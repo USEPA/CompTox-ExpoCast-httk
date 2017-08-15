@@ -1,0 +1,298 @@
+---
+title: "Virtual study populations"
+author: "Caroline Ring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Virtual study populations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette includes the code necessary to recreate the analysis of virtual study populations as listed in Howgate 2006 and Johnson 2006. There are a few steps to this process. 
+
+1. Read in the study data (from a spreadsheet or .csv file).
+1. Do a bit of processing:
+* convert clearance to Css
+* convert 90% confidence intervals to 95% confidence intervals
+1. Use the study population specifications as input to HTTK-Pop to generate virtual study populations, using the virtual-individuals method.
+1. Then, for each study population: For each chemical of interest, evaluate the HTTK model, yielding a vector of Css values.
+
+Replicate the above 20 times. That is, generate 20 virtual populations corresponding to each study, then run the model for each one. Then compute some overall Css statistics for each chemical. 
+
+To use the code in this vignette, you'll first need to load a few packages (if you haven't already).
+```{r load_packages}
+library(httk)
+library(data.table)
+library(EnvStats)
+```
+
+# Reading in the study data
+The following code reads in the study data from Howgate 2006 and Johnson 2006, and does the required processing.
+```{r read_study_dat, eval=FALSE}
+johnson[, Compound:=tolower(Compound)]
+#Compute clearance median and CI assuming lognormal dist
+johnson[, cv:=Clearance.sd/Clearance.mean]
+johnson[, sigma:=sqrt(log(1+cv^2))]
+johnson[, mu:=log(Clearance.mean)-(0.5*sigma^2)]
+johnson[, Clearance.median:=exp(mu)]
+johnson[, Clearance.95CI.min:=exp(mu-1.96*sigma)]
+johnson[, Clearance.95CI.max:=exp(mu+1.96*sigma)]
+johnson[, src:="Johnson et al. 2006"]
+
+howgate[, Compound:=tolower(Compound)]
+howgate[, Clearance.units:='1/h']
+setnames(howgate,
+         c("Median.Clearance..1.h.",
+           "X90..CI.min",
+           "X90..CI.max"),
+         c("Clearance.median",
+           "Clearance.90CI.min",
+           "Clearance.90CI.max"))
+
+#Convert 90% CI to 95% CI, still assuming a log-normal distribution
+howgate[, sigma:=log(Clearance.90CI.max/Clearance.median)/1.65]
+howgate[, Clearance.95CI.min:=Clearance.90CI.min*exp(-0.31*sigma)]
+howgate[, Clearance.95CI.max:=Clearance.90CI.max*exp(0.31*sigma)]
+howgate[, src:="Howgate et al. 2006"]
+
+jh <- rbind(johnson, howgate, fill=TRUE)
+
+#Get CAS numbers by matching to HTTK data
+chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
+                                            species='Human',
+                                            info=c('CAS', 'Compound'),
+                                            exclude.fub.zero=FALSE))
+chem.dt[, Compound:=tolower(Compound)]
+
+#Harmonize compound names
+chem.dt[CAS=="57-41-0", Compound:="phenytoin"]
+chem.dt[CAS=="58-08-2", Compound:="caffeine"]
+chem.dt[CAS=="59865-13-3", Compound:="cyclosporine"]
+
+jhchem <- merge(jh,chem.dt,by='Compound')
+
+#Exclude infants
+jhchem <- jhchem[!(Age.min==0 & Age.max==0), ]
+
+#Convert in vivo clearance to in vivo Css
+jhchem[Clearance.units=='L/h/kg',
+       css.invivo:=1/(Clearance.median)]
+jhchem[, Study.id:=1:nrow(jhchem)]
+saveRDS(object=jhchem,
+        file="data/jhchem.Rdata")
+```
+# Extract study population specifications
+Next, extract the specifications for the study populations, so we can use them to generate virtual study populations. These include the total number of subjects, the age limits, and the number of female subjects (if given).
+```{r extract_study_pop_specs, eval=FALSE}
+jhtmp <- jhchem[, .(Study.id, CAS, Total.subjects,
+                    Age.min, Age.max, Female.subjects)]
+```
+# Set up function for each study population
+This function does the following:
+
+1. Uses HTTK-Pop to generate a virtual study population based on the specifications.
+1. Converts the HTTK-Pop parameters to the parameters for a specified HTTK model.
+1. Evaluates Css and total clearance for each virtual individual.
+1. Calculates relevant statistics on Css and total clearance for this virtual study population, including
+* Median
+* 95% confidence interval bounds on the observations
+* 95% confidence interval bounds on the median
+1. Also calculates bodyweight-adjusted Css and total clearance, and relevant statistics.
+
+```{r eval_studypop, eval=FALSE}
+eval_studypop <- function(args,
+                          fup.censor,
+                          poormetab,
+                          model){
+  #if number of female subjects is specified,
+  #set up gendernum appropriately; otherwise leave it NULL
+  if(is.na(args$Female.subjects)){
+    gendernum<-NULL
+    } else{
+      gendernum<-list(Female=args$Female.subjects,
+                      Male=args$Total.subjects-
+                        args$Female.subjects)
+      }
+  #Generate a virtual study population.
+  indiv.pop <- httk::httkpop_generate(method='virtual individuals',
+                                        nsamp=args$Total.subjects,
+                                        gendernum=gendernum,
+                                        agelim_years=c(args$Age.min,
+                                                       args$Age.max))
+  #Convert to HTTK model params
+  indiv.httk <- httk::get_httk_params(indiv_dt=indiv.pop,
+                                       model=model,
+                                       chemcas=args$CAS,
+                                       poormetab=poormetab,
+                                       fup.censor=fup.censor)
+  
+  #If model is 3compartmentss, convert Funbound.plasma to Funbound.blood
+  if (model=="3compartmentss"){
+  #First, get the default parameters used for the Schmitt method of estimating
+    #partition coefficients.
+    pschmitt <- httk::parameterize_schmitt(chem.cas=args$CAS,
+                                           species='Human')
+    #next, replace the single default value for Funbound.plasma with the vector
+    #of Funbound.plasma values from the virtual population data.table.
+    pschmitt$Funbound.plasma<-indiv.httk[, Funbound.plasma]
+    
+    #Now, predict the partitioning coefficients using Schmitt's method. The
+    #result will be a list of numerical vectors, one vector for each
+    #tissue-to-plasma partitioning coefficient, and one element of each vector
+    #for each individual. The list element names specify which partition
+    #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
+    PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
+                                              chem.cas=args$CAS,
+                                              species='Human')
+    Rb2p <- 1 - indiv.pop$hematocrit + indiv.pop$hematocrit * 
+      PCs[["Krbc2pu"]] * 
+      indiv.httk$Funbound.plasma
+    
+  indiv.httk[, Funbound.plasma:=Funbound.plasma/Rb2p]
+  }
+  #Evaluate Css using HTTK model
+  css <- httk::calc_analytic_css(chem.cas=args$CAS,
+                                 parameters=indiv.httk,
+                                 daily.dose=1, 
+                                 output.units="uM",
+                                 model=model,
+                                 species='Human',
+                                 suppress.messages=TRUE,
+                                 recalc.blood2plasma=TRUE)
+  
+  if(model=="3compartmentss"){ #Convert from css.blood back to css.plasma
+    css <- css/Rb2p
+  }
+  #Compute Css statistics
+  css.median <- median(css)
+  css.95CI.min<-quantile(css, probs=0.025)
+  css.95CI.max<-quantile(css, probs=0.975)
+  css.median.95CI <- EnvStats::eqnpar(css, p=0.5, ci=TRUE, lb=0)$interval[['limits']]
+  css.bw <- css/indiv.pop[, weight_adj] #Bodyweight-adjusted
+  css.bw.median <- median(css.bw)
+  css.bw.95CI.min<-quantile(css.bw, probs=0.025)
+  css.bw.95CI.max<-quantile(css.bw, probs=0.975)
+  css.bw.median.95CI <- EnvStats::eqnpar(css.bw, p=0.5, ci=TRUE, lb=0)$interval[['limits']]
+  
+  #For comparison, get bodyweight stats too
+  bw.median <- median(indiv.pop[, weight_adj])
+  bw.mean <- mean(indiv.pop[, weight_adj])
+  bw.sd <- sd(indiv.pop[, weight_adj])
+  log.bw.sd <- sd(indiv.pop[, log(weight_adj)])
+  
+  return(data.table(Study.id=args$Study.id,
+                    bw.median=bw.median,
+                    bw.mean=bw.mean,
+                    bw.sd=bw.sd,
+                    log.bw.sd=log.bw.sd,
+                    css.median=css.median,
+                    css.95CI.min=css.95CI.min,
+                    css.95CI.max=css.95CI.max,
+                    css.median.95CI.min=css.median.95CI['LCL'],
+                    css.median.95CI.max=css.median.95CI['UCL'],
+                    css.bw.median=css.bw.median,
+                    css.bw.95CI.min=css.bw.95CI.min,
+                    css.bw.95CI.max=css.bw.95CI.max,
+                    css.bw.median.95CI.min=css.bw.median.95CI['LCL'],
+                    css.bw.median.95CI.max=css.bw.median.95CI['UCL']))
+  }
+```
+# Evaluate model for virtual populations
+Now, the study population specifications for each *in vivo* study are in `jhtmp`, and we've set up a function to generate virtual study populations and evaluate the HTTK model for each one. We just need to loop over the studies.
+
+Following the methods of Howgate and Johnson, we replicate each study 20 times and take overall statistics. This procedure tends to reduce numerical error.
+
+Let's actually set this up as a function that takes arguments including the HTTK model, whether poor metabolizers should be included or not, and whether `Funbound.plasma` should be drawn from a censored distribution or not. Then we can call it under different conditions and see how things change. This function will save its results in two .Rdata files: one containing the statistics for each study population replicate, and one containing the overall statistics over all replicates for each study population.
+```{r repfun, eval=FALSE}
+repfun <- function(args, fup.censor, poormetab, model){
+  #Replicate each study population 20 times and evaluate model;
+  #rbind the results into one big data.table
+  
+  #Initialize output list
+  allreps.ls <- vector(mode='list', length=20)
+  
+  for (i in seq_along(allreps.ls)){
+    allreps.ls[[i]] <- eval_studypop(args = args,
+                                     fup.censor = fup.censor,
+                                     poormetab = poormetab,
+                                     model=model)
+    }
+  allreps <- rbindlist(allreps.ls) #the 20 replicates of a single study
+  return(allreps)
+  }
+```
+Finally, let's run it for different combinations of conditions on the `Clint` and `Funbound.plasma` distributions.
+
+**Warning: the following code may take a LONG time to run!** On my machine, it took 791 seconds (a little over 13 minutes), with 10 parallel cores.
+```{r eval_all_parallel, eval=FALSE}
+#Convert jhtmp to a list of lists by row, because eval_studypop() expects a list of arguments
+jh.ls<-lapply(as.list(1:nrow(jhtmp)),
+              function(x) as.list(jhtmp[x,]))
+
+#Choose HTTK model
+model <- '3compartmentss'
+
+cluster <- parallel::makeCluster(40, outfile='virtpops_parallel_out.txt')
+evalout <- parallel::clusterEvalQ(cl=cluster,
+                                  {library('httk')
+                                   library('data.table')
+                                   library('EnvStats')})
+parallel::clusterExport(cl=cluster,
+                        c('eval_studypop', 'repfun'))
+#Set seeds on all workers for reproducibility
+parallel::clusterSetRNGStream(cluster, 
+                              TeachingDemos::char2seed("Caroline Ring"))
+#Loop over values of poormetab and fup.censor
+system.time({for (poormetab in c(TRUE, FALSE)){
+  for (fup.censor in c(TRUE, FALSE)){
+    rep_stat <- rbindlist(parallel::parLapply(cl=cluster, jh.ls, repfun,
+                                    poormetab = poormetab,
+                                    fup.censor = fup.censor,
+                                    model = model))
+    
+    #Save the stats for each replicate of each study population
+    saveRDS(object=rep_stat,
+            file=paste0('data/',
+                        paste(paste('virtstudypop_allreps_',
+                                    model,
+                                    'poormetab', poormetab,
+                                    'fup.censor', fup.censor,
+                                    "FuptoFub",
+                                    sep='_'),
+                              'Rdata',
+                              sep='.')))
+    
+    #Now compute overall stats, over all replicates of each study
+    overall.stats <- rep_stat[,
+                              list(median(css.median),
+                                   mean(css.95CI.max/css.median),
+                                   mean(css.95CI.min/css.median),
+                                   median(css.bw.median),
+                                   mean(css.bw.95CI.max/css.bw.median),
+                                   mean(css.bw.95CI.min/css.bw.median)),
+                              by=Study.id]
+    setnames(overall.stats,
+             paste0('V', 1:6),
+             c('median.css.median',
+               'mean.css.95CI.max.fold',
+               'mean.css.95CI.min.fold',
+               'median.css.bw.median',
+               'mean.css.bw.95CI.max.fold',
+               'mean.css.bw.95CI.min.fold'))
+    saveRDS(object=overall.stats,
+            file=paste0('data/',
+                        paste(paste('virtstudypop_overallstats',
+                                    model,
+                                    'poormetab', poormetab,
+                                    'fup.censor', fup.censor,
+                                    "FuptoFub",
+                                    sep='_'),
+                              'Rdata',
+                              sep='.')))
+    }
+  }
+})
+parallel::stopCluster(cluster)
+```
+That's it! Now we've got the results saved and can analyze and plot them as desired.

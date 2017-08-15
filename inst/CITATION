@@ -1,0 +1,28 @@
+bibentry(bibtype = "Article",
+  title        = "{httk}: {R} Package for High-Throughput Toxicokinetics",
+  author       = c(person(given = c("Robert", "G."),
+                          family = "Pearce"),
+                   person(given = c("R.", "Woodrow"),
+                          family = "Setzer"),
+                   person(given = c("Cory", "L."),
+                          family = "Strope"),
+                   person(given = c("Nisha", "S."),
+                          family = "Sipes"),
+                   person(given = c("John", "F."),
+                          family = "Wambaugh",
+                          email = "wambaugh.john@epa.gov")),
+  journal      = "Journal of Statistical Software",
+  year         = "2017",
+  volume       = "79",
+  number       = "4",
+  pages        = "1--25",
+  doi          = "10.18637/jss.v079.i04",
+
+  header       = "To cite httk in publications use:",
+  textVersion  =
+  paste("Robert G. Pearce, R. Woodrow Setzer, Cory L. Strope, Nisha S. Sipes, John F. Wambaugh (2017).",
+        "httk: R Package for High-Throughput Toxicokinetics.",
+        "Journal of Statistical Software, 79(4), 1-25.",
+        "doi:10.18637/jss.v079.i04")
+)
+

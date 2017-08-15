@@ -1,0 +1,15 @@
+\name{Wetmore2012}
+\docType{data}
+\alias{Wetmore2012}
+\title{Published toxicokinetic predictions based on in vitro data from Wetmore et al. 2012.}
+\description{
+This data set overlaps with Wetmore.data and is used only in Vignette 4 for steady state concentration.
+}
+\usage{Wetmore2012}
+\format{A data.frame containing 13 rows and 15 columns.}
+\references{
+Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A., Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck, K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125 157-174 (2012)
+
+
+}
+\keyword{ datasets }
