@@ -1,0 +1,185 @@
+---
+title: "Hematocrit spline fits and residuals"
+author: "Caroline Ring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Hematocrit spline fits and residuals}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, 
+                      comment = '#>', 
+                      fig.width=11.25, 
+                      fig.height=19)
+```
+
+```{r}
+library(httk)
+library(survey)
+library(data.table)
+library(ggplot2)
+all.reth <- levels(nhanes_mec_svy$variables[, ridreth1])
+all.gendr <- levels(nhanes_mec_svy$variables[, riagendr])
+```
+
+Plot hematocrit vs. age with spline fits.
+```{r hematocrit_spline, eval=FALSE}
+par(mfcol=c(5,2),
+    mar=c(2,2,2.5,2)+0.1,
+    oma=c(4,4,4,0),
+    mgp=c(1,1,0))
+
+for (gendr in all.gendr){
+  for (r in all.reth){
+    grsub <- subset(nhanes_mec_svy, riagendr==gendr & ridreth1==r & is.finite(loglbxhct))
+    svyplot(loglbxhct~ridexagm, grsub, style="transparent", 
+            basecol="gray50", xlab=NA, ylab=NA, cex.axis=1.5)
+    lines(sort(unique(grsub$variables[,ridexagm])), 
+          predict(spline_hematocrit[gender==gendr & reth==r,
+                                    hct_spline[[1]]],
+                  sort(unique(grsub$variables[,ridexagm])))$y)
+    title(paste(gendr, r), line=0.5, cex.main=1.5)
+    }
+  }
+title(xlab="Age, months",
+      ylab="Log hematocrit, log %",
+      outer=TRUE,
+      line=2, cex.lab=2)
+title(main="Hematocrit vs. age, with spline fits",
+      outer=TRUE,
+      line=1, cex.main=2)
+```
+
+
+```{r hematocrit_spline_pdf, echo=FALSE, eval=FALSE}
+pdf("pdf_figures/hematocrit_splines.pdf", width=8.5, height=11)
+par(mfcol=c(5,2),
+    mar=c(2,2,2.5,2)+0.1,
+    oma=c(4,4,4,0),
+    mgp=c(1,1,0))
+
+for (gendr in all.gendr){
+  for (r in all.reth){
+    grsub <- subset(nhanes_mec_svy, riagendr==gendr & ridreth1==r & !is.na(loglbxhct))
+    svyplot(loglbxhct~ridexagm, grsub, style="transparent", 
+            basecol="gray50", xlab=NA, ylab=NA, cex.axis=1.5)
+    lines(sort(unique(grsub$variables[,ridexagm])), 
+          predict(spline_hematocrit[gender==gendr & reth==r,
+                                    hct_spline[[1]]],
+                  sort(unique(grsub$variables[,ridexagm])))$y)
+    title(paste(gendr, r), line=0.5, cex.main=1.5)
+    }
+  }
+title(xlab="Age, months",
+      ylab="Log hematocrit, log %",
+      outer=TRUE,
+      line=2, cex.lab=2)
+title(main="Hematocrit vs. age, with spline fits",
+      outer=TRUE,
+      line=1, cex.main=2)
+dev.off()
+```
+
+Plot log hematocrit residuals vs. age.
+```{r hematocrit_resid, eval=FALSE}
+par(mfcol=c(5,2),
+    mar=c(2,2,2.5,2)+0.1,
+    oma=c(4,4,4,0),
+    mgp=c(1,1,0))
+
+for (gendr in all.gendr){
+  for (r in all.reth){
+    grsub <- subset(nhanes_mec_svy, riagendr==gendr & ridreth1==r & !is.na(loglbxhct))
+    grsub <- update(grsub, loglbxhct_resid=loglbxhct- 
+                      predict(spline_hematocrit[gender==gendr & 
+                                                    reth==r,
+                                                  hct_spline[[1]]],
+                              grsub$variables[,ridexagm])$y)
+    svyplot(loglbxhct_resid~ridexagm, grsub, style="transparent", 
+            xlab=NA, ylab=NA, cex.axis=1.5)
+    title(paste(gendr, r), line=0.5, cex.main=1.5)
+    }
+  }
+title(xlab="Age, months",
+      ylab="Log hematocrit residual, log %", 
+      outer=TRUE,
+      line=2, cex.lab=2)
+title(main = "Hematocrit residuals vs. age",
+      outer=TRUE, line=1, cex.main=2)
+```
+Make QQ plots of log hematocrit residual quantiles vs. normal quantiles.
+```{r, eval=FALSE}
+par(mfcol=c(5,2),
+    mar=c(2,2,2.5,2)+0.1,
+    oma=c(4,4,4,0),
+    mgp=c(1,1,0))
+
+for (gendr in all.gendr){
+  for (r in all.reth){
+    grsub <- subset(nhanes_mec_svy, riagendr==gendr & ridreth1==r & !is.na(loglbxhct))
+    grsub <- update(grsub, loghctresid=loglbxhct- 
+                      predict(spline_hematocrit[gender==gendr & 
+                                                    reth==r,
+                                                  hct_spline[[1]]],
+                              grsub$variables[,ridexagm])$y)
+qprobs <- ppoints(n=length(grsub$prob))
+norm.q <- qnorm(p=qprobs)
+loghctresid.q <- svyquantile(~loghctresid, 
+                            design=grsub,
+                            quantiles=qprobs)
+plot(y=loghctresid.q,
+     x=norm.q, #Plot weighted points
+     type='p',
+     col="gray70",
+     xlab=NA, ylab=NA)
+#Add qqline: passing through first and third quartiles
+x <- qnorm(p=c(0.25, 0.75))
+y <- as.vector(svyquantile(~loghctresid, 
+                           design=grsub,
+                           quantiles=c(0.25, 0.75)))
+m <- diff(y)/diff(x)
+intercept <- -m*x[1]+y[1]
+abline(a=intercept, b=m)
+title(paste(gendr, r), line=0.5, cex.main=1.5)
+}
+}
+title(xlab='Normal quantiles',
+     ylab='log Hct resid quantiles',
+     outer=TRUE,
+     line=2,
+     cex.lab=2)
+```
+
+Clearly, the log residuals aren't normally distributed for most combinations of race and gender. For this reason, I decided to use a kernel density estimate of the residual distribution as a way to non-parametrically estimate the residual distribution, rather than assuming a particular theoretical parametric distribution.
+
+# KDE for residuals
+Here are the KDEs for the log hematocrit residuals for each gender and race/ethnicity combination.
+```{r, eval=FALSE}
+par(mfcol=c(5,2),
+    mar=c(2,2,2.5,2)+0.1,
+    oma=c(4,4,4,0),
+    mgp=c(1,1,0))
+
+for (gendr in all.gendr){
+  for (r in all.reth){
+    grsub <- subset(nhanes_mec_svy, riagendr==gendr & ridreth1==r & !is.na(loglbxhct))
+    grsub <- update(grsub, loghctresid=loglbxhct- 
+                      predict(spline_hematocrit[gender==gendr & 
+                                                    reth==r,
+                                                  hct_spline[[1]]],
+                              grsub$variables[,ridexagm])$y)
+    tmp.kde <- ks::kde(x=grsub$variables[, loghctresid],
+                   w=grsub$variables[, wtmec6yr])
+    plot(tmp.kde, xlab=NA, ylab=NA, xlim=c(-0.65,0.4), drawpoints=TRUE, col.pt="black")
+    title(paste(gendr, r), line=0.5, cex.main=1.5)
+    }
+  }
+title(xlab='Log hematocrit residual',
+     ylab='KDE density',
+     outer=TRUE,
+     line=2,
+     cex.lab=2)
+```

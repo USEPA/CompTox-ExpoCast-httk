@@ -1,0 +1,50 @@
+#' 
+#' Draws ages from a smoothed distribution for a given gender/race combination
+#' 
+#' @param g Gender. Either 'Male' or 'Female'.
+#' @param r Race/ethnicity. One of 'Mexican American', 'Other Hispanic', 
+#'   'Non-Hispanic Black', 'Non-Hispanic White', 'Other'.
+#' @param nsamp Number of ages to draw.
+#' @param agelim_months Two-element numeric vector giving the minimum and 
+#'   maximum ages in months to include.
+#'   
+#' @return A named list with members 'ages_months' and 'ages_years', each 
+#'   numeric of length \code{nsamp}, giving the sampled ages in months and 
+#'   years. 
+age_draw_smooth <- function(g, r, nsamp, agelim_months){
+  #R CMD CHECK throws notes about "no visible binding for global variable", for 
+  #each time a data.table column name is used without quotes. To appease R CMD 
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  gender <- reth <- smth <- NULL
+  physiology.data <- physiology.data
+  #End R CMD CHECK appeasement.
+
+  indiv_ages_m <- vector()
+  indiv_ages_y <- vector()
+  while(length(indiv_ages_m)<nsamp){
+      tmp.m <- sample(x=0:959,
+                         size=nsamp,
+                         replace=TRUE,
+                         prob=approx(age_dist_smooth[gender==g &
+                                                       reth==r,
+                                                     smth[[1]]$x],
+                                     age_dist_smooth[gender==g &
+                                                       reth==r,
+                                                     smth[[1]]$y],
+                                     xout=0:959,
+                                     rule=2,
+                                     method='linear')$y)
+    indiv_ages_m <- c(indiv_ages_m, 
+                    tmp.m[tmp.m>=min(agelim_months) &
+                            tmp.m<max(agelim_months)])
+  }
+  #We may have overshot, so just take the first nsamp
+  #Round them to whole numbers
+  indiv_ages_m <- round(indiv_ages_m[1:nsamp])
+  indiv_ages_y <- floor(indiv_ages_m/12) #convert ages in months to years
+#indiv_ages_y <- indiv_ages_m/12
+  return(list(ages_months=indiv_ages_m,
+              ages_years=indiv_ages_y))
+}
