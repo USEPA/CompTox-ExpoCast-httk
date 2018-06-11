@@ -12,7 +12,7 @@ calc_analytic_css(chem.name=NULL,chem.cas = NULL,parameters=NULL,daily.dose=1,
                   output.units='uM',model = 'pbtk',species='Human',
                   concentration='plasma',suppress.messages=F,
                   recalc.blood2plasma=F,default.to.human=F,tissue=NULL,
-                  well.stirred.correction=T,Funbound.plasma.pc.correction=T,
+                  well.stirred.correction=T,adjusted.Funbound.plasma=T,regression=T,
                   restrictive.clearance=T,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -34,7 +34,8 @@ calc_analytic_css(chem.name=NULL,chem.cas = NULL,parameters=NULL,daily.dose=1,
   Substitutes missing rat values with human values if true.
   }
   \item{tissue}{Desired tissue conentration, overwrites concentration argument.}
-  \item{Funbound.plasma.pc.correction}{Uses corrected Funbound.plasma when set to TRUE along with parition coefficients calculated with this value and regressions.}
+ \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE for model 1compartment and 3compartmentss.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE.}

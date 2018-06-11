@@ -34,7 +34,7 @@ excluding the data in tissue.data.
 \value{
 
  \item{Funbound.plasma}{corrected unbound fraction in plasma}
- \item{Funbound.plasma.uncorrected}{measured unbound fraction in plasma (0.005 if below limit of detection)}
+ \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005 if below limit of detection)}
  \item{Pow}{octonol:water partition coefficient (not log transformed)}
  \item{pKa_Donor}{compound H dissociation equilibirum constant(s)}
   \item{pKa_Accept}{compound H association equilibirum constant(s)}

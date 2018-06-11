@@ -16,7 +16,7 @@ get_cheminfo(info="CAS",species="Human",exclude.fub.zero=NA,fub.lod.default=0.00
 \arguments{
 \item{info}{A single character vector (or collection of character vectors) from "Compound", "CAS", "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint", "Clint.pValue", "Funbound.plasma", "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type". info="all" gives all information for the model and species.} 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").}
-\item{exclude.fub.zero}{Whether or not to exclude chemicals with a fraction of unbound plasma equal to zero or include them with a value of fub.lod.default. Defaults to TRUE for '3compartmentss' and FALSE for pk models and schmitt.}
+\item{exclude.fub.zero}{Whether or not to exclude chemicals with a fraction of unbound plasma equal to zero or include them with a value of fub.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk models and schmitt.}
 \item{fub.lod.default}{Default value used for fraction of unbound plasma for chemicals where measured value was below the limit of detection. Default value is 0.0005.}
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment model, '1compartment' for the one compartment model, '3compartment' for three compartment model, '3compartmentss' for the three compartment model without partition coefficients, or 'schmitt' for chemicals with logP and fraction unbound (used in predict_partitioning_schmitt).}
 \item{default.to.human}{Substitutes missing values with human values if true.}

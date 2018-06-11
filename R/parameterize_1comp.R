@@ -1,17 +1,21 @@
-parameterize_1comp <- function(chem.cas=NULL,chem.name=NULL,species='Human',default.to.human=F,Funbound.plasma.pc.correction=T,restrictive.clearance=T,well.stirred.correction=T,suppress.messages=F)
+parameterize_1comp <- function(chem.cas=NULL,chem.name=NULL,species='Human',default.to.human=F,adjusted.Funbound.plasma=T,regression=T,restrictive.clearance=T,well.stirred.correction=T,suppress.messages=F)
 {
  physiology.data <- physiology.data
 if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
 params <- list()
 
-params[['Vdist']] <- calc_vdist(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,suppress.messages=T)
+params[['Vdist']] <- calc_vdist(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,suppress.messages=T)
 
-params[['kelim']] <- calc_elimination_rate(chem.cas=chem.cas,chem.name=chem.name,species=species,suppress.messages=T,default.to.human=default.to.human,
-                                           Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,restrictive.clearance=restrictive.clearance,well.stirred.correction=well.stirred.correction)
+ss.params <- suppressWarnings(parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance))
+ss.params <- c(ss.params, params['Vdist'])
 
-params[['kgutabs']] <- 1
+params[['kelim']] <- calc_elimination_rate(parameters=ss.params,chem.cas=chem.cas,chem.name=chem.name,species=species,suppress.messages=T,default.to.human=default.to.human,
+                                           adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,
+                                           well.stirred.correction=well.stirred.correction)
 
-params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+params[['kgutabs']] <- 2.18
+
+params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
 
 params[['million.cells.per.gliver']] <- 110
 
@@ -38,6 +42,8 @@ params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
   params[['Fgutabs']] <- Fgutabs
+
+  params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]  
 
 return(params)
 }

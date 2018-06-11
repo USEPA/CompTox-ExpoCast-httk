@@ -1,18 +1,13 @@
 Title: High-Throughput Toxicokinetics
 Package: httk
-Version: 1.7
-Date: 2017-7-13
-Author: John Wambaugh, Robert Pearce, Caroline Ring, Jimena Davis, Nisha Sipes, and R. Woodrow Setzer
-Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
-        EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
-        reshape2, gdata, viridis, CensRegMod, gmodels, colorspace
+Version: 1.8
+Date: 2018-1-22
+Author: John Wambaugh, Robert Pearce, Caroline Ring, Jimena Davis, Nisha Sipes, Barbara Wetmore, and R. Woodrow Setzer
+Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales, EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks, reshape2, gdata, viridis, CensRegMod, gmodels, colorspace
 Description: Functions and data tables for simulation and statistical analysis of chemical toxicokinetics ("TK") using data obtained from relatively high throughput, in vitro studies. Both physiologically-based ("PBTK") and empirical (e.g., one compartment) "TK" models can be parameterized for several hundred chemicals and multiple species. These models are solved efficiently, often using compiled (C-based) code. A Monte Carlo sampler is included for simulating biological variability and measurement limitations. Functions are also provided for exporting "PBTK" models to "SBML" and "JARNAC" for use with other simulation software. These functions and data provide a set of tools for in vitro-in vivo extrapolation ("IVIVE") of high throughput screening data (e.g., ToxCast) to real-world exposures via reverse dosimetry (also known as "RTK").
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
 License: GPL-3
 LazyData: true
-Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        utils
+Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats, utils
 Depends: R (>= 2.10)
 VignetteBuilder: knitr, R.rsp
-NeedsCompilation: yes
-Packaged: 2017-07-14 23:27:29 UTC; Rpearce

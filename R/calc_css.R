@@ -12,7 +12,8 @@ calc_css <- function(parameters=NULL,
                     model='pbtk',
                     default.to.human=F,
                     f.change = 0.00001,
-                    Funbound.plasma.pc.correction=T,
+                    adjusted.Funbound.plasma=T,
+                    regression=T,
                     well.stirred.correction=T,
                     restrictive.clearance=T,
                     ...)
@@ -20,15 +21,15 @@ calc_css <- function(parameters=NULL,
   
   if(is.null(parameters)){
     if(tolower(model)=='pbtk'){
-      parameters <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+      parameters <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
     }else if(tolower(model)=='3compartment'){
-      parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+      parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
     }else if(tolower(model)=='1compartment'){
-      parameters <- parameterize_1comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance)
+      parameters <- parameterize_1comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance)
     }
   } 
 
-  css <- calc_analytic_css(parameters=parameters,daily.dose=daily.dose,concentration='plasma',model=model,suppress.messages=T,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance) 
+  css <- calc_analytic_css(parameters=parameters,daily.dose=daily.dose,concentration='plasma',model=model,suppress.messages=T,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance) 
   conc <- (1 - f) * css 
 
   if(tolower(model) == 'pbtk'){

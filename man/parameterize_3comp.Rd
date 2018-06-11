@@ -11,8 +11,8 @@ This function initializes the parameters needed in the function solve_3comp.
 \usage{
  parameterize_3comp(chem.cas=NULL,chem.name=NULL,species="Human",
                     default.to.human=F,force.human.clint.fub = F,
-                    clint.pvalue.threshold=0.05,Funbound.plasma.pc.correction=T,
-                    suppress.messages=F)
+                    clint.pvalue.threshold=0.05,adjusted.Funbound.plasma=T,
+                    regression=T,suppress.messages=F)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,7 +35,8 @@ This function initializes the parameters needed in the function solve_3comp.
   Forces use of human values for hepatic intrinsic clearance and fraction of unbound plasma if true.
  }
  \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays having p-values greater than the threshold are set to zero.}
-  \item{Funbound.plasma.pc.correction}{Returns corrected Funbound.plasma when set to TRUE along with parition coefficients calculated with this value and regressions.}
+ \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to TRUE along with parition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{suppress.messages}{Whether or not the output message is suppressed.} 
  }
 

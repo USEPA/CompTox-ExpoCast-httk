@@ -12,6 +12,7 @@
 \alias{is.toxcast}
 \alias{is.expocast}
 \alias{is.httk}
+\alias{is.pharma}
 \title{
 Convenience Boolean (yes/no) functions to identify chemical membership in several key lists.
 }
@@ -58,6 +59,7 @@ is.tox21(chem.cas)
 is.toxcast(chem.cas)
 is.expocast(chem.cas)
 is.httk(chem.cas,species="Human",model="3compartmentss")
+is.pharma(chem.cas)
 }
 \arguments{
   \item{chem.cas}{The Chemical Abstracts Service Resgistry Number (CAS-RN) 

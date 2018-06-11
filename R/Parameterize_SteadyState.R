@@ -1,5 +1,5 @@
 # This function retrieves the paramters needed to run the constant infusion dose model for determining steady-state concentration.
-parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human",clint.pvalue.threshold=0.05,default.to.human=F,human.clint.fub=F,Funbound.plasma.correction=T)
+parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human",clint.pvalue.threshold=0.05,default.to.human=F,human.clint.fub=F,adjusted.Funbound.plasma=T,restrictive.clearance=T)
 {
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
@@ -53,7 +53,7 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
     fub <- 0.005
     warning("Fraction unbound = 0, changed to 0.005.")
   }
-  if(Funbound.plasma.correction){
+  if(adjusted.Funbound.plasma){
     if(human.clint.fub) Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]
     else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
     pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
@@ -61,8 +61,8 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
     Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
     ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
     dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-    fub <- 1 / ((dow - 1) * Flipid + 1 / fub)
-    warning('Funbound.plasma recalculated with correction.  Set Funbound.plasma.pc.correction to FALSE to use original value.')
+    fub <- 1 / ((dow) * Flipid + 1 / fub)
+    warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
   }
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
@@ -88,6 +88,12 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
   Params[['Fgutabs']] <- Fgutabs
+  
+  cl <- calc_hepatic_clearance(parameters=Params,hepatic.model='unscaled',suppress.messages=T)
+  Qliver <- Params$Qtotal.liverc / Params$BW^.25
+  Rb2p <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+  if(restrictive.clearance) Params[['hepatic.bioavailability']] <- Qliver / (Qliver + Params$Funbound.plasma * cl / Rb2p)
+  else Params[['hepatic.bioavailability']] <- Qliver / (Qliver + cl / Rb2p) 
 
   return(Params)
 }

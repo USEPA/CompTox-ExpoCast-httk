@@ -1,11 +1,11 @@
 # This function retrives a steady-state chemical concentration from the Wetmore et al. (2012) and (2013) publications
-get_wetmore_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=F)
+get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=F)
 {
   Wetmore.data <- Wetmore.data
   if (species == "Human") available.quantiles <- c(0.05,0.5, 0.95)
   else available.quantiles <- 0.5
-  if (!all(which.quantile %in% available.quantiles)) stop("Wetmore papers only includes 5%, 50%, and 95% quantiles for human and 50% for rat.")
-  if (!(tolower(output.units) %in% c("mg/l","um"))) stop("Wetmore papers only includes mg/L and uM values for Css")
+  if (!all(which.quantile %in% available.quantiles)) stop("Literature only includes 5%, 50%, and 95% quantiles for human and 50% for rat.")
+  if (!(tolower(output.units) %in% c("mg/l","um"))) stop("Literature only includes mg/L and uM values for Css")
   out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
@@ -41,7 +41,7 @@ get_wetmore_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quan
   
   if(!suppress.messages){
     cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"plasma concentrations returned in",output.units,"units.\n")
-    cat("Retrieving Css from Wetmore et al. based on ",clearance.assay.conc," uM intrinsic clearance data for the ",which.quantile," quantile in ",species,".\n")
+    cat("Retrieving Css from literature based on ",clearance.assay.conc," uM intrinsic clearance data for the ",which.quantile," quantile in ",species,".\n")
   }
   return(out)
 }

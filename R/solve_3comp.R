@@ -18,7 +18,8 @@ solve_3comp <- function(chem.name = NULL,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
                     dosing.matrix=NULL,
-                    Funbound.plasma.pc.correction=T,
+                    adjusted.Funbound.plasma=T,
+                    regression=T,
                     restrictive.clearance = T,
                     ...)
 {
@@ -26,11 +27,11 @@ solve_3comp <- function(chem.name = NULL,
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
   if (is.null(parameters)){
     parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
-                                     Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
   }else{
     name.list <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","Krbc2pu","Kgut2pu","kgutabs","Kliver2pu","Krest2pu","MW","Qcardiacc","Qgfrc","Qgutf","Qliverf","Rblood2plasma","million.cells.per.gliver","Vgutc","Vliverc","Vrestc")
     if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
-    name.list2 <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","kdermabs","Krbc2pu","Kgut2pu","kgutabs","kinhabs","Kkidney2pu","Kliver2pu","Klung2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+    name.list2 <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","Krbc2pu","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
     if(any(name.list2[which(!name.list2 %in% name.list)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")
   }  
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
@@ -87,7 +88,7 @@ solve_3comp <- function(chem.name = NULL,
   parameters[['Vgut']] <- parameters[['Vgutc']] * parameters[['BW']]
   parameters[['Vliver']] <- parameters[['Vliverc']] * parameters[['BW']]
   parameters[['Vrest']] <- parameters[['Vrestc']] * parameters[['BW']]
-  parameters[['Qkidneyf']] <- parameters[["CLbiliary"]] <-  parameters[["kdermabs"]] <-parameters[["kinhabs"]] <- parameters[["MW"]]   <- parameters[['Vgutc']] <- parameters[['Vrestc']]  <- parameters[["Vliverc"]]  <- NULL
+  parameters[['Qkidneyf']] <- parameters[["MW"]]   <- parameters[['Vgutc']] <- parameters[['Vrestc']]  <- parameters[["Vliverc"]]  <- NULL
 
     
   
@@ -148,26 +149,18 @@ solve_3comp <- function(chem.name = NULL,
     if(is.null(doses.per.day)){
       out <- ode(y = state, times = times,func="derivs3comp", parms=parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,...)
     }else{
-      if(iv.dose){
-        dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
-        length <- length(dosing)
-        eventdata <- data.frame(var=rep('Arest',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))                          
-        out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
-      }else{
-        dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
-        length <- length(dosing)
-        eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))                          
-        out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
-      }
+      dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
+      length <- length(dosing)
+      if(iv.dose) eventdata <- data.frame(var=rep('Arest',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length)) 
+      else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))   
+      times <- sort(c(times,dosing + 1e-8,start + 1e-8))                       
+      out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
     }  
   }else{
-    if(iv.dose){
-      eventdata <- data.frame(var=rep('Arest',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
-      out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
-    }else{
-      eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
-      out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
-    }
+    if(iv.dose) eventdata <- data.frame(var=rep('Arest',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
+    else eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
+    times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
+    out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)    
   }
   colnames(out)[[which(colnames(out)=='Cserum')]] <- 'Cplasma'
   

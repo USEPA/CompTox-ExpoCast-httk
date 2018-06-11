@@ -50,8 +50,8 @@ Species <- variable <- Tissue <- Parameter <- NULL
   else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
   ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
   dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-  fub.corrected <- 1 / ((dow - 1) * Flipid + 1 / fub)
-  outlist <- list(Funbound.plasma=fub.corrected,Funbound.plasma.uncorrected=fub,Pow=Pow,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept,MA=MA,Fprotein.plasma = Fprotein,plasma.pH=7.4,alpha=0.001)
+  fub.corrected <- 1 / ((dow) * Flipid + 1 / fub)
+  outlist <- list(Funbound.plasma=fub.corrected,unadjusted.Funbound.plasma=fub,Pow=Pow,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept,MA=MA,Fprotein.plasma = Fprotein,plasma.pH=7.4,alpha=0.001)
   
   return(outlist)                                
                                  

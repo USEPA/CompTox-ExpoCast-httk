@@ -11,8 +11,10 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          species='Human',
                                          default.to.human=F,
                                          parameters=NULL,
+                                         adjusted.Funbound.plasma=T,
                                          regression=T,
-                                         regression.list=c('brain','adipose','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')) #Schmitt 2008
+                                         regression.list=c('brain','adipose','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone'),
+                                         tissues=NULL) #Schmitt 2008
 {
   Tissue <- Species <- variable <- NULL
   
@@ -21,6 +23,8 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
     user.params <- F
   }else user.params <- T
   
+  if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+   
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
     warning('Human fractional tissue volumes used in calculating partition coefficients.')
@@ -46,12 +50,19 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 	# water fraction in interstitium:
   FWint <- FWpl
   if(regression){
-   #  regression coefficients add to table
-    reg <- matrix(c(-0.167,0.543,-0.325,0.574,-0.006,0.267, 0.143, 0.764, 0.116, 0.6835, 0.45, 0.67, 0.475, 0.62, 0.087, 0.866, -0.02, 0.66, -0.09, 0.567, 0.035, 0.766, 0.036, 0.78),12,2,byrow=T)
-    rownames(reg) <- c('brain','adipose','red blood cells','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')
-    colnames(reg) <- c('intercept','slope')
+   #  regression coefficients add to table 
+    if(adjusted.Funbound.plasma){
+      reg <- matrix(c(-0.167,0.543,-0.325,0.574,-0.006,0.267, 0.143, 0.764, 0.116, 0.683, 0.452, 0.673, 0.475, 0.621, 0.087, 0.866, -0.022, 0.658, -0.09, 0.566, 0.034, 0.765, 0.036, 0.781),12,2,byrow=T)
+      rownames(reg) <- c('brain','adipose','red blood cells','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')
+      colnames(reg) <- c('intercept','slope')
+    }else{
+      reg <- matrix(c(-0.117,0.377,-0.324,0.544,-0.022,0.196, 0.14, 0.735, 0.12, 0.534, 0.443, 0.631, 0.487, 0.513, 0.113, 0.75, -0.025, 0.537, -0.086, 0.498, 0.011, 0.675, 0.025, 0.758),12,2,byrow=T)
+      rownames(reg) <- c('brain','adipose','red blood cells','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')
+      colnames(reg) <- c('intercept','slope')  
+    } 
   }
-	for (this.tissue in unique(tissue.data[,'Tissue']))
+  if(is.null(tissues)) tissues <- unique(tissue.data[,'Tissue'])
+	for (this.tissue in tissues)
 	{
 		this.subset <- subset(tissue.data,Tissue == this.tissue & tolower(Species) == tolower(species))
 # Tissue-specific cellular/interstial volume fractions:
@@ -119,16 +130,15 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
     fraction_charged_plasma <- plasma[['fraction_charged']] 
     KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + parameters$alpha * fraction_charged_plasma)/(fraction_neutral + fraction_zwitter + parameters$alpha * fraction_charged)
     
-    if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[\"Krbc2pu\"] <- ",as.numeric(Fint * Kint + KAPPAcell2pu*Fcell * Kcell) ,sep='')))
- 	  else eval(parse(text=paste("Ktissue2pu[\"K",this.tissue,"2pu\"] <- ",as.numeric(Fint * Kint + KAPPAcell2pu*Fcell * Kcell) ,sep='')))
+    if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell" ,sep='')))
+ 	  else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
    
     if(regression & this.tissue %in% regression.list){
-      #if(parameters$Pow > 4){
         if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- 10^(reg[[this.tissue,\'intercept\']] + reg[[this.tissue,\'slope\']] * log10(Ktissue2pu[[\"Krbc2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
         else if(this.tissue != 'rest') eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- 10^(reg[this.tissue,\'intercept\'] + reg[this.tissue,\'slope\'] * log10(Ktissue2pu[[\"K",this.tissue,"2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
     }
 	}
-  if(regression) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
+  if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
   if(user.params) warning(paste(species,'fractional tissue volumes used in calculation.  Parameters should match species argument.')) 
  	return(Ktissue2pu)
 }

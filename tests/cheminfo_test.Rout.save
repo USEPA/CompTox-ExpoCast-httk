@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2017-05-29 r72746) -- "Unsuffered Consequences"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -21,10 +19,10 @@ Type 'q()' to quit R.
 > fub.zero.list <- get_cheminfo()
 > no.fub.zero.list <- get_cheminfo(model='pbtk')
 > length(fub.zero.list)
-[1] 553
+[1] 579
 > length(no.fub.zero.list)
-[1] 430
+[1] 472
 > 
 > proc.time()
    user  system elapsed 
-   1.96    0.17    2.32 
+   1.60    0.14    1.70 

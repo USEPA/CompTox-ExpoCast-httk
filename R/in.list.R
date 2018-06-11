@@ -19,4 +19,5 @@ is.tox21 <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="Tox2
 is.toxcast <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="ToxCast"))
 is.expocast <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="ExpoCast"))
 is.nhanes <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES"))
+is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list = "Pharma"))
 is.httk <- function(chem.cas,species="Human", model = "3compartmentss") return(chem.cas %in% get_cheminfo(species=species,model = model))

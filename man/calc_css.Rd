@@ -12,7 +12,7 @@ This function finds the day a chemical comes within the specified range of the a
 calc_css(parameters=NULL,chem.name=NULL,chem.cas=NULL,species="Human", f = .01,
          daily.dose=1, doses.per.day=3,days = 10,output.units = "uM",
          concentration='plasma',suppress.messages=F,model='pbtk',default.to.human=F,
-         f.change=0.00001,Funbound.plasma.pc.correction=T,
+         f.change=0.00001,adjusted.Funbound.plasma=T,regression=T,
          well.stirred.correction=T, restrictive.clearance=T,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -44,7 +44,8 @@ calc_css(parameters=NULL,chem.name=NULL,chem.cas=NULL,species="Human", f = .01,
   Substitutes missing animal values with human values if true (hepatic intrinsic clearance or fraction of unbound plasma).
   }
   \item{f.change}{Fractional change of daily steady state concentration reached to stop calculating.}
-  \item{Funbound.plasma.pc.correction}{Uses corrected Funbound.plasma when set to TRUE along with parition coefficients calculated with this value and regressions.}
+ \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE for model 1compartment elimination rate.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE.}

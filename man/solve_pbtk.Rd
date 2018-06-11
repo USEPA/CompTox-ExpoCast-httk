@@ -14,7 +14,7 @@ solve_pbtk(chem.name = NULL, chem.cas = NULL, times=NULL, parameters=NULL,
            initial.values=NULL,plots=F,suppress.messages=F,species="Human", 
            iv.dose=F,output.units='uM',method="lsoda",rtol=1e-8,atol=1e-12,
            default.to.human=F,recalc.blood2plasma=F,recalc.clearance=F,
-           dosing.matrix=NULL,Funbound.plasma.pc.correction=T, 
+           dosing.matrix=NULL,adjusted.Funbound.plasma=T,regression=T, 
            restrictive.clearance = T,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -43,12 +43,15 @@ solve_pbtk(chem.name = NULL, chem.cas = NULL, times=NULL, parameters=NULL,
   \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical in the blood to plasma using the input parameters, calculated with hematocrit, Funbound.plasma, and Krbc2pu.} 
    \item{recalc.clearance}{Recalculates the the hepatic clearance (Clmetabolism) with new million.cells.per.gliver parameter.}
   \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two columns or rows named "dose" and "time" containing the time and amount, in mg/kg BW, of each dose.}
-   \item{Funbound.plasma.pc.correction}{Uses corrected Funbound.plasma when set to TRUE along with parition coefficients calculated with this value and regressions.}
+ \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE.}
   \item{...}{Additional arguments passed to the integrator.}
+
 }
 
 \details{
+ 
 Note that the model parameters have units of hours while the model output is in days.
 
 Default NULL value for doses.per.day solves for a single dose.
@@ -58,6 +61,9 @@ The compartments used in this model are the gutlumen, gut, liver, kidneys, veins
 The extra compartments include the amounts or concentrations metabolized by the liver and excreted by the kidneys through the tubules.  
 
 AUC is the area under the curve of the plasma concentration.
+
+Model Figure
+\figure{pbtk.png}{options: width="60\%"}
 
 %%When species is specified as rabbit, dog, or mouse, the function uses the appropriate physiological data(volumes and flows) but substitues human fraction unbound, partition coefficients, and intrinsic hepatic clearance. 
 

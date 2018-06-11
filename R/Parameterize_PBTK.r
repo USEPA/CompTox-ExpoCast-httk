@@ -10,7 +10,8 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
                               force.human.clint.fub = F,
                               clint.pvalue.threshold=0.05,
-                              Funbound.plasma.pc.correction=T,
+                              adjusted.Funbound.plasma=T,
+                              regression=T,
                               suppress.messages=F)
 {
   physiology.data <- physiology.data
@@ -35,15 +36,13 @@ parameterize_pbtk <- function(chem.cas=NULL,
   
 # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,force.human.fub=force.human.clint.fub)
-  if(Funbound.plasma.pc.correction) regression <- T
-  else regression <- F
-  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,species=species,regression=regression)
+  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
-  if(Funbound.plasma.pc.correction){
+  if(adjusted.Funbound.plasma){
     fub <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma recalculated with correction.  Set Funbound.plasma.pc.correction to FALSE to use original value.')
-  }else fub <- schmitt.params$Funbound.plasma.uncorrected
+    warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
+  }else fub <- schmitt.params$unadjusted.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
@@ -94,9 +93,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 1, # 1/h
-    kinhabs = 1, # 1/h
-    kdermabs = 1, # 1/h
+    kgutabs = 2.18, # 1/h
     Funbound.plasma = as.numeric(fub), # unitless fraction
     hematocrit = as.numeric(hematocrit), # unitless ratio
     MW = MW)) #g/mol
@@ -116,6 +113,6 @@ parameterize_pbtk <- function(chem.cas=NULL,
                                 Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
   
 
-    outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction))
+    outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
   return(outlist[sort(names(outlist))])
 }

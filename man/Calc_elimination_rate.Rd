@@ -12,7 +12,7 @@ elimination is entirely due to metablism by the liver and glomerular filtration 
 \usage{
 calc_elimination_rate(chem.cas=NULL,chem.name=NULL,parameters=NULL,species="Human",
                       suppress.messages=F,default.to.human=F,restrictive.clearance=T,
-                      Funbound.plasma.pc.correction=T,well.stirred.correction=T)
+                      adjusted.Funbound.plasma=T,regression=T,well.stirred.correction=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,7 +33,8 @@ calc_elimination_rate(chem.cas=NULL,chem.name=NULL,parameters=NULL,species="Huma
    \item{default.to.human}{
   Substitutes missing animal values with human values if true.
   }
-  \item{Funbound.plasma.pc.correction}{If set to TRUE, volume of distribution is calculated with the corrected partition coefficients, using regressions, and corrected Funbound.plasma.}
+ \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
  \item{restrictive.clearance}{In calculating elimination rate, protein binding is not taken into account (set to 1) in liver clearance if FALSE.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}

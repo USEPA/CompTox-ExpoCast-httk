@@ -1,16 +1,16 @@
 initparms <- function(newParms = NULL){
   parms <- c(
     BW = 70,
-    CLmetabolismc = 0,
+    Clmetabolismc = 0.203,
     hematocrit = 0.44,
     kgutabs = 1,
-    Kkidney2plasma = 0,
-    Kliver2plasma = 0,
-    Krest2plasma = 0,
-    Kgut2plasma = 0,
-    Klung2plasma = 0,
+    Kkidney2pu = 0,
+    Kliver2pu = 0,
+    Krest2pu = 0,
+    Kgut2pu = 0,
+    Klung2pu = 0,
     Qcardiacc = 4.8,
-    Qgfrc = 0,
+    Qgfrc = 0.108,
     Qgutf = 0.205,
     Qkidneyf = 0.221,
     Qliverf = 0.0536,
@@ -22,8 +22,8 @@ initparms <- function(newParms = NULL){
     Vrestc = 0.77654,
     Vvenc = 0.0487,
     Fraction_unbound_plasma = 0.0682,
-    Ratioblood2plasma = 0.0,
-    CLmetabolism = 0.0,
+    Rblood2plasma = 0.0,
+    Clmetabolism = 0.0,
     Qcardiac = 0.0,
     Qgfr = 0.0,
     Qgut = 0.0,
@@ -60,8 +60,8 @@ Outputs <- c(
     "Cart",
     "Crest",
     "Ckidney",
-    "Cserum",
-    "Aserum"
+    "Cplasma",
+    "Aplasma"
 )
 
 

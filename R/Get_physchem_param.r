@@ -19,7 +19,10 @@ get_physchem_param <- function(param,chem.name=NULL,chem.CAS=NULL)
     if (!is.na(as.numeric(chem.physical_and_invitro.data[chem.physical_and_invitro.data.index,param])) | (param %in% c("pKa_Donor","pKa_Accept","logMA")))
     {
       value <- chem.physical_and_invitro.data[chem.physical_and_invitro.data.index,param] 
-      if(!is.na(value) & param %in% c('pKa_Donor','pKa_Accept') & regexpr(",",value)!=-1) value <- sort(as.numeric(strsplit(value,",")[[1]]))
+      if(!is.na(value) & param %in% c('pKa_Donor','pKa_Accept') & (regexpr(",",value)!=-1 | regexpr(";",value)!=-1)){
+        if(regexpr(",",value)!=-1) value <- sort(as.numeric(strsplit(value,",")[[1]]))
+        else value <- sort(as.numeric(strsplit(value,";")[[1]]))
+      }
       return(as.numeric(value))
     }else stop(paste("Incomplete phys-chem data for ",chem.name," -- missing ",param,"."))
   }

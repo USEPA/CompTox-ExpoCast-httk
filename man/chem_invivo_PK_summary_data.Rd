@@ -11,7 +11,7 @@ for each study and dosage. These data can be used to evaluate toxicokinetic mode
 predictions.}
 \usage{chem.invivo.PK.summary.data}
 \format{A data.frame containing 100 rows and 25 columns.}
-\source{Wambaugh, John F., et al. "Toxicokinetic triage for environmental chemicals." Toxicological Sciences (2015): 228-237.}
+\source{Wambaugh et al. 2018 Toxicological Sciences, in press}
 \references{
 Aanderud L, Bakke OM (1983). Pharmacokinetics of antipyrine, paracetamol, and morphine in rat at 71 ATA. Undersea Biomed Res. 10(3):193-201. PMID: 6636344
 
@@ -80,6 +80,8 @@ Tokuma Y, Sekiguchi M, Niwa T, Noguchi H (1988). Pharmacokinetics of nilvadipine
 Treiber A, Schneiter R, Delahaye S, Clozel M (2004). Inhibition of organic anion transporting polypeptide-mediated hepatic uptake is the major determinant in the pharmacokinetic interaction between bosentan and cyclosporin A in the rat. J Pharmacol Exp Ther. 308(3):1121-9. PMID: 14617681
 
 Tsui BC, Feng JD, Buckley SJ, Yeung PK (1994). Pharmacokinetics and metabolism of diltiazem in rats following a single intra-arterial or single oral dose. Eur J Drug Metab Pharmacokinet. 19(4):369-73. PMID: 7737239
+
+Wambaugh, John F., et al. "Toxicokinetic triage for environmental chemicals." Toxicological Sciences (2015): 228-237.
 
 Wang Y, Roy A, Sun L, Lau CE (1999). A double-peak phenomenon in the pharmacokinetics of alprazolam after oral administration. Drug Metab Dispos. 27(8):855-9. PMID: 10421610
 
