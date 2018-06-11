@@ -12,7 +12,7 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
  parameterize_pbtk(chem.cas=NULL,chem.name=NULL,species="Human",default.to.human=F,
  tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
  force.human.clint.fub = F,clint.pvalue.threshold=0.05,
- Funbound.plasma.pc.correction=T, suppress.messages=F)
+ adjusted.Funbound.plasma=T, regression=T, suppress.messages=F)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,7 +37,8 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
   Forces use of human values for hepatic intrinsic clearance and fraction of unbound plasma if true.
  }
  \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays having p-values greater than the threshold are set to zero.}
- \item{Funbound.plasma.pc.correction}{Returns corrected Funbound.plasma when set to TRUE along with parition coefficients calculated with this value and regressions.}
+ \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to TRUE along with parition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{suppress.messages}{Whether or not the output message is suppressed.} 
 }
 
@@ -49,10 +50,8 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
     \item{Funbound.plasma}{Fraction of plasma that is not bound.}
        \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte assay using the method of Kilford et al. (2008)}
     \item{hematocrit}{Percent volume of red blood cells in the blood.}
-    \item{kdermabs}{Rate that chemical is transferred from the skin to the blood, 1/h.}
     \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound concentration in plasma.}
     \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
-     \item{kinhabs}{Rate that the chemical is transferred from the lungs to the blood, 1/h.}
      \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to unbound concentration in plasma.}
      \item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to unbound concentration in plasma.}
       \item{Klung2pu}{Ratio of concentration of chemical in lung tissue to unbound concentration in plasma.}

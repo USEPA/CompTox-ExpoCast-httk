@@ -34,7 +34,7 @@ calc_mc_oral_equiv(conc,chem.name=NULL,chem.cas=NULL,which.quantile=0.95,
   \item{input.units}{Units of given concentration, default of uM but can also be mg/L.}
   \item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or 'mol' for mol/ kg BW/ day.}
   \item{which.quantile}{
-  Which quantile from Monte Carlo simulation is requested. Can be a vector.
+  Which quantile from Monte Carlo steady-state simulation (calc_mc_css) is requested. Can be a vector. Note that 95th concentration quantile is the same population as the 5th dose quantile.
 %%     ~~Describe \code{ssparams.mean} here~~
 }
  \item{species}{
@@ -42,7 +42,7 @@ calc_mc_oral_equiv(conc,chem.name=NULL,chem.cas=NULL,which.quantile=0.95,
 %%     ~~Describe \code{ssparams.var.inv} here~~
 }
    \item{return.samples}{Whether or not to return the vector containing the samples from the simulation instead of the selected quantile.}
-  \item{...}{Additional parameters passed to calc_mc_css.}
+  \item{...}{Additional parameters passed to calc_mc_css for httkpop and variance of parameters.}
 }
 
 \value{

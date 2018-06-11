@@ -11,7 +11,8 @@ This function initializes the parameters needed in the functions calc_mc_css, ca
 \usage{
  parameterize_steadystate(chem.cas=NULL,chem.name=NULL,species="Human",
                           clint.pvalue.threshold=0.05,default.to.human=F,
-                          human.clint.fub=F,Funbound.plasma.correction=T)
+                          human.clint.fub=F,adjusted.Funbound.plasma=T,
+                          restrictive.clearance=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,7 +26,8 @@ This function initializes the parameters needed in the functions calc_mc_css, ca
    \item{human.clint.fub}{
   Uses human hepatic intrinsic clearance and fraction of unbound plasma in calculation of partition coefficients for rats if true.
  }
-  \item{Funbound.plasma.correction}{Returns corrected Funbound.plasma when set to TRUE.}
+ \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to TRUE.}
+ \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein binding is not taken into account (set to 1) in liver clearance if FALSE.}
 }
 
 
@@ -41,6 +43,7 @@ This function initializes the parameters needed in the functions calc_mc_css, ca
   \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
    \item{liver.density}{Liver tissue density, kg/L.}
    \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte assay using the method of Kilford et al. (2008)}
+   \item{hepatic.bioavailability}{Fraction of dose remaining after first pass clearance, calculated from the corrected well-stirred model.}
      
 %%  ~Describe the value returned
 %%  If it is a LIST, use

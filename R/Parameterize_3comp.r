@@ -4,7 +4,8 @@ parameterize_3comp<- function(chem.cas=NULL,
                               default.to.human=F,
                               force.human.clint.fub = F,
                               clint.pvalue.threshold=0.05,
-                              Funbound.plasma.pc.correction=T,
+                              adjusted.Funbound.plasma=T,
+                              regression=T,
                               suppress.messages=F)
 {
   parms <- parameterize_pbtk(chem.cas=chem.cas,
@@ -14,10 +15,11 @@ parameterize_3comp<- function(chem.cas=NULL,
                               tissuelist=list(liver=c("liver"),gut=c("gut")),
                               force.human.clint.fub = force.human.clint.fub,
                               clint.pvalue.threshold=clint.pvalue.threshold,
-                              Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,
+                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                              regression=regression,
                               suppress.messages=suppress.messages)
                               
-parms$kinhabs <- parms$kdermabs <- parms$Qkidneyf  <- parms$Vvenc <- parms$Vartc <- NULL
+parms$Qkidneyf  <- parms$Vvenc <- parms$Vartc <- NULL
  
  return(parms)                             
 }

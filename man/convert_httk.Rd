@@ -5,7 +5,7 @@
 \title{Converts HTTK-Pop virtual population into parameters relevant to an HTTK 
 model.}
 \usage{
-convert_httk(indiv.model.bio, model, this.chem,Funbound.plasma.pc.correction=T,
+convert_httk(indiv.model.bio, model, this.chem,adjusted.Funbound.plasma=T,regression=T,
              well.stirred.correction=T,restrictive.clearance=T)
 }
 \arguments{
@@ -19,7 +19,8 @@ parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
 
 \item{this.chem}{CAS number for the chemical in the HTTK data set for which 
 parameters are to be generated.}
- \item{Funbound.plasma.pc.correction}{Uses regressions in calculating partition coefficients if TRUE.}
+ \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE for model 1compartment elimination rate.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE for model 1compartment elimination rate.}

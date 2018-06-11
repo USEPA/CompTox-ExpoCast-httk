@@ -18,7 +18,8 @@
 convert_httk <- function(indiv.model.bio, 
                          model,
                          this.chem,
-                         Funbound.plasma.pc.correction=T,
+                         adjusted.Funbound.plasma=T,
+                         regression=T,
                          well.stirred.correction=T,
                          restrictive.clearance=T){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -59,27 +60,28 @@ convert_httk <- function(indiv.model.bio,
                             '3compartmentss'='parameterize_steadystate')
   #And get the default HTTK parameters. These values will be used for all
   #parameters not being Monte Carlo sampled
-  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',Funbound.plasma.correction=Funbound.plasma.pc.correction)
+  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance)
+  else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance)
   else{
   p <- do.call(getFromNamespace(paramfun, "httk"),
                args=list(chem.cas=this.chem, 
-                         species='Human',Funbound.plasma.pc.correction=Funbound.plasma.pc.correction))
+                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression))
   }
   #Depending on model, choose which parameters are not to be Monte Carlo sampled
   noMC.names <- switch(model,
                        '1compartment'=c('kgutabs',
                                         'MW',
-                                        'Fgutabs'),
+                                        'Fgutabs',
+                                        'hepatic.bioavailability'),
                        '3compartment'=c('MW',
                                         'Fgutabs',
                                         'kgutabs'),
-                       'pbtk'=c('kdermabs',
-                                'kgutabs',
-                                'kinhabs',
+                       'pbtk'=c('kgutabs',
                                 'MW',
                                 'Fgutabs'),
                        '3compartmentss'=c('MW',
-                                          'Fgutabs'))
+                                          'Fgutabs',
+                                          'hepatic.bioavailability'))
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
   indiv.model[, (noMC.names):=p[noMC.names]]
@@ -105,7 +107,8 @@ convert_httk <- function(indiv.model.bio,
     PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
                                               chem.cas=this.chem,
                                               species='Human',
-                                              regression=Funbound.plasma.pc.correction)
+                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                              regression=regression)
     
     #Depending on model, get the list of compartments.
     #All other tissues will be lumped into a "rest" compartment.
@@ -249,7 +252,7 @@ convert_httk <- function(indiv.model.bio,
       ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
                                         chem.cas=this.chem,
                                         suppress.messages=TRUE,
-                                        Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,
+                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
                                         well.stirred.correction=well.stirred.correction,
                                         restrictive.clearance=restrictive.clearance)
       #Add kelim to the population data.table.
@@ -269,7 +272,8 @@ convert_httk <- function(indiv.model.bio,
                                   Krbc2pu*
                                   Funbound.plasma)]
     }
-  }else indiv.model[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,species='Human',Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)]
+  }else indiv.model[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
+    
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.

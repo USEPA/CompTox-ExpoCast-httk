@@ -4,7 +4,7 @@ calc_rblood2plasma <- function(chem.cas=NULL,
                               chem.name=NULL,
                               default.to.human=F,
                               species="Human",
-                              Funbound.plasma.pc.correction=T)
+                              adjusted.Funbound.plasma=T)
 {
    physiology.data <- physiology.data
 
@@ -26,10 +26,10 @@ calc_rblood2plasma <- function(chem.cas=NULL,
   
 # Predict the PCs for all tissues in the tissue.data table:
 
-  PCs <- predict_partitioning_schmitt(parameters=parameters,species=species)  #regression not applied to Krbc2pu
+  PCs <- predict_partitioning_schmitt(parameters=parameters,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma,tissues='red blood cells')  #regression not applied to Krbc2pu
     
-  if(Funbound.plasma.pc.correction) Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma
-  else Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma.uncorrected
+  if(adjusted.Funbound.plasma) Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma
+  else Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$unadjusted.Funbound.plasma
     
   return(as.numeric(Rblood2plasma))
 }

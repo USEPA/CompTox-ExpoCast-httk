@@ -31,7 +31,7 @@ draw_fup_clint <- function(this.chem,
                            fup.censor,
                            Clint.vary=TRUE,
                            lod=0.01,
-                           Funbound.plasma.correction=T){
+                           adjusted.Funbound.plasma=T){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -45,7 +45,7 @@ draw_fup_clint <- function(this.chem,
   #of Funbound.plasma and Clint
   pss<-httk::parameterize_steadystate(chem.cas=this.chem,
                                       species='Human',
-                                      Funbound.plasma.correction=Funbound.plasma.correction)
+                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma)
   
   #Initialize the data table
   indiv_tmp <- data.table(junk=rep(NA, nsamp))

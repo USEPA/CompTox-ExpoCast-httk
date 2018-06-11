@@ -11,9 +11,11 @@ coefficients from for the tissues contained in the tissue.data table.
 }
 \usage{
 predict_partitioning_schmitt(chem.name=NULL,chem.cas=NULL,species="Human",
-                             default.to.human=F,parameters=NULL,regression=T,
+                             default.to.human=F,parameters=NULL,
+                             adjusted.Funbound.plasma=T, regression=T,
                              regression.list=c('brain','adipose','gut','heart','kidney',
-                                        'liver','lung','muscle','skin','spleen','bone'))
+                                        'liver','lung','muscle','skin','spleen','bone'),
+                             tissues=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,8 +35,10 @@ predict_partitioning_schmitt(chem.name=NULL,chem.cas=NULL,species="Human",
   Substitutes missing animal values with human values if true (hepatic intrinsic clearance or fraction of unbound plasma).
   }
   \item{parameters}{Chemical parameters from the parameterize_schmitt function, overrides chem.name and chem.cas.}
+  \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma adjustment.}
   \item{regression}{Whether or not to use the regressions.  Regressions are used by default.}
   \item{regression.list}{Tissues to use regressions on.}
+  \item{tissues}{Vector of desired partition coefficients.  Returns all by default.}
 }
 
 \value{
@@ -42,6 +46,8 @@ Returns tissue to unbound plasma partition coefficients for each tissue.
 
 }
 \details{
+A separate regression is used when adjusted.Funbound.plasma is FALSE.
+
 A regression is used for membrane affinity when not provided.  The regressions for correcting each tissue are performed on 
 tissue plasma partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
 Thus the regressions should be used with the corrected Funbound.plasma.

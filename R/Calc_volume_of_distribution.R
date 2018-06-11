@@ -3,16 +3,18 @@ calc_vdist<- function(chem.cas=NULL,
                               chem.name=NULL,
                               parameters=NULL,
                               default.to.human=F,
-                              species="Human",suppress.messages=F,Funbound.plasma.pc.correction=T)
+                              species="Human",suppress.messages=F,
+                              adjusted.Funbound.plasma=T,regression=T)
 {
   physiology.data <- physiology.data
   Parameter <- NULL
 
   if(is.null(parameters)){
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
-    if(Funbound.plasma.pc.correction) parameters <- c(suppressWarnings(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=T)),schmitt.parameters[['Funbound.plasma']])
-    else parameters <- c(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=F),Funbound.plasma=schmitt.parameters['Funbound.plasma.uncorrected'])
-  }
+    parameters <- suppressWarnings(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=regression,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+    if(adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
+    else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
+}
    
   schmitt.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kgut2pu","Kheart2pu","Kkidney2pu","Kliver2pu","Klung2pu","Kmuscle2pu","Kskin2pu","Kspleen2pu","Krbc2pu", "Krest2pu")  
   schmitt.specific.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kheart2pu","Kmuscle2pu","Kskin2pu","Kspleen2pu")
@@ -38,14 +40,14 @@ calc_vdist<- function(chem.cas=NULL,
       fub <- 0.005
       warning("Fraction unbound = 0, changed to 0.005.")
     }
-    if(Funbound.plasma.pc.correction){
+    if(adjusted.Funbound.plasma){
       Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
       pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
       pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
       Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-      fub <- 1 / ((dow - 1) * Flipid + 1 / fub)
+      fub <- 1 / ((dow) * Flipid + 1 / fub)
     }
     parameters <- c(parameters,Funbound.plasma=fub)  
   }
@@ -74,7 +76,7 @@ calc_vdist<- function(chem.cas=NULL,
     RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
     vol.dist <- plasma.vol + RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma   
   }else{
-    pbtk.name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","kdermabs","Kgut2pu","kgutabs","kinhabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+    pbtk.name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
     name.list.3comp <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Krbc2pu","kgutabs","Kliver2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc","Qgfrc","Qgutf","Qliverf","Rblood2plasma","Vgutc","Vliverc","Vrestc")
     if(!all(name.list.3comp %in% names(parameters)) | !all(names(parameters) %in% pbtk.name.list))stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
     #necess <- c("Funbound.plasma","hematocrit","Vrestc","Krest2plasma","Krbc2plasma")

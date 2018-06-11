@@ -1,13 +1,13 @@
 # from Ito and Houston (2004)
-calc_hepatic_clearance <- function(chem.name=NULL,chem.cas=NULL,parameters=NULL,species='Human',default.to.human=F,hepatic.model='well-stirred',suppress.messages=F,well.stirred.correction=T,restrictive.clearance=T,Funbound.plasma.pc.correction=T,...)
+calc_hepatic_clearance <- function(chem.name=NULL,chem.cas=NULL,parameters=NULL,species='Human',default.to.human=F,hepatic.model='well-stirred',suppress.messages=F,well.stirred.correction=T,restrictive.clearance=T,adjusted.Funbound.plasma=T,...)
 {
   model <- hepatic.model
   name.list <- c("Clint","Funbound.plasma","Qtotal.liverc","million.cells.per.gliver","Vliverc","BW","liver.density",'Fhep.assay.correction')
   if(is.null(parameters)){
-  parameters <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,...)
+  parameters <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
   }else if(!all(name.list %in% names(parameters))){
     if(is.null(chem.cas) & is.null(chem.name))stop('chem.cas or chem.name must be specified when not including all necessary 3compartmentss parameters.')
-    params <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,Funbound.plasma.correction=Funbound.plasma.pc.correction)
+    params <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
     parameters <- c(parameters,params[name.list[!(name.list %in% names(parameters))]])
   }
   Clint <- get_param("Clint",parameters,"calc_Hepatic_Clearance") # uL/min/10^6 cells
@@ -44,7 +44,7 @@ calc_hepatic_clearance <- function(chem.name=NULL,chem.cas=NULL,parameters=NULL,
     if(well.stirred.correction){
       if('Rblood2plasma' %in% names(parameters)) Rblood2plasma <- parameters$Rblood2plasma
       else if(!(is.null(chem.cas) & is.null(chem.name))){
-        Rblood2plasma <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+        Rblood2plasma <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
       }else(stop("Enter chem.cas or chem.name with corresponding species or enter Rblood2plasma as a parameter for the well-stirred model correction."))
       CLh <- Qtotal.liverc*fub*Clint/(Qtotal.liverc+fub*Clint / Rblood2plasma)
     }else CLh <- Qtotal.liverc*fub*Clint/(Qtotal.liverc+fub*Clint)   

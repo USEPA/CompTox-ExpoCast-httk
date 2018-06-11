@@ -9,7 +9,7 @@ This function calculates the constant ratio of the blood concentration to the pl
 }
 \usage{
 calc_rblood2plasma(chem.cas=NULL, chem.name=NULL, default.to.human=F, 
-                   species="Human",Funbound.plasma.pc.correction=T)
+                   species="Human",adjusted.Funbound.plasma=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,9 +29,7 @@ calc_rblood2plasma(chem.cas=NULL, chem.name=NULL, default.to.human=F,
 %%     ~~Describe \code{ssparams.var.inv} here~~
 
 }
-\item{Funbound.plasma.pc.correction}{
- If TRUE, the Funbound.plasma correction is applied in calculating Rblood2plasma.
-}
+  \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma adjustment.}
 
 }
 \details{

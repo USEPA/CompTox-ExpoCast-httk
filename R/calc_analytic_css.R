@@ -1,4 +1,4 @@
- calc_analytic_css <- function(chem.name=NULL,chem.cas = NULL,parameters=NULL,daily.dose=1,output.units='uM',model = 'pbtk',species='Human',concentration='plasma',suppress.messages=F,recalc.blood2plasma=F,default.to.human=F,tissue=NULL,well.stirred.correction=T,Funbound.plasma.pc.correction=T,restrictive.clearance=T,...)
+ calc_analytic_css <- function(chem.name=NULL,chem.cas = NULL,parameters=NULL,daily.dose=1,output.units='uM',model = 'pbtk',species='Human',concentration='plasma',suppress.messages=F,recalc.blood2plasma=F,default.to.human=F,tissue=NULL,well.stirred.correction=T,adjusted.Funbound.plasma=T,regression=T,restrictive.clearance=T,...)
  {
     tissue.data <- tissue.data
     physiology.data <- physiology.data
@@ -35,10 +35,10 @@
     if(tolower(model)=='pbtk')
     {
        if(is.null(parameters)){
-         parameters <- parameterize_pbtk(chem.cas=chem.cas,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,...)
+         parameters <- parameterize_pbtk(chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,...)
          user.params <- F 
        }else{
-         name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","kdermabs","Kgut2pu","kgutabs","kinhabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+         name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
          if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk."))
          if(recalc.blood2plasma) parameters[['Rblood2plasma']] <- 1 - parameters[['hematocrit']] + parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
          user.params <- T
@@ -71,33 +71,35 @@
     else if (tolower(model)=='3compartmentss')
     {
       if (is.null(parameters)){
-        parameters <- parameterize_steadystate(chem.cas=chem.cas,species=species,default.to.human=default.to.human,Funbound.plasma.correction=Funbound.plasma.pc.correction,...)
+        parameters <- parameterize_steadystate(chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,...)
         user.params <- F
       }else{
         name.list <- c("Clint","Funbound.plasma","Fhep.assay.correction","Qtotal.liverc","Qgfrc","BW","MW","Fgutabs","million.cells.per.gliver","Vliverc","liver.density")
         if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_steadystate."))
         user.params <- T
       }
-      if(parameters$Funbound.plasma == 0) stop('Fraction unbound plasma cannot be zero.  Use calc_mc_css or get_wetmore_css to predict steady state for this chemical with three compartment steady state model.')
+      if(parameters$Funbound.plasma == 0) stop('Fraction unbound plasma cannot be zero.  Use calc_mc_css or get_lit_css to predict steady state for this chemical with three compartment steady state model.')
       
-      dose <- dose * parameters$Fgutabs
+      dose <- dose * parameters$Fgutabs * parameters$hepatic.bioavailability
       fub <- parameters$Funbound.plasma
-      Css <- dose/(parameters$Qgfrc/parameters[['BW']]^.25 * fub + calc_hepatic_clearance(parameters=parameters,chem.cas=chem.cas,chem.name=chem.name,species=species,well.stirred.correction=well.stirred.correction,suppress.messages=T,restrictive.clearance=restrictive.clearance))
+      Css <- dose/(parameters$Qgfrc/parameters[['BW']]^.25 * fub + calc_hepatic_clearance(parameters=parameters,chem.cas=chem.cas,chem.name=chem.name,species=species,well.stirred.correction=well.stirred.correction,suppress.messages=T,restrictive.clearance=restrictive.clearance)) 
       if (tolower(concentration)=='blood')
       {
         if(is.null(chem.name) & is.null(chem.cas)) stop("Enter chem.name or chem.cas with appropriate species and default.to.human options for desired concentration.")
-        Rb2p <- available_rblood2plasma(chem.cas=chem.cas,species=species,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)
+        Rb2p <- available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
         Css <- Css * Rb2p
       } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")      
     }else if(tolower(model) == '1compartment'){
       if(is.null(parameters)){
-        parameters <- parameterize_1comp(chem.cas=chem.cas,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,restrictive.clearance=restrictive.clearance,...)
+        parameters <- parameterize_1comp(chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,...)
         user.params <- F
       }else{
         name.list <- c("Vdist","million.cells.per.gliver","kelim","kgutabs","Rblood2plasma","MW","hematocrit","Fgutabs")
         if(!all(name.list %in% names(parameters))) stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
         user.params <- T            
       }
+      parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+      
       dose <- dose * parameters$Fgutabs
       Css <- dose / parameters$kelim / parameters$Vdist
       if (tolower(concentration)=='blood')
@@ -106,12 +108,12 @@
       } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
     }else if(tolower(model) == '3compartment'){
       if (is.null(parameters)){
-        parameters <- parameterize_3comp(chem.cas=chem.cas,species=species,default.to.human=default.to.human,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction,...)
+        parameters <- parameterize_3comp(chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,...)
         user.params <- F
       }else{
         name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Krbc2pu","kgutabs","Kliver2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc","Qgfrc","Qgutf","Qliverf","Rblood2plasma","Vgutc","Vliverc","Vrestc")
         if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
-        name.list2 <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","kdermabs","Kgut2pu","kgutabs","kinhabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+        name.list2 <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
         if(any(name.list2[which(!name.list2 %in% name.list)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")
         if(recalc.blood2plasma) parameters[['Rblood2plasma']] <- 1 - parameters[['hematocrit']] + parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
         user.params <- T
@@ -141,10 +143,10 @@
     } 
     if(!paste0('K',tolower(tissue)) %in% substr(names(parameters),1,nchar(names(parameters))-3)){
       if(is.null(chem.name) & is.null(chem.cas)) stop("Enter chem.name or chem.cas with appropriate species and default.to.human options for desired tissue concentration.")
-      pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human)
+      pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,tissues=tissue)
       parameters <- c(parameters,pcs[!substr(names(pcs),1,nchar(names(pcs))-3) %in% substr(names(parameters),1,nchar(names(parameters))-3)])
     }
-     if(!'Rblood2plasma' %in% names(parameters) & tolower(tissue) %in% c('gut','kidney','liver')) parameters[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,Funbound.plasma.pc.correction=Funbound.plasma.pc.correction)    
+     if(!'Rblood2plasma' %in% names(parameters) & tolower(tissue) %in% c('gut','kidney','liver')) parameters[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)    
     if(tissue == 'gut'){
       if(!all(c('Qcardiacc','Qgutf') %in% names(parameters))){
         Qgut <- as.numeric(subset(tissue.data,Tissue == 'gut' & tolower(Species) == tolower(species) & variable == 'Flow (mL/min/kg^(3/4))')[,'value']) * 60 / 1000 / parameters$BW^.25

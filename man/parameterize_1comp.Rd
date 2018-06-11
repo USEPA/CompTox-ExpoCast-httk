@@ -10,7 +10,7 @@ This function initializes the parameters needed in the function solve_1comp.
 }
 \usage{
  parameterize_1comp(chem.cas=NULL,chem.name=NULL,species="Human",
-                    default.to.human=F,Funbound.plasma.pc.correction=T,
+                    default.to.human=F,adjusted.Funbound.plasma=T,regression=T,
                     restrictive.clearance=T,well.stirred.correction=T,
                     suppress.messages=F)
 }
@@ -30,8 +30,9 @@ This function initializes the parameters needed in the function solve_1comp.
   \item{default.to.human}{
   Substitutes missing rat values with human values if true.
   }
-  \item{Funbound.plasma.pc.correction}{If set to TRUE, volume of distribution and elimination are calculated with the corrected partition coefficients, using regressions, and corrected Funbound.plasma.}
- \item{restrictive.clearance}{In calculating elimination rate, protein binding is not taken into account (set to 1) in liver clearance if FALSE.}
+   \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with volume of distribution calculated with this value.}
+  \item{regression}{Whether or not to use the regressions in calculating partition coefficients in volume of distribution calculation.}
+ \item{restrictive.clearance}{In calculating elimination rate and hepatic bioavailability, protein binding is not taken into account (set to 1) in liver clearance if FALSE.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
  \item{suppress.messages}{Whether or not to suppress messages.}
@@ -47,7 +48,8 @@ This function initializes the parameters needed in the function solve_1comp.
   \item{kgutabs}{Rate chemical is absorbed, 1/h.}
   \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
    \item{MW}{Molecular Weight, g/mol.} 
-   \item{Rblood2plasma}{The ratio of the concentration of the chemical in the blood to the concentration in the plasma.}
+   \item{Rblood2plasma}{The ratio of the concentration of the chemical in the blood to the concentration in the plasma. Only included for the conversion of plasma outputs.}
+   \item{hepatic.bioavailability}{Fraction of dose remaining after first pass clearance, calculated from the corrected well-stirred model.}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}

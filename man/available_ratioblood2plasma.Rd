@@ -9,7 +9,7 @@ This function finds the best available constant ratio of the blood concentration
 }
 \usage{
 available_rblood2plasma(chem.cas=NULL, chem.name=NULL,species="Human",
-                        Funbound.plasma.pc.correction=T)
+                        adjusted.Funbound.plasma=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,12 +25,10 @@ available_rblood2plasma(chem.cas=NULL, chem.name=NULL,species="Human",
    Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 %%     ~~Describe \code{ssparams.var.inv} here~~
 }
-\item{Funbound.plasma.pc.correction}{
- If TRUE, the Funbound.plasma correction is applied in calculating Rblood2plasma.
-} 
+  \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma adjustment if calculating Rblood2plasma.} 
 }
 \details{
-If available, in vivo data (from chem.physical_and_invitro.data) for the given species is returned, substituting the human in vivo value when missing. 
+If available, in vivo data (from chem.physical_and_invitro.data) for the given species is returned, substituting the human in vivo value when missing for other species. 
 In the absence of in vivo data, the value is calculated with calc_rblood2plasma for the given species.
 If Funbound.plasma is unvailable for the given species, the human Funbound.plasma is substituted.
 If none of these are available, the mean human Rblood2plasma from chem.physical_and_invitro.data is returned. 
@@ -45,7 +43,7 @@ Robert Pearce
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \examples{
-available_rblood2plasma(chem.name="Bisphenol A",Funbound.plasma.pc.correction=FALSE)
+available_rblood2plasma(chem.name="Bisphenol A",adjusted.Funbound.plasma=FALSE)
 available_rblood2plasma(chem.name="Bisphenol A",species="Rat")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
