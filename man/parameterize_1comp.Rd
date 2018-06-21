@@ -48,8 +48,9 @@ This function initializes the parameters needed in the function solve_1comp.
   \item{kgutabs}{Rate chemical is absorbed, 1/h.}
   \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
    \item{MW}{Molecular Weight, g/mol.} 
-   \item{Rblood2plasma}{The ratio of the concentration of the chemical in the blood to the concentration in the plasma. Only included for the conversion of plasma outputs.}
+   \item{Rblood2plasma}{The ratio of the concentration of the chemical in the blood to the concentration in the plasma. Not used in calculations but included for the conversion of plasma outputs.}
    \item{hepatic.bioavailability}{Fraction of dose remaining after first pass clearance, calculated from the corrected well-stirred model.}
+   \item{BW}{Body Weight, kg.}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}

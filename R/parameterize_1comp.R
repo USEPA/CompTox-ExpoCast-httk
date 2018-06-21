@@ -43,7 +43,9 @@ params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
   params[['Fgutabs']] <- Fgutabs
 
-  params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]  
+  params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]
+    
+  params[['BW']] <- this.phys.data[["Average BW"]]
 
 return(params)
 }
