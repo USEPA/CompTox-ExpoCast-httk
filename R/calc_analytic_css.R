@@ -94,7 +94,7 @@
         parameters <- parameterize_1comp(chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,...)
         user.params <- F
       }else{
-        name.list <- c("Vdist","million.cells.per.gliver","kelim","kgutabs","Rblood2plasma","MW","hematocrit","Fgutabs")
+        name.list <- c("Vdist","million.cells.per.gliver","kelim","kgutabs","Rblood2plasma","MW","hematocrit","Fgutabs","BW")
         if(!all(name.list %in% names(parameters))) stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
         user.params <- T            
       }
