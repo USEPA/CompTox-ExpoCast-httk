@@ -2,6 +2,7 @@
 
 calc_rblood2plasma <- function(chem.cas=NULL,
                               chem.name=NULL,
+                              hematocrit=NULL,
                               default.to.human=F,
                               species="Human",
                               adjusted.Funbound.plasma=T)
@@ -22,7 +23,7 @@ calc_rblood2plasma <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
 
-  hematocrit <- this.phys.data["Hematocrit"]
+  if (is.null(hematocrit)) hematocrit <- this.phys.data["Hematocrit"]
   
 # Predict the PCs for all tissues in the tissue.data table:
 
