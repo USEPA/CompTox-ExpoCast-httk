@@ -1,18 +1,15 @@
-\name{parameterize_pbtk}
-\alias{parameterize_pbtk}
+\name{parameterize_fetal_pbtk}
+\alias{parameterize_fetal_pbtk}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-   Parameterize_PBTK
+   Parameterize_fetal_PBTK
 }
 \description{
-This function initializes the parameters needed in the functions solve_pbtk, calc_css, and others using the multiple compartment model.
+This function initializes the parameters needed in the functions solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
- parameterize_pbtk(chem.cas=NULL,chem.name=NULL,species="Human",default.to.human=F,
- tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
- force.human.clint.fub = F,clint.pvalue.threshold=0.05,
- adjusted.Funbound.plasma=T, regression=T, placenta=F, suppress.messages=F)
+ parameterize_fetal_pbtk(chem.cas=NULL,chem.name=NULL,species="Human",...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,25 +24,10 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
   \item{species}{
     Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human"). 
 }
-  \item{default.to.human}{
-  Substitutes missing animal values with human values if true (hepatic intrinsic clearance or fraction of unbound plasma).
-  }
-  \item{tissuelist}{
-    Specifies compartment names and tissues groupings. Remaining tissues in tissue.data are lumped in the rest of the body.  However, solve_pbtk only works with the default parameters.
-  }
-  \item{force.human.clint.fub}{
-  Forces use of human values for hepatic intrinsic clearance and fraction of unbound plasma if true.
- }
- \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays having p-values greater than the threshold are set to zero.}
- \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to TRUE along with parition coefficients calculated with this value.}
-  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
-  \item{placenta}{Calculate placenta partitioning coefficients, Kplacenta2pu and Kfplacenta2pu.}
-  \item{suppress.messages}{Whether or not the output message is suppressed.} 
+  \item{...}{Arguments passed to parameterize_pbtk.}
 }
-
 \value{
-
-  \item{BW}{Body Weight, kg.}
+  \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
     \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.}
     \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the gutlumen.}
     \item{Funbound.plasma}{Fraction of plasma that is not bound.}
@@ -60,19 +42,26 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
      \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to unbound concentration in plasma.}
        \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
     \item{MW}{Molecular Weight, g/mol.}
-    \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.}
      \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and excreted.}
-     \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
-     \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
-     \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
       \item{Rblood2plasma}{The ratio of the concentration of the chemical in the blood to the concentration in the plasma from available_rblood2plasma.}
      \item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
       \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
+      \item{Vfgutc}{Volume of the fetal gut per kg body weight, L/kg BW.}
       \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
       \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}   
-      \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}   
-      \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+      \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.} 
+      \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}  
        \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+      \item{Kfgut2pu}{Ratio of concentration of chemical in fetal gut tissue to unbound concentration in plasma.}
+     \item{Kfkidney2pu}{Ratio of concentration of chemical in fetal kidney tissue to unbound concentration in plasma.}
+     \item{Kfliver2pu}{Ratio of concentration of chemical in fetal liver tissue to unbound concentration in plasma.}
+      \item{Kflung2pu}{Ratio of concentration of chemical in fetal lung tissue to unbound concentration in plasma.}
+     \item{Kfrest2pu}{Ratio of concentration of chemical in fetal rest of body tissue to unbound concentration in plasma.}
+     \item{Kfbrain2pu}{Ratio of concentration of chemical in fetal brain tissue to unbound concentration in plasma.}
+     \item{Kthyroid2pu}{Ratio of concentration of chemical in fetal thyroid tissue to unbound concentration in plasma.}
+     \item{Kfthyroid2pu}{Ratio of concentration of chemical in fetal thyroid tissue to unbound concentration in plasma.}
+     \item{Kplacenta2pu}{Ratio of concentration of chemical in placental tissue to unbound concentration in maternal plasma.}
+     \item{Kfplacenta2pu}{Ratio of concentration of chemical in placental tissue to unbound concentration in fetal plasma.}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -90,16 +79,10 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A. (2008). Hepatocellular
 
 \examples{
 
- parameters <- parameterize_pbtk(chem.cas='80-05-7')
+ parameters <- parameterize_fetal_pbtk(chem.cas='80-05-7')
 
- parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
+ parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
 
- # Change the tissue lumping (note, these model parameters will not work with our current solver):
- compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
-                      lung=c("lung"),gut=c("gut"),slow=c("bone"))
- parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
-                   tissuelist=compartments) 
- 
  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
