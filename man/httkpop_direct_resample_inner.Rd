@@ -4,8 +4,8 @@
 \alias{httkpop_direct_resample_inner}
 \title{Inner loop function called by \code{httkpop_direct_resample}.}
 \usage{
-httkpop_direct_resample_inner(nsamp, gendernum, agelim_months, agelim_years,
-  reths, weight_category)
+httkpop_direct_resample_inner(nsamp, gendernum, agelim_months,
+  agelim_years, reths, weight_category)
 }
 \arguments{
 \item{nsamp}{The desired number of individuals in the virtual population. 
@@ -47,4 +47,12 @@ A data.table where each row represents an individual, and
 \description{
 Inner loop function called by \code{httkpop_direct_resample}.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

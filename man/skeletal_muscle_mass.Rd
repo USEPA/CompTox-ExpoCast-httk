@@ -29,4 +29,3 @@ For individuals under age 18, use \code{\link{skeletal_muscle_mass_children}}.
 \seealso{
 \code{\link{skeletal_muscle_mass_children}}
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

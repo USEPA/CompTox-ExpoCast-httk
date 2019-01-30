@@ -29,4 +29,12 @@ A character vector of weight classes. Each element will be one of
 Given vectors of age, BMI, recumbent length, weight, and gender,
 categorizes weight classes using CDC and WHO categories.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

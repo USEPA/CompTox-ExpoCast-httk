@@ -47,11 +47,9 @@ solve_pbtk(chem.name = NULL, chem.cas = NULL, times=NULL, parameters=NULL,
   \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE.}
   \item{...}{Additional arguments passed to the integrator.}
-
 }
 
 \details{
- 
 Note that the model parameters have units of hours while the model output is in days.
 
 Default NULL value for doses.per.day solves for a single dose.
@@ -88,6 +86,9 @@ John Wambaugh and Robert Pearce
 solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
 out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
                   plots=TRUE,initial.values=c(Agut=200))
+params <- parameterize_pbtk(chem.cas="80-05-7")
+solve_pbtk(parameters=params)
+                  
 \dontrun{
 parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
 parameters["Funbound.plasma"] <- 0.1

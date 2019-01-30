@@ -32,6 +32,14 @@
 #'@return A data.table where each row represents an individual, and
 #'  each column represents a demographic, anthropometric, or physiological
 #'  parameter.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 httkpop_direct_resample <- function(nsamp=NULL,
                                     gendernum=NULL,
                                     agelim_years=NULL, 

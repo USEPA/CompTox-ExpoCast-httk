@@ -1,13 +1,13 @@
 #' Returns draws from a normal distribution with a lower censoring limit of lod
 #' (limit of detection)
-#' 
+#'
 #' @param n Number of samples to take
 #' @param mean Mean of censored distribution. Default 0.
 #' @param sd Standard deviation of censored distribution. Default 1.
 #' @param lod Bound below which to censor. Default 0.005.
 #' @param lower Lower bound on censored distribution. Default 0.
 #' @param upper Upper bound on censored distribution. Default 1.
-#'   
+#'
 #' @return A vector of samples from the specified censored distribution.
 r_left_censored_norm <- function(n,
                                  mean=0,

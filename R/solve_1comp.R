@@ -27,12 +27,11 @@ solve_1comp <- function(chem.cas=NULL,
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
   if(is.null(parameters)){  parameters <- parameterize_1comp(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,well.stirred.correction=well.stirred.correction,suppress.messages=suppress.messages) 
   }else{
-    name.list <- c("Vdist","kelim","kgutabs","Rblood2plasma","MW","million.cells.per.gliver","hematocrit","Fgutabs","BW")
-    if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
+     if(!all(param.names.1comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
   }
   Rb2p <- parameters[['Rblood2plasma']]
   BW <- parameters[['BW']]
-  
+   
   parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
 
   if(is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
@@ -124,7 +123,7 @@ solve_1comp <- function(chem.cas=NULL,
   }
   parameters[['ke']] <- parameters[['kelim']]   
   parameters[['vdist']] <- parameters[['Vdist']]
-  parameters <- initparms1comp(parameters[!(names(parameters) %in% c("kelim","Rblood2plasma","MW",'Vdist','million.cells.per.gliver','hematocrit','Fgutabs','hepatic.bioavailability','BW'))])
+  parameters <- initparms1comp(parameters[param.names.1comp.solver])
   
   state <-initState1comp(parameters,state)
   
@@ -146,10 +145,9 @@ solve_1comp <- function(chem.cas=NULL,
     times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
     out <- ode(y = state, times = times, func="derivs1comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod1comp", nout=length(Outputs1comp),outnames=Outputs1comp,events=list(data=eventdata),...)
   }
-  
+   
   if(use.amounts) out[,c('Agutlumen','Acompartment','Ametabolized')] <- out[,c('Agutlumen','Acompartment','Ametabolized')] * BW
-  else out[,c('Agutlumen','Ametabolized')] <- out[,c('Agutlumen','Ametabolized')] * BW 
-
+  else out[,c('Agutlumen','Ametabolized')] <- out[,c('Agutlumen','Ametabolized')] * BW
 
  if(plots==T)
   {
@@ -170,7 +168,7 @@ solve_1comp <- function(chem.cas=NULL,
         cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
       }
     }else{
-      if(use.amounts){
+      if(use.amounts){  
         cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
       }else{
         if(tolower(output.units) == 'um'){

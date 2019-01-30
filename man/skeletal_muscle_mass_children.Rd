@@ -18,4 +18,3 @@ Vector of skeletal muscle masses in kg.
 For individuals under age 18, predict skeletal muscle mass from gender and age,
 using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012 3:25-29.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

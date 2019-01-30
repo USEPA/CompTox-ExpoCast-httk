@@ -10,7 +10,12 @@ This function calculates the ionization of a compound at a given pH.  The pKa's 
 either entered as parameters or taken from a specific compound in the package.
 }
 \usage{
- calc_ionization(chem.cas=NULL,chem.name=NULL,pH=NULL,pKa_Donor=NA,pKa_Accept=NA)
+ calc_ionization(chem.cas=NULL,
+                 chem.name=NULL,
+                 parameters=NULL,
+                 pH=NULL,
+                 pKa_Donor=NA,
+                 pKa_Accept=NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +27,7 @@ either entered as parameters or taken from a specific compound in the package.
    Either the chemical name or the CAS number must be specified.
 %%     ~~Describe \code{pred} here~~
 }
+  \item{parameters}{Chemical parameters from a parameterize_MODEL function, overrides chem.name and chem.cas.}
   \item{pH}{pH where ionization is evaluated.}
   
   \item{pKa_Donor}{
@@ -59,6 +65,9 @@ of the terms in the sums represent a different ionization.
 
 \author{
 Robert Pearce
+}
+\references{
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput predictions of chemical distribution to tissues." Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 }
 
 \examples{

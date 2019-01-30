@@ -14,6 +14,14 @@
 #'  
 #'@return A character vector of weight classes. Each element will be one of
 #'  'Underweight', 'Normal', 'Overweight', or 'Obese'.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 get_weight_class <- function(age_years,
                              age_months,

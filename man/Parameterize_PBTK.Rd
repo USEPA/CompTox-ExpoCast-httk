@@ -36,7 +36,7 @@ This function initializes the parameters needed in the functions solve_pbtk, cal
   \item{force.human.clint.fub}{
   Forces use of human values for hepatic intrinsic clearance and fraction of unbound plasma if true.
  }
- \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays having p-values greater than the threshold are set to zero.}
+ \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro clearance assay result has a p-values greater than the threshold are set to zero.}
  \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to TRUE along with parition coefficients calculated with this value.}
   \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
   \item{suppress.messages}{Whether or not the output message is suppressed.} 

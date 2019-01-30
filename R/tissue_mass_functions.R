@@ -8,6 +8,14 @@
 #'   
 #' @return A vector of blood masses in kg the same length as \code{BSA} and 
 #'   \code{gender}.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 blood_weight <- function(BSA, gender){
   #From Bosgra et al. 2012, eq 10 and 11
   bw<-rep(NA,length(gender))

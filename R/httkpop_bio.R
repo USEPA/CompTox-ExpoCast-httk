@@ -8,6 +8,14 @@
 #'   model, including body weight (BW), hematocrit, tissue volumes per kg body
 #'   weight, tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg
 #'   BW)^3/4, portal vein flow per (kg BW)^3/4, and liver density.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 httkpop_bio <- function(indiv_dt){
   
