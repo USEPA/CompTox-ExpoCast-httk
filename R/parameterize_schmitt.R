@@ -63,6 +63,6 @@ Species <- variable <- Tissue <- Parameter <- NULL
                   plasma.pH=7.4,
                   alpha=0.001)
   
-  return(outlist)                                
+  return(c(predict_partitioning_schmitt(parameters=outlist),outlist))                                
                                  
 }

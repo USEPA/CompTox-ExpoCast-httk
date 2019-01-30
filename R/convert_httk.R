@@ -254,16 +254,14 @@ convert_httk <- function(indiv.model.bio,
       Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
     }
 
-    if(!is.na(Rblood2plasma)){
-      indiv.model[,Rblood2plasma:=Rblood2plasma]
-      warning('Human in vivo Rblood2plasma substituted.')
-    }else{ indiv.model[,
+    indiv.model[,Rblood2plasma:=Rblood2plasma]
+    indiv.model[is.na(Rblood2plasma),
                 Rblood2plasma:=(1-
                                   hematocrit +
                                   hematocrit*
                                   Krbc2pu*
                                   Funbound.plasma)]
-    }
+    
 #    if (model!='1compartment'){
       #Need to compute hepatic clearance,
       #CLmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
