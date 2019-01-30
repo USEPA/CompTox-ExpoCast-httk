@@ -28,4 +28,12 @@ These values can also be used for children 2 years old and greater (see PEDIATRI
 REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
 10.1542/pir.29-10-335))
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

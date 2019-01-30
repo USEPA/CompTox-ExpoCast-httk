@@ -17,4 +17,12 @@ A vector of n samples from the KDE fhat
 \description{
 Randomly draws from a one-dimensional KDE
 }
-
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

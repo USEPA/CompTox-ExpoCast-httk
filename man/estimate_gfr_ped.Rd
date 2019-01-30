@@ -16,4 +16,12 @@ Vector of GFRs in mL/min/1.73m^2.
 BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9) 931-56. 
 Used in Wetmore et al. 2014.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

@@ -26,4 +26,3 @@ using logistic equations fit to data from Baxter-Jones et al. 2011,
 or for infants < 1 year, using equation from Koo et al. 2000
 (See Price et al. 2003)
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

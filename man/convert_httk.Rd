@@ -2,11 +2,13 @@
 % Please edit documentation in R/convert_httk.R
 \name{convert_httk}
 \alias{convert_httk}
-\title{Converts HTTK-Pop virtual population into parameters relevant to an HTTK 
+\title{Converts HTTK-Pop virtual population into parameters relevant to an HTTK
 model.}
 \usage{
-convert_httk(indiv.model.bio, model, this.chem,adjusted.Funbound.plasma=T,regression=T,
-             well.stirred.correction=T,restrictive.clearance=T)
+convert_httk(indiv.model.bio, model, this.chem = NULL,
+  parameters = NULL, adjusted.Funbound.plasma = T, regression = T,
+  well.stirred.correction = T, restrictive.clearance = T,
+  clint.pvalue.threshold = 0.05)
 }
 \arguments{
 \item{indiv.model.bio}{A data.table containing the physiological
@@ -17,20 +19,34 @@ parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
 \item{model}{Which HTTK model to use. One of '1compartment', '3compartmentss',
 '3compartment', or 'pbtk'.}
 
-\item{this.chem}{CAS number for the chemical in the HTTK data set for which 
+\item{this.chem}{CAS number for the chemical in the HTTK data set (see 
+\code{\link[httk]{get_cheminfo}}) for which
 parameters are to be generated.}
- \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
-  \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
-  \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE for model 1compartment elimination rate.  
-                                  This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
- \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE for model 1compartment elimination rate.}
+
+\item{parameters}{A list of chemical-specific model parameters containing at least
+Funbound.plasma, Clint, and Fhep.assay.correction.}
+
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE.}
+
+\item{regression}{Whether or not to use the regressions in calculating partition 
+coefficients.}
+
+\item{well.stirred.correction}{Uses correction in calculation of hepatic clearance 
+for well-stirred model if TRUE for hepatic.model well-stirred. This assumes 
+clearance relative to amount unbound in whole blood instead of plasma, but 
+converted to use with plasma concentration.}
+
+\item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
+liver clearance if FALSE.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
+clearance assay result has a p-values greater than the threshold are set to zero.}
 }
 \value{
-A data.table whose columns are the parameters of the HTTK model 
+A data.table whose columns are the parameters of the HTTK model
  specified in \code{model}.
 }
 \description{
-Converts HTTK-Pop virtual population into parameters relevant to an HTTK 
+Converts HTTK-Pop virtual population into parameters relevant to an HTTK
 model.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

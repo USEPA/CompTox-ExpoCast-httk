@@ -2,16 +2,22 @@
 
 calc_rblood2plasma <- function(chem.cas=NULL,
                               chem.name=NULL,
+                              params=NULL,
                               hematocrit=NULL,
                               default.to.human=F,
                               species="Human",
                               adjusted.Funbound.plasma=T)
 {
-   physiology.data <- physiology.data
+  physiology.data <- physiology.data
 
-  parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
+  if (is.null(params)) 
+  {
+    parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
+  } else {
+    parameters <- params
+  }
   
-    if (!(species %in% colnames(physiology.data)))
+  if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
@@ -19,11 +25,15 @@ calc_rblood2plasma <- function(chem.cas=NULL,
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
 
-# Load the physiological parameters for this species
-  this.phys.data <- physiology.data[,phys.species]
-  names(this.phys.data) <- physiology.data[,1]
-
-  if (is.null(hematocrit)) hematocrit <- this.phys.data["Hematocrit"]
+  if (is.null(hematocrit)) 
+  {
+    if (is.null(parameters$hematocrit))
+    {
+      hematocrit <- physiology.data[physiology.data$Parameter=="Hematocrit",phys.species]
+    } else {
+      hematocrit <- parameters$hematocrit
+    }
+  }
   
 # Predict the PCs for all tissues in the tissue.data table:
 

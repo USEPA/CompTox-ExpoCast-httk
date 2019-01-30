@@ -12,7 +12,7 @@ This function initializes the parameters needed in the function solve_1comp.
  parameterize_1comp(chem.cas=NULL,chem.name=NULL,species="Human",
                     default.to.human=F,adjusted.Funbound.plasma=T,regression=T,
                     restrictive.clearance=T,well.stirred.correction=T,
-                    suppress.messages=F)
+                    suppress.messages=F,clint.pvalue.threshold = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,6 +36,7 @@ This function initializes the parameters needed in the function solve_1comp.
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
  \item{suppress.messages}{Whether or not to suppress messages.}
+ \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro clearance assay result has a p-values greater than the threshold are set to zero.}
 }
 
 

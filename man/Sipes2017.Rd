@@ -1,10 +1,10 @@
-\name{Sipes2017}
+\name{sipes2017}
 \docType{data}
 \alias{Sipes2017}
 \title{Sipes et al. 2017 data}
 \description{
 This table includes data predicted with Simulations Plus' ADMET predictor, used in load_sipes2017, that was used in Sipes et al. 2017. The column names are equivalent to those of chem.physical_and_invitro.data.}
-\usage{Sipes2017}
+\usage{sipes2017}
 \format{data.frame}
 \source{ADMET, Simulations Plus}
 \references{

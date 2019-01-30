@@ -21,8 +21,10 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   if(is.null(parameters)){
     parameters <- parameterize_schmitt(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human)
     user.params <- F
-  }else user.params <- T
-  
+  } else {
+    user.params <- T
+    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- parameterize_schmitt(chem.cas="80-05-7")$plasma.pH
+  }
   if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
    
   if(! tolower(species) %in% c('rat','human')){
@@ -104,7 +106,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 		}
 
     # Need to calculate the amount of un-ionized parent:
-    ionization <- calc_ionization(pH=pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)
+    ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
     fraction_charged <- ionization[["fraction_charged"]]
     fraction_negative <- ionization[["fraction_negative"]]
@@ -124,7 +126,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 		
 		Kcell <- (FW  + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
 		
-    plasma <- calc_ionization(pH=parameters$plasma.pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)
+    plasma <- calc_ionization(pH=parameters$plasma.pH,parameters=parameters)
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
@@ -134,11 +136,12 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
  	  else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
    
     if(regression & this.tissue %in% regression.list){
+      #if(parameters$Pow > 4){
         if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- 10^(reg[[this.tissue,\'intercept\']] + reg[[this.tissue,\'slope\']] * log10(Ktissue2pu[[\"Krbc2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
         else if(this.tissue != 'rest') eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- 10^(reg[this.tissue,\'intercept\'] + reg[this.tissue,\'slope\'] * log10(Ktissue2pu[[\"K",this.tissue,"2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
     }
 	}
   if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
-  if(user.params) warning(paste(species,'fractional tissue volumes used in calculation.  Parameters should match species argument.')) 
+  if(user.params) warning(paste(species,'fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
  	return(Ktissue2pu)
 }

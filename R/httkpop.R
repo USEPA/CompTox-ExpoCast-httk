@@ -17,8 +17,16 @@
 #'   \code{\link{get_httk_params}}.}
 #'   
 #'   
-#' @import data.table httk survey
+#' @import data.table survey
 #'   
 #' @docType package
 #' @name httkpop
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 NULL

@@ -26,4 +26,12 @@ From Levey AS, Stevens LA, Schmid CH, Zhang YL, Castro AF, Feldman HI, et al. A 
 equation to estimate glomerular filtration rate. Ann Intern Med 2009;
 150(9):604-612. doi:10.7326/0003-4819-150-9-200905050-00006
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

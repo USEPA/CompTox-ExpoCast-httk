@@ -1,5 +1,8 @@
 # This function performs Monte Carlo to assess uncertainty and variability for pharmacokinetic models.
-monte_carlo <- function(params,which.quantile=0.95,cv.params=NULL,censored.params=NULL,samples=1000,name.model='calc_analytic_css',output.col.model=NA,return.samples=F,...)
+monte_carlo <- function(params,which.quantile=0.95,
+                        cv.params=NULL,censored.params=NULL,samples=1000,
+                        name.model='calc_analytic_css',output.col.model=NA,
+                        return.samples=F,...)
 {
 # A matrix where each column corresponds to a parameter that is varied
 # and each row is a different draw of parameter values:  

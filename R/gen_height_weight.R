@@ -7,6 +7,14 @@
 #'@return The same data.table with two new variables added: \code{weight}
 #'  and \code{height}. Respectively, these give individual body weights in
 #'  kg, and individual heights in cm.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 gen_height_weight <- function(hbw_dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

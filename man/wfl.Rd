@@ -26,5 +26,13 @@ For infants under age 2, weight class depends on weight for length percentile.
 #'\describe{ \item{Underweight}{<2.3rd percentile} \item{Normal
 weight}{2.3rd-97.7th percentile} \item{Obese}{>=97.7th percentile} }
 }
-\keyword{datasets}
-
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{data}
+\keyword{httk-pop}

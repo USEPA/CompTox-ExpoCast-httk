@@ -20,4 +20,3 @@ A vector of kidney masses in kg.
 For individuals under age 18, predict kidney mass from weight, height, and
 gender. using equations from Ogiu et al.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

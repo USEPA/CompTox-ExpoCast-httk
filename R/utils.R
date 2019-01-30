@@ -5,6 +5,14 @@
 #' @param fhat A list with elements x, w, and h (h is the KDE bandwidth).
 #' 
 #' @return A vector of n samples from the KDE fhat
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 rfun <- function(n,
                  fhat){
   tmp <- fhat$x[sample(seq_along(fhat$x), 
@@ -30,6 +38,14 @@ rfun <- function(n,
 #' @return A logical vector the same length as \code{x}, indicating whether each
 #'   element of \code{x} is within the inclusive limits given by \code{lims}.
 #'   
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 is_in_inclusive <- function(x, lims) {
   if (is.numeric(x)){
     if (length(x)!=1) {

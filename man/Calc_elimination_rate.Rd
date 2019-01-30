@@ -10,9 +10,11 @@ This function calculates an elimination rate from the three compartment steady s
 elimination is entirely due to metablism by the liver and glomerular filtration in the kidneys.
 }
 \usage{
-calc_elimination_rate(chem.cas=NULL,chem.name=NULL,parameters=NULL,species="Human",
-                      suppress.messages=F,default.to.human=F,restrictive.clearance=T,
-                      adjusted.Funbound.plasma=T,regression=T,well.stirred.correction=T)
+calc_elimination_rate(chem.cas=NULL,chem.name=NULL,parameters=NULL,
+                      species="Human",suppress.messages=F,default.to.human=F,
+                      restrictive.clearance=T,adjusted.Funbound.plasma=T,
+                      regression=T,well.stirred.correction=T, 
+                      clint.pvalue.threshold = 0.05)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,6 +40,7 @@ calc_elimination_rate(chem.cas=NULL,chem.name=NULL,parameters=NULL,species="Huma
  \item{restrictive.clearance}{In calculating elimination rate, protein binding is not taken into account (set to 1) in liver clearance if FALSE.}
   \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE.  
                                   This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
+  \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro clearance assay result has a p-values greater than the threshold are set to zero.}
 
 
 }

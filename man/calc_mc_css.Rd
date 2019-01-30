@@ -9,20 +9,32 @@ Find the monte carlo steady state concentration.
 This function finds the analytical steady state plasma concentration(from calc_analytic_css) using a monte carlo simulation (monte_carlo).
 }
 \usage{
-calc_mc_css(chem.cas=NULL,chem.name=NULL,parameters=NULL,daily.dose=1,
-            which.quantile=0.95,species="Human",output.units="mg/L",suppress.messages=F,
-            censored.params=list(Funbound.plasma=list(cv=0.3,lod=0.01)),
-            vary.params=list(BW=0.3,Vliverc=0.3,Qgfrc=0.3,Qtotal.liverc=0.3,
-            million.cells.per.gliver=0.3,Clint=0.3),samples=1000,
-            return.samples=F,default.to.human=F,tissue=NULL,well.stirred.correction=T,
-            adjusted.Funbound.plasma=T,regression=T,restrictive.clearance=T,httkpop=T,
-            model='3compartmentss',poormetab=T,fup.censor=T,Clint.vary=T,
-            sigma.factor=0.3,lod=0.01,method='direct resampling',
-            gendernum=NULL,agelim_years=NULL,agelim_months=NULL,
-            weight_category =  c("Underweight", "Normal", "Overweight", "Obese"),
-            gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
-            reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-            "Non-Hispanic Black", "Other"),physiology.matrix=NULL,parameter.matrix=NULL)
+calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
+            daily.dose = 1, which.quantile = 0.95, species = "Human", 
+            output.units = "mg/L", suppress.messages = F, 
+            model = "3compartmentss", 
+            censored.params = list(Funbound.plasma = list(cv = 0.3, lod = 0.01)),
+            vary.params = list(BW = 0.3, Vliverc = 0.3, Qgfrc = 0.3, 
+                               Qtotal.liverc = 0.3, 
+                               million.cells.per.gliver = 0.3, Clint = 0.3), 
+            samples = 1000, return.samples = F, default.to.human = F,
+            tissue = NULL, well.stirred.correction = T,
+            adjusted.Funbound.plasma = T, regression = T,
+            clint.pvalue.threshold = 0.05,
+            restrictive.clearance = T,
+            tk.statistic.used = "mean",
+            IVIVE=NULL,  
+            httkpop = T,
+            poormetab = T, fup.censor = T, 
+            Clint.vary = T, sigma.factor = 0.3, lod = 0.01,
+            method = "direct resampling", gendernum = NULL,
+            agelim_years = NULL, agelim_months = NULL,
+            weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
+            gfr_category = c("Normal","Kidney Disease", "Kidney Failure"), 
+            reths = c("Mexican American", "Other Hispanic", 
+                      "Non-Hispanic White", "Non-Hispanic Black", "Other"),
+            physiology.matrix = NULL, parameter.matrix = NULL,
+            ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -69,9 +81,15 @@ parameter in "parameters". New values are sampled with mean equal to the value i
   \item{tissue}{Desired steady state tissue conentration.}
  \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE along with partition coefficients calculated with this value.}
   \item{regression}{Whether or not to use the regressions in calculating partition coefficients.}
-  \item{well.stirred.correction}{Uses correction in calculation of hepatic clearance for well-stirred model if TRUE for model 1compartment and 3compartmentss.  
-                                  This assumes clearance relative to amount unbound in whole blood instead of plasma, but converted to use with plasma concentration.}
+  \item{well.stirred.correction}{If TRUE (default) then the well-stirred 
+correction (Rowland et al., 1973) is 
+used in the calculation of hepatic clearance for the models that do not
+include flows for first-pass metabolism (currently, 1compartment and 
+ 3compartmentss). This assumes clearance relative to amount unbound in whole 
+blood instead of plasma, but converted for use with plasma concentration.}
  \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in liver clearance if FALSE.}
+  \item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum (peak) concetrations might be used for IVIVE with some models. Defaults to "mean". Meaningless for the steady-state model (Argument is currently ignored because analytic steady-state solutions are used by this function.).}
+ \item{IVIVE}{Honda et al. (submitted) identified six plausible sets of assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. Argument may be set to "Honda1" through "Honda6". If used, this function overwrites the tissue, restrictive.clearance, and plasma.binding arguments. See Details below for more information.}
   \item{httkpop}{Whether or not to use population generator and sampler from httkpop.  This is overwrites censored.params and  vary.params and is only for human physiology.  Species must also be set to 'Human'.}
    \item{model}{Model used in calculation: 'pbtk' for the multiple compartment model,'3compartment' for the three compartment model, '3compartmentss' for the three compartment steady state model, and '1compartment' for one compartment model.  This only applies when httkpop=TRUE and species="Human", otherwise '3compartmentss' is used.}
    
@@ -136,21 +154,39 @@ User-supplied vector must contain one or more of these strings.}
 %%     ~~Describe \code{pred} here~~
 \item{physiology.matrix}{A data table generated by \code{httkpop_generate()}.}
 \item{parameter.matrix}{A data table generated by \code{get_httk_params()}.}
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro clearance assay result has a p-values greater than the threshold are set to zero.}
+\item{...}{Additional parameters passed to calc_analytic_css}
 }
 
 
 \details{
-All arguments after httkpop only apply if httkpop is set to TRUE and species to "Human", the defaults.
+All arguments after httkpop only apply if httkpop is set to TRUE and species to "Human".
 
-%%  When species is specified as rabbit, dog, or mouse, the function uses the appropriate physiological data(volumes and flows) but substitues human fraction unbound, partition coefficients, and intrinsic hepatic clearance. 
+When species is specified as rabbit, dog, or mouse, the function uses the appropriate physiological data(volumes and flows) but substitues human fraction unbound, partition coefficients, and intrinsic hepatic clearance. 
 
 Tissue concentrations are calculated for the pbtk model with oral infusion dosing.  All tissues other than gut, liver, and lung are the product of the steady state plasma concentration and the tissue to plasma partition coefficient.
+
+The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE) assumptions identified by Honda et al. (submitted) are:
+\tabular{lrrrr}{
+ \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr
+Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr
+Honda2 \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr
+Honda3 \tab Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr
+Honda4 \tab Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr
+Honda5 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr
+Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
+}
+*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
 }
 
 \author{
-John Wambaugh
+original by John Wambaugh, rewritten by Caroline Ring and Robert Pearce
 }
-
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment international 106 (2017): 105-118.
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -161,12 +197,16 @@ John Wambaugh
              samples=100,return.samples=TRUE)
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
-calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
-censored.params = list(Funbound.plasma = list(cv = 0.1, lod = 0.005)),
-vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-Qtotal.liverc = 0.15, million.cells.per.gliver = 0.15, Clint = 0.15),
-output.units = "uM", samples = 2000)
+ calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+             censored.params = list(Funbound.plasma = list(cv = 0.1, 
+                                                          lod = 0.005)),
+             vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
+                               Qtotal.liverc = 0.15, 
+                               million.cells.per.gliver = 0.15, Clint = 0.15),
+             output.units = "uM", samples = 2000)
 
+ params <- parameterize_pbtk(chem.cas="80-05-7")
+ calc_mc_css(parameters=params,model="pbtk")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

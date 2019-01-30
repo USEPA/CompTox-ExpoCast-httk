@@ -10,7 +10,7 @@ This function finds the day a chemical comes within the specified range of the a
 }
 \usage{
 calc_css(parameters=NULL,chem.name=NULL,chem.cas=NULL,species="Human", f = .01,
-         daily.dose=1, doses.per.day=3,days = 10,output.units = "uM",
+         daily.dose=1, doses.per.day=3,days = 21,output.units = "uM",
          concentration='plasma',suppress.messages=F,model='pbtk',default.to.human=F,
          f.change=0.00001,adjusted.Funbound.plasma=T,regression=T,
          well.stirred.correction=T, restrictive.clearance=T,...)
@@ -56,7 +56,7 @@ calc_css(parameters=NULL,chem.name=NULL,chem.cas=NULL,species="Human", f = .01,
 }
 
 \value{
-\item{frac}{Fraction of the true steady state concentration reached on the day steady state is reached.}
+\item{frac}{Ratio of the mean concentration on the day steady state is reached (baed on doses.per.day) to the analytical Css (based on infusion dosing).}
 \item{max}{The maximum concentration of the simulation.}
 \item{avg}{The average concentration on the final day of the simulation.}
 \item{the.day}{The day the average concentration comes within 100 * p percent of the true steady state concentration.}

@@ -15,7 +15,6 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 This vignette generates the data and figures from the partition coefficient evaluation paper.
 
 ```{r, eval=FALSE}
-library(httk)
 library(gdata)
 library(ggplot2)
 library(viridis)

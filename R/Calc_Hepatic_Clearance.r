@@ -1,11 +1,40 @@
 # from Ito and Houston (2004)
-calc_hepatic_clearance <- function(chem.name=NULL,chem.cas=NULL,parameters=NULL,species='Human',default.to.human=F,hepatic.model='well-stirred',suppress.messages=F,well.stirred.correction=T,restrictive.clearance=T,adjusted.Funbound.plasma=T,...)
+calc_hepatic_clearance <- function(chem.name=NULL,
+                                   chem.cas=NULL,
+                                   parameters=NULL,
+                                   species='Human',
+                                   default.to.human=F,
+                                   hepatic.model='well-stirred',
+                                   suppress.messages=F,
+                                   well.stirred.correction=T,
+                                   restrictive.clearance=T,
+                                   adjusted.Funbound.plasma=T,
+                                   ...)
 {
   model <- hepatic.model
-  name.list <- c("Clint","Funbound.plasma","Qtotal.liverc","million.cells.per.gliver","Vliverc","BW","liver.density",'Fhep.assay.correction')
-  if(is.null(parameters)){
-  parameters <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
-  }else if(!all(name.list %in% names(parameters))){
+  name.list <- c("Clint",
+                 "Funbound.plasma",
+                 "Qtotal.liverc",
+                 "million.cells.per.gliver",
+                 "Vliverc",
+                 "BW",
+                 "liver.density",
+                 'Fhep.assay.correction')
+
+# This function likes to have the blood flow to the liver per kg bw^0.75 in a 
+# variable named Qtotal.liverc:
+  if (!is.null(parameters))
+  {
+    if (all(c("Qcardiacc","Qgutf","Qliverf")%in%names(parameters)))
+    {
+      parameters[["Qtotal.liverc"]] <- parameters[["Qcardiacc"]]*(parameters[["Qgutf"]]+parameters[["Qliverf"]])
+    }
+  }
+  if(is.null(parameters))
+  {
+    parameters <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
+  } else if (!all(name.list %in% names(parameters)))
+  {
     if(is.null(chem.cas) & is.null(chem.name))stop('chem.cas or chem.name must be specified when not including all necessary 3compartmentss parameters.')
     params <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
     parameters <- c(parameters,params[name.list[!(name.list %in% names(parameters))]])

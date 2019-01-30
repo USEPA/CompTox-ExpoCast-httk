@@ -24,4 +24,3 @@ A vector of blood masses in kg.
 If blood mass from \code{\link{blood_weight}} is negative or very small, then
 just default to the mean blood mass by age. (Geigy Scientific Tables, 7th ed.)
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

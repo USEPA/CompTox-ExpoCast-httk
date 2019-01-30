@@ -21,4 +21,12 @@ The same data.table, with aditional variables describing tissue masses
 Given a data.table describing a virtual population by the NHANES quantities, 
 generates HTTK physiological parameters for each individual.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}
