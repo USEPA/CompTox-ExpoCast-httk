@@ -29,10 +29,8 @@ solve_3comp <- function(chem.name = NULL,
     parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
   }else{
-    name.list <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","Krbc2pu","Kgut2pu","kgutabs","Kliver2pu","Krest2pu","MW","Qcardiacc","Qgfrc","Qgutf","Qliverf","Rblood2plasma","million.cells.per.gliver","Vgutc","Vliverc","Vrestc")
-    if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
-    name.list2 <- c("BW","Clmetabolismc","Fgutabs","Funbound.plasma","Fhep.assay.correction","hematocrit","Krbc2pu","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
-    if(any(name.list2[which(!name.list2 %in% name.list)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")
+    if(!all(param.names.3comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.3comp[which(!param.names.3comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
+    if(any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")
   }  
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   start <- times[1]
@@ -139,7 +137,7 @@ solve_3comp <- function(chem.name = NULL,
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
   parameters[['Ratioblood2plasma']] <- parameters[['Rblood2plasma']]
   names(parameters)[substr(names(parameters),1,1) == 'K'] <- gsub('2pu','2plasma',names(parameters)[substr(names(parameters),1,1) == 'K'])
-  parameters <- initparms3comp(parameters[!(names(parameters) %in% c("Rblood2plasma","Fhep.assay.correction","Krbc2plasma","hematocrit","million.cells.per.gliver","Fgutabs","Funbound.plasma","Clmetabolismc"))])
+  parameters <- initparms3comp(parameters[param.names.3comp.solver])
 
 
   
@@ -153,7 +151,7 @@ solve_3comp <- function(chem.name = NULL,
       length <- length(dosing)
       if(iv.dose) eventdata <- data.frame(var=rep('Arest',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length)) 
       else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))   
-      times <- sort(c(times,dosing + 1e-8,start + 1e-8))                       
+      times <- sort(c(times,dosing + 1e-8,start + 1e-8))                        
       out <- ode(y = state, times = times, func="derivs3comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod3comp", nout=length(Outputs3comp),outnames=Outputs3comp,events=list(data=eventdata),...)
     }  
   }else{

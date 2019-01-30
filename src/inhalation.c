@@ -3,17 +3,17 @@
 
    Model File:  inhalation.model
 
-   Date:  Mon Apr 02 16:08:44 2018
+   Date:  Mon Oct 22 11:15:43 2018
 
-   Created by:  "mod v5.5.0"
+   Created by:  "C:/Users/mlinakis/Desktop/RLibrary/MCSIMU~1/mod/mod.exe v5.6.5"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2013 Free Software Foundation, Inc.
+   Copyright (c) 1993-2015 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
-   11 States:
+   14 States:
      Agutlumen = 0.0,
      Agut = 0.0,
      Aliver = 0.0,
@@ -25,8 +25,11 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
+     Ainh = 0.0,
+     Aexh = 0.0,
+     Amuc = 0.0,
 
-   10 Outputs:
+   13 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -36,14 +39,19 @@
     "Ckidney",
     "Cplasma",
     "Aplasma",
-    "Clungart",
+    "Calv",
+    "Cendexh",
+    "Cmixexh",
+    "Cmuc",
 
    1 Input:
      Cinh (forcing function)
 
-   44 Parameters:
+   53 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
+     vmax = 0,
+     km = 1,
      hematocrit = 0.44,
      kgutabs = 1,
      Kkidney2pu = 0,
@@ -86,82 +94,104 @@
      InhMag = 0,
      Period = 0,
      Exposure = 0,
+     kUrtc = 11.0,
+     kUrt = 0,
+     Kmuc2air = 0,
+     Vmucc = 0.0001,
+     Vmuc = 0.0,
+     Vmax = 0,
+     Km = 1,
 */
 
 #include <R.h>
 
 /* Model variables: States */
-#define ID_Agutlumen 0x0000
-#define ID_Agut 0x0001
-#define ID_Aliver 0x0002
-#define ID_Aven 0x0003
-#define ID_Alung 0x0004
-#define ID_Aart 0x0005
-#define ID_Arest 0x0006
-#define ID_Akidney 0x0007
-#define ID_Atubules 0x0008
-#define ID_Ametabolized 0x0009
-#define ID_AUC 0x000a
+#define ID_Agutlumen 0x00000
+#define ID_Agut 0x00001
+#define ID_Aliver 0x00002
+#define ID_Aven 0x00003
+#define ID_Alung 0x00004
+#define ID_Aart 0x00005
+#define ID_Arest 0x00006
+#define ID_Akidney 0x00007
+#define ID_Atubules 0x00008
+#define ID_Ametabolized 0x00009
+#define ID_AUC 0x0000a
+#define ID_Ainh 0x0000b
+#define ID_Aexh 0x0000c
+#define ID_Amuc 0x0000d
 
 /* Model variables: Outputs */
-#define ID_Cgut 0x0000
-#define ID_Cliver 0x0001
-#define ID_Cven 0x0002
-#define ID_Clung 0x0003
-#define ID_Cart 0x0004
-#define ID_Crest 0x0005
-#define ID_Ckidney 0x0006
-#define ID_Cplasma 0x0007
-#define ID_Aplasma 0x0008
-#define ID_Clungart 0x0009
+#define ID_Cgut 0x00000
+#define ID_Cliver 0x00001
+#define ID_Cven 0x00002
+#define ID_Clung 0x00003
+#define ID_Cart 0x00004
+#define ID_Crest 0x00005
+#define ID_Ckidney 0x00006
+#define ID_Cplasma 0x00007
+#define ID_Aplasma 0x00008
+#define ID_Calv 0x00009
+#define ID_Cendexh 0x0000a
+#define ID_Cmixexh 0x0000b
+#define ID_Cmuc 0x0000c
 
 /* Parameters */
-static double parms[44];
+static double parms[53];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
-#define hematocrit parms[2]
-#define kgutabs parms[3]
-#define Kkidney2pu parms[4]
-#define Kliver2pu parms[5]
-#define Krest2pu parms[6]
-#define Kgut2pu parms[7]
-#define Klung2pu parms[8]
-#define Qcardiacc parms[9]
-#define Qgfrc parms[10]
-#define Qgutf parms[11]
-#define Qkidneyf parms[12]
-#define Qliverf parms[13]
-#define Qlungf parms[14]
-#define Vartc parms[15]
-#define Vgutc parms[16]
-#define Vkidneyc parms[17]
-#define Vliverc parms[18]
-#define Vlungc parms[19]
-#define Vrestc parms[20]
-#define Vvenc parms[21]
-#define Fraction_unbound_plasma parms[22]
-#define Rblood2plasma parms[23]
-#define Clmetabolism parms[24]
-#define Qcardiac parms[25]
-#define Qgfr parms[26]
-#define Qgut parms[27]
-#define Qkidney parms[28]
-#define Qliver parms[29]
-#define Qlung parms[30]
-#define Qrest parms[31]
-#define Vart parms[32]
-#define Vgut parms[33]
-#define Vkidney parms[34]
-#define Vliver parms[35]
-#define Vlung parms[36]
-#define Vrest parms[37]
-#define Vven parms[38]
-#define Qalv parms[39]
-#define Kblood2air parms[40]
-#define InhMag parms[41]
-#define Period parms[42]
-#define Exposure parms[43]
+#define vmax parms[2]
+#define km parms[3]
+#define hematocrit parms[4]
+#define kgutabs parms[5]
+#define Kkidney2pu parms[6]
+#define Kliver2pu parms[7]
+#define Krest2pu parms[8]
+#define Kgut2pu parms[9]
+#define Klung2pu parms[10]
+#define Qcardiacc parms[11]
+#define Qgfrc parms[12]
+#define Qgutf parms[13]
+#define Qkidneyf parms[14]
+#define Qliverf parms[15]
+#define Qlungf parms[16]
+#define Vartc parms[17]
+#define Vgutc parms[18]
+#define Vkidneyc parms[19]
+#define Vliverc parms[20]
+#define Vlungc parms[21]
+#define Vrestc parms[22]
+#define Vvenc parms[23]
+#define Fraction_unbound_plasma parms[24]
+#define Rblood2plasma parms[25]
+#define Clmetabolism parms[26]
+#define Qcardiac parms[27]
+#define Qgfr parms[28]
+#define Qgut parms[29]
+#define Qkidney parms[30]
+#define Qliver parms[31]
+#define Qlung parms[32]
+#define Qrest parms[33]
+#define Vart parms[34]
+#define Vgut parms[35]
+#define Vkidney parms[36]
+#define Vliver parms[37]
+#define Vlung parms[38]
+#define Vrest parms[39]
+#define Vven parms[40]
+#define Qalv parms[41]
+#define Kblood2air parms[42]
+#define InhMag parms[43]
+#define Period parms[44]
+#define Exposure parms[45]
+#define kUrtc parms[46]
+#define kUrt parms[47]
+#define Kmuc2air parms[48]
+#define Vmucc parms[49]
+#define Vmuc parms[50]
+#define Vmax parms[51]
+#define Km parms[52]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -171,7 +201,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_inh (void (* odeparms)(int *, double *))
 {
-  int N=44;
+  int N=53;
   odeparms(&N, parms);
 }
 
@@ -209,6 +239,10 @@ void getParms_inh (double *inParms, double *out, int *nout) {
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
   Qalv = Qalv * 24 * pow ( BW , 0.75 ) ;
+  kUrt = kUrtc * pow ( BW , 0.75 ) * 24 ;
+  Vmuc = Vmucc * BW ;
+  Vmax = vmax * 60 * 24 ;
+  Km = km ;
 
   for (i = 0; i < *nout; i++) {
     out[i] = parms[i];
@@ -233,23 +267,29 @@ void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   yout[ID_Ckidney] = y[ID_Akidney] / Vkidney ;
 
-  yout[ID_Clungart] = ( Qcardiac * yout[ID_Cven] + Qalv * Cinh ) / ( Qcardiac + Qalv / Kblood2air ) ;
-
   yout[ID_Cplasma] = y[ID_Aven] / Vven / Rblood2plasma ;
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
+
+  yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
+
+  yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
+
+  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+
+  yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
+  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qlung * yout[ID_Clung] / Klung2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = Qcardiac * ( yout[ID_Clungart] - yout[ID_Cart] ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -257,9 +297,15 @@ void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_Atubules] = Qgfr * yout[ID_Ckidney] / Kkidney2pu ;
 
-  ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
+  ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma + Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
+
+  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+
+  ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+
+  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
 
 } /* derivs */
 

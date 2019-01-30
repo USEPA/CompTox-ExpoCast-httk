@@ -1,5 +1,10 @@
+#Written by Robert Pearce
+# This function attempts to retrieve a measured species- and chemical-specific 
+# blood:plasma concentration ratio.
 get_rblood2plasma <- function(chem.name=NULL,chem.cas=NULL,species='Human',default.to.human=F){
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
+  if (is.null(chem.name) & is.null(chem.cas)) return(NA)
+  
   CAS <- NULL
   # Look up the chemical name/CAS, depending on what was provide:
   if(is.null(chem.cas)){

@@ -12,6 +12,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
+			      vmax.km=F,
+			      vmax = 0,
+			      km = 1,
                               suppress.messages=F)
 {
   physiology.data <- physiology.data
@@ -62,6 +65,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
+  lP <- 1 #Set to 1 in case log P isn't available from table: Kmuc2air will then just be set to Kwater2air below
+  lP <- get_physchem_param("logP",chem.CAS = chem.cas)
 
   outlist <- list()
    # Begin flows:
@@ -101,8 +106,12 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
 
-  outlist <- c(outlist,
-    list(Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+  if(vmax.km){
+    if(vmax==0){
+	#stop("Cannot calculate saturable metabolism with Vmax = 0.") #Do we want to throw an error if MM kinetics are attempted without providing Vmax, or simply default back to first-order as below?
+	warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
+	outlist <- c(outlist,
+    	list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
                                 Funbound.plasma=fub, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
@@ -111,7 +120,21 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
                                 Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
-  
+	}else{
+    	outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))
+	}
+  }else{
+  outlist <- c(outlist,
+    list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+                                Clint=Clint, #uL/min/10^6 cells
+                                Funbound.plasma=fub, # unitless fraction
+                                Fhep.assay.correction=outlist$Fhep.assay.correction, 
+                                million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                liver.density= 1.05, # g/mL
+                                Dn=0.17,BW=BW,
+                                Vliverc=lumped_params$Vliverc, #L/kg
+                                Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+  }
 
     outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
     #alveolar ventilation:15 L/h/kg^.75 from campbell 2007
@@ -120,10 +143,16 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     hl <- subset(chem.physical_and_invitro.data,CAS == chem.cas)[,'HL']
     Kwater2air <- 8.314 * 310 / (hl * 101325)   #310 K body temp, 101325 atm to Pa, 
     Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma#((1 - parameters$hematocrit) / parameters$Funbound.plasma + parameters$hematocrit * parameters$Krbc2pu)
-    Vdot <- 300 #ml/s
-    Vdot <- Vdot / 1000 *3600 / outlist$BW^.75 #L/h/kg^.75   from ml/s
+    #Vdot <- 300 #ml/s
+    #Vdot <- Vdot / 1000 *3600 / outlist$BW^.75 #L/h/kg^.75   from ml/s
+    Vdot <- 24.75 #L/h
+    #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary
     Fds <- 0.33
-    outlist <- c(outlist,Kblood2air =  Kblood2air,Qalv=Vdot*(1-Fds))
+    lKair2muc <- log10(1/Kwater2air) - (lP - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
+    Kair2muc <- 10^(lKair2muc)
+    Kmuc2air <- 1/Kair2muc
+    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalv=Vdot*(1-Fds))
+
         
   return(outlist[sort(names(outlist))])
 }

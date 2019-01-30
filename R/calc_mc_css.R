@@ -66,7 +66,7 @@ calc_mc_css <- function(chem.cas=NULL,
     }
     if(well.stirred.correction & !'Rblood2plasma' %in% names(parameters)) parameters[['Rblood2plasma']] <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
     
-    out <- monte_carlo(params=parameters,censored.params=censored.params,which.quantile=which.quantile,cv.params=vary.params,samples=samples,model='3compartmentss',daily.dose=daily.dose,output.units=output.units,tissue=tissue,chem.name=chem.name,chem.cas=chem.cas,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,suppress.messages=T,return.samples=return.samples,restrictive.clearance=restrictive.clearance,species=species)
+    out <- monte_carlo(params=parameters,censored.params=censored.params,which.quantile=which.quantile,cv.params=vary.params,samples=samples,model='3compartmentss',daily.dose=daily.dose,output.units=output.units,tissue=tissue,chem.name=chem.name,chem.cas=chem.cas,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,suppress.messages=T,return.samples=return.samples,restrictive.clearance=restrictive.clearance)
     if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
   }  
   if(!suppress.messages & !return.samples){

@@ -78,7 +78,7 @@ get_cheminfo <- function(info="CAS",species="Human",exclude.fub.zero=NA,fub.lod.
       if('substance_type' %in% tolower(info)) info <- c('Substance_Type',info[tolower(info) != 'substance_type'])
   
     
-    valid.info <- c("Compound","CAS","logP","pKa_Accept","pKa_Donor","MW","Clint","Clint.pValue","Funbound.plasma","DSSTox_Substance_Id","Structure_Formula","Substance_Type")
+    valid.info <- c("Compound","CAS","MW","logP","pKa_Accept","pKa_Donor","logMA","Clint","Clint.pValue","Funbound.plasma","DTXSID","Formula")
   
     if (any(toupper(info)=="ALL")) info <- valid.info
     

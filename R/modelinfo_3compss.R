@@ -1,0 +1,15 @@
+#Define the parameter names for each model in one place so that all functions can use them:
+param.names.3compss <- c("Clint",
+                       "Funbound.plasma",
+                       "Funbound.plasma.adjustment",
+                       "hepatic.bioavailability",
+                       "Fhep.assay.correction",
+                       "Qtotal.liverc",
+                       "Qgfrc",
+                       "Rblood2plasma",
+                       "BW",
+                       "MW",
+                       "Fgutabs",
+                       "million.cells.per.gliver",
+                       "Vliverc",
+                       "liver.density")

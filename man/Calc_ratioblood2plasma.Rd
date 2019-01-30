@@ -8,7 +8,8 @@ Calculate the constant ratio of the blood concentration to the plasma concentrat
 This function calculates the constant ratio of the blood concentration to the plasma concentration.
 }
 \usage{
-calc_rblood2plasma(chem.cas=NULL, chem.name=NULL, hematocrit = NULL, default.to.human=F, 
+calc_rblood2plasma(chem.cas=NULL, chem.name=NULL, params = NULL, 
+                   hematocrit = NULL, default.to.human=F, 
                    species="Human",adjusted.Funbound.plasma=T)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -21,6 +22,7 @@ calc_rblood2plasma(chem.cas=NULL, chem.name=NULL, hematocrit = NULL, default.to.
   Either the CAS number or the chemical name must be specified.
 %%     ~~Describe \code{pred} here~~
 }
+\item{params}{Parameters from parameterize_schmitt.}
 \item{hematocrit}{Overwrites default hematocrit value in calculating Rblood2plasma.}
   \item{default.to.human}{
   Substitutes missing animal values with human values if true.

@@ -9,18 +9,19 @@ calc_vdist<- function(chem.cas=NULL,
   physiology.data <- physiology.data
   Parameter <- NULL
 
-  if(is.null(parameters)){
+  if (is.null(parameters))
+  {
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
     parameters <- suppressWarnings(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=regression,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-    if(adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
+    if (adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
     else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
-}
-   
+  }
   schmitt.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kgut2pu","Kheart2pu","Kkidney2pu","Kliver2pu","Klung2pu","Kmuscle2pu","Kskin2pu","Kspleen2pu","Krbc2pu", "Krest2pu")  
-  schmitt.specific.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kheart2pu","Kmuscle2pu","Kskin2pu","Kspleen2pu")
+  schmitt.specific.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kheart2pu","Kmuscle2pu","Kskin2pu","Kspleen2pu")   
+
   if(any(names(parameters) %in% schmitt.specific.names) & !all(c(schmitt.names) %in% names(parameters))) stop("All predict_partitioning_schmitt coefficients must be included if not using pbtk or 3compartment parameters.")              
   else if(all(schmitt.names %in% names(parameters))) schmitt.params  <- T
-  else schmitt.params <- F                                                                                            
+  else schmitt.params <- F                                                                                           
 
   if(schmitt.params & !('funbound.plasma' %in% tolower(names(parameters)))){
     if(is.null(chem.cas) & is.null(chem.name))stop("Specify chem.name or chem.cas with correct species if not including Funbound.plasma with predict_partitioning_schmitt coefficients.")
@@ -76,9 +77,7 @@ calc_vdist<- function(chem.cas=NULL,
     RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
     vol.dist <- plasma.vol + RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma   
   }else{
-    pbtk.name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
-    name.list.3comp <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Krbc2pu","kgutabs","Kliver2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc","Qgfrc","Qgutf","Qliverf","Rblood2plasma","Vgutc","Vliverc","Vrestc")
-    if(!all(name.list.3comp %in% names(parameters)) | !all(names(parameters) %in% pbtk.name.list))stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
+    if(!all(param.names.schmitt %in% names(parameters)) & !all(param.names.3comp %in% names(parameters)) & !all(names(parameters) %in% param.names.pbtk))stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
     #necess <- c("Funbound.plasma","hematocrit","Vrestc","Krest2plasma","Krbc2plasma")
     #if(!all(necess %in% names(parameters))){
       #if(is.null(chem.cas) & is.null(chem.name))stop('chem.cas or chem.name must be specified when not including Funbound.plasma, hematocrit, Vrestc, Krest2plasma, and Krbc2plasma in parameters.')
