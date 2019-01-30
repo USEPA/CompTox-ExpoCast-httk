@@ -10,7 +10,7 @@
 }
 
 \author{
-\packageMaintainer{httk} (Maintainer), Robert Pearce, Caroline Ring, 
+John Wambaugh, Robert Pearce, Caroline Ring, 
 Gregory Honda, Nisha Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer}
 
 \keyword{ package }
