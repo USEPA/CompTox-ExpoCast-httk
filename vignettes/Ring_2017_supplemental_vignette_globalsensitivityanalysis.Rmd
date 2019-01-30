@@ -705,275 +705,276 @@ indep.bio2 <- indep_gen()
 The innermost function (over parameters) will be the same, but we need to modify the function of things to do for each chemical, because we need to do sensitivity analysis for the physiological parameters independently, not as a group.
 
 ```{r, eval=FALSE}
-doforeachchem_indep <- function(this.chemcas, #CAS for one chemical 
-                                model, #HTTK model to use
-                                species='Human', #Species for HTTK
-                                nsamp, #Number of people in virtual population
-                                css.method, #'analytic' or 'full'
-                                sigma.factor=0.3, #coefficient of variation
-                                indep.model.bio1, #output of indep_gen()
-                                indep.model.bio2, #output of indep_gen()
-                                poormetab, #TRUE or FALSE
-                                fup.censor){  #TRUE or FALSE
-  #To avoid making changes outside the function
-  indiv.model.bio1 <- copy(indep.model.bio1)
-  indiv.model.bio2 <- copy(indep.model.bio2)
-  
-  #First draw Funbound.plasma and Clint
-  indiv.A <- httk::draw_fup_clint(this.chem=this.chemcas,
-                                     indiv.bio.tmp=indiv.model.bio1,
-                                     sigma.factor=sigma.factor,
-                                     poormetab=poormetab,
-                                     fup.censor=fup.censor)
-  indiv.B <- httk::draw_fup_clint(this.chem=this.chemcas,
-                                     indiv.bio.tmp=indiv.model.bio2,
-                                     sigma.factor=sigma.factor,
-                                     poormetab=poormetab,
-                                     fup.censor=fup.censor)
-  #Convert to HTTK parameters for matrix A and matrix B
-  indiv.A.httk <- httk::convert_httk(indiv.model.bio = indiv.A,
-                                        model = model,
-                                        this.chem = this.chemcas)
-  indiv.B.httk <- httk::convert_httk(indiv.model.bio = indiv.B,
-                                        model = model,
-                                        this.chem = this.chemcas)
-  
-  #If model is 3compartmentss, convert Funbound.plasma to Funbound.blood
-  if (model=="3compartmentss"){
-    #First, get the default parameters used for the Schmitt method of estimating
-    #partition coefficients.
-    pschmitt <- httk::parameterize_schmitt(chem.cas=this.chemcas,
-                                           species='Human')
-    convert_Fup <- function(DT.bio, DT.httk, pschmitt, this.chemcas){
-      DT.bio <- copy(DT.bio)
-      DT.httk <- copy(DT.httk)
-    #next, replace the single default value for Funbound.plasma with the vector
-    #of Funbound.plasma values from the virtual population data.table.
-    pschmitt$Funbound.plasma<-DT.httk[, Funbound.plasma]
-    #Now, predict the partitioning coefficients using Schmitt's method. The
-    #result will be a list of numerical vectors, one vector for each
-    #tissue-to-plasma partitioning coefficient, and one element of each vector
-    #for each individual. The list element names specify which partition
-    #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
-                                              chem.cas=this.chemcas,
-                                              species='Human')
-    Rb2p <- 1 - DT.bio$hematocrit + DT.bio$hematocrit * 
-      PCs[["Krbc2pu"]] * 
-      DT.httk$Funbound.plasma
-    
-  Funbound.blood <- DT.httk$Funbound.plasma/Rb2p
-  return(list(Rb2p=Rb2p,
-              Funbound.blood=Funbound.blood))
-  }
-  
-  Fconvert.A <- convert_Fup(DT.bio=indiv.A,
-                                                DT.httk=indiv.A.httk,
-                                                pschmitt=pschmitt,
-                                                this.chemcas=this.chemcas)
-  
-  Fconvert.B <- convert_Fup(DT.bio=indiv.B,
-                                                DT.httk=indiv.B.httk,
-                                                pschmitt=pschmitt,
-                                                this.chemcas=this.chemcas)
-  
-  indiv.A.httk[, Funbound.plasma:=Fconvert.A$Funbound.blood]
-  indiv.B.httk[, Funbound.plasma:=Fconvert.B$Funbound.blood]
-  }
-  #Evaluate model
-  if (tolower(css.method)=='analytic') {
-    f.A <- httk::calc_analytic_css(chem.cas=this.chemcas,
-                                   parameters=indiv.A.httk,
-                                   daily.dose=1, 
-                                   output.units="uM",
-                                   model=model,
-                                   species=species,
-                                   suppress.messages=TRUE,
-                                   recalc.blood2plasma=TRUE)
-    f.B <- httk::calc_analytic_css(chem.cas=this.chemcas,
-                                   parameters=indiv.B.httk,
-                                   daily.dose=1, 
-                                   output.units="uM",
-                                   model=model,
-                                   species=species,
-                                   suppress.messages=TRUE,
-                                   recalc.blood2plasma=TRUE)
-    if (model=="3compartmentss"){
-      f.A <- f.A/Fconvert.A$Rb2p
-      f.B <- f.B/Fconvert.B$Rb2p
-    }
-    }
-  else if (tolower(css.method)=='full'){
-    f.A <- apply(X=indiv.A.httk, 
-                 MARGIN=1,
-                 FUN=function(x) httk::calc_css(chem.cas=this.chemcas,
-                                                parameters=as.list(x),
-                                                daily.dose=1, 
-                                                output.units="uM",
-                                                model=model,
-                                                species=species,
-                                                suppress.messages=TRUE,
-                                                f.change=1e-5)[['avg']])
-    f.B <- apply(X=indiv.B.httk, 
-                 MARGIN=1,
-                 FUN=function(x) httk::calc_css(chem.cas=this.chemcas,
-                                                parameters=as.list(x),
-                                                daily.dose=1, 
-                                                output.units="uM",
-                                                model=model,
-                                                species=species,
-                                                suppress.messages=TRUE,
-                                                f.change=1e-5)[['avg']])
-    }
-  #Compute normalized data (number of standard deviations from the mean)
-  g0<-(f.A-mean(f.A))/sqrt(var(f.A) * (length(f.A)-1) / length(f.A))
-  g0prime <- (f.B-mean(f.B))/sqrt(var(f.B) * (length(f.B)-1) / length(f.B))
-  
-  #Compute spurious correlation term between f.A and f.B
-  p0 <- mean(g0*g0prime)
-  
-  #Next, define the list of HTTK parameters that constitute the physiological parameters for this model.
-  #Strictly speaking this should be all of the columns in indiv.model.bio1, except for liver.density, which is a fixed value.
-#   #From previous runs, these are the only parameters that the models are sensitive to
-  phys.par <- switch(model,
-                     'pbtk'=c('BW',
-                              'hematocrit',
-                              'million.cells.per.gliver',
-                              'Qcardiacc',
-                              'Qgfrc',
-                              'Qgutf',
-                              'Qkidneyf',
-                              'Qliverf',
-                              'Vliverc'),
-                     '3compartment'=c('BW',
-                                      'hematocrit',
-                                      'million.cells.per.gliver',
-                                      'Qgfrc',
-                                      'Qgutf',
-                                      'Qliverf',
-                                      'Vliverc'),
-                     '3compartmentss'=c('BW',
-                                        'million.cells.per.gliver',
-                                        'Qgfrc',
-                                        'Qtotal.liverc',
-                                        'Vliverc'),
-                     '1compartment'=c('BW',
-                                      'million.cells.per.gliver',
-                                      'Qgfrc',
-                                      'Qtotal.liverc',
-                                      'Vliverc'))
-phys.par.all <- names(indiv.model.bio1)[names(indiv.model.bio1)!=
-                                            'liver.density']
-  parlist <- list('Clint',
-                  'Funbound.plasma',
-                  phys.par.all)
-  
-  parlist <- c(parlist, as.list(phys.par))
-  #Note: Now sensitivity is being calculated to each of the physiological parameter independently, as well as grouped.
-  
-  #If Clint is fixed at zero,
-  #don't test sensitivity to it
-  if (all(indiv.A[, Clint]==0)){
-    parlist <- parlist[parlist!='Clint']
-    }
-  
-  #Now loop over parameters (and groups thereof)
-  eff.list <- lapply(parlist,
-                     doforeachparam,
-                     indiv.A=indiv.A,
-                     indiv.B=indiv.B,
-                     this.chemcas=this.chemcas,
-                     model=model,
-                     species=species,
-                     css.method=css.method,
-                     f.A=f.A,
-                     f.B=f.B,
-                     g0=g0,
-                     g0prime=g0prime,
-                     p0=p0)
-  
-  parnames <- parlist
-  #Name the sensitivity indexes by their parameters
-  #For the group of physiological parameters, just name it "phys.par"
-  parnames[sapply(parnames, function(x) length(x)>1)] <- 'phys.par'
-  names(eff.list) <- parnames
-  
-  #If Clint was zero, then sensitivity to it wasn't calculated.
-  #Set all the sensitivity quantities to NA to indicate this.
-  if (all(indiv.A[, Clint]==0)){
-    eff.list <- c(eff.list,
-                  list(Clint=list(Ti=NA,
-                                  Si=NA,
-                                  p0=NA,
-                                  pj=NA,
-                                  csj=NA,
-                                  csminusj=NA,
-                                  cdj=NA,
-                                  cdminusj=NA,
-                                  caj=NA,
-                                  caminusj=NA)))
-    }
-  #Construct a data.table to return
-  eff.dt <- as.data.table(do.call(rbind.data.frame,
-                                  eff.list),
-                          keep.rownames=TRUE)
-  eff.dt[, chemcas:=this.chemcas]
-  return(eff.dt)
-  }
+# Commented out because of problem with Pandoc for Windows:
+#doforeachchem_indep <- function(this.chemcas, #CAS for one chemical 
+#                                model, #HTTK model to use
+#                                species='Human', #Species for HTTK
+#                                nsamp, #Number of people in virtual population
+#                                css.method, #'analytic' or 'full'
+#                                sigma.factor=0.3, #coefficient of variation
+#                                indep.model.bio1, #output of indep_gen()
+#                                indep.model.bio2, #output of indep_gen()
+#                                poormetab, #TRUE or FALSE
+#                                fup.censor){  #TRUE or FALSE
+#  #To avoid making changes outside the function
+#  indiv.model.bio1 <- copy(indep.model.bio1)
+#  indiv.model.bio2 <- copy(indep.model.bio2)
+#  
+#  #First draw Funbound.plasma and Clint
+#  indiv.A <- httk::draw_fup_clint(this.chem=this.chemcas,
+#                                     indiv.bio.tmp=indiv.model.bio1,
+#                                     sigma.factor=sigma.factor,
+#                                     poormetab=poormetab,
+#                                     fup.censor=fup.censor)
+#  indiv.B <- httk::draw_fup_clint(this.chem=this.chemcas,
+#                                     indiv.bio.tmp=indiv.model.bio2,
+#                                     sigma.factor=sigma.factor,
+#                                     poormetab=poormetab,
+#                                     fup.censor=fup.censor)
+#  #Convert to HTTK parameters for matrix A and matrix B
+#  indiv.A.httk <- httk::convert_httk(indiv.model.bio = indiv.A,
+#                                        model = model,
+#                                        this.chem = this.chemcas)
+#  indiv.B.httk <- httk::convert_httk(indiv.model.bio = indiv.B,
+#                                        model = model,
+#                                        this.chem = this.chemcas)
+#  
+#  #If model is 3compartmentss, convert Funbound.plasma to Funbound.blood
+#  if (model=="3compartmentss"){
+#    #First, get the default parameters used for the Schmitt method of estimating
+#    #partition coefficients.
+#    pschmitt <- httk::parameterize_schmitt(chem.cas=this.chemcas,
+#                                           species='Human')
+#    convert_Fup <- function(DT.bio, DT.httk, pschmitt, this.chemcas){
+#      DT.bio <- copy(DT.bio)
+#      DT.httk <- copy(DT.httk)
+#    #next, replace the single default value for Funbound.plasma with the vector
+#    #of Funbound.plasma values from the virtual population data.table.
+#    pschmitt$Funbound.plasma<-DT.httk[, Funbound.plasma]
+#    #Now, predict the partitioning coefficients using Schmitt's method. The
+#    #result will be a list of numerical vectors, one vector for each
+#    #tissue-to-plasma partitioning coefficient, and one element of each vector
+#    #for each individual. The list element names specify which partition
+#    #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
+#    PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
+#                                              chem.cas=this.chemcas,
+#                                              species='Human')
+#    Rb2p <- 1 - DT.bio$hematocrit + DT.bio$hematocrit * 
+#      PCs[["Krbc2pu"]] * 
+#      DT.httk$Funbound.plasma
+#    
+#  Funbound.blood <- DT.httk$Funbound.plasma/Rb2p
+#  return(list(Rb2p=Rb2p,
+#              Funbound.blood=Funbound.blood))
+#  }
+#  
+#  Fconvert.A <- convert_Fup(DT.bio=indiv.A,
+#                                                DT.httk=indiv.A.httk,
+#                                                pschmitt=pschmitt,
+#                                                this.chemcas=this.chemcas)
+#  
+#  Fconvert.B <- convert_Fup(DT.bio=indiv.B,
+#                                                DT.httk=indiv.B.httk,
+#                                                pschmitt=pschmitt,
+#                                                this.chemcas=this.chemcas)
+#  
+#  indiv.A.httk[, Funbound.plasma:=Fconvert.A$Funbound.blood]
+#  indiv.B.httk[, Funbound.plasma:=Fconvert.B$Funbound.blood]
+#  }
+#  #Evaluate model
+#  if (tolower(css.method)=='analytic') {
+#    f.A <- httk::calc_analytic_css(chem.cas=this.chemcas,
+#                                   parameters=indiv.A.httk,
+#                                   daily.dose=1, 
+#                                   output.units="uM",
+#                                   model=model,
+#                                   species=species,
+#                                   suppress.messages=TRUE,
+#                                   recalc.blood2plasma=TRUE)
+#    f.B <- httk::calc_analytic_css(chem.cas=this.chemcas,
+#                                   parameters=indiv.B.httk,
+#                                   daily.dose=1, 
+#                                   output.units="uM",
+#                                   model=model,
+#                                   species=species,
+#                                   suppress.messages=TRUE,
+#                                   recalc.blood2plasma=TRUE)
+#    if (model=="3compartmentss"){
+#      f.A <- f.A/Fconvert.A$Rb2p
+#      f.B <- f.B/Fconvert.B$Rb2p
+#    }
+#    }
+#  else if (tolower(css.method)=='full'){
+#    f.A <- apply(X=indiv.A.httk, 
+#                 MARGIN=1,
+#                 FUN=function(x) httk::calc_css(chem.cas=this.chemcas,
+#                                                parameters=as.list(x),
+#                                                daily.dose=1, 
+#                                                output.units="uM",
+#                                                model=model,
+#                                                species=species,
+#                                                suppress.messages=TRUE,
+#                                                f.change=1e-5)[['avg']])
+#    f.B <- apply(X=indiv.B.httk, 
+#                 MARGIN=1,
+#                 FUN=function(x) httk::calc_css(chem.cas=this.chemcas,
+#                                                parameters=as.list(x),
+#                                                daily.dose=1, 
+#                                                output.units="uM",
+#                                                model=model,
+#                                                species=species,
+#                                                suppress.messages=TRUE,
+#                                                f.change=1e-5)[['avg']])
+#    }
+#  #Compute normalized data (number of standard deviations from the mean)
+#  g0<-(f.A-mean(f.A))/sqrt(var(f.A) * (length(f.A)-1) / length(f.A))
+#  g0prime <- (f.B-mean(f.B))/sqrt(var(f.B) * (length(f.B)-1) / length(f.B))
+#  
+#  #Compute spurious correlation term between f.A and f.B
+#  p0 <- mean(g0*g0prime)
+#  
+#  #Next, define the list of HTTK parameters that constitute the physiological parameters for this model.
+#  #Strictly speaking this should be all of the columns in indiv.model.bio1, except for liver.density, which is a fixed value.
+##   #From previous runs, these are the only parameters that the models are sensitive to
+#  phys.par <- switch(model,
+#                     'pbtk'=c('BW',
+#                              'hematocrit',
+#                              'million.cells.per.gliver',
+#                              'Qcardiacc',
+#                              'Qgfrc',
+#                              'Qgutf',
+#                              'Qkidneyf',
+#                              'Qliverf',
+#                              'Vliverc'),
+#                     '3compartment'=c('BW',
+#                                      'hematocrit',
+#                                      'million.cells.per.gliver',
+#                                      'Qgfrc',
+#                                      'Qgutf',
+#                                      'Qliverf',
+#                                      'Vliverc'),
+#                     '3compartmentss'=c('BW',
+#                                        'million.cells.per.gliver',
+#                                        'Qgfrc',
+#                                        'Qtotal.liverc',
+#                                        'Vliverc'),
+#                     '1compartment'=c('BW',
+#                                      'million.cells.per.gliver',
+#                                      'Qgfrc',
+#                                      'Qtotal.liverc',
+#                                      'Vliverc'))
+#phys.par.all <- names(indiv.model.bio1)[names(indiv.model.bio1)!=
+#                                            'liver.density']
+#  parlist <- list('Clint',
+#                  'Funbound.plasma',
+#                  phys.par.all)
+#  
+#  parlist <- c(parlist, as.list(phys.par))
+#  #Note: Now sensitivity is being calculated to each of the physiological parameter independently, as well as grouped.
+#  
+#  #If Clint is fixed at zero,
+#  #don't test sensitivity to it
+#  if (all(indiv.A[, Clint]==0)){
+#    parlist <- parlist[parlist!='Clint']
+#    }
+#  
+#  #Now loop over parameters (and groups thereof)
+#  eff.list <- lapply(parlist,
+#                     doforeachparam,
+#                     indiv.A=indiv.A,
+#                     indiv.B=indiv.B,
+#                     this.chemcas=this.chemcas,
+#                     model=model,
+#                     species=species,
+#                     css.method=css.method,
+#                     f.A=f.A,
+#                     f.B=f.B,
+#                     g0=g0,
+#                     g0prime=g0prime,
+#                     p0=p0)
+#  
+#  parnames <- parlist
+#  #Name the sensitivity indexes by their parameters
+#  #For the group of physiological parameters, just name it "phys.par"
+#  parnames[sapply(parnames, function(x) length(x)>1)] <- 'phys.par'
+#  names(eff.list) <- parnames
+#  
+#  #If Clint was zero, then sensitivity to it wasn't calculated.
+#  #Set all the sensitivity quantities to NA to indicate this.
+#  if (all(indiv.A[, Clint]==0)){
+#    eff.list <- c(eff.list,
+#                  list(Clint=list(Ti=NA,
+#                                  Si=NA,
+#                                  p0=NA,
+#                                  pj=NA,
+#                                  csj=NA,
+#                                  csminusj=NA,
+#                                  cdj=NA,
+#                                  cdminusj=NA,
+#                                  caj=NA,
+#                                  caminusj=NA)))
+#    }
+#  #Construct a data.table to return
+#  eff.dt <- as.data.table(do.call(rbind.data.frame,
+#                                  eff.list),
+#                          keep.rownames=TRUE)
+#  eff.dt[, chemcas:=this.chemcas]
+#  return(eff.dt)
+#  }
 ```
 
 And finally, loop over the chemicals to actually do the sensitivity analysis.
 
 ```{r, eval=FALSE}
-model <- "3compartmentss"
-species <- "Human"
-sigma.factor <- 0.3
-css.method <- "analytic"
-chemlist <- httk::get_cheminfo(info="CAS",
-                               exclude.fub.zero=FALSE)
-
-cluster <- parallel::makeCluster(2,# Was 40, reduced for simpler processors 
-                                 outfile='globalsens_indep_parallel_out.txt')
-
-evalout <- parallel::clusterEvalQ(cl=cluster,
-                                  {library(data.table)
-                                   library(httk)})
-parallel::clusterExport(cl = cluster,
-                        varlist = c('doforeachparam'))
-Set seeds on all workers for reproducibility
-parallel::clusterSetRNGStream(cluster, 
-                              TeachingDemos::char2seed("Caroline Ring"))
-for (poormetab in c(TRUE, FALSE)){
-  for (fup.censor in c(TRUE, FALSE)) {
-    #Now loop over the chemicals
-    eff.allchems <- rbindlist(
-      parLapplyLB(cl=cluster,
-                  chemlist, 
-                  doforeachchem_indep,
-                  model=model, 
-                  species=species, 
-                  sigma.factor=sigma.factor,
-                  css.method=css.method,
-                  indep.model.bio1=indep.bio1,
-                  indep.model.bio2=indep.bio2,
-                  poormetab=poormetab,
-                  fup.censor=fup.censor,
-                  nsamp=10)) # should be 1000, reduced for speed
-    saveRDS(eff.allchems, 
-            paste0('data/',
-                   'sens_glenisaacs_nhanes_', 
-                   'allchems_',
-                   'indepMC_',
-                   model,
-                   '_',
-                   css.method,
-                   '_fup_censor_',
-                   fup.censor,
-                   '_poormetab_',
-                   poormetab,
-                   "_FuptoFub",
-                   '.Rdata'))
-    }
-  }
-parallel::stopCluster(cluster)
+#model <- "3compartmentss"
+#species <- "Human"
+#sigma.factor <- 0.3
+#css.method <- "analytic"
+#chemlist <- httk::get_cheminfo(info="CAS",
+#                               exclude.fub.zero=FALSE)
+#
+#cluster <- parallel::makeCluster(2, Was 40, reduced for simpler processors 
+#                                 outfile='globalsens_indep_parallel_out.txt')
+#
+#evalout <- parallel::clusterEvalQ(cl=cluster,
+#                                  {library(data.table)
+#                                   library(httk)})
+#parallel::clusterExport(cl = cluster,
+#                        varlist = c('doforeachparam'))
+#Set seeds on all workers for reproducibility
+#parallel::clusterSetRNGStream(cluster, 
+#                              TeachingDemos::char2seed("Caroline Ring"))
+#for (poormetab in c(TRUE, FALSE)){
+#  for (fup.censor in c(TRUE, FALSE)) {
+#    Now loop over the chemicals
+#    eff.allchems <- rbindlist(
+#      parLapplyLB(cl=cluster,
+#                  chemlist, 
+#                  doforeachchem_indep,
+#                  model=model, 
+#                  species=species, 
+#                  sigma.factor=sigma.factor,
+#                  css.method=css.method,
+#                  indep.model.bio1=indep.bio1,
+#                  indep.model.bio2=indep.bio2,
+#                  poormetab=poormetab,
+#                  fup.censor=fup.censor,
+#                  nsamp=10))  should be 1000, reduced for speed
+#    saveRDS(eff.allchems, 
+#            paste0('data/',
+#                   'sens_glenisaacs_nhanes_', 
+#                   'allchems_',
+#                   'indepMC_',
+#                   model,
+#                   '_',
+#                   css.method,
+#                   '_fup_censor_',
+#                   fup.censor,
+#                   '_poormetab_',
+#                   poormetab,
+#                   "_FuptoFub",
+#                   '.Rdata'))
+#    }
+#  }
+#parallel::stopCluster(cluster)
 ```
