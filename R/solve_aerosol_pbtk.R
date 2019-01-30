@@ -24,11 +24,11 @@ solve_aerosol_pbtk <- function(chem.name = NULL,
                     exposure = .5,
                     ...)
 {
-  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
+  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- Calv <- NULL
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
   if(is.null(parameters)){
     parameters <- parameterize_aerosol_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
-                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)                                  
+                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression, dae = dae, particle.density = particle.density)                                  
   }else{
     name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
   if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 
@@ -89,8 +89,8 @@ solve_aerosol_pbtk <- function(chem.name = NULL,
   
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
   
-    parameters <- initparms_aerosol(parameters[!(names(parameters) %in% c("Fhep.assay.correction","Krbc2pu","million.cells.per.gliver","Fgutabs","Funbound.plasma"))])
-    state <-initState_aerosol(parameters,state) 
+    parameters <- initParms_aerosol(parameters[!(names(parameters) %in% c("Fhep.assay.correction","Krbc2pu","million.cells.per.gliver","Fgutabs","Funbound.plasma"))])
+    state <-initStates_aerosol(parameters,state) 
      
     forcing <- function(mag, Period, start, ExpDuration, times) {
       Nrep <- ceiling(max(times) / Period) 

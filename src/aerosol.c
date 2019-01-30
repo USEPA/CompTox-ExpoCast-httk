@@ -3,13 +3,13 @@
 
    Model File:  aerosol.model
 
-   Date:  Mon Apr 02 16:09:04 2018
+   Date:  Mon Dec 10 11:31:47 2018
 
-   Created by:  "mod v5.5.0"
+   Created by:  "C:/Users/mlinakis/Desktop/RLibrary/MCSIMU~1/mod/mod.exe v5.6.5"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2013 Free Software Foundation, Inc.
+   Copyright (c) 1993-2015 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
@@ -26,7 +26,7 @@
      Ametabolized = 0.0,
      AUC = 0.0,
 
-   9 Outputs:
+   10 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -35,12 +35,13 @@
     "Crest",
     "Ckidney",
     "Cplasma",
+    "Calv",
     "Aplasma",
 
    1 Input:
      Cinh (forcing function)
 
-   43 Parameters:
+   44 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
      hematocrit = 0.44,
@@ -84,36 +85,38 @@
      Fdeposited = 0,
      Fds = 0,
      DEalv = 0,
+     Kblood2air = 0,
 */
 
 #include <R.h>
 
 /* Model variables: States */
-#define ID_Agutlumen 0x0000
-#define ID_Agut 0x0001
-#define ID_Aliver 0x0002
-#define ID_Aven 0x0003
-#define ID_Alung 0x0004
-#define ID_Aart 0x0005
-#define ID_Arest 0x0006
-#define ID_Akidney 0x0007
-#define ID_Atubules 0x0008
-#define ID_Ametabolized 0x0009
-#define ID_AUC 0x000a
+#define ID_Agutlumen 0x00000
+#define ID_Agut 0x00001
+#define ID_Aliver 0x00002
+#define ID_Aven 0x00003
+#define ID_Alung 0x00004
+#define ID_Aart 0x00005
+#define ID_Arest 0x00006
+#define ID_Akidney 0x00007
+#define ID_Atubules 0x00008
+#define ID_Ametabolized 0x00009
+#define ID_AUC 0x0000a
 
 /* Model variables: Outputs */
-#define ID_Cgut 0x0000
-#define ID_Cliver 0x0001
-#define ID_Cven 0x0002
-#define ID_Clung 0x0003
-#define ID_Cart 0x0004
-#define ID_Crest 0x0005
-#define ID_Ckidney 0x0006
-#define ID_Cplasma 0x0007
-#define ID_Aplasma 0x0008
+#define ID_Cgut 0x00000
+#define ID_Cliver 0x00001
+#define ID_Cven 0x00002
+#define ID_Clung 0x00003
+#define ID_Cart 0x00004
+#define ID_Crest 0x00005
+#define ID_Ckidney 0x00006
+#define ID_Cplasma 0x00007
+#define ID_Calv 0x00008
+#define ID_Aplasma 0x00009
 
 /* Parameters */
-static double parms[43];
+static double parms[44];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -158,6 +161,7 @@ static double parms[43];
 #define Fdeposited parms[40]
 #define Fds parms[41]
 #define DEalv parms[42]
+#define Kblood2air parms[43]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -167,7 +171,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_aerosol (void (* odeparms)(int *, double *))
 {
-  int N=43;
+  int N=44;
   odeparms(&N, parms);
 }
 
@@ -233,6 +237,8 @@ void derivs_aerosol (int *neq, double *pdTime, double *y, double *ydot, double *
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
+  yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
+
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] + Vdot * Fdeposited * Cinh ;
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
@@ -243,7 +249,7 @@ void derivs_aerosol (int *neq, double *pdTime, double *y, double *ydot, double *
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) + Vdot * Cinh * DEalv ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Vdot * DEalv * ( Cinh - yout[ID_Calv] ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 

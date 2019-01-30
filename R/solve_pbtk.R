@@ -29,8 +29,8 @@ solve_pbtk <- function(chem.name = NULL,
     parameters <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression) 
   }else{
-    name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
-  if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 
+#    name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+  if(!all(param.names.pbtk %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.pbtk[which(!param.names.pbtk %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 
   }
   if(is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   start <- times[1]
@@ -146,7 +146,7 @@ parameters[["MW"]] <- NULL
   if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
   
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
-  parameters <- initparms(parameters[!(names(parameters) %in% c("Fhep.assay.correction","million.cells.per.gliver","Fgutabs","Funbound.plasma","Krbc2pu"))])
+  parameters <- initparms(parameters[param.names.pbtk.solver])
 
   
   state <-initState(parameters,state)

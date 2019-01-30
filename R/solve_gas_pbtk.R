@@ -20,13 +20,16 @@ solve_gas_pbtk <- function(chem.name = NULL,
                     air.concentration=1,
                     period = 1,
                     exposure = .5,
+		    vmax.km=F,
+		    vmax = 0,
+		    km = 1,
                     ...)
 {
-  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
+  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- Calv <- Cendexh <- Cmixexh <- NULL
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
   if(is.null(parameters)){
     parameters <- parameterize_gas_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
-                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)                                  
+                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression, vmax.km=vmax.km, vmax = vmax, km = km)                                  
   }else{
     name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
   if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 
@@ -72,14 +75,14 @@ solve_gas_pbtk <- function(chem.name = NULL,
 
    if (use.amounts) {
     state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen,Alung = Alung,Aliver = Aliver,
-               Aven = Aven,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0, AUC=0)
+               Aven = Aven,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
   }else{
     state <- c(Agutlumen = Agutlumen,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
   }    
   
   if(recalc.blood2plasma) parameters[['Rblood2plasma']] <- 1 - parameters[['hematocrit']] + parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
   
-  if(recalc.clearance){
+  if(recalc.clearance & !vmax.km){
     if(is.null(chem.name) & is.null(chem.cas)) stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
     ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
     ss.params[['million.cells.per.gliver']] <- parameters[['million.cells.per.gliver']]
@@ -88,20 +91,20 @@ solve_gas_pbtk <- function(chem.name = NULL,
   if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
   
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
-  parameters <- initparms_inh(parameters[!(names(parameters) %in% c("Fhep.assay.correction","Krbc2pu","million.cells.per.gliver","Fgutabs","Funbound.plasma"))])
-  state <-initState_inh(parameters,state) 
+  	parameters <- initParms_inh(parameters[!(names(parameters) %in% c("Fhep.assay.correction","Krbc2pu","million.cells.per.gliver","Fgutabs","Funbound.plasma"))])
+  	state <-initStates_inh(parameters,state) 
      
-  forcing <- function(mag, Period, start, ExpDuration, times) {
-  Nrep <- ceiling(max(times) / Period) 
-  times <- rep(c(start, ExpDuration), Nrep) + rep(Period * (0:(Nrep - 1)), rep(2, Nrep))
-  y  <- rep(c(mag,0), Nrep)
-  cbind(times,y)
-  }
-  Forc <- list(forcing(air.concentration, period, 0,exposure, times))  # possible to have more than one in list
-  if(!is.null(dosing.matrix)) Forc <- dosing.matrix
-  out <- ode(y = state, times = times, func="derivs_inh", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod_inh", nout=length(Outputs_inh),outnames=Outputs_inh,initforc= "initforc_inh",forcing=Forc,fcontrol=list(method='constant',rule=2,f=0),...)   
-  
-  
+  	forcing <- function(mag, Period, start, ExpDuration, times, vmax, km) {
+  		Nrep <- ceiling(max(times) / Period) 
+  		times <- rep(c(start, ExpDuration), Nrep) + rep(Period * (0:(Nrep - 1)), rep(2, Nrep))
+  		y  <- rep(c(mag,0), Nrep)
+ 		 cbind(times,y)
+ 		 }
+  	Forc <- list(forcing(air.concentration, period, 0,exposure, times))  # possible to have more than one in list
+  	if(!is.null(dosing.matrix)) Forc <- dosing.matrix
+  	out <- ode(y = state, times = times, func="derivs_inh", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod_inh", nout=length(Outputs_inh),outnames=Outputs_inh,initforc= "initforc_inh",forcing=Forc,fcontrol=list(method='constant',rule=2,f=0),...)   
+
+
   if(plots==T)
   {
     if(use.amounts){
@@ -112,9 +115,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
     
   }
     if(use.amounts){
-      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC")]
+      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC","Cendexh","Cmixexh")]
     }else{
-      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC")]
+      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC","Cendexh","Cmixexh")]
     }
   class(out) <- c('matrix','deSolve')
   
