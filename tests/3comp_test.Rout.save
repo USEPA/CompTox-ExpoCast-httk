@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2019-01-08 r75959) -- "Unsuffered Consequences"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,23 +21,18 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > set.seed(12345)
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Human plasma concentration returned in uM units.
 [1] 0.1125149
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
 > calc_mc_css(chem.name="bisphenol a",model="3compartment")
 Human plasma concentration returned in mg/L units for 0.95 quantile.
@@ -47,16 +42,18 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo Rblood2plasma returned.
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+3: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+5: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-6: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
+7: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-7: In convert_httk(indiv.model.bio = indiv_fc, model = model, this.chem = chemcas,  :
-  Human in vivo Rblood2plasma substituted.
+8: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
 > head(solve_3comp(chem.name="bisphenol a"))
 Human values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -75,21 +72,25 @@ AUC is area under plasma concentration curve in uM * days units with Rblood2plas
 [5,]    18.674944 0.0272788812
 [6,]    25.173646 0.0490186442
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Human plasma concentration returned in uM units.
 [1] 0.1125149
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
 > calc_mc_css(chem.cas="80-05-7",model="3compartment")
 Human plasma concentration returned in mg/L units for 0.95 quantile.
@@ -99,16 +100,18 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo Rblood2plasma returned.
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+3: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+5: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-6: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
+7: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-7: In convert_httk(indiv.model.bio = indiv_fc, model = model, this.chem = chemcas,  :
-  Human in vivo Rblood2plasma substituted.
+8: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
 > head(solve_3comp(chem.cas="80-05-7"))
 Human values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -127,42 +130,46 @@ AUC is area under plasma concentration curve in uM * days units with Rblood2plas
 [5,]    18.674944 0.0272788812
 [6,]    25.173646 0.0490186442
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
 [1] 0.1125149
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-4: In calc_analytic_css(parameters = parameterize_3comp(chem.cas = "80-05-7"),  :
+5: In calc_analytic_css(parameters = parameterize_3comp(chem.cas = "80-05-7"),  :
   Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
 > calc_mc_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in mg/L units.
 [1] 1.224887
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-4: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
+5: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-5: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
+6: In httk::predict_partitioning_schmitt(parameters = pschmitt, chem.cas = this.chem,  :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-6: In if (!is.na(Rblood2plasma)) { :
-  the condition has length > 1 and only the first element will be used
-7: In convert_httk(indiv.model.bio = indiv_fc, model = model, this.chem = chemcas,  :
-  Human in vivo Rblood2plasma substituted.
+7: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 Values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -181,17 +188,19 @@ AUC is area under plasma concentration curve in uM * days units with Rblood2plas
 [5,]    18.674944 0.0272788812
 [6,]    25.173646 0.0490186442
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-4: In solve_3comp(parameters = parameterize_3comp(chem.cas = "80-05-7")) :
-  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
 5: In solve_3comp(parameters = parameterize_3comp(chem.cas = "80-05-7")) :
+  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
+6: In solve_3comp(parameters = parameterize_3comp(chem.cas = "80-05-7")) :
   Clearance not recalculated.  Set recalc.clearance to TRUE if desired.
 > 
 > proc.time()
    user  system elapsed 
-   4.14    0.37    4.50 
+  10.54    5.46   10.09 

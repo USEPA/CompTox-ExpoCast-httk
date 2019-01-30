@@ -1,3 +1,4 @@
+
 R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -15,8 +16,6 @@ Type 'contributors()' for more information and
 Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
-
-[Previously saved workspace restored]
 
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
@@ -190,3 +189,7 @@ Warning messages:
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
 [1] 2.362581
+> 
+> proc.time()
+   user  system elapsed 
+  10.68    5.93   10.75 
