@@ -61,7 +61,8 @@ Default value of NULL for doses.per.day solves for a single dose.
  AUC is area under plasma concentration curve. 
    
  Model Figure
-\figure{1comp.png}{options: width="60\%"}
+ \if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One Compartment Model Schematic"}}
+ \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One Compartment Model Schematic"}}
 
 %%  ~~ If necessary, more details than the description above ~~
 }
@@ -77,6 +78,10 @@ A matrix with a column for time(in days) and a column for the compartment and th
 
 \author{
 Robert Pearce
+}
+
+\reference{
+Pearce, Robert G., et al. "Httk: R package for high-throughput toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 
 \examples{
