@@ -61,7 +61,8 @@ The extra compartments include the amounts or concentrations metabolized by the 
 AUC is the area under the curve of the plasma concentration.
 
 Model Figure
-\figure{pbtk.png}{options: width="60\%"}
+\if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model Schematic"}}
+ \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model Schematic"}}
 
 %%When species is specified as rabbit, dog, or mouse, the function uses the appropriate physiological data(volumes and flows) but substitues human fraction unbound, partition coefficients, and intrinsic hepatic clearance. 
 
@@ -79,6 +80,10 @@ A matrix of class deSolve with a column for time(in days), each compartment, the
 
 \author{
 John Wambaugh and Robert Pearce
+}
+
+\reference{
+Pearce, Robert G., et al. "Httk: R package for high-throughput toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 
 \examples{
