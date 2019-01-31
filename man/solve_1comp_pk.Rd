@@ -80,7 +80,7 @@ A matrix with a column for time(in days) and a column for the compartment and th
 Robert Pearce
 }
 
-\reference{
+\references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 
