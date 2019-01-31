@@ -65,10 +65,10 @@ A data.table where each row represents an individual, and
 Generate a virtual population
 }
 \examples{
-#Simply generate a virtual population of 100 individuals,
+#Simply generate a virtual population of 20 individuals,
  #using the direct-resampling method
  set.seed(42)
-httkpop_generate(method='direct resampling', nsamp=100)
+httkpop_generate(method='direct resampling', nsamp=20)
 #Generate a population using the virtual-individuals method,
 #including 80 females and 20 males,
 #including only ages 20-65,
@@ -76,8 +76,8 @@ httkpop_generate(method='direct resampling', nsamp=100)
  #Non-Hispanic Black individuals,
  #including only non-obese individuals
 httkpop_generate(method = 'virtual individuals',
-gendernum=list(Female=80, 
-Male=20),
+gendernum=list(Female=16, 
+Male=4),
 agelim_years=c(20,65), 
 reths=c('Mexican American', 
 'Non-Hispanic Black'),
