@@ -82,7 +82,7 @@ A matrix of class deSolve with a column for time(in days), each compartment, the
 John Wambaugh and Robert Pearce
 }
 
-\reference{
+\references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 
