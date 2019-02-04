@@ -55,7 +55,7 @@ if (getRversion() >= "2.15.1") {
 #' #Simply generate a virtual population of 20 individuals,
 #'  #using the direct-resampling method
 #'  set.seed(42)
-#'httkpop_generate(method='direct resampling', nsamp=20)
+#'httkpop_generate(method='direct resampling', nsamp=10)
 #' #Generate a population using the virtual-individuals method,
 #' #including 80 females and 20 males,
 #' #including only ages 20-65,
@@ -63,8 +63,8 @@ if (getRversion() >= "2.15.1") {
 #'  #Non-Hispanic Black individuals,
 #'  #including only non-obese individuals
 #' httkpop_generate(method = 'virtual individuals',
-#' gendernum=list(Female=16, 
-#' Male=4),
+#' gendernum=list(Female=8, 
+#' Male=2),
 #' agelim_years=c(20,65), 
 #' reths=c('Mexican American', 
 #''Non-Hispanic Black'),
