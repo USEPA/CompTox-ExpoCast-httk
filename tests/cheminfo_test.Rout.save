@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2019-01-08 r75959) -- "Unsuffered Consequences"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,16 +21,23 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 587
+[1] 8822
 > length(pbpk.list)
-[1] 485
+[1] 8815
 > length(rat.list)
-[1] 171
+[1] 101
 > 
 > proc.time()
    user  system elapsed 
-   1.37    0.28    1.65 
+   1.68    0.68    8.96 

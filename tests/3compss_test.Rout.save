@@ -21,7 +21,6 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
-> set.seed(12345)
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
 Human plasma concentration returned in uM units.
 [1] 0.1296676
@@ -30,26 +29,8 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo Rblood2plasma returned.
-> calc_mc_css(chem.name="bisphenol a",model="3compartmentss")
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-[1] 1.284123
-Warning messages:
-1: In httk::parameterize_steadystate(chem.cas = this.chem, species = "Human",  :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo Rblood2plasma returned.
-3: In parameterize_steadystate(chem.cas = this.chem, species = "Human",  :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo Rblood2plasma returned.
-5: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'Pow' then assigning NULL (deleting it).
-6: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Donor' then assigning NULL (deleting it).
-7: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Accept' then assigning NULL (deleting it).
-8: In available_rblood2plasma(chem.cas = this.chem, species = "Human",  :
-  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.name="bisphenol a",model="3compartmentss")
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Human plasma concentration returned in uM units.
 [1] 0.1296676
@@ -58,26 +39,8 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo Rblood2plasma returned.
-> calc_mc_css(chem.cas="80-05-7",model="3compartmentss")
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-[1] 1.319599
-Warning messages:
-1: In httk::parameterize_steadystate(chem.cas = this.chem, species = "Human",  :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo Rblood2plasma returned.
-3: In parameterize_steadystate(chem.cas = this.chem, species = "Human",  :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo Rblood2plasma returned.
-5: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'Pow' then assigning NULL (deleting it).
-6: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Donor' then assigning NULL (deleting it).
-7: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Accept' then assigning NULL (deleting it).
-8: In available_rblood2plasma(chem.cas = this.chem, species = "Human",  :
-  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.cas="80-05-7",model="3compartmentss")
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
 [1] 0.1296676
@@ -86,23 +49,9 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo Rblood2plasma returned.
-> calc_mc_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
-Plasma concentration returned in mg/L units.
-[1] 1.296876
-Warning messages:
-1: In parameterize_steadystate(chem.cas = "80-05-7") :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo Rblood2plasma returned.
-3: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'Pow' then assigning NULL (deleting it).
-4: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Donor' then assigning NULL (deleting it).
-5: In `[.data.table`(indiv.model, , `:=`((noMC.names), p[noMC.names])) :
-  Adding new column 'pKa_Accept' then assigning NULL (deleting it).
-6: In available_rblood2plasma(chem.cas = this.chem, species = "Human",  :
-  Average in vivo Human Rblood2plasma (0.846) substituted.
+> #set.seed(12345)
+> #calc_mc_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 > 
 > proc.time()
    user  system elapsed 
-   8.93    5.53    8.96 
+   1.54    0.54    2.42 
