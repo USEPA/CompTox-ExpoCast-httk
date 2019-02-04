@@ -17,8 +17,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
 > 
@@ -153,4 +151,4 @@ Volume of distribution returned in units of L/kg BW.
 > 
 > proc.time()
    user  system elapsed 
-   3.93    0.65   15.09 
+   3.09    0.67    5.46 

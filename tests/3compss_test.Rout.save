@@ -17,8 +17,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
@@ -54,4 +52,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-   1.54    0.54    2.42 
+   1.71    0.43    2.95 
