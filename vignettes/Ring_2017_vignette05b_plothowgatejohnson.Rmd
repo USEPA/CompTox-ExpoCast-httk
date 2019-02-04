@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
 
-This vignette plots HTTK-Pop-predicted Css against *in vivo* Css from Howgate 2006 and Johnson 2006.
+This vignette plots HTTK-Pop-predicted Css against *in vivo* Css from Howgate 
+2006 and Johnson 2006.
 
 First load some packages.
 ```{r load_packages, eval = FALSE}
@@ -40,7 +41,11 @@ chem.dt[, Clint.zero:=Clint==0]
 
 jhchem <- merge(jhchem,chem.dt,by='CAS')
 ```
-Define a function to plot the confidence intervals as ellipses. This function takes the confidence interval bounds in two dimensions and returns points along the circumference of an ellipse with major and minor axes defined by the confidence intervals in each dimension. By default it returns 100 points; this seems to be plenty to draw a smooth-looking ellipse.
+Define a function to plot the confidence intervals as ellipses. This function 
+takes the confidence interval bounds in two dimensions and returns points along 
+the circumference of an ellipse with major and minor axes defined by the 
+confidence intervals in each dimension. By default it returns 100 points; this 
+seems to be plenty to draw a smooth-looking ellipse.
 ```{r, eval=FALSE}
 ellipse_fun <- function(x.CI.max,
                         x.CI.min,
@@ -65,7 +70,8 @@ ellipse_fun <- function(x.CI.max,
   
   }
 ```
-Next, define a function to actually do the plotting -- one that can be called with arguments for poormetab and fup.censor.
+Next, define a function to actually do the plotting -- one that can be called 
+with arguments for poormetab and fup.censor.
 ```{r, eval=FALSE}
 plot_virtstudy_innerfunction <- function(model,
                                               fup.censor,
