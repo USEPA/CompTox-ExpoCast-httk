@@ -155,9 +155,17 @@ out_dr <- parallel::clusterMap(cl=cluster,
                                )
 parallel::stopCluster(cluster)
 ```
-Great. Now, let's think of the procedure as looping first over the ten subpopulations of interest, and then over the chemicals in the HTTK data set. So first, let's think about what we need to do for each chemical, given a subpopulation.
+Great. Now, let's think of the procedure as looping first over the ten 
+subpopulations of interest, and then over the chemicals in the HTTK data set. 
+So first, let's think about what we need to do for each chemical, given a subpopulation.
 
-We need to draw `Funbound.plasma` and `Clint` samples for the two virtual populations and convert into HTTK parameter matrices. That will give us matrix A and matrix B. Then, we need to evaluate yA and yB. Then, we need to loop over the HTTK model parameters -- the columns of A and B -- and swap one column at a time between A and B. For parameter i, we then need to evaluate yABi and yBAi. Then, we need to compute the correlations, and from them the sensitivity indices for parameter i. 
+We need to draw `Funbound.plasma` and `Clint` samples for the two virtual 
+populations and convert into HTTK parameter matrices. That will give us matrix A 
+and matrix B. Then, we need to evaluate yA and yB. Then, we need to loop over 
+the HTTK model parameters -- the columns of A and B -- and swap one column at a 
+time between A and B. For parameter i, we then need to evaluate yABi and yBAi. 
+Then, we need to compute the correlations, and from them the sensitivity indices 
+for parameter i. 
 
 So we can write some pseudocode like this:
 
@@ -575,9 +583,18 @@ doforeachsubpop <- function(ecg, #Short for "ExpoCast group"
   }
 ```
 # Loop over subpopulations
-Excellent! All that remains is to write the loop over the subpopulations that will call all of these functions in turn. We'll also add loops over the values of `poormetab` and `Funbound.plasma`, to see if and how global sensitivity changes under different conditions on the distributions of those variables.
+Excellent! All that remains is to write the loop over the subpopulations that 
+will call all of these functions in turn. We'll also add loops over the values 
+of `poormetab` and `Funbound.plasma`, to see if and how global sensitivity 
+changes under different conditions on the distributions of those variables.
 
-**WARNING: this code may take a LONG time to run!** 4 model evaluations per individual times 1000 individuals times 3 parameters times about 500 chemicals times 10 subpopulations = 6e7 model evaluations, plus overhead. While the model evaluations are vectorized for the analytic steady-state models -- so 1000 model evaluations take very little time -- this still can add up. On my machine, it took about 7 minutes for each combination of CLint and Funbound conditions, and about half an hour total -- and that is parallelized with 10 cores.
+**WARNING: this code may take a LONG time to run!** 4 model evaluations per 
+individual times 1000 individuals times 3 parameters times about 500 chemicals 
+times 10 subpopulations = 6e7 model evaluations, plus overhead. While the model 
+evaluations are vectorized for the analytic steady-state models -- so 1000 model 
+evaluations take very little time -- this still can add up. On my machine, it 
+took about 7 minutes for each combination of CLint and Funbound conditions, and 
+about half an hour total -- and that is parallelized with 10 cores.
 ```{r, eval=FALSE}
 model <- "3compartmentss"
 species <- "Human"
@@ -633,9 +650,12 @@ system.time({for (poormetab in c(TRUE, FALSE)){
 parallel::stopCluster(cluster)
 ```
 
-Finally, we want to do sensitivity analysis for independent Monte Carlo, because that lets us estimate sensitivity to each physiological parameter independently.
+Finally, we want to do sensitivity analysis for independent Monte Carlo, because 
+that lets us estimate sensitivity to each physiological parameter independently.
 
-The first thing we need to do is generate two separate populations using independent Monte Carlo. To save space, we'll set this up as a function that takes the seed as an argument.
+The first thing we need to do is generate two separate populations using 
+independent Monte Carlo. To save space, we'll set this up as a function that 
+takes the seed as an argument.
 
 ```{r, eval=FALSE}
 indep_gen <- function(nsamp=1000, sigma.factor=0.3){
@@ -727,7 +747,10 @@ indep.bio1 <- indep_gen()
 indep.bio2 <- indep_gen()
 ```
 
-The innermost function (over parameters) will be the same, but we need to modify the function of things to do for each chemical, because we need to do sensitivity analysis for the physiological parameters independently, not as a group.
+The innermost function (over parameters) will be the same, but we need to 
+modify the function of things to do for each chemical, because we need to do 
+sensitivity analysis for the physiological parameters independently, not as a 
+group.
 
 ```{r, eval=FALSE}
  Commented out because of problem with Pandoc for Windows:
