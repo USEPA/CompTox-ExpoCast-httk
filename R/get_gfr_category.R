@@ -15,6 +15,14 @@
 #'  
 #'@return Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney
 #'  Failure'.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 get_gfr_category <- function(age_years,
                              age_months,

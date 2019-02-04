@@ -1,0 +1,151 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH other_tests.R other_tests.Rout
+> library(httk)
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk")
+Human plasma concentration returned in uM units.
+[1] 0.1121317
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.name="bisphenol a",model="pbtk")
+> head(solve_pbtk(chem.name="bisphenol a"))
+Human values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
+           time Agutlumen      Cart      Cven    Clung     Cgut   Cliver
+[1,] 0.00000000 306.62619 0.0000000 0.0000000 0.000000  0.00000  0.00000
+[2,] 0.01041667 177.79465 0.1703611 0.2019768 2.074797 78.89239 20.68000
+[3,] 0.02083333 103.09280 0.4876743 0.5165699 5.719525 85.38273 46.12968
+[4,] 0.03125000  59.77750 0.7131891 0.7291709 8.268875 72.28920 59.13937
+[5,] 0.04166667  34.66149 0.8161984 0.8212888 9.414865 56.90857 61.26207
+[6,] 0.05208333  20.09819 0.8320255 0.8305318 9.572862 43.98474 57.09011
+       Ckidney      Crest Ametabolized    Atubules   Cplasma          AUC
+[1,]  0.000000 0.00000000     0.000000 0.000000000 0.0000000 0.0000000000
+[2,]  2.281671 0.04365287     1.019103 0.001502663 0.2556668 0.0009707884
+[3,] 10.364644 0.29432197     5.345560 0.017040175 0.6538859 0.0057620258
+[4,] 18.256376 0.73358422    12.135080 0.054142717 0.9230012 0.0141182068
+[5,] 22.938060 1.25337472    19.834567 0.107495972 1.0396061 0.0244550198
+[6,] 24.592396 1.76463677    27.358660 0.168744111 1.0513061 0.0354129085
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> calc_analytic_css(chem.cas="80-05-7",model="pbtk")
+Human plasma concentration returned in uM units.
+[1] 0.1121317
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.cas="80-05-7",model="pbtk")
+> head(solve_pbtk(chem.cas="80-05-7"))
+Human values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
+           time Agutlumen      Cart      Cven    Clung     Cgut   Cliver
+[1,] 0.00000000 306.62619 0.0000000 0.0000000 0.000000  0.00000  0.00000
+[2,] 0.01041667 177.79465 0.1703611 0.2019768 2.074797 78.89239 20.68000
+[3,] 0.02083333 103.09280 0.4876743 0.5165699 5.719525 85.38273 46.12968
+[4,] 0.03125000  59.77750 0.7131891 0.7291709 8.268875 72.28920 59.13937
+[5,] 0.04166667  34.66149 0.8161984 0.8212888 9.414865 56.90857 61.26207
+[6,] 0.05208333  20.09819 0.8320255 0.8305318 9.572862 43.98474 57.09011
+       Ckidney      Crest Ametabolized    Atubules   Cplasma          AUC
+[1,]  0.000000 0.00000000     0.000000 0.000000000 0.0000000 0.0000000000
+[2,]  2.281671 0.04365287     1.019103 0.001502663 0.2556668 0.0009707884
+[3,] 10.364644 0.29432197     5.345560 0.017040175 0.6538859 0.0057620258
+[4,] 18.256376 0.73358422    12.135080 0.054142717 0.9230012 0.0141182068
+[5,] 22.938060 1.25337472    19.834567 0.107495972 1.0396061 0.0244550198
+[6,] 24.592396 1.76463677    27.358660 0.168744111 1.0513061 0.0354129085
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
+Plasma concentration returned in uM units.
+[1] 0.1121317
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+5: In calc_analytic_css(parameters = parameterize_pbtk(chem.cas = "80-05-7"),  :
+  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
+> #set.seed(12345)
+> #calc_mc_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
+> head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
+Values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
+           time Agutlumen      Cart      Cven    Clung     Cgut   Cliver
+[1,] 0.00000000 306.62619 0.0000000 0.0000000 0.000000  0.00000  0.00000
+[2,] 0.01041667 177.79465 0.1703611 0.2019768 2.074797 78.89239 20.68000
+[3,] 0.02083333 103.09280 0.4876743 0.5165699 5.719525 85.38273 46.12968
+[4,] 0.03125000  59.77750 0.7131891 0.7291709 8.268875 72.28920 59.13937
+[5,] 0.04166667  34.66149 0.8161984 0.8212888 9.414865 56.90857 61.26207
+[6,] 0.05208333  20.09819 0.8320255 0.8305318 9.572862 43.98474 57.09011
+       Ckidney      Crest Ametabolized    Atubules   Cplasma          AUC
+[1,]  0.000000 0.00000000     0.000000 0.000000000 0.0000000 0.0000000000
+[2,]  2.281671 0.04365287     1.019103 0.001502663 0.2556668 0.0009707884
+[3,] 10.364644 0.29432197     5.345560 0.017040175 0.6538859 0.0057620258
+[4,] 18.256376 0.73358422    12.135080 0.054142717 0.9230012 0.0141182068
+[5,] 22.938060 1.25337472    19.834567 0.107495972 1.0396061 0.0244550198
+[6,] 24.592396 1.76463677    27.358660 0.168744111 1.0513061 0.0354129085
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+5: In solve_pbtk(parameters = parameterize_pbtk(chem.cas = "80-05-7")) :
+  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
+6: In solve_pbtk(parameters = parameterize_pbtk(chem.cas = "80-05-7")) :
+  Clearance not recalculated.  Set recalc.clearance to TRUE if desired.
+> 
+> proc.time()
+   user  system elapsed 
+   2.50    0.51    4.11 
