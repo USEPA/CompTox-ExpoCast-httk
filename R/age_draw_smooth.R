@@ -11,6 +11,14 @@
 #' @return A named list with members 'ages_months' and 'ages_years', each 
 #'   numeric of length \code{nsamp}, giving the sampled ages in months and 
 #'   years. 
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 age_draw_smooth <- function(g, r, nsamp, agelim_months){
   #R CMD CHECK throws notes about "no visible binding for global variable", for 
   #each time a data.table column name is used without quotes. To appease R CMD 

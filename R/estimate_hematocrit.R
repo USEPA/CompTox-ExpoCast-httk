@@ -8,6 +8,14 @@
 #'   \code{age_months}, \code{gender}, \code{reth}.
 #'   
 #' @return The same data.table with a \code{hematocrit} column added.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 estimate_hematocrit <- function(hcttmp_dt){
   

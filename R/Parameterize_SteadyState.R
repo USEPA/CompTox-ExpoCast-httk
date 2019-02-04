@@ -1,5 +1,12 @@
 # This function retrieves the paramters needed to run the constant infusion dose model for determining steady-state concentration.
-parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human",clint.pvalue.threshold=0.05,default.to.human=F,human.clint.fub=F,adjusted.Funbound.plasma=T,restrictive.clearance=T)
+parameterize_steadystate <- function(chem.cas=NULL,
+                                     chem.name=NULL,
+                                     species="Human",
+                                     clint.pvalue.threshold=0.05,
+                                     default.to.human=F,
+                                     human.clint.fub=F,
+                                     adjusted.Funbound.plasma=T,
+                                     restrictive.clearance=T)
 {
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
@@ -27,7 +34,10 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
   BW <- this.phys.data[["Average BW"]]
     
 
-  Qtotal.liverc <- subset(tissue.data,tolower(Species) == tolower(species) & variable == 'Flow (mL/min/kg^(3/4))' & Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
+  Qtotal.liverc <- subset(tissue.data,
+                          tolower(Species) == tolower(species) & 
+                          variable == 'Flow (mL/min/kg^(3/4))' & 
+                          Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
   Vliverc <- subset(tissue.data,tolower(Species) == tolower(species) & variable == 'Vol (L/kg)' & Tissue == 'liver')[,'value'] # L/kg BW
   Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
   if (class(Clint) == "try-error" & default.to.human || human.clint.fub) 
@@ -48,6 +58,9 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
     warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fub) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
   if (fub == 0)
   {
     fub <- 0.005
@@ -56,14 +69,11 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
   if(adjusted.Funbound.plasma){
     if(human.clint.fub) Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]
     else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-    pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-    pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
-    Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
     ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
     dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-    fub <- 1 / ((dow) * Flipid + 1 / fub)
+    fub.adjust <- 1 / ((dow) * Flipid + 1 / fub)/fub
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  }
+  } else fub.adjust <- NA
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if(class(Fgutabs) == "try-error") Fgutabs <- 1
@@ -71,15 +81,16 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
 
   Params <- list()
   Params[["Clint"]] <- Clint # uL/min/10^6
-  Params[["Funbound.plasma"]] <- fub # unitless fraction
+  if (!is.na(fub.adjust)) Params[["Funbound.plasma"]] <- fub*fub.adjust # unitless fraction
+  else Params[["Funbound.plasma"]] <- fub # unitless fraction
+  Params[["Funbound.plasma.adjustment"]] <- fub.adjust
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
-  
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+#  Params[["Pow"]] <- Pow
+#  Params[["pKa_Donor"]] <- pKa_Donor
+#  Params[["pKa_Accept"]] <- pKa_Accept
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
   Params[["Fhep.assay.correction"]] <- calc_fu_hep(Pow,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept) # fraction 
@@ -89,11 +100,16 @@ parameterize_steadystate <- function(chem.cas=NULL,chem.name=NULL,species="Human
   Params[["liver.density"]] <- 1.05 # g/mL
   Params[['Fgutabs']] <- Fgutabs
   
-  cl <- calc_hepatic_clearance(parameters=Params,hepatic.model='unscaled',suppress.messages=T)
-  Qliver <- Params$Qtotal.liverc / Params$BW^.25
   Rb2p <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
-  if(restrictive.clearance) Params[['hepatic.bioavailability']] <- Qliver / (Qliver + Params$Funbound.plasma * cl / Rb2p)
-  else Params[['hepatic.bioavailability']] <- Qliver / (Qliver + cl / Rb2p) 
+  Params[["Rblood2plasma"]] <- Rb2p
 
-  return(Params)
+  # Need to have a parameter with this name to calculate clearance, but need 
+  # clearance to calculate bioavailability:
+  Params[["hepatic.bioavailability"]] <- NA
+  cl <- calc_hepatic_clearance(parameters=Params,hepatic.model='unscaled',suppress.messages=T)#L/h/kg boduweight
+  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h
+
+  if(restrictive.clearance) Params[['hepatic.bioavailability']] <- Qliver / (Qliver + Params$Funbound.plasma * cl / Rb2p)
+  else Params[['hepatic.bioavailability']] <- Qliver / (Qliver + cl*BW / Rb2p) 
+    return(Params)
 }

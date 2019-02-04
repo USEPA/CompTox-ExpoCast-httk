@@ -1,3 +1,6 @@
+#This file is used by roxygen2 to generate man files (documentation) for data
+#sets included in the package.
+#
 #' Reference tissue masses and flows from tables in McNally et al. 2014.
 #' 
 #' Reference tissue masses, flows, and marginal distributions from McNally et
@@ -16,6 +19,14 @@
 #'   \code{flow_ref}/\code{CO_ref}}}
 #' @source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human 
 #'   population generator." Toxicology 315, 70-85, 2004.
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "mcnally_dt"
 
 #'Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
@@ -31,6 +42,14 @@
 #'  smoothed relationship between log hematocrit and age in months} 
 #'  \item{\code{hct_kde}}{A list of kde objects; each is a KDE of the
 #'  distribution of residuals about the smoothing spline.}}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "spline_hematocrit"
 
 #'Smoothing splines for log serum creatinine vs. age in months, along with KDE
@@ -50,6 +69,14 @@
 #'  objects; each is a KDE of the distribution of residuals about the smoothing 
 #'  spline.}
 #'   }
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "spline_serumcreat"
 
 #'Smoothing splines for log height vs. age and log body weight vs. age, along 
@@ -68,6 +95,14 @@
 #'  weight in kg and age in months} \item{\code{hw_kde}}{A list of kde objects;
 #'  each is a 2-D KDE of the distribution of log height and log body weight
 #'  residuals about the smoothing splines.} }
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "spline_heightweight"
 
 #'Pre-processed NHANES data.
@@ -89,6 +124,14 @@
 #'  Assigned using methods in \code{get_weight_class}.} }
 #'  
 #'@source \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "nhanes_mec_svy"
 
 #'Smoothed age distributions by race and gender.
@@ -101,6 +144,14 @@
 #'  \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of 
 #'  \code{svysmooth} objects, each encoding a weighted smoothed distribution of 
 #'  ages.}}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "age_dist_smooth"
 
 #'CDC BMI-for-age charts
@@ -127,6 +178,14 @@
 #'  
 #'  
 #'@source \url{www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "bmiage"
 
 #'WHO weight-for-length charts
@@ -148,4 +207,65 @@
 #'  \url{http://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
 #'  and
 #'  \url{http://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "wfl"
+
+#' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
+#'
+#' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
+#' Honda et al. (submitted)
+#'
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{area_bottom}{}
+#'   \item{cell_yield}{}
+#'   \item{diam}{} 
+#'   \item{sysID}{}
+#'   \item{v_total}{} 
+#'   \item{v_working}{} 
+#'   \item{well_desc}{}
+#'   \item{well_number}{}
+#' }
+#' @source \url{http://www.diamondse.info/}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Greg Honda
+#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+"well_param"
+
+#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#'
+#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#'
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{MP}{}
+#'   \item{MW}{} 
+#'   \item{casrn}{}
+#'   \item{compound_name}{}
+#'   \item{gkaw}{}
+#'   \item{gkow}{}
+#'   \item{gswat}{}
+#' }
+#' @source \url{http://www.diamondse.info/}
+#'
+#'@keywords data
+#'
+#'@author Greg Honda
+#'
+#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+"armitage_input"
