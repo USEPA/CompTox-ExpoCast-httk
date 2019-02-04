@@ -17,8 +17,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
 > #R CMD BATCH other_tests.R other_tests.Rout
 > #library(httk)
 > #set.seed(12345)
@@ -56,4 +54,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   0.29    0.26    2.73 
+   0.18    0.21    5.43 
