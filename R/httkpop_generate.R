@@ -51,8 +51,7 @@ if (getRversion() >= "2.15.1") {
 #'@return A data.table where each row represents an individual, and 
 #'  each column represents a demographic, anthropometric, or physiological 
 #'  parameter.
-#'@examples
-#'\dontrun{
+#'@examples \dontrun{
 #' #Simply generate a virtual population of 100 individuals,
 #'  #using the direct-resampling method
 #'  set.seed(42)
