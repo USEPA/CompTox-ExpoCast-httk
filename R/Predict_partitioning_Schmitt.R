@@ -142,6 +142,6 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
     }
 	}
   if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
-  if(user.params) warning(paste(species,'fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
+ # if(user.params) warning(paste(species,' fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
  	return(Ktissue2pu)
 }

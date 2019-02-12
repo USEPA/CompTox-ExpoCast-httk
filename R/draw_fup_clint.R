@@ -174,7 +174,7 @@ draw_fup_clint <- function(this.chem=NULL,
     ppb.fit <- optim(c(2,(1-Funbound.plasma)/Funbound.plasma*2), function(x) (0.95-pbeta(Funbound.plasma.u95,x[1],x[2])+pbeta(Funbound.plasma.l95,x[1],x[2]))^2+(Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,method="BFGS")
   # We are drawing new values for the unadjusted Fup:
     indiv_tmp[, unadjusted.Funbound.plasma:=rbeta(n=nsamp,ppb.fit$par[1],ppb.fit$par[2])]
-    indiv_tmp[, Flipid:=subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]]
+    indiv_tmp[, Flipid:=subset(httk::physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(httk::physiology.data) == 'Human')]]
     indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
 
