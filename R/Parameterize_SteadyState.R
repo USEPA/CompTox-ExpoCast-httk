@@ -66,11 +66,11 @@ parameterize_steadystate <- function(chem.cas=NULL,
     fub <- 0.005
     warning("Fraction unbound = 0, changed to 0.005.")
   }
+  ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
+  dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
   if(adjusted.Funbound.plasma){
     if(human.clint.fub) Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]
     else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-    ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
-    dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
     fub.adjust <- 1 / ((dow) * Flipid + 1 / fub)/fub
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fub.adjust <- NA
@@ -86,6 +86,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Funbound.plasma.adjustment"]] <- fub.adjust
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
+  Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
 #  Params[["Pow"]] <- Pow
