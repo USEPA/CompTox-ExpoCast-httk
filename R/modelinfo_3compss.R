@@ -1,6 +1,7 @@
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.3compss <- c("BW",
                        "Clint",
+                       "Dow74",
                        "Fgutabs",
                        "Fhep.assay.correction",
                        "Funbound.plasma",
