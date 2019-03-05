@@ -7,7 +7,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      human.clint.fup=F,
                                      adjusted.Funbound.plasma=T,
                                      restrictive.clearance=T,
-                                     fup.lod.default=0.005)
+                                     fup.lod.default=0.005,
+                                     suppress.messages=F)
 {
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
@@ -55,7 +56,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   {
     Clint.point <- as.numeric(strsplit(Clint.db,",")[[1]][1])
     Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
-    warning("Clint is provided as a distribution.")
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
   } else {
     Clint.point <- Clint.db
   # Check that the trend in the CLint assay was significant:
@@ -69,19 +70,19 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     fup.db<- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
-    warning(paste(species,"coerced to Human for protein binding data."))
+    if (!suppress.messages) warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fup.db) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   # Check if fup is a point value or a distribution, if a distribution, use the median:
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
     fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
-    warning("Fraction unbound is provided as a distribution.")
+    if (!suppress.messages) warning("Fraction unbound is provided as a distribution.")
   } else fup.point <- fup.db
   if (fup.point == 0)
   {
     fup.point <- fup.lod.default
-    warning("Fraction unbound = 0, changed to 0.005.")
+    if (!suppress.messages) warning("Fraction unbound = 0, changed to 0.005.")
   }
 
   pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
@@ -104,7 +105,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
     }
     fup.adjustment <- 1 / ((dow) * Flipid + 1 / fup.point)/fup.point
     fup.adjusted <- fup.point*fup.adjustment # unitless fraction
-    warning('Funbound.plasma adjusted for in vitro partition (Pearce, 2017).  Set adjusted.Funbound.plasma to FALSE to use original value.')
+    if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).  Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else {
     fup.adjusted <- fup.point
     fup.adjustment <- NA
@@ -137,7 +138,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
             species=species,
-            adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+            suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
 
   # Need to have a parameter with this name to calculate clearance, but need 

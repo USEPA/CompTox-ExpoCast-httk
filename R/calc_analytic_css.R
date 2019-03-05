@@ -176,12 +176,12 @@
      Qkidney <- parameters[['Qkidneyf']] * Qcardiac
      Qrest <- Qcardiac-Qgut-Qliver-Qkidney
      Rblood2plasma <- parameters[['Rblood2plasma']]
-     fub <- parameters[["Funbound.plasma"]]
-     if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fub
+     fup <- parameters[["Funbound.plasma"]]
+     if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
 
      dose <- dose * parameters$Fgutabs
      
-     Css <- (dose * (Qliver + Qgut) / (fub * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / (Qcardiac - (Qliver + Qgut)**2 /(fub * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - Qkidney**2 / (Qgfr * fub / Rblood2plasma + Qkidney) - Qrest)
+     Css <- (dose * (Qliver + Qgut) / (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / (Qcardiac - (Qliver + Qgut)**2 /(fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - Qkidney**2 / (Qgfr * fup / Rblood2plasma + Qkidney) - Qrest)
    if (tolower(concentration)=='plasma')
     {
       Css <- Css / parameters[['Rblood2plasma']]
@@ -220,6 +220,12 @@
     }
 
     Fup <- parameters$Funbound.plasma
+    if (nchar(Fup) - nchar(gsub(",","",Fup))==2) 
+    {
+      Fup <- as.numeric(strsplit(Fup,",")[[1]][1])
+    }
+    
+    
     Rb2p <- parameters$Rblood2plasma 
     cl <- calc_hepatic_clearance(parameters=parameters,
                                  chem.cas=chem.cas,
@@ -298,10 +304,14 @@
     }
 
     dose <- dose * parameters$Fgutabs
-    fub <- parameters$Funbound.plasma
+    fup <- parameters$Funbound.plasma
+    if (nchar(fup) - nchar(gsub(",","",fup))==2) 
+    {
+      fup <- as.numeric(strsplit(fup,",")[[1]][1])
+    }
     Clmetabolism <- parameters$Clmetabolismc
-    if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fub
-    Css <- dose * parameters[['BW']]^0.25  / (Clmetabolism * parameters[['BW']]^0.25  + parameters$Qgfrc * (parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc / ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + fub * parameters$Qgfrc / parameters$Rblood2plasma)) / fub
+    if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
+    Css <- dose * parameters[['BW']]^0.25  / (Clmetabolism * parameters[['BW']]^0.25  + parameters$Qgfrc * (parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc / ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + fup * parameters$Qgfrc / parameters$Rblood2plasma)) / fup
     if (tolower(concentration)=='blood')
     {
        Css <- Css * parameters[['Rblood2plasma']]
@@ -347,10 +357,10 @@
         if(is.null(chem.name) & is.null(chem.cas)) stop("Include Clmetabolismc (unscaled) in parameters or enter chem.name or chem.cas with appropriate species for desired tissue concentration.")
         parameters[['Clmetabolismc']] <- calc_hepatic_clearance(chem.cas=chem.cas,species=species,hepatic.model='unscaled',suppress.messages=T)
       }
-      fub <- parameters[['Funbound.plasma']]
+      fup <- parameters[['Funbound.plasma']]
       Clmetabolism <- parameters$Clmetabolismc
-      if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fub
-      Css <- parameters[['Kliver2pu']] * fub * (dose + Qliver * Css * parameters[['Rblood2plasma']]) / (Clmetabolism * fub + Qliver * parameters[['Rblood2plasma']])
+      if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
+      Css <- parameters[['Kliver2pu']] * fup * (dose + Qliver * Css * parameters[['Rblood2plasma']]) / (Clmetabolism * fup + Qliver * parameters[['Rblood2plasma']])
       if(unit.change){
         Css <- Css / parameters$MW * 1000
         output.units <- 'uM'
@@ -380,8 +390,8 @@
   }    
        
 
- #  Css <- dose * Rblood2plasma * (Qliver + Qgut) * (Qkidney * Rblood2plasma  + Qgfr * fub)  / ((##(Rblood2plasma * Qkidney + Qgfr * fub) * (Qcardiac - Qrest) - Qkidney**2 * Rblood2plasma) * ((Qliver + Qgut) * Rblood2plasma +  Clmetabolism * fub * Kliver2plasma) - (Qliver + Qgut)**2 * (Qkidney *Rblood2plasma + Qgfr * fub)*Rblood2plasma)
+ #  Css <- dose * Rblood2plasma * (Qliver + Qgut) * (Qkidney * Rblood2plasma  + Qgfr * fup)  / ((##(Rblood2plasma * Qkidney + Qgfr * fup) * (Qcardiac - Qrest) - Qkidney**2 * Rblood2plasma) * ((Qliver + Qgut) * Rblood2plasma +  Clmetabolism * fup * Kliver2plasma) - (Qliver + Qgut)**2 * (Qkidney *Rblood2plasma + Qgfr * fup)*Rblood2plasma)
   
-    #Css <- dose/(QGFRc*fub+calc_Hepatic_Clearance(Params))
+    #Css <- dose/(QGFRc*fup+calc_Hepatic_Clearance(Params))
     return(as.numeric(Css))
 }

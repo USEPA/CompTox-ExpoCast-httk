@@ -62,10 +62,22 @@ draw_fup_clint <- function(this.chem=NULL,
     parameters<-httk::parameterize_steadystate(chem.cas=this.chem,
                                       species='Human',
                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      clint.pvalue.threshold=clint.pvalue.threshold)
-  } else if (any(!(c("Funbound.plasma","Clint","Dow74","Fhep.assay.correction")%in%names(parameters))))
-  {
-    stop("Funbound.plasma, Clint, Dow74, and Fhep.assay.correction needed in draw_fup_clint.")
+                                      clint.pvalue.threshold=clint.pvalue.threshold,
+                                      suppress.messages=T)
+  } else {
+    if (!"Dow74"%in%names(parameters))
+    {
+      pKa_Donor <- parameters[["pKa_Donor"]]
+      pKa_Accept <- parameters[["pKa_Accept"]]
+      Pow <- parameters[["Pow"]] # Octanol:water partition coeffiecient
+      ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
+      dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
+      parameters[["Dow74"]] <- dow
+    }
+    if (any(!(c("Funbound.plasma","Clint","Dow74","Fhep.assay.correction")%in%names(parameters))))
+    {
+      stop("Funbound.plasma, Clint, Dow74, and Fhep.assay.correction needed in draw_fup_clint.")
+    }
   }
   
   # Initalize the data.table:
@@ -93,7 +105,7 @@ draw_fup_clint <- function(this.chem=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (regexpr(",",parameters$Clint)!=-1)
+  else if (nchar(parameters$Clint) - nchar(gsub(",","",parameters$Clint))==3)
   {
     temp <- strsplit(parameters$Clint,",")
     Clint <- as.numeric(temp[[1]][1])
@@ -146,13 +158,17 @@ draw_fup_clint <- function(this.chem=NULL,
   if (is.null(fup.meas.cv))
   {
     Funbound.plasma <- parameters$Funbound.plasma
+    if (nchar(Funbound.plasma) - nchar(gsub(",","",Funbound.plasma))==2)
+    {
+      Funbound.plasma <- as.numeric(strsplit(parameters$Funbound.plasma,",")[[1]][1])
+    }
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
   }
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (regexpr(",",parameters$Funbound.plasma)!=-1)
+  else if (nchar(parameters$Funbound.plasma) - nchar(gsub(",","",parameters$Funbound.plasma))==2)
   {
     temp <- strsplit(parameters$Funbound.plasma,",")
     Funbound.plasma <- as.numeric(temp[[1]][1])
@@ -194,11 +210,16 @@ draw_fup_clint <- function(this.chem=NULL,
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   # Otherwise use point estimate:
   } else {
+    temp <- parameters$Funbound.plasma
+    if (nchar(parameters$Funbound.plasma) - nchar(gsub(",","",parameters$Funbound.plasma))==2)
+    {
+      temp <- as.numeric(strsplit(parameters$Funbound.plasma,",")[[1]][1])
+    }
     #if measured Funbound.plasma > 1,
     #then set the distribution mean to 1.
-    indiv_tmp[, fup.mean := min(1,
-                    Funbound.plasma)] 
+    indiv_tmp[, fup.mean := min(1,temp)] 
   }
+ 
 
   #
   #

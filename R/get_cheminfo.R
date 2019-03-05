@@ -110,15 +110,17 @@ get_cheminfo <- function(info="CAS",
   # parameters are not NA
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
+    numeric.fups <- is.numeric(chem.physical_and_invitro.data[,species.fup])
     # If we are exclude the below LOD fup's, then get rid of those too:
     if (exclude.fup.zero) 
     {
-      good.chemicals.index <- good.chemicals.index & 
-        ((as.numeric(chem.physical_and_invitro.data[,species.fup])>0) |
+      good.chemicals.index[numeric.fups] <- 
+        (as.numeric(chem.physical_and_invitro.data[numeric.fups,species.fup])>0)
     # Keep the chemicals where we have the median and confidence interval
     # separated by commas (should be two commas):
-        (nchar(chem.physical_and_invitro.data[,species.fup]) -
-        nchar(gsub(",","",chem.physical_and_invitro.data[,species.fup])))==2) 
+      good.chemicals.index[!numeric.fups] <- 
+        (nchar(chem.physical_and_invitro.data[!numeric.fups,species.fup]) -
+        nchar(gsub(",","",chem.physical_and_invitro.data[!numeric.fups,species.fup]))==2) 
     }
     good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
   
