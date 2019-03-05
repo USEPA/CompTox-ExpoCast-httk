@@ -3,7 +3,8 @@ parameterize_schmitt <- function(chem.cas=NULL,
                                  chem.name=NULL,
                                  species="Human",
                                  default.to.human=F,
-                                 force.human.fup=F)
+                                 force.human.fup=F,
+                                 suppress.messages=F)
 {
 
   physiology.data <- physiology.data
@@ -18,7 +19,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
   {
     fup.db <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
-    warning(paste(species,"coerced to Human for protein binding data."))
+    if (!suppress.messages) warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fup.db) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   
@@ -26,7 +27,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
     fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
-    warning("Fraction unbound is provided as a distribution.")
+    if (!suppress.messages) warning("Fraction unbound is provided as a distribution.")
   } else fup.point <- fup.db
 
   if (fup.point == 0) stop("Fraction unbound = 0, can't predict partitioning.")

@@ -43,7 +43,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
                                          species=species,
                                          default.to.human=default.to.human,
                                          force.human.fup=force.human.clint.fup,
-                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+                                         suppress.messages=T)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                       species=species,
                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -59,9 +59,9 @@ parameterize_pbtk <- function(chem.cas=NULL,
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Check to see if fup is a distribution:
-  if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
+  if (nchar(fup) - nchar(gsub(",","",fup))==2) 
   {
-    fup <- schmitt.params$unadjusted.Funbound.plasm
+    fup <- schmitt.params$unadjusted.Funbound.plasma
   }
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)

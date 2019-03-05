@@ -71,7 +71,7 @@ calc_hepatic_clearance <- function(chem.name=NULL,
   if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
   {
     Clint<- as.numeric(strsplit(Clint,",")[[1]][1])
-    warning("Hepatic clearance is provided as a distribution.")
+    if (!suppress.messages) warning("Hepatic clearance is provided as a distribution.")
   }
   
   fup <- parameters[["Funbound.plasma"]]
@@ -79,12 +79,12 @@ calc_hepatic_clearance <- function(chem.name=NULL,
   if (nchar(fup) - nchar(gsub(",","",fup))==2) 
   {
     fup <- as.numeric(strsplit(fup,",")[[1]][1])
-    warning("Fraction unbound in plasma is provided as a distribution.")
+    if (!suppress.messages) warning("Fraction unbound in plasma is provided as a distribution.")
   }
   if(!restrictive.clearance) fup <- 1
   
   fu_hep <- parameters[["Fhep.assay.correction"]]
-  Qtotal.liverc <- parameters[["Qtotal.liver"]] # L/h/kgBW
+  Qtotal.liverc <- parameters[["Qtotal.liverc"]] # L/h/kgBW
   Vliverc <- parameters[["Vliverc"]] #  L/kg BW
   liver.density <- parameters[["liver.density"]] # g/mL
   Dn <- parameters[["Dn"]] #
@@ -128,6 +128,6 @@ calc_hepatic_clearance <- function(chem.name=NULL,
     a <- sqrt(1 + 4*Rn*Dn)
     CLh <- Qtotal.liverc*(1 - 4*a/((1+a)^2*exp((a-1)/2/Dn)-(1-a)^2*exp(-(a+1)/2/Dn)))
   }
-  if(!suppress.messages) cat("Hepatic clearance calculated with the",hepatic.model,"model in units of L/h/kg.\n")  
+  if (!suppress.messages) cat("Hepatic clearance calculated with the",hepatic.model,"model in units of L/h/kg.\n")  
   return(as.numeric(CLh))
 }
