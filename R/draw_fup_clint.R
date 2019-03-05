@@ -209,7 +209,7 @@ draw_fup_clint <- function(this.chem=NULL,
   # Clint variability:
   #do not sample Clint if measured value is zero,
   #or if user said not to vary Clint.
-  if (!is.nul(clint.pop.cv) & Clint>0)
+  if (!is.null(clint.pop.cv) & Clint>0)
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
@@ -226,7 +226,11 @@ draw_fup_clint <- function(this.chem=NULL,
                            replace=TRUE)
       #Set the means of the two distributions. Poor metabolizers distribution
       #has mean 10% of regular metabolizers distribution.
-      indiv_tmp[,Clint.mu:=Clint]
+      # Check if clint is a distribution (median,low95,high95,pvalue):
+      if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
+      {
+        indiv_tmp[,Clint.mu:=as.numeric(strsplit(Clint,",")[[1]][1])]
+      } else indiv_tmp[,Clint.mu:=Clint]
       indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,.(Clint.mu=Clint.mu/10)]
 
       #Set the standard deviations of the two distributions.
