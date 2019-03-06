@@ -23,11 +23,6 @@ calc_total_clearance<- function(chem.cas=NULL,
     }
     Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / parameters[['BW']]^0.25 #L/h/kgBW
     fup <- parameters[["Funbound.plasma"]]# unitless fraction
-    if (nchar(fup) - nchar(gsub(",","",fup))==2) 
-    {
-      fup <- as.numeric(strsplit(fup,",")[[1]][1])
-    }
-     
     clearance <- Qgfrc*fup+
                    calc_hepatic_clearance(chem.cas=chem.cas,
                      chem.name=chem.name,
@@ -37,6 +32,7 @@ calc_total_clearance<- function(chem.cas=NULL,
                      well.stirred.correction=well.stirred.correction,
                      restrictive.clearance=restrictive.clearance,
                      adjusted.Funbound.plasma=adjusted.Funbound.plasma) #L/h/kgBW
+
     if (!suppress.messages)
     {
       cat(paste(toupper(substr(species,1,1)),

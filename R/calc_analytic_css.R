@@ -220,11 +220,6 @@
     }
 
     Fup <- parameters$Funbound.plasma
-    if (nchar(Fup) - nchar(gsub(",","",Fup))==2) 
-    {
-      Fup <- as.numeric(strsplit(Fup,",")[[1]][1])
-    }
-    
     
     Rb2p <- parameters$Rblood2plasma 
     cl <- calc_hepatic_clearance(parameters=parameters,
@@ -305,10 +300,6 @@
 
     dose <- dose * parameters$Fgutabs
     fup <- parameters$Funbound.plasma
-    if (nchar(fup) - nchar(gsub(",","",fup))==2) 
-    {
-      fup <- as.numeric(strsplit(fup,",")[[1]][1])
-    }
     Clmetabolism <- parameters$Clmetabolismc
     if(!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
     Css <- dose * parameters[['BW']]^0.25  / (Clmetabolism * parameters[['BW']]^0.25  + parameters$Qgfrc * (parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc / ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + fup * parameters$Qgfrc / parameters$Rblood2plasma)) / fup

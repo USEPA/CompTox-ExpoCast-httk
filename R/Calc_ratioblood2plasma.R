@@ -6,13 +6,18 @@ calc_rblood2plasma <- function(chem.cas=NULL,
                               hematocrit=NULL,
                               default.to.human=F,
                               species="Human",
-                              adjusted.Funbound.plasma=T)
+                              adjusted.Funbound.plasma=T,
+                              suppress.messages=F)
 {
   physiology.data <- physiology.data
 
   if (is.null(params)) 
   {
-    parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
+    parameters <- parameterize_schmitt(chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    default.to.human=default.to.human,
+                    species=species,
+                    suppress.messages=suppress.messages)
   } else {
     parameters <- params
   }

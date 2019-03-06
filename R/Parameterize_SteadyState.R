@@ -54,6 +54,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Check if clintis a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
+    Clint.dist <- Clint.db
     Clint.point <- as.numeric(strsplit(Clint.db,",")[[1]][1])
     Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
     if (!suppress.messages) warning("Clint is provided as a distribution.")
@@ -62,6 +63,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Check that the trend in the CLint assay was significant:
     Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
     if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
+    Clint.dist <- NA
   }
   
   # unitless fraction of chemical unbound with plasma
@@ -77,8 +79,12 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
     fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
+    fup.dist <- fup.db
     if (!suppress.messages) warning("Fraction unbound is provided as a distribution.")
-  } else fup.point <- fup.db
+  } else {
+    fup.point <- fup.db
+    fup.dist <- NA
+  }
   if (fup.point == 0)
   {
     fup.point <- fup.lod.default
@@ -115,12 +121,11 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
   Params <- list()
-  Params[["Clint"]] <- Clint.db # uL/min/10^6
+  Params[["Clint"]] <- Clint.point # uL/min/10^6
+  Params[["Clint.dist"]] <- Clint.dist
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
-  if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
-  {
-    Params[["Funbound.plasma"]] <- fup.db
-  } else Params[["Funbound.plasma"]] <- fup.adjusted 
+  Params[["Funbound.plasma"]] <- fup.adjusted
+  Params[["Funbound.plasma.dist"]] <- fup.dist
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4

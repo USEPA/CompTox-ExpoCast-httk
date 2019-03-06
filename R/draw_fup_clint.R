@@ -88,11 +88,14 @@ draw_fup_clint <- function(this.chem=NULL,
   #
   #
   #
-  # MEASUREMENT UNCERTAINTY:
+  # MEASUREMENT UNCERTAINTY
   #
   #
   #
-  # Hepatocyte clearance assay uncertainty...
+  # Hepatocyte clearance assay uncertainty:
+  #
+  #
+  #
   # If the default CV is set to NULL, we just use the point estimate with no
   # uncertainty:
   if (is.null(clint.meas.cv))
@@ -105,9 +108,14 @@ draw_fup_clint <- function(this.chem=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (nchar(parameters$Clint) - nchar(gsub(",","",parameters$Clint))==3)
+  else if (!is.na(parameters$Clint.dist))
   {
-    temp <- strsplit(parameters$Clint,",")
+    if (nchar(parameters$Clint.dist) -
+      nchar(gsub(",","",parameters$Clint.dist))!=3) 
+    {
+      stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
+    }
+    temp <- strsplit(parameters$Clint.dist,",")
     Clint <- as.numeric(temp[[1]][1])
     Clint.l95 <- as.numeric(temp[[1]][2])
     Clint.u95 <- as.numeric(temp[[1]][3])
@@ -116,10 +124,13 @@ draw_fup_clint <- function(this.chem=NULL,
   # generate confidence limits:
   } else {
     Clint <- parameters$Clint
-    # zero doesn't behave well in a log-normal distribution (negatives too):
-    Clint.l95 <- max(Clint*(1 - clint.meas.cv*1.96),1)  
-    Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
-    Clint.pvalue <- 0
+    if (Clint > 0)
+    { 
+      # zero doesn't behave well in a log-normal distribution (negatives too):
+      Clint.l95 <- max(Clint*(1 - clint.meas.cv*1.96),1)  
+      Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
+      Clint.pvalue <- 0
+    }
   }
 
   #Assign the HTTK default value for fraction unbound in hepatocyte assay to all
@@ -129,7 +140,11 @@ draw_fup_clint <- function(this.chem=NULL,
   # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
   # "true" values for Clint that are consistent with the measurment .
   # If a credible interval was specified for Clint, draw from that interval:
-  if (!is.null(Clint.u95))
+  if (Clint == 0)
+  {
+    indiv_tmp[,Clint:=0]
+  } 
+  else if (!is.null(Clint.u95))
   {
     if (Clint.u95>0& Clint>0)
     {
@@ -151,26 +166,34 @@ draw_fup_clint <- function(this.chem=NULL,
   # the Bayesian "p-value" here reflects how often there is no clearance:
     indiv_tmp[as.logical(rbinom(n=nsamp,1,Clint.pvalue)),Clint:=0] 
   } else indiv_tmp[,Clint:=Clint]
+  # Store NA so data.table doesn't convert everything to text:
+  indiv_tmp[,Clint.dist:=NA]
 
+  #
+  #
+  #
   # fup uncertainty Monte Carlo:
+  #
+  #
+  #
   # If the default CV is set to NULL, we just use the point estimate with no
   # uncertainty:
   if (is.null(fup.meas.cv))
   {
     Funbound.plasma <- parameters$Funbound.plasma
-    if (nchar(Funbound.plasma) - nchar(gsub(",","",Funbound.plasma))==2)
-    {
-      Funbound.plasma <- as.numeric(strsplit(parameters$Funbound.plasma,",")[[1]][1])
-    }
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
-  }
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (nchar(parameters$Funbound.plasma) - nchar(gsub(",","",parameters$Funbound.plasma))==2)
+  } else if(!is.na(parameters$Funbound.plasma.dist))
   {
-    temp <- strsplit(parameters$Funbound.plasma,",")
+    if (nchar(parameters$Funbound.plasma.dist) - 
+      nchar(gsub(",","",parameters$Funbound.plasma.dist))!=2)
+    {
+      stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
+    }
+    temp <- strsplit(parameters$Funbound.plasma.dist,",")
     Funbound.plasma <- as.numeric(temp[[1]][1])
     Funbound.plasma.l95 <- as.numeric(temp[[1]][2])
     Funbound.plasma.u95 <- as.numeric(temp[[1]][3])
@@ -193,10 +216,8 @@ draw_fup_clint <- function(this.chem=NULL,
   {
   # If so, assign values between zero and the lod:
     indiv_tmp[, fup.mean := runif(n=1,0,fup.lod)]
-  }
   # Otherwise, check to see if fup credible interval was provided:
-  if (!is.null(Funbound.plasma.u95))
-  {
+  } else if (!is.null(Funbound.plasma.u95)) {
     # Use optim to estimate parameters for a beta distribution (alpha and beta)
     # such that the median and 95% credible interval approximate the given values:
     ppb.fit <- optim(c(2,(1-Funbound.plasma)/Funbound.plasma*2), function(x) (0.95-
@@ -209,17 +230,11 @@ draw_fup_clint <- function(this.chem=NULL,
     indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   # Otherwise use point estimate:
-  } else {
-    temp <- parameters$Funbound.plasma
-    if (nchar(parameters$Funbound.plasma) - nchar(gsub(",","",parameters$Funbound.plasma))==2)
-    {
-      temp <- as.numeric(strsplit(parameters$Funbound.plasma,",")[[1]][1])
-    }
-    #if measured Funbound.plasma > 1,
-    #then set the distribution mean to 1.
-    indiv_tmp[, fup.mean := min(1,temp)] 
-  }
- 
+  } else indiv_tmp[,Funbound.plasma:=parameters$Funbound.plasma]
+  #if measured Funbound.plasma > 1, then set it to 1
+  indiv_tmp[, fup.mean := min(1,parameters$Funbound.plasma)]
+  # Store NA so data.table doesn't convert everything to text:
+  indiv_tmp[,Funbound.plasma.dist:=NA]
 
   #
   #
@@ -227,7 +242,11 @@ draw_fup_clint <- function(this.chem=NULL,
   # POPULATION VARIABILITY:
   #
   #
-  # Clint variability:
+  #
+  # Clint variability Monte Carlo:
+  #
+  #
+  #
   #do not sample Clint if measured value is zero,
   #or if user said not to vary Clint.
   if (!is.null(clint.pop.cv) & Clint>0)
@@ -274,12 +293,15 @@ draw_fup_clint <- function(this.chem=NULL,
                                                   mean=Clint,
                                                   sd=clint.pop.cv*Clint)]
     }
-  } else { #if either measured Clint is zero or the user said don't vary Clint
-    #just set Clint to its measured value, for all individuals.
-    if (is.null(Clint.u95)) indiv_tmp[, Clint:=parameters$Clint]
   }
-  
-  # fup variability:
+    
+  #
+  #
+  #
+  # fup variability Monte Carlo:
+  #
+  #
+  #
   # next, draw Funbound.plasma from either a normal or censored distribution, as
   # long as fup.pop.cv isn't NULL (otherwise, no pop variability for this
   if (!is.null(fup.pop.cv))

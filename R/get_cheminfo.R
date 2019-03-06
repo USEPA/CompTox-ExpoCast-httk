@@ -64,7 +64,7 @@ get_cheminfo <- function(info="CAS",
 
       if (model == '3compartmentss')
       {
-        necessary.params <- c(species.clint,species.fup,"MW")
+        necessary.params <- c(species.clint,species.fup,"MW","logP")
         if(is.na(exclude.fup.zero)) exclude.fup.zero <- F 
       } else {
         necessary.params <- c(species.clint,species.fup,"MW","logP")
@@ -110,7 +110,7 @@ get_cheminfo <- function(info="CAS",
   # parameters are not NA
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
-    numeric.fups <- is.numeric(chem.physical_and_invitro.data[,species.fup])
+    numeric.fups <- !is.na(as.numeric(chem.physical_and_invitro.data[,species.fup]))
     # If we are exclude the below LOD fup's, then get rid of those too:
     if (exclude.fup.zero) 
     {

@@ -27,9 +27,13 @@ parameterize_schmitt <- function(chem.cas=NULL,
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
     fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
+    fup.dist <- fup.db
     if (!suppress.messages) warning("Fraction unbound is provided as a distribution.")
-  } else fup.point <- fup.db
-
+  } else {
+    fup.point <- fup.db
+    fup.dist <- NA 
+  }
+  
   if (fup.point == 0) stop("Fraction unbound = 0, can't predict partitioning.")
                                  
  # Check the species argument for capitilization problems and whether or not it is in the table:  
@@ -61,7 +65,8 @@ parameterize_schmitt <- function(chem.cas=NULL,
   fup.corrected <- 1 / ((dow) * Flipid + 1 / fup.point)
   
   outlist <- list(Funbound.plasma=fup.corrected,
-                  unadjusted.Funbound.plasma=fup.db,
+                  unadjusted.Funbound.plasma=fup.point,
+                  Funbound.plasma.dist=fup.dist,
                   Funbound.plasma.adjustment=fup.corrected/fup.point,
                   Pow=Pow,
                   pKa_Donor=pKa_Donor,

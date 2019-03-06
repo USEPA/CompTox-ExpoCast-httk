@@ -67,20 +67,7 @@ calc_hepatic_clearance <- function(chem.name=NULL,
 #
 #  fub <- get_param("Funbound.plasma",parameters,"calc_Hepatic_Clearance") # unitless fraction
   Clint <- parameters[["Clint"]]
-  # Check if clint a point value or a distribution, if a distribution, use the median:
-  if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
-  {
-    Clint<- as.numeric(strsplit(Clint,",")[[1]][1])
-    if (!suppress.messages) warning("Hepatic clearance is provided as a distribution.")
-  }
-  
   fup <- parameters[["Funbound.plasma"]]
-  # Check if fup a point value or a distribution, if a distribution, use the median:
-  if (nchar(fup) - nchar(gsub(",","",fup))==2) 
-  {
-    fup <- as.numeric(strsplit(fup,",")[[1]][1])
-    if (!suppress.messages) warning("Fraction unbound in plasma is provided as a distribution.")
-  }
   if(!restrictive.clearance) fup <- 1
   
   fu_hep <- parameters[["Fhep.assay.correction"]]

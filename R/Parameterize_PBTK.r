@@ -26,17 +26,28 @@ parameterize_pbtk <- function(chem.cas=NULL,
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
   if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
-    Clint <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-    # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
-  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
-  
+  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+  # Check if clint is a point value or a distribution, if a distribution, use the median:
+  if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
+  {
+    Clint.dist <- Clint.db
+    Clint<- as.numeric(strsplit(Clint.db,",")[[1]][1])
+    Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  } else {
+    Clint <- Clint.db
+  # Check that the trend in the CLint assay was significant:
+    Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
+    if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
+    Clint.dist <- NA
+  }
+
   
 # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
@@ -57,12 +68,6 @@ parameterize_pbtk <- function(chem.cas=NULL,
     fup <- schmitt.params$Funbound.plasma
     warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
-
-# Check to see if fup is a distribution:
-  if (nchar(fup) - nchar(gsub(",","",fup))==2) 
-  {
-    fup <- schmitt.params$unadjusted.Funbound.plasma
-  }
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
@@ -118,6 +123,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,list(BW = as.numeric(BW),
     kgutabs = 2.18, # 1/h
     Funbound.plasma = fup, # unitless fraction
+    Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
     MW = MW, #g/mol
     Pow = Pow,
@@ -133,6 +139,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
 
   outlist <- c(outlist,
     list(Clint=Clint,
+         Clint.dist = schmitt.params$Clint.dist,
          Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",
                           parameters=list(
                             Clint=Clint, #uL/min/10^6 cells
