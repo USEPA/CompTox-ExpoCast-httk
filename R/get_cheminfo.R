@@ -110,20 +110,32 @@ get_cheminfo <- function(info="CAS",
   # parameters are not NA
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
-    numeric.fups <- !is.na(as.numeric(chem.physical_and_invitro.data[,species.fup]))
+    good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,]  
+
+# Make sure that we have a usable fup:
+    numeric.fups <- !is.na(suppressWarnings(as.numeric(good.chemical.data[,species.fup])))
+    good.chemicals.index <- !good.chemicals.index[good.chemicals.index]
     # If we are exclude the below LOD fup's, then get rid of those too:
     if (exclude.fup.zero) 
     {
       good.chemicals.index[numeric.fups] <- 
-        (as.numeric(chem.physical_and_invitro.data[numeric.fups,species.fup])>0)
+        (as.numeric(good.chemical.data[numeric.fups,species.fup])>0)
+    } else good.chemicals.index[numeric.fups] <- T
     # Keep the chemicals where we have the median and confidence interval
     # separated by commas (should be two commas):
-      good.chemicals.index[!numeric.fups] <- 
-        (nchar(chem.physical_and_invitro.data[!numeric.fups,species.fup]) -
-        nchar(gsub(",","",chem.physical_and_invitro.data[!numeric.fups,species.fup]))==2) 
-    }
-    good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
-  
+    good.chemicals.index[!numeric.fups] <- 
+      (nchar(good.chemical.data[!numeric.fups,species.fup]) -
+      nchar(gsub(",","",good.chemical.data[!numeric.fups,species.fup]))==2) 
+    good.chemical.data <- good.chemical.data[good.chemicals.index,]
+
+# Make sure that we have a usable clint:    
+    numeric.clints <- !is.na(suppressWarnings(as.numeric(good.chemical.data[,species.clint])))
+    good.chemicals.index <- numeric.clints
+    good.chemicals.index[!numeric.clints] <- 
+        (nchar(good.chemical.data[!numeric.clints,species.clint]) -
+        nchar(gsub(",","",good.chemical.data[!numeric.clints,species.clint]))==3) 
+    good.chemical.data <- good.chemical.data[good.chemicals.index,] 
+    
     if ('mw' %in% tolower(info)) info <- c('MW',info[tolower(info) != 'mw'])
     if ('pka_accept' %in% tolower(info)) info <- 
       c('pKa_Accept',info[tolower(info) != 'pka_accept'])
