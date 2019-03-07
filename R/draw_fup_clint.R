@@ -239,9 +239,11 @@ draw_fup_clint <- function(this.chem=NULL,
     indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   # Otherwise use point estimate:
-  } else indiv_tmp[,Funbound.plasma:=parameters$Funbound.plasma]
+  } else {
+    indiv_tmp[,fup.mean:=Funbound.plasma]
+  }
   #if measured Funbound.plasma > 1, then set it to 1
-  indiv_tmp[, fup.mean := min(1,parameters$Funbound.plasma)]
+  indiv_tmp[, fup.mean := min(1,fup.mean)]
   # Store NA so data.table doesn't convert everything to text:
   indiv_tmp[,Funbound.plasma.dist:=NA]
 
