@@ -150,10 +150,10 @@ draw_fup_clint <- function(this.chem=NULL,
     {
       # Optimize to find parameters for a log-normal distribution that have
       # the least squares difference using the three quantiles (median, l95, u95)
-      clint.fit <- optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
+      clint.fit <- suppressWarnings(optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
                                               plnorm(Clint.u95,x[1],x[2])+
                                               plnorm(Clint.l95,x[1],x[2]))^2+
-                                              (Clint-qlnorm(0.5,x[1],x[2]))^2)
+                                              (Clint-qlnorm(0.5,x[1],x[2]))^2))
       indiv_tmp[,Clint:=rlnorm(n=nsamp,clint.fit$par[1],clint.fit$par[2])]
     } else if (Clint.u95>0)
     {
@@ -220,12 +220,21 @@ draw_fup_clint <- function(this.chem=NULL,
   } else if (!is.null(Funbound.plasma.u95)) {
     # Use optim to estimate parameters for a beta distribution (alpha and beta)
     # such that the median and 95% credible interval approximate the given values:
-    ppb.fit <- optim(c(2,(1-Funbound.plasma)/Funbound.plasma*2), function(x) (0.95-
-      pbeta(Funbound.plasma.u95,x[1],x[2])+
-      pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-      (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-      method="BFGS")
-  # We are drawing new values for the unadjusted Fup:
+    if (Funbound.plasma < 0.99)
+    {
+      ppb.fit <- suppressWarnings(optim(c(2,(1-Funbound.plasma)/Funbound.plasma*2), function(x) (0.95-
+        pbeta(Funbound.plasma.u95,x[1],x[2])+
+        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+        method="BFGS"))
+    } else { 
+      ppb.fit <- suppressWarnings(optim(c(2,1), function(x) (0.95-
+        pbeta(Funbound.plasma.u95,x[1],x[2])+
+        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+        method="BFGS"))
+    }
+    # We are drawing new values for the unadjusted Fup:
     indiv_tmp[, unadjusted.Funbound.plasma:=rbeta(n=nsamp,ppb.fit$par[1],ppb.fit$par[2])]
     indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
