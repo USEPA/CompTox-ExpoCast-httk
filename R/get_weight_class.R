@@ -23,6 +23,51 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 
+
+
+
+
+#' Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
+#' weight classes using CDC and WHO categories.
+#' 
+#' Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
+#' weight classes using CDC and WHO categories.
+#' 
+#' 
+#' @param age_years A vector of ages in years.
+#' @param age_months A vector of ages in months.
+#' @param bmi A vector of BMIs.
+#' @param recumlen A vector of heights or recumbent lengths in cm.
+#' @param weight A vector of body weights in kg.
+#' @param gender A vector of genders (as 'Male' or 'Female').
+#' @param age_years A vector of ages in years.
+#' @param age_months A vector of ages in months.
+#' @param bmi A vector of BMIs.
+#' @param recumlen A vector of heights or recumbent lengths in cm.
+#' @param weight A vector of body weights in kg.
+#' @param gender A vector of genders (as 'Male' or 'Female').
+#' @return A character vector of weight classes. Each element will be one of
+#' 'Underweight', 'Normal', 'Overweight', or 'Obese'.
+#' 
+#' A character vector of weight classes. Each element will be one of
+#' 'Underweight', 'Normal', 'Overweight', or 'Obese'.
+#' @author Caroline Ring
+#' 
+#' Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118 Given vectors of age, BMI,
+#' recumbent length, weight, and gender, categorizes weight classes using CDC
+#' and WHO categories.
+#' 
+#' Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
+#' weight classes using CDC and WHO categories.
+#' 
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export get_weight_class
 get_weight_class <- function(age_years,
                              age_months,
                              bmi,

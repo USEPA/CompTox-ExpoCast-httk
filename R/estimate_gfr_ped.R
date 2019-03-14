@@ -15,6 +15,36 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 
+
+
+
+
+#' Predict GFR in children.
+#' 
+#' BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9)
+#' 931-56.  Used in Wetmore et al. 2014.
+#' 
+#' 
+#' @param BSA Vector of body surface areas in m^2.
+#' @param BSA Vector of body surface areas in m^2.
+#' @return Vector of GFRs in mL/min/1.73m^2.
+#' 
+#' Vector of GFRs in mL/min/1.73m^2.
+#' @author Caroline Ring
+#' 
+#' Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118 Predict GFR in children.
+#' 
+#' BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9)
+#' 931-56.  Used in Wetmore et al. 2014.
+#' 
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export estimate_gfr_ped
 estimate_gfr_ped <- function(BSA){
   #BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9) 931-56.
   #Used in Wetmore et al. 2014.

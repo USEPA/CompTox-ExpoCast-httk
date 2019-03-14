@@ -2,6 +2,49 @@
 # Either retrieves a measured blood:plasma concentration ratio from the
 # chem.physical_and_invitro.data table or calculates it using the red blood cell
 # partition coefficient predicted with Schmitt's method
+
+
+
+
+
+
+#' Find the best available ratio of the blood to plasma concentration constant.
+#' 
+#' 
+#' 
+#' @param chem.cas Either the CAS number or the chemical name must be
+#' specified. %% ~~Describe \code{pred} here~~}
+#' 
+#' \itemchem.nameEither the chemical name or the CAS number must be specified.
+#' %% ~~Describe \code{obs} here~~}
+#' 
+#' \itemspeciesSpecies desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+#' 
+#' \itemadjusted.Funbound.plasmaWhether or not to use Funbound.plasma
+#' adjustment if calculating Rblood2plasma.
+#' 
+#' This function finds the best available constant ratio of the blood
+#' concentration to the plasma concentration, using get_rblood2plasma and
+#' calc_rblood2plasma.
+#' 
+#' If available, in vivo data (from chem.physical_and_invitro.data) for the
+#' given species is returned, substituting the human in vivo value when missing
+#' for other species.  In the absence of in vivo data, the value is calculated
+#' with calc_rblood2plasma for the given species. If Funbound.plasma is
+#' unvailable for the given species, the human Funbound.plasma is substituted.
+#' If none of these are available, the mean human Rblood2plasma from
+#' chem.physical_and_invitro.data is returned.  %% ~~ If necessary, more
+#' details than the description above ~~
+#' 
+#' available_rblood2plasma(chem.name="Bisphenol
+#' A",adjusted.Funbound.plasma=FALSE)
+#' available_rblood2plasma(chem.name="Bisphenol A",species="Rat")
+#' 
+#' Robert Pearce
+#' 
+#' Parameter
+#' @export available_rblood2plasma
 available_rblood2plasma <- function(chem.cas=NULL,chem.name=NULL,species='Human',adjusted.Funbound.plasma=T)
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data

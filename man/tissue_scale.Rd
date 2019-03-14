@@ -12,10 +12,19 @@ tissue_scale(height_ref, height_indiv, tissue_mean_ref)
 \item{height_indiv}{Individual height in cm.}
 
 \item{tissue_mean_ref}{Reference tissue mass or flow.}
+
+\item{height_ref}{Reference height in cm.}
+
+\item{height_indiv}{Individual height in cm.}
+
+\item{tissue_mean_ref}{Reference tissue mass or flow.}
 }
 \value{
 Allometrically scaled tissue mass or flow, in the same units as
  \code{tissue_mean_ref}.
+
+Allometrically scaled tissue mass or flow, in the same units as
+\code{tissue_mean_ref}.
 }
 \description{
 Allometrically scale a tissue mass or flow based on height^{3/4}.
@@ -24,8 +33,17 @@ Allometrically scale a tissue mass or flow based on height^{3/4}.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+Allometric scaling.
+
+Allometrically scale a tissue mass or flow based on height^3/4.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
 Caroline Ring
 }
 \keyword{httk-pop}

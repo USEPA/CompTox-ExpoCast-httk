@@ -6,6 +6,57 @@
 # MA: phospholipid:water distribution coefficient
 # KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
 # Fprotein.plasma: protein fraction in plasma - from Gardner 1980
+
+
+
+
+#' Predict partition coefficients using the method from Schmitt (2008).
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
+#' function implements the method from Schmitt (2008) in predicting the tissue
+#' to unbound plasma partition coefficients from for the tissues contained in
+#' the tissue.data table.
+#' 
+#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' 
+#' A regression is used for membrane affinity when not provided.  The
+#' regressions for correcting each tissue are performed on tissue plasma
+#' partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
+#' corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
+#' Thus the regressions should be used with the corrected Funbound.plasma.
+#' 
+#' The red blood cell regression can be used but is not by default because of
+#' the span of the data used, reducing confidence in the regression for higher
+#' and lower predicted values.
+#' 
+#' Human tissue volumes are used for species other than Rat.
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. %% ~~Describe \code{obs} here~~
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. %% ~~Describe \code{pred} here~~
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param parameters Chemical parameters from the parameterize_schmitt
+#' function, overrides chem.name and chem.cas.
+#' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
+#' adjustment.
+#' @param regression Whether or not to use the regressions.  Regressions are
+#' used by default.
+#' @param regression.list Tissues to use regressions on.
+#' @param tissues Vector of desired partition coefficients.  Returns all by
+#' default.
+#' @return Returns tissue to unbound plasma partition coefficients for each
+#' tissue.
+#' @author Robert Pearce
+#' @keywords Parameter
+#' @examples
+#' 
+#' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
+#' 
+#' @export predict_partitioning_schmitt
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
                                          species='Human',

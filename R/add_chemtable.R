@@ -137,6 +137,70 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 }
 
 
+
+
+
+
+#' Add a table of chemical information for use in making httk predictions.
+#' 
+#' This function adds chemical-specific information to the table
+#' chem.physical_and_invitro.data. This table is queried by the model
+#' parameterization functions when attempting to parameterize a model, so
+#' adding sufficient data to this table allows additional chemicals to be
+#' modeled.
+#' 
+#' 
+#' @param new.table Object of class data.frame containing one row per chemical,
+#' with each chemical minimally by described by a CAS number.
+#' @param data.list This list identifies which properties are to be read from
+#' the table. Each item in the list should point to a column in the table
+#' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
+#' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
+#' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
+#' 'Fgutabs', 'Rblood2plasma'.
+#' @param current.table This is the table to which data are being added.
+#' @param reference This is the reference for the data in the new table. This
+#' may be omitted if a column in data.list gives the reference value for each
+#' chemical.
+#' @param species This is the species for the data in the new table. This may
+#' be omitted if a column in data.list gives the species value for each
+#' chemical or if the data are not species-specific (e.g., MW).
+#' @param overwrite If overwrite=TRUE then data in current.table will be
+#' replaced by any data in new.table that is for the same chemical and
+#' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
+#' and property are ignored.  Funbound.plasma values of 0 (below limit of
+#' detection) are overwritten either way.
+#' @return \item{data.frame}{A new data.frame containing the data in
+#' current.table augmented by new.table} %% ~Describe the value returned %% If
+#' it is a LIST, use %% \item{comp1 }{Description of 'comp1'} %% \item{comp2
+#' }{Description of 'comp2'} %% ...
+#' @author John Wambaugh
+#' @examples
+#' 
+#' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
+#' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+#'                      stringsAsFactors=FALSE))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(200,200,200)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(2,3,4)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(0.01,0.02,0.3)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
+#' colnames(my.new.data) <- c("Name","CASRN","MW","LogP","Fup","CLint")
+#' 
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=chem.physical_and_invitro.data,
+#'                                   data.list=list(
+#'                                   Compound="Name",
+#'                                   CAS="CASRN",
+#'                                   MW="MW",
+#'                                   logP="LogP",
+#'                                   Funbound.plasma="Fup",
+#'                                   Clint="CLint"),
+#'                                   species="Human",
+#'                                   reference="MyPaper 2015")
+#' parameterize_steadystate(chem.name="C")  
+#' calc_css(chem.name="B")                                
+#' 
+#' @export add_chemtable
 add_chemtable <- function(new.table, data.list, current.table=NULL, reference=NULL,
                           species=NULL, overwrite=F)
 {

@@ -1,4 +1,48 @@
 # from Ito and Houston (2004)
+
+
+
+
+#' Calculate the hepatic clearance.
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
+#' function calculates the hepatic clearance in plasma for a well-stirred model
+#' or other type if specified.
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or the parameters
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or the parameters must
+#' be specified.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true.
+#' @param parameters Chemical parameters from parameterize_steadystate
+#' function, overrides chem.name and chem.cas.
+#' @param hepatic.model Model used in calculating hepatic clearance, unscaled,
+#' parallel tube, dispersion, or default well-stirred.
+#' @param suppress.messages Whether or not to suppress the output message.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE for hepatic.model well-stirred.
+#' This assumes clearance relative to amount unbound in whole blood instead of
+#' plasma, but converted to use with plasma concentration.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE.
+#' @param ... Additional parameters passed to parameterize_steadystate if
+#' parameters is NULL.
+#' @return \item{Hepatic Clearance}{Units of L/h/kg BW.}
+#' @author John Wambaugh
+#' @keywords Parameter
+#' @examples
+#' 
+#' calc_hepatic_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
+#' calc_hepatic_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
+#' 
+#' 
+#' @export calc_hepatic_clearance
 calc_hepatic_clearance <- function(chem.name=NULL,
                                    chem.cas=NULL,
                                    parameters=NULL,

@@ -1,20 +1,24 @@
-#' @import data.table
-#' @import magrittr
-#' @title Estimate well surface area
-#' @description Estimate geometry surface area of plastic in well plate based on well plate format suggested values from Corning. 
-#' option.plastic == T (default) give nonzero surface area (sarea, m^2)
-#' option.bottom == T (default) includes surface area of the bottom of the well in determining sarea. 
-#' Optionally include user values for working volume (v_working, m^3) and surface area. 
-#' @param tcdata A data table with well_number corresponding to plate format, optionally include v_working, sarea, option.bottom, and option.plastic
-#' @param this.well_number For single value, plate format default is 384, used if is.na(tcdata)==T
-#' @param this.cell_yield For single value, optionally supply cell_yield, otherwise estimated based on well number
-#' @param this.v_working For single value, optionally supply working volume, otherwise estimated based on well number (m^3)
-#'
-#' @return tcdata, A data table with well_number, sarea (surface area, m^2), cell_yield (# cells), v_working (m^3), v_total (m^3) per well
-#'
-#' @export
-#'
+#' Estimate well surface area
+#' 
+#' Estimate geometry surface area of plastic in well plate based on well plate
+#' format suggested values from Corning.  option.plastic == T (default) give
+#' nonzero surface area (sarea, m^2) option.bottom == T (default) includes
+#' surface area of the bottom of the well in determining sarea.  Optionally
+#' include user values for working volume (v_working, m^3) and surface area.
+#' 
+#' 
+#' @param tcdata A data table with well_number corresponding to plate format,
+#' optionally include v_working, sarea, option.bottom, and option.plastic
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==T
+#' @param this.cell_yield For single value, optionally supply cell_yield,
+#' otherwise estimated based on well number
+#' @param this.v_working For single value, optionally supply working volume,
+#' otherwise estimated based on well number (m^3)
+#' @return tcdata, A data table with well_number, sarea (surface area, m^2),
+#' cell_yield (# cells), v_working (m^3), v_total (m^3) per well
 #' @author Greg Honda
+#' @export armitage_estimate_sarea
 armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_working,sarea, option.bottom, and option.plastic
                                     this.well_number = 384,
                                     this.cell_yield = NA,
@@ -69,17 +73,27 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   return(tcdata)
 }
 
-#' @title Evaluate the updated Armitage model
-#' @description Evaluate the Armitage model for chemical distributon in vitro.
-#' Takes input as data table or single set of values. Outputs a data table.
-#' Updates over the model published in Armitage et al. 2014 include binding to plastic walls and lipid and protein compartments in cells.
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' @param tcdata A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working. Otherwise supply single values to this.params.
+
+
+
+
+#' Evaluate the updated Armitage model
+#' 
+#' Evaluate the Armitage model for chemical distributon in vitro. Takes input
+#' as data table or single set of values. Outputs a data table. Updates over
+#' the model published in Armitage et al. 2014 include binding to plastic walls
+#' and lipid and protein compartments in cells.
+#' 
+#' 
+#' @param tcdata A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params.
 #' @param this.casrn For single value, CAS number
 #' @param this.ac50 For single value, AC50 (micromolar) nominal concentration
 #' @param this.MP For single value, melting point (oC)
-#' @param this.gkow For single value, Log10 Kow, octanol-water partitioning coefficient
-#' @param this.gkaw For single value, Log10 Kaw, air-water partitioning coefficient
+#' @param this.gkow For single value, Log10 Kow, octanol-water partitioning
+#' coefficient
+#' @param this.gkaw For single value, Log10 Kaw, air-water partitioning
+#' coefficient
 #' @param this.gswat For single value, Log10 water solubility (mol/L)
 #' @param this.sarea For single value, surface area per well (m^2)
 #' @param this.v_total For single value, Total volume per well (m^3)
@@ -87,7 +101,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.cell_yield For single value, Number of cells per well
 #' @param this.Tsys System temperature (oC)
 #' @param this.Tref Reference temperature (K)
-#' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning model
+#' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
+#' model
 #' @param this.option.swat2 Use alternative water solubility correction
 #' @param this.FBSf Fraction fetal bovine serum
 #' @param this.pseudooct Pseudo-octanol cell storage lipid content
@@ -100,15 +115,14 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.celldensity Cell density kg/L, g/mL
 #' @param this.cellmass Mass per cell, ng/cell
 #' @param this.f_oc 1, everything assumed to be like proteins
-#'
 #' @return tcdata
-#'
-#' @export
-#'
 #' @author Greg Honda
-#'
-#' @references Honda et al. (submitted) "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions"
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+#' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#' 
+#' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
+#' to Evaluate Extrapolation Assumptions"
+#' @export armitage_eval
 armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working
                             this.casrn,
                             this.ac50 = 10, # micromolar

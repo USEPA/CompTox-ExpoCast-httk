@@ -21,8 +21,7 @@ bone_mass_age(age_years, age_months, height, weight, gender)
 Vector of bone masses.
 }
 \description{
-Predict bone mass from age_years, height, weight, gender,
-using logistic equations fit to data from Baxter-Jones et al. 2011,
-or for infants < 1 year, using equation from Koo et al. 2000
-(See Price et al. 2003)
+Predict bone mass from age_years, height, weight, gender, using logistic
+equations fit to data from Baxter-Jones et al. 2011, or for infants < 1
+year, using equation from Koo et al. 2000 (See Price et al. 2003)
 }

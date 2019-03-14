@@ -6,7 +6,6 @@
 }
 \description{
 This function solves for the amounts or concentrations in uM of a chemical in different tissues as functions of time based on the dose and dosing frequency.
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
 solve_pbtk(chem.name = NULL, chem.cas = NULL, times=NULL, parameters=NULL,
@@ -24,7 +23,7 @@ solve_pbtk(chem.name = NULL, chem.cas = NULL, times=NULL, parameters=NULL,
   \item{times}{Optional time sequence for specified number of days.  Dosing sequence begins at the beginning of times.}
   \item{parameters}{Chemical parameters from parameterize_pbtk function, overrides chem.name and chem.cas.}
   \item{days}{Length of the simulation.}
-   \item{tsteps}{The number time steps per hour.}
+  \item{tsteps}{The number of time steps per hour.}
   \item{daily.dose}{Total daily dose, mg/kg BW.}
   \item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
   \item{doses.per.day}{Number of doses per day.}
