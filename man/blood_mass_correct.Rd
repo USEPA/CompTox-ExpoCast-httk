@@ -7,7 +7,8 @@
 blood_mass_correct(blood_mass, age_months, age_years, gender, weight)
 }
 \arguments{
-\item{blood_mass}{A vector of blood masses in kg to be replaced with averages.}
+\item{blood_mass}{A vector of blood masses in kg to be replaced with
+averages.}
 
 \item{age_months}{A vector of ages in months.}
 
@@ -21,6 +22,7 @@ blood_mass_correct(blood_mass, age_months, age_years, gender, weight)
 A vector of blood masses in kg.
 }
 \description{
-If blood mass from \code{\link{blood_weight}} is negative or very small, then
-just default to the mean blood mass by age. (Geigy Scientific Tables, 7th ed.)
+If blood mass from \code{\link{blood_weight}} is negative or very small,
+then just default to the mean blood mass by age. (Geigy Scientific Tables,
+7th ed.)
 }

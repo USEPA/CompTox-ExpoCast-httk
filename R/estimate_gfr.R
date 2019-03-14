@@ -17,6 +17,40 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 
+
+
+
+
+#' Predict GFR.
+#' 
+#' First predict serum creatinine using smoothing spline, then predict GFR
+#' using CKD-EPI equation.
+#' 
+#' 
+#' @param gfrtmp.dt A data.table with columns \code{gender}, \code{reth},
+#' \code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.
+#' @param gfrtmp.dt A data.table with columns \code{gender}, \code{reth},
+#' \code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.
+#' @return The same data.table with a \code{gfr_est} column added, containing
+#' estimated GFR values.
+#' 
+#' The same data.table with a \code{gfr_est} column added, containing estimated
+#' GFR values.
+#' @author Caroline Ring
+#' 
+#' Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118 Predict GFR.
+#' 
+#' First predict serum creatinine using smoothing spline, then predict GFR
+#' using CKD-EPI equation.
+#' 
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export estimate_gfr
 estimate_gfr <- function(gfrtmp.dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

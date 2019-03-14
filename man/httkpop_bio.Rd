@@ -8,12 +8,19 @@ httkpop_bio(indiv_dt)
 }
 \arguments{
 \item{indiv_dt}{The data.table object returned by \code{httkpop_generate()}}
+
+\item{indiv_dt}{The data.table object returned by \code{httkpop_generate()}}
 }
 \value{
 A data.table with the physiological parameters expected by any HTTK 
   model, including body weight (BW), hematocrit, tissue volumes per kg body
   weight, tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg
   BW)^3/4, portal vein flow per (kg BW)^3/4, and liver density.
+
+A data.table with the physiological parameters expected by any HTTK
+model, including body weight (BW), hematocrit, tissue volumes per kg body
+weight, tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg
+BW)^3/4, portal vein flow per (kg BW)^3/4, and liver density.
 }
 \description{
 Convert HTTK-Pop-generated parameters to HTTK physiological parameters
@@ -22,8 +29,17 @@ Convert HTTK-Pop-generated parameters to HTTK physiological parameters
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+Convert HTTK-Pop-generated parameters to HTTK physiological parameters
+
+Convert HTTK-Pop-generated parameters to HTTK physiological parameters
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
 Caroline Ring
 }
 \keyword{httk-pop}

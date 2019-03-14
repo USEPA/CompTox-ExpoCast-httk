@@ -14,7 +14,8 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
   this.celldensity = 1, this.cellmass = 3, this.f_oc = 1)
 }
 \arguments{
-\item{tcdata}{A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working. Otherwise supply single values to this.params.}
+\item{tcdata}{A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea,
+v_total, v_working. Otherwise supply single values to this.params.}
 
 \item{this.casrn}{For single value, CAS number}
 
@@ -22,9 +23,11 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
 
 \item{this.MP}{For single value, melting point (oC)}
 
-\item{this.gkow}{For single value, Log10 Kow, octanol-water partitioning coefficient}
+\item{this.gkow}{For single value, Log10 Kow, octanol-water partitioning
+coefficient}
 
-\item{this.gkaw}{For single value, Log10 Kaw, air-water partitioning coefficient}
+\item{this.gkaw}{For single value, Log10 Kaw, air-water partitioning
+coefficient}
 
 \item{this.gswat}{For single value, Log10 water solubility (mol/L)}
 
@@ -40,7 +43,8 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
 
 \item{this.Tref}{Reference temperature (K)}
 
-\item{this.option.kbsa2}{Use alternative bovine-serum-albumin partitioning model}
+\item{this.option.kbsa2}{Use alternative bovine-serum-albumin partitioning
+model}
 
 \item{this.option.swat2}{Use alternative water solubility correction}
 
@@ -70,15 +74,17 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
 tcdata
 }
 \description{
-Evaluate the Armitage model for chemical distributon in vitro.
-Takes input as data table or single set of values. Outputs a data table.
-Updates over the model published in Armitage et al. 2014 include binding to plastic walls and lipid and protein compartments in cells.
+Evaluate the Armitage model for chemical distributon in vitro. Takes input
+as data table or single set of values. Outputs a data table. Updates over
+the model published in Armitage et al. 2014 include binding to plastic walls
+and lipid and protein compartments in cells.
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
-Honda et al. (submitted) "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions"
+Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
+to Evaluate Extrapolation Assumptions"
 }
 \author{
 Greg Honda

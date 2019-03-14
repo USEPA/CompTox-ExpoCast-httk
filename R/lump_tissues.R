@@ -7,6 +7,45 @@
 #               tissues that are to be lumped, for example:
 #               tissuelist<-list(Rapid=c("Brain","Kidney"))
 # species specifies the flow.col and vol.col in the tissuedata.table
+
+
+
+
+#' Lump tissue parameters
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
+#' function takes the parameters from predict_partitioning_schmitt and lumps
+#' the partition coefficients along with the volumes and flows based on the
+#' given tissue list. It is useful in Monte Carlo simulation of individual
+#' partition coefficients when calculating the rest of body partition
+#' coefficient.
+#' 
+#' 
+#' @param Ktissue2pu.in List of partition coefficients from
+#' predict_partitioning_schmitt.
+#' @param tissuelist Specifies compartment names and tissues groupings.
+#' Remaining tissues in tissue.data are lumped in the rest of the body.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
+#' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration
+#' of chemical in rest of body tissue to unbound concentration in plasma.}
+#' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+#' \item{Vliverc}{ Volume of the liver per kg body weight, L/kg BW.}
+#' \item{Qtotal.liverf}{Fraction of cardiac output flowing to the gut and
+#' liver, i.e. out of the liver.} \item{Qgutf}{Fraction of cardiac output
+#' flowing to the gut.} \item{Qkidneyf}{Fraction of cardiac output flowing to
+#' the kidneys.}
+#' @author John Wambaugh
+#' @keywords Parameter
+#' @examples
+#' 
+#' pcs <- predict_partitioning_schmitt(chem.name='bisphenola')
+#' tissuelist <- list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")
+#' ,muscle.bone=c('muscle','bone'))
+#' lump_tissues(pcs,tissuelist=tissuelist)
+#' 
+#' @export lump_tissues
 lump_tissues <- function(Ktissue2pu.in,
                             tissuelist=NULL,
                             species="Human")

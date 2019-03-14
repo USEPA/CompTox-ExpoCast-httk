@@ -1,4 +1,59 @@
 # This function predicts partition coefficients for all tissues, then lumps them into a single compartment. The effective volume of distribution is calculated by summing each tissues volume times it's partition coefficient relative to plasma. Plasma, and the paritioning into RBCs are also added to get the total volume of distribution in L/KG BW.
+
+
+
+
+
+
+#' Calculate the volume of distribution for a one compartment model.
+#' 
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
+#' function predicts partition coefficients for all tissues, then lumps them
+#' into a single compartment.
+#' 
+#' The effective volume of distribution is calculated by summing each tissues
+#' volume times it's partition coefficient relative to plasma. Plasma, and the
+#' paritioning into RBCs are also added to get the total volume of distribution
+#' in L/KG BW. Partition coefficients are calculated using Schmitt's (2008)
+#' method.  %%When species is specified as rabbit, dog, or mouse, the function
+#' uses the appropriate physiological data(volumes and flows) but substitues
+#' human fraction unbound, partition coefficients, and intrinsic hepatic
+#' clearance.
+#' 
+#' %% ~~ If necessary, more details than the description above ~~
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified when Funbound.plasma is not given in parameter list. %% ~~Describe
+#' \code{obs} here~~
+#' @param chem.cas Either the CAS number or the chemical name must be specified
+#' when Funbound.plasma is not given in parameter list. %% ~~Describe
+#' \code{pred} here~~
+#' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
+#' predict_partitioning_schmitt.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with parition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @return \item{Volume of distribution}{Units of L/ kg BW.}
+#' @author John Wambaugh
+#' @references Schmitt W. "General approach for the calculation of tissue to
+#' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
+#' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
+#' partition coefficients for PBPK modeling of drugs and environmental
+#' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
+#' @keywords Parameter
+#' @examples
+#' 
+#' calc_vdist(chem.cas="80-05-7")
+#' calc_vdist(chem.name="Bisphenol A")
+#' calc_vdist(chem.name="Bisphenol A",species="Rat")
+#' 
+#' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       parameters=NULL,

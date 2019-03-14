@@ -1,3 +1,58 @@
+#' Parameterize_1comp
+#' 
+#' This function initializes the parameters needed in the function solve_1comp.
+#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#' 
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. %% ~~Describe \code{obs} here~~
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. %% ~~Describe \code{pred} here~~
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param default.to.human Substitutes missing rat values with human values if
+#' true.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with volume of distribution calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients in volume of distribution calculation.
+#' @param restrictive.clearance In calculating elimination rate and hepatic
+#' bioavailability, protein binding is not taken into account (set to 1) in
+#' liver clearance if FALSE.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE.  This assumes clearance relative
+#' to amount unbound in whole blood instead of plasma, but converted to use
+#' with plasma concentration.
+#' @param suppress.messages Whether or not to suppress messages.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
+#' @return
+#' 
+#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+#' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' \item{kgutabs}{Rate chemical is absorbed, 1/h.}
+#' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
+#' \item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
+#' concentration of the chemical in the blood to the concentration in the
+#' plasma. Not used in calculations but included for the conversion of plasma
+#' outputs.} \item{hepatic.bioavailability}{Fraction of dose remaining after
+#' first pass clearance, calculated from the corrected well-stirred model.}
+#' \item{BW}{Body Weight, kg.} %% ~Describe the value returned %% If it is a
+#' LIST, use %% \item{comp1 }{Description of 'comp1'} %% \item{comp2
+#' }{Description of 'comp2'} %% ...
+#' @author John Wambaugh
+#' @keywords Parameter
+#' @examples
+#' 
+#'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
+#'  parameters <- parameterize_1comp(chem.cas='80-05-7',restrictive.clearance=FALSE,
+#'                                   species='rabbit',default.to.human=TRUE)
+#'  out <- solve_1comp(parameters=parameters)
+#' 
+#' @export parameterize_1comp
 parameterize_1comp <- function(chem.cas=NULL,
                                chem.name=NULL,
                                species='Human',
