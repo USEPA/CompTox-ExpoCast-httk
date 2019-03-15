@@ -1,9 +1,11 @@
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.1comp <- c("BW",
                      "Clint",
+                     "Clint.dist",
                      "Fgutabs",
                      "Fhep.assay.correction",
                      "Funbound.plasma",
+                     "Funbound.plasma.dist",
                      "Funbound.plasma.adjustment",
                      "hepatic.bioavailability",
                      "hematocrit",
