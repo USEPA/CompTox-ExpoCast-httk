@@ -1,8 +1,10 @@
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.3comp <- c("BW",
                      "Clint",
+                     "Clint.dist",
                      "Clmetabolismc",
                      "Funbound.plasma",
+                     "Funbound.plasma.dist",
                      "Funbound.plasma.adjustment",
                      "Fgutabs",
                      "Fhep.assay.correction",
