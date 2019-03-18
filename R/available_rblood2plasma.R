@@ -43,7 +43,7 @@
 available_rblood2plasma <- function(chem.cas=NULL,
                                     chem.name=NULL,
                                     species='Human',
-                                    adjusted.Funbound.plasma=T
+                                    adjusted.Funbound.plasma=T,
                                     suppress.messages=F)
 
 {
