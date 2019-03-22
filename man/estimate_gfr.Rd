@@ -12,6 +12,9 @@ estimate_gfr(gfrtmp.dt)
 
 \item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth},
 \code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.}
+
+\item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth},
+\code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.}
 }
 \value{
 The same data.table with a \code{gfr_est} column added, containing 
@@ -19,6 +22,9 @@ The same data.table with a \code{gfr_est} column added, containing
 
 The same data.table with a \code{gfr_est} column added, containing
 estimated GFR values.
+
+The same data.table with a \code{gfr_est} column added, containing estimated
+GFR values.
 }
 \description{
 First predict serum creatinine using smoothing spline, then predict GFR using
@@ -35,9 +41,18 @@ using CKD-EPI equation.
 
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118 Predict GFR.
+
+First predict serum creatinine using smoothing spline, then predict GFR
+using CKD-EPI equation.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
 Caroline Ring
 
 Caroline Ring

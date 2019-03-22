@@ -1,8 +1,3 @@
-# This function calculates an elimination rate for a one compartment model where 
-# elimination is entirely due to metabolism by the liver and glomerular filtration
-# in the kidneys.
-
-
 #' Calculate the total clearance.
 #' 
 #' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
@@ -60,10 +55,12 @@ calc_total_clearance<- function(chem.cas=NULL,
                                              chem.name=chem.name, 
                                              species=species,
                                              default.to.human=default.to.human,
-                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                             adjusted.Funbound.plasma=
+                                               adjusted.Funbound.plasma,
                                              ...)
     }
-    Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / parameters[['BW']]^0.25 #L/h/kgBW
+    Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / 
+      parameters[['BW']]^0.25 #L/h/kgBW
     fup <- parameters[["Funbound.plasma"]]# unitless fraction
     clearance <- Qgfrc*fup+
                    calc_hepatic_clearance(chem.cas=chem.cas,
@@ -73,7 +70,8 @@ calc_total_clearance<- function(chem.cas=NULL,
                      suppress.messages=T,
                      well.stirred.correction=well.stirred.correction,
                      restrictive.clearance=restrictive.clearance,
-                     adjusted.Funbound.plasma=adjusted.Funbound.plasma) #L/h/kgBW
+                     adjusted.Funbound.plasma=
+                       adjusted.Funbound.plasma) #L/h/kgBW
 
     if (!suppress.messages)
     {

@@ -171,9 +171,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
 #' @return \item{data.frame}{A new data.frame containing the data in
-#' current.table augmented by new.table} %% ~Describe the value returned %% If
-#' it is a LIST, use %% \item{comp1 }{Description of 'comp1'} %% \item{comp2
-#' }{Description of 'comp2'} %% ...
+#' current.table augmented by new.table} 
 #' @author John Wambaugh
 #' @examples
 #' 

@@ -27,9 +27,7 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
-#' @return
-#' 
-#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 #' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
@@ -40,9 +38,7 @@
 #' plasma. Not used in calculations but included for the conversion of plasma
 #' outputs.} \item{hepatic.bioavailability}{Fraction of dose remaining after
 #' first pass clearance, calculated from the corrected well-stirred model.}
-#' \item{BW}{Body Weight, kg.} %% ~Describe the value returned %% If it is a
-#' LIST, use %% \item{comp1 }{Description of 'comp1'} %% \item{comp2
-#' }{Description of 'comp2'} %% ...
+#' \item{BW}{Body Weight, kg.} 
 #' @author John Wambaugh
 #' @keywords Parameter
 #' @examples

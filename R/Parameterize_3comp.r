@@ -21,14 +21,13 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @return
-#' 
-#' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-#' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
-#' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-#' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-#' chemical unbound in hepatocyte assay using the method of Kilford et al.
-#' (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, 
+#' L/h/kg BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
+#' fraction of the dose that enters the gutlumen.} 
+#' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+#' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+#' assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
+#' volume of red blood cells in the blood.}
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
 #' concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
 #' chemical in liver tissue to unbound concentration in plasma.}
@@ -45,9 +44,6 @@
 #' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-#' 
-#' %% ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
 #' @author Robert Pearce and John Wambaugh
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -79,7 +75,8 @@ parameterize_3comp<- function(chem.cas=NULL,
                               tissuelist=list(liver=c("liver"),gut=c("gut")),
                               force.human.clint.fup = force.human.clint.fup,
                               clint.pvalue.threshold=clint.pvalue.threshold,
-                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                              adjusted.Funbound.plasma=
+                               adjusted.Funbound.plasma,
                               regression=regression,
                               suppress.messages=suppress.messages)
                               
