@@ -84,6 +84,10 @@ with plasma concentration.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
+\value{
+A matrix with a column for time(in days) and a column for the
+compartment and the area under the curve (concentration only).
+}
 \description{
 This function solves for the amount or concentration of a chemical in plasma
 for a one compartment model as a function of time based on the dose and

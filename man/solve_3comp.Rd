@@ -84,6 +84,11 @@ partition coefficients.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
+\value{
+A matrix of class deSolve with a column for time(in days) and each
+compartment, the plasma concentration, area under the curve, and a row for
+each time point.
+}
 \description{
 This function solves for the amounts or concentrations of a chemical in
 different tissues as functions of time based on the dose and dosing

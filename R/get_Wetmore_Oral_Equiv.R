@@ -31,11 +31,7 @@
 #' @param clearance.assay.conc Concentration of chemical used in measureing
 #' intrinsic clearance data, 1 or 10 uM.
 #' @param ... Additional parameters passed to get_lit_css.
-#' @return
-#' 
-#' Equivalent dose in specified units, default of mg/kg BW/day. %% ~Describe
-#' the value returned %% If it is a LIST, use %% \item{comp1 }{Description of
-#' 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
+#' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #' @author John Wambaugh
 #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
 #' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,

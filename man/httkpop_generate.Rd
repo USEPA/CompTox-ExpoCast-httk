@@ -66,6 +66,7 @@ Generate a virtual population
 }
 \examples{
 
+
 \dontrun{
 #Simply generate a virtual population of 100 individuals,
  #using the direct-resampling method
@@ -87,6 +88,7 @@ weight_category=c('Underweight',
 'Normal',
 'Overweight'))
 }
+
 
 
 }

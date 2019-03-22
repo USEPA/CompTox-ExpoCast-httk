@@ -66,11 +66,7 @@
 #' See Details below for more information.
 #' @param ... Additional parameters passed to calc_mc_css for httkpop and
 #' variance of parameters.
-#' @return
-#' 
-#' Equivalent dose in specified units, default of mg/kg BW/day. %% ~Describe
-#' the value returned %% If it is a LIST, use %% \item{comp1 }{Description of
-#' 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
+#' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #' @author John Wambaugh
 #' @keywords Steady State Monte Carlo
 #' @examples
