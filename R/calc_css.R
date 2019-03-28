@@ -1,8 +1,3 @@
-# Written by Robert Pearce and John Wambaugh
-
-
-
-
 #' Find the steady state concentration and the day it is reached.
 #' 
 #' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
@@ -59,7 +54,7 @@
 #' \item{avg}{The average concentration on the final day of the simulation.}
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
-#' @author Robert Pearce
+#' @author Robert Pearce, John Wambaugh
 #' @keywords Steady State
 #' @examples
 #' 

@@ -10,7 +10,7 @@
 #' 
 #' Default value of NULL for doses.per.day solves for a single dose.
 #' 
-#' %%When species is specified as rabbit, dog, or mouse, the function uses the
+#' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 

@@ -28,10 +28,10 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the CAS number, parameters, or the chemical name must
-be specified. %% ~~Describe \code{pred} here~~}
+be specified.}
 
 \item{chem.name}{Either the chemical parameters, name, or the CAS number
-must be specified. %% ~~Describe \code{obs} here~~}
+must be specified.}
 
 \item{parameters}{Parameters from parameterize_steadystate. Not used with
 httkpop model.}
@@ -39,11 +39,10 @@ httkpop model.}
 \item{daily.dose}{Total daily dose, mg/kg BW/day.}
 
 \item{which.quantile}{Which quantile from Monte Carlo simulation is
-requested. Can be a vector. %% ~~Describe \code{ssparams.mean} here~~}
+requested. Can be a vector.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").  Species must be set to "Human" to run httkpop model.  %%
-~~Describe \code{ssparams.var.inv} here~~}
+default "Human").  Species must be set to "Human" to run httkpop model.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
@@ -186,8 +185,7 @@ distribution)}
 censored below \code{lod/2}. Default value is 0.01.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function finds the analytical steady state plasma concentration(from
+This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).
 }
 \details{
