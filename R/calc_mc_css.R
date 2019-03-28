@@ -1,10 +1,3 @@
-# The function uses Monte Carlo methods to vary parameters and can return various quantiles.
-# Original by John Wambaugh
-# Rewritten by Caroline Ring with modifications by John Wambaugh and Robert Pearce
-
-
-
-
 #' Find the monte carlo steady state concentration.
 #' 
 #' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
@@ -37,17 +30,16 @@
 #' used by this function.
 #' 
 #' @param chem.name Either the chemical parameters, name, or the CAS number
-#' must be specified. %% ~~Describe \code{obs} here~~
+#' must be specified. 
 #' @param chem.cas Either the CAS number, parameters, or the chemical name must
-#' be specified. %% ~~Describe \code{pred} here~~
+#' be specified. 
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.
 #' @param daily.dose Total daily dose, mg/kg BW/day.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
-#' requested. Can be a vector. %% ~~Describe \code{ssparams.mean} here~~
+#' requested. Can be a vector.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").  Species must be set to "Human" to run httkpop model.  %%
-#' ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human").  Species must be set to "Human" to run httkpop model. 
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param suppress.messages Whether or not to suppress output message.
 #' @param censored.params The parameters listed in censored.params are sampled

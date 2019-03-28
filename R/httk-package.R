@@ -2617,7 +2617,7 @@ NULL
 #' @aliases httk-package httk
 #' @docType package
 #' @author John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
-#' Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer
+#' Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 #' @seealso
 #' \href{https://cfpub.epa.gov/si/si_public_record_report.cfm?dirEntryId=311211PowerPoint
 #' Presentation: High-Throughput Toxicokinetics (HTTK) R package}
