@@ -4,8 +4,8 @@
 \alias{get_cheminfo}
 \title{Retrieve chemical information from HTTK package}
 \usage{
-get_cheminfo(info = "CAS", species = "Human", exclude.fub.zero = NA,
-  fub.lod.default = 0.005, model = "3compartmentss",
+get_cheminfo(info = "CAS", species = "Human", exclude.fup.zero = NA,
+  fup.lod.default = 0.005, model = "3compartmentss",
   default.to.human = F)
 }
 \arguments{
@@ -18,12 +18,12 @@ gives all information for the model and species.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{exclude.fub.zero}{Whether or not to exclude chemicals with a fraction
+\item{exclude.fup.zero}{Whether or not to exclude chemicals with a fraction
 of unbound plasma equal to zero or include them with a value of
-fub.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
+fup.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
 models and schmitt.}
 
-\item{fub.lod.default}{Default value used for fraction of unbound plasma for
+\item{fup.lod.default}{Default value used for fraction of unbound plasma for
 chemicals where measured value was below the limit of detection. Default
 value is 0.0005.}
 

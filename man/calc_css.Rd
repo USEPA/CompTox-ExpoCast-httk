@@ -134,7 +134,7 @@ print(avg.vs.max)
 
 }
 \author{
-Robert Pearce
+Robert Pearce, John Wambaugh
 }
 \keyword{State}
 \keyword{Steady}
