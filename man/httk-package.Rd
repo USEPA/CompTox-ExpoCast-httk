@@ -81,6 +81,6 @@ John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer
 
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
-Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer
+Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 }
 \keyword{package}
