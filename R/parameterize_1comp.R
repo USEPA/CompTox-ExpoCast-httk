@@ -1,13 +1,13 @@
 #' Parameterize_1comp
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#'  function does. ~~
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing rat values with human values if

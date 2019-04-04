@@ -11,23 +11,21 @@ get_lit_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of specified
-input.units, default of uM. %% ~~Describe \code{ssparams.i} here~~}
+input.units, default of uM.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
-\item{suppress.messages}{Suppress output messages. %% ~~Describe \code{sds}
-here~~}
+\item{suppress.messages}{Suppress output messages.}
 
 \item{which.quantile}{Which quantile from the SimCYP Monte Carlo simulation
 is requested. Can be a vector.  Papers include 0.05, 0.5, and 0.95 for
-humans and 0.5 for rats. %% ~~Describe \code{ssparams.mean} here~~}
+humans and 0.5 for rats.}
 
-\item{species}{Species desired (either "Rat" or default "Human"). %%
-~~Describe \code{ssparams.var.inv} here~~}
+\item{species}{Species desired (either "Rat" or default "Human").}
 
 \item{input.units}{Units of given concentration, default of uM but can also
 be mg/L.}
@@ -46,8 +44,7 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 \description{
 This function converts a chemical plasma concetration to an oral equivalent
 dose using the values from the Wetmore et al. (2012) and (2013) publications
-and other literature. %% ~~ A concise (1-5 lines) description of what the
-function does. ~~
+and other literature.
 }
 \examples{
 

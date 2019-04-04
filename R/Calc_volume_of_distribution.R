@@ -1,39 +1,29 @@
-# This function predicts partition coefficients for all tissues, then lumps them into a single compartment. The effective volume of distribution is calculated by summing each tissues volume times it's partition coefficient relative to plasma. Plasma, and the paritioning into RBCs are also added to get the total volume of distribution in L/KG BW.
-
-
-
-
-
-
 #' Calculate the volume of distribution for a one compartment model.
-#' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function predicts partition coefficients for all tissues, then lumps them
+#'
+#' This function predicts partition coefficients for all tissues, then lumps them
 #' into a single compartment.
 #' 
 #' The effective volume of distribution is calculated by summing each tissues
 #' volume times it's partition coefficient relative to plasma. Plasma, and the
 #' paritioning into RBCs are also added to get the total volume of distribution
 #' in L/KG BW. Partition coefficients are calculated using Schmitt's (2008)
-#' method.  %%When species is specified as rabbit, dog, or mouse, the function
+#' method.  When species is specified as rabbit, dog, or mouse, the function
 #' uses the appropriate physiological data(volumes and flows) but substitues
 #' human fraction unbound, partition coefficients, and intrinsic hepatic
 #' clearance.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified when Funbound.plasma is not given in parameter list. %% ~~Describe
-#' \code{obs} here~~
+#' specified when Funbound.plasma is not given in parameter list. 
 #' @param chem.cas Either the CAS number or the chemical name must be specified
-#' when Funbound.plasma is not given in parameter list. %% ~~Describe
-#' \code{pred} here~~
+#' when Funbound.plasma is not given in parameter list. 
 #' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
 #' predict_partitioning_schmitt.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with parition coefficients calculated with this value.

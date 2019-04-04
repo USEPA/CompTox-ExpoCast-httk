@@ -185,8 +185,7 @@ distribution)}
 censored below \code{lod/2}. Default value is 0.01.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function finds the analytical steady state plasma concentration(from
+This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).
 }
 \details{
@@ -233,8 +232,6 @@ used by this function.
  params <- parameterize_pbtk(chem.cas="80-05-7")
  calc_mc_css(parameters=params,model="pbtk")
 }
-\% Add one or more standard keywords, see file 'KEYWORDS' in the
-\% R documentation directory.
 
 }
 \references{

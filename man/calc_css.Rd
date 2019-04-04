@@ -16,17 +16,16 @@ calc_css(parameters = NULL, chem.name = NULL, chem.cas = NULL,
 overrides chem.name and chem.cas.}
 
 \item{chem.name}{Either the chemical name, CAS number, or parameters must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
 \item{f}{Fractional distance from the final steady state concentration that
-the average concentration must come within to be considered at steady state.
-%% ~~Describe \code{pred} here~~}
+the average concentration must come within to be considered at steady state.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
@@ -79,9 +78,8 @@ dosing).} \item{max}{The maximum concentration of the simulation.}
 percent of the true steady state concentration.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function finds the day a chemical comes within the specified range of the
-analytical steady state venous blood or plasma concentration(from
+This function finds the day a chemical comes within the specified range of
+the analytical steady state venous blood or plasma concentration(from
 calc_analytic_css) for the multiple compartment, three compartment, and one
 compartment models, the fraction of the true steady state value reached on
 that day, the maximum concentration, and the average concentration at the

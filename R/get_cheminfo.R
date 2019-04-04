@@ -1,10 +1,6 @@
-# This function displays the information specified in "info=" for all chemicals for which the PBPK model can be paramterized.
-
-
 #' Retrieve chemical information from HTTK package
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function provides the information specified in "info=" (can be single entry
+#' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
 #' paramterized for a given species.
 #' 

@@ -9,13 +9,13 @@ get_rblood2plasma(chem.name = NULL, chem.cas = NULL,
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}

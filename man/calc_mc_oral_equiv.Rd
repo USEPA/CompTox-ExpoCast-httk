@@ -11,22 +11,20 @@ calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
 }
 \arguments{
-\item{conc}{Bioactive in vitro concentration in units of uM. %% ~~Describe
-\code{ssparams.i} here~~}
+\item{conc}{Bioactive in vitro concentration in units of uM.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
-concentration quantile is the same population as the 5th dose quantile. %%
-~~Describe \code{ssparams.mean} here~~}
+concentration quantile is the same population as the 5th dose quantile.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").  %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
 
 \item{input.units}{Units of given concentration, default of uM but can also
 be mg/L.}
@@ -34,8 +32,7 @@ be mg/L.}
 \item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or
 'mol' for mol/ kg BW/ day.}
 
-\item{suppress.messages}{Suppress text messages. %% ~~Describe \code{sds}
-here~~}
+\item{suppress.messages}{Suppress text messages.}
 
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
@@ -68,8 +65,7 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
 This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from calc_mc_css.  %% ~~ A concise (1-5
-lines) description of what the function does. ~~
+dose using a concentration obtained from calc_mc_css.
 }
 \details{
 All arguments after httkpop only apply if httkpop is set to TRUE and species

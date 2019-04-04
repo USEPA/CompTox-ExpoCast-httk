@@ -11,10 +11,10 @@ parameterize_3comp(chem.cas = NULL, chem.name = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -63,7 +63,7 @@ of the chemical in the blood to the concentration in the plasma.}
 }
 \description{
 This function initializes the parameters needed in the function solve_3comp.
-%% ~~ A concise (1-5 lines) description of what the function does. ~~
+ function does. ~~
 }
 \examples{
 

@@ -21,7 +21,7 @@ be specified.}
 function, overrides chem.name and chem.cas.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
@@ -49,8 +49,7 @@ parameters is NULL.}
 \item{Hepatic Clearance}{Units of L/h/kg BW.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function calculates the hepatic clearance in plasma for a well-stirred model
+This function calculates the hepatic clearance in plasma for a well-stirred model
 or other type if specified.
 }
 \examples{
