@@ -1,14 +1,8 @@
-# This function displays the information specified in "info=" for all chemicals from Wetmore et al. (2012) and (2013)
-
-
-
-
 #' Get literature Chemical Information.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function provides the information specified in "info=" for all chemicals
-#' with data from the Wetmore et al. (2012) and (2013) publications and other
-#' literature.
+#' This function provides the information specified in "info=" for all
+#' chemicals with data from the Wetmore et al. (2012) and (2013) publications
+#' and other literature.
 #' 
 #' 
 #' @param info A single character vector (or collection of character vectors)

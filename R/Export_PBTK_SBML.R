@@ -6,16 +6,15 @@
 
 #' Export model to sbml.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function exports the multiple compartment PBTK model to an sbml file.
+#' This function exports the multiple compartment PBTK model to an sbml file.
 #' 
 #' Compartments to enter into the initial.amounts list includes Agutlumen,
 #' Aart, Aven, Alung, Agut, Aliver, Akidney, and Arest.
 #' 
-#' %%When species is specified as rabbit, dog, or mouse, the function uses the
+#' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.cas Either the chemical name or CAS number must be specified.
 #' @param chem.name Either the chemical name or CAS number must be specified.

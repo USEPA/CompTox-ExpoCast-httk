@@ -9,10 +9,10 @@ calc_ionization(chem.cas = NULL, chem.name = NULL, parameters = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{parameters}{Chemical parameters from a parameterize_MODEL function,
 overrides chem.name and chem.cas.}
@@ -33,10 +33,9 @@ Overwrites chem.name and chem.cas.}
 \item{fraction_zwitter}{fraction of compound zwitterionic}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function calculates the ionization of a compound at a given pH.  The pKa's
-are either entered as parameters or taken from a specific compound in the
-package.
+This function calculates the ionization of a compound at a given pH. The 
+pKa's are either entered as parameters or taken from a specific compound in
+the package.
 }
 \details{
 The fractions are calculated by determining the coefficients for each

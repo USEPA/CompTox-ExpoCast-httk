@@ -11,34 +11,31 @@ get_lit_css(chem.cas = NULL, chem.name = NULL, daily.dose = 1,
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{daily.dose}{Total daily dose infused in units of mg/kg BW/day.
-Defaults to 1 mg/kg/day.  %% ~~Describe \code{ssparams.var.inv} here~~}
+Defaults to 1 mg/kg/day.}
 
 \item{which.quantile}{Which quantile from the SimCYP Monte Carlo simulation
-is requested. Can be a vector. %% ~~Describe \code{ssparams.mean} here~~}
+is requested. Can be a vector.}
 
-\item{species}{Species desired (either "Rat" or default "Human").  %%
-~~Describe \code{ssparams.var.inv} here~~}
+\item{species}{Species desired (either "Rat" or default "Human").}
 
 \item{clearance.assay.conc}{Concentration of chemical used in measureing
 intrinsic clearance data, 1 or 10 uM.}
 
 \item{output.units}{Returned units for function, defaults to mg/L but can
-also be uM (specify units = "uM"). %% ~~Describe \code{ssparams.var.inv}
-here~~}
+also be uM (specify units = "uM").}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \description{
 This function retrives a steady-state plasma concentration as a result of
 infusion dosing from the Wetmore et al. (2012) and (2013) publications and
-other literature. %% ~~ A concise (1-5 lines) description of what the
-function does. ~~
+other literature.
 }
 \examples{
 

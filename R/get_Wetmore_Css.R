@@ -1,31 +1,23 @@
-# This function retrives a steady-state chemical concentration from the Wetmore et al. (2012) and (2013) publications
-
-
-
-
 #' Get literature Css
 #' 
 #' This function retrives a steady-state plasma concentration as a result of
 #' infusion dosing from the Wetmore et al. (2012) and (2013) publications and
-#' other literature. %% ~~ A concise (1-5 lines) description of what the
-#' function does. ~~
-#' 
+#' other literature. 
+#'
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the cas number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param which.quantile Which quantile from the SimCYP Monte Carlo simulation
-#' is requested. Can be a vector. %% ~~Describe \code{ssparams.mean} here~~
-#' @param species Species desired (either "Rat" or default "Human").  %%
-#' ~~Describe \code{ssparams.var.inv} here~~
+#' is requested. Can be a vector. 
+#' @param species Species desired (either "Rat" or default "Human").
 #' @param clearance.assay.conc Concentration of chemical used in measureing
 #' intrinsic clearance data, 1 or 10 uM.
 #' @param daily.dose Total daily dose infused in units of mg/kg BW/day.
-#' Defaults to 1 mg/kg/day.  %% ~~Describe \code{ssparams.var.inv} here~~
+#' Defaults to 1 mg/kg/day.  
 #' @param output.units Returned units for function, defaults to mg/L but can
-#' also be uM (specify units = "uM"). %% ~~Describe \code{ssparams.var.inv}
-#' here~~
+#' also be uM (specify units = "uM"). 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @author John Wambaugh
 #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,

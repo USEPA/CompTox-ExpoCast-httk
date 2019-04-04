@@ -54,8 +54,7 @@ clearance, calculated from the corrected well-stirred model.}
 \description{
 This function initializes the parameters needed in the functions
 calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
-compartment steady state model ('3compartmentss').  %% ~~ A concise (1-5
-lines) description of what the function does. ~~
+compartment steady state model ('3compartmentss').
 }
 \examples{
 

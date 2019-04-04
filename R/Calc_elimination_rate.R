@@ -1,29 +1,20 @@
-# This function calculates an elimination rate for a one compartment model where 
-# eelimination is entirely due to metablism by the liver and glomerular filtration
-# in the kidneys.
-
-
-
-
-#' Calculate the elimination rate for a one compartment model.
+#' Calculate the elimination rate for a one compartment model. 
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function calculates an elimination rate from the three compartment steady
-#' state model where elimination is entirely due to metablism by the liver and
-#' glomerular filtration in the kidneys.
+#' This function calculates an elimination rate from the three compartment
+#' steady state model where elimination is entirely due to metablism by the
+#' liver and glomerular filtration in the kidneys.
 #' 
 #' Elimination rate calculated by dividing the total clearance (using the
-#' default well-stirred hepatic model) by the volume of distribution. %%When
+#' default -stirred hepatic model) by the volume of distribution. When
 #' species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
 #' 
 #' @param chem.name Either the chemical name or the cas number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the cas number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -37,8 +28,8 @@
 #' partition coefficients.
 #' @param restrictive.clearance In calculating elimination rate, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' @param well.stirred.correction Uses correction in calculation of hepatic
-#' clearance for well-stirred model if TRUE.  This assumes clearance relative
+#' @param .stirred.correction Uses correction in calculation of hepatic
+#' clearance for -stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
 #' with plasma concentration.
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
@@ -63,7 +54,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   restrictive.clearance=T,
                                   adjusted.Funbound.plasma=T,
                                   regression=T,
-                                  well.stirred.correction=T,
+                                  .stirred.correction=T,
                                   clint.pvalue.threshold=0.05)
 {
   name.list <- c("Clint",
@@ -134,7 +125,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     parameters=parameters,
                                     suppress.messages=T,
                                     default.to.human=default.to.human,
-                                    well.stirred.correction=well.stirred.correction,
+                                    .stirred.correction=.stirred.correction,
                                     restrictive.clearance=restrictive.clearance,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                     clint.pvalue.threshold=clint.pvalue.threshold) #L/h/kgBW

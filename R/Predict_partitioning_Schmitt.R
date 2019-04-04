@@ -8,14 +8,11 @@
 # Fprotein.plasma: protein fraction in plasma - from Gardner 1980
 
 
-
-
 #' Predict partition coefficients using the method from Schmitt (2008).
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function implements the method from Schmitt (2008) in predicting the tissue
-#' to unbound plasma partition coefficients from for the tissues contained in
-#' the tissue.data table.
+#' This function implements the method from Schmitt (2008) in predicting the 
+#' tissue to unbound plasma partition coefficients from for the tissues 
+#' contained in the tissue.data table.
 #' 
 #' A separate regression is used when adjusted.Funbound.plasma is FALSE.
 #' 
@@ -32,9 +29,9 @@
 #' Human tissue volumes are used for species other than Rat.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values

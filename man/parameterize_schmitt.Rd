@@ -10,10 +10,10 @@ parameterize_schmitt(chem.cas = NULL, chem.name = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -35,8 +35,7 @@ affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 \item{plasma.pH}{pH of the plasma}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function provides the necessary parameters to run
+This function provides the necessary parameters to run
 predict_partitioning_schmitt, excluding the data in tissue.data.
 }
 \details{

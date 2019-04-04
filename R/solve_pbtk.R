@@ -17,15 +17,17 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' Model Figure \if{html\figure{pbtk.pngoptions: width="60%" alt="Figure: PBTK
-#' Model Schematic"}} \if{latex\figure{pbtk.pdfoptions: width=12cm alt="Figure:
-#' PBTK Model Schematic"}}
+#' Model Figure 
+#' \if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
+#' Schematic"}}
+#' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
+#' Schematic"}}
 #' 
-#' %%When species is specified as rabbit, dog, or mouse, the function uses the
+#' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.

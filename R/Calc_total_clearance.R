@@ -1,7 +1,6 @@
 #' Calculate the total clearance.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function calculates the total clearance rate for a one compartment model
+#' This function calculates the total clearance rate for a one compartment model
 #' where clearance is entirely due to metablism by the liver and glomerular
 #' filtration in the kidneys, identical to clearance of three compartment
 #' steady state model.
@@ -14,7 +13,7 @@
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.

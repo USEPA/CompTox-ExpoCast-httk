@@ -2,8 +2,7 @@
 #' 
 #' This function solves for the amount or concentration of a chemical in plasma
 #' for a one compartment model as a function of time based on the dose and
-#' dosing frequency. %% ~~ A concise (1-5 lines) description of what the
-#' function does. ~~
+#' dosing frequency. 
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
@@ -16,11 +15,13 @@
 #' 
 #' AUC is area under plasma concentration curve.
 #' 
-#' Model Figure \if{html\figure{1comp.pngoptions: width="60%" alt="Figure: One
-#' Compartment Model Schematic"}} \if{latex\figure{1comp.pdfoptions: width=12cm
-#' alt="Figure: One Compartment Model Schematic"}}
+#' Model Figure 
+#' \if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+#' Compartment Model Schematic"}}
+#' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
+#' Compartment Model Schematic"}}
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
