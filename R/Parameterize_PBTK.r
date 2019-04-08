@@ -1,23 +1,13 @@
-# This function parameterizes a PBPK model. The argument tissuelist allows the specific tissues parameerized to be customized.
-# All tissues not specified by tissuelist are lumped into a rest of body compartment ("Rest")
-
-
-
-
-
-
-
 #' Parameterize_PBTK
 #' 
 #' This function initializes the parameters needed in the functions solve_pbtk,
-#' calc_css, and others using the multiple compartment model. %% ~~ A concise
-#' (1-5 lines) description of what the function does. ~~
+#' calc_css, and others using the multiple compartment model.
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -67,9 +57,7 @@
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} %% ~Describe
-#' the value returned %% If it is a LIST, use %% \item{comp1 }{Description of
-#' 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
+#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
 #' @author John Wambaugh and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -116,7 +104,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
-  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
+  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))

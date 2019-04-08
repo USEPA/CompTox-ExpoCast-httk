@@ -12,8 +12,13 @@ estimate_hematocrit(hcttmp_dt)
 
 \item{hcttmp_dt}{A data.table with columns \code{age_years},
 \code{age_months}, \code{gender}, \code{reth}.}
+
+\item{hcttmp_dt}{A data.table with columns \code{age_years},
+\code{age_months}, \code{gender}, \code{reth}.}
 }
 \value{
+The same data.table with a \code{hematocrit} column added.
+
 The same data.table with a \code{hematocrit} column added.
 
 The same data.table with a \code{hematocrit} column added.
@@ -35,9 +40,20 @@ values for individuals specified by age, gender, and race/ethnicity.
 
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118 Predict hematocrit using
+smoothing spline.
+
+Using precalculated smoothing splines on NHANES log hematocrit vs. age in
+months (and KDE residuals) by gender and race/ethnicity, generate hematocrit
+values for individuals specified by age, gender, and race/ethnicity.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
 Caroline Ring
 
 Caroline Ring

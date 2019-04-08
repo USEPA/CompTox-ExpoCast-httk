@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plotting Howgate/Johnson data}
+  %\VignetteIndexEntry{Ring et al. 2017 Plotting Howgate/Johnson data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,7 +30,7 @@ jhchem <- readRDS(file="data/jhchem.Rdata")
 chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
                                             species='Human',
                                             info=c('CAS', "MW", "Funbound.plasma"),
-                                            exclude.fub.zero=FALSE))
+                                            exclude.fup.zero=FALSE))
 #Get CLint measured values from HTTK
 chem.dt[, Clint:=sapply(CAS, 
                         function(x) parameterize_steadystate(chem.cas=x,

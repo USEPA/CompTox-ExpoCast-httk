@@ -1,12 +1,6 @@
-# Written by Robert Pearce
-
-
-
-
 #' Parameterize Schmitt's method.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function provides the necessary parameters to run
+#' This function provides the necessary parameters to run
 #' predict_partitioning_schmitt, excluding the data in tissue.data.
 #' 
 #' When species is specified as rabbit, dog, or mouse, the human unbound
@@ -16,9 +10,9 @@
 #' fractional volume in plasma.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing fraction of unbound plasma with

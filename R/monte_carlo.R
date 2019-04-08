@@ -1,14 +1,7 @@
-# This function performs Monte Carlo to assess uncertainty and variability for pharmacokinetic models.
-
-
-
-
 #' Monte Carlo for pharmacokinetic models
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function performs Monte Carlo to assess uncertainty and variability for
-#' toxicokinetic models.
-#' 
+#' This function performs Monte Carlo to assess uncertainty and variability for
+#' toxicokinetic models. 
 #' 
 #' @param params All parameters needed by the function indicated by the
 #' argument "name.model". These paramters that are also listed in either

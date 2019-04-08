@@ -18,6 +18,13 @@ survey::svysmooth(), for each combination of race/ethnicity and gender.
 
 Distributions of ages in months, computed from NHANES data smoothed using
 survey::svysmooth(), for each combination of race/ethnicity and gender.
+
+Distributions of ages in months, computed from NHANES data smoothed using
+survey::svysmooth(), for each combination of race/ethnicity and gender.
+}
+\details{
+Distributions of ages in months, computed from NHANES data smoothed using
+survey::svysmooth(), for each combination of race/ethnicity and gender.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to 
@@ -27,8 +34,20 @@ International 106 (2017): 105-118
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 
 Caroline Ring

@@ -21,6 +21,12 @@ McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
 
 McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
 population generator." Toxicology 315, 70-85, 2004.
+
+McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
+population generator." Toxicology 315, 70-85, 2004.
+
+McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human population
+generator." Toxicology 315, 70-85, 2004.
 }
 \usage{
 mcnally_dt
@@ -29,6 +35,13 @@ mcnally_dt
 Reference tissue masses, flows, and marginal distributions from McNally et
 al. 2014.
 
+Reference tissue masses, flows, and marginal distributions from McNally et
+al. 2014.
+
+Reference tissue masses, flows, and marginal distributions from McNally et
+al. 2014.
+}
+\details{
 Reference tissue masses, flows, and marginal distributions from McNally et
 al. 2014.
 }
@@ -40,8 +53,20 @@ International 106 (2017): 105-118
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 
 Caroline Ring
