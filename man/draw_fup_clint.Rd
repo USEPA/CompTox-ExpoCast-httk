@@ -5,8 +5,9 @@
 \title{Draw Funbound.plasma and Clint from censored or non-censored distributions.}
 \usage{
 draw_fup_clint(this.chem = NULL, parameters = NULL, nsamp,
-  sigma.factor = 0.3, poormetab, fup.censor, Clint.vary = TRUE,
-  lod = 0.01, adjusted.Funbound.plasma = T,
+  fup.meas.cv = 0.4, clint.meas.cv = 0.3, fup.pop.cv = 0.05,
+  clint.pop.cv = 0.1, poormetab, fup.lod = 0.01,
+  fup.censored.dist = FALSE, adjusted.Funbound.plasma = T,
   clint.pvalue.threshold = 0.05)
 }
 \arguments{
@@ -15,6 +16,33 @@ draw_fup_clint(this.chem = NULL, parameters = NULL, nsamp,
 
 \item{parameters}{A list of chemical-specific model parameters containing at least
 Funbound.plasma, Clint, and Fhep.assay.correction.}
+
+\item{nsamp}{The number of samples to draw.}
+
+\item{poormetab}{Logical. Whether to include poor metabolizers in the Clint
+distribution or not.}
+
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
+clearance assay result has a p-values greater than the threshold are set to zero.}
+
+\item{sigma.factor}{The coefficient of variance to assume. Default 0.3.}
+
+\item{fup.censor}{Logical. Whether to draw \code{Funbound.plasma} from a
+censored distribution or not.}
+
+\item{Clint.vary}{Logical, default TRUE. Whether to treat \code{Clint} as
+fixed at its measured value (FALSE), or as a random variable (TRUE).}
+
+\item{lod}{The average limit of detection for \code{Funbound.plasma}, below
+which distribution will be censored if fup.censor is TRUE. Default 0.01.}
+
+\item{this.chem}{The CAS number of one of the HTTK chemicals (see
+\code{\link[httk]{get_cheminfo}}).}
+
+\item{parameters}{A list of chemical-specific model parameters containing at
+least Funbound.plasma, Clint, and Fhep.assay.correction.}
 
 \item{nsamp}{The number of samples to draw.}
 
@@ -32,10 +60,12 @@ fixed at its measured value (FALSE), or as a random variable (TRUE).}
 \item{lod}{The average limit of detection for \code{Funbound.plasma}, below
 which distribution will be censored if fup.censor is TRUE. Default 0.01.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE.}
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
+TRUE.}
 
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
-clearance assay result has a p-values greater than the threshold are set to zero.}
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
 
 \item{this.chem}{The CAS number of one of the HTTK chemicals (see
 \code{\link[httk]{get_cheminfo}}).}
@@ -76,6 +106,10 @@ A data.table with three columns: \code{Funbound.plasma} and
 \code{Clint}, containing the sampled values, and
 \code{Fhep.assay.correction}, containing the value for fraction unbound in
 hepatocyte assay.
+
+A data.table with three columns: \code{Funbound.plasma} and \code{Clint},
+containing the sampled values, and \code{Fhep.assay.correction}, containing
+the value for fraction unbound in hepatocyte assay.
 }
 \description{
 Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
@@ -86,6 +120,14 @@ distributions.
 \author{
 Caroline Ring and John Wambaugh
 Draw Funbound.plasma and Clint from censored or non-censored distributions.
+
+Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
+user specifications on the assumed distributions of Funbound.plasma and
+Clint, draw "individual" values of Funbound.plasma and Clint from those
+distributions.
+
+Caroline Ring and John Wambaugh Draw Funbound.plasma and Clint from
+censored or non-censored distributions.
 
 Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
 user specifications on the assumed distributions of Funbound.plasma and

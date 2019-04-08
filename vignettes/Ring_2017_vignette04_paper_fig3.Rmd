@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generating Figure 3}
+  %\VignetteIndexEntry{Ring et al. 2017 Generating Figure 3}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -92,7 +92,7 @@ Convert literature in vivo Css from mg/L to umol/L (uM), using Css/(MW/1000), wh
 chemlist <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound', 'MW'),
                                              species='Human',
                                              model=model,
-                                             exclude.fub.zero=FALSE))
+                                             exclude.fup.zero=FALSE))
 setnames(chemlist, 'CAS', 'chemcas')
 litCss.dt <- merge(litCss.dt,
                    chemlist[, .(Compound, MW)],

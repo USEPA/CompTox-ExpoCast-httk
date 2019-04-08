@@ -1,11 +1,11 @@
-# This function retrives in vitro PK data (e.g. intrinsic metabolic clearance 
-#or fraction unbound in plasma) from the vLiver tables.
+# This function retrieves in vitro PK data (e.g. intrinsic metabolic clearance 
+# or fraction unbound in plasma) from the vLiver tables.
 get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
   if (is.null(chem.CAS) & is.null(chem.name))
   {
-    stop("Must specifiy compound name or CAS.\n")
+    stop("Must specify compound name or CAS.\n")
   } else if ((!is.null(chem.CAS) & 
              !any(chem.physical_and_invitro.data[,"CAS"]==chem.CAS)) & 
              (!is.null(chem.name) & 

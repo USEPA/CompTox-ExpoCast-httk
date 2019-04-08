@@ -7,14 +7,14 @@ concentration.}
 \usage{
 calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, params = NULL,
   hematocrit = NULL, default.to.human = F, species = "Human",
-  adjusted.Funbound.plasma = T)
+  adjusted.Funbound.plasma = T, suppress.messages = F)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{params}{Parameters from parameterize_schmitt.}
 
@@ -25,10 +25,13 @@ Rblood2plasma.}
 if true.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
 
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment.}
+
+\item{suppress.messages}{Determine whether to display certain usage
+feedback.}
 }
 \description{
 This function calculates the constant ratio of the blood concentration to

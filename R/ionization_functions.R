@@ -45,10 +45,9 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 
 #' Calculate the ionization.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function calculates the ionization of a compound at a given pH.  The pKa's
-#' are either entered as parameters or taken from a specific compound in the
-#' package.
+#' This function calculates the ionization of a compound at a given pH. The 
+#' pKa's are either entered as parameters or taken from a specific compound in
+#' the package.
 #' 
 #' The fractions are calculated by determining the coefficients for each
 #' species and dividing the particular species by the sum of all three.  The
@@ -64,9 +63,9 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' of the terms in the sums represent a different ionization.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param parameters Chemical parameters from a parameterize_MODEL function,
 #' overrides chem.name and chem.cas.
 #' @param pH pH where ionization is evaluated.

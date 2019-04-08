@@ -15,11 +15,11 @@
 #' details than the description above ~~
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
 #' @author Robert Pearce

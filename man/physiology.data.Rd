@@ -8,8 +8,24 @@
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
+
+Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+chemicals." Toxicological Sciences (2015): 228-237.
+
+Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+chemicals." Toxicological Sciences (2015): 228-237.
 }
 \description{
+This data set contains values from Davies and Morris (1993) necessary to
+paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
+The temperature for each species are taken from Robertshaw et al. (2004),
+Gordon (1993), and Stammers(1926).
+
+This data set contains values from Davies and Morris (1993) necessary to
+paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
+The temperature for each species are taken from Robertshaw et al. (2004),
+Gordon (1993), and Stammers(1926).
+
 This data set contains values from Davies and Morris (1993) necessary to
 paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
 The temperature for each species are taken from Robertshaw et al. (2004),
@@ -24,8 +40,30 @@ Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
 Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
 and body temperature in normal rats Gordon (1993) Temperature Regulation in
 Laboratory Rodents
+
+Davies, B. and Morris, T. (1993). Physiological Parameters in
+Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
+10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
+%scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
+Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
+Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
+and body temperature in normal rats Gordon (1993) Temperature Regulation in
+Laboratory Rodents
+
+Davies, B. and Morris, T. (1993). Physiological Parameters in
+Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
+10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
+%scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
+Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
+Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
+and body temperature in normal rats Gordon (1993) Temperature Regulation in
+Laboratory Rodents
 }
 \author{
+John Wambaugh and Nisha Sipes
+
+John Wambaugh and Nisha Sipes
+
 John Wambaugh and Nisha Sipes
 }
 \keyword{datasets}

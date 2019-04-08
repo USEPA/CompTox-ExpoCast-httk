@@ -5,17 +5,24 @@
 \title{Find the best available ratio of the blood to plasma concentration constant.}
 \usage{
 available_rblood2plasma(chem.cas = NULL, chem.name = NULL,
-  species = "Human", adjusted.Funbound.plasma = T)
+  species = "Human", adjusted.Funbound.plasma = T,
+  suppress.messages = F)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
+
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
+
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment if calculating Rblood2plasma.}
+
+\item{suppress.messages}{Whether or not to display relevant warning messages
+to user.}
 }
 \description{
 This function finds the best available constant ratio of the blood

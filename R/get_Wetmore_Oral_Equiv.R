@@ -1,41 +1,30 @@
-# This functions converts a uM chemical concetrations ("conc") to an oral equivalent dose using the values from the Wetmore et al. (2012) and (2013) publications
-
-
-
-
 #' Get Literature Oral Equivalent Dose
 #' 
 #' This function converts a chemical plasma concetration to an oral equivalent
 #' dose using the values from the Wetmore et al. (2012) and (2013) publications
-#' and other literature. %% ~~ A concise (1-5 lines) description of what the
-#' function does. ~~
+#' and other literature. 
+#'
 #' 
 #' 
 #' @param conc Bioactive in vitro concentration in units of specified
-#' input.units, default of uM. %% ~~Describe \code{ssparams.i} here~~
+#' input.units, default of uM. 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
 #' @param output.units Units of dose, default of 'mg' for mg/kg BW/ day or
 #' 'mol' for mol/ kg BW/ day.
-#' @param suppress.messages Suppress output messages. %% ~~Describe \code{sds}
-#' here~~
+#' @param suppress.messages Suppress output messages. 
 #' @param which.quantile Which quantile from the SimCYP Monte Carlo simulation
 #' is requested. Can be a vector.  Papers include 0.05, 0.5, and 0.95 for
-#' humans and 0.5 for rats. %% ~~Describe \code{ssparams.mean} here~~
-#' @param species Species desired (either "Rat" or default "Human"). %%
-#' ~~Describe \code{ssparams.var.inv} here~~
+#' humans and 0.5 for rats. 
+#' @param species Species desired (either "Rat" or default "Human"). 
 #' @param clearance.assay.conc Concentration of chemical used in measureing
 #' intrinsic clearance data, 1 or 10 uM.
 #' @param ... Additional parameters passed to get_lit_css.
-#' @return
-#' 
-#' Equivalent dose in specified units, default of mg/kg BW/day. %% ~Describe
-#' the value returned %% If it is a LIST, use %% \item{comp1 }{Description of
-#' 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
+#' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #' @author John Wambaugh
 #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
 #' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,

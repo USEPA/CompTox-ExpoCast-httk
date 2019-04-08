@@ -10,12 +10,10 @@ calc_vdist(chem.cas = NULL, chem.name = NULL, parameters = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be specified
-when Funbound.plasma is not given in parameter list. %% ~~Describe
-\code{pred} here~~}
+when Funbound.plasma is not given in parameter list.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified when Funbound.plasma is not given in parameter list. %% ~~Describe
-\code{obs} here~~}
+specified when Funbound.plasma is not given in parameter list.}
 
 \item{parameters}{Parameters from parameterize_3comp, parameterize_pbtk or
 predict_partitioning_schmitt.}
@@ -24,7 +22,7 @@ predict_partitioning_schmitt.}
 if true.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+default "Human").}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
@@ -38,8 +36,7 @@ partition coefficients.}
 \item{Volume of distribution}{Units of L/ kg BW.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function predicts partition coefficients for all tissues, then lumps them
+This function predicts partition coefficients for all tissues, then lumps them
 into a single compartment.
 }
 \details{
@@ -47,12 +44,10 @@ The effective volume of distribution is calculated by summing each tissues
 volume times it's partition coefficient relative to plasma. Plasma, and the
 paritioning into RBCs are also added to get the total volume of distribution
 in L/KG BW. Partition coefficients are calculated using Schmitt's (2008)
-method.  %%When species is specified as rabbit, dog, or mouse, the function
+method.  When species is specified as rabbit, dog, or mouse, the function
 uses the appropriate physiological data(volumes and flows) but substitues
 human fraction unbound, partition coefficients, and intrinsic hepatic
 clearance.
-
-%% ~~ If necessary, more details than the description above ~~
 }
 \examples{
 

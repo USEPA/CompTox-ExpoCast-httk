@@ -18,11 +18,11 @@
 #' details than the description above ~~
 #' 
 #' @param chem.cas Either the CAS number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment if calculating Rblood2plasma.
 #' @param suppress.messages Whether or not to display relevant warning messages

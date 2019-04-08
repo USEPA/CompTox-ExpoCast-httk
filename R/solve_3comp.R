@@ -3,7 +3,7 @@
 #' This function solves for the amounts or concentrations of a chemical in
 #' different tissues as functions of time based on the dose and dosing
 #' frequency.  It uses a three compartment model with partition coefficients.
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~
+#'  function does. ~~
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
@@ -13,15 +13,17 @@
 #' The compartments used in this model are the gutlumen, gut, liver, and
 #' rest-of-body, with the plasma equivalent to the liver plasma.
 #' 
-#' Model Figure \if{html\figure{3comp.pngoptions: width="60%" alt="Figure:
-#' Three Compartment Model Schematic"}} \if{latex\figure{3comp.pdfoptions:
-#' width=12cm alt="Figure: Three Compartment Model Schematic"}}
+#' Model Figure 
+#' \if{html}{\figure{3comp.png}{options: width="60\%" alt="Figure: Three
+#' Compartment Model Schematic"}} 
+#' \if{latex}{\figure{3comp.pdf}{options: width=12cm alt="Figure: Three Compartment
+#' Model Schematic"}}
 #' 
-#' %%When species is specified as rabbit, dog, or mouse, the function uses the
+#' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -69,9 +71,6 @@
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for
 #' each time point.
-#' 
-#' %% ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
 #' @author John Wambaugh and Robert Pearce
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
