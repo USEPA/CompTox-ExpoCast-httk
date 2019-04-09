@@ -1,3 +1,84 @@
+#' Solve one compartment TK model
+#' 
+#' This function solves for the amount or concentration of a chemical in plasma
+#' for a one compartment model as a function of time based on the dose and
+#' dosing frequency. 
+#' 
+#' Note that the model parameters have units of hours while the model output is
+#' in days.
+#' 
+#' Default value of NULL for doses.per.day solves for a single dose.
+#' 
+#' When species is specified as rabbit, dog, or mouse, the function uses the
+#' appropriate physiological data(volumes and flows) but substitues human
+#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' 
+#' AUC is area under plasma concentration curve.
+#' 
+#' Model Figure 
+#' \if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+#' Compartment Model Schematic"}}
+#' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
+#' Compartment Model Schematic"}}
+#' 
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or the parameters
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or the parameters must
+#' be specified.
+#' @param times Optional time sequence for specified number of days.
+#' @param parameters Chemical parameters from parameterize_1comp function,
+#' overrides chem.name and chem.cas.
+#' @param days Length of the simulation.
+#' @param tsteps The number time steps per hour.
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
+#' @param doses.per.day Number of doses per day.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
+#' "Human").
+#' @param iv.dose Simulates a single i.v. dose if true.
+#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
+#' "uM").
+#' @param initial.values Vector containing the initial concentrations or
+#' amounts of the chemical in specified tissues with units corresponding to
+#' output.units.  Defaults are zero.
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param plots Plots all outputs if true.
+#' @param method Method used by integrator (deSolve).
+#' @param rtol Argument passed to integrator (deSolve).
+#' @param atol Argument passed to integrator (deSolve).
+#' @param default.to.human Substitutes missing rat values with human values if
+#' true.
+#' @param dosing.matrix Vector of dosing times or a matrix consisting of two
+#' columns or rows named "dose" and "time" containing the time and amount, in
+#' mg/kg BW, of each dose.
+#' @param recalc.elimination Whether or not to recalculate the elimination
+#' rate.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with volume of distribution calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients in volume of distribution calculation.
+#' @param restrictive.clearance In calculating elimination rate, protein
+#' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE.  This assumes clearance relative
+#' to amount unbound in whole blood instead of plasma, but converted to use
+#' with plasma concentration.
+#' @param ... Additional arguments passed to the integrator.
+#' @return A matrix with a column for time(in days) and a column for the
+#' compartment and the area under the curve (concentration only).
+#' @author Robert Pearce
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @keywords Solve
+#' @examples
+#' 
+#' solve_1comp(chem.name='Bisphenol-A',days=1)
+#' params <- parameterize_1comp(chem.cas="80-05-7")
+#' solve_1comp(parameters=params)
+#' 
+#' @export solve_1comp
 solve_1comp <- function(chem.cas=NULL,
                         chem.name=NULL,
                         times=NULL,
@@ -27,12 +108,11 @@ solve_1comp <- function(chem.cas=NULL,
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
   if(is.null(parameters)){  parameters <- parameterize_1comp(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,well.stirred.correction=well.stirred.correction,suppress.messages=suppress.messages) 
   }else{
-    name.list <- c("Vdist","kelim","kgutabs","Rblood2plasma","MW","million.cells.per.gliver","hematocrit","Fgutabs","BW")
-    if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
+     if(!all(param.names.1comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
   }
   Rb2p <- parameters[['Rblood2plasma']]
   BW <- parameters[['BW']]
-  
+   
   parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
 
   if(is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
@@ -124,7 +204,7 @@ solve_1comp <- function(chem.cas=NULL,
   }
   parameters[['ke']] <- parameters[['kelim']]   
   parameters[['vdist']] <- parameters[['Vdist']]
-  parameters <- initparms1comp(parameters[!(names(parameters) %in% c("kelim","Rblood2plasma","MW",'Vdist','million.cells.per.gliver','hematocrit','Fgutabs','hepatic.bioavailability','BW'))])
+  parameters <- initparms1comp(parameters[param.names.1comp.solver])
   
   state <-initState1comp(parameters,state)
   
@@ -146,10 +226,9 @@ solve_1comp <- function(chem.cas=NULL,
     times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
     out <- ode(y = state, times = times, func="derivs1comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod1comp", nout=length(Outputs1comp),outnames=Outputs1comp,events=list(data=eventdata),...)
   }
-  
+   
   if(use.amounts) out[,c('Agutlumen','Acompartment','Ametabolized')] <- out[,c('Agutlumen','Acompartment','Ametabolized')] * BW
-  else out[,c('Agutlumen','Ametabolized')] <- out[,c('Agutlumen','Ametabolized')] * BW 
-
+  else out[,c('Agutlumen','Ametabolized')] <- out[,c('Agutlumen','Ametabolized')] * BW
 
  if(plots==T)
   {
@@ -170,7 +249,7 @@ solve_1comp <- function(chem.cas=NULL,
         cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
       }
     }else{
-      if(use.amounts){
+      if(use.amounts){  
         cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
       }else{
         if(tolower(output.units) == 'um'){

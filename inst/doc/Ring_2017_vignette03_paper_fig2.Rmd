@@ -1,0 +1,128 @@
+---
+title: "Ring et al. 2017 Vignette 3: Generating Figure 2"
+author: "Caroline Ring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating Figure 2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, 
+                      comment = '#>', 
+                      fig.width=12, 
+                      fig.height=12)
+```
+
+This vignette includes code to generate Figure 2 from the paper: a scatterplot matrix of pairwise joint distributions of five physiological parameters.
+
+To use this code, you need virtual population data generated in the Subpopulations vignette. (To reproduce the plot exactly, you need to set the seed before generating the populations, as in the Subpopulations vignette.)
+
+First, load some packages.
+```{r, eval = FALSE}
+library('data.table')
+library('GGally')
+library('ggplot2')
+```
+
+Next, read in the data. Figure 2 used the Age 20-65 subpopulation.
+```{r, eval=FALSE}
+subpop <- 'Age.20.65'
+pop.vi <- readRDS(paste0('data/', paste('httkpop',
+                               'vi',
+                              subpop,
+                               sep='_'), '.Rdata'))
+pop.dr <- readRDS(paste0('data/', paste('httkpop',
+                               'dr',
+                              subpop,
+                               sep='_'), '.Rdata'))
+```
+
+Add a factor to each data table showing which method was used to generate that population.
+```{r, eval=FALSE}
+pop.vi[, which_method:='virtual individuals']
+pop.dr[, which_method:='direct resampling']
+```
+
+The physiological variables of interest here are:
+
+* Liver mass
+* Portal vein flow
+* GFR
+* Hepatocellularity (million cells per g liver)
+* Body weight
+
+(As noted in the paper, these quantities were chosen because global sensitivity analysis showed that `Css` was primarily sensitive to these, as opposed to other, physiological quantities.)
+
+Portal vein flow is the only one not already included in the data tables. To calculate it, we just need to sum the arterial flows to the liver and to the gut. Let's do that for both the virtual-individuals and the direct-resampling virtual populations.
+
+```{r, eval=FALSE}
+pop.vi[, portalvein_flow:=Liver_flow+
+          Stomach_flow+
+          Small_intestine_flow+
+          Large_intestine_flow]
+
+pop.dr[, portalvein_flow:=Liver_flow+
+          Stomach_flow+
+          Small_intestine_flow+
+          Large_intestine_flow]
+```
+
+Next, let's define the variables of interest and `rbind` together those variables from the two virtual populations.
+```{r, eval=FALSE}
+#List the variables of interest
+inboth <- c('age_years',
+            'height',
+            'weight_adj',
+            'serum_creat',
+            'hematocrit',
+'Liver_mass',
+'portalvein_flow',
+'million.cells.per.gliver',
+'gfr_est')
+bothpop <- rbind(pop.vi[, c(inboth, 'which_method'), with=FALSE],
+                    pop.dr[, c(inboth, 'which_method'), with=FALSE])
+```
+
+For better readability in the plot, let's change the capitalization and punctuation of the variable names, since they'll be used for labels.
+```{r, eval=FALSE}
+setnames(bothpop, inboth,
+         c('Age',
+           'Height',
+           'Weight', 
+           'Serum.creat.',
+           'Hematocrit',
+           'Liver.mass',
+           'Portal.vein.flow',
+           'GFR',
+           'Hepatocell.'))
+inboth <- c('Age',
+           'Height',
+           'Weight', 
+           'Serum.creat.',
+           'Hematocrit',
+           'Liver.mass',
+           'Portal.vein.flow',
+           'GFR',
+           'Hepatocell.') 
+```
+
+Finally, let's make the plot.
+```{r, eval=FALSE}
+  theme_set(theme_bw())
+  p <- ggpairs(data=bothpop,
+               columns=1:9,
+               linetype='which_method',
+               color='which_method',
+               upper=list(continuous='blank'),
+               lower=list(continuous='density'),
+               diag=list(continuous='density'),
+               axisLabels='show',
+               legends=TRUE)
+  print(p)
+pdf("pdf_figures/Figure2.pdf", height=12, width=12)
+print(p)
+dev.off()
+```

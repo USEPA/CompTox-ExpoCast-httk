@@ -29,8 +29,95 @@
 #'@return A data.table where each row represents an individual, and
 #'  each column represents a demographic, anthropometric, or physiological
 #'  parameter.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 
+
+
+
+
+#' Inner loop function called by \code{httkpop_direct_resample}.
+#' 
+#' Inner loop function called by \code{httkpop_direct_resample}.
+#' 
+#' 
+#' @param nsamp The desired number of individuals in the virtual population.
+#' \code{nsamp} need not be provided if \code{gendernum} is provided.
+#' @param gendernum Optional: A named list giving the numbers of male and
+#' female individuals to include in the population, e.g. \code{list(Male=100,
+#' Female=100)}. Default is NULL, meaning both males and females are included,
+#' in their proportions in the NHANES data. If both \code{nsamp} and
+#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
+#' the sum of \code{gendernum}).
+#' @param agelim_months Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in months) to include in the population. Default
+#' is c(0, 959), equivalent to the default \code{agelim_years}. If
+#' \code{agelim_months} is provided and \code{agelim_years} is not,
+#' agelim_months will override the default values of \code{agelim_years}.
+#' @param agelim_years Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in years) to include in the population. Default is
+#' c(0,79). If \code{agelim_years} is provided and \code{agelim_months} is not,
+#' \code{agelim_years} will override the default value of \code{agelim_months}.
+#' @param reths Optional: a character vector giving the races/ethnicities to
+#' include in the population. Default is \code{c('Mexican American','Other
+#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#' all races and ethnicities in their proportions in the NHANES data.
+#' User-supplied vector must contain one or more of these strings.
+#' @param weight_category Optional: The weight categories to include in the
+#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#' 'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @param nsamp The desired number of individuals in the virtual population.
+#' \code{nsamp} need not be provided if \code{gendernum} is provided.
+#' @param gendernum Optional: A named list giving the numbers of male and
+#' female individuals to include in the population, e.g. \code{list(Male=100,
+#' Female=100)}. Default is NULL, meaning both males and females are included,
+#' in their proportions in the NHANES data. If both \code{nsamp} and
+#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
+#' the sum of \code{gendernum}).
+#' @param agelim_months Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in months) to include in the population. Default
+#' is c(0, 959), equivalent to the default \code{agelim_years}. If
+#' \code{agelim_months} is provided and \code{agelim_years} is not,
+#' agelim_months will override the default values of \code{agelim_years}.
+#' @param agelim_years Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in years) to include in the population. Default is
+#' c(0,79). If \code{agelim_years} is provided and \code{agelim_months} is not,
+#' \code{agelim_years} will override the default value of \code{agelim_months}.
+#' @param reths Optional: a character vector giving the races/ethnicities to
+#' include in the population. Default is \code{c('Mexican American','Other
+#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#' all races and ethnicities in their proportions in the NHANES data.
+#' User-supplied vector must contain one or more of these strings.
+#' @param weight_category Optional: The weight categories to include in the
+#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#' 'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @return A data.table where each row represents an individual, and each
+#' column represents a demographic, anthropometric, or physiological parameter.
+#' 
+#' A data.table where each row represents an individual, and each column
+#' represents a demographic, anthropometric, or physiological parameter.
+#' @author Caroline Ring
+#' 
+#' Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118 Inner loop function called by
+#' \code{httkpop_direct_resample}.
+#' 
+#' Inner loop function called by \code{httkpop_direct_resample}.
+#' 
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export httkpop_direct_resample_inner
 httkpop_direct_resample_inner <- function(nsamp,
                                           gendernum,
                                           agelim_months,

@@ -15,7 +15,58 @@
 #'  
 #'@return Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney
 #'  Failure'.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
+
+
+
+
+#' Categorize kidney function by GFR.
+#' 
+#' For adults: In general GFR > 60 is considered normal 15 < GFR < 60 is
+#' considered kidney disease GFR < 15 is considered kidney failure
+#' 
+#' These values can also be used for children 2 years old and greater (see
+#' PEDIATRICS IN REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
+#' 10.1542/pir.29-10-335))
+#' 
+#' @param age_years Vector of ages in years.
+#' @param age_months Vector of ages in months.
+#' @param gfr_est Vector of estimated GFR values in mL/min/1.73m^2.
+#' @param age_years Vector of ages in years.
+#' @param age_months Vector of ages in months.
+#' @param gfr_est Vector of estimated GFR values in mL/min/1.73m^2.
+#' @return Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney
+#' Failure'.
+#' 
+#' Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney Failure'.
+#' @author Caroline Ring
+#' 
+#' Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118 Categorize kidney function by
+#' GFR.
+#' 
+#' For adults: In general GFR > 60 is considered normal 15 < GFR < 60 is
+#' considered kidney disease GFR < 15 is considered kidney failure
+#' 
+#' These values can also be used for children 2 years old and greater (see
+#' PEDIATRICS IN REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
+#' 10.1542/pir.29-10-335))
+#' 
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export get_gfr_category
 get_gfr_category <- function(age_years,
                              age_months,
                              gfr_est){
