@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generating subpopulations}
+  %\VignetteIndexEntry{Ring et al. 2017 Generating subpopulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -96,7 +96,7 @@ return(0)
 })
 }
 
-cluster <- parallel::makeCluster(10, 
+cluster <- parallel::makeCluster(2, # Reduced from 40 to 2 cores 
                        outfile='subpopulations_parallel_out.txt')
 
 evalout <- parallel::clusterEvalQ(cl=cluster,
