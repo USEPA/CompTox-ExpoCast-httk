@@ -17,15 +17,17 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' Model Figure \if{html\figure{pbtk.pngoptions: width="60%" alt="Figure: PBTK
-#' Model Schematic"}} \if{latex\figure{pbtk.pdfoptions: width=12cm alt="Figure:
-#' PBTK Model Schematic"}}
+#' Model Figure 
+#' \if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
+#' Schematic"}}
+#' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
+#' Schematic"}}
 #' 
-#' %%When species is specified as rabbit, dog, or mouse, the function uses the
+#' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' %% ~~ If necessary, more details than the description above ~~
+#' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -73,9 +75,6 @@
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
-#' 
-#' %% ~Describe the value returned %% If it is a LIST, use %% \item{comp1
-#' }{Description of 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
 #' @author John Wambaugh and Robert Pearce
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.

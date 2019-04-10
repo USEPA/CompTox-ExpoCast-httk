@@ -23,17 +23,27 @@ export_pbtk_jarnac(chem.cas = NULL, chem.name = NULL,
 \item{digits}{Desired number of decimal places to round the parameters.}
 }
 \description{
+<<<<<<< HEAD
 %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
 function exports the multiple compartment PBTK model to a jarnac file.
+=======
+This function exports the multiple compartment PBTK model to a jarnac file.
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \details{
 Compartments to enter into the initial.amounts list includes Agutlumen,
 Aart, Aven, Alung, Agut, Aliver, Akidney, and Arest.
 
+<<<<<<< HEAD
 %%When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 %% ~~ If necessary, more details than the description above ~~
+=======
+When species is specified as rabbit, dog, or mouse, the function uses the
+appropriate physiological data(volumes and flows) but substitues human
+fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

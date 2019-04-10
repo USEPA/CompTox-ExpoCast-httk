@@ -1,10 +1,6 @@
-# This function displays the information specified in "info=" for all chemicals for which the PBPK model can be paramterized.
-
-
 #' Retrieve chemical information from HTTK package
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function provides the information specified in "info=" (can be single entry
+#' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
 #' paramterized for a given species.
 #' 
@@ -19,11 +15,11 @@
 #' gives all information for the model and species.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param exclude.fub.zero Whether or not to exclude chemicals with a fraction
+#' @param exclude.fup.zero Whether or not to exclude chemicals with a fraction
 #' of unbound plasma equal to zero or include them with a value of
-#' fub.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
+#' fup.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
 #' models and schmitt.
-#' @param fub.lod.default Default value used for fraction of unbound plasma for
+#' @param fup.lod.default Default value used for fraction of unbound plasma for
 #' chemicals where measured value was below the limit of detection. Default
 #' value is 0.0005.
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
@@ -79,8 +75,8 @@
 #' @export get_cheminfo
 get_cheminfo <- function(info="CAS",
                          species="Human",
-                         exclude.fub.zero=NA,
-                         fub.lod.default=0.005,
+                         exclude.fup.zero=NA,
+                         fup.lod.default=0.005,
                          model='3compartmentss',
                          default.to.human=F)
 {

@@ -1,8 +1,8 @@
 #' Calculate Monte Carlo Oral Equivalent Dose
 #' 
 #' This functions converts a chemical plasma concetration to an oral equivalent
-#' dose using a concentration obtained from calc_mc_css.  %% ~~ A concise (1-5
-#' lines) description of what the function does. ~~
+#' dose using a concentration obtained from calc_mc_css.  
+#' 
 #' 
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
@@ -29,24 +29,21 @@
 #' currently ignored because analytical steady-state solutions are currently
 #' used by this function.
 #' 
-#' @param conc Bioactive in vitro concentration in units of uM. %% ~~Describe
-#' \code{ssparams.i} here~~
+#' @param conc Bioactive in vitro concentration in units of uM. 
 #' @param chem.name Either the chemical name or the CAS number must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
-#' specified. %% ~~Describe \code{pred} here~~
-#' @param suppress.messages Suppress text messages. %% ~~Describe \code{sds}
-#' here~~
+#' specified. 
+#' @param suppress.messages Suppress text messages. 
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
 #' @param output.units Units of dose, default of 'mg' for mg/kg BW/ day or
 #' 'mol' for mol/ kg BW/ day.
 #' @param which.quantile Which quantile from Monte Carlo steady-state
 #' simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
-#' concentration quantile is the same population as the 5th dose quantile. %%
-#' ~~Describe \code{ssparams.mean} here~~
+#' concentration quantile is the same population as the 5th dose quantile. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").  %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human").  
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
 #' @param restrictive.clearance Protein binding not taken into account (set to
@@ -66,11 +63,7 @@
 #' See Details below for more information.
 #' @param ... Additional parameters passed to calc_mc_css for httkpop and
 #' variance of parameters.
-#' @return
-#' 
-#' Equivalent dose in specified units, default of mg/kg BW/day. %% ~Describe
-#' the value returned %% If it is a LIST, use %% \item{comp1 }{Description of
-#' 'comp1'} %% \item{comp2 }{Description of 'comp2'} %% ...
+#' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #' @author John Wambaugh
 #' @keywords Steady State Monte Carlo
 #' @examples

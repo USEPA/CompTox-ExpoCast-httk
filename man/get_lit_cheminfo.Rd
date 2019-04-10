@@ -20,10 +20,16 @@ and "Species".}
 valid chemicals.}
 }
 \description{
+<<<<<<< HEAD
 %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
 function provides the information specified in "info=" for all chemicals
 with data from the Wetmore et al. (2012) and (2013) publications and other
 literature.
+=======
+This function provides the information specified in "info=" for all
+chemicals with data from the Wetmore et al. (2012) and (2013) publications
+and other literature.
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

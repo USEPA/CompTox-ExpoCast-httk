@@ -52,8 +52,7 @@ samples from the simulation instead of the selected quantile.}
 \item{...}{Additional arguments passed to name.model.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function performs Monte Carlo to assess uncertainty and variability for
+This function performs Monte Carlo to assess uncertainty and variability for
 toxicokinetic models.
 }
 \examples{
