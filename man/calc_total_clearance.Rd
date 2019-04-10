@@ -20,11 +20,7 @@ must be specified.}
 function, overrides chem.name and chem.cas.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-<<<<<<< HEAD
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
-=======
 default "Human").}
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
@@ -49,12 +45,7 @@ parameters is NULL.}
 \item{Total Clearance}{Units of L/h/kg BW.}
 }
 \description{
-<<<<<<< HEAD
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function calculates the total clearance rate for a one compartment model
-=======
 This function calculates the total clearance rate for a one compartment model
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 where clearance is entirely due to metablism by the liver and glomerular
 filtration in the kidneys, identical to clearance of three compartment
 steady state model.

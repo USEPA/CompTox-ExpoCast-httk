@@ -11,32 +11,6 @@ get_lit_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of specified
-<<<<<<< HEAD
-input.units, default of uM. %% ~~Describe \code{ssparams.i} here~~}
-
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
-
-\item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
-
-\item{suppress.messages}{Suppress output messages. %% ~~Describe \code{sds}
-here~~}
-
-\item{which.quantile}{Which quantile from the SimCYP Monte Carlo simulation
-is requested. Can be a vector.  Papers include 0.05, 0.5, and 0.95 for
-humans and 0.5 for rats. %% ~~Describe \code{ssparams.mean} here~~}
-
-\item{species}{Species desired (either "Rat" or default "Human"). %%
-~~Describe \code{ssparams.var.inv} here~~}
-
-\item{input.units}{Units of given concentration, default of uM but can also
-be mg/L.}
-
-\item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or
-'mol' for mol/ kg BW/ day.}
-
-=======
 input.units, default of uM.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -59,19 +33,11 @@ be mg/L.}
 \item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or
 'mol' for mol/ kg BW/ day.}
 
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 \item{clearance.assay.conc}{Concentration of chemical used in measureing
 intrinsic clearance data, 1 or 10 uM.}
 
 \item{...}{Additional parameters passed to get_lit_css.}
 }
-<<<<<<< HEAD
-\description{
-This function converts a chemical plasma concetration to an oral equivalent
-dose using the values from the Wetmore et al. (2012) and (2013) publications
-and other literature. %% ~~ A concise (1-5 lines) description of what the
-function does. ~~
-=======
 \value{
 Equivalent dose in specified units, default of mg/kg BW/day.
 }
@@ -79,7 +45,6 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 This function converts a chemical plasma concetration to an oral equivalent
 dose using the values from the Wetmore et al. (2012) and (2013) publications
 and other literature.
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

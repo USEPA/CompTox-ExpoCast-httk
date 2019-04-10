@@ -4,13 +4,8 @@
 \alias{get_cheminfo}
 \title{Retrieve chemical information from HTTK package}
 \usage{
-<<<<<<< HEAD
-get_cheminfo(info = "CAS", species = "Human", exclude.fub.zero = NA,
-  fub.lod.default = 0.005, model = "3compartmentss",
-=======
 get_cheminfo(info = "CAS", species = "Human", exclude.fup.zero = NA,
   fup.lod.default = 0.005, model = "3compartmentss",
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
   default.to.human = F)
 }
 \arguments{
@@ -23,21 +18,12 @@ gives all information for the model and species.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-<<<<<<< HEAD
-\item{exclude.fub.zero}{Whether or not to exclude chemicals with a fraction
-of unbound plasma equal to zero or include them with a value of
-fub.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
-models and schmitt.}
-
-\item{fub.lod.default}{Default value used for fraction of unbound plasma for
-=======
 \item{exclude.fup.zero}{Whether or not to exclude chemicals with a fraction
 of unbound plasma equal to zero or include them with a value of
 fup.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
 models and schmitt.}
 
 \item{fup.lod.default}{Default value used for fraction of unbound plasma for
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 chemicals where measured value was below the limit of detection. Default
 value is 0.0005.}
 
@@ -55,12 +41,7 @@ true.}
 valid chemicals.}
 }
 \description{
-<<<<<<< HEAD
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function provides the information specified in "info=" (can be single entry
-=======
 This function provides the information specified in "info=" (can be single entry
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 or vector) for all chemicals for which a toxicokinetic model can be
 paramterized for a given species.
 }

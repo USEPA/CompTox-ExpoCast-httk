@@ -36,11 +36,6 @@ partition coefficients.}
 \item{force.human.clint.fub}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
 }
-<<<<<<< HEAD
-\description{
-This function initializes the parameters needed in the function solve_3comp.
-%% ~~ A concise (1-5 lines) description of what the function does. ~~
-=======
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, 
 L/h/kg BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
@@ -69,7 +64,6 @@ of the chemical in the blood to the concentration in the plasma.}
 \description{
 This function initializes the parameters needed in the function solve_3comp.
  function does. ~~
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

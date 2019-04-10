@@ -15,18 +15,12 @@
 #' 
 #' AUC is area under plasma concentration curve.
 #' 
-<<<<<<< HEAD
-#' Model Figure \if{html}{\figure{1comp.pngoptions: width="60%" alt="Figure: One
-#' Compartment Model Schematic"}} \if{latex}{\figure{1comp.pdfoptions: width=12cm
-#' alt="Figure: One Compartment Model Schematic"}}
-=======
 #' Model Figure 
 #' \if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
 #' Compartment Model Schematic"}}
 #' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 #' Compartment Model Schematic"}}
 #' 
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 #' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters

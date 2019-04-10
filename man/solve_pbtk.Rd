@@ -84,36 +84,6 @@ partition coefficients.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
-<<<<<<< HEAD
-\description{
-This function solves for the amounts or concentrations in uM of a chemical
-in different tissues as functions of time based on the dose and dosing
-frequency.
-}
-\details{
-Note that the model parameters have units of hours while the model output is
-in days.
-
-Default NULL value for doses.per.day solves for a single dose.
-
-The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, and the rest of the body.
-
-The extra compartments include the amounts or concentrations metabolized by
-the liver and excreted by the kidneys through the tubules.
-
-AUC is the area under the curve of the plasma concentration.
-
-Model Figure \if{html\figure{pbtk.pngoptions: width="60%" alt="Figure: PBTK
-Model Schematic"}} \if{latex\figure{pbtk.pdfoptions: width=12cm alt="Figure:
-PBTK Model Schematic"}}
-
-%%When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
-fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-
-%% ~~ If necessary, more details than the description above ~~
-=======
 \value{
 A matrix of class deSolve with a column for time(in days), each
 compartment, the area under the curve, and plasma concentration and a row
@@ -147,7 +117,6 @@ Schematic"}}
 When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 
