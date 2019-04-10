@@ -1,13 +1,7 @@
-# Written by Robert Pearce and John Wambaugh
-
-
-
-
 #' Find the steady state concentration and the day it is reached.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function finds the day a chemical comes within the specified range of the
-#' analytical steady state venous blood or plasma concentration(from
+#' This function finds the day a chemical comes within the specified range of
+#' the analytical steady state venous blood or plasma concentration(from
 #' calc_analytic_css) for the multiple compartment, three compartment, and one
 #' compartment models, the fraction of the true steady state value reached on
 #' that day, the maximum concentration, and the average concentration at the
@@ -15,12 +9,12 @@
 #' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or parameters must be
-#' specified. %% ~~Describe \code{obs} here~~
+#' specified. 
 #' @param chem.cas Either the chemical name, CAS number, or parameters must be
-#' specified. %% ~~Describe \code{pred} here~~
+#' specified. 
 #' @param f Fractional distance from the final steady state concentration that
 #' the average concentration must come within to be considered at steady state.
-#' %% ~~Describe \code{pred} here~~
+#' 
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -59,7 +53,7 @@
 #' \item{avg}{The average concentration on the final day of the simulation.}
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
-#' @author Robert Pearce
+#' @author Robert Pearce, John Wambaugh
 #' @keywords Steady State
 #' @examples
 #' 

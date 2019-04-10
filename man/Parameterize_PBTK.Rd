@@ -13,10 +13,17 @@ parameterize_pbtk(chem.cas = NULL, chem.name = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
+<<<<<<< HEAD
 specified. %% ~~Describe \code{pred} here~~}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified. %% ~~Describe \code{obs} here~~}
+=======
+specified.}
+
+\item{chem.name}{Either the chemical name or the CAS number must be
+specified.}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -43,10 +50,49 @@ partition coefficients.}
 \item{force.human.clint.fub}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
 }
+<<<<<<< HEAD
 \description{
 This function initializes the parameters needed in the functions solve_pbtk,
 calc_css, and others using the multiple compartment model. %% ~~ A concise
 (1-5 lines) description of what the function does. ~~
+=======
+\value{
+\item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
+BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
+plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
+chemical unbound in hepatocyte assay using the method of Kilford et al.
+(2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
+concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
+from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
+kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
+concentration of chemical in liver tissue to unbound concentration in
+plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
+of chemical in red blood cells to unbound concentration in plasma.}
+\item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
+unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
+cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
+\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
+Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
+excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+\item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
+\item{Qliverf}{Fraction of cardiac output flowing to the liver.}
+\item{Rblood2plasma}{The ratio of the concentration of the chemical in the
+blood to the concentration in the plasma from available_rblood2plasma.}
+\item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
+\item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
+\item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
+\item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
+\item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+\item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+}
+\description{
+This function initializes the parameters needed in the functions solve_pbtk,
+calc_css, and others using the multiple compartment model.
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

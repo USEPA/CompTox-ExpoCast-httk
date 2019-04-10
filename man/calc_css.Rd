@@ -16,17 +16,28 @@ calc_css(parameters = NULL, chem.name = NULL, chem.cas = NULL,
 overrides chem.name and chem.cas.}
 
 \item{chem.name}{Either the chemical name, CAS number, or parameters must be
+<<<<<<< HEAD
 specified. %% ~~Describe \code{obs} here~~}
 
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
 specified. %% ~~Describe \code{pred} here~~}
+=======
+specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or parameters must be
+specified.}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
 \item{f}{Fractional distance from the final steady state concentration that
+<<<<<<< HEAD
 the average concentration must come within to be considered at steady state.
 %% ~~Describe \code{pred} here~~}
+=======
+the average concentration must come within to be considered at steady state.}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
@@ -46,10 +57,17 @@ each iteration.}
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
 the one compartment model.}
+<<<<<<< HEAD
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
+=======
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 \item{f.change}{Fractional change of daily steady state concentration
 reached to stop calculating.}
 
@@ -79,9 +97,14 @@ dosing).} \item{max}{The maximum concentration of the simulation.}
 percent of the true steady state concentration.}
 }
 \description{
+<<<<<<< HEAD
 %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
 function finds the day a chemical comes within the specified range of the
 analytical steady state venous blood or plasma concentration(from
+=======
+This function finds the day a chemical comes within the specified range of
+the analytical steady state venous blood or plasma concentration(from
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 calc_analytic_css) for the multiple compartment, three compartment, and one
 compartment models, the fraction of the true steady state value reached on
 that day, the maximum concentration, and the average concentration at the
@@ -134,7 +157,11 @@ print(avg.vs.max)
 
 }
 \author{
+<<<<<<< HEAD
 Robert Pearce
+=======
+Robert Pearce, John Wambaugh
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \keyword{State}
 \keyword{Steady}

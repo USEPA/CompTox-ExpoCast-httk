@@ -5,8 +5,7 @@
 
 #' Calculate the hepatic clearance.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function calculates the hepatic clearance in plasma for a well-stirred model
+#' This function calculates the hepatic clearance in plasma for a well-stirred model
 #' or other type if specified.
 #' 
 #' 
@@ -15,7 +14,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
 #' @param parameters Chemical parameters from parameterize_steadystate

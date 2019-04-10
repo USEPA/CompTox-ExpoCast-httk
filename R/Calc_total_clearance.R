@@ -1,12 +1,6 @@
-# This function calculates an elimination rate for a one compartment model where 
-# elimination is entirely due to metabolism by the liver and glomerular filtration
-# in the kidneys.
-
-
 #' Calculate the total clearance.
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function calculates the total clearance rate for a one compartment model
+#' This function calculates the total clearance rate for a one compartment model
 #' where clearance is entirely due to metablism by the liver and glomerular
 #' filtration in the kidneys, identical to clearance of three compartment
 #' steady state model.
@@ -19,7 +13,7 @@
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~
+#' default "Human"). 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
@@ -60,10 +54,12 @@ calc_total_clearance<- function(chem.cas=NULL,
                                              chem.name=chem.name, 
                                              species=species,
                                              default.to.human=default.to.human,
-                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                             adjusted.Funbound.plasma=
+                                               adjusted.Funbound.plasma,
                                              ...)
     }
-    Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / parameters[['BW']]^0.25 #L/h/kgBW
+    Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / 
+      parameters[['BW']]^0.25 #L/h/kgBW
     fup <- parameters[["Funbound.plasma"]]# unitless fraction
     clearance <- Qgfrc*fup+
                    calc_hepatic_clearance(chem.cas=chem.cas,
@@ -73,7 +69,8 @@ calc_total_clearance<- function(chem.cas=NULL,
                      suppress.messages=T,
                      well.stirred.correction=well.stirred.correction,
                      restrictive.clearance=restrictive.clearance,
-                     adjusted.Funbound.plasma=adjusted.Funbound.plasma) #L/h/kgBW
+                     adjusted.Funbound.plasma=
+                       adjusted.Funbound.plasma) #L/h/kgBW
 
     if (!suppress.messages)
     {

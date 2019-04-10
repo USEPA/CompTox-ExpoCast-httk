@@ -11,10 +11,15 @@ calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, params = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
+<<<<<<< HEAD
 \itemchem.nameEither the chemical name or the CAS number must be specified.
 %% ~~Describe \code{obs} here~~}
+=======
+\item{chem.name}{Either the chemical name or the CAS number must be
+specified.}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \itemparamsParameters from parameterize_schmitt.
 
@@ -24,12 +29,25 @@ Rblood2plasma.
 \itemdefault.to.humanSubstitutes missing animal values with human values if
 true.
 
+<<<<<<< HEAD
 \itemspeciesSpecies desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
 
 \itemadjusted.Funbound.plasmaWhether or not to use Funbound.plasma
 adjustment.
 
+=======
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
+\item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
+adjustment.}
+
+\item{suppress.messages}{Determine whether to display certain usage
+feedback.}
+}
+\description{
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 This function calculates the constant ratio of the blood concentration to
 the plasma concentration.
 

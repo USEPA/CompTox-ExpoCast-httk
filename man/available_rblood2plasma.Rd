@@ -10,6 +10,7 @@ available_rblood2plasma(chem.cas = NULL, chem.name = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
+<<<<<<< HEAD
 specified. %% ~~Describe \code{pred} here~~}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -17,6 +18,15 @@ specified. %% ~~Describe \code{obs} here~~}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
+=======
+specified.}
+
+\item{chem.name}{Either the chemical name or the CAS number must be
+specified.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment if calculating Rblood2plasma.}

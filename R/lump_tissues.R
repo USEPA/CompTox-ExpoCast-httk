@@ -1,25 +1,19 @@
-# This function returns the flows, volumes, and partition coefficients for the
-# lumped tissues specified in tissue list
-# Ktissue2plasma -- tissue to free plasma concentration partition coefficients
-#                   for every tissue specified by Schmitt (2008) (the tissue.data table)
-# tissuelist -- a list of character vectors, the name of each entry in the list
-#               is a lumped tissue, the words in the vector are the Schmitt (2008)
-#               tissues that are to be lumped, for example:
-#               tissuelist<-list(Rapid=c("Brain","Kidney"))
-# species specifies the flow.col and vol.col in the tissuedata.table
-
-
-
-
 #' Lump tissue parameters
 #' 
-#' %% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-#' function takes the parameters from predict_partitioning_schmitt and lumps
-#' the partition coefficients along with the volumes and flows based on the
-#' given tissue list. It is useful in Monte Carlo simulation of individual
+#' This function takes the parameters from predict_partitioning_schmitt and 
+#' lumps the partition coefficients along with the volumes and flows based on 
+#' the given tissue list. It is useful in Monte Carlo simulation of individual
 #' partition coefficients when calculating the rest of body partition
 #' coefficient.
 #' 
+#' This function returns the flows, volumes, and partition coefficients for the
+#' lumped tissues specified in tissue list Ktissue2plasma -- tissue to free
+#' plasma concentration partition coefficients for every tissue specified by 
+#' Schmitt (2008) (the tissue.data table) tissuelist -- a list of character 
+#' vectors, the name of each entry in the list is a lumped tissue, the words in
+#' the vector are the Schmitt (2008) tissues that are to be lumped, for
+#' example: tissuelist<-list(Rapid=c("Brain","Kidney")) species specifies the
+#' flow.col and vol.col in the tissuedata.table
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
 #' predict_partitioning_schmitt.

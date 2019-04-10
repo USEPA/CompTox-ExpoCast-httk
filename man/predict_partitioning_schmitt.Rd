@@ -12,10 +12,17 @@ predict_partitioning_schmitt(chem.name = NULL, chem.cas = NULL,
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
+<<<<<<< HEAD
 specified. %% ~~Describe \code{obs} here~~}
 
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified. %% ~~Describe \code{pred} here~~}
+=======
+specified.}
+
+\item{chem.cas}{Either the chemical name or the CAS number must be
+specified.}
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -42,10 +49,9 @@ Returns tissue to unbound plasma partition coefficients for each
 tissue.
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function implements the method from Schmitt (2008) in predicting the tissue
-to unbound plasma partition coefficients from for the tissues contained in
-the tissue.data table.
+This function implements the method from Schmitt (2008) in predicting the 
+tissue to unbound plasma partition coefficients from for the tissues 
+contained in the tissue.data table.
 }
 \details{
 A separate regression is used when adjusted.Funbound.plasma is FALSE.

@@ -12,10 +12,10 @@ calc_elimination_rate(chem.cas = NULL, chem.name = NULL,
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
+specified.}
 
 \item{chem.name}{Either the chemical name or the cas number must be
-specified. %% ~~Describe \code{obs} here~~}
+specified.}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
@@ -37,8 +37,8 @@ TRUE along with partition coefficients calculated with this value.}
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE.  This assumes clearance relative
+\item{.stirred.correction}{Uses correction in calculation of hepatic
+clearance for -stirred model if TRUE.  This assumes clearance relative
 to amount unbound in whole blood instead of plasma, but converted to use
 with plasma concentration.}
 
@@ -50,19 +50,17 @@ set to zero.}
 \item{Elimination rate}{Units of 1/h.}
 }
 \description{
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function calculates an elimination rate from the three compartment steady
-state model where elimination is entirely due to metablism by the liver and
-glomerular filtration in the kidneys.
+This function calculates an elimination rate from the three compartment
+steady state model where elimination is entirely due to metablism by the
+liver and glomerular filtration in the kidneys.
 }
 \details{
 Elimination rate calculated by dividing the total clearance (using the
-default well-stirred hepatic model) by the volume of distribution. %%When
+default -stirred hepatic model) by the volume of distribution. When
 species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-
-%% ~~ If necessary, more details than the description above ~~
+>>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 
