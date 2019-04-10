@@ -102,8 +102,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 AUC is area under plasma concentration curve.
 
-Model Figure \if{html\figure{1comp.pngoptions: width="60%" alt="Figure: One
-Compartment Model Schematic"}} \if{latex\figure{1comp.pdfoptions: width=12cm
+Model Figure \if{html}{\figure{1comp.pngoptions: width="60%" alt="Figure: One
+Compartment Model Schematic"}} \if{latex}{\figure{1comp.pdfoptions: width=12cm
 alt="Figure: One Compartment Model Schematic"}}
 
 %% ~~ If necessary, more details than the description above ~~

@@ -20,6 +20,10 @@
 \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 
 \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+
+\url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+
+\url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 }
 \usage{
 nhanes_mec_svy
@@ -28,6 +32,13 @@ nhanes_mec_svy
 NHANES data on demographics, anthropometrics, and some laboratory measures, 
 cleaned and combined into a single data set.
 
+NHANES data on demographics, anthropometrics, and some laboratory measures,
+cleaned and combined into a single data set.
+
+NHANES data on demographics, anthropometrics, and some laboratory measures,
+cleaned and combined into a single data set.
+}
+\details{
 NHANES data on demographics, anthropometrics, and some laboratory measures,
 cleaned and combined into a single data set.
 }
@@ -39,8 +50,20 @@ International 106 (2017): 105-118
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 
 Caroline Ring
