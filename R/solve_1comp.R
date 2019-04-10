@@ -79,6 +79,8 @@
 #' solve_1comp(parameters=params)
 #' 
 #' @export solve_1comp
+#' @useDynLib httk
+#' @import deSolve
 solve_1comp <- function(chem.cas=NULL,
                         chem.name=NULL,
                         times=NULL,

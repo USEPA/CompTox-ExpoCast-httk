@@ -93,9 +93,11 @@ parameterize_1comp <- function(chem.cas=NULL,
                                              clint.pvalue.threshold=clint.pvalue.threshold)
   
   params[["Clint"]] <- ss.params[["Clint"]]
+  params[["Clint.dist"]] <- ss.params[["Clint.dist"]]
   params[["Funbound.plasma"]] <- ss.params[["Funbound.plasma"]] 
   params[["Funbound.plasma.adjustment"]] <- ss.params[["Funbound.plasma.adjustment"]] 
   params[["Fhep.assay.correction"]] <- ss.params[["Fhep.assay.correction"]]
+  params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
                                                          chem.cas=chem.cas,
                                                          species=species,

@@ -15,7 +15,7 @@
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
 #' However, solve_pbtk only works with the default parameters.
-#' @param force.human.clint.fub Forces use of human values for hepatic
+#' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are

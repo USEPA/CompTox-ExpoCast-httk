@@ -6,7 +6,7 @@
 \usage{
 calc_stats(days, chem.name = NULL, chem.cas = NULL,
   parameters = NULL, stats = c("AUC", "peak", "mean"),
-  species = "Human", exclude.fub.zero = F, daily.dose = 1,
+  species = "Human", exclude.fup.zero = F, daily.dose = 1,
   dose = NULL, doses.per.day = NULL, output.units = "uM",
   concentration = "plasma", model = "pbtk", default.to.human = F,
   suppress.messages = F, ...)
@@ -27,7 +27,7 @@ containing any combination).}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{exclude.fub.zero}{Whether or not to exclude chemicals with a fraction
+\item{exclude.fup.zero}{Whether or not to exclude chemicals with a fraction
 of unbound plasma equal to zero or include them with a value of 0.005, only
 used when chem.name, chem.cas, and parameters are not specified.}
 
