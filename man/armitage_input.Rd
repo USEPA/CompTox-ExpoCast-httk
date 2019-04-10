@@ -18,6 +18,10 @@
 \url{http://www.diamondse.info/}
 
 \url{http://www.diamondse.info/}
+
+\url{http://www.diamondse.info/}
+
+\url{http://www.diamondse.info/}
 }
 \usage{
 armitage_input
@@ -25,6 +29,11 @@ armitage_input
 \description{
 Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
 
+Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+
+Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+}
+\details{
 Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
 }
 \references{
@@ -39,8 +48,24 @@ Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
 Data to Evaluate Extrapolation Assumptions", submitted.
+
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
+Data to Evaluate Extrapolation Assumptions", submitted.
+
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48,
+9770-9779. dx.doi.org/10.1021/es501955g
+
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
+Data to Evaluate Extrapolation Assumptions", submitted.
 }
 \author{
+Greg Honda
+
+Greg Honda
+
 Greg Honda
 
 Greg Honda
