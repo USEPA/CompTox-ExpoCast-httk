@@ -22,6 +22,9 @@ default "Human").}
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
 
+\item{force.human.clint.fup}{Forces use of human values for hepatic
+intrinsic clearance and fraction of unbound plasma if true.}
+
 \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
 having p-values greater than the threshold are set to zero.}
 
@@ -32,9 +35,6 @@ TRUE along with parition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{force.human.clint.fub}{Forces use of human values for hepatic
-intrinsic clearance and fraction of unbound plasma if true.}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, 
