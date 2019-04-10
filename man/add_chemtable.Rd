@@ -33,13 +33,10 @@ replaced by any data in new.table that is for the same chemical and
 property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored.  Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
-<<<<<<< HEAD
-=======
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in
 current.table augmented by new.table}
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \description{
 This function adds chemical-specific information to the table

@@ -13,30 +13,17 @@ calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, params = NULL,
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
-<<<<<<< HEAD
-\itemchem.nameEither the chemical name or the CAS number must be specified.
-%% ~~Describe \code{obs} here~~}
-=======
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
-\itemparamsParameters from parameterize_schmitt.
+\item{params}{Parameters from parameterize_schmitt.}
 
-\itemhematocritOverwrites default hematocrit value in calculating
-Rblood2plasma.
+\item{hematocrit}{Overwrites default hematocrit value in calculating
+Rblood2plasma.}
 
-\itemdefault.to.humanSubstitutes missing animal values with human values if
-true.
+\item{default.to.human}{Substitutes missing animal values with human values
+if true.}
 
-<<<<<<< HEAD
-\itemspeciesSpecies desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). %% ~~Describe \code{ssparams.var.inv} here~~}
-
-\itemadjusted.Funbound.plasmaWhether or not to use Funbound.plasma
-adjustment.
-
-=======
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
@@ -47,10 +34,10 @@ adjustment.}
 feedback.}
 }
 \description{
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 This function calculates the constant ratio of the blood concentration to
 the plasma concentration.
-
+}
+\details{
 The red blood cell (RBC) parition coefficient as predicted by the Schmitt
 (2008) method is used in the calculation. The value is calculated with the
 equation: 1 - hematocrit + hematocrit * Krbc2pu * Funbound.plasma, summing
@@ -60,18 +47,18 @@ species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(hematocrit and temperature) but substitues
 human fraction unbound and tissue volumes.  %% ~~ If necessary, more details
 than the description above ~~
+}
+\examples{
 
 calc_rblood2plasma(chem.name="Bisphenol A")
 calc_rblood2plasma(chem.name="Bisphenol A",species="Rat")
 
-Schmitt W. "General approach for the calculation of tissue to plasma
-partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
-
+}
+\references{
+Schmitt W. "General approach for the calculation of tissue to
+plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
+}
+\author{
 John Wambaugh
-
-Parameter}
 }
-\description{
-Calculate the constant ratio of the blood concentration to the plasma
-concentration.
-}
+\keyword{Parameter}

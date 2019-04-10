@@ -44,11 +44,6 @@ with plasma concentration.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 }
-<<<<<<< HEAD
-\description{
-This function initializes the parameters needed in the function solve_1comp.
-%% ~~ A concise (1-5 lines) description of what the function does. ~~
-=======
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
 \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
@@ -66,7 +61,6 @@ first pass clearance, calculated from the corrected well-stirred model.}
 \description{
 This function initializes the parameters needed in the function solve_1comp.
  function does. ~~
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

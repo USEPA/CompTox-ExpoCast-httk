@@ -12,17 +12,10 @@ predict_partitioning_schmitt(chem.name = NULL, chem.cas = NULL,
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
-<<<<<<< HEAD
-specified. %% ~~Describe \code{obs} here~~}
-
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{pred} here~~}
-=======
 specified.}
 
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}

@@ -61,12 +61,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 \item{peak}{The highest concentration.}
 }
 \description{
-<<<<<<< HEAD
-%% ~~ A concise (1-5 lines) description of what the function does. ~~ This
-function calculates the area under the curve, the mean, and the peak values
-=======
 This function calculates the area under the curve, the mean, and the peak values
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 for the venous blood or plasma concentration of a specified chemical or all
 chemicals if none is specified for the multiple compartment model with a
 given number of days, dose, and number of doses per day.
@@ -74,16 +69,9 @@ given number of days, dose, and number of doses per day.
 \details{
 Default value of 0 for doses.per.day solves for a single dose.
 
-<<<<<<< HEAD
-%%When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
-fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-%% ~~ If necessary, more details than the description above ~~
-=======
 When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 }
 \examples{
 

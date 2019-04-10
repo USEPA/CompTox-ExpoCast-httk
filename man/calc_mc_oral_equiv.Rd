@@ -11,24 +11,6 @@ calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
 }
 \arguments{
-<<<<<<< HEAD
-\item{conc}{Bioactive in vitro concentration in units of uM. %% ~~Describe
-\code{ssparams.i} here~~}
-
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified. %% ~~Describe \code{obs} here~~}
-
-\item{chem.cas}{Either the CAS number or the chemical name must be
-specified. %% ~~Describe \code{pred} here~~}
-
-\item{which.quantile}{Which quantile from Monte Carlo steady-state
-simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
-concentration quantile is the same population as the 5th dose quantile. %%
-~~Describe \code{ssparams.mean} here~~}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").  %% ~~Describe \code{ssparams.var.inv} here~~}
-=======
 \item{conc}{Bioactive in vitro concentration in units of uM.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -43,7 +25,6 @@ concentration quantile is the same population as the 5th dose quantile.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 
 \item{input.units}{Units of given concentration, default of uM but can also
 be mg/L.}
@@ -51,21 +32,6 @@ be mg/L.}
 \item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or
 'mol' for mol/ kg BW/ day.}
 
-<<<<<<< HEAD
-\item{suppress.messages}{Suppress text messages. %% ~~Describe \code{sds}
-here~~}
-
-\item{return.samples}{Whether or not to return the vector containing the
-samples from the simulation instead of the selected quantile.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
-
-\item{plasma.binding}{If TRUE, then only the free (unbound) fraction of
-chemical is considered to be bioactive. If FALSE, the total chemical
-concentration is used for IVIVE. (Default TRUE)}
-
-=======
 \item{suppress.messages}{Suppress text messages.}
 
 \item{return.samples}{Whether or not to return the vector containing the
@@ -78,7 +44,6 @@ samples from the simulation instead of the selected quantile.}
 chemical is considered to be bioactive. If FALSE, the total chemical
 concentration is used for IVIVE. (Default TRUE)}
 
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 \item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum
 (peak) concetrations might be used for IVIVE with some models. Defaults to
 "mean". Meaningless for the steady-state model (Argument is currently
@@ -95,13 +60,6 @@ See Details below for more information.}
 \item{...}{Additional parameters passed to calc_mc_css for httkpop and
 variance of parameters.}
 }
-<<<<<<< HEAD
-\description{
-This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from calc_mc_css.  %% ~~ A concise (1-5
-lines) description of what the function does. ~~
-}
-=======
 \value{
 Equivalent dose in specified units, default of mg/kg BW/day.
 }
@@ -109,7 +67,6 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 This functions converts a chemical plasma concetration to an oral equivalent
 dose using a concentration obtained from calc_mc_css.
 }
->>>>>>> e1b28c8999c9e61d128782f7057fac7d965f07cf
 \details{
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
