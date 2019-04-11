@@ -198,7 +198,7 @@ calc_css <- function(parameters=NULL,
   } else{ 
    if(!suppress.messages)cat("Analytic css not reached after 100 years.")
    css.day  <- 36500
-   frac_achieved <- as.numeric(max(subset(out[,concentration]))/css)  
+   frac_achieved <- as.numeric(max(subset(out[,"Cplasma"]))/css)  
   }     
    
   if (tolower(output.units) == tolower("mg/L")) 
