@@ -106,10 +106,11 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Need to have a parameter with this name to calculate clearance, but need 
   # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
-  cl <- calc_hepatic_clearance(parameters=Params,hepatic.model='unscaled',suppress.messages=T)#L/h/kg boduweight
-  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h
+  cl <- calc_hepatic_clearance(parameters=Params,hepatic.model='unscaled',suppress.messages=T)#L/h/kg body weight
+  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
-  if(restrictive.clearance) Params[['hepatic.bioavailability']] <- Qliver / (Qliver + Params$Funbound.plasma * cl / Rb2p)
-  else Params[['hepatic.bioavailability']] <- Qliver / (Qliver + cl*BW / Rb2p) 
-    return(Params)
+  if(restrictive.clearance) Params[['hepatic.bioavailability']] <- Qliver / (Qliver + Params$Funbound.plasma * cl / Rb2p) # Units cancel (i.e., unitless)
+  else Params[['hepatic.bioavailability']] <- Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
+
+  return(Params)
 }
