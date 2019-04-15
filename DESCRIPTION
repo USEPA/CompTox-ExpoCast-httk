@@ -1,13 +1,68 @@
-Title: High-Throughput Toxicokinetics
 Package: httk
-Version: 1.8
-Date: 2018-1-22
-Author: John Wambaugh, Robert Pearce, Caroline Ring, Jimena Davis, Nisha Sipes, Barbara Wetmore, and R. Woodrow Setzer
-Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales, EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks, reshape2, gdata, viridis, CensRegMod, gmodels, colorspace
-Description: Functions and data tables for simulation and statistical analysis of chemical toxicokinetics ("TK") using data obtained from relatively high throughput, in vitro studies. Both physiologically-based ("PBTK") and empirical (e.g., one compartment) "TK" models can be parameterized for several hundred chemicals and multiple species. These models are solved efficiently, often using compiled (C-based) code. A Monte Carlo sampler is included for simulating biological variability and measurement limitations. Functions are also provided for exporting "PBTK" models to "SBML" and "JARNAC" for use with other simulation software. These functions and data provide a set of tools for in vitro-in vivo extrapolation ("IVIVE") of high throughput screening data (e.g., ToxCast) to real-world exposures via reverse dosimetry (also known as "RTK").
-Maintainer: John Wambaugh <wambaugh.john@epa.gov>
+Version: 1.9
+Date: 2019-02-04
+Title: High-Throughput Toxicokinetics
+Description: Functions and data tables for simulation and statistical analysis 
+             of chemical toxicokinetics ("TK") as in Pearce et al. (2017) 
+             <doi:10.18637/jss.v079.i04>. Chemical-specific in vitro 
+             data have been obtained from relatively high throughput 
+             experiments. Both physiologically-based ("PBTK") and empirical 
+             (e.g., one compartment) "TK" models can be parameterized for 
+             several hundred chemicals and multiple species. These models are 
+             solved efficiently, often using compiled (C-based) code. A Monte 
+             Carlo sampler is included for simulating biological variability 
+             (Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>) 
+             and measurement limitations. Calibrated methods are included for 
+             predicting tissue:plasma partition coefficients and volume of 
+             distribution 
+             (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>). 
+             These functions and data provide a set of tools for 
+             in vitro-in vivo extrapolation ("IVIVE") of high throughput 
+             screening data (e.g., Tox21, ToxCast) to real-world exposures via 
+             reverse dosimetry (also known as "RTK") 
+             (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
+Authors@R: c(
+           person("John", "Wambaugh", email = "wambaugh.john@epa.gov", role = c("aut", "cre")), 
+           person("Robert", "Pearce", role = c("aut")), 
+           person("Caroline", "Ring", email = "cring@toxstrategies.com", role = c("aut")), 
+           person("Greg", "Honda", email = "honda.gregory@epa.gov", role = c("aut")), 
+           person("Jimena", "Davis", role = c("ctb")), 
+           person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", role = c("ctb")), 
+           person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", role = c("ctb")), 
+           person("Woodrow", "Setzer", role = c("ctb"))
+           )
+Depends: R (>= 2.10)
+Imports: deSolve, 
+          msm, 
+          data.table, 
+          survey, 
+          mvtnorm, 
+          truncnorm, 
+          stats, 
+          utils, 
+          magrittr
+Suggests: ggplot2, 
+          knitr, 
+          rmarkdown, 
+          R.rsp, 
+          GGally, 
+          gplots, 
+          scales, 
+          EnvStats, 
+          MASS, 
+          RColorBrewer, 
+          TeachingDemos, 
+          classInt, 
+          ks, 
+          reshape2, 
+          gdata, 
+          viridis, 
+          CensRegMod, 
+          gmodels, 
+          colorspace
 License: GPL-3
 LazyData: true
-Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats, utils
-Depends: R (>= 2.10)
 VignetteBuilder: knitr, R.rsp
+RoxygenNote: 6.1.1
+URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
+BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk

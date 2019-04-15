@@ -62,6 +62,9 @@ parameterize_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
 
   outlist <- list()
    # Begin flows:
@@ -96,13 +99,18 @@ parameterize_pbtk <- function(chem.cas=NULL,
     kgutabs = 2.18, # 1/h
     Funbound.plasma = as.numeric(fub), # unitless fraction
     hematocrit = as.numeric(hematocrit), # unitless ratio
-    MW = MW)) #g/mol
+    MW = MW, #g/mol
+    Pow = Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    MA=schmitt.params[["MA"]]))
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
 
   outlist <- c(outlist,
-    list(Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+    list(Clint=Clint,
+         Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
                                 Funbound.plasma=fub, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
@@ -110,9 +118,14 @@ parameterize_pbtk <- function(chem.cas=NULL,
                                 liver.density= 1.05, # g/mL
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+                                Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)), #L/h/kg BW
+         million.cells.per.gliver=110, # 10^6 cells/g-liver
+         liver.density=1.05, # g/mL
+         Fgutabs=Fgutabs)) 
   
-
+  if(adjusted.Funbound.plasma) outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma/schmitt.params$unadjusted.Funbound.plasma
+  else outlist["Funbound.plasma.adjustment"] <- NA
+   
     outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
   return(outlist[sort(names(outlist))])
 }
