@@ -12,6 +12,14 @@
 #'@param age_years Vector of ages in years.
 #'  
 #'@return Vector of GFR values in mL/min/1.73m^2.
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 
 ckd_epi_eq <- function(scr, gender, reth, age_years){
   kappa <- rep(NA, length(scr))

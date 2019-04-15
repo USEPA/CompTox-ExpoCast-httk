@@ -1,0 +1,57 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH other_tests.R other_tests.Rout
+> #library(httk)
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda1",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda1")
+> #params <- parameterize_steadystate(chem.name="bisphenol a")
+> #3/Css/params[["Funbound.plasma"]]
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda2",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda2")
+> #params <- parameterize_steadystate(chem.name="bisphenol a")
+> #3/Css/params[["Funbound.plasma"]]
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda3",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda3")
+> #3/Css
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda4",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda4")
+> #3/Css
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda5",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda5")
+> #3/Css
+> #set.seed(12345)
+> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda6",output.units="uM")
+> #set.seed(12345)
+> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda6")
+> #3/Css
+> 
+> proc.time()
+   user  system elapsed 
+   0.18    0.21    5.43 
