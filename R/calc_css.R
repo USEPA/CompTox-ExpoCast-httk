@@ -1,3 +1,106 @@
+#' Find the steady state concentration and the day it is reached.
+#' 
+#' This function finds the day a chemical comes within the specified range of
+#' the analytical steady state venous blood or plasma concentration(from
+#' calc_analytic_css) for the multiple compartment, three compartment, and one
+#' compartment models, the fraction of the true steady state value reached on
+#' that day, the maximum concentration, and the average concentration at the
+#' end of the simulation.
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or parameters must be
+#' specified. 
+#' @param chem.cas Either the chemical name, CAS number, or parameters must be
+#' specified. 
+#' @param f Fractional distance from the final steady state concentration that
+#' the average concentration must come within to be considered at steady state.
+#' 
+#' @param parameters Chemical parameters from parameterize_pbtk function,
+#' overrides chem.name and chem.cas.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param doses.per.day Number of doses per day.
+#' @param days Initial number of days to run simulation that is multiplied on
+#' each iteration.
+#' @param output.units Units for returned concentrations, defaults to uM
+#' (specify units = "uM") but can also be mg/L.
+#' @param concentration Desired concentration type, 'blood' or default
+#' 'plasma'.
+#' @param suppress.messages Whether or not to suppress messages.
+#' @param model Model used in calculation, 'pbtk' for the multiple compartment
+#' model,'3compartment' for the three compartment model, and '1compartment' for
+#' the one compartment model.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param f.change Fractional change of daily steady state concentration
+#' reached to stop calculating.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE for model 1compartment elimination
+#' rate.  This assumes clearance relative to amount unbound in whole blood
+#' instead of plasma, but converted to use with plasma concentration.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param ... Additional arguments passed to model solver (default of
+#' solve_pbtk).
+#' @return \item{frac}{Ratio of the mean concentration on the day steady state
+#' is reached (baed on doses.per.day) to the analytical Css (based on infusion
+#' dosing).} \item{max}{The maximum concentration of the simulation.}
+#' \item{avg}{The average concentration on the final day of the simulation.}
+#' \item{the.day}{The day the average concentration comes within 100 * p
+#' percent of the true steady state concentration.}
+#' @author Robert Pearce, John Wambaugh
+#' @keywords Steady State
+#' @examples
+#' 
+#' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
+#' \dontrun{
+#' parms <- parameterize_3comp(chem.name='Bisphenol-A')
+#' parms$Funbound.plasma <- .07
+#' calc_css(parms,concentration='blood',model='3compartment')
+#' 
+#' 
+#' library("ggplot2")
+#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' plot.data <- as.data.frame(out)
+#' css <- calc_analytic_css(chem.name = "Bisphenol A")
+#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
+#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
+#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
+#' element_text(size = 16), plot.title = element_text(size = 17)) +
+#' ggtitle("Bisphenol A")
+#' print(c.vs.t)
+#' 
+#' days <- NULL
+#' avg <- NULL
+#' max <- NULL
+#' for(this.cas in get_cheminfo()){
+#' css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+#' days[[this.cas]] <- css.info[["the.day"]]
+#' avg[[this.cas]] <- css.info[["avg"]]
+#' max[[this.cas]] <- css.info[["max"]]
+#' }
+#' days.data <- as.data.frame(days)
+#' hist <- ggplot(days.data, aes(days)) +
+#' geom_histogram(fill = "blue", binwidth = 1/6) + scale_x_log10() +
+#' ylab("Number of Chemicals") + xlab("Days") + theme(axis.text =
+#' element_text(size = 16), axis.title = element_text(size = 16))
+#' print(hist)
+#' avg.max.data <- as.data.frame(cbind(avg, max))
+#' avg.vs.max <- ggplot(avg.max.data, aes(avg, max)) + geom_point() +
+#' geom_abline() + scale_x_log10() + scale_y_log10() +
+#' xlab("Average Concentration at Steady State (uM)") +
+#' ylab("Max Concentration at Steady State (uM)") +
+#' theme(axis.text = element_text(size = 16),
+#' axis.title = element_text(size = 16))
+#' print(avg.vs.max)
+#' }
+#' 
+#' @export calc_css
 calc_css <- function(parameters=NULL,
                     chem.name=NULL,
                     chem.cas=NULL, 
@@ -5,7 +108,7 @@ calc_css <- function(parameters=NULL,
                     f = .01,
                     daily.dose=1,
                     doses.per.day=3,
-                    days = 10,
+                    days = 21,
                     output.units = "uM",
                     concentration='plasma',
                     suppress.messages=F,
@@ -30,8 +133,9 @@ calc_css <- function(parameters=NULL,
   } 
 
   css <- calc_analytic_css(parameters=parameters,daily.dose=daily.dose,concentration='plasma',model=model,suppress.messages=T,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance) 
-  conc <- (1 - f) * css 
+  target.conc <- (1 - f) * css 
 
+  # Initially simulate for a time perioud of length "days":
   if(tolower(model) == 'pbtk'){
     out <- solve_pbtk(parameters=parameters, daily.dose=daily.dose,doses.per.day=doses.per.day,days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
     Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
@@ -43,59 +147,60 @@ calc_css <- function(parameters=NULL,
     Final_Conc <- out[dim(out)[1],c("Agutlumen","Ccompartment")]
   }else stop('The model options are only: 1compartment, 3compartment, and pbtk.')
   
-  day <- days
-  past.out <- NULL
-  while(out[dim(out)[1],'AUC'] - out[match(days - 1,out[,'time']),'AUC'] < conc & (out[dim(out)[1],'AUC'] - out[match(days - 1,out[,'time']),'AUC'])/
-       (out[match(days - 1,out[,'time']),'AUC'] - out[match(days - 2,out[,'time']),'AUC']) > 1 + f.change)
+  total.days <- days
+  additional.days <- days
+
+  while(all(out[,"Cplasma"] < target.conc) & 
+       ((out[match((additional.days - 1),out[,'time']),'Cplasma']-
+        out[match((additional.days - 2),out[,'time']),'Cplasma'])/
+        out[match((additional.days - 2),out[,'time']),'Cplasma'] > f.change))
   {
-    if(day < 3600)
+    if(additional.days < 1000)
     {
-      days <- days * 3
-    }else{
-      days <- days * 2
-    }
-    day <- day + days
+      additional.days <- additional.days * 5
+    }#else{
+    #  additional.days <- additional.days * 3
+    #}
+    total.days <- total.days + additional.days
     
   if(tolower(model) == 'pbtk'){
-    past.out <- as.data.frame(out)
-    out <- solve_pbtk(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
+    out <- solve_pbtk(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
     Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
   }else if(tolower(model) =='3compartment'){
-    past.out <- as.data.frame(out)
-    out <- solve_3comp(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
+    out <- solve_3comp(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
     Final_Conc <- out[dim(out)[1],c("Agutlumen","Cgut","Cliver","Crest")]
   }else if(tolower(model)=='1compartment'){
-    past.out <- as.data.frame(out)
-    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,initial.values=Final_Conc,...)
+    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,initial.values=Final_Conc,...)
     Final_Conc <- out[dim(out)[1],c('Agutlumen','Ccompartment')]
   }
   
-    if(day > 36500) break 
+    if(total.days > 36500) break 
   }
   
-  if(out[dim(out)[1],'AUC'] - out[match(days - 1,out[,'time']),'AUC'] > conc)
+# Calculate the day Css is reached:
+  if (total.days < 36500)
   {
-    dif <- out[match(1,out[,'time']):dim(out)[1],'AUC'] - out[1:match(days - 1,out[,'time']),'AUC']   #area under curve for 24 hours previous to each point.  length of days-1
-    if(dif[1] > conc)the.day <- day - days + 1              #first day not included in dif
-    else the.day <- day - days + 1 + ceiling(min(which(dif > conc)) / length(dif) * (days - 1))   #add one since first day is not included.  then add the day where we see the first point such that the last 24 hours is above the concentration
-  }else{
-    if((out[dim(out)[1],'AUC'] - out[match(days - 1,out[,'time']),'AUC'])/
-      (out[match(days - 1,out[,'time']),'AUC'] - out[match(days - 2,out[,'time']),'AUC']) < 1 + f.change){
-      out[,'AUC'] <- out[,'AUC'] + past.out[dim(past.out)[1],'AUC']           #make AUC consistent with the previous output
-      end.past.out <- subset(past.out,time >= past.out[[dim(past.out)[1],'time']] - 1)   #only take the last day
-      end.past.out[,'time'] <- end.past.out[,'time'] - end.past.out[dim(end.past.out)[1],'time']       #make the time negative
-      complete.out <- rbind(end.past.out[1:(dim(end.past.out)[1]-1),],out)                             #combine them
-      #same as dif but divided by the area under the curve of the 24 hours prior to each point.  past.out is added to account for the second day
-      div.dif <- (complete.out[match(1,complete.out[,'time']):dim(complete.out)[1],'AUC'] - complete.out[match(0,complete.out[,'time']):match(days - 1,complete.out[,'time']),'AUC']) / 
-               (complete.out[match(0,complete.out[,'time']):match(days - 1,complete.out[,'time']),'AUC'] - complete.out[1:match(days - 2,complete.out[,'time']),'AUC'])
-      if(div.dif[1] < 1 + f.change)the.day <- day - days + 1 
-      else the.day <- day - days + 1 + ceiling(min(which(div.dif < 1 + f.change)) / length(div.dif) * (days - 1))
-    }else{ 
-     if(!suppress.messages)cat("Steady state not reached after 100 years.")
-     the.day <- 36500   
-    }     
-  }
-  
+    # The day the simulation started:
+    sim.start.day <- total.days - additional.days
+    # The day the current simulation reached Css:
+    if(any(out[,"Cplasma"] >= target.conc))
+    {
+      sim.css.day <- floor(min(out[out[,"Cplasma"]>=target.conc,"time"]))
+    } else {
+      sim.css.day <- additional.days
+    }
+    # The overall day the simulation reached Css:
+    css.day <- sim.start.day+sim.css.day
+    # Fraction of analytic Css achieved:
+    last.day.subset<-subset(out,out[,"time"]<(sim.css.day+1) &
+                                out[,"time"]>=(sim.css.day))
+    frac_achieved <- as.numeric(mean(last.day.subset[,"Cplasma"])/css)
+  } else{ 
+   if(!suppress.messages)cat("Analytic css not reached after 100 years.")
+   css.day  <- 36500
+   frac_achieved <- as.numeric(max(subset(out[,concentration]))/css)  
+  }     
+   
   if (tolower(output.units) == tolower("mg/L")) 
   {
       out[,'AUC'] <- out[,'AUC']/1e+06 * parameters[["MW"]] * 1000
@@ -113,7 +218,7 @@ calc_css <- function(parameters=NULL,
     }else{
       max=as.numeric(max(out[,'Cplasma']))
     }
-    avg=as.numeric(out[dim(out)[1],'AUC'] - out[match(days-1,out[,'time']),'AUC'])
+    avg=as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])
   }else if(tolower(concentration)=='blood'){
     if(tolower(model)=='pbtk'){
       max=as.numeric(max(out[,'Cven']))
@@ -122,14 +227,17 @@ calc_css <- function(parameters=NULL,
     }else{
       max=as.numeric(max(out[,'Ccompartment'] * parameters[['Rblood2plasma']]))
     }   
-   avg=as.numeric((out[dim(out)[1],'AUC'] - out[match(days-1,out[,'time']),'AUC'])*parameters[['Rblood2plasma']])
+   avg=as.numeric((out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])*parameters[['Rblood2plasma']])
   }else stop("Only blood and plasma concentrations are calculated.")
   if(!suppress.messages){
     if(is.null(chem.cas) & is.null(chem.name)){
       cat(paste(toupper(substr(concentration,1,1)),substr(concentration,2,nchar(concentration)),sep=''),"concentrations returned in",output.units,"units.\n")
     }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",output.units,"units.\n")
   }
-  return(list(avg=avg,frac=as.numeric((out[match(days - (day - the.day),out[,'time']),'AUC'] - out[match(days - 1 - (day - the.day),out[,'time']),'AUC']) / css), 
+  
+
+  return(list(avg=avg,
+    frac=frac_achieved, 
     max=max,
-    the.day =as.numeric(the.day)))
+    the.day =as.numeric(css.day)))
 }

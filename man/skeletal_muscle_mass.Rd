@@ -22,11 +22,11 @@ Vector of skeletal muscle masses in kg.
 Predict skeletal muscle mass from age, height, and gender.
 }
 \details{
-For individuals over age 18, use allometrically-scaled muscle mass with an age-based scaling factor,
-to account for loss of muscle mass with age (Janssen et al. 2000).
-For individuals under age 18, use \code{\link{skeletal_muscle_mass_children}}.
+For individuals over age 18, use allometrically-scaled muscle mass with an
+age-based scaling factor, to account for loss of muscle mass with age
+(Janssen et al. 2000). For individuals under age 18, use
+\code{\link{skeletal_muscle_mass_children}}.
 }
 \seealso{
 \code{\link{skeletal_muscle_mass_children}}
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

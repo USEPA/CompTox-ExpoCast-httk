@@ -1,0 +1,97 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH other_tests.R other_tests.Rout
+> library(httk)
+> 
+> fake <- data.frame(Compound="Tester",
++                    CASRN="222-11-1",
++                    MW=200,
++                    logP=3.5,
++                    Fup=0.1,
++                    Clint=0.1,
++                    Clint.pValue=0.001)
+> chem.physical_and_invitro.data <- add_chemtable(fake,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Compound",CAS="CASRN",MW="MW",logP="logP",Funbound.plasma="Fup",Clint="Clint",Clint.pValue="Clint.pValue"),species="Human",reference="Fake")
+Warning message:
+In CAS.checksum(this.CAS) : NAs introduced by coercion
+> calc_css(chem.name="Tester")
+Human plasma concentrations returned in uM units.
+$avg
+[1] 29.56159
+
+$frac
+[1] 1.042693
+
+$max
+[1] 30.27284
+
+$the.day
+[1] 2
+
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+5: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+> 
+> load_sipes2017()
+> # "Tester" should be gone because chem.physical_an_invitro_data was just overwritten:
+> "Tester" %in% get_cheminfo(info="Compound")
+[1] FALSE
+> # But we should have the ADMet Predicted chemicals from Sipes et al. (2017),
+> # this one is a good test since the logP is nearly 10!
+> calc_css(chem.cas="26040-51-7")
+Human plasma concentrations returned in uM units.
+$avg
+[1] 0.2037975
+
+$frac
+[1] 6.480182
+
+$max
+[1] 0.3199865
+
+$the.day
+[1] 0
+
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+5: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+> 
+> proc.time()
+   user  system elapsed 
+   2.56    0.43    3.45 

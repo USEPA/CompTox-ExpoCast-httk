@@ -20,4 +20,3 @@ A vector of body surface areas in cm^2.
 Predict body surface area from weight, height, and age, using Mosteller's
 formula for age>18 and Haycock's formula for age<18
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

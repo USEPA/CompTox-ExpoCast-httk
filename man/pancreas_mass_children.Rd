@@ -20,4 +20,3 @@ A vector of pancreas masses in kg.
 For individuals under 18, predict the pancreas mass from height, weight, and
 gender, using equations from Ogiu et al.
 }
-\references{Ring, Caroline L., et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability." Environment International 106 (2017): 105-118.}

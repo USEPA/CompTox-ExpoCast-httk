@@ -2,7 +2,6 @@
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  library(httk)
 #  library(gdata)
 #  library(ggplot2)
 #  library(viridis)

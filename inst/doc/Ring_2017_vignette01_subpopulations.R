@@ -74,7 +74,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  })
 #  }
 #  
-#  cluster <- parallel::makeCluster(10,
+#  cluster <- parallel::makeCluster(2, # Reduced from 40 to 2 cores
 #                         outfile='subpopulations_parallel_out.txt')
 #  
 #  evalout <- parallel::clusterEvalQ(cl=cluster,
