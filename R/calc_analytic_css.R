@@ -109,6 +109,7 @@
   
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
   
+  # Check if IVIVE assumption set is used, overide restrictive.clearance and tissue if so.
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
@@ -138,9 +139,11 @@
       }else unit.change <- F
     }
   }
+  
+  ## Honda - 12APR2019 - fixed unit conversion (100000 to 1e6)
   if (tolower(output.units)=='um')
   { 
-       dose <- dose / 1000 / MW * 100000 # Analytic solution is linear with dose so okay to change here
+       dose <- dose / 1000 / MW * 1e6 # Analytic solution is linear with dose so okay to change here
   } else if(tolower(output.units) != 'mg/l') stop('Output.units can only be uM or mg/L.')
     
   if(tolower(model)=='pbtk')
@@ -230,11 +233,9 @@
                                  restrictive.clearance=restrictive.clearance)
     Qliver <- parameters$Qtotal.liverc / parameters$BW^.25
 #      Rb2p <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
-    if (restrictive.clearance) {
-      parameters[['hepatic.bioavailability']] <- Qliver / (Qliver +  Fup * cl / Rb2p)
-    } else {
-      parameters[['hepatic.bioavailability']] <- Qliver / (Qliver + cl / Rb2p) 
-    }
+    
+    ## Honda - 12APR2019 - use hepatic.bioavailibility calculated using unscaled clearance in 
+    ## parameterize_steady_state
     dose <- dose * parameters$Fgutabs * parameters$hepatic.bioavailability
 
     Css <- dose/(parameters$Qgfrc/parameters[['BW']]^.25 * Fup + cl) 
