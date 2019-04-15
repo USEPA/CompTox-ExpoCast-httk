@@ -1,5 +1,5 @@
-## ---- include=FALSE------------------------------------------------------
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+## ---- include=FALSE, eval=F----------------------------------------------
+#  knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 ## ----load_packages, eval=FALSE-------------------------------------------
 #  library(scales)

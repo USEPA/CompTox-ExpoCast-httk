@@ -10,7 +10,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  seed.int <- TeachingDemos::char2seed('Caroline Ring', set=FALSE)+1
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  nsamp<-1000
+#  nsamp<-25
 #  ExpoCast.group<-list("Total",
 #                       "Age.6.11",
 #                       "Age.12.19",
@@ -80,7 +80,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #    }
 #  
 #  
-#  cluster <- parallel::makeCluster(40,
+#  cluster <- parallel::makeCluster(2, #Change number of cores from 40 to 2
 #                                   outfile='subpopulations_parallel_out2.txt')
 #  
 #  evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -499,7 +499,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  chemlist <- httk::get_cheminfo(info="CAS",
 #                                 exclude.fub.zero=FALSE)
 #  
-#  cluster <- parallel::makeCluster(40,
+#  cluster <- parallel::makeCluster(2, # Changed number of corse from 40 to 2
 #                                   outfile='globalsens_parallel_out.txt')
 #  
 #  evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -632,6 +632,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  indep.bio2 <- indep_gen()
 
 ## ---- eval=FALSE---------------------------------------------------------
+#   Commented out because of problem with Pandoc for Windows:
 #  doforeachchem_indep <- function(this.chemcas, #CAS for one chemical
 #                                  model, #HTTK model to use
 #                                  species='Human', #Species for HTTK
@@ -856,7 +857,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  chemlist <- httk::get_cheminfo(info="CAS",
 #                                 exclude.fub.zero=FALSE)
 #  
-#  cluster <- parallel::makeCluster(40,
+#  cluster <- parallel::makeCluster(2, # Was 40, reduced for simpler processors
 #                                   outfile='globalsens_indep_parallel_out.txt')
 #  
 #  evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -864,12 +865,12 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #                                     library(httk)})
 #  parallel::clusterExport(cl = cluster,
 #                          varlist = c('doforeachparam'))
-#  #Set seeds on all workers for reproducibility
+#  Set seeds on all workers for reproducibility
 #  parallel::clusterSetRNGStream(cluster,
 #                                TeachingDemos::char2seed("Caroline Ring"))
 #  for (poormetab in c(TRUE, FALSE)){
 #    for (fup.censor in c(TRUE, FALSE)) {
-#      #Now loop over the chemicals
+#      Now loop over the chemicals
 #      eff.allchems <- rbindlist(
 #        parLapplyLB(cl=cluster,
 #                    chemlist,
@@ -882,7 +883,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #                    indep.model.bio2=indep.bio2,
 #                    poormetab=poormetab,
 #                    fup.censor=fup.censor,
-#                    nsamp=1000))
+#                    nsamp=10))  should be 1000, reduced for speed
 #      saveRDS(eff.allchems,
 #              paste0('data/',
 #                     'sens_glenisaacs_nhanes_',

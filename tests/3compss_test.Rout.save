@@ -1,0 +1,55 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH other_tests.R other_tests.Rout
+> library(httk)
+> calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
+Human plasma concentration returned in uM units.
+[1] 0.1296676
+Warning messages:
+1: In parameterize_steadystate(chem.cas = chem.cas, species = species,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
+  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.name="bisphenol a",model="3compartmentss")
+> calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
+Human plasma concentration returned in uM units.
+[1] 0.1296676
+Warning messages:
+1: In parameterize_steadystate(chem.cas = chem.cas, species = species,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
+  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(chem.cas="80-05-7",model="3compartmentss")
+> calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
+Plasma concentration returned in uM units.
+[1] 0.1296676
+Warning messages:
+1: In parameterize_steadystate(chem.cas = "80-05-7") :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
+  Human in vivo Rblood2plasma returned.
+> #set.seed(12345)
+> #calc_mc_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
+> 
+> proc.time()
+   user  system elapsed 
+   1.71    0.43    2.95 

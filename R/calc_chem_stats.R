@@ -1,4 +1,5 @@
 # This function simulates a daily repeated dosing treatment and summarizes the PK statistics from that treatment:
+# Written by John Wambaugh
 calc_chem_stats <- function(chem.name=NULL,chem.cas=NULL,parameters=NULL,days,stats=c("AUC","mean","peak"),doses.per.day=NULL,daily.dose=1,dose=NULL,species="Human",output.units="uM",concentration='plasma',model='pbtk',default.to.human=F,suppress.messages=F,...)
 {        
   good.units <- c("uM","mg/L")

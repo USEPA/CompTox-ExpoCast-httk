@@ -1,4 +1,58 @@
-# This function retrives a steady-state chemical concentration from the Wetmore et al. (2012) and (2013) publications
+#' Get literature Css
+#' 
+#' This function retrives a steady-state plasma concentration as a result of
+#' infusion dosing from the Wetmore et al. (2012) and (2013) publications and
+#' other literature. 
+#'
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.cas Either the cas number or the chemical name must be
+#' specified. 
+#' @param which.quantile Which quantile from the SimCYP Monte Carlo simulation
+#' is requested. Can be a vector. 
+#' @param species Species desired (either "Rat" or default "Human").
+#' @param clearance.assay.conc Concentration of chemical used in measureing
+#' intrinsic clearance data, 1 or 10 uM.
+#' @param daily.dose Total daily dose infused in units of mg/kg BW/day.
+#' Defaults to 1 mg/kg/day.  
+#' @param output.units Returned units for function, defaults to mg/L but can
+#' also be uM (specify units = "uM"). 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @author John Wambaugh
+#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
+#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
+#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
+#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
+#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
+#' 157-174 (2012)
+#' 
+#' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
+#' Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
+#' Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
+#' Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
+#' Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
+#' Toxicological Sciences, 132:327-346 (2013).
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
+#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
+#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
+#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
+#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
+#' Sciences, kfv171.
+#' @keywords Literature Monte Carlo
+#' @examples
+#' 
+#' 
+#' get_lit_css(chem.cas="34256-82-1")
+#' 
+#' 
+#' get_lit_css(chem.cas="34256-82-1",species="Rat",which.quantile=0.5)
+#' 
+#' get_lit_css(chem.cas="80-05-7", daily.dose = 1,which.quantile = 0.5, output.units = "uM")
+#' 
+#' 
+#' @export get_lit_css
 get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=F)
 {
   Wetmore.data <- Wetmore.data

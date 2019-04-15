@@ -1,5 +1,8 @@
+#R CMD BATCH cheminfo_test.R cheminfo_test.Rout
 library(httk)
-fub.zero.list <- get_cheminfo()
-no.fub.zero.list <- get_cheminfo(model='pbtk')
-length(fub.zero.list)
-length(no.fub.zero.list)
+Css.list <- get_cheminfo()
+pbpk.list <- get_cheminfo(model='pbtk')
+rat.list <- get_cheminfo(species="rat")
+length(Css.list)
+length(pbpk.list)
+length(rat.list)

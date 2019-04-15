@@ -6,6 +6,54 @@
 # MA: phospholipid:water distribution coefficient
 # KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
 # Fprotein.plasma: protein fraction in plasma - from Gardner 1980
+
+
+#' Predict partition coefficients using the method from Schmitt (2008).
+#' 
+#' This function implements the method from Schmitt (2008) in predicting the 
+#' tissue to unbound plasma partition coefficients from for the tissues 
+#' contained in the tissue.data table.
+#' 
+#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' 
+#' A regression is used for membrane affinity when not provided.  The
+#' regressions for correcting each tissue are performed on tissue plasma
+#' partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
+#' corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
+#' Thus the regressions should be used with the corrected Funbound.plasma.
+#' 
+#' The red blood cell regression can be used but is not by default because of
+#' the span of the data used, reducing confidence in the regression for higher
+#' and lower predicted values.
+#' 
+#' Human tissue volumes are used for species other than Rat.
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param parameters Chemical parameters from the parameterize_schmitt
+#' function, overrides chem.name and chem.cas.
+#' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
+#' adjustment.
+#' @param regression Whether or not to use the regressions.  Regressions are
+#' used by default.
+#' @param regression.list Tissues to use regressions on.
+#' @param tissues Vector of desired partition coefficients.  Returns all by
+#' default.
+#' @return Returns tissue to unbound plasma partition coefficients for each
+#' tissue.
+#' @author Robert Pearce
+#' @keywords Parameter
+#' @examples
+#' 
+#' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
+#' 
+#' @export predict_partitioning_schmitt
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
                                          species='Human',
@@ -21,8 +69,10 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   if(is.null(parameters)){
     parameters <- parameterize_schmitt(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human)
     user.params <- F
-  }else user.params <- T
-  
+  } else {
+    user.params <- T
+    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- parameterize_schmitt(chem.cas="80-05-7")$plasma.pH
+  }
   if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
    
   if(! tolower(species) %in% c('rat','human')){
@@ -104,7 +154,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 		}
 
     # Need to calculate the amount of un-ionized parent:
-    ionization <- calc_ionization(pH=pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)
+    ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
     fraction_charged <- ionization[["fraction_charged"]]
     fraction_negative <- ionization[["fraction_negative"]]
@@ -124,7 +174,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 		
 		Kcell <- (FW  + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
 		
-    plasma <- calc_ionization(pH=parameters$plasma.pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)
+    plasma <- calc_ionization(pH=parameters$plasma.pH,parameters=parameters)
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
@@ -140,6 +190,6 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
     }
 	}
   if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
-  if(user.params) warning(paste(species,'fractional tissue volumes used in calculation.  Parameters should match species argument.')) 
+ # if(user.params) warning(paste(species,' fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
  	return(Ktissue2pu)
 }

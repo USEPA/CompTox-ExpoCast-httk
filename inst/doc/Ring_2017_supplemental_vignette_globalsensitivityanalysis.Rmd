@@ -21,23 +21,48 @@ library(data.table)
 library(parallel)
 ```
 
-Basically, the idea of the Sobol method is to apportion variance: to estimate how much of the variance in a model's output is contributed by variance in each of the model parameters. The fraction of output variance attributable to each parameter is called the sensitivity index for that parameter.
+Basically, the idea of the Sobol method is to apportion variance: to estimate 
+how much of the variance in a model's output is contributed by variance in each 
+of the model parameters. The fraction of output variance attributable to each 
+parameter is called the sensitivity index for that parameter.
 
-The sensitivity indexes can be estimated using the following method. Generate two parameter matrices, independently of one another. Call them Matrix A and Matrix B. Evaluate the model using A and B, to get two vectors of output, fA and fB. Then, swap one column at a time between A and B. If you swap column i, the resulting matrices can be called ABi (for matrix A, with column i from matrix B) and BAi (for matrix B, with column i from matrix A). Evaluate the model for the column-swapped matrices to get another two vectors of output, fABi and fBAi. Then first-order and total sensitivity indices can be estimated from the correlation coefficients between output vectors (Glen & Isaacs 2012).
+The sensitivity indexes can be estimated using the following method. Generate 
+two parameter matrices, independently of one another. Call them Matrix A and 
+Matrix B. Evaluate the model using A and B, to get two vectors of output, fA 
+and fB. Then, swap one column at a time between A and B. If you swap column i, 
+the resulting matrices can be called ABi (for matrix A, with column i from 
+matrix B) and BAi (for matrix B, with column i from matrix A). Evaluate the 
+model for the column-swapped matrices to get another two vectors of output, 
+fABi and fBAi. Then first-order and total sensitivity indices can be estimated 
+from the correlation coefficients between output vectors (Glen & Isaacs 2012).
 
-With HTTK-Pop, this means we need to generate two virtual populations with the same specifications. For each chemical, we then need to add `Funbound.plasma` and `Clint` columns to each population matrix, and convert it into a matrix of HTTK model parameters. That will give matrices A and B, for each chemical. Then, we need to swap columns, evaluate the model, and compute the sensitivity indices from the correlations.
+With HTTK-Pop, this means we need to generate two virtual populations with the 
+same specifications. For each chemical, we then need to add `Funbound.plasma` 
+and `Clint` columns to each population matrix, and convert it into a matrix of 
+HTTK model parameters. That will give matrices A and B, for each chemical. Then, 
+we need to swap columns, evaluate the model, and compute the sensitivity indices 
+from the correlations.
 
-Let's get started. First, let's generate the two virtual populations using HTTK-Pop. These are strictly physiological parameters -- no chemical dependence -- so we can just do this once and re-use the two virtual populations for each chemical.
+Let's get started. First, let's generate the two virtual populations using 
+HTTK-Pop. These are strictly physiological parameters -- no chemical dependence 
+-- so we can just do this once and re-use the two virtual populations for each 
+chemical.
 
-We'll generate virtual populations for each of the ten ExpoCast subpopulations of interest, to see if and how global sensitivity changes by subpopulation. In fact, we've already generated one set of virtual populations in the "Generating subpopulations" vignette. Let's just re-use those as the first virtual population, and repeat the same procedure to generate a second virtual population, for each subpopulation.
+We'll generate virtual populations for each of the ten ExpoCast subpopulations 
+of interest, to see if and how global sensitivity changes by subpopulation. In 
+fact, we've already generated one set of virtual populations in the "Generating 
+subpopulations" vignette. Let's just re-use those as the first virtual 
+population, and repeat the same procedure to generate a second virtual 
+population, for each subpopulation.
 
-We'll use the same seed as before (based on my name), but increment it by 1, so that the two virtual populations are not identical.
+We'll use the same seed as before (based on my name), but increment it by 1, so 
+that the two virtual populations are not identical.
 ```{r, eval=FALSE}
 seed.int <- TeachingDemos::char2seed('Caroline Ring', set=FALSE)+1
 ```
 We set up the subpopulation specifications in the same way as before.
 ```{r, eval=FALSE}
-nsamp<-1000
+nsamp<-25
 ExpoCast.group<-list("Total",
                      "Age.6.11",
                      "Age.12.19",
@@ -108,7 +133,7 @@ tmpfun <- function(gendernum, agelim, bmi_category, ExpoCast_grp,
   }
 
 
-cluster <- parallel::makeCluster(40, 
+cluster <- parallel::makeCluster(2, #Change number of cores from 40 to 2
                                  outfile='subpopulations_parallel_out2.txt')
 
 evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -130,9 +155,17 @@ out_dr <- parallel::clusterMap(cl=cluster,
                                )
 parallel::stopCluster(cluster)
 ```
-Great. Now, let's think of the procedure as looping first over the ten subpopulations of interest, and then over the chemicals in the HTTK data set. So first, let's think about what we need to do for each chemical, given a subpopulation.
+Great. Now, let's think of the procedure as looping first over the ten 
+subpopulations of interest, and then over the chemicals in the HTTK data set. 
+So first, let's think about what we need to do for each chemical, given a subpopulation.
 
-We need to draw `Funbound.plasma` and `Clint` samples for the two virtual populations and convert into HTTK parameter matrices. That will give us matrix A and matrix B. Then, we need to evaluate yA and yB. Then, we need to loop over the HTTK model parameters -- the columns of A and B -- and swap one column at a time between A and B. For parameter i, we then need to evaluate yABi and yBAi. Then, we need to compute the correlations, and from them the sensitivity indices for parameter i. 
+We need to draw `Funbound.plasma` and `Clint` samples for the two virtual 
+populations and convert into HTTK parameter matrices. That will give us matrix A 
+and matrix B. Then, we need to evaluate yA and yB. Then, we need to loop over 
+the HTTK model parameters -- the columns of A and B -- and swap one column at a 
+time between A and B. For parameter i, we then need to evaluate yABi and yBAi. 
+Then, we need to compute the correlations, and from them the sensitivity indices 
+for parameter i. 
 
 So we can write some pseudocode like this:
 
@@ -303,7 +336,7 @@ doforeachparam <- function(i,
               caminusj=caminusj))
   }
 ```
-# For each chemical
+ For each chemical
 Great. Now take one step out, and define a function for what we need to do for each chemical.
 ```{r, eval=FALSE}
 doforeachchem <- function(this.chemcas, #CAS for one chemical 
@@ -550,9 +583,18 @@ doforeachsubpop <- function(ecg, #Short for "ExpoCast group"
   }
 ```
 # Loop over subpopulations
-Excellent! All that remains is to write the loop over the subpopulations that will call all of these functions in turn. We'll also add loops over the values of `poormetab` and `Funbound.plasma`, to see if and how global sensitivity changes under different conditions on the distributions of those variables.
+Excellent! All that remains is to write the loop over the subpopulations that 
+will call all of these functions in turn. We'll also add loops over the values 
+of `poormetab` and `Funbound.plasma`, to see if and how global sensitivity 
+changes under different conditions on the distributions of those variables.
 
-**WARNING: this code may take a LONG time to run!** 4 model evaluations per individual times 1000 individuals times 3 parameters times about 500 chemicals times 10 subpopulations = 6e7 model evaluations, plus overhead. While the model evaluations are vectorized for the analytic steady-state models -- so 1000 model evaluations take very little time -- this still can add up. On my machine, it took about 7 minutes for each combination of CLint and Funbound conditions, and about half an hour total -- and that is parallelized with 10 cores.
+**WARNING: this code may take a LONG time to run!** 4 model evaluations per 
+individual times 1000 individuals times 3 parameters times about 500 chemicals 
+times 10 subpopulations = 6e7 model evaluations, plus overhead. While the model 
+evaluations are vectorized for the analytic steady-state models -- so 1000 model 
+evaluations take very little time -- this still can add up. On my machine, it 
+took about 7 minutes for each combination of CLint and Funbound conditions, and 
+about half an hour total -- and that is parallelized with 10 cores.
 ```{r, eval=FALSE}
 model <- "3compartmentss"
 species <- "Human"
@@ -561,7 +603,7 @@ css.method <- "analytic"
 chemlist <- httk::get_cheminfo(info="CAS",
                                exclude.fub.zero=FALSE)
 
-cluster <- parallel::makeCluster(40, 
+cluster <- parallel::makeCluster(2, # Changed number of corse from 40 to 2 
                                  outfile='globalsens_parallel_out.txt')
 
 evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -608,9 +650,12 @@ system.time({for (poormetab in c(TRUE, FALSE)){
 parallel::stopCluster(cluster)
 ```
 
-Finally, we want to do sensitivity analysis for independent Monte Carlo, because that lets us estimate sensitivity to each physiological parameter independently.
+Finally, we want to do sensitivity analysis for independent Monte Carlo, because 
+that lets us estimate sensitivity to each physiological parameter independently.
 
-The first thing we need to do is generate two separate populations using independent Monte Carlo. To save space, we'll set this up as a function that takes the seed as an argument.
+The first thing we need to do is generate two separate populations using 
+independent Monte Carlo. To save space, we'll set this up as a function that 
+takes the seed as an argument.
 
 ```{r, eval=FALSE}
 indep_gen <- function(nsamp=1000, sigma.factor=0.3){
@@ -702,9 +747,13 @@ indep.bio1 <- indep_gen()
 indep.bio2 <- indep_gen()
 ```
 
-The innermost function (over parameters) will be the same, but we need to modify the function of things to do for each chemical, because we need to do sensitivity analysis for the physiological parameters independently, not as a group.
+The innermost function (over parameters) will be the same, but we need to 
+modify the function of things to do for each chemical, because we need to do 
+sensitivity analysis for the physiological parameters independently, not as a 
+group.
 
 ```{r, eval=FALSE}
+ Commented out because of problem with Pandoc for Windows:
 doforeachchem_indep <- function(this.chemcas, #CAS for one chemical 
                                 model, #HTTK model to use
                                 species='Human', #Species for HTTK
@@ -932,7 +981,7 @@ css.method <- "analytic"
 chemlist <- httk::get_cheminfo(info="CAS",
                                exclude.fub.zero=FALSE)
 
-cluster <- parallel::makeCluster(40, 
+cluster <- parallel::makeCluster(2, # Was 40, reduced for simpler processors 
                                  outfile='globalsens_indep_parallel_out.txt')
 
 evalout <- parallel::clusterEvalQ(cl=cluster,
@@ -940,12 +989,12 @@ evalout <- parallel::clusterEvalQ(cl=cluster,
                                    library(httk)})
 parallel::clusterExport(cl = cluster,
                         varlist = c('doforeachparam'))
-#Set seeds on all workers for reproducibility
+Set seeds on all workers for reproducibility
 parallel::clusterSetRNGStream(cluster, 
                               TeachingDemos::char2seed("Caroline Ring"))
 for (poormetab in c(TRUE, FALSE)){
   for (fup.censor in c(TRUE, FALSE)) {
-    #Now loop over the chemicals
+    Now loop over the chemicals
     eff.allchems <- rbindlist(
       parLapplyLB(cl=cluster,
                   chemlist, 
@@ -958,7 +1007,7 @@ for (poormetab in c(TRUE, FALSE)){
                   indep.model.bio2=indep.bio2,
                   poormetab=poormetab,
                   fup.censor=fup.censor,
-                  nsamp=1000))
+                  nsamp=10))  should be 1000, reduced for speed
     saveRDS(eff.allchems, 
             paste0('data/',
                    'sens_glenisaacs_nhanes_', 

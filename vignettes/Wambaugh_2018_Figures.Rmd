@@ -4,12 +4,12 @@ author: "John Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (Submitted): Creating All Figures}
+  %\VignetteIndexEntry{Wambaugh et al. (2018): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=F}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) "Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics" from Toxicological Sciences

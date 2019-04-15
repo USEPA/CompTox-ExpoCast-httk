@@ -12,54 +12,284 @@
 
 <meta name="author" content="Caroline Ring" />
 
-<meta name="date" content="2018-04-05" />
+<meta name="date" content="2019-02-04" />
 
-<title>Ring et al. 2017 Global sensitivity analysis plotting</title>
+<title>Ring et al. 2017 Global sensitivity analysis plotting</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 </head>
 
@@ -68,363 +298,363 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Ring et al. 2017 Global sensitivity analysis plotting</h1>
+<h1 class="title toc-ignore">Ring et al. 2017 Global sensitivity analysis plotting</h1>
 <h4 class="author"><em>Caroline Ring</em></h4>
-<h4 class="date"><em>2018-04-05</em></h4>
+<h4 class="date"><em>2019-02-04</em></h4>
 
 
 
 <p>This vignette includes the code to create the global sensitivity analysis plots included in the HTTK-Pop paper.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
-<span class="kw">library</span>(httk)
-<span class="kw">library</span>(ggplot2) 
-<span class="kw">library</span>(scales)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(data.table)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(httk)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(ggplot2) </a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(scales)</a></code></pre></div>
 <p>First, read in the global sensitivity analysis data. Do this for all four combinations of the <code>poormetab</code> and <code>fup.censor</code> conditions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> '3compartmentss'</span>
-css.method &lt;-<span class="st"> 'analytic'</span>
-
-<span class="co">#All combinations of poormetab and fup.censor</span>
-pmfc &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">poormetab=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
-                    <span class="dt">fup.censor=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
-                    <span class="dt">fuptofub=</span><span class="ot">TRUE</span>)
-<span class="co">#Initialize list of data.tables</span>
-dt.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode=</span><span class="st">&quot;list&quot;</span>, <span class="dt">length=</span><span class="kw">nrow</span>(pmfc))
-
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(pmfc)){
-  dt.list[[i]] &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
-                   <span class="st">'sens_glenisaacs_nhanes_'</span>, 
-                   <span class="st">'allchems_'</span>,
-                   <span class="st">'allgroups_'</span>,
-                   model,
-                   <span class="st">'_'</span>,
-                   css.method,
-                   <span class="st">'_fup_censor_'</span>,
-                   pmfc[i, <span class="st">'fup.censor'</span>],
-                   <span class="st">'_poormetab_'</span>,
-                   pmfc[i, <span class="st">'poormetab'</span>],
-                   <span class="kw">ifelse</span>(pmfc[i, <span class="st">'fuptofub'</span>], <span class="st">&quot;_FuptoFub&quot;</span>, <span class="st">&quot;&quot;</span>),
-                   <span class="st">'.Rdata'</span>))
-  dt.list[[i]][, poormetab:<span class="er">=</span>pmfc[i, <span class="st">'poormetab'</span>]]
-  dt.list[[i]][, fup.censor:<span class="er">=</span>pmfc[i, <span class="st">'fup.censor'</span>]]
-  dt.list[[i]][, fuptofub:<span class="er">=</span>pmfc[i, <span class="st">'fuptofub'</span>]]
-}
-
-dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(dt.list)
-<span class="kw">rm</span>(dt.list)
-<span class="kw">setnames</span>(dat, <span class="kw">c</span>(<span class="st">'chemcas'</span>, <span class="st">'rn'</span>),
-         <span class="kw">c</span>(<span class="st">'CAS'</span>, <span class="st">'param'</span>))</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">model &lt;-<span class="st"> &#39;3compartmentss&#39;</span></a>
+<a class="sourceLine" id="cb2-2" title="2">css.method &lt;-<span class="st"> &#39;analytic&#39;</span></a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#All combinations of poormetab and fup.censor</span></a>
+<a class="sourceLine" id="cb2-5" title="5">pmfc &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">poormetab=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb2-6" title="6">                    <span class="dt">fup.censor=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb2-7" title="7">                    <span class="dt">fuptofub=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#Initialize list of data.tables</span></a>
+<a class="sourceLine" id="cb2-9" title="9">dt.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode=</span><span class="st">&quot;list&quot;</span>, <span class="dt">length=</span><span class="kw">nrow</span>(pmfc))</a>
+<a class="sourceLine" id="cb2-10" title="10"></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pmfc)){</a>
+<a class="sourceLine" id="cb2-12" title="12">  dt.list[[i]] &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">&#39;data/&#39;</span>,</a>
+<a class="sourceLine" id="cb2-13" title="13">                   <span class="st">&#39;sens_glenisaacs_nhanes_&#39;</span>, </a>
+<a class="sourceLine" id="cb2-14" title="14">                   <span class="st">&#39;allchems_&#39;</span>,</a>
+<a class="sourceLine" id="cb2-15" title="15">                   <span class="st">&#39;allgroups_&#39;</span>,</a>
+<a class="sourceLine" id="cb2-16" title="16">                   model,</a>
+<a class="sourceLine" id="cb2-17" title="17">                   <span class="st">&#39;_&#39;</span>,</a>
+<a class="sourceLine" id="cb2-18" title="18">                   css.method,</a>
+<a class="sourceLine" id="cb2-19" title="19">                   <span class="st">&#39;_fup_censor_&#39;</span>,</a>
+<a class="sourceLine" id="cb2-20" title="20">                   pmfc[i, <span class="st">&#39;fup.censor&#39;</span>],</a>
+<a class="sourceLine" id="cb2-21" title="21">                   <span class="st">&#39;_poormetab_&#39;</span>,</a>
+<a class="sourceLine" id="cb2-22" title="22">                   pmfc[i, <span class="st">&#39;poormetab&#39;</span>],</a>
+<a class="sourceLine" id="cb2-23" title="23">                   <span class="kw">ifelse</span>(pmfc[i, <span class="st">&#39;fuptofub&#39;</span>], <span class="st">&quot;_FuptoFub&quot;</span>, <span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb2-24" title="24">                   <span class="st">&#39;.Rdata&#39;</span>))</a>
+<a class="sourceLine" id="cb2-25" title="25">  dt.list[[i]][, poormetab<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;poormetab&#39;</span>]]</a>
+<a class="sourceLine" id="cb2-26" title="26">  dt.list[[i]][, fup.censor<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;fup.censor&#39;</span>]]</a>
+<a class="sourceLine" id="cb2-27" title="27">  dt.list[[i]][, fuptofub<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;fuptofub&#39;</span>]]</a>
+<a class="sourceLine" id="cb2-28" title="28">}</a>
+<a class="sourceLine" id="cb2-29" title="29"></a>
+<a class="sourceLine" id="cb2-30" title="30">dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(dt.list)</a>
+<a class="sourceLine" id="cb2-31" title="31"><span class="kw">rm</span>(dt.list)</a>
+<a class="sourceLine" id="cb2-32" title="32"><span class="kw">setnames</span>(dat, <span class="kw">c</span>(<span class="st">&#39;chemcas&#39;</span>, <span class="st">&#39;rn&#39;</span>),</a>
+<a class="sourceLine" id="cb2-33" title="33">         <span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;param&#39;</span>))</a></code></pre></div>
 <p>Next, add measured values of <code>Funbound.plasma</code> and <code>CLint</code> to the data table. Get these measured values from <code>httk</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cheminfo.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk::<span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'3compartmentss'</span>,
-                                          <span class="dt">info=</span><span class="kw">c</span>(<span class="st">'CAS'</span>,<span class="st">'Compound'</span>,
-                                                 <span class="st">'Funbound.plasma'</span>),
-                                          <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))
-<span class="kw">setnames</span>(cheminfo.dt,
-         <span class="st">'Human.Funbound.plasma'</span>,
-         <span class="st">'Funbound.plasma'</span>
-)
-
-cheminfo.dt[, Clint:<span class="er">=</span><span class="kw">sapply</span>(CAS, 
-                            function(x) <span class="kw">parameterize_steadystate</span>(<span class="dt">chem.cas=</span>x,
-                                                                 <span class="dt">species=</span><span class="st">'Human'</span>)$Clint)]
-
-dat &lt;-<span class="st"> </span><span class="kw">merge</span>(dat,
-                  cheminfo.dt[, .(CAS,
-                                  Compound,
-                                  Funbound.plasma,
-                                  Clint)],
-                  <span class="dt">by=</span><span class="st">'CAS'</span>)
-  
-  <span class="kw">setnames</span>(dat, <span class="st">'Clint'</span>, <span class="st">'CLint'</span>)
-  dat[param==<span class="st">'Clint'</span>, param:<span class="er">=</span><span class="st">'CLint'</span>]
-  dat[param==<span class="st">'Funbound.plasma'</span>, param:<span class="er">=</span><span class="st">'Fub'</span>]
-  dat[, param:<span class="er">=</span><span class="kw">factor</span>(param, 
-                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">'CLint'</span>,
-                                       <span class="st">'Fub'</span>,
-                                       <span class="st">'phys.par'</span>))]</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">cheminfo.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">&#39;3compartmentss&#39;</span>,</a>
+<a class="sourceLine" id="cb3-2" title="2">                                          <span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>,<span class="st">&#39;Compound&#39;</span>,</a>
+<a class="sourceLine" id="cb3-3" title="3">                                                 <span class="st">&#39;Funbound.plasma&#39;</span>),</a>
+<a class="sourceLine" id="cb3-4" title="4">                                          <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="kw">setnames</span>(cheminfo.dt,</a>
+<a class="sourceLine" id="cb3-6" title="6">         <span class="st">&#39;Human.Funbound.plasma&#39;</span>,</a>
+<a class="sourceLine" id="cb3-7" title="7">         <span class="st">&#39;Funbound.plasma&#39;</span></a>
+<a class="sourceLine" id="cb3-8" title="8">)</a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10">cheminfo.dt[, Clint<span class="op">:</span><span class="er">=</span><span class="kw">sapply</span>(CAS, </a>
+<a class="sourceLine" id="cb3-11" title="11">                            <span class="cf">function</span>(x) <span class="kw">parameterize_steadystate</span>(<span class="dt">chem.cas=</span>x,</a>
+<a class="sourceLine" id="cb3-12" title="12">                                                                 <span class="dt">species=</span><span class="st">&#39;Human&#39;</span>)<span class="op">$</span>Clint)]</a>
+<a class="sourceLine" id="cb3-13" title="13"></a>
+<a class="sourceLine" id="cb3-14" title="14">dat &lt;-<span class="st"> </span><span class="kw">merge</span>(dat,</a>
+<a class="sourceLine" id="cb3-15" title="15">                  cheminfo.dt[, .(CAS,</a>
+<a class="sourceLine" id="cb3-16" title="16">                                  Compound,</a>
+<a class="sourceLine" id="cb3-17" title="17">                                  Funbound.plasma,</a>
+<a class="sourceLine" id="cb3-18" title="18">                                  Clint)],</a>
+<a class="sourceLine" id="cb3-19" title="19">                  <span class="dt">by=</span><span class="st">&#39;CAS&#39;</span>)</a>
+<a class="sourceLine" id="cb3-20" title="20">  </a>
+<a class="sourceLine" id="cb3-21" title="21">  <span class="kw">setnames</span>(dat, <span class="st">&#39;Clint&#39;</span>, <span class="st">&#39;CLint&#39;</span>)</a>
+<a class="sourceLine" id="cb3-22" title="22">  dat[param<span class="op">==</span><span class="st">&#39;Clint&#39;</span>, param<span class="op">:</span><span class="er">=</span><span class="st">&#39;CLint&#39;</span>]</a>
+<a class="sourceLine" id="cb3-23" title="23">  dat[param<span class="op">==</span><span class="st">&#39;Funbound.plasma&#39;</span>, param<span class="op">:</span><span class="er">=</span><span class="st">&#39;Fub&#39;</span>]</a>
+<a class="sourceLine" id="cb3-24" title="24">  dat[, param<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(param, </a>
+<a class="sourceLine" id="cb3-25" title="25">                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&#39;CLint&#39;</span>,</a>
+<a class="sourceLine" id="cb3-26" title="26">                                       <span class="st">&#39;Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb3-27" title="27">                                       <span class="st">&#39;phys.par&#39;</span>))]</a></code></pre></div>
 <p>Next, set up a few things to prepare for plotting. First, change the factor levels for <code>poormetab</code> and <code>fup.censor</code> to be more informative than just TRUE and FALSE.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  
-  <span class="co">#change poormetab factor levels to be informative</span>
-  dat[, poormetab:<span class="er">=</span><span class="kw">factor</span>(poormetab,
-                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),
-                              <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'excluded'</span>,
-                                       <span class="st">'included'</span>))]
-  <span class="co">#change fup.censor factor levels to be informative</span>
-  dat[, fup.censor:<span class="er">=</span><span class="kw">factor</span>(fup.censor,
-                               <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),
-                               <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'&lt;lod=lod/2'</span>,
-                                        <span class="st">'&lt;lod censored'</span>))]
-  <span class="co">#change fup.censor name is be more informative</span>
-  <span class="kw">setnames</span>(dat, <span class="st">'fup.censor'</span>, <span class="st">'Fub'</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">  </a>
+<a class="sourceLine" id="cb4-2" title="2">  <span class="co">#change poormetab factor levels to be informative</span></a>
+<a class="sourceLine" id="cb4-3" title="3">  dat[, poormetab<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(poormetab,</a>
+<a class="sourceLine" id="cb4-4" title="4">                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb4-5" title="5">                              <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&#39;excluded&#39;</span>,</a>
+<a class="sourceLine" id="cb4-6" title="6">                                       <span class="st">&#39;included&#39;</span>))]</a>
+<a class="sourceLine" id="cb4-7" title="7">  <span class="co">#change fup.censor factor levels to be informative</span></a>
+<a class="sourceLine" id="cb4-8" title="8">  dat[, fup.censor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(fup.censor,</a>
+<a class="sourceLine" id="cb4-9" title="9">                               <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb4-10" title="10">                               <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&#39;&lt;lod=lod/2&#39;</span>,</a>
+<a class="sourceLine" id="cb4-11" title="11">                                        <span class="st">&#39;&lt;lod censored&#39;</span>))]</a>
+<a class="sourceLine" id="cb4-12" title="12">  <span class="co">#change fup.censor name is be more informative</span></a>
+<a class="sourceLine" id="cb4-13" title="13">  <span class="kw">setnames</span>(dat, <span class="st">&#39;fup.censor&#39;</span>, <span class="st">&#39;Fub&#39;</span>)</a></code></pre></div>
 <p>And set up a labeller function to more informatively label the plots by parameter.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_labeller_fun &lt;-<span class="st"> </span>function(DF){
- if (variable==<span class="st">'param'</span>){
-   <span class="kw">return</span>(<span class="kw">paste</span>(<span class="st">'i ='</span>, value))
- }else{
-   <span class="kw">return</span>(<span class="kw">paste</span>(variable,value))
- }
-}</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">my_labeller_fun &lt;-<span class="st"> </span><span class="cf">function</span>(DF){</a>
+<a class="sourceLine" id="cb5-2" title="2"> <span class="cf">if</span> (variable<span class="op">==</span><span class="st">&#39;param&#39;</span>){</a>
+<a class="sourceLine" id="cb5-3" title="3">   <span class="kw">return</span>(<span class="kw">paste</span>(<span class="st">&#39;i =&#39;</span>, value))</a>
+<a class="sourceLine" id="cb5-4" title="4"> }<span class="cf">else</span>{</a>
+<a class="sourceLine" id="cb5-5" title="5">   <span class="kw">return</span>(<span class="kw">paste</span>(variable,value))</a>
+<a class="sourceLine" id="cb5-6" title="6"> }</a>
+<a class="sourceLine" id="cb5-7" title="7">}</a></code></pre></div>
 <p>Next, since we’re going to plot measured CLint on a log scale, we need to handle the case where measured CLint was 0. It’s a bit kludgy, but we’ll just plot CLint = 0 as CLint = 1e-8, so that those points will actually show up on the log-scale plot.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat[CLint==<span class="dv">0</span>, CLint:<span class="er">=</span><span class="fl">1e-8</span>] <span class="co">#plot them as 1e-8 but label them as zero</span>
-<span class="co">#Hack the log-scaled x-axis so that CLint==0 points have some buffer space for display</span>
-CLint.breaks &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1e-8</span>, <span class="fl">1e-6</span>, <span class="fl">1e-4</span>, <span class="fl">1e-2</span>, <span class="fl">1e0</span>, <span class="fl">1e2</span>, <span class="fl">1e4</span>)
-<span class="co">#Label the CLint breaks</span>
-CLint.labels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">expression</span>(<span class="dv">0</span>^{<span class="kw">paste</span>(<span class="st">' '</span>)}), <span class="kw">expression</span>(<span class="dv">10</span>^{-<span class="dv">6</span>}), 
-                  <span class="kw">expression</span>(<span class="dv">10</span>^{-<span class="dv">4</span>}),
-                  <span class="kw">expression</span>(<span class="dv">10</span>^{-<span class="dv">2</span>}), <span class="kw">expression</span>(<span class="dv">10</span>^<span class="dv">0</span>),
-                  <span class="kw">expression</span>(<span class="dv">10</span>^<span class="dv">2</span>), <span class="kw">expression</span>(<span class="dv">10</span>^<span class="dv">4</span>))</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">dat[CLint<span class="op">==</span><span class="dv">0</span>, CLint<span class="op">:</span><span class="er">=</span><span class="fl">1e-8</span>] <span class="co">#plot them as 1e-8 but label them as zero</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">#Hack the log-scaled x-axis so that CLint==0 points have some buffer space for display</span></a>
+<a class="sourceLine" id="cb6-3" title="3">CLint.breaks &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1e-8</span>, <span class="fl">1e-6</span>, <span class="fl">1e-4</span>, <span class="fl">1e-2</span>, <span class="fl">1e0</span>, <span class="fl">1e2</span>, <span class="fl">1e4</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#Label the CLint breaks</span></a>
+<a class="sourceLine" id="cb6-5" title="5">CLint.labels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">expression</span>(<span class="dv">0</span><span class="op">^</span>{<span class="kw">paste</span>(<span class="st">&#39; &#39;</span>)}), <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span>{<span class="op">-</span><span class="dv">6</span>}), </a>
+<a class="sourceLine" id="cb6-6" title="6">                  <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span>{<span class="op">-</span><span class="dv">4</span>}),</a>
+<a class="sourceLine" id="cb6-7" title="7">                  <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span>{<span class="op">-</span><span class="dv">2</span>}), <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span><span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb6-8" title="8">                  <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span><span class="dv">2</span>), <span class="kw">expression</span>(<span class="dv">10</span><span class="op">^</span><span class="dv">4</span>))</a></code></pre></div>
 <p>And define the colormap to use for the sensitivity values. I chose a multi-hue sequential palette from ColorBrewer, because the variations in hue make it easier to see where sensitivity index values fall into certain bins, and the yellow-green-blue palette shows up well against a gray plot background.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ylgnbu &lt;-<span class="st"> </span>RColorBrewer::<span class="kw">brewer.pal</span>(<span class="dt">n=</span><span class="dv">9</span>, <span class="dt">name=</span><span class="st">&quot;YlGnBu&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">ylgnbu &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">n=</span><span class="dv">9</span>, <span class="dt">name=</span><span class="st">&quot;YlGnBu&quot;</span>)</a></code></pre></div>
 <p>Finally, let’s actually make the plots.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for (ecg in <span class="kw">c</span>(<span class="st">'Total'</span>,
-                  <span class="st">'Age.6.11'</span>,
-                  <span class="st">'Age.12.19'</span>,
-                  <span class="st">'Age.20.65'</span>,
-                  <span class="st">'Age.GT65'</span>,
-                  <span class="st">'BMIgt30'</span>,
-                  <span class="st">'BMIle30'</span>,
-                  <span class="st">'Males'</span>,
-                  <span class="st">'Females'</span>,
-                  <span class="st">'ReproAgeFemale'</span>)){
-  for (fpb in <span class="kw">c</span>(<span class="ot">TRUE</span>)){
-    dt.tmp &lt;-<span class="st"> </span>dat[param %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">'CLint'</span>,
-                                       <span class="st">'Fub'</span>,
-                                       <span class="st">'phys.par'</span>) &amp;
-<span class="st">                         </span>ExpoCast.group==ecg &amp;
-<span class="st">                         </span>fuptofub==fpb, ]
-    <span class="kw">setorder</span>(dt.tmp,Si)
-    p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) +<span class="st"> </span>
-<span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,
-                       <span class="dt">y=</span>Funbound.plasma,
-                       <span class="dt">color=</span>Si,
-                       <span class="dt">fill=</span>Si,
-                       <span class="dt">order=</span>Si),
-                   <span class="dt">shape=</span><span class="dv">21</span>)+
-<span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                              <span class="dt">guide=</span><span class="st">'colourbar'</span>,
-                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                              <span class="dt">oob=</span>squish,
-                              <span class="dt">name=</span><span class="st">'First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i'</span>)+<span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span>
-<span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don't plot separate colorbar for fill</span>
-                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don't fill points for NAs</span>
-                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                             <span class="dt">oob=</span>squish)+
-<span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span>
-                           <span class="dt">breaks=</span>CLint.breaks,
-                           <span class="dt">labels=</span>CLint.labels) +
-<span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),
-                           <span class="dt">oob=</span>squish) +<span class="st"> </span><span class="co">#Funbound.plasma shouldn't be &gt;1 -- if it is, just pretend it's 1</span>
-<span class="co">#         facet_grid(poormetab*Fub~param,</span>
-<span class="co">#                    labeller=my_labeller_fun)+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(poormetab*Fub~param, 
-             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),
-                                        <span class="dt">Fub =</span> label_both,
-                                        <span class="dt">param=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) +
-<span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">'Measured CLint (uL/min/million cells)'</span>,
-             <span class="dt">y=</span><span class="st">'Measured Fub'</span>,
-             <span class="dt">title=</span>ecg) +
-<span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span>
-              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),
-              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) 
-  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">'pdf_figures/'</span>,
-                  <span class="kw">paste</span>(<span class="st">'Si'</span>,
-                        <span class="st">'httkpop'</span>,
-                        <span class="st">'group'</span>,
-                        ecg,
-                        <span class="st">'model'</span>,
-                        model,
-                        <span class="st">&quot;FuptoFub&quot;</span>,
-                        fpb,
-                        <span class="dt">sep=</span><span class="st">'_'</span>),
-                  <span class="st">'.pdf'</span>),
-         <span class="dt">plot=</span>p,
-         <span class="dt">height=</span><span class="fl">8.5</span>,
-         <span class="dt">width=</span><span class="dv">11</span>)
-<span class="kw">print</span>(p)
-    }
-}</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="cf">for</span> (ecg <span class="cf">in</span> <span class="kw">c</span>(<span class="st">&#39;Total&#39;</span>,</a>
+<a class="sourceLine" id="cb8-2" title="2">                  <span class="st">&#39;Age.6.11&#39;</span>,</a>
+<a class="sourceLine" id="cb8-3" title="3">                  <span class="st">&#39;Age.12.19&#39;</span>,</a>
+<a class="sourceLine" id="cb8-4" title="4">                  <span class="st">&#39;Age.20.65&#39;</span>,</a>
+<a class="sourceLine" id="cb8-5" title="5">                  <span class="st">&#39;Age.GT65&#39;</span>,</a>
+<a class="sourceLine" id="cb8-6" title="6">                  <span class="st">&#39;BMIgt30&#39;</span>,</a>
+<a class="sourceLine" id="cb8-7" title="7">                  <span class="st">&#39;BMIle30&#39;</span>,</a>
+<a class="sourceLine" id="cb8-8" title="8">                  <span class="st">&#39;Males&#39;</span>,</a>
+<a class="sourceLine" id="cb8-9" title="9">                  <span class="st">&#39;Females&#39;</span>,</a>
+<a class="sourceLine" id="cb8-10" title="10">                  <span class="st">&#39;ReproAgeFemale&#39;</span>)){</a>
+<a class="sourceLine" id="cb8-11" title="11">  <span class="cf">for</span> (fpb <span class="cf">in</span> <span class="kw">c</span>(<span class="ot">TRUE</span>)){</a>
+<a class="sourceLine" id="cb8-12" title="12">    dt.tmp &lt;-<span class="st"> </span>dat[param <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CLint&#39;</span>,</a>
+<a class="sourceLine" id="cb8-13" title="13">                                       <span class="st">&#39;Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb8-14" title="14">                                       <span class="st">&#39;phys.par&#39;</span>) <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="st">                         </span>ExpoCast.group<span class="op">==</span>ecg <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb8-16" title="16"><span class="st">                         </span>fuptofub<span class="op">==</span>fpb, ]</a>
+<a class="sourceLine" id="cb8-17" title="17">    <span class="kw">setorder</span>(dt.tmp,Si)</a>
+<a class="sourceLine" id="cb8-18" title="18">    p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-19" title="19"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,</a>
+<a class="sourceLine" id="cb8-20" title="20">                       <span class="dt">y=</span>Funbound.plasma,</a>
+<a class="sourceLine" id="cb8-21" title="21">                       <span class="dt">color=</span>Si,</a>
+<a class="sourceLine" id="cb8-22" title="22">                       <span class="dt">fill=</span>Si,</a>
+<a class="sourceLine" id="cb8-23" title="23">                       <span class="dt">order=</span>Si),</a>
+<a class="sourceLine" id="cb8-24" title="24">                   <span class="dt">shape=</span><span class="dv">21</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb8-25" title="25"><span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb8-26" title="26">                              <span class="dt">guide=</span><span class="st">&#39;colourbar&#39;</span>,</a>
+<a class="sourceLine" id="cb8-27" title="27">                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb8-28" title="28">                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb8-29" title="29">                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb8-30" title="30">                              <span class="dt">oob=</span>squish,</a>
+<a class="sourceLine" id="cb8-31" title="31">                              <span class="dt">name=</span><span class="st">&#39;First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i&#39;</span>)<span class="op">+</span><span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span></a>
+<a class="sourceLine" id="cb8-32" title="32"><span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb8-33" title="33">                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don&#39;t plot separate colorbar for fill</span></a>
+<a class="sourceLine" id="cb8-34" title="34">                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don&#39;t fill points for NAs</span></a>
+<a class="sourceLine" id="cb8-35" title="35">                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb8-36" title="36">                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb8-37" title="37">                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb8-38" title="38">                             <span class="dt">oob=</span>squish)<span class="op">+</span></a>
+<a class="sourceLine" id="cb8-39" title="39"><span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">&#39;log10&#39;</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span></a>
+<a class="sourceLine" id="cb8-40" title="40">                           <span class="dt">breaks=</span>CLint.breaks,</a>
+<a class="sourceLine" id="cb8-41" title="41">                           <span class="dt">labels=</span>CLint.labels) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-42" title="42"><span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb8-43" title="43">                           <span class="dt">oob=</span>squish) <span class="op">+</span><span class="st"> </span><span class="co">#Funbound.plasma shouldn&#39;t be &gt;1 -- if it is, just pretend it&#39;s 1</span></a>
+<a class="sourceLine" id="cb8-44" title="44"><span class="co">#         facet_grid(poormetab*Fub~param,</span></a>
+<a class="sourceLine" id="cb8-45" title="45"><span class="co">#                    labeller=my_labeller_fun)+</span></a>
+<a class="sourceLine" id="cb8-46" title="46"><span class="st">  </span><span class="kw">facet_grid</span>(poormetab<span class="op">*</span>Fub<span class="op">~</span>param, </a>
+<a class="sourceLine" id="cb8-47" title="47">             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),</a>
+<a class="sourceLine" id="cb8-48" title="48">                                        <span class="dt">Fub =</span> label_both,</a>
+<a class="sourceLine" id="cb8-49" title="49">                                        <span class="dt">param=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-50" title="50"><span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;Measured CLint (uL/min/million cells)&#39;</span>,</a>
+<a class="sourceLine" id="cb8-51" title="51">             <span class="dt">y=</span><span class="st">&#39;Measured Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb8-52" title="52">             <span class="dt">title=</span>ecg) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-53" title="53"><span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span></a>
+<a class="sourceLine" id="cb8-54" title="54">              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb8-55" title="55">              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) </a>
+<a class="sourceLine" id="cb8-56" title="56">  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb8-57" title="57">                  <span class="kw">paste</span>(<span class="st">&#39;Si&#39;</span>,</a>
+<a class="sourceLine" id="cb8-58" title="58">                        <span class="st">&#39;httkpop&#39;</span>,</a>
+<a class="sourceLine" id="cb8-59" title="59">                        <span class="st">&#39;group&#39;</span>,</a>
+<a class="sourceLine" id="cb8-60" title="60">                        ecg,</a>
+<a class="sourceLine" id="cb8-61" title="61">                        <span class="st">&#39;model&#39;</span>,</a>
+<a class="sourceLine" id="cb8-62" title="62">                        model,</a>
+<a class="sourceLine" id="cb8-63" title="63">                        <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb8-64" title="64">                        fpb,</a>
+<a class="sourceLine" id="cb8-65" title="65">                        <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb8-66" title="66">                  <span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb8-67" title="67">         <span class="dt">plot=</span>p,</a>
+<a class="sourceLine" id="cb8-68" title="68">         <span class="dt">height=</span><span class="fl">8.5</span>,</a>
+<a class="sourceLine" id="cb8-69" title="69">         <span class="dt">width=</span><span class="dv">11</span>)</a>
+<a class="sourceLine" id="cb8-70" title="70"><span class="kw">print</span>(p)</a>
+<a class="sourceLine" id="cb8-71" title="71">    }</a>
+<a class="sourceLine" id="cb8-72" title="72">}</a></code></pre></div>
 <p>We’d also like to plot the sensitivity analysis results for independent Monte Carlo – both showing the same data as for correlated Monte Carlo (sensitivity to the physiological parameters as a group), and showing sensitivity to each of the physiological parameters independently.</p>
 <p>So first, we read in the independent MC data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Initialize list of data.tables</span>
-dt.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode=</span><span class="st">&quot;list&quot;</span>, <span class="dt">length=</span><span class="kw">nrow</span>(pmfc))
-
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(pmfc)){
-  dt.list[[i]] &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
-                   <span class="st">'sens_glenisaacs_nhanes_'</span>, 
-                   <span class="st">'allchems_'</span>,
-                   <span class="st">'indepMC_'</span>,
-                   model,
-                   <span class="st">'_'</span>,
-                   css.method,
-                   <span class="st">'_fup_censor_'</span>,
-                   pmfc[i, <span class="st">'fup.censor'</span>],
-                   <span class="st">'_poormetab_'</span>,
-                   pmfc[i, <span class="st">'poormetab'</span>],
-                    <span class="kw">ifelse</span>(pmfc[i, <span class="st">'fuptofub'</span>], <span class="st">&quot;_FuptoFub&quot;</span>, <span class="st">&quot;&quot;</span>),
-                   <span class="st">'.Rdata'</span>))
-  dt.list[[i]][, poormetab:<span class="er">=</span>pmfc[i, <span class="st">'poormetab'</span>]]
-  dt.list[[i]][, fup.censor:<span class="er">=</span>pmfc[i, <span class="st">'fup.censor'</span>]]
-  dt.list[[i]][, fuptofub:<span class="er">=</span>pmfc[i, <span class="st">'fuptofub'</span>]]
-}
-
-dat_indep &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(dt.list)
-<span class="kw">setnames</span>(dat_indep, <span class="kw">c</span>(<span class="st">'chemcas'</span>, <span class="st">'rn'</span>),
-         <span class="kw">c</span>(<span class="st">'CAS'</span>, <span class="st">'param'</span>))
- dat_indep &lt;-<span class="st"> </span><span class="kw">merge</span>(dat_indep,
-                  cheminfo.dt[, .(CAS,
-                                  Compound,
-                                  Funbound.plasma,
-                                  Clint)],
-                  <span class="dt">by=</span><span class="st">'CAS'</span>)
-  
-  <span class="kw">setnames</span>(dat_indep, <span class="st">'Clint'</span>, <span class="st">'CLint'</span>)
-  dat_indep[param==<span class="st">'Clint'</span>, param:<span class="er">=</span><span class="st">'CLint'</span>]
-  dat_indep[param==<span class="st">'Funbound.plasma'</span>, param:<span class="er">=</span><span class="st">'Fub'</span>]
-  dat_indep[, param:<span class="er">=</span><span class="kw">factor</span>(param, 
-                          <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">'CLint'</span>,
-                                   <span class="st">'Fub'</span>,
-                                   <span class="st">'phys.par'</span>,
-                                   <span class="kw">unique</span>(param)[!(<span class="kw">unique</span>(param) %in%<span class="st">  </span>
-<span class="st">                                                     </span><span class="kw">c</span>(<span class="st">'CLint'</span>,
-                                                       <span class="st">'Fub'</span>,
-                                                       <span class="st">'phys.par'</span>))]))]
-  <span class="co">#change poormetab factor levels to be informative</span>
-  dat_indep[, poormetab:<span class="er">=</span><span class="kw">factor</span>(poormetab,
-                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),
-                              <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'excluded'</span>,
-                                       <span class="st">'included'</span>))]
-  <span class="co">#change fup.censor factor levels to be informative</span>
-  dat_indep[, fup.censor:<span class="er">=</span><span class="kw">factor</span>(fup.censor,
-                               <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),
-                               <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'&lt;lod=lod/2'</span>,
-                                        <span class="st">'&lt;lod censored'</span>))]
-  <span class="co">#change fup.censor name is be more informative</span>
-  <span class="kw">setnames</span>(dat_indep, <span class="st">'fup.censor'</span>, <span class="st">'Fub'</span>)
-dat_indep[CLint==<span class="dv">0</span>, CLint:<span class="er">=</span><span class="fl">1e-8</span>] <span class="co">#plot them as 1e-8 but label them as zero</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">#Initialize list of data.tables</span></a>
+<a class="sourceLine" id="cb9-2" title="2">dt.list &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">mode=</span><span class="st">&quot;list&quot;</span>, <span class="dt">length=</span><span class="kw">nrow</span>(pmfc))</a>
+<a class="sourceLine" id="cb9-3" title="3"></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pmfc)){</a>
+<a class="sourceLine" id="cb9-5" title="5">  dt.list[[i]] &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">&#39;data/&#39;</span>,</a>
+<a class="sourceLine" id="cb9-6" title="6">                   <span class="st">&#39;sens_glenisaacs_nhanes_&#39;</span>, </a>
+<a class="sourceLine" id="cb9-7" title="7">                   <span class="st">&#39;allchems_&#39;</span>,</a>
+<a class="sourceLine" id="cb9-8" title="8">                   <span class="st">&#39;indepMC_&#39;</span>,</a>
+<a class="sourceLine" id="cb9-9" title="9">                   model,</a>
+<a class="sourceLine" id="cb9-10" title="10">                   <span class="st">&#39;_&#39;</span>,</a>
+<a class="sourceLine" id="cb9-11" title="11">                   css.method,</a>
+<a class="sourceLine" id="cb9-12" title="12">                   <span class="st">&#39;_fup_censor_&#39;</span>,</a>
+<a class="sourceLine" id="cb9-13" title="13">                   pmfc[i, <span class="st">&#39;fup.censor&#39;</span>],</a>
+<a class="sourceLine" id="cb9-14" title="14">                   <span class="st">&#39;_poormetab_&#39;</span>,</a>
+<a class="sourceLine" id="cb9-15" title="15">                   pmfc[i, <span class="st">&#39;poormetab&#39;</span>],</a>
+<a class="sourceLine" id="cb9-16" title="16">                    <span class="kw">ifelse</span>(pmfc[i, <span class="st">&#39;fuptofub&#39;</span>], <span class="st">&quot;_FuptoFub&quot;</span>, <span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb9-17" title="17">                   <span class="st">&#39;.Rdata&#39;</span>))</a>
+<a class="sourceLine" id="cb9-18" title="18">  dt.list[[i]][, poormetab<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;poormetab&#39;</span>]]</a>
+<a class="sourceLine" id="cb9-19" title="19">  dt.list[[i]][, fup.censor<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;fup.censor&#39;</span>]]</a>
+<a class="sourceLine" id="cb9-20" title="20">  dt.list[[i]][, fuptofub<span class="op">:</span><span class="er">=</span>pmfc[i, <span class="st">&#39;fuptofub&#39;</span>]]</a>
+<a class="sourceLine" id="cb9-21" title="21">}</a>
+<a class="sourceLine" id="cb9-22" title="22"></a>
+<a class="sourceLine" id="cb9-23" title="23">dat_indep &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(dt.list)</a>
+<a class="sourceLine" id="cb9-24" title="24"><span class="kw">setnames</span>(dat_indep, <span class="kw">c</span>(<span class="st">&#39;chemcas&#39;</span>, <span class="st">&#39;rn&#39;</span>),</a>
+<a class="sourceLine" id="cb9-25" title="25">         <span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;param&#39;</span>))</a>
+<a class="sourceLine" id="cb9-26" title="26"> dat_indep &lt;-<span class="st"> </span><span class="kw">merge</span>(dat_indep,</a>
+<a class="sourceLine" id="cb9-27" title="27">                  cheminfo.dt[, .(CAS,</a>
+<a class="sourceLine" id="cb9-28" title="28">                                  Compound,</a>
+<a class="sourceLine" id="cb9-29" title="29">                                  Funbound.plasma,</a>
+<a class="sourceLine" id="cb9-30" title="30">                                  Clint)],</a>
+<a class="sourceLine" id="cb9-31" title="31">                  <span class="dt">by=</span><span class="st">&#39;CAS&#39;</span>)</a>
+<a class="sourceLine" id="cb9-32" title="32">  </a>
+<a class="sourceLine" id="cb9-33" title="33">  <span class="kw">setnames</span>(dat_indep, <span class="st">&#39;Clint&#39;</span>, <span class="st">&#39;CLint&#39;</span>)</a>
+<a class="sourceLine" id="cb9-34" title="34">  dat_indep[param<span class="op">==</span><span class="st">&#39;Clint&#39;</span>, param<span class="op">:</span><span class="er">=</span><span class="st">&#39;CLint&#39;</span>]</a>
+<a class="sourceLine" id="cb9-35" title="35">  dat_indep[param<span class="op">==</span><span class="st">&#39;Funbound.plasma&#39;</span>, param<span class="op">:</span><span class="er">=</span><span class="st">&#39;Fub&#39;</span>]</a>
+<a class="sourceLine" id="cb9-36" title="36">  dat_indep[, param<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(param, </a>
+<a class="sourceLine" id="cb9-37" title="37">                          <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&#39;CLint&#39;</span>,</a>
+<a class="sourceLine" id="cb9-38" title="38">                                   <span class="st">&#39;Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb9-39" title="39">                                   <span class="st">&#39;phys.par&#39;</span>,</a>
+<a class="sourceLine" id="cb9-40" title="40">                                   <span class="kw">unique</span>(param)[<span class="op">!</span>(<span class="kw">unique</span>(param) <span class="op">%in%</span><span class="st">  </span></a>
+<a class="sourceLine" id="cb9-41" title="41"><span class="st">                                                     </span><span class="kw">c</span>(<span class="st">&#39;CLint&#39;</span>,</a>
+<a class="sourceLine" id="cb9-42" title="42">                                                       <span class="st">&#39;Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb9-43" title="43">                                                       <span class="st">&#39;phys.par&#39;</span>))]))]</a>
+<a class="sourceLine" id="cb9-44" title="44">  <span class="co">#change poormetab factor levels to be informative</span></a>
+<a class="sourceLine" id="cb9-45" title="45">  dat_indep[, poormetab<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(poormetab,</a>
+<a class="sourceLine" id="cb9-46" title="46">                              <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb9-47" title="47">                              <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&#39;excluded&#39;</span>,</a>
+<a class="sourceLine" id="cb9-48" title="48">                                       <span class="st">&#39;included&#39;</span>))]</a>
+<a class="sourceLine" id="cb9-49" title="49">  <span class="co">#change fup.censor factor levels to be informative</span></a>
+<a class="sourceLine" id="cb9-50" title="50">  dat_indep[, fup.censor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(fup.censor,</a>
+<a class="sourceLine" id="cb9-51" title="51">                               <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb9-52" title="52">                               <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&#39;&lt;lod=lod/2&#39;</span>,</a>
+<a class="sourceLine" id="cb9-53" title="53">                                        <span class="st">&#39;&lt;lod censored&#39;</span>))]</a>
+<a class="sourceLine" id="cb9-54" title="54">  <span class="co">#change fup.censor name is be more informative</span></a>
+<a class="sourceLine" id="cb9-55" title="55">  <span class="kw">setnames</span>(dat_indep, <span class="st">&#39;fup.censor&#39;</span>, <span class="st">&#39;Fub&#39;</span>)</a>
+<a class="sourceLine" id="cb9-56" title="56">dat_indep[CLint<span class="op">==</span><span class="dv">0</span>, CLint<span class="op">:</span><span class="er">=</span><span class="fl">1e-8</span>] <span class="co">#plot them as 1e-8 but label them as zero</span></a></code></pre></div>
 <p>Now do the plotting.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for (fpb in <span class="kw">c</span>(<span class="ot">TRUE</span>)){
-  dt.tmp &lt;-<span class="st"> </span>dat_indep[param %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">'CLint'</span>,
-                                       <span class="st">'Fub'</span>,
-                                       <span class="st">'phys.par'</span>) &amp;
-<span class="st">                           </span>fuptofub==fpb, ]
-  <span class="kw">setorder</span>(dt.tmp, Si)
-p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) +<span class="st"> </span>
-<span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,
-                       <span class="dt">y=</span>Funbound.plasma,
-                       <span class="dt">color=</span>Si,
-                       <span class="dt">fill=</span>Si,
-                       <span class="dt">order=</span>Si),
-                   <span class="dt">shape=</span><span class="dv">21</span>)+
-<span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                              <span class="dt">guide=</span><span class="st">'colourbar'</span>,
-                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                              <span class="dt">oob=</span>squish,
-                              <span class="dt">name=</span><span class="st">'First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i'</span>)+<span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span>
-<span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don't plot separate colorbar for fill</span>
-                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don't fill points for NAs</span>
-                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                             <span class="dt">oob=</span>squish)+
-<span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span>
-                           <span class="dt">breaks=</span>CLint.breaks,
-                           <span class="dt">labels=</span>CLint.labels) +
-<span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),
-                           <span class="dt">oob=</span>squish) +<span class="st"> </span><span class="co">#Funbound.plasma shouldn't be &gt;1 -- if it is, just pretend it's 1</span>
-<span class="co">#         facet_grid(poormetab*Fub~param,</span>
-<span class="co">#                    labeller=my_labeller_fun)+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(poormetab*Fub~param, 
-             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),
-                                        <span class="dt">Fub =</span> label_both,
-                                        <span class="dt">param=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) +
-<span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">'Measured CLint (uL/min/million cells)'</span>,
-             <span class="dt">y=</span><span class="st">'Measured Fub'</span>,
-             <span class="dt">title=</span><span class="st">'Independent MC'</span>) +
-<span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span>
-              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),
-              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) 
-  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">'pdf_figures/'</span>,
-                  <span class="kw">paste</span>(<span class="st">'Si'</span>,
-                        <span class="st">'indepMC'</span>,
-                        <span class="st">'model'</span>,
-                        model,
-                        <span class="st">&quot;FuptoFub&quot;</span>,
-                        fpb,
-                        <span class="dt">sep=</span><span class="st">'_'</span>),
-                  <span class="st">'.pdf'</span>),
-         <span class="dt">plot=</span>p,
-         <span class="dt">height=</span><span class="fl">8.5</span>,
-         <span class="dt">width=</span><span class="dv">11</span>)
-<span class="kw">print</span>(p)
-}</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="cf">for</span> (fpb <span class="cf">in</span> <span class="kw">c</span>(<span class="ot">TRUE</span>)){</a>
+<a class="sourceLine" id="cb10-2" title="2">  dt.tmp &lt;-<span class="st"> </span>dat_indep[param <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;CLint&#39;</span>,</a>
+<a class="sourceLine" id="cb10-3" title="3">                                       <span class="st">&#39;Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb10-4" title="4">                                       <span class="st">&#39;phys.par&#39;</span>) <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="st">                           </span>fuptofub<span class="op">==</span>fpb, ]</a>
+<a class="sourceLine" id="cb10-6" title="6">  <span class="kw">setorder</span>(dt.tmp, Si)</a>
+<a class="sourceLine" id="cb10-7" title="7">p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,</a>
+<a class="sourceLine" id="cb10-9" title="9">                       <span class="dt">y=</span>Funbound.plasma,</a>
+<a class="sourceLine" id="cb10-10" title="10">                       <span class="dt">color=</span>Si,</a>
+<a class="sourceLine" id="cb10-11" title="11">                       <span class="dt">fill=</span>Si,</a>
+<a class="sourceLine" id="cb10-12" title="12">                       <span class="dt">order=</span>Si),</a>
+<a class="sourceLine" id="cb10-13" title="13">                   <span class="dt">shape=</span><span class="dv">21</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb10-15" title="15">                              <span class="dt">guide=</span><span class="st">&#39;colourbar&#39;</span>,</a>
+<a class="sourceLine" id="cb10-16" title="16">                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb10-17" title="17">                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb10-18" title="18">                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb10-19" title="19">                              <span class="dt">oob=</span>squish,</a>
+<a class="sourceLine" id="cb10-20" title="20">                              <span class="dt">name=</span><span class="st">&#39;First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i&#39;</span>)<span class="op">+</span><span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span></a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb10-22" title="22">                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don&#39;t plot separate colorbar for fill</span></a>
+<a class="sourceLine" id="cb10-23" title="23">                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don&#39;t fill points for NAs</span></a>
+<a class="sourceLine" id="cb10-24" title="24">                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb10-25" title="25">                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb10-26" title="26">                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb10-27" title="27">                             <span class="dt">oob=</span>squish)<span class="op">+</span></a>
+<a class="sourceLine" id="cb10-28" title="28"><span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">&#39;log10&#39;</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span></a>
+<a class="sourceLine" id="cb10-29" title="29">                           <span class="dt">breaks=</span>CLint.breaks,</a>
+<a class="sourceLine" id="cb10-30" title="30">                           <span class="dt">labels=</span>CLint.labels) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-31" title="31"><span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb10-32" title="32">                           <span class="dt">oob=</span>squish) <span class="op">+</span><span class="st"> </span><span class="co">#Funbound.plasma shouldn&#39;t be &gt;1 -- if it is, just pretend it&#39;s 1</span></a>
+<a class="sourceLine" id="cb10-33" title="33"><span class="co">#         facet_grid(poormetab*Fub~param,</span></a>
+<a class="sourceLine" id="cb10-34" title="34"><span class="co">#                    labeller=my_labeller_fun)+</span></a>
+<a class="sourceLine" id="cb10-35" title="35"><span class="st">  </span><span class="kw">facet_grid</span>(poormetab<span class="op">*</span>Fub<span class="op">~</span>param, </a>
+<a class="sourceLine" id="cb10-36" title="36">             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),</a>
+<a class="sourceLine" id="cb10-37" title="37">                                        <span class="dt">Fub =</span> label_both,</a>
+<a class="sourceLine" id="cb10-38" title="38">                                        <span class="dt">param=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-39" title="39"><span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;Measured CLint (uL/min/million cells)&#39;</span>,</a>
+<a class="sourceLine" id="cb10-40" title="40">             <span class="dt">y=</span><span class="st">&#39;Measured Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb10-41" title="41">             <span class="dt">title=</span><span class="st">&#39;Independent MC&#39;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-42" title="42"><span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span></a>
+<a class="sourceLine" id="cb10-43" title="43">              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb10-44" title="44">              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) </a>
+<a class="sourceLine" id="cb10-45" title="45">  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb10-46" title="46">                  <span class="kw">paste</span>(<span class="st">&#39;Si&#39;</span>,</a>
+<a class="sourceLine" id="cb10-47" title="47">                        <span class="st">&#39;indepMC&#39;</span>,</a>
+<a class="sourceLine" id="cb10-48" title="48">                        <span class="st">&#39;model&#39;</span>,</a>
+<a class="sourceLine" id="cb10-49" title="49">                        model,</a>
+<a class="sourceLine" id="cb10-50" title="50">                        <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb10-51" title="51">                        fpb,</a>
+<a class="sourceLine" id="cb10-52" title="52">                        <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb10-53" title="53">                  <span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb10-54" title="54">         <span class="dt">plot=</span>p,</a>
+<a class="sourceLine" id="cb10-55" title="55">         <span class="dt">height=</span><span class="fl">8.5</span>,</a>
+<a class="sourceLine" id="cb10-56" title="56">         <span class="dt">width=</span><span class="dv">11</span>)</a>
+<a class="sourceLine" id="cb10-57" title="57"><span class="kw">print</span>(p)</a>
+<a class="sourceLine" id="cb10-58" title="58">}</a></code></pre></div>
 <p>And plot each physiological parameter independently.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for (fpb in <span class="kw">c</span>(<span class="ot">TRUE</span>)){
-  dt.tmp &lt;-<span class="st"> </span>dat_indep[param %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">'million.cells.per.gliver'</span>,
-                                        <span class="st">'Qgfrc'</span>,
-                                        <span class="st">'Qtotal.liverc'</span>,
-                                        <span class="st">'Vliverc'</span>) &amp;
-<span class="st">                           </span>fuptofub==fpb, ]
-  <span class="kw">setorder</span>(dt.tmp, Si)
-p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) +<span class="st"> </span>
-<span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,
-                       <span class="dt">y=</span>Funbound.plasma,
-                       <span class="dt">color=</span>Si,
-                       <span class="dt">fill=</span>Si,
-                       <span class="dt">order=</span>Si),
-                   <span class="dt">shape=</span><span class="dv">21</span>)+
-<span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                              <span class="dt">guide=</span><span class="st">'colourbar'</span>,
-                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                              <span class="dt">oob=</span>squish,
-                              <span class="dt">name=</span><span class="st">'First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i'</span>)+<span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span>
-<span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,
-                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don't plot separate colorbar for fill</span>
-                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don't fill points for NAs</span>
-                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span>
-                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),
-                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),
-                             <span class="dt">oob=</span>squish)+
-<span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">'log10'</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span>
-                           <span class="dt">breaks=</span>CLint.breaks,
-                           <span class="dt">labels=</span>CLint.labels) +
-<span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),
-                           <span class="dt">oob=</span>squish) +<span class="st"> </span><span class="co">#Funbound.plasma shouldn't be &gt;1 -- if it is, just pretend it's 1</span>
-<span class="co">#         facet_grid(poormetab*Fub~param,</span>
-<span class="co">#                    labeller=my_labeller_fun)+</span>
-<span class="st">  </span><span class="kw">facet_grid</span>(poormetab*Fub~param, 
-             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),
-                                        <span class="dt">Fub =</span> label_both,
-                                        <span class="dt">param=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) +
-<span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">'Measured CLint (uL/min/million cells)'</span>,
-             <span class="dt">y=</span><span class="st">'Measured Fub'</span>,
-             <span class="dt">title=</span><span class="st">'Independent MC'</span>) +
-<span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span>
-              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),
-              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) 
-  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">'pdf_figures/'</span>,
-                  <span class="kw">paste</span>(<span class="st">'Si'</span>,
-                        <span class="st">'indepMC'</span>,
-                        <span class="st">'physparams'</span>,
-                        <span class="st">'model'</span>,
-                        model,
-                        <span class="st">&quot;FuptoFub&quot;</span>,
-                        fpb,
-                        <span class="dt">sep=</span><span class="st">'_'</span>),
-                  <span class="st">'.pdf'</span>),
-         <span class="dt">plot=</span>p,
-         <span class="dt">height=</span><span class="fl">8.5</span>,
-         <span class="dt">width=</span><span class="dv">11</span>)
-<span class="kw">print</span>(p)
-}</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="cf">for</span> (fpb <span class="cf">in</span> <span class="kw">c</span>(<span class="ot">TRUE</span>)){</a>
+<a class="sourceLine" id="cb11-2" title="2">  dt.tmp &lt;-<span class="st"> </span>dat_indep[param <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;million.cells.per.gliver&#39;</span>,</a>
+<a class="sourceLine" id="cb11-3" title="3">                                        <span class="st">&#39;Qgfrc&#39;</span>,</a>
+<a class="sourceLine" id="cb11-4" title="4">                                        <span class="st">&#39;Qtotal.liverc&#39;</span>,</a>
+<a class="sourceLine" id="cb11-5" title="5">                                        <span class="st">&#39;Vliverc&#39;</span>) <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="st">                           </span>fuptofub<span class="op">==</span>fpb, ]</a>
+<a class="sourceLine" id="cb11-7" title="7">  <span class="kw">setorder</span>(dt.tmp, Si)</a>
+<a class="sourceLine" id="cb11-8" title="8">p&lt;-<span class="kw">ggplot</span>(<span class="dt">data=</span>dt.tmp) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="st">        </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>CLint,</a>
+<a class="sourceLine" id="cb11-10" title="10">                       <span class="dt">y=</span>Funbound.plasma,</a>
+<a class="sourceLine" id="cb11-11" title="11">                       <span class="dt">color=</span>Si,</a>
+<a class="sourceLine" id="cb11-12" title="12">                       <span class="dt">fill=</span>Si,</a>
+<a class="sourceLine" id="cb11-13" title="13">                       <span class="dt">order=</span>Si),</a>
+<a class="sourceLine" id="cb11-14" title="14">                   <span class="dt">shape=</span><span class="dv">21</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="st">        </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb11-16" title="16">                              <span class="dt">guide=</span><span class="st">&#39;colourbar&#39;</span>,</a>
+<a class="sourceLine" id="cb11-17" title="17">                              <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb11-18" title="18">                              <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb11-19" title="19">                              <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb11-20" title="20">                              <span class="dt">oob=</span>squish,</a>
+<a class="sourceLine" id="cb11-21" title="21">                              <span class="dt">name=</span><span class="st">&#39;First-order </span><span class="ch">\n</span><span class="st">Css sensitivity </span><span class="ch">\n</span><span class="st">to param i&#39;</span>)<span class="op">+</span><span class="st"> </span><span class="co">#there may be some very small negative indexes; just treat them as zero</span></a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="st">        </span><span class="kw">scale_fill_gradientn</span>(<span class="dt">colours=</span>ylgnbu,</a>
+<a class="sourceLine" id="cb11-23" title="23">                             <span class="dt">guide=</span><span class="ot">FALSE</span>, <span class="co">#don&#39;t plot separate colorbar for fill</span></a>
+<a class="sourceLine" id="cb11-24" title="24">                             <span class="dt">na.value=</span><span class="ot">NA</span>, <span class="co">#don&#39;t fill points for NAs</span></a>
+<a class="sourceLine" id="cb11-25" title="25">                             <span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="co">#specify limits, breaks, and labels to get the colorbar tick marks where I want them</span></a>
+<a class="sourceLine" id="cb11-26" title="26">                             <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb11-27" title="27">                             <span class="dt">labels=</span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb11-28" title="28">                             <span class="dt">oob=</span>squish)<span class="op">+</span></a>
+<a class="sourceLine" id="cb11-29" title="29"><span class="st">        </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans=</span><span class="st">&#39;log10&#39;</span>, <span class="co">#use the hack to get CLint==0 points to not be clipped</span></a>
+<a class="sourceLine" id="cb11-30" title="30">                           <span class="dt">breaks=</span>CLint.breaks,</a>
+<a class="sourceLine" id="cb11-31" title="31">                           <span class="dt">labels=</span>CLint.labels) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-32" title="32"><span class="st">        </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb11-33" title="33">                           <span class="dt">oob=</span>squish) <span class="op">+</span><span class="st"> </span><span class="co">#Funbound.plasma shouldn&#39;t be &gt;1 -- if it is, just pretend it&#39;s 1</span></a>
+<a class="sourceLine" id="cb11-34" title="34"><span class="co">#         facet_grid(poormetab*Fub~param,</span></a>
+<a class="sourceLine" id="cb11-35" title="35"><span class="co">#                    labeller=my_labeller_fun)+</span></a>
+<a class="sourceLine" id="cb11-36" title="36"><span class="st">  </span><span class="kw">facet_grid</span>(poormetab<span class="op">*</span>Fub<span class="op">~</span>param, </a>
+<a class="sourceLine" id="cb11-37" title="37">             <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PM &quot;</span>, x),</a>
+<a class="sourceLine" id="cb11-38" title="38">                                        <span class="dt">Fub =</span> label_both,</a>
+<a class="sourceLine" id="cb11-39" title="39">                                        <span class="dt">param=</span><span class="cf">function</span>(x) <span class="kw">paste</span>(<span class="st">&quot;i = &quot;</span>, x))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-40" title="40"><span class="st">        </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;Measured CLint (uL/min/million cells)&#39;</span>,</a>
+<a class="sourceLine" id="cb11-41" title="41">             <span class="dt">y=</span><span class="st">&#39;Measured Fub&#39;</span>,</a>
+<a class="sourceLine" id="cb11-42" title="42">             <span class="dt">title=</span><span class="st">&#39;Independent MC&#39;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-43" title="43"><span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>), <span class="co">#bump up the legend text size</span></a>
+<a class="sourceLine" id="cb11-44" title="44">              <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb11-45" title="45">              <span class="dt">strip.background=</span><span class="kw">element_blank</span>()) </a>
+<a class="sourceLine" id="cb11-46" title="46">  <span class="kw">ggsave</span>(<span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb11-47" title="47">                  <span class="kw">paste</span>(<span class="st">&#39;Si&#39;</span>,</a>
+<a class="sourceLine" id="cb11-48" title="48">                        <span class="st">&#39;indepMC&#39;</span>,</a>
+<a class="sourceLine" id="cb11-49" title="49">                        <span class="st">&#39;physparams&#39;</span>,</a>
+<a class="sourceLine" id="cb11-50" title="50">                        <span class="st">&#39;model&#39;</span>,</a>
+<a class="sourceLine" id="cb11-51" title="51">                        model,</a>
+<a class="sourceLine" id="cb11-52" title="52">                        <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb11-53" title="53">                        fpb,</a>
+<a class="sourceLine" id="cb11-54" title="54">                        <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb11-55" title="55">                  <span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb11-56" title="56">         <span class="dt">plot=</span>p,</a>
+<a class="sourceLine" id="cb11-57" title="57">         <span class="dt">height=</span><span class="fl">8.5</span>,</a>
+<a class="sourceLine" id="cb11-58" title="58">         <span class="dt">width=</span><span class="dv">11</span>)</a>
+<a class="sourceLine" id="cb11-59" title="59"><span class="kw">print</span>(p)</a>
+<a class="sourceLine" id="cb11-60" title="60">}</a></code></pre></div>
 
 
 
