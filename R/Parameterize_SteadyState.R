@@ -5,7 +5,6 @@
 #' compartment steady state model ('3compartmentss').  
 #' 
 #' 
-#' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
 #' @param chem.cas Either the chemical name or the CAS number must be
