@@ -1,8 +1,85 @@
-# This function parameterizes a PBPK model. The argument tissuelist allows the specific tissues parameerized to be customized.
-# All tissues not specified by tissuelist are lumped into a rest of body compartment ("Rest")
-
-
-
+#' Parameterize_PBTK
+#' 
+#' This function initializes the parameters needed in the functions solve_pbtk,
+#' calc_css, and others using the multiple compartment model.
+#' 
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param tissuelist Specifies compartment names and tissues groupings.
+#' Remaining tissues in tissue.data are lumped in the rest of the body.
+#' However, solve_pbtk only works with the default parameters.
+#' @param force.human.clint.fup Forces use of human values for hepatic
+#' intrinsic clearance and fraction of unbound plasma if true.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
+#' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
+#' TRUE along with parition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @return
+#' 
+#' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
+#' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+#' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
+#' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
+#' chemical unbound in hepatocyte assay using the method of Kilford et al.
+#' (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
+#' concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
+#' from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
+#' kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
+#' concentration of chemical in liver tissue to unbound concentration in
+#' plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+#' to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
+#' of chemical in red blood cells to unbound concentration in plasma.}
+#' \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
+#' unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
+#' cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
+#' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
+#' Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
+#' excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+#' \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
+#' \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
+#' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
+#' blood to the concentration in the plasma from available_rblood2plasma.}
+#' \item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
+#' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
+#' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
+#' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
+#' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+#' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#' @author John Wambaugh and Robert Pearce
+#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
+#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
+#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' @keywords Parameter
+#' @examples
+#' 
+#' 
+#'  parameters <- parameterize_pbtk(chem.cas='80-05-7')
+#' 
+#'  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
+#' 
+#'  # Change the tissue lumping (note, these model parameters will not work with our current solver):
+#'  compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
+#'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
+#'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
+#'                    tissuelist=compartments) 
+#'  
+#'  
+#' 
+#' @export parameterize_pbtk
 parameterize_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               species="Human",
@@ -27,7 +104,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
-  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
+  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))

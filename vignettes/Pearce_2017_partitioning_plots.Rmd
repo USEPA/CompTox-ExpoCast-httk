@@ -4,7 +4,7 @@ author: "Robert Pearce"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating Partition Coefficient Evaluation Plots}
+  %\VignetteIndexEntry{Pearce et al. 2017 Creating Partition Coefficient Evaluation Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

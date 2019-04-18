@@ -1,4 +1,41 @@
-# Written by Robert Pearce
+#' Parameterize Schmitt's method.
+#' 
+#' This function provides the necessary parameters to run
+#' predict_partitioning_schmitt, excluding the data in tissue.data.
+#' 
+#' When species is specified as rabbit, dog, or mouse, the human unbound
+#' fraction is substituted.
+#' 
+#' force.human.fup calculates Funbound.plasma.corrected with the human lipid
+#' fractional volume in plasma.
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param default.to.human Substitutes missing fraction of unbound plasma with
+#' human values if true.
+#' @param force.human.fup Returns human fraction of unbound plasma in
+#' calculation for rats if true.
+#' @return
+#' 
+#' \item{Funbound.plasma}{corrected unbound fraction in plasma}
+#' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
+#' if below limit of detection)} \item{Pow}{octonol:water partition coefficient
+#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibirum
+#' constant(s)} \item{pKa_Accept}{compound H association equilibirum
+#' constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
+#' affinity} \item{Fprotein.plasma}{protein fraction in plasma}
+#' \item{plasma.pH}{pH of the plasma}
+#' @author Robert Pearce
+#' @keywords Parameter
+#' @examples
+#' 
+#' parameterize_schmitt(chem.name='bisphenola')
+#' 
+#' @export parameterize_schmitt
 parameterize_schmitt <- function(chem.cas=NULL,
                                  chem.name=NULL,
                                  species="Human",

@@ -41,10 +41,89 @@ liver clearance if FALSE.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
 clearance assay result has a p-values greater than the threshold are set to zero.}
+
+\item{indiv.model.bio}{A data.table containing the physiological parameters
+as expected by HTTK (from \code{\link{httkpop_bio}}) and
+\code{Funbound.plasma} and \code{Clint} values (from
+\code{\link{draw_fup_clint}}).}
+
+\item{model}{Which HTTK model to use. One of '1compartment',
+'3compartmentss', '3compartment', or 'pbtk'.}
+
+\item{this.chem}{CAS number for the chemical in the HTTK data set (see
+\code{\link[httk]{get_cheminfo}}) for which parameters are to be generated.}
+
+\item{parameters}{A list of chemical-specific model parameters containing at
+least Funbound.plasma, Clint, and Fhep.assay.correction.}
+
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
+TRUE.}
+
+\item{regression}{Whether or not to use the regressions in calculating
+partition coefficients.}
+
+\item{well.stirred.correction}{Uses correction in calculation of hepatic
+clearance for well-stirred model if TRUE for hepatic.model well-stirred.
+This assumes clearance relative to amount unbound in whole blood instead of
+plasma, but converted to use with plasma concentration.}
+
+\item{restrictive.clearance}{Protein binding not taken into account (set to
+1) in liver clearance if FALSE.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
+
+\item{indiv.model.bio}{A data.table containing the physiological parameters
+as expected by HTTK (from \code{\link{httkpop_bio}}) and
+\code{Funbound.plasma} and \code{Clint} values (from
+\code{\link{draw_fup_clint}}).}
+
+\item{model}{Which HTTK model to use. One of '1compartment',
+'3compartmentss', '3compartment', or 'pbtk'.}
+
+\item{this.chem}{CAS number for the chemical in the HTTK data set (see
+\code{\link[httk]{get_cheminfo}}) for which parameters are to be generated.}
+
+\item{parameters}{A list of chemical-specific model parameters containing at
+least Funbound.plasma, Clint, and Fhep.assay.correction.}
+
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
+TRUE.}
+
+\item{regression}{Whether or not to use the regressions in calculating
+partition coefficients.}
+
+\item{well.stirred.correction}{Uses correction in calculation of hepatic
+clearance for well-stirred model if TRUE for hepatic.model well-stirred.
+This assumes clearance relative to amount unbound in whole blood instead of
+plasma, but converted to use with plasma concentration.}
+
+\item{restrictive.clearance}{Protein binding not taken into account (set to
+1) in liver clearance if FALSE.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
  specified in \code{model}.
+Converts HTTK-Pop virtual population into parameters relevant to an HTTK
+model.
+
+Converts HTTK-Pop virtual population into parameters relevant to an HTTK
+model.
+
+A data.table whose columns are the parameters of the HTTK model
+specified in \code{model}. Converts HTTK-Pop virtual population into
+parameters relevant to an HTTK model.
+
+Converts HTTK-Pop virtual population into parameters relevant to an HTTK
+model.
+
+A data.table whose columns are the parameters of the HTTK model specified in
+\code{model}.
 }
 \description{
 Converts HTTK-Pop virtual population into parameters relevant to an HTTK

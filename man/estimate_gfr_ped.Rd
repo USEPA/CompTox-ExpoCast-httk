@@ -8,8 +8,16 @@ estimate_gfr_ped(BSA)
 }
 \arguments{
 \item{BSA}{Vector of body surface areas in m^2.}
+
+\item{BSA}{Vector of body surface areas in m^2.}
+
+\item{BSA}{Vector of body surface areas in m^2.}
 }
 \value{
+Vector of GFRs in mL/min/1.73m^2.
+
+Vector of GFRs in mL/min/1.73m^2.
+
 Vector of GFRs in mL/min/1.73m^2.
 }
 \description{
@@ -20,8 +28,27 @@ Used in Wetmore et al. 2014.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+Predict GFR in children.
+
+BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9)
+931-56.  Used in Wetmore et al. 2014.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118 Predict GFR in children.
+
+BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9)
+931-56.  Used in Wetmore et al. 2014.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 }
 \keyword{httk-pop}
