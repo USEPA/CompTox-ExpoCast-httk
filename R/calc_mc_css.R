@@ -1,6 +1,182 @@
-# The function uses Monte Carlo methods to vary parameters and can return various quantiles.
-# Original by John Wambaugh
-# Rewritten by Caroline Ring with modifications by John Wambaugh and Robert Pearce
+#' Find the monte carlo steady state concentration.
+#' 
+#' This function finds the analytical steady state plasma concentration(from
+#' calc_analytic_css) using a monte carlo simulation (monte_carlo).
+#' 
+#' All arguments after httkpop only apply if httkpop is set to TRUE and species
+#' to "Human".
+#' 
+#' When species is specified as rabbit, dog, or mouse, the function uses the
+#' appropriate physiological data(volumes and flows) but substitues human
+#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' 
+#' Tissue concentrations are calculated for the pbtk model with oral infusion
+#' dosing.  All tissues other than gut, liver, and lung are the product of the
+#' steady state plasma concentration and the tissue to plasma partition
+#' coefficient.
+#' 
+#' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+#' assumptions identified by Honda et al. (submitted) are: \tabular{lrrrr}{
+#' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
+#' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
+#' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
+#' Restrictive \tab Free \tab Max Conc. \cr Honda3 \tab Veinous \tab
+#' Non-restrictive \tab Total \tab Mean Conc. \cr Honda4 \tab Veinous \tab
+#' Non-restrictive \tab Total \tab Max Conc. \cr Honda5 \tab Target Tissue \tab
+#' Non-restrictive \tab Total \tab Mean Conc. \cr Honda6 \tab Target Tissue
+#' \tab Non-restrictive \tab Total \tab Max Conc. \cr } *Assumption is
+#' currently ignored because analytical steady-state solutions are currently
+#' used by this function.
+#' 
+#' @param chem.name Either the chemical parameters, name, or the CAS number
+#' must be specified. 
+#' @param chem.cas Either the CAS number, parameters, or the chemical name must
+#' be specified. 
+#' @param parameters Parameters from parameterize_steadystate. Not used with
+#' httkpop model.
+#' @param daily.dose Total daily dose, mg/kg BW/day.
+#' @param which.quantile Which quantile from Monte Carlo simulation is
+#' requested. Can be a vector.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").  Species must be set to "Human" to run httkpop model. 
+#' @param output.units Plasma concentration units, either uM or default mg/L.
+#' @param suppress.messages Whether or not to suppress output message.
+#' @param censored.params The parameters listed in censored.params are sampled
+#' from a normal distribution that is censored for values less than the limit
+#' of detection (specified separately for each paramter). This argument should
+#' be a list of sub-lists. Each sublist is named for a parameter in
+#' "parameters" and contains two elements: "CV" (coefficient of variation) and
+#' "LOD" (limit of detection, below which parameter values are censored. New
+#' values are sampled with mean equal to the value in "parameters" and standard
+#' deviation equal to the mean times the CV.  Censored values are sampled on a
+#' uniform distribution between 0 and the limit of detection. Not used with
+#' httkpop model.
+#' @param vary.params The parameters listed in vary.params are sampled from a
+#' normal distribution that is truncated at zero. This argument should be a
+#' list of coefficients of variation (CV) for the normal distribution. Each
+#' entry in the list is named for a parameter in "parameters". New values are
+#' sampled with mean equal to the value in "parameters" and standard deviation
+#' equal to the mean times the CV. Not used with httkpop model.
+#' @param samples Number of samples generated in calculating quantiles.
+#' @param return.samples Whether or not to return the vector containing the
+#' samples from the simulation instead of the selected quantile.
+#' @param default.to.human Substitutes missing rat values with human values if
+#' true.
+#' @param tissue Desired steady state tissue conentration.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param well.stirred.correction If TRUE (default) then the well-stirred
+#' correction (Rowland et al., 1973) is used in the calculation of hepatic
+#' clearance for the models that do not include flows for first-pass metabolism
+#' (currently, 1compartment and 3compartmentss). This assumes clearance
+#' relative to amount unbound in whole blood instead of plasma, but converted
+#' for use with plasma concentration.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param tk.statistic.used Theoreticially either the "mean" or "max"imum
+#' (peak) concetrations might be used for IVIVE with some models. Defaults to
+#' "mean". Meaningless for the steady-state model (Argument is currently
+#' ignored because analytic steady-state solutions are used by this function.).
+#' @param IVIVE Honda et al. (submitted) identified six plausible sets of
+#' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
+#' Argument may be set to "Honda1" through "Honda6". If used, this function
+#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+#' See Details below for more information.
+#' @param httkpop Whether or not to use population generator and sampler from
+#' httkpop.  This is overwrites censored.params and vary.params and is only for
+#' human physiology.  Species must also be set to 'Human'.
+#' @param model Model used in calculation: 'pbtk' for the multiple compartment
+#' model,'3compartment' for the three compartment model, '3compartmentss' for
+#' the three compartment steady state model, and '1compartment' for one
+#' compartment model.  This only applies when httkpop=TRUE and species="Human",
+#' otherwise '3compartmentss' is used.
+#' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
+#' metabolizers)
+#' @param fup.censor TRUE (draw \code{Funbound.plasma} from a censored
+#' distribution) or FALSE (draw \code{Funbound.plasma} from a non-censored
+#' distribution)
+#' @param sigma.factor The coefficient of variation to use for \code{Clint} and
+#' \code{Funbound.plasma} distributions. Default value is 0.3.
+#' @param Clint.vary TRUE (sample \code{Clint} values) or FALSE (hold
+#' \code{Clint} fixed). Default TRUE. If \code{Clint.vary} is FALSE, then
+#' \code{poormetab} will have no effect.
+#' @param lod The average limit of detection for Funbound.plasma. if
+#' \code{fup.censor == TRUE}, the \code{Funbound.plasma} distribution will be
+#' censored below \code{lod/2}. Default value is 0.01.
+#' @param method The population-generation method to use. Either "virtual
+#' individuals" or "direct resampling" (default). Short names may be used: "d"
+#' or "dr" for "direct resampling", and "v" or "vi" for "virtual individuals".
+#' @param gendernum Optional: A named list giving the numbers of male and
+#' female individuals to include in the population, e.g. \code{list(Male=100,
+#' Female=100)}. Default is NULL, meaning both males and females are included,
+#' in their proportions in the NHANES data. If both \code{nsamp} and
+#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
+#' the sum of \code{gendernum}).
+#' @param agelim_years Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in years) to include in the population. Default is
+#' c(0,79). If only a single value is provided, both minimum and maximum ages
+#' will be set to that value; e.g. \code{agelim_years=3} is equivalent to
+#' \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
+#' \code{agelim_months} is not, \code{agelim_years} will override the default
+#' value of \code{agelim_months}.
+#' @param agelim_months Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in months) to include in the population. Default
+#' is c(0, 959), equivalent to the default \code{agelim_years}. If only a
+#' single value is provided, both minimum and maximum ages will be set to that
+#' value; e.g. \code{agelim_months=36} is equivalent to
+#' \code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
+#' \code{agelim_years} is not, \code{agelim_months} will override the default
+#' values of \code{agelim_years}.
+#' @param weight_category Optional: The weight categories to include in the
+#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#' 'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @param gfr_category The kidney function categories to include in the
+#' population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
+#' to include all kidney function levels.
+#' @param reths Optional: a character vector giving the races/ethnicities to
+#' include in the population. Default is \code{c('Mexican American','Other
+#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#' all races and ethnicities in their proportions in the NHANES data.
+#' User-supplied vector must contain one or more of these strings.
+#' @param physiology.matrix A data table generated by
+#' \code{httkpop_generate()}.
+#' @param parameter.matrix A data table generated by \code{get_httk_params()}.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
+#' @param ... Additional parameters passed to calc_analytic_css
+#' @author original by John Wambaugh, rewritten by Caroline Ring and Robert
+#' Pearce
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment international 106 (2017): 105-118. Honda, Gregory S., et al.
+#' "Using the Concordance of In Vitro and In Vivo Data to Evaluate
+#' Extrapolation Assumptions", submitted. Rowland, Malcolm, Leslie Z. Benet,
+#' and Garry G. Graham. "Clearance concepts in pharmacokinetics." Journal of
+#' pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#' @keywords Monte Carlo Steady State
+#' @examples
+#' 
+#' \dontrun{
+#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
+#'              samples=100,return.samples=TRUE)
+#'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+#' 
+#'  calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+#'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
+#'                                                           lod = 0.005)),
+#'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
+#'                                Qtotal.liverc = 0.15, 
+#'                                million.cells.per.gliver = 0.15, Clint = 0.15),
+#'              output.units = "uM", samples = 2000)
+#' 
+#'  params <- parameterize_pbtk(chem.cas="80-05-7")
+#'  calc_mc_css(parameters=params,model="pbtk")
+#' }
+#' 
+#' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
                         parameters=NULL,

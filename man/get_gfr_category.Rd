@@ -12,10 +12,27 @@ get_gfr_category(age_years, age_months, gfr_est)
 \item{age_months}{Vector of ages in months.}
 
 \item{gfr_est}{Vector of estimated GFR values in mL/min/1.73m^2.}
+
+\item{age_years}{Vector of ages in years.}
+
+\item{age_months}{Vector of ages in months.}
+
+\item{gfr_est}{Vector of estimated GFR values in mL/min/1.73m^2.}
+
+\item{age_years}{Vector of ages in years.}
+
+\item{age_months}{Vector of ages in months.}
+
+\item{gfr_est}{Vector of estimated GFR values in mL/min/1.73m^2.}
 }
 \value{
 Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney
  Failure'.
+
+Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney
+Failure'.
+
+Vector of GFR categories: 'Normal', 'Kidney Disease', 'Kidney Failure'.
 }
 \description{
 For adults: 
@@ -32,8 +49,36 @@ REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+Categorize kidney function by GFR.
+
+For adults: In general GFR > 60 is considered normal 15 < GFR < 60 is
+considered kidney disease GFR < 15 is considered kidney failure
+
+These values can also be used for children 2 years old and greater (see
+PEDIATRICS IN REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
+10.1542/pir.29-10-335))
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118 Categorize kidney function by
+GFR.
+
+For adults: In general GFR > 60 is considered normal 15 < GFR < 60 is
+considered kidney disease GFR < 15 is considered kidney failure
+
+These values can also be used for children 2 years old and greater (see
+PEDIATRICS IN REVIEW Vol. 29 No. 10 October 1, 2008 pp. 335-341 (doi:
+10.1542/pir.29-10-335))
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 }
 \keyword{httk-pop}

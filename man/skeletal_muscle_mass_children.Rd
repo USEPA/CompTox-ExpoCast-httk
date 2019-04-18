@@ -15,6 +15,7 @@ skeletal_muscle_mass_children(gender, age_years)
 Vector of skeletal muscle masses in kg.
 }
 \description{
-For individuals under age 18, predict skeletal muscle mass from gender and age,
-using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012 3:25-29.
+For individuals under age 18, predict skeletal muscle mass from gender and
+age, using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012
+3:25-29.
 }

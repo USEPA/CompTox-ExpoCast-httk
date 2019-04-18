@@ -14,8 +14,28 @@ ckd_epi_eq(scr, gender, reth, age_years)
 \item{reth}{Vector of races/ethnicities.}
 
 \item{age_years}{Vector of ages in years.}
+
+\item{scr}{Vector of serum creatinine values in mg/dL.}
+
+\item{gender}{Vector of genders (either 'Male' or 'Female').}
+
+\item{reth}{Vector of races/ethnicities.}
+
+\item{age_years}{Vector of ages in years.}
+
+\item{scr}{Vector of serum creatinine values in mg/dL.}
+
+\item{gender}{Vector of genders (either 'Male' or 'Female').}
+
+\item{reth}{Vector of races/ethnicities.}
+
+\item{age_years}{Vector of ages in years.}
 }
 \value{
+Vector of GFR values in mL/min/1.73m^2.
+
+Vector of GFR values in mL/min/1.73m^2.
+
 Vector of GFR values in mL/min/1.73m^2.
 }
 \description{
@@ -30,8 +50,33 @@ equation to estimate glomerular filtration rate. Ann Intern Med 2009;
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+CKD-EPI equation for GFR.
+
+Predict GFR from serum creatinine, gender, race, and age.
+
+From Levey AS, Stevens LA, Schmid CH, Zhang YL, Castro AF, Feldman HI, et
+al. A new equation to estimate glomerular filtration rate. Ann Intern Med
+2009; 150(9):604-612. doi:10.7326/0003-4819-150-9-200905050-00006
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118 CKD-EPI equation for GFR.
+
+Predict GFR from serum creatinine, gender, race, and age.
+
+From Levey AS, Stevens LA, Schmid CH, Zhang YL, Castro AF, Feldman HI, et
+al. A new equation to estimate glomerular filtration rate. Ann Intern Med
+2009; 150(9):604-612. doi:10.7326/0003-4819-150-9-200905050-00006
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
+Caroline Ring
+
+Caroline Ring
+
 Caroline Ring
 }
 \keyword{httk-pop}

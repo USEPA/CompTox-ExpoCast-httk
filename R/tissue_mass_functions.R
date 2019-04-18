@@ -3,19 +3,17 @@
 #' Predict blood mass based on body surface area and gender, using equations
 #' from Bosgra et al. 2012
 #' 
+#' 
 #' @param BSA Body surface area in m^2. May be a vector.
 #' @param gender Either 'Male' or 'Female'. May be a vector.
-#'   
-#' @return A vector of blood masses in kg the same length as \code{BSA} and 
-#'   \code{gender}.
-#'
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
+#' @return A vector of blood masses in kg the same length as \code{BSA} and
+#' \code{gender}.
+#' @author Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @export blood_weight
 blood_weight <- function(BSA, gender){
   #From Bosgra et al. 2012, eq 10 and 11
   bw<-rep(NA,length(gender))
@@ -24,18 +22,25 @@ blood_weight <- function(BSA, gender){
   return(bw)
 }
 
-#'Find average blood masses by age.
-#'
-#'If blood mass from \code{\link{blood_weight}} is negative or very small, then
-#'just default to the mean blood mass by age. (Geigy Scientific Tables, 7th ed.)
-#'                                     
-#'@param blood_mass A vector of blood masses in kg to be replaced with averages.
-#'@param age_months A vector of ages in months.
-#'@param age_years A vector of ages in years.
-#'@param gender A vector of genders (either 'Male' or 'Female').
-#'@param weight A vector of body weights in kg.
-#'  
-#'@return A vector of blood masses in kg.
+
+
+
+
+#' Find average blood masses by age.
+#' 
+#' If blood mass from \code{\link{blood_weight}} is negative or very small,
+#' then just default to the mean blood mass by age. (Geigy Scientific Tables,
+#' 7th ed.)
+#' 
+#' 
+#' @param blood_mass A vector of blood masses in kg to be replaced with
+#' averages.
+#' @param age_months A vector of ages in months.
+#' @param age_years A vector of ages in years.
+#' @param gender A vector of genders (either 'Male' or 'Female').
+#' @param weight A vector of body weights in kg.
+#' @return A vector of blood masses in kg.
+#' @export blood_mass_correct
 blood_mass_correct <- function(blood_mass, 
                                age_months,
                                age_years,
@@ -71,16 +76,21 @@ blood_mass_correct <- function(blood_mass,
 }
 
 
+
+
+
+
 #' Predict body surface area.
 #' 
 #' Predict body surface area from weight, height, and age, using Mosteller's
 #' formula for age>18 and Haycock's formula for age<18
 #' 
+#' 
 #' @param BW A vector of body weights in kg.
 #' @param H A vector of heights in cm.
 #' @param age_years A vector of ages in years.
-#' 
 #' @return A vector of body surface areas in cm^2.
+#' @export body_surface_area
 body_surface_area <- function(BW, H, age_years) {
   #BW in kg, H in cm
   bsa <- rep(NA, length(BW))
@@ -89,20 +99,24 @@ body_surface_area <- function(BW, H, age_years) {
   return(bsa*(100^2)) #convert bsa in m^2 to cm^2
 }
 
+
+
+
+
 #' Predict bone mass.
 #' 
-#' Predict bone mass from age_years, height, weight, gender,
-#' using logistic equations fit to data from Baxter-Jones et al. 2011,
-#'or for infants < 1 year, using equation from Koo et al. 2000
-#' (See Price et al. 2003)
+#' Predict bone mass from age_years, height, weight, gender, using logistic
+#' equations fit to data from Baxter-Jones et al. 2011, or for infants < 1
+#' year, using equation from Koo et al. 2000 (See Price et al. 2003)
+#' 
 #' 
 #' @param age_years Vector of ages in years.
 #' @param age_months Vector of ages in months.
 #' @param height Vector of heights in cm.
 #' @param weight Vector of body weights in kg.
 #' @param gender Vector of genders, either 'Male' or 'Female'.
-#' 
 #' @return Vector of bone masses.
+#' @export bone_mass_age
 bone_mass_age <- function(age_years, age_months, height, weight, gender){
   #From data in Baxter-Jones et al. 2011: for males, bone mineral content in kg
   #obeys the following logistic equation: bone mass (kg) = 0.89983 + (2.99019 -
@@ -161,14 +175,19 @@ bone_mass_age <- function(age_years, age_months, height, weight, gender){
   return(bonemass)
 }
 
+
+
+
+
 #' Predict brain mass.
 #' 
 #' Predict brain mass from gender and age.
 #' 
+#' 
 #' @param gender Vector of genders, either 'Male' or 'Female'
 #' @param age_years Vector of ages in years.
-#' 
 #' @return A vector of brain masses in kg.
+#' @export brain_mass
 brain_mass <- function(gender, age_years){
   B<- rep(NA, length(gender))
   B[gender=='Male'] <- 0.405 #kg; brain mass at birth
@@ -177,16 +196,21 @@ brain_mass <- function(gender, age_years){
   return(brain.mean.mass)
 }
 
-#'Predict kidney mass for children.
-#'
-#'For individuals under age 18, predict kidney mass from weight, height, and
-#'gender. using equations from Ogiu et al.
-#'
-#'@param weight Vector of weights in kg.
-#'@param height Vector of heights in cm.
-#'@param gender Vector of genders (either 'Male' or 'Female').
-#'  
-#'@return A vector of kidney masses in kg.
+
+
+
+
+#' Predict kidney mass for children.
+#' 
+#' For individuals under age 18, predict kidney mass from weight, height, and
+#' gender. using equations from Ogiu et al.
+#' 
+#' 
+#' @param weight Vector of weights in kg.
+#' @param height Vector of heights in cm.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @return A vector of kidney masses in kg.
+#' @export kidney_mass_children
 kidney_mass_children <- function(weight, height, gender){
   km <- rep(NA, length(weight))
   #equations from Ogiu et al.
@@ -208,14 +232,21 @@ kidney_mass_children <- function(weight, height, gender){
   return(km/1000) #convert g to kg
 }
 
-#'Predict liver mass for children.
-#'
-#'For individuals under 18, predict the liver mass from height, weight, and
-#'gender, using equations from Ogiu et al.
-#'
-#'@inheritParams kidney_mass_children
-#'
-#'@return A vector of liver masses in kg.
+
+
+
+
+#' Predict liver mass for children.
+#' 
+#' For individuals under 18, predict the liver mass from height, weight, and
+#' gender, using equations from Ogiu et al.
+#' 
+#' 
+#' @param height Vector of heights in cm.
+#' @param weight Vector of weights in kg.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @return A vector of liver masses in kg.
+#' @export liver_mass_children
 liver_mass_children <- function(height, weight, gender){
   #equations from Ogiu et al. 1997
   #see also Price et al. 2003 (P3M paper)
@@ -230,14 +261,21 @@ liver_mass_children <- function(height, weight, gender){
   return(lm)
 }
 
-#'Predict lung mass for children.
-#'
-#'For individuals under 18, predict the liver mass from height, weight, and
-#'gender, using equations from Ogiu et al.
-#'
-#'@inheritParams kidney_mass_children
-#'
-#'@return A vector of lung masses in kg.
+
+
+
+
+#' Predict lung mass for children.
+#' 
+#' For individuals under 18, predict the liver mass from height, weight, and
+#' gender, using equations from Ogiu et al.
+#' 
+#' 
+#' @param height Vector of heights in cm.
+#' @param weight Vector of weights in kg.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @return A vector of lung masses in kg.
+#' @export lung_mass_children
 lung_mass_children <- function(height, weight, gender){
   #equations from Ogiu et al. 1997
   #see also Price et al. 2003 (P3M paper)
@@ -260,14 +298,21 @@ lung_mass_children <- function(height, weight, gender){
   return(lm)
 }
 
-#'Predict pancreas mass for children.
-#'
-#'For individuals under 18, predict the pancreas mass from height, weight, and
-#'gender, using equations from Ogiu et al.
-#'
-#'@inheritParams kidney_mass_children
-#'
-#'@return A vector of pancreas masses in kg.
+
+
+
+
+#' Predict pancreas mass for children.
+#' 
+#' For individuals under 18, predict the pancreas mass from height, weight, and
+#' gender, using equations from Ogiu et al.
+#' 
+#' 
+#' @param height Vector of heights in cm.
+#' @param weight Vector of weights in kg.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @return A vector of pancreas masses in kg.
+#' @export pancreas_mass_children
 pancreas_mass_children <- function(height, weight, gender){
   
   #equations from Ogiu et al. 1997
@@ -284,15 +329,21 @@ pancreas_mass_children <- function(height, weight, gender){
   return(pm)
 }
 
-#'Predict skeletal muscle mass for children.
-#'
-#'For individuals under age 18, predict skeletal muscle mass from gender and age,
-#'using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012 3:25-29.
-#'
-#'@param gender Vector of genders (either 'Male' or 'Female').
-#'@param age_years Vector of ages in years.
-#'
-#'@return Vector of skeletal muscle masses in kg.
+
+
+
+
+#' Predict skeletal muscle mass for children.
+#' 
+#' For individuals under age 18, predict skeletal muscle mass from gender and
+#' age, using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012
+#' 3:25-29.
+#' 
+#' 
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @param age_years Vector of ages in years.
+#' @return Vector of skeletal muscle masses in kg.
+#' @export skeletal_muscle_mass_children
 skeletal_muscle_mass_children <- function(gender, age_years){
   #Equation from J Cachexia Sarcopenia Muscle (2012) 3:25-29
   
@@ -316,22 +367,26 @@ skeletal_muscle_mass_children <- function(gender, age_years){
   return(smm)
 }
 
-#'Predict skeletal muscle mass.
-#'
-#'Predict skeletal muscle mass from age, height, and gender.
-#'
-#'For individuals over age 18, use allometrically-scaled muscle mass with an age-based scaling factor,
-#'to account for loss of muscle mass with age (Janssen et al. 2000).
-#'For individuals under age 18, use \code{\link{skeletal_muscle_mass_children}}.
-#'
-#'@seealso \code{\link{skeletal_muscle_mass_children}}
-#'
-#'@param smm Vector of allometrically-scaled skeletal muscle masses.
-#'@param age_years Vector of ages in years.
-#'@param height Vector of heights in cm.
-#'@param gender Vector of genders, either 'Male' or 'Female.'
-#'
-#'@return Vector of skeletal muscle masses in kg.
+
+
+
+
+#' Predict skeletal muscle mass.
+#' 
+#' Predict skeletal muscle mass from age, height, and gender.
+#' 
+#' For individuals over age 18, use allometrically-scaled muscle mass with an
+#' age-based scaling factor, to account for loss of muscle mass with age
+#' (Janssen et al. 2000). For individuals under age 18, use
+#' \code{\link{skeletal_muscle_mass_children}}.
+#' 
+#' @param smm Vector of allometrically-scaled skeletal muscle masses.
+#' @param age_years Vector of ages in years.
+#' @param height Vector of heights in cm.
+#' @param gender Vector of genders, either 'Male' or 'Female.'
+#' @return Vector of skeletal muscle masses in kg.
+#' @seealso \code{\link{skeletal_muscle_mass_children}}
+#' @export skeletal_muscle_mass
 skeletal_muscle_mass <- function(smm, age_years, height, gender){  
   #Age-related decrease in skeletal muscle mass
   #Janssen et al. 2000 (see Figure 2)
@@ -358,26 +413,36 @@ skeletal_muscle_mass <- function(smm, age_years, height, gender){
   return(smm)
 }
 
+
+
+
+
 #' Predict skin mass.
 #' 
-#' Using equation from Bosgra et al. 2012, predict skin mass from body surface area.
+#' Using equation from Bosgra et al. 2012, predict skin mass from body surface
+#' area.
+#' 
 #' 
 #' @param BSA Vector of body surface areas in cm^2.
-#' 
 #' @return Vector of skin masses in kg.
+#' @export skin_mass_bosgra
 skin_mass_bosgra <- function(BSA){
   wskin <- exp(1.64*(BSA/100^2)-1.93)
   return(wskin)
 }
 
-#'Predict spleen mass for children.
-#'
-#'For individuals under 18, predict the spleen mass from height, weight, and
-#'gender, using equations from Ogiu et al.
-#'
-#'@inheritParams kidney_mass_children
-#'
-#'@return A vector of spleen masses in kg.
+
+
+#' Predict spleen mass for children.
+#' 
+#' For individuals under 18, predict the spleen mass from height, weight, and
+#' gender, using equations from Ogiu et al.
+#' 
+#' 
+#' @param height Vector of heights in cm.
+#' @param weight Vector of weights in kg.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#' @return A vector of spleen masses in kg.
 spleen_mass_children <- function(height, weight, gender){
   
   #equations from Ogiu et al. 1997

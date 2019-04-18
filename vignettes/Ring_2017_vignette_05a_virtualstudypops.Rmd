@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Virtual study populations}
+  %\VignetteIndexEntry{Ring et al. 2017 Virtual study populations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -62,7 +62,7 @@ jh <- rbind(johnson, howgate, fill=TRUE)
 chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
                                             species='Human',
                                             info=c('CAS', 'Compound'),
-                                            exclude.fub.zero=FALSE))
+                                            exclude.fup.zero=FALSE))
 chem.dt[, Compound:=tolower(Compound)]
 
 #Harmonize compound names
