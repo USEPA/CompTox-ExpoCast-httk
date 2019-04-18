@@ -54,7 +54,6 @@ draw_fup_clint <- function(this.chem=NULL,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  junk <- NULL
   Clint.mu<-Clint.sd<-unadjusted.Funbound.plasma<-Flipid<-physiology.data<-NULL
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-NULL
   #End R CMD CHECK appeasement.
@@ -84,36 +83,6 @@ draw_fup_clint <- function(this.chem=NULL,
       stop("Funbound.plasma, Clint, Dow74, and Fhep.assay.correction needed in draw_fup_clint.")
     }
   }
-  if (regexpr(",",parameters$Funbound.plasma)!=-1)
-  {
-    temp <- strsplit(parameters$Funbound.plasma,",")
-    Funbound.plasma <- as.numeric(temp[[1]][1])
-    Funbound.plasma.l95 <- as.numeric(temp[[1]][2])
-    Funbound.plasma.u95 <- as.numeric(temp[[1]][3])
-    Dow74 <- as.numeric(temp[[1]][4])
-  } else {
-    Funbound.plasma <- parameters$Funbound.plasma
-    Funbound.plasma.l95 <- NULL
-    Funbound.plasma.u95 <- NULL
-    Dow74 <- NULL
-  }
-  if (regexpr(",",parameters$Clint)!=-1)
-  {
-    temp <- strsplit(parameters$Clint,",")
-    Clint <- as.numeric(temp[[1]][1])
-    Clint.l95 <- as.numeric(temp[[1]][2])
-    Clint.u95 <- as.numeric(temp[[1]][3])
-    Clint.pvalue <- as.numeric(temp[[1]][4])
-  } else {
-    Clint <- parameters$Clint
-    Clint.l95 <- NULL
-    Clint.u95 <- NULL
-    Clint.pvalue <- NULL
-  }
-  Fhep.assay.correction <- parameters$Fhep.assay.correction
-  
-  #Initialize the data table
-  indiv_tmp <- data.table(junk=rep(NA, nsamp))
 
   
   # Initalize the data.table:
