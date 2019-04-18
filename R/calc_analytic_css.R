@@ -1,93 +1,3 @@
-#'Calculate the analytic steady state concentration.
-#'
-#'This function calculates the analytic steady state plasma or venous blood 
-#'concentrations as a result of infusion dosing for the three compartment and 
-#'multiple compartment PBTK models.
-#'
-#'@export
-#'
-#'@param chem.name Either the chemical name, CAS number, or the parameters must 
-#'be specified.
-#'@param chem.cas Either the chemical name, CAS number, or the parameters must 
-#'be specified.
-#'@param parameters Chemical parameters from parameterize_pbtk (for model = 
-#''pbtk'), parameterize_3comp (for model = '3compartment), 
-#'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
-#'(for model = '3compartmentss'), overrides chem.name and chem.cas.
-#'@param daily.dose Total daily dose, mg/kg BW.
-#'@param output.units Units for returned concentrations, defaults to uM 
-#'(specify units = "uM") but can also be mg/L.
-#'@param model Model used in calculation, 'pbtk' for the multiple compartment 
-#'model,'3compartment' for the three compartment model, '3compartmentss' for 
-#'the three compartment steady state model, and '1compartment' for one 
-#'compartment model.
-#'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or 
-#'default "Human"). 
-#'@param suppress.messages Whether or not the output message is suppressed.
-#'@param concentration Desired concentration type, 'blood' or default 'plasma'.
-#'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
-#'in the blood to plasma using the input parameters, calculated with hematocrit,
-#'Funbound.plasma, and Krbc2pu.
-#'@param default.to.human Substitutes missing rat values with human values if 
-#'true.
-#'@param tissue Desired tissue conentration, overwrites concentration 
-#'argument.
-#'@param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to 
-#'TRUE along with partition coefficients calculated with this value.
-#'@param regression}{Whether or not to use the regressions in calculating 
-#'partition coefficients.
-#'@param well.stirred.correction Uses correction in calculation of hepatic 
-#'clearance for well-stirred model if TRUE for model 1compartment and 
-#'3compartmentss. This assumes clearance relative to amount unbound in whole 
-#'blood instead of plasma, but converted to use with plasma concentration.
-#'@param IVIVE Honda et al. (submitted) identified six plausible sets of 
-#'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
-#'Argument may be set to "Honda1" through "Honda6". If used, this function 
-#'overwrites the tissue, restrictive.clearance, and plasma.binding arguments. 
-#'See Details below for more information.
-#'@param restrictive.clearance If TRUE (default), then only the fraction of
-#' chemical not bound to protein is available for metabolism in the liver. If 
-#' FALSE, then all chemical in the liver is metabolized (faster metabolism due
-#' to rapid off-binding). 
-#'@param ... Additional parameters passed to parameterize functions if parameters is NULL.
-#'  
-#'@return Steady state concentration                                                               %'      #'
-#'@details Tissue concentrations are calculated for the pbtk model with oral 
-#'infusion dosing.  All tissues other than gut, liver, and lung are the product
-#'of the steady state plasma concentration and the tissue to plasma partition 
-#'coefficient. 
-#'\tabular{lrrrr}{
-#' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr
-#'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr
-#'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr
-#'Honda3 \tab Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-#'Honda4 \tab Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr
-#'Honda5 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-#'Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
-#'}
-#'*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
-#'  
-#'@examples 
-#'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
-#'                  model='3compartment',concentration='blood')
-#'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-#'                  default.to.human=TRUE,daily.dose=2)
-#'calc_analytic_css(chem.name="bisphenol a",model="1compartment")
-#'calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
-#'params <- parameterize_pbtk(chem.cas="80-05-7") 
-#'calc_analytic_css(parameters=params,model="pbtk")
-#'
-#'@author Robert Pearce and John Wambaugh
-#'
-#'@keywords Solve
-#'
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
-
-
-
-
-
 #' Calculate the analytic steady state concentration.
 #' 
 #' This function calculates the analytic steady state plasma or venous blood
@@ -198,35 +108,11 @@
 #' See Details below for more information.
 #' @param ... Additional parameters passed to parameterize functions if
 #' parameters is NULL.
-#' @return Steady state concentration %' #'
-#' 
-#' Steady state concentration %' #'
+#' @return Steady state concentration 
 #' @author Robert Pearce and John Wambaugh
 #' 
 #' Robert Pearce and John Wambaugh
-#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
-#' In Vivo Data to Evaluate Extrapolation Assumptions", submitted. Calculate
-#' the analytic steady state concentration.
-#' 
-#' This function calculates the analytic steady state plasma or venous blood
-#' concentrations as a result of infusion dosing for the three compartment and
-#' multiple compartment PBTK models.
-#' 
-#' Tissue concentrations are calculated for the pbtk model with oral infusion
-#' dosing.  All tissues other than gut, liver, and lung are the product of the
-#' steady state plasma concentration and the tissue to plasma partition
-#' coefficient.  \tabular{lrrrr}{ \tab \emph{in vivo} Conc. \tab Metabolic
-#' Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr Honda1
-#' \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr Honda2
-#' \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr Honda3 \tab
-#' Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr Honda4 \tab
-#' Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr Honda5 \tab
-#' Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr Honda6
-#' \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr }
-#' *Assumption is currently ignored because analytical steady-state solutions
-#' are currently used by this function.
-#' 
-#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
+#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
 #' Data to Evaluate Extrapolation Assumptions", submitted.
 #' @keywords Solve
 #' @examples
@@ -239,17 +125,6 @@
 #' calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 #' params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' calc_analytic_css(parameters=params,model="pbtk")
-#' 
-#' 
-#' calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
-#'                  model='3compartment',concentration='blood')
-#' calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-#'                  default.to.human=TRUE,daily.dose=2)
-#' calc_analytic_css(chem.name="bisphenol a",model="1compartment")
-#' calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
-#' params <- parameterize_pbtk(chem.cas="80-05-7") 
-#' calc_analytic_css(parameters=params,model="pbtk")
-#' 
 #' 
 #' 
 #' @export calc_analytic_css

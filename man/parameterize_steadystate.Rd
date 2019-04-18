@@ -26,14 +26,14 @@ having p-values greater than the threshold are set to zero.}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
+\item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
+of unbound plasma in calculation of partition coefficients for rats if true.}
+
 \item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
 TRUE.}
 
 \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
-
-\item{human.clint.fub}{Uses human hepatic intrinsic clearance and fraction
-of unbound plasma in calculation of partition coefficients for rats if true.}
 }
 \value{
 \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}

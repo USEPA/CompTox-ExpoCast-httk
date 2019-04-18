@@ -28,7 +28,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 Remaining tissues in tissue.data are lumped in the rest of the body.
 However, solve_pbtk only works with the default parameters.}
 
-\item{force.human.clint.fub}{Forces use of human values for hepatic
+\item{force.human.clint.fup}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in

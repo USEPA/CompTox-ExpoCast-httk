@@ -1,41 +1,3 @@
-#'Draw Funbound.plasma and Clint from censored or non-censored distributions.
-#'
-#'Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
-#'user specifications on the assumed distributions of Funbound.plasma and Clint,
-#'draw "individual" values of Funbound.plasma and Clint from those
-#'distributions.
-#'
-#'@export
-#'
-#'@param this.chem The CAS number of one of the HTTK chemicals (see 
-#'  \code{\link[httk]{get_cheminfo}}).
-#' @param parameters A list of chemical-specific model parameters containing at least
-#' Funbound.plasma, Clint, and Fhep.assay.correction. 
-#'@param nsamp The number of samples to draw.
-#'@param sigma.factor The coefficient of variance to assume. Default 0.3.
-#'@param poormetab Logical. Whether to include poor metabolizers in the Clint
-#'  distribution or not.
-#'@param fup.censor Logical. Whether to draw \code{Funbound.plasma} from a
-#'  censored distribution or not.
-#'@param Clint.vary Logical, default TRUE. Whether to treat \code{Clint} as
-#'  fixed at its measured value (FALSE), or as a random variable (TRUE).
-#'@param lod The average limit of detection for \code{Funbound.plasma}, below
-#'  which distribution will be censored if fup.censor is TRUE. Default 0.01.
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
-#' clearance assay result has a p-values greater than the threshold are set to zero.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE.
-#'
-#'@return A data.table with three columns:
-#'  \code{Funbound.plasma} and \code{Clint}, containing the sampled values, and
-#'  \code{Fhep.assay.correction}, containing the value for fraction unbound in
-#'  hepatocyte assay.
-#'
-#' @author Caroline Ring and John Wambaugh
-
-
-
-
-
 #' Draw Funbound.plasma and Clint from censored or non-censored distributions.
 #' 
 #' Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
@@ -43,40 +5,25 @@
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions.
 #' 
-#' 
 #' @param this.chem The CAS number of one of the HTTK chemicals (see
 #' \code{\link[httk]{get_cheminfo}}).
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
 #' @param nsamp The number of samples to draw.
-#' @param sigma.factor The coefficient of variance to assume. Default 0.3.
+#' @param fup.meas.cv Coefficient of variation of distribution of measured
+#' \code{Funbound.plasma} values. 
+#' @param clint.meas.cv Coefficient of variation of distribution of measured 
+#' \code{Clint} values.
+#' @param fup.pop.cv Coefficient of variation of distribution of population
+#' \code{Funbound.plasma} values.
+#' @param clint.pop.cv Coefficient of variation of distribution of population
+#' \code{Clint} values.
 #' @param poormetab Logical. Whether to include poor metabolizers in the Clint
 #' distribution or not.
-#' @param fup.censor Logical. Whether to draw \code{Funbound.plasma} from a
+#' @param fup.lod The average limit of detection for \code{Funbound.plasma}, below
+#' which distribution will be censored if fup.censored.dist is TRUE. Default 0.01.
+#' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
-#' @param Clint.vary Logical, default TRUE. Whether to treat \code{Clint} as
-#' fixed at its measured value (FALSE), or as a random variable (TRUE).
-#' @param lod The average limit of detection for \code{Funbound.plasma}, below
-#' which distribution will be censored if fup.censor is TRUE. Default 0.01.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE.
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
-#' @param this.chem The CAS number of one of the HTTK chemicals (see
-#' \code{\link[httk]{get_cheminfo}}).
-#' @param parameters A list of chemical-specific model parameters containing at
-#' least Funbound.plasma, Clint, and Fhep.assay.correction.
-#' @param nsamp The number of samples to draw.
-#' @param sigma.factor The coefficient of variance to assume. Default 0.3.
-#' @param poormetab Logical. Whether to include poor metabolizers in the Clint
-#' distribution or not.
-#' @param fup.censor Logical. Whether to draw \code{Funbound.plasma} from a
-#' censored distribution or not.
-#' @param Clint.vary Logical, default TRUE. Whether to treat \code{Clint} as
-#' fixed at its measured value (FALSE), or as a random variable (TRUE).
-#' @param lod The average limit of detection for \code{Funbound.plasma}, below
-#' which distribution will be censored if fup.censor is TRUE. Default 0.01.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE.
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
@@ -86,20 +33,9 @@
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
 #' hepatocyte assay.
-#' 
-#' A data.table with three columns: \code{Funbound.plasma} and \code{Clint},
-#' containing the sampled values, and \code{Fhep.assay.correction}, containing
-#' the value for fraction unbound in hepatocyte assay.
-#' @author Caroline Ring and John Wambaugh Draw Funbound.plasma and Clint from
-#' censored or non-censored distributions.
-#' 
-#' Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
-#' user specifications on the assumed distributions of Funbound.plasma and
-#' Clint, draw "individual" values of Funbound.plasma and Clint from those
-#' distributions.
-#' 
-#' Caroline Ring and John Wambaugh
+#' @author Caroline Ring and John Wambaugh
 #' @export draw_fup_clint
+
 draw_fup_clint <- function(this.chem=NULL,
                            parameters=NULL,
                            nsamp,
@@ -128,11 +64,11 @@ draw_fup_clint <- function(this.chem=NULL,
   if (!is.null(this.chem))
   {
     parameters<-httk::parameterize_steadystate(chem.cas=this.chem,
-                                      species='Human',
-                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      clint.pvalue.threshold=clint.pvalue.threshold,
-                                      suppress.messages=T)
-  } else {
+                    species='Human',
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    clint.pvalue.threshold=clint.pvalue.threshold,
+                    suppress.messages=T)
+ } else {
     if (!"Dow74"%in%names(parameters))
     {
       pKa_Donor <- parameters[["pKa_Donor"]]
@@ -147,6 +83,7 @@ draw_fup_clint <- function(this.chem=NULL,
       stop("Funbound.plasma, Clint, Dow74, and Fhep.assay.correction needed in draw_fup_clint.")
     }
   }
+
   
   # Initalize the data.table:
   indiv_tmp <- data.table(Funbound.plasma=rep(parameters[["Funbound.plasma"]],nsamp),
@@ -345,12 +282,13 @@ draw_fup_clint <- function(this.chem=NULL,
                            replace=TRUE)
       #Set the means of the two distributions. Poor metabolizers distribution
       #has mean 10% of regular metabolizers distribution.
+      
       # Check if clint is a distribution (median,low95,high95,pvalue):
       if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
       {
         indiv_tmp[,Clint.mu:=as.numeric(strsplit(Clint,",")[[1]][1])]
       } else indiv_tmp[,Clint.mu:=Clint]
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,.(Clint.mu=Clint.mu/10)]
+      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,(Clint.mu=Clint.mu/10)]
 
       #Set the standard deviations of the two distributions.
       #Both have a coefficient of variation given by *.pop.cv:
@@ -382,7 +320,7 @@ draw_fup_clint <- function(this.chem=NULL,
   #
   #
   # next, draw Funbound.plasma from either a normal or censored distribution, as
-  # long as fup.pop.cv isn't NULL (otherwise, no pop variability for this
+  # long as fup.pop.cv isn't NULL (otherwise, no pop variability for this)
   if (!is.null(fup.pop.cv))
   {
     indiv_tmp[,fup.sd:=fup.pop.cv*fup.mean]

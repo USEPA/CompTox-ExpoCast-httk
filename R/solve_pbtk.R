@@ -106,6 +106,8 @@
 #' }
 #' 
 #' @export solve_pbtk
+#' @useDynLib httk
+#' @import deSolve
 solve_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,

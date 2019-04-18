@@ -54,7 +54,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   restrictive.clearance=T,
                                   adjusted.Funbound.plasma=T,
                                   regression=T,
-                                  .stirred.correction=T,
+                                  well.stirred.correction=T,
                                   clint.pvalue.threshold=0.05)
 {
   name.list <- c("Clint",
@@ -128,7 +128,8 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     .stirred.correction=.stirred.correction,
                                     restrictive.clearance=restrictive.clearance,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                    clint.pvalue.threshold=clint.pvalue.threshold) #L/h/kgBW
+                                    clint.pvalue.threshold=clint.pvalue.threshold,
+                                    well.stirred.correction=well.stirred.correction) #L/h/kgBW
 
   if(!suppress.messages)cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"elimination rate returned in units of 1/h.\n")
   return(as.numeric(clearance/Vd))

@@ -1,7 +1,6 @@
 #' Parameterize_3comp
 #' 
 #' This function initializes the parameters needed in the function solve_3comp.
-#'  function does. ~~
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -12,7 +11,7 @@
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
-#' @param force.human.clint.fub Forces use of human values for hepatic
+#' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
 #' having p-values greater than the threshold are set to zero.
