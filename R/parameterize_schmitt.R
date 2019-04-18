@@ -6,7 +6,7 @@
 #' When species is specified as rabbit, dog, or mouse, the human unbound
 #' fraction is substituted.
 #' 
-#' force.human.fub calculates Funbound.plasma.corrected with the human lipid
+#' force.human.fup calculates Funbound.plasma.corrected with the human lipid
 #' fractional volume in plasma.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -17,7 +17,7 @@
 #' default "Human").
 #' @param default.to.human Substitutes missing fraction of unbound plasma with
 #' human values if true.
-#' @param force.human.fub Returns human fraction of unbound plasma in
+#' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
 #' @return
 #' 

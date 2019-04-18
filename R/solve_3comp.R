@@ -82,6 +82,8 @@
 #' solve_3comp(parameters=params)
 #' 
 #' @export solve_3comp
+#' @useDynLib httk
+#' @import deSolve
 solve_3comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,

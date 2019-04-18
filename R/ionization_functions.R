@@ -13,31 +13,6 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
   return(Dow)
 }
 
-#calc_ionization <- function(pH,pKa=NA,pKb=NA) 
-#{
-#  # Need to calculate the amount of un-ionized parent:
-#  denom <- 1
-#  acid <- 0
-#  base <- 0
-#  if (!is.na(pKa))
-#  {
-#    if (regexpr(",",pKa)!=-1) pKa <- sort(as.numeric(strsplit(pKa,",")[[1]]))
-#    for (i in 1:length(pKa))
-#      denom <- denom + 10^(i*pH-sum(pKa[1:i]))
-#      acid <- acid + 10^(i*pH-sum(pKa[1:i]))
-#  }
-#  if (!is.na(pKb)) 
-#  {
-#    if (regexpr(",",pKb)!=-1) pKb <- sort(as.numeric(strsplit(pKb,",")[[1]]),decreasing=T)
-#      for (i in 1:length(pKb))
-#        denom <- denom + 10^(sum(pKb[1:i])-i*pH)
-#        base <- base + 10^(sum(pKb[1:i])-i*pH)
-#  }
-#  return(list(fraction_neutral = 1/denom,
-#    fraction_charged = 1 - 1/denom,
-#    fraction_negative = acid/denom,
-#    fraction_positive = base/denom))
-#}
 
 
 #' Calculate the ionization.

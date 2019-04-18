@@ -108,9 +108,7 @@
 #' See Details below for more information.
 #' @param ... Additional parameters passed to parameterize functions if
 #' parameters is NULL.
-#' @return Steady state concentration %' #'
-#' 
-#' Steady state concentration %' #'
+#' @return Steady state concentration 
 #' @author Robert Pearce and John Wambaugh
 #' 
 #' Robert Pearce and John Wambaugh
