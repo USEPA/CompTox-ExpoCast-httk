@@ -63,7 +63,6 @@ of the chemical in the blood to the concentration in the plasma.}
 }
 \description{
 This function initializes the parameters needed in the function solve_3comp.
- function does. ~~
 }
 \examples{
 
