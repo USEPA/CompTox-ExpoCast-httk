@@ -1,7 +1,6 @@
 #' Parameterize_1comp
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
-#'  function does. 
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -78,7 +77,6 @@ parameterize_1comp <- function(chem.cas=NULL,
                                                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                                          restrictive.clearance=restrictive.clearance,
                                                          clint.pvalue.threshold=clint.pvalue.threshold))
-
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
@@ -92,11 +90,13 @@ parameterize_1comp <- function(chem.cas=NULL,
                                              restrictive.clearance=restrictive.clearance,
                                              well.stirred.correction=well.stirred.correction,
                                              clint.pvalue.threshold=clint.pvalue.threshold)
- 
+  
   params[["Clint"]] <- ss.params[["Clint"]]
+  params[["Clint.dist"]] <- ss.params[["Clint.dist"]]
   params[["Funbound.plasma"]] <- ss.params[["Funbound.plasma"]] 
   params[["Funbound.plasma.adjustment"]] <- ss.params[["Funbound.plasma.adjustment"]] 
   params[["Fhep.assay.correction"]] <- ss.params[["Fhep.assay.correction"]]
+  params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
                                                          chem.cas=chem.cas,
                                                          species=species,
@@ -111,7 +111,6 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
   
   params[['million.cells.per.gliver']] <- 110
-
   params[["liver.density"]] <- 1.05 # g/mL
    
    # Check the species argument for capitilization problems and whether or not it is in the table:  

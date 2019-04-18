@@ -5,7 +5,6 @@
 #' compartment steady state model ('3compartmentss').  
 #' 
 #' 
-#' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
 #' @param chem.cas Either the chemical name or the CAS number must be
@@ -16,7 +15,7 @@
 #' having p-values greater than the threshold are set to zero.
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
-#' @param human.clint.fub Uses human hepatic intrinsic clearance and fraction
+#' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
 #' TRUE.
