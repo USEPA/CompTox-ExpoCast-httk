@@ -76,6 +76,8 @@
 #' 
 #' 
 #' @export solve_fetal_pbtk
+#' @useDynLib httk
+#' @import deSolve
 solve_fetal_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,

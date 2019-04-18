@@ -108,7 +108,7 @@ calc_hepatic_clearance <- function(chem.name=NULL,
 ## Correct for fraction of chemical unbound in in vitro hepatocyte assay:
 #  Clint <- Clint / fu_hep
 #
-#  fub <- get_param("Funbound.plasma",parameters,"calc_Hepatic_Clearance") # unitless fraction
+#  fup <- get_param("Funbound.plasma",parameters,"calc_Hepatic_Clearance") # unitless fraction
   Clint <- parameters[["Clint"]]
   fup <- parameters[["Funbound.plasma"]]
   if(!restrictive.clearance) fup <- 1

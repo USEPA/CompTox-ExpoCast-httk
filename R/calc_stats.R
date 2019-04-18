@@ -23,7 +23,7 @@
 #' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param exclude.fub.zero Whether or not to exclude chemicals with a fraction
+#' @param exclude.fup.zero Whether or not to exclude chemicals with a fraction
 #' of unbound plasma equal to zero or include them with a value of 0.005, only
 #' used when chem.name, chem.cas, and parameters are not specified.
 #' @param doses.per.day Number of doses per day.
@@ -54,7 +54,7 @@
 #' triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 #' 
 #' @export calc_stats
-calc_stats <-function(days,chem.name=NULL,chem.cas=NULL,parameters=NULL,stats=c("AUC","peak","mean"),species='Human',exclude.fub.zero=F,daily.dose=1,dose=NULL,doses.per.day=NULL,output.units='uM',concentration='plasma',model='pbtk',default.to.human=F,suppress.messages=F,...)
+calc_stats <-function(days,chem.name=NULL,chem.cas=NULL,parameters=NULL,stats=c("AUC","peak","mean"),species='Human',exclude.fup.zero=F,daily.dose=1,dose=NULL,doses.per.day=NULL,output.units='uM',concentration='plasma',model='pbtk',default.to.human=F,suppress.messages=F,...)
 {
   AUC <- NULL
   peak <- NULL
@@ -62,7 +62,7 @@ calc_stats <-function(days,chem.name=NULL,chem.cas=NULL,parameters=NULL,stats=c(
   out <- NULL
   
   if(is.null(chem.name) & is.null(chem.cas) & is.null(parameters)){
-    for(this.CAS in get_cheminfo(species=species,exclude.fub.zero = exclude.fub.zero,model=model)){
+    for(this.CAS in get_cheminfo(species=species,exclude.fup.zero = exclude.fup.zero,model=model)){
       stat <- calc_chem_stats(chem.cas=this.CAS,days=days,stats=stats,species=species,dose=dose,daily.dose=daily.dose,doses.per.day=doses.per.day,concentration=concentration,output.units=output.units,model=model,default.to.human=default.to.human,suppress.messages=T,...)
 
       if(length(stat)==1){

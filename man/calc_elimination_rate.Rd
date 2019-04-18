@@ -8,7 +8,7 @@ calc_elimination_rate(chem.cas = NULL, chem.name = NULL,
   parameters = NULL, species = "Human", suppress.messages = F,
   default.to.human = F, restrictive.clearance = T,
   adjusted.Funbound.plasma = T, regression = T,
-  .stirred.correction = T, clint.pvalue.threshold = 0.05)
+  well.stirred.correction = T, clint.pvalue.threshold = 0.05)
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be
@@ -37,14 +37,14 @@ TRUE along with partition coefficients calculated with this value.}
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
+
 \item{.stirred.correction}{Uses correction in calculation of hepatic
 clearance for -stirred model if TRUE.  This assumes clearance relative
 to amount unbound in whole blood instead of plasma, but converted to use
 with plasma concentration.}
-
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
-set to zero.}
 }
 \value{
 \item{Elimination rate}{Units of 1/h.}

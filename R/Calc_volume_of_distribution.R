@@ -76,16 +76,16 @@ calc_vdist<- function(chem.cas=NULL,
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fub <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
-    if (class(fub) == "try-error" & default.to.human) 
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+    if (class(fup) == "try-error" & default.to.human) 
     {
-      fub <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
-    if (class(fub) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-    if (fub == 0)
+    if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+    if (fup == 0)
     {
-      fub <- 0.005
+      fup <- 0.005
       warning("Fraction unbound = 0, changed to 0.005.")
     }
     if(adjusted.Funbound.plasma){
@@ -95,9 +95,9 @@ calc_vdist<- function(chem.cas=NULL,
       Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-      fub <- 1 / ((dow) * Flipid + 1 / fub)
+      fup <- 1 / ((dow) * Flipid + 1 / fup)
     }
-    parameters <- c(parameters,Funbound.plasma=fub)  
+    parameters <- c(parameters,Funbound.plasma=fup)  
   }
   
   
