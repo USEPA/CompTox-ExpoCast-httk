@@ -415,6 +415,17 @@ convert_httk <- function(indiv.model.bio,
   if (model %in% c('1compartment', '3compartmentss'))
   {
     indiv.model[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
+    indiv.model[, Clmetabolismc:=calc_hepatic_clearance(parameters=list(
+          Clint=Clint,
+          Funbound.plasma=Funbound.plasma,
+          Qtotal.liverc=Qtotal.liverc, 
+          million.cells.per.gliver=million.cells.per.gliver,
+          Vliverc=Vliverc,
+          BW=BW,
+          liver.density=liver.density, 
+          Fhep.assay.correction=Fhep.assay.correction),
+          hepatic.model='unscaled',
+          suppress.messages=T)] #L/h/kg body weight
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
