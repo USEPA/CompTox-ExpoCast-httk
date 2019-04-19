@@ -17,11 +17,13 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Human plasma concentration returned in uM units.
-[1] 0.1125149
+[1] 1.125149
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
@@ -61,7 +63,7 @@ Warning messages:
   Human in vivo Rblood2plasma returned.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Human plasma concentration returned in uM units.
-[1] 0.1125149
+[1] 1.125149
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
@@ -101,7 +103,7 @@ Warning messages:
   Human in vivo Rblood2plasma returned.
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 0.1125149
+[1] 1.125149
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
@@ -148,4 +150,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-   2.34    0.57    4.51 
+   2.26    0.56    2.73 

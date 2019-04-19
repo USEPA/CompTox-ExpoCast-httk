@@ -17,11 +17,13 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
 Human plasma concentration returned in uM units.
-[1] 0.1296676
+[1] 1.121203
 Warning messages:
 1: In parameterize_steadystate(chem.cas = chem.cas, species = species,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
@@ -31,7 +33,7 @@ Warning messages:
 > #calc_mc_css(chem.name="bisphenol a",model="3compartmentss")
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Human plasma concentration returned in uM units.
-[1] 0.1296676
+[1] 1.121203
 Warning messages:
 1: In parameterize_steadystate(chem.cas = chem.cas, species = species,  :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
@@ -41,7 +43,7 @@ Warning messages:
 > #calc_mc_css(chem.cas="80-05-7",model="3compartmentss")
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 0.1296676
+[1] 1.121203
 Warning messages:
 1: In parameterize_steadystate(chem.cas = "80-05-7") :
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
@@ -52,4 +54,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-   1.71    0.43    2.95 
+   1.56    0.45    1.92 
