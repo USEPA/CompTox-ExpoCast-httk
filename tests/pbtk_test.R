@@ -3,6 +3,8 @@ library(httk)
 calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
+calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
+calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
 
 head(solve_pbtk(chem.name="bisphenol a"))
 head(solve_pbtk(chem.cas="80-05-7"))

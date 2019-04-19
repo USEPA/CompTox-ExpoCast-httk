@@ -3,6 +3,8 @@ library(httk)
 calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
+calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
+calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 
 head(solve_3comp(chem.name="bisphenol a"))
 head(solve_3comp(chem.cas="80-05-7"))

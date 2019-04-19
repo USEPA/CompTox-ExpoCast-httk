@@ -261,10 +261,17 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
+# Need to convert to 3compartmentss parameters:
+    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
+      parameters=c(parameters[param.names.3compss%in%names(parameters)],
+      Dow74=NA,
+      hepatic.bioavailability=NA,
+      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
+                                        ...)
     if (!paste0('K',tolower(tissue)) %in% 
-      substr(names(parameters),1,nchar(names(parameters))-3))
+      substr(names(pcs),1,nchar(names(pcs))-3))
     {
-      stop(paste("Tissue",tissue,"is not available in model \"pbtk\"."))
+      stop(paste("Tissue",tissue,"is not available."))
     }
 # Tissues with sources (gut) or sinks (liver,kidney) need to be calculated
 # taking the change of mass into account:
@@ -274,7 +281,8 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       Css <- parameters[['Kgut2pu']] * parameters[['Funbound.plasma']] * 
         (Css + dose / (Qgut * parameters[['Rblood2plasma']]))
     } else if (tissue == 'liver') {
-      Qliver <- parameters$Qtotal.liverc / parameters$BW^0.25
+      Qliver <- (parameters$Qgutf + parameters$Qliverf) * parameters$Qcardiacc / 
+        parameters$BW^0.25
       Clmetabolism <- parameters$Clmetabolismc
       if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
       Css <- parameters[['Kliver2pu']] * fup * (hourly.dose + 
@@ -285,7 +293,9 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       Css <- parameters[['Kkidney2pu']] * fup * Qkidney * Css * Rblood2plasma /
         (Qkidney * Rblood2plasma + parameters$Qgfrc * fup)
 # All other tissues are proportional based on the partition coefficient:
-    } else Css <- Css * parameters[[names(parameters)[substr(names(parameters),2,nchar(names(parameters))-3)==tissue]]] * fup   
+    } else {
+      Css <- Css * pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * fup   
+    }
   }
 
   if (tolower(concentration)=='plasma')
@@ -346,10 +356,6 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    restrictive.clearance=T,
                                    ...)
 {
-  if (!is.null(tissue)) 
-  {
-    stop("Model 3compss can not give tissue concentrations.")
-  }
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
   {
     stop('Parameters, chem.name, or chem.cas must be specified.')
@@ -406,6 +412,29 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     Qtotalliver*Fup*cl /
     (Qtotalliver + Fup*cl/Rb2p))
     
+# Check to see if a specific tissue was asked for:
+  if (!is.null(tissue))
+  {
+# We need logP, which currently isn't one of the 3compss parameters, so unless
+# the user gives chem.name/chem.cas, we can't run:
+    if (is.null(chem.cas) & is.null(chem.name) & !("Pow" %in% names(parameters)))
+      stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
+# Need to convert to 3compartmentss parameters:
+    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
+      parameters=c(parameters[param.names.3compss%in%names(parameters)],
+      Dow74=NA,
+      hepatic.bioavailability=NA,
+      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
+                                        ...)
+    if (!paste0('K',tolower(tissue)) %in% 
+      substr(names(pcs),1,nchar(names(pcs))-3))
+    {
+      stop(paste("Tissue",tissue,"is not available."))
+    }
+
+    Css <- Css * pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * Fup   
+  }
+
   if (tolower(concentration)=='blood')
   {
     Css <- Css * Rb2p
@@ -458,10 +487,6 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    restrictive.clearance=T,
                                    ...)
 {
-  if (!is.null(tissue)) 
-  {
-    stop("Model 1comp can not give tissue concentrations.")
-  }
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
   {
     stop('Parameters, chem.name, or chem.cas must be specified.')
@@ -494,6 +519,28 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
+
+# Check to see if a specific tissue was asked for:
+  if (!is.null(tissue))
+  {
+# Need to convert to 3compartmentss parameters:
+    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
+      parameters=c(parameters[param.names.3compss%in%names(parameters)],
+      Dow74=NA,
+      hepatic.bioavailability=NA,
+      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
+                                        ...)
+    if (!paste0('K',tolower(tissue)) %in% 
+      substr(names(pcs),1,nchar(names(pcs))-3))
+    {
+      stop(paste("Tissue",tissue,"is not available."))
+    }
+
+    Css <- Css * 
+      pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * 
+      parameters$Funbound.plasma   
+  }
+  
   if (tolower(concentration)=='blood')
   {
     Css <- Css * parameters[['Rblood2plasma']]
@@ -548,10 +595,6 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    restrictive.clearance=T,
                                    ...)
 {
-  if (!is.null(tissue)) 
-  {
-    stop("Model 3comp can not give tissue concentrations.")
-  }
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
   {
     stop('Parameters, chem.name, or chem.cas must be specified.')
@@ -586,6 +629,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
 
   hourly.dose <- hourly.dose * parameters$Fgutabs
   fup <- parameters$Funbound.plasma
+  Rblood2plasma <- parameters$Rblood2plasma
   Clmetabolism <- parameters$Clmetabolismc
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   Css <- hourly.dose * parameters[['BW']]^0.25  / 
@@ -595,6 +639,41 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + 
     fup * parameters$Qgfrc / parameters$Rblood2plasma)) / fup
 
+# Check to see if a specific tissue was asked for:
+  if (!is.null(tissue))
+  {
+# Need to convert to 3compartmentss parameters:
+    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
+      parameters=c(parameters[param.names.3compss%in%names(parameters)],
+      Dow74=NA,
+      hepatic.bioavailability=NA,
+      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
+                                        ...)
+    if (!paste0('K',tolower(tissue)) %in% 
+      substr(names(pcs),1,nchar(names(pcs))-3))
+    {
+      stop(paste("Tissue",tissue,"is not available."))
+    }
+# Tissues with sources (gut) or sinks (liver,kidney) need to be calculated
+# taking the change of mass into account:
+    if (tissue == 'gut')
+    {
+      Qgut <- parameters$Qgutf * parameters$Qcardiacc / parameters$BW^0.25
+      Css <- parameters[['Kgut2pu']] * fup * 
+        (Css + dose / (Qgut * Rblood2plasma))
+    } else if (tissue == 'liver') {
+      Qliver <- (parameters$Qgutf + parameters$Qliverf) * parameters$Qcardiacc / 
+        parameters$BW^0.25
+      Clmetabolism <- parameters$Clmetabolismc
+      if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
+      Css <- parameters[['Kliver2pu']] * fup * (hourly.dose + 
+        Qliver * Css * Rblood2plasma) / 
+        (Clmetabolism * fup + Qliver * Rblood2plasma)
+    } else {
+      Css <- Css * pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * fup   
+    }
+  }
+  
   if (tolower(concentration)=='blood')
   {
      Css <- Css * parameters[['Rblood2plasma']]
