@@ -148,7 +148,7 @@ calc_analytic_css <- function(chem.name=NULL,
 # Convert to uM if requested
   if (tolower(output.units)=='um')
   { 
-    Css <- Css / 1000 / MW * 100000 # mg/L -> uM
+    Css <- Css / 1e3 / MW * 1e6 # mg/L -> uM
   }
 
 #User message:

@@ -69,7 +69,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   {
     stop('Fraction unbound plasma cannot be zero.')
   }
-  if (is.na(parameters$hepatic.bioavailability)) browser() 
+#  if (is.na(parameters$hepatic.bioavailability)) browser() 
   if (recalc.blood2plasma) 
   {
     parameters$Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
