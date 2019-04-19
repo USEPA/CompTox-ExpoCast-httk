@@ -1,3 +1,6 @@
+# Add this model to the list of models:
+model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
+
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.pbtk <- c("BW",
                     "Clint",
