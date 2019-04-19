@@ -17,18 +17,27 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 587
+[1] 8822
 > length(pbpk.list)
-[1] 485
+[1] 8815
 > length(rat.list)
-[1] 172
+[1] 101
 > 
 > proc.time()
    user  system elapsed 
-   1.40    0.40    1.76 
+   1.59    0.50    2.01 
