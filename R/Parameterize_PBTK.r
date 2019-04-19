@@ -216,7 +216,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
 
   outlist <- c(outlist,
     list(Clint=Clint,
-         Clint.dist = schmitt.params$Clint.dist,
+         Clint.dist = Clint.dist,
          Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",
                           parameters=list(
                             Clint=Clint, #uL/min/10^6 cells
