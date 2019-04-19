@@ -28,10 +28,10 @@
 #' currently ignored because analytical steady-state solutions are currently
 #' used by this function.
 #' 
-#' @param chem.name Either the chemical parameters, name, or the CAS number
-#' must be specified. 
 #' @param chem.cas Either the CAS number, parameters, or the chemical name must
 #' be specified. 
+#' @param chem.name Either the chemical parameters, name, or the CAS number
+#' must be specified. 
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.
 #' @param daily.dose Total daily dose, mg/kg BW/day.
@@ -41,6 +41,11 @@
 #' default "Human").  Species must be set to "Human" to run httkpop model. 
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param suppress.messages Whether or not to suppress output message.
+#' @param model Model used in calculation: 'pbtk' for the multiple compartment
+#' model,'3compartment' for the three compartment model, '3compartmentss' for
+#' the three compartment steady state model, and '1compartment' for one
+#' compartment model.  This only applies when httkpop=TRUE and species="Human",
+#' otherwise '3compartmentss' is used.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
 #' of detection (specified separately for each paramter). This argument should
@@ -57,22 +62,33 @@
 #' entry in the list is named for a parameter in "parameters". New values are
 #' sampled with mean equal to the value in "parameters" and standard deviation
 #' equal to the mean times the CV. Not used with httkpop model.
+#' @param fup.meas.cv Coefficient of variation of distribution of measured
+#' \code{Funbound.plasma} values. 
+#' @param clint.meas.cv Coefficient of variation of distribution of measured 
+#' \code{Clint} values.
+#' @param fup.pop.cv Coefficient of variation of distribution of population
+#' \code{Funbound.plasma} values.
+#' @param clint.pop.cv Coefficient of variation of distribution of population
+#' \code{Clint} values.
 #' @param samples Number of samples generated in calculating quantiles.
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
 #' @param tissue Desired steady state tissue conentration.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
 #' @param well.stirred.correction If TRUE (default) then the well-stirred
 #' correction (Rowland et al., 1973) is used in the calculation of hepatic
 #' clearance for the models that do not include flows for first-pass metabolism
 #' (currently, 1compartment and 3compartmentss). This assumes clearance
 #' relative to amount unbound in whole blood instead of plasma, but converted
 #' for use with plasma concentration.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param tk.statistic.used Theoreticially either the "mean" or "max"imum
@@ -87,22 +103,11 @@
 #' @param httkpop Whether or not to use population generator and sampler from
 #' httkpop.  This is overwrites censored.params and vary.params and is only for
 #' human physiology.  Species must also be set to 'Human'.
-#' @param model Model used in calculation: 'pbtk' for the multiple compartment
-#' model,'3compartment' for the three compartment model, '3compartmentss' for
-#' the three compartment steady state model, and '1compartment' for one
-#' compartment model.  This only applies when httkpop=TRUE and species="Human",
-#' otherwise '3compartmentss' is used.
 #' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
 #' metabolizers)
-#' @param fup.censor TRUE (draw \code{Funbound.plasma} from a censored
-#' distribution) or FALSE (draw \code{Funbound.plasma} from a non-censored
-#' distribution)
-#' @param sigma.factor The coefficient of variation to use for \code{Clint} and
-#' \code{Funbound.plasma} distributions. Default value is 0.3.
-#' @param Clint.vary TRUE (sample \code{Clint} values) or FALSE (hold
-#' \code{Clint} fixed). Default TRUE. If \code{Clint.vary} is FALSE, then
-#' \code{poormetab} will have no effect.
-#' @param lod The average limit of detection for Funbound.plasma. if
+#' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
+#' censored distribution or not.
+#' @param fup.lod The average limit of detection for Funbound.plasma. if
 #' \code{fup.censor == TRUE}, the \code{Funbound.plasma} distribution will be
 #' censored below \code{lod/2}. Default value is 0.01.
 #' @param method The population-generation method to use. Either "virtual
@@ -143,19 +148,19 @@
 #' @param physiology.matrix A data table generated by
 #' \code{httkpop_generate()}.
 #' @param parameter.matrix A data table generated by \code{get_httk_params()}.
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
 #' @param ... Additional parameters passed to calc_analytic_css
-#' @author original by John Wambaugh, rewritten by Caroline Ring and Robert
+#' 
+#' @author Original by John Wambaugh, rewritten by Caroline Ring and Robert
 #' Pearce
 #' @references Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
-#' Environment international 106 (2017): 105-118. Honda, Gregory S., et al.
-#' "Using the Concordance of In Vitro and In Vivo Data to Evaluate
-#' Extrapolation Assumptions", submitted. Rowland, Malcolm, Leslie Z. Benet,
-#' and Garry G. Graham. "Clearance concepts in pharmacokinetics." Journal of
-#' pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#' Environment international 106 (2017): 105-118. 
+#' 
+#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo 
+#' Data to Evaluate Extrapolation Assumptions", submitted. 
+#' 
+#' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
+#' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 #' @keywords Monte Carlo Steady State
 #' @examples
 #' 
@@ -311,7 +316,13 @@ calc_mc_css <- function(chem.cas=NULL,
                    ".  Use parameters from parameterize_steadystate."))
       }
     }
-    if (well.stirred.correction & !'Rblood2plasma' %in% names(parameters)) parameters[['Rblood2plasma']] <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+    if (well.stirred.correction & !'Rblood2plasma' %in% names(parameters)){
+      parameters[['Rblood2plasma']] <- 
+        available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,
+                                species=species,
+                                adjusted.Funbound.plasma=
+                                  adjusted.Funbound.plasma)
+    }
     
     out <- monte_carlo(params=parameters,
                         censored.params=censored.params,
@@ -331,6 +342,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         return.samples=return.samples,
                         restrictive.clearance=restrictive.clearance,
                         species=species)
+
     if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
   }  
   if(!suppress.messages & !return.samples){

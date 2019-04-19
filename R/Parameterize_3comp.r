@@ -1,7 +1,6 @@
 #' Parameterize_3comp
 #' 
 #' This function initializes the parameters needed in the function solve_3comp.
-#'  function does. ~~
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be

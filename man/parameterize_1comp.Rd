@@ -60,7 +60,6 @@ first pass clearance, calculated from the corrected well-stirred model.}
 }
 \description{
 This function initializes the parameters needed in the function solve_1comp.
- function does. ~~
 }
 \examples{
 
