@@ -1,7 +1,6 @@
 #' Parameterize_1comp
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
-#'  function does. ~~
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be

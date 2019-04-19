@@ -22,7 +22,7 @@ Package for High-Throughput Toxicokinetics}
 
 \href{https://doi.org/10.1093/toxsci/kfv171}{Wetmore et al. (2015):
 Incorporating High-Throughput Exposure Predictions With Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing<}
+In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 
 \href{https://doi.org/10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
 Toxicokinetic Triage for Environmental Chemicals}
