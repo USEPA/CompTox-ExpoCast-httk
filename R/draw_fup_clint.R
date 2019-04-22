@@ -292,7 +292,8 @@ draw_fup_clint <- function(this.chem=NULL,
       {
         indiv_tmp[,Clint.mu:=as.numeric(strsplit(Clint,",")[[1]][1])]
       } else indiv_tmp[,Clint.mu:=Clint]
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,(Clint.mu=Clint.mu/10)]
+      #Simulate 5% of population as ultra-low metabolizers
+      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
 
       #Set the standard deviations of the two distributions.
       #Both have a coefficient of variation given by *.pop.cv:
