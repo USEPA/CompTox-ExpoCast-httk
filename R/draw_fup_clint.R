@@ -46,7 +46,7 @@ draw_fup_clint <- function(this.chem=NULL,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.05,
                            clint.pop.cv=0.1,
-                           poormetab,
+                           poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
                            adjusted.Funbound.plasma=T,
@@ -273,26 +273,17 @@ draw_fup_clint <- function(this.chem=NULL,
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
-    if (poormetab){ #if poor metabolizers are included:
+    if (poormetab) #if poor metabolizers are included:
+    {}
       #Assume that 5% of the population has 10% the metabolism; i.e., assume a
       #Gaussian mixture distribution
 
-      #Gaussian mixture distribution: first, draw whether each individual will
-      #come from the "regular metabolizers" distribution (with 95% probability),
-      #or the "poor metabolizers" distribution (with 5% probability)
-      components <- sample(1:2,
-                           prob=c(0.05,0.95),
-                           size=nsamp,
-                           replace=TRUE)
-      #Set the means of the two distributions. Poor metabolizers distribution
-      #has mean 10% of regular metabolizers distribution.
-      
-      # Check if clint is a distribution (median,low95,high95,pvalue):
-      if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
-      {
-        indiv_tmp[,Clint.mu:=as.numeric(strsplit(Clint,",")[[1]][1])]
-      } else indiv_tmp[,Clint.mu:=Clint]
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,(Clint.mu=Clint.mu/10)]
+
+      #Set the means of the two distributions; regular metabolizers:
+      indiv_tmp[,Clint.mu:=Clint]
+      # and then poor metabolizers (5% of population)
+      # who have metabolic clearance rates at 10% of  the regular metabolizers
+      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
 
       #Set the standard deviations of the two distributions.
       #Both have a coefficient of variation given by *.pop.cv:
