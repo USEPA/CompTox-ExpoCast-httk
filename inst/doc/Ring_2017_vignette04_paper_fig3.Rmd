@@ -1,0 +1,236 @@
+---
+title: "Ring et al. 2017 Vignette 4: Generating Figure 3"
+author: "Caroline Ring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generating Figure 3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, 
+                      comment = '#>', 
+                      fig.width=7, 
+                      fig.height=7)
+```
+
+This vignette contains code to generate Figure 3 from the paper: a plot of HTTK-Pop predicted median Css vs. literature median Css.
+
+First, load some packages.
+```{r, eval = FALSE}
+library('data.table')
+library('ggplot2')
+library('httk')
+```
+
+Next, load in the model-predicted median Css values for the Age 20-50 non-obese sub-population.
+```{r, eval=FALSE}
+poormetab <- TRUE
+fup.censor <- TRUE
+grp <- 'Age.20.50.nonobese'
+model <- '3compartmentss'
+popmethod <- 'dr'
+
+m.dat <- readRDS(paste0('data/',
+                        paste('allchems',
+                              grp,
+                              popmethod,
+                              'poormetab',
+                              poormetab,
+                              'fup.censor',
+                              fup.censor,
+                              model,
+                              "FuptoFub",
+                              sep='_'),
+                        '.Rdata'))
+```
+
+And read in the literature values of median Css. Start with data from Obach et al. 2008.
+```{r, eval=FALSE}
+#Convert clearance in mL/min/kg to Css in mg/L for a dose of 1 mg/kg/day
+Obach2008[,"Css (mg/L)"] <- 1/
+  (24*60*
+     as.numeric(Obach2008[,
+                          "CL (mL/min/kg)"])/
+     1000) # 1 mg/kg/day / L/day/kg -> mg/L
+literature.Css <- Obach2008[,c("Name","CAS","Css (mg/L)")]
+Obach2008.dt <- as.data.table(literature.Css)
+```
+
+Then add in some data from Wetmore et al. 2012.
+```{r, eval=FALSE}
+Wetmore2012 <- Wetmore2012[c(1:2,13,3:12),]
+Wetmore2012.Css <- Wetmore2012[,c("Chemical","CAS","Literature.Css")]
+Wetmore2012.Css[, 'Literature.Css'] <- gsub(x=Wetmore2012.Css[,
+                                                              'Literature.Css'], 
+                                            pattern=',', 
+                                            replacement='')
+#strip commas from Css values for proper conversion
+Wetmore2012.Css[, "Literature.Css"] <- as.numeric(Wetmore2012.Css[,
+                                                                  "Literature.Css"])
+colnames(Wetmore2012.Css) <- c("Name","CAS","Css (mg/L)")
+Wetmore2012.Css <- Wetmore2012.Css[!is.na(Wetmore2012.Css[,"Css (mg/L)"]),]
+Wetmore2012.dt <- as.data.table(Wetmore2012.Css)
+```
+
+Combine the Wetmore and Obach data
+```{r, eval=FALSE}
+litCss.dt <- rbind(Obach2008.dt, Wetmore2012.dt)
+setnames(litCss.dt, c('Name', 'Css (mg/L)'), c('Compound', 'litcss'))
+```
+
+Convert literature in vivo Css from mg/L to umol/L (uM), using Css/(MW/1000), where MW is molecular weight in grams per mole of substance.
+```{r, eval=FALSE}
+#MW = weight in grams per mole of substance
+#MW*1000 = weight in mg per mole of substance
+#MW*1000/10^6 = MW/1000 = weight in mg per umol of substance
+#Css in mg/L divided by MW in mg/umol = umol/L = uM
+
+#get MW from HTTK cheminfo
+chemlist <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound', 'MW'),
+                                             species='Human',
+                                             model=model,
+                                             exclude.fub.zero=FALSE))
+setnames(chemlist, 'CAS', 'chemcas')
+litCss.dt <- merge(litCss.dt,
+                   chemlist[, .(Compound, MW)],
+                   by='Compound')
+#Now merge with litcss
+setnames(litCss.dt,
+         'CAS',
+         'chemcas')
+litCss.dt[, litcss:=litcss/(MW/1000)]
+```
+
+Next, make a data table with the literature Css values in one column and the model-predicted Css values in another.
+```{r, eval=FALSE}
+tmp.med <- merge(m.dat[, .(chemcas, css50)],
+                 litCss.dt,
+                 by=c('chemcas')
+                 )
+```
+
+Do a linear regression on the log10-scaled data, to assess the correlation between model-predicted and literature Css.
+```{r, eval=FALSE}
+mymodel <- lm(log10(css50)~log10(litcss), data=tmp.med)
+summary(mymodel)
+```
+
+Plot the data, along with the identity line and linear regression.
+```{r, eval=FALSE}
+p <- ggplot(data=tmp.med)+
+  geom_point(aes(y=css50, #Plot data points
+                 x=litcss),
+             shape=21, #As open circles
+             size=4) +
+  stat_smooth(data=tmp.med, #Plot best-fit line
+              mapping=aes(x=litcss, y=css50), #data will be log10-transformed before this is done, so this is the same as the linear regression above
+              method="lm",
+              linetype=2, #dashed line
+              size=1,
+              color="black",
+              alpha=0.25, #shading for confidence interval
+              level=0.99) + #99% CI
+  geom_abline(slope=1,intercept=0, #identity line
+              linetype=1, size=1, color="black")+ 
+  scale_x_log10() + #scale x data as log10
+  scale_y_log10() + #scale y data as log10
+  labs(x='Literature median Css (uM)', 
+       y='HTTK-Pop median Css (uM)') +
+  theme_bw()+
+  theme(axis.text.x=element_text(size=rel(2), angle=45, hjust=1),
+        axis.text.y=element_text(size=rel(2)),
+        axis.title.x=element_text(size=rel(2)),
+        axis.title.y=element_text(size=rel(2)))
+print(p)
+```
+
+The two chemicals with the highest literature Css values look very influential. What are they?
+```{r, eval=FALSE}
+#First find the chemicals with the two highest literature Css values
+setorder(tmp.med, litcss) #sort ascending by literature Css
+knitr::kable(tmp.med[(nrow(tmp.med)-1):nrow(tmp.med),
+                     .(Compound, chemcas, css50, litcss, MW)],
+             format="markdown",
+             col.names=c("Compound", "CASRN", "Predicted median Css", "Literature median Css", "MW (g/mol)"))
+```
+
+Let's see what the regression looks like without PFOS and PFOA.
+```{r, eval=FALSE}
+tmp.med2 <- tmp.med[1:(nrow(tmp.med)-2), ] #remove the highest two lit Css chemicals
+mymodel2 <- lm(log10(css50)~log10(litcss), data=tmp.med2) #re-do regression
+summary(mymodel2)
+```
+
+And re-do the plot with the new regression, excluding PFOS and PFOA.
+```{r, eval=FALSE}
+p2 <- p + stat_smooth(data=tmp.med2,#Add new best-fit line
+                      mapping=aes(x=litcss, y=css50),
+                      method="lm",
+                      color="black",
+                      linetype=3, #dotted
+                      size=1.2, #slightly increase thickness
+                      level=0.99, #plot 99% CI shading
+                      alpha=0.25)
+print(p2)
+ggsave(filename="pdf_figures/Figure3_FuptoFub.pdf",
+       plot=p2,
+       height=11, width=14)
+```
+
+The intercept and slope of the best-fit line don't change all that much when we exclude PFOS and PFOA; the correlation (R^2) decreases somewhat, from 0.32 to 0.22.
+
+To check whether the slopes of the regressions are significantly different from 1, check whether each model is significantly different from a corresponding model with a slope of 1.
+
+```{r, eval=FALSE}
+offset.model <- lm(log10(css50)~offset(log10(litcss)), data=tmp.med) #forces slope of 1
+summary(offset.model)
+anova(mymodel, offset.model) #Compare original regression to offset model
+
+offset.model2 <- lm(log10(css50)~offset(log10(litcss)), data=tmp.med2) #forces slope of 1
+summary(offset.model2)
+anova(mymodel2, offset.model2) #Compare second regression to offset model
+```
+
+Both p-values indicate that the slope is significantly different from 1.
+
+Finally, to generate a table of the predicted values, literature values, and the difference between them, just add a column to the data table. Sort by the ratio between predicted and literature values to see which chemicals are underpredicted or overpredicted, and by how much.
+
+```{r, eval=FALSE}
+tmp.med[, predicted.over.lit:=css50/litcss]
+setorder(tmp.med, predicted.over.lit)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+knitr::kable(tmp.med[, .(Compound, chemcas, css50, litcss, predicted.over.lit)], 
+             format='markdown',
+             col.names=c("Compound", "CASRN", "Median predicted Css", "Median literature Css", "Ratio of median predicted to median literature Css"),
+             align=rep("l", 5))
+```
+
+How many are within 10-fold?
+```{r, eval=FALSE}
+tmp.med[, sum(predicted.over.lit<=10 & predicted.over.lit>=0.1)]
+```
+
+How many are within 5-fold?
+```{r, eval=FALSE}
+tmp.med[, sum(predicted.over.lit<=5 & predicted.over.lit>=0.2)]
+```
+
+How many are within 2-fold?
+```{r, eval=FALSE}
+tmp.med[, sum(predicted.over.lit<=2 & predicted.over.lit>=0.5)]
+```
+
+How many are overpredicted?
+```{r, eval=FALSE}
+tmp.med[, sum(predicted.over.lit>1)]
+```
+
+Compared to the total:
+```{r, eval=FALSE}
+nrow(tmp.med)
+```
