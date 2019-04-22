@@ -278,7 +278,6 @@ draw_fup_clint <- function(this.chem=NULL,
       #Assume that 5% of the population has 10% the metabolism; i.e., assume a
       #Gaussian mixture distribution
 
-
       #Set the means of the two distributions; regular metabolizers:
       indiv_tmp[,Clint.mu:=Clint]
       # and then poor metabolizers (5% of population)
