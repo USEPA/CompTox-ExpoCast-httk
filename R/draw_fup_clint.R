@@ -273,37 +273,20 @@ draw_fup_clint <- function(this.chem=NULL,
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
+    #Set the mean of the regular metabolizer distribution:
+    indiv_tmp[,Clint.mu:=Clint]
     if (poormetab) #if poor metabolizers are included:
-    {}
-      #Assume that 5% of the population has 10% the metabolism; i.e., assume a
-      #Gaussian mixture distribution
-
-      #Set the means of the two distributions; regular metabolizers:
-      indiv_tmp[,Clint.mu:=Clint]
-      # and then poor metabolizers (5% of population)
-      # who have metabolic clearance rates at 10% of  the regular metabolizers
+    {
+      #Assume that 5% of the population has 10% the metabolism:
       indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
-
-      #Set the standard deviations of the two distributions.
-      #Both have a coefficient of variation given by *.pop.cv:
-      indiv_tmp[,Clint.sd:=clint.pop.cv*Clint.mu]
-
-      #Now draw from the "regular" or "poor metabolizers" distributions as
-      #assigned earlier for each individual.
-      indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
-                                                  a=0,
-                                                  b=Inf,
-                                                  mean=Clint.mu,
-                                                  sd=Clint.sd)]
-    } else{ #if poor metabolizers were excluded
-      #Draw Clint from a normal distribution with mean = measured Clint, and
-      #coefficient of variation given by clint.pop.cv.
-      indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
-                                                  a=0,
-                                                  b=Inf,
-                                                  mean=Clint,
-                                                  sd=clint.pop.cv*Clint)]
     }
+    #Draw Clint from a normal distribution with mean = measured Clint, and
+    #coefficient of variation given by clint.pop.cv.
+    indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
+                                                a=0,
+                                                b=Inf,
+                                                mean=Clint,
+                                                sd=clint.pop.cv*Clint)]
   }
     
   #
