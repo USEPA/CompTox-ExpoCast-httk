@@ -6,11 +6,9 @@
 \usage{
 calc_analytic_css(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, daily.dose = 1, output.units = "uM",
-  model = "pbtk", species = "Human", concentration = "plasma",
-  suppress.messages = F, recalc.blood2plasma = F,
-  default.to.human = F, tissue = NULL, well.stirred.correction = T,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, IVIVE = NULL, ...)
+  model = "pbtk", concentration = "plasma", suppress.messages = F,
+  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
+  IVIVE = NULL, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -173,15 +171,12 @@ calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 params <- parameterize_pbtk(chem.cas="80-05-7") 
 calc_analytic_css(parameters=params,model="pbtk")
 
-
 }
 \references{
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", submitted.
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
 }
 \author{
-Robert Pearce and John Wambaugh
-
-Robert Pearce and John Wambaugh
+Robert Pearce, John Wambaugh, and Greg Honda
 }
 \keyword{Solve}

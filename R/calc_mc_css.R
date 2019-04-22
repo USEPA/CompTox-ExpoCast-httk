@@ -354,5 +354,6 @@ calc_mc_css <- function(chem.cas=NULL,
       else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),tissue,"concentration returned in",output.units,"units.\n")
     }
   }
+  print(out)
   return(as.numeric(out))
 }

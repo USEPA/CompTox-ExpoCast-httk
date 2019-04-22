@@ -1,3 +1,6 @@
+# Add this model to the list of models:
+model.list[["3compartmentss"]]$analytic.css.func <- "calc_analytic_css_3compss"
+
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.3compss <- c("BW",
                        "Clint",
