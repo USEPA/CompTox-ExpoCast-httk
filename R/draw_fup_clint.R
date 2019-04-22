@@ -285,8 +285,8 @@ draw_fup_clint <- function(this.chem=NULL,
     indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
                                                 a=0,
                                                 b=Inf,
-                                                mean=Clint,
-                                                sd=clint.pop.cv*Clint)]
+                                                mean=Clint.mu,
+                                                sd=clint.pop.cv*Clint.mu)]
   }
     
   #
