@@ -74,6 +74,8 @@
 #' @author John Wambaugh and Robert Pearce
 #' @keywords Solve
 #' @export solve_aerosol_pbtk
+#' @useDynLib httk
+#' @import deSolve
 solve_aerosol_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,
