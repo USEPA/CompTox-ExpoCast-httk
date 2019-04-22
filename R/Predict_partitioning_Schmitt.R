@@ -59,6 +59,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          species='Human',
                                          default.to.human=F,
                                          parameters=NULL,
+                                         alpha=0.001,
                                          adjusted.Funbound.plasma=T,
                                          regression=T,
                                          regression.list=c('brain','adipose','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone'),
@@ -72,6 +73,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   } else {
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- parameterize_schmitt(chem.cas="80-05-7")$plasma.pH
+    if (!"Fprotein.plasma"%in%names(parameters)) parameters$Fprotein.plasma <- parameterize_schmitt(chem.cas="80-05-7")$Fprotein.plasma
   }
   if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
    
@@ -79,7 +81,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
     species <- 'Human'
     warning('Human fractional tissue volumes used in calculating partition coefficients.')
   }
-  #parameters$alpha <- 0.001
+  if (!("alpha" %in% names(parameters))) parameters$alpha <- alpha
 # For the "rest" tissue containing those tissues in "Physiological Parameter
 # Values for PBPK Models" (2004) that are not described by Schmitt (2008)
 

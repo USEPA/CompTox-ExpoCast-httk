@@ -207,6 +207,6 @@ parameterize_steadystate <- function(chem.cas=NULL,
     Params[['hepatic.bioavailability']] <- 
       Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
   }
-  
+  if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(Params)
 }

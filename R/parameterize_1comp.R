@@ -94,6 +94,7 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[["Clint"]] <- ss.params[["Clint"]]
   params[["Clint.dist"]] <- ss.params[["Clint.dist"]]
   params[["Funbound.plasma"]] <- ss.params[["Funbound.plasma"]] 
+  params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
   params[["Funbound.plasma.adjustment"]] <- ss.params[["Funbound.plasma.adjustment"]] 
   params[["Fhep.assay.correction"]] <- ss.params[["Fhep.assay.correction"]]
   params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 

@@ -29,6 +29,9 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -47,7 +50,8 @@ draw_fup_clint <- function(this.chem=NULL,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
                            adjusted.Funbound.plasma=T,
-                           clint.pvalue.threshold=0.05)
+                           clint.pvalue.threshold=0.05,
+                           minimum.Funbound.plasma=0.0001)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -248,7 +252,7 @@ draw_fup_clint <- function(this.chem=NULL,
     indiv_tmp[,fup.mean:=Funbound.plasma]
   }
   #if measured Funbound.plasma > 1, then set it to 1
-  indiv_tmp[, fup.mean := min(1,fup.mean)]
+  indiv_tmp[fup.mean>1, fup.mean := 1]
   # Store NA so data.table doesn't convert everything to text:
   indiv_tmp[,Funbound.plasma.dist:=NA]
 
@@ -343,5 +347,9 @@ draw_fup_clint <- function(this.chem=NULL,
     }
   }
 
+  #Enforce a minimum Funbound.plasma unless set to zero:
+  indiv_tmp[Funbound.plasma<minimum.Funbound.plasma,
+    Funbound.plasma:=minimum.Funbound.plasma]
+  
   return(indiv_tmp)
 }
