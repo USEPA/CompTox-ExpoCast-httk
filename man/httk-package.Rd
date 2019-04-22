@@ -9,9 +9,6 @@
 \description{
 c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_description(\"#1\")}",
 "httk")\Sexpr{tools:::Rd_package_description("httk")}
-
-c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_description(\"#1\")}",
-"httk")\Sexpr{tools:::Rd_package_description("httk")}
 }
 \seealso{
 \href{https://cfpub.epa.gov/si/si_public_record_report.cfm?dirEntryId=311211}{PowerPoint
@@ -46,9 +43,6 @@ Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
 ExpoCast (Exposure Forecasting) Project}
 }
 \author{
-John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
-Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer
-
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 }
