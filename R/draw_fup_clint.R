@@ -132,14 +132,10 @@ draw_fup_clint <- function(this.chem=NULL,
       #Gaussian mixture distribution: first, draw whether each individual will
       #come from the "regular metabolizers" distribution (with 95% probability),
       #or the "poor metabolizers" distribution (with 5% probability)
-      components <- sample(1:2,
-                           prob=c(0.05,0.95),
-                           size=nsamp,
-                           replace=TRUE)
       #Set the means of the two distributions. Poor metabolizers distribution
       #has mean 10% of regular metabolizers distribution.
       indiv_tmp[,Clint.mu:=Clint]
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,.(Clint.mu=Clint.mu/10)]
+      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
 
       #Set the standard deviations of the two distributions.
       #Both have a coefficient of variation given by sigma.factor.
