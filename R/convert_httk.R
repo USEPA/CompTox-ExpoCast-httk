@@ -342,9 +342,25 @@ convert_httk <- function(indiv.model.bio,
       indiv.model[, kelim:=ke]
     }
   } else {
+    calc_hep_params <- c(as.list(indiv.model[, list(Clint,
+                                                    Funbound.plasma,
+                                                    Fhep.assay.correction,
+                                                    million.cells.per.gliver,
+                                                    BW,
+                                                    Vliverc,
+                                                    Qtotal.liverc)]),
+                         liver.density=1.05,
+                         Dn=0.17)
     indiv.model[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,
                                                         species='Human',
                                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
+    indiv.model[,
+                Clmetabolismc:=httk::calc_hepatic_clearance(hepatic.model="unscaled",
+                                                            parameters=calc_hep_params,
+                                                            suppress.messages=TRUE,
+                                                            clint.pvalue.threshold=clint.pvalue.threshold)]
+    
+
   }
   # For models that don't described first pass blood flow from the gut, need to
   # cacluate a hepatic bioavailability (Rowland, 2009):
@@ -353,7 +369,8 @@ convert_httk <- function(indiv.model.bio,
     indiv.model[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
-
+  
+  
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.
   indiv.model<- indiv.model[,

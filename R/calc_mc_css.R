@@ -66,8 +66,7 @@ calc_mc_css <- function(chem.cas=NULL,
                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                              regression=regression,
                              restrictive.clearance=restrictive.clearance,
-                             clint.pvalue.threshold=0.05,
-                             ...)
+                             clint.pvalue.threshold=0.05)
     return(css)
   }
   if (httkpop == T & tolower(species) == 'human')
@@ -117,40 +116,40 @@ calc_mc_css <- function(chem.cas=NULL,
     if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
     if (is.null(parameters))
     {
-        parameters <- parameterize_steadystate(chem.cas=chem.cas,
-                                               chem.name=chem.name,
-                                               species=species,
-                                               default.to.human=default.to.human,
-                                               adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+      parameters <- parameterize_steadystate(chem.cas=chem.cas,
+                                             chem.name=chem.name,
+                                             species=species,
+                                             default.to.human=default.to.human,
+                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma)
     } else {
       if (!all(param.names.3compss %in% names(parameters)))
       {
         stop(paste("Missing parameters:",
                    paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
-                     collapse=', '),
+                         collapse=', '),
                    ".  Use parameters from parameterize_steadystate."))
       }
     }
     if (well.stirred.correction & !'Rblood2plasma' %in% names(parameters)) parameters[['Rblood2plasma']] <- available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
     
     out <- monte_carlo(params=parameters,
-                        censored.params=censored.params,
-                        which.quantile=which.quantile,
-                        cv.params=vary.params,
-                        samples=samples,model='3compartmentss',
-                        daily.dose=daily.dose,
-                        output.units=output.units,
-                        tissue=tissue,
-                        IVIVE=IVIVE,
-                        chem.name=chem.name,
-                        chem.cas=chem.cas,
-                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                        regression=regression,
-                        well.stirred.correction=well.stirred.correction,
-                        suppress.messages=T,
-                        return.samples=return.samples,
-                        restrictive.clearance=restrictive.clearance,
-                        species=species)
+                       censored.params=censored.params,
+                       which.quantile=which.quantile,
+                       cv.params=vary.params,
+                       samples=samples,model='3compartmentss',
+                       daily.dose=daily.dose,
+                       output.units=output.units,
+                       tissue=tissue,
+                       IVIVE=IVIVE,
+                       chem.name=chem.name,
+                       chem.cas=chem.cas,
+                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                       regression=regression,
+                       well.stirred.correction=well.stirred.correction,
+                       suppress.messages=T,
+                       return.samples=return.samples,
+                       restrictive.clearance=restrictive.clearance,
+                       species=species)
     if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
   }  
   if(!suppress.messages & !return.samples){
