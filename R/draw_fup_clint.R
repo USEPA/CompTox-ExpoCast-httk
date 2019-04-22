@@ -46,7 +46,7 @@ draw_fup_clint <- function(this.chem=NULL,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.05,
                            clint.pop.cv=0.1,
-                           poormetab,
+                           poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
                            adjusted.Funbound.plasma=T,
@@ -273,47 +273,20 @@ draw_fup_clint <- function(this.chem=NULL,
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
-    if (poormetab){ #if poor metabolizers are included:
-      #Assume that 5% of the population has 10% the metabolism; i.e., assume a
-      #Gaussian mixture distribution
-
-      #Gaussian mixture distribution: first, draw whether each individual will
-      #come from the "regular metabolizers" distribution (with 95% probability),
-      #or the "poor metabolizers" distribution (with 5% probability)
-      components <- sample(1:2,
-                           prob=c(0.05,0.95),
-                           size=nsamp,
-                           replace=TRUE)
-      #Set the means of the two distributions. Poor metabolizers distribution
-      #has mean 10% of regular metabolizers distribution.
-      
-      # Check if clint is a distribution (median,low95,high95,pvalue):
-      if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
-      {
-        indiv_tmp[,Clint.mu:=as.numeric(strsplit(Clint,",")[[1]][1])]
-      } else indiv_tmp[,Clint.mu:=Clint]
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,(Clint.mu=Clint.mu/10)]
-
-      #Set the standard deviations of the two distributions.
-      #Both have a coefficient of variation given by *.pop.cv:
-      indiv_tmp[,Clint.sd:=clint.pop.cv*Clint.mu]
-
-      #Now draw from the "regular" or "poor metabolizers" distributions as
-      #assigned earlier for each individual.
-      indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
-                                                  a=0,
-                                                  b=Inf,
-                                                  mean=Clint.mu,
-                                                  sd=Clint.sd)]
-    } else{ #if poor metabolizers were excluded
-      #Draw Clint from a normal distribution with mean = measured Clint, and
-      #coefficient of variation given by clint.pop.cv.
-      indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
-                                                  a=0,
-                                                  b=Inf,
-                                                  mean=Clint,
-                                                  sd=clint.pop.cv*Clint)]
+    #Set the mean of the regular metabolizer distribution:
+    indiv_tmp[,Clint.mu:=Clint]
+    if (poormetab) #if poor metabolizers are included:
+    {
+      #Assume that 5% of the population has 10% the metabolism:
+      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
     }
+    #Draw Clint from a normal distribution with mean = measured Clint, and
+    #coefficient of variation given by clint.pop.cv.
+    indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
+                                                a=0,
+                                                b=Inf,
+                                                mean=Clint.mu,
+                                                sd=clint.pop.cv*Clint.mu)]
   }
     
   #
