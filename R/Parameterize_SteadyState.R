@@ -60,7 +60,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (class(fub) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
   pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+  Pow <-  10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
   if (fub == 0)
   {
     fub <- 0.005
@@ -86,6 +86,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Funbound.plasma.adjustment"]] <- fub.adjust
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
+  Params[["Pow"]] <- Pow
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
 #  Params[["Pow"]] <- Pow
