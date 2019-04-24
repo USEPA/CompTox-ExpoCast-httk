@@ -336,7 +336,7 @@
         Css <- Css / parameters$MW * 1000
         output.units <- 'uM'
       }
-    }else if(tissue == 'liver'){
+    }else if(tissue == 'liver' & model!="1compartment"){
       if('Qtotal.liverc' %in% names(parameters)) Qliver <- parameters$Qtotal.liverc / parameters$BW^0.25
       else if(all(c('Qgutf','Qliverf','Qcardiacc') %in% names(parameters))) Qliver <- (parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc / parameters$BW^0.25
       else{
@@ -356,7 +356,7 @@
         Css <- Css / parameters$MW * 1000
         output.units <- 'uM'
       }
-    }else if(tissue == 'kidney'){
+    }else if(tissue == 'kidney' & model!="1compartment"){
       if(!all(c('Qcardiacc','Qkidneyf') %in% names(parameters))){
         Qkidney <- as.numeric(subset(tissue.data,Tissue == 'kidney' & tolower(Species) == tolower(species) & variable == 'Flow (mL/min/kg^(3/4))')[,'value']) * 60 / 1000 / parameters$BW^0.25 
         if(user.params) warning(paste(species,'kidney flow used in calculating',tissue,'concentration.  Species of parameters should match species argument of input function.'))
