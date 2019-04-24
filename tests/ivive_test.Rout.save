@@ -17,41 +17,54 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH other_tests.R other_tests.Rout
-> #library(httk)
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda1",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda1")
-> #params <- parameterize_steadystate(chem.name="bisphenol a")
-> #3/Css/params[["Funbound.plasma"]]
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda2",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda2")
-> #params <- parameterize_steadystate(chem.name="bisphenol a")
-> #3/Css/params[["Funbound.plasma"]]
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda3",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda3")
-> #3/Css
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda4",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda4")
-> #3/Css
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda5",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda5")
-> #3/Css
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda6",output.units="uM")
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda6")
-> #3/Css
+> library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
+> script.args <- commandArgs(TRUE)
+> if (length(script.args) > 0) if (script.args[1]=="mctest")
++ {
++   set.seed(12345)
++   Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda1",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda1")
++   params <- parameterize_steadystate(chem.name="bisphenol a")
++   3/Css/params[["Funbound.plasma"]]
++   set.seed(12345)
++   Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda2",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda2")
++   params <- parameterize_steadystate(chem.name="bisphenol a")
++   3/Css/params[["Funbound.plasma"]]
++   set.seed(12345)
++   calc_mc_css(chem.name="bisphenol a",IVIVE="Honda3",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda3")
++   3/Css
++   set.seed(12345)
++   Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda4",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda4")
++   3/Css
++   set.seed(12345)
++   Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda5",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda5")
++   3/Css
++   set.seed(12345)
++   Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda6",output.units="uM")
++   set.seed(12345)
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda6")
++   3/Css
++ }
 > 
 > proc.time()
    user  system elapsed 
-   0.18    0.21    5.43 
+   1.51    0.54    1.98 
