@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > 
 > fake <- data.frame(Compound="Tester",
 +                    CASRN="222-11-1",
@@ -96,4 +103,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-   2.70    0.65    3.28 
+   3.20    0.67    3.78 
