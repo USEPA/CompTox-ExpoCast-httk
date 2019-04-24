@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Human plasma concentration returned in uM units.
 [1] 1.125149
@@ -215,4 +222,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-   2.60    0.54    3.11 
+   2.95    0.76    3.79 

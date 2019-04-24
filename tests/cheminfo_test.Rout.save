@@ -21,16 +21,23 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 583
+[1] 8821
 > length(pbpk.list)
-[1] 485
+[1] 8815
 > length(rat.list)
-[1] 172
+[1] 101
 > 
 > proc.time()
    user  system elapsed 
-   1.50    0.51    2.26 
+   1.68    0.62    2.21 
