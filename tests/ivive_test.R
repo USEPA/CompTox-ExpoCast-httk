@@ -16,7 +16,7 @@ if (length(script.args) > 0) if (script.args[1]=="mctest")
   params <- parameterize_steadystate(chem.name="bisphenol a")
   3/Css/params[["Funbound.plasma"]]
   set.seed(12345)
-  Css <- calc_mc_css(chem.name="bisphenol a",IVIVE="Honda3",output.units="uM")
+  calc_mc_css(chem.name="bisphenol a",IVIVE="Honda3",output.units="uM")
   set.seed(12345)
   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda3")
   3/Css

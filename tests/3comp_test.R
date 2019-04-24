@@ -10,6 +10,7 @@ head(solve_3comp(chem.name="bisphenol a"))
 head(solve_3comp(chem.cas="80-05-7"))
 head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 
+script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 
 {
   if (any(script.args=="mctest"))
