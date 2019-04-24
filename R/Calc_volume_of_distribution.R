@@ -51,15 +51,25 @@ calc_vdist<- function(chem.cas=NULL,
                       species="Human",
                       suppress.messages=F,
                       adjusted.Funbound.plasma=T,
-                      regression=T)
+                      regression=T,
+                      minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
   Parameter <- NULL
 
   if (is.null(parameters))
   {
-    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
-    parameters <- suppressWarnings(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=regression,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            default.to.human=default.to.human,
+                            species=species,
+                            minimum.Funbound.plasma=minimum.Funbound.plasma)
+    parameters <- suppressWarnings(predict_partitioning_schmitt(
+                    parameters=schmitt.parameters,
+                    species=species,
+                    regression=regression,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma))
     if (adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
     else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }

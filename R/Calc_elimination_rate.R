@@ -55,7 +55,8 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   adjusted.Funbound.plasma=T,
                                   regression=T,
                                   well.stirred.correction=T,
-                                  clint.pvalue.threshold=0.05)
+                                  clint.pvalue.threshold=0.05,
+                                  minimum.Funbound.plasma=0.0001)
 {
   name.list <- c("Clint",
                  "Funbound.plasma",
@@ -79,18 +80,20 @@ calc_elimination_rate <- function(chem.cas=NULL,
   if(is.null(parameters))
   {
     parameters <- parameterize_steadystate(chem.cas=chem.cas,
-                                           chem.name=chem.name,
-                                           species=species,
-                                           default.to.human=default.to.human,
-                                           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                           clint.pvalue.threshold=clint.pvalue.threshold)
+                    chem.name=chem.name,
+                    species=species,
+                    default.to.human=default.to.human,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    clint.pvalue.threshold=clint.pvalue.threshold,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma)
     Vd <- calc_vdist(chem.cas=chem.cas,
                      chem.name=chem.name,
                      species=species,
                      suppress.messages=T,
                      default.to.human=default.to.human,
                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                     regression=regression) 
+                     regression=regression,
+                     minimum.Funbound.plasma=minimum.Funbound.plasma) 
   } else { 
     if(!all(name.list %in% names(parameters)))
     {
@@ -99,10 +102,11 @@ calc_elimination_rate <- function(chem.cas=NULL,
         stop('chem.cas or chem.name must be specified when not including all 3compartment or pbtk parameters.')
       }
       params <- parameterize_steadystate(chem.cas=chem.cas,
-                                         chem.name=chem.name,
-                                         species=species,
-                                         default.to.human=default.to.human,
-                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+                  chem.name=chem.name,
+                  species=species,
+                  default.to.human=default.to.human,
+                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                  minimum.Funbound.plasma=minimum.Funbound.plasma)
       parameters <- c(parameters,params[name.list[!(name.list %in% names(parameters))]])
     }
     if('Vdist' %in% names(parameters)){
@@ -116,7 +120,8 @@ calc_elimination_rate <- function(chem.cas=NULL,
                        suppress.messages=T,
                        default.to.human=default.to.human,
                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                       regression=regression) 
+                       regression=regression,
+                       minimum.Funbound.plasma=minimum.Funbound.plasma) 
     }    
   } 
   clearance <- calc_total_clearance(chem.name=chem.name,
@@ -129,7 +134,8 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     restrictive.clearance=restrictive.clearance,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                     clint.pvalue.threshold=clint.pvalue.threshold,
-                                    well.stirred.correction=well.stirred.correction) #L/h/kgBW
+                                    well.stirred.correction=well.stirred.correction,
+                                    minimum.Funbound.plasma=minimum.Funbound.plasma) #L/h/kgBW
 
   if(!suppress.messages)cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"elimination rate returned in units of 1/h.\n")
   return(as.numeric(clearance/Vd))
