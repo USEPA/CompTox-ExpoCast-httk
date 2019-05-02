@@ -62,13 +62,29 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          alpha=0.001,
                                          adjusted.Funbound.plasma=T,
                                          regression=T,
-                                         regression.list=c('brain','adipose','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone'),
-                                         tissues=NULL) #Schmitt 2008
+                                         regression.list=c('brain',
+                                                           'adipose',
+                                                           'gut',
+                                                           'heart',
+                                                           'kidney',
+                                                           'liver',
+                                                           'lung',
+                                                           'muscle',
+                                                           'skin',
+                                                           'spleen',
+                                                           'bone'),
+                                         tissues=NULL,
+                                         minimum.Funbound.plasma=0.0001) 
 {
   Tissue <- Species <- variable <- NULL
   
-  if(is.null(parameters)){
-    parameters <- parameterize_schmitt(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human)
+  if (is.null(parameters))
+  {
+    parameters <- parameterize_schmitt(chem.name=chem.name,
+                    chem.cas=chem.cas,
+                    species=species,
+                    default.to.human=default.to.human,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma)
     user.params <- F
   } else {
     user.params <- T
@@ -105,17 +121,43 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
   FPint <- 0.37 * parameters$Fprotein.plasma
 	# water fraction in interstitium:
   FWint <- FWpl
-  if(regression){
-   #  regression coefficients add to table 
-    if(adjusted.Funbound.plasma){
-      reg <- matrix(c(-0.167,0.543,-0.325,0.574,-0.006,0.267, 0.143, 0.764, 0.116, 0.683, 0.452, 0.673, 0.475, 0.621, 0.087, 0.866, -0.022, 0.658, -0.09, 0.566, 0.034, 0.765, 0.036, 0.781),12,2,byrow=T)
-      rownames(reg) <- c('brain','adipose','red blood cells','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')
-      colnames(reg) <- c('intercept','slope')
-    }else{
-      reg <- matrix(c(-0.117,0.377,-0.324,0.544,-0.022,0.196, 0.14, 0.735, 0.12, 0.534, 0.443, 0.631, 0.487, 0.513, 0.113, 0.75, -0.025, 0.537, -0.086, 0.498, 0.011, 0.675, 0.025, 0.758),12,2,byrow=T)
-      rownames(reg) <- c('brain','adipose','red blood cells','gut','heart','kidney','liver','lung','muscle','skin','spleen','bone')
-      colnames(reg) <- c('intercept','slope')  
-    } 
+  if (regression)
+  {
+   #  regression coefficients (intercept and slope) add to table 
+    if (adjusted.Funbound.plasma)
+    {
+      reg <- matrix(c(-0.167,0.543, # brain
+                      -0.325,0.574, # adipose
+                      -0.006,0.267, # red blood cells
+                      0.143, 0.764, # gut
+                      0.116, 0.683, # heart
+                      0.452, 0.673, # kidney
+                      0.475, 0.621, # liver
+                      0.087, 0.866, # lung
+                      -0.022, 0.658, # muscle
+                      -0.09, 0.566, # skin
+                      0.034, 0.765, # spleen
+                      0.036, 0.781), # bone
+                      12,2,byrow=T)
+    } else {
+      reg <- matrix(c(-0.117,0.377, # brain
+                      -0.324,0.544, # adipose
+                      -0.022,0.196, # red blood cells
+                      0.14, 0.735, # gut
+                      0.12, 0.534, # heart 
+                      0.443, 0.631, # kidney 
+                      0.487, 0.513, # liver 
+                      0.113, 0.75, # lung
+                      -0.025, 0.537, # muscle 
+                      -0.086, 0.498, # skin
+                      0.011, 0.675, # spleen
+                      0.025, 0.758), # bone
+                      12,2,byrow=T)
+
+    }
+    rownames(reg) <- c('brain','adipose','red blood cells','gut','heart',
+                       'kidney','liver','lung','muscle','skin','spleen','bone')
+    colnames(reg) <- c('intercept','slope')      
   }
   if(is.null(tissues)) tissues <- unique(tissue.data[,'Tissue'])
 	for (this.tissue in tissues)

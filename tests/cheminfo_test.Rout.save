@@ -17,13 +17,15 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
 > library(httk)
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 587
+[1] 583
 > length(pbpk.list)
 [1] 485
 > length(rat.list)
@@ -31,4 +33,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   1.40    0.40    1.76 
+   1.39    0.50    1.82 
