@@ -57,7 +57,8 @@ parameterize_1comp <- function(chem.cas=NULL,
                                restrictive.clearance=T,
                                well.stirred.correction=T,
                                suppress.messages=F,
-                               clint.pvalue.threshold=0.05)
+                               clint.pvalue.threshold=0.05,
+                               minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
   if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
@@ -71,25 +72,27 @@ parameterize_1comp <- function(chem.cas=NULL,
                                   regression=regression,suppress.messages=T)
   
   ss.params <- suppressWarnings(parameterize_steadystate(chem.name=chem.name,
-                                                         chem.cas=chem.cas,
-                                                         species=species,
-                                                         default.to.human=default.to.human,
-                                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                                         restrictive.clearance=restrictive.clearance,
-                                                         clint.pvalue.threshold=clint.pvalue.threshold))
+                 chem.cas=chem.cas,
+                 species=species,
+                 default.to.human=default.to.human,
+                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                 restrictive.clearance=restrictive.clearance,
+                 clint.pvalue.threshold=clint.pvalue.threshold,
+                 minimum.Funbound.plasma=minimum.Funbound.plasma))
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
-                                             chem.cas=chem.cas,
-                                             chem.name=chem.name,
-                                             species=species,
-                                             suppress.messages=T,
-                                             default.to.human=default.to.human,
-                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                             regression=regression,
-                                             restrictive.clearance=restrictive.clearance,
-                                             well.stirred.correction=well.stirred.correction,
-                                             clint.pvalue.threshold=clint.pvalue.threshold)
+                         chem.cas=chem.cas,
+                         chem.name=chem.name,
+                         species=species,
+                         suppress.messages=T,
+                         default.to.human=default.to.human,
+                         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                         regression=regression,
+                         restrictive.clearance=restrictive.clearance,
+                         well.stirred.correction=well.stirred.correction,
+                         clint.pvalue.threshold=clint.pvalue.threshold,
+                         minimum.Funbound.plasma=minimum.Funbound.plasma)
   
   params[["Clint"]] <- ss.params[["Clint"]]
   params[["Clint.dist"]] <- ss.params[["Clint.dist"]]
@@ -99,9 +102,10 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[["Fhep.assay.correction"]] <- ss.params[["Fhep.assay.correction"]]
   params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
-                                                         chem.cas=chem.cas,
-                                                         species=species,
-                                                         default.to.human=default.to.human)) 
+                    chem.cas=chem.cas,
+                    species=species,
+                    default.to.human=default.to.human,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma)) 
   params[["Pow"]] <- phys.params[["Pow"]]
   params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
   params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]

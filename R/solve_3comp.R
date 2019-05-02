@@ -107,14 +107,24 @@ solve_3comp <- function(chem.name = NULL,
                     adjusted.Funbound.plasma=T,
                     regression=T,
                     restrictive.clearance = T,
+                    minimum.Funbound.plasma=0.0001,
                     ...)
 {
   Agutlumen <- Agut <- Aliver <- Arest <- Cgut <- Cliver <- Crest <- NULL
-  if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
-  if (is.null(parameters)){
-    parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
-                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
-  }else{
+  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
+    stop('Parameters, chem.name, or chem.cas must be specified.')
+  if (is.null(parameters))
+  {
+    parameters <- parameterize_3comp(
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    species=species,
+                    default.to.human=default.to.human,
+                    suppress.messages=suppress.messages,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    regression=regression,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma)
+  } else {
     if(!all(param.names.3comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.3comp[which(!param.names.3comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
     if(any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")
   }  
