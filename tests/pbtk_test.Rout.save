@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > library(httk)
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 Human plasma concentration returned in uM units.
-[1] 0.1121317
+[1] 1.121317
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = outlist) :
   Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
@@ -31,8 +31,59 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-> #set.seed(12345)
-> #calc_mc_css(chem.name="bisphenol a",model="pbtk")
+> calc_analytic_css(chem.cas="80-05-7",model="pbtk")
+Human plasma concentration returned in uM units.
+[1] 1.121317
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
+Plasma concentration returned in uM units.
+[1] 1.121317
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+5: In calc_analytic_css(parameters = parameterize_pbtk(chem.cas = "80-05-7"),  :
+  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
+Human liver concentration returned in uM units.
+[1] 24.73511
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
+Human brain concentration returned in uM units.
+[1] 7.648167
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo Rblood2plasma returned.
+5: In predict_partitioning_schmitt(parameters = outlist) :
+  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
+> 
 > head(solve_pbtk(chem.name="bisphenol a"))
 Human values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -59,20 +110,6 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-> calc_analytic_css(chem.cas="80-05-7",model="pbtk")
-Human plasma concentration returned in uM units.
-[1] 0.1121317
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = outlist) :
-  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-3: In parameterize_pbtk(chem.cas = chem.cas, species = species, default.to.human = default.to.human,  :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo Rblood2plasma returned.
-> #set.seed(12345)
-> #calc_mc_css(chem.cas="80-05-7",model="pbtk")
 > head(solve_pbtk(chem.cas="80-05-7"))
 Human values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -99,22 +136,6 @@ Warning messages:
   Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
 4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo Rblood2plasma returned.
-> calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
-Plasma concentration returned in uM units.
-[1] 0.1121317
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = outlist) :
-  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Humanfractional tissue volumes used in calculation.  Parameters should match species argument used (Human).
-3: In parameterize_pbtk(chem.cas = "80-05-7") :
-  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo Rblood2plasma returned.
-5: In calc_analytic_css(parameters = parameterize_pbtk(chem.cas = "80-05-7"),  :
-  Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.
-> #set.seed(12345)
-> #calc_mc_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
 > head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
 Values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
@@ -146,6 +167,50 @@ Warning messages:
 6: In solve_pbtk(parameters = parameterize_pbtk(chem.cas = "80-05-7")) :
   Clearance not recalculated.  Set recalc.clearance to TRUE if desired.
 > 
+> script.args <- commandArgs(TRUE)
+> if (length(script.args) > 0) 
++ {
++   if (any(script.args=="mctest"))
++   {
++     set.seed(12345)
++     calc_mc_css(chem.name="bisphenol a",model="pbtk")
++     set.seed(12345)
++     calc_mc_css(chem.cas="80-05-7",model="pbtk")
++     set.seed(12345)
++     calc_mc_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
++   }
++   if (any(script.args=="wetmoretest"))
++   {
++     wetmore.chems <- subset(chem.physical_and_invitro.data,
++       regexpr("Wetmore",Human.Clint.Reference)!=-1 &
++       regexpr("Wetmore",Human.Funbound.plasma.Reference)!=-1)
++     Css.table <- data.frame()
++     for (this.cas in sort(get_lit_cheminfo()))
++       if (this.cas %in% get_cheminfo(model="pbtk") &
++         this.cas %in% wetmore.chems$CAS)
++       {
++         Css.table[this.cas,"Css.lit"] <- get_lit_css(chem.cas=this.cas,
++           output.units="uM",
++           which.quantile=0.5)
++         Css.table[this.cas,"Css.calc"] <- calc_analytic_css(chem.cas=this.cas,
++           model="pbtk")
++       }                                                                          
++     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
++     
++ #    library(ggplot2)
++ #    test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
++ #             geom_point(size=3)+
++ #       scale_y_log10()+
++ #       scale_x_log10()+
++ #      ylab(expression(paste(C[aa]," Literature (uM)"))) +
++ #      xlab(expression(paste(C[aa]," pbtk model (uM)"))) +
++ #      geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
++ #    
++ #    dev.new()
++ #    print(test.fig)
++   }
++ }
+> 
 > proc.time()
    user  system elapsed 
-   2.50    0.51    4.11 
+   2.76    0.53    3.26 

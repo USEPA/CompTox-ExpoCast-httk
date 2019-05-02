@@ -17,6 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+[Previously saved workspace restored]
+
 > #R CMD BATCH other_tests.R other_tests.Rout
 > library(httk)
 > calc_css(chem.name='nicotine')
@@ -25,7 +27,7 @@ $avg
 [1] 0.633025
 
 $frac
-[1] 9.055435
+[1] 0.9055435
 
 $max
 [1] 1.303318
@@ -45,16 +47,16 @@ Warning messages:
 > calc_css(chem.name="perfluorooctanoic acid")
 Human plasma concentrations returned in uM units.
 $avg
-[1] 133.3033
+[1] 187.9245
 
 $frac
-[1] 0.9290521
+[1] 0.9831696
 
 $max
-[1] 135.2968
+[1] 189.1913
 
 $the.day
-[1] 1
+[1] 68
 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = outlist) :
@@ -94,4 +96,4 @@ There were 12 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-   2.45    0.42    4.71 
+   2.56    0.46    2.95 

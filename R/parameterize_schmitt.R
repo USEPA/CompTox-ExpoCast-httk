@@ -41,7 +41,8 @@ parameterize_schmitt <- function(chem.cas=NULL,
                                  species="Human",
                                  default.to.human=F,
                                  force.human.fup=F,
-                                 suppress.messages=F)
+                                 suppress.messages=F,
+                                 minimum.Funbound.plasma=0.0001)
 {
 
   physiology.data <- physiology.data
@@ -99,7 +100,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
   else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
   ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
   dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-  fup.corrected <- 1 / ((dow) * Flipid + 1 / fup.point)
+  fup.corrected <- max(1 / 
+                      ((dow) * Flipid + 1 / fup.point),
+                      minimum.Funbound.plasma) # Enforcing a sanity check on 
+                                               # plasma binding
   
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
