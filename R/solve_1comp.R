@@ -103,14 +103,31 @@ solve_1comp <- function(chem.cas=NULL,
                         adjusted.Funbound.plasma=T,
                         regression=T,
                         restrictive.clearance=T,
-                        well.stirred.correction=T,                        
+                        well.stirred.correction=T,
+                        minimum.Funbound.plasma=0.0001,                        
                         ...)
 {     
    Agutlumen <- Acompartment <- Ccompartment <- NULL 
-  if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
-  if(is.null(parameters)){  parameters <- parameterize_1comp(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,well.stirred.correction=well.stirred.correction,suppress.messages=suppress.messages) 
-  }else{
-     if(!all(param.names.1comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
+  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
+    stop('Parameters, chem.name, or chem.cas must be specified.')
+  if (is.null(parameters))
+  {
+   parameters <- parameterize_1comp(chem.name=chem.name,
+                   chem.cas=chem.cas,
+                   species=species,
+                   default.to.human=default.to.human,
+                   adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                   regression=regression,
+                   restrictive.clearance=restrictive.clearance,
+                   well.stirred.correction=well.stirred.correction,
+                   suppress.messages=suppress.messages,
+                   well.stirred.correction=well.stirred.correction,
+                   minimum.Funbound.plasma=minimum.Funbound.plasma) 
+  } else {
+     if (!all(param.names.1comp %in% names(parameters)))
+       stop(paste("Missing parameters:",
+       paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],
+       collapse=', '),".  Use parameters from parameterize_1comp."))
   }
   Rb2p <- parameters[['Rblood2plasma']]
   BW <- parameters[['BW']]
