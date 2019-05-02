@@ -1,7 +1,7 @@
 #' Calculate the volume of distribution for a one compartment model.
 #'
-#' This function predicts partition coefficients for all tissues, then lumps
-#' them into a single compartment.
+#' This function predicts partition coefficients for all tissues, then lumps them
+#' into a single compartment.
 #' 
 #' The effective volume of distribution is calculated by summing each tissues
 #' volume times it's partition coefficient relative to plasma. Plasma, and the
@@ -51,7 +51,8 @@ calc_vdist<- function(chem.cas=NULL,
                       species="Human",
                       suppress.messages=F,
                       adjusted.Funbound.plasma=T,
-                      regression=T)
+                      regression=T,
+                      minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
   Parameter <- NULL
@@ -59,34 +60,22 @@ calc_vdist<- function(chem.cas=NULL,
   if (is.null(parameters))
   {
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
-                                            chem.name=chem.name,
-                                            default.to.human=default.to.human,
-                                            species=species)
-    parameters <- suppressWarnings(predict_partitioning_schmitt(parameters=
-                                              schmitt.parameters,
-                                              species=species,
-                                              regression=regression,
-                            adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-    if (adjusted.Funbound.plasma) parameters <-
-      c(parameters,schmitt.parameters['Funbound.plasma'])
-    else parameters <- 
-      c(parameters,Funbound.plasma=
-          schmitt.parameters[['unadjusted.Funbound.plasma']])
+                            chem.name=chem.name,
+                            default.to.human=default.to.human,
+                            species=species,
+                            minimum.Funbound.plasma=minimum.Funbound.plasma)
+    parameters <- suppressWarnings(predict_partitioning_schmitt(
+                    parameters=schmitt.parameters,
+                    species=species,
+                    regression=regression,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma))
+    if (adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
+    else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
-  schmitt.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu","Kgut2pu",
-                     "Kheart2pu","Kkidney2pu","Kliver2pu","Klung2pu",
-                     "Kmuscle2pu","Kskin2pu","Kspleen2pu","Krbc2pu", 
-                     "Krest2pu")  
-  schmitt.specific.names <- c("Kadipose2pu","Kbone2pu","Kbrain2pu",
-                              "Kheart2pu","Kmuscle2pu","Kskin2pu",
-                              "Kspleen2pu")   
-
-  if(any(names(parameters) %in% schmitt.specific.names) & 
-     !all(c(schmitt.names) %in% names(parameters))) {
-stop("All predict_partitioning_schmitt coefficients must be included
-     if not using pbtk or 3compartment parameters.")              
-} else if(all(schmitt.names %in% names(parameters))) schmitt.params  <- T
+  if(any(names(parameters) %in% schmitt.specific.names) & !all(c(schmitt.names) %in% names(parameters))) stop("All predict_partitioning_schmitt coefficients must be included if not using pbtk or 3compartment parameters.")              
+  else if(all(schmitt.names %in% names(parameters))) schmitt.params  <- T
   else schmitt.params <- F                                                                                           
 
   if(schmitt.params & !('funbound.plasma' %in% tolower(names(parameters))))
@@ -158,13 +147,7 @@ stop("All predict_partitioning_schmitt coefficients must be included
        !all(param.names.3comp %in% names(parameters)) & 
        !all(param.names.pbtk %in% names(parameters))) 
        stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
-    #necess <- c("Funbound.plasma","hematocrit","Vrestc","Krest2plasma","Krbc2plasma")
-    #if(!all(necess %in% names(parameters))){
-    #if(is.null(chem.cas) & is.null(chem.name))stop('chem.cas or chem.name must be specified when not including Funbound.plasma, hematocrit, Vrestc, Krest2plasma, and Krbc2plasma in parameters.')
-    # params <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human)
-    #  parameters <- c(parameters,params[!(names(params) %in% names(parameters))])
-    #  if(!suppress.messages)warning('Unspecified pbtk model parameters included in the calculation.  Include all necessary parameters (Funbound.plasma, hematocrit, Vrestc, Krest2plasma, and Krbc2plasma) to use a different set of parameters in the calculation.')
-    # }
+
     RBC.vol <- plasma.vol/(1 - parameters$hematocrit)*parameters$hematocrit 
     vol.dist <- plasma.vol + RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
     lastchar <- function(x){substr(x, nchar(x), nchar(x))}

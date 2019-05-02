@@ -65,7 +65,8 @@ parameterize_3comp<- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-                              suppress.messages=F)
+                              suppress.messages=F,
+                              minimum.Funbound.plasma=0.0001)
 {
   parms <- parameterize_pbtk(chem.cas=chem.cas,
                               chem.name=chem.name,
@@ -77,7 +78,8 @@ parameterize_3comp<- function(chem.cas=NULL,
                               adjusted.Funbound.plasma=
                                adjusted.Funbound.plasma,
                               regression=regression,
-                              suppress.messages=suppress.messages)
+                              suppress.messages=suppress.messages,
+                              minimum.Funbound.plasma=minimum.Funbound.plasma)
                               
 parms$Qkidneyf  <- parms$Vvenc <- parms$Vartc <- NULL
  

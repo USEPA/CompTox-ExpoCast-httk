@@ -52,7 +52,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      adjusted.Funbound.plasma=T,
                                      restrictive.clearance=T,
                                      fup.lod.default=0.005,
-                                     suppress.messages=F)
+                                     suppress.messages=F,
+                                     minimum.Funbound.plasma=0.0001)
 {
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
@@ -153,7 +154,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
                   Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
                     which(tolower(colnames(physiology.data)) == tolower(species))]
     }
-    fup.adjustment <- 1 / ((dow) * Flipid + 1 / fup.point)/fup.point
+    fup.adjustment <- max(1 / ((dow) * Flipid + 1 / fup.point)/fup.point,
+                        minimum.Funbound.plasma) # Enforcing a sanity check on 
+                                                 # plasma binding
     fup.adjusted <- fup.point*fup.adjustment # unitless fraction
     if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).  Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else {

@@ -93,7 +93,8 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-                              suppress.messages=F)
+                              suppress.messages=F,
+                              minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
 # Look up the chemical name/CAS, depending on what was provide:
@@ -131,11 +132,13 @@ parameterize_pbtk <- function(chem.cas=NULL,
                                          species=species,
                                          default.to.human=default.to.human,
                                          force.human.fup=force.human.clint.fup,
-                                         suppress.messages=T)
+                                         suppress.messages=T,
+                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                       species=species,
                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      regression=regression)
+                                      regression=regression,
+                                      minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
