@@ -130,7 +130,7 @@ calc_mc_oral_equiv <- function(conc,
     dose <- dose /1000 / MW * 1000000 
   }else if(tolower(output.units) != 'mgpkgpday') stop("Output units can only be in mgpkgpday or mol.")
   if(!suppress.messages & !return.samples){
-    cat(input.units,"concentration converted to",output.units,"/kg bw/day dose for",which.quantile,"quantile.\n")
+    cat(input.units,"concentration converted to",output.units,"dose for",which.quantile,"quantile.\n")
   }
 	if (class(Css) == "try-error"){
     return(NA)
