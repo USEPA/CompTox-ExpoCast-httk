@@ -1,0 +1,779 @@
+---
+title: "Wambaugh et al. (submitted): Creating Figures for the Manuscript"
+author: "John F. Wambaugh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Wambaugh et al. (submitted): Creating Figures for the Manuscript}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, EVAL=F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Wambaugh et al. (submitted): Creating Figures for the Manuscript
+##Prepate for session
+```
+library(data.table)
+library(httk)
+library(ggplot2)
+library(gdata)
+library(stringr)
+library(scales)
+library(grid)
+```
+rm(list=ls())
+HTTK.DATA <- "New-HTTK-2018-09-11.RData" # The updated chem.physical_and_invitro.data file
+HTTK.RAW.DATA <- "New-HTTK-raw-2018-09-11.RData"
+## Multiple plot function
+From http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+```
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, heights=NULL, widths=unit(rep_len(1, cols), "null")) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    if (!is.null(heights))
+    {
+      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout),heights=heights,widths=widths)))
+    } else {
+      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout),widths=widths)))
+    }
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+## Function to format scientific notation 
+From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
+```
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+```
+setwd("Z:/Research Projects/CeetoxHumanHTTK")
+
+load("PPB-JAGS-Analyses/PPB-affinity-analysis-2018-08-31.RData")
+load("PPB-JAGS-Analyses/PPB-base-analysis-2018-08-30.RData")
+load(HTTK.RAW.DATA)
+#colnames(new.httk.data)[colnames(new.httk.data)=="Fup.High"] <- "Base.Fup.High"
+#colnames(new.httk.data)[colnames(new.httk.data)=="Kd.High"] <- "Affinity.Kd.High"
+#new.httk.data$Fup.point <- new.httk.data$Base.Fup.point
+
+
+
+
+pharma <- read.xls("z:/Contracts/HTTKchemicallists/DSSTox_PHRMPEND_20170531.xlsx",stringsAsFactors=F)
+'''
+Fig1.table <- new.raw.httk.data
+Fig1.table$Error1 <- Fig1.table$Base.Fup.High - Fig1.table$Base.Fup.Low
+Fig1.table$Error2 <- Fig1.table$Affinity.Fup.High - Fig1.table$Affinity.Fup.Low
+Fig1.table$Sigma1 <- Fig1.table$Error1/(2*qnorm(0.975))
+Fig1.table$Mean1 <- (Fig1.table$Base.Fup.High + Fig1.table$Base.Fup.Low)/(qnorm(0.975))
+Fig1.table$CV1 <- Fig1.table$Sigma1/Fig1.table$Mean1
+Fig1.table$Sigma2 <- Fig1.table$Error2/(2*qnorm(0.975))
+Fig1.table$Mean2 <- (Fig1.table$Base.Fup.High + Fig1.table$Base.Fup.Low)/(qnorm(0.975))
+Fig1.table$CV2 <- Fig1.table$Sigma2/Fig1.table$Mean2
+Fig1.table$ErrorClint <- Fig1.table$CLint.1uM.High95th - Fig1.table$CLint.1uM.Low95th
+Fig1.table$SigmaClint <- Fig1.table$ErrorClint/(2*qnorm(0.975))
+Fig1.table$MeanClint <- (Fig1.table$CLint.1uM.High95th + Fig1.table$CLint.1uM.Low95th)/(qnorm(0.975))
+Fig1.table$CVClint <- Fig1.table$SigmaClint/Fig1.table$MeanClint
+
+Fig1a <- ggplot(Fig1.table)+
+   geom_freqpoly(binwidth = 0.5,lwd=1.5,color="Red",aes(Base.Fup.Med))+ 
+   geom_freqpoly(binwidth = 0.5,lwd=1.5,lty=3,color="Blue",aes(Affinity.Fup.Med))+ 
+  xlab(expression(paste("Measured ",F[up]))) +
+  ylab("Number of chemicals")+
+   scale_x_log10(label=scientific_10,limits=c(10^-6,1.05))+
+#  scale_y_continuous(limits=c(0,65))+
+#  annotate("text", x=10^-3, y = 60, hjust=0.5,size=4,label = paste(dim(subset(Fig1.table,!is.na(Affinity.Fup.Med)))[1],"Chemicals Measured"))+
+   labs(title=paste(dim(subset(Fig1.table,!is.na(Affinity.Fup.Med)))[1],"Chemicals Measured"))+
+#    annotate("text", x=10^-3, y = 50, hjust=0.5,size=4,color="Red",label = paste("Median 100%:",signif(median(Fig1.table$Base.Fup.Med,na.rm=T),2)))+
+#    annotate("text", x =10^-3, y = 40, hjust=0.5,size=4,color="Blue",label = paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=T),2)))+
+    theme_bw()+
+    theme( text  = element_text(size=10)) +
+    annotate("text", x=10^-6,y=80,size=8,label="a")
+dev.new()        
+print(Fig1a)    
+    
+print(paste("Median 100%:",signif(median(Fig1.table$Base.Fup.Med,na.rm=T),2)))
+print(paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=T),2)))
+   
+    
+
+Fig1b <- ggplot(Fig1.table)+
+   geom_histogram(binwidth = 0.5,alpha=0.6,fill="green",aes(CLint.1uM.Median))+ 
+   xlab(expression(paste("Measured ",Cl[int]," (µL/min/",10^6," hepatocytes)"))) +
+  ylab("Number of chemicals")+
+  scale_x_log10(label=scientific_10,limits=c(10^-1,5*10^3))+
+#  scale_y_continuous(limits=c(0,40))+
+#  annotate("text", x=5*10^1, y = 35, hjust=0.5,size=4,label = paste(dim(subset(Fig1.table,!is.na(CLint.1uM.Median)))[1],"Chemicals Measured"))+
+  labs(title=paste(dim(subset(Fig1.table,!is.na(CLint.1uM.Median)))[1],"Chemicals Measured"))+
+#    annotate("text", x=5*10^1, y = 30, hjust=0.5,size=4,label = paste(sum(Fig1.table$CLint.1uM.Median==0,na.rm=T),"Zero Measurments"))+
+#    annotate("text", x =5*10^1, y = 25, hjust=0.5,size=4,label = paste("Median Non-Zero:",signif(median(Fig1.table$CLint.1uM.Median,na.rm=T),3)))+
+    theme_bw()+
+    theme( text  = element_text(size=10)) +
+    annotate("text", x=2*10^-1,y=80,size=8,label="b")
+        
+print(Fig1b)    
+    
+print(paste(sum(Fig1.table$CLint.1uM.Median==0,na.rm=T),"Zero Measurments"))
+print(paste("Median Non-Zero:",signif(median(Fig1.table$CLint.1uM.Median,na.rm=T),3)))
+
+
+
+Fig1c <- ggplot(Fig1.table)+
+   geom_histogram(binwidth = 0.1,alpha=0.2,fill="Red",aes(Error1))+ 
+   geom_histogram(binwidth = 0.1,alpha=0.2,fill="Blue",aes(Error2))+ 
+  xlab("Width of Credible Interval") +
+  ylab("Number of chemicals")+
+   scale_x_log10(label=scientific_10,limits=c(5*10^-4,1.05))+
+#  scale_y_continuous(limits=c(0,1.5))+
+#    annotate("text", x=5*10^-2, y = 60, hjust=0.5,size=4,color="Red",label = paste("Median 100% CI:",signif(median(Fig1.table$Error1,na.rm=T),2),"CV:",signif(median(Fig1.table$CV1,na.rm=T),2)))+
+#    annotate("text", x =5*10^-2, y = 50, hjust=0.5,size=4,color="Blue",label = paste("Median Titr. CI:",signif(median(Fig1.table$Error2,na.rm=T),2),"CV:",signif(median(Fig1.table$CV2,na.rm=T),2)))+
+   labs(title=paste("CI:",signif(median(Fig1.table$Error1,na.rm=T),2),"CV:",signif(median(Fig1.table$CV1,na.rm=T),1),"/ CI:",signif(median(Fig1.table$Error2,na.rm=T),1),"CV:",signif(median(Fig1.table$CV2,na.rm=T),1)))+
+    theme_bw()+
+    theme( text  = element_text(size=10))+
+    annotate("text", x=5*10^-4,y=48,size=8,label="c")
+        
+print(paste("Median 100% CI:",signif(median(Fig1.table$Error1,na.rm=T),2),"CV:",signif(median(Fig1.table$CV1,na.rm=T),2)))    
+print(paste("Median Titr. CI:",signif(median(Fig1.table$Error2,na.rm=T),2),"CV:",signif(median(Fig1.table$CV2,na.rm=T),2)))
+
+print(Fig1c)
+
+Fig1d <- ggplot(Fig1.table)+
+   geom_histogram(binwidth = 0.1,alpha=0.6,fill="green",aes(ErrorClint))+ 
+  xlab("Width of Credible Interval") +
+  ylab("Number of chemicals")+
+  scale_x_log10(label=scientific_10,limits=c(10^0,10^3))+
+#  scale_y_continuous(limits=c(0,40))+
+#   annotate("text", x =5*10^1, y = 35, hjust=0.5,size=4,label = paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))+
+   labs(title=paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))+
+    theme_bw()+
+    theme( text  = element_text(size=10))+
+    annotate("text", x=1.5,y=25,size=8,label="d")
+        
+print(Fig1d)  
+print(paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))
+
+dev.new()
+multiplot(Fig1a,Fig1c,Fig1b,Fig1d,cols=2,widths=c(1.75,1.75))
+
+
+Fig1.table$TopSuccess <- NA
+Fig1.table[!is.na(Fig1.table$Base.Fup.Med)&!is.na(Fig1.table$Affinity.Fup.Med),"TopSuccess"]<-T
+Fig1.table[is.na(Fig1.table$Base.Fup.Med)&!is.na(Fig1.table$Affinity.Fup.Med),"TopSuccess"]<-F
+print(paste(sum(!is.na(Fig1.table$Base.Fup.Med)),"total successful Fup estimates using single conc."))
+Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Base.Fup.Low"] <-  Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Affinity.Fup.Med"]
+Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Base.Fup.High"] <-  Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Affinity.Fup.Med"]
+Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Base.Fup.Med"] <-  Fig1.table[is.na(Fig1.table$Base.Fup.Med),"Affinity.Fup.Med"]
+Fig1.table$Class <- "Other"
+Fig1.table[Fig1.table$DTXSID %in% pharma$DSSTox_Substance_Id,"Class"]<-"Pharmaceutical"
+Fig1.table$Class <- as.factor(Fig1.table$Class)
+
+
+# Define the top and bottom of the errorbars
+#Fig2a.table <- new.raw.httk.data
+Fig1.table$Positive <- T
+Fig1.table[Fig1.table$Fup.point<0&!is.na(Fig1.table$Fup.point),"Positive"]<-F
+Fig1.table[Fig1.table$Fup.point<0&!is.na(Fig1.table$Fup.point),"Fup.point"] <-  Fig1.table[Fig1.table$Fup.point<0&!is.na(Fig1.table$Fup.point),"Base.Fup.Med"]
+Fig1.table$Uncertain<-"Yes"
+Fig1.table[is.na(Fig1.table$CV1),"CV1"] <- -999
+Fig1.table[Fig1.table$CV1<0.49,"Uncertain"] <- "No"
+Fig1.table[Fig1.table$CV1==-999,"CV1"] <- NA
+
+Fig2a <- ggplot(Fig1.table,aes(x=Fup.point,y=Base.Fup.Med,shape=Positive,alpha=Uncertain,colour=Positive)) +
+         geom_point(size=3)+
+#         geom_errorbar(aes(ymax = Base.Fup.High, ymin=Base.Fup.Low))+
+   scale_y_log10(label=scientific_10,limits=c(10^-5,2)) +
+   scale_x_log10(label=scientific_10,limits=c(10^-5,2)) +
+  ylab(expression(paste(F[up]," Bayesian Analysis (Single Conc.)"))) +
+  xlab(expression(paste(F[up]," Point Estimate (Traditional Analysis)"))) +
+  geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") +
+#  geom_vline(xintercept = 1, size=2,linetype="dashed", colour="red")+
+  geom_vline(xintercept = 0.01, size=2,linetype="dotted", colour="red")+
+  geom_hline(yintercept = 0.01, size=2,linetype="dotted", colour="red")+
+    scale_colour_discrete(name="Point Estimate > 0")+ 
+    scale_shape_discrete(name="Point Estimate > 0") +
+    scale_alpha_manual(values=c(1,0.3))+
+        theme_bw() +
+     theme(legend.position="bottom", text  = element_text(size=12))+
+     annotate("text", size=8,x = 10^-5, y = 2, label = "a")
+
+dev.new()
+print(Fig2a)
+
+print(paste(sum(Fig1.table$Uncertain=="Yes"),"uncertain estimates using single conc."))
+print(paste(sum(Fig1.table$Positive==FALSE),"chemicals with negative point estimates."))
+print(paste(sum(subset(Fig1.table,!is.na(Fup.point))$Fup.point>1),"chemicals with Fup > 1."))
+
+
+
+summary(lm(data=subset(Fig2a.table,!is.na(Fup.point)&Fup.point>0&Base.Fup.Med>0),log(Fup.point)~log(Base.Fup.Med)))
+
+
+
+
+Fig1.table$Uncertain2<-"Yes"
+Fig1.table[is.na(Fig1.table$CV2),"CV2"] <- -999
+Fig1.table[Fig1.table$CV2<0.49,"Uncertain2"] <- "No"
+Fig1.table[Fig1.table$CV2==-999,"CV2"] <- NA
+
+Fig2b <- ggplot(Fig1.table,aes(x=Base.Fup.Med,y=Affinity.Fup.Med,shape=TopSuccess,alpha=Uncertain2,colour=TopSuccess)) +
+         geom_point(size=3)+
+#         geom_errorbar(aes(ymax = Fup.High.x, ymin=Fup.Low.x))+
+#         geom_errorbarh(aes(xmin=Fup.Low.y,xmax=Fup.High.y))+
+   scale_y_log10(label=scientific_10,limits=c(10^-5,2)) +
+   scale_x_log10(label=scientific_10,limits=c(10^-5,2)) +
+  xlab(expression(paste(F[up]," Bayesian Analysis (Single Conc.)"))) +
+  ylab(expression(paste(F[up]," Bayesian Analysis (Three Conc.)"))) +
+  geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue")+
+  scale_colour_discrete(name="TopSuccess")+
+  scale_shape_discrete(name="TopSuccess") +
+#    annotate("text",size=8, x = 10^-4, y = 1, label = "B")+
+   scale_alpha_manual(values=c(1,0.3))+
+     theme_bw() +
+  theme(legend.position="bottom", text  = element_text(size=12))+
+      annotate("text", size=8,x = 10^-5, y = 2, label = "b")
+         
+print(Fig2b)
+
+print(paste(sum(!is.na(Fig1.table$Affinity.Fup.Med)),"total successful Fup estimates using protein titration."))
+print(paste(sum(Fig1.table$Uncertain2=="Yes"),"uncertain estimates using protein titration."))
+print(paste(sum(Fig1.table$TopSuccess==FALSE,na.rm=T),"chemicals that could not be measured at 100% plasma protein."))
+
+
+summary(lm(data=subset(Fig1.table,!is.na(Base.Fup.Med)&Affinity.Fup.Med>0&Base.Fup.Med>0),log(Base.Fup.Med)~log(Affinity.Fup.Med)))
+
+dev.new(width=10,height=6)
+multiplot(Fig2a,Fig2b,cols=2,widths=c(1.75,1.75))
+
+
+
+
+  Fig3 <- ggplot(Fig1.table,aes(Affinity.Kd.Med,fill=Class))+
+    geom_histogram(binwidth = 0.5)+
+    xlab(expression(paste("Binding Affinity (", mu,"M)",sep=""))) +
+      ylab("Number of chemicals")+
+    scale_x_log10(label=scientific_10)+
+      scale_fill_discrete(name="Chemical Class")+
+      theme_bw()  +
+    theme(legend.position="bottom", text  = element_text(size=18))
+      
+  dev.new()
+  print(Fig3)
+  
+  
+clearance.table <- subset(new.raw.httk.data,!is.na(CLint.1uM.Median))
+    
+print(paste(sum(clearance.table$CLint.1uM.Median==0),"zero valued median Bayesian posteriors"))
+print(paste(sum(clearance.table$CLint.1uM.Point==0&clearance.table$CLint.1uM.Median>0,na.rm=T),"zero valued point estimates where median posterior>0"))
+print(paste(sum(clearance.table$CLint.1uM.Point>0&clearance.table$CLint.1uM.Median==0,na.rm=T),"zero valued median Bayesian posteriors where point estimate was non-zero"))
+print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median==0,na.rm=T),"zero valued median Bayesian posteriors where point estimate was NA"))
+print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median>0,na.rm=T),"non-zero valued median Bayesian posteriors where point estimate was NA"))
+
+
+
+
+clearance.table$Fit <- "Decreasing"
+clearance.table[clearance.table$CLint.1uM.Median == 0,"Fit"] <- "Median Zero"
+#clearance.table[is.na(clearance.table$CLint.1uM.Point == 0),"Fit"] <- "Point Est. Missing"
+for (i in 1:dim(clearance.table)[1])
+  if (!is.na(clearance.table[i,"CLint.1uM.Point"]))
+  {
+    if (clearance.table[i,"CLint.1uM.Point"] == 0) clearance.table[i,"Fit"] <- "Point Est. Zero"
+  } else clearance.table[i,"Fit"] <- "Point Est. Failed"
+   
+
+set.seed(123456)
+clearance.table[is.na(clearance.table$CLint.1uM.Point),"CLint.1uM.Point"]<-runif(sum(is.na(clearance.table$CLint.1uM.Point)),0.1,0.2)
+clearance.table[clearance.table$CLint.1uM.Point==0,"CLint.1uM.Point"]<-runif(sum(clearance.table$CLint.1uM.Point==0),0.3,0.8)
+clearance.table[clearance.table$CLint.1uM.Low95th==0,"CLint.1uM.Low95th"]<-0.1
+clearance.table[clearance.table$CLint.1uM.Median==0,"CLint.1uM.Median"]<-0.1
+clearance.table[clearance.table$CLint.1uM.High95th==0,"CLint.1uM.High95th"]<-0.1
+
+Fig4 <- ggplot(clearance.table, aes(x=CLint.1uM.Point,y=CLint.1uM.Median,colour=Fit)) +
+  geom_point(size=3) +
+  geom_segment(aes(x=CLint.1uM.Point,xend=CLint.1uM.Point,y=CLint.1uM.Low95th,yend=CLint.1uM.High95th),size=1)+
+  scale_y_log10(label=scientific_10,limits=c(10^-1,1000)) + 
+  scale_x_log10(label=scientific_10,limits=c(10^-1,1000)) +
+  xlab(expression(paste(CL[int]," (",mu,"L/min/",10^{6}," Hep.) Point Estimate",sep="")))+
+  ylab(expression(paste(CL[int]," (",mu,"L/min/",10^{6}," Hep.) Bayesian",sep="")))+
+  geom_abline(intercept = 0, slope = 1,linetype="dashed")+
+  scale_colour_discrete(name="Assay Result")+
+  theme_bw() +
+  theme(legend.position="bottom", text  = element_text(size=14))+
+  guides(colour=guide_legend(nrow=2,byrow=TRUE))
+
+dev.new()
+print(Fig4)  
+
+summary(lm(data=subset(clearance.table,!is.na(CLint.1uM.Point)&CLint.1uM.Point>0&CLint.1uM.Median>0),log(CLint.1uM.Point)~log(CLint.1uM.Median)))
+
+load(HTTK.DATA)
+ 
+ceetox <- as.data.table(subset(new.httk.data,!is.na(Human.Funbound.plasma)&!is.na(Human.Clint)&!is.na(logP)))
+httk_cas <- ceetox$CAS[ceetox$CAS %in% get_cheminfo(model="3compartmentss")]
+params <- ceetox[CAS %in% httk_cas, httk::parameterize_steadystate(chem.cas=CAS),
+                 by=.(CAS)]
+params <- params[,MW:=NULL]
+ceetox <- merge(ceetox,params,by=c("CAS"))
+ 
+#Generate the population that we will use:
+set.seed(42)
+#pop <- httk:::httkpop_generate(method="d",
+#                               nsamp=1000)
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       css95_uv:=cssfun_uv(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          Clint.median=Human.Clint, #or whichever column is appropriate
+                          Clint.low=Human.Clint.Low95, #or whichever column is appropriate
+                          Clint.high=Human.Clint.High95,#, #or whichever column is appropriate
+                          Clint.pvalue=Human.Clint.pValue),
+#                          pop=pop,
+#                          MW=MW),
+#                          Fhep.assay.correction=Fhep.assay.correction),
+       by=.(CAS)]
+                                      
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),    
+       css95_v:=calc_mc_css(chem.cas=CAS,
+                                 clint.pvalue.threshold=1, #Don't need to use p-values here (Bayesian)
+                                 fup.censor=F,
+                                 daily.dose=1, 
+                                 output.units="uM",
+                                 model="3compartmentss",
+                                 species="Human"),
+       by=.(CAS)]
+
+#
+#       
+#ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),    
+#       css95_v:=cssfun_v(chemcas=CAS, 
+##                          ppb=Human.Funbound.plasma, #or whichever column is appropriate
+##                          Clint=Human.Clint, #or whichever column is appropriate
+#                          pop=pop),
+##                          MW=MW,
+##                          Fhep.assay.correction=Fhep.assay.correction,
+##                          hepatic.bioavailability=hepatic.bioavailability),
+#       by=.(CAS)]
+
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+#ceetox[CAS==this.cas,
+       css95_u:=cssfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          Clint.median=Human.Clint, #or whichever column is appropriate
+                          Clint.low=Human.Clint.Low95, #or whichever column is appropriate
+                          Clint.high=Human.Clint.High95, #or whichever column is appropriate
+                          Clint.pvalue=Human.Clint.pValue,
+                          MW=MW),
+#                          Fhep.assay.correction=Fhep.assay.correction),
+       by=.(CAS)]
+
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       cssmed_u:=cssfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          Clint.median=Human.Clint, #or whichever column is appropriate
+                          Clint.low=Human.Clint.Low95, #or whichever column is appropriate
+                          Clint.high=Human.Clint.High95, #or whichever column is appropriate
+                          Clint.pvalue=Human.Clint.pValue,
+                          MW=MW,
+#                          Fhep.assay.correction=Fhep.assay.correction,
+                          probs=0.5),
+       by=.(CAS)]
+       
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       css5_u:=cssfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          Clint.median=Human.Clint, #or whichever column is appropriate
+                          Clint.low=Human.Clint.Low95, #or whichever column is appropriate
+                          Clint.high=Human.Clint.High95, #or whichever column is appropriate
+                          Clint.pvalue=Human.Clint.pValue,
+                          MW=MW,
+#                          Fhep.assay.correction=Fhep.assay.correction,
+                          probs=0.05),
+       by=.(CAS)]
+       
+
+              
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       cssmed:=httk::calc_analytic_css(chem.cas=CAS,
+                                 clint.pvalue.threshold=1,
+                                 daily.dose=1, 
+                                 output.units="uM",
+                                 model="3compartmentss",
+                                 species="Human",
+                                 suppress.messages=TRUE),
+       by=.(CAS)]
+
+
+
+# Go back to Bayes estimates:
+load(HTTK.DATA)
+
+dt_melt <- data.table::melt(ceetox[, .(Compound, CAS, css95_u, css95_v, css95_uv, cssmed)],
+                            id.vars=c("Compound","CAS", "cssmed"),
+                            variable.name="type",
+                            value.name="css95")
+
+dt_melt[, type:=gsub(x=type, pattern="css95_uv", replacement="Both", fixed=TRUE)]
+dt_melt[, type:=gsub(x=type, pattern="css95_u", replacement="Uncertainty", fixed=TRUE)]
+dt_melt[, type:=gsub(x=type, pattern="css95_v", replacement="Variability", fixed=TRUE)]
+
+
+#now set the factor levels explicitly
+dt_melt[, type:=factor(type,
+                       levels=c("Uncertainty", "Variability", "Both"))]
+
+
+dt_melt[, Norm:=css95/cssmed]
+
+
+#now set the factor levels explicitly
+dt_melt[, Compound:=factor(Compound,
+                       levels=dt_melt[type=="Both",Compound][order(dt_melt[type=="Both",Norm])])]
+                       
+                       
+Fig6 <- ggplot(data=dt_melt) +
+  geom_point(size=2,alpha=0.7,aes(x=Compound,
+                y=Norm,
+                color=type,
+                shape=type)) +
+   scale_y_log10(label=scientific_10,limits=c(0.1,10^3)) +
+  ylab(expression(paste("Ratio of ",C[ss]," ",95^th," Percentile to Median Estimate"))) +
+  xlab("Chemicals")+
+  scale_colour_discrete(name=expression(paste(C[ss]," Varied to Reflect")))+ 
+  scale_shape_discrete(name=expression(paste(C[ss]," Varied to Reflect"))) +
+  theme_bw() +
+  theme(legend.position="bottom",axis.text.x = element_blank())+
+  annotate("text", size=8,x = levels(dt_melt$Compound)[length(unique(dt_melt$Compound))/2], y = 900, label = paste("Median Ratio for Uncertainty:",signif(median(subset(dt_melt,type=="Uncertainty")$Norm),3)))+
+  annotate("text", size=8,x = levels(dt_melt$Compound)[length(unique(dt_melt$Compound))/2], y = 300, label = paste("Median Ratio for Variability:",signif(median(subset(dt_melt,type=="Variability")$Norm),3)))+
+  annotate("text", size=8,x = levels(dt_melt$Compound)[length(unique(dt_melt$Compound))/2], y = 100, label = paste("Median Ratio for Both:",signif(median(subset(dt_melt,type=="Both")$Norm),3)))
+    
+dev.new(width=10,height=6)  
+print(Fig6)
+
+# Head to https://www3.epa.gov/research/COMPTOX/toxcast_summary.html to get the ToxCast/Tox21 data:
+Tox21.ids <- read.csv("z:/Research Projects/Ideas/Chemical_Summary_151020.csv",stringsAsFactors=F)
+ToxCastPhIII <- Tox21.ids[unlist(lapply(strsplit(Tox21.ids$clib,"\\|"),function(x) any(x=="toxcast:ph3"))),]
+
+# These are the concentrations that caused activity in exess of the background (ACC) "hits":
+Tox21.acc <- read.csv("z:/Research Projects/Ideas/modl_acc_Matrix_151020.csv",stringsAsFactors=F)
+
+
+Tox21.acc <- merge(Tox21.ids,Tox21.acc,by.x="code",by.y="X",stringsAsFactors=F)
+
+# Subset this to just the chemicals we have numbers for (this won't help if you predict everything):
+Tox21.acc <- subset(Tox21.acc,casn%in%ceetox$CAS)
+
+
+# We need to turn this into a data frame with a row for each hit:
+library(reshape)
+Tox21.acc.rows <- melt(Tox21.acc,id=c("code","chid","chnm","casn","clib"))
+
+# Get rid of the NA's (non-hits):
+Tox21.acc.numeric <- subset(Tox21.acc.rows,!is.na(value))
+
+#Subset to those chemicals with HTS hits:
+human.hits <- subset(ceetox,CAS%in%Tox21.acc.numeric$casn)
+
+
+# Now calculate the oral equivalent dose for each chemical:
+# VERY IMPORTANT -- MUST CHECK WHETHER VALUES IN THE ACC DATA FILE ARE LOG BASE E OR 10
+# Must make sure that CSS is in units of uM!!
+for (this.chem in human.hits$CAS)
+{
+  med.conc <- median(exp(subset(Tox21.acc.numeric,casn==this.chem)$value))
+  q10.conc <- quantile(exp(subset(Tox21.acc.numeric,casn==this.chem)$value),0.1)
+  low.conc <- min(exp(subset(Tox21.acc.numeric,casn==this.chem)$value))
+  high.conc <- max(exp(subset(Tox21.acc.numeric,casn==this.chem)$value))
+  css95.v <- human.hits[human.hits$CAS==this.chem][["css95_v"]]
+  css95.uv <- human.hits[human.hits$CAS==this.chem][["css95_uv"]]
+  human.hits[human.hits$CAS==this.chem,"HTS.Median.ACC"] <- med.conc
+  human.hits[human.hits$CAS==this.chem,"HTS.Q10.ACC"] <- q10.conc
+  human.hits[human.hits$CAS==this.chem,"HTS.Low.ACC"] <- low.conc
+  human.hits[human.hits$CAS==this.chem,"HTS.High.ACC"] <- high.conc
+  human.hits[human.hits$CAS==this.chem,"HTS.Median.equivdose.v"] <- med.conc/css95.v
+  human.hits[human.hits$CAS==this.chem,"HTS.Q10.equivdose.v"] <- q10.conc/css95.v
+  human.hits[human.hits$CAS==this.chem,"HTS.Low.equivdose.v"] <- low.conc/css95.v
+  human.hits[human.hits$CAS==this.chem,"HTS.High.equivdose.v"] <- high.conc/css95.v
+  human.hits[human.hits$CAS==this.chem,"HTS.Median.equivdose.uv"] <- med.conc/css95.uv
+  human.hits[human.hits$CAS==this.chem,"HTS.Q10.equivdose.uv"] <- q10.conc/css95.uv
+  human.hits[human.hits$CAS==this.chem,"HTS.Low.equivdose.uv"] <- low.conc/css95.uv
+  human.hits[human.hits$CAS==this.chem,"HTS.High.equivdose.uv"] <- high.conc/css95.uv
+}  
+
+load("L:/Lab/NCCT_ExpoCast/ExpoCast2018/SEEM3/SEEM3_bayes/chem.preds.summary-2018-06-05.RData")
+directnhanes.preds <- read.csv("z:/Research Projects/Ideas/GMandCL4NHANESchems-Total.csv",stringsAsFactors=F,header=T)
+
+
+#Add the exposure predictions:
+for (this.chem in human.hits$CAS)
+{
+  print(this.chem)
+# If we have direct inferrences from NHANES, use those exposures:
+  if (this.chem %in% directnhanes.preds$CASRN)
+  {
+    human.hits[human.hits$CAS==this.chem,"Exposure.median"] <- directnhanes.preds[directnhanes.preds$CASRN==this.chem,"lP"]
+    human.hits[human.hits$CAS==this.chem,"Exposure.high"] <- directnhanes.preds[directnhanes.preds$CASRN==this.chem,"lP.max"]
+# Otherwise use the heuristics model (Wambaugh 2014):    
+  } else if (this.chem %in% chem.preds$CAS) {
+    human.hits[human.hits$CAS==this.chem,"Exposure.median"] <- chem.preds[chem.preds$CAS==this.chem,"seem3"]
+    human.hits[human.hits$CAS==this.chem,"Exposure.high"] <- chem.preds[chem.preds$CAS==this.chem,"seem3.u95"]  
+  }
+}
+
+# Drop chemicals without exposure predictions:
+human.hits<- subset(human.hits,!is.na(Exposure.median))
+
+
+# This code puts the chemicals into order by margine between exposure and activity:
+chem.names <- unique(human.hits$Compound)
+potency <- rep(Inf,times=length(chem.names))
+names(potency) <- chem.names
+potency.u <- potency
+for (this.chem in chem.names)
+{
+  this.subset <- subset(human.hits,Compound==this.chem)
+  potency[this.chem] <- this.subset$HTS.Q10.equivdose.v/this.subset$Exposure.high
+  potency.u[this.chem] <- this.subset$HTS.Q10.equivdose.uv/this.subset$Exposure.high
+}
+potency <- sort(potency)
+human.hits$Compound <- factor(human.hits$Compound, levels=names(potency))
+
+potency.u <- potency.u[names(potency.u)[potency.u<1]]
+potency.u <- potency.u[names(potency)[potency>1]]
+
+new.overlaps <- names(potency.u[!is.na(potency.u)])
+first.change <- new.overlaps[1]
+last.change <- new.overlaps[length(new.overlaps)]
+window.start <- names(potency)[which(names(potency)==first.change)-15]
+window.end <- names(potency)[which(names(potency)==last.change)+15]
+window.names <- names(potency)[(which(names(potency)==first.change)-15):(which(names(potency)==last.change)+15)]
+# Initialize a new plot:
+Fig7a <- ggplot(data=human.hits) +
+  geom_segment(aes(x=Compound,xend=Compound,y=HTS.Low.equivdose.uv,yend=HTS.High.equivdose.uv),size=1,,color="red") + 
+  geom_rect(mapping=aes(xmin=window.start,xmax=window.end,ymin=10^-9,ymax=10^3),color="grey",alpha=0.5)+
+  geom_segment(aes(x=Compound,xend=Compound,y=HTS.Low.equivdose.uv,yend=HTS.High.equivdose.uv),size=1,,color="red") + 
+  geom_point(aes(x=Compound,y=HTS.Median.equivdose.uv),shape=3) +
+  geom_point(aes(x=Compound,y=HTS.Q10.equivdose.uv)) +
+  theme_bw() +
+  theme(axis.text.x = element_blank()) + 
+  theme(axis.title.x = element_text(size=16)) + 
+  theme(axis.title.y = element_text(size=16)) + 
+  scale_y_log10(label=scientific_10,limits = c(10^-9,10^3)) + 
+  geom_segment(aes(x=Compound,xend=Compound,y=Exposure.high,yend=Exposure.median),size=1,color="blue") + 
+  geom_point(aes(x=Compound,y=Exposure.median),shape=2) + 
+  ylab("mg/kg BW/day") + 
+  xlab("All Chemicals")+
+  annotate("text", size=8,x = names(potency)[10], y = 100, label = "a")
+
+
+Fig7b <- ggplot(data=human.hits) +
+  geom_segment(aes(x=Compound,xend=Compound,y=HTS.Low.equivdose.v,yend=HTS.High.equivdose.v),size=1,,color="red") + 
+  geom_point(aes(x=Compound,y=HTS.Median.equivdose.v),shape=3) +
+  geom_point(aes(x=Compound,y=HTS.Q10.equivdose.v)) +
+  theme_bw() +
+  theme(axis.text.x = element_blank()) + 
+  theme(axis.title.x = element_text(size=16)) + 
+  theme(axis.title.y = element_text(size=16)) + 
+  xlim(window.names) +
+  scale_y_log10(label=scientific_10,limits = c(10^-8,2*10^2)) + 
+  geom_segment(aes(x=Compound,xend=Compound,y=Exposure.high,yend=Exposure.median),size=1,color="blue") + 
+  geom_point(aes(x=Compound,y=Exposure.median),shape=2) + 
+  ylab("Variability Only") + 
+  xlab("Chemicals Impacted by Uncertainty")+
+  annotate("text", size=8,x = window.names[2], y = 100, label = "b")
+
+
+
+# Initialize a new plot:
+Fig7c <- ggplot() +
+  geom_segment(data=human.hits,aes(x=Compound,xend=Compound,y=HTS.Low.equivdose.uv,yend=HTS.High.equivdose.uv),size=1,,color="red") + 
+  geom_point(data=human.hits,aes(x=Compound,y=HTS.Median.equivdose.uv),shape=3) +
+  geom_point(data=human.hits,aes(x=Compound,y=HTS.Q10.equivdose.uv)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1,size=6)) + 
+  theme(axis.text.x = element_blank()) + 
+  theme(axis.title.x = element_text(size=16)) + 
+  theme(axis.title.y = element_text(size=16)) + 
+  xlim(window.names) +
+  scale_y_log10(label=scientific_10,limits = c(10^-8,2*10^2)) + 
+  geom_segment(data=human.hits,aes(x=Compound,xend=Compound,y=Exposure.high,yend=Exposure.median),size=1,color="blue") + 
+  geom_segment(data=subset(human.hits,Compound%in%names(potency.u)),aes(x=Compound,xend=Compound,y=10^-8,yend=Exposure.median/1.5),size=2,arrow=arrow(length=unit(0.5,"cm")))+
+  geom_point(data=human.hits,aes(x=Compound,y=Exposure.median),shape=2) + 
+  xlab("") + 
+  ylab("Uncertainty and Variability ")+
+  annotate("text", size=8,x = window.names[2], y = 100, label = "c")
+ 
+
+#print(Fig10b)
+dev.new(width=10,height=9)
+multiplot(Fig7a,Fig7b,Fig7c,cols=1,heights=c(0.5,0.5,0.5))
+
+write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("Overlaps-",Sys.Date(),".txt",sep=""),row.names=F)
+
+
+
+# This takes a long time because calc_vdist is not yet data.table compatible:
+
+# Use the point estimates:
+chem.physical_and_invitro.data <- add_chemtable(new.raw.httk.data,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Name",CAS="CAS",Clint="CLint.1uM.Point",Funbound.plasma="Fup.point"),reference="Wambaugh 2019",species="Human",overwrite=T)
+
+
+
+       
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma.Point) & Human.Funbound.plasma.Point>0,
+       Vdpoint:=httk::calc_vdist(chem.cas=CAS),
+       by=.(CAS)]
+       
+load(HTTK.DATA)
+
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       Vd_95:=Vdfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          MW=MW),
+       by=.(CAS)]
+
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       Vd_med:=Vdfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          MW=MW,
+                          probs=0.5),
+       by=.(CAS)]
+       
+ceetox[is.finite(MW) & is.finite(Human.Funbound.plasma) & is.finite(Human.Clint),
+       Vd_5:=Vdfun_u(chemcas=CAS, 
+                          ppb.median=Human.Funbound.plasma, #or whichever column is appropriate
+                          ppb.low=Human.Funbound.plasma.Low95, #or whichever column is appropriate
+                          ppb.high=Human.Funbound.plasma.High95, #or whichever column is appropriate
+                          MW=MW,
+                          probs=0.05),
+       by=.(CAS)]
+
+ceetox[,VdpointEstimated:=T]
+ceetox[is.na(Vdpoint),VdpointEstimated:=F]
+ceetox[is.na(Vdpoint),Vdpoint:=Vd_med]
+
+
+Fig5a <- ggplot(data=subset(ceetox,VdpointEstimated),aes(x=Vdpoint,y=Vd_med)) +
+  geom_point(size=3) +
+  geom_errorbar(aes(ymax = Vd_95, ymin=Vd_5))+
+  scale_y_log10(label=scientific_10) +
+  scale_x_log10(label=scientific_10) +
+  xlab(expression(paste(V[d], " (L/kg BW) Point Estimate")))+
+  ylab(expression(paste("Bayesian ",V[d], " (L/kg BW)")))+
+  geom_abline(intercept = 0, slope = 1,linetype="dashed",color="blue")+
+  annotate("text", size=8,x = .3, y = 300, label = "A")+
+  theme_bw() +
+  theme(text  = element_text(size=18)) 
+
+print(Fig5a)
+
+Fig5b <- ggplot(data=ceetox,aes(x=cssmed,y=cssmed_u)) +
+  geom_point(size=3) +
+  geom_errorbar(aes(ymin=css5_u,ymax=css95_u))+
+  scale_y_log10(label=scientific_10) +
+  scale_x_log10(label=scientific_10) +
+  xlab(expression(paste(C[ss]," Point Estimate (µM)")))+
+  ylab(expression(paste("Bayesian ",C[ss]," (µM)")))+
+  annotate("text", size=8,x = 10^-1, y = 10^4, label = "B")+
+  theme_bw() +
+  theme(text  = element_text(size=18)) +
+  geom_abline(intercept = 0, slope = 1,linetype="dashed",color="blue") 
+  
+print(Fig5b)
+
+dev.new(width=8,height=5)
+multiplot(Fig5a,Fig5b,cols=2,widths=c(1.75,1.75))
+
+
+save.image(paste("Cyprotex-",Sys.Date(),".RData",sep=""))
+
+ToxCast <- read.xls("//AA.AD.EPA.GOV/ORD/RTP/Users/E-J/jwambaug/Net MyDocuments/Contracts/HTTKchemicallists/TOXCAST_20170330_wQC_ListPriority.xlsx",stringsAsFactors=F)
+ToxCast.PH1and2 <- subset(ToxCast,toxcast.ph1v2==1|toxcast.ph2==1)
+sum(unique(ToxCast.PH1and2$DTXSID) %in% get_cheminfo(info="DTXSID"))/length(unique(ToxCast.PH1and2$DTXSID))
+sum(unique(ToxCast.PH1and2$DTXSID) %in% get_cheminfo(info="DTXSID"))
+ToxCast.E1K <- subset(ToxCast,toxcast.e1k==1)
+sum(unique(ToxCast.E1K$DTXSID) %in% get_cheminfo(info="DTXSID"))/length(unique(ToxCast.E1K$DTXSID))
+
+replicates <- subset(new.raw.httk.data,duplicated(CAS))
+dupcas <- replicates$CAS
+replicates <- subset(new.raw.httk.data,CAS%in%dupcas)
+rep1 <- subset(replicates,!duplicated(CAS))
+rep2 <- subset(replicates,duplicated(CAS))
+replicates <- merge(rep1,rep2,by=c("CAS"))
+
+FigX <- ggplot(replicates,aes(x=Affinity.Fup.Med.x,y=Affinity.Fup.Med.y)) +
+         geom_point(size=3)+
+         geom_errorbar(aes(ymax = Affinity.Fup.High.y, ymin=Affinity.Fup.Low.y))+
+         geom_errorbarh(aes(xmin=Affinity.Fup.High.x, xmax=Affinity.Fup.Low.x))+
+         scale_y_log10(label=scientific_10,limits=c(10^-7,2)) +
+         scale_x_log10(label=scientific_10,limits=c(10^-7,2)) +
+         ylab(expression(paste(F[up]," Replicate 1"))) +
+         xlab(expression(paste(F[up]," Replicate 2"))) +
+         geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") +
+#    scale_colour_discrete(name="Point Estimate > 0")+ 
+#    scale_shape_discrete(name="Point Estimate > 0") +
+        theme_bw() +
+        theme(legend.position="bottom", text  = element_text(size=12))+
+#        annotate("text", size=8,x = 10^-7, y = 2, label = "a")
+
+dev.new()
+print(FigX)
+
+summary(lm(data=replicates,log(Affinity.Fup.Med.y)~log(Affinity.Fup.Med.x)))
+
+
+
+
+
