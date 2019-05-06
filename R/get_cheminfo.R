@@ -138,10 +138,10 @@ get_cheminfo <- function(info="CAS",
 
       if (model == '3compartmentss')
       {
-        necessary.params <- c(species.clint,species.fup,"MW","logP")
+        necessary.params <- c(species.clint,"MW","logP")
         if(is.na(exclude.fup.zero)) exclude.fup.zero <- F 
       } else {
-        necessary.params <- c(species.clint,species.fup,"MW","logP")
+        necessary.params <- c(species.clint,"MW","logP")
         if(is.na(exclude.fup.zero)) exclude.fup.zero <- T
       }
       incomplete.data <- F
