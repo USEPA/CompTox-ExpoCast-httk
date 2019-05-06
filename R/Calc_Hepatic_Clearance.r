@@ -33,7 +33,7 @@
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.
 #' @return \item{Hepatic Clearance}{Units of L/h/kg BW.}
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #' @keywords Parameter
 #' @examples
 #' 
@@ -72,7 +72,6 @@ calc_hepatic_clearance <- function(chem.name=NULL,
     {
       parameters[["Qtotal.liverc"]] <- parameters[["Qcardiacc"]]*(parameters[["Qgutf"]]+parameters[["Qliverf"]])
     }
-   
   }
   if(is.null(parameters))
   {
@@ -95,30 +94,20 @@ calc_hepatic_clearance <- function(chem.name=NULL,
     params <- parameterize_steadystate(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,...)
     parameters <- c(parameters,params[name.list[!(name.list %in% names(parameters))]])
   }
-#  Clint <- get_param("Clint",parameters,"calc_Hepatic_Clearance") # uL/min/10^6 cells
-#  # Check if clint is a distribution (median,low95,high95,pvalue):
-#  if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
-#  {
-#    Clint <- as.numeric(strsplit(Clint,",")[[1]][1])
-#  }
-#
-#  fu_hep <- get_param("Fhep.assay.correction",parameters,"calc_Hepatic_Clearance") 
-#   #try(get_param("Fraction_unbound_hepatocyteassay",parameters,"calc_Hepatic_Clearance")) # fraction set if paramaterize function called with fu_hep_correct=TRUE
-#  #if (class(fu_hep) == "try-error") fu_hep <- 1
-## Correct for fraction of chemical unbound in in vitro hepatocyte assay:
-#  Clint <- Clint / fu_hep
-#
-#  fup <- get_param("Funbound.plasma",parameters,"calc_Hepatic_Clearance") # unitless fraction
-  Clint <- parameters[["Clint"]]
-  fup <- parameters[["Funbound.plasma"]]
-  if(!restrictive.clearance) fup <- 1
+
+  Clint <- get_param("Clint",parameters,"calc_Hepatic_Clearance") # uL/min/10^6 cells
+  fu_hep <- get_param("Fhep.assay.correction",parameters,"calc_Hepatic_Clearance") 
+# Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+  Clint <- Clint / fu_hep
+
+  fup <- get_param("Funbound.plasma",parameters,"calc_Hepatic_Clearance") # unitless fraction
+  if (!restrictive.clearance) fup <- 1
   
-  fu_hep <- parameters[["Fhep.assay.correction"]]
-  Qtotal.liverc <- parameters[["Qtotal.liverc"]] # L/h/kgBW
-  Vliverc <- parameters[["Vliverc"]] #  L/kg BW
-  liver.density <- parameters[["liver.density"]] # g/mL
-  Dn <- parameters[["Dn"]] #
-  million.cells.per.gliver <- parameters[["million.cells.per.gliver"]] # 10^6 cells/g-liver
+  Qtotal.liverc <- get_param("Qtotal.liverc",parameters,"calc_Hepatic_Clearance",default=1.24) # L/h/kgBW
+  Vliverc <- get_param("Vliverc",parameters,"calc_Hepatic_Clearance") #  L/kg BW
+  liver.density <- get_param("liver.density",parameters,"calc_Hepatic_Clearance") # g/mL
+  Dn <- get_param("Dn",parameters,"calc_Hepatic_Clearance",default=0.17) #
+  million.cells.per.gliver <- get_param("million.cells.per.gliver",parameters,"calc_Hepatic_Clearance") # 10^6 cells/g-liver
 
   if(!(tolower(model) %in% c("well-stirred","parallel tube","dispersion","unscaled")))
     stop("Model other than \"well-stirred,\" \"parallel tube,\", \"dispersion\", or \"unscaled\" specified.")

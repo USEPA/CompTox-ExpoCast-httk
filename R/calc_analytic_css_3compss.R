@@ -105,12 +105,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     if (is.null(chem.cas) & is.null(chem.name) & !("Pow" %in% names(parameters)))
       stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
 # Need to convert to 3compartmentss parameters:
-    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
-      parameters=c(parameters[param.names.3compss%in%names(parameters)],
-      Dow74=NA,
-      hepatic.bioavailability=NA,
-      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
-                                        ...)
+    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas)
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
