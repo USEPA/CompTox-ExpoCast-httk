@@ -191,7 +191,7 @@ get_cheminfo <- function(info="CAS",
     if (exclude.fup.zero) 
     {
       fup.values.numeric[fup.values==0] <- F
-      fup.values.numeric(is.na(fup.values.numeric)) <- F 
+      fup.values.numeric[is.na(fup.values.numeric)] <- F 
     }
     fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
     fup.values.dist[is.na(fup.values.dist)] <- F
