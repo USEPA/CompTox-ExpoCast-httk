@@ -205,7 +205,7 @@ get_cheminfo <- function(info="CAS",
 # Either a numeric value:
         (!is.na(suppressWarnings(as.numeric(clint.values))) |
 # or four values separated by three commas:
-        suppressWarnings(nchar(fup.values) - nchar(gsub(",","",clint.values))==3))
+        suppressWarnings(nchar(clint.values) - nchar(gsub(",","",clint.values))==3))
     }
     good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
     
