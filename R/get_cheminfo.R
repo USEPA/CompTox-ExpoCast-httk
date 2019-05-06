@@ -185,27 +185,33 @@ get_cheminfo <- function(info="CAS",
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
 # Make sure that we have a usable fup:
-    fup.values <- chem.physical_and_invitro.data[,species.fup] 
-    good.chemicals.index <- good.chemicals.index & 
-# Either a numeric value:
-      (!is.na(suppressWarnings(as.numeric(fup.values))) |
-# or three values separated by two commas:
-      suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2))
-    # If we are exclude the fups with a zero, then get rid of those too:
+    fup.values <- chem.physical_and_invitro.data[,species.fup]
+    fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
+# If we are exclude the fups with a zero, then get rid of those:
     if (exclude.fup.zero) 
     {
-      good.chemicals.index <- good.chemicals.index & 
-        (chem.physical_and_invitro.data[,species.fup]>0) 
+      fup.values.numeric[fup.values==0] <- F
+      fup.values.numeric(is.na(fup.values.numeric)) <- F 
     }
+    fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
+    fup.values.dist[is.na(fup.values.dist)] <- F
+    good.chemicals.index <- good.chemicals.index & 
+# Either a numeric value:
+      (fup.values.numeric |
+# or three values separated by two commas:
+      fup.values.dist)
 # Make sure that we have a usable clint:    
     if (!(model %in% c("schmitt")))
     {
       clint.values <- chem.physical_and_invitro.data[,species.clint]
+      clint.values.numeric <- suppressWarnings(!is.na(as.numeric(clint.values)))
+      clint.values.dist <- suppressWarnings(nchar(clint.values) - nchar(gsub(",","",clint.values))==3)
+      clint.values.dist[is.na(clint.values.dist)] <- F
       good.chemicals.index <- good.chemicals.index &
 # Either a numeric value:
-        (!is.na(suppressWarnings(as.numeric(clint.values))) |
+        (clint.values.numeric |
 # or four values separated by three commas:
-        suppressWarnings(nchar(clint.values) - nchar(gsub(",","",clint.values))==3))
+        clint.values.dist)
     }
     good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
     
