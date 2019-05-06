@@ -29,7 +29,7 @@
 #' adjustment.
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #' @references Schmitt W. "General approach for the calculation of tissue to
 #' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 #' @keywords Parameter
