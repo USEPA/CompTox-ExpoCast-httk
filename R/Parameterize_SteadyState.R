@@ -90,12 +90,16 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  # Check that the trend in the CLint assay was significant:
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
-  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+  if (class(Clint.db) == "try-error") 
+    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clintis a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
@@ -105,11 +109,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   } else {
     Clint.point <- Clint.db
-  # Check that the trend in the CLint assay was significant:
-    Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
-    if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
     Clint.dist <- NA
   }
+  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
