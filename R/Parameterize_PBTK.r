@@ -105,9 +105,12 @@ parameterize_pbtk <- function(chem.cas=NULL,
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  # Check that the trend in the CLint assay was significant:
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
   if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
@@ -120,11 +123,9 @@ parameterize_pbtk <- function(chem.cas=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   } else {
     Clint <- Clint.db
-  # Check that the trend in the CLint assay was significant:
-    Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
-    if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
     Clint.dist <- NA
   }
+  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
 
   
 # Predict the PCs for all tissues in the tissue.data table:

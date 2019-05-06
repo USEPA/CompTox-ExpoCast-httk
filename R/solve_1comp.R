@@ -121,7 +121,6 @@ solve_1comp <- function(chem.cas=NULL,
                    restrictive.clearance=restrictive.clearance,
                    well.stirred.correction=well.stirred.correction,
                    suppress.messages=suppress.messages,
-                   well.stirred.correction=well.stirred.correction,
                    minimum.Funbound.plasma=minimum.Funbound.plasma) 
   } else {
      if (!all(param.names.1comp %in% names(parameters)))
