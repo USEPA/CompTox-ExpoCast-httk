@@ -174,7 +174,7 @@ get_cheminfo <- function(info="CAS",
         } else stop('Set default.to.human to TRUE for Clint values with selected species') 
       }   
       necessary.params <- c(species.fup,"logP")
-      if (is.na(exclude.fup.zero)) exclude.fup.zero <- T  
+      exclude.fup.zero <- T  
       incomplete.data <- F
     } 
   } else stop("Valid models are currently only: pbtk, 1compartment, 3compartment, schmitt, and 3compartmentss.")
@@ -190,7 +190,7 @@ get_cheminfo <- function(info="CAS",
 # If we are exclude the fups with a zero, then get rid of those:
     if (exclude.fup.zero) 
     {
-      fup.values.numeric[fup.values==0] <- F
+      fup.values.numeric[as.numeric(fup.values)==0] <- F
       fup.values.numeric[is.na(fup.values.numeric)] <- F 
     }
     fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
