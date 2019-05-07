@@ -497,7 +497,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  sigma.factor <- 0.3
 #  css.method <- "analytic"
 #  chemlist <- httk::get_cheminfo(info="CAS",
-#                                 exclude.fub.zero=FALSE)
+#                                 exclude.fup.zero=FALSE)
 #  
 #  cluster <- parallel::makeCluster(2, # Changed number of corse from 40 to 2
 #                                   outfile='globalsens_parallel_out.txt')
@@ -855,7 +855,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  sigma.factor <- 0.3
 #  css.method <- "analytic"
 #  chemlist <- httk::get_cheminfo(info="CAS",
-#                                 exclude.fub.zero=FALSE)
+#                                 exclude.fup.zero=FALSE)
 #  
 #  cluster <- parallel::makeCluster(2, # Was 40, reduced for simpler processors
 #                                   outfile='globalsens_indep_parallel_out.txt')

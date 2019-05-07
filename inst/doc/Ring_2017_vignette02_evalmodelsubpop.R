@@ -7,7 +7,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  library(EnvStats)
 
 ## ----get_chemcas, eval=FALSE---------------------------------------------
-#  chemlist <- httk::get_cheminfo(info='CAS', exclude.fub.zero=FALSE)
+#  chemlist <- httk::get_cheminfo(info='CAS', exclude.fup.zero=FALSE)
 
 ## ----doforeachchem, eval=FALSE-------------------------------------------
 #  doforeachchem <- function(this.chemcas,

@@ -350,7 +350,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-34" title="34">                          }))</a></code></pre></div>
 <p>Get the compound names that correspond to each CAS.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">chem.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;Compound&#39;</span>),</a>
-<a class="sourceLine" id="cb3-2" title="2">                                            <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb3-2" title="2">                                            <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="kw">setnames</span>(chem.dt, <span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;chemcas&#39;</span>)</a>
 <a class="sourceLine" id="cb3-4" title="4">dat &lt;-<span class="st"> </span><span class="kw">merge</span>(dat, chem.dt, <span class="dt">by=</span><span class="st">&#39;chemcas&#39;</span>)</a></code></pre></div>
 <p>Next, read in the ToxCast AC50 values.</p>

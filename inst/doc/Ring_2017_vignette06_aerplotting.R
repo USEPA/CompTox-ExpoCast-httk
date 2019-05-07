@@ -45,7 +45,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 ## ----add_chemnames, eval=FALSE-------------------------------------------
 #  chem.dt <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound'),
-#                                              exclude.fub.zero=FALSE))
+#                                              exclude.fup.zero=FALSE))
 #  setnames(chem.dt, 'CAS', 'chemcas')
 #  dat <- merge(dat, chem.dt, by='chemcas')
 
