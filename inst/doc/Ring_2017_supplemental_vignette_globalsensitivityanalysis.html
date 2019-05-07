@@ -829,7 +829,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb8-3" title="3">sigma.factor &lt;-<span class="st"> </span><span class="fl">0.3</span></a>
 <a class="sourceLine" id="cb8-4" title="4">css.method &lt;-<span class="st"> &quot;analytic&quot;</span></a>
 <a class="sourceLine" id="cb8-5" title="5">chemlist &lt;-<span class="st"> </span>httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="st">&quot;CAS&quot;</span>,</a>
-<a class="sourceLine" id="cb8-6" title="6">                               <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-6" title="6">                               <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb8-7" title="7"></a>
 <a class="sourceLine" id="cb8-8" title="8">cluster &lt;-<span class="st"> </span>parallel<span class="op">::</span><span class="kw">makeCluster</span>(<span class="dv">2</span>, <span class="co"># Changed number of corse from 40 to 2 </span></a>
 <a class="sourceLine" id="cb8-9" title="9">                                 <span class="dt">outfile=</span><span class="st">&#39;globalsens_parallel_out.txt&#39;</span>)</a>
@@ -1184,7 +1184,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb12-3" title="3">sigma.factor &lt;-<span class="st"> </span><span class="fl">0.3</span></a>
 <a class="sourceLine" id="cb12-4" title="4">css.method &lt;-<span class="st"> &quot;analytic&quot;</span></a>
 <a class="sourceLine" id="cb12-5" title="5">chemlist &lt;-<span class="st"> </span>httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="st">&quot;CAS&quot;</span>,</a>
-<a class="sourceLine" id="cb12-6" title="6">                               <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb12-6" title="6">                               <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb12-7" title="7"></a>
 <a class="sourceLine" id="cb12-8" title="8">cluster &lt;-<span class="st"> </span>parallel<span class="op">::</span><span class="kw">makeCluster</span>(<span class="dv">2</span>, <span class="co"># Was 40, reduced for simpler processors </span></a>
 <a class="sourceLine" id="cb12-9" title="9">                                 <span class="dt">outfile=</span><span class="st">&#39;globalsens_indep_parallel_out.txt&#39;</span>)</a>

@@ -313,7 +313,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="running-the-httk-models" class="section level1">
 <h1>Running the HTTK models</h1>
 <p>The HTTK models are all general (chemical-independent) models, which means that in order to run them, you need to specify a chemical for which they can be parameterized. Let’s loop over all the chemicals in the HTTK data set. First, get a list of all of their CAS numbers.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">chemlist &lt;-<span class="st"> </span>httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="st">&#39;CAS&#39;</span>, <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">chemlist &lt;-<span class="st"> </span>httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="st">&#39;CAS&#39;</span>, <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 <div id="things-to-do-for-each-chemical" class="section level1">
 <h1>Things to do for each chemical</h1>

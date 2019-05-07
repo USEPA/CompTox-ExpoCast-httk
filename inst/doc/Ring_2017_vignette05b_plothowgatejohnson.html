@@ -316,7 +316,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-3" title="3">chem.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">&#39;3compartmentss&#39;</span>,</a>
 <a class="sourceLine" id="cb2-4" title="4">                                            <span class="dt">species=</span><span class="st">&#39;Human&#39;</span>,</a>
 <a class="sourceLine" id="cb2-5" title="5">                                            <span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&quot;MW&quot;</span>, <span class="st">&quot;Funbound.plasma&quot;</span>),</a>
-<a class="sourceLine" id="cb2-6" title="6">                                            <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb2-6" title="6">                                            <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb2-7" title="7"><span class="co">#Get CLint measured values from HTTK</span></a>
 <a class="sourceLine" id="cb2-8" title="8">chem.dt[, Clint<span class="op">:</span><span class="er">=</span><span class="kw">sapply</span>(CAS, </a>
 <a class="sourceLine" id="cb2-9" title="9">                        <span class="cf">function</span>(x) <span class="kw">parameterize_steadystate</span>(<span class="dt">chem.cas=</span>x,</a>
