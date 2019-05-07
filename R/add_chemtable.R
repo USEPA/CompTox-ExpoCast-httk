@@ -55,6 +55,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
   
     }
   
+    this.property.nospecies <- this.property
     if (this.property %in% CHEM.INVITRO.COLS)
     {
       if (!is.null(species))
@@ -118,8 +119,14 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
     }
     if (is.na(this.table[index,this.property]) | overwrite | (this.property == paste(species,'Funbound.plasma',sep=".") & this.table[index,this.property] == 0))
     {
-      if (!(this.property %in% AS.NUMERIC.EXCEPTIONS)) this.table[index,this.property] <- as.numeric(value)
-      else this.table[index,this.property] <- as.character(value)
+      if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS)) this.table[index,this.property] <- as.numeric(value)
+      else {
+        if (class(this.table[,this.property])!='character')
+        {  
+          this.table[,this.property] < as.character(this.table[,this.property])
+        }
+        this.table[index,this.property] <- as.character(value)
+      }
 # There is a difference between no pKa prediction available, a prediciton of no pKa:
       if(!is.na(this.table[index,this.property]) & this.table[index,this.property] == "" & this.property %in% c("pKa_Donor","pKa_Accept")) this.table[index,this.property] <- NA
       ref.name <- paste(this.property,"Reference",sep=".")
@@ -135,10 +142,6 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
     return(this.table)
   }
 }
-
-
-
-
 
 
 #' Add a table of chemical information for use in making httk predictions.
