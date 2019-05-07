@@ -4,7 +4,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      species="Human",
                                      clint.pvalue.threshold=0.05,
                                      default.to.human=F,
-                                     human.clint.fub=F,
+                                     human.clint.fup=F,
                                      adjusted.Funbound.plasma=T,
                                      restrictive.clearance=T)
 {
@@ -40,7 +40,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
                           Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
   Vliverc <- subset(tissue.data,tolower(Species) == tolower(species) & variable == 'Vol (L/kg)' & Tissue == 'liver')[,'value'] # L/kg BW
   Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
-  if (class(Clint) == "try-error" & default.to.human || human.clint.fub) 
+  if (class(Clint) == "try-error" & default.to.human || human.clint.fup) 
   {
     Clint <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
@@ -51,29 +51,29 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
   
   # unitless fraction of chemical unbound with plasma
-  fub <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
-  if (class(fub) == "try-error" & default.to.human || human.clint.fub) 
+  fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+  if (class(fup) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fub <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for protein binding data."))
   }
-  if (class(fub) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+  if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
   pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
   Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
-  if (fub == 0)
+  if (fup == 0)
   {
-    fub <- 0.005
+    fup <- 0.005
     warning("Fraction unbound = 0, changed to 0.005.")
   }
   if(adjusted.Funbound.plasma){
-    if(human.clint.fub) Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]
+    if(human.clint.fup) Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]
     else Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
     ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
     dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-    fub.adjust <- 1 / ((dow) * Flipid + 1 / fub)/fub
+    fup.adjust <- 1 / ((dow) * Flipid + 1 / fup)/fup
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  } else fub.adjust <- NA
+  } else fup.adjust <- NA
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if(class(Fgutabs) == "try-error") Fgutabs <- 1
@@ -81,9 +81,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
 
   Params <- list()
   Params[["Clint"]] <- Clint # uL/min/10^6
-  if (!is.na(fub.adjust)) Params[["Funbound.plasma"]] <- fub*fub.adjust # unitless fraction
-  else Params[["Funbound.plasma"]] <- fub # unitless fraction
-  Params[["Funbound.plasma.adjustment"]] <- fub.adjust
+  if (!is.na(fup.adjust)) Params[["Funbound.plasma"]] <- fup*fup.adjust # unitless fraction
+  else Params[["Funbound.plasma"]] <- fup # unitless fraction
+  Params[["Funbound.plasma.adjustment"]] <- fup.adjust
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["BW"]] <- BW # kg

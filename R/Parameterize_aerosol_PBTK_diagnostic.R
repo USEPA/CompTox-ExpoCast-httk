@@ -8,7 +8,7 @@ parameterize_aerosol_pbtk_diagnostic <- function(chem.cas=NULL,
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
-                              force.human.clint.fub = F,
+                              force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
@@ -25,7 +25,7 @@ parameterize_aerosol_pbtk_diagnostic <- function(chem.cas=NULL,
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
-  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fub) 
+  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
     Clint <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
@@ -37,14 +37,14 @@ parameterize_aerosol_pbtk_diagnostic <- function(chem.cas=NULL,
   
   
 # Predict the PCs for all tissues in the tissue.data table:
-  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,force.human.fub=force.human.clint.fub)
+  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,force.human.fup=force.human.clint.fup)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   if(adjusted.Funbound.plasma){
-    fub <- schmitt.params$Funbound.plasma
+    fup <- schmitt.params$Funbound.plasma
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  }else fub <- schmitt.params$unadjusted.Funbound.plasma
+  }else fup <- schmitt.params$unadjusted.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
@@ -96,7 +96,7 @@ parameterize_aerosol_pbtk_diagnostic <- function(chem.cas=NULL,
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
     kgutabs = 1, # 1/h
-    Funbound.plasma = as.numeric(fub), # unitless fraction
+    Funbound.plasma = as.numeric(fup), # unitless fraction
     hematocrit = as.numeric(hematocrit), # unitless ratio
     MW = MW)) #g/mol
   
@@ -106,7 +106,7 @@ parameterize_aerosol_pbtk_diagnostic <- function(chem.cas=NULL,
   outlist <- c(outlist,
     list(Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
-                                Funbound.plasma=fub, # unitless fraction
+                                Funbound.plasma=fup, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
                                 million.cells.per.gliver= 110, # 10^6 cells/g-liver
                                 liver.density= 1.05, # g/mL
