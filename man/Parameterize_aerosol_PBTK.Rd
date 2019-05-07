@@ -11,7 +11,7 @@ This function initializes the parameters needed in the function solve_aerosol_pb
 \usage{
  parameterize_aerosol_pbtk(chem.cas=NULL,chem.name=NULL,species="Human",default.to.human=F,
  tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
- force.human.clint.fub = F,clint.pvalue.threshold=0.05, adjusted.Funbound.plasma=T,
+ force.human.clint.fup = F,clint.pvalue.threshold=0.05, adjusted.Funbound.plasma=T,
  regression=T, dae = 1, particle.density = 3, suppress.messages=F)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -33,7 +33,7 @@ This function initializes the parameters needed in the function solve_aerosol_pb
   \item{tissuelist}{
     Specifies compartment names and tissues groupings. Remaining tissues in tissue.data are lumped in the rest of the body.  However, solve_pbtk only works with the default parameters.
   }
-  \item{force.human.clint.fub}{
+  \item{force.human.clint.fup}{
   Forces use of human values for hepatic intrinsic clearance and fraction of unbound plasma if true.
  }
  \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays having p-values greater than the threshold are set to zero.}
