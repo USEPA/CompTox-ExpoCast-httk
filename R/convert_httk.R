@@ -95,6 +95,9 @@
 #' 
 #' A data.table whose columns are the parameters of the HTTK model specified in
 #' \code{model}.
+#'
+#' @author Caroline Ring, John Wambaugh, and Greg Honda
+#'
 #' @export convert_httk
 convert_httk <- function(indiv.model.bio,
                          model,
@@ -183,7 +186,8 @@ convert_httk <- function(indiv.model.bio,
                                 "Fhep.assay.correction",
                                 "Funbound.plasma.adjustment",
                                 'Fgutabs'),
-                       '3compartmentss'=c('MW',
+                       '3compartmentss'=c("Dow74",
+                                          'MW',
                                           'Fgutabs',
                                           "Fhep.assay.correction",
                                           "Funbound.plasma.adjustment"))
@@ -406,28 +410,34 @@ convert_httk <- function(indiv.model.bio,
       indiv.model[, kelim:=ke]
     }
   } else {
+    calc_hep_params <- c(as.list(indiv.model[, list(Clint,
+                                                    Funbound.plasma,
+                                                    Fhep.assay.correction,
+                                                    million.cells.per.gliver,
+                                                    BW,
+                                                    Vliverc,
+                                                    Qtotal.liverc)]),
+                         liver.density=1.05,
+                         Dn=0.17)
     indiv.model[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,
                                                         species='Human',
                                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
+    indiv.model[,
+                Clmetabolismc:=httk::calc_hepatic_clearance(hepatic.model="unscaled",
+                                                            parameters=calc_hep_params,
+                                                            suppress.messages=TRUE,
+                                                            clint.pvalue.threshold=clint.pvalue.threshold)]
+    
+
   }
   # For models that don't described first pass blood flow from the gut, need to
   # cacluate a hepatic bioavailability (Rowland, 2009):
   if (model %in% c('1compartment', '3compartmentss'))
   {
     indiv.model[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
-    indiv.model[, Clmetabolismc:=calc_hepatic_clearance(parameters=list(
-          Clint=Clint,
-          Funbound.plasma=Funbound.plasma,
-          Qtotal.liverc=Qtotal.liverc, 
-          million.cells.per.gliver=million.cells.per.gliver,
-          Vliverc=Vliverc,
-          BW=BW,
-          liver.density=liver.density, 
-          Fhep.assay.correction=Fhep.assay.correction),
-          hepatic.model='unscaled',
-          suppress.messages=T)] #L/h/kg body weight
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
+
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.

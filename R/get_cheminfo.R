@@ -31,7 +31,7 @@
 #' true.
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #' @keywords Retrieval
 #' @examples
 #' 
@@ -138,10 +138,10 @@ get_cheminfo <- function(info="CAS",
 
       if (model == '3compartmentss')
       {
-        necessary.params <- c(species.clint,species.fup,"MW","logP")
+        necessary.params <- c(species.clint,"MW","logP")
         if(is.na(exclude.fup.zero)) exclude.fup.zero <- F 
       } else {
-        necessary.params <- c(species.clint,species.fup,"MW","logP")
+        necessary.params <- c(species.clint,"MW","logP")
         if(is.na(exclude.fup.zero)) exclude.fup.zero <- T
       }
       incomplete.data <- F
@@ -184,31 +184,36 @@ get_cheminfo <- function(info="CAS",
   # parameters are not NA
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
-    good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,]  
-
 # Make sure that we have a usable fup:
-    numeric.fups <- !is.na(suppressWarnings(as.numeric(good.chemical.data[,species.fup])))
-    good.chemicals.index <- !good.chemicals.index[good.chemicals.index]
-    # If we are exclude the below LOD fup's, then get rid of those too:
+    fup.values <- chem.physical_and_invitro.data[,species.fup]
+    fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
+# If we are exclude the fups with a zero, then get rid of those:
     if (exclude.fup.zero) 
     {
-      good.chemicals.index[numeric.fups] <- 
-        (as.numeric(good.chemical.data[numeric.fups,species.fup])>0)
-    } else good.chemicals.index[numeric.fups] <- T
-    # Keep the chemicals where we have the median and confidence interval
-    # separated by commas (should be two commas):
-    good.chemicals.index[!numeric.fups] <- 
-      (nchar(good.chemical.data[!numeric.fups,species.fup]) -
-      nchar(gsub(",","",good.chemical.data[!numeric.fups,species.fup]))==2) 
-    good.chemical.data <- good.chemical.data[good.chemicals.index,]
-
+      fup.values.numeric[fup.values==0] <- F
+      fup.values.numeric[is.na(fup.values.numeric)] <- F 
+    }
+    fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
+    fup.values.dist[is.na(fup.values.dist)] <- F
+    good.chemicals.index <- good.chemicals.index & 
+# Either a numeric value:
+      (fup.values.numeric |
+# or three values separated by two commas:
+      fup.values.dist)
 # Make sure that we have a usable clint:    
-    numeric.clints <- !is.na(suppressWarnings(as.numeric(good.chemical.data[,species.clint])))
-    good.chemicals.index <- numeric.clints
-    good.chemicals.index[!numeric.clints] <- 
-        (nchar(good.chemical.data[!numeric.clints,species.clint]) -
-        nchar(gsub(",","",good.chemical.data[!numeric.clints,species.clint]))==3) 
-    good.chemical.data <- good.chemical.data[good.chemicals.index,] 
+    if (!(model %in% c("schmitt")))
+    {
+      clint.values <- chem.physical_and_invitro.data[,species.clint]
+      clint.values.numeric <- suppressWarnings(!is.na(as.numeric(clint.values)))
+      clint.values.dist <- suppressWarnings(nchar(clint.values) - nchar(gsub(",","",clint.values))==3)
+      clint.values.dist[is.na(clint.values.dist)] <- F
+      good.chemicals.index <- good.chemicals.index &
+# Either a numeric value:
+        (clint.values.numeric |
+# or four values separated by three commas:
+        clint.values.dist)
+    }
+    good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
     
     if ('mw' %in% tolower(info)) info <- c('MW',info[tolower(info) != 'mw'])
     if ('pka_accept' %in% tolower(info)) info <- 

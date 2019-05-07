@@ -96,11 +96,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   {
 # Need to convert to 3compartmentss parameters:
     pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
-      parameters=c(parameters[param.names.3compss%in%names(parameters)],
-      Dow74=NA,
-      hepatic.bioavailability=NA,
-      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
-                                        ...)
+      parameters=parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {

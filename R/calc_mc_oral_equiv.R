@@ -37,8 +37,8 @@
 #' @param suppress.messages Suppress text messages. 
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
-#' @param output.units Units of dose, default of 'mg' for mg/kg BW/ day or
-#' 'mol' for mol/ kg BW/ day.
+#' @param output.units Units of dose, default of 'mgpkgpday' for mg/kg BW/ day or
+#' 'umolpkgpday' for umol/ kg BW/ day.
 #' @param which.quantile Which quantile from Monte Carlo steady-state
 #' simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
 #' concentration quantile is the same population as the 5th dose quantile. 
@@ -81,7 +81,7 @@ calc_mc_oral_equiv <- function(conc,
                                which.quantile=0.95,
                                species="Human",
                                input.units='uM',
-                               output.units='mg',
+                               output.units='mgpkgpday',
                                suppress.messages=F,
                                return.samples=F,
                                restrictive.clearance=T,
@@ -124,13 +124,13 @@ calc_mc_oral_equiv <- function(conc,
     params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas,species=species)
     dose <- dose/params[["Funbound.plasma"]]
   } 
-  if(tolower(output.units) == 'mol'){
+  if(tolower(output.units) == 'umolpkgpday'){
     if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
     MW <- get_physchem_param("MW",chem.CAS=chem.cas)
     dose <- dose /1000 / MW * 1000000 
-  }else if(tolower(output.units) != 'mg') stop("Output units can only be in mg or mol.")
+  }else if(tolower(output.units) != 'mgpkgpday') stop("Output units can only be in mgpkgpday or mol.")
   if(!suppress.messages & !return.samples){
-    cat(input.units,"concentration converted to",output.units,"/kg bw/day dose for",which.quantile,"quantile.\n")
+    cat(input.units,"concentration converted to",output.units,"dose for",which.quantile,"quantile.\n")
   }
 	if (class(Css) == "try-error"){
     return(NA)
