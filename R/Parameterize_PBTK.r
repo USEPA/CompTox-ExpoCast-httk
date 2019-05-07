@@ -26,6 +26,9 @@
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @return
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' 
 #' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
@@ -149,6 +152,9 @@ parameterize_pbtk <- function(chem.cas=NULL,
     fup <- schmitt.params$Funbound.plasma
     warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
+
+# Restrict the value of fup:
+  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
