@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
 #                                              species='Human',
 #                                              info=c('CAS', "MW", "Funbound.plasma"),
-#                                              exclude.fub.zero=FALSE))
+#                                              exclude.fup.zero=FALSE))
 #  #Get CLint measured values from HTTK
 #  chem.dt[, Clint:=sapply(CAS,
 #                          function(x) parameterize_steadystate(chem.cas=x,

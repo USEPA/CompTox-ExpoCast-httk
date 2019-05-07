@@ -357,7 +357,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-30" title="30">chem.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">&#39;3compartmentss&#39;</span>,</a>
 <a class="sourceLine" id="cb2-31" title="31">                                            <span class="dt">species=</span><span class="st">&#39;Human&#39;</span>,</a>
 <a class="sourceLine" id="cb2-32" title="32">                                            <span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;Compound&#39;</span>),</a>
-<a class="sourceLine" id="cb2-33" title="33">                                            <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb2-33" title="33">                                            <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb2-34" title="34">chem.dt[, Compound<span class="op">:</span><span class="er">=</span><span class="kw">tolower</span>(Compound)]</a>
 <a class="sourceLine" id="cb2-35" title="35"></a>
 <a class="sourceLine" id="cb2-36" title="36"><span class="co">#Harmonize compound names</span></a>

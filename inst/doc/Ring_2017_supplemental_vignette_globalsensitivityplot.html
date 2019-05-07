@@ -347,7 +347,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">cheminfo.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">&#39;3compartmentss&#39;</span>,</a>
 <a class="sourceLine" id="cb3-2" title="2">                                          <span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>,<span class="st">&#39;Compound&#39;</span>,</a>
 <a class="sourceLine" id="cb3-3" title="3">                                                 <span class="st">&#39;Funbound.plasma&#39;</span>),</a>
-<a class="sourceLine" id="cb3-4" title="4">                                          <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb3-4" title="4">                                          <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb3-5" title="5"><span class="kw">setnames</span>(cheminfo.dt,</a>
 <a class="sourceLine" id="cb3-6" title="6">         <span class="st">&#39;Human.Funbound.plasma&#39;</span>,</a>
 <a class="sourceLine" id="cb3-7" title="7">         <span class="st">&#39;Funbound.plasma&#39;</span></a>
