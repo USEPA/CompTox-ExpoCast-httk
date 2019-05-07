@@ -228,7 +228,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  chemlist <- as.data.table(get_cheminfo(info=c('CAS', 'Compound', 'MW'),
 #                                           species='Human',
 #                                           model=model,
-#                                           exclude.fub.zero=FALSE))
+#                                           exclude.fup.zero=FALSE))
 #    setnames(chemlist, 'CAS', 'chemcas')
 #  
 #    data.read.list <- mapply(data_read,
