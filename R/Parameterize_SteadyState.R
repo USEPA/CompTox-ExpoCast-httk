@@ -21,6 +21,10 @@
 #' TRUE.
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#'
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
@@ -165,6 +169,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
     fup.adjusted <- fup.point
     fup.adjustment <- NA
   }
+# Restrict values of fup:
+  if (fup.adjusted < minimum.Funbound.plasma) fup.adjusted <- minimum.Funbound.plasma
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1

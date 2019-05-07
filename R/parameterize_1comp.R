@@ -26,6 +26,10 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#'
 #' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
