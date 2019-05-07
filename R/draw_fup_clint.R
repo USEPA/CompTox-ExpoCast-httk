@@ -44,7 +44,7 @@ draw_fup_clint <- function(this.chem=NULL,
                            nsamp,
                            fup.meas.cv=0.4,
                            clint.meas.cv=0.3,                           
-                           fup.pop.cv=0.02,
+                           fup.pop.cv=0.1,
                            clint.pop.cv=0.1,
                            poormetab=TRUE,
                            fup.lod=0.01,
@@ -226,26 +226,48 @@ draw_fup_clint <- function(this.chem=NULL,
   # If so, assign values between zero and the lod:
     indiv_tmp[, fup.mean := runif(n=1,0,fup.lod)]
   # Otherwise, check to see if fup credible interval was provided:
-  } else if (!is.null(Funbound.plasma.u95)) {
-    # Use optim to estimate parameters for a beta distribution (alpha and beta)
-    # such that the median and 95% credible interval approximate the given values:
-    if (Funbound.plasma < 0.99)
+  } else if (!is.null(Funbound.plasma.u95)) 
+  {
+    if (Funbound.plasma>minimum.Funbound.plasma)
     {
-      ppb.fit <- suppressWarnings(optim(c(2,(1-Funbound.plasma)/Funbound.plasma*2), function(x) (0.95-
-        pbeta(Funbound.plasma.u95,x[1],x[2])+
-        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-        method="BFGS"))
-    } else { 
-      ppb.fit <- suppressWarnings(optim(c(2,1), function(x) (0.95-
-        pbeta(Funbound.plasma.u95,x[1],x[2])+
-        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-        method="BFGS"))
+      # Use optim to estimate parameters for a beta distribution (alpha and beta)
+      # such that the median and 95% credible interval approximate the given values:
+      if (Funbound.plasma < 0.99)
+      {
+        ppb.fit <- suppressWarnings(optim(c(2,
+          (1-Funbound.plasma)/Funbound.plasma*2), 
+          function(x) (0.95-
+          pbeta(Funbound.plasma.u95,x[1],x[2])+
+          pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+          (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+          method="BFGS"))
+      } else { 
+        ppb.fit <- suppressWarnings(optim(c(2,1), function(x) (0.95-
+          pbeta(Funbound.plasma.u95,x[1],x[2])+
+          pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+          (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+          method="BFGS"))
+      }
+      # We are drawing new values for the unadjusted Fup:
+      indiv_tmp[, unadjusted.Funbound.plasma:=rbeta(n=nsamp,
+        ppb.fit$par[1],
+        ppb.fit$par[2])]
+    } else if (Funbound.plasma.u95 > minimum.Funbound.plasma)
+    {
+      # Assume that since the median is zero but the u95 is not, that there is 
+      # an uniform distribution:
+      # 97.5% of clearance values will be below Funbound.plasma.u95:
+      indiv_tmp[,unadjusted.Funbound.plasma:=runif(n=nsamp,
+        minimum.Funbound.plasma,
+        min(1,(Funbound.plasma.u95-minimum.Funbound.plasma)/0.975))]
+      indiv_tmp[as.logical(rbinom(n=nsamp,1,.975)),
+        unadjusted.Funbound.plasma:=minimum.Funbound.plasma]      
+    } else {
+      indiv_tmp[,unadjusted.Funbound.plasma:=minimum.Funbound.plasma]
     }
-    # We are drawing new values for the unadjusted Fup:
-    indiv_tmp[, unadjusted.Funbound.plasma:=rbeta(n=nsamp,ppb.fit$par[1],ppb.fit$par[2])]
-    indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
+# Adjust for in vitro binding:    
+    indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
+      1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
     indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   # Otherwise use point estimate:
   } else {
@@ -318,6 +340,8 @@ draw_fup_clint <- function(this.chem=NULL,
                                                              mean=fup.mean,
                                                              sd=fup.sd)] 
     }
+  } else {
+    indiv_tmp[,Funbound.plasma:=fup.mean]
   }
 
   #Enforce a minimum Funbound.plasma unless set to zero:
