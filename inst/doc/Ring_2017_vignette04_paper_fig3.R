@@ -67,7 +67,7 @@ knitr::opts_chunk$set(collapse = TRUE,
 #  chemlist <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound', 'MW'),
 #                                               species='Human',
 #                                               model=model,
-#                                               exclude.fub.zero=FALSE))
+#                                               exclude.fup.zero=FALSE))
 #  setnames(chemlist, 'CAS', 'chemcas')
 #  litCss.dt <- merge(litCss.dt,
 #                     chemlist[, .(Compound, MW)],
