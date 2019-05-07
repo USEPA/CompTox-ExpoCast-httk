@@ -74,14 +74,15 @@ get_httk_params <- function(indiv_dt,
                             fup.censored.dist=FALSE,
                             fup.meas.cv=0.4,
                             clint.meas.cv=0.3,
-                            fup.pop.cv=0.05,
+                            fup.pop.cv=0.1,
                             clint.pop.cv=0.1,
                             fup.lod=0.01,
                             adjusted.Funbound.plasma=T,
                             regression=T,
                             well.stirred.correction=T,
                             restrictive.clearance=T,
-                            clint.pvalue.threshold=0.05){
+                            clint.pvalue.threshold=0.05)
+{
   
   #First convert to physiological parameters used by HTTK
   indiv_bio <- httkpop_bio(indiv_dt = indiv_dt)
