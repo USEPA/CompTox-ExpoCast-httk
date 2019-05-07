@@ -46,7 +46,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 #  cheminfo.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
 #                                            info=c('CAS','Compound',
 #                                                   'Funbound.plasma'),
-#                                            exclude.fub.zero=FALSE))
+#                                            exclude.fup.zero=FALSE))
 #  setnames(cheminfo.dt,
 #           'Human.Funbound.plasma',
 #           'Funbound.plasma'

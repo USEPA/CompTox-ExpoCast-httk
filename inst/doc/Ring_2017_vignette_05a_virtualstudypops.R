@@ -36,7 +36,7 @@
 #  chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
 #                                              species='Human',
 #                                              info=c('CAS', 'Compound'),
-#                                              exclude.fub.zero=FALSE))
+#                                              exclude.fup.zero=FALSE))
 #  chem.dt[, Compound:=tolower(Compound)]
 #  
 #  #Harmonize compound names
