@@ -28,7 +28,7 @@ library('httk')
 Next, load in the model-predicted median Css values for the Age 20-50 non-obese sub-population.
 ```{r, eval=FALSE}
 poormetab <- TRUE
-fup.censor <- TRUE
+fup.censored.dist <- TRUE
 grp <- 'Age.20.50.nonobese'
 model <- '3compartmentss'
 popmethod <- 'dr'
@@ -39,8 +39,8 @@ m.dat <- readRDS(paste0('data/',
                               popmethod,
                               'poormetab',
                               poormetab,
-                              'fup.censor',
-                              fup.censor,
+                              'fup.censored.dist',
+                              fup.censored.dist,
                               model,
                               "FuptoFub",
                               sep='_'),
