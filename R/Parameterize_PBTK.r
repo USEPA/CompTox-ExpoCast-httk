@@ -138,8 +138,8 @@ parameterize_pbtk <- function(chem.cas=NULL,
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
                                          species=species,
                                          default.to.human=default.to.human,
-                                         force.human.fup=force.human.clint.fup
-                                         suppress.messages=T
+                                         force.human.fup=force.human.clint.fup,
+                                         suppress.messages=T,
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
   
   if(placenta){
@@ -147,7 +147,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                         regression=regression,
                                         species=species,
-                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma
+                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
     p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
     PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
@@ -156,7 +156,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                         species=species,
                                         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                        regression=regression
+                                        regression=regression,
                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
 
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
