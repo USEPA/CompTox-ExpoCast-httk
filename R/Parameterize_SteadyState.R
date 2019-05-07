@@ -21,6 +21,10 @@
 #' TRUE.
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#'
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
@@ -90,12 +94,16 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  # Check that the trend in the CLint assay was significant:
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
-  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+  if (class(Clint.db) == "try-error") 
+    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clintis a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
@@ -105,11 +113,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   } else {
     Clint.point <- Clint.db
-  # Check that the trend in the CLint assay was significant:
-    Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
-    if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
     Clint.dist <- NA
   }
+  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
@@ -163,6 +169,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
     fup.adjusted <- fup.point
     fup.adjustment <- NA
   }
+# Restrict values of fup:
+  if (fup.adjusted < minimum.Funbound.plasma) fup.adjusted <- minimum.Funbound.plasma
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
