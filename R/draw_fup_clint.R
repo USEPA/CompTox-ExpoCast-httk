@@ -44,7 +44,7 @@ draw_fup_clint <- function(this.chem=NULL,
                            nsamp,
                            fup.meas.cv=0.4,
                            clint.meas.cv=0.3,                           
-                           fup.pop.cv=0.02,
+                           fup.pop.cv=0.1,
                            clint.pop.cv=0.1,
                            poormetab=TRUE,
                            fup.lod=0.01,
@@ -340,6 +340,8 @@ draw_fup_clint <- function(this.chem=NULL,
                                                              mean=fup.mean,
                                                              sd=fup.sd)] 
     }
+  } else {
+    indiv_tmp[,Funbound.plasma:=fup.mean]
   }
 
   #Enforce a minimum Funbound.plasma unless set to zero:
