@@ -259,8 +259,9 @@ draw_fup_clint <- function(this.chem=NULL,
       # 97.5% of clearance values will be below Funbound.plasma.u95:
       indiv_tmp[,unadjusted.Funbound.plasma:=runif(n=nsamp,
         minimum.Funbound.plasma,
-        min(1,(Funbound.plasma.u95-minimum.Funbound.plasma)/0.975))]
-      indiv_tmp[as.logical(rbinom(n=nsamp,1,.975)),
+        min(1,minimum.Funbound.plasma+
+        2*(Funbound.plasma.u95-minimum.Funbound.plasma)))]
+      indiv_tmp[as.logical(rbinom(n=nsamp,1,.95)),
         unadjusted.Funbound.plasma:=minimum.Funbound.plasma]      
     } else {
       indiv_tmp[,unadjusted.Funbound.plasma:=minimum.Funbound.plasma]
