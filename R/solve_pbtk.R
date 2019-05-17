@@ -268,30 +268,79 @@ parameters[["MW"]] <- NULL
   if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
   
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
-  parameters <- initparms(parameters[param.names.pbtk.solver])
+# Here we remove model parameters that are not needed by the C solver:
+  parameters <- pbtk.initparms(parameters[param.names.pbtk.solver])
 
-  
-  state <-initState(parameters,state)
-  
-   
-     
+  state <-pbtk.initState(parameters,state)
 
   if(is.null(dosing.matrix)){
     if(is.null(doses.per.day)){
-      out <- ode(y = state, times = times,func="derivs", parms=parameters, method=method,rtol=rtol,atol=atol,dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,...)
+      out <- ode(y = state, 
+        times = times,
+# This is the derivatives function specific to this model:
+        func="pbtkderivs", 
+        parms=parameters,
+        method=method,
+        rtol=rtol,
+        atol=atol,
+# This is the httk.dll file containing all the .C code:
+        dllname="httk",
+        initfunc="initmod", 
+# Here we make sure we get the number of outputs from the model that we expect:
+        nout=length(pbtk.Outputs),
+# Here we assign them names (order matters!)
+        outnames=pbtk.Outputs,
+        ...)
     }else{
       dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
       length <- length(dosing)
-      if(iv.dose) eventdata <- data.frame(var=rep('Aven',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
-      else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
+      if(iv.dose) eventdata <- data.frame(var=rep('Aven',length),
+        time = round(dosing,8),
+        value = rep(dose,length), 
+        method = rep("add",length))
+      else eventdata <- data.frame(var=rep('Agutlumen',length),
+        time = round(dosing,8),
+        value = rep(dose,length), 
+        method = rep("add",length))
       times <- sort(c(times,dosing + 1e-8,start + 1e-8))
-      out <- ode(y = state, times = times, func="derivs", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,events=list(data=eventdata),...)
+      out <- ode(y = state, 
+        times = times, 
+# This is the derivatives function specific to this model:
+        func="pbtkderivs", 
+        parms = parameters,
+        method=method,
+        rtol=rtol,
+        atol=atol, 
+# This is the httk.dll file containing all the .C code:
+        dllname="httk",
+        initfunc="initmod", 
+# Here we make sure we get the number of outputs from the model that we expect:
+        nout=length(pbtk.Outputs),
+# Here we assign them names (order matters!)
+        outnames=pbtk.Outputs,
+        events=list(data=eventdata),
+        ...)
     }      
   }else{
     if(iv.dose) eventdata <- data.frame(var=rep('Aven',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))                          
     else eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
     times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
-    out <- ode(y = state, times = times, func="derivs", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,events=list(data=eventdata),...)                                
+    out <- ode(y = state, 
+      times = times, 
+# This is the derivatives function specific to this model:
+      func="pbtkderivs", 
+      parms = parameters,
+      method=method,
+      rtol=rtol,
+      atol=atol, 
+# This is the httk.dll file containing all the .C code:
+      dllname="httk",
+      initfunc="initmod", 
+# Here we make sure we get the number of outputs from the model that we expect:
+      nout=length(pbtk.Outputs),
+# Here we assign them names (order matters!)
+      outnames=pbtk.Outputs,
+      events=list(data=eventdata),...)                                
   }
   
   

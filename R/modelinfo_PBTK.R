@@ -63,7 +63,7 @@ param.names.pbtk.solver <- c("BW",
                     "Vrestc",
                     "Vvenc")
 
-initparms <- function(newParms = NULL){
+pbtk.initparms <- function(newParms = NULL){
   parms <- c(
     BW = 70,
     Clmetabolismc = 0.203,
@@ -117,7 +117,7 @@ initparms <- function(newParms = NULL){
   out
 }
 
-Outputs <- c(
+pbtk.Outputs <- c(
     "Cgut",
     "Cliver",
     "Cven",
@@ -130,7 +130,7 @@ Outputs <- c(
 )
 
 
-initState <- function(parms, newState = NULL) {
+pbtk.initState <- function(parms, newState = NULL) {
   Y <- c(
     Agutlumen = 0.0,
     Agut = 0.0,
