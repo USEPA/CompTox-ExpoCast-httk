@@ -189,7 +189,7 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void pbtkderivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
