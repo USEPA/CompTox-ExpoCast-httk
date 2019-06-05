@@ -23,10 +23,10 @@ get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
                     chem.physical_and_invitro.data[,"Compound"]==chem.name,
                     "CAS"][1]
     }
-    if (!(param %in% c("Clint","Funbound.plasma","Clint.pValue","Fgutabs"))) 
+    if (!(param %in% c("Clint","Funbound.plasma","Clint.pValue","Fgutabs","Caco2.Pab"))) 
     {
       stop(paste("Parameter",param,
-        "not among \"Clint\", \"Clint.pValue\", and \"Funbound.plasma\".\n"))
+         "not among \"Clint\", \"Clint.pValue\", \"Funbound.plasma\", and \"Caco2.Pab\".\n"))
     }
     chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$CAS==chem.CAS)
     this.col.name <- tolower(paste(species,param,sep="."))
@@ -53,7 +53,8 @@ get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
       else if (param=="Funbound.plasma" & (nchar(param.val) -
             nchar(gsub(",","",param.val)))==2) return(param.val)
       else if (param=="Clint.pValue") return(param.val)
-       else if (!is.na(as.numeric(param.val))) return(as.numeric(param.val))
+      else if (param == "Caco2.Pab" & (nchar(param.val) - nchar(gsub(",","",param.val))) >= 1) return(param.val)
+      else if (!is.na(as.numeric(param.val))) return(as.numeric(param.val))
     }
     stop(paste("Incomplete in vitro PK data for ",chem.name,
       " in ",species," -- missing ",param,".",sep=""))

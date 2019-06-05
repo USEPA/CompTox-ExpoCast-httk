@@ -20,11 +20,11 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
   CHEM.ID.COLS<-c("Compound","CAS","CAS.Checksum","DTXSID","Formula","SMILES.desalt")
   CHEM.PHYS.COLS<-c("MW","logP","logPwa","pKa_Donor","pKa_Accept","logMA")
   # The colmuns have "[SPECIES]." prepended to their name:
-  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma")
+  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma","Caco2.Pab")
   # In the table we create each word in most column names is capitalized:
-  COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula")
+  COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
   # Many data are converted to numeric,but sometimes we want to preserve strings:
-  AS.NUMERIC.EXCEPTIONS <- c("pKa_Donor","pKa_Accept","SMILES.desalt","Funbound.plasma","Clint","DTXSID","SMILES.desalt","Formula")
+  AS.NUMERIC.EXCEPTIONS <- c("pKa_Donor","pKa_Accept","SMILES.desalt","Funbound.plasma","Clint","DTXSID","SMILES.desalt","Formula", "Caco2.Pab")
   if (!is.na(value))
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)) this.property <- COLUMN.CAPITALIZATION.EXCEPTIONS[tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)==tolower(this.property)]
@@ -206,7 +206,7 @@ add_chemtable <- function(new.table, data.list, current.table=NULL, reference=NU
                           species=NULL, overwrite=F)
 {
 # Let's make the capitalization consistent in data.list:
-  exceptions <- c("Clint.pValue","logP","logPwa","logMA","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula")
+  exceptions <- c("Clint.pValue","logP","logPwa","logMA","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
   for (this.name in names(data.list))
   {
     if (tolower(this.name) %in% tolower(exceptions)) this.name <- exceptions[tolower(exceptions)==tolower(this.name)]
