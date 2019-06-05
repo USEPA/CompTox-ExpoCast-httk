@@ -57,7 +57,11 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      restrictive.clearance=T,
                                      fup.lod.default=0.005,
                                      suppress.messages=F,
-                                     minimum.Funbound.plasma=0.0001)
+                                     minimum.Funbound.plasma=0.0001,
+                                     Caco2.options = list(Caco2.Pab.default = 2,
+                                                          Caco2.Fgut = TRUE,
+                                                          Caco2.Fabs = TRUE
+                                                          ))
 {
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
@@ -117,6 +121,26 @@ parameterize_steadystate <- function(chem.cas=NULL,
   }
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
   
+  
+  # Caco-2 Pab:
+  Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+  if (class(Caco2.Pab.db) == "try-error"){  
+    Caco2.Pab.point <- Caco2.Pab.default
+    Caco2.Pab.dist <- NA
+    warning(paste0("Default value of ", Caco2.Pab.default, " used for Caco2 permeability."))
+  }
+  # Check if Caco2 a point value or a distribution, if a distribution, use the median:
+  if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) >= 1) 
+  {
+    Caco2.Pab.dist <- Caco2.Pab.db
+    Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  } else {
+    Caco2.Pab.point <- Caco2.Pab.db
+    Caco2.Pab.dist <- NA
+  }
+  
+  
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
   fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
@@ -172,8 +196,6 @@ parameterize_steadystate <- function(chem.cas=NULL,
 # Restrict values of fup:
   if (fup.adjusted < minimum.Funbound.plasma) fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
@@ -193,7 +215,6 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fgutabs']] <- Fgutabs
   
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
@@ -201,22 +222,46 @@ parameterize_steadystate <- function(chem.cas=NULL,
             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
-
+  
   # Need to have a parameter with this name to calculate clearance, but need 
   # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
-  cl <- calc_hepatic_clearance(parameters=Params,
+  cl_us <- calc_hepatic_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
+  Params[["cl_us"]] <- cl_us
+  
+  
+  
+  if(Caco2.Fgut == FALSE){
+    fgut.oral <- 1
+  }else{
+    fgut.oral <- calc_fgut.oral(Params = Params, species = species)
+    Fgutabs <- fabs.oral * fgut.oral
+  }
+  
+  if(Caco2.Fabs == FALSE){
+    fabs.oral <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+    if (class(fabs.oral) == "try-error") fabs.oral <- 1
+  }else{
+    fabs.oral <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+  }
+  
+  Fgutabs <- fabs.oral * fgut.oral
+  Params[['Fgutabs']] <- Fgutabs
+  
+
+
+ 
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
   if (restrictive.clearance) 
   { 
     Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + fup.adjusted * cl / Rb2p) # Units cancel (i.e., unitless)
+      Qliver / (Qliver + fup.adjusted * cl_us / Rb2p) # Units cancel (i.e., unitless)
   } else {
     Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
+      Qliver / (Qliver + cl_us / Rb2p) # Units cancel (i.e., unitless)
   }
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(Params)
