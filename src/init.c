@@ -14,7 +14,7 @@ extern void getParms_3comp(double *, double *, void *);
 extern void initmod(void *);
 extern void initmod1comp(void *);
 extern void initmod3comp(void *);
-extern void derivs(int *, double *, double *, double *, double *, int *);
+extern void pbtkderivs(int *, double *, double *, double *, double *, int *);
 extern void derivs1comp(int *, double *, double *, double *, double *, int *);
 extern void derivs3comp(int *, double *, double *, double *, double *, int *);
 extern void jac(int *, double *, double *, int *, int *, double *, int *, double *, int *);
@@ -34,7 +34,7 @@ static const R_CMethodDef CEntries[] = {
     {"initmod", (DL_FUNC) &initmod, 1},
     {"initmod1comp", (DL_FUNC) &initmod1comp, 1},
     {"initmod3comp", (DL_FUNC) &initmod3comp, 1},
-    {"derivs", (DL_FUNC) &derivs, 6},
+    {"pbtkderivs", (DL_FUNC) &pbtkderivs, 6},
     {"derivs1comp", (DL_FUNC) &derivs1comp, 6},
     {"derivs3comp", (DL_FUNC) &derivs3comp, 6},
     {"jac", (DL_FUNC) &jac, 9},
