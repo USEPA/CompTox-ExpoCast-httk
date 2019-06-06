@@ -27,7 +27,7 @@
    3 Parameters:
      vdist = 0,
      ke = 0,
-     kgutabs = 1,
+     Kgutabs = 1,
 */
 
 #include <R.h>
@@ -46,7 +46,7 @@ static double parms[3];
 
 #define vdist parms[0]
 #define ke parms[1]
-#define kgutabs parms[2]
+#define Kgutabs parms[2]
 
 
 
@@ -71,7 +71,7 @@ void getParms_1comp (double *inParms, double *out, int *nout) {
   }
 
 
-  kgutabs = kgutabs * 24 ;
+  Kgutabs = Kgutabs * 24 ;
   ke = ke * 24 ;
 
   for (i = 0; i < *nout; i++) {
@@ -85,9 +85,9 @@ void derivs1comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   yout[ID_Ccompartment] = y[ID_Acompartment] / vdist ;
 
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Agutlumen] = - Kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Acompartment] = kgutabs * y[ID_Agutlumen] - ke * y[ID_Acompartment];
+  ydot[ID_Acompartment] = Kgutabs * y[ID_Agutlumen] - ke * y[ID_Acompartment];
 
   ydot[ID_Ametabolized] = ke * y[ID_Acompartment];
 

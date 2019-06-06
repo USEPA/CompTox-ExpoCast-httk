@@ -845,7 +845,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-524" title="524">}</a></code></pre></div>
 <div id="figure-three" class="section level2">
 <h2>Figure Three</h2>
-<p>A “heatmap” of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by “neutral ph74”, “positive ph74” and “negative ph74”. The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.</p>
+<p>A “heatmap” of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and Kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by “neutral ph74”, “positive ph74” and “negative ph74”. The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">physprop.matrix &lt;-<span class="st"> </span>chem.invivo.PK.aggregate.data[,<span class="kw">c</span>(<span class="st">&quot;MW&quot;</span>,</a>
 <a class="sourceLine" id="cb3-2" title="2">                                    <span class="st">&quot;logP&quot;</span>,</a>
 <a class="sourceLine" id="cb3-3" title="3">                                    <span class="st">&quot;WaterSol&quot;</span>,</a>
@@ -856,7 +856,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb3-8" title="8">                                    <span class="st">&quot;Fup&quot;</span>,</a>
 <a class="sourceLine" id="cb3-9" title="9">                                    <span class="st">&quot;Vdist&quot;</span>,</a>
 <a class="sourceLine" id="cb3-10" title="10">                                    <span class="st">&quot;kelim&quot;</span>,</a>
-<a class="sourceLine" id="cb3-11" title="11">                                    <span class="st">&quot;kgutabs&quot;</span>,</a>
+<a class="sourceLine" id="cb3-11" title="11">                                    <span class="st">&quot;Kgutabs&quot;</span>,</a>
 <a class="sourceLine" id="cb3-12" title="12">                                    <span class="st">&quot;Fbio&quot;</span>)]</a>
 <a class="sourceLine" id="cb3-13" title="13">rnames &lt;-<span class="st"> </span>chem.invivo.PK.aggregate.data<span class="op">$</span>Compound</a>
 <a class="sourceLine" id="cb3-14" title="14">rnames[rnames<span class="op">==</span><span class="st">&quot;Bensulide&quot;</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Bensulide.Joint&quot;</span>,<span class="st">&quot;Bensulide.NHEERL&quot;</span>,<span class="st">&quot;Bensulide.RTI&quot;</span>)</a>
@@ -1042,9 +1042,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="figure-six" class="section level2">
 <h2>Figure Six</h2>
 <p>Distribution of Gut Absorption Rate for Environmental and Pharmaceutical Chemicals.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">FitData<span class="op">$</span>Selectedkgutabs &lt;-<span class="st"> </span>FitData<span class="op">$</span>kgutabs</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">FitData<span class="op">$</span>SelectedKgutabs &lt;-<span class="st"> </span>FitData<span class="op">$</span>Kgutabs</a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="co"># Cutoff from optimizer is 1000:</span></a>
-<a class="sourceLine" id="cb7-3" title="3">Figkgutabs &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs<span class="op">&lt;</span><span class="dv">999</span>), <span class="kw">aes</span>(Selectedkgutabs, <span class="dt">fill =</span> Chemical)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-3" title="3">FigKgutabs &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">subset</span>(FitData,SelectedKgutabs<span class="op">&lt;</span><span class="dv">999</span>), <span class="kw">aes</span>(SelectedKgutabs, <span class="dt">fill =</span> Chemical)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-4" title="4"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth=</span><span class="fl">0.5</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-5" title="5"><span class="st">     </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_<span class="dv">10</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-6" title="6"><span class="st">     </span><span class="kw">ylab</span>(<span class="st">&quot;Number of Chemicals&quot;</span>)<span class="op">+</span></a>
@@ -1053,12 +1053,12 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb7-9" title="9"><span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)</a>
 <a class="sourceLine" id="cb7-10" title="10">     </a>
 <a class="sourceLine" id="cb7-11" title="11"><span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">6</span>,<span class="dt">height=</span><span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb7-12" title="12"><span class="kw">print</span>(Figkgutabs) </a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="kw">print</span>(FigKgutabs) </a>
 <a class="sourceLine" id="cb7-13" title="13"></a>
-<a class="sourceLine" id="cb7-14" title="14"><span class="kw">mean</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>Selectedkgutabs)</a>
-<a class="sourceLine" id="cb7-15" title="15"><span class="kw">min</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>Selectedkgutabs)</a>
-<a class="sourceLine" id="cb7-16" title="16"><span class="kw">max</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>Selectedkgutabs)</a>
-<a class="sourceLine" id="cb7-17" title="17"><span class="kw">median</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>Selectedkgutabs)</a></code></pre></div>
+<a class="sourceLine" id="cb7-14" title="14"><span class="kw">mean</span>(<span class="kw">subset</span>(FitData,SelectedKgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>SelectedKgutabs)</a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="kw">min</span>(<span class="kw">subset</span>(FitData,SelectedKgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>SelectedKgutabs)</a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="kw">max</span>(<span class="kw">subset</span>(FitData,SelectedKgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>SelectedKgutabs)</a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="kw">median</span>(<span class="kw">subset</span>(FitData,SelectedKgutabs<span class="op">&lt;</span><span class="dv">999</span>)<span class="op">$</span>SelectedKgutabs)</a></code></pre></div>
 </div>
 <div id="figure-seven" class="section level2">
 <h2>Figure Seven</h2>

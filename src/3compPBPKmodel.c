@@ -33,7 +33,7 @@
    20 Parameters:
      BW = 70,
      CLmetabolismc = 0.203,
-     kgutabs = 1,
+     Kgutabs = 1,
      Qcardiacc = 0,
      Qgfrc = 0.108,
      Qgutf = 0.205,
@@ -75,7 +75,7 @@ static double parms[20];
 
 #define BW parms[0]
 #define CLmetabolismc parms[1]
-#define kgutabs parms[2]
+#define Kgutabs parms[2]
 #define Qcardiacc parms[3]
 #define Qgfrc parms[4]
 #define Qgutf parms[5]
@@ -114,7 +114,7 @@ void getParms_3comp (double *inParms, double *out, int *nout) {
   }
 
 
-  kgutabs = kgutabs * 24 ;
+  Kgutabs = Kgutabs * 24 ;
   CLmetabolism = CLmetabolismc * 24 * BW ;
   Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
   Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
@@ -138,9 +138,9 @@ void derivs3comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   yout[ID_Cserum] = y[ID_Aliver] / Vliver / Kliver2plasma / Fraction_unbound_plasma ;
 
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Agutlumen] = - Kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = Kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma ) ;
 
   ydot[ID_Aliver] = Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma + Qliver * y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
 

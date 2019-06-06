@@ -13,7 +13,7 @@ param.names.1comp <- c("BW",
                      "hepatic.bioavailability",
                      "hematocrit",
                      "kelim",
-                     "kgutabs",
+                     "Kgutabs",
                      "liver.density",
                      "million.cells.per.gliver",
                      "MA",
@@ -26,13 +26,13 @@ param.names.1comp <- c("BW",
 
 param.names.1comp.solver <- c("vdist",
                      "ke",
-                     "kgutabs")
+                     "Kgutabs")
 
 initparms1comp <- function(newParms = NULL){
   parms <- c(
     vdist = 0,
     ke = 0,
-    kgutabs = 1
+    Kgutabs = 1
   )
   if (!is.null(newParms)) {
     if (!all(names(newParms) %in% c(names(parms)))) {
