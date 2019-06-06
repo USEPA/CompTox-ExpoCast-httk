@@ -559,7 +559,7 @@ na.dist <- function(x,method="euclidian",...)
 }
 ```
 ## Figure Three
-A "heatmap" of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by "neutral ph74", "positive ph74" and "negative ph74". The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.
+A "heatmap" of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and Kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by "neutral ph74", "positive ph74" and "negative ph74". The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.
 ```{r fig3, eval=FALSE}
 physprop.matrix <- chem.invivo.PK.aggregate.data[,c("MW",
                                     "logP",
@@ -571,7 +571,7 @@ physprop.matrix <- chem.invivo.PK.aggregate.data[,c("MW",
                                     "Fup",
                                     "Vdist",
                                     "kelim",
-                                    "kgutabs",
+                                    "Kgutabs",
                                     "Fbio")]
 rnames <- chem.invivo.PK.aggregate.data$Compound
 rnames[rnames=="Bensulide"] <- c("Bensulide.Joint","Bensulide.NHEERL","Bensulide.RTI")
@@ -767,9 +767,9 @@ paste("with",with(FitData.Fup,sum(SelectedCLtot<CLtot.1comp.pred,na.rm=T)),"chem
 ## Figure Six
 Distribution of Gut Absorption Rate for Environmental and Pharmaceutical Chemicals.
 ```{r fig6, eval=FALSE}
-FitData$Selectedkgutabs <- FitData$kgutabs
+FitData$SelectedKgutabs <- FitData$Kgutabs
 # Cutoff from optimizer is 1000:
-Figkgutabs <- ggplot(subset(FitData,Selectedkgutabs<999), aes(Selectedkgutabs, fill = Chemical)) +
+FigKgutabs <- ggplot(subset(FitData,SelectedKgutabs<999), aes(SelectedKgutabs, fill = Chemical)) +
   geom_histogram(binwidth=0.5) +
      scale_x_log10(label=scientific_10) +
      ylab("Number of Chemicals")+
@@ -778,12 +778,12 @@ Figkgutabs <- ggplot(subset(FitData,Selectedkgutabs<999), aes(Selectedkgutabs, f
         theme(legend.position="bottom")
      
 dev.new(width=6,height=6)
-print(Figkgutabs) 
+print(FigKgutabs) 
 
-mean(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
-min(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
-max(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
-median(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
+mean(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
+min(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
+max(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
+median(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
 
 ```
 ## Figure Seven
