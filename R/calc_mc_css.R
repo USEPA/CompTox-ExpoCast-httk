@@ -196,10 +196,13 @@ calc_mc_css <- function(chem.cas=NULL,
                           Qgfrc=0.3,
                           Qtotal.liverc=0.3,
                           million.cells.per.gliver=0.3,
+                          Caco2.Pab = 0.3,
                           Clint=0.3),
                         fup.meas.cv=0.4,
+                        caco2.meas.cv = 0.3,
                         clint.meas.cv=0.3,
                         fup.pop.cv=0.3,
+                        caco2.pop.cv = 0.3,
                         clint.pop.cv=0.3,
                         samples=1000,
                         return.samples=F,
@@ -225,6 +228,9 @@ calc_mc_css <- function(chem.cas=NULL,
                         reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White","Non-Hispanic Black", "Other"),
                         physiology.matrix=NULL,
                         parameter.matrix=NULL,
+                        Caco2.options = list(Caco2.Pab.default = 2,
+                                             Caco2.Fgut = TRUE,
+                                             Caco2.Fabs = TRUE),
                         ...)
 {
   if (!(model %in% c("pbtk","1compartment","3compartment","3compartmentss"))) stop("Model must be either \"pbtk\", \"1compartment\", \"3compartmentss\", or \"3compartment\".")
@@ -254,6 +260,7 @@ calc_mc_css <- function(chem.cas=NULL,
                              regression=regression,
                              restrictive.clearance=restrictive.clearance,
                              clint.pvalue.threshold=0.05,
+                             Caco2.options = Caco2.options,
                              ...)
     return(css)
   }
@@ -289,15 +296,18 @@ calc_mc_css <- function(chem.cas=NULL,
                                           poormetab=poormetab,
                                           fup.meas.cv=fup.meas.cv,
                                           clint.meas.cv=clint.meas.cv,
+                                          caco2.meas.cv = caco2.meas.cv,
                                           fup.pop.cv=fup.pop.cv,
                                           clint.pop.cv=clint.pop.cv,
+                                          caco2.pop.cv = caco2.pop.cv,
                                           fup.lod=fup.lod,
                                           fup.censored.dist=fup.censored.dist,
                                           well.stirred.correction=well.stirred.correction,
                                           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                           regression=regression,
                                           restrictive.clearance=restrictive.clearance,
-                                          clint.pvalue.threshold=clint.pvalue.threshold)
+                                          clint.pvalue.threshold=clint.pvalue.threshold,
+                                          Caco2.options = Caco2.options)
       css.list <- apply(parameter.matrix,1,css_apply) 
     }
     if (return.samples) out <- css.list

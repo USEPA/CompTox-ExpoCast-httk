@@ -132,6 +132,9 @@ solve_pbtk <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
+                    Caco2.options = list(Caco2.Pab.default = 2,
+                                         Caco2.Fgut = TRUE,
+                                         Caco2.Fabs = TRUE),
                     ...)
 {
   Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
@@ -149,7 +152,8 @@ solve_pbtk <- function(chem.name = NULL,
                     suppress.messages=suppress.messages,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                     regression=regression,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma) 
+                    minimum.Funbound.plasma=minimum.Funbound.plasma,
+                    Caco2.options = Caco2.options) 
   }else{
 #    name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
   if(!all(param.names.pbtk %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.pbtk[which(!param.names.pbtk %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 

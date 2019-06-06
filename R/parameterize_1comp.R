@@ -62,7 +62,11 @@ parameterize_1comp <- function(chem.cas=NULL,
                                well.stirred.correction=T,
                                suppress.messages=F,
                                clint.pvalue.threshold=0.05,
-                               minimum.Funbound.plasma=0.0001)
+                               minimum.Funbound.plasma=0.0001,
+                               Caco2.options = list(Caco2.Pab.default = 2,
+                                                    Caco2.Fgut = TRUE,
+                                                    Caco2.Fabs = TRUE)
+                               )
 {
   physiology.data <- physiology.data
   if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
@@ -82,7 +86,8 @@ parameterize_1comp <- function(chem.cas=NULL,
                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                  restrictive.clearance=restrictive.clearance,
                  clint.pvalue.threshold=clint.pvalue.threshold,
-                 minimum.Funbound.plasma=minimum.Funbound.plasma))
+                 minimum.Funbound.plasma=minimum.Funbound.plasma,
+                 Caco2.options = Caco2.options))
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
@@ -140,10 +145,7 @@ parameterize_1comp <- function(chem.cas=NULL,
   if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
   params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
-    Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
-    if (class(Fgutabs) == "try-error") Fgutabs <- 1
-    
-    params[['Fgutabs']] <- Fgutabs
+    params[['Fgutabs']] <- ss.params[['Fgutabs']]
   
     params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]  
     

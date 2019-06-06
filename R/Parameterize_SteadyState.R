@@ -125,21 +125,19 @@ parameterize_steadystate <- function(chem.cas=NULL,
   # Caco-2 Pab:
   Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
   if (class(Caco2.Pab.db) == "try-error"){  
-    Caco2.Pab.point <- Caco2.Pab.default
-    Caco2.Pab.dist <- NA
-    warning(paste0("Default value of ", Caco2.Pab.default, " used for Caco2 permeability."))
+    Caco2.Pab.db <- Caco2.options$Caco2.Pab.default
+    warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
   }
   # Check if Caco2 a point value or a distribution, if a distribution, use the median:
-  if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) >= 1) 
+  if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
   {
     Caco2.Pab.dist <- Caco2.Pab.db
     Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   } else {
-    Caco2.Pab.point <- Caco2.Pab.db
+    Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
     Caco2.Pab.dist <- NA
   }
-  
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
@@ -203,6 +201,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
   Params[["Funbound.plasma"]] <- fup.adjusted
   Params[["Funbound.plasma.dist"]] <- fup.dist
+  Params[["Caco2.Pab"]] <- Caco2.Pab.point
+  Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
@@ -233,14 +233,13 @@ parameterize_steadystate <- function(chem.cas=NULL,
   
   
   
-  if(Caco2.Fgut == FALSE){
+  if(Caco2.options$Caco2.Fgut == FALSE){
     fgut.oral <- 1
   }else{
     fgut.oral <- calc_fgut.oral(Params = Params, species = species)
-    Fgutabs <- fabs.oral * fgut.oral
   }
   
-  if(Caco2.Fabs == FALSE){
+  if(Caco2.options$Caco2.Fabs == FALSE){
     fabs.oral <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
     if (class(fabs.oral) == "try-error") fabs.oral <- 1
   }else{

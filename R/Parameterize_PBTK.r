@@ -97,7 +97,11 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               adjusted.Funbound.plasma=T,
                               regression=T,
                               suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              Caco2.options = list(Caco2.Pab.default = 2,
+                                                   Caco2.Fgut = TRUE,
+                                                   Caco2.Fabs = TRUE)
+                              )
 {
   physiology.data <- physiology.data
 # Look up the chemical name/CAS, depending on what was provide:
@@ -239,8 +243,41 @@ parameterize_pbtk <- function(chem.cas=NULL,
                             Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
                           suppress.messages=T)), #L/h/kg BW
          million.cells.per.gliver=110, # 10^6 cells/g-liver
-         liver.density=1.05, # g/mL
-         Fgutabs=Fgutabs)) 
+         liver.density=1.05 # g/mL
+         )) 
+  
+  # Calculate Fgutabs
+  # Caco-2 Pab:
+  Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+  if (class(Caco2.Pab.db) == "try-error"){  
+    Caco2.Pab.db <- Caco2.options$Caco2.Pab.default
+    warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
+  }
+  # Check if Caco2 a point value or a distribution, if a distribution, use the median:
+  if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
+  {
+    Caco2.Pab.dist <- Caco2.Pab.db
+    Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  } else {
+    Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
+    Caco2.Pab.dist <- NA
+  }
+  gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point)
+  if(Caco2.options$Caco2.Fgut == FALSE){
+    fgut.oral <- 1
+  }else{
+    fgut.oral <- calc_fgut.oral(Params = gut.params, species = species)
+  }
+  if(Caco2.options$Caco2.Fabs == FALSE){
+    fabs.oral <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+    if (class(fabs.oral) == "try-error") fabs.oral <- 1
+  }else{
+    fabs.oral <- calc_fabs.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+  }
+  Fgutabs <- fabs.oral * fgut.oral
+
+  outlist[["Fgutabs"]] <- Fgutabs
   
   if (adjusted.Funbound.plasma) 
   {

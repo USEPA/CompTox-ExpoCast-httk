@@ -46,10 +46,8 @@
 #'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
 #'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
 #' 
-#' @export parameterize_fbio
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
-#' @export calc_hepatic.bioavailability
 #' @export calc_fgut.oral
 #' 
 calc_fbio.oral <- function(Params = NULL,
