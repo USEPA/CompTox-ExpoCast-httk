@@ -108,6 +108,9 @@ solve_3comp <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
+                    Caco2.options = list(Caco2.Pab.default = 2,
+                                         Caco2.Fgut = TRUE,
+                                         Caco2.Fabs = TRUE),
                     ...)
 {
   Agutlumen <- Agut <- Aliver <- Arest <- Cgut <- Cliver <- Crest <- NULL
@@ -123,7 +126,8 @@ solve_3comp <- function(chem.name = NULL,
                     suppress.messages=suppress.messages,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                     regression=regression,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma)
+                    minimum.Funbound.plasma=minimum.Funbound.plasma,
+                    Caco2.options = Caco2.options)
   } else {
     if(!all(param.names.3comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.3comp[which(!param.names.3comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_3comp."))
     if(any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] %in% names(parameters)))stop("Parameters are from parameterize_pbtk.  Use parameters from parameterize_3comp.")

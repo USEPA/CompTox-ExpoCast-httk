@@ -36,13 +36,16 @@ convert_httk <- function(indiv.model.bio,
                          regression=T,
                          well.stirred.correction=T,
                          restrictive.clearance=T,
-                         clint.pvalue.threshold=0.05){
+                         clint.pvalue.threshold=0.05,
+                         Caco2.options = list(Caco2.Pab.default = 2,
+                                              Caco2.Fgut = TRUE,
+                                              Caco2.Fabs = TRUE)){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- NULL
+  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- Caco2.Pab <- Fgutabs <- fabs.oral <- fgut.oral <- NULL
   Fhep.assay.correction <- million.cells.per.gliver <- NULL
   BW <- Vliverc <- Qtotal.liverc <- Clmetabolismc <- RBC.vol <- NULL
   plasma.vol <- hematocrit <- Vdist <- Qgfrc <- liver.density <- NULL
@@ -370,6 +373,23 @@ convert_httk <- function(indiv.model.bio,
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
+  # Update Fgutabs based on Caco-2 data
+  if(Caco2.options$Caco2.Fabs == T){
+    indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab))]
+  }else{
+    indiv.model[, fabs.oral := Fgutabs]
+  }
+  if(Caco2.options$Caco2.Fgut == T){
+    indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
+                                                            "cl_us" = Clmetabolismc,
+                                                            "BW" = BW
+    ))]
+  }else{
+    indiv.model[, fgut.oral := 1]
+  }
+  
+  indiv.model[, Fgutabs := fabs.oral*fgut.oral]
+  
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.

@@ -73,15 +73,20 @@ get_httk_params <- function(indiv_dt,
                             poormetab,
                             fup.censored.dist=FALSE,
                             fup.meas.cv=0.4,
+                            caco2.meas.cv = 0.3,
                             clint.meas.cv=0.3,
                             fup.pop.cv=0.1,
+                            caco2.pop.cv = 0.1,
                             clint.pop.cv=0.1,
                             fup.lod=0.01,
                             adjusted.Funbound.plasma=T,
                             regression=T,
                             well.stirred.correction=T,
                             restrictive.clearance=T,
-                            clint.pvalue.threshold=0.05)
+                            clint.pvalue.threshold=0.05,
+                            Caco2.options = list(Caco2.Pab.default = 2,
+                                                 Caco2.Fgut = TRUE,
+                                                 Caco2.Fabs = TRUE))
 {
   
   #First convert to physiological parameters used by HTTK
@@ -101,7 +106,8 @@ get_httk_params <- function(indiv_dt,
                       fup.censored.dist=fup.censored.dist,
                       fup.lod=fup.lod,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      clint.pvalue.threshold=clint.pvalue.threshold))
+                      clint.pvalue.threshold=clint.pvalue.threshold,
+                      Caco2.options = Caco2.options))
   
   #Next convert the whole thing to the HTTK parameters for a specified model
   indiv_httk <- convert_httk(indiv.model.bio=indiv_fc, 
@@ -111,7 +117,8 @@ get_httk_params <- function(indiv_dt,
                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
                  well.stirred.correction=well.stirred.correction,
                  restrictive.clearance=restrictive.clearance,
-                 clint.pvalue.threshold=clint.pvalue.threshold)
+                 clint.pvalue.threshold=clint.pvalue.threshold,
+                 Caco2.options = Caco2.options)
   
   return(indiv_httk)
 }

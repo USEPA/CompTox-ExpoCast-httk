@@ -89,6 +89,9 @@ calc_analytic_css <- function(chem.name=NULL,
                                tissue=NULL,
                                restrictive.clearance=T,
                                IVIVE=NULL,
+                              Caco2.options = list(Caco2.Pab.default = 2,
+                                                   Caco2.Fgut = TRUE,
+                                                   Caco2.Fabs = TRUE),
                                ...)
 {
 #  tissue.data <- tissue.data
@@ -141,7 +144,8 @@ calc_analytic_css <- function(chem.name=NULL,
       suppress.messages=suppress.messages,
       recalc.blood2plasma=recalc.blood2plasma,
       tissue=tissue,
-      restrictive.clearance=restrictive.clearance),
+      restrictive.clearance=restrictive.clearance,
+      Caco2.options = Caco2.options),
       list(...)))
   } else {
     stop(paste("Model",model,"not available. Please select from:",

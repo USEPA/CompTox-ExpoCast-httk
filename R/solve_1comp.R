@@ -104,7 +104,10 @@ solve_1comp <- function(chem.cas=NULL,
                         regression=T,
                         restrictive.clearance=T,
                         well.stirred.correction=T,
-                        minimum.Funbound.plasma=0.0001,                        
+                        minimum.Funbound.plasma=0.0001,
+                        Caco2.options = list(Caco2.Pab.default = 2,
+                                             Caco2.Fgut = TRUE,
+                                             Caco2.Fabs = TRUE),
                         ...)
 {     
    Agutlumen <- Acompartment <- Ccompartment <- NULL 
@@ -121,7 +124,8 @@ solve_1comp <- function(chem.cas=NULL,
                    restrictive.clearance=restrictive.clearance,
                    well.stirred.correction=well.stirred.correction,
                    suppress.messages=suppress.messages,
-                   minimum.Funbound.plasma=minimum.Funbound.plasma) 
+                   minimum.Funbound.plasma=minimum.Funbound.plasma,
+                   Caco2.options = Caco2.options) 
   } else {
      if (!all(param.names.1comp %in% names(parameters)))
        stop(paste("Missing parameters:",
