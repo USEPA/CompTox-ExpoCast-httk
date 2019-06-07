@@ -1,8 +1,44 @@
-initParms <- function(newParms = NULL) {
+#Define the parameter names for each model in one place so that all functions can use them:
+param.names.fetal.pbtk.solver = c("pre_pregnant_BW", 
+  "CLmetabolismc", 
+  "Kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Krbc2pu", 
+  "Kadipose2pu", 
+  "Krest2pu", 
+  "Klung2pu", 
+  "Kgut2pu",
+  "Kthyroid2pu", 
+  "Kplacenta2pu", 
+  "Kfplacenta2pu",
+  "Kfkidney2pu", 
+  "Kfrest2pu",
+  "Kfthyroid2pu",
+  "Kfliver2pu", 
+  "Kflung2pu", 
+  "Kfgut2pu", 
+  "Kfbrain2pu", 
+  "Vartc",
+  "Vvenc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vthyroidc",
+  "Fraction_unbound_plasma",
+  "Ratioblood2plasma"
+)
+
+#Add additional useful parameter names for direct access, though not directly passed to ODE solver. 
+param.names.fetal.pbtk = c(param.names.fetal.pbtk.solver, 
+                           param.names.pbtk[!(param.names.pbtk %in% param.names.pbtk.solver)])
+
+initParmsfetalpbtk <- function(newParms = NULL) {
   parms <- c(
-    pre_pregnant_BW = 0.0,
+    pre_pregnant_BW = 61.103,
     CLmetabolismc = 0.0,
-    Kgutabs = 0.0,
+    Kgutabs = 1,
     Kkidney2pu = 0.0,
     Kliver2pu = 0.0,
     Krbc2pu = 0.0,
@@ -38,45 +74,6 @@ initParms <- function(newParms = NULL) {
     Ratioblood2plasma = 0.0,
     CLmetabolism = 0.0
   )
-  parms <- within(as.list(parms), {
-    pre_pregnant_BW = 61.103;
-    CLmetabolismc = 0.0;
-    Kgutabs = 1;
-    Kkidney2pu = 0;
-    Kliver2pu = 0;
-    Krbc2pu = 0;
-    Kadipose2pu = 0;
-    Krest2pu = 0;
-    Klung2pu = 0;
-    Kgut2pu = 0;
-    Kthyroid2pu = 0;
-    Kplacenta2pu = 0;
-    Kfplacenta2pu = 0;
-    Kfkidney2pu = 0;
-    Kfrest2pu = 0;
-    Kfthyroid2pu = 0;
-    Kfliver2pu = 0;
-    Kflung2pu = 0;
-    Kfgut2pu = 0;
-    Kfbrain2pu = 0;
-    Vartc = 0;
-    Vvenc = 0;
-    Vgutc = 0;
-    Vkidneyc = 0;
-    Vliverc = 0;
-    Vlungc = 0;
-    Vart = 0;
-    Vven = 0;
-    Vgut = 0;
-    Vkidney = 0;
-    Vliver = 0;
-    Vlung = 0;
-    Vthyroidc = 0;
-    Vthyroid = 0;
-    Fraction_unbound_plasma = 0;
-    Ratioblood2plasma = 0.0;
-    CLmetabolism = 0.0;
-  })
   if (!is.null(newParms)) {
     if (!all(names(newParms) %in% c(names(parms)))) {
       stop("illegal parameter name")
@@ -91,7 +88,7 @@ initParms <- function(newParms = NULL) {
   out
 }
 
-Outputs <- c(
+Outputsfetalpbtk <- c(
     "Cgut",
     "Cliver",
     "Cven",
@@ -117,7 +114,7 @@ Outputs <- c(
     "Cfserum"
 )
 
-initStates <- function(parms, newStates = NULL) {
+initStatesfetalpbtk <- function(parms, newStates = NULL) {
   Y <- c(
     Agutlumen = 0.0,
     Agut = 0.0,
