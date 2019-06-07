@@ -24,6 +24,8 @@
 #' TRUE along with parition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' @param placenta Whether to involve calculation of placenta partitioning
+#' coefficients, Kplacenta2pu and Kfplacenta2pu.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @return
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
@@ -96,6 +98,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
+                              placenta=F,
                               suppress.messages=F,
                               minimum.Funbound.plasma=0.0001)
 {
@@ -138,15 +141,29 @@ parameterize_pbtk <- function(chem.cas=NULL,
                                          force.human.fup=force.human.clint.fup,
                                          suppress.messages=T,
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
-  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
-                                      species=species,
-                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      regression=regression,
-                                      minimum.Funbound.plasma=minimum.Funbound.plasma)
-# Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-  lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
-# Check to see if we should use the in vitro fup assay correction:  
+  if(placenta){
+    schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
+    PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
+                                        regression=regression,
+                                        species=species,
+                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                        minimum.Funbound.plasma=minimum.Funbound.plasma)
+    p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
+    PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
+    lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
+  }else{  
+    PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
+                                        species=species,
+                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                        regression=regression,
+                                        minimum.Funbound.plasma=minimum.Funbound.plasma)
+
+# Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
+    lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
+  }
+  
+  # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
@@ -203,7 +220,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     lumped_params[substr(names(lumped_params),1,1) == 'V'],
     lumped_params[substr(names(lumped_params),1,1) == 'K'])
   
-  
+  if(placenta) outlist <- c(outlist,Kplacenta2pu=as.numeric(p.list$Kplacenta2pu),Kfplacenta2pu=as.numeric(p.list$Kfplacenta2pu))  
 # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
