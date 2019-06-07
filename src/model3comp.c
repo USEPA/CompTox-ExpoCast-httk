@@ -104,7 +104,7 @@ void initmod3comp (void (* odeparms)(int *, double *))
 }
 
 
-void getParms_3comp (double *inParms, double *out, int *nout) {
+void getParms3comp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
