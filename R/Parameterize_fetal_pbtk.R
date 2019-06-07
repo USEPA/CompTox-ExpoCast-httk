@@ -19,7 +19,7 @@
 #' assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
 #' volume of red blood cells in the blood.} \item{Kgut2pu}{Ratio of
 #' concentration of chemical in gut tissue to unbound concentration in plasma.}
-#' \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
+#' \item{Kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
 #' \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
 #' unbound concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
 #' chemical in liver tissue to unbound concentration in plasma.}

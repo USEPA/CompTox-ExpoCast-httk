@@ -68,7 +68,7 @@
      pre_pregnant_BW = 0,
      CLmetabolismc = 0.0,
      hematocrit = 0,
-     kgutabs = 1,
+     Kgutabs = 1,
      Kkidney2plasma = 0,
      Kliver2plasma = 0,
      Krbc2plasma = 0,
@@ -164,7 +164,7 @@ static double parms[40];
 #define pre_pregnant_BW parms[0]
 #define CLmetabolismc parms[1]
 #define hematocrit parms[2]
-#define kgutabs parms[3]
+#define Kgutabs parms[3]
 #define Kkidney2plasma parms[4]
 #define Kliver2plasma parms[5]
 #define Krbc2plasma parms[6]
@@ -230,7 +230,7 @@ void getParms_fetus (double *inParms, double *out, int *nout) {
   }
 
 
-  kgutabs = kgutabs * 24 ;
+  Kgutabs = Kgutabs * 24 ;
   CLmetabolism = CLmetabolismc * 24 * pre_pregnant_BW ;
   Vart = Vartc * pre_pregnant_BW ;
   Vgut = Vgutc * pre_pregnant_BW ;
@@ -387,9 +387,9 @@ void derivsfetus (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   yout[ID_Afserum] = y[ID_Afven] / Ratioblood2plasma * ( 1 - hematocrit ) ;
 
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Agutlumen] = - Kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = Kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma ) ;
 
   ydot[ID_Aliver] = Qliver * y[ID_Aart] / Vart + Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2plasma / Fraction_unbound_plasma * Ratioblood2plasma - CLmetabolism * y[ID_Aliver] / Vliver / Kliver2plasma ;
 
