@@ -252,32 +252,31 @@ Vflung <- 0.02611 * exp(0.5898/0.07125 * (1 - exp(-0.07125 *  start/7)))/1000
   parameters[['CLmetabolismc']] <- parameters[['Clmetabolismc']] 
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
   parameters[['Ratioblood2plasma']] <- parameters[['Rblood2plasma']]
-  names(parameters)[substr(names(parameters),1,1) == 'K'] <- gsub('2pu','2plasma',names(parameters)[substr(names(parameters),1,1) == 'K'])
   
   parameters <- initParmsfetalpbtk(parameters[param.names.fetal.pbtk.solver])
 
   
-  state <-initStatefetus(parameters,state)
+  state <-initStatesfetalpbtk(parameters,state)
   
    
      
 
   if(is.null(dosing.matrix)){
     if(is.null(doses.per.day)){
-      out <- ode(y = state, times = times,func="derivsfetus", parms=parameters, method=method,rtol=rtol,atol=atol,dllname="httk",initfunc="initmodfetus", nout=length(Outputsfetus),outnames=Outputsfetus,...)
+      out <- ode(y = state, times = times,func="derivsfetalpbtk", parms=parameters, method=method,rtol=rtol,atol=atol,dllname="httk",initfunc="initmodfetalpbtk", nout=length(Outputsfetus),outnames=Outputsfetus,...)
     }else{
       dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
       length <- length(dosing)
       if(iv.dose) eventdata <- data.frame(var=rep('Aven',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
       else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
       times <- sort(c(times,dosing + 1e-8,start + 1e-8))
-      out <- ode(y = state, times = times, func="derivsfetus", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmodfetus", nout=length(Outputsfetus),outnames=Outputsfetus,events=list(data=eventdata),...)
+      out <- ode(y = state, times = times, func="derivsfetalpbtk", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmodfetalpbtk", nout=length(Outputsfetus),outnames=Outputsfetus,events=list(data=eventdata),...)
     }      
   }else{
     if(iv.dose) eventdata <- data.frame(var=rep('Aven',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))                          
     else eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
     times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
-    out <- ode(y = state, times = times, func="derivsfetus", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmodfetus", nout=length(Outputsfetus),outnames=Outputsfetus,events=list(data=eventdata),...)                                
+    out <- ode(y = state, times = times, func="derivsfetalpbtk", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmodfetalpbtk", nout=length(Outputsfetus),outnames=Outputsfetus,events=list(data=eventdata),...)                                
   }
   
   colnames(out)[[which(colnames(out)=='Aserum')]] <- 'Aplasma'
