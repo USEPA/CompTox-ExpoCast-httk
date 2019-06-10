@@ -255,7 +255,7 @@ Vflung <- 0.02611 * exp(0.5898/0.07125 * (1 - exp(-0.07125 *  start/7)))/1000
   names(parameters)[substr(names(parameters),1,1) == 'K'] <- gsub('2pu','2plasma',names(parameters)[substr(names(parameters),1,1) == 'K'])
   
   parameters <- initParmsfetalpbtk(parameters[param.names.fetal.pbtk.solver])
-  parameters <- initParmsfetalpbtk(parameters[!(names(parameters) %in% c("Fhep.assay.correction","million.cells.per.gliver","Fgutabs","Funbound.plasma","Clmetabolismc","Rblood2plasma","MW"))])
+
   
   state <-initStatefetus(parameters,state)
   
