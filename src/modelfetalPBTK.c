@@ -68,7 +68,7 @@
 
    37 Parameters:
      pre_pregnant_BW = 61.103,
-     CLmetabolismc = 0.0,
+     Clmetabolismc = 0.0,
      Kgutabs = 1,
      Kkidney2pu = 0,
      Kliver2pu = 0,
@@ -103,7 +103,7 @@
      Vthyroid = 0,
      Fraction_unbound_plasma = 0,
      Ratioblood2plasma = 0.0,
-     CLmetabolism = 0.0,
+     Clmetabolism = 0.0,
 */
 
 #include <R.h>
@@ -163,7 +163,7 @@
 static double parms[37];
 
 #define pre_pregnant_BW parms[0]
-#define CLmetabolismc parms[1]
+#define Clmetabolismc parms[1]
 #define Kgutabs parms[2]
 #define Kkidney2pu parms[3]
 #define Kliver2pu parms[4]
@@ -198,7 +198,7 @@ static double parms[37];
 #define Vthyroid parms[33]
 #define Fraction_unbound_plasma parms[34]
 #define Ratioblood2plasma parms[35]
-#define CLmetabolism parms[36]
+#define Clmetabolism parms[36]
 
 /* Forcing (Input) functions */
 static double forc[0];
@@ -229,7 +229,7 @@ void getParmsfetalpbtk (double *inParms, double *out, int *nout) {
 
 
   Kgutabs = Kgutabs * 24 ;
-  CLmetabolism = CLmetabolismc * 24 * pre_pregnant_BW ;
+  Clmetabolism = Clmetabolismc * 24 * pre_pregnant_BW ;
   Vart = Vartc * pre_pregnant_BW ;
   Vgut = Vgutc * pre_pregnant_BW ;
   Vkidney = Vkidneyc * pre_pregnant_BW ;
@@ -459,7 +459,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Agut] = Kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aliver] = Qliver * y[ID_Aart] / Vart + Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * Ratioblood2plasma - CLmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
+  ydot[ID_Aliver] = Qliver * y[ID_Aart] / Vart + Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * Ratioblood2plasma - Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qrest * y[ID_Arest] / Vrest / Krest2pu + Qthyroid * y[ID_Athyroid] / Vthyroid / Kthyroid2pu + Qplacenta * y[ID_Aplacenta] / Vplacenta / Kplacenta2pu ) * Ratioblood2plasma / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / Vven ;
 
@@ -475,7 +475,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Atubules] = Qgfr * y[ID_Akidney] / Vkidney / Kkidney2pu ;
 
-  ydot[ID_Ametabolized] = CLmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
+  ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
   ydot[ID_AUC] = y[ID_Aven] / Vven / Ratioblood2plasma ;
 

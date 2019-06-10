@@ -1,6 +1,6 @@
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.fetal.pbtk.solver = c("pre_pregnant_BW", 
-  "CLmetabolismc", 
+  "Clmetabolismc", 
   "Kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
@@ -37,7 +37,7 @@ param.names.fetal.pbtk = c(param.names.fetal.pbtk.solver,
 initParmsfetalpbtk <- function(newParms = NULL) {
   parms <- c(
     pre_pregnant_BW = 61.103,
-    CLmetabolismc = 0.0,
+    Clmetabolismc = 0.0,
     Kgutabs = 1,
     Kkidney2pu = 0.0,
     Kliver2pu = 0.0,
@@ -72,7 +72,7 @@ initParmsfetalpbtk <- function(newParms = NULL) {
     Vthyroid = 0.0,
     Fraction_unbound_plasma = 0.0,
     Ratioblood2plasma = 0.0,
-    CLmetabolism = 0.0
+    Clmetabolism = 0.0
   )
   if (!is.null(newParms)) {
     if (!all(names(newParms) %in% c(names(parms)))) {
