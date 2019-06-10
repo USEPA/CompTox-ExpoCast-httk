@@ -109,7 +109,7 @@ pbtk.initparms <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms",
+  out <- .C("getParmspbtk",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out

@@ -263,8 +263,8 @@ convert_httk <- function(indiv.model.bio,
     
 #    if (model!='1compartment'){
       #Need to compute hepatic clearance,
-      #CLmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
-      #to CLmetabolismc using unscaled model (unscaled means that it's unscaled
+      #Clmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
+      #to Clmetabolismc using unscaled model (unscaled means that it's unscaled
       #by weight, i.e. L/h/kg bodyweight).
 
       #First, construct a list of the parameters needed by HTTK to compute total
