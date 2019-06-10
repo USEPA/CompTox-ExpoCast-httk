@@ -1,7 +1,7 @@
 initparmsfetus <- function(newParms = NULL){
   parms <- c(
     pre_pregnant_BW = 0,
-    CLmetabolismc = 0.0,
+    Clmetabolismc = 0.0,
     hematocrit = 0,
     Kgutabs = 1,
     Kkidney2plasma = 0,
@@ -37,7 +37,7 @@ initparmsfetus <- function(newParms = NULL){
     Vfgutc = 0,
     Fraction_unbound_plasma = 0,
     Ratioblood2plasma = 0.0,
-    CLmetabolism = 0.0,
+    Clmetabolism = 0.0,
     Qgfrc = 0,
     Qgfr = 0.0
   )
