@@ -76,7 +76,7 @@ initParmsfetalpbtk <- function(newParms = NULL) {
   )
   if (!is.null(newParms)) {
     if (!all(names(newParms) %in% c(names(parms)))) {
-      stop("illegal parameter name")
+      stop(paste("illegal parameter name(s):",names(newParms)[!(names(newParms) %in% c(names(parms)))],sep=" "))
     }
   }
   if (!is.null(newParms))
