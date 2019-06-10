@@ -81,7 +81,7 @@ initParmsfetalpbtk <- function(newParms = NULL) {
   }
   if (!is.null(newParms))
     parms[names(newParms)] <- newParms
-  out <- .C("getParms",  as.double(parms),
+  out <- .C("getParmsfetalpbtk",  as.double(parms),
             out=double(length(parms)),
             as.integer(length(parms)))$out
   names(out) <- names(parms)
