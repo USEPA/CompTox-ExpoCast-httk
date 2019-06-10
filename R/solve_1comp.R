@@ -81,8 +81,8 @@
 #' @export solve_1comp
 #' @useDynLib httk
 #' @import deSolve
-solve_1comp <- function(chem.cas=NULL,
-                        chem.name=NULL,
+solve_1comp <- function(chem.name=NULL,
+                        chem.cas=NULL,
                         times=NULL,
                         parameters=NULL,
                         daily.dose=1,
