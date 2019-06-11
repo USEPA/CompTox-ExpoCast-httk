@@ -23,6 +23,12 @@
 #' liver clearance if FALSE.
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
 #' clearance assay result has a p-values greater than the threshold are set to zero.
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1. 
 ##'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
@@ -81,12 +87,12 @@ convert_httk <- function(indiv.model.bio,
                             '3compartmentss'='parameterize_steadystate')
   #And get the default HTTK parameters. These values will be used for all
   #parameters not being Monte Carlo sampled
-  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
-  else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
+  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold, Caco2.options = Caco2.options)
+  else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold, Caco2.options = Caco2.options)
   else{
   p <- do.call(getFromNamespace(paramfun, "httk"),
                args=list(chem.cas=this.chem,
-                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression))
+                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression, Caco2.options = Caco2.options))
   }
   } else p <- parameters
   #Depending on model, choose which parameters are not to be Monte Carlo sampled
@@ -373,23 +379,32 @@ convert_httk <- function(indiv.model.bio,
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
-  # Update Fgutabs based on Caco-2 data
+  # Determine small intestine blood flow, L/h
+  indiv.model[, Qsmallintestine := Qcardiacc*Qsmallintestinef*BW^0.75]
+  
+  # Update Fgutabs based on Caco-2 data, note that the if statements are redundant, but should save a little time
   if(Caco2.options$Caco2.Fabs == T){
-    indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab))]
+    indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab,
+                                                            "Fgutabs" = Fgutabs))]
   }else{
     indiv.model[, fabs.oral := Fgutabs]
   }
   if(Caco2.options$Caco2.Fgut == T){
     indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
                                                             "cl_us" = Clmetabolismc,
-                                                            "BW" = BW
+                                                            "BW" = BW,
+                                                            "Qsmallintestine" = Qsmallintestine,
+                                                            "Funbound.plasma" = Funbound.plasma,
+                                                            "Rblood2plasma" = Rblood2plasma
     ))]
   }else{
     indiv.model[, fgut.oral := 1]
   }
   
-  indiv.model[, Fgutabs := fabs.oral*fgut.oral]
-  
+  # Replace Fgutabs with a recalculated value
+  if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
+    indiv.model[, Fgutabs := fabs.oral*fgut.oral]
+  }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.
