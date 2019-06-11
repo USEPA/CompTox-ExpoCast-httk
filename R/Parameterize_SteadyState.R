@@ -24,6 +24,12 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1.
 #'
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
@@ -231,7 +237,10 @@ parameterize_steadystate <- function(chem.cas=NULL,
           suppress.messages=T)#L/h/kg body weight
   Params[["cl_us"]] <- cl_us
   
-  
+  # Select Fgutabs, optionally overwrite based on Caco2.Pab
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  Params[['Fgutabs']] <- Fgutabs
   
   if(Caco2.options$Caco2.Fgut == FALSE){
     fgut.oral <- 1
@@ -240,16 +249,15 @@ parameterize_steadystate <- function(chem.cas=NULL,
   }
   
   if(Caco2.options$Caco2.Fabs == FALSE){
-    fabs.oral <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
-    if (class(fabs.oral) == "try-error") fabs.oral <- 1
+    fabs.oral <- Fgutabs
   }else{
     fabs.oral <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
   }
   
-  Fgutabs <- fabs.oral * fgut.oral
-  Params[['Fgutabs']] <- Fgutabs
+  if(Caco2.options$Caco2.Fabs == TRUE | Caco2.options$Caco2.Fgut == TRUE){
+    Params[['Fgutabs']] <- fabs.oral * fgut.oral
+  }
   
-
 
  
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight

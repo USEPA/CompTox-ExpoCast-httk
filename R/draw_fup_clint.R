@@ -32,6 +32,12 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1.
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -44,10 +50,10 @@ draw_fup_clint <- function(this.chem=NULL,
                            nsamp,
                            fup.meas.cv=0.4,
                            clint.meas.cv=0.3,
-                           caco2.meas.cv = 0.4,
+                           caco2.meas.sd = 0.3,
                            fup.pop.cv=0.3,
                            clint.pop.cv=0.3,
-                           caco2.pop.cv = 0.3,
+                           caco2.pop.sd = 0.3,
                            poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
@@ -296,7 +302,7 @@ draw_fup_clint <- function(this.chem=NULL,
   #
   # If the default CV is set to NULL, we just use the point estimate with no
   # uncertainty:
-  if (is.null(caco2.meas.cv))
+  if (is.null(caco2.meas.sd))
   {
     Caco2.Pab <- parameters$Caco2.Pab
     Caco2.Pab.l95 <- NULL
@@ -317,7 +323,7 @@ draw_fup_clint <- function(this.chem=NULL,
     Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
     Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
     
-    caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.cv), function(x) (0.95 -
+    caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), function(x) (0.95 -
                                                                                     pnorm(Caco2.Pab.u95, x[1], x[2]) +
                                                                                     pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
                                           (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
@@ -326,11 +332,11 @@ draw_fup_clint <- function(this.chem=NULL,
     # If we don't have that, we use the default coefficient of variation to
     # generate confidence limits:
     
-  } else if(!is.null(caco2.meas.cv)){
+  } else if(!is.null(caco2.meas.sd)){
     Caco2.Pab <- parameters$Caco2.Pab
     caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
-                                        function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(Caco2.Pab*caco2.meas.cv)))^2))
-    caco2.fit$par[2] <- abs(Caco2.Pab*caco2.meas.cv)
+                                        function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
+    caco2.fit$par[2] <- abs(caco2.meas.sd)
     indiv_tmp[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
     
   } 
@@ -417,7 +423,7 @@ draw_fup_clint <- function(this.chem=NULL,
   #
   #
   #do not sample if user said not to vary Caco2.Pab.
-  if (!is.null(caco2.pop.cv))
+  if (!is.null(caco2.pop.sd))
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
@@ -430,7 +436,7 @@ draw_fup_clint <- function(this.chem=NULL,
                                                    a = -3,
                                                    b = 3,
                                                    mean = Caco2.Pab.mu,
-                                                   sd = abs(caco2.pop.cv*Caco2.Pab.mu))]
+                                                   sd = abs(caco2.pop.sd))]
 
   }
   

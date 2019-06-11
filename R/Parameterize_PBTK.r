@@ -25,10 +25,17 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @return
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1.
 #' 
 #' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
@@ -246,6 +253,10 @@ parameterize_pbtk <- function(chem.cas=NULL,
          liver.density=1.05 # g/mL
          )) 
   
+  outlist <- c(outlist,
+               Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+                                                     species=species,
+                                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma))
   # Calculate Fgutabs
   # Caco-2 Pab:
   Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
@@ -263,7 +274,9 @@ parameterize_pbtk <- function(chem.cas=NULL,
     Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
     Caco2.Pab.dist <- NA
   }
-  gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point)
+  gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point, 
+                     "Funbound.plasma" = outlist$Funbound.plasma, "Rblood2plasma" = outlist$Rblood2plasma,
+                     "Fgutabs" = Fgutabs)
   if(Caco2.options$Caco2.Fgut == FALSE){
     fgut.oral <- 1
   }else{
@@ -284,10 +297,6 @@ parameterize_pbtk <- function(chem.cas=NULL,
     outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-        
+ 
   return(outlist[sort(names(outlist))])
 }

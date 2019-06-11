@@ -44,6 +44,12 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1.
 #' @return A data.table whose columns correspond to the parameters of the HTTK
 #' model specified in \code{model}, and whose rows correspond to the
 #' individuals (rows) of \code{indiv_dt}. 
@@ -73,10 +79,10 @@ get_httk_params <- function(indiv_dt,
                             poormetab,
                             fup.censored.dist=FALSE,
                             fup.meas.cv=0.4,
-                            caco2.meas.cv = 0.3,
+                            caco2.meas.sd = 0.3,
                             clint.meas.cv=0.3,
                             fup.pop.cv=0.1,
-                            caco2.pop.cv = 0.1,
+                            caco2.pop.sd = 0.1,
                             clint.pop.cv=0.1,
                             fup.lod=0.01,
                             adjusted.Funbound.plasma=T,
@@ -101,8 +107,10 @@ get_httk_params <- function(indiv_dt,
                       poormetab=poormetab,
                       fup.meas.cv=fup.meas.cv,
                       clint.meas.cv=clint.meas.cv,
+                      caco2.meas.sd = caco2.meas.sd,
                       fup.pop.cv=fup.pop.cv,
                       clint.pop.cv=clint.pop.cv,
+                      caco2.pop.sd = caco2.pop.sd,
                       fup.censored.dist=fup.censored.dist,
                       fup.lod=fup.lod,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,

@@ -1,13 +1,16 @@
 #' Parameterize_SteadyState
 #' 
-#' This function initializes the parameters needed in the functions
-#' calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
-#' compartment steady state model ('3compartmentss').  
+#' These functions calculate the fraction absorbed (calc_fabs.oral), the fraction
+#' surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
+#' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
+#' parameterization and other functions. Options are set in the list Caco2.options.
 #' 
-#' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified.
+#' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+#' cl_us, BW, Qsmallintestine, Fgutabs) used in the calculation, either supplied by user
+#' or calculated in parameterize_steady_state.
 #' @param chem.cas Either the chemical name or the CAS number must be
+#' specified.
+#' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -24,27 +27,31 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = 1.
+#' 
 #'
-#' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
-#' that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
-#' liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-#' BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
-#' Weight, kg} \item{MW}{Molecular Weight, g/mol}
-#' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-#' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
-#' \item{liver.density}{Liver tissue density, kg/L.}
-#' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
-#' assay using the method of Kilford et al. (2008)}
-#' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
-#' clearance, calculated from the corrected well-stirred model.}
+#' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
+#' reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
+#' i.e. the fraction of the dose that enters the gutlumen.} \item{fgut.oral}{Fraction of 
+#' chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
+#' surviving first pass hepatic clearance.}
 #' @author Gregory Honda
 #' @keywords Parameter
 #' @examples
 #' 
-#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
+#'  fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
+#'                          Caco2.options = list(Caco2.Pab.default = 2,
+#'                                               Caco2.Fabs = TRUE,
+#'                                               Caco2.Fgut = TRUE))
+#'  fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
+#'                          Caco2.options = list(Caco2.Pab.default = 2,
+#'                                               Caco2.Fabs = FALSE,
+#'                                               Caco2.Fgut = FALSE))
 #' 
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
@@ -66,7 +73,7 @@ calc_fbio.oral <- function(Params = NULL,
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE)
 ){
-  # Header initialization  
+  # Initialize parameters if null
   if(is.null(Params)){
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
     chem.cas <- out$chem.cas
@@ -87,10 +94,10 @@ calc_fbio.oral <- function(Params = NULL,
                                                             Caco2.Fabs = FALSE))
   }
 
-  fabs.oral <- calc_fabs.oral(Params = Params)  
-  fhep.oral <- Params$hepatic.bioavailability
-  fgut.oral <- calc_fgut.oral(Params = Params)
-  fbio.oral <- fabs.oral*fhep.oral*fgut.oral
+  fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
+  fhep.oral <- Params$hepatic.bioavailability # Determine Fhep.oral
+  fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.roal
+  fbio.oral <- fabs.oral*fhep.oral*fgut.oral # Determine Fbio.oral
   
   return(list("fbio.oral" = fbio.oral,
               "fabs.oral" = fabs.oral,
@@ -118,10 +125,10 @@ calc_fabs.oral <- function(Params = NULL,
                                                 Caco2.Fabs = TRUE)
 ){
   # Required parameters
-  req.param <- c("Caco2.Pab")
+  req.param <- c("Caco2.Pab", "Fgutabs")
   
   # Header initialization  
-  if(is.null(Params) || all(!req.param %in% names(Params))){
+  if(is.null(Params) | !all(req.param %in% names(Params))){
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name
@@ -141,11 +148,15 @@ calc_fabs.oral <- function(Params = NULL,
                                                      Caco2.Fabs = FALSE))
   }
   
-  
-  peffh <- 10^(0.6532 * Params$Caco2.Pab - 0.3036)
-  permh <- 0.66 * peffh * 3.6
-  fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
-  return(fabs.oral)
+  # Detetermine Fabs.oral based on Caco2 data, or keep as Fgutabs
+  if(Caco2.options$Caco2.Fabs == TRUE){
+    peffh <- 10^(0.6532 * Params$Caco2.Pab - 0.3036)
+    permh <- 0.66 * peffh * 3.6
+    fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
+  }else{
+    fabs.oral <- Params$Fgutabs
+  }
+  return(as.numeric(fabs.oral))
   
 }
 
@@ -166,47 +177,63 @@ calc_fgut.oral <- function(Params = NULL,
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE)
 ){
-  # Required parameters
-  req.param <- c("BW", "cl_us", "Caco2.Pab")
   
-  # Header initialization  
-  if(is.null(Params) || all(!req.param %in% names(Params))){
-    out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name
-    Params <- parameterize_steadystate(chem.cas = chem.cas,
-                                chem.name = chem.name,
-                                species = species,
-                                clint.pvalue.threshold = clint.pvalue.threshold,
-                                default.to.human = default.to.human,
-                                human.clint.fup = human.clint.fup,
-                                adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                restrictive.clearance = restrictive.clearance,
-                                fup.lod.default = fup.lod.default,
-                                suppress.messages = suppress.messages,
-                                minimum.Funbound.plasma = minimum.Funbound.plasma,
-                                Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
-                                                     Caco2.Fgut = FALSE,
-                                                     Caco2.Fabs = FALSE))
-  }
-  
-  clu_hep <- Params$cl_us*Params$BW # L/h for 70 kg human
-  clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
-  
-  if(tolower(species) == "rat"){
-    peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
-    peffr <- peffh/3.6 # Fagerhol 1996
-    permr <- 71/(100^2)*peffr*3.6
-    fgut.oral <- 0.65/(0.65+clu_gut*(1+.65/permr))
-  
-  }else{
-    peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
-    permh <- 0.66*peffh*3.6 # L/h, 0.66 m2 area intestine
-    fgut.oral <- 18/(18+clu_gut*(1+18/permh))
+  if(Caco2.options$Caco2.Fgut == TRUE){
+    # Required parameters
+    req.param <- c("BW", "cl_us", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma")
     
+    # Header initialization  
+    if(is.null(Params) | !all(req.param %in% names(Params))){
+      out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+      chem.cas <- out$chem.cas
+      chem.name <- out$chem.name
+      Params <- parameterize_steadystate(chem.cas = chem.cas,
+                                         chem.name = chem.name,
+                                         species = species,
+                                         clint.pvalue.threshold = clint.pvalue.threshold,
+                                         default.to.human = default.to.human,
+                                         human.clint.fup = human.clint.fup,
+                                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
+                                         restrictive.clearance = restrictive.clearance,
+                                         fup.lod.default = fup.lod.default,
+                                         suppress.messages = suppress.messages,
+                                         minimum.Funbound.plasma = minimum.Funbound.plasma,
+                                         Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
+                                                              Caco2.Fgut = FALSE,
+                                                              Caco2.Fabs = FALSE))
+    }
+    
+    
+    clu_hep <- Params$cl_us*Params$BW # L/h for 70 kg human
+    clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
+    fup <- Params$Funbound.plasma
+    Rb2p <- Params$Rblood2plasma
+    
+    if(tolower(species) == "rat"){
+      peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+      peffr <- peffh/3.6 # Fagerhol 1996
+      permr <- 71/(100^2)*peffr*3.6
+      fgut.oral <- 0.65/(0.65+fup*clu_gut/Rb2p*(1+.65/permr))
+      
+    }else{
+      
+      # Calculate Qvilli based on Qsmallintestine, or use default for ~70 kg human
+      if(!is.null(Params$Qsmallintestine)){
+        Qvilli <- (18/37.5)*Params$Qsmallintestine
+      }else{
+        Qvilli <- 18 # L/h blood flow to microvilli of intestinal lumen
+      }
+      
+      peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+      permh <- 0.66*peffh*3.6 # L/h, 0.66 m2 area intestine
+      fgut.oral <- Qvilli/(Qvilli+fup*clu_gut/Rb2p*(1+Qvilli/permh))
+      
+    }
+  }else{
+    # if Caco2.options$Fgut.oral == FALSE, return 1
+    fgut.oral <- 1
   }
-
-  return(fgut.oral)
+  return(as.numeric(fgut.oral))
   
 }
 
