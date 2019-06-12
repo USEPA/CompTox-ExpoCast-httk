@@ -249,10 +249,9 @@ Vflung <- 0.02611 * exp(0.5898/0.07125 * (1 - exp(-0.07125 *  start/7)))/1000
   } 
   if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
   
-  parameters[['Clmetabolismc']] <- parameters[['Clmetabolismc']] 
+  #Parameter bridging between R and .C solver file naming conventions
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
   parameters[['Ratioblood2plasma']] <- parameters[['Rblood2plasma']]
-  
   parameters <- initParmsfetalpbtk(parameters[param.names.fetal.pbtk.solver])
 
   
