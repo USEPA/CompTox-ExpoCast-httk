@@ -1,38 +1,87 @@
-#Define the parameter names for each model in one place so that all functions can use them:
-param.names.fetal.pbtk.solver = c("pre_pregnant_BW", 
-  "Clmetabolismc", 
-  "Kgutabs",
-  "Kkidney2pu",
-  "Kliver2pu",
-  "Krbc2pu", 
-  "Kadipose2pu", 
-  "Krest2pu", 
-  "Klung2pu", 
-  "Kgut2pu",
-  "Kthyroid2pu", 
-  "Kplacenta2pu", 
-  "Kfplacenta2pu",
-  "Kfkidney2pu", 
-  "Kfrest2pu",
-  "Kfthyroid2pu",
-  "Kfliver2pu", 
-  "Kflung2pu", 
-  "Kfgut2pu", 
-  "Kfbrain2pu", 
-  "Vartc",
-  "Vvenc",
-  "Vgutc",
-  "Vkidneyc",
-  "Vliverc",
-  "Vlungc",
-  "Vthyroidc",
-  "Fraction_unbound_plasma",
-  "Ratioblood2plasma"
-)
+#Note some variables, like hematocrit, employed with distributions elsewhere 
+#in httk, are not similarly treated or included in parameter lists here in the
+#pregnancy case for the sake of simplicity due to the the absence of data to 
+#better support anything other than simulation of the average case. 
 
-#Add additional useful parameter names for direct access, though not directly passed to ODE solver. 
-param.names.fetal.pbtk = c(param.names.fetal.pbtk.solver, 
-                           param.names.pbtk[!(param.names.pbtk %in% param.names.pbtk.solver)])
+#Compile list of useful parameter names for direct access, though these not
+#all directly passed to ODE solver. This list also contains the names of 
+#equivalent variables to those used in ode solving with modelfetalPBTK.c, as 
+#they are found named differently elsewhere in httk prior to being bridged
+#over in name for incorporation into the ode model solving process. 
+param.names.fetal.pbtk = c("pre_pregnant_BW", 
+                           "Clmetabolismc", 
+                           "Kgutabs",
+                           "Kkidney2pu",
+                           "Kliver2pu",
+                           "Krbc2pu", 
+                           "Kadipose2pu", 
+                           "Krest2pu", 
+                           "Klung2pu", 
+                           "Kgut2pu",
+                           "Kthyroid2pu", 
+                           "Kplacenta2pu", 
+                           "Kfplacenta2pu",
+                           "Kfkidney2pu", 
+                           "Kfrest2pu",
+                           "Kfthyroid2pu",
+                           "Kfliver2pu", 
+                           "Kflung2pu", 
+                           "Kfgut2pu", 
+                           "Kfbrain2pu", 
+                           "Vartc",
+                           "Vvenc",
+                           "Vgutc",
+                           "Vkidneyc",
+                           "Vliverc",
+                           "Vlungc",
+                           "Vthyroidc",
+                           "Clint",
+                           "Funbound.plasma",
+                           "Funbound.plasma.dist",
+                           "Funbound.plasma.adjustment",
+                           "Fgutabs",
+                           "Fhep.assay.correction",
+                           "liver.density",
+                           "million.cells.per.gliver",
+                           "MW",
+                           "Pow",
+                           "pKa_Donor",
+                           "pKa_Accept",
+                           "MA",
+                           "Rblood2pu")
+
+#Parameter names as used explicitly by the .c solver. 
+param.names.fetal.pbtk.solver = c("pre_pregnant_BW", 
+                                  "Clmetabolismc", 
+                                  "Kgutabs",
+                                  "Kkidney2pu",
+                                  "Kliver2pu",
+                                  "Krbc2pu", 
+                                  "Kadipose2pu", 
+                                  "Krest2pu", 
+                                  "Klung2pu", 
+                                  "Kgut2pu",
+                                  "Kthyroid2pu", 
+                                  "Kplacenta2pu", 
+                                  "Kfplacenta2pu",
+                                  "Kfkidney2pu", 
+                                  "Kfrest2pu",
+                                  "Kfthyroid2pu",
+                                  "Kfliver2pu", 
+                                  "Kflung2pu", 
+                                  "Kfgut2pu", 
+                                  "Kfbrain2pu", 
+                                  "Vartc",
+                                  "Vvenc",
+                                  "Vgutc",
+                                  "Vkidneyc",
+                                  "Vliverc",
+                                  "Vlungc",
+                                  "Vthyroidc",
+                                  "Fraction_unbound_plasma",
+                                  "Ratioblood2plasma")
+
+
 
 initParmsfetalpbtk <- function(newParms = NULL) {
   parms <- c(
