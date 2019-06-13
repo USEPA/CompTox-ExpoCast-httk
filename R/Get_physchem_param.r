@@ -13,7 +13,7 @@ get_physchem_param <- function(param,chem.name=NULL,chem.CAS=NULL)
     if (!is.null(chem.CAS)) chem.name <- chem.physical_and_invitro.data[chem.physical_and_invitro.data[,"CAS"]==chem.CAS,"Compound"][1]
     else chem.CAS <- chem.physical_and_invitro.data[chem.physical_and_invitro.data[,"Compound"]==chem.name,"CAS"][1]
 
-    if (!(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA'))) stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
+    if (!(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP"))) stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
     chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$CAS==chem.CAS)
     
     if (!is.na(as.numeric(chem.physical_and_invitro.data[chem.physical_and_invitro.data.index,param])) | (param %in% c("pKa_Donor","pKa_Accept","logMA")))
