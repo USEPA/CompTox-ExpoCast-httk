@@ -6,7 +6,7 @@ src-x64/
 .gitignore
 *.Rproj
 .Rproj.user/
-
+inst/doc/
 # Compiled source #
 ###################
 *.com
