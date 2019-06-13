@@ -33,7 +33,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   sarea<-cell_yield<-cell_yield_est<-NULL
   #End R CMD CHECK appeasement.
   
-  if(is.na(tcdata)){
+  if(all(is.na(tcdata))){
     tcdata <- data.table(well_number = this.well_number, cell_yield = this.cell_yield, v_working = this.v_working)
   }
   
@@ -123,13 +123,11 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
 #' to Evaluate Extrapolation Assumptions"
 #' @export armitage_eval
-armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working
-                            this.casrn,
-                            this.ac50 = 10, # micromolar
-                            this.MP = NA,
-                            this.gkow = NA,
-                            this.gkaw = NA,
-                            this.gswat = NA,
+armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
+                          nomconc.vector = c(1,1), # nominal concentration vector (e.g. apparent AC50 values)
+                          this.well_number = 384,
+                          tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
+                            this.ac50 = 10, 
                             this.sarea = NA,
                             this.v_total = NA,
                             this.v_working = NA,
@@ -184,22 +182,40 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   #End R CMD CHECK appeasement.
 
   if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn=this.casrn,
-                         ac50=this.ac50,
-                         MP=this.MP,
-                         gkow=this.gkow,
-                         gkaw=this.gkaw,
-                         gswat=this.gswat,
-                         sarea=this.sarea,
-                         v_total=this.v_total,
-                         v_working=this.v_working,
-                         cell_yield=this.cell_yield)
+    tcdata <- data.table(casrn = casrn.vector,
+                         nomconc = nomconc.vector,
+                         well_number = this.well_number,
+                         sarea = this.sarea,
+                         v_total = this.v_total,
+                         v_working = this.v_working,
+                         cell_yield = this.cell_yield)
   }
-
-  if(any(is.na(tcdata[,.(casrn,ac50,MP,gkow,gkaw,gswat,
-                         sarea,v_total,v_working,cell_yield)]))){
-    print("casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working, or cell_yield undefined")
+  
+  # Check CAS and AC50 supplied
+  if(any(is.na(tcdata[,.(casrn,nomconc)]))){
+    print("casrn or ac50 undefined")
+    stop()
+  }  
+  if(any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+    missing.rows <- which(is.na(tcdata[,sarea]))
+    if(any(is.na(tcdata[missing.rows, well_number]))){
+      print(paste0("Either well_number or geometry must be defined for rows: ", 
+                  paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
+      stop()
+    }else{
+      temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+    }
+    
+    
+    
   }
+  
+  get_physchem_param(param = c("logP"), chem.CAS = "80-05-7")
+  
+  Wetmore.data <- Wetmore2012
 
 
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
