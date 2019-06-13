@@ -85,16 +85,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' and lipid and protein compartments in cells.
 #' 
 #' 
-#' @param tcdata A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea,
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params.
-#' @param this.casrn For single value, CAS number
-#' @param this.ac50 For single value, AC50 (micromolar) nominal concentration
-#' @param this.MP For single value, melting point (oC)
-#' @param this.gkow For single value, Log10 Kow, octanol-water partitioning
-#' coefficient
-#' @param this.gkaw For single value, Log10 Kaw, air-water partitioning
-#' coefficient
-#' @param this.gswat For single value, Log10 water solubility (mol/L)
+#' @param casrn.vector For vector or single value, CAS number
+#' @param nomconc.vector For vector or single value, micromolar nominal concentration (e.g. AC50 value)
 #' @param this.sarea For single value, surface area per well (m^2)
 #' @param this.v_total For single value, Total volume per well (m^3)
 #' @param this.v_working For single value, Working volume per well (m^3)
@@ -127,11 +121,10 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
                           nomconc.vector = c(1,1), # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
-                            this.ac50 = 10, 
-                            this.sarea = NA,
-                            this.v_total = NA,
-                            this.v_working = NA,
-                            this.cell_yield = NA,
+                            this.sarea = NA_real_,
+                            this.v_total = NA_real_,
+                            this.v_working = NA_real_,
+                            this.cell_yield = NA_real_,
                             this.Tsys = 37,
                             this.Tref = 298.15,
                             this.option.kbsa2 = F,
@@ -163,6 +156,7 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   # this.celldensity<-1 # kg/L g/mL  mg/uL
   # this.cellmass <- 3 #ng/cell
   # this.f_oc <- 1 # everything assumed to be like proteins
+
 
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -205,18 +199,19 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
     }else{
       temp <- armitage_estimate_sarea(tcdata[missing.rows,])
       tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+      tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+      tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
     }
     
     
     
   }
   
-  get_physchem_param(param = c("logP"), chem.CAS = "80-05-7")
-  
-  Wetmore.data <- Wetmore2012
-
+  tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
+           get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                              chem.CAS = casrn)]
+  tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
 
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                                 option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
@@ -308,9 +303,9 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
 
-  tcdata[,ac50:=ac50/1e6] %>% # umol/L to mol/L
-    .[,cinit:=ac50] %>%
-    .[,mtot:=ac50*Vm] %>% # total moles
+  tcdata[,nomconc := nomconc/1e6] %>% # umol/L to mol/L
+    .[,cinit:= nomconc] %>%
+    .[,mtot:= nomconc*Vm] %>% # total moles
     .[,cwat:=mtot/(kaw*Vair + Vm + kbsa*Valb +
                      P_cells*kow*Vslip + P_dom*f_oc*Vdom + kcw*Vcells +
                      1000*kpl*sarea)] %>%
@@ -344,7 +339,8 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
     .[,xdom:=mdom/mtot] %>%
     .[,xcells:=mcells/mtot] %>%
     .[,xplastic:=mplastic/mtot] %>%
-    .[,xprecip:=mprecip/mtot]
+    .[,xprecip:=mprecip/mtot] %>% 
+    .[, eta_free := cwat_s/nomconc]
 
   return(tcdata)
   #output concentrations in mol/L
