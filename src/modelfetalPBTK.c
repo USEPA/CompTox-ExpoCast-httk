@@ -277,7 +277,6 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   /* local */ double Qcardiac;
   /* local */ double Qgut;
   /* local */ double Qkidney;
-  /* local */ double Qbrain;
   /* local */ double Qliver;
   /* local */ double Qthyroid;
   /* local */ double Qplacenta;
@@ -290,7 +289,6 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   /* local */ double Qfartb;
   /* local */ double Qfcardiac;
   /* local */ double Qflung;
-  /* local */ double Qffo;
   /* local */ double Qfplacenta;
   /* local */ double Qfdv;
   /* local */ double Qfgut;
@@ -363,8 +361,6 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qkidney = 53.248 + 3.6447 * (*pdTime) - 0.15357 * pow ( (*pdTime) , 2 ) + 0.0016968 * pow ( (*pdTime) , 3 ) ;
 
-  Qbrain = 0.01 * ( 12.0 + ( 8.8 - 12.0 ) / 40 * (*pdTime) ) * Qcardiac ;
-
   Qliver = 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40 * (*pdTime) ) * Qcardiac ;
 
   Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40 * (*pdTime) ) * Qcardiac ;
@@ -388,8 +384,6 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   Qfcardiac = Qfartb ;
 
   Qflung = Qfrvtl - Qfda ;
-
-  Qffo = Qfartb - Qfrvtl ;
 
   Qfplacenta = 262.20 / ( 1 + exp ( -0.22183 * ( (*pdTime) - 28.784 ) ) ) ;
 
