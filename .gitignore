@@ -1,7 +1,11 @@
 # Don't track content of these folders
 src-i386/
 src-x64/
-
+.Rbuildignore
+.Rhistory
+R/.Rhistory
+.Rproj.user/
+*.Rproj
 
 # Compiled source #
 ###################
