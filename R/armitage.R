@@ -118,7 +118,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' to Evaluate Extrapolation Assumptions"
 #' @export armitage_eval
 armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
-                          nomconc.vector = c(1,1), # nominal concentration vector (e.g. apparent AC50 values)
+                          nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
                             this.sarea = NA_real_,
@@ -208,9 +208,11 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
     
   }
   
-  tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
-           get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
-                              chem.CAS = casrn)]
+  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
+    tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
+             get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.CAS = casrn)]
+  }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
 
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
