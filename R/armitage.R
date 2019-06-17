@@ -80,7 +80,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Evaluate the updated Armitage model
 #' 
 #' Evaluate the Armitage model for chemical distributon in vitro. Takes input
-#' as data table or single set of values. Outputs a data table. Updates over
+#' as data table or vectors of values. Outputs a data table. Updates over
 #' the model published in Armitage et al. 2014 include binding to plastic walls
 #' and lipid and protein compartments in cells.
 #' 
@@ -89,16 +89,16 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' v_total, v_working. Otherwise supply single values to this.params.
 #' @param casrn.vector For vector or single value, CAS number
 #' @param nomconc.vector For vector or single value, micromolar nominal concentration (e.g. AC50 value)
-#' @param this.sarea For single value, surface area per well (m^2)
-#' @param this.v_total For single value, Total volume per well (m^3)
-#' @param this.v_working For single value, Working volume per well (m^3)
-#' @param this.cell_yield For single value, Number of cells per well
+#' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
+#' @param this.sarea Surface area per well (m^2)
+#' @param this.v_total Total volume per well (m^3)
+#' @param this.v_working Working volume per well (m^3)
+#' @param this.cell_yield Number of cells per well
 #' @param this.Tsys System temperature (oC)
 #' @param this.Tref Reference temperature (K)
 #' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
 #' model
 #' @param this.option.swat2 Use alternative water solubility correction
-#' @param this.FBSf Fraction fetal bovine serum
 #' @param this.pseudooct Pseudo-octanol cell storage lipid content
 #' @param this.memblip Membrane lipid content of cells
 #' @param this.nlom Structural protein conent of cells
@@ -120,8 +120,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
-                          tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
                           this.FBSf = NA, # Must be set if not in tcdata, this is the most senstive parameter in the model
+                          tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
                           this.sarea = NA_real_,
                           this.v_total = NA_real_,
                           this.v_working = NA_real_,
@@ -172,7 +172,7 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   mtot<-cwat<-P_dom<-f_oc<-cwat_s<-csat<-activity<-cair<-calb<-cslip<-cdom<-NULL
   ccell<-cplastic<-mwat_s<-mair<-mbsa<-mslip<-mdom<-mcells<-mplastic<-NULL
   mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
-  ccells<-eta_free <- NULL
+  ccells<-eta_free <- cfree.invitro <- NULL
   logHenry <- logWSol <- NULL
   #End R CMD CHECK appeasement.
 
@@ -188,11 +188,23 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   
   # Check CAS and AC50 supplied
   if(any(is.na(tcdata[,.(casrn,nomconc)]))){
-    print("casrn or ac50 undefined")
-    stop()
+    stop("casrn or nomconc undefined")
   }  
-  if(any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-    missing.rows <- which(is.na(tcdata[,sarea]))
+  
+  if(is.na(this.FBSf) & !"FBSf" %in% names(tcdata)){
+    stop("this.FBSf must be defined or FBSf must be a column in tcdata")
+  }
+  
+  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
+     any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+    
+    if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
+       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+      missing.rows <- which(is.na(tcdata[,sarea]))
+    }else{
+      missing.rows <- 1:length(tcdata[,casrn])
+    }
+    
     if(any(is.na(tcdata[missing.rows, well_number]))){
       print(paste0("Either well_number or geometry must be defined for rows: ", 
                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
@@ -343,8 +355,9 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
     .[,xcells:=mcells/mtot] %>%
     .[,xplastic:=mplastic/mtot] %>%
     .[,xprecip:=mprecip/mtot] %>% 
-    .[, eta_free := cwat_s/nomconc]
-
+    .[, eta_free := cwat_s/nomconc] %>%  # effective availability ratio
+    .[, cfree.invitro := cwat_s * 1e6] # free invitro concentration in micromolar
+  
   return(tcdata)
   #output concentrations in mol/L
   #output mass (mwat_s etc.) in mols
