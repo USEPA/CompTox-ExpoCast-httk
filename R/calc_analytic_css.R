@@ -32,7 +32,7 @@ model.list <- list()
 #'@param IVIVE Honda et al. (submitted) identified six plausible sets of 
 #'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
 #'Argument may be set to "Honda1" through "Honda6". If used, this function 
-#'overwrites the tissue, restrictive.clearance, and plasma.binding arguments. 
+#'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 #'See Details below for more information.
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
@@ -77,7 +77,6 @@ model.list <- list()
 #''
 #' @export calc_analytic_css
 calc_analytic_css <- function(chem.name=NULL,
-
                                chem.cas = NULL,
                                parameters=NULL,
                                daily.dose=1,
@@ -88,6 +87,7 @@ calc_analytic_css <- function(chem.name=NULL,
                                recalc.blood2plasma=F,
                                tissue=NULL,
                                restrictive.clearance=T,
+                              bioactive.free.invivo = F,
                                IVIVE=NULL,
                               Caco2.options = list(Caco2.Pab.default = 2,
                                                    Caco2.Fgut = TRUE,
@@ -108,6 +108,8 @@ calc_analytic_css <- function(chem.name=NULL,
     out <- honda.ivive(method=IVIVE,tissue=tissue)
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+    
   }
      
 # Check that the output units are ones we can work with:
@@ -145,6 +147,7 @@ calc_analytic_css <- function(chem.name=NULL,
       recalc.blood2plasma=recalc.blood2plasma,
       tissue=tissue,
       restrictive.clearance=restrictive.clearance,
+      bioactive.free.invivo = bioactive.free.invivo,
       Caco2.options = Caco2.options),
       list(...)))
   } else {

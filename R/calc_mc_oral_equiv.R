@@ -48,7 +48,7 @@
 #' samples from the simulation instead of the selected quantile.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param plasma.binding If TRUE, then only the free (unbound) fraction of
+#' @param bioactive.free.invivo If TRUE, then only the free (unbound) fraction of
 #' chemical is considered to be bioactive. If FALSE, the total chemical
 #' concentration is used for IVIVE. (Default TRUE)
 #' @param tk.statistic.used Theoreticially either the "mean" or "max"imum
@@ -59,7 +59,7 @@
 #' @param IVIVE Honda et al. (submitted) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+#' overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 #' See Details below for more information.
 #' @param ... Additional parameters passed to calc_mc_css for httkpop and
 #' variance of parameters.
@@ -85,7 +85,7 @@ calc_mc_oral_equiv <- function(conc,
                                suppress.messages=F,
                                return.samples=F,
                                restrictive.clearance=T,
-                               plasma.binding=F,
+                               bioactive.free.invivo=F,
                                tk.statistic.used="mean",
                                tissue=NULL,
                                IVIVE=NULL,
@@ -98,9 +98,10 @@ calc_mc_oral_equiv <- function(conc,
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
-    plasma.binding <- out[["plasma.binding"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+
   }
   
   Css <- try(calc_mc_css(daily.dose=1,
@@ -111,6 +112,7 @@ calc_mc_oral_equiv <- function(conc,
                          output.units=input.units,
                          suppress.messages=T,
                          restrictive.clearance=restrictive.clearance,
+                         bioactive.free.invivo = bioactive.free.invivo,
                          tissue=tissue,
                          tk.statistic.used=tk.statistic.used,
                          return.samples=return.samples,
@@ -119,7 +121,7 @@ calc_mc_oral_equiv <- function(conc,
   dose <- conc/Css  
   
   # Do we use the free concentration in the plasma or the total?
-  if(plasma.binding) 
+  if(bioactive.free.invivo) 
   {
     params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas,species=species)
     dose <- dose/params[["Funbound.plasma"]]

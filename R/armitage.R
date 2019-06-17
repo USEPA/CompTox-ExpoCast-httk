@@ -121,25 +121,25 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
-                            this.sarea = NA_real_,
-                            this.v_total = NA_real_,
-                            this.v_working = NA_real_,
-                            this.cell_yield = NA_real_,
-                            this.Tsys = 37,
-                            this.Tref = 298.15,
-                            this.option.kbsa2 = F,
-                            this.option.swat2 = F,
-                            this.FBSf = 0, #
-                            this.pseudooct = 0.01, # storage lipid content of cells
-                            this.memblip = 0.04, # membrane lipid content of cells
-                            this.nlom = 0.20, # structural protein content of cells
-                            this.P_nlom = 0.035, # proportionality constant to octanol structural protein
-                            this.P_dom = 0.05,# proportionality constant to octanol dom
-                            this.P_cells = 1,# proportionality constant to octanol storage-liqid
-                            this.csalt = 0.15, # ionic strength of buffer, mol/L
-                            this.celldensity=1, # kg/L g/mL  mg/uL
-                            this.cellmass = 3, #ng/cell
-                            this.f_oc = 1 # everything assumed to be like proteins
+                          this.FBSf = NA, # Must be set if not in tcdata, this is the most senstive parameter in the model
+                          this.sarea = NA_real_,
+                          this.v_total = NA_real_,
+                          this.v_working = NA_real_,
+                          this.cell_yield = NA_real_,
+                          this.Tsys = 37,
+                          this.Tref = 298.15,
+                          this.option.kbsa2 = F,
+                          this.option.swat2 = F,
+                          this.pseudooct = 0.01, # storage lipid content of cells
+                          this.memblip = 0.04, # membrane lipid content of cells
+                          this.nlom = 0.20, # structural protein content of cells
+                          this.P_nlom = 0.035, # proportionality constant to octanol structural protein
+                          this.P_dom = 0.05,# proportionality constant to octanol dom
+                          this.P_cells = 1,# proportionality constant to octanol storage-liqid
+                          this.csalt = 0.15, # ionic strength of buffer, mol/L
+                          this.celldensity=1, # kg/L g/mL  mg/uL
+                          this.cellmass = 3, #ng/cell
+                          this.f_oc = 1 # everything assumed to be like proteins
 ){
   # this.Tsys <- 37
   # this.Tref <- 298.15
@@ -172,7 +172,8 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   mtot<-cwat<-P_dom<-f_oc<-cwat_s<-csat<-activity<-cair<-calb<-cslip<-cdom<-NULL
   ccell<-cplastic<-mwat_s<-mair<-mbsa<-mslip<-mdom<-mcells<-mplastic<-NULL
   mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
-  ccells<-NULL
+  ccells<-eta_free <- NULL
+  logHenry <- logWSol <- NULL
   #End R CMD CHECK appeasement.
 
   if(all(is.na(tcdata))){
