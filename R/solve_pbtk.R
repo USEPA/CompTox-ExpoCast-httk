@@ -151,7 +151,7 @@ solve_pbtk <- function(chem.name = NULL,
                     regression=regression,
                     minimum.Funbound.plasma=minimum.Funbound.plasma) 
   }else{
-#    name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
+#    name.list <- c("BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qcardiacc" ,"Qgfrc","Qgutf","Qkidneyf","Qliverf","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vrestc","Vvenc")
   if(!all(param.names.pbtk %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.pbtk[which(!param.names.pbtk %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_pbtk.")) 
   }
   if(is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
