@@ -49,7 +49,7 @@ set to zero.}
 \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-\item{Kgutabs}{Rate chemical is absorbed, 1/h.}
+\item{kgutabs}{Rate chemical is absorbed, 1/h.}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 \item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
 concentration of the chemical in the blood to the concentration in the

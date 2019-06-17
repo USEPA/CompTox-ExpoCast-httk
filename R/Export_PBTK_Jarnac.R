@@ -74,7 +74,7 @@ p = defn cell
 	
 // Amount of chemical entering the gut tissue:	
 J1: Aart -> Agut;	Qgut*Aart/Vart;
-J2: Agutlumen -> Agut;	Kgutabs*Agutlumen;
+J2: Agutlumen -> Agut;	kgutabs*Agutlumen;
 	
 // Change of amount of chemical in lung tissue:	
 
@@ -156,7 +156,7 @@ p.Qrest = p.Qcardiac - p.Qgut - p.Qliver - p.Qkidney;
 
 
 //   Rate constants L/day
-p.Kgutabs = ",24*inlist$Kgutabs,";  // rate constant for adsorption of compound from the gut
+p.kgutabs = ",24*inlist$kgutabs,";  // rate constant for adsorption of compound from the gut
 
 
 // simulation command (start time, end time, number of points [optional list of <code>]):
