@@ -12,7 +12,7 @@ solve_3comp(chem.name = NULL, chem.cas = NULL, times = NULL,
   atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, ...)
+  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

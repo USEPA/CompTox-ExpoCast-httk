@@ -6,7 +6,7 @@
 \usage{
 parameterize_schmitt(chem.cas = NULL, chem.name = NULL,
   species = "Human", default.to.human = F, force.human.fup = F,
-  suppress.messages = F)
+  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
