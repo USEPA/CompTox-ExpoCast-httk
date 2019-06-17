@@ -98,7 +98,7 @@
 #' @param IVIVE Honda et al. (submitted) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+#' overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 #' See Details below for more information.
 #' @param httkpop Whether or not to use population generator and sampler from
 #' httkpop.  This is overwrites censored.params and vary.params and is only for
@@ -220,6 +220,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         clint.pvalue.threshold=0.05,
                         restrictive.clearance=T,
                         tk.statistic.used="mean",
+                        bioactive.free.invivo = FALSE,
                         IVIVE=NULL,
                         httkpop=T,
                         poormetab=T,
@@ -248,6 +249,8 @@ calc_mc_css <- function(chem.cas=NULL,
     out <- honda.ivive(method=IVIVE,tissue=tissue)
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+
   }
  
   css_apply <- function(params)
@@ -265,6 +268,7 @@ calc_mc_css <- function(chem.cas=NULL,
                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                              regression=regression,
                              restrictive.clearance=restrictive.clearance,
+                             bioactive.free.invivo = bioactive.free.invivo,
                              clint.pvalue.threshold=0.05,
                              Caco2.options = Caco2.options,
                              ...)
@@ -361,6 +365,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         suppress.messages=T,
                         return.samples=return.samples,
                         restrictive.clearance=restrictive.clearance,
+                       bioactive.free.invivo = bioactive.free.invivo,
                         species=species)
 
     if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
