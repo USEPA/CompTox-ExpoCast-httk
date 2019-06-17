@@ -8,7 +8,7 @@ length(Css.list)
 length(pbpk.list)
 length(rat.list)
                                                  
-# check for duplicate entries:
+# check for duplicate entries (all of the following should be TRUE):
 length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
 length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
 length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
