@@ -25,11 +25,10 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @return
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' 
+#' @return
 #' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
 #' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
