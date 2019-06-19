@@ -87,6 +87,18 @@
 #' }
 #' 
 #' @export in.list
+#' @export is.nhanes.serum.parent
+#' @export is.nhanes.serum.analyte
+#' @export is.nhanes.blood.parent
+#' @export is.nhanes.blood.analyte
+#' @export is.nhanes.urine.parent
+#' @export is.nhanes.urine.analyte
+#' @export is.tox21
+#' @export is.toxcast
+#' @export is.expocast
+#' @export is.nhanes
+#' @export is.pharma
+#' @export is.httk
 in.list <- function(chem.cas=NULL,
                     which.list="ToxCast")
 {
