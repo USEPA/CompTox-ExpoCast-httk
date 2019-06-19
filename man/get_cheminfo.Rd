@@ -91,6 +91,6 @@ httk.TPO.human.table <- subset(get_cheminfo(info="all",species="human"),
 
 }
 \author{
-John Wambaugh
+John Wambaugh and Robert Pearce
 }
 \keyword{Retrieval}

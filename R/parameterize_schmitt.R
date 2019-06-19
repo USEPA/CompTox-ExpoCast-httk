@@ -117,6 +117,6 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   plasma.pH=7.4,
                   alpha=0.001)
   
-  return(c(predict_partitioning_schmitt(parameters=outlist),outlist))                                
+  return(outlist)                                
                                  
 }
