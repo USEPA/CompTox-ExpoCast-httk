@@ -44,6 +44,7 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' @param concentration Blood, plasma, or tissue concentration.
 #' @return A data.table whose columns correspond to the parameters of the HTTK
 #' model specified in \code{model}, and whose rows correspond to the
 #' individuals (rows) of \code{indiv_dt}. 
@@ -81,6 +82,7 @@ get_httk_params <- function(indiv_dt,
                             regression=T,
                             well.stirred.correction=T,
                             restrictive.clearance=T,
+                            concentration = "plasma",
                             clint.pvalue.threshold=0.05)
 {
   
@@ -111,6 +113,7 @@ get_httk_params <- function(indiv_dt,
                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
                  well.stirred.correction=well.stirred.correction,
                  restrictive.clearance=restrictive.clearance,
+                 concentration = concentration,
                  clint.pvalue.threshold=clint.pvalue.threshold)
   
   return(indiv_httk)

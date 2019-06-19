@@ -5,30 +5,32 @@
 \title{Evaluate the updated Armitage model}
 \usage{
 armitage_eval(casrn.vector = c("81-81-2", "80-05-7"),
-  nomconc.vector = 1, this.well_number = 384, tcdata = NA,
-  this.sarea = NA_real_, this.v_total = NA_real_,
+  nomconc.vector = 1, this.well_number = 384, this.FBSf = NA,
+  tcdata = NA, this.sarea = NA_real_, this.v_total = NA_real_,
   this.v_working = NA_real_, this.cell_yield = NA_real_,
   this.Tsys = 37, this.Tref = 298.15, this.option.kbsa2 = F,
-  this.option.swat2 = F, this.FBSf = 0, this.pseudooct = 0.01,
-  this.memblip = 0.04, this.nlom = 0.2, this.P_nlom = 0.035,
-  this.P_dom = 0.05, this.P_cells = 1, this.csalt = 0.15,
-  this.celldensity = 1, this.cellmass = 3, this.f_oc = 1)
+  this.option.swat2 = F, this.pseudooct = 0.01, this.memblip = 0.04,
+  this.nlom = 0.2, this.P_nlom = 0.035, this.P_dom = 0.05,
+  this.P_cells = 1, this.csalt = 0.15, this.celldensity = 1,
+  this.cellmass = 3, this.f_oc = 1)
 }
 \arguments{
 \item{casrn.vector}{For vector or single value, CAS number}
 
 \item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
 
+\item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
+
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 v_total, v_working. Otherwise supply single values to this.params.}
 
-\item{this.sarea}{For single value, surface area per well (m^2)}
+\item{this.sarea}{Surface area per well (m^2)}
 
-\item{this.v_total}{For single value, Total volume per well (m^3)}
+\item{this.v_total}{Total volume per well (m^3)}
 
-\item{this.v_working}{For single value, Working volume per well (m^3)}
+\item{this.v_working}{Working volume per well (m^3)}
 
-\item{this.cell_yield}{For single value, Number of cells per well}
+\item{this.cell_yield}{Number of cells per well}
 
 \item{this.Tsys}{System temperature (oC)}
 
@@ -38,8 +40,6 @@ v_total, v_working. Otherwise supply single values to this.params.}
 model}
 
 \item{this.option.swat2}{Use alternative water solubility correction}
-
-\item{this.FBSf}{Fraction fetal bovine serum}
 
 \item{this.pseudooct}{Pseudo-octanol cell storage lipid content}
 
@@ -66,7 +66,7 @@ tcdata
 }
 \description{
 Evaluate the Armitage model for chemical distributon in vitro. Takes input
-as data table or single set of values. Outputs a data table. Updates over
+as data table or vectors of values. Outputs a data table. Updates over
 the model published in Armitage et al. 2014 include binding to plastic walls
 and lipid and protein compartments in cells.
 }
