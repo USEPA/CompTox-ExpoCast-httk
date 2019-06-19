@@ -57,6 +57,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {
