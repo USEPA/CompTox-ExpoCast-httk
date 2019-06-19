@@ -233,7 +233,7 @@ solve_3comp <- function(chem.name = NULL,
   }
   if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
     
-  parameters[['CLmetabolismc']] <- parameters[['Clmetabolismc']] 
+  parameters[['Clmetabolismc']] <- parameters[['Clmetabolismc']] 
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
   parameters[['Ratioblood2plasma']] <- parameters[['Rblood2plasma']]
   names(parameters)[substr(names(parameters),1,1) == 'K'] <- gsub('2pu','2plasma',names(parameters)[substr(names(parameters),1,1) == 'K'])

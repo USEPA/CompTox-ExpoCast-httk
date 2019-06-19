@@ -76,7 +76,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          tissues=NULL,
                                          minimum.Funbound.plasma=0.0001) 
 {
-  Tissue <- Species <- variable <- NULL
+  Tissue <- Species <- variable <- Reference <- value <- NULL
   
   if (is.null(parameters))
   {
@@ -88,10 +88,11 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
     user.params <- F
   } else {
     user.params <- T
-    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- parameterize_schmitt(chem.cas="80-05-7")$plasma.pH
-    if (!"Fprotein.plasma"%in%names(parameters)) parameters$Fprotein.plasma <- parameterize_schmitt(chem.cas="80-05-7")$Fprotein.plasma
+    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
+    if (!"Fprotein.plasma"%in%names(parameters)) parameters$Fprotein.plasma <-  physiology.data[which(physiology.data[,'Parameter'] =='Plasma Protein Volume Fraction'),which(tolower(colnames(physiology.data)) == tolower(species))]
   }
-  if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+  
+  if(!adjusted.Funbound.plasma & user.params == FALSE) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
    
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
@@ -102,11 +103,16 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 # Values for PBPK Models" (2004) that are not described by Schmitt (2008)
 
 # we use the average values for the Schmitt (2008) tissues
-for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
-  this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,Tissue != 'red blood cells' & tolower(Species) == tolower(species) & variable == this.comp)[,'value'])))
-  colnames(this.row) <- colnames(tissue.data)
-  tissue.data <- rbind(tissue.data,this.row)
-}
+  mycomps <- c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')
+  tissue.data <- as.data.table(tissue.data)[Tissue != 'red blood cells' & 
+                                              variable %in% mycomps & 
+                                              tolower(Species) == tolower(species),
+                                            .(value = mean(value, na.rm = T),
+                                              Tissue = 'rest',
+                                              Reference = NA_character_), 
+                                            .(variable, Species)] %>% 
+    rbind(.,tissue.data) %>% 
+    as.data.frame()
 
 
 	Ktissue2pu <- list()

@@ -50,6 +50,7 @@
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = 1.
+#' @param concentration Blood, plasma, or tissue concentration.
 #' @return A data.table whose columns correspond to the parameters of the HTTK
 #' model specified in \code{model}, and whose rows correspond to the
 #' individuals (rows) of \code{indiv_dt}. 
@@ -89,10 +90,11 @@ get_httk_params <- function(indiv_dt,
                             regression=T,
                             well.stirred.correction=T,
                             restrictive.clearance=T,
-                            clint.pvalue.threshold=0.05,
                             Caco2.options = list(Caco2.Pab.default = 2,
                                                  Caco2.Fgut = TRUE,
-                                                 Caco2.Fabs = TRUE))
+                                                 Caco2.Fabs = TRUE),
+                            concentration = "plasma",
+                            clint.pvalue.threshold=0.05)
 {
   
   #First convert to physiological parameters used by HTTK
@@ -125,8 +127,9 @@ get_httk_params <- function(indiv_dt,
                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
                  well.stirred.correction=well.stirred.correction,
                  restrictive.clearance=restrictive.clearance,
-                 clint.pvalue.threshold=clint.pvalue.threshold,
-                 Caco2.options = Caco2.options)
+                 Caco2.options = Caco2.options,
+                 concentration = concentration,
+                 clint.pvalue.threshold=clint.pvalue.threshold)
   
   return(indiv_httk)
 }

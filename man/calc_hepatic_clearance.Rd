@@ -60,6 +60,6 @@ calc_hepatic_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 
 }
 \author{
-John Wambaugh
+John Wambaugh and Robert Pearce
 }
 \keyword{Parameter}
