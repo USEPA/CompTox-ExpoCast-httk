@@ -50,14 +50,13 @@ model.list <- list()
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 
 #'product of the steady state plasma concentration and the tissue to plasma 
 #'partition coefficient. 
-#'\tabular{lrrrr}{
+#'\tabular{lrrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. In Vivo \tab TK Statistic Used* \tab Bioactive Chemical Conc. In Vitro \cr
 #'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
 #'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 #'Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 #'Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 #'}
-#'*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
 #'  
 #'@examples 
 #'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
@@ -78,22 +77,22 @@ model.list <- list()
 #''
 #' @export calc_analytic_css
 calc_analytic_css <- function(chem.name=NULL,
-                               chem.cas = NULL,
-                               parameters=NULL,
-                               daily.dose=1,
-                               output.units='uM',
-                               model = 'pbtk',
-                               concentration='plasma',
-                               suppress.messages=F,
-                               recalc.blood2plasma=F,
-                               tissue=NULL,
-                               restrictive.clearance=T,
+                              chem.cas = NULL,
+                              parameters=NULL,
+                              daily.dose=1,
+                              output.units='uM',
+                              model = 'pbtk',
+                              concentration='plasma',
+                              suppress.messages=F,
+                              recalc.blood2plasma=F,
+                              tissue=NULL,
+                              restrictive.clearance=T,
                               bioactive.free.invivo = F,
-                               IVIVE=NULL,
+                              IVIVE=NULL,
                               Caco2.options = list(Caco2.Pab.default = "2",
                                                    Caco2.Fgut = TRUE,
                                                    Caco2.Fabs = TRUE),
-                               ...)
+                              ...)
 
 {
 #  tissue.data <- tissue.data

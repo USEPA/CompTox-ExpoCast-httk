@@ -13,7 +13,9 @@ solve_1comp(chem.name = NULL, chem.cas = NULL, times = NULL,
   dosing.matrix = NULL, recalc.elimination = F,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, well.stirred.correction = T,
-  minimum.Funbound.plasma = 1e-04, ...)
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(Caco2.Pab.default = 2, Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE), ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
