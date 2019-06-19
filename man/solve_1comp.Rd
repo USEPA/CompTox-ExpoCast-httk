@@ -12,7 +12,8 @@ solve_1comp(chem.cas = NULL, chem.name = NULL, times = NULL,
   rtol = 1e-08, atol = 1e-12, default.to.human = F,
   dosing.matrix = NULL, recalc.elimination = F,
   adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, well.stirred.correction = T, ...)
+  restrictive.clearance = T, well.stirred.correction = T,
+  minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must

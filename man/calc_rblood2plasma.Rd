@@ -59,6 +59,6 @@ Schmitt W. "General approach for the calculation of tissue to
 plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 }
 \author{
-John Wambaugh
+John Wambaugh and Robert Pearce
 }
 \keyword{Parameter}

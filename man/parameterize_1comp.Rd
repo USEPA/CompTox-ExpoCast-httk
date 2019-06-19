@@ -8,7 +8,8 @@ parameterize_1comp(chem.cas = NULL, chem.name = NULL,
   species = "Human", default.to.human = F,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, well.stirred.correction = T,
-  suppress.messages = F, clint.pvalue.threshold = 0.05)
+  suppress.messages = F, clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -43,6 +44,10 @@ with plasma concentration.}
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
