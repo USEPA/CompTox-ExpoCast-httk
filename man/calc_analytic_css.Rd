@@ -8,7 +8,7 @@ calc_analytic_css(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, daily.dose = 1, output.units = "uM",
   model = "pbtk", concentration = "plasma", suppress.messages = F,
   recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  IVIVE = NULL, ...)
+  bioactive.free.invivo = F, IVIVE = NULL, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -32,7 +32,7 @@ model,'3compartment' for the three compartment model, '3compartmentss' for
 the three compartment steady state model, and '1compartment' for one 
 compartment model.}
 
-\item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
+\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
@@ -48,10 +48,14 @@ chemical not bound to protein is available for metabolism in the liver. If
 FALSE, then all chemical in the liver is metabolized (faster metabolism due
 to rapid off-binding).}
 
-\item{IVIVE}{Honda et al. (submitted) identified six plausible sets of 
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
+
+\item{IVIVE}{Honda et al. (submitted) identified four plausible sets of 
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
-Argument may be set to "Honda1" through "Honda6". If used, this function 
-overwrites the tissue, restrictive.clearance, and plasma.binding arguments. 
+Argument may be set to "Honda1" through "Honda4". If used, this function 
+overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
 \item{...}{Additional parameters passed to parameterize function if 
@@ -94,8 +98,7 @@ calc_analytic_css(parameters=params,model="pbtk")
 }
 \references{
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
-'
+In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 }
 \author{
 Robert Pearce, John Wambaugh, and Greg Honda
