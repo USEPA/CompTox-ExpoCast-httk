@@ -8,7 +8,8 @@ calc_elimination_rate(chem.cas = NULL, chem.name = NULL,
   parameters = NULL, species = "Human", suppress.messages = F,
   default.to.human = F, restrictive.clearance = T,
   adjusted.Funbound.plasma = T, regression = T,
-  well.stirred.correction = T, clint.pvalue.threshold = 0.05)
+  well.stirred.correction = T, clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be

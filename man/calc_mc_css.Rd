@@ -11,7 +11,7 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
   list(cv = 0.3, lod = 0.01)), vary.params = list(BW = 0.3, Vliverc =
   0.3, Qgfrc = 0.3, Qtotal.liverc = 0.3, million.cells.per.gliver = 0.3,
   Clint = 0.3), fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-  fup.pop.cv = 0.05, clint.pop.cv = 0.1, samples = 1000,
+  fup.pop.cv = 0.3, clint.pop.cv = 0.3, samples = 1000,
   return.samples = F, default.to.human = F, tissue = NULL,
   well.stirred.correction = T, adjusted.Funbound.plasma = T,
   regression = T, clint.pvalue.threshold = 0.05,
@@ -250,8 +250,7 @@ Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
-Original by John Wambaugh, rewritten by Caroline Ring and Robert
-Pearce
+Caroline Ring, Robert Pearce, and John Wambaugh
 }
 \keyword{Carlo}
 \keyword{Monte}
