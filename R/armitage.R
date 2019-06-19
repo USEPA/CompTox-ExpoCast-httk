@@ -33,7 +33,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   sarea<-cell_yield<-cell_yield_est<-NULL
   #End R CMD CHECK appeasement.
   
-  if(is.na(tcdata)){
+  if(all(is.na(tcdata))){
     tcdata <- data.table(well_number = this.well_number, cell_yield = this.cell_yield, v_working = this.v_working)
   }
   
@@ -85,16 +85,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' and lipid and protein compartments in cells.
 #' 
 #' 
-#' @param tcdata A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea,
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params.
-#' @param this.casrn For single value, CAS number
-#' @param this.ac50 For single value, AC50 (micromolar) nominal concentration
-#' @param this.MP For single value, melting point (oC)
-#' @param this.gkow For single value, Log10 Kow, octanol-water partitioning
-#' coefficient
-#' @param this.gkaw For single value, Log10 Kaw, air-water partitioning
-#' coefficient
-#' @param this.gswat For single value, Log10 water solubility (mol/L)
+#' @param casrn.vector For vector or single value, CAS number
+#' @param nomconc.vector For vector or single value, micromolar nominal concentration (e.g. AC50 value)
 #' @param this.sarea For single value, surface area per well (m^2)
 #' @param this.v_total For single value, Total volume per well (m^3)
 #' @param this.v_working For single value, Working volume per well (m^3)
@@ -123,17 +117,14 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
 #' to Evaluate Extrapolation Assumptions"
 #' @export armitage_eval
-armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working
-                            this.casrn,
-                            this.ac50 = 10, # micromolar
-                            this.MP = NA,
-                            this.gkow = NA,
-                            this.gkaw = NA,
-                            this.gswat = NA,
-                            this.sarea = NA,
-                            this.v_total = NA,
-                            this.v_working = NA,
-                            this.cell_yield = NA,
+armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
+                          nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
+                          this.well_number = 384,
+                          tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
+                            this.sarea = NA_real_,
+                            this.v_total = NA_real_,
+                            this.v_working = NA_real_,
+                            this.cell_yield = NA_real_,
                             this.Tsys = 37,
                             this.Tref = 298.15,
                             this.option.kbsa2 = F,
@@ -166,6 +157,7 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   # this.cellmass <- 3 #ng/cell
   # this.f_oc <- 1 # everything assumed to be like proteins
 
+
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -184,23 +176,44 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   #End R CMD CHECK appeasement.
 
   if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn=this.casrn,
-                         ac50=this.ac50,
-                         MP=this.MP,
-                         gkow=this.gkow,
-                         gkaw=this.gkaw,
-                         gswat=this.gswat,
-                         sarea=this.sarea,
-                         v_total=this.v_total,
-                         v_working=this.v_working,
-                         cell_yield=this.cell_yield)
+    tcdata <- data.table(casrn = casrn.vector,
+                         nomconc = nomconc.vector,
+                         well_number = this.well_number,
+                         sarea = this.sarea,
+                         v_total = this.v_total,
+                         v_working = this.v_working,
+                         cell_yield = this.cell_yield)
   }
-
-  if(any(is.na(tcdata[,.(casrn,ac50,MP,gkow,gkaw,gswat,
-                         sarea,v_total,v_working,cell_yield)]))){
-    print("casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working, or cell_yield undefined")
+  
+  # Check CAS and AC50 supplied
+  if(any(is.na(tcdata[,.(casrn,nomconc)]))){
+    print("casrn or ac50 undefined")
+    stop()
+  }  
+  if(any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+    missing.rows <- which(is.na(tcdata[,sarea]))
+    if(any(is.na(tcdata[missing.rows, well_number]))){
+      print(paste0("Either well_number or geometry must be defined for rows: ", 
+                  paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
+      stop()
+    }else{
+      temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+      tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+      tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+    }
+    
+    
+    
   }
-
+  
+  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
+    tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
+             get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.CAS = casrn)]
+  }
+  tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
 
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                                 option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
@@ -292,9 +305,9 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
 
-  tcdata[,ac50:=ac50/1e6] %>% # umol/L to mol/L
-    .[,cinit:=ac50] %>%
-    .[,mtot:=ac50*Vm] %>% # total moles
+  tcdata[,nomconc := nomconc/1e6] %>% # umol/L to mol/L
+    .[,cinit:= nomconc] %>%
+    .[,mtot:= nomconc*Vm] %>% # total moles
     .[,cwat:=mtot/(kaw*Vair + Vm + kbsa*Valb +
                      P_cells*kow*Vslip + P_dom*f_oc*Vdom + kcw*Vcells +
                      1000*kpl*sarea)] %>%
@@ -328,7 +341,8 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
     .[,xdom:=mdom/mtot] %>%
     .[,xcells:=mcells/mtot] %>%
     .[,xplastic:=mplastic/mtot] %>%
-    .[,xprecip:=mprecip/mtot]
+    .[,xprecip:=mprecip/mtot] %>% 
+    .[, eta_free := cwat_s/nomconc]
 
   return(tcdata)
   #output concentrations in mol/L
