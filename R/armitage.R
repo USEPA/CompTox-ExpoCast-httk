@@ -191,7 +191,7 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
     stop("casrn or nomconc undefined")
   }  
   
-  if(is.na(this.FBSf) & !"FBSf" %in% names(tcdata)){
+  if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
   

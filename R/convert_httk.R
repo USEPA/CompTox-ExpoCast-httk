@@ -21,14 +21,9 @@
 #' converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
+#' @param concentration Blood, plasma, or tissue concentration. 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
 #' clearance assay result has a p-values greater than the threshold are set to zero.
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1. 
 ##'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
@@ -42,16 +37,14 @@ convert_httk <- function(indiv.model.bio,
                          regression=T,
                          well.stirred.correction=T,
                          restrictive.clearance=T,
-                         clint.pvalue.threshold=0.05,
-                         Caco2.options = list(Caco2.Pab.default = 2,
-                                              Caco2.Fgut = TRUE,
-                                              Caco2.Fabs = TRUE)){
+                         concentration = "plasma",
+                         clint.pvalue.threshold=0.05){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- Caco2.Pab <- Fgutabs <- fabs.oral <- fgut.oral <- NULL
+  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- NULL
   Fhep.assay.correction <- million.cells.per.gliver <- NULL
   BW <- Vliverc <- Qtotal.liverc <- Clmetabolismc <- RBC.vol <- NULL
   plasma.vol <- hematocrit <- Vdist <- Qgfrc <- liver.density <- NULL
@@ -87,12 +80,16 @@ convert_httk <- function(indiv.model.bio,
                             '3compartmentss'='parameterize_steadystate')
   #And get the default HTTK parameters. These values will be used for all
   #parameters not being Monte Carlo sampled
-  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold, Caco2.options = Caco2.options)
-  else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold, Caco2.options = Caco2.options)
+  if(paramfun == 'parameterize_steadystate'){
+    p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
+    if(concentration == "tissue"){
+      p <- add_schmitt.param_to_3compss(parameters = p, chem.cas = this.chem)
+    }
+  } else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
   else{
   p <- do.call(getFromNamespace(paramfun, "httk"),
                args=list(chem.cas=this.chem,
-                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression, Caco2.options = Caco2.options))
+                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression))
   }
   } else p <- parameters
   #Depending on model, choose which parameters are not to be Monte Carlo sampled
@@ -129,6 +126,10 @@ convert_httk <- function(indiv.model.bio,
                                           'Fgutabs',
                                           "Fhep.assay.correction",
                                           "Funbound.plasma.adjustment"))
+  
+  if(model == '3compartmentss' & concentration == "tissue"){
+    noMC.names <- c(noMC.names, "MA","Pow","pKa_Donor", "pKa_Accept")
+  }
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
   indiv.model[, (noMC.names):=p[noMC.names]]
@@ -379,32 +380,6 @@ convert_httk <- function(indiv.model.bio,
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
-  # Determine small intestine blood flow, L/h
-  indiv.model[, Qsmallintestine := Qcardiacc*Qsmallintestinef*BW^0.75]
-  
-  # Update Fgutabs based on Caco-2 data, note that the if statements are redundant, but should save a little time
-  if(Caco2.options$Caco2.Fabs == T){
-    indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab,
-                                                            "Fgutabs" = Fgutabs))]
-  }else{
-    indiv.model[, fabs.oral := Fgutabs]
-  }
-  if(Caco2.options$Caco2.Fgut == T){
-    indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
-                                                            "cl_us" = Clmetabolismc,
-                                                            "BW" = BW,
-                                                            "Qsmallintestine" = Qsmallintestine,
-                                                            "Funbound.plasma" = Funbound.plasma,
-                                                            "Rblood2plasma" = Rblood2plasma
-    ))]
-  }else{
-    indiv.model[, fgut.oral := 1]
-  }
-  
-  # Replace Fgutabs with a recalculated value
-  if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
-    indiv.model[, Fgutabs := fabs.oral*fgut.oral]
-  }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.

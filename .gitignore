@@ -5,8 +5,11 @@ src-x64/
 *.Rhistory
 .gitignore
 *.Rproj
-.Rproj.user/
 inst/doc/
+R/.Rhistory
+.Rproj.user/
+
+
 # Compiled source #
 ###################
 *.com

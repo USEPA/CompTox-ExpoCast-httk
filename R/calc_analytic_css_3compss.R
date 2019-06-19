@@ -18,12 +18,18 @@
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #'in the blood to plasma using the input parameters. Use this if you have 
 #''altered hematocrit, Funbound.plasma, or Krbc2pu.
+#'
+#'
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
+#'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -43,6 +49,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    Caco2.options = list(Caco2.Pab.default = 2,
                                                         Caco2.Fgut = TRUE,
                                                         Caco2.Fabs = TRUE),
+
                                    ...)
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
@@ -107,10 +114,13 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   {
 # We need logP, which currently isn't one of the 3compss parameters, so unless
 # the user gives chem.name/chem.cas, we can't run:
-    if (is.null(chem.cas) & is.null(chem.name) & !("Pow" %in% names(parameters)))
+    if (is.null(chem.cas) & is.null(chem.name) & !any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters)))
       stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
 # Need to convert to 3compartmentss parameters:
-    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas)
+    if(!all(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters))){
+      parameters <- add_schmitt.param_to_3compss(parameters = parameters, chem.cas = chem.cas, chem.name = chem.name)
+    }
+    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
@@ -120,14 +130,45 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     Css <- Css * pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * Fup   
   }
 
-  if (tolower(concentration)=='blood')
-  {
-    Css <- Css * Rb2p
-  }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+  if(tolower(concentration) != "tissue"){
     
-    Css <- Css * Fup
-    
-  }else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")      
-
+    if (tolower(concentration)=='blood')
+    {
+      Css <- Css * Rb2p
+      
+    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+      
+      Css <- Css * parameters[['Funbound.plasma']]
+      
+    } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")      
+  }
   return(Css)
 }
+
+
+
+
+# Add some parameters to the output from parameterize_steady_state so that predict_partitioning_schmitt can run without reparameterizing
+add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, chem.name = NULL){
+  
+  if ((is.null(chem.cas) & is.null(chem.name)))
+    stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
+  if (is.null(parameters))
+    stop("Must have input parameters to add Schmitt input to.")
+  # Need to convert to 3compartmentss parameters:
+  temp.params <- get_physchem_param(chem.CAS = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+  if(!"Pow" %in% names(parameters)){
+    parameters[["Pow"]] <- 10^temp.params[["logP"]]
+  }
+  if(!"MA" %in% names(parameters)){
+    parameters[["MA"]] <- 10^temp.params[["logMA"]]
+  }
+  if(!"pKa_Accept" %in% names(parameters)){
+    parameters[["pKa_Accept"]] <- temp.params[["pKa_Accept"]]
+  }
+  if(!"pKa_Donor" %in% names(parameters)){
+    parameters[["pKa_Donor"]] <- temp.params[["pKa_Donor"]]
+  }
+  return(parameters)
+}
+

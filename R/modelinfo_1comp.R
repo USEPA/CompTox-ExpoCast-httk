@@ -40,7 +40,7 @@ initparms1comp <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms_1comp",
+  out <- .C("getParms1comp",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out
