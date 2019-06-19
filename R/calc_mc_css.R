@@ -91,10 +91,9 @@
 #' set to zero.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param tk.statistic.used Theoreticially either the "mean" or "max"imum
-#' (peak) concetrations might be used for IVIVE with some models. Defaults to
-#' "mean". Meaningless for the steady-state model (Argument is currently
-#' ignored because analytic steady-state solutions are used by this function.).
+#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #' @param IVIVE Honda et al. (submitted) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
@@ -209,8 +208,9 @@ calc_mc_css <- function(chem.cas=NULL,
                         adjusted.Funbound.plasma=T,
                         regression=T,
                         clint.pvalue.threshold=0.05,
-                        restrictive.clearance=T,
-                        tk.statistic.used="mean",
+                        restrictive.clearance = T,
+                        bioactive.free.invivo = FALSE,
+                        concentration = "plasma",
                         IVIVE=NULL,
                         httkpop=T,
                         poormetab=T,
@@ -229,13 +229,26 @@ calc_mc_css <- function(chem.cas=NULL,
 {
   if (!(model %in% c("pbtk","1compartment","3compartment","3compartmentss"))) stop("Model must be either \"pbtk\", \"1compartment\", \"3compartmentss\", or \"3compartment\".")
 
-  if (!(tk.statistic.used %in% c("mean","max"))) stop ("tk.statistic.used for IVIVE must be either \"mean\" or \"max\"imum concentrtation.")
-
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+    concentration <- out[["concentration"]]
+  }
+  
+  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
+  ){
+    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
+         Ctissue * Funbound.plasma is not a relevant concentration.\n
+         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
+  }
+  
+  if(!is.null(tissue) & tolower(concentration) != "tissue"){
+    concentration <- "tissue"
+    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
  
   css_apply <- function(params)
@@ -246,14 +259,17 @@ calc_mc_css <- function(chem.cas=NULL,
                              daily.dose=daily.dose,
                              suppress.messages=T,
                              output.units=output.units,
-                             tissue=tissue,
                              chem.cas=chem.cas,
                              chem.name=chem.name,
                              well.stirred.correction=well.stirred.correction,
                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                              regression=regression,
-                             restrictive.clearance=restrictive.clearance,
-                             clint.pvalue.threshold=0.05,
+                             IVIVE = NULL,
+                             tissue=tissue,
+                             restrictive.clearance = restrictive.clearance,
+                             bioactive.free.invivo = bioactive.free.invivo,
+                             concentration = concentration,
+                             clint.pvalue.threshold = 0.05,
                              ...)
     return(css)
   }
@@ -297,6 +313,7 @@ calc_mc_css <- function(chem.cas=NULL,
                                           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                           regression=regression,
                                           restrictive.clearance=restrictive.clearance,
+                                          concentration = concentration,
                                           clint.pvalue.threshold=clint.pvalue.threshold)
       css.list <- apply(parameter.matrix,1,css_apply) 
     }

@@ -23,6 +23,9 @@
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
+#'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with \code{tissue = NULL} in current implementation.
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -38,6 +41,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    recalc.blood2plasma=F,
                                    tissue=NULL,
                                    restrictive.clearance=T,
+                                   bioactive.free.invivo = FALSE,
                                    ...)
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
@@ -87,13 +91,8 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
-# Need to convert to 3compartmentss parameters:
-    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
-      parameters=c(parameters[param.names.3compss%in%names(parameters)],
-      Dow74=NA,
-      hepatic.bioavailability=NA,
-      Qtotal.liverc=(parameters$Qgutf+parameters$Qliverf)*parameters$Qcardiacc),
-                                        ...)
+# Need to convert to Schmitt parameters:
+    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
@@ -119,10 +118,16 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     }
   }
   
-  if (tolower(concentration)=='blood')
-  {
-     Css <- Css * parameters[['Rblood2plasma']]
-  } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
-
+  if(tolower(concentration) != 'tissue'){
+    if (tolower(concentration)=='blood')
+    {
+      Css <- Css * parameters[['Rblood2plasma']]
+      
+    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+      
+      Css <- Css * parameters[['Funbound.plasma']]
+      
+    } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
+  }
   return(Css)
 }

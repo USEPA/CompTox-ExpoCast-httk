@@ -11,13 +11,13 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
   list(cv = 0.3, lod = 0.01)), vary.params = list(BW = 0.3, Vliverc =
   0.3, Qgfrc = 0.3, Qtotal.liverc = 0.3, million.cells.per.gliver = 0.3,
   Clint = 0.3), fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-  fup.pop.cv = 0.05, clint.pop.cv = 0.1, samples = 1000,
+  fup.pop.cv = 0.3, clint.pop.cv = 0.3, samples = 1000,
   return.samples = F, default.to.human = F, tissue = NULL,
   well.stirred.correction = T, adjusted.Funbound.plasma = T,
   regression = T, clint.pvalue.threshold = 0.05,
-  restrictive.clearance = T, tk.statistic.used = "mean",
-  IVIVE = NULL, httkpop = T, poormetab = T,
-  fup.censored.dist = FALSE, fup.lod = 0.01,
+  restrictive.clearance = T, bioactive.free.invivo = FALSE,
+  concentration = "plasma", IVIVE = NULL, httkpop = T,
+  poormetab = T, fup.censored.dist = FALSE, fup.lod = 0.01,
   method = "direct resampling", gendernum = NULL,
   agelim_years = NULL, agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
@@ -114,10 +114,9 @@ set to zero.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum
-(peak) concetrations might be used for IVIVE with some models. Defaults to
-"mean". Meaningless for the steady-state model (Argument is currently
-ignored because analytic steady-state solutions are used by this function.).}
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
@@ -250,8 +249,7 @@ Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
-Original by John Wambaugh, rewritten by Caroline Ring and Robert
-Pearce
+Caroline Ring, Robert Pearce, and John Wambaugh
 }
 \keyword{Carlo}
 \keyword{Monte}

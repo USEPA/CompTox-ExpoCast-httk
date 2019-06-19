@@ -67,7 +67,9 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
 {
 
   if (is.null(pH)) stop("pH is required to calculate the ionization.")
-  if (!is.null(chem.cas) | !is.null(chem.name)) 
+  if (!is.null(chem.cas) | !is.null(chem.name) & 
+      !all(c("pKa_Donor","pKa_Accept") %in% names(parameters)) &
+       (is.null(pKa_Donor) | is.null(pKa_Accept))) 
   {
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
     chem.cas <- out$chem.cas
@@ -77,6 +79,11 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   {
     pKa_Donor <- parameters$pKa_Donor
     pKa_Accept <- parameters$pKa_Accept
+  } else if(!is.null(pKa_Donor) & !is.null(pKa_Accept)){
+    pKa_Donor <- pKa_Donor
+    pKa_Accept <- pKa_Accept
+  } else {
+    stop("pKa_Donor and pKa_Accept must be in input parameters, or chem.cas or chem.name must be supplied.")
   }
   
   # Number of ionizations to calculate:
