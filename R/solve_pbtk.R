@@ -278,14 +278,14 @@ parameters[["MW"]] <- NULL
       out <- ode(y = state, 
         times = times,
 # This is the derivatives function specific to this model:
-        func="pbtkderivs", 
+        func="derivspbtk", 
         parms=parameters,
         method=method,
         rtol=rtol,
         atol=atol,
 # This is the httk.dll file containing all the .C code:
         dllname="httk",
-        initfunc="initmod", 
+        initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
         nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)
@@ -306,14 +306,14 @@ parameters[["MW"]] <- NULL
       out <- ode(y = state, 
         times = times, 
 # This is the derivatives function specific to this model:
-        func="pbtkderivs", 
+        func="derivspbtk", 
         parms = parameters,
         method=method,
         rtol=rtol,
         atol=atol, 
 # This is the httk.dll file containing all the .C code:
         dllname="httk",
-        initfunc="initmod", 
+        initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
         nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)
@@ -328,14 +328,14 @@ parameters[["MW"]] <- NULL
     out <- ode(y = state, 
       times = times, 
 # This is the derivatives function specific to this model:
-      func="pbtkderivs", 
+      func="derivspbtk", 
       parms = parameters,
       method=method,
       rtol=rtol,
       atol=atol, 
 # This is the httk.dll file containing all the .C code:
       dllname="httk",
-      initfunc="initmod", 
+      initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
       nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)

@@ -32,7 +32,7 @@
 
    20 Parameters:
      BW = 70,
-     CLmetabolismc = 0.203,
+     Clmetabolismc = 0.203,
      kgutabs = 1,
      Qcardiacc = 0,
      Qgfrc = 0.108,
@@ -42,7 +42,7 @@
      Vliver = 0,
      Vrest = 0,
      Fraction_unbound_plasma = 0.0682,
-     CLmetabolism = 0.0,
+     Clmetabolism = 0.0,
      Qcardiac = 0,
      Qgfr = 0.0,
      Qgut = 0.0,
@@ -74,7 +74,7 @@
 static double parms[20];
 
 #define BW parms[0]
-#define CLmetabolismc parms[1]
+#define Clmetabolismc parms[1]
 #define kgutabs parms[2]
 #define Qcardiacc parms[3]
 #define Qgfrc parms[4]
@@ -84,7 +84,7 @@ static double parms[20];
 #define Vliver parms[8]
 #define Vrest parms[9]
 #define Fraction_unbound_plasma parms[10]
-#define CLmetabolism parms[11]
+#define Clmetabolism parms[11]
 #define Qcardiac parms[12]
 #define Qgfr parms[13]
 #define Qgut parms[14]
@@ -104,7 +104,7 @@ void initmod3comp (void (* odeparms)(int *, double *))
 }
 
 
-void getParms_3comp (double *inParms, double *out, int *nout) {
+void getParms3comp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -115,7 +115,7 @@ void getParms_3comp (double *inParms, double *out, int *nout) {
 
 
   kgutabs = kgutabs * 24 ;
-  CLmetabolism = CLmetabolismc * 24 * BW ;
+  Clmetabolism = Clmetabolismc * 24 * BW ;
   Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
   Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
   Qgut = Qcardiac * Qgutf ;
@@ -142,11 +142,11 @@ void derivs3comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aliver] = Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma + Qliver * y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
+  ydot[ID_Aliver] = Qgut * y[ID_Agut] / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma + Qliver * y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - Clmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
 
   ydot[ID_Arest] = ( Qgut + Qliver ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - Qgut * y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qliver * y[ID_Arest] / Vrest * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgfr / Krest2plasma * y[ID_Arest] / Vrest ;
 
-  ydot[ID_Ametabolized] = CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
+  ydot[ID_Ametabolized] = Clmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
 
   ydot[ID_Atubules] = Qgfr / Krest2plasma * y[ID_Arest] / Vrest ;
 

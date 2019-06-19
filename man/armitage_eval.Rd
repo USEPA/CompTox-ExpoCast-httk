@@ -4,9 +4,10 @@
 \alias{armitage_eval}
 \title{Evaluate the updated Armitage model}
 \usage{
-armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
-  this.gkow = NA, this.gkaw = NA, this.gswat = NA, this.sarea = NA,
-  this.v_total = NA, this.v_working = NA, this.cell_yield = NA,
+armitage_eval(casrn.vector = c("81-81-2", "80-05-7"),
+  nomconc.vector = 1, this.well_number = 384, tcdata = NA,
+  this.sarea = NA_real_, this.v_total = NA_real_,
+  this.v_working = NA_real_, this.cell_yield = NA_real_,
   this.Tsys = 37, this.Tref = 298.15, this.option.kbsa2 = F,
   this.option.swat2 = F, this.FBSf = 0, this.pseudooct = 0.01,
   this.memblip = 0.04, this.nlom = 0.2, this.P_nlom = 0.035,
@@ -14,22 +15,12 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
   this.celldensity = 1, this.cellmass = 3, this.f_oc = 1)
 }
 \arguments{
-\item{tcdata}{A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea,
+\item{casrn.vector}{For vector or single value, CAS number}
+
+\item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
+
+\item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 v_total, v_working. Otherwise supply single values to this.params.}
-
-\item{this.casrn}{For single value, CAS number}
-
-\item{this.ac50}{For single value, AC50 (micromolar) nominal concentration}
-
-\item{this.MP}{For single value, melting point (oC)}
-
-\item{this.gkow}{For single value, Log10 Kow, octanol-water partitioning
-coefficient}
-
-\item{this.gkaw}{For single value, Log10 Kaw, air-water partitioning
-coefficient}
-
-\item{this.gswat}{For single value, Log10 water solubility (mol/L)}
 
 \item{this.sarea}{For single value, surface area per well (m^2)}
 

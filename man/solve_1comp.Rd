@@ -4,7 +4,7 @@
 \alias{solve_1comp}
 \title{Solve one compartment TK model}
 \usage{
-solve_1comp(chem.cas = NULL, chem.name = NULL, times = NULL,
+solve_1comp(chem.name = NULL, chem.cas = NULL, times = NULL,
   parameters = NULL, daily.dose = 1, dose = NULL,
   doses.per.day = NULL, days = 10, tsteps = 4,
   suppress.messages = F, species = "Human", output.units = "uM",
@@ -16,11 +16,11 @@ solve_1comp(chem.cas = NULL, chem.name = NULL, times = NULL,
   minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
-be specified.}
-
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
 must be specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
+be specified.}
 
 \item{times}{Optional time sequence for specified number of days.}
 
