@@ -76,7 +76,14 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          tissues=NULL,
                                          minimum.Funbound.plasma=0.0001) 
 {
-  Tissue <- Species <- variable <- Reference <- value <- NULL
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Tissue <- Species <- variable <- Reference <- value <- physiology.data <- NULL
+  #End R CMD CHECK appeasement.
+  
   
   if (is.null(parameters))
   {
