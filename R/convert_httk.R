@@ -50,6 +50,7 @@ convert_httk <- function(indiv.model.bio,
   plasma.vol <- hematocrit <- Vdist <- Qgfrc <- liver.density <- NULL
   kelim <- Rblood2plasma <- Krbc2pu <- NULL
   Qliver<-Qcardiacc<-Qgutf<-Qliverf<-hepatic.bioavailability<-NULL
+  
   #End R CMD CHECK appeasement.
 
   indiv.model <- data.table::copy(indiv.model.bio)

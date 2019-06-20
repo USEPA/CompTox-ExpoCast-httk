@@ -172,7 +172,7 @@ armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CA
   mtot<-cwat<-P_dom<-f_oc<-cwat_s<-csat<-activity<-cair<-calb<-cslip<-cdom<-NULL
   ccell<-cplastic<-mwat_s<-mair<-mbsa<-mslip<-mdom<-mcells<-mplastic<-NULL
   mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
-  ccells<-eta_free <- cfree.invitro <- NULL
+  ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
   logHenry <- logWSol <- NULL
   #End R CMD CHECK appeasement.
 
