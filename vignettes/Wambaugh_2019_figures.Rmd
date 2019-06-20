@@ -1,10 +1,10 @@
 ---
-title: "Wambaugh et al. (submitted): Creating Figures for the Manuscript"
+title: "Wambaugh et al. (submitted): Creating All Figures"
 author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (submitted): Creating Figures for the Manuscript}
+  %\VignetteIndexEntry{Wambaugh et al. (submitted): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
