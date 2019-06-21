@@ -28,7 +28,7 @@
 #' partition coefficients.
 #' @param restrictive.clearance In calculating elimination rate, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' @param .stirred.correction Uses correction in calculation of hepatic
+#' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for -stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
 #' with plasma concentration.
@@ -58,13 +58,6 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   clint.pvalue.threshold=0.05,
                                   minimum.Funbound.plasma=0.0001)
 {
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  .stirred.correction <- NULL
-  #End R CMD CHECK appeasement.
   
   name.list <- c("Clint",
                  "Funbound.plasma",
@@ -138,7 +131,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     parameters=parameters,
                                     suppress.messages=T,
                                     default.to.human=default.to.human,
-                                    .stirred.correction=.stirred.correction,
+                                    well.stirred.correction=well.stirred.correction,
                                     restrictive.clearance=restrictive.clearance,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                     clint.pvalue.threshold=clint.pvalue.threshold,
