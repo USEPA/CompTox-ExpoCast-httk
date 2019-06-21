@@ -11,9 +11,9 @@
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' 
-#' @param chem.name Either the chemical name or the cas number must be
-#' specified. 
 #' @param chem.cas Either the cas number or the chemical name must be
+#' specified. 
+#' @param chem.name Either the chemical name or the cas number must be
 #' specified. 
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
@@ -22,12 +22,12 @@
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#' @param restrictive.clearance In calculating elimination rate, protein
+#' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
-#' @param restrictive.clearance In calculating elimination rate, protein
-#' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for -stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
@@ -35,6 +35,9 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @return \item{Elimination rate}{Units of 1/h.}
 #' @author John Wambaugh
 #' @keywords Parameter

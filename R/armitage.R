@@ -85,11 +85,13 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' and lipid and protein compartments in cells.
 #' 
 #' 
-#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
-#' v_total, v_working. Otherwise supply single values to this.params.
 #' @param casrn.vector For vector or single value, CAS number
 #' @param nomconc.vector For vector or single value, micromolar nominal concentration (e.g. AC50 value)
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==T
 #' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params.
 #' @param this.sarea Surface area per well (m^2)
 #' @param this.v_total Total volume per well (m^3)
 #' @param this.v_working Working volume per well (m^3)

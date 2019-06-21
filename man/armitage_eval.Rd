@@ -19,6 +19,9 @@ armitage_eval(casrn.vector = c("81-81-2", "80-05-7"),
 
 \item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
 
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==T}
+
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
