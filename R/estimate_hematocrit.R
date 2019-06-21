@@ -16,42 +16,8 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#'@export estimate_hematocrit
 
-
-
-
-
-#' Predict hematocrit using smoothing spline.
-#' 
-#' Using precalculated smoothing splines on NHANES log hematocrit vs. age in
-#' months (and KDE residuals) by gender and race/ethnicity, generate hematocrit
-#' values for individuals specified by age, gender, and race/ethnicity.
-#' 
-#' 
-#' @param hcttmp_dt A data.table with columns \code{age_years},
-#' \code{age_months}, \code{gender}, \code{reth}.
-#' @param hcttmp_dt A data.table with columns \code{age_years},
-#' \code{age_months}, \code{gender}, \code{reth}.
-#' @return The same data.table with a \code{hematocrit} column added.
-#' 
-#' The same data.table with a \code{hematocrit} column added.
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118 Predict hematocrit using
-#' smoothing spline.
-#' 
-#' Using precalculated smoothing splines on NHANES log hematocrit vs. age in
-#' months (and KDE residuals) by gender and race/ethnicity, generate hematocrit
-#' values for individuals specified by age, gender, and race/ethnicity.
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
-#' @export estimate_hematocrit
 estimate_hematocrit <- function(hcttmp_dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

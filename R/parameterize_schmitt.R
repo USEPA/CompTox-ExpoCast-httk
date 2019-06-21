@@ -9,9 +9,9 @@
 #' force.human.fup calculates Funbound.plasma.corrected with the human lipid
 #' fractional volume in plasma.
 #' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -19,6 +19,10 @@
 #' human values if true.
 #' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @return
 #' 
 #' \item{Funbound.plasma}{corrected unbound fraction in plasma}

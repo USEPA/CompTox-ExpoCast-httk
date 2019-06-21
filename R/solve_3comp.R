@@ -67,6 +67,9 @@
 #' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for

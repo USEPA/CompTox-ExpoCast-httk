@@ -118,6 +118,8 @@ set to zero.}
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
+\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
+
 \item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function

@@ -11,8 +11,8 @@
 #' Predict partition coefficients using the method from Schmitt (2008).
 #' 
 #' This function implements the method from Schmitt (2008) in predicting the 
-#' tissue to unbound plasma partition coefficients from for the tissues 
-#' contained in the tissue.data table.
+#' tissue to unbound plasma partition coefficients for the tissues contained 
+#' in the tissue.data table.
 #' 
 #' A separate regression is used when adjusted.Funbound.plasma is FALSE.
 #' 
@@ -38,6 +38,8 @@
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param parameters Chemical parameters from the parameterize_schmitt
 #' function, overrides chem.name and chem.cas.
+#' @param alpha Ratio of Distribution coefficient D of totally charged species
+#' and that of the neutral form
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment.
 #' @param regression Whether or not to use the regressions.  Regressions are
@@ -45,6 +47,9 @@
 #' @param regression.list Tissues to use regressions on.
 #' @param tissues Vector of desired partition coefficients.  Returns all by
 #' default.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
 #' @author Robert Pearce
