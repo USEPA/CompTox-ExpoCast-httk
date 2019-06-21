@@ -42,7 +42,7 @@ partition coefficients.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
-\item{.stirred.correction}{Uses correction in calculation of hepatic
+\item{well.stirred.correction}{Uses correction in calculation of hepatic
 clearance for -stirred model if TRUE.  This assumes clearance relative
 to amount unbound in whole blood instead of plasma, but converted to use
 with plasma concentration.}
