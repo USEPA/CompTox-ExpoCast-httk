@@ -118,13 +118,14 @@ is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list 
 
 
 
-#' Convenience Boolean (yes/no) functions to identify chemical membership in
-#' several key lists.
+#' Convenience Boolean (yes/no) function to identify chemical membership and
+#' treatment within the httk project.
 #' 
-#' These functions allow easy identification of whether or not a chemical CAS
-#' is included in various research projects. While it is our intent to keep
-#' these lists up-to-date, the information here is only for convenience and
-#' should not be considered to be definitive.
+#' Allows easy identification of whether or not a chemical CAS is included in
+#' various aspects of the httk research project (by model type and species of
+#' interest). While it is our intent to keep these lists up-to-date, the 
+#' information here is only for convenience and should not be considered
+#' definitive. 
 #' 
 #' Tox21: Toxicology in the 21st Century (Tox21) is a U.S. federal High
 #' Throughput Screening (HTS) collaboration among EPA, NIH, including National

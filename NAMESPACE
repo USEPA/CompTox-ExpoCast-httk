@@ -84,6 +84,12 @@ export(solve_pbtk)
 export(tissue_masses_flows)
 export(tissue_scale)
 import(data.table)
+import(msm,mvtnorm,truncnorm,stats,utils,magrittr)
 import(deSolve)
 import(survey)
+importFrom("graphics","plot")
+importFrom("stats", "approx", "optim", "pbeta", "plnorm", "predict",
+             "qbeta", "qf", "qlnorm", "quantile", "rbeta", "rbinom",
+             "rlnorm", "rnorm", "runif", "spline")
+  importFrom("utils", "getFromNamespace")
 useDynLib(httk)
