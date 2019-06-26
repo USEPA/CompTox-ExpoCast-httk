@@ -2,18 +2,6 @@
 % Please edit documentation in R/in.list.R
 \name{is.httk}
 \alias{is.httk}
-\alias{in.list}
-\alias{is.nhanes}
-\alias{is.nhanes.serum.parent}
-\alias{is.nhanes.serum.analyte}
-\alias{is.nhanes.blood.parent}
-\alias{is.nhanes.blood.analyte}
-\alias{is.nhanes.urine.parent}
-\alias{is.nhanes.urine.analyte}
-\alias{is.tox21}
-\alias{is.toxcast}
-\alias{is.expocast}
-\alias{is.pharma}
 \title{Convenience Boolean (yes/no) functions to identify chemical membership in
 several key lists.}
 \usage{
@@ -33,8 +21,9 @@ without partition coefficients, or 'schmitt' for chemicals with logP and
 fraction unbound (used in predict_partitioning_schmitt).}
 }
 \value{
-\item{logical}{A Boolean (1/0) value that is TRUE if the chemical is
-in the list.}
+\item{logical}{A Boolean (1/0) value that is TRUE if the chemical
+is included in the httk project with a given modeling scheme (PBTK) and 
+a given species}
 }
 \description{
 These functions allow easy identification of whether or not a chemical CAS
@@ -87,7 +76,6 @@ for (this.cas in httk.table$CAS[1:50])
   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 }
-
 }
 \references{
 Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
@@ -106,6 +94,10 @@ Technology, 10.1021/es503583j.
 
 CDC (2014). National Health and Nutrition Examination Survey. Available at:
 http://www.cdc.gov/nchs/nhanes.htm.
+}
+\seealso{
+\code{\link{in.list}} for determining chemical membership in 
+several other key lists
 }
 \author{
 John Wambaugh

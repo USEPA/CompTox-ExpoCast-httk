@@ -12,7 +12,6 @@
 \alias{is.tox21}
 \alias{is.toxcast}
 \alias{is.expocast}
-\alias{is.httk}
 \alias{is.pharma}
 \title{Convenience Boolean (yes/no) functions to identify chemical membership in
 several key lists.}
@@ -102,6 +101,9 @@ Technology, 10.1021/es503583j.
 
 CDC (2014). National Health and Nutrition Examination Survey. Available at:
 http://www.cdc.gov/nchs/nhanes.htm.
+}
+\seealso{
+\code{\link{is.httk}} for determining inclusion in httk project
 }
 \author{
 John Wambaugh
