@@ -16,6 +16,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#'@import stats
 #'@export tissue_masses_flows
 
 tissue_masses_flows <- function(tmf_dt){

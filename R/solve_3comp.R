@@ -84,9 +84,9 @@
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
+#' @import deSolve graphics
 #' @export solve_3comp
 #' @useDynLib httk
-#' @import deSolve
 solve_3comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,

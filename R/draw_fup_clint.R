@@ -37,6 +37,7 @@
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
 #' hepatocyte assay.
 #' @author Caroline Ring and John Wambaugh
+#' @import stats
 #' @export draw_fup_clint
 
 draw_fup_clint <- function(this.chem=NULL,

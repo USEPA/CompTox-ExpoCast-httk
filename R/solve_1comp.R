@@ -80,10 +80,10 @@
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
-#' 
+#' @import deSolve graphics
 #' @export solve_1comp
 #' @useDynLib httk
-#' @import deSolve
+
 solve_1comp <- function(chem.name=NULL,
                         chem.cas=NULL,
                         times=NULL,

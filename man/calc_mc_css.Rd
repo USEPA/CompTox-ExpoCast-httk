@@ -237,7 +237,6 @@ used by this function.
  params <- parameterize_pbtk(chem.cas="80-05-7")
  calc_mc_css(parameters=params,model="pbtk")
 }
-
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to

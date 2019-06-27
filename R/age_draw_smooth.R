@@ -16,6 +16,7 @@
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
 #' @keywords httk-pop
+#' @import stats
 #' @export age_draw_smooth
 age_draw_smooth <- function(g, r, nsamp, agelim_months){
   #R CMD CHECK throws notes about "no visible binding for global variable", for 

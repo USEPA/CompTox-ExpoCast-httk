@@ -18,6 +18,7 @@
 #' @return tcdata, A data table with well_number, sarea (surface area, m^2),
 #' cell_yield (# cells), v_working (m^3), v_total (m^3) per well
 #' @author Greg Honda
+#' @import magrittr
 #' @export armitage_estimate_sarea
 armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_working,sarea, option.bottom, and option.plastic
                                     this.well_number = 384,
@@ -118,6 +119,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
 #' to Evaluate Extrapolation Assumptions"
+#' @import magrittr
 #' @export armitage_eval
 armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
