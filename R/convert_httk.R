@@ -29,6 +29,8 @@
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
+#' @import utils
+#' @export convert_httk
 convert_httk <- function(indiv.model.bio,
                          model,
                          this.chem=NULL,

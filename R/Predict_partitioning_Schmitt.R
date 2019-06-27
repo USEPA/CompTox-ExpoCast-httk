@@ -58,6 +58,7 @@
 #' 
 #' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 #' 
+#' @import magrittr
 #' @export predict_partitioning_schmitt
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,

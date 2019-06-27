@@ -179,7 +179,7 @@
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
-#' 
+#' @import stats
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
