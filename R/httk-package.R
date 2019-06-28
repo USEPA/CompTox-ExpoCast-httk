@@ -2555,13 +2555,10 @@ NULL
 
 
 
-#' c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_title(\"#1\")}",
-#' "httk")\Sexpr{tools:::Rd_package_title("httk")}
+#' \Sexpr{tools:::Rd_package_title("httk")}
 #' 
-#' c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_description(\"#1\")}",
-#' "httk")\Sexpr{tools:::Rd_package_description("httk")}
-#' 
-#' 
+#' \Sexpr{tools:::Rd_package_description("httk")}
+#'  
 #' @name httk-package
 #' @aliases httk-package httk
 #' @docType package
@@ -2595,6 +2592,9 @@ NULL
 #' 
 #' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018):
 #' Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
+#'
+#' \href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019):
+#' Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionss}
 #' 
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
 #' ExpoCast (Exposure Forecasting) Project}
