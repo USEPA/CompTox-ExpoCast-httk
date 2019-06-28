@@ -7,8 +7,9 @@
 calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   which.quantile = 0.95, species = "Human", input.units = "uM",
   output.units = "mgpkgpday", suppress.messages = F,
-  return.samples = F, restrictive.clearance = T, plasma.binding = F,
-  tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
+  return.samples = F, concentration = "plasma",
+  restrictive.clearance = T, bioactive.free.invivo = F,
+  tissue = NULL, IVIVE = NULL, ...)
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}
@@ -37,17 +38,14 @@ be mg/L.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
+\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
+
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{plasma.binding}{If TRUE, then only the free (unbound) fraction of
-chemical is considered to be bioactive. If FALSE, the total chemical
-concentration is used for IVIVE. (Default TRUE)}
-
-\item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum
-(peak) concetrations might be used for IVIVE with some models. Defaults to
-"mean". Meaningless for the steady-state model (Argument is currently
-ignored because analytic steady-state solutions are used by this function.).}
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{tissue}{Desired steady state tissue conentration.}
 

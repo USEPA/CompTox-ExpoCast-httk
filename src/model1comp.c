@@ -61,7 +61,7 @@ void initmod1comp (void (* odeparms)(int *, double *))
 
 
 
-void getParms_1comp (double *inParms, double *out, int *nout) {
+void getParms1comp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;

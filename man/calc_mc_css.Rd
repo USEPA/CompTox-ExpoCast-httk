@@ -15,9 +15,9 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
   return.samples = F, default.to.human = F, tissue = NULL,
   well.stirred.correction = T, adjusted.Funbound.plasma = T,
   regression = T, clint.pvalue.threshold = 0.05,
-  restrictive.clearance = T, tk.statistic.used = "mean",
-  IVIVE = NULL, httkpop = T, poormetab = T,
-  fup.censored.dist = FALSE, fup.lod = 0.01,
+  restrictive.clearance = T, bioactive.free.invivo = FALSE,
+  concentration = "plasma", IVIVE = NULL, httkpop = T,
+  poormetab = T, fup.censored.dist = FALSE, fup.lod = 0.01,
   method = "direct resampling", gendernum = NULL,
   agelim_years = NULL, agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
@@ -114,10 +114,11 @@ set to zero.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum
-(peak) concetrations might be used for IVIVE with some models. Defaults to
-"mean". Meaningless for the steady-state model (Argument is currently
-ignored because analytic steady-state solutions are used by this function.).}
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
+
+\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
 
 \item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
@@ -236,7 +237,6 @@ used by this function.
  params <- parameterize_pbtk(chem.cas="80-05-7")
  calc_mc_css(parameters=params,model="pbtk")
 }
-
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to

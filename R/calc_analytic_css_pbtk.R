@@ -12,7 +12,7 @@
 #'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #'(for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
-#'@param concentration Desired concentration type, 'blood' or default 'plasma'.
+#'@param concentration Desired concentration type, 'blood', 'tissue', or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #'in the blood to plasma using the input parameters. Use this if you have 
@@ -23,6 +23,9 @@
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
+#'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -38,8 +41,17 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    recalc.blood2plasma=F,
                                    tissue=NULL,
                                    restrictive.clearance=T,
+                                   bioactive.free.invivo = FALSE,
                                    ...)
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  dose <- NULL
+  #End R CMD CHECK appeasement.
+  
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
   {
     stop('Parameters, chem.name, or chem.cas must be specified.')
@@ -94,9 +106,8 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
-# Need to convert to 3compartmentss parameters:
-    pcs <- predict_partitioning_schmitt(chem.cas=chem.cas,
-      parameters=parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]])
+# Need to convert to schmitt parameters:
+    pcs <- predict_partitioning_schmitt(parameters=parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
@@ -127,17 +138,24 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     }
   }
 
-  if (tolower(concentration)=='plasma')
-  {
-    Css <- Css / Rblood2plasma
-    concentration <- "Plasma"
-  } else if (tolower(concentration)=='blood')
-  {
-    concentration <- "Blood"
-  } else {
-    stop("Only blood and plasma concentrations are calculated.")
+  if(tolower(concentration != "tissue")){
+    if (tolower(concentration)=='plasma')
+    {
+      Css <- Css 
+      concentration <- "Plasma"
+      
+      if(bioactive.free.invivo == T){
+        Css <- Css * parameters[['Funbound.plasma']]
+      }
+      
+    } else if (tolower(concentration)=='blood')
+    {
+      Css <- Css * Rblood2plasma
+      concentration <- "Blood"
+    } else {
+      stop("Only blood and plasma concentrations are calculated.")
+    }
   }
-  
   return(Css)
 }
 
