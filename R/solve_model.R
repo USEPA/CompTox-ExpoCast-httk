@@ -154,6 +154,8 @@ solve_model <- function(chem.name = NULL,
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
     stop('Parameters, chem.name, or chem.cas must be specified.')
+  
+  if (is.null(model)) stop("Model must be specified.")
 
 # We need to know model-specific information to set up the solver:
   if (!(model %in% names(model.list)))            
