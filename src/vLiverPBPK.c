@@ -157,35 +157,35 @@ void initmod (void (* odeparms)(int *, double *))
 
 
 
-void getParms (double *inParms, double *out, int *nout) {
-/*----- Model scaling */
-
-  int i;
-
-  for (i = 0; i < *nout; i++) {
-    parms[i] = inParms[i];
-  }
-
-
-  kgutabs = kgutabs * 24 ;
-  Clmetabolism = Clmetabolismc * 24 * BW ;
-  Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
-  Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
-  Qgut = Qcardiac * Qgutf ;
-  Qkidney = Qcardiac * Qkidneyf ;
-  Qliver = Qcardiac * Qliverf ;
-  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver ) ;
-  Vart = Vartc * BW ;
-  Vgut = Vgutc * BW ;
-  Vkidney = Vkidneyc * BW ;
-  Vliver = Vliverc * BW ;
-  Vlung = Vlungc * BW ;
-  Vrest = Vrestc * BW ;
-  Vven = Vvenc * BW ;
-
-  for (i = 0; i < *nout; i++) {
-    out[i] = parms[i];
-  }
+//void getParms (double *inParms, double *out, int *nout) {
+///*----- Model scaling */
+//
+//  int i;
+//
+//  for (i = 0; i < *nout; i++) {
+//    parms[i] = inParms[i];
+//  }
+//
+//
+//  kgutabs = kgutabs * 24 ;
+//  Clmetabolism = Clmetabolismc * 24 * BW ;
+//  Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
+//  Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
+//  Qgut = Qcardiac * Qgutf ;
+//  Qkidney = Qcardiac * Qkidneyf ;
+//  Qliver = Qcardiac * Qliverf ;
+//  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver ) ;
+//  Vart = Vartc * BW ;
+//  Vgut = Vgutc * BW ;
+//  Vkidney = Vkidneyc * BW ;
+//  Vliver = Vliverc * BW ;
+//  Vlung = Vlungc * BW ;
+//  Vrest = Vrestc * BW ;
+//  Vven = Vvenc * BW ;
+//
+//  for (i = 0; i < *nout; i++) {
+//    out[i] = parms[i];
+//  }
   }
 /*----- Dynamics section */
 

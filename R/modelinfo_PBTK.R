@@ -68,11 +68,32 @@ model.list[["pbtk"]]$solver.param.names <- c("BW",
                     "Vvenc")
 
 # These parameters specific the exposure scenario simulated by the model:
-model.list[["pbtk"]]$solver.param.names <- c(""daily.dose",
+model.list[["pbtk"]]$solver.param.names <- c("daily.dose",
                     "dose", # Assume dose is in mg/kg BW/day  
                     "doses.per.day",
                     "iv.dose",
-                    "dosing.matrix")"
+                    "dosing.matrix")
+
+model.list[["pbtk"]]$compiled.init.func <- "init_mod"
+model.list[["pbtk"]]$routes <- c("oral","iv")
+model.list[["pbtk"]]$dose.variable <- c(oral="Agutlumen",iv="Aven")
+# Can take the values "add" to add dose C1 <- C1 + dose,
+#"replace" to change the value C1 <- dose
+#or "multiply" to change the value to C1 <- C1*dose
+model.list[["pbtk"]]$dose.type <- c(oral="add",iv="add")
+
+
+model.list[["pbtk"]]$derivative.output.names <- c(
+    "Cgut",
+    "Cliver",
+    "Cven",
+    "Clung",
+    "Cart",
+    "Crest",
+    "Ckidney",
+    "Cplasma",
+    "Aplasma"
+)
 
 
 #initparms <- function(newParms = NULL){
@@ -129,82 +150,94 @@ model.list[["pbtk"]]$solver.param.names <- c(""daily.dose",
 #  out
 #}
 #
-model.list[["pbtk"]]$derivative.output.names <- c(
-    "Cgut",
-    "Cliver",
-    "Cven",
-    "Clung",
-    "Cart",
-    "Crest",
-    "Ckidney",
-    "Cplasma",
-    "Aplasma"
-)
 
-# This function initializes the model:
-model.list[["pbtk"]]$init.state.func <- "initState_pbtk"
-initState_pbtk <- function(parms, 
-  initial.values, 
-  use.amounts=F) 
+## This function initializes the model:
+#model.list[["pbtk"]]$init.state.func <- "initState_pbtk"
+#initState_pbtk <- function(parms, 
+#  initial.values, 
+#  use.amounts=F) 
+#{
+#  if (use.amounts)
+#  {
+#    CompartmentsToInitialize <-c("Agutlumen","Aart","Aven","Alung","Agut","Aliver","Akidney","Arest")
+#  } else {
+#    CompartmentsToInitialize <-c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")
+#  }
+#
+#  for (this.compartment in CompartmentsToInitialize)
+#  {
+#  # If the compartment has a value specified in the list initial.values, then set it to that value:
+#    if (this.compartment %in% names(initial.values))
+#    {
+#      eval(parse(text=paste(this.compartment,"<-",initial.values[[this.compartment]])))
+#      
+#    }
+#  # Otherwise set the value to zero:
+#    else eval(parse(text=paste(this.compartment,"<- 0")))
+#  }
+#  
+#
+#   if (use.amounts) 
+#  {
+#    if(iv.dose){
+#      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen,Alung = Alung,Aliver = Aliver,
+#               Aven = Aven + dose,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
+#    }else{
+#      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen + dose,Alung = Alung,Aliver = Aliver,
+#               Aven = Aven,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
+#    }
+#  }else{
+#    if(iv.dose){
+#      state <- c(Agutlumen = Agutlumen,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven + dose,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
+#    }else{
+#      state <- c(Agutlumen = Agutlumen + dose,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
+#    }
+#  }    
+#
+#  Y <- c(
+#    Agutlumen = 0.0,
+#    Agut = 0.0,
+#    Aliver = 0.0,
+#    Aven = 0.0,
+#    Alung = 0.0,
+#    Aart = 0.0,
+#    Arest = 0.0,
+#    Akidney = 0.0,
+#    Atubules = 0.0,
+#    Ametabolized = 0.0,
+#    AUC = 0.0
+#  )
+##  Y <- with(as.list(parms), {  Y
+##  })
+#
+#  if (!is.null(newState)) {
+#    if (!all(names(newState) %in% c(names(Y)))) {
+#      stop("illegal state variable name in newState")
+#    }
+#    Y[names(newState)] <- newState
+#  }
+#  return(Y)
+#}
+
+
+
+# This function handles the initial dose to the model:
+model.list[["pbtk"]]$R.init.func <- "R_intitfunc_pbtk"
+R_initfunc_pbtk <- function(initial.state,dosing,use.amounts=F)
 {
-  if (use.amounts)
+  state <- initial.state
+
+  state["Atubules"] <- 0
+  state["Ametabolized"] <- 0
+  state["AUC"] <- 0
+
+  if (dosing$route=="iv")
   {
-    CompartmentsToInitialize <-c("Agutlumen","Aart","Aven","Alung","Agut","Aliver","Akidney","Arest")
-  } else {
-    CompartmentsToInitialize <-c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")
-  }
-
-  for (this.compartment in CompartmentsToInitialize)
+    state["Aven"] <- state["Aven"] + dose
+  } else if (dosing$route=="oral")
   {
-  # If the compartment has a value specified in the list initial.values, then set it to that value:
-    if (this.compartment %in% names(initial.values))
-    {
-      eval(parse(text=paste(this.compartment,"<-",initial.values[[this.compartment]])))
-      
-    }
-  # Otherwise set the value to zero:
-    else eval(parse(text=paste(this.compartment,"<- 0")))
-  }
-  
+    state["Agutlumen"] <- state["Agutlumen"] + dose
+  } else stop (paste("Route",dosing$route,"is unavailable"))
 
-   if (use.amounts) 
-  {
-    if(iv.dose){
-      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen,Alung = Alung,Aliver = Aliver,
-               Aven = Aven + dose,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }else{
-      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen + dose,Alung = Alung,Aliver = Aliver,
-               Aven = Aven,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }
-  }else{
-    if(iv.dose){
-      state <- c(Agutlumen = Agutlumen,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven + dose,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }else{
-      state <- c(Agutlumen = Agutlumen + dose,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }
-  }    
-
-  Y <- c(
-    Agutlumen = 0.0,
-    Agut = 0.0,
-    Aliver = 0.0,
-    Aven = 0.0,
-    Alung = 0.0,
-    Aart = 0.0,
-    Arest = 0.0,
-    Akidney = 0.0,
-    Atubules = 0.0,
-    Ametabolized = 0.0,
-    AUC = 0.0
-  )
-#  Y <- with(as.list(parms), {  Y
-#  })
-
-  if (!is.null(newState)) {
-    if (!all(names(newState) %in% c(names(Y)))) {
-      stop("illegal state variable name in newState")
-    }
-    Y[names(newState)] <- newState
-  }
-  return(Y)
+  return(state)
 }
