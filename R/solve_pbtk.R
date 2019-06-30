@@ -71,6 +71,9 @@
 #' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -105,9 +108,9 @@
 #' print(c.vs.t)
 #' }
 #' 
+#' @import deSolve graphics
 #' @export solve_pbtk
 #' @useDynLib httk
-#' @import deSolve
 solve_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,
@@ -278,14 +281,14 @@ parameters[["MW"]] <- NULL
       out <- ode(y = state, 
         times = times,
 # This is the derivatives function specific to this model:
-        func="pbtkderivs", 
+        func="derivspbtk", 
         parms=parameters,
         method=method,
         rtol=rtol,
         atol=atol,
 # This is the httk.dll file containing all the .C code:
         dllname="httk",
-        initfunc="initmod", 
+        initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
         nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)
@@ -306,14 +309,14 @@ parameters[["MW"]] <- NULL
       out <- ode(y = state, 
         times = times, 
 # This is the derivatives function specific to this model:
-        func="pbtkderivs", 
+        func="derivspbtk", 
         parms = parameters,
         method=method,
         rtol=rtol,
         atol=atol, 
 # This is the httk.dll file containing all the .C code:
         dllname="httk",
-        initfunc="initmod", 
+        initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
         nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)
@@ -328,14 +331,14 @@ parameters[["MW"]] <- NULL
     out <- ode(y = state, 
       times = times, 
 # This is the derivatives function specific to this model:
-      func="pbtkderivs", 
+      func="derivspbtk", 
       parms = parameters,
       method=method,
       rtol=rtol,
       atol=atol, 
 # This is the httk.dll file containing all the .C code:
       dllname="httk",
-      initfunc="initmod", 
+      initfunc="initmodpbtk", 
 # Here we make sure we get the number of outputs from the model that we expect:
       nout=length(pbtk.Outputs),
 # Here we assign them names (order matters!)
