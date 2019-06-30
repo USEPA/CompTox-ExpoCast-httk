@@ -186,7 +186,7 @@ void initmod (void (* odeparms)(int *, double *))
 //  for (i = 0; i < *nout; i++) {
 //    out[i] = parms[i];
 //  }
-  }
+//  }
 /*----- Dynamics section */
 
 void pbtkderivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)

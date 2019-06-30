@@ -28,13 +28,13 @@ extern void root1comp (int *, double *, double *, int *, double *, double *, int
 extern void root3comp (int *, double *, double *, int *, double *, double *, int *);
 
 static const R_CMethodDef CEntries[] = {
-    {"getParms",       (DL_FUNC) &getParms,       3},
+//    {"getParms",       (DL_FUNC) &getParms,       3},
     {"getParms_1comp", (DL_FUNC) &getParms_1comp, 3},
     {"getParms_3comp", (DL_FUNC) &getParms_3comp, 3},
     {"initmod", (DL_FUNC) &initmod, 1},
     {"initmod1comp", (DL_FUNC) &initmod1comp, 1},
     {"initmod3comp", (DL_FUNC) &initmod3comp, 1},
-    {"derivs", (DL_FUNC) &derivs, 6},
+//    {"derivs", (DL_FUNC) &derivs, 6},
     {"derivs1comp", (DL_FUNC) &derivs1comp, 6},
     {"derivs3comp", (DL_FUNC) &derivs3comp, 6},
     {"jac", (DL_FUNC) &jac, 9},

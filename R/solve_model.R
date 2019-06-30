@@ -113,7 +113,7 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @export solve_pbtk
+#' @export solve_model
 #' @useDynLib httk
 #' @import deSolve
 solve_model <- function(chem.name = NULL,
@@ -336,7 +336,7 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
   names(state) <- StateVecNames
   
 # Set the initial conditions based on argument initial.values
-  for (this.compartment %in% names(initial.values))
+  for (this.compartment in names(initial.values))
   {
     if (firstchar(this.compartment)=="C")
     {
@@ -359,7 +359,7 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
 #  state <-initState(parameters,state)
 
 # If we are simulating a single dose:
-  if (!is.null(doses)
+  if (!is.null(dose))
   {
     times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
     out <- ode(y = state, 
@@ -403,7 +403,7 @@ with two columns (time, dose).")
       num.doses <- length(dose.times)
       eventdata <- data.frame(var=rep(dose.var,num.doses),
                               time = dosing.times,
-                              value = dosing.matrix[,2]
+                              value = dosing.matrix[,2],
                               method = rep(dose.types,num.doses))
     }    
     times <- sort(unique(c(times, 
@@ -433,7 +433,7 @@ with two columns (time, dose).")
     plot(out, select=unique(c(monitor.vars,names(initial.values))))
   }              
 
-  out <- out[,unique(c("time",monitor.vars,names(initial.values)]
+  out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
   
   if(!suppress.messages)
