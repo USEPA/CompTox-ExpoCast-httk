@@ -23,12 +23,20 @@
 #' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
 #' Schematic"}}
 #' 
-#' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' Model parameters are named according to the following convention:\tabular{lrrrr}{
+#' prefix \tab suffic \tab Meaning \tab units \cr
+#' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+#' V \tab \tab Volume \tab L \cr
+#' Q \tab \tab Flow \tab L/h \cr
+#' k \tab \tab Rate \tab 1/h \cr
+#' \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
+#' and 1/kg^(3/4) for florws \cr}
+#'
+#' When species is specified but chemical-specific in vitro data are not
+#' available, the function uses the appropriate physiological data (volumes and 
+#' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-#' 
-#' 
-#' 
+#'  
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -113,10 +121,15 @@ solve_model <- function(chem.name = NULL,
                     times=NULL,
                     parameters=NULL,
                     model=NULL,
-                    dosIng=list(),
+                    daily.dose = NULL,
+                    route="oral",
+                    dose = 1, # Assume dose is in mg/kg BW/day  
+                    doses.per.day=NULL,
+                    dosing.matrix = NULL,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
                     plots=F,
+                    monitor.vars=c("Ametabolized","Atubules","Cplasma","AUC"),
                     suppress.messages=F,
                     species="Human",
                     output.units='uM',
@@ -133,6 +146,10 @@ solve_model <- function(chem.name = NULL,
   Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
   Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- NULL
   Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
+
+# set up some local functions for easier string manipulation:
+  lastchar <- function(x){substr(x, nchar(x), nchar(x))}
+  firstchar <- function(x){substr(x, 1,1)}
   
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
@@ -144,15 +161,70 @@ solve_model <- function(chem.name = NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } else {
+# name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
+# name(s)) of the parameters that describe dosing:
     dose_param_names <- model.list[[model]]$dose.param.names
+# name(s)s of the parameters that control the solver:
     solver_param_names <- model.list[[model]]$solver.param.names
+# name of the function that calculates the derivative:
     derivative_function <- model.list[[model]]$derivative.func
+# ordered names of the outputs from the derivative function:
     derivative_output_names <- model.list[[model]]$derivative.output.names
+# calculate the number of outputs from the derivitive function:
     num_outputs <- length(derivative_output_names)    
+# allowable names of units for the model that are based on amounts (e.g., umol, mg)
+    amount_units <- model.list[[model]]$amount.units
+# allowable names of units for the model that are concentrations (e.g, uM, mg/L)
+    conc_units <- model.list[[model]]$conc.units
+# the names of the compartments in the model that are always in units of 
+# amounts (e.g., gut)
+    amount_compartments <- model.list[[model]]$amount.compartments
+# the names of the compartments in the model that can be solved for in either
+# units of concentration or amount:
+    other_compartments <- model.list[[model]]$other.compartments
+    initialize_R_function <- model.list[["pbtk"]]$R.init.func
+    initialize_compiled_function <- model.list[["pbtk"]]$compiled.init.func
+    model_routes <- model.list[["pbtk"]]$routes
   }
 
-# Make sure we have all the parameters necessary to run the solver (we don't
+# Make sure the model i dynamic:
+if (is.null(derivative_function)) stop(paste("Model",model,"is not solvable \
+(Derivative function is not defined)"))
+
+# Make sure that the dose route is sufficiently described:
+if (is.null(route))
+{
+  stop ("Route must be specified")
+} else if (!route %in% model_routes)
+{
+  stop(paste("Model",model,"dose not have route",route))
+} else {
+  dose.var <- model.list[["pbtk"]]$dose.variable[[route]]
+  # We need to know which compartment gets the dose and how it receives it
+  # (deSolve allows add, replace, or multiply:
+  if (is.null(dose.var))
+  {
+    stop(paste("Must specify variable to receive dose for model",model,"and route",
+      route))
+  } else {
+    dose.type <- model.list[["pbtk"]]$dose.type[[route]]
+    if (is.null(dose.type))
+    {
+      stop(paste("Must specify how the variable is changed for model",model,"and route",
+        route))
+    }
+  }
+}
+
+# Check that dosing isn't ambiguous:
+if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
+{
+  stop("Please specify only one of the arguments \"dose\", \"daily.dose\", \
+  or \"dosing.matrix\"")
+}
+
+# Make sure we have all the parameters necessary to describe the chemical (we don't
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
@@ -175,20 +247,46 @@ solve_model <- function(chem.name = NULL,
     }
   }
   
+  if (recalc.blood2plasma) parameters[['Rblood2plasma']] <- 
+    1 - 
+    parameters[['hematocrit']] + 
+    parameters[['hematocrit']] * parameters[['Krbc2pu']] * 
+    parameters[['Funbound.plasma']]
+  
+  if (recalc.clearance)
+  {
+    if (is.null(chem.name) & is.null(chem.cas)) 
+      stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
+    ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
+    ss.params[['million.cells.per.gliver']] <- parameters[['million.cells.per.gliver']]
+    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
+      hepatic.model='unscaled',
+      suppress.messages=T)
+  } 
+  
+  if (!restrictive.clearance) parameters$Clmetabolismc <- 
+    parameters$Clmetabolismc / parameters$Funbound.plasma
+  
+  parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
+
+
 # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
-  start <- times[1]
-  end <- times[length(times)]
+  times <- sort(times)
+  start.time <- times[1]
+  end.time <- times[length(times)]
   
-  lastchar <- function(x){substr(x, nchar(x), nchar(x))}
-  firstchar <- function(x){substr(x, 1,1)}
-
 # Figure out what units we want the solver to use:   
-  if (tolower(output.units)=='um' | tolower(output.units) == 'mg/l') 
+# Check to see if we are going to work in concentrations:
+  if (tolower(output.units) %in% conc_units)
     use.amounts <- F
-  if (tolower(output.units)=='umol' | tolower(output.units) == 'mg') 
-    use.amounts <- T
-  
+# or if we are going to use amounts:
+  else if (tolower(output.units) %in% amount_units)
+      use.amounts <- T
+# or if we need to throw an error:
+  else stop(paste("Units",output.units,"unavailable for model",model))
+
+# If we are working in molar units then we need to convert parameters:
   if (tolower(output.units)=='um' | tolower(output.units) == 'umol')
   {
     dose <- as.numeric(dose * 
@@ -207,11 +305,11 @@ solve_model <- function(chem.name = NULL,
     if (!is.null(dosing.matrix)) dose.vector <- dose.vector * parameters[['BW']]
   } else stop('Output.units can only be uM, umol, mg, or mg/L.')
  
-  # Volume parameters that are provided on a L/kg body weght scale start with
+  # Volume parameters that need to be scaled (linearly) by body weight are those
+  # volume parameters that are provided on a L/kg body weght scale start with
   # "V" and end with "c":       ]
   scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V" & 
     lastchar(names(parameters))=="c"]
-
   # Multiply scaled volumes by body weight:      
   for (this.vol in scaled.volumes)
   {
@@ -220,108 +318,139 @@ solve_model <- function(chem.name = NULL,
       parameters[[this.vol]],'*', parameters[["BW"]]))) # L/kg BW -> L 
   }
   
+# Generate the list of compartments to be used:
+  StateVecNames <- c(amount_compartments, 
+                     sapply(other_compartments,
+                     function(x) paste("A",x,sep="")))
   if (use.amounts)
   {
-    CompartmentsToInitialize <-c("Agutlumen","Aart","Aven","Alung","Agut","Aliver","Akidney","Arest")
+    CompartmentsToInitialize <- StateVecNames
   } else {
-    CompartmentsToInitialize <-c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")
+    CompartmentsToInitialize <-c(CompartmentsToInitialize,
+                                 sapply(other_compartments,
+                                 function(x) paste("C",x,sep="")))
   }
 
-  for (this.compartment in CompartmentsToInitialize)
+# create the state vector:
+  state <- rep(0,length(StateVecNames))
+  names(state) <- StateVecNames
+  
+# Set the initial conditions based on argument initial.values
+  for (this.compartment %in% names(initial.values))
   {
-  # If the compartment has a value specified in the list initial.values, then set it to that value:
-    if (this.compartment %in% names(initial.values))
+    if (firstchar(this.compartment)=="C")
     {
-      eval(parse(text=paste(this.compartment,"<-",initial.values[[this.compartment]])))
-      
-    }
-  # Otherwise set the value to zero:
-    else eval(parse(text=paste(this.compartment,"<- 0")))
+      tissue <- substring(this.compartment, 2)
+      state[paste("A",tissue,sep="")] <-
+                            initial.values[[this.compartment]] *
+                            parameters[[paste("V",tissue,sep="")]]
+    } else if (firstchar(this.compartment)=="A")
+    {
+      state[this.compartment] <- initial.values[[this.compartment]]
+    } else stop("Initital values must begin with \"C\" or \"A\".")
   }
   
+# Add the first dose:
+  state <- do.call(initialize_R_function,list(state=state, 
+             dosing=dosing, 
+             use.amounts=use.amounts))
+             
+#  parameters <- initparms(parameters[param.names.pbtk.solver])
+#  state <-initState(parameters,state)
 
-   if (use.amounts) 
+# If we are simulating a single dose:
+  if (!is.null(doses)
   {
-    if(iv.dose){
-      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen,Alung = Alung,Aliver = Aliver,
-               Aven = Aven + dose,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }else{
-      state <- c(Aart = Aart,Agut = Agut,Agutlumen = Agutlumen + dose,Alung = Alung,Aliver = Aliver,
-               Aven = Aven,Arest = Arest,Akidney = Akidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }
-  }else{
-    if(iv.dose){
-      state <- c(Agutlumen = Agutlumen,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven + dose,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }else{
-      state <- c(Agutlumen = Agutlumen + dose,Agut = Cgut * Vgut,Aliver = Cliver * Vliver,Aven = Cven * Vven,Alung = Clung * Vlung,Aart = Cart * Vart,Arest = Crest * Vrest,Akidney = Ckidney * Vkidney,Atubules = 0,Ametabolized = 0,AUC=0)
-    }
-  }    
-  
-  if(recalc.blood2plasma) parameters[['Rblood2plasma']] <- 1 - parameters[['hematocrit']] + parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
-  
-  if(recalc.clearance){
-    if(is.null(chem.name) & is.null(chem.cas)) stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-    ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
-    ss.params[['million.cells.per.gliver']] <- parameters[['million.cells.per.gliver']]
-    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,hepatic.model='unscaled',suppress.messages=T)
-  } 
-  if(!restrictive.clearance) parameters$Clmetabolismc <- parameters$Clmetabolismc / parameters$Funbound.plasma
-  
-  parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
+    times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
+    out <- ode(y = state, 
+      times = times,
+      func=derivative_function, 
+      parms=parameters, 
+      method=method,
+      rtol=rtol,
+      atol=atol,
+      dllname="httk",
+      initfunc=initialize_compiled_function,
+      nout=num_outputs,
+      outnames=derivative_output_names,
+      ...)
+  } else {
+# Either we are doing dosing at a constant interval:
+    if (is.null(dosing.matrix))
+    {
+      if (is.null(daily.dose)) stop("Must specifiy total \"daily.dose\" when \
+\"doses.per.day\" is not set to NULL.")
+      else if (!is.null(daily.dose)) 
+      {
+        stop("Must specifiy total \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
+      } 
 
-  parameters <- initparms(parameters[param.names.pbtk.solver])
-
-  state <-initState(parameters,state)
-  
-   
-     
-
-  if(is.null(dosing.matrix)){
-    if(is.null(doses.per.day)){
-      out <- ode(y = state, times = times,func="derivs", parms=parameters, method=method,rtol=rtol,atol=atol,dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,...)
-    }else{
-      dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
-      length <- length(dosing)
-      if(iv.dose) eventdata <- data.frame(var=rep('Aven',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
-      else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))
-      times <- sort(c(times,dosing + 1e-8,start + 1e-8))
-      out <- ode(y = state, times = times, func="derivs", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,events=list(data=eventdata),...)
-    }      
-  }else{
-    if(iv.dose) eventdata <- data.frame(var=rep('Aven',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))                          
-    else eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
-    times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
-    out <- ode(y = state, times = times, func="derivs", parms = parameters,method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod", nout=length(Outputs),outnames=Outputs,events=list(data=eventdata),...)                                
-  }
-  
-  
-  if(plots==T)
-  {
-    if(use.amounts){
-      plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC"))
-    }else{
-      plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC"))
-    }
+      dose.times <- seq(start.time + 1/doses.per.day,
+                        end.time-1/doses.per.day,
+                        1/doses.per.day)
+      each.dose <- daily.dose/doses.per.day
+      eventdata <- data.frame(var=rep(dose.var,num.doses),
+                              time = round(dose.times,8),
+                              value = rep(each.dose,num.doses), 
+                              method = rep(dose.type,num.doses))
+    } else {
+      if (any(is.na(dosing.matrix))) stop("Dosing mstrix cannot contain NA values")
+      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix \
+with two columns (time, dose).")
     
-  }
-    if(use.amounts){
-      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC")]
-    }else{
-      out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC")]
-    }
+# Or a matrix of doses (first col time, second col dose) has been specified:
+      dose.times <- dosing.matrix[,1]
+      num.doses <- length(dose.times)
+      eventdata <- data.frame(var=rep(dose.var,num.doses),
+                              time = dosing.times,
+                              value = dosing.matrix[,2]
+                              method = rep(dose.types,num.doses))
+    }    
+    times <- sort(unique(c(times, 
+      dose.times,
+      dose.times + 1e-8,
+      start.time,
+      start.time + 1e-8,
+      end.time)))
+# We use the events argument with deSolve to do multiple doses:
+    out <- ode(y = state, 
+      times = times, 
+      func=derivative_function,
+      parms = parameters,
+      method=method,
+      rtol=rtol,
+      atol=atol,
+      dllname="httk",
+      initfunc=initialize_compiled_function,
+      nout=num_outputs,
+      outnames=derivative_output_names,
+      events=list(data=eventdata),
+      ...)
+  }  
+  
+  if (plots==T)
+  {
+    plot(out, select=unique(c(monitor.vars,names(initial.values))))
+  }              
+
+  out <- out[,unique(c("time",monitor.vars,names(initial.values)]
   class(out) <- c('matrix','deSolve')
   
-  if(!suppress.messages){
-    if(is.null(chem.cas) & is.null(chem.name)){
+  if(!suppress.messages)
+  {
+    if(is.null(chem.cas) & is.null(chem.name))
+    {
       cat("Values returned in",output.units,"units.\n")
-      if(!recalc.blood2plasma) warning('Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.') 
-      if(!recalc.clearance) warning('Clearance not recalculated.  Set recalc.clearance to TRUE if desired.') 
-    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
-    if(tolower(output.units) == 'mg'){
+      if (!recalc.blood2plasma) warning('Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.') 
+      if (!recalc.clearance) warning('Clearance not recalculated.  Set recalc.clearance to TRUE if desired.') 
+    } else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
+    if (tolower(output.units) == 'mg')
+    {
       cat("AUC is area under plasma concentration in mg/L * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-    }else if(tolower(output.units) == 'umol'){
+    } else if(tolower(output.units) == 'umol')
+    {
       cat("AUC is area under plasma concentration in uM * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-    }else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+    } else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
   }
     
   return(out) 
