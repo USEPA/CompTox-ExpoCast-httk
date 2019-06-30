@@ -149,7 +149,7 @@ static double parms[37];
 
 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmodpbtk (void (* odeparms)(int *, double *))
 {
   int N=37;
   odeparms(&N, parms);
@@ -157,39 +157,39 @@ void initmod (void (* odeparms)(int *, double *))
 
 
 
-//void getParms (double *inParms, double *out, int *nout) {
-///*----- Model scaling */
-//
-//  int i;
-//
-//  for (i = 0; i < *nout; i++) {
-//    parms[i] = inParms[i];
-//  }
-//
-//
-//  kgutabs = kgutabs * 24 ;
-//  Clmetabolism = Clmetabolismc * 24 * BW ;
-//  Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
-//  Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
-//  Qgut = Qcardiac * Qgutf ;
-//  Qkidney = Qcardiac * Qkidneyf ;
-//  Qliver = Qcardiac * Qliverf ;
-//  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver ) ;
-//  Vart = Vartc * BW ;
-//  Vgut = Vgutc * BW ;
-//  Vkidney = Vkidneyc * BW ;
-//  Vliver = Vliverc * BW ;
-//  Vlung = Vlungc * BW ;
-//  Vrest = Vrestc * BW ;
-//  Vven = Vvenc * BW ;
-//
-//  for (i = 0; i < *nout; i++) {
-//    out[i] = parms[i];
-//  }
-//  }
+void getParmspbtk (double *inParms, double *out, int *nout) {
+/*----- Model scaling */
+
+  int i;
+
+  for (i = 0; i < *nout; i++) {
+    parms[i] = inParms[i];
+  }
+
+
+  kgutabs = kgutabs * 24 ;
+  Clmetabolism = Clmetabolismc * 24 * BW ;
+  Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
+  Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
+  Qgut = Qcardiac * Qgutf ;
+  Qkidney = Qcardiac * Qkidneyf ;
+  Qliver = Qcardiac * Qliverf ;
+  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver ) ;
+  Vart = Vartc * BW ;
+  Vgut = Vgutc * BW ;
+  Vkidney = Vkidneyc * BW ;
+  Vliver = Vliverc * BW ;
+  Vlung = Vlungc * BW ;
+  Vrest = Vrestc * BW ;
+  Vven = Vvenc * BW ;
+
+  for (i = 0; i < *nout; i++) {
+    out[i] = parms[i];
+  }
+  }
 /*----- Dynamics section */
 
-void pbtkderivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivspbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
@@ -236,20 +236,20 @@ void pbtkderivs (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jacpbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void eventpbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void rootpbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
