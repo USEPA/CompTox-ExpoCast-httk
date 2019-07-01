@@ -360,22 +360,11 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
 #  parameters <- initparms(parameters[param.names.pbtk.solver])
 #  state <-initState(parameters,state)
 
+  times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
 # If we are simulating a single dose:
   if (!is.null(dose))
   {
-    times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
-    out <- ode(y = state, 
-      times = times,
-      func=derivative_function, 
-      parms=parameters, 
-      method=method,
-      rtol=rtol,
-      atol=atol,
-      dllname="httk",
-      initfunc=initialize_compiled_function,
-      nout=num_outputs,
-      outnames=derivative_output_names,
-      ...)
+    eventdata <- NULL
   } else {
 # Either we are doing dosing at a constant interval:
     if (is.null(dosing.matrix))
@@ -408,27 +397,22 @@ with two columns (time, dose).")
                               value = dosing.matrix[,2],
                               method = rep(dose.types,num.doses))
     }    
-    times <- sort(unique(c(times, 
-      dose.times,
-      dose.times + 1e-8,
-      start.time,
-      start.time + 1e-8,
-      end.time)))
-# We use the events argument with deSolve to do multiple doses:
-    out <- ode(y = state, 
-      times = times, 
-      func=derivative_function,
-      parms = parameters,
-      method=method,
-      rtol=rtol,
-      atol=atol,
-      dllname="httk",
-      initfunc=initialize_compiled_function,
-      nout=num_outputs,
-      outnames=derivative_output_names,
-      events=list(data=eventdata),
-      ...)
+    times <- sort(unique(times,dose.times))
   }  
+# We use the events argument with deSolve to do multiple doses:
+  out <- ode(y = state, 
+    times = times, 
+    func=derivative_function,
+    parms = parameters,
+    method=method,
+    rtol=rtol,
+    atol=atol,
+    dllname="httk",
+    initfunc=initialize_compiled_function,
+    nout=num_outputs,
+    outnames=derivative_output_names,
+    events=list(data=eventdata),
+    ...)
   
   if (plots==T)
   {
