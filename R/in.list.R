@@ -97,9 +97,14 @@ in.list <- function(chem.cas=NULL,
 {
   chem.lists <- chem.lists
   if (!(tolower(which.list) %in% tolower(names(chem.lists))))
-    stop(paste("List",which.list,"not in available lists:",paste(names(chem.lists),collapse=", ")))
+    stop(paste("List",which.list,"not in available lists:",
+    paste(names(chem.lists),collapse=", ")))
 
-  if (!suppressWarnings(CAS.checksum(chem.cas))) stop (paste("Chemical CAS",chem.cas,"failes checksum."))
+  good.cas <- sapply(chem.cas,function(x) suppressWarnings(CAS.checksum(x)))
+  
+  if (!all(good.cas)) stop (paste("Chemical CAS failed checksum:",
+    chem.cas[!good.cas]))
+  
   return(chem.cas %in% chem.lists[tolower(names(chem.lists))==tolower(which.list)][[1]][,"CAS"])
 }
 
