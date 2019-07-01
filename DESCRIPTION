@@ -33,7 +33,7 @@ Authors@R: c(
            person("Woodrow", "Setzer", role = c("ctb"))
            )
 Depends: R (>= 2.10)
-Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
+Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats, graphics,
         utils, magrittr
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
