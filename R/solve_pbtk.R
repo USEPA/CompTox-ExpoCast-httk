@@ -108,7 +108,8 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @import deSolve graphics
+#' @import deSolve 
+#' @importFrom graphics plot
 #' @export solve_pbtk
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
