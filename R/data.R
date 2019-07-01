@@ -220,7 +220,7 @@
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
 #'
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
-#' Honda et al. (submitted)
+#' Honda et al. (2019)
 #'
 #' @format A data frame with 53940 rows and 10 variables:
 #' \describe{
@@ -241,12 +241,12 @@
 #'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "well_param"
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #'
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #'
 #' @format A data frame with 53940 rows and 10 variables:
 #' \describe{
@@ -267,5 +267,32 @@
 #'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "armitage_input"
+
+#' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
+#'
+#' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
+#' Honda et al. (2019)
+#'
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{area_bottom}{}
+#'   \item{cell_yield}{}
+#'   \item{diam}{} 
+#'   \item{sysID}{}
+#'   \item{v_total}{} 
+#'   \item{v_working}{} 
+#'   \item{well_desc}{}
+#'   \item{well_number}{}
+#' }
+#' @source \url{http://www.diamondse.info/}
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Greg Honda
+#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
+"well_param"
