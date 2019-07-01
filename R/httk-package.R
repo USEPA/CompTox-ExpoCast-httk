@@ -24,9 +24,9 @@ NULL
 
 
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #' 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #' 
 #' 
 #' @name armitage_input
@@ -39,7 +39,7 @@ NULL
 #' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #' 
 #' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-#' Data to Evaluate Extrapolation Assumptions", submitted.
+#' Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 #' @source \url{http://www.diamondse.info/}
 #' @keywords data
 NULL
@@ -1189,7 +1189,7 @@ NULL
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
 #' 
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
-#' Honda et al. (submitted)
+#' Honda et al. (2019)
 #' 
 #' 
 #' @name well_param
@@ -1203,7 +1203,7 @@ NULL
 #' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #' 
 #' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-#' Data to Evaluate Extrapolation Assumptions", submitted.
+#' Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 #' @source \url{http://www.diamondse.info/}
 #' @keywords data httk-pop
 NULL
@@ -1359,11 +1359,11 @@ NULL
 
 
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #' 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #' 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #' 
 #' 
 #' @name armitage_input
@@ -1378,13 +1378,13 @@ NULL
 #' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #' 
 #' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-#' Data to Evaluate Extrapolation Assumptions", submitted.
+#' Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 #' 
 #' Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48,
 #' 9770-9779. dx.doi.org/10.1021/es501955g
 #' 
 #' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-#' Data to Evaluate Extrapolation Assumptions", submitted.
+#' Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 #' @source \url{http://www.diamondse.info/}
 #' 
 #' \url{http://www.diamondse.info/}
