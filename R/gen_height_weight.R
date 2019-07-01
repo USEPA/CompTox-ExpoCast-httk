@@ -14,6 +14,7 @@
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
 #' @keywords httk-pop
+#' @import stats
 #' @export gen_height_weight
 gen_height_weight <- function(hbw_dt){
   

@@ -94,6 +94,7 @@
 #' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #' @param IVIVE Honda et al. (submitted) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
@@ -178,7 +179,7 @@
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
-#' 
+#' @import stats
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
