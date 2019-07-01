@@ -150,7 +150,7 @@ calc_fabs.oral <- function(Params = NULL,
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fgutabs
   if(Caco2.options$Caco2.Fabs == TRUE){
-    peffh <- 10^(0.6532 * Params$Caco2.Pab - 0.3036)
+    peffh <- 10^(0.4926 * Params$Caco2.Pab - 0.1454) # Yang 2007 for Caco2 pH7.4
     permh <- 0.66 * peffh * 3.6
     fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
   }else{
