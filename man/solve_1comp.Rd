@@ -4,7 +4,7 @@
 \alias{solve_1comp}
 \title{Solve one compartment TK model}
 \usage{
-solve_1comp(chem.cas = NULL, chem.name = NULL, times = NULL,
+solve_1comp(chem.name = NULL, chem.cas = NULL, times = NULL,
   parameters = NULL, daily.dose = 1, dose = NULL,
   doses.per.day = NULL, days = 10, tsteps = 4,
   suppress.messages = F, species = "Human", output.units = "uM",
@@ -12,14 +12,15 @@ solve_1comp(chem.cas = NULL, chem.name = NULL, times = NULL,
   rtol = 1e-08, atol = 1e-12, default.to.human = F,
   dosing.matrix = NULL, recalc.elimination = F,
   adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, well.stirred.correction = T, ...)
+  restrictive.clearance = T, well.stirred.correction = T,
+  minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
-be specified.}
-
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
 must be specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
+be specified.}
 
 \item{times}{Optional time sequence for specified number of days.}
 
@@ -82,6 +83,10 @@ clearance for well-stirred model if TRUE.  This assumes clearance relative
 to amount unbound in whole blood instead of plasma, but converted to use
 with plasma concentration.}
 
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
@@ -116,7 +121,6 @@ Compartment Model Schematic"}}
 solve_1comp(chem.name='Bisphenol-A',days=1)
 params <- parameterize_1comp(chem.cas="80-05-7")
 solve_1comp(parameters=params)
-
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
