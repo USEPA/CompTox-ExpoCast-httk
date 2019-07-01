@@ -12,6 +12,7 @@
 #' @param lower Lower bound on censored distribution. Default 0.
 #' @param upper Upper bound on censored distribution. Default 1.
 #' @return A vector of samples from the specified censored distribution.
+#' @import stats
 #' @export r_left_censored_norm
 r_left_censored_norm <- function(n,
                                  mean=0,
