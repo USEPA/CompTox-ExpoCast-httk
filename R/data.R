@@ -105,6 +105,9 @@
 #'International 106 (2017): 105-118
 "spline_heightweight"
 
+#'A timestamp of table creation
+"Tables.Rdata.stamp"
+
 #'Pre-processed NHANES data.
 #'
 #'NHANES data on demographics, anthropometrics, and some laboratory measures, 
