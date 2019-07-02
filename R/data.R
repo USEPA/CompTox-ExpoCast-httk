@@ -326,7 +326,7 @@
 #'   \item{MW}{Molecular weight (Daltons)}                         
 #'   \item{logP}{log base ten of octanol:water partiion coefficient}
 #' }
-#' @source \url{Wambaugh et al. (submitted)}
+#' @source Wambaugh et al. (submitted)
 #'
 #'@keywords data
 #'
@@ -415,7 +415,7 @@
 #'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
 #' description}
 #' }
-#' @source \url{Wambaugh et al. (submitted)}
+#' @source Wambaugh et al. (submitted)
 #'
 #'@keywords data
 #'
@@ -429,8 +429,8 @@
 #'
 #' These data are a subset of the Bayesian inferrences reported by Ring et al.
 #' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
-#' National Health and Nutrition Examination Survey (NHANES). The reflect the
-#' poulaton median intake rate (mg/kg body weight/day), with uncertainty.
+#' National Health and Nutrition Examination Survey (NHANES). They reflect the
+#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
 #'
 #' @format A data frame with 20 rows and 4 variables:
 #' describe{
@@ -442,7 +442,7 @@
 #' intake rate (mg/kg bodyweight/day)}
 #'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
 #' }
-#' @source \url{Wambaugh et al. (submitted)}
+#' @source Wambaugh et al. (submitted)
 #'
 #'@keywords data
 #'
@@ -452,3 +452,44 @@
 #' evironmental chemicals by simulating toxicokinetic variability." Environment 
 #' international 106 (2017): 105-118
 "wambaugh2019.nhanes"
+
+#' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
+#'
+#' These data are a subset of the Bayesian inferrences reported by Ring et al.
+#' (2019) for a consensus model of twelve exposue predictors. The predictors 
+#' were calibrated based upon their ability to predict intake rates inferred
+# 'from the U.S. Centers for Disease Control and Prevention (CDC)
+#' National Health and Nutrition Examination Survey (NHANES). They reflect the
+#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
+#'
+#' @format A data frame with 385 rows and 38 variables:
+#' @source Wambaugh et al. (submitted)
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Ring, Caroline L., et al. "Consensus modeling of median chemical 
+#' intake for the US population based on predictions of exposure pathways." 
+#' Environmental science & technology 53.2 (2018): 719-732.
+"wambaugh2019.seem3"
+
+#' Subset of the ToxCast and Tox21 Bioactivites Observed with HTS
+#'
+#' These data are all ToxCast and Tox21 high throughput screening (HTS) assay
+#' results for the subset of chemicals appearing in Wambaugh et al. (2019). The
+#' values are NA if no systematic concentration-response was observed, otherwise
+#' the log base ten uM concentration of the activity concentration at cutoff (ACC)
+#' is given. Each column correspons to a different in vitro HTS assay. 
+#'
+#' @format A data frame with 489 rows and 1197 variables:
+#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization", submitted.
+"wambaugh2019.Tox21"
+
