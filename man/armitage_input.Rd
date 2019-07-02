@@ -3,7 +3,7 @@
 \docType{data}
 \name{armitage_input}
 \alias{armitage_input}
-\title{Armitage et al. (2014) Model Inputs from Honda et al. (submitted)}
+\title{Armitage et al. (2014) Model Inputs from Honda et al. (2019)}
 \format{A data frame with 53940 rows and 10 variables:
 \describe{
   \item{MP}{}
@@ -27,39 +27,39 @@
 armitage_input
 }
 \description{
-Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 
-Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 
-Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 }
 \details{
-Armitage et al. (2014) Model Inputs from Honda et al. (submitted)
+Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 }
 \references{
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", submitted.
+Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", submitted.
+Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48,
 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", submitted.
+Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 }
 \author{
 Greg Honda
