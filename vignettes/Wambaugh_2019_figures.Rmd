@@ -11,9 +11,8 @@ vignette: >
 
 #Wambaugh et al. (submitted): Creating Figures for the Manuscript
 ##Prepate for session
-```{r setup, include=FALSE}
+```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
-
 library(data.table)
 library(httk)
 library(ggplot2)
@@ -22,8 +21,6 @@ library(stringr)
 library(scales)
 library(grid)
 library(reshape)
-
-rm(list=ls()) # Clear the workspace
 ```
 ## Define some needed code:
 ### RMSE and R^2
@@ -126,10 +123,13 @@ cssfun_u <- function(chemcas,
     minimum.Funbound.plasma=0))
     
   # Get the physico-chemical properties:
-  params.schmitt <-parameterize_schmitt(chem.cas=chemcas) 
+  params.schmitt <-parameterize_schmitt(chem.cas=chemcas)
+  psd <- params.schmitt$pKa_Donor
+  psa <- params.schmitt$pKa_Accept
+  params.schmitt <- params.schmitt[regexpr("pKa",names(params.schmitt))==-1]
   pop_u_httk[,names(params.schmitt):=params.schmitt]
-  pop_u_httk[,pKa_Donor := paste(params.schmitt$pKa_Donor, collapse=",")]
-  pop_u_httk[,pKa_Accept := paste(params.schmitt$pKa_Accept, collapse=",")]
+  pop_u_httk[,pKa_Donor := paste(psd, collapse=",")]
+  pop_u_httk[,pKa_Accept := paste(psa, collapse=",")]
   pop_u_httk <- pop_u_httk[rep(1,1000)]
 
   # Calculate the distribution coefficient:
@@ -263,13 +263,17 @@ hlfun_u <- function(chemcas,
                       minimum.Funbound.plasma=0.0001)
 {
   # Create a data table with uncertainty only:
+  print(chemcas)
   pop_u_httk <- as.data.table(parameterize_steadystate(chem.cas=chemcas,
     clint.pvalue.threshold=1,
     minimum.Funbound.plasma=0))
-  params.schmitt <-parameterize_schmitt(chem.cas=chemcas) 
+  params.schmitt <-parameterize_schmitt(chem.cas=chemcas)
+  psd <- params.schmitt$pKa_Donor
+  psa <- params.schmitt$pKa_Accept
+  params.schmitt <- params.schmitt[regexpr("pKa",names(params.schmitt))==-1]
   pop_u_httk[,names(params.schmitt):=params.schmitt]
-  pop_u_httk[,pKa_Donor := paste(params.schmitt$pKa_Donor, collapse=",")]
-  pop_u_httk[,pKa_Accept := paste(params.schmitt$pKa_Accept, collapse=",")]
+  pop_u_httk[,pKa_Donor := paste(psd, collapse=",")]
+  pop_u_httk[,pKa_Accept := paste(psa, collapse=",")]
   pop_u_httk <- pop_u_httk[rep(1,1000)]
 
   ions <- calc_ionization(pH=7.4,parameters=pop_u_httk)
@@ -277,6 +281,7 @@ hlfun_u <- function(chemcas,
   
   # Parse the Funbound.plasma.dist into quantiles:
   Funbound.plasma.dist <- pop_u_httk[1,Funbound.plasma.dist]
+  print(paste(chemcas,Funbound.plasma.dist))
   if (nchar(Funbound.plasma.dist) - 
     nchar(gsub(",","",Funbound.plasma.dist))!=2)
   {
@@ -365,7 +370,6 @@ hlfun_u <- function(chemcas,
   pop_u_httk[, CLh:=calc_hepatic_clearance(chem.cas=chemcas,parameters=pop_u_httk,hepatic.model='unscaled',suppress.messages=T,clint.pvalue.threshold=1)]
   pop_u_httk[, Qliver:=Qtotal.liverc*BW^0.75]
   pop_u_httk[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clint / Rblood2plasma)]
-#  pop_u_httk[, (setdiff(names(pop_u_httk), names(httk::parameterize_steadystate(chem.cas=chemcas)))):=NULL]
 
   PC.names <- names(predict_partitioning_schmitt(chem.cas="80-05-7"))
   pop_u_httk<-cbind(pop_u_httk,as.data.table(predict_partitioning_schmitt(parameters=pop_u_httk)))
@@ -378,7 +382,7 @@ hlfun_u <- function(chemcas,
 ### Figure 1: 
 Histograms depicting the median measured values (a, b) and 95% credible intervals (c, d) for fraction unbound in plasma (fup, a,c) and intrinsic hepatic clearance (Clint, b,d). In panel a, the distribution of estimated fup for the single protein concentration assay (solid line) is compared with the protein titration (three concentrations) method (dotted) line. In panel b, the median estimated Clint is shown. In panel c, the distribution with larger credible intervals corresponds to the single protein concentration assay, with a median credible interval is 0.1, corresponding to a precision of roughly ±0.05. When data from the protein titration are jointly analyzed (smaller credible intervals), the certainty is increased to a median credible interval of 0.029, or roughly ±0.015. The width of the credible interval is a measure of the certainty in an estimate, i.e., a smaller credible interval indicates greater certainty. For the fup values, a credible interval approaching 1 indicates that all possible values are consistent with the data – that is, the data do not help identify fup since fup must be between 0 and 1. In panel d the distribution of credible intervals for Clint is shown.
 ```{R Wambaugh2019.Fig1}
-Fig1.table <- wambaugh2019.raw
+Fig1.table <- httk::wambaugh2019.raw
 Fig1.table$Error1 <- Fig1.table$Base.Fup.High - Fig1.table$Base.Fup.Low
 Fig1.table$Error2 <- Fig1.table$Affinity.Fup.High - Fig1.table$Affinity.Fup.Low
 Fig1.table$Sigma1 <- Fig1.table$Error1/(2*qnorm(0.975))
@@ -492,7 +496,7 @@ multiplot(Fig1a,Fig1c,Fig1b,Fig1d,cols=2,widths=c(1.75,1.75))
 #Figure 2:
 Distribution of Binding Affinities Employed in Bayesian fup Estimations. To jointly analyze the data from the RED assay conducted at three protein concentrations, a model for binding to protein with an dissociation constant (i.e., binding affinity) must be assumed. Although the specific binding protein (for example, hemoglobin) and the stoichiometry are unknown, this number provides a rough estimate for each chemical of how much that chemical would be expected to be impacted by the presence of plasma binding. 
 ```{R Wambaugh2019.Fig2}
-Fig2.table <- wambaugh2019.raw
+Fig2.table <- httk::wambaugh2019.raw
 print(paste(sum(!is.na(Fig2.table$Fup.point)),"total successful Fup estimates using point estimation."))
 print(paste(sum(!is.na(Fig2.table$Base.Fup.Med)),"total successful Fup estimates using BAyesian analysis of top protein concentration."))
 Fig2.table$Error1 <- Fig2.table$Base.Fup.High - Fig2.table$Base.Fup.Low
@@ -601,8 +605,7 @@ print(paste(dim(Fupbasenot)[1],"uncertain estimates using original protocol."))
 print(paste(dim(Fupaffinitynot)[1],"uncertain estimates using protein titration."))
 print(paste(dim(Fupaffinityworked)[1]-dim(Fupbaseworked)[1],"chemicals that could not be measured at 100% plasma protein."))
 
-
-Wetmore.data <- httk:::Wetmore.data
+Wetmore.data <- httk::Wetmore.data
 W2015 <- subset(Wetmore.data,Reference=="Wetmore 2015")
 
 W2012 <- subset(Wetmore.data,Reference=="Wetmore 2012")
@@ -642,7 +645,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
 #Figure 4:
 Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 µM chemical concentration displayed, though 1 and 10 µM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material (doi:10.5061/dryad.nf40jb4).
 ```{R Wambaugh2019.Fig4}
-clearance.table <- subset(wambaugh2019.raw,!is.na(CLint.1uM.Median))
+clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
     
 print(paste(sum(clearance.table$CLint.1uM.Median==0),"zero valued median Bayesian posteriors"))
 print(paste(sum(clearance.table$CLint.1uM.Point==0&clearance.table$CLint.1uM.Median>0,na.rm=T),"zero valued point estimates where median posterior>0"))
@@ -699,12 +702,14 @@ summary(clearance.fit)
 Figure 5. Uncertainty Assessment for TK Quantities half-life and Css. The impact of uncertainty on estimated values for fup and Clint could in turn affect additional TK quantities, for example elimination half-life (t1/2, shown in panel A) and steady-state serum concentration (Css, shown in panel B). In both plots, the x-axis indicates the value that would have been estimated with previous methods, while the y-axis indicates the median and 95% credible interval for values calculated with our Bayesian method. Chemicals plotted with triangles are those that could be estimated with the previous, point estimate methods, while chemicals plotted with circles could not. The dashed line indicates the identity (perfect predictor) line. Chemicals that had no point estimate are plotted on the identity line.
 ```{R Wambaugh2019.Fig5, eval=F}
 # This section takes a long time because calc_vdist is not yet data.table compatible:
+ceetox <- as.data.table(subset(httk::wambaugh2019,!is.na(Human.Funbound.plasma)&!is.na(Human.Clint)&!is.na(logP)))
+httk_cas <- ceetox$CAS[ceetox$CAS %in% get_cheminfo(model="3compartmentss")]
 
 # back up chem.physical_and_invtro.data:
 HTTK.data <- chem.physical_and_invitro.data
 
 # Use the point estimates:
-chem.physical_and_invitro.data <- add_chemtable(wambaugh2019.raw,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Name",CAS="CAS",Clint="CLint.1uM.Point",Funbound.plasma="Fup.point"),reference="Wambaugh 2019",species="Human",overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(httk::wambaugh2019.raw,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Name",CAS="CAS",Clint="CLint.1uM.Point",Funbound.plasma="Fup.point"),reference="Wambaugh 2019",species="Human",overwrite=T)
 
 
 
@@ -774,15 +779,6 @@ multiplot(Fig5a,Fig5b,cols=2,widths=c(1.75,1.75))
 #Figure 6:
 Relative contributions of uncertainty and variability to differences between the 95th percentile and median Css. Monte Carlo analysis of both variability (triangles) and uncertainty (circles) give distributions that can be characterized by a 95th percentile Css for which individuals achieve a higher Css for the same fixed dose rate – these individuals can be considered more “sensitive” to chemical exposure. Uncertainty and variability can be combined (squares) to estimate a 95th percentile reflecting both factors. For most chemicals, variability contributes more than uncertainty to the difference between the Css predicted for the median Clint and fup values. 
 ```{R Wambaugh2019.Fig6, eval=F}
-
-ceetox <- as.data.table(subset(wambaugh2019,!is.na(Human.Funbound.plasma)&!is.na(Human.Clint)&!is.na(logP)))
-httk_cas <- ceetox$CAS[ceetox$CAS %in% get_cheminfo(model="3compartmentss")]
-#params <- ceetox[CAS %in% httk_cas, httk::parameterize_steadystate(chem.cas=CAS),
-#                 by=.(CAS)]
-#params <- params[,MW:=NULL]
-#ceetox <- merge(ceetox,params,by=c("CAS"))
- 
-
 set.seed(42)
 ceetox[CAS%in%httk_cas,
        css95_uv:=calc_mc_css(chem.cas=CAS,
@@ -897,7 +893,7 @@ High throughput risk-based prioritization can be conducted by using doses predic
 # Head to ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/ to get the ToxCast/Tox21 data:
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
 # This has been Subset  to just the chemicals we have new numbers for:
-Tox21.acc <- wambaugh2019.Tox21
+Tox21.acc <- httk::wambaugh2019.Tox21
 
 # We need to turn this into a data frame with a row for each hit:
 Tox21.acc.rows <- melt(Tox21.acc,id=c("code","chid","chnm","casn","clib"))
@@ -905,9 +901,8 @@ Tox21.acc.rows <- melt(Tox21.acc,id=c("code","chid","chnm","casn","clib"))
 # Get rid of the NA's (non-hits):
 Tox21.acc.numeric <- subset(Tox21.acc.rows,!is.na(value))
 
-
-chem.preds <- wambaugh2019.seem3
-directnhanes.preds <- wambaugh2019.nhanes
+chem.preds <- httk::wambaugh2019.seem3
+directnhanes.preds <- httk::wambaugh2019.nhanes
 
 #Subset to those chemicals with HTS hits:
 human.hits <- subset(ceetox,CAS%in%Tox21.acc.numeric$casn)
@@ -1062,31 +1057,5 @@ ceetox$Human.Clint2 <- sapply(ceetox$Human.Clint,function(x) as.numeric(strsplit
 ceetox$Human.Fup2 <- sapply(ceetox$Human.Funbound.plasma,function(x) as.numeric(strsplit(x,",")[[1]][1]))
 write.csv(ceetox[,c(1,2,8,9,16,17,6,7,12,30,10,11,15,31,13,14,18:28)],row.names=F,file=paste("Supplemental-Table4-",Sys.Date(),".txt",sep=""))
 
-ToxCast <- read.xls("//AA.AD.EPA.GOV/ORD/RTP/Users/E-J/jwambaug/Net MyDocuments/Contracts/HTTKchemicallists/TOXCAST_20170330_wQC_ListPriority.xlsx",stringsAsFactors=F)
-ToxCast.PH1and2 <- subset(ToxCast,toxcast.ph1v2==1|toxcast.ph2==1)
-sum(unique(ToxCast.PH1and2$DTXSID) %in% get_cheminfo(info="DTXSID"))/length(unique(ToxCast.PH1and2$DTXSID))
-sum(unique(ToxCast.PH1and2$DTXSID) %in% get_cheminfo(info="DTXSID"))
-ToxCast.E1K <- subset(ToxCast,toxcast.e1k==1)
-sum(unique(ToxCast.E1K$DTXSID) %in% get_cheminfo(info="DTXSID"))/length(unique(ToxCast.E1K$DTXSID))
-
 print(paste("Complete HTTK data on",sum(get_cheminfo()%in%ceetox$CAS),"new chemicals."))
-
-print("Unilever data:")
-subset(get_cheminfo(info="all"),CAS%in%c("458-37-7",
-"25316-40-9",
-"33171-05-0",
-"36062-04-1",
-"23513-14-6",
-"58-08-2",
-"91-64-5",
-"123-31-9"))
-
-for (this.CAS in c("458-37-7",
-"25316-40-9",
-"33171-05-0",
-"36062-04-1",
-"23513-14-6",
-"58-08-2",
-"91-64-5",
-"123-31-9"))
 ```

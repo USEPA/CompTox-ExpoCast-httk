@@ -328,7 +328,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords data
+#'@keywords datasets
 #'
 #'@author John Wambaugh
 #'
@@ -417,7 +417,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords data
+#'@keywords datasets
 #'
 #'@author John Wambaugh
 #'
@@ -444,7 +444,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords data
+#'@keywords datasets
 #'
 #'@author John Wambaugh
 #'
@@ -465,7 +465,7 @@
 #' @format A data frame with 385 rows and 38 variables:
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords data
+#'@keywords datasets
 #'
 #'@author John Wambaugh
 #'
@@ -485,7 +485,7 @@
 #' @format A data frame with 489 rows and 1197 variables:
 #' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
 #'
-#'@keywords data
+#'@keywords datasets
 #'
 #'@author John Wambaugh
 #'
