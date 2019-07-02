@@ -16,7 +16,7 @@
 #' coefficient.
 #' 
 #' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-#' assumptions identified by Honda et al. (submitted) are: \tabular{lrrrr}{
+#' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 #' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -95,7 +95,7 @@
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
-#' @param IVIVE Honda et al. (submitted) identified six plausible sets of
+#' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
 #' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
@@ -151,16 +151,21 @@
 #' @param ... Additional parameters passed to calc_analytic_css
 #' 
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' @references Wambaugh, John F., et al. "Toxicokinetic triage for 
+#' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+#'
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment international 106 (2017): 105-118. 
 #' 
-#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo 
-#' Data to Evaluate Extrapolation Assumptions", submitted. 
+#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 #' 
 #' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 #' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#'
 #' @keywords Monte Carlo Steady State
+#'
 #' @examples
 #' 
 #' \dontrun{
@@ -179,6 +184,7 @@
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
+#'
 #' @import stats
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
