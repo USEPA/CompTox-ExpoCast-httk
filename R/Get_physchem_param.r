@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# This function retrives physico-chemical properties ("param") for the chemical specified by chem.name or chem.CAS from the vLiver tables.
-=======
-
 #' Get physico-chemical parameters from chem.physical_and_invitro.data
 #'
 #' This function retrives physico-chemical properties ("param") for the chemical specified 

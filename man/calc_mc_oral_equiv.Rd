@@ -52,7 +52,7 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 \item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
-overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 See Details below for more information.}
 
 \item{...}{Additional parameters passed to calc_mc_css for httkpop and
