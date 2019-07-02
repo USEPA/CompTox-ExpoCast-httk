@@ -605,7 +605,7 @@ print(paste(dim(Fupbasenot)[1],"uncertain estimates using original protocol."))
 print(paste(dim(Fupaffinitynot)[1],"uncertain estimates using protein titration."))
 print(paste(dim(Fupaffinityworked)[1]-dim(Fupbaseworked)[1],"chemicals that could not be measured at 100% plasma protein."))
 
-Wetmore.data <- httk::Wetmore.data
+Wetmore.data <- httk:::Wetmore.data
 W2015 <- subset(Wetmore.data,Reference=="Wetmore 2015")
 
 W2012 <- subset(Wetmore.data,Reference=="Wetmore 2012")
