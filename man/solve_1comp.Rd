@@ -85,6 +85,10 @@ clearance for well-stirred model if TRUE.  This assumes clearance relative
 to amount unbound in whole blood instead of plasma, but converted to use
 with plasma concentration.}
 
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
@@ -119,7 +123,6 @@ Compartment Model Schematic"}}
 solve_1comp(chem.name='Bisphenol-A',days=1)
 params <- parameterize_1comp(chem.cas="80-05-7")
 solve_1comp(parameters=params)
-
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput

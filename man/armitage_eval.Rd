@@ -19,6 +19,9 @@ armitage_eval(casrn.vector = c("81-81-2", "80-05-7"),
 
 \item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
 
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==T}
+
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
@@ -72,10 +75,8 @@ and lipid and protein compartments in cells.
 }
 \references{
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-
-Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
-to Evaluate Extrapolation Assumptions"
+2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 }
 \author{
 Greg Honda

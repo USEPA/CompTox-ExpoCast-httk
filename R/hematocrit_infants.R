@@ -24,48 +24,9 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-
-
-
-
-
-#' Predict hematocrit in infants under 1 year old.
-#' 
-#' For infants under 1 year, hematocrit was not measured in NHANES. Assume a
-#' log-normal distribution where plus/minus 1 standard deviation of the
-#' underlying normal distribution is given by the reference range. Draw
-#' hematocrit values from these distributions by age.
-#' 
-#' \tabular{cc}{ Age \tab Reference range\cr <1 month \tab 31-49\cr 1-6 months
-#' \tab 29-42\cr 7-12 months \tab 33-38 }
-#' 
-#' @param age_months Vector of ages in months; all must be <= 12.
-#' @param age_months Vector of ages in months; all must be <= 12.
-#' @return Vector of hematocrit percentages corresponding to the input vector
-#' of ages.
-#' 
-#' Vector of hematocrit percentages corresponding to the input vector of ages.
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118 Predict hematocrit in infants
-#' under 1 year old.
-#' 
-#' For infants under 1 year, hematocrit was not measured in NHANES. Assume a
-#' log-normal distribution where plus/minus 1 standard deviation of the
-#' underlying normal distribution is given by the reference range. Draw
-#' hematocrit values from these distributions by age.
-#' 
-#' \tabular{cc}{ Age \tab Reference range\cr <1 month \tab 31-49\cr 1-6 months
-#' \tab 29-42\cr 7-12 months \tab 33-38 }
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
+#' @import stats
 #' @export hematocrit_infants
+
 hematocrit_infants <- function(age_months){
 
 #For infants under 1 year,
