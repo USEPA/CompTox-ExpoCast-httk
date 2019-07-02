@@ -79,7 +79,6 @@
 #' 
 #' @keywords Monte Carlo Steady State
 #'
-#' @keywords Steady State Monte Carlo
 #' @examples
 #' 
 #' 

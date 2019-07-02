@@ -270,29 +270,185 @@
 #'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "armitage_input"
 
-#' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
+#' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
 #'
-#' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
-#' Honda et al. (2019)
+#' SWISSPHARMA is a list of pharmaceuticals with consumption data from 
+#' Switzerland, France, Germany and the USA, used for a suspect 
+#' screening/exposure modelling approach described in 
+#' Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is 
+#' available on the NORMAN Suspect List Exchange.
 #'
-#' @format A data frame with 53940 rows and 10 variables:
-#' \describe{
-#'   \item{area_bottom}{}
-#'   \item{cell_yield}{}
-#'   \item{diam}{} 
-#'   \item{sysID}{}
-#'   \item{v_total}{} 
-#'   \item{v_working}{} 
-#'   \item{well_desc}{}
-#'   \item{well_number}{}
-#' }
-#' @source \url{http://www.diamondse.info/}
+#'@source \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 #'@keywords data
-#'@keywords httk-pop
 #'
-#'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
-#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
-"well_param"
+#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization ", submitted.
+"pharma"
+
+#' in vitro Toxicokinetic Data from Wambaugh et al. (submitted)
+#'
+#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
+#' et al. (submitted) They
+#' are the processed values used to make the figures in that manuscript.
+#' These data summarize the results of Bayesian analysis of the in vitro
+#' toxicokinetic experiments conducted by Cyprotex to characterize fraction 
+#' unbound in the presence of pooled human plasma protein and the intrnsic 
+#' hepatic clearance of the chemical by pooled human hepatocytes.
+#'
+#' @format A data frame with 496 rows and 17 variables:
+#' describe{
+#'   \item{Compound}{The name of the chemical}
+#'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
+#'   \item{Human.Clint}{Median of Bayesian credible interval for intrinsic 
+#' hepatic clearance (uL/min/million hepatocytes)]}
+#'   \item{Human.Clint.pValue}{Probability that there is no clearance}          
+#'   \item{Human.Funbound.plasma}{Median of Bayesian credibl interval for 
+#' fraction of chemical free in the presence of plasma}
+#'   \item{pKa_Accept}{pH(s) at which hydrogen acceptor sites (if any) are at 
+#' equilibrium}                  
+#'   \item{pKa_Donor}{pH(s) at which hydrogne donor sites (if any) are at 
+#' equilibrium}
+#'   \item{DSSTox_Substance_Id}{Identifier for CompTox Chemical Dashboard}         
+#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
+#' description}
+#'   \item{Human.Clint.Low95}{Lower 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}        
+#'   \item{Human.Clint.High95}{Uppper 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}
+#'   \item{Human.Clint.Point}{Point estimate of intrinsic hepatic clearance 
+#' (uL/min/million hepatocytes)}
+#'   \item{Human.Funbound.plasma.Low95}{Lower 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma}
+#'   \item{Human.Funbound.plasma.High95}{Upper 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma}
+#'   \item{Human.Funbound.plasma.Point}{Point estimate of the fraction of
+#' chemical free in the presence of plasma}
+#'   \item{MW}{Molecular weight (Daltons)}                         
+#'   \item{logP}{log base ten of octanol:water partiion coefficient}
+#' }
+#' @source \url{Wambaugh et al. (submitted)}
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization", submitted.
+"wambaugh2019"
+
+#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)
+#'
+#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
+#' et al. (submitted) They
+#' are the output of different Bayesian models evaluated to compare using a
+#' single protein concentration vs. the new three concentration titration
+#' protocol. These data summarize the results of Bayesian analysis of the in vitro
+#' toxicokinetic experiments conducted by Cyprotex to characterize fraction 
+#' unbound in the presence of pooled human plasma protein and the intrnsic 
+#' hepatic clearance of the chemical by pooled human hepatocytes.
+#' This file includes replicates (diferent CompoundName id's but same chemical')
+#'
+#' @format A data frame with 530 rows and 28 variables:
+#' describe{
+#'   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
+#'   \item{Name}{The name of the chemical}
+#'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
+#'   \item{CompoundName}{Sample name provided by EPA to Cyprotex}
+#'   \item{Fup.point}{Point estimate of the fraction of
+#' chemical free in the presence of plasma}
+#'   \item{Base.Fup.Med}{Median of Bayesian credible interval for 
+#' fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Affinity.Fup.Med}{Median of Bayesian credible interval for 
+#' fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.Med}{Median of Bayesian credible interval for 
+#' protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible 
+#' interval for protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Decreases.prob}{Probability that the chemical concentration decreased
+#' systematiclally during hepatic clearance assay.}
+#'   \item{Saturates.prob}{Probability that the rate of chemical concentration
+#' decrease varied between the 1 and 10 uM hepatic clearance experiments.}
+#'   \item{Slope.1uM.Median}{Estimated slope for chemcial concentration decrease
+#' in the 1 uM hepatic clearance assay.}
+#'   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
+#' in the 10 uM hepatic clearance assay.}
+#'   \item{Clint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
+#' hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
+#'   \item{Clint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
+#' concentration (uL/min/million hepatocytes)}        
+#'   \item{Clint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
+#' concentration(uL/min/million hepatocytes)}
+#'   \item{Clint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
+#' hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
+#'   \item{Clint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
+#' concentration (uL/min/million hepatocytes)}        
+#'   \item{Clint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
+#' concentration(uL/min/million hepatocytes)}
+#'   \item{Clint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
+#' (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
+#'   \item{Clint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
+#' (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
+#'   \item{fit}{Classification of clearance observed}                         
+#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
+#' description}
+#' }
+#' @source \url{Wambaugh et al. (submitted)}
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization", submitted.
+"wambaugh2019.raw"
+
+#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))
+#'
+#' These data are a subset of the Bayesian inferrences reported by Ring et al.
+#' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
+#' National Health and Nutrition Examination Survey (NHANES). The reflect the
+#' poulaton median intake rate (mg/kg body weight/day), with uncertainty.
+#'
+#' @format A data frame with 20 rows and 4 variables:
+#' describe{
+#'   \item{lP}{The median of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{lP.max}{The upper 95th percentile of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
+#' }
+#' @source \url{Wambaugh et al. (submitted)}
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#' evironmental chemicals by simulating toxicokinetic variability." Environment 
+#' international 106 (2017): 105-118
+"wambaugh2019.nhanes"
