@@ -61,38 +61,32 @@ get_physchem_param <- function(param, chem.name=NULL, chem.CAS=NULL)
         if(length(param) > 1){
           if(length(chem.CAS) > 1){
             if("pKa_Donor" %in% param){
-              values.out[["pKa_Donor"]] <- lapply(strsplit(gsub(";",",",values[,"pKa_Donor"]),","),
-                                                  function(x) sort(as.numeric(x), na.last = TRUE))
+              values.out[["pKa_Donor"]] <- gsub(";",",",values[,"pKa_Donor"])
             }
             if("pKa_Accept" %in% param){
-              values.out[["pKa_Accept"]] <- lapply(strsplit(gsub(";",",",values[,"pKa_Accept"]),","),
-                                                   function(x) sort(as.numeric(x), na.last = TRUE))
+              values.out[["pKa_Accept"]] <- gsub(";",",",values[,"pKa_Accept"])
             }
           }else{
             if("pKa_Donor" %in% param){
-              values.out[["pKa_Donor"]] <- unlist(lapply(strsplit(gsub(";",",",values[,"pKa_Donor"]),","),
-                                                  function(x) sort(as.numeric(x), na.last = TRUE)))
+              values.out[["pKa_Donor"]] <- unlist(gsub(";",",",values[,"pKa_Donor"]))
             }
             if("pKa_Accept" %in% param){
-              values.out[["pKa_Accept"]] <- unlist(lapply(strsplit(gsub(";",",",values[,"pKa_Accept"]),","),
-                                                   function(x) sort(as.numeric(x), na.last = TRUE)))
+              values.out[["pKa_Accept"]] <- unlist(gsub(";",",",values[,"pKa_Accept"]))
             }
           }
         }else{
           if("pKa_Donor" %in% param){
-            values.out[["pKa_Donor"]] <- lapply(strsplit(gsub(";",",",values),","),
-                                                function(x) sort(as.numeric(x), na.last = TRUE))
+            values.out[["pKa_Donor"]] <- gsub(";",",",values)
           }
           if("pKa_Accept" %in% param){
-            values.out[["pKa_Accept"]] <- lapply(strsplit(gsub(";",",",values),","),
-                                                 function(x) sort(as.numeric(x), na.last = TRUE))
+            values.out[["pKa_Accept"]] <- gsub(";",",",values)
           }
         }
 
       }
       
       if(length(this.index) == 1 & length(param) == 1){
-        return(as.numeric(unlist(values.out)))
+        return(unlist(values.out))
       }else if(length(this.index) >= 1 & length(param) > 1){
         return(values.out)
       }else if(length(this.index) > 1 & length(param == 1)){
