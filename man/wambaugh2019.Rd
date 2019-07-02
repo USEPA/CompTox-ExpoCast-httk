@@ -5,7 +5,7 @@
 \alias{wambaugh2019}
 \title{in vitro Toxicokinetic Data from Wambaugh et al. (submitted)}
 \format{A data frame with 496 rows and 17 variables:
-describe{
+\describe{
   \item{Compound}{The name of the chemical}
   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
   \item{Human.Clint}{Median of Bayesian credible interval for intrinsic 
