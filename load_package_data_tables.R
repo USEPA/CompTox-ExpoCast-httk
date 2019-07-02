@@ -904,10 +904,13 @@ load("chemprops-072115.RData")
 #Dashboard doesn't like this CAS:
 chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
 chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
-
+chemprop.table$logHenry <- log10(chemrop.table$Henry)
 chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
                                                 current.table = chem.physical_and_invitro.data,
                                                 data.list=list(CAS="CASRN",
+                                                               logHenry="logHenry",
+                                                               logP="logP",
+                                                               MP="MP",
                                                                logPwa="logPwa37p5"),
                                                 reference="EPISuite")
 

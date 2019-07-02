@@ -7,8 +7,6 @@
 "Tirapazamine","27314-97-2"
 "Verlukast","120443-16-5"
 "Alizapride","59338-93-1"
-"Mirtazapine","85650-52-8"
-"Fenvalerate","51630-58-1"
 "Norcisapride","84946-16-7"
 "Sabeluzole","104383-17-7"
 "R-(+)-bisoprolol","111051-40-2"
