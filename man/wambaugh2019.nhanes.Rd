@@ -5,7 +5,7 @@
 \alias{wambaugh2019.nhanes}
 \title{NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))}
 \format{A data frame with 20 rows and 4 variables:
-describe{
+\describe{
   \item{lP}{The median of the Bayesian credible interval for median population
 intake rate (mg/kg bodyweight/day)}
   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population

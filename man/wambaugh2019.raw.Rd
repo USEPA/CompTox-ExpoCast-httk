@@ -5,7 +5,7 @@
 \alias{wambaugh2019.raw}
 \title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)}
 \format{A data frame with 530 rows and 28 variables:
-describe{
+\describe{
   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
   \item{Name}{The name of the chemical}
   \item{CAS}{The Chemical Abstracts Service Registry Number}                         

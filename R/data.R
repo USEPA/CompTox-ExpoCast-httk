@@ -296,7 +296,7 @@
 #' hepatic clearance of the chemical by pooled human hepatocytes.
 #'
 #' @format A data frame with 496 rows and 17 variables:
-#' describe{
+#' \describe{
 #'   \item{Compound}{The name of the chemical}
 #'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
 #'   \item{Human.Clint}{Median of Bayesian credible interval for intrinsic 
@@ -349,7 +349,7 @@
 #' This file includes replicates (diferent CompoundName id's but same chemical')
 #'
 #' @format A data frame with 530 rows and 28 variables:
-#' describe{
+#' \describe{
 #'   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
 #'   \item{Name}{The name of the chemical}
 #'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
@@ -433,7 +433,7 @@
 #' populaton median intake rate (mg/kg body weight/day), with uncertainty.
 #'
 #' @format A data frame with 20 rows and 4 variables:
-#' describe{
+#' \describe{
 #'   \item{lP}{The median of the Bayesian credible interval for median population
 #' intake rate (mg/kg bodyweight/day)}
 #'   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population
