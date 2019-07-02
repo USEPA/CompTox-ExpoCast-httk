@@ -113,14 +113,16 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @author Greg Honda
 #' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' 
+#' @examples 
+#' temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1, well_number = 384, nomconc = 10)
+#' print(temp$cfree.invitro)
 #' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
 #' to Evaluate Extrapolation Assumptions"
 #' @export armitage_eval
-armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
+armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
-                          this.FBSf = NA, # Must be set if not in tcdata, this is the most senstive parameter in the model
+                          this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
                           this.sarea = NA_real_,
                           this.v_total = NA_real_,
