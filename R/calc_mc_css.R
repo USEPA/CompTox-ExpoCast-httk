@@ -154,7 +154,7 @@
 #' @references Wambaugh, John F., et al. "Toxicokinetic triage for 
 #' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
 #'
-#'Ring, Caroline L., et al. "Identifying populations sensitive to
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment international 106 (2017): 105-118. 
 #' 
@@ -165,6 +165,7 @@
 #' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 #'
 #' @keywords Monte Carlo Steady State
+#'
 #' @examples
 #' 
 #' \dontrun{
