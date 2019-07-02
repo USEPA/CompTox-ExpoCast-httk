@@ -27,6 +27,9 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 \item{parameters}{Chemical parameters from the parameterize_schmitt
 function, overrides chem.name and chem.cas.}
 
+\item{alpha}{Ratio of Distribution coefficient D of totally charged species
+and that of the neutral form}
+
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment.}
 
@@ -37,6 +40,10 @@ used by default.}
 
 \item{tissues}{Vector of desired partition coefficients.  Returns all by
 default.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 Returns tissue to unbound plasma partition coefficients for each
@@ -44,8 +51,8 @@ tissue.
 }
 \description{
 This function implements the method from Schmitt (2008) in predicting the 
-tissue to unbound plasma partition coefficients from for the tissues 
-contained in the tissue.data table.
+tissue to unbound plasma partition coefficients for the tissues contained 
+in the tissue.data table.
 }
 \details{
 A separate regression is used when adjusted.Funbound.plasma is FALSE.

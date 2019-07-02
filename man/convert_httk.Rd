@@ -43,7 +43,6 @@ liver clearance if FALSE.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
 clearance assay result has a p-values greater than the threshold are set to zero.}
-
 \item{concentration}{Blood, plasma, or tissue concentration.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
