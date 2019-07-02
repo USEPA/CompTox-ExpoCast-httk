@@ -8,7 +8,9 @@ calc_analytic_css(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, daily.dose = 1, output.units = "uM",
   model = "pbtk", concentration = "plasma", suppress.messages = F,
   recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = F, IVIVE = NULL, ...)
+  bioactive.free.invivo = F, IVIVE = NULL,
+  Caco2.options = list(Caco2.Pab.default = "2", Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE), ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -74,16 +76,13 @@ Concentrations are calculated for the specifed model with constant
 oral infusion dosing.  All tissues other than gut, liver, and lung are the 
 product of the steady state plasma concentration and the tissue to plasma 
 partition coefficient. 
-\tabular{lrrrr}{
-\tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr
-Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr
-Honda2 \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr
-Honda3 \tab Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-Honda4 \tab Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr
-Honda5 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
+\tabular{lrrrrr}{
+\tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. In Vivo \tab TK Statistic Used* \tab Bioactive Chemical Conc. In Vitro \cr
+Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
+Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 }
-*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
 }
 \examples{
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
@@ -99,6 +98,7 @@ calc_analytic_css(parameters=params,model="pbtk")
 \references{
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+'
 }
 \author{
 Robert Pearce, John Wambaugh, and Greg Honda

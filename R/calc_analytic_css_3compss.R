@@ -46,7 +46,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=T,
                                    bioactive.free.invivo = F,
-                                   Caco2.options = list(Caco2.Pab.default = 2,
+                                   Caco2.options = list(Caco2.Pab.default = "2",
                                                         Caco2.Fgut = TRUE,
                                                         Caco2.Fabs = TRUE),
 

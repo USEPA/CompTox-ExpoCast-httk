@@ -56,6 +56,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     parameters <- parameterize_3comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {

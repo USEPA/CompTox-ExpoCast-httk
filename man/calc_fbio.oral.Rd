@@ -9,9 +9,15 @@ calc_fbio.oral(Params = NULL, chem.cas = NULL, chem.name = NULL,
   default.to.human = F, human.clint.fup = F,
   adjusted.Funbound.plasma = T, restrictive.clearance = T,
   fup.lod.default = 0.005, suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04)
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(Caco2.Pab.default = 2, Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE))
 }
 \arguments{
+\item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+cl_us, BW, Qsmallintestine, Fgutabs) used in the calculation, either supplied by user
+or calculated in parameterize_steady_state.}
+
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
 
@@ -39,32 +45,37 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = 1.}
 }
 \value{
-\item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
-that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
-liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
-Weight, kg} \item{MW}{Molecular Weight, g/mol}
-\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-\item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
-\item{liver.density}{Liver tissue density, kg/L.}
-\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
-assay using the method of Kilford et al. (2008)}
-\item{hepatic.bioavailability}{Fraction of dose remaining after first pass
-clearance, calculated from the corrected well-stirred model.}
+\item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
+reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
+i.e. the fraction of the dose that enters the gutlumen.} \item{fgut.oral}{Fraction of 
+chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
+surviving first pass hepatic clearance.}
 }
 \description{
-This function initializes the parameters needed in the functions
-calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
-compartment steady state model ('3compartmentss').
+These functions calculate the fraction absorbed (calc_fabs.oral), the fraction
+surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
+(calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
+parameterization and other functions. Options are set in the list Caco2.options.
 }
 \examples{
 
- parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
- parameters <- parameterize_steadystate(chem.cas='80-05-7')
+ fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
+                         Caco2.options = list(Caco2.Pab.default = 2,
+                                              Caco2.Fabs = TRUE,
+                                              Caco2.Fgut = TRUE))
+ fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
+                         Caco2.options = list(Caco2.Pab.default = 2,
+                                              Caco2.Fabs = FALSE,
+                                              Caco2.Fgut = FALSE))
 
 }
 \author{
