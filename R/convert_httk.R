@@ -24,11 +24,13 @@
 #' @param concentration Blood, plasma, or tissue concentration. 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
 #' clearance assay result has a p-values greater than the threshold are set to zero.
-##'
+#'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
+#' @import utils
+#' @export convert_httk
 convert_httk <- function(indiv.model.bio,
                          model,
                          this.chem=NULL,

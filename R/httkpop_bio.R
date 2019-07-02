@@ -16,42 +16,8 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-
-
-
-
-
-#' Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-#' 
-#' Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-#' 
-#' 
-#' @param indiv_dt The data.table object returned by \code{httkpop_generate()}
-#' @param indiv_dt The data.table object returned by \code{httkpop_generate()}
-#' @return A data.table with the physiological parameters expected by any HTTK
-#' model, including body weight (BW), hematocrit, tissue volumes per kg body
-#' weight, tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg
-#' BW)^3/4, portal vein flow per (kg BW)^3/4, and liver density.
-#' 
-#' A data.table with the physiological parameters expected by any HTTK model,
-#' including body weight (BW), hematocrit, tissue volumes per kg body weight,
-#' tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg BW)^3/4,
-#' portal vein flow per (kg BW)^3/4, and liver density.
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118 Convert HTTK-Pop-generated
-#' parameters to HTTK physiological parameters
-#' 
-#' Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
 #' @export httkpop_bio
+
 httkpop_bio <- function(indiv_dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

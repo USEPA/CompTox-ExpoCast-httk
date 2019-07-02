@@ -140,6 +140,7 @@
 #' ## End(**Not run**)
 #' }
 #' 
+#' @import stats msm
 #' @export monte_carlo
 monte_carlo <- function(params,which.quantile=0.95,
                         cv.params=NULL,censored.params=NULL,samples=1000,

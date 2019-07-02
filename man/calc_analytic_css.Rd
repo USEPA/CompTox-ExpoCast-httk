@@ -52,7 +52,7 @@ to rapid off-binding).}
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
-\item{IVIVE}{Honda et al. (submitted) identified four plausible sets of 
+\item{IVIVE}{Honda et al. (2019) identified four plausible sets of 
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
 Argument may be set to "Honda1" through "Honda4". If used, this function 
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
@@ -99,6 +99,7 @@ calc_analytic_css(parameters=params,model="pbtk")
 \references{
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+'
 }
 \author{
 Robert Pearce, John Wambaugh, and Greg Honda

@@ -18,7 +18,6 @@
 #'   
 #'   
 #' @import data.table survey
-#'   
 #' @docType package
 #' @name httkpop
 #'
