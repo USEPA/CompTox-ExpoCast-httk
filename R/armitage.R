@@ -115,10 +115,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @return tcdata
 #' @author Greg Honda
 #' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' 
-#' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
-#' to Evaluate Extrapolation Assumptions"
+#' 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 #' @import magrittr
 #' @export armitage_eval
 armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers

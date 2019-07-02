@@ -75,10 +75,8 @@ and lipid and protein compartments in cells.
 }
 \references{
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-
-Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
-to Evaluate Extrapolation Assumptions"
+2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 }
 \author{
 Greg Honda
