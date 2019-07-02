@@ -321,7 +321,9 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 #Table CLint units are uL/min/10^6 cells:
 # For Rotroff data they average 1 and 10 uM, but then you get the same numbers
 Tonnelier.table <- read.xls("Tonnelier-2012.xlsx",stringsAsFactors=F)
+# Dashboard prefers different CAS:
 Tonnelier.table[Tonnelier.table$Name=="Abamectin","CAS"] <- "71751-41-2"
+Tonnelier.table[Tonnelier.table$CAS=="51630-58-1","CAS"] <- "67614-33-9"
 Tonnelier.table$CAS <- sapply(Tonnelier.table$CAS,function(x) substr(x,regexpr("[^0]",x),nchar(x)))
 chem.prop <- add_chemtable(Tonnelier.table,
                species="Human",
@@ -359,6 +361,14 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 
 Obach2008.table <- read.xls("Obach2008.xlsx",stringsAsFactors=F)
 Obach2008.table[Obach2008.table$CAS..=="3764-87-2","Name"] <- "Trestolone"
+# Dashboard doesn't recognize prefers other CAS:
+Obach2008.table[Obach2008.table$CAS..=="229627-58-1","CAS.."] <- "NOCAS_43930"
+Obach2008.table[Obach2008.table$CAS..=="85650-52-8","CAS.."] <- "61337-67-5"
+Obach2008.table[Obach2008.table$CAS..=="135729-61-2","CAS.."] <- "135729-56-5"
+Obach2008.table[Obach2008.table$CAS..=="51931-66-9","CAS.."] <- "32447-90-8"
+# Get rid of non-numeric fu values:
+Obach2008.table$fu <- as.numeric(Obach2008.table$fu)
+Obach2008.table <- subset(Obach2008.table,!is.na(fu))
 chem.prop <- add_chemtable(Obach2008.table,
                species="Human",
                reference="Obach 2008",
@@ -422,6 +432,9 @@ load("CASback.RData")
 library(stringr)
 Cory.newpKa <- ret.df
 Cory.newpKa[Cory.newpKa$CAS=="3764-87-2","Compound"] <- "Trestolone"
+# Dashboard prefers a different cas:
+Cory.newpKa[Cory.newpKa$CAS=="85650-52-8","CAS"] <- "61337-67-5"
+ 
 # Old mistake gave wrong CAS for Metoprolol in list given to Cory::
 Cory.newpKa <- Cory.newpKa[Cory.newpKa$CAS!="37350-58-6",]
 Cory.newpKa$Donor <- str_replace(Cory.newpKa$pKaTools_APKA,";",",")
@@ -617,8 +630,9 @@ if (any(duplicated(Wetmore.data))) stop("Duplicate entries in Wetmore.data")
 
 
 # Read in the Tox21 and ToxCast lists from the Dashboard
-Tox21<- read.xlsx("Tox21-2018-08-07.xls",stringsAsFactors=F,1)
-ToxCast<- read.xlsx("ToxCast-2018-08-07.xls",stringsAsFactors=F,1)
+Tox21 <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")
+ToxCast <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")
+DrugBank <- read.csv("Dashboard-DrugBank.tsv",stringsAsFactors=F,sep="\t")
 
 NHANES.serum <- read.xls("ACT-p2m-20150330.xlsx",sheet=1,stringsAsFactors=F)
 NHANES.blood <- read.xls("ACT-p2m-20150330.xlsx",sheet=2,stringsAsFactors=F)
@@ -632,8 +646,9 @@ chem.lists[["NHANES.blood.analyte"]] <- NHANES.blood[-1,3:4]
 chem.lists[["NHANES.urine.parent"]] <- NHANES.urine[-1,1:2]
 chem.lists[["NHANES.urine.analyte"]] <- NHANES.urine[-1,4:5]
 #chem.lists[["EPA.invivo"]] <- EPAinvivo[EPAinvivo[,"In.Vivo.TK.Study.Underway"]=="Y",1:2]
-chem.lists[["Tox21"]] <- Tox21[,2:3]
-chem.lists[["ToxCast"]] <- ToxCast[,2:3]
+chem.lists[["Tox21"]] <- Tox21[,c(2:3,1)]
+chem.lists[["ToxCast"]] <- ToxCast[,c(2:3,1)]
+chem.lists[["DrugBank"]] <- DrugBank[,c(2:3,1)]
 
 for(i in 1:length(chem.lists))
 {
@@ -680,7 +695,6 @@ chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,!CAS %in% subse
 
 #Remove overwritten clint pvalues
 for(this.cas in subset(chem.physical_and_invitro.data,Human.Clint.pValue.Reference != Human.Clint.Reference)[,'CAS']) chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue.Reference'] <- NA
-
 
 load("NewInVivoTablesForHTTK.RData")
 #Honda 2019:
@@ -869,7 +883,8 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
 
 
 # Some chemicals are missing from DSStox OPERA predictions:
-new.opera <- read.xls('MissingPhysChem.xls',stringsAsFactors=F) 
+new.opera <- read.csv('MissingPhysChem.csv',stringsAsFactors=F) 
+colnames(new.opera)[1] <- "INPUT"
 new.opera[,"logHenry"] <- log10(as.numeric(new.opera$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
 new.opera[,"logWSol"] <- log10(as.numeric(new.opera$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
 chem.physical_and_invitro.data <- add_chemtable(new.opera,current.table = chem.physical_and_invitro.data,
@@ -886,6 +901,8 @@ chem.physical_and_invitro.data <- add_chemtable(new.opera,current.table = chem.p
 # (need to check into Henry's law coefficient)
 # Use EPI Suite for now
 load("chemprops-072115.RData")
+#Dashboard doesn't like this CAS:
+chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
 chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
 
 chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
@@ -924,6 +941,8 @@ sipes2017.table <- add_chemtable(sipes2017,
                                   reference = 'Sipes 2017', 
                                   species= 'Human', 
                                   overwrite=F)
+
+if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) browser()
 
 write.table(chem.physical_and_invitro.data,file="HTTK-Chem-Props.txt",row.names=F,quote=F,sep="\t")
 write.table(chem.invivo.PK.data,file="HTTK-Chem-InVivo-Data.txt",row.names=F,quote=F,sep="\t")
