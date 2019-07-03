@@ -74,7 +74,8 @@ the model published in Armitage et al. 2014 include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{
-temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1, well_number = 384, nomconc = 10)
+temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+well_number = 384, nomconc = 10)
 print(temp$cfree.invitro)
 
 }
