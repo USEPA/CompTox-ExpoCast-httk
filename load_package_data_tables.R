@@ -165,6 +165,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
 McGinnity.table <- read.xls("McGinnity2004.xlsx",stringsAsFactors=F)[-1,]
+McGinnity.table[McGinnity.table$Human.Hepatic.Clint=="<1.0","Human.Hepatic.Clint"]<-0
 chem.prop <- add_chemtable(McGinnity.table,
                current.table=chem.prop,
                reference="McGinnity 2004", species="Human",
@@ -177,7 +178,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
 Ito.table <- read.xls("Ito2004.xlsx",stringsAsFactors=F)
-Ito.table[Ito.table$Clint..hepatocyte=="ND","Clint..hepatocyte"]<-0
+Ito.table[Ito.table$Clint..hepatocyte.=="ND","Clint..hepatocyte."]<-0
 chem.prop <- add_chemtable(Ito.table,
                current.table=chem.prop,
                reference="Ito 2004", species="Human",
@@ -728,7 +729,7 @@ chem.physical_and_invitro.data <- add_chemtable(chemprop.new.rat,
                                                                 pKa_Accept="pKa_Accept",
                                                                 pKa_Donor="pKa_Donor",
                                                                 Compound = "preferred_name"),
-                                                 reference="Honda Submitted",
+                                                 reference="Honda 2019",
                                                  species="Rat",
                                                  overwrite=T)
 
@@ -740,7 +741,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_clint),
                                                                DTXSID="DSSTox_Substance_Id",
                                                                Clint="clearance",
                                                                Compound = "preferred_name"),
-                                                reference="Honda Submitted",
+                                                reference="Honda 2019",
                                                 species="Rat",
                                                 overwrite=T)
 # only use the fups that greg identified as good:
@@ -750,7 +751,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_fup),
                                                                DTXSID="DSSTox_Substance_Id",
                                                                Funbound.plasma="Funbound.plasma",
                                                                Compound = "preferred_name"),
-                                                reference="Honda Submitted",
+                                                reference="Honda 2019",
                                                 species="Rat",
                                                 overwrite=T)
 
@@ -904,13 +905,14 @@ load("chemprops-072115.RData")
 #Dashboard doesn't like this CAS:
 chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
 chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
-chemprop.table$logHenry <- log10(chemrop.table$Henry)
+chemprop.table$logHenry <- log10(as.numeric(chemprop.table$Henry))
 chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
                                                 current.table = chem.physical_and_invitro.data,
                                                 data.list=list(CAS="CASRN",
                                                                logHenry="logHenry",
-                                                               logP="logP",
+                                                               logP="LogP",
                                                                MP="MP",
+                                                               MW="MolecularWeight",
                                                                logPwa="logPwa37p5"),
                                                 reference="EPISuite")
 
@@ -972,4 +974,5 @@ save(Wetmore.data,
      chem.lists,
      sysdata.rda.stamp,                 
      file="sysdata.rda",compress="gzip",version=2)
+     
      
