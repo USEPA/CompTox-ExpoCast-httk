@@ -1,4 +1,4 @@
----
+﻿---
 title: "Wambaugh et al. (submitted): Creating Figures for the Manuscript"
 author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
@@ -643,7 +643,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
 ```
 
 #Figure 4:
-Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 µM chemical concentration displayed, though 1 and 10 µM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material (doi:10.5061/dryad.nf40jb4).
+Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 µM chemical concentration displayed, though 1 and 10 µM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material (https://doi.org/10.5061/dryad.nf40jb4).
 ```{R Wambaugh2019.Fig4}
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
     
