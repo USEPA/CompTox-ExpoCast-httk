@@ -102,7 +102,10 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   } else {
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
-    if (!"Fprotein.plasma"%in%names(parameters)) parameters$Fprotein.plasma <-  physiology.data[which(physiology.data[,'Parameter'] =='Plasma Protein Volume Fraction'),which(tolower(colnames(physiology.data)) == tolower(species))]
+    if (!"Fprotein.plasma"%in%names(parameters)) 
+      parameters$Fprotein.plasma <-  httk::physiology.data[
+      which(httk::physiology.data[,'Parameter'] == 'Plasma Protein Volume Fraction'),
+      which(tolower(colnames(httk::physiology.data)) == tolower(species))]
   }
   
   if(!adjusted.Funbound.plasma & user.params == FALSE) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
