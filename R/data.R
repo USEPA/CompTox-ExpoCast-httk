@@ -386,33 +386,33 @@
 #'   \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible 
 #' interval for protein binding affinity from analysis of protein
 #' titration protocol data (affinity model)}
-#'   \item{Decreases.prob}{Probability that the chemical concentration decreased
+#'   \item{Decreases.Prob}{Probability that the chemical concentration decreased
 #' systematiclally during hepatic clearance assay.}
-#'   \item{Saturates.prob}{Probability that the rate of chemical concentration
+#'   \item{Saturates.Prob}{Probability that the rate of chemical concentration
 #' decrease varied between the 1 and 10 uM hepatic clearance experiments.}
 #'   \item{Slope.1uM.Median}{Estimated slope for chemcial concentration decrease
 #' in the 1 uM hepatic clearance assay.}
 #'   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
 #' in the 10 uM hepatic clearance assay.}
-#'   \item{Clint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
+#'   \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
 #' hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{Clint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#'   \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
 #' interval for intrinsic hepatic clearance at 1 uM initital chemical 
 #' concentration (uL/min/million hepatocytes)}        
-#'   \item{Clint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#'   \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
 #' interval for intrinsic hepatic clearance at 1 uM initital chemical 
 #' concentration(uL/min/million hepatocytes)}
-#'   \item{Clint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
+#'   \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
 #' hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{Clint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#'   \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
 #' interval for intrinsic hepatic clearance at 10 uM initital chemical 
 #' concentration (uL/min/million hepatocytes)}        
-#'   \item{Clint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#'   \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
 #' interval for intrinsic hepatic clearance at 10 uM initital chemical 
 #' concentration(uL/min/million hepatocytes)}
-#'   \item{Clint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
+#'   \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
 #' (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
-#'   \item{Clint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
+#'   \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
 #' (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
 #'   \item{Fit}{Classification of clearance observed}                         
 #'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
