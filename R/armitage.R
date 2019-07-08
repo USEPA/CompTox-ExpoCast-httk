@@ -119,7 +119,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @import magrittr
 #' @examples 
 #' temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
-#' well_number = 384, nomconc = 10)
+#' this.well_number = 384, nomconc = 10)
 #' print(temp$cfree.invitro)
 #' 
 #' @export armitage_eval
