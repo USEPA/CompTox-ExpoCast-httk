@@ -67,7 +67,7 @@ concentration(uL/min/million hepatocytes)}
 (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
   \item{Clint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
 (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
-  \item{fit}{Classification of clearance observed}                         
+  \item{Fit}{Classification of clearance observed}                         
   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
 description}
 }}
