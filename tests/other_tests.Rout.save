@@ -1,34 +1,3 @@
-
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-[Previously saved workspace restored]
-
-> #R CMD BATCH other_tests.R other_tests.Rout
-> library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
-> calc_css(chem.name='nicotine')
 Human plasma concentrations returned in uM units.
 $avg
 [1] 0.6802697
@@ -42,8 +11,6 @@ $max
 $the.day
 [1] 0
 
-There were 31 warnings (use warnings() to see them)
-> calc_css(chem.name="perfluorooctanoic acid")
 Human plasma concentrations returned in uM units.
 $avg
 [1] 133.3033
@@ -57,8 +24,6 @@ $max
 $the.day
 [1] 16
 
-There were 31 warnings (use warnings() to see them)
-> calc_stats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.82 .
 $AUC
@@ -70,13 +35,5 @@ $peak
 $mean
 [1] 0.06802697
 
-There were 31 warnings (use warnings() to see them)
-> calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-+                   default.to.human=TRUE,daily.dose=2)
 Tissue concentration for liver returned in uM units.
 [1] 23.605
-There were 50 or more warnings (use warnings() to see the first 50)
-> 
-> proc.time()
-   user  system elapsed 
-   2.54    0.53    3.00 
