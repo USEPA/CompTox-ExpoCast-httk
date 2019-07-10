@@ -1,56 +1,6 @@
-
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-[Previously saved workspace restored]
-
-> #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
-> library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
-> # Check if the number of chemicals has changed:
-> Css.list <- get_cheminfo()
-> pbpk.list <- get_cheminfo(model='pbtk')
-Warning message:
-In get_cheminfo(model = "pbtk") : NAs introduced by coercion
-> rat.list <- get_cheminfo(species="rat")
-> length(Css.list)
-[1] 8834
-> length(pbpk.list)
-[1] 8776
-> length(rat.list)
+[1] 944
+[1] 874
 [1] 171
->                                                  
-> # check for duplicate entries (all of the following should be TRUE):
-> length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
 [1] TRUE
-> length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
-[1] FALSE
-> length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
-+   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
 [1] TRUE
->   
-> 
-> proc.time()
-   user  system elapsed 
-   2.18    0.37    2.53 
+[1] TRUE
