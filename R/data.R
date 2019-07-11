@@ -126,7 +126,8 @@
 #'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
 #'  Assigned using methods in \code{get_weight_class}.} }
 #'  
-#'@source \url{https://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@source \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -149,7 +150,7 @@
 #'  ages.}}
 #'@keywords data
 #'@keywords httk-pop
-#'
+#'          
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
@@ -180,7 +181,8 @@
 #'  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
 #'  
 #'  
-#'@source \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'@source \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'
 #'@keywords data
 #'@keywords httk-pop
 #'
