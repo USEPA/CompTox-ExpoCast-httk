@@ -22,22 +22,25 @@ model.list <- list()
 #'model,'3compartment' for the three compartment model, '3compartmentss' for 
 #'the three compartment steady state model, and '1compartment' for one 
 #'compartment model.
-#'@param concentration Desired concentration type, 'blood' or default 'plasma'.
+#'@param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #'in the blood to plasma using the input parameters. Use this if you have 
 #''altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #'concentration.)
-#'@param IVIVE Honda et al. (submitted) identified six plausible sets of 
+#'@param IVIVE Honda et al. (2019) identified four plausible sets of 
 #'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
-#'Argument may be set to "Honda1" through "Honda6". If used, this function 
-#'overwrites the tissue, restrictive.clearance, and plasma.binding arguments. 
+#'Argument may be set to "Honda1" through "Honda4". If used, this function 
+#'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 #'See Details below for more information.
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
+#'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -72,24 +75,24 @@ model.list <- list()
 #'
 #'@keywords Solve
 #'
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#'In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 #''
 #' @export calc_analytic_css
 calc_analytic_css <- function(chem.name=NULL,
-
-                               chem.cas = NULL,
-                               parameters=NULL,
-                               daily.dose=1,
-                               output.units='uM',
-                               model = 'pbtk',
-                               concentration='plasma',
-                               suppress.messages=F,
-                               recalc.blood2plasma=F,
-                               tissue=NULL,
-                               restrictive.clearance=T,
-                               IVIVE=NULL,
-                               ...)
+                              chem.cas = NULL,
+                              parameters=NULL,
+                              daily.dose=1,
+                              output.units='uM',
+                              model = 'pbtk',
+                              concentration='plasma',
+                              suppress.messages=F,
+                              recalc.blood2plasma=F,
+                              tissue=NULL,
+                              restrictive.clearance = T,
+                              bioactive.free.invivo = F,
+                              IVIVE=NULL,
+                              ...)
 {
 #  tissue.data <- tissue.data
 #  physiology.data <- physiology.data
@@ -102,11 +105,26 @@ calc_analytic_css <- function(chem.name=NULL,
 # IVIVE parameters:
   if (!is.null(IVIVE)) 
   {
-    out <- honda.ivive(method=IVIVE,tissue=tissue)
+    out <- honda.ivive(method=IVIVE, tissue=tissue)
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+    concentration <- out[["concentration"]]
+  }
+  
+  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
+     ){
+    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
+         Ctissue * Funbound.plasma is not a relevant concentration.\n
+         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
   }
      
+  if(!is.null(tissue) & tolower(concentration) != "tissue"){
+    concentration <- "tissue"
+    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
+  }
+  
 # Check that the output units are ones we can work with:
   good.units <- c("uM","mg/L")
   if (!(tolower(output.units) %in% tolower(good.units))) 
@@ -141,7 +159,8 @@ calc_analytic_css <- function(chem.name=NULL,
       suppress.messages=suppress.messages,
       recalc.blood2plasma=recalc.blood2plasma,
       tissue=tissue,
-      restrictive.clearance=restrictive.clearance),
+      restrictive.clearance=restrictive.clearance,
+      bioactive.free.invivo = bioactive.free.invivo),
       list(...)))
   } else {
     stop(paste("Model",model,"not available. Please select from:",
@@ -159,8 +178,9 @@ calc_analytic_css <- function(chem.name=NULL,
   {
     if (tolower(concentration)=="plasma") concentration <- "Plasma"
     else if (tolower(concentration)=="blood") concentration <- "Blood"
+    else if (tolower(concentration) == "tissue") concentration <- "Tissue"
     if(is.null(tissue)) cat(paste(concentration,"concentration returned in",output.units,"units.\n"))
-    else cat(paste(concentration,"for",tissue,"returned in",output.units,"units.\n"))
+    else cat(paste(concentration,"concentration for",tissue,"returned in",output.units,"units.\n"))
   }
   
   return(as.numeric(Css))

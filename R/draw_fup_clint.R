@@ -37,6 +37,7 @@
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
 #' hepatocyte assay.
 #' @author Caroline Ring and John Wambaugh
+#' @import stats
 #' @export draw_fup_clint
 
 draw_fup_clint <- function(this.chem=NULL,
@@ -59,7 +60,8 @@ draw_fup_clint <- function(this.chem=NULL,
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   Clint.mu<-Clint.sd<-unadjusted.Funbound.plasma<-Flipid<-physiology.data<-NULL
-  Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-NULL
+  Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
+  Funbound.plasma.dist<-fup.sd<-NULL
   #End R CMD CHECK appeasement.
 
   #To get the measured values of Funbound.plasma and Clint, get the HTTK default

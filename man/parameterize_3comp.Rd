@@ -7,7 +7,8 @@
 parameterize_3comp(chem.cas = NULL, chem.name = NULL,
   species = "Human", default.to.human = F, force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05, adjusted.Funbound.plasma = T,
-  regression = T, suppress.messages = F)
+  regression = T, suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -35,6 +36,10 @@ TRUE along with parition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, 

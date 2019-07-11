@@ -9,8 +9,8 @@ parameterize_pbtk(chem.cas = NULL, chem.name = NULL,
   c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
   force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T, regression = T, placenta = F,
-  suppress.messages = F)
-  }
+  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
+}
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
@@ -45,6 +45,10 @@ partition coefficients.}
 coefficients, Kplacenta2pu and Kfplacenta2pu.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -54,7 +58,7 @@ plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
 chemical unbound in hepatocyte assay using the method of Kilford et al.
 (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-concentration in plasma.} \item{Kgutabs}{Rate that chemical enters the gut
+concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
 from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
 kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
 concentration of chemical in liver tissue to unbound concentration in

@@ -11,8 +11,8 @@
 #' Predict partition coefficients using the method from Schmitt (2008).
 #' 
 #' This function implements the method from Schmitt (2008) in predicting the 
-#' tissue to unbound plasma partition coefficients from for the tissues 
-#' contained in the tissue.data table.
+#' tissue to unbound plasma partition coefficients for the tissues contained 
+#' in the tissue.data table.
 #' 
 #' A separate regression is used when adjusted.Funbound.plasma is FALSE.
 #' 
@@ -38,6 +38,8 @@
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param parameters Chemical parameters from the parameterize_schmitt
 #' function, overrides chem.name and chem.cas.
+#' @param alpha Ratio of Distribution coefficient D of totally charged species
+#' and that of the neutral form
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment.
 #' @param regression Whether or not to use the regressions.  Regressions are
@@ -45,6 +47,9 @@
 #' @param regression.list Tissues to use regressions on.
 #' @param tissues Vector of desired partition coefficients.  Returns all by
 #' default.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
 #' @author Robert Pearce
@@ -53,6 +58,7 @@
 #' 
 #' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 #' 
+#' @import magrittr
 #' @export predict_partitioning_schmitt
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
@@ -76,7 +82,14 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          tissues=NULL,
                                          minimum.Funbound.plasma=0.0001) 
 {
-  Tissue <- Species <- variable <- NULL
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Tissue <- Species <- variable <- Reference <- value <- physiology.data <- NULL
+  #End R CMD CHECK appeasement.
+  
   
   if (is.null(parameters))
   {
@@ -88,10 +101,14 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
     user.params <- F
   } else {
     user.params <- T
-    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- parameterize_schmitt(chem.cas="80-05-7")$plasma.pH
-    if (!"Fprotein.plasma"%in%names(parameters)) parameters$Fprotein.plasma <- parameterize_schmitt(chem.cas="80-05-7")$Fprotein.plasma
+    if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
+    if (!"Fprotein.plasma"%in%names(parameters)) 
+      parameters$Fprotein.plasma <-  httk::physiology.data[
+      which(httk::physiology.data[,'Parameter'] == 'Plasma Protein Volume Fraction'),
+      which(tolower(colnames(httk::physiology.data)) == tolower(species))]
   }
-  if(!adjusted.Funbound.plasma) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+  
+  if(!adjusted.Funbound.plasma & user.params == FALSE) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
    
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
@@ -105,12 +122,14 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
   this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,Tissue != 'red blood cells' & tolower(Species) == tolower(species) & variable == this.comp)[,'value'])))
   colnames(this.row) <- colnames(tissue.data)
-  tissue.data <- rbind(tissue.data,this.row)
+  tissue.data <- rbind(tissue.data,this.row) %>%
+  as.data.frame()
 }
   if('fetal.plasma.pH' %in% names(parameters)){
     placenta.tissue.data <- cbind(rep('placenta',9),rep(species,9),rep(NA,9),c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH'),c(.724,.276,.793,.0083,.1535,as.numeric(subset(tissue.data,Tissue=='rest' & Species==species & variable %in% c('Fn_Lc','Fn_PLc','Fa_PLc'))[,'value']),7.24))
     colnames(placenta.tissue.data) <- colnames(tissue.data)
-    tissue.data <- rbind(tissue.data,placenta.tissue.data)
+    tissue.data <- rbind(tissue.data,placenta.tissue.data) %>%
+    as.data.frame()
   }
 
 	Ktissue2pu <- list()

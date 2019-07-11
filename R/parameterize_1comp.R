@@ -34,7 +34,7 @@
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 #' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-#' \item{Kgutabs}{Rate chemical is absorbed, 1/h.}
+#' \item{kgutabs}{Rate chemical is absorbed, 1/h.}
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 #' \item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
 #' concentration of the chemical in the blood to the concentration in the
@@ -115,7 +115,7 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
   params[["MA"]] <- phys.params[["MA"]]
 
-  params[['Kgutabs']] <- 2.18
+  params[['kgutabs']] <- 2.18
   
   params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
   
