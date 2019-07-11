@@ -1,5 +1,6 @@
-#R CMD BATCH other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
 
 calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 calc_analytic_css(chem.cas="80-05-7",model="1compartment")
