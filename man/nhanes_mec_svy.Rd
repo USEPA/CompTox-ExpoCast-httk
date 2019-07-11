@@ -17,7 +17,7 @@
  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
  Assigned using methods in \code{get_weight_class}.} }}
 \source{
-\url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+\url{https://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 
 \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 
