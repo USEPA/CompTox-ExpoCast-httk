@@ -17,7 +17,7 @@
 #' coefficient.
 #' 
 #' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-#' assumptions identified by Honda et al. (submitted) are: \tabular{lrrrr}{
+#' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 #' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -48,15 +48,12 @@
 #' samples from the simulation instead of the selected quantile.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param plasma.binding If TRUE, then only the free (unbound) fraction of
-#' chemical is considered to be bioactive. If FALSE, the total chemical
-#' concentration is used for IVIVE. (Default TRUE)
-#' @param tk.statistic.used Theoreticially either the "mean" or "max"imum
-#' (peak) concetrations might be used for IVIVE with some models. Defaults to
-#' "mean". Meaningless for the steady-state model (Argument is currently
-#' ignored because analytic steady-state solutions are used by this function.).
+#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+#' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #' @param tissue Desired steady state tissue conentration.
-#' @param IVIVE Honda et al. (submitted) identified six plausible sets of
+#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
+#' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
 #' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
@@ -65,7 +62,23 @@
 #' variance of parameters.
 #' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #' @author John Wambaugh
-#' @keywords Steady State Monte Carlo
+#'
+#' @references Wetmore, Barbara A., et al. "Incorporating high-throughput 
+#' exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
+#' chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+#'
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment international 106 (2017): 105-118. 
+#' 
+#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#' 
+#' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
+#' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#' 
+#' @keywords Monte Carlo Steady State
+#'
 #' @examples
 #' 
 #' 
@@ -84,23 +97,35 @@ calc_mc_oral_equiv <- function(conc,
                                output.units='mgpkgpday',
                                suppress.messages=F,
                                return.samples=F,
+                               concentration = "plasma",
                                restrictive.clearance=T,
-                               plasma.binding=F,
-                               tk.statistic.used="mean",
+                               bioactive.free.invivo = F,
                                tissue=NULL,
                                IVIVE=NULL,
                                ...)
 {
   if(!(tolower(input.units) %in% c('um','mg/l'))) stop("Input units can only be uM or mg/L.")
   
-  if (!(tk.statistic.used %in% c("mean","max"))) stop ("tk.statistic.used for IVIVE must be either \"mean\" or \"max\"imum concentrtation.")
-  
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
-    plasma.binding <- out[["plasma.binding"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
+    concentration <- out[["concentration"]]
+  }
+  
+  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
+  ){
+    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
+         Ctissue * Funbound.plasma is not a relevant concentration.\n
+         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
+  }
+  
+  if(!is.null(tissue) & tolower(concentration) != "tissue"){
+    concentration <- "tissue"
+    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
   Css <- try(calc_mc_css(daily.dose=1,
@@ -110,20 +135,16 @@ calc_mc_oral_equiv <- function(conc,
                          species=species,
                          output.units=input.units,
                          suppress.messages=T,
+                         concentration = concentration,
                          restrictive.clearance=restrictive.clearance,
+                         bioactive.free.invivo = bioactive.free.invivo,
                          tissue=tissue,
-                         tk.statistic.used=tk.statistic.used,
                          return.samples=return.samples,
                          ...))
                          
   dose <- conc/Css  
   
-  # Do we use the free concentration in the plasma or the total?
-  if(plasma.binding) 
-  {
-    params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas,species=species)
-    dose <- dose/params[["Funbound.plasma"]]
-  } 
+
   if(tolower(output.units) == 'umolpkgpday'){
     if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
     MW <- get_physchem_param("MW",chem.CAS=chem.cas)

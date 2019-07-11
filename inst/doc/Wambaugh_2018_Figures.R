@@ -550,7 +550,7 @@
 #                                      "Fup",
 #                                      "Vdist",
 #                                      "kelim",
-#                                      "Kgutabs",
+#                                      "kgutabs",
 #                                      "Fbio")]
 #  rnames <- chem.invivo.PK.aggregate.data$Compound
 #  rnames[rnames=="Bensulide"] <- c("Bensulide.Joint","Bensulide.NHEERL","Bensulide.RTI")
@@ -735,9 +735,9 @@
 #  
 
 ## ----fig6, eval=FALSE----------------------------------------------------
-#  FitData$SelectedKgutabs <- FitData$Kgutabs
+#  FitData$Selectedkgutabs <- FitData$kgutabs
 #  # Cutoff from optimizer is 1000:
-#  FigKgutabs <- ggplot(subset(FitData,SelectedKgutabs<999), aes(SelectedKgutabs, fill = Chemical)) +
+#  Figkgutabs <- ggplot(subset(FitData,Selectedkgutabs<999), aes(Selectedkgutabs, fill = Chemical)) +
 #    geom_histogram(binwidth=0.5) +
 #       scale_x_log10(label=scientific_10) +
 #       ylab("Number of Chemicals")+
@@ -746,12 +746,12 @@
 #          theme(legend.position="bottom")
 #  
 #  dev.new(width=6,height=6)
-#  print(FigKgutabs)
+#  print(Figkgutabs)
 #  
-#  mean(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
-#  min(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
-#  max(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
-#  median(subset(FitData,SelectedKgutabs<999)$SelectedKgutabs)
+#  mean(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
+#  min(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
+#  max(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
+#  median(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
 #  
 
 ## ----fig7, eval=FALSE----------------------------------------------------

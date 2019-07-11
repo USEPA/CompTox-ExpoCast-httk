@@ -12,7 +12,6 @@
 \alias{is.tox21}
 \alias{is.toxcast}
 \alias{is.expocast}
-\alias{is.httk}
 \alias{is.pharma}
 \title{Convenience Boolean (yes/no) functions to identify chemical membership in
 several key lists.}
@@ -27,15 +26,6 @@ corresponding to the chemical of interest.}
 "ToxCast", "Tox21", "ExpoCast", "NHANES", ""NHANES.serum.parent",
 "NHANES.serum.analyte","NHANES.blood.parent","NHANES.blood.analyte",
 "NHANES.urine.parent","NHANES.urine.analyte"}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
-\item{model}{Model used in calculation, 'pbtk' for the multiple compartment
-model, '1compartment' for the one compartment model, '3compartment' for
-three compartment model, '3compartmentss' for the three compartment model
-without partition coefficients, or 'schmitt' for chemicals with logP and
-fraction unbound (used in predict_partitioning_schmitt).}
 }
 \value{
 \item{logical}{A Boolean (1/0) value that is TRUE if the chemical is
@@ -111,6 +101,9 @@ Technology, 10.1021/es503583j.
 
 CDC (2014). National Health and Nutrition Examination Survey. Available at:
 http://www.cdc.gov/nchs/nhanes.htm.
+}
+\seealso{
+\code{\link{is.httk}} for determining inclusion in httk project
 }
 \author{
 John Wambaugh

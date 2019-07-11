@@ -27,19 +27,18 @@
 #' @param placenta Whether to involve calculation of placenta partitioning
 #' coefficients, Kplacenta2pu and Kfplacenta2pu.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @return
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
+#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
 #' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
 #' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
 #' chemical unbound in hepatocyte assay using the method of Kilford et al.
 #' (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-#' concentration in plasma.} \item{Kgutabs}{Rate that chemical enters the gut
+#' concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
 #' from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
 #' kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
 #' concentration of chemical in liver tissue to unbound concentration in
@@ -225,7 +224,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    Kgutabs = 2.18, # 1/h
+    kgutabs = 2.18, # 1/h
     Funbound.plasma = fup, # unitless fraction
     Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
