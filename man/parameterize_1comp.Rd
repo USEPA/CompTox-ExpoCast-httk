@@ -8,7 +8,8 @@ parameterize_1comp(chem.cas = NULL, chem.name = NULL,
   species = "Human", default.to.human = F,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, well.stirred.correction = T,
-  suppress.messages = F, clint.pvalue.threshold = 0.05)
+  suppress.messages = F, clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -43,13 +44,17 @@ with plasma concentration.}
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
 \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-\item{Kgutabs}{Rate chemical is absorbed, 1/h.}
+\item{kgutabs}{Rate chemical is absorbed, 1/h.}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 \item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
 concentration of the chemical in the blood to the concentration in the

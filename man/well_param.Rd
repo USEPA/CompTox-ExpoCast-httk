@@ -25,23 +25,23 @@ well_param
 }
 \description{
 Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
-Honda et al. (submitted)
+Honda et al. (2019)
 
 Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
-Honda et al. (submitted)
+Honda et al. (2019)
 }
 \references{
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions", submitted.
+In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", submitted.
+Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 }
 \author{
 Greg Honda

@@ -75,7 +75,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
         <listOfParameters>
          <parameter id = \"Qgut\" value = \"",signif(inlist$Qgutf * inlist$Qcardiac,digits),"\"/>
          <parameter id = \"Vart\" value = \"",signif(inlist$Vartc * inlist$BW,digits),"\"/>
-         <parameter id = \"Kgutabs\" value = \"",signif(24*inlist$Kgutabs,digits),"\"/>
+         <parameter id = \"kgutabs\" value = \"",signif(24*inlist$kgutabs,digits),"\"/>
          <parameter id = \"Qcardiac\" value = \"",signif(inlist$Qcardiac,digits),"\"/>
          <parameter id = \"Vlung\" value = \"",signif(inlist$Vlungc * inlist$BW,digits),"\"/>
          <parameter id = \"Vven\" value = \"",signif(inlist$Vvenc * inlist$BW,digits),"\"/>
@@ -136,7 +136,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                   <apply>
                      <times/>
                      <ci>
-                           Kgutabs
+                           kgutabs
                      </ci>
                      <ci>
                            Agutlumen

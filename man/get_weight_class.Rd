@@ -20,40 +20,10 @@ ages in years.}
 \item{weight}{A vector of body weights in kg.}
 
 \item{gender}{A vector of genders (as 'Male' or 'Female').}
-
-\item{age_years}{A vector of ages in years.}
-
-\item{age_months}{A vector of ages in months.}
-
-\item{bmi}{A vector of BMIs.}
-
-\item{recumlen}{A vector of heights or recumbent lengths in cm.}
-
-\item{weight}{A vector of body weights in kg.}
-
-\item{gender}{A vector of genders (as 'Male' or 'Female').}
-
-\item{age_years}{A vector of ages in years.}
-
-\item{age_months}{A vector of ages in months.}
-
-\item{bmi}{A vector of BMIs.}
-
-\item{recumlen}{A vector of heights or recumbent lengths in cm.}
-
-\item{weight}{A vector of body weights in kg.}
-
-\item{gender}{A vector of genders (as 'Male' or 'Female').}
 }
 \value{
 A character vector of weight classes. Each element will be one of
  'Underweight', 'Normal', 'Overweight', or 'Obese'.
-
-A character vector of weight classes. Each element will be one of
-'Underweight', 'Normal', 'Overweight', or 'Obese'.
-
-A character vector of weight classes. Each element will be one of
-'Underweight', 'Normal', 'Overweight', or 'Obese'.
 }
 \description{
 Given vectors of age, BMI, recumbent length, weight, and gender,
@@ -63,30 +33,8 @@ categorizes weight classes using CDC and WHO categories.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
-Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
-weight classes using CDC and WHO categories.
-
-Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
-weight classes using CDC and WHO categories.
-
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118 Given vectors of age, BMI,
-recumbent length, weight, and gender, categorizes weight classes using CDC
-and WHO categories.
-
-Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
-weight classes using CDC and WHO categories.
-
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
 }
 \author{
-Caroline Ring
-
-Caroline Ring
-
 Caroline Ring
 }
 \keyword{httk-pop}

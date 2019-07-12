@@ -65,6 +65,9 @@
 #' clearance for well-stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
 #' with plasma concentration.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
@@ -77,10 +80,10 @@
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
-#' 
+#' @import deSolve 
 #' @export solve_1comp
 #' @useDynLib httk
-#' @import deSolve
+
 solve_1comp <- function(chem.name=NULL,
                         chem.cas=NULL,
                         times=NULL,
@@ -250,7 +253,7 @@ solve_1comp <- function(chem.name=NULL,
 
  if(plots==T)
   {
-    plot(out,select=c(CompartmentsToInitialize,"Ametabolized","AUC"))
+    graphics::plot(out,select=c(CompartmentsToInitialize,"Ametabolized","AUC"))
   }
   
   out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","AUC")]
