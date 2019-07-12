@@ -8,7 +8,7 @@ steady-state model}
 calc_analytic_css_3compss(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, hourly.dose = 1/24, concentration = "plasma",
   suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
-  restrictive.clearance = T, ...)
+  restrictive.clearance = T, bioactive.free.invivo = FALSE, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -39,6 +39,10 @@ concentration.)}
 chemical not bound to protein is available for metabolism in the liver. If 
 FALSE, then all chemical in the liver is metabolized (faster metabolism due
 to rapid off-binding).}
+
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

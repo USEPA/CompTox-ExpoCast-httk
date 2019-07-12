@@ -8,7 +8,8 @@ parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
   species = "Human", clint.pvalue.threshold = 0.05,
   default.to.human = F, human.clint.fup = F,
   adjusted.Funbound.plasma = T, restrictive.clearance = T,
-  fup.lod.default = 0.005, suppress.messages = F)
+  fup.lod.default = 0.005, suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -34,6 +35,16 @@ TRUE.}
 
 \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
+
+\item{fup.lod.default}{Default value used for fraction of unbound plasma for
+chemicals where measured value was below the limit of detection. Default
+value is 0.0005.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
