@@ -27,8 +27,9 @@
 #' @keywords Export
 #' @examples
 #' 
+#' \dontrun{
 #' export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
-#' 
+#' }
 #' 
 #' @export export_pbtk_sbml
 export_pbtk_sbml <- function(chem.cas=NULL,

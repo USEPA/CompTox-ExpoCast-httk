@@ -422,6 +422,11 @@ convert_httk <- function(indiv.model.bio,
   if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
     indiv.model[, Fgutabs := fabs.oral*fgut.oral]
   }
+  # Force pKa to NA_real_ so data.table doesn't replace everything with text
+  if(any(c("pKa_Donor","pKa_Accept") %in% names(indiv.model))){
+    suppressWarnings(indiv.model[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
+      .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.
