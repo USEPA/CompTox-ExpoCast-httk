@@ -85,7 +85,6 @@
 #' solve_3comp(parameters=params)
 #' 
 #' @import deSolve 
-#' @importFrom graphics plot
 #' @export solve_3comp
 #' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
@@ -270,7 +269,7 @@ solve_3comp <- function(chem.name = NULL,
   
   if(plots==T)
   {
-    plot(out,select=c(CompartmentsToInitialize,"Cplasma","AUC","Ametabolized","Atubules"))
+    graphics::plot(out,select=c(CompartmentsToInitialize,"Cplasma","AUC","Ametabolized","Atubules"))
   }
   
   out <- out[,c("time",CompartmentsToInitialize,"Cplasma","AUC","Ametabolized","Atubules")]

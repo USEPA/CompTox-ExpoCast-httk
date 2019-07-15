@@ -8,7 +8,6 @@ src-x64/
 inst/doc/
 R/.Rhistory
 .Rproj.user/
-*.Rhistory
 
 
 # Compiled source #

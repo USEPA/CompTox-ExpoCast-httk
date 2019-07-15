@@ -109,7 +109,6 @@
 #' }
 #' 
 #' @import deSolve 
-#' @importFrom graphics plot
 #' @export solve_pbtk
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
@@ -355,9 +354,9 @@ parameters[["MW"]] <- NULL
   if(plots==T)
   {
     if(use.amounts){
-      plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC"))
+      graphics::plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Aplasma","AUC"))
     }else{
-      plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC"))
+      graphics::plot(out,select=c(CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC"))
     }
     
   }

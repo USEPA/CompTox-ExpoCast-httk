@@ -1,5 +1,7 @@
-#R CMD BATCH cheminfo_test.R cheminfo_test.Rout
+#R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
 library(httk)
+options(warn=-1)
+
 # Check if the number of chemicals has changed:
 Css.list <- get_cheminfo()
 pbpk.list <- get_cheminfo(model='pbtk')
