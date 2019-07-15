@@ -126,7 +126,8 @@
 #'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
 #'  Assigned using methods in \code{get_weight_class}.} }
 #'  
-#'@source \url{https://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@source \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -149,7 +150,7 @@
 #'  ages.}}
 #'@keywords data
 #'@keywords httk-pop
-#'
+#'          
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
@@ -180,7 +181,8 @@
 #'  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
 #'  
 #'  
-#'@source \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'@source \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -477,24 +479,6 @@
 #' Environmental science & technology 53.2 (2018): 719-732.
 "wambaugh2019.seem3"
 
-#' Subset of the ToxCast and Tox21 Bioactivites Observed with HTS
-#'
-#' These data are all ToxCast and Tox21 high throughput screening (HTS) assay
-#' results for the subset of chemicals appearing in Wambaugh et al. (2019). The
-#' values are NA if no systematic concentration-response was observed, otherwise
-#' the log base ten uM concentration of the activity concentration at cutoff (ACC)
-#' is given. Each column correspons to a different in vitro HTS assay. 
-#'
-#' @format A data frame with 489 rows and 1197 variables:
-#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
-#'
-#'@keywords datasets
-#'
-#'@author John Wambaugh
-#'
-#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization", submitted.
-"wambaugh2019.Tox21"
 
 #' Sipes et al. 2017 data
 #' 
@@ -633,3 +617,40 @@
 #' chemicals." Toxicological Sciences (2015): 228-237.
 #' @keywords datasets
 "sipes2017.table"
+
+#' ToxCast and Tox21 2015 Active Hit Calls (EPA)
+#' 
+#' The ToxCast and Tox21 research programs employ batteries of high throughput 
+#' assays to assess chemical bioactivity in vitro. Not every chemical is tested 
+#' through every assay. Most assays are conducted in concentration response, 
+#' and each corresponding assay endpoint is analyzed statistically to determine 
+#' if there is a concentration-dependent response or "hit" using the ToxCast 
+#' Pipeline.  Most assay endpoint-chemical combinations are non-responsive. 
+#' Here, only the hits are treated as potential indicators of bioactivity. This 
+#' bioactivity does not have a direct toxicological interpretation. The October 
+#' 2015 release (invitrodb_v2) of the ToxCast and Tox21 data were used for this 
+#' analysis.
+#' 
+#' @name ToxCast2015subset
+#' @aliases tc.dt.sub
+#' @docType data
+#' @format A data.table with 62412 rows and 5 columns
+#' @author Caroline Ring
+#' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program: 
+#' providing high throughput decision support tools for chemical risk 
+#' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
+#' 
+#' Tice, Raymond R., et al. "Improving the human hazard characterization of 
+#' chemicals: a Tox21 update." Environmental health perspectives 121.7 (2013): 
+#' 756-765.
+#' 
+#' Richard, Ann M., et al. "ToxCast chemical landscape: paving the road to 21st 
+#' century toxicology." Chemical research in toxicology 29.8 (2016): 1225-1251.
+#' 
+#' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput 
+#' screening data." Bioinformatics 33.4 (2016): 618-620.
+#' 
+#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
+#'
+#' @keywords datasets
+"ToxCast2015subset"
