@@ -894,13 +894,22 @@ High throughput risk-based prioritization can be conducted by using doses predic
 # Head to ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/ to get the ToxCast/Tox21 data:
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
 # This has been Subset  to just the chemicals we have new numbers for:
-Tox21.acc <- httk::wambaugh2019.Tox21
+#Tox21.acc <- httk::wambaugh2019.Tox21
 
 # We need to turn this into a data frame with a row for each hit:
-Tox21.acc.rows <- melt(Tox21.acc,id=c("code","chid","chnm","casn","clib"))
+#Tox21.acc.rows <- melt(Tox21.acc,id=c("code","chid","chnm","casn","clib"))
 
 # Get rid of the NA's (non-hits):
-Tox21.acc.numeric <- subset(Tox21.acc.rows,!is.na(value))
+#Tox21.acc.numeric <- subset(Tox21.acc.rows,!is.na(value))
+
+# In this vignette we use the AC50's (as in Ring 2017) rather than ACC's
+# (as in Wambaugh submitted) to help keep the HTTK package smaller:
+Tox21.acc.numeric <- httk::ToxCast2015subset[,c("Chemical.Name",
+  "CASRN",
+  "Assay.Endpoint",
+  "AC50",
+  "Activity.Call")]
+colnames(Tox21.acc.numeric) <- c("chnm","casn","variable","value","call")
 
 chem.preds <- httk::wambaugh2019.seem3
 directnhanes.preds <- httk::wambaugh2019.nhanes

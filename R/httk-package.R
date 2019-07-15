@@ -913,20 +913,6 @@ NULL
 
 
 
-#' Toxcast Data
-#' 
-#' This data set is used in Vignette 6.
-#' 
-#' 
-#' @name tc.dt
-#' @docType data
-#' @keywords datasets
-NULL
-
-
-
-
-
 #' Tissue composition and species-specific physiology parameters
 #' 
 #' This data set contains values from Schmitt (2008) and Ruark et al. (2014)
