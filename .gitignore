@@ -6,6 +6,8 @@ src-x64/
 R/.Rhistory
 .Rproj.user/
 *.Rproj
+inst/
+build/
 
 # Compiled source #
 ###################

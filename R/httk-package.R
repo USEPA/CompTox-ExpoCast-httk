@@ -48,48 +48,6 @@ NULL
 
 
 
-#' CDC BMI-for-age charts
-#' 
-#' Charts giving the BMI-for-age percentiles for boys and girls ages 2-18
-#' 
-#' For children ages 2 to 18, weight class depends on the BMI-for-age
-#' percentile. \describe{ \item{Underweight}{<5th percentile} \item{Normal
-#' weight}{5th-85th percentile} \item{Overweight}{85th-95th percentile}
-#' \item{Obese}{>=95th percentile} }
-#' 
-#' @name bmiage
-#' @docType data
-#' @format A data.table object with variables \describe{
-#' \item{list("Sex")}{'Male' or 'Female'} \item{list("Agemos")}{Age in months}
-#' \item{list("L")}{LMS parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{, }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{ }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{list("M")}{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{, }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{list("S")}{LMS
-#' parameters; see \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}
-#' \item{list("P3")}{BMI percentiles}\item{, }{BMI percentiles}\item{ }{BMI
-#' percentiles}\item{list("P5")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P10")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P25")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P50")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P75")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P85")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{ }{BMI percentiles}\item{list("P90")}{BMI
-#' percentiles}\item{, }{BMI percentiles}\item{list("P95")}{BMI
-#' percentiles}\item{, and }{BMI percentiles}\item{list("P97")}{BMI
-#' percentiles}}
-#' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @source \url{www.cdc.gov/growthcharts/percentile_data_files.htm}
-#' @keywords data httk-pop
-NULL
 
 
 
@@ -748,37 +706,6 @@ NULL
 
 
 
-#' Pre-processed NHANES data.
-#' 
-#' NHANES data on demographics, anthropometrics, and some laboratory measures,
-#' cleaned and combined into a single data set.
-#' 
-#' 
-#' @name nhanes_mec_svy
-#' @docType data
-#' @format A survey.design2 object, including masked cluster and strata.
-#' Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
-#' Variables are as described in NHANES Demographics and Examination
-#' documentation, with the exception of: \describe{
-#' \item{list("wtmec6yr")}{6-year sample weights for combining 3 cycles,
-#' computed by dividing 2-year sample weights by 3.}
-#' \item{list("bmxhtlenavg")}{Average of height and recumbent length if both
-#' were measured; if only one was measured, takes value of the one that was
-#' measured.} \item{list("logbmxwt")}{Natural log of measured body weight.}
-#' \item{list("logbmxhtlenavg")}{Natural log of \code{bmxhtlenavg}.}
-#' \item{list("weight_class")}{One of Underweight, Normal, Overweight, or
-#' Obese.  Assigned using methods in \code{get_weight_class}.} }
-#' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @source \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
-#' @keywords data httk-pop
-NULL
-
-
-
-
 
 #' Published Pharmacokinetic Parameters from Obach et al. 2008
 #' 
@@ -980,20 +907,6 @@ NULL
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
 #' @keywords data httk-pop
-NULL
-
-
-
-
-
-#' Toxcast Data
-#' 
-#' This data set is used in Vignette 6.
-#' 
-#' 
-#' @name tc.dt
-#' @docType data
-#' @keywords datasets
 NULL
 
 
@@ -1248,65 +1161,6 @@ NULL
 
 
 
-
-
-#' CDC BMI-for-age charts
-#' 
-#' Charts giving the BMI-for-age percentiles for boys and girls ages 2-18
-#' 
-#' Charts giving the BMI-for-age percentiles for boys and girls ages 2-18
-#' 
-#' For children ages 2 to 18, weight class depends on the BMI-for-age
-#' percentile. \describe{ \item{Underweight}{<5th percentile} \item{Normal
-#' weight}{5th-85th percentile} \item{Overweight}{85th-95th percentile}
-#' \item{Obese}{>=95th percentile} }
-#' 
-#' For children ages 2 to 18, weight class depends on the BMI-for-age
-#' percentile. \describe{ \item{Underweight}{<5th percentile} \item{Normal
-#' }{5th-85th percentile}\item{weight}{5th-85th percentile}
-#' \item{Overweight}{85th-95th percentile} \item{Obese}{>=95th percentile} }
-#' 
-#' @name bmiage
-#' @docType data
-#' @format A data.table object with variables \describe{
-#' \item{list("Sex")}{'Male' or 'Female'} \item{list("Agemos")}{Age in months}
-#' \item{list("L")}{LMS parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{, }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{ }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{list("M")}{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{, }{LMS
-#' parameters; see
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}\item{list("S")}{LMS
-#' parameters; see \url{www.cdc.gov/growthcharts/percentile_data_files.htm}}
-#' \item{list("P3")}{BMI percentiles}\item{, }{BMI percentiles}\item{ }{BMI
-#' percentiles}\item{list("P5")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P10")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P25")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P50")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P75")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{list("P85")}{BMI percentiles}\item{, }{BMI
-#' percentiles}\item{ }{BMI percentiles}\item{list("P90")}{BMI
-#' percentiles}\item{, }{BMI percentiles}\item{list("P95")}{BMI
-#' percentiles}\item{, and }{BMI percentiles}\item{list("P97")}{BMI
-#' percentiles}}
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @source \url{www.cdc.gov/growthcharts/percentile_data_files.htm}
-#' 
-#' \url{www.cdc.gov/growthcharts/percentile_data_files.htm}
-#' @keywords data httk-pop
-NULL
 
 
 
@@ -2554,44 +2408,6 @@ NULL
 
 
 
-#' Pre-processed NHANES data.
-#' 
-#' NHANES data on demographics, anthropometrics, and some laboratory measures,
-#' cleaned and combined into a single data set.
-#' 
-#' NHANES data on demographics, anthropometrics, and some laboratory measures,
-#' cleaned and combined into a single data set.
-#' 
-#' 
-#' @name nhanes_mec_svy
-#' @docType data
-#' @format A survey.design2 object, including masked cluster and strata.
-#' Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
-#' Variables are as described in NHANES Demographics and Examination
-#' documentation, with the exception of: \describe{
-#' \item{list("wtmec6yr")}{6-year sample weights for combining 3 cycles,
-#' computed by dividing 2-year sample weights by 3.}
-#' \item{list("bmxhtlenavg")}{Average of height and recumbent length if both
-#' were measured; if only one was measured, takes value of the one that was
-#' measured.} \item{list("logbmxwt")}{Natural log of measured body weight.}
-#' \item{list("logbmxhtlenavg")}{Natural log of \code{bmxhtlenavg}.}
-#' \item{list("weight_class")}{One of Underweight, Normal, Overweight, or
-#' Obese.  Assigned using methods in \code{get_weight_class}.} }
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @source \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
-#' 
-#' \url{www.cdc.gov/nhanes/nhanes_questionnaires.htm}
-#' @keywords data httk-pop
-NULL
 
 
 
