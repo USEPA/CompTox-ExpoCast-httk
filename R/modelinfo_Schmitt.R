@@ -13,7 +13,9 @@ schmitt.names <- c("Kadipose2pu",
                    "Krbc2pu",
                    "Krest2pu")  
 
-param.names.schmitt <- c(schmitt.names,"Funbound.plasma",
+param.names.schmitt <- c(schmitt.names,
+                         "Funbound.plasma",
+                         "Funbound.plasma.dist",
                          "unadjusted.Funbound.plasma",
                          "Funbound.plasma.adjustment",
                          "Pow",

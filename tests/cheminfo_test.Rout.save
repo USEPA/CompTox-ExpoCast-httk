@@ -1,13 +1,11 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -17,20 +15,28 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
-> #R CMD BATCH cheminfo_test.R cheminfo_test.Rout
+> #R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
 > library(httk)
+> options(warn=-1)
+> 
+> # Check if the number of chemicals has changed:
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 583
+[1] 944
 > length(pbpk.list)
-[1] 485
+[1] 874
 > length(rat.list)
-[1] 172
+[1] 171
+>                                                  
+> # check for duplicate entries (all of the following should be TRUE):
+> length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
+[1] TRUE
+> length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
+[1] TRUE
+> length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
++   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
+[1] TRUE
+>   
 > 
-> proc.time()
-   user  system elapsed 
-   1.39    0.50    1.82 

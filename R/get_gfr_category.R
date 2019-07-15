@@ -23,6 +23,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' @export get_gfr_category
 
 get_gfr_category <- function(age_years,
                              age_months,

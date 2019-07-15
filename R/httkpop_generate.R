@@ -7,56 +7,67 @@ if (getRversion() >= "2.15.1") {
                   'spline_serumcreat', 'wfl'))
 }
 
-#'Generate a virtual population
-#'
-#'@export
-#'
-#'@param method The population-generation method to use. Either "virtual 
-#'  individuals" or "direct resampling." Short names may be used: "d" or "dr" 
-#'  for "direct resampling", and "v" or "vi" for "virtual individuals".
-#'@param nsamp The desired number of individuals in the virtual population. 
-#'  \code{nsamp} need not be provided if \code{gendernum} is provided.
-#'@param gendernum Optional: A named list giving the numbers of male and female 
-#'  individuals to include in the population, e.g. \code{list(Male=100, 
-#'  Female=100)}. Default is NULL, meaning both males and females are included, 
-#'  in their proportions in the NHANES data. If both \code{nsamp} and 
-#'  \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be 
-#'  the sum of \code{gendernum}).
-#'@param agelim_years Optional: A two-element numeric vector giving the minimum 
-#'  and maximum ages (in years) to include in the population. Default is 
-#'  c(0,79). If only a single value is provided, both minimum and maximum ages 
-#'  will be set to that value; e.g. \code{agelim_years=3} is equivalent to 
-#'  \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and 
-#'  \code{agelim_months} is not, \code{agelim_years} will override the default 
-#'  value of \code{agelim_months}.
-#'@param agelim_months Optional: A two-element numeric vector giving the minimum
-#'  and maximum ages (in months) to include in the population. Default is c(0, 
-#'  959), equivalent to the default \code{agelim_years}. If only a single value
-#'  is provided, both minimum and maximum ages will be set to that value; e.g.
-#'  \code{agelim_months=36} is equivalent to \code{agelim_months=c(36,36)}. If
-#'  \code{agelim_months} is provided and \code{agelim_years} is not,
-#'  \code{agelim_months} will override the default values of \code{agelim_years}.
-#'@param reths Optional: a character vector giving the races/ethnicities to 
-#'  include in the population. Default is \code{c('Mexican American','Other 
-#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include 
-#'  all races and ethnicities in their proportions in the NHANES data. 
-#'  User-supplied vector must contain one or more of these strings.
-#'@param weight_category Optional: The weight categories to include in the 
-#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight', 
-#'  'Obese')}. User-supplied vector must contain one or more of these strings.
-#'@param gfr_category The kidney function categories to include in the 
-#'  population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
-#'  to include all kidney function levels.
-#'  
-#'@return A data.table where each row represents an individual, and 
-#'  each column represents a demographic, anthropometric, or physiological 
-#'  parameter.
-#'@examples
-#'\dontrun{
+
+
+
+
+#' Generate a virtual population
+#' 
+#' Generate a virtual population
+#' 
+#' 
+#' @param method The population-generation method to use. Either "virtual
+#' individuals" or "direct resampling." Short names may be used: "d" or "dr"
+#' for "direct resampling", and "v" or "vi" for "virtual individuals".
+#' @param nsamp The desired number of individuals in the virtual population.
+#' \code{nsamp} need not be provided if \code{gendernum} is provided.
+#' @param gendernum Optional: A named list giving the numbers of male and
+#' female individuals to include in the population, e.g. \code{list(Male=100,
+#' Female=100)}. Default is NULL, meaning both males and females are included,
+#' in their proportions in the NHANES data. If both \code{nsamp} and
+#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
+#' the sum of \code{gendernum}).
+#' @param agelim_years Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in years) to include in the population. Default is
+#' c(0,79). If only a single value is provided, both minimum and maximum ages
+#' will be set to that value; e.g. \code{agelim_years=3} is equivalent to
+#' \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
+#' \code{agelim_months} is not, \code{agelim_years} will override the default
+#' value of \code{agelim_months}.
+#' @param agelim_months Optional: A two-element numeric vector giving the
+#' minimum and maximum ages (in months) to include in the population. Default
+#' is c(0, 959), equivalent to the default \code{agelim_years}. If only a
+#' single value is provided, both minimum and maximum ages will be set to that
+#' value; e.g. \code{agelim_months=36} is equivalent to
+#' \code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
+#' \code{agelim_years} is not, \code{agelim_months} will override the default
+#' values of \code{agelim_years}.
+#' @param weight_category Optional: The weight categories to include in the
+#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#' 'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @param gfr_category The kidney function categories to include in the
+#' population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
+#' to include all kidney function levels.
+#' @param reths Optional: a character vector giving the races/ethnicities to
+#' include in the population. Default is \code{c('Mexican American','Other
+#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#' all races and ethnicities in their proportions in the NHANES data.
+#' User-supplied vector must contain one or more of these strings.
+#' @return A data.table where each row represents an individual, and each
+#' column represents a demographic, anthropometric, or physiological parameter.
+#' @author Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @examples
+#' 
+#' 
+#' \dontrun{
 #' #Simply generate a virtual population of 100 individuals,
 #'  #using the direct-resampling method
 #'  set.seed(42)
-#'httkpop_generate(method='direct resampling', nsamp=100)
+#' httkpop_generate(method='direct resampling', nsamp=100)
 #' #Generate a population using the virtual-individuals method,
 #' #including 80 females and 20 males,
 #' #including only ages 20-65,
@@ -68,20 +79,15 @@ if (getRversion() >= "2.15.1") {
 #' Male=20),
 #' agelim_years=c(20,65), 
 #' reths=c('Mexican American', 
-#''Non-Hispanic Black'),
+#' 'Non-Hispanic Black'),
 #' weight_category=c('Underweight',
 #' 'Normal',
 #' 'Overweight'))
-#'}
-#'
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#'
+#' }
+#' 
+#' 
+#' 
+#' @export httkpop_generate
 httkpop_generate <- function(method,
                              nsamp=NULL,
                              gendernum=NULL,

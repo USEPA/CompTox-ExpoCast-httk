@@ -1,8 +1,12 @@
+# Add this model to the list of models:
+model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
+
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.pbtk <- c("BW",
                     "Clint",
                     "Clmetabolismc",
                     "Funbound.plasma",
+                    "Funbound.plasma.dist",
                     "Funbound.plasma.adjustment",
                     "Fgutabs",
                     "Fhep.assay.correction",
@@ -59,7 +63,7 @@ param.names.pbtk.solver <- c("BW",
                     "Vrestc",
                     "Vvenc")
 
-initparms <- function(newParms = NULL){
+pbtk.initparms <- function(newParms = NULL){
   parms <- c(
     BW = 70,
     Clmetabolismc = 0.203,
@@ -105,7 +109,7 @@ initparms <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms",
+  out <- .C("getParmspbtk",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out
@@ -113,7 +117,7 @@ initparms <- function(newParms = NULL){
   out
 }
 
-Outputs <- c(
+pbtk.Outputs <- c(
     "Cgut",
     "Cliver",
     "Cven",
@@ -126,7 +130,7 @@ Outputs <- c(
 )
 
 
-initState <- function(parms, newState = NULL) {
+pbtk.initState <- function(parms, newState = NULL) {
   Y <- c(
     Agutlumen = 0.0,
     Agut = 0.0,

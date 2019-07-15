@@ -18,13 +18,15 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c("Compound","CAS","CAS.Checksum","DTXSID","Formula","SMILES.desalt")
-  CHEM.PHYS.COLS<-c("MW","logP","logPwa","pKa_Donor","pKa_Accept","logMA")
+  CHEM.PHYS.COLS<-c("MW","logP","logPwa","logHenry","logVP","logWSol","MP","pKa_Donor","pKa_Accept","logMA")
   # The colmuns have "[SPECIES]." prepended to their name:
-  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma")
+  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma","Caco2.Pab")
   # In the table we create each word in most column names is capitalized:
-  COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula")
+  COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","logHenry","logWSol","MP",
+                                        "MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept",
+                                        "SMILES.desalt","DTXSID","Formula","Caco2.Pab")
   # Many data are converted to numeric,but sometimes we want to preserve strings:
-  AS.NUMERIC.EXCEPTIONS <- c("pKa_Donor","pKa_Accept","SMILES.desalt","Funbound.plasma","Clint","DTXSID","SMILES.desalt","Formula")
+  AS.NUMERIC.EXCEPTIONS <- c("pKa_Donor","pKa_Accept","SMILES.desalt","Funbound.plasma","Clint","DTXSID","SMILES.desalt","Formula", "Caco2.Pab")
   if (!is.na(value))
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)) this.property <- COLUMN.CAPITALIZATION.EXCEPTIONS[tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)==tolower(this.property)]
@@ -55,6 +57,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
   
     }
   
+    this.property.nospecies <- this.property
     if (this.property %in% CHEM.INVITRO.COLS)
     {
       if (!is.null(species))
@@ -118,8 +121,14 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
     }
     if (is.na(this.table[index,this.property]) | overwrite | (this.property == paste(species,'Funbound.plasma',sep=".") & this.table[index,this.property] == 0))
     {
-      if (!(this.property %in% AS.NUMERIC.EXCEPTIONS)) this.table[index,this.property] <- as.numeric(value)
-      else this.table[index,this.property] <- as.character(value)
+      if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS)) this.table[index,this.property] <- as.numeric(value)
+      else {
+        if (class(this.table[,this.property])!='character')
+        {  
+          this.table[,this.property] < as.character(this.table[,this.property])
+        }
+        this.table[index,this.property] <- as.character(value)
+      }
 # There is a difference between no pKa prediction available, a prediciton of no pKa:
       if(!is.na(this.table[index,this.property]) & this.table[index,this.property] == "" & this.property %in% c("pKa_Donor","pKa_Accept")) this.table[index,this.property] <- NA
       ref.name <- paste(this.property,"Reference",sep=".")
@@ -137,11 +146,69 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 }
 
 
+#' Add a table of chemical information for use in making httk predictions.
+#' 
+#' This function adds chemical-specific information to the table
+#' chem.physical_and_invitro.data. This table is queried by the model
+#' parameterization functions when attempting to parameterize a model, so
+#' adding sufficient data to this table allows additional chemicals to be
+#' modeled.
+#' 
+#' 
+#' @param new.table Object of class data.frame containing one row per chemical,
+#' with each chemical minimally by described by a CAS number.
+#' @param data.list This list identifies which properties are to be read from
+#' the table. Each item in the list should point to a column in the table
+#' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
+#' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
+#' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
+#' 'Fgutabs', 'Rblood2plasma'.
+#' @param current.table This is the table to which data are being added.
+#' @param reference This is the reference for the data in the new table. This
+#' may be omitted if a column in data.list gives the reference value for each
+#' chemical.
+#' @param species This is the species for the data in the new table. This may
+#' be omitted if a column in data.list gives the species value for each
+#' chemical or if the data are not species-specific (e.g., MW).
+#' @param overwrite If overwrite=TRUE then data in current.table will be
+#' replaced by any data in new.table that is for the same chemical and
+#' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
+#' and property are ignored.  Funbound.plasma values of 0 (below limit of
+#' detection) are overwritten either way.
+#' @return \item{data.frame}{A new data.frame containing the data in
+#' current.table augmented by new.table} 
+#' @author John Wambaugh
+#' @examples
+#' 
+#' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
+#' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+#'                      stringsAsFactors=FALSE))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(200,200,200)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(2,3,4)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(0.01,0.02,0.3)))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
+#' colnames(my.new.data) <- c("Name","CASRN","MW","LogP","Fup","CLint")
+#' 
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=chem.physical_and_invitro.data,
+#'                                   data.list=list(
+#'                                   Compound="Name",
+#'                                   CAS="CASRN",
+#'                                   MW="MW",
+#'                                   logP="LogP",
+#'                                   Funbound.plasma="Fup",
+#'                                   Clint="CLint"),
+#'                                   species="Human",
+#'                                   reference="MyPaper 2015")
+#' parameterize_steadystate(chem.name="C")  
+#' calc_css(chem.name="B")                                
+#' 
+#' @export add_chemtable
 add_chemtable <- function(new.table, data.list, current.table=NULL, reference=NULL,
                           species=NULL, overwrite=F)
 {
 # Let's make the capitalization consistent in data.list:
-  exceptions <- c("Clint.pValue","logP","logPwa","logMA","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula")
+  exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
   for (this.name in names(data.list))
   {
     if (tolower(this.name) %in% tolower(exceptions)) this.name <- exceptions[tolower(exceptions)==tolower(this.name)]

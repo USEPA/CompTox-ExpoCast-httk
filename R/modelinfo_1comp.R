@@ -1,9 +1,14 @@
+# Add this model to the list of models:
+model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
+
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.1comp <- c("BW",
                      "Clint",
+                     "Clint.dist",
                      "Fgutabs",
                      "Fhep.assay.correction",
                      "Funbound.plasma",
+                     "Funbound.plasma.dist",
                      "Funbound.plasma.adjustment",
                      "hepatic.bioavailability",
                      "hematocrit",
@@ -35,7 +40,7 @@ initparms1comp <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms_1comp",
+  out <- .C("getParms1comp",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out

@@ -4,47 +4,45 @@
 \alias{armitage_eval}
 \title{Evaluate the updated Armitage model}
 \usage{
-armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
-  this.gkow = NA, this.gkaw = NA, this.gswat = NA, this.sarea = NA,
-  this.v_total = NA, this.v_working = NA, this.cell_yield = NA,
+armitage_eval(casrn.vector = NA_character_, nomconc.vector = 1,
+  this.well_number = 384, this.FBSf = NA_real_, tcdata = NA,
+  this.sarea = NA_real_, this.v_total = NA_real_,
+  this.v_working = NA_real_, this.cell_yield = NA_real_,
   this.Tsys = 37, this.Tref = 298.15, this.option.kbsa2 = F,
-  this.option.swat2 = F, this.FBSf = 0, this.pseudooct = 0.01,
-  this.memblip = 0.04, this.nlom = 0.2, this.P_nlom = 0.035,
-  this.P_dom = 0.05, this.P_cells = 1, this.csalt = 0.15,
-  this.celldensity = 1, this.cellmass = 3, this.f_oc = 1)
+  this.option.swat2 = F, this.pseudooct = 0.01, this.memblip = 0.04,
+  this.nlom = 0.2, this.P_nlom = 0.035, this.P_dom = 0.05,
+  this.P_cells = 1, this.csalt = 0.15, this.celldensity = 1,
+  this.cellmass = 3, this.f_oc = 1)
 }
 \arguments{
-\item{tcdata}{A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working. Otherwise supply single values to this.params.}
+\item{casrn.vector}{For vector or single value, CAS number}
 
-\item{this.casrn}{For single value, CAS number}
+\item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
 
-\item{this.ac50}{For single value, AC50 (micromolar) nominal concentration}
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==T}
 
-\item{this.MP}{For single value, melting point (oC)}
+\item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
-\item{this.gkow}{For single value, Log10 Kow, octanol-water partitioning coefficient}
+\item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+v_total, v_working. Otherwise supply single values to this.params.}
 
-\item{this.gkaw}{For single value, Log10 Kaw, air-water partitioning coefficient}
+\item{this.sarea}{Surface area per well (m^2)}
 
-\item{this.gswat}{For single value, Log10 water solubility (mol/L)}
+\item{this.v_total}{Total volume per well (m^3)}
 
-\item{this.sarea}{For single value, surface area per well (m^2)}
+\item{this.v_working}{Working volume per well (m^3)}
 
-\item{this.v_total}{For single value, Total volume per well (m^3)}
-
-\item{this.v_working}{For single value, Working volume per well (m^3)}
-
-\item{this.cell_yield}{For single value, Number of cells per well}
+\item{this.cell_yield}{Number of cells per well}
 
 \item{this.Tsys}{System temperature (oC)}
 
 \item{this.Tref}{Reference temperature (K)}
 
-\item{this.option.kbsa2}{Use alternative bovine-serum-albumin partitioning model}
+\item{this.option.kbsa2}{Use alternative bovine-serum-albumin partitioning
+model}
 
 \item{this.option.swat2}{Use alternative water solubility correction}
-
-\item{this.FBSf}{Fraction fetal bovine serum}
 
 \item{this.pseudooct}{Pseudo-octanol cell storage lipid content}
 
@@ -70,15 +68,20 @@ armitage_eval(tcdata = NA, this.casrn, this.ac50 = 10, this.MP = NA,
 tcdata
 }
 \description{
-Evaluate the Armitage model for chemical distributon in vitro.
-Takes input as data table or single set of values. Outputs a data table.
-Updates over the model published in Armitage et al. 2014 include binding to plastic walls and lipid and protein compartments in cells.
+Evaluate the Armitage model for chemical distributon in vitro. Takes input
+as data table or vectors of values. Outputs a data table. Updates over
+the model published in Armitage et al. 2014 include binding to plastic walls
+and lipid and protein compartments in cells.
+}
+\examples{
+temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+this.well_number = 384, nomconc = 10)
+print(temp$cfree.invitro)
+
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-
-Honda et al. (submitted) "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions"
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 }
 \author{
 Greg Honda

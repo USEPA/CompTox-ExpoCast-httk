@@ -12,59 +12,61 @@ httkpop_generate(method, nsamp = NULL, gendernum = NULL,
   "Non-Hispanic Black", "Other"))
 }
 \arguments{
-\item{method}{The population-generation method to use. Either "virtual 
-individuals" or "direct resampling." Short names may be used: "d" or "dr" 
+\item{method}{The population-generation method to use. Either "virtual
+individuals" or "direct resampling." Short names may be used: "d" or "dr"
 for "direct resampling", and "v" or "vi" for "virtual individuals".}
 
-\item{nsamp}{The desired number of individuals in the virtual population. 
+\item{nsamp}{The desired number of individuals in the virtual population.
 \code{nsamp} need not be provided if \code{gendernum} is provided.}
 
-\item{gendernum}{Optional: A named list giving the numbers of male and female 
-individuals to include in the population, e.g. \code{list(Male=100, 
-Female=100)}. Default is NULL, meaning both males and females are included, 
-in their proportions in the NHANES data. If both \code{nsamp} and 
-\code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be 
+\item{gendernum}{Optional: A named list giving the numbers of male and
+female individuals to include in the population, e.g. \code{list(Male=100,
+Female=100)}. Default is NULL, meaning both males and females are included,
+in their proportions in the NHANES data. If both \code{nsamp} and
+\code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
 the sum of \code{gendernum}).}
 
-\item{agelim_years}{Optional: A two-element numeric vector giving the minimum 
-and maximum ages (in years) to include in the population. Default is 
-c(0,79). If only a single value is provided, both minimum and maximum ages 
-will be set to that value; e.g. \code{agelim_years=3} is equivalent to 
-\code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and 
-\code{agelim_months} is not, \code{agelim_years} will override the default 
+\item{agelim_years}{Optional: A two-element numeric vector giving the
+minimum and maximum ages (in years) to include in the population. Default is
+c(0,79). If only a single value is provided, both minimum and maximum ages
+will be set to that value; e.g. \code{agelim_years=3} is equivalent to
+\code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
+\code{agelim_months} is not, \code{agelim_years} will override the default
 value of \code{agelim_months}.}
 
-\item{agelim_months}{Optional: A two-element numeric vector giving the minimum
-and maximum ages (in months) to include in the population. Default is c(0, 
-959), equivalent to the default \code{agelim_years}. If only a single value
-is provided, both minimum and maximum ages will be set to that value; e.g.
-\code{agelim_months=36} is equivalent to \code{agelim_months=c(36,36)}. If
-\code{agelim_months} is provided and \code{agelim_years} is not,
-\code{agelim_months} will override the default values of \code{agelim_years}.}
+\item{agelim_months}{Optional: A two-element numeric vector giving the
+minimum and maximum ages (in months) to include in the population. Default
+is c(0, 959), equivalent to the default \code{agelim_years}. If only a
+single value is provided, both minimum and maximum ages will be set to that
+value; e.g. \code{agelim_months=36} is equivalent to
+\code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
+\code{agelim_years} is not, \code{agelim_months} will override the default
+values of \code{agelim_years}.}
 
-\item{weight_category}{Optional: The weight categories to include in the 
-population. Default is \code{c('Underweight', 'Normal', 'Overweight', 
+\item{weight_category}{Optional: The weight categories to include in the
+population. Default is \code{c('Underweight', 'Normal', 'Overweight',
 'Obese')}. User-supplied vector must contain one or more of these strings.}
 
-\item{gfr_category}{The kidney function categories to include in the 
+\item{gfr_category}{The kidney function categories to include in the
 population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
 to include all kidney function levels.}
 
-\item{reths}{Optional: a character vector giving the races/ethnicities to 
-include in the population. Default is \code{c('Mexican American','Other 
-Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include 
-all races and ethnicities in their proportions in the NHANES data. 
+\item{reths}{Optional: a character vector giving the races/ethnicities to
+include in the population. Default is \code{c('Mexican American','Other
+Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
 }
 \value{
-A data.table where each row represents an individual, and 
- each column represents a demographic, anthropometric, or physiological 
- parameter.
+A data.table where each row represents an individual, and each
+column represents a demographic, anthropometric, or physiological parameter.
 }
 \description{
 Generate a virtual population
 }
 \examples{
+
+
 \dontrun{
 #Simply generate a virtual population of 100 individuals,
  #using the direct-resampling method
@@ -87,11 +89,13 @@ weight_category=c('Underweight',
 'Overweight'))
 }
 
+
+
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

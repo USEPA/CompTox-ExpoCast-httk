@@ -1,20 +1,25 @@
-#' @import data.table
-#' @import magrittr
-#' @title Estimate well surface area
-#' @description Estimate geometry surface area of plastic in well plate based on well plate format suggested values from Corning. 
-#' option.plastic == T (default) give nonzero surface area (sarea, m^2)
-#' option.bottom == T (default) includes surface area of the bottom of the well in determining sarea. 
-#' Optionally include user values for working volume (v_working, m^3) and surface area. 
-#' @param tcdata A data table with well_number corresponding to plate format, optionally include v_working, sarea, option.bottom, and option.plastic
-#' @param this.well_number For single value, plate format default is 384, used if is.na(tcdata)==T
-#' @param this.cell_yield For single value, optionally supply cell_yield, otherwise estimated based on well number
-#' @param this.v_working For single value, optionally supply working volume, otherwise estimated based on well number (m^3)
-#'
-#' @return tcdata, A data table with well_number, sarea (surface area, m^2), cell_yield (# cells), v_working (m^3), v_total (m^3) per well
-#'
-#' @export
-#'
+#' Estimate well surface area
+#' 
+#' Estimate geometry surface area of plastic in well plate based on well plate
+#' format suggested values from Corning.  option.plastic == T (default) give
+#' nonzero surface area (sarea, m^2) option.bottom == T (default) includes
+#' surface area of the bottom of the well in determining sarea.  Optionally
+#' include user values for working volume (v_working, m^3) and surface area.
+#' 
+#' 
+#' @param tcdata A data table with well_number corresponding to plate format,
+#' optionally include v_working, sarea, option.bottom, and option.plastic
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==T
+#' @param this.cell_yield For single value, optionally supply cell_yield,
+#' otherwise estimated based on well number
+#' @param this.v_working For single value, optionally supply working volume,
+#' otherwise estimated based on well number (m^3)
+#' @return tcdata, A data table with well_number, sarea (surface area, m^2),
+#' cell_yield (# cells), v_working (m^3), v_total (m^3) per well
 #' @author Greg Honda
+#' @import magrittr
+#' @export armitage_estimate_sarea
 armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_working,sarea, option.bottom, and option.plastic
                                     this.well_number = 384,
                                     this.cell_yield = NA,
@@ -29,7 +34,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   sarea<-cell_yield<-cell_yield_est<-NULL
   #End R CMD CHECK appeasement.
   
-  if(is.na(tcdata)){
+  if(all(is.na(tcdata))){
     tcdata <- data.table(well_number = this.well_number, cell_yield = this.cell_yield, v_working = this.v_working)
   }
   
@@ -69,27 +74,34 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   return(tcdata)
 }
 
-#' @title Evaluate the updated Armitage model
-#' @description Evaluate the Armitage model for chemical distributon in vitro.
-#' Takes input as data table or single set of values. Outputs a data table.
-#' Updates over the model published in Armitage et al. 2014 include binding to plastic walls and lipid and protein compartments in cells.
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' @param tcdata A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working. Otherwise supply single values to this.params.
-#' @param this.casrn For single value, CAS number
-#' @param this.ac50 For single value, AC50 (micromolar) nominal concentration
-#' @param this.MP For single value, melting point (oC)
-#' @param this.gkow For single value, Log10 Kow, octanol-water partitioning coefficient
-#' @param this.gkaw For single value, Log10 Kaw, air-water partitioning coefficient
-#' @param this.gswat For single value, Log10 water solubility (mol/L)
-#' @param this.sarea For single value, surface area per well (m^2)
-#' @param this.v_total For single value, Total volume per well (m^3)
-#' @param this.v_working For single value, Working volume per well (m^3)
-#' @param this.cell_yield For single value, Number of cells per well
+
+
+
+
+#' Evaluate the updated Armitage model
+#' 
+#' Evaluate the Armitage model for chemical distributon in vitro. Takes input
+#' as data table or vectors of values. Outputs a data table. Updates over
+#' the model published in Armitage et al. 2014 include binding to plastic walls
+#' and lipid and protein compartments in cells.
+#' 
+#' 
+#' @param casrn.vector For vector or single value, CAS number
+#' @param nomconc.vector For vector or single value, micromolar nominal concentration (e.g. AC50 value)
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==T
+#' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params.
+#' @param this.sarea Surface area per well (m^2)
+#' @param this.v_total Total volume per well (m^3)
+#' @param this.v_working Working volume per well (m^3)
+#' @param this.cell_yield Number of cells per well
 #' @param this.Tsys System temperature (oC)
 #' @param this.Tref Reference temperature (K)
-#' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning model
+#' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
+#' model
 #' @param this.option.swat2 Use alternative water solubility correction
-#' @param this.FBSf Fraction fetal bovine serum
 #' @param this.pseudooct Pseudo-octanol cell storage lipid content
 #' @param this.memblip Membrane lipid content of cells
 #' @param this.nlom Structural protein conent of cells
@@ -100,41 +112,40 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.celldensity Cell density kg/L, g/mL
 #' @param this.cellmass Mass per cell, ng/cell
 #' @param this.f_oc 1, everything assumed to be like proteins
-#'
 #' @return tcdata
-#'
-#' @export
-#'
 #' @author Greg Honda
-#'
-#' @references Honda et al. (submitted) "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions"
-armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working
-                            this.casrn,
-                            this.ac50 = 10, # micromolar
-                            this.MP = NA,
-                            this.gkow = NA,
-                            this.gkaw = NA,
-                            this.gswat = NA,
-                            this.sarea = NA,
-                            this.v_total = NA,
-                            this.v_working = NA,
-                            this.cell_yield = NA,
-                            this.Tsys = 37,
-                            this.Tref = 298.15,
-                            this.option.kbsa2 = F,
-                            this.option.swat2 = F,
-                            this.FBSf = 0, #
-                            this.pseudooct = 0.01, # storage lipid content of cells
-                            this.memblip = 0.04, # membrane lipid content of cells
-                            this.nlom = 0.20, # structural protein content of cells
-                            this.P_nlom = 0.035, # proportionality constant to octanol structural protein
-                            this.P_dom = 0.05,# proportionality constant to octanol dom
-                            this.P_cells = 1,# proportionality constant to octanol storage-liqid
-                            this.csalt = 0.15, # ionic strength of buffer, mol/L
-                            this.celldensity=1, # kg/L g/mL  mg/uL
-                            this.cellmass = 3, #ng/cell
-                            this.f_oc = 1 # everything assumed to be like proteins
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+#' @import magrittr
+#' @examples 
+#' temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+#' this.well_number = 384, nomconc = 10)
+#' print(temp$cfree.invitro)
+#' 
+#' @export armitage_eval
+armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
+                          nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
+                          this.well_number = 384,
+                          this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model
+                          tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
+                          this.sarea = NA_real_,
+                          this.v_total = NA_real_,
+                          this.v_working = NA_real_,
+                          this.cell_yield = NA_real_,
+                          this.Tsys = 37,
+                          this.Tref = 298.15,
+                          this.option.kbsa2 = F,
+                          this.option.swat2 = F,
+                          this.pseudooct = 0.01, # storage lipid content of cells
+                          this.memblip = 0.04, # membrane lipid content of cells
+                          this.nlom = 0.20, # structural protein content of cells
+                          this.P_nlom = 0.035, # proportionality constant to octanol structural protein
+                          this.P_dom = 0.05,# proportionality constant to octanol dom
+                          this.P_cells = 1,# proportionality constant to octanol storage-liqid
+                          this.csalt = 0.15, # ionic strength of buffer, mol/L
+                          this.celldensity=1, # kg/L g/mL  mg/uL
+                          this.cellmass = 3, #ng/cell
+                          this.f_oc = 1 # everything assumed to be like proteins
 ){
   # this.Tsys <- 37
   # this.Tref <- 298.15
@@ -152,6 +163,7 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   # this.cellmass <- 3 #ng/cell
   # this.f_oc <- 1 # everything assumed to be like proteins
 
+
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -166,27 +178,61 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   mtot<-cwat<-P_dom<-f_oc<-cwat_s<-csat<-activity<-cair<-calb<-cslip<-cdom<-NULL
   ccell<-cplastic<-mwat_s<-mair<-mbsa<-mslip<-mdom<-mcells<-mplastic<-NULL
   mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
-  ccells<-NULL
+  ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
+  logHenry <- logWSol <- NULL
   #End R CMD CHECK appeasement.
 
   if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn=this.casrn,
-                         ac50=this.ac50,
-                         MP=this.MP,
-                         gkow=this.gkow,
-                         gkaw=this.gkaw,
-                         gswat=this.gswat,
-                         sarea=this.sarea,
-                         v_total=this.v_total,
-                         v_working=this.v_working,
-                         cell_yield=this.cell_yield)
+    tcdata <- data.table(casrn = casrn.vector,
+                         nomconc = nomconc.vector,
+                         well_number = this.well_number,
+                         sarea = this.sarea,
+                         v_total = this.v_total,
+                         v_working = this.v_working,
+                         cell_yield = this.cell_yield)
   }
-
-  if(any(is.na(tcdata[,.(casrn,ac50,MP,gkow,gkaw,gswat,
-                         sarea,v_total,v_working,cell_yield)]))){
-    print("casrn, ac50, MP, gkow, gkaw, gswat, sarea, v_total, v_working, or cell_yield undefined")
+  
+  # Check CAS and AC50 supplied
+  if(any(is.na(tcdata[,.(casrn,nomconc)]))){
+    stop("casrn or nomconc undefined")
+  }  
+  
+  if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
+    stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
-
+  
+  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
+     any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+    
+    if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
+       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+      missing.rows <- which(is.na(tcdata[,sarea]))
+    }else{
+      missing.rows <- 1:length(tcdata[,casrn])
+    }
+    
+    if(any(is.na(tcdata[missing.rows, well_number]))){
+      print(paste0("Either well_number or geometry must be defined for rows: ", 
+                  paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
+      stop()
+    }else{
+      temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+      tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+      tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+    }
+    
+    
+    
+  }
+  
+  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
+    tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
+             get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.CAS = casrn)]
+  }
+  tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
 
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                                 option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
@@ -278,9 +324,9 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
 
-  tcdata[,ac50:=ac50/1e6] %>% # umol/L to mol/L
-    .[,cinit:=ac50] %>%
-    .[,mtot:=ac50*Vm] %>% # total moles
+  tcdata[,nomconc := nomconc/1e6] %>% # umol/L to mol/L
+    .[,cinit:= nomconc] %>%
+    .[,mtot:= nomconc*Vm] %>% # total moles
     .[,cwat:=mtot/(kaw*Vair + Vm + kbsa*Valb +
                      P_cells*kow*Vslip + P_dom*f_oc*Vdom + kcw*Vcells +
                      1000*kpl*sarea)] %>%
@@ -314,8 +360,10 @@ armitage_eval <- function(tcdata = NA, # A data.table with casrn, ac50, MP, gkow
     .[,xdom:=mdom/mtot] %>%
     .[,xcells:=mcells/mtot] %>%
     .[,xplastic:=mplastic/mtot] %>%
-    .[,xprecip:=mprecip/mtot]
-
+    .[,xprecip:=mprecip/mtot] %>% 
+    .[, eta_free := cwat_s/nomconc] %>%  # effective availability ratio
+    .[, cfree.invitro := cwat_s * 1e6] # free invitro concentration in micromolar
+  
   return(tcdata)
   #output concentrations in mol/L
   #output mass (mwat_s etc.) in mols
