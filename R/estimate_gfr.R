@@ -16,7 +16,8 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-
+#' @import stats
+#' @export estimate_gfr
 estimate_gfr <- function(gfrtmp.dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

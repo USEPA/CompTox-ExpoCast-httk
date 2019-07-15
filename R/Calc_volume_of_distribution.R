@@ -1,4 +1,52 @@
-# This function predicts partition coefficients for all tissues, then lumps them into a single compartment. The effective volume of distribution is calculated by summing each tissues volume times it's partition coefficient relative to plasma. Plasma, and the paritioning into RBCs are also added to get the total volume of distribution in L/KG BW.
+#' Calculate the volume of distribution for a one compartment model.
+#'
+#' This function predicts partition coefficients for all tissues, then lumps them
+#' into a single compartment.
+#' 
+#' The effective volume of distribution is calculated by summing each tissues
+#' volume times it's partition coefficient relative to plasma. Plasma, and the
+#' paritioning into RBCs are also added to get the total volume of distribution
+#' in L/KG BW. Partition coefficients are calculated using Schmitt's (2008)
+#' method.  When species is specified as rabbit, dog, or mouse, the function
+#' uses the appropriate physiological data(volumes and flows) but substitues
+#' human fraction unbound, partition coefficients, and intrinsic hepatic
+#' clearance.
+#' 
+#' 
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified when Funbound.plasma is not given in parameter list. 
+#' @param chem.cas Either the CAS number or the chemical name must be specified
+#' when Funbound.plasma is not given in parameter list. 
+#' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
+#' predict_partitioning_schmitt.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human"). 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with parition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#' @return \item{Volume of distribution}{Units of L/ kg BW.}
+#' @author John Wambaugh
+#' @references Schmitt W. "General approach for the calculation of tissue to
+#' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
+#' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
+#' partition coefficients for PBPK modeling of drugs and environmental
+#' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
+#' @keywords Parameter
+#' @examples
+#' 
+#' calc_vdist(chem.cas="80-05-7")
+#' calc_vdist(chem.name="Bisphenol A")
+#' calc_vdist(chem.name="Bisphenol A",species="Rat")
+#' 
+#' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       parameters=NULL,
@@ -6,15 +54,25 @@ calc_vdist<- function(chem.cas=NULL,
                       species="Human",
                       suppress.messages=F,
                       adjusted.Funbound.plasma=T,
-                      regression=T)
+                      regression=T,
+                      minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
   Parameter <- NULL
 
   if (is.null(parameters))
   {
-    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,chem.name=chem.name,default.to.human=default.to.human,species=species)
-    parameters <- suppressWarnings(predict_partitioning_schmitt(parameters=schmitt.parameters,species=species,regression=regression,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            default.to.human=default.to.human,
+                            species=species,
+                            minimum.Funbound.plasma=minimum.Funbound.plasma)
+    parameters <- suppressWarnings(predict_partitioning_schmitt(
+                    parameters=schmitt.parameters,
+                    species=species,
+                    regression=regression,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma))
     if (adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
     else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
@@ -31,16 +89,16 @@ calc_vdist<- function(chem.cas=NULL,
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fub <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
-    if (class(fub) == "try-error" & default.to.human) 
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+    if (class(fup) == "try-error" & default.to.human) 
     {
-      fub <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
-    if (class(fub) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-    if (fub == 0)
+    if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+    if (fup == 0)
     {
-      fub <- 0.005
+      fup <- 0.005
       warning("Fraction unbound = 0, changed to 0.005.")
     }
     if(adjusted.Funbound.plasma){
@@ -50,9 +108,9 @@ calc_vdist<- function(chem.cas=NULL,
       Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-      fub <- 1 / ((dow) * Flipid + 1 / fub)
+      fup <- 1 / ((dow) * Flipid + 1 / fup)
     }
-    parameters <- c(parameters,Funbound.plasma=fub)  
+    parameters <- c(parameters,Funbound.plasma=fup)  
   }
   
   

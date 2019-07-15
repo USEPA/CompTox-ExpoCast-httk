@@ -13,5 +13,6 @@ skin_mass_bosgra(BSA)
 Vector of skin masses in kg.
 }
 \description{
-Using equation from Bosgra et al. 2012, predict skin mass from body surface area.
+Using equation from Bosgra et al. 2012, predict skin mass from body surface
+area.
 }

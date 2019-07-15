@@ -1,20 +1,21 @@
-#'Generate heights and weights for a virtual population.
-#'
-#'@param hbw_dt A data.table describing the virtual population by race, gender, 
-#'  and age (in years and months). Must have variables \code{gender}, 
-#'  \code{reth}, \code{age}, and \code{age.years}.
-#'  
-#'@return The same data.table with two new variables added: \code{weight}
-#'  and \code{height}. Respectively, these give individual body weights in
-#'  kg, and individual heights in cm.
-#'
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
+#' Generate heights and weights for a virtual population.
+#' 
+#' Generate heights and weights for a virtual population.
+#' 
+#' 
+#' @param hbw_dt A data.table describing the virtual population by race,
+#' gender, and age (in years and months). Must have variables \code{gender},
+#' \code{reth}, \code{age}, and \code{age.years}.
+#' @return The same data.table with two new variables added: \code{weight} and
+#' \code{height}. Respectively, these give individual body weights in kg, and
+#' individual heights in cm.
+#' @author Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+#' @import stats
+#' @export gen_height_weight
 gen_height_weight <- function(hbw_dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for

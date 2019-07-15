@@ -1,4 +1,3 @@
-#'
 #'Given a data.table describing a virtual population by the NHANES quantities, 
 #'generates HTTK physiological parameters for each individual.
 #'
@@ -17,6 +16,8 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#'@import stats
+#'@export tissue_masses_flows
 
 tissue_masses_flows <- function(tmf_dt){
   
@@ -161,7 +162,7 @@ tissue_masses_flows <- function(tmf_dt){
          flow_mean:=tissue_scale(height_ref=height_ref,
                                  height_indiv=height,
                                  tissue_mean_ref=1.05*flow_ref)*#scale back to age 25; reference value is for age 35
-           (1-max(0,0.005*(age_years-25)))] #age scaling of CO
+           (1-pmax(0,0.005*(age_years-25)))] #age scaling of CO
   #Split off CO into a separate column
   CO_flow_mean <- tmp_dt[tissue=='CO', list(id, flow_mean)]
   setnames(CO_flow_mean, 'flow_mean', 'CO_flow_mean')

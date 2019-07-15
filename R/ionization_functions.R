@@ -13,37 +13,63 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
   return(Dow)
 }
 
-#calc_ionization <- function(pH,pKa=NA,pKb=NA) 
-#{
-#  # Need to calculate the amount of un-ionized parent:
-#  denom <- 1
-#  acid <- 0
-#  base <- 0
-#  if (!is.na(pKa))
-#  {
-#    if (regexpr(",",pKa)!=-1) pKa <- sort(as.numeric(strsplit(pKa,",")[[1]]))
-#    for (i in 1:length(pKa))
-#      denom <- denom + 10^(i*pH-sum(pKa[1:i]))
-#      acid <- acid + 10^(i*pH-sum(pKa[1:i]))
-#  }
-#  if (!is.na(pKb)) 
-#  {
-#    if (regexpr(",",pKb)!=-1) pKb <- sort(as.numeric(strsplit(pKb,",")[[1]]),decreasing=T)
-#      for (i in 1:length(pKb))
-#        denom <- denom + 10^(sum(pKb[1:i])-i*pH)
-#        base <- base + 10^(sum(pKb[1:i])-i*pH)
-#  }
-#  return(list(fraction_neutral = 1/denom,
-#    fraction_charged = 1 - 1/denom,
-#    fraction_negative = acid/denom,
-#    fraction_positive = base/denom))
-#}
 
+
+#' Calculate the ionization.
+#' 
+#' This function calculates the ionization of a compound at a given pH. The 
+#' pKa's are either entered as parameters or taken from a specific compound in
+#' the package.
+#' 
+#' The fractions are calculated by determining the coefficients for each
+#' species and dividing the particular species by the sum of all three.  The
+#' positive, negative and zwitterionic/neutral coefficients are given by:
+#' \deqn{zwitter/netural = 1} \deqn{for(i in 1:pkabove) negative = negative +
+#' 10^(i * pH - pKa1 - ... - pKai)} \deqn{for(i in 1:pkbelow) positive =
+#' positive + 10^(pKa1 + ... + pKai - i * pH)} where i begins at 1 and ends at
+#' the number of points above(for negative) or below(for positive) the
+#' neutral/zwitterionic range.  The neutral/zwitterionic range is either the pH
+#' range between 2 pKa's where the number of acceptors above is equal to the
+#' number of donors below, everything above the pKa acceptors if there are no
+#' donors, or everything below the pKa donors if there are no acceptors.  Each
+#' of the terms in the sums represent a different ionization.
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' @param parameters Chemical parameters from a parameterize_MODEL function,
+#' overrides chem.name and chem.cas.
+#' @param pH pH where ionization is evaluated.
+#' @param pKa_Donor Compound H dissociation equilibirum constant(s).
+#' Overwrites chem.name and chem.cas.
+#' @param pKa_Accept Compound H association equilibirum constant(s).
+#' Overwrites chem.name and chem.cas.
+#' @return
+#' 
+#' \item{fraction_neutral}{fraction of compound neutral}
+#' \item{fraction_charged}{fraction of compound charged}
+#' \item{fraction_negative}{fraction of compound negative}
+#' \item{fraction_positive}{fraction of compound positive}
+#' \item{fraction_zwitter}{fraction of compound zwitterionic}
+#' @author Robert Pearce
+#' @references Pearce, Robert G., et al. "Evaluation and calibration of
+#' high-throughput predictions of chemical distribution to tissues." Journal of
+#' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @keywords Parameter
+#' @examples
+#' 
+#' calc_ionization(chem.name='bisphenola',pH=7.4)
+#' calc_ionization(pKa_Donor=8,pKa_Accept=c(1,4),pH=9)
+#' 
+#' @export calc_ionization
 calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL,pKa_Donor=NA,pKa_Accept=NA)
 {
 
   if (is.null(pH)) stop("pH is required to calculate the ionization.")
-  if (!is.null(chem.cas) | !is.null(chem.name)) 
+  if (!is.null(chem.cas) | !is.null(chem.name) & 
+      !all(c("pKa_Donor","pKa_Accept") %in% names(parameters)) &
+       (is.null(pKa_Donor) | is.null(pKa_Accept))) 
   {
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
     chem.cas <- out$chem.cas
@@ -53,7 +79,14 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   {
     pKa_Donor <- parameters$pKa_Donor
     pKa_Accept <- parameters$pKa_Accept
+  } else if(!is.null(pKa_Donor) & !is.null(pKa_Accept)){
+    pKa_Donor <- pKa_Donor
+    pKa_Accept <- pKa_Accept
+  } else {
+    stop("pKa_Donor and pKa_Accept must be in input parameters, or chem.cas or chem.name must be supplied.")
   }
+  
+
   
   # Number of ionizations to calculate:
   if (is.null(parameters))
@@ -99,27 +132,30 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   {
     if (calculations==1)
     {
+      if(is.character(pKa_Donor) | is.character(pKa_Accept)){
+        pKa_Donor <- as.numeric(unlist(strsplit(pKa_Donor, ",")))
+        pKa_Accept <- as.numeric(unlist(strsplit(pKa_Accept, ",")))
+      }
+      
+      
       this.pKa_Donor <- pKa_Donor
       this.pKa_Accept <- pKa_Accept
     } else {
       this.pKa_Donor <- pKa_Donor[[index]]
       this.pKa_Accept <- pKa_Accept[[index]]
-      if (!is.na(this.pKa_Donor))
-      {
-        if (any(regexpr(",",this.pKa_Donor)!=-1))
-        { 
-          this.pKa_Donor <- strsplit(this.pKa_Donor,",")[[1]]
-        }
-        this.pKa_Donor <- as.numeric(this.pKa_Donor)
+      
+      if (any(regexpr(",",this.pKa_Donor)!=-1))
+      { 
+        this.pKa_Donor <- strsplit(this.pKa_Donor,",")[[1]]
       }
-      if (!is.na(this.pKa_Accept))
-      {
-        if (any(regexpr(",",this.pKa_Accept)!=-1))
-        { 
-          this.pKa_Accept <- strsplit(this.pKa_Accept,",")[[1]]
-        }
-        this.pKa_Accept <- as.numeric(this.pKa_Accept)
+      this.pKa_Donor <- as.numeric(this.pKa_Donor)
+      
+      if (any(regexpr(",",this.pKa_Accept)!=-1))
+      { 
+        this.pKa_Accept <- strsplit(this.pKa_Accept,",")[[1]]
       }
+      this.pKa_Accept <- as.numeric(this.pKa_Accept)
+      
     }  
   # Need to calculate the amount of un-ionized parent:
 

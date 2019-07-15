@@ -1,5 +1,7 @@
-#R CMD BATCH other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
+
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) if (script.args[1]=="mctest")
 {

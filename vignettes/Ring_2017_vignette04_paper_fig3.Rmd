@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Generating Figure 3}
+  %\VignetteIndexEntry{Ring et al. 2017 Generating Figure 3}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,7 +28,7 @@ library('httk')
 Next, load in the model-predicted median Css values for the Age 20-50 non-obese sub-population.
 ```{r, eval=FALSE}
 poormetab <- TRUE
-fup.censor <- TRUE
+fup.censored.dist <- TRUE
 grp <- 'Age.20.50.nonobese'
 model <- '3compartmentss'
 popmethod <- 'dr'
@@ -39,8 +39,8 @@ m.dat <- readRDS(paste0('data/',
                               popmethod,
                               'poormetab',
                               poormetab,
-                              'fup.censor',
-                              fup.censor,
+                              'fup.censored.dist',
+                              fup.censored.dist,
                               model,
                               "FuptoFub",
                               sep='_'),
@@ -92,7 +92,7 @@ Convert literature in vivo Css from mg/L to umol/L (uM), using Css/(MW/1000), wh
 chemlist <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound', 'MW'),
                                              species='Human',
                                              model=model,
-                                             exclude.fub.zero=FALSE))
+                                             exclude.fup.zero=FALSE))
 setnames(chemlist, 'CAS', 'chemcas')
 litCss.dt <- merge(litCss.dt,
                    chemlist[, .(Compound, MW)],

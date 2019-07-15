@@ -9,12 +9,12 @@
  \item{\code{Agemos}}{Age in months}
  \item{\code{L}, 
  \code{M}, \code{S}}{LMS parameters; see 
- \url{www.cdc.gov/growthcharts/percentile_data_files.htm}} 
+ \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}} 
  \item{\code{P3}, 
  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P85}, 
  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}}
 \source{
-\url{www.cdc.gov/growthcharts/percentile_data_files.htm}
+\url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
 }
 \usage{
 bmiage

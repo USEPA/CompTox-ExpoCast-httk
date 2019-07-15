@@ -1,5 +1,7 @@
-#R CMD BATCH other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
+
 calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
@@ -40,16 +42,16 @@ if (length(script.args) > 0)
       }                                                                          
     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
     
-#    library(ggplot2)
-#    test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
-#             geom_point(size=3)+
-#       scale_y_log10()+
-#       scale_x_log10()+
-#      ylab(expression(paste(C[aa]," Literature (uM)"))) +
-#      xlab(expression(paste(C[aa]," pbtk model (uM)"))) +
-#      geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
-#    
-#    dev.new()
-#    print(test.fig)
+    library(ggplot2)
+    test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
+             geom_point(size=3)+
+       scale_y_log10()+
+       scale_x_log10()+
+      ylab(expression(paste(C[ss]," Literature (uM)"))) +
+      xlab(expression(paste(C[ss]," pbtk model (uM)"))) +
+      geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
+    
+    dev.new()
+    print(test.fig)
   }
 }

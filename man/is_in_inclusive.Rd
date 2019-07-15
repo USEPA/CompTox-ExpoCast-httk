@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{is_in_inclusive}
 \alias{is_in_inclusive}
-\title{Checks whether a value, or all values in a vector, is within inclusive limits}
+\title{Checks whether a value, or all values in a vector, is within inclusive
+limits}
 \usage{
 is_in_inclusive(x, lims)
 }
@@ -10,25 +11,27 @@ is_in_inclusive(x, lims)
 \item{x}{A numeric value, or vector of values.}
 
 \item{lims}{A two-element vector of (min, max) values for the inclusive
-limits. If \code{x} is a vector, \code{lims} may also be a two-column 
-matrix with \code{nrow=length(x)} where the first column is lower limits 
-and the second column is upper limits. If \code{x} is a vector and 
-\code{lims} is a two-element vector, then each element of \code{x} will be 
-checked against the same limits. If \code{x} is a vector and \code{lims} is
-a matrix, then each element of \code{x} will be checked against the limits 
-given by the corresponding row of \code{lims}.}
+limits. If \code{x} is a vector, \code{lims} may also be a two-column matrix
+with \code{nrow=length(x)} where the first column is lower limits and the
+second column is upper limits. If \code{x} is a vector and \code{lims} is a
+two-element vector, then each element of \code{x} will be checked against
+the same limits. If \code{x} is a vector and \code{lims} is a matrix, then
+each element of \code{x} will be checked against the limits given by the
+corresponding row of \code{lims}.}
 }
 \value{
-A logical vector the same length as \code{x}, indicating whether each
-  element of \code{x} is within the inclusive limits given by \code{lims}.
+A logical vector the same length as \code{x}, indicating whether
+each element of \code{x} is within the inclusive limits given by
+\code{lims}.
 }
 \description{
-Checks whether a value, or all values in a vector, is within inclusive limits
+Checks whether a value, or all values in a vector, is within inclusive
+limits
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

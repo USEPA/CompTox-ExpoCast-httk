@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Virtual study populations}
+  %\VignetteIndexEntry{Ring et al. 2017 Virtual study populations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -62,7 +62,7 @@ jh <- rbind(johnson, howgate, fill=TRUE)
 chem.dt <- as.data.table(httk::get_cheminfo(model='3compartmentss',
                                             species='Human',
                                             info=c('CAS', 'Compound'),
-                                            exclude.fub.zero=FALSE))
+                                            exclude.fup.zero=FALSE))
 chem.dt[, Compound:=tolower(Compound)]
 
 #Harmonize compound names
@@ -102,7 +102,7 @@ This function does the following:
 
 ```{r eval_studypop, eval=FALSE}
 eval_studypop <- function(args,
-                          fup.censor,
+                          fup.censored.dist,
                           poormetab,
                           model){
   #if number of female subjects is specified,
@@ -125,7 +125,7 @@ eval_studypop <- function(args,
                                        model=model,
                                        chemcas=args$CAS,
                                        poormetab=poormetab,
-                                       fup.censor=fup.censor)
+                                       fup.censored.dist=fup.censored.dist)
   
   #If model is 3compartmentss, convert Funbound.plasma to Funbound.blood
   if (model=="3compartmentss"){
@@ -205,7 +205,7 @@ Following the methods of Howgate and Johnson, we replicate each study 20 times a
 
 Let's actually set this up as a function that takes arguments including the HTTK model, whether poor metabolizers should be included or not, and whether `Funbound.plasma` should be drawn from a censored distribution or not. Then we can call it under different conditions and see how things change. This function will save its results in two .Rdata files: one containing the statistics for each study population replicate, and one containing the overall statistics over all replicates for each study population.
 ```{r repfun, eval=FALSE}
-repfun <- function(args, fup.censor, poormetab, model){
+repfun <- function(args, fup.censored.dist, poormetab, model){
   #Replicate each study population 20 times and evaluate model;
   #rbind the results into one big data.table
   
@@ -214,7 +214,7 @@ repfun <- function(args, fup.censor, poormetab, model){
   
   for (i in seq_along(allreps.ls)){
     allreps.ls[[i]] <- eval_studypop(args = args,
-                                     fup.censor = fup.censor,
+                                     fup.censored.dist = fup.censored.dist,
                                      poormetab = poormetab,
                                      model=model)
     }
@@ -243,12 +243,12 @@ parallel::clusterExport(cl=cluster,
 #Set seeds on all workers for reproducibility
 parallel::clusterSetRNGStream(cluster, 
                               TeachingDemos::char2seed("Caroline Ring"))
-#Loop over values of poormetab and fup.censor
+#Loop over values of poormetab and fup.censored.dist
 system.time({for (poormetab in c(TRUE, FALSE)){
-  for (fup.censor in c(TRUE, FALSE)){
+  for (fup.censored.dist in c(TRUE, FALSE)){
     rep_stat <- rbindlist(parallel::parLapply(cl=cluster, jh.ls, repfun,
                                     poormetab = poormetab,
-                                    fup.censor = fup.censor,
+                                    fup.censored.dist = fup.censored.dist,
                                     model = model))
     
     #Save the stats for each replicate of each study population
@@ -257,7 +257,7 @@ system.time({for (poormetab in c(TRUE, FALSE)){
                         paste(paste('virtstudypop_allreps_',
                                     model,
                                     'poormetab', poormetab,
-                                    'fup.censor', fup.censor,
+                                    'fup.censored.dist', fup.censored.dist,
                                     "FuptoFub",
                                     sep='_'),
                               'Rdata',
@@ -285,7 +285,7 @@ system.time({for (poormetab in c(TRUE, FALSE)){
                         paste(paste('virtstudypop_overallstats',
                                     model,
                                     'poormetab', poormetab,
-                                    'fup.censor', fup.censor,
+                                    'fup.censored.dist', fup.censored.dist,
                                     "FuptoFub",
                                     sep='_'),
                               'Rdata',

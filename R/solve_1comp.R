@@ -1,5 +1,91 @@
-solve_1comp <- function(chem.cas=NULL,
-                        chem.name=NULL,
+#' Solve one compartment TK model
+#' 
+#' This function solves for the amount or concentration of a chemical in plasma
+#' for a one compartment model as a function of time based on the dose and
+#' dosing frequency. 
+#' 
+#' Note that the model parameters have units of hours while the model output is
+#' in days.
+#' 
+#' Default value of NULL for doses.per.day solves for a single dose.
+#' 
+#' When species is specified as rabbit, dog, or mouse, the function uses the
+#' appropriate physiological data(volumes and flows) but substitues human
+#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' 
+#' AUC is area under plasma concentration curve.
+#' 
+#' Model Figure 
+#' \if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+#' Compartment Model Schematic"}}
+#' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
+#' Compartment Model Schematic"}}
+#' 
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or the parameters
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or the parameters must
+#' be specified.
+#' @param times Optional time sequence for specified number of days.
+#' @param parameters Chemical parameters from parameterize_1comp function,
+#' overrides chem.name and chem.cas.
+#' @param days Length of the simulation.
+#' @param tsteps The number time steps per hour.
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
+#' @param doses.per.day Number of doses per day.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
+#' "Human").
+#' @param iv.dose Simulates a single i.v. dose if true.
+#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
+#' "uM").
+#' @param initial.values Vector containing the initial concentrations or
+#' amounts of the chemical in specified tissues with units corresponding to
+#' output.units.  Defaults are zero.
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param plots Plots all outputs if true.
+#' @param method Method used by integrator (deSolve).
+#' @param rtol Argument passed to integrator (deSolve).
+#' @param atol Argument passed to integrator (deSolve).
+#' @param default.to.human Substitutes missing rat values with human values if
+#' true.
+#' @param dosing.matrix Vector of dosing times or a matrix consisting of two
+#' columns or rows named "dose" and "time" containing the time and amount, in
+#' mg/kg BW, of each dose.
+#' @param recalc.elimination Whether or not to recalculate the elimination
+#' rate.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with volume of distribution calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients in volume of distribution calculation.
+#' @param restrictive.clearance In calculating elimination rate, protein
+#' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE.  This assumes clearance relative
+#' to amount unbound in whole blood instead of plasma, but converted to use
+#' with plasma concentration.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#' @param ... Additional arguments passed to the integrator.
+#' @return A matrix with a column for time(in days) and a column for the
+#' compartment and the area under the curve (concentration only).
+#' @author Robert Pearce
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @keywords Solve
+#' @examples
+#' 
+#' solve_1comp(chem.name='Bisphenol-A',days=1)
+#' params <- parameterize_1comp(chem.cas="80-05-7")
+#' solve_1comp(parameters=params)
+#' @import deSolve 
+#' @export solve_1comp
+#' @useDynLib httk
+
+solve_1comp <- function(chem.name=NULL,
+                        chem.cas=NULL,
                         times=NULL,
                         parameters=NULL,
                         daily.dose=1,
@@ -20,14 +106,30 @@ solve_1comp <- function(chem.cas=NULL,
                         adjusted.Funbound.plasma=T,
                         regression=T,
                         restrictive.clearance=T,
-                        well.stirred.correction=T,                        
+                        well.stirred.correction=T,
+                        minimum.Funbound.plasma=0.0001,                        
                         ...)
 {     
    Agutlumen <- Acompartment <- Ccompartment <- NULL 
-  if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Parameters, chem.name, or chem.cas must be specified.')
-  if(is.null(parameters)){  parameters <- parameterize_1comp(chem.name=chem.name,chem.cas=chem.cas,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,well.stirred.correction=well.stirred.correction,suppress.messages=suppress.messages) 
-  }else{
-     if(!all(param.names.1comp %in% names(parameters)))stop(paste("Missing parameters:",paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_1comp."))
+  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
+    stop('Parameters, chem.name, or chem.cas must be specified.')
+  if (is.null(parameters))
+  {
+   parameters <- parameterize_1comp(chem.name=chem.name,
+                   chem.cas=chem.cas,
+                   species=species,
+                   default.to.human=default.to.human,
+                   adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                   regression=regression,
+                   restrictive.clearance=restrictive.clearance,
+                   well.stirred.correction=well.stirred.correction,
+                   suppress.messages=suppress.messages,
+                   minimum.Funbound.plasma=minimum.Funbound.plasma) 
+  } else {
+     if (!all(param.names.1comp %in% names(parameters)))
+       stop(paste("Missing parameters:",
+       paste(param.names.1comp[which(!param.names.1comp %in% names(parameters))],
+       collapse=', '),".  Use parameters from parameterize_1comp."))
   }
   Rb2p <- parameters[['Rblood2plasma']]
   BW <- parameters[['BW']]
@@ -151,7 +253,7 @@ solve_1comp <- function(chem.cas=NULL,
 
  if(plots==T)
   {
-    plot(out,select=c(CompartmentsToInitialize,"Ametabolized","AUC"))
+    graphics::plot(out,select=c(CompartmentsToInitialize,"Ametabolized","AUC"))
   }
   
   out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","AUC")]

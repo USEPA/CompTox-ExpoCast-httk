@@ -1,8 +1,13 @@
+# Add this model to the list of models:
+model.list[["3compartment"]]$analytic.css.func <- "calc_analytic_css_3comp"
+
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.3comp <- c("BW",
                      "Clint",
+                     "Clint.dist",
                      "Clmetabolismc",
                      "Funbound.plasma",
+                     "Funbound.plasma.dist",
                      "Funbound.plasma.adjustment",
                      "Fgutabs",
                      "Fhep.assay.correction",
@@ -29,7 +34,7 @@ param.names.3comp <- c("BW",
                      "Vrestc")
 
 param.names.3comp.solver <- c("BW",
-                     "CLmetabolismc",
+                     "Clmetabolismc",
                      'Fraction_unbound_plasma',
                      "Kgut2plasma",
                      "kgutabs",
@@ -47,7 +52,7 @@ param.names.3comp.solver <- c("BW",
 initparms3comp <- function(newParms = NULL){
   parms <- c(
     BW = 70,
-    CLmetabolismc = 0.203,
+    Clmetabolismc = 0.203,
     kgutabs = 1,
     Qcardiacc = 0,
     Qgfrc = 0.108,
@@ -57,7 +62,7 @@ initparms3comp <- function(newParms = NULL){
     Vliver = 0,
     Vrest = 0,
     Fraction_unbound_plasma = 0.0682,
-    CLmetabolism = 0.0,
+    Clmetabolism = 0.0,
     Qcardiac = 0,
     Qgfr = 0.0,
     Qgut = 0.0,
@@ -73,7 +78,7 @@ initparms3comp <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms_3comp",
+  out <- .C("getParms3comp",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out

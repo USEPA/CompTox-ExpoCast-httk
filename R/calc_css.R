@@ -1,4 +1,106 @@
-# Written by Robert Pearce and John Wambaugh
+#' Find the steady state concentration and the day it is reached.
+#' 
+#' This function finds the day a chemical comes within the specified range of
+#' the analytical steady state venous blood or plasma concentration(from
+#' calc_analytic_css) for the multiple compartment, three compartment, and one
+#' compartment models, the fraction of the true steady state value reached on
+#' that day, the maximum concentration, and the average concentration at the
+#' end of the simulation.
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or parameters must be
+#' specified. 
+#' @param chem.cas Either the chemical name, CAS number, or parameters must be
+#' specified. 
+#' @param f Fractional distance from the final steady state concentration that
+#' the average concentration must come within to be considered at steady state.
+#' 
+#' @param parameters Chemical parameters from parameterize_pbtk function,
+#' overrides chem.name and chem.cas.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param doses.per.day Number of doses per day.
+#' @param days Initial number of days to run simulation that is multiplied on
+#' each iteration.
+#' @param output.units Units for returned concentrations, defaults to uM
+#' (specify units = "uM") but can also be mg/L.
+#' @param concentration Desired concentration type, 'blood' or default
+#' 'plasma'.
+#' @param suppress.messages Whether or not to suppress messages.
+#' @param model Model used in calculation, 'pbtk' for the multiple compartment
+#' model,'3compartment' for the three compartment model, and '1compartment' for
+#' the one compartment model.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param f.change Fractional change of daily steady state concentration
+#' reached to stop calculating.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE for model 1compartment elimination
+#' rate.  This assumes clearance relative to amount unbound in whole blood
+#' instead of plasma, but converted to use with plasma concentration.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param ... Additional arguments passed to model solver (default of
+#' solve_pbtk).
+#' @return \item{frac}{Ratio of the mean concentration on the day steady state
+#' is reached (baed on doses.per.day) to the analytical Css (based on infusion
+#' dosing).} \item{max}{The maximum concentration of the simulation.}
+#' \item{avg}{The average concentration on the final day of the simulation.}
+#' \item{the.day}{The day the average concentration comes within 100 * p
+#' percent of the true steady state concentration.}
+#' @author Robert Pearce, John Wambaugh
+#' @keywords Steady State
+#' @examples
+#' 
+#' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
+#' \dontrun{
+#' parms <- parameterize_3comp(chem.name='Bisphenol-A')
+#' parms$Funbound.plasma <- .07
+#' calc_css(parms,concentration='blood',model='3compartment')
+#' 
+#' 
+#' library("ggplot2")
+#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' plot.data <- as.data.frame(out)
+#' css <- calc_analytic_css(chem.name = "Bisphenol A")
+#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
+#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
+#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
+#' element_text(size = 16), plot.title = element_text(size = 17)) +
+#' ggtitle("Bisphenol A")
+#' print(c.vs.t)
+#' 
+#' days <- NULL
+#' avg <- NULL
+#' max <- NULL
+#' for(this.cas in get_cheminfo()){
+#' css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+#' days[[this.cas]] <- css.info[["the.day"]]
+#' avg[[this.cas]] <- css.info[["avg"]]
+#' max[[this.cas]] <- css.info[["max"]]
+#' }
+#' days.data <- as.data.frame(days)
+#' hist <- ggplot(days.data, aes(days)) +
+#' geom_histogram(fill = "blue", binwidth = 1/6) + scale_x_log10() +
+#' ylab("Number of Chemicals") + xlab("Days") + theme(axis.text =
+#' element_text(size = 16), axis.title = element_text(size = 16))
+#' print(hist)
+#' avg.max.data <- as.data.frame(cbind(avg, max))
+#' avg.vs.max <- ggplot(avg.max.data, aes(avg, max)) + geom_point() +
+#' geom_abline() + scale_x_log10() + scale_y_log10() +
+#' xlab("Average Concentration at Steady State (uM)") +
+#' ylab("Max Concentration at Steady State (uM)") +
+#' theme(axis.text = element_text(size = 16),
+#' axis.title = element_text(size = 16))
+#' print(avg.vs.max)
+#' }
+#' 
+#' @export calc_css
 calc_css <- function(parameters=NULL,
                     chem.name=NULL,
                     chem.cas=NULL, 
@@ -96,7 +198,7 @@ calc_css <- function(parameters=NULL,
   } else{ 
    if(!suppress.messages)cat("Analytic css not reached after 100 years.")
    css.day  <- 36500
-   frac_achieved <- as.numeric(max(subset(out[,concentration]))/css)  
+   frac_achieved <- as.numeric(max(out[,"Cplasma"])/css)  
   }     
    
   if (tolower(output.units) == tolower("mg/L")) 

@@ -14,6 +14,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' @export estimate_gfr_ped
 
 estimate_gfr_ped <- function(BSA){
   #BSA-based equation from Johnson et al. 2006, Clin Pharmacokinet 45(9) 931-56.

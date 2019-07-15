@@ -1,5 +1,7 @@
-#R CMD BATCH other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
+
 calc_css(chem.name='nicotine')
 calc_css(chem.name="perfluorooctanoic acid")
 calc_stats(chem.name='nicotine',days=10)

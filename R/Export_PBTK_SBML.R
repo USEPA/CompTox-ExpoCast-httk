@@ -1,5 +1,37 @@
 #Function written by Robert Pearce for NCCT, December, 2013
 #SBML version of vLiver PBPK model by James Sluka
+
+
+
+
+#' Export model to sbml.
+#' 
+#' This function exports the multiple compartment PBTK model to an sbml file.
+#' 
+#' Compartments to enter into the initial.amounts list includes Agutlumen,
+#' Aart, Aven, Alung, Agut, Aliver, Akidney, and Arest.
+#' 
+#' When species is specified as rabbit, dog, or mouse, the function uses the
+#' appropriate physiological data(volumes and flows) but substitues human
+#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' 
+#' 
+#' @param chem.cas Either the chemical name or CAS number must be specified.
+#' @param chem.name Either the chemical name or CAS number must be specified.
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
+#' "Human").
+#' @param initial.amounts Must specify initial amounts in units of choice.
+#' @param filename The name of the jarnac file containing the model.
+#' @param digits Desired number of decimal places to round the parameters.
+#' @author Robert Pearce
+#' @keywords Export
+#' @examples
+#' 
+#' \dontrun{
+#' export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
+#' }
+#' 
+#' @export export_pbtk_sbml
 export_pbtk_sbml <- function(chem.cas=NULL,
                              chem.name=NULL,
                              species="Human",
