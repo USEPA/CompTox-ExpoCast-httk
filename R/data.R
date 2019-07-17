@@ -18,16 +18,40 @@
 #'   \item{\code{flow_frac}}{Fraction of CO flowing to each tissue: 
 #'   \code{flow_ref}/\code{CO_ref}}}
 #' @source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human 
-#'   population generator." Toxicology 315, 70-85, 2004.
+#'   population generator." Toxicology 315, 70-85, 2014.
+#' \url{https://doi.org/10.1016/j.tox.2013.07.0094}
 #'@keywords data
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
+#' environmental chemicals by simulating toxicokinetic variability." Environment 
+#' International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "mcnally_dt"
+
+#' Parameter Estimates from Wambaugh et al. (2018)
+#' 
+#' This table includes 1 and 2 compartment fits of plasma concentration vs time
+#' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
+#' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
+#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
+#' steady state concentration (Css, mg/L).
+#' 
+#' 
+#' @docType data
+#'
+#' @format data.frame
+#'
+#' @author John Wambaugh
+#'
+#' @source Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation 
+#' of toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
+#' \url{https://doi.org/10.1093/toxsci/kfy020}
+#'
+#' @keywords datasets
+"chem.invivo.PK.aggregate.data"
 
 #'Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
 #'race and gender.
@@ -50,6 +74,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_hematocrit"
 
 #'Smoothing splines for log serum creatinine vs. age in months, along with KDE
@@ -77,6 +102,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_serumcreat"
 
 #'Smoothing splines for log height vs. age and log body weight vs. age, along 
@@ -103,6 +129,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_heightweight"
 
 #'A timestamp of table creation
@@ -136,6 +163,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "nhanes_mec_svy"
 
 #'Smoothed age distributions by race and gender.
@@ -156,6 +184,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "age_dist_smooth"
 
 #'CDC BMI-for-age charts
@@ -191,6 +220,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "bmiage"
 
 #'WHO weight-for-length charts
@@ -220,6 +250,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "wfl"
 
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
@@ -456,6 +487,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #' evironmental chemicals by simulating toxicokinetic variability." Environment 
 #' international 106 (2017): 105-118
+#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "wambaugh2019.nhanes"
 
 #' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
@@ -477,6 +509,7 @@
 #'@references Ring, Caroline L., et al. "Consensus modeling of median chemical 
 #' intake for the US population based on predictions of exposure pathways." 
 #' Environmental science & technology 53.2 (2018): 719-732.
+#' \url{https://doi.org/10.1021/acs.est.8b04056}
 "wambaugh2019.seem3"
 
 
@@ -488,14 +521,22 @@
 #' 
 #' 
 #' @name sipes2017
+#'
 #' @aliases Sipes2017
+#'
 #' @docType data
+#'
 #' @format data.frame
+#'
 #' @author Nisha Sipes
+#'
 #' @references Sipes, Nisha S., et al. "An Intuitive Approach for Predicting
 #' Potential Human Health Risk with the Tox21 10k Library." Environmental
 #' Science & Technology 51.18 (2017): 10786-10796.
+#  \url{https://doi.org/10.1021/acs.est.7b00650}
+#'
 #' @source ADMET, Simulations Plus
+#'
 #' @keywords datasets
 "sipes2017"
 
@@ -654,3 +695,230 @@
 #'
 #' @keywords datasets
 "ToxCast2015subset"
+
+#' Chemical membership in different research projects
+#' 
+#' A static list of lists identifying chemical membership in different research
+#' projects. While it is our intent to keep these lists up-to-date, the
+#' information here is only for convenience and should not be considered to be
+#' definitive.
+#' 
+#' 
+#' @docType data
+#' @format A list containing ten lists.
+#' @author John Wambaugh
+#' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
+#' Alignment. Environ Health Perspect 116(1)
+#' \url{https://dx.doi.org/10.1289%2Fehp.11100}
+#' 
+#' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
+#' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
+#' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
+#' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
+#' Perspectives 118(4), 485-492 \url{https://doi.org/10.1289/ehp.0901392}
+#' 
+#' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
+#' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
+#' Human Exposure to Environmental Chemicals. Environmental Science &
+#' Technology, \url{https://doi.org/10.1021/es503583j}
+#' 
+#' CDC (2014). National Health and Nutrition Examination Survey. 
+#' \url{http://www.cdc.gov/nchs/nhanes.htm}
+#' @keywords datasets
+"chem.lists"
+
+#' Published toxicokinetic time course measurements
+#' 
+#' This data set includes time and dose specific measurements of chemical
+#' concentration in tissues taken from animals administered control doses of
+#' the chemicals either orally or intravenously. This plasma concentration-time
+#' data is from rat experiments reported in public sources. Toxicokinetic data
+#' were retrieved from those studies by the Netherlands Organisation for
+#' Applied Scientific Research (TNO) using curve stripping (TechDig v2).  This
+#' data is provided for statistical analysis as in Wambaugh et al. 2018.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 597 rows and 13 columns.
+#' @author Sieto Bosgra
+#' @references Aanderud L, Bakke OM (1983). Pharmacokinetics of antipyrine,
+#' paracetamol, and morphine in rat at 71 ATA. Undersea Biomed Res.
+#' 10(3):193-201. PMID: 6636344
+#' 
+#' Aasmoe L, Mathiesen M, Sager G (1999). Elimination of methoxyacetic acid and
+#' ethoxyacetic acid in rat. Xenobiotica. 29(4):417-24. PMID: 10375010
+#' 
+#' Ako RA. Pharmacokinetics/pharmacodynamics (PK/PD) of oral diethylstilbestrol
+#' (DES) in recurrent prostate cancer patients and of oral dissolving film
+#' (ODF)-DES in rats. PhD dissertation, College of Pharmacy, University of
+#' Houston, USA, 2011.
+#' 
+#' Anadon A, Martinez-Larranaga MR, Fernandez-Cruz ML, Diaz MJ, Fernandez MC,
+#' Martinez MA (1996). Toxicokinetics of deltamethrin and its 4'-HO-metabolite
+#' in the rat. Toxicol Appl Pharmacol. 141(1):8-16. PMID: 8917670
+#' 
+#' Binkerd PE, Rowland JM, Nau H, Hendrickx AG (1988). Evaluation of valproic
+#' acid (VPA) developmental toxicity and pharmacokinetics in Sprague-Dawley
+#' rats. Fundam Appl Toxicol. 11(3):485-93. PMID: 3146521
+#' 
+#' Boralli VB, Coelho EB, Cerqueira PM, Lanchote VL (2005). Stereoselective
+#' analysis of metoprolol and its metabolites in rat plasma with application to
+#' oxidative metabolism. J Chromatogr B Analyt Technol Biomed Life Sci.
+#' 823(2):195-202. PMID: 16029965
+#' 
+#' Chan MP, Morisawa S, Nakayama A, Kawamoto Y, Sugimoto M, Yoneda M (2005).
+#' Toxicokinetics of 14C-endosulfan in male Sprague-Dawley rats following oral
+#' administration of single or repeated doses. Environ Toxicol. 20(5):533-41.
+#' PMID: 16161119
+#' 
+#' Cruz L, Castaneda-Hernandez G, Flores-Murrieta FJ, Garcia-Lopez P,
+#' Guizar-Sahagun G (2002). Alteration of phenacetin pharmacokinetics after
+#' experimental spinal cord injury. Proc West Pharmacol Soc. 45:4-5. PMID:
+#' 12434508
+#' 
+#' Della Paschoa OE, Mandema JW, Voskuyl RA, Danhof M (1998).
+#' Pharmacokinetic-pharmacodynamic modeling of the anticonvulsant and
+#' electroencephalogram effects of phenytoin in rats. J Pharmacol Exp Ther.
+#' 284(2):460-6. PMID: 9454785
+#' 
+#' Du B, Li X, Yu Q, A Y, Chen C (2010). Pharmacokinetic comparison of orally
+#' disintegrating, beta-cyclodextrin inclusion complex and conventional tablets
+#' of nicardipine in rats. Life Sci J. 7(2):80-4.
+#' 
+#' Farris FF, Dedrick RL, Allen PV, Smith JC (1993). Physiological model for
+#' the pharmacokinetics of methyl mercury in the growing rat. Toxicol Appl
+#' Pharmacol. 119(1):74-90. PMID: 8470126
+#' 
+#' Hays SM, Elswick BA, Blumenthal GM, Welsch F, Conolly RB, Gargas ML (2000).
+#' Development of a physiologically based pharmacokinetic model of
+#' 2-methoxyethanol and 2-methoxyacetic acid disposition in pregnant rats.
+#' Toxicol Appl Pharmacol. 163(1):67-74. PMID: 10662606
+#' 
+#' Igari Y, Sugiyama Y, Awazu S, Hanano M (1982). Comparative physiologically
+#' based pharmacokinetics of hexobarbital, phenobarbital and thiopental in the
+#' rat. J Pharmacokinet Biopharm. 10(1):53-75. PMID: 7069578
+#' 
+#' Ito K, Houston JB (2004). Comparison of the use of liver models for
+#' predicting drug clearance using in vitro kinetic data from hepatic
+#' microsomes and isolated hepatocytes. Pharm Res. 21(5):785-92. PMID: 15180335
+#' 
+#' Jia L, Wong H, Wang Y, Garza M, Weitman SD (2003). Carbendazim: disposition,
+#' cellular permeability, metabolite identification, and pharmacokinetic
+#' comparison with its nanoparticle. J Pharm Sci. 92(1):161-72. PMID: 12486692
+#' 
+#' Kawai R, Mathew D, Tanaka C, Rowland M (1998). Physiologically based
+#' pharmacokinetics of cyclosporine A: extension to tissue distribution
+#' kinetics in rats and scale-up to human. J Pharmacol Exp Ther. 287(2):457-68.
+#' PMID: 9808668
+#' 
+#' Kim YC, Kang HE, Lee MG (2008). Pharmacokinetics of phenytoin and its
+#' metabolite, 4'-HPPH, after intravenous and oral administration of phenytoin
+#' to diabetic rats induced by alloxan or streptozotocin. Biopharm Drug Dispos.
+#' 29(1):51-61. PMID: 18022993
+#' 
+#' Kobayashi S, Takai K, Iga T, Hanano M (1991). Pharmacokinetic analysis of
+#' the disposition of valproate in pregnant rats. Drug Metab Dispos.
+#' 19(5):972-6. PMID: 1686245
+#' 
+#' Kotegawa T, Laurijssens BE, Von Moltke LL, Cotreau MM, Perloff MD,
+#' Venkatakrishnan K, Warrington JS, Granda BW, Harmatz JS, Greenblatt DJ
+#' (2002). In vitro, pharmacokinetic, and pharmacodynamic interactions of
+#' ketoconazole and midazolam in the rat. J Pharmacol Exp Ther. 302(3):1228-37.
+#' PMID: 12183684
+#' 
+#' Krug AK, Kolde R, Gaspar JA, Rempel E, Balmer NV, Meganathan K, Vojnits K,
+#' Baquie M, Waldmann T, Ensenat-Waser R, Jagtap S, Evans RM, Julien S,
+#' Peterson H, Zagoura D, Kadereit S, Gerhard D, Sotiriadou I, Heke M,
+#' Natarajan K, Henry M, Winkler J, Marchan R, Stoppini L, Bosgra S, Westerhout
+#' J, Verwei M, Vilo J, Kortenkamp A, Hescheler J, Hothorn L, Bremer S, van
+#' Thriel C, Krause KH, Hengstler JG, Rahnenfuhrer J, Leist M, Sachinidis A
+#' (2013). Human embryonic stem cell-derived test systems for developmental
+#' neurotoxicity: a transcriptomics approach. Arch Toxicol. 87(1):123-43. PMID:
+#' 23179753
+#' 
+#' Leon-Reyes MR, Castaneda-Hernandez G, Ortiz MI (2009). Pharmacokinetic of
+#' diclofenac in the presence and absence of glibenclamide in the rat. J Pharm
+#' Pharm Sci. 12(3):280-7. PMID: 20067705
+#' 
+#' Nagata M, Hidaka M, Sekiya H, Kawano Y, Yamasaki K, Okumura M, Arimori K
+#' (2007). Effects of pomegranate juice on human cytochrome P450 2C9 and
+#' tolbutamide pharmacokinetics in rats. Drug Metab Dispos. 35(2):302-5. PMID:
+#' 17132763
+#' 
+#' Okiyama M, Ueno K, Ohmori S, Igarashi T, Kitagawa H (1988). Drug
+#' interactions between imipramine and benzodiazepines in rats. J Pharm Sci.
+#' 77(1):56-63. PMID: 2894451
+#' 
+#' Pelissier-Alicot AL, Schreiber-Deturmeny E, Simon N, Gantenbein M,
+#' Bruguerolle B (2002). Time-of-day dependent pharmacodynamic and
+#' pharmacokinetic profiles of caffeine in rats. Naunyn Schmiedebergs Arch
+#' Pharmacol. 365(4):318-25. PMID: 11919657
+#' 
+#' Piersma AH, Bosgra S, van Duursen MB, Hermsen SA, Jonker LR, Kroese ED, van
+#' der Linden SC, Man H, Roelofs MJ, Schulpen SH, Schwarz M, Uibel F, van
+#' Vugt-Lussenburg BM, Westerhout J, Wolterbeek AP, van der Burg B (2013).
+#' Evaluation of an alternative in vitro test battery for detecting
+#' reproductive toxicants. Reprod Toxicol. 38:53-64. PMID: 23511061
+#' 
+#' Pollack GM, Li RC, Ermer JC, Shen DD (1985). Effects of route of
+#' administration and repetitive dosing on the disposition kinetics of
+#' di(2-ethylhexyl) phthalate and its mono-de-esterified metabolite in rats.
+#' Toxicol Appl Pharmacol. Jun 30;79(2):246-56. PMID: 4002226
+#' 
+#' Saadeddin A, Torres-Molina F, Carcel-Trullols J, Araico A, Peris JE (2004).
+#' Pharmacokinetics of the time-dependent elimination of all-trans-retinoic
+#' acid in rats. AAPS J. 6(1):1-9. PMID: 18465253
+#' 
+#' Satterwhite JH, Boudinot FD (1991). Effects of age and dose on the
+#' pharmacokinetics of ibuprofen in the rat. Drug Metab Dispos. 19(1):61-7.
+#' PMID: 1673423
+#' 
+#' Szymura-Oleksiak J, Panas M, Chrusciel W (1983). Pharmacokinetics of
+#' imipramine after single and multiple intravenous administration in rats. Pol
+#' J Pharmacol Pharm. 35(2):151-7. PMID: 6622297
+#' 
+#' Tanaka C, Kawai R, Rowland M (2000). Dose-dependent pharmacokinetics of
+#' cyclosporin A in rats: events in tissues. Drug Metab Dispos. 28(5):582-9.
+#' PMID: 10772639
+#' 
+#' Timchalk C, Nolan RJ, Mendrala AL, Dittenber DA, Brzak KA, Mattsson JL
+#' (2002). A Physiologically based pharmacokinetic and pharmacodynamic
+#' (PBPK/PD) model for the organophosphate insecticide chlorpyrifos in rats and
+#' humans. Toxicol Sci. Mar;66(1):34-53. PMID: 11861971
+#' 
+#' Tokuma Y, Sekiguchi M, Niwa T, Noguchi H (1988). Pharmacokinetics of
+#' nilvadipine, a new dihydropyridine calcium antagonist, in mice, rats,
+#' rabbits and dogs. Xenobiotica 18(1):21-8. PMID: 3354229
+#' 
+#' Treiber A, Schneiter R, Delahaye S, Clozel M (2004). Inhibition of organic
+#' anion transporting polypeptide-mediated hepatic uptake is the major
+#' determinant in the pharmacokinetic interaction between bosentan and
+#' cyclosporin A in the rat. J Pharmacol Exp Ther. 308(3):1121-9. PMID:
+#' 14617681
+#' 
+#' Tsui BC, Feng JD, Buckley SJ, Yeung PK (1994). Pharmacokinetics and
+#' metabolism of diltiazem in rats following a single intra-arterial or single
+#' oral dose. Eur J Drug Metab Pharmacokinet. 19(4):369-73. PMID: 7737239
+#' 
+#' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' 
+#' Wang Y, Roy A, Sun L, Lau CE (1999). A double-peak phenomenon in the
+#' pharmacokinetics of alprazolam after oral administration. Drug Metab Dispos.
+#' 27(8):855-9. PMID: 10421610
+#' 
+#' Wang X, Lee WY, Or PM, Yeung JH (2010). Pharmacokinetic interaction studies
+#' of tanshinones with tolbutamide, a model CYP2C11 probe substrate, using
+#' liver microsomes, primary hepatocytes and in vivo in the rat. Phytomedicine.
+#' 17(3-4):203-11. PMID: 19679455
+#' 
+#' Yang SH, Lee MG (2008). Dose-independent pharmacokinetics of ondansetron in
+#' rats: contribution of hepatic and intestinal first-pass effects to low
+#' bioavailability. Biopharm Drug Dispos. 29(7):414-26. PMID: 18697186
+#' 
+#' Yeung PK, Alcos A, Tang J (2009). Pharmacokinetics and Hemodynamic Effects
+#' of Diltiazem in Rats Following Single vs Multiple Doses In Vivo. Open Drug
+#' Metab J. 3:56-62.
+#' @source Wambaugh et al. 2018 Toxicological Sciences, in press
+#' @keywords datasets
+"chem.invivo.PK.data"
