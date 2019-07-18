@@ -1,4 +1,4 @@
-#' Solve_PBTK
+#' Solve_model
 #' 
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues as functions of time based on the dose and dosing
@@ -16,12 +16,6 @@
 #' the liver and excreted by the kidneys through the tubules.
 #' 
 #' AUC is the area under the curve of the plasma concentration.
-#' 
-#' Model Figure 
-#' \if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
-#' Schematic"}}
-#' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
-#' Schematic"}}
 #' 
 #' Model parameters are named according to the following convention:\tabular{lrrrr}{
 #' prefix \tab suffic \tab Meaning \tab units \cr
@@ -121,11 +115,9 @@ solve_model <- function(chem.name = NULL,
                     times=NULL,
                     parameters=NULL,
                     model=NULL,
-                    daily.dose = NULL,
                     route="oral",
-                    dose = 1, # Assume dose is in mg/kg BW/day  
-                    doses.per.day=NULL,
-                    dosing.matrix = NULL,
+                    dosing=NULL,
+                    days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
                     plots=F,
@@ -165,8 +157,6 @@ solve_model <- function(chem.name = NULL,
   } else {
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# name(s)) of the parameters that describe dosing:
-    dose_param_names <- model.list[[model]]$dose.param.names
 # name(s)s of the parameters that control the solver:
     solver_param_names <- model.list[[model]]$solver.param.names
 # name of the function that calculates the derivative:
@@ -190,41 +180,42 @@ solve_model <- function(chem.name = NULL,
     model_routes <- model.list[["pbtk"]]$routes
   }
 
-# Make sure the model i dynamic:
-if (is.null(derivative_function)) stop(paste("Model",model,"is not solvable \
-(Derivative function is not defined)"))
+  # Make sure the model is dynamic:
+  if (is.null(derivative_function)) stop(paste("Model",model,"is not solvable \
+  (Derivative function is not defined)"))
 
-# Make sure that the dose route is sufficiently described:
-if (is.null(route))
-{
-  stop ("Route must be specified")
-} else if (!route %in% model_routes)
-{
-  stop(paste("Model",model,"dose not have route",route))
-} else {
-  dose.var <- model.list[["pbtk"]]$dose.variable[[route]]
-  # We need to know which compartment gets the dose and how it receives it
-  # (deSolve allows add, replace, or multiply:
-  if (is.null(dose.var))
+  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+    model.list[[model]]$dosing.params)) %in% 
+    names(dosing))) stop("Dosing descriptor(s) missing")
+  initial.dose <- dosing$initial.dose
+  dosing.matrix <- dosing$dosing.matrix
+  daily.dose <- dosing$daily.dose
+  doses.per.day <- dosing$doses.per.day
+
+  # Make sure that the dose route is sufficiently described:
+  if (is.null(route))
   {
-    stop(paste("Must specify variable to receive dose for model",model,"and route",
-      route))
+    stop ("Route must be specified")
+  } else if (!route %in% model_routes)
+  {
+    stop(paste("Model",model,"dose not have route",route))
   } else {
-    dose.type <- model.list[["pbtk"]]$dose.type[[route]]
-    if (is.null(dose.type))
+    dose.var <- model.list[["pbtk"]]$dose.variable[[route]]
+    # We need to know which compartment gets the dose and how it receives it
+    # (deSolve allows add, replace, or multiply:
+    if (is.null(dose.var))
     {
-      stop(paste("Must specify how the variable is changed for model",model,"and route",
+      stop(paste("Must specify variable to receive dose for model",model,"and route",
         route))
+    } else {
+      dose.type <- model.list[["pbtk"]]$dose.type[[route]]
+      if (is.null(dose.type))
+      {
+        stop(paste("Must specify how the variable is changed for model",model,"and route",
+          route))
+      }
     }
   }
-}
-
-# Check that dosing isn't ambiguous:
-if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
-{
-  stop("Please specify only one of the arguments \"dose\", \"daily.dose\", \
-  or \"dosing.matrix\"")
-}
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
 # necessarily need all parameters associated with a given model to do this:)
@@ -288,24 +279,7 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
 # or if we need to throw an error:
   else stop(paste("Units",output.units,"unavailable for model",model))
 
-# If we are working in molar units then we need to convert parameters:
-  if (tolower(output.units)=='um' | tolower(output.units) == 'umol')
-  {
-    dose <- as.numeric(dose * 
-      parameters[["BW"]] / # mg/kg BW -> mg
-      1e3 /                # mg -> g
-      parameters[["MW"]] * # g -> mol
-      1e6)                 # mol -> umol
-    if (!is.null(dosing.matrix)) dose.vector <- as.numeric(dose.vector * 
-      parameters[["BW"]] / # mg/kg BW -> mg
-      1e3/                 # mg -> g
-      parameters[["MW"]] * # g -> mol
-      1e6)                 # mol -> umol
-  } else if (tolower(output.units) == 'mg/l' | tolower(output.units) == 'mg')
-  {
-    dose <- dose * parameters[['BW']]
-    if (!is.null(dosing.matrix)) dose.vector <- dose.vector * parameters[['BW']]
-  } else stop('Output.units can only be uM, umol, mg, or mg/L.')
+  dosing <- scale_dosing(dosing,parameters,output.units)
  
   # Volume parameters that need to be scaled (linearly) by body weight are those
   # volume parameters that are provided on a L/kg body weght scale start with
@@ -328,7 +302,7 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
   {
     CompartmentsToInitialize <- StateVecNames
   } else {
-    CompartmentsToInitialize <-c(CompartmentsToInitialize,
+    CompartmentsToInitialize <-c(StateVecNames,
                                  sapply(other_compartments,
                                  function(x) paste("C",x,sep="")))
   }
@@ -353,16 +327,29 @@ if (!is.null(dose) & !is.null(daily.dose) & !is.null(dosing.matrix))
   }
   
 # Add the first dose:
-  state <- do.call(initialize_R_function,list(state=state, 
-             dosing=dosing, 
-             use.amounts=use.amounts))
+  if (!is.null(dosing$initial.dose))
+  {
+     if (!dose.type %in% c("add","replace","multiply"))
+       stop("Dose type must be \"add\", \"replace\", or \"multiply\".")
+       
+     if (dose.type=="add") state[dose.var] <- state[dose.var] + 
+       dosing$initial.dose
+     else if (dose.type=="multiply") state[dose.var] <- state[dose.var] *
+       dosing$initial.dose
+     else state[dose.var] <-dosing$initial.dose
+  }
+
+#  state <- do.call(initialize_R_function,list(initial.state=state, 
+#             dosing=c(list(route=route),dosing), 
+#             use.amounts=use.amounts))
              
 #  parameters <- initparms(parameters[param.names.pbtk.solver])
 #  state <-initState(parameters,state)
 
   times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
+
 # If we are simulating a single dose:
-  if (!is.null(dose))
+  if (!is.null(initial.dose))
   {
     eventdata <- NULL
   } else {
