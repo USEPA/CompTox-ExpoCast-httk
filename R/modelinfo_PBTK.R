@@ -1,83 +1,131 @@
 # Add this model to the list of models:
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
-# These are all the paramters returned by the model parameterization fucntion.
+# The is the R function for generating model parameters:
+model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
+
+# These are all the paramters returned by the R model parameterization fucntion.
 # Some of these paramters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["pbtk"]]$param.names <- c("BW",
-                    "Clint",
-                    "Clmetabolismc",
-                    "Funbound.plasma",
-                    "Funbound.plasma.dist",
-                    "Funbound.plasma.adjustment",
-                    "Fgutabs",
-                    "Fhep.assay.correction",
-                    "hematocrit",
-                    "Kgut2pu",
-                    "kgutabs",
-                    "Kkidney2pu",
-                    "Kliver2pu",
-                    "Klung2pu",
-                    "Krbc2pu",
-                    "Krest2pu",
-                    "liver.density",
-                    "million.cells.per.gliver",
-                    "MW",
-                    "Pow",
-                    "pKa_Donor",
-                    "pKa_Accept",
-                    "MA",
-                    "Qcardiacc",
-                    "Qgfrc",
-                    "Qgutf",
-                    "Qkidneyf",
-                    "Qliverf",
-                    "Rblood2plasma",
-                    "Vartc",
-                    "Vgutc",
-                    "Vkidneyc",
-                    "Vliverc",
-                    "Vlungc",
-                    "Vrestc",
-                    "Vvenc")
+model.list[["pbtk"]]$param.names <- c(
+  "BW",
+  "Clint",
+  "Clmetabolismc",
+  "Funbound.plasma",
+  "Funbound.plasma.dist",
+  "Funbound.plasma.adjustment",
+  "Fgutabs",
+  "Fhep.assay.correction",
+  "hematocrit",
+  "Kgut2pu",
+  "kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Klung2pu",
+  "Krbc2pu",
+  "Krest2pu",
+  "liver.density",
+  "million.cells.per.gliver",
+  "MW",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MA",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
                     
-# The parameters are needed to calculate the derivative of the system of
-# equations describing the model:
-model.list[["pbtk"]]$solver.param.names <- c("BW",
-                    "Clmetabolismc",
-                    "Fraction_unbound_plasma",
-                    "hematocrit",
-                    "Kgut2pu",
-                    "kgutabs",
-                    "Kkidney2pu",
-                    "Kliver2pu",
-                    "Klung2pu",
-                    "Krest2pu",
-                    "Qcardiacc",
-                    "Qgfrc",
-                    "Qgutf",
-                    "Qkidneyf",
-                    "Qliverf",
-                    "Rblood2plasma",
-                    "Vartc",
-                    "Vgutc",
-                    "Vkidneyc",
-                    "Vliverc",
-                    "Vlungc",
-                    "Vrestc",
-                    "Vvenc")
+# This subset of R parameters are needed to initially parametrize the compiled
+# code for the solver:
+model.list[["pbtk"]]$init.param.names <- c(
+  "BW",
+  "Clmetabolismc",
+  "Fraction_unbound_plasma",
+  "hematocrit",
+  "Kgut2pu",
+  "kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Klung2pu",
+  "Krest2pu",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
 
-# These parameters specific the exposure scenario simulated by the model:
-model.list[["pbtk"]]$solver.param.names <- c("daily.dose",
-                    "dose", # Assume dose is in mg/kg BW/day  
-                    "doses.per.day",
-                    "iv.dose",
-                    "dosing.matrix")
-model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
-model.list[["pbtk"]]$compiled.init.func <- "init_mod"
+# This function translates the R model parameters into the compiled model
+# parameters:
+model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
 
+# This is the ORDERED full list of parameters used by the compiled code to 
+# calculate the derivative of the system of equations describing the model 
+model.list[["pbtk"]]$compiled.param.names <- c(
+  "BW",
+  "Clmetabolismc",
+  "hematocrit",
+  "kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Krest2pu",
+  "Kgut2pu",
+  "Klung2pu",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc",
+  "Fraction_unbound_plasma",
+  "Rblood2plasma",
+  "Clmetabolism",
+  "Qcardiac",
+  "Qgfr",
+  "Qgut",
+  "Qkidney",
+  "Qliver",
+  "Qrest",
+  "Vart",
+  "Vgut",
+  "Vkidney",
+  "Vliver",
+  "Vlung",
+  "Vrest",
+  "Vven"
+  )
 
+# This function initializes the state vector for the compiled model:
+model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
+
+# This is the function that calculates the derviative of the model as a function
+# of time, state, and parameters:
 model.list[["pbtk"]]$derivative.func <- "derivspbtk"
+
+# This is the ORDERED list of variables returned by the derivative function:
 model.list[["pbtk"]]$derivative.output.names <- c(
     "Cgut",
     "Cliver",
@@ -94,7 +142,7 @@ model.list[["pbtk"]]$derivative.output.names <- c(
 model.list[["pbtk"]]$conc.units <- c('um', 'mg/l')
 model.list[["pbtk"]]$amount.units <- c('umol', 'mg')
 
-#model.list[["pbtk"]]$R.init.func <- "R_initfunc_pbtk"
+# These parameters specific the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
@@ -109,7 +157,9 @@ model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["pbtk"]]$dose.type <- list(oral="add",
   iv="add")
 
-# This function handles setting up the model (including the initial dose):
+
+# OLD INFO (for compatibility testing)
+
 R_initfunc_pbtk <- function(initial.state,dosing,use.amounts=F)
 {
   # Check that dosing isn't ambiguous:
@@ -137,12 +187,6 @@ R_initfunc_pbtk <- function(initial.state,dosing,use.amounts=F)
 
   return(state)
 }
-
-
-# OLD INFO (for compatibility testing)
-
-# Add this model to the list of models:
-model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
 #Define the parameter names for each model in one place so that all functions can use them:
 param.names.pbtk <- c("BW",
@@ -205,6 +249,8 @@ param.names.pbtk.solver <- c("BW",
                     "Vlungc",
                     "Vrestc",
                     "Vvenc")
+
+
 
 pbtk.initparms <- function(newParms = NULL){
   parms <- c(
