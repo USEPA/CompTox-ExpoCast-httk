@@ -121,7 +121,7 @@ solve_model <- function(chem.name = NULL,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
                     plots=F,
-                    monitor.vars=c("Ametabolized","Atubules","Cplasma","AUC"),
+                    monitor.vars=NULL,
                     suppress.messages=F,
                     species="Human",
                     output.units='uM',
@@ -155,16 +155,10 @@ solve_model <- function(chem.name = NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } else {
+# Available exposure routes:
+    model_routes <- model.list[["pbtk"]]$routes
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# name(s)s of the parameters that control the solver:
-    solver_param_names <- model.list[[model]]$solver.param.names
-# name of the function that calculates the derivative:
-    derivative_function <- model.list[[model]]$derivative.func
-# ordered names of the outputs from the derivative function:
-    derivative_output_names <- model.list[[model]]$derivative.output.names
-# calculate the number of outputs from the derivitive function:
-    num_outputs <- length(derivative_output_names)    
 # allowable names of units for the model that are based on amounts (e.g., umol, mg)
     amount_units <- model.list[[model]]$amount.units
 # allowable names of units for the model that are concentrations (e.g, uM, mg/L)
@@ -176,21 +170,25 @@ solve_model <- function(chem.name = NULL,
 # units of concentration or amount:
     other_compartments <- model.list[[model]]$other.compartments
     initialize_R_function <- model.list[["pbtk"]]$R.init.func
+# Function that initializes the compiled moel code:
     initialize_compiled_function <- model.list[["pbtk"]]$compiled.init.func
-    model_routes <- model.list[["pbtk"]]$routes
+# name(s)s of the R parameters needed to initialize the compiled model params:
+    solver_param_names <- model.list[[model]]$init.param.names
+# Function that transform the paramers to those needed by the solver:
+    compiled_parameters_init <- model.list[["pbtk"]]$compiled.parameters.init
+# name(s)s of the compiled model parameters that control the solver:
+    compiled_param_names <- model.list[[model]]$compiled.param.names
+# name of the function that calculates the derivative:
+    derivative_function <- model.list[[model]]$derivative.func
+# ordered names of the outputs from the derivative function:
+    derivative_output_names <- model.list[[model]]$derivative.output.names
+# calculate the number of outputs from the derivitive function:
+    num_outputs <- length(derivative_output_names)    
   }
 
   # Make sure the model is dynamic:
   if (is.null(derivative_function)) stop(paste("Model",model,"is not solvable \
   (Derivative function is not defined)"))
-
-  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-    model.list[[model]]$dosing.params)) %in% 
-    names(dosing))) stop("Dosing descriptor(s) missing")
-  initial.dose <- dosing$initial.dose
-  dosing.matrix <- dosing$dosing.matrix
-  daily.dose <- dosing$daily.dose
-  doses.per.day <- dosing$doses.per.day
 
   # Make sure that the dose route is sufficiently described:
   if (is.null(route))
@@ -262,6 +260,14 @@ solve_model <- function(chem.name = NULL,
   
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
 
+  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+    model.list[[model]]$dosing.params)) %in% 
+    names(dosing))) stop("Dosing descriptor(s) missing")
+  dosing <- scale_dosing(dosing,parameters,output.units)
+  initial.dose <- dosing$initial.dose
+  dosing.matrix <- dosing$dosing.matrix
+  daily.dose <- dosing$daily.dose
+  doses.per.day <- dosing$doses.per.day
 
 # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
@@ -278,21 +284,19 @@ solve_model <- function(chem.name = NULL,
       use.amounts <- T
 # or if we need to throw an error:
   else stop(paste("Units",output.units,"unavailable for model",model))
-
-  dosing <- scale_dosing(dosing,parameters,output.units)
  
-  # Volume parameters that need to be scaled (linearly) by body weight are those
-  # volume parameters that are provided on a L/kg body weght scale start with
-  # "V" and end with "c":       ]
-  scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V" & 
-    lastchar(names(parameters))=="c"]
-  # Multiply scaled volumes by body weight:      
-  for (this.vol in scaled.volumes)
-  {
-    eval(parse(text=paste(substr(this.vol,1,nchar(this.vol)-1), 
-      '<-', 
-      parameters[[this.vol]],'*', parameters[["BW"]]))) # L/kg BW -> L 
-  }
+#  # Volume parameters that need to be scaled (linearly) by body weight are those
+#  # volume parameters that are provided on a L/kg body weght scale start with
+#  # "V" and end with "c":       ]
+#  scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V" & 
+#    lastchar(names(parameters))=="c"]
+#  # Multiply scaled volumes by body weight:      
+#  for (this.vol in scaled.volumes)
+#  {
+#    eval(parse(text=paste(substr(this.vol,1,nchar(this.vol)-1), 
+#      '<-', 
+#      parameters[[this.vol]],'*', parameters[["BW"]]))) # L/kg BW -> L 
+#  }
   
 # Generate the list of compartments to be used:
   StateVecNames <- c(amount_compartments, 
@@ -327,16 +331,15 @@ solve_model <- function(chem.name = NULL,
   }
   
 # Add the first dose:
-  if (!is.null(dosing$initial.dose))
+  if (!is.null(initial.dose))
   {
      if (!dose.type %in% c("add","replace","multiply"))
        stop("Dose type must be \"add\", \"replace\", or \"multiply\".")
        
-     if (dose.type=="add") state[dose.var] <- state[dose.var] + 
-       dosing$initial.dose
+     if (dose.type=="add") state[dose.var] <- state[dose.var] + initial.dose
      else if (dose.type=="multiply") state[dose.var] <- state[dose.var] *
-       dosing$initial.dose
-     else state[dose.var] <-dosing$initial.dose
+       initial.dose
+     else state[dose.var] <- initial.dose
   }
 
 #  state <- do.call(initialize_R_function,list(initial.state=state, 
@@ -386,6 +389,17 @@ with two columns (time, dose).")
     }    
     times <- sort(unique(times,dose.times))
   }  
+  
+# Here we remove model parameters that are not needed by the C solver (via
+# only passing those parameters in solver_param_names) and add in any
+# additional parameters calculated by the C code (such as body weight scaling):
+  parameters <- .C(compiled_parameters_init,
+    as.double(parameters[solver_param_names]),
+    out=double(length(parameters[compiled_param_names])),
+    as.integer(length(parameters[compiled_param_names])))$out
+  names(parameters) <- compiled_param_names
+
+  
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(y = state, 
     times = times, 
@@ -397,10 +411,17 @@ with two columns (time, dose).")
     dllname="httk",
     initfunc=initialize_compiled_function,
     nout=num_outputs,
-    outnames=derivative_output_names,
+    outnames=derivative_output_names,                                        
     events=list(data=eventdata),
     ...)
   
+# Downselect to only the desired parameters:
+  if (is.null(monitor.vars))
+  {
+    monitor.vars <- CompartmentsToInitializ
+  }
+  monitor.vars <- c(monitor.vars,"Ametabolized","Atubules","Cplasma","AUC")
+ 
   if (plots==T)
   {
     plot(out, select=unique(c(monitor.vars,names(initial.values))))
