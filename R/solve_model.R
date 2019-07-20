@@ -350,10 +350,6 @@ solve_model <- function(chem.name = NULL,
 #  state <-initState(parameters,state)
 
   times <- sort(unique(c(times,start.time,start.time+1e8,end.time)))
-  if (!is.null(dosing.matrix)) 
-    times <- sort(unique(c(times,
-    dosing.matrix[,"time"],
-    dosing.matrix[,"time"]+1e8)))
 
 # If we are simulating a single dose:
   if (!is.null(initial.dose))
@@ -365,7 +361,7 @@ solve_model <- function(chem.name = NULL,
     {
       if (is.null(daily.dose)) stop("Must specifiy total \"daily.dose\" when \
 \"doses.per.day\" is not set to NULL.")
-      else if (!is.null(daily.dose)) 
+      else if (is.null(doses.per.day)) 
       {
         stop("Must specifiy total \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
       } 
@@ -393,6 +389,10 @@ with two columns (time, dose).")
     }    
     times <- sort(unique(times,dose.times))
   }  
+  if (!is.null(eventdata)) 
+    times <- sort(unique(c(times,
+    eventdata$time,
+    eventdata$time+1e8)))
   
 # Here we remove model parameters that are not needed by the C solver (via
 # only passing those parameters in solver_param_names) and add in any
