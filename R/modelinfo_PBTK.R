@@ -46,31 +46,32 @@ model.list[["pbtk"]]$param.names <- c(
   "Vvenc")
                     
 # This subset of R parameters are needed to initially parametrize the compiled
-# code for the solver:
+# code for the solver: (must match ORDER under "parameters" in C code)
 model.list[["pbtk"]]$init.param.names <- c(
   "BW",
   "Clmetabolismc",
-  "Fraction_unbound_plasma",
   "hematocrit",
-  "Kgut2pu",
   "kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
-  "Klung2pu",
   "Krest2pu",
+  "Kgut2pu",
+  "Klung2pu",
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
   "Qkidneyf",
   "Qliverf",
-  "Rblood2plasma",
   "Vartc",
   "Vgutc",
   "Vkidneyc",
   "Vliverc",
   "Vlungc",
   "Vrestc",
-  "Vvenc")
+  "Vvenc",
+  "Fraction_unbound_plasma",
+  "Rblood2plasma"
+)
 
 # This function translates the R model parameters into the compiled model
 # parameters:
