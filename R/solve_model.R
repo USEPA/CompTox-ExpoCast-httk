@@ -349,7 +349,11 @@ solve_model <- function(chem.name = NULL,
 #  parameters <- initparms(parameters[param.names.pbtk.solver])
 #  state <-initState(parameters,state)
 
-  times <- sort(unique(c(times,start.time,start.time + 1e-8,end.time)))
+  times <- sort(unique(c(times,start.time,start.time+1e8,end.time)))
+  if (!is.null(dosing.matrix)) 
+    times <- sort(unique(c(times,
+    dosing.matrix[,"time"],
+    dosing.matrix[,"time"]+1e8)))
 
 # If we are simulating a single dose:
   if (!is.null(initial.dose))
@@ -380,12 +384,12 @@ solve_model <- function(chem.name = NULL,
 with two columns (time, dose).")
     
 # Or a matrix of doses (first col time, second col dose) has been specified:
-      dose.times <- dosing.matrix[,1]
+      dose.times <- dosing.matrix[,"time"]
       num.doses <- length(dose.times)
       eventdata <- data.frame(var=rep(dose.var,num.doses),
-                              time = dosing.times,
-                              value = dosing.matrix[,2],
-                              method = rep(dose.types,num.doses))
+                              time = dose.times,
+                              value = dosing.matrix[,"dose"],
+                              method = rep(dose.type,num.doses))
     }    
     times <- sort(unique(times,dose.times))
   }  
@@ -418,9 +422,9 @@ with two columns (time, dose).")
 # Downselect to only the desired parameters:
   if (is.null(monitor.vars))
   {
-    monitor.vars <- CompartmentsToInitializ
+    monitor.vars <- derivative_output_names
   }
-  monitor.vars <- c(monitor.vars,"Ametabolized","Atubules","Cplasma","AUC")
+  monitor.vars <- c(dose.var,monitor.vars,"Ametabolized","Atubules","Cplasma","AUC")
  
   if (plots==T)
   {

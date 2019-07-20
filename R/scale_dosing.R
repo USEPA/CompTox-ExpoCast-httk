@@ -12,8 +12,8 @@ scale_dosing <- function(dosing,parameters,output.units="uM")
       1e3 /                # mg -> g
       parameters[["MW"]] * # g -> mol
       1e6)                 # mol -> umol
-    if (!is.null(dosing$dosing.matrix)) dosing$dose.vector <- 
-      as.numeric(dose.vector * 
+    if (!is.null(dosing$dosing.matrix)) dosing$dosing.matrix[,"dose"] <- 
+      as.numeric(dosing$dosing.matrix[,"dose"] * 
       parameters[["BW"]] / # mg/kg BW -> mg
       1e3/                 # mg -> g
       parameters[["MW"]] * # g -> mol
@@ -22,8 +22,8 @@ scale_dosing <- function(dosing,parameters,output.units="uM")
   {
     if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 
       dosing$initial.dose * parameters[['BW']]
-    if (!is.null(dosing$dosing.matrix)) dosing$dose.vector <- 
-      dosing$dose.vector * parameters[['BW']]
+    if (!is.null(dosing$dosing.matrix)) dosing$dosing.matrix[,"dose"] <- 
+      dosing$dosing.matrix[,"dose"] * parameters[['BW']]
   } else stop('Output.units can only be uM, umol, mg, or mg/L.')
   
   return(dosing)
