@@ -349,7 +349,7 @@ solve_model <- function(chem.name = NULL,
 #  parameters <- initparms(parameters[param.names.pbtk.solver])
 #  state <-initState(parameters,state)
 
-  times <- sort(unique(c(times,start.time,start.time+1e8,end.time)))
+  times <- sort(unique(c(times,start.time,start.time+1e-8,end.time)))
 
 # If we are simulating a single dose:
   if (!is.null(initial.dose))
@@ -365,34 +365,27 @@ solve_model <- function(chem.name = NULL,
       {
         stop("Must specifiy total \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
       } 
-
-      dose.times <- seq(start.time + 1/doses.per.day,
+      dose.times <- seq(start.time,
                         end.time-1/doses.per.day,
                         1/doses.per.day)
-      each.dose <- daily.dose/doses.per.day
-      eventdata <- data.frame(var=rep(dose.var,num.doses),
-                              time = round(dose.times,8),
-                              value = rep(each.dose,num.doses), 
-                              method = rep(dose.type,num.doses))
+      dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
     } else {
       if (any(is.na(dosing.matrix))) stop("Dosing mstrix cannot contain NA values")
       if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix \
 with two columns (time, dose).")
-    
 # Or a matrix of doses (first col time, second col dose) has been specified:
       dose.times <- dosing.matrix[,"time"]
-      num.doses <- length(dose.times)
-      eventdata <- data.frame(var=rep(dose.var,num.doses),
-                              time = dose.times,
-                              value = dosing.matrix[,"dose"],
-                              method = rep(dose.type,num.doses))
-    }    
-    times <- sort(unique(times,dose.times))
-  }  
-  if (!is.null(eventdata)) 
+      dose.vec <- dosing.matrix[,"dose"]
+    }
+    num.doses <- length(dose.times)
+    eventdata <- data.frame(var=rep(dose.var,num.doses),
+                            time = round(dose.times,8),
+                            value = dose.vec, 
+                            method = rep(dose.type,num.doses))
     times <- sort(unique(c(times,
     eventdata$time,
-    eventdata$time+1e8)))
+    eventdata$time+1e-8)))
+  }  
   
 # Here we remove model parameters that are not needed by the C solver (via
 # only passing those parameters in solver_param_names) and add in any
