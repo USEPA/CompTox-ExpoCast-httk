@@ -149,7 +149,8 @@ solve_model <- function(chem.name = NULL,
   
   if (is.null(model)) stop("Model must be specified.")
 
-# We need to know model-specific information to set up the solver:
+# We need to know model-specific information (from [MODEL]_modelinfo.R]) 
+# to set up the solver:
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
@@ -238,28 +239,42 @@ solve_model <- function(chem.name = NULL,
     }
   }
   
+  # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
+  # have been updated by Monte Carlo it may be that Rblood2plasma needs to be
+  # recalculated:
   if (recalc.blood2plasma) parameters[['Rblood2plasma']] <- 
     1 - 
     parameters[['hematocrit']] + 
     parameters[['hematocrit']] * parameters[['Krbc2pu']] * 
     parameters[['Funbound.plasma']]
   
+  # The unscald hepatic clearance depens on many parameters that could be changed
+  # by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
-    if (is.null(chem.name) & is.null(chem.cas)) 
-      stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-    ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
-    ss.params[['million.cells.per.gliver']] <- parameters[['million.cells.per.gliver']]
+  # Do we have all the parameters we need?:
+    if (!all(model.list[["pbtk"]]$param.names%in%names(parameters)))
+    {
+      if (is.null(chem.name) & is.null(chem.cas)) 
+        stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
+      ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
+    }
+    ss.params[[names(ssparams) %in% names(parameters)]] <- 
+      parameters[[names(ssparams) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
-  } 
+  }
   
+  # If the hepatic metabolism is now slowed by plasma protein binding (non-
+  # restrictive clearance)  
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
   
+  # Change parameter name to match C code (DO WE REALLY NEED THIS?):
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
 
+  # Parse the dosing parameter into recognized values:
   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
     model.list[[model]]$dosing.params)) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
@@ -284,20 +299,7 @@ solve_model <- function(chem.name = NULL,
       use.amounts <- T
 # or if we need to throw an error:
   else stop(paste("Units",output.units,"unavailable for model",model))
- 
-#  # Volume parameters that need to be scaled (linearly) by body weight are those
-#  # volume parameters that are provided on a L/kg body weght scale start with
-#  # "V" and end with "c":       ]
-#  scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V" & 
-#    lastchar(names(parameters))=="c"]
-#  # Multiply scaled volumes by body weight:      
-#  for (this.vol in scaled.volumes)
-#  {
-#    eval(parse(text=paste(substr(this.vol,1,nchar(this.vol)-1), 
-#      '<-', 
-#      parameters[[this.vol]],'*', parameters[["BW"]]))) # L/kg BW -> L 
-#  }
-  
+   
 # Generate the list of compartments to be used:
   StateVecNames <- c(amount_compartments, 
                      sapply(other_compartments,
@@ -318,12 +320,14 @@ solve_model <- function(chem.name = NULL,
 # Set the initial conditions based on argument initial.values
   for (this.compartment in names(initial.values))
   {
+# Are we doing concentrations?
     if (firstchar(this.compartment)=="C")
     {
       tissue <- substring(this.compartment, 2)
       state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                             parameters[[paste("V",tissue,sep="")]]
+# Or amounts?
     } else if (firstchar(this.compartment)=="A")
     {
       state[this.compartment] <- initial.values[[this.compartment]]
@@ -342,18 +346,16 @@ solve_model <- function(chem.name = NULL,
      else state[dose.var] <- initial.dose
   }
 
-#  state <- do.call(initialize_R_function,list(initial.state=state, 
-#             dosing=c(list(route=route),dosing), 
-#             use.amounts=use.amounts))
-             
-#  parameters <- initparms(parameters[param.names.pbtk.solver])
-#  state <-initState(parameters,state)
-
+  # We add a time point 1e-8 later than the beginnging to make the plots look
+  # better:
   times <- sort(unique(c(times,start.time,start.time+1e-8,end.time)))
 
-# If we are simulating a single dose:
+# eventdata is the deSolve object specifying "events" where the simulation 
+# stops and variables are potentially changed. We use this object to perform 
+# dosing. Each additional dose after the initial dose is an event.
   if (!is.null(initial.dose))
   {
+# If we are simulating a single dose then we don't need evendata:
     eventdata <- NULL
   } else {
 # Either we are doing dosing at a constant interval:
@@ -369,11 +371,11 @@ solve_model <- function(chem.name = NULL,
                         end.time-1/doses.per.day,
                         1/doses.per.day)
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
+# Or a matrix of doses (first col time, second col dose) has been specified:
     } else {
       if (any(is.na(dosing.matrix))) stop("Dosing mstrix cannot contain NA values")
       if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix \
 with two columns (time, dose).")
-# Or a matrix of doses (first col time, second col dose) has been specified:
       dose.times <- dosing.matrix[,"time"]
       dose.vec <- dosing.matrix[,"dose"]
     }
@@ -412,26 +414,32 @@ with two columns (time, dose).")
     events=list(data=eventdata),
     ...)
   
-# Downselect to only the desired parameters:
+# The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
   {
     monitor.vars <- derivative_output_names
   }
+# However, we always included these four:  
   monitor.vars <- c(dose.var,monitor.vars,"Ametabolized","Atubules","Cplasma","AUC")
  
+# Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
     plot(out, select=unique(c(monitor.vars,names(initial.values))))
-  }              
-
+  } 
+               
+# Downselect to only the desired parameters:
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
-  
+
+# Document the valeus produced by the simulation:  
   if(!suppress.messages)
   {
     if(is.null(chem.cas) & is.null(chem.name))
     {
       cat("Values returned in",output.units,"units.\n")
+# If only a parameter vector is given it's good to warn people that they
+# need to make sure that these values have been appropriately recalculated:
       if (!recalc.blood2plasma) warning('Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.') 
       if (!recalc.clearance) warning('Clearance not recalculated.  Set recalc.clearance to TRUE if desired.') 
     } else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
