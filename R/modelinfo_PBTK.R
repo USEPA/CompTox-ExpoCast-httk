@@ -171,3 +171,15 @@ model.list[["pbtk"]]$amount.compartments<- c(
     "Atubules",
     "Ametabolized",
     "AUC")
+    
+#Parameters needed to make a prediction (this is used by get_cheminfo):
+model.list[["pbtk"]]$required.params <- c(
+  "Clint",
+  "Funbound.plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MW"
+   )
+# Do we ignore the Fups where the alue was below the limit of detection?
+model.list[["pbtk"]]$exclude.fup.zero <- T

@@ -149,8 +149,9 @@ solve_model <- function(chem.name = NULL,
   
   if (is.null(model)) stop("Model must be specified.")
 
-# We need to know model-specific information (from [MODEL]_modelinfo.R]) 
+# We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
+  model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
