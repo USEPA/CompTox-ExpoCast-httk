@@ -440,16 +440,23 @@ with two columns (time, dose).")
       cat("Values returned in",output.units,"units.\n")
 # If only a parameter vector is given it's good to warn people that they
 # need to make sure that these values have been appropriately recalculated:
-      if (!recalc.blood2plasma) warning('Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.') 
-      if (!recalc.clearance) warning('Clearance not recalculated.  Set recalc.clearance to TRUE if desired.') 
-    } else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
+      if (!recalc.blood2plasma) warning('Rblood2plasma not recalculated. \
+      Set recalc.blood2plasma to TRUE if desired.') 
+      if (!recalc.clearance) warning('Clearance not recalculated. \
+      Set recalc.clearance to TRUE if desired.') 
+    } else cat(paste(toupper(substr(species,1,1)),
+      substr(species,2,nchar(species)),sep=''),
+      "values returned in",output.units,"units.\n")
     if (tolower(output.units) == 'mg')
     {
-      cat("AUC is area under plasma concentration in mg/L * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+      cat("AUC is area under plasma concentration in mg/L * days units with \
+Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
     } else if(tolower(output.units) == 'umol')
     {
-      cat("AUC is area under plasma concentration in uM * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-    } else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+      cat("AUC is area under plasma concentration in uM * days units with \
+Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+    } else cat("AUC is area under plasma concentration curve in",output.units,
+      "* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
   }
     
   return(out) 
