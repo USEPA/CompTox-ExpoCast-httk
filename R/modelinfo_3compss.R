@@ -19,3 +19,15 @@ param.names.3compss <- c("BW",
                        "Qgfrc",
                        "Rblood2plasma",
                        "Vliverc")
+
+#Parameters needed to make a prediction (this is used by get_cheminfo):
+model.list[["3compartmentss"]]$required.params <- c(
+  "Clint",
+  "Funbound.plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MW"
+   )
+# Do we ignore the Fups where the alue was below the limit of detection?
+model.list[["3compartmentss"]]$exclude.fup.zero <- F
