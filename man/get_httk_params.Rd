@@ -7,7 +7,7 @@ needed by HTTK, for a specific chemical.}
 \usage{
 get_httk_params(indiv_dt, chemcas = NULL, parameters = NULL, model,
   poormetab, fup.censored.dist = FALSE, fup.meas.cv = 0.4,
-  clint.meas.cv = 0.3, fup.pop.cv = 0.05, clint.pop.cv = 0.1,
+  clint.meas.cv = 0.3, fup.pop.cv = 0.1, clint.pop.cv = 0.1,
   fup.lod = 0.01, adjusted.Funbound.plasma = T, regression = T,
   well.stirred.correction = T, restrictive.clearance = T,
   clint.pvalue.threshold = 0.05)

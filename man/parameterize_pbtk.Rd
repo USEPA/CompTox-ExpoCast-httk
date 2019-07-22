@@ -9,7 +9,7 @@ parameterize_pbtk(chem.cas = NULL, chem.name = NULL,
   c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
   force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T, regression = T,
-  suppress.messages = F)
+  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -42,8 +42,11 @@ TRUE along with parition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-}
-\value{
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).
+
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
 the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
@@ -74,7 +77,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}}
 }
 \description{
 This function initializes the parameters needed in the functions solve_pbtk,

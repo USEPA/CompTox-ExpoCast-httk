@@ -135,9 +135,9 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     ...)
 {
-  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
-  Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- NULL
-  Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
+#  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
+#  Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- NULL
+#  Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
 
 # set up some local functions for easier string manipulation:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}

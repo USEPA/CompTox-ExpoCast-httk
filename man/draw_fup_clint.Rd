@@ -5,10 +5,10 @@
 \title{Draw Funbound.plasma and Clint from censored or non-censored distributions.}
 \usage{
 draw_fup_clint(this.chem = NULL, parameters = NULL, nsamp,
-  fup.meas.cv = 0.4, clint.meas.cv = 0.3, fup.pop.cv = 0.05,
-  clint.pop.cv = 0.1, poormetab, fup.lod = 0.01,
+  fup.meas.cv = 0.4, clint.meas.cv = 0.3, fup.pop.cv = 0.3,
+  clint.pop.cv = 0.3, poormetab = TRUE, fup.lod = 0.01,
   fup.censored.dist = FALSE, adjusted.Funbound.plasma = T,
-  clint.pvalue.threshold = 0.05)
+  clint.pvalue.threshold = 0.05, minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{this.chem}{The CAS number of one of the HTTK chemicals (see
@@ -46,6 +46,10 @@ TRUE.}
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 A data.table with three columns: \code{Funbound.plasma} and

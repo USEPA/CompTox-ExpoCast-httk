@@ -6,8 +6,8 @@
 \usage{
 calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   which.quantile = 0.95, species = "Human", input.units = "uM",
-  output.units = "mg", suppress.messages = F, return.samples = F,
-  restrictive.clearance = T, plasma.binding = F,
+  output.units = "mgpkgpday", suppress.messages = F,
+  return.samples = F, restrictive.clearance = T, plasma.binding = F,
   tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
 }
 \arguments{
@@ -29,8 +29,8 @@ default "Human").}
 \item{input.units}{Units of given concentration, default of uM but can also
 be mg/L.}
 
-\item{output.units}{Units of dose, default of 'mg' for mg/kg BW/ day or
-'mol' for mol/ kg BW/ day.}
+\item{output.units}{Units of dose, default of 'mgpkgpday' for mg/kg BW/ day or
+'umolpkgpday' for umol/ kg BW/ day.}
 
 \item{suppress.messages}{Suppress text messages.}
 
