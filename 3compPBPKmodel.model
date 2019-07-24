@@ -1,32 +1,37 @@
+#------------------------------------------------------------------------------
+# the HTTK Three Compartment Model (3compartment)
+# written by Robert Pearce, modified by John Wambaugh
+#-
+
 States = {
-Aintestine;
-Aportven;
-Aliver;
-Asyscomp;
-Ametabolized;
-Atubules;
+Aintestine,
+Aportven,
+Aliver,
+Asyscomp,
+Ametabolized,
+Atubules
 };
 
 Inputs = {
 };
 
 Outputs = {
-Cportven;
-Cliver;
-Csyscomp;
+Cportven,
+Cliver,
+Csyscomp,
 };
 
-BW = 70;
-CLmetabolismc = 0.203;
-kgutabs = 1;
+BW = 0;
+CLmetabolismc = 0;
+kgutabs = 0;
 Qcardiacc = 0;
-Qgfrc = 0.108;
-Qgutf = 0.205;
-Qliverf = 0.0536;
-Vportven = 0;
-Vliver = 0;
-Vsyscomp = 0;
-Fraction_unbound_plasma = 0.0682;
+Qgfrc = 0;
+Qgutf = 0;
+Qliverf = 0;
+Vportvenc = 0;
+Vliverc = 0;
+Vsyscompc = 0;
+Fraction_unbound_plasma = 0;
 CLmetabolism = 0.0;
 Qcardiac = 0;
 Qgfr = 0.0;
@@ -36,9 +41,6 @@ Kliver2plasma = 0;
 Krest2plasma = 0;
 Ratioblood2plasma = 0;
 
-
-
-
 Initialize{
 kgutabs = kgutabs * 24;
 CLmetabolism = CLmetabolismc * 24 * BW;
@@ -46,6 +48,9 @@ Qcardiac = Qcardiacc * 24 * BW;
 Qgfr = Qgfrc * BW * 24;
 Qgut = Qcardiac * Qgutf;
 Qliver = Qcardiac * Qliverf;
+Vportven = Vportvenc * BW;
+Vsyscomp = Vsyscompc * BW;
+Vliver = Vliverc * BW;
 }
 
 Dynamics{
@@ -63,3 +68,4 @@ dt (Atubules) = Qgfr / Krest2plasma * Asyscomp / Vsyscomp;
 
 }
 
+End.
