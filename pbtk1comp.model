@@ -1,0 +1,34 @@
+States = {
+Agutlumen;
+Acompartment;
+Ametabolized;
+AUC;
+};
+
+Inputs = {
+};
+
+Outputs = {
+Ccompartment;
+};
+
+vdist = 0;
+ke=0;
+kgutabs=1;
+
+
+
+
+Initialize{
+kgutabs = kgutabs * 24;
+ke = ke * 24;
+}
+
+Dynamics{
+Ccompartment = Acompartment / vdist;
+
+dt (Agutlumen)  = -kgutabs * Agutlumen; 
+dt (Acompartment) = kgutabs * Agutlumen - ke * Acompartment;
+dt (Ametabolized) = ke * Acompartment;
+dt (AUC) = Ccompartment;
+}
