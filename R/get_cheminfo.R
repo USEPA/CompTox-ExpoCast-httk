@@ -115,6 +115,8 @@ get_cheminfo <- function(info="CAS",
     necessary.params <- model.list[[model]]$required.params
     exclude.fup.zero <- model.list[[model]]$exclude.fup.zero
   }
+  if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
+    model,"have not been defined."))
   
   # For now let's not require these because it's still hard to distringuish
   # between compounds that don't ionize and those for which we don't have

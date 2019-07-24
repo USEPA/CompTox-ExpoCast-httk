@@ -49,30 +49,30 @@ model.list[["pbtk"]]$param.names <- c(
                     
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
-model.list[["pbtk"]]$init.param.names <- c(
-  "BW",
-  "Clmetabolismc",
-  "hematocrit",
-  "kgutabs",
-  "Kkidney2pu",
-  "Kliver2pu",
-  "Krest2pu",
-  "Kgut2pu",
-  "Klung2pu",
-  "Qcardiacc",
-  "Qgfrc",
-  "Qgutf",
-  "Qkidneyf",
-  "Qliverf",
-  "Vartc",
-  "Vgutc",
-  "Vkidneyc",
-  "Vliverc",
-  "Vlungc",
-  "Vrestc",
-  "Vvenc",
-  "Fraction_unbound_plasma",
-  "Rblood2plasma"
+model.list[["pbtk"]]$Rtosolvermap <- list(
+  BW="BW",
+  Clmetabolismc="Clmetabolismc",
+  hematocrit="hematocrit",
+  kgutabs="kgutabs",
+  Kkidney2pu="Kkidney2pu",
+  Kliver2pu="Kliver2pu",
+  Krest2pu="Krest2pu",
+  Kgut2pu="Kgut2pu",
+  Klung2pu="Klung2pu",
+  Qcardiacc="Qcardiacc",
+  Qgfrc="Qgfrc",
+  Qgutf="Qgutf",
+  Qkidney="Qkidneyf",
+  Qliverf="Qliverf",
+  Vartc="Vartc",
+  Vgutc="Vgutc",
+  Vkidneyc="Vkidneyc",
+  Vliverc="Vliverc",
+  Vlungc="Vlungc",
+  Vrestc="Vrestc",
+  Vvenc="Vvenc",
+  Fraction_unbound_plasma="Funbound.plasma",
+  Rblood2plasma="Rblood2plasma"
 )
 
 # This function translates the R model parameters into the compiled model
@@ -128,18 +128,34 @@ model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
 # of time, state, and parameters:
 model.list[["pbtk"]]$derivative.func <- "derivspbtk"
 
-# This is the ORDERED list of variables returned by the derivative function:
+# This is the ORDERED list of variables returned by the derivative function
+# (from Model variables: Outputs):
 model.list[["pbtk"]]$derivative.output.names <- c(
-    "Cgut",
-    "Cliver",
-    "Cven",
-    "Clung",
-    "Cart",
-    "Crest",
-    "Ckidney",
-    "Cplasma",
-    "Aplasma"
-)
+  "Cgut",
+  "Cliver",
+  "Cven",
+  "Clung",
+  "Cart",
+  "Crest",
+  "Ckidney",
+  "Cplasma",
+  "Aplasma"
+  )
+
+model.list[["pbtk"]]$default.monitor.vars <- c(
+  "Agutlumen",
+  "Cgut",
+  "Cliver",
+  "Cven",
+  "Clung",
+  "Cart",
+  "Crest",
+  "Ckidney",
+  "Cplasma",
+  "Atubules",
+  "Ametabolized",
+  "AUC"
+  )
 
 # Allowable units (and whether they are for amounts or concentration):
 model.list[["pbtk"]]$conc.units <- c('um', 'mg/l')
@@ -187,5 +203,6 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

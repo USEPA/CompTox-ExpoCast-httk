@@ -171,7 +171,7 @@ solve_model <- function(chem.name = NULL,
 # Function that initializes the compiled moel code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
-    solver_param_names <- model.list[[model]]$init.param.names
+    Rtosolvermap <- model.list[[model]]$Rtosolvermap
 # Function that transform the paramers to those needed by the solver:
     compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
 # name(s)s of the compiled model parameters that control the solver:
@@ -182,6 +182,8 @@ solve_model <- function(chem.name = NULL,
     derivative_output_names <- model.list[[model]]$derivative.output.names
 # calculate the number of outputs from the derivitive function:
     num_outputs <- length(derivative_output_names)    
+# Which variables to we track by defauly:
+    default.monitor.vars <- model.list[[model]]$default.monitor.vars
   }
 
   # Make sure the model is dynamic:
@@ -244,6 +246,7 @@ solve_model <- function(chem.name = NULL,
     parameters[['hematocrit']] + 
     parameters[['hematocrit']] * parameters[['Krbc2pu']] * 
     parameters[['Funbound.plasma']]
+  Rblood2plasma <- parameters[["Rblood2plasma"]]
   
   # The unscald hepatic clearance depens on many parameters that could be changed
   # by Monte Carlo simulation. This code recalculates it if needed:
@@ -276,8 +279,15 @@ solve_model <- function(chem.name = NULL,
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
 
-  # Change parameter name to match C code (IS THERE A BETTER WAY TO HANDLE THIS?):
-  parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
+  # Map the R paramters onto the names for the C code:
+  for (this.param in names(Rtosolvermap)[!(names(Rtosolvermap) 
+    %in% names(parameters))])
+  {
+    if (Rtosolvermap[[this.param]] %in% names(parameters))
+      parameters[[this.param]] <- parameters[[Rtosolvermap[[this.param]]]]
+    else stop(paste("Failed to find R parameter",Rtosolvermap[[this.param]],
+      "to initialize parameter",this.param,"in the C code."))
+  }
 
   # Parse the dosing parameter into recognized values:
   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
@@ -398,7 +408,7 @@ with two columns (time, dose).")
 # only passing those parameters in solver_param_names) and add in any
 # additional parameters calculated by the C code (such as body weight scaling):
   parameters <- .C(compiled_parameters_init,
-    as.double(parameters[solver_param_names]),
+    as.double(parameters[names(Rtosolvermap)]),
     out=double(length(parameters[compiled_param_names])),
     as.integer(length(parameters[compiled_param_names])))$out
   names(parameters) <- compiled_param_names
@@ -422,10 +432,12 @@ with two columns (time, dose).")
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
   {
-    monitor.vars <- derivative_output_names
+    monitor.vars <- default.monitor.vars
   }
-# However, we always included these four:  
-  monitor.vars <- c(dose.var,monitor.vars,"Ametabolized","Atubules","Cplasma","AUC")
+# However, we always include whatever compartment received the dose:  
+  monitor.vars <- unique(c(dose.var,monitor.vars))
+  if (any(!(monitor.vars%in%colnames(out)))) stop("Some of the requested \
+variables to monitor (monitor.vars) are not in the derative_output_names.")
  
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
@@ -455,13 +467,13 @@ with two columns (time, dose).")
     if (tolower(output.units) == 'mg')
     {
       cat("AUC is area under plasma concentration in mg/L * days units with \
-Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+Rblood2plasma =",Rblood2plasma,".\n")
     } else if(tolower(output.units) == 'umol')
     {
       cat("AUC is area under plasma concentration in uM * days units with \
-Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+Rblood2plasma =",Rblood2plasma,".\n")
     } else cat("AUC is area under plasma concentration curve in",output.units,
-      "* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+      "* days units with Rblood2plasma =",Rblood2plasma,".\n")
   }
     
   return(out) 

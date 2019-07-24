@@ -8,33 +8,35 @@ model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["1compartment"]]$param.names <- c("BW",
-                     "Clint",
-                     "Clint.dist",
-                     "Fgutabs",
-                     "Fhep.assay.correction",
-                     "Funbound.plasma",
-                     "Funbound.plasma.dist",
-                     "Funbound.plasma.adjustment",
-                     "hepatic.bioavailability",
-                     "hematocrit",
-                     "kelim",
-                     "kgutabs",
-                     "liver.density",
-                     "million.cells.per.gliver",
-                     "MA",
-                     "MW",
-                     "Rblood2plasma",
-                     "Pow",
-                     "pKa_Donor",
-                     "pKa_Accept",
-                     "Vdist")
+model.list[["1compartment"]]$param.names <- c(
+  "BW",
+  "Clint",
+  "Clint.dist",
+  "Fgutabs",
+  "Fhep.assay.correction",
+  "Funbound.plasma",
+  "Funbound.plasma.dist",
+  "Funbound.plasma.adjustment",
+  "hepatic.bioavailability",
+  "hematocrit",
+  "kelim",
+  "kgutabs",
+  "liver.density",
+  "million.cells.per.gliver",
+  "MA",
+  "MW",
+  "Rblood2plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "Vdist")
 
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
-model.list[["1compartment"]]$init.param.names <- c("vdist",
-                     "ke",
-                     "kgutabs")
+model.list[["1compartment"]]$Rtosolvermap <- list(
+  vdist="Vdist",
+  ke="kelim",
+  kgutab="kgutabs")
 
 # This function translates the R model parameters into the compiled model
 # parameters:
@@ -42,9 +44,10 @@ model.list[["1compartment"]]$compiled.parameters.init <- "getParms1comp"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
-model.list[["1compartment"]]$compiled.param.names <- c("vdist",
-                     "ke",
-                     "kgutabs")
+model.list[["1compartment"]]$compiled.param.names <- c(
+  "vdist",
+  "ke",
+  "kgutabs")
 
 # This function initializes the state vector for the compiled model:
 model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
@@ -54,7 +57,14 @@ model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
 model.list[["1compartment"]]$derivative.func <- "derivs1comp"
 
 # This is the ORDERED list of variables returned by the derivative function:
-model.list[["1compartment"]]$derivative.output.names <- c("Ccompartment")
+model.list[["1compartment"]]$derivative.output.names <- c(
+  "Ccompartment")
+
+model.list[["1compartment"]]$default.monitor.vars <- c(
+  "Agutlumen",
+  "Ccompartment",
+  "Ametabolized",
+  "AUC")
 
 # Allowable units (and whether they are for amounts or concentration):
 model.list[["1compartment"]]$conc.units <- c('um', 'mg/l')
@@ -87,6 +97,16 @@ model.list[["1compartment"]]$amount.compartments<- c(
 # concentrations:
 model.list[["1compartment"]]$other.compartments<- c("compartment")
 
+#Parameters needed to make a prediction (this is used by get_cheminfo):
+model.list[["1compartment"]]$required.params <- c(
+  "Clint",
+  "Funbound.plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MW"
+   )
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T
 
@@ -110,7 +130,7 @@ initparms1comp <- function(newParms = NULL){
     }
   }
   if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms_1comp",
+  out <- .C("getParms1comp",
    as.double(parms),
   out=double(length(parms)),
   as.integer(length(parms)))$out
