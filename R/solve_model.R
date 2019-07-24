@@ -138,10 +138,6 @@ solve_model <- function(chem.name = NULL,
 #  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
 #  Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- NULL
 #  Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
-
-# set up some local functions for easier string manipulation:
-  lastchar <- function(x){substr(x, nchar(x), nchar(x))}
-  firstchar <- function(x){substr(x, 1,1)}
   
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
@@ -158,7 +154,7 @@ solve_model <- function(chem.name = NULL,
       paste(names(model.list),collapse=", ")))
   } else {
 # Available exposure routes:
-    model_routes <- model.list[["pbtk"]]$routes
+    model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
 # allowable names of units for the model that are based on amounts (e.g., umol, mg)
@@ -171,13 +167,13 @@ solve_model <- function(chem.name = NULL,
 # the names of the compartments in the model that can be solved for in either
 # units of concentration or amount:
     other_compartments <- model.list[[model]]$other.compartments
-    initialize_R_function <- model.list[["pbtk"]]$R.init.func
+    initialize_R_function <- model.list[[model]]$R.init.func
 # Function that initializes the compiled moel code:
-    initialize_compiled_function <- model.list[["pbtk"]]$compiled.init.func
+    initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     solver_param_names <- model.list[[model]]$init.param.names
 # Function that transform the paramers to those needed by the solver:
-    compiled_parameters_init <- model.list[["pbtk"]]$compiled.parameters.init
+    compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
 # name(s)s of the compiled model parameters that control the solver:
     compiled_param_names <- model.list[[model]]$compiled.param.names
 # name of the function that calculates the derivative:
@@ -200,7 +196,7 @@ solve_model <- function(chem.name = NULL,
   {
     stop(paste("Model",model,"dose not have route",route))
   } else {
-    dose.var <- model.list[["pbtk"]]$dose.variable[[route]]
+    dose.var <- model.list[[model]]$dose.variable[[route]]
     # We need to know which compartment gets the dose and how it receives it
     # (deSolve allows add, replace, or multiply:
     if (is.null(dose.var))
@@ -208,7 +204,7 @@ solve_model <- function(chem.name = NULL,
       stop(paste("Must specify variable to receive dose for model",model,"and route",
         route))
     } else {
-      dose.type <- model.list[["pbtk"]]$dose.type[[route]]
+      dose.type <- model.list[[model]]$dose.type[[route]]
       if (is.null(dose.type))
       {
         stop(paste("Must specify how the variable is changed for model",model,"and route",
@@ -254,7 +250,7 @@ solve_model <- function(chem.name = NULL,
   if (recalc.clearance)
   {
   # Do we have all the parameters we need?:
-    if (!all(model.list[["pbtk"]]$param.names%in%names(parameters)))
+    if (!all(model.list[[model]]$param.names%in%names(parameters)))
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
@@ -272,7 +268,15 @@ solve_model <- function(chem.name = NULL,
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
   
-  # Change parameter name to match C code (DO WE REALLY NEED THIS?):
+  # If there is not an explicit liver we need to include a factor for first-
+  # pass metabolism:
+  if (!is.null(model.list[[model]]$do.first.pass))
+    if (model.list[[model]]$do.first.pass)
+  {
+    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+  }
+
+  # Change parameter name to match C code (IS THERE A BETTER WAY TO HANDLE THIS?):
   parameters[['Fraction_unbound_plasma']] <- parameters[['Funbound.plasma']]
 
   # Parse the dosing parameter into recognized values:
@@ -354,7 +358,7 @@ solve_model <- function(chem.name = NULL,
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
 # dosing. Each additional dose after the initial dose is an event.
-  if (!is.null(initial.dose))
+  if (is.null(dosing.matrix) & is.null(doses.per.day))
   {
 # If we are simulating a single dose then we don't need evendata:
     eventdata <- NULL

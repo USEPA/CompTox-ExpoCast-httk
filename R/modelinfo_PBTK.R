@@ -1,11 +1,13 @@
 # Add this model to the list of models:
+
+#Analytic expression for steady-state plasma concentration.
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
 # The is the R function for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
-# These are all the paramters returned by the R model parameterization fucntion.
-# Some of these paramters are not directly used to solve the model, but describe
+# These are all the parameters returned by the R model parameterization function.
+# Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[["pbtk"]]$param.names <- c(
   "BW",
@@ -158,20 +160,24 @@ model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["pbtk"]]$dose.type <- list(oral="add",
   iv="add")
 
-
+# These variables are always calculated in amounts: 
 model.list[["pbtk"]]$amount.compartments<- c(
     "Agutlumen",
-    "Agut",
-    "Aliver",
-    "Aven",
-    "Alung",
-    "Aart",
-    "Arest",
-    "Akidney",
+    "Ametabolized", 
     "Atubules",
-    "Ametabolized",
     "AUC")
-    
+
+# These variables may be calculated using amounts but are returned as 
+# concentrations:
+model.list[["pbtk"]]$other.compartments<- c(
+    "gut",
+    "liver",
+    "ven",
+    "lung",
+    "art",
+    "rest",
+    "kidney") 
+       
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
   "Clint",
@@ -181,5 +187,5 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
-# Do we ignore the Fups where the alue was below the limit of detection?
+# Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

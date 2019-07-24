@@ -93,7 +93,7 @@ get_cheminfo <- function(info="CAS",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
-  if (any(!(toupper(info) %in% toupper(valid.info)))) stop(paste("Data on",
+  if (any(!(toupper(info) %in% toupper(valid.info))) & tolower(info)!="all") stop(paste("Data on",
     info[!(info %in% valid.info)],"not available. Valid options are:",
     paste(valid.info,collapse=" ")))
 
@@ -183,7 +183,7 @@ get_cheminfo <- function(info="CAS",
   # If we are exclude the fups with a zero, then get rid of those:
       if (exclude.fup.zero) 
       {
-        suppressWarnings(fup.values.numeric[as.numeric(fup.values)==0]) <- F
+        suppressWarnings(fup.values.numeric[as.numeric(fup.values)==0] <- F)
         fup.values.numeric[is.na(fup.values.numeric)] <- F 
       }
   # However, we want to include the fups that are distributions:
