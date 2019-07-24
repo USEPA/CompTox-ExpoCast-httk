@@ -157,9 +157,8 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units (and whether they are for amounts or concentration):
-model.list[["pbtk"]]$conc.units <- c('um', 'mg/l')
-model.list[["pbtk"]]$amount.units <- c('umol', 'mg')
+# Allowable units:
+model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
@@ -176,23 +175,21 @@ model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["pbtk"]]$dose.type <- list(oral="add",
   iv="add")
 
-# These variables are always calculated in amounts: 
-model.list[["pbtk"]]$amount.compartments<- c(
+# This ORDERED LIST of variables are always calculated in amounts (must match
+# Model variables: States in C code): 
+model.list[["pbtk"]]$state.vars <- c(
     "Agutlumen",
-    "Ametabolized", 
+    "Agut",
+    "Aliver",
+    "Aven",
+    "Alung",
+    "Aart",
+    "Arest",
+    "Akidney", 
     "Atubules",
-    "AUC")
-
-# These variables may be calculated using amounts but are returned as 
-# concentrations:
-model.list[["pbtk"]]$other.compartments<- c(
-    "gut",
-    "liver",
-    "ven",
-    "lung",
-    "art",
-    "rest",
-    "kidney") 
+    "Ametabolized",
+    "AUC"
+    ) 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
