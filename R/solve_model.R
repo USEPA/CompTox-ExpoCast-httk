@@ -135,10 +135,13 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     ...)
 {
-#  Aart <- Agut <- Agutlumen <- Alung <- Aliver <- Aven <- Arest <- NULL
-#  Akidney <- Cgut <- Vgut <- Cliver <- Vliver <- Cven <- Vven <- Clung <- NULL
-#  Vlung <- Cart <- Vart <- Crest <- Vrest <- Ckidney <- Vkidney <- NULL
-  
+# Handy string manipulation functions:
+  lastchar <- function(x){substr(x, nchar(x), nchar(x))}
+  firstchar <- function(x){substr(x, 1,1)}
+   
+# Small time delta for plotting changes:
+  SMALL.TIME <- 1e-5   
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
     stop('Parameters, chem.name, or chem.cas must be specified.')
@@ -158,15 +161,10 @@ solve_model <- function(chem.name = NULL,
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
 # allowable names of units for the model that are based on amounts (e.g., umol, mg)
-    amount_units <- model.list[[model]]$amount.units
-# allowable names of units for the model that are concentrations (e.g, uM, mg/L)
-    conc_units <- model.list[[model]]$conc.units
-# the names of the compartments in the model that are always in units of 
-# amounts (e.g., gut)
-    amount_compartments <- model.list[[model]]$amount.compartments
-# the names of the compartments in the model that can be solved for in either
-# units of concentration or amount:
-    other_compartments <- model.list[[model]]$other.compartments
+    allowed_units <- model.list[[model]]$allowed.units
+# the names of the state variables of the model (so far, always in units of 
+# amounts)
+    state.vars <- model.list[[model]]$state.vars
     initialize_R_function <- model.list[[model]]$R.init.func
 # Function that initializes the compiled moel code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
@@ -182,7 +180,8 @@ solve_model <- function(chem.name = NULL,
     derivative_output_names <- model.list[[model]]$derivative.output.names
 # calculate the number of outputs from the derivitive function:
     num_outputs <- length(derivative_output_names)    
-# Which variables to we track by defauly:
+# Which variables to we track by default (should be able to build this from
+# state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
   }
 
@@ -229,12 +228,12 @@ solve_model <- function(chem.name = NULL,
       regression=regression,
       minimum.Funbound.plasma=minimum.Funbound.plasma)) 
   } else {
-    if (!all(solver_param_names %in% names(parameters)))
+    if (!all(compiled_param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(solver_param_names[which(!solve_param_names %in% 
+        paste(compiled_param_names[which(!compiled_param_names %in% 
         names(parameters))],collapse=', '),
-        ".  Use parameters from",parameterize_function,".",sep="")) 
+        ". Use parameters from",parameterize_function,".",sep="")) 
     }
   }
   
@@ -293,7 +292,7 @@ solve_model <- function(chem.name = NULL,
   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
     model.list[[model]]$dosing.params)) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
-  dosing <- scale_dosing(dosing,parameters,output.units)
+  dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
@@ -305,32 +304,13 @@ solve_model <- function(chem.name = NULL,
   start.time <- times[1]
   end.time <- times[length(times)]
   
-# Figure out what units we want the solver to use:   
-# Check to see if we are going to work in concentrations:
-  if (tolower(output.units) %in% conc_units)
-    use.amounts <- F
-# or if we are going to use amounts:
-  else if (tolower(output.units) %in% amount_units)
-      use.amounts <- T
-# or if we need to throw an error:
-  else stop(paste("Units",output.units,"unavailable for model",model))
+# Check the units that we want the solver to use:   
+  if (!(tolower(output.units) %in% allowed_units)) stop(
+    paste("Units",output.units,"unavailable for model",model))
    
-# Generate the list of compartments to be used:
-  StateVecNames <- c(amount_compartments, 
-                     sapply(other_compartments,
-                     function(x) paste("A",x,sep="")))
-  if (use.amounts)
-  {
-    CompartmentsToInitialize <- StateVecNames
-  } else {
-    CompartmentsToInitialize <-c(StateVecNames,
-                                 sapply(other_compartments,
-                                 function(x) paste("C",x,sep="")))
-  }
-
 # create the state vector:
-  state <- rep(0,length(StateVecNames))
-  names(state) <- StateVecNames
+  state <- rep(0,length(state.vars))
+  names(state) <- state.vars
   
 # Set the initial conditions based on argument initial.values
   for (this.compartment in names(initial.values))
@@ -363,7 +343,7 @@ solve_model <- function(chem.name = NULL,
 
   # We add a time point 1e-8 later than the beginnging to make the plots look
   # better:
-  times <- sort(unique(c(times,start.time,start.time+1e-8,end.time)))
+  times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
 
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
@@ -401,7 +381,7 @@ with two columns (time, dose).")
                             method = rep(dose.type,num.doses))
     times <- sort(unique(c(times,
     eventdata$time,
-    eventdata$time+1e-8)))
+    eventdata$time+SMALL.TIME)))
   }  
   
 # Here we remove model parameters that are not needed by the C solver (via
@@ -452,28 +432,40 @@ variables to monitor (monitor.vars) are not in the derative_output_names.")
 # Document the valeus produced by the simulation:  
   if(!suppress.messages)
   {
-    if(is.null(chem.cas) & is.null(chem.name))
+    if (is.null(chem.cas) & is.null(chem.name))
     {
-      cat("Values returned in",output.units,"units.\n")
+      if (tolower(output.units) == 'um')
+      {
+        out.amount <- 'umol'
+      } else out.amount <- 'mg'
+      cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
 # If only a parameter vector is given it's good to warn people that they
 # need to make sure that these values have been appropriately recalculated:
-      if (!recalc.blood2plasma) warning('Rblood2plasma not recalculated. \
-      Set recalc.blood2plasma to TRUE if desired.') 
-      if (!recalc.clearance) warning('Clearance not recalculated. \
-      Set recalc.clearance to TRUE if desired.') 
-    } else cat(paste(toupper(substr(species,1,1)),
-      substr(species,2,nchar(species)),sep=''),
-      "values returned in",output.units,"units.\n")
-    if (tolower(output.units) == 'mg')
+      if (!recalc.blood2plasma) warning("Rblood2plasma not recalculated. \
+Set recalc.blood2plasma to TRUE if desired.") 
+      if (!recalc.clearance) warning("Clearance not recalculated. \
+Set recalc.clearance to TRUE if desired.") 
+    } else {
+      if (tolower(output.units) == 'um')
+      {
+        out.amount <- 'umol'
+      } else out.amount <- 'mg'
+      cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=""),
+        "amounts returned in", out.amount,
+        "and concentration returned in", output.units,
+        "units.\n")
+    }
+    if (tolower(output.units) == 'mg/l')
     {
       cat("AUC is area under plasma concentration in mg/L * days units with \
-Rblood2plasma =",Rblood2plasma,".\n")
-    } else if(tolower(output.units) == 'umol')
+Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
+    } else if(tolower(output.units) == 'um')
     {
       cat("AUC is area under plasma concentration in uM * days units with \
-Rblood2plasma =",Rblood2plasma,".\n")
-    } else cat("AUC is area under plasma concentration curve in",output.units,
-      "* days units with Rblood2plasma =",Rblood2plasma,".\n")
+Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
+    } else cat("AUC is area under plasma concentration curve in ",output.units,
+      " * days units with Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
   }
     
   return(out) 

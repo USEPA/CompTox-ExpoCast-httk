@@ -36,7 +36,13 @@ model.list[["1compartment"]]$param.names <- c(
 model.list[["1compartment"]]$Rtosolvermap <- list(
   vdist="Vdist",
   ke="kelim",
-  kgutab="kgutabs")
+  kgutabs="kgutabs",
+  BW="BW")
+
+# If the model does not include an explicit gut-liver link before systemic
+# circulation, then we want to decrease the absorbed dose by the first past
+# hepatic extraction factor:
+model.list[["1compartment"]]$do.first.pass <- T
 
 # This function translates the R model parameters into the compiled model
 # parameters:
@@ -47,7 +53,8 @@ model.list[["1compartment"]]$compiled.parameters.init <- "getParms1comp"
 model.list[["1compartment"]]$compiled.param.names <- c(
   "vdist",
   "ke",
-  "kgutabs")
+  "kgutabs",
+  "BW")
 
 # This function initializes the state vector for the compiled model:
 model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
@@ -66,9 +73,8 @@ model.list[["1compartment"]]$default.monitor.vars <- c(
   "Ametabolized",
   "AUC")
 
-# Allowable units (and whether they are for amounts or concentration):
-model.list[["1compartment"]]$conc.units <- c('um', 'mg/l')
-model.list[["1compartment"]]$amount.units <- c('umol', 'mg')
+# Allowable units:
+model.list[["1compartment"]]$allowed.units <- c('um', 'mg/l')
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["1compartment"]]$dosing.params <- c("daily.dose",
@@ -85,17 +91,13 @@ model.list[["1compartment"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["1compartment"]]$dose.type <- list(oral="add",
   iv="add")
 
-
-# These variables are always calculated in amounts: 
-model.list[["1compartment"]]$amount.compartments<- c(
+# This ORDERED LIST of variables are always calculated in amounts (must match
+# Model variables: States in C code): 
+model.list[["1compartment"]]$state.vars <- c(
     "Agutlumen",
+    "Acompartment",
     "Ametabolized", 
-    "Atubules",
     "AUC")
-
-# These variables may be calculated using amounts but are returned as 
-# concentrations:
-model.list[["1compartment"]]$other.compartments<- c("compartment")
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["1compartment"]]$required.params <- c(
@@ -109,55 +111,3 @@ model.list[["1compartment"]]$required.params <- c(
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T
-
-
-# Old infor for compatibility:
-
-param.names.1comp.solver <- c("vdist",
-                     "ke",
-                     "kgutabs")
-
-
-initparms1comp <- function(newParms = NULL){
-  parms <- c(
-    vdist = 0,
-    ke = 0,
-    kgutabs = 1
-  )
-  if (!is.null(newParms)) {
-    if (!all(names(newParms) %in% c(names(parms)))) {
-      stop("illegal parameter name")
-    }
-  }
-  if (!is.null(newParms)) parms[names(newParms)] <- newParms
-  out <- .C("getParms1comp",
-   as.double(parms),
-  out=double(length(parms)),
-  as.integer(length(parms)))$out
-  names(out) <- names(parms)
-  out
-}
-
-Outputs1comp <- c(
-    "Ccompartment"
-)
-
-
-initState1comp <- function(parms, newState = NULL) {
-  Y <- c(
-    Agutlumen = 0.0,
-    Acompartment = 0.0,
-    Ametabolized = 0.0,
-    AUC = 0.0
-  )
-  Y <- with(as.list(parms), {  Y
-  })
-
-  if (!is.null(newState)) {
-    if (!all(names(newState) %in% c(names(Y)))) {
-      stop("illegal state variable name in newState")
-    }
-    Y[names(newState)] <- newState
-  }
-  Y
-}
