@@ -89,9 +89,10 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance=T,
                               bioactive.free.invivo = F,
                               IVIVE=NULL,
-                              Caco2.options = list(Caco2.Pab.default = "2",
+                              Caco2.options = list(Caco2.Pab.default = "1.6",
                                                    Caco2.Fgut = TRUE,
-                                                   Caco2.Fabs = TRUE),
+                                                   Caco2.Fabs = TRUE,
+                                                   overwrite.invivo = FALSE),
                               ...)
 
 {

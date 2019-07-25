@@ -36,7 +36,7 @@
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fabs.oral, otherwise fabs.oral = \code {Fabsgut}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = 1.
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
@@ -61,9 +61,10 @@ draw_fup_clint <- function(this.chem=NULL,
                            adjusted.Funbound.plasma=T,
                            clint.pvalue.threshold=0.05,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 2,
+                           Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE))
+                                                Caco2.Fabs = TRUE,
+                                                overwrite.invivo = FALSE))
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
