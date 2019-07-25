@@ -21,13 +21,16 @@
 #' converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
+#' @param concentration Blood, plasma, or tissue concentration. 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
 #' clearance assay result has a p-values greater than the threshold are set to zero.
-##'
+#'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
+#' @import utils
+#' @export convert_httk
 convert_httk <- function(indiv.model.bio,
                          model,
                          this.chem=NULL,
@@ -36,6 +39,7 @@ convert_httk <- function(indiv.model.bio,
                          regression=T,
                          well.stirred.correction=T,
                          restrictive.clearance=T,
+                         concentration = "plasma",
                          clint.pvalue.threshold=0.05){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -78,8 +82,12 @@ convert_httk <- function(indiv.model.bio,
                             '3compartmentss'='parameterize_steadystate')
   #And get the default HTTK parameters. These values will be used for all
   #parameters not being Monte Carlo sampled
-  if(paramfun == 'parameterize_steadystate') p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
-  else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
+  if(paramfun == 'parameterize_steadystate'){
+    p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
+    if(concentration == "tissue"){
+      p <- add_schmitt.param_to_3compss(parameters = p, chem.cas = this.chem)
+    }
+  } else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
   else{
   p <- do.call(getFromNamespace(paramfun, "httk"),
                args=list(chem.cas=this.chem,
@@ -120,6 +128,10 @@ convert_httk <- function(indiv.model.bio,
                                           'Fgutabs',
                                           "Fhep.assay.correction",
                                           "Funbound.plasma.adjustment"))
+  
+  if(model == '3compartmentss' & concentration == "tissue"){
+    noMC.names <- c(noMC.names, "MA","Pow","pKa_Donor", "pKa_Accept")
+  }
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
   indiv.model[, (noMC.names):=p[noMC.names]]
@@ -263,8 +275,8 @@ convert_httk <- function(indiv.model.bio,
     
 #    if (model!='1compartment'){
       #Need to compute hepatic clearance,
-      #CLmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
-      #to CLmetabolismc using unscaled model (unscaled means that it's unscaled
+      #Clmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
+      #to Clmetabolismc using unscaled model (unscaled means that it's unscaled
       #by weight, i.e. L/h/kg bodyweight).
 
       #First, construct a list of the parameters needed by HTTK to compute total
@@ -370,6 +382,11 @@ convert_httk <- function(indiv.model.bio,
     indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
+  # Force pKa to NA_real_ so data.table doesn't replace everything with text
+  if(any(c("pKa_Donor","pKa_Accept") %in% names(indiv.model))){
+    suppressWarnings(indiv.model[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
+      .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.

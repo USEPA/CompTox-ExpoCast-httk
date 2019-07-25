@@ -7,8 +7,14 @@
 calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   which.quantile = 0.95, species = "Human", input.units = "uM",
   output.units = "mgpkgpday", suppress.messages = F,
+<<<<<<< HEAD
   return.samples = F, restrictive.clearance = T, plasma.binding = F,
   tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
+=======
+  return.samples = F, concentration = "plasma",
+  restrictive.clearance = T, bioactive.free.invivo = F,
+  tissue = NULL, IVIVE = NULL, ...)
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}
@@ -37,21 +43,18 @@ be mg/L.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
+\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
+
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{plasma.binding}{If TRUE, then only the free (unbound) fraction of
-chemical is considered to be bioactive. If FALSE, the total chemical
-concentration is used for IVIVE. (Default TRUE)}
-
-\item{tk.statistic.used}{Theoreticially either the "mean" or "max"imum
-(peak) concetrations might be used for IVIVE with some models. Defaults to
-"mean". Meaningless for the steady-state model (Argument is currently
-ignored because analytic steady-state solutions are used by this function.).}
+\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
+as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
+bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{tissue}{Desired steady state tissue conentration.}
 
-\item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
+\item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
@@ -81,7 +84,7 @@ steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
 The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-assumptions identified by Honda et al. (submitted) are: \tabular{lrrrr}{
+assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -101,6 +104,21 @@ calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
                    method='vi',samples=100,tissue='brain')
 }
 
+}
+\references{
+Wetmore, Barbara A., et al. "Incorporating high-throughput 
+exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
+chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment international 106 (2017): 105-118. 
+
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+
+Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
+pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
 John Wambaugh

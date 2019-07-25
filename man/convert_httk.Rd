@@ -8,12 +8,16 @@ model.}
 convert_httk(indiv.model.bio, model, this.chem = NULL,
   parameters = NULL, adjusted.Funbound.plasma = T, regression = T,
   well.stirred.correction = T, restrictive.clearance = T,
+<<<<<<< HEAD
   clint.pvalue.threshold = 0.05)
 
 convert_httk(indiv.model.bio, model, this.chem = NULL,
   parameters = NULL, adjusted.Funbound.plasma = T, regression = T,
   well.stirred.correction = T, restrictive.clearance = T,
   clint.pvalue.threshold = 0.05)
+=======
+  concentration = "plasma", clint.pvalue.threshold = 0.05)
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
 \arguments{
 \item{indiv.model.bio}{A data.table containing the physiological
@@ -44,8 +48,11 @@ converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}
 
+\item{concentration}{Blood, plasma, or tissue concentration.}
+
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
 clearance assay result has a p-values greater than the threshold are set to zero.}
+<<<<<<< HEAD
 
 \item{indiv.model.bio}{A data.table containing the physiological
 parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
@@ -77,10 +84,13 @@ liver clearance if FALSE.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
 clearance assay result has a p-values greater than the threshold are set to zero.}
+=======
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
  specified in \code{model}.
+<<<<<<< HEAD
 
 A data.table whose columns are the parameters of the HTTK model
  specified in \code{model}.
@@ -89,11 +99,18 @@ A data.table whose columns are the parameters of the HTTK model
 Converts HTTK-Pop virtual population into parameters relevant to an HTTK
 model.
 
+=======
+}
+\description{
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 Converts HTTK-Pop virtual population into parameters relevant to an HTTK
 model.
 }
 \author{
 Caroline Ring, John Wambaugh, and Greg Honda
+<<<<<<< HEAD
 
 Caroline Ring, John Wambaugh, and Greg Honda
+=======
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
