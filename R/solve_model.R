@@ -416,8 +416,7 @@ with two columns (time, dose).")
   }
 # However, we always include whatever compartment received the dose:  
   monitor.vars <- unique(c(dose.var,monitor.vars))
-  if (any(!(monitor.vars%in%colnames(out)))) stop("Some of the requested \
-variables to monitor (monitor.vars) are not in the derative_output_names.")
+  if (any(!(monitor.vars%in%colnames(out)))) stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
  
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
