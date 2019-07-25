@@ -35,8 +35,9 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
+\dontrun{
 export_pbtk_jarnac(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.jan')
-
+}
 
 }
 \author{

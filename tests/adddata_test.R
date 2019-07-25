@@ -1,5 +1,6 @@
-#R CMD BATCH other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
 
 fake <- data.frame(Compound="Tester",
                    CASRN="222-11-1",

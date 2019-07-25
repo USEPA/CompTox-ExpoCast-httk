@@ -36,6 +36,15 @@ TRUE.}
 \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
+<<<<<<< HEAD
+=======
+\item{fup.lod.default}{Default value used for fraction of unbound plasma for
+chemicals where measured value was below the limit of detection. Default
+value is 0.0005.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
+
+>>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}

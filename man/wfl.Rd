@@ -7,7 +7,7 @@
 \format{A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
  or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
  \code{S}}{LMS parameters; see 
- \url{www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
+ \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
  \code{P95}, and \code{P97.7}}{weight percentiles} }}
 \source{

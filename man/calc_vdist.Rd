@@ -32,6 +32,10 @@ TRUE along with parition coefficients calculated with this value.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{Volume of distribution}{Units of L/ kg BW.}

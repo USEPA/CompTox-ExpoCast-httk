@@ -23,6 +23,12 @@ human values if true.}
 
 \item{force.human.fup}{Returns human fraction of unbound plasma in
 calculation for rats if true.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 }
 \value{
 \item{Funbound.plasma}{corrected unbound fraction in plasma}
