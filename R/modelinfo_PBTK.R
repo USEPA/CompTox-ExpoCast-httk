@@ -143,7 +143,6 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   )
 
 model.list[["pbtk"]]$default.monitor.vars <- c(
-  "Agutlumen",
   "Cgut",
   "Cliver",
   "Cven",

@@ -109,15 +109,8 @@ model.list[["3compartment"]]$derivative.output.names <- c(
 )
 
 model.list[["3compartment"]]$default.monitor.vars <- c(
-  "Agutlumen",
-  "Cgut",
   "Cliver",
-  "Cven",
-  "Clung",
-  "Cart",
-  "Crest",
-  "Ckidney",
-  "Cplasma",
+  "Csyscomp",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -152,7 +145,8 @@ model.list[["3compartment"]]$state.vars <- c(
   "Aliver",
   "Asyscomp",
   "Ametabolized",
-  "Atubules"
+  "Atubules",
+  "AUC"
   )
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):

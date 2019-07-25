@@ -1,9 +1,9 @@
 /* 3comp.C for R deSolve package
    ___________________________________________________
 
-   Model File:  3compPBPKmodel.model
+   Model File:  git/httkmodels/3compPBPKmodel.model
 
-   Date:  Wed Jul 24 16:41:04 2019
+   Date:  Thu Jul 25 13:04:54 2019
 
    Created by:  "c:/users/jwambaug/MCSim under R/mod/mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -13,13 +13,14 @@
 
    Model calculations for compartmental model:
 
-   6 States:
+   7 States:
      Aintestine = 0.0,
      Aportven = 0.0,
      Aliver = 0.0,
      Asyscomp = 0.0,
      Ametabolized = 0.0,
      Atubules = 0.0,
+     AUC = 0.0,
 
    3 Outputs:
     "Cportven",
@@ -65,6 +66,7 @@
 #define ID_Asyscomp 0x00003
 #define ID_Ametabolized 0x00004
 #define ID_Atubules 0x00005
+#define ID_AUC 0x00006
 
 /* Model variables: Outputs */
 #define ID_Cportven 0x00000
@@ -107,7 +109,7 @@ int Nout3comp=1;
 int nr3comp[1]={0};
 double ytau3comp[1] = {0.0};
 
-static double yini3comp[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+static double yini3comp[7] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
 void lagvalue3comp(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
@@ -200,6 +202,8 @@ void derivs3comp (int *neq, double *pdTime, double *y, double *ydot, double *you
   ydot[ID_Ametabolized] = CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
 
   ydot[ID_Atubules] = Qgfr / Krest2plasma * y[ID_Asyscomp] / Vsyscomp ;
+
+  ydot[ID_AUC] = yout[ID_Csyscomp] ;
 
 } /* derivs */
 
