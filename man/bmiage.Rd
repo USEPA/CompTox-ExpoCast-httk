@@ -35,6 +35,7 @@ For children ages 2 to 18, weight class depends on the BMI-for-age percentile.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+\url{https://doi.org/10.1016/j.envint.2017.06.004}
 }
 \author{
 Caroline Ring

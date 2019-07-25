@@ -45,14 +45,9 @@ partition coefficients.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-<<<<<<< HEAD
-dataset).
-
-=======
 dataset).}
 }
 \value{
->>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
 the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
@@ -83,7 +78,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
 This function initializes the parameters needed in the functions solve_pbtk,
