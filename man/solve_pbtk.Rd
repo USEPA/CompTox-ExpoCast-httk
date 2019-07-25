@@ -12,12 +12,8 @@ solve_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
   atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
-<<<<<<< HEAD
   restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL, ...)
-=======
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04, ...)
->>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

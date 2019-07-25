@@ -30,6 +30,7 @@ populaton median intake rate (mg/kg body weight/day), with uncertainty.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 evironmental chemicals by simulating toxicokinetic variability." Environment 
 international 106 (2017): 105-118
+\url{https://doi.org/10.1016/j.envint.2017.06.004}
 }
 \author{
 John Wambaugh

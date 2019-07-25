@@ -46,6 +46,7 @@ RoxygenNote: 6.1.1
 URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
+Encoding: UTF-8
 Packaged: 2019-02-04 16:26:30 UTC; jwambaug
 Author: John Wambaugh [aut, cre],
   Robert Pearce [aut],

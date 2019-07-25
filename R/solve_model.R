@@ -442,7 +442,7 @@ with two columns (time, dose).")
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
-    plot(out, select=unique(c(monitor.vars,names(initial.values))))
+    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))))
   } 
                
 # Downselect to only the desired parameters:

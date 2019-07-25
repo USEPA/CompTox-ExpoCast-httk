@@ -7,14 +7,9 @@
 calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   which.quantile = 0.95, species = "Human", input.units = "uM",
   output.units = "mgpkgpday", suppress.messages = F,
-<<<<<<< HEAD
-  return.samples = F, restrictive.clearance = T, plasma.binding = F,
-  tk.statistic.used = "mean", tissue = NULL, IVIVE = NULL, ...)
-=======
   return.samples = F, concentration = "plasma",
   restrictive.clearance = T, bioactive.free.invivo = F,
   tissue = NULL, IVIVE = NULL, ...)
->>>>>>> c798081e2b5b82c28b883d1fe80fb7815d2c73ec
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}

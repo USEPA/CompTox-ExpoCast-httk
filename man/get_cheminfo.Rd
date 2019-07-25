@@ -30,11 +30,6 @@ fraction unbound (used in predict_partitioning_schmitt).}
 
 \item{default.to.human}{Substitutes missing values with human values if
 true.}
-
-\item{exclude.fup.zero}{Whether or not to exclude chemicals with a fraction
-of unbound plasma equal to zero or include them with a value of
-fup.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
-models and schmitt.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for
