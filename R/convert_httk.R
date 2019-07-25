@@ -28,8 +28,8 @@
 #' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1. 
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. 
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
@@ -46,9 +46,10 @@ convert_httk <- function(indiv.model.bio,
                          restrictive.clearance=T,
                          clint.pvalue.threshold=0.05,
                          concentration = "plasma",
-                         Caco2.options = list(Caco2.Pab.default = 2,
+                         Caco2.options = list(Caco2.Pab.default = 1.6,
                                               Caco2.Fgut = TRUE,
-                                              Caco2.Fabs = TRUE)){
+                                              Caco2.Fabs = TRUE,
+                                              overwrite.invivo = FALSE)){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -116,7 +117,9 @@ convert_httk <- function(indiv.model.bio,
                                         "MA",
                                         'pKa_Donor',
                                         'pKa_Accept',
-                                        'Fgutabs',
+                                        'Fabsgut',
+                                        'Fabs',
+                                        'Fgut',
                                         "Fhep.assay.correction",
                                         "Funbound.plasma.adjustment"),
                        '3compartment'=c('MW',
@@ -126,7 +129,9 @@ convert_httk <- function(indiv.model.bio,
                                         'pKa_Accept',
                                         "Fhep.assay.correction",
                                         "Funbound.plasma.adjustment",
-                                        'Fgutabs',
+                                        'Fabsgut',
+                                        'Fabs',
+                                        'Fgut',
                                         'kgutabs'),
                        'pbtk'=c('kgutabs',
                                 'MW',
@@ -136,10 +141,14 @@ convert_httk <- function(indiv.model.bio,
                                 'pKa_Accept',
                                 "Fhep.assay.correction",
                                 "Funbound.plasma.adjustment",
-                                'Fgutabs'),
+                                'Fabsgut',
+                                'Fabs',
+                                'Fgut'),
                        '3compartmentss'=c("Dow74",
                                           'MW',
-                                          'Fgutabs',
+                                          'Fabsgut',
+                                          'Fabs',
+                                          'Fgut',
                                           "Fhep.assay.correction",
                                           "Funbound.plasma.adjustment"))
   
@@ -399,14 +408,14 @@ convert_httk <- function(indiv.model.bio,
   # Determine small intestine blood flow, L/h
   indiv.model[, Qsmallintestine := Qcardiacc*Qsmallintestinef*BW^0.75]
   
-  # Update Fgutabs based on Caco-2 data, note that the if statements are redundant, but should save a little time
-  if(Caco2.options$Caco2.Fabs == T){
+  # Update Fabsgut based on Caco-2 data, note that the if statements are redundant, but should save a little time
+  if(Caco2.options$Caco2.Fabs == TRUE & overwrite.invivo == TRUE){
     indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab,
                                                             "Fgutabs" = Fgutabs))]
   }else{
-    indiv.model[, fabs.oral := Fgutabs]
+    indiv.model[, fabs.oral := Fabs]
   }
-  if(Caco2.options$Caco2.Fgut == T){
+  if(Caco2.options$Caco2.Fgut == TRUE & overwrite.invivo == TRUE){
     indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
                                                             "cl_us" = Clmetabolismc,
                                                             "BW" = BW,
@@ -415,12 +424,12 @@ convert_httk <- function(indiv.model.bio,
                                                             "Rblood2plasma" = Rblood2plasma
     ))]
   }else{
-    indiv.model[, fgut.oral := 1]
+    indiv.model[, fgut.oral := Fgut]
   }
   
   # Replace Fgutabs with a recalculated value
   if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
-    indiv.model[, Fgutabs := fabs.oral*fgut.oral]
+    indiv.model[, Fabsgut := fabs.oral*fgut.oral]
   }
   # Force pKa to NA_real_ so data.table doesn't replace everything with text
   if(any(c("pKa_Donor","pKa_Accept") %in% names(indiv.model))){

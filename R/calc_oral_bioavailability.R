@@ -61,17 +61,18 @@ calc_fbio.oral <- function(Params = NULL,
                            chem.cas = NULL,
                            chem.name = NULL,
                            species = "Human",
-                           clint.pvalue.threshold=0.05,
-                           default.to.human=F,
-                           human.clint.fup=F,
-                           adjusted.Funbound.plasma=T,
-                           restrictive.clearance=T,
-                           fup.lod.default=0.005,
-                           suppress.messages=F,
-                           minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 2,
+                           clint.pvalue.threshold = 0.05,
+                           default.to.human = F,
+                           human.clint.fup = F,
+                           adjusted.Funbound.plasma = T,
+                           restrictive.clearance = T,
+                           fup.lod.default = 0.005,
+                           suppress.messages = F,
+                           minimum.Funbound.plasma = 0.0001,
+                           Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE)
+                                                Caco2.Fabs = TRUE,
+                                                overwrite.invivo = FALSE)
 ){
   # Initialize parameters if null
   if(is.null(Params)){
@@ -91,7 +92,8 @@ calc_fbio.oral <- function(Params = NULL,
                                        minimum.Funbound.plasma = minimum.Funbound.plasma,
                                        Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                             Caco2.Fgut = FALSE,
-                                                            Caco2.Fabs = FALSE))
+                                                            Caco2.Fabs = FALSE,
+                                                            ovewrite.invivo = FALSE))
   }
 
   fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
@@ -120,9 +122,10 @@ calc_fabs.oral <- function(Params = NULL,
                            fup.lod.default=0.005,
                            suppress.messages=F,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 2,
+                           Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE)
+                                                Caco2.Fabs = TRUE,
+                                                overwrite.invivo = FALSE)
 ){
   # Required parameters
   req.param <- c("Caco2.Pab", "Fgutabs")
@@ -145,7 +148,8 @@ calc_fabs.oral <- function(Params = NULL,
                                 minimum.Funbound.plasma = minimum.Funbound.plasma,
                                 Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                      Caco2.Fgut = FALSE,
-                                                     Caco2.Fabs = FALSE))
+                                                     Caco2.Fabs = FALSE,
+                                                     overwrite.invivo = FALSE))
   }
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fgutabs
@@ -154,7 +158,7 @@ calc_fabs.oral <- function(Params = NULL,
     permh <- 0.66 * peffh * 3.6
     fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
   }else{
-    fabs.oral <- Params$Fgutabs
+    fabs.oral <- Params$Fabsgut
   }
   return(as.numeric(fabs.oral))
   
@@ -173,9 +177,10 @@ calc_fgut.oral <- function(Params = NULL,
                            fup.lod.default=0.005,
                            suppress.messages=F,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 2,
+                           Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE)
+                                                Caco2.Fabs = TRUE,
+                                                overwrite.invivo = FALSE)
 ){
   
   if(Caco2.options$Caco2.Fgut == TRUE){
@@ -200,7 +205,8 @@ calc_fgut.oral <- function(Params = NULL,
                                          minimum.Funbound.plasma = minimum.Funbound.plasma,
                                          Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                               Caco2.Fgut = FALSE,
-                                                              Caco2.Fabs = FALSE))
+                                                              Caco2.Fabs = FALSE,
+                                                              overwrite.invivo = FALSE))
     }
     
     
@@ -236,15 +242,6 @@ calc_fgut.oral <- function(Params = NULL,
   return(as.numeric(fgut.oral))
   
 }
-
-
-
-
-
-
-
-
-
 
 
 

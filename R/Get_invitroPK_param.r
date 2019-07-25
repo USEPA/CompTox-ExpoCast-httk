@@ -23,10 +23,10 @@ get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
                     chem.physical_and_invitro.data[,"Compound"]==chem.name,
                     "CAS"][1]
     }
-    if (!(param %in% c("Clint","Funbound.plasma","Clint.pValue","Fgutabs","Caco2.Pab"))) 
+    if (!(param %in% c("Clint","Funbound.plasma","Clint.pValue","Fabsgut","Fabs","Fgut","Caco2.Pab"))) 
     {
       stop(paste("Parameter",param,
-         "not among \"Clint\", \"Clint.pValue\", \"Funbound.plasma\", and \"Caco2.Pab\".\n"))
+         "not among \"Clint\", \"Clint.pValue\", \"Funbound.plasma\", \"Fabsgut\", \"Fabs\", \"Fgut\", and \"Caco2.Pab\".\n"))
     }
     chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$CAS==chem.CAS)
     this.col.name <- tolower(paste(species,param,sep="."))

@@ -68,9 +68,10 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      fup.lod.default=0.005,
                                      suppress.messages=F,
                                      minimum.Funbound.plasma=0.0001,
-                                     Caco2.options = list(Caco2.Pab.default = 2,
+                                     Caco2.options = list(Caco2.Pab.default = "1.6",
                                                           Caco2.Fgut = TRUE,
-                                                          Caco2.Fabs = TRUE
+                                                          Caco2.Fabs = TRUE,
+                                                          overwrite.invivo = FALSE
                                                           ))
 {
   Parameter <- Species <- variable <- Tissue <- NULL
@@ -80,6 +81,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
   out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
+  
+  # Ammend list options
+  Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
 
   #Capitilie the first letter of spcies only:
   species <- tolower(species)
@@ -133,9 +137,12 @@ parameterize_steadystate <- function(chem.cas=NULL,
   
   
   # Caco-2 Pab:
+  if(!all(c("Caco2.Fabs", "Caco2.Fgut", "overwrite.invivo", "Caco2.Pab.default") %in% names(Caco2.options))){
+    Caco2.options <- ammend.caco2.options(Caco2.options)
+  }
   Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
   if (class(Caco2.Pab.db) == "try-error"){  
-    Caco2.Pab.db <- Caco2.options$Caco2.Pab.default
+    Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
     warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
   }
   # Check if Caco2 a point value or a distribution, if a distribution, use the median:
@@ -241,28 +248,27 @@ parameterize_steadystate <- function(chem.cas=NULL,
           suppress.messages=T)#L/h/kg body weight
   Params[["cl_us"]] <- cl_us
   
-  # Select Fgutabs, optionally overwrite based on Caco2.Pab
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
-  Params[['Fgutabs']] <- Fgutabs
-  
-  if(Caco2.options$Caco2.Fgut == FALSE){
-    fgut.oral <- 1
-  }else{
-    fgut.oral <- calc_fgut.oral(Params = Params, species = species)
+  # Select Fabs, optionally overwrite based on Caco2.Pab
+  Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
+  if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+    if(Caco2.options$Caco2.Fabs == FALSE){
+      Fabs <- 1
+    }else{
+      Fabs <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+    }
   }
   
-  if(Caco2.options$Caco2.Fabs == FALSE){
-    fabs.oral <- Fgutabs
-  }else{
-    fabs.oral <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+  Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
+  if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+    if(Caco2.options$Caco2.Fabs == FALSE){
+      Fgut <- 1
+    }else{
+      Fgut <- calc_fgut.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+    }
   }
-  
-  if(Caco2.options$Caco2.Fabs == TRUE | Caco2.options$Caco2.Fgut == TRUE){
-    Params[['Fgutabs']] <- fabs.oral * fgut.oral
-  }
-  
-
+  Params[['Fabsgut']] <- Fabs*Fgut
+  Params[['Fabs']] <- Fabs
+  Params[['Fgut']] <- Fgut
  
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 

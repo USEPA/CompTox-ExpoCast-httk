@@ -48,7 +48,8 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    bioactive.free.invivo = F,
                                    Caco2.options = list(Caco2.Pab.default = "2",
                                                         Caco2.Fgut = TRUE,
-                                                        Caco2.Fabs = TRUE),
+                                                        Caco2.Fabs = TRUE,
+                                                        overwrite.inivo = FALSE),
 
                                    ...)
 {
@@ -102,7 +103,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   if (!restrictive.clearance) cl <- cl*Fup
 
 # Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:
-  Css <- parameters$Fgutabs * 
+  Css <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
     parameters$Qgfrc/BW^0.25 * Fup + 
