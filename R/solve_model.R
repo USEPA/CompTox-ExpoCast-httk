@@ -185,6 +185,8 @@ solve_model <- function(chem.name = NULL,
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
   }
 
+### ERROR CHECKING
+
   # Make sure the model is dynamic:
   if (is.null(derivative_function)) stop(paste("Model",model,"is not solvable \
   (Derivative function is not defined)"))
@@ -213,6 +215,12 @@ solve_model <- function(chem.name = NULL,
       }
     }
   }
+  
+  # Check the units that we want the solver to use:   
+  if (!(tolower(output.units) %in% allowed_units)) stop(
+    paste("Units",output.units,"unavailable for model",model))
+  
+### MODEL PARAMETERS FOR R
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
 # necessarily need all parameters associated with a given model to do this:)
@@ -278,36 +286,8 @@ solve_model <- function(chem.name = NULL,
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
 
-  # Map the R paramters onto the names for the C code:
-  for (this.param in names(Rtosolvermap)[!(names(Rtosolvermap) 
-    %in% names(parameters))])
-  {
-    if (Rtosolvermap[[this.param]] %in% names(parameters))
-      parameters[[this.param]] <- parameters[[Rtosolvermap[[this.param]]]]
-    else stop(paste("Failed to find R parameter",Rtosolvermap[[this.param]],
-      "to initialize parameter",this.param,"in the C code."))
-  }
+### STATE VECTOR
 
-  # Parse the dosing parameter into recognized values:
-  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-    model.list[[model]]$dosing.params)) %in% 
-    names(dosing))) stop("Dosing descriptor(s) missing")
-  dosing <- scale_dosing(dosing,parameters,route,output.units)
-  initial.dose <- dosing$initial.dose
-  dosing.matrix <- dosing$dosing.matrix
-  daily.dose <- dosing$daily.dose
-  doses.per.day <- dosing$doses.per.day
-
-# We need to let the solver know which time points we want:
-  if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
-  times <- sort(times)
-  start.time <- times[1]
-  end.time <- times[length(times)]
-  
-# Check the units that we want the solver to use:   
-  if (!(tolower(output.units) %in% allowed_units)) stop(
-    paste("Units",output.units,"unavailable for model",model))
-   
 # create the state vector:
   state <- rep(0,length(state.vars))
   names(state) <- state.vars
@@ -328,7 +308,31 @@ solve_model <- function(chem.name = NULL,
       state[this.compartment] <- initial.values[[this.compartment]]
     } else stop("Initital values must begin with \"C\" or \"A\".")
   }
-  
+
+### SIMULATION TIME
+
+# We need to let the solver know which time points we want:
+  if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
+  times <- sort(times)
+  start.time <- times[1]
+  end.time <- times[length(times)]
+
+  # We add a time point 1e-8 later than the beginnging to make the plots look
+  # better:
+  times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
+
+### DOSING
+
+  # Parse the dosing parameter into recognized values:
+  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+    model.list[[model]]$dosing.params)) %in% 
+    names(dosing))) stop("Dosing descriptor(s) missing")
+  dosing <- scale_dosing(dosing,parameters,route,output.units)
+  initial.dose <- dosing$initial.dose
+  dosing.matrix <- dosing$dosing.matrix
+  daily.dose <- dosing$daily.dose
+  doses.per.day <- dosing$doses.per.day
+
 # Add the first dose:
   if (!is.null(initial.dose))
   {
@@ -340,10 +344,6 @@ solve_model <- function(chem.name = NULL,
        initial.dose
      else state[dose.var] <- initial.dose
   }
-
-  # We add a time point 1e-8 later than the beginnging to make the plots look
-  # better:
-  times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
 
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
@@ -384,15 +384,34 @@ with two columns (time, dose).")
     eventdata$time+SMALL.TIME)))
   }  
   
-# Here we remove model parameters that are not needed by the C solver (via
+### MODEL PARAMETERS FOR DESOLVE
+
+  # Map the R parameters onto the names for the C code:
+  for (this.param in names(Rtosolvermap)[!(names(Rtosolvermap) 
+    %in% names(parameters))])
+  {
+    if (Rtosolvermap[[this.param]] %in% names(parameters))
+      parameters[[this.param]] <- parameters[[Rtosolvermap[[this.param]]]]
+    else stop(paste("Failed to find R parameter",Rtosolvermap[[this.param]],
+      "to initialize parameter",this.param,"in the C code."))
+  }
+  
+  # These parameters are presumably initialized by the compiled code, such as
+  # parameters scaled from other parameters:
+  for (this.param in compiled_param_names)
+    if (!(this.param %in% names(parameters)))
+      parameters[[this.param]] <- 0
+  
+  # Here we remove model parameters that are not needed by the C solver (via
 # only passing those parameters in solver_param_names) and add in any
 # additional parameters calculated by the C code (such as body weight scaling):
   parameters <- .C(compiled_parameters_init,
-    as.double(parameters[names(Rtosolvermap)]),
+    as.double(parameters[compiled_param_names]),
     out=double(length(parameters[compiled_param_names])),
     as.integer(length(parameters[compiled_param_names])))$out
   names(parameters) <- compiled_param_names
 
+### RUNNING DESOLVE
   
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(y = state, 
@@ -408,6 +427,8 @@ with two columns (time, dose).")
     outnames=derivative_output_names,                                        
     events=list(data=eventdata),
     ...)
+
+### MODEL OUTPUT
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
@@ -428,7 +449,7 @@ with two columns (time, dose).")
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
 
-# Document the valeus produced by the simulation:  
+# Document the values produced by the simulation:  
   if(!suppress.messages)
   {
     if (is.null(chem.cas) & is.null(chem.name))
