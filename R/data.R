@@ -332,7 +332,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords datasets
+#'@keywords data
 #'
 #'@author John Wambaugh
 #'
@@ -534,7 +534,7 @@
 #' of Diltiazem in Rats Following Single vs Multiple Doses In Vivo. Open Drug
 #' Metab J. 3:56-62.
 #' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
+#' @keywords data
 "chem.invivo.PK.data"
 
 
@@ -730,7 +730,7 @@
 #' of Diltiazem in Rats Following Single vs Multiple Doses In Vivo. Open Drug
 #' Metab J. 3:56-62.
 #' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
+#' @keywords data
 "chem.invivo.PK.summary.data"
 
 
@@ -748,7 +748,7 @@
 #' @format data.frame
 #' @author John Wambaugh
 #' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
+#' @keywords data
 "chem.invivo.PK.aggregate.data"
 
 
@@ -779,7 +779,7 @@
 #' 
 #' CDC (2014). National Health and Nutrition Examination Survey. Available at:
 #' http://www.cdc.gov/nchs/nhanes.htm.
-#' @keywords datasets
+#' @keywords data
 "chem.lists"
 
 
@@ -864,7 +864,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords datasets
+#'@keywords data
 #'
 #'@author John Wambaugh
 #'
@@ -891,7 +891,7 @@
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords datasets
+#'@keywords data
 #'
 #'@author John Wambaugh
 #'
@@ -912,7 +912,7 @@
 #' @format A data frame with 385 rows and 38 variables:
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords datasets
+#'@keywords data
 #'
 #'@author John Wambaugh
 #'
@@ -1027,7 +1027,7 @@
 #' Sciences, kfv171.
 #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' @keywords data
 "chem.physical_and_invitro.data"
 
 
@@ -1047,7 +1047,7 @@
 #' Potential Human Health Risk with the Tox21 10k Library." Environmental
 #' Science & Technology 51.18 (2017): 10786-10796.
 #' @source ADMET, Simulations Plus
-#' @keywords datasets
+#' @keywords data
 "sipes2017"
 
 
@@ -1166,7 +1166,7 @@
 #' Sciences, kfv171.
 #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' @keywords data
 "sipes2017.table"
 
 #' ToxCast and Tox21 2015 Active Hit Calls (EPA)
@@ -1203,7 +1203,7 @@
 #' 
 #' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
 #'
-#' @keywords datasets
+#' @keywords data
 "ToxCast2015subset"
 
 
@@ -1214,7 +1214,7 @@
 #' 
 #' 
 #' @docType data
-#' @keywords datasets
+#' @keywords data
 "howgate"
 
 
@@ -1224,7 +1224,7 @@
 #' 
 #' 
 #' @docType data
-#' @keywords datasets
+#' @keywords data
 "johnson"
 
 
@@ -1240,7 +1240,7 @@
 #' analysis of a database of intravenous pharmacokinetic parameters in humans
 #' for 670 drug compounds." Drug Metabolism and Disposition 36.7 (2008):
 #' 1385-1405.
-#' @keywords datasets
+#' @keywords data
 "Obach2008"
 
 
@@ -1250,7 +1250,7 @@
 #' 
 #' 
 #' @docType data
-#' @keywords datasets
+#' @keywords data
 "onlyp"
 
 
@@ -1308,7 +1308,7 @@
 #' 
 #' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
 #' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
-#' @keywords datasets
+#' @keywords data
 "pc.data"
 
 
@@ -1334,7 +1334,7 @@
 #' Laboratory Rodents
 #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' @keywords data
 "physiology.data"
 
 
@@ -1372,7 +1372,7 @@
 #' 
 #' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' @keywords data
 "tissue.data"
 
 
@@ -1411,7 +1411,7 @@
 #' Sciences, kfv171.
 #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' @keywords data
 "Wetmore.data"
 
 
@@ -1431,6 +1431,6 @@
 #' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
 #' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
 #' 157-174 (2012)
-#' @keywords datasets
+#' @keywords data
 "Wetmore2012"
 
