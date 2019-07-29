@@ -46,7 +46,7 @@
 #' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 #' Sciences, kfv171.
-#' @keywords Literature Monte Carlo
+#' @keywords Literature Monte-Carlo
 #' @examples
 #' 
 #' table <- NULL

@@ -54,7 +54,7 @@
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
 #' @author Robert Pearce, John Wambaugh
-#' @keywords Steady State
+#' @keywords Steady-State
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
