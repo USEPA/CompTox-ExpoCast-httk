@@ -1,10 +1,10 @@
 ---
-title: "Ring et al. 2017 Global sensitivity analysis"
+title: "Ring et al. (2017) Global sensitivity analysis"
 author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. 2017 Global sensitivity analysis}
+  %\VignetteIndexEntry{Ring et al. (2017) Global sensitivity analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
