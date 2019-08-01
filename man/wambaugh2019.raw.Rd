@@ -95,4 +95,4 @@ Variability in Risk Prioritization", submitted.
 \author{
 John Wambaugh
 }
-\keyword{datasets}
+\keyword{data}
