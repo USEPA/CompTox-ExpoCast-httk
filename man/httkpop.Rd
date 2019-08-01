@@ -9,26 +9,11 @@
 The httkpop package generates virtual population physiologies for use in
 population TK.
 
-The httkpop package generates virtual population physiologies for use in
-population TK.
-
 The httkpop package generates virtual population physiologies for use in 
-population TK.
-}
-\details{
-The httkpop package generates virtual population physiologies for use in
 population TK.
 }
 \section{Main function to generate a population}{
 
-
-If you just want to generate a table of (chemical-independent) population
-physiology parameters, use \code{\link{httkpop_generate}}.
-
-
-
-If you just want to generate a table of (chemical-independent) population
-physiology parameters, use \code{\link{httkpop_generate}}.
 
 If you just want to generate a table of (chemical-independent) population
 physiology parameters, use \code{\link{httkpop_generate}}.
@@ -54,23 +39,11 @@ Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
-
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
-
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
 }
 \author{
-Caroline Ring
-
-Caroline Ring
-
 Caroline Ring
 
 Caroline Ring
