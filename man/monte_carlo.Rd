@@ -162,5 +162,4 @@ Fig1a.fit <- lm(log(Wetmore) ~ log(Predicted)*Percentile, Wetmore.table)
 \author{
 John Wambaugh
 }
-\keyword{Carlo}
-\keyword{Monte}
+\keyword{Monte-Carlo}

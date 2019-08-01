@@ -9,6 +9,9 @@
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
 }
+\usage{
+physiology.data
+}
 \description{
 This data set contains values from Davies and Morris (1993) necessary to
 paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
@@ -28,4 +31,4 @@ Laboratory Rodents
 \author{
 John Wambaugh and Nisha Sipes
 }
-\keyword{datasets}
+\keyword{data}

@@ -5,15 +5,15 @@
 \title{Solve one compartment TK model}
 \usage{
 solve_1comp(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, species = "Human", iv.dose = F,
-  output.units = "uM", method = "lsoda", rtol = 1e-08,
-  atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, dosing.matrix = NULL,
+  parameters = NULL, daily.dose = 1, dose = NULL,
+  doses.per.day = NULL, days = 10, tsteps = 4,
+  suppress.messages = F, species = "Human", output.units = "uM",
+  plots = F, initial.values = NULL, iv.dose = F, method = "lsoda",
+  rtol = 1e-08, atol = 1e-12, default.to.human = F,
+  dosing.matrix = NULL, recalc.elimination = F,
   adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
+  restrictive.clearance = T, well.stirred.correction = T,
+  minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -27,31 +27,31 @@ be specified.}
 \item{parameters}{Chemical parameters from parameterize_1comp function,
 overrides chem.name and chem.cas.}
 
-\item{days}{Length of the simulation.}
-
-\item{tsteps}{The number time steps per hour.}
-
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
 
 \item{doses.per.day}{Number of doses per day.}
 
-\item{initial.values}{Vector containing the initial concentrations or
-amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
+\item{days}{Length of the simulation.}
 
-\item{plots}{Plots all outputs if true.}
+\item{tsteps}{The number time steps per hour.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", or default
 "Human").}
 
-\item{iv.dose}{Simulates a single i.v. dose if true.}
-
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
+
+\item{plots}{Plots all outputs if true.}
+
+\item{initial.values}{Vector containing the initial concentrations or
+amounts of the chemical in specified tissues with units corresponding to
+output.units.  Defaults are zero.}
+
+\item{iv.dose}{Simulates a single i.v. dose if true.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -66,6 +66,9 @@ true.}
 columns or rows named "dose" and "time" containing the time and amount, in
 mg/kg BW, of each dose.}
 
+\item{recalc.elimination}{Whether or not to recalculate the elimination
+rate.}
+
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with volume of distribution calculated with this value.}
 
@@ -75,19 +78,16 @@ partition coefficients in volume of distribution calculation.}
 \item{restrictive.clearance}{In calculating elimination rate, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
+\item{well.stirred.correction}{Uses correction in calculation of hepatic
+clearance for well-stirred model if TRUE.  This assumes clearance relative
+to amount unbound in whole blood instead of plasma, but converted to use
+with plasma concentration.}
+
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{recalc.elimination}{Whether or not to recalculate the elimination
-rate.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
 }
 \value{
 A matrix with a column for time(in days) and a column for the

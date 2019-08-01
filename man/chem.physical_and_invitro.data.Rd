@@ -9,6 +9,9 @@
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
 }
+\usage{
+chem.physical_and_invitro.data
+}
 \description{
 This data set contains the necessary information to make basic,
 high-throughput toxicokinetic (HTTK) predictions for compounds, including
@@ -112,4 +115,4 @@ Sciences, kfv171.
 \author{
 John Wambaugh
 }
-\keyword{datasets}
+\keyword{data}
