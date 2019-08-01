@@ -6,10 +6,6 @@
 \title{Parameter Estimates from Wambaugh et al. (2018)}
 \format{data.frame}
 \source{
-Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation 
-of toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
-\url{https://doi.org/10.1093/toxsci/kfy020}
-
 Wambaugh et al. 2018 Toxicological Sciences, in press
 }
 \usage{
@@ -21,16 +17,8 @@ data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
 Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
 steady state concentration (Css, mg/L).
-
-This table includes 1 and 2 compartment fits of plasma concentration vs time
-data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
-Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
-1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
-steady state concentration (Css, mg/L).
 }
 \author{
 John Wambaugh
-
-John Wambaugh
 }
-\keyword{datasets}
+\keyword{data}

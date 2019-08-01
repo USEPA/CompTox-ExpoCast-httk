@@ -18,23 +18,13 @@ spline_hematocrit
 \description{
 Smoothing splines and KDE residuals pre-calculated from NHANES hematocrit and
 age data by race/ethnicity and gender.
-
-Smoothing splines and KDE residuals pre-calculated from NHANES hematocrit
-and age data by race/ethnicity and gender.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
-\url{https://doi.org/10.1016/j.envint.2017.06.004}
-
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
 }
 \author{
-Caroline Ring
-
 Caroline Ring
 }
 \keyword{data}

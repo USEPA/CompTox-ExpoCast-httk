@@ -1,114 +1,6 @@
 #This file is used by roxygen2 to generate man files (documentation) for data
 #sets included in the package.
 
-#' Physico-chemical properties and in vitro measurements for toxicokinetics
-#' 
-#' This data set contains the necessary information to make basic,
-#' high-throughput toxicokinetic (HTTK) predictions for compounds, including
-#' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
-#' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
-#' compiled from multiple sources, and can be used to parameterize a variety of
-#' toxicokinetic models.
-#' 
-#' 
-#' @name chem.physical_and_invitro.data
-#' @docType data
-#' @format A data.frame containing 565 rows and 33 columns.
-#' @author John Wambaugh
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
-#' 
-#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
-#' 
-#' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
-#' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
-#' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
-#' 
-#' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
-#' predicting drug clearance using in vitro kinetic data from hepatic
-#' microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
-#' 
-#' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
-#' assessment of the top 25 English prescription pharmaceuticals. Water
-#' research 36(20), 5013-22.
-#' 
-#' Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
-#' Development of a novel in vitro model to predict hepatic clearance using
-#' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
-#' Disposition 30(12), 1446-54.
-#' 
-#' McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
-#' Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
-#' metabolism tools for the prediction of metabolic clearance. Drug Metabolism
-#' and Disposition 32(11), 1247-53, 10.1124/dmd.104.000026.
-#' 
-#' Naritomi, Y., Terashita, S., Kagayama, A. and Sugiyama, Y. (2003). Utility
-#' of Hepatocytes in Predicting Drug Metabolism: Comparison of Hepatic
-#' Intrinsic Clearance in Rats and Humans in Vivo and in Vitro. Drug Metabolism
-#' and Disposition 31(5), 580-588, 10.1124/dmd.31.5.580.
-#' 
-#' Obach, R. S. (1999). Prediction of human clearance of twenty-nine drugs from
-#' hepatic microsomal intrinsic clearance data: An examination of in vitro
-#' half-life approach and nonspecific binding to microsomes. Drug Metabolism
-#' and Disposition 27(11), 1350-9.
-#' 
-#' Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
-#' database of intravenous pharmacokinetic parameters in humans for 670 drug
-#' compounds. Drug Metabolism and Disposition 36(7), 1385-405,
-#' 10.1124/dmd.108.020479.
-#' 
-#' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
-#' oral bioavailability by using in vitro and in silico drug related parameters
-#' in a physiologically based absorption model. International journal of
-#' pharmaceutics, 429(1), 84-98.
-#' 
-#' Pirovano, Alessandra, et al. "QSARs for estimating intrinsic hepatic
-#' clearance of organic chemicals in humans." Environmental toxicology and
-#' pharmacology 42 (2016): 190-197.
-#' 
-#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-#' partition coefficients. Toxicology in vitro : an international journal
-#' published in association with BIBRA 22(2), 457-67,
-#' 10.1016/j.tiv.2007.09.010.
-#' 
-#' Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
-#' Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
-#' Application of Serum Incubation Method. Drug Metabolism and Disposition
-#' 30(8), 892-896, 10.1124/dmd.30.8.892.
-#' 
-#' Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
-#' for human bioaccumulative potential with a physiologically based
-#' toxicokinetic model. Archives of Toxicology 86(3), 393-403,
-#' 10.1007/s00204-011-0768-0.
-#' 
-#' Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
-#' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
-#' 286-297.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
-#' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
-#' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
-#' and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
-#' high-throughput screening data in chemical toxicity assessment.
-#' Toxicological sciences : an official journal of the Society of Toxicology
-#' 125(1), 157-74, 10.1093/toxsci/kfr254.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
-#' Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
-#' B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
-#' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
-#' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
-#' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
 
 #' Reference tissue masses and flows from tables in McNally et al. 2014.
 #' 
@@ -127,40 +19,16 @@ NULL
 #'   \item{\code{flow_frac}}{Fraction of CO flowing to each tissue: 
 #'   \code{flow_ref}/\code{CO_ref}}}
 #' @source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human 
-#'   population generator." Toxicology 315, 70-85, 2014.
-#' \url{https://doi.org/10.1016/j.tox.2013.07.0094}
+#'   population generator." Toxicology 315, 70-85, 2004.
 #'@keywords data
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#' environmental chemicals by simulating toxicokinetic variability." Environment 
-#' International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 "mcnally_dt"
-
-#' Parameter Estimates from Wambaugh et al. (2018)
-#' 
-#' This table includes 1 and 2 compartment fits of plasma concentration vs time
-#' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
-#' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
-#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
-#' steady state concentration (Css, mg/L).
-#' 
-#' 
-#' @docType data
-#'
-#' @format data.frame
-#'
-#' @author John Wambaugh
-#'
-#' @source Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation 
-#' of toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
-#' \url{https://doi.org/10.1093/toxsci/kfy020}
-#'
-#' @keywords datasets
-"chem.invivo.PK.aggregate.data"
 
 #'Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
 #'race and gender.
@@ -183,7 +51,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_hematocrit"
 
 #'Smoothing splines for log serum creatinine vs. age in months, along with KDE
@@ -211,7 +78,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_serumcreat"
 
 #'Smoothing splines for log height vs. age and log body weight vs. age, along 
@@ -238,7 +104,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "spline_heightweight"
 
 #'A timestamp of table creation
@@ -272,7 +137,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "nhanes_mec_svy"
 
 #'Smoothed age distributions by race and gender.
@@ -293,7 +157,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "age_dist_smooth"
 
 #'CDC BMI-for-age charts
@@ -329,7 +192,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "bmiage"
 
 #'WHO weight-for-length charts
@@ -359,7 +221,6 @@ NULL
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
 "wfl"
 
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
@@ -389,8 +250,6 @@ NULL
 #'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "well_param"
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
-#'
 #' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
 #'
 #' @format A data frame with 53940 rows and 10 variables:
@@ -473,7 +332,7 @@ NULL
 #' }
 #' @source Wambaugh et al. (submitted)
 #'
-#'@keywords datasets
+#'@keywords data
 #'
 #'@author John Wambaugh
 #'
@@ -481,359 +340,6 @@ NULL
 #' Variability in Risk Prioritization", submitted.
 "wambaugh2019"
 
-#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)
-#'
-#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-#' et al. (submitted) They
-#' are the output of different Bayesian models evaluated to compare using a
-#' single protein concentration vs. the new three concentration titration
-#' protocol. These data summarize the results of Bayesian analysis of the in vitro
-#' toxicokinetic experiments conducted by Cyprotex to characterize fraction 
-#' unbound in the presence of pooled human plasma protein and the intrnsic 
-#' hepatic clearance of the chemical by pooled human hepatocytes.
-#' This file includes replicates (diferent CompoundName id's but same chemical')
-#'
-#' @format A data frame with 530 rows and 28 variables:
-#' \describe{
-#'   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
-#'   \item{Name}{The name of the chemical}
-#'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
-#'   \item{CompoundName}{Sample name provided by EPA to Cyprotex}
-#'   \item{Fup.point}{Point estimate of the fraction of
-#' chemical free in the presence of plasma}
-#'   \item{Base.Fup.Med}{Median of Bayesian credible interval for 
-#' fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible 
-#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible 
-#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Affinity.Fup.Med}{Median of Bayesian credible interval for 
-#' fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible 
-#' interval for fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible 
-#' interval for fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.Med}{Median of Bayesian credible interval for 
-#' protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible 
-#' interval for protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible 
-#' interval for protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Decreases.Prob}{Probability that the chemical concentration decreased
-#' systematiclally during hepatic clearance assay.}
-#'   \item{Saturates.Prob}{Probability that the rate of chemical concentration
-#' decrease varied between the 1 and 10 uM hepatic clearance experiments.}
-#'   \item{Slope.1uM.Median}{Estimated slope for chemcial concentration decrease
-#' in the 1 uM hepatic clearance assay.}
-#'   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
-#' in the 10 uM hepatic clearance assay.}
-#'   \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
-#' hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
-#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
-#' concentration (uL/min/million hepatocytes)}        
-#'   \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
-#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
-#' concentration(uL/min/million hepatocytes)}
-#'   \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
-#' hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
-#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
-#' concentration (uL/min/million hepatocytes)}        
-#'   \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
-#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
-#' concentration(uL/min/million hepatocytes)}
-#'   \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
-#' (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
-#'   \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
-#' (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
-#'   \item{Fit}{Classification of clearance observed}                         
-#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
-#' description}
-#' }
-#' @source Wambaugh et al. (submitted)
-#'
-#'@keywords datasets
-#'
-#'@author John Wambaugh
-#'
-#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization", submitted.
-"wambaugh2019.raw"
-
-#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))
-#'
-#' These data are a subset of the Bayesian inferrences reported by Ring et al.
-#' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
-#' National Health and Nutrition Examination Survey (NHANES). They reflect the
-#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
-#'
-#' @format A data frame with 20 rows and 4 variables:
-#' \describe{
-#'   \item{lP}{The median of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{lP.max}{The upper 95th percentile of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
-#' }
-#' @source Wambaugh et al. (submitted)
-#'
-#'@keywords datasets
-#'
-#'@author John Wambaugh
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#' evironmental chemicals by simulating toxicokinetic variability." Environment 
-#' international 106 (2017): 105-118
-#' \url{https://doi.org/10.1016/j.envint.2017.06.004}
-"wambaugh2019.nhanes"
-
-#' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
-#'
-#' These data are a subset of the Bayesian inferrences reported by Ring et al.
-#' (2019) for a consensus model of twelve exposue predictors. The predictors 
-#' were calibrated based upon their ability to predict intake rates inferred
-# 'from the U.S. Centers for Disease Control and Prevention (CDC)
-#' National Health and Nutrition Examination Survey (NHANES). They reflect the
-#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
-#'
-#' @format A data frame with 385 rows and 38 variables:
-#' @source Wambaugh et al. (submitted)
-#'
-#'@keywords datasets
-#'
-#'@author John Wambaugh
-#'
-#'@references Ring, Caroline L., et al. "Consensus modeling of median chemical 
-#' intake for the US population based on predictions of exposure pathways." 
-#' Environmental science & technology 53.2 (2018): 719-732.
-#' \url{https://doi.org/10.1021/acs.est.8b04056}
-"wambaugh2019.seem3"
-
-
-#' Sipes et al. 2017 data
-#' 
-#' This table includes data predicted with Simulations Plus' ADMET predictor,
-#' used in load_sipes2017, that was used in Sipes et al. 2017. The column names
-#' are equivalent to those of chem.physical_and_invitro.data.
-#' 
-#' 
-#' @name sipes2017
-#'
-#' @aliases Sipes2017
-#'
-#' @docType data
-#'
-#' @format data.frame
-#'
-#' @author Nisha Sipes
-#'
-#' @references Sipes, Nisha S., et al. "An Intuitive Approach for Predicting
-#' Potential Human Health Risk with the Tox21 10k Library." Environmental
-#' Science & Technology 51.18 (2017): 10786-10796.
-#  \url{https://doi.org/10.1021/acs.est.7b00650}
-#'
-#' @source ADMET, Simulations Plus
-#'
-#' @keywords datasets
-"sipes2017"
-
-
-
-
-
-#' Physico-chemical properties and toxicokinetics, measured values and Sipes et
-#' al. (2017)
-#' 
-#' This is an image of the chem.phys_and_invitro.data table that has had the
-#' Sipes et al. (2017) ADMET predictions adfdded to it. The data set contains 
-#' the necessary information to make basic,
-#' high-throughput toxicokinetic (HTTK) predictions for compounds, including
-#' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
-#' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
-#' compiled from multiple sources, and can be used to parameterize a variety of
-#' toxicokinetic models.
-#' 
-#' @name sipes2017.table
-#' @docType data
-#' @format A data.frame containing 9211 rows and 47 columns.
-#' @author John Wambaugh
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
-#' 
-#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
-#' 
-#' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
-#' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
-#' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
-#' 
-#' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
-#' predicting drug clearance using in vitro kinetic data from hepatic
-#' microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
-#' 
-#' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
-#' assessment of the top 25 English prescription pharmaceuticals. Water
-#' research 36(20), 5013-22.
-#' 
-#' Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
-#' Development of a novel in vitro model to predict hepatic clearance using
-#' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
-#' Disposition 30(12), 1446-54.
-#' 
-#' McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
-#' Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
-#' metabolism tools for the prediction of metabolic clearance. Drug Metabolism
-#' and Disposition 32(11), 1247-53, 10.1124/dmd.104.000026.
-#' 
-#' Naritomi, Y., Terashita, S., Kagayama, A. and Sugiyama, Y. (2003). Utility
-#' of Hepatocytes in Predicting Drug Metabolism: Comparison of Hepatic
-#' Intrinsic Clearance in Rats and Humans in Vivo and in Vitro. Drug Metabolism
-#' and Disposition 31(5), 580-588, 10.1124/dmd.31.5.580.
-#' 
-#' Obach, R. S. (1999). Prediction of human clearance of twenty-nine drugs from
-#' hepatic microsomal intrinsic clearance data: An examination of in vitro
-#' half-life approach and nonspecific binding to microsomes. Drug Metabolism
-#' and Disposition 27(11), 1350-9.
-#' 
-#' Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
-#' database of intravenous pharmacokinetic parameters in humans for 670 drug
-#' compounds. Drug Metabolism and Disposition 36(7), 1385-405,
-#' 10.1124/dmd.108.020479.
-#' 
-#' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
-#' oral bioavailability by using in vitro and in silico drug related parameters
-#' in a physiologically based absorption model. International journal of
-#' pharmaceutics, 429(1), 84-98.
-#' 
-#' Pirovano, Alessandra, et al. "QSARs for estimating intrinsic hepatic
-#' clearance of organic chemicals in humans." Environmental toxicology and
-#' pharmacology 42 (2016): 190-197.
-#' 
-#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-#' partition coefficients. Toxicology in vitro : an international journal
-#' published in association with BIBRA 22(2), 457-67,
-#' 10.1016/j.tiv.2007.09.010.
-#' 
-#' Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
-#' Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
-#' Application of Serum Incubation Method. Drug Metabolism and Disposition
-#' 30(8), 892-896, 10.1124/dmd.30.8.892.
-#' 
-#' Sipes, Nisha S., et al. "An Intuitive Approach for Predicting Potential
-#' Human Health Risk with the Tox21 10k Library." Environmental Science &
-#' Technology 51.18 (2017): 10786-10796.
-#' 
-#' Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
-#' for human bioaccumulative potential with a physiologically based
-#' toxicokinetic model. Archives of Toxicology 86(3), 393-403,
-#' 10.1007/s00204-011-0768-0.
-#' 
-#' Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
-#' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
-#' 286-297.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
-#' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
-#' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
-#' and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
-#' high-throughput screening data in chemical toxicity assessment.
-#' Toxicological sciences : an official journal of the Society of Toxicology
-#' 125(1), 157-74, 10.1093/toxsci/kfr254.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
-#' Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
-#' B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
-#' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
-#' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
-#' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-"sipes2017.table"
-
-#' ToxCast and Tox21 2015 Active Hit Calls (EPA)
-#' 
-#' The ToxCast and Tox21 research programs employ batteries of high throughput 
-#' assays to assess chemical bioactivity in vitro. Not every chemical is tested 
-#' through every assay. Most assays are conducted in concentration response, 
-#' and each corresponding assay endpoint is analyzed statistically to determine 
-#' if there is a concentration-dependent response or "hit" using the ToxCast 
-#' Pipeline.  Most assay endpoint-chemical combinations are non-responsive. 
-#' Here, only the hits are treated as potential indicators of bioactivity. This 
-#' bioactivity does not have a direct toxicological interpretation. The October 
-#' 2015 release (invitrodb_v2) of the ToxCast and Tox21 data were used for this 
-#' analysis.
-#' 
-#' @name ToxCast2015subset
-#' @aliases tc.dt.sub
-#' @docType data
-#' @format A data.table with 62412 rows and 5 columns
-#' @author Caroline Ring
-#' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program: 
-#' providing high throughput decision support tools for chemical risk 
-#' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
-#' 
-#' Tice, Raymond R., et al. "Improving the human hazard characterization of 
-#' chemicals: a Tox21 update." Environmental health perspectives 121.7 (2013): 
-#' 756-765.
-#' 
-#' Richard, Ann M., et al. "ToxCast chemical landscape: paving the road to 21st 
-#' century toxicology." Chemical research in toxicology 29.8 (2016): 1225-1251.
-#' 
-#' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput 
-#' screening data." Bioinformatics 33.4 (2016): 618-620.
-#' 
-#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
-#'
-#' @keywords datasets
-"ToxCast2015subset"
-
-#' Chemical membership in different research projects
-#' 
-#' A static list of lists identifying chemical membership in different research
-#' projects. While it is our intent to keep these lists up-to-date, the
-#' information here is only for convenience and should not be considered to be
-#' definitive.
-#' 
-#' 
-#' @docType data
-#' @format A list containing ten lists.
-#' @author John Wambaugh
-#' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
-#' Alignment. Environ Health Perspect 116(1) \url{https://doi.org/10.1289/ehp.11100}
-#' 
-#' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
-#' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
-#' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
-#' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
-#' Perspectives 118(4), 485-492 \url{https://doi.org/10.1289/ehp.0901392}
-#' 
-#' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
-#' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
-#' Human Exposure to Environmental Chemicals. Environmental Science &
-#' Technology, \url{https://doi.org/10.1021/es503583j}
-#' 
-#' CDC (2014). National Health and Nutrition Examination Survey. 
-#' \url{http://www.cdc.gov/nchs/nhanes.htm}
-#' @keywords datasets
-"chem.lists"
 
 #' Published toxicokinetic time course measurements
 #' 
@@ -1028,352 +534,8 @@ NULL
 #' of Diltiazem in Rats Following Single vs Multiple Doses In Vivo. Open Drug
 #' Metab J. 3:56-62.
 #' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
-"chem.invivo.PK.data"
-
-#' Parameter Estimates from Wambaugh et al. (2018)
-#' 
-#' This table includes 1 and 2 compartment fits of plasma concentration vs time
-#' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
-#' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
-#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
-#' steady state concentration (Css, mg/L).
-#' 
-#' 
-#' @name chem.invivo.PK.aggregate.data
-#' @docType data
-#' @format data.frame
-#' @author John Wambaugh
-#' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
-NULL
-
-#' Johnson 2006
-#' 
-#' This data set is only used in Vignette 5.
-#' 
-#' 
-#' @name johnson
-#' @docType data
-#' @keywords datasets
-NULL
-
-#' Published Pharmacokinetic Parameters from Obach et al. 2008
-#' 
-#' This data set is used in Vignette 4 for steady state concentration.
-#' 
-#' 
-#' @name Obach2008
-#' @docType data
-#' @format A data.frame containing 670 rows and 8 columns.
-#' @references Obach, R. Scott, Franco Lombardo, and Nigel J. Waters. "Trend
-#' analysis of a database of intravenous pharmacokinetic parameters in humans
-#' for 670 drug compounds." Drug Metabolism and Disposition 36.7 (2008):
-#' 1385-1405.
-#' @keywords datasets
-NULL
-
-#' NHANES Exposure Data
-#' 
-#' This data set is only used in Vignette 6.
-#' 
-#' 
-#' @name onlyp
-#' @docType data
-#' @keywords datasets
-NULL
-
-#' Partition Coefficient Data
-#' 
-#' Measured rat in vivo partition coefficients and data for predicting them.
-#' 
-#' 
-#' @name pc.data
-#' @docType data
-#' @format A data.frame.
-#' @author Jimena Davis and Robert Pearce
-#' @references Schmitt, W., General approach for the calculation of tissue to
-#' plasma partition coefficients. Toxicology in Vitro, 2008. 22(2): p. 457-467.
-#' 
-#' Schmitt, W., Corrigendum to:"General approach for the calculation of tissue
-#' to plasma partition coefficients"[Toxicology in Vitro 22 (2008) 457-467].
-#' Toxicology in Vitro, 2008. 22(6): p. 1666.
-#' 
-#' Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
-#' coefficients of drugs to facilitate the use of physiologically based
-#' pharmacokinetic models in drug discovery. Journal of pharmaceutical
-#' sciences, 2000. 89(1): p. 16-35.
-#' 
-#' Rodgers, T. and M. Rowland, Physiologically based pharmacokinetic modelling
-#' 2: predicting the tissue distribution of acids, very weak bases, neutrals
-#' and zwitterions. Journal of pharmaceutical sciences, 2006. 95(6): p.
-#' 1238-1257.
-#' 
-#' Rodgers, T., D. Leahy, and M. Rowland, Physiologically based pharmacokinetic
-#' modeling 1: predicting the tissue distribution of moderate-to-strong bases.
-#' Journal of pharmaceutical sciences, 2005. 94(6): p. 1259-1276.
-#' 
-#' Rodgers, T., D. Leahy, and M. Rowland, Tissue distribution of basic drugs:
-#' Accounting for enantiomeric, compound and regional differences amongst
-#' beta-blocking drugs in rat. Journal of pharmaceutical sciences, 2005. 94(6):
-#' p. 1237-1248.
-#' 
-#' Gueorguieva, I., et al., Development of a whole body physiologically based
-#' model to characterise the pharmacokinetics of benzodiazepines. 1: Estimation
-#' of rat tissue-plasma partition ratios. Journal of pharmacokinetics and
-#' pharmacodynamics, 2004. 31(4): p. 269-298.
-#' 
-#' Poulin, P., K. Schoenlein, and F.P. Theil, Prediction of adipose tissue:
-#' plasma partition coefficients for structurally unrelated drugs. Journal of
-#' pharmaceutical sciences, 2001. 90(4): p. 436-447.
-#' 
-#' Bjorkman, S., Prediction of the volume of distribution of a drug: which
-#' tissue-plasma partition coefficients are needed? Journal of pharmacy and
-#' pharmacology, 2002. 54(9): p. 1237-1245.
-#' 
-#' Yun, Y. and A. Edginton, Correlation-based prediction of tissue-to-plasma
-#' partition coefficients using readily available input parameters.
-#' Xenobiotica, 2013. 43(10): p. 839-852.
-#' 
-#' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
-#' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' Species-specific physiology parameters
-#' 
-#' This data set contains values from Davies and Morris (1993) necessary to
-#' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-#' The temperature for each species are taken from Robertshaw et al. (2004),
-#' Gordon (1993), and Stammers(1926).
-#' 
-#' 
-#' @name physiology.data
-#' @docType data
-#' @format A data.frame containing 11 rows and 7 columns.
-#' @author John Wambaugh and Nisha Sipes
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
-
-
-
-
-#' Smoothing splines for log hematocrit vs. age in months, and KDE residuals,
-#' by race and gender.
-#' 
-#' Smoothing splines and KDE residuals pre-calculated from NHANES hematocrit
-#' and age data by race/ethnicity and gender.
-#' 
-#' 
-#' @name spline_hematocrit
-#' @docType data
-#' @format A data.table with 6 variables: \describe{
-#' \item{list("gender")}{Gender: Male or Female}
-#' \item{list("reth")}{Race/ethnicity: Mexican American, Other Hispanic,
-#' Non-Hispanic White, Non-Hispanic Black, Other} \item{list("hct_spline")}{A
-#' list of smooth.spline objects, each giving a smoothed relationship between
-#' log hematocrit and age in months} \item{list("hct_kde")}{A list of kde
-#' objects; each is a KDE of the distribution of residuals about the smoothing
-#' spline.}}
-#' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords data httk-pop
-NULL
-
-
-
-
-
-
-#' Tissue composition and species-specific physiology parameters
-#' 
-#' This data set contains values from Schmitt (2008) and Ruark et al. (2014)
-#' describing the composition of specific tissues and from Birnbaum et al.
-#' (1994) describing volumes of and blood flows to those tissues, allowing
-#' parameterization of toxicokinetic models for human, mouse, rat, dog, or
-#' rabbit. Tissue volumes were calculated by converting the fractional mass of
-#' each tissue with its density (both from ICRP), lumping the remaining tissues
-#' into the rest-of-body, excluding the mass of the gastrointestinal contents
-#' 
-#' 
-#' @name tissue.data
-#' @docType data
-#' @format A data.frame containing 13 rows and 20 columns.
-#' @author John Wambaugh, Robert Pearce, and Nisha Sipes
-#' @references Birnbaum, L and Brown, R and Bischoff, K and Foran, J and
-#' Blancato, J and Clewell, H and Dedrick, R (1994). Physiological parameter
-#' values for PBPK model. International Life Sciences Institute, Risk Science
-#' Institute, Washington, DC
-#' 
-#' Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma
-#' partition coefficients: Interindividual and interspecies variability."
-#' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
-#' 
-#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-#' partition coefficients. Toxicology in vitro : an international journal
-#' published in association with BIBRA 22(2), 457-67,
-#' 10.1016/j.tiv.2007.09.010.
-#' 
-#' ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
-#' @source Pearce et al. (2017), in preparation,
-#' 
-#' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
-
-
-
-
-#' Published toxicokinetic predictions based on in vitro data
-#' 
-#' This data set gives the chemical specific predictions for serum
-#' concentration at steady state resulting from constant infusion exposure, as
-#' published in a series of papers from Barbara Wetmore's group at the Hamner
-#' Institutes for Life Sciences. Predictions include the median and 90\%
-#' interval in uM and mg/L. Calculations were made using the 1 and 10 uM in
-#' vitro measured clearances.
-#' 
-#' 
-#' @name Wetmore.data
-#' @docType data
-#' @format A data.frame containing 577 rows and 20 columns.
-#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-#' 157-174 (2012)
-#' 
-#' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
-#' Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
-#' Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
-#' Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
-#' Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
-#' Toxicological Sciences, 132:327-346 (2013).
-#' 
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
-
-#' Published toxicokinetic predictions based on in vitro data from Wetmore et
-#' al. 2012.
-#' 
-#' This data set overlaps with Wetmore.data and is used only in Vignette 4 for
-#' steady state concentration.
-#' 
-#' 
-#' @name Wetmore2012
-#' @docType data
-#' @format A data.frame containing 13 rows and 15 columns.
-#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-#' 157-174 (2012)
-#' @keywords datasets
-NULL
-
-#' Smoothed age distributions by race and gender.
-#' 
-#' Distributions of ages in months, computed from NHANES data smoothed using
-#' survey::svysmooth(), for each combination of race/ethnicity and gender.
-#' 
-#' 
-#' @name age_dist_smooth
-
-#' @docType data
-#' @format A data.table object with three variables: \describe{
-#' \item{list("gender")}{Gender: Male or Female}
-#' \item{list("reth")}{Race/ethnicity} \item{list("smth")}{A list of
-#' \code{svysmooth} objects, each encoding a weighted smoothed distribution of
-#' ages.}}
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' 
-#' @keywords data httk-pop
-NULL
-
-
-#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
-#' 
-#' 
-#' @name armitage_input
-#' @docType data
-#' @format A data frame with 53940 rows and 10 variables: \describe{
-#' \item{MP}{} \item{MW}{} \item{casrn}{} \item{compound_name}{} \item{gkaw}{}
-#' \item{gkow}{} \item{gswat}{} }
-#' @author Greg Honda
-#' 
-#' Greg Honda
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' 
-#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-#' Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
-#' 
-#' @source \url{http://www.diamondse.info/}
 #' @keywords data
-NULL
-
-#' Chemical membership in different research projects
-#' 
-#' A static list of lists identifying chemical membership in different research
-#' projects. While it is our intent to keep these lists up-to-date, the
-#' information here is only for convenience and should not be considered to be
-#' definitive.
-#' 
-#' 
-#' @name chem.lists
-#' @docType data
-#' @format A list containing ten lists.
-#' @author John Wambaugh
-#' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
-#' Alignment. Environ Health Perspect 116(1).
-#' 
-#' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
-#' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
-#' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
-#' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
-#' Perspectives 118(4), 485-492.
-#' 
-#' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
-#' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
-#' Human Exposure to Environmental Chemicals. Environmental Science &
-#' Technology, 10.1021/es503583j.
-#' 
-#' CDC (2014). National Health and Nutrition Examination Survey. Available at:
-#' http://www.cdc.gov/nchs/nhanes.htm.
-#' @keywords datasets
-NULL
+"chem.invivo.PK.data"
 
 
 #' Summary of published toxicokinetic time course experiments
@@ -1386,7 +548,6 @@ NULL
 #' evaluate toxicokinetic model predictions.
 #' 
 #' 
-#' @name chem.invivo.PK.summary.data
 #' @docType data
 #' @format A data.frame containing 100 rows and 25 columns.
 #' @author John Wambaugh
@@ -1569,8 +730,482 @@ NULL
 #' of Diltiazem in Rats Following Single vs Multiple Doses In Vivo. Open Drug
 #' Metab J. 3:56-62.
 #' @source Wambaugh et al. 2018 Toxicological Sciences, in press
-#' @keywords datasets
-NULL
+#' @keywords data
+"chem.invivo.PK.summary.data"
+
+
+
+#' Parameter Estimates from Wambaugh et al. (2018)
+#' 
+#' This table includes 1 and 2 compartment fits of plasma concentration vs time
+#' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
+#' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
+#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
+#' steady state concentration (Css, mg/L).
+#' 
+#' 
+#' @docType data
+#' @format data.frame
+#' @author John Wambaugh
+#' @source Wambaugh et al. 2018 Toxicological Sciences, in press
+#' @keywords data
+"chem.invivo.PK.aggregate.data"
+
+
+#' Chemical membership in different research projects
+#' 
+#' A static list of lists identifying chemical membership in different research
+#' projects. While it is our intent to keep these lists up-to-date, the
+#' information here is only for convenience and should not be considered to be
+#' definitive.
+#' 
+#' 
+#' @docType data
+#' @format A list containing ten lists.
+#' @author John Wambaugh
+#' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
+#' Alignment. Environ Health Perspect 116(1).
+#' 
+#' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
+#' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
+#' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
+#' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
+#' Perspectives 118(4), 485-492.
+#' 
+#' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
+#' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
+#' Human Exposure to Environmental Chemicals. Environmental Science &
+#' Technology, 10.1021/es503583j.
+#' 
+#' CDC (2014). National Health and Nutrition Examination Survey. Available at:
+#' http://www.cdc.gov/nchs/nhanes.htm.
+#' @keywords data
+"chem.lists"
+
+
+#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)
+#'
+#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
+#' et al. (submitted) They
+#' are the output of different Bayesian models evaluated to compare using a
+#' single protein concentration vs. the new three concentration titration
+#' protocol. These data summarize the results of Bayesian analysis of the in vitro
+#' toxicokinetic experiments conducted by Cyprotex to characterize fraction 
+#' unbound in the presence of pooled human plasma protein and the intrnsic 
+#' hepatic clearance of the chemical by pooled human hepatocytes.
+#' This file includes replicates (diferent CompoundName id's but same chemical')
+#'
+#' @format A data frame with 530 rows and 28 variables:
+#' \describe{
+#'   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
+#'   \item{Name}{The name of the chemical}
+#'   \item{CAS}{The Chemical Abstracts Service Registry Number}                         
+#'   \item{CompoundName}{Sample name provided by EPA to Cyprotex}
+#'   \item{Fup.point}{Point estimate of the fraction of
+#' chemical free in the presence of plasma}
+#'   \item{Base.Fup.Med}{Median of Bayesian credible interval for 
+#' fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
+#' physiological plasma protein data only (base model)}
+#'   \item{Affinity.Fup.Med}{Median of Bayesian credible interval for 
+#' fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible 
+#' interval for fraction of chemical free in the presence of plasma for analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.Med}{Median of Bayesian credible interval for 
+#' protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible 
+#' interval for protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible 
+#' interval for protein binding affinity from analysis of protein
+#' titration protocol data (affinity model)}
+#'   \item{Decreases.Prob}{Probability that the chemical concentration decreased
+#' systematiclally during hepatic clearance assay.}
+#'   \item{Saturates.Prob}{Probability that the rate of chemical concentration
+#' decrease varied between the 1 and 10 uM hepatic clearance experiments.}
+#'   \item{Slope.1uM.Median}{Estimated slope for chemcial concentration decrease
+#' in the 1 uM hepatic clearance assay.}
+#'   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
+#' in the 10 uM hepatic clearance assay.}
+#'   \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
+#' hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
+#'   \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
+#' concentration (uL/min/million hepatocytes)}        
+#'   \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 1 uM initital chemical 
+#' concentration(uL/min/million hepatocytes)}
+#'   \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
+#' hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
+#'   \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
+#' concentration (uL/min/million hepatocytes)}        
+#'   \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
+#' interval for intrinsic hepatic clearance at 10 uM initital chemical 
+#' concentration(uL/min/million hepatocytes)}
+#'   \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
+#' (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
+#'   \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
+#' (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
+#'   \item{Fit}{Classification of clearance observed}                         
+#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
+#' description}
+#' }
+#' @source Wambaugh et al. (submitted)
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization", submitted.
+"wambaugh2019.raw"
+
+#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))
+#'
+#' These data are a subset of the Bayesian inferrences reported by Ring et al.
+#' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
+#' National Health and Nutrition Examination Survey (NHANES). They reflect the
+#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
+#'
+#' @format A data frame with 20 rows and 4 variables:
+#' \describe{
+#'   \item{lP}{The median of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{lP.max}{The upper 95th percentile of the Bayesian credible interval for median population
+#' intake rate (mg/kg bodyweight/day)}
+#'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
+#' }
+#' @source Wambaugh et al. (submitted)
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#' evironmental chemicals by simulating toxicokinetic variability." Environment 
+#' international 106 (2017): 105-118
+"wambaugh2019.nhanes"
+
+#' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
+#'
+#' These data are a subset of the Bayesian inferrences reported by Ring et al.
+#' (2019) for a consensus model of twelve exposue predictors. The predictors 
+#' were calibrated based upon their ability to predict intake rates inferred
+# 'from the U.S. Centers for Disease Control and Prevention (CDC)
+#' National Health and Nutrition Examination Survey (NHANES). They reflect the
+#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
+#'
+#' @format A data frame with 385 rows and 38 variables:
+#' @source Wambaugh et al. (submitted)
+#'
+#'@keywords data
+#'
+#'@author John Wambaugh
+#'
+#'@references Ring, Caroline L., et al. "Consensus modeling of median chemical 
+#' intake for the US population based on predictions of exposure pathways." 
+#' Environmental science & technology 53.2 (2018): 719-732.
+"wambaugh2019.seem3"
+
+
+#' Physico-chemical properties and in vitro measurements for toxicokinetics
+#' 
+#' This data set contains the necessary information to make basic,
+#' high-throughput toxicokinetic (HTTK) predictions for compounds, including
+#' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
+#' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
+#' compiled from multiple sources, and can be used to parameterize a variety of
+#' toxicokinetic models.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 565 rows and 33 columns.
+#' @author John Wambaugh
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+#' 
+#' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
+#' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
+#' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
+#' 
+#' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
+#' predicting drug clearance using in vitro kinetic data from hepatic
+#' microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
+#' 
+#' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
+#' assessment of the top 25 English prescription pharmaceuticals. Water
+#' research 36(20), 5013-22.
+#' 
+#' Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
+#' Development of a novel in vitro model to predict hepatic clearance using
+#' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
+#' Disposition 30(12), 1446-54.
+#' 
+#' McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
+#' Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
+#' metabolism tools for the prediction of metabolic clearance. Drug Metabolism
+#' and Disposition 32(11), 1247-53, 10.1124/dmd.104.000026.
+#' 
+#' Naritomi, Y., Terashita, S., Kagayama, A. and Sugiyama, Y. (2003). Utility
+#' of Hepatocytes in Predicting Drug Metabolism: Comparison of Hepatic
+#' Intrinsic Clearance in Rats and Humans in Vivo and in Vitro. Drug Metabolism
+#' and Disposition 31(5), 580-588, 10.1124/dmd.31.5.580.
+#' 
+#' Obach, R. S. (1999). Prediction of human clearance of twenty-nine drugs from
+#' hepatic microsomal intrinsic clearance data: An examination of in vitro
+#' half-life approach and nonspecific binding to microsomes. Drug Metabolism
+#' and Disposition 27(11), 1350-9.
+#' 
+#' Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
+#' database of intravenous pharmacokinetic parameters in humans for 670 drug
+#' compounds. Drug Metabolism and Disposition 36(7), 1385-405,
+#' 10.1124/dmd.108.020479.
+#' 
+#' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
+#' oral bioavailability by using in vitro and in silico drug related parameters
+#' in a physiologically based absorption model. International journal of
+#' pharmaceutics, 429(1), 84-98.
+#' 
+#' Pirovano, Alessandra, et al. "QSARs for estimating intrinsic hepatic
+#' clearance of organic chemicals in humans." Environmental toxicology and
+#' pharmacology 42 (2016): 190-197.
+#' 
+#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
+#' partition coefficients. Toxicology in vitro : an international journal
+#' published in association with BIBRA 22(2), 457-67,
+#' 10.1016/j.tiv.2007.09.010.
+#' 
+#' Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
+#' Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
+#' Application of Serum Incubation Method. Drug Metabolism and Disposition
+#' 30(8), 892-896, 10.1124/dmd.30.8.892.
+#' 
+#' Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
+#' for human bioaccumulative potential with a physiologically based
+#' toxicokinetic model. Archives of Toxicology 86(3), 393-403,
+#' 10.1007/s00204-011-0768-0.
+#' 
+#' Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
+#' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
+#' 286-297.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
+#' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
+#' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
+#' and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
+#' high-throughput screening data in chemical toxicity assessment.
+#' Toxicological sciences : an official journal of the Society of Toxicology
+#' 125(1), 157-74, 10.1093/toxsci/kfr254.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
+#' Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
+#' B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
+#' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
+#' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
+#' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
+#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
+#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
+#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
+#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
+#' Sciences, kfv171.
+#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' @keywords data
+"chem.physical_and_invitro.data"
+
+
+#' Sipes et al. 2017 data
+#' 
+#' This table includes data predicted with Simulations Plus' ADMET predictor,
+#' used in load_sipes2017, that was used in Sipes et al. 2017. The column names
+#' are equivalent to those of chem.physical_and_invitro.data.
+#' 
+#' 
+#' @name sipes2017
+#' @aliases Sipes2017
+#' @docType data
+#' @format data.frame
+#' @author Nisha Sipes
+#' @references Sipes, Nisha S., et al. "An Intuitive Approach for Predicting
+#' Potential Human Health Risk with the Tox21 10k Library." Environmental
+#' Science & Technology 51.18 (2017): 10786-10796.
+#' @source ADMET, Simulations Plus
+#' @keywords data
+"sipes2017"
+
+
+
+
+
+#' Physico-chemical properties and toxicokinetics, measured values and Sipes et
+#' al. (2017)
+#' 
+#' This is an image of the chem.phys_and_invitro.data table that has had the
+#' Sipes et al. (2017) ADMET predictions adfdded to it. The data set contains 
+#' the necessary information to make basic,
+#' high-throughput toxicokinetic (HTTK) predictions for compounds, including
+#' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
+#' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
+#' compiled from multiple sources, and can be used to parameterize a variety of
+#' toxicokinetic models.
+#' 
+#' @name sipes2017.table
+#' @docType data
+#' @format A data.frame containing 9211 rows and 47 columns.
+#' @author John Wambaugh
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+#' 
+#' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
+#' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
+#' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
+#' 
+#' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
+#' predicting drug clearance using in vitro kinetic data from hepatic
+#' microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
+#' 
+#' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
+#' assessment of the top 25 English prescription pharmaceuticals. Water
+#' research 36(20), 5013-22.
+#' 
+#' Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
+#' Development of a novel in vitro model to predict hepatic clearance using
+#' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
+#' Disposition 30(12), 1446-54.
+#' 
+#' McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
+#' Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
+#' metabolism tools for the prediction of metabolic clearance. Drug Metabolism
+#' and Disposition 32(11), 1247-53, 10.1124/dmd.104.000026.
+#' 
+#' Naritomi, Y., Terashita, S., Kagayama, A. and Sugiyama, Y. (2003). Utility
+#' of Hepatocytes in Predicting Drug Metabolism: Comparison of Hepatic
+#' Intrinsic Clearance in Rats and Humans in Vivo and in Vitro. Drug Metabolism
+#' and Disposition 31(5), 580-588, 10.1124/dmd.31.5.580.
+#' 
+#' Obach, R. S. (1999). Prediction of human clearance of twenty-nine drugs from
+#' hepatic microsomal intrinsic clearance data: An examination of in vitro
+#' half-life approach and nonspecific binding to microsomes. Drug Metabolism
+#' and Disposition 27(11), 1350-9.
+#' 
+#' Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
+#' database of intravenous pharmacokinetic parameters in humans for 670 drug
+#' compounds. Drug Metabolism and Disposition 36(7), 1385-405,
+#' 10.1124/dmd.108.020479.
+#' 
+#' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
+#' oral bioavailability by using in vitro and in silico drug related parameters
+#' in a physiologically based absorption model. International journal of
+#' pharmaceutics, 429(1), 84-98.
+#' 
+#' Pirovano, Alessandra, et al. "QSARs for estimating intrinsic hepatic
+#' clearance of organic chemicals in humans." Environmental toxicology and
+#' pharmacology 42 (2016): 190-197.
+#' 
+#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
+#' partition coefficients. Toxicology in vitro : an international journal
+#' published in association with BIBRA 22(2), 457-67,
+#' 10.1016/j.tiv.2007.09.010.
+#' 
+#' Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
+#' Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
+#' Application of Serum Incubation Method. Drug Metabolism and Disposition
+#' 30(8), 892-896, 10.1124/dmd.30.8.892.
+#' 
+#' Sipes, Nisha S., et al. "An Intuitive Approach for Predicting Potential
+#' Human Health Risk with the Tox21 10k Library." Environmental Science &
+#' Technology 51.18 (2017): 10786-10796.
+#' 
+#' Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
+#' for human bioaccumulative potential with a physiologically based
+#' toxicokinetic model. Archives of Toxicology 86(3), 393-403,
+#' 10.1007/s00204-011-0768-0.
+#' 
+#' Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
+#' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
+#' 286-297.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
+#' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
+#' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
+#' and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
+#' high-throughput screening data in chemical toxicity assessment.
+#' Toxicological sciences : an official journal of the Society of Toxicology
+#' 125(1), 157-74, 10.1093/toxsci/kfr254.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
+#' Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
+#' B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
+#' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
+#' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
+#' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
+#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
+#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
+#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
+#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
+#' Sciences, kfv171.
+#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' @keywords data
+"sipes2017.table"
+
+#' ToxCast and Tox21 2015 Active Hit Calls (EPA)
+#' 
+#' The ToxCast and Tox21 research programs employ batteries of high throughput 
+#' assays to assess chemical bioactivity in vitro. Not every chemical is tested 
+#' through every assay. Most assays are conducted in concentration response, 
+#' and each corresponding assay endpoint is analyzed statistically to determine 
+#' if there is a concentration-dependent response or "hit" using the ToxCast 
+#' Pipeline.  Most assay endpoint-chemical combinations are non-responsive. 
+#' Here, only the hits are treated as potential indicators of bioactivity. This 
+#' bioactivity does not have a direct toxicological interpretation. The October 
+#' 2015 release (invitrodb_v2) of the ToxCast and Tox21 data were used for this 
+#' analysis.
+#' 
+#' @name ToxCast2015subset
+#' @aliases tc.dt.sub
+#' @docType data
+#' @format A data.table with 62412 rows and 5 columns
+#' @author Caroline Ring
+#' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program: 
+#' providing high throughput decision support tools for chemical risk 
+#' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
+#' 
+#' Tice, Raymond R., et al. "Improving the human hazard characterization of 
+#' chemicals: a Tox21 update." Environmental health perspectives 121.7 (2013): 
+#' 756-765.
+#' 
+#' Richard, Ann M., et al. "ToxCast chemical landscape: paving the road to 21st 
+#' century toxicology." Chemical research in toxicology 29.8 (2016): 1225-1251.
+#' 
+#' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput 
+#' screening data." Bioinformatics 33.4 (2016): 618-620.
+#' 
+#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
+#'
+#' @keywords data
+"ToxCast2015subset"
+
 
 
 #' Howgate 2006
@@ -1578,8 +1213,224 @@ NULL
 #' This data set is only used in Vignette 5.
 #' 
 #' 
-#' @name howgate
 #' @docType data
-#' @keywords datasets
-NULL
+#' @keywords data
+"howgate"
+
+
+#' Johnson 2006
+#' 
+#' This data set is only used in Vignette 5.
+#' 
+#' 
+#' @docType data
+#' @keywords data
+"johnson"
+
+
+
+#' Published Pharmacokinetic Parameters from Obach et al. 2008
+#' 
+#' This data set is used in Vignette 4 for steady state concentration.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 670 rows and 8 columns.
+#' @references Obach, R. Scott, Franco Lombardo, and Nigel J. Waters. "Trend
+#' analysis of a database of intravenous pharmacokinetic parameters in humans
+#' for 670 drug compounds." Drug Metabolism and Disposition 36.7 (2008):
+#' 1385-1405.
+#' @keywords data
+"Obach2008"
+
+
+#' NHANES Exposure Data
+#' 
+#' This data set is only used in Vignette 6.
+#' 
+#' 
+#' @docType data
+#' @keywords data
+"onlyp"
+
+
+
+#' Partition Coefficient Data
+#' 
+#' Measured rat in vivo partition coefficients and data for predicting them.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame.
+#' @author Jimena Davis and Robert Pearce
+#' @references Schmitt, W., General approach for the calculation of tissue to
+#' plasma partition coefficients. Toxicology in Vitro, 2008. 22(2): p. 457-467.
+#' 
+#' Schmitt, W., Corrigendum to:"General approach for the calculation of tissue
+#' to plasma partition coefficients"[Toxicology in Vitro 22 (2008) 457-467].
+#' Toxicology in Vitro, 2008. 22(6): p. 1666.
+#' 
+#' Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
+#' coefficients of drugs to facilitate the use of physiologically based
+#' pharmacokinetic models in drug discovery. Journal of pharmaceutical
+#' sciences, 2000. 89(1): p. 16-35.
+#' 
+#' Rodgers, T. and M. Rowland, Physiologically based pharmacokinetic modelling
+#' 2: predicting the tissue distribution of acids, very weak bases, neutrals
+#' and zwitterions. Journal of pharmaceutical sciences, 2006. 95(6): p.
+#' 1238-1257.
+#' 
+#' Rodgers, T., D. Leahy, and M. Rowland, Physiologically based pharmacokinetic
+#' modeling 1: predicting the tissue distribution of moderate-to-strong bases.
+#' Journal of pharmaceutical sciences, 2005. 94(6): p. 1259-1276.
+#' 
+#' Rodgers, T., D. Leahy, and M. Rowland, Tissue distribution of basic drugs:
+#' Accounting for enantiomeric, compound and regional differences amongst
+#' beta-blocking drugs in rat. Journal of pharmaceutical sciences, 2005. 94(6):
+#' p. 1237-1248.
+#' 
+#' Gueorguieva, I., et al., Development of a whole body physiologically based
+#' model to characterise the pharmacokinetics of benzodiazepines. 1: Estimation
+#' of rat tissue-plasma partition ratios. Journal of pharmacokinetics and
+#' pharmacodynamics, 2004. 31(4): p. 269-298.
+#' 
+#' Poulin, P., K. Schoenlein, and F.P. Theil, Prediction of adipose tissue:
+#' plasma partition coefficients for structurally unrelated drugs. Journal of
+#' pharmaceutical sciences, 2001. 90(4): p. 436-447.
+#' 
+#' Bjorkman, S., Prediction of the volume of distribution of a drug: which
+#' tissue-plasma partition coefficients are needed? Journal of pharmacy and
+#' pharmacology, 2002. 54(9): p. 1237-1245.
+#' 
+#' Yun, Y. and A. Edginton, Correlation-based prediction of tissue-to-plasma
+#' partition coefficients using readily available input parameters.
+#' Xenobiotica, 2013. 43(10): p. 839-852.
+#' 
+#' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
+#' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
+#' @keywords data
+"pc.data"
+
+
+
+#' Species-specific physiology parameters
+#' 
+#' This data set contains values from Davies and Morris (1993) necessary to
+#' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
+#' The temperature for each species are taken from Robertshaw et al. (2004),
+#' Gordon (1993), and Stammers(1926).
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 11 rows and 7 columns.
+#' @author John Wambaugh and Nisha Sipes
+#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
+#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
+#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
+#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
+#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
+#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
+#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
+#' Laboratory Rodents
+#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' @keywords data
+"physiology.data"
+
+
+
+#' Tissue composition and species-specific physiology parameters
+#' 
+#' This data set contains values from Schmitt (2008) and Ruark et al. (2014)
+#' describing the composition of specific tissues and from Birnbaum et al.
+#' (1994) describing volumes of and blood flows to those tissues, allowing
+#' parameterization of toxicokinetic models for human, mouse, rat, dog, or
+#' rabbit. Tissue volumes were calculated by converting the fractional mass of
+#' each tissue with its density (both from ICRP), lumping the remaining tissues
+#' into the rest-of-body, excluding the mass of the gastrointestinal contents
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 13 rows and 20 columns.
+#' @author John Wambaugh, Robert Pearce, and Nisha Sipes
+#' @references Birnbaum, L and Brown, R and Bischoff, K and Foran, J and
+#' Blancato, J and Clewell, H and Dedrick, R (1994). Physiological parameter
+#' values for PBPK model. International Life Sciences Institute, Risk Science
+#' Institute, Washington, DC
+#' 
+#' Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma
+#' partition coefficients: Interindividual and interspecies variability."
+#' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
+#' 
+#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
+#' partition coefficients. Toxicology in vitro : an international journal
+#' published in association with BIBRA 22(2), 457-67,
+#' 10.1016/j.tiv.2007.09.010.
+#' 
+#' ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
+#' @source Pearce et al. (2017), in preparation,
+#' 
+#' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' @keywords data
+"tissue.data"
+
+
+
+#' Published toxicokinetic predictions based on in vitro data
+#' 
+#' This data set gives the chemical specific predictions for serum
+#' concentration at steady state resulting from constant infusion exposure, as
+#' published in a series of papers from Barbara Wetmore's group at the Hamner
+#' Institutes for Life Sciences. Predictions include the median and 90\%
+#' interval in uM and mg/L. Calculations were made using the 1 and 10 uM in
+#' vitro measured clearances.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 577 rows and 20 columns.
+#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
+#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
+#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
+#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
+#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
+#' 157-174 (2012)
+#' 
+#' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
+#' Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
+#' Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
+#' Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
+#' Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
+#' Toxicological Sciences, 132:327-346 (2013).
+#' 
+#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
+#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
+#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
+#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
+#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
+#' Sciences, kfv171.
+#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
+#' @keywords data
+"Wetmore.data"
+
+
+
+#' Published toxicokinetic predictions based on in vitro data from Wetmore et
+#' al. 2012.
+#' 
+#' This data set overlaps with Wetmore.data and is used only in Vignette 4 for
+#' steady state concentration.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing 13 rows and 15 columns.
+#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
+#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
+#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
+#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
+#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
+#' 157-174 (2012)
+#' @keywords data
+"Wetmore2012"
 

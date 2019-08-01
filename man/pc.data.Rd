@@ -5,6 +5,9 @@
 \alias{pc.data}
 \title{Partition Coefficient Data}
 \format{A data.frame.}
+\usage{
+pc.data
+}
 \description{
 Measured rat in vivo partition coefficients and data for predicting them.
 }
@@ -58,4 +61,4 @@ ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
 \author{
 Jimena Davis and Robert Pearce
 }
-\keyword{datasets}
+\keyword{data}

@@ -69,6 +69,6 @@ partition coefficients for PBPK modeling of drugs and environmental
 chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh
 }
 \keyword{Parameter}

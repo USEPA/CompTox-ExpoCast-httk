@@ -8,11 +8,10 @@
 #' (2008) method is used in the calculation. The value is calculated with the
 #' equation: 1 - hematocrit + hematocrit * Krbc2pu * Funbound.plasma, summing
 #' the red blood cell to plasma and plasma:plasma (equal to 1) partition
-#' coefficients multiplied by their respective fractional volumes. %%When
+#' coefficients multiplied by their respective fractional volumes. When
 #' species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(hematocrit and temperature) but substitues
-#' human fraction unbound and tissue volumes.  %% ~~ If necessary, more details
-#' than the description above ~~
+#' appropriate physiological data (hematocrit and temperature), but substitues
+#' human fraction unbound and tissue volumes. 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.

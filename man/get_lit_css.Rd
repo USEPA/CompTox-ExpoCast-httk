@@ -74,6 +74,5 @@ Sciences, kfv171.
 \author{
 John Wambaugh
 }
-\keyword{Carlo}
 \keyword{Literature}
-\keyword{Monte}
+\keyword{Monte-Carlo}

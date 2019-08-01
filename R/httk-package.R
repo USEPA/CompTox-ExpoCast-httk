@@ -1,3 +1,26 @@
+#' httkpop: Virtual population generator for HTTK.
+#' 
+#' The httkpop package generates virtual population physiologies for use in
+#' population TK.
+#' 
+#' 
+#' @name httkpop
+#' @aliases httkpop httkpop-package
+#' @docType package
+#' @section Main function to generate a population:
+#' 
+#' If you just want to generate a table of (chemical-independent) population
+#' physiology parameters, use \code{\link{httkpop_generate}}.
+#' @author Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
+NULL
+
+
+
+
 #' \Sexpr{tools:::Rd_package_title("httk")}
 #' 
 #' \Sexpr{tools:::Rd_package_description("httk")}
@@ -20,9 +43,6 @@
 #' 
 #' \href{https://doi.org/10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
 #' Toxicokinetic Triage for Environmental Chemicals}
-#'
-#' \href{https://doi.org/10.1371/journal.pone.0162428}{Sluka et al. (2016):
-#' A Liver-Centric Multiscale Modeling Framework for Xenobiotics}
 #' 
 #' \href{https://doi.org/10.1007/s10928-017-9548-7}{Pearce et al. (2017):
 #' Evaluation and calibration of high-throughput predictions of chemical
@@ -45,27 +65,4 @@
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
 #' ExpoCast (Exposure Forecasting) Project}
 #' @keywords package
-
-
-
-
-#' httkpop: Virtual population generator for HTTK.
-#' 
-#' The httkpop package generates virtual population physiologies for use in
-#' population TK.
-#' 
-#' 
-#' @name httkpop
-#' @aliases httkpop httkpop-package
-#' @docType package
-#' @section Main function to generate a population:
-#' 
-#' If you just want to generate a table of (chemical-independent) population
-#' physiology parameters, use \code{\link{httkpop_generate}}.
-#' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
 NULL
-

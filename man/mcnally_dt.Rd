@@ -17,8 +17,7 @@
   \code{flow_ref}/\code{CO_ref}}}}
 \source{
 McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human 
-  population generator." Toxicology 315, 70-85, 2014.
-\url{https://doi.org/10.1016/j.tox.2013.07.0094}
+  population generator." Toxicology 315, 70-85, 2004.
 }
 \usage{
 mcnally_dt
@@ -31,7 +30,6 @@ al. 2014.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
-\url{https://doi.org/10.1016/j.envint.2017.06.004}
 }
 \author{
 Caroline Ring
