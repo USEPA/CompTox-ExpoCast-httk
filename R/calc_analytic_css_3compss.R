@@ -166,4 +166,3 @@ add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, che
   }
   return(parameters)
 }
-
