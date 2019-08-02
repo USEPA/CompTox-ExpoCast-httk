@@ -8,6 +8,18 @@
 \description{
 \Sexpr{tools:::Rd_package_description("httk")}
 }
+\section{Main function to generate a population}{
+
+
+If you just want to generate a table of (chemical-independent) population
+physiology parameters, use \code{\link{httkpop_generate}}.
+}
+
+\references{
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
 \seealso{
 \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{PowerPoint
 Presentation: High-Throughput Toxicokinetics (HTTK) R package}
@@ -21,6 +33,9 @@ In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 
 \href{https://doi.org/10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
 Toxicokinetic Triage for Environmental Chemicals}
+
+\href{https://doi.org/10.1371/journal.pone.0162428}{Sluka et al. (2016):
+A Liver-Centric Multiscale Modeling Framework for Xenobiotics}
 
 \href{https://doi.org/10.1007/s10928-017-9548-7}{Pearce et al. (2017):
 Evaluation and calibration of high-throughput predictions of chemical
@@ -46,5 +61,22 @@ ExpoCast (Exposure Forecasting) Project}
 \author{
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
+
+Caroline Ring
 }
+\keyword{HTTK.}
+\keyword{TK.}
+\keyword{The}
+\keyword{Virtual}
+\keyword{for}
+\keyword{generates}
+\keyword{generator}
+\keyword{httk-pop}
+\keyword{httkpop}
+\keyword{httkpop:}
+\keyword{in}
 \keyword{package}
+\keyword{physiologies}
+\keyword{population}
+\keyword{use}
+\keyword{virtual}
