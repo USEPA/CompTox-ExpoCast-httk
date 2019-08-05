@@ -1,18 +1,22 @@
 #' Solve_model
 #' 
-#' This function solves for the amounts or concentrations in uM of a chemical
-#' in different tissues as functions of time based on the dose and dosing
-#' frequency. 
+#' This function's arguments prepare an ode system for numerical solution of
+#' the amounts or concentrations (uM) of a chemical in different compartments
+#' (representing single or aggregated tissues) of a given organism (either 
+#' "Rat", "Rabbit", "Dog", "Mouse", or default "Human") over time.
+#' 
+#' At a minimum, a chemical identifier (whether name, CAS number, or other
+#' chemical parameterization), model system of interest ("pbtk",
+#' "3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
+#' dosing regimen must be provided for solve_model to run its toxicokinetic
+#' simulations.
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
 #' 
-#' Default NULL value for doses.per.day solves for a single dose.
-#' 
-#' The compartments used in this model are the gutlumen, gut, liver, kidneys,
-#' veins, arteries, lungs, and the rest of the body.
-#' 
-#' The extra compartments include the amounts or concentrations metabolized by
+#' The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
+#' kidneys, veins, arteries, lungs, and the rest of the body. The extra
+#' compartments include the amounts or concentrations metabolized by
 #' the liver and excreted by the kidneys through the tubules.
 #' 
 #' AUC is the area under the curve of the plasma concentration.
@@ -24,7 +28,7 @@
 #' Q \tab \tab Flow \tab L/h \cr
 #' k \tab \tab Rate \tab 1/h \cr
 #' \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
-#' and 1/kg^(3/4) for florws \cr}
+#' and 1/kg^(3/4) for flows \cr}
 #'
 #' When species is specified but chemical-specific in vitro data are not
 #' available, the function uses the appropriate physiological data (volumes and 
@@ -321,7 +325,7 @@ solve_model <- function(chem.name = NULL,
   start.time <- times[1]
   end.time <- times[length(times)]
 
-  # We add a time point 1e-8 later than the beginning to make the plots look
+  # We add a time point 1e-5 later than the beginning to make the plots look
   # better:
   times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
 
