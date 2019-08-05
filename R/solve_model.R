@@ -1,15 +1,16 @@
 #' Solve_model
 #' 
-#' This function's arguments prepare an ode system for numerical solution of
-#' the amounts or concentrations (uM) of a chemical in different compartments
-#' (representing single or aggregated tissues) of a given organism (either 
-#' "Rat", "Rabbit", "Dog", "Mouse", or default "Human") over time.
+#' solve_model's arguments prepare an ode system for numerical solution over
+#' time of the amounts or concentrations (uM) of chemical in the different
+#' bodily compartments of a given available species (either "Rat", "Rabbit",
+#' "Dog", "Mouse", or default "Human").
 #' 
 #' At a minimum, a chemical identifier (whether name, CAS number, or other
 #' chemical parameterization), model system of interest ("pbtk",
 #' "3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
 #' dosing regimen must be provided for solve_model to run its toxicokinetic
-#' simulations.
+#' simulations. See 'dosing' argument listing below for breakdown of how to
+#' specify dose (in terms of route of administration, frequency, and quantity)
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
@@ -21,8 +22,9 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' Model parameters are named according to the following convention:\tabular{lrrrr}{
-#' prefix \tab suffic \tab Meaning \tab units \cr
+#' Model parameters are named according to the following convention:
+#' \tabular{lrrrr}{
+#' prefix \tab suffix \tab Meaning \tab units \cr
 #' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
 #' V \tab \tab Volume \tab L \cr
 #' Q \tab \tab Flow \tab L/h \cr
@@ -31,7 +33,7 @@
 #' and 1/kg^(3/4) for flows \cr}
 #'
 #' When species is specified but chemical-specific in vitro data are not
-#' available, the function uses the appropriate physiological data (volumes and 
+#' available, the function uses the appropriate physiological data (volumes and
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
@@ -39,7 +41,7 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param times Optional time sequence for specified number of days.  Dosing
+#' @param times Optional time sequence for specified number of days. Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
@@ -143,7 +145,8 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     ...)
 {
-# Handy string manipulation functions:
+# Handy string manipulation functions for processing variable names that adhere
+# to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
   firstchar <- function(x){substr(x, 1,1)}
    
@@ -153,17 +156,21 @@ solve_model <- function(chem.name = NULL,
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
     stop('Parameters, chem.name, or chem.cas must be specified.')
-  
-  if (is.null(model)) stop("Model must be specified.")
 
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
+  if (is.null(model)) stop("Model must be specified.")
+  
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } else {
+    #Set more convenient names for various model-related variables (e.g. route
+    #of exposure) stored in the list of lists, model.list, compiled in the
+    #various models' associated "modelinfo_xxx.R" files:
+    
 # Available exposure routes:
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
@@ -174,11 +181,11 @@ solve_model <- function(chem.name = NULL,
 # amounts)
     state.vars <- model.list[[model]]$state.vars
     initialize_R_function <- model.list[[model]]$R.init.func
-# Function that initializes the compiled moel code:
+# name of function that initializes the compiled moel code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
-# Function that transform the paramers to those needed by the solver:
+# Function that transform the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
 # name(s)s of the compiled model parameters that control the solver:
     compiled_param_names <- model.list[[model]]$compiled.param.names
@@ -186,7 +193,7 @@ solve_model <- function(chem.name = NULL,
     derivative_function <- model.list[[model]]$derivative.func
 # ordered names of the outputs from the derivative function:
     derivative_output_names <- model.list[[model]]$derivative.output.names
-# calculate the number of outputs from the derivitive function:
+# calculate the number of outputs from the derivative function:
     num_outputs <- length(derivative_output_names)    
 # Which variables to we track by default (should be able to build this from
 # state vars and outputs):

@@ -117,7 +117,9 @@ parameterize_1comp <- function(chem.cas=NULL,
 
   params[['kgutabs']] <- 2.18
   
-  params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+  params[['Rblood2plasma']] <- 
+    available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,
+        species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
   
   params[['million.cells.per.gliver']] <- 110
   params[["liver.density"]] <- 1.05 # g/mL
