@@ -261,7 +261,7 @@ solve_model <- function(chem.name = NULL,
   }
   
   # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
-  # have been updated by Monte Carlo it may be that Rblood2plasma needs to be
+  # have been updated by Monte Carlo, it may be that Rblood2plasma needs to be
   # recalculated:
   if (recalc.blood2plasma) parameters[['Rblood2plasma']] <- 
     1 - 
@@ -270,8 +270,8 @@ solve_model <- function(chem.name = NULL,
     parameters[['Funbound.plasma']]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
   
-  # The unscald hepatic clearance depens on many parameters that could be changed
-  # by Monte Carlo simulation. This code recalculates it if needed:
+  # The unscaled hepatic clearance depends on many parameters that could be
+  # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
   # Do we have all the parameters we need?:
