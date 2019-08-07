@@ -42,9 +42,11 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=T,
                                    bioactive.free.invivo = F,
-                                   Caco2.options = list(Caco2.Pab.default = 2,
+                                   Caco2.options = list(Caco2.Pab.default = "1.6",
                                                         Caco2.Fgut = TRUE,
-                                                        Caco2.Fabs = TRUE),
+                                                        Caco2.Fabs = TRUE,
+                                                        overwrite.invivo = FALSE,
+                                                        keepit100 = FALSE),
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -98,7 +100,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   fup <- parameters[["Funbound.plasma"]]
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+  hourly.dose <- hourly.dose * parameters$Fabsgut
   
 # Calculate steady-state plasma Css:
   Css <- (hourly.dose * (Qliver + Qgut) / 

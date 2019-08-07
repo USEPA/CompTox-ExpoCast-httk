@@ -435,7 +435,7 @@ convert_httk <- function(indiv.model.bio,
       indiv.model[, fgut.oral := Fgut]
     }
     
-    # Replace Fgutabs with a recalculated value
+    # Replace Fabsgut with a recalculated value
     if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
       indiv.model[, Fabsgut := fabs.oral*fgut.oral]
     }

@@ -45,7 +45,8 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    Caco2.options = list(Caco2.Pab.default = "1.6",
                                                         Caco2.Fgut = TRUE,
                                                         Caco2.Fabs = TRUE,
-                                                        overwrite.invivo = FALSE),
+                                                        overwrite.invivo = FALSE,
+                                                        keepit100 = FALSE),
                                    ...)
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
@@ -77,9 +78,9 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-  parameters$Fabsgut <- parameters$Fabsgut * parameters$hepatic.bioavailability
+  parameters$Fbio.oral <- parameters$Fabsgut * parameters$hepatic.bioavailability
   
-  hourly.dose <- hourly.dose * parameters$Fabsgut
+  hourly.dose <- hourly.dose * parameters$Fbio.oral
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
 
 # Check to see if a specific tissue was asked for:

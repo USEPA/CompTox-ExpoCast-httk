@@ -20,7 +20,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
   CHEM.ID.COLS<-c("Compound","CAS","CAS.Checksum","DTXSID","Formula","SMILES.desalt")
   CHEM.PHYS.COLS<-c("MW","logP","logPwa","logHenry","logVP","logWSol","MP","pKa_Donor","pKa_Accept","logMA")
   # The colmuns have "[SPECIES]." prepended to their name:
-  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma","Caco2.Pab")
+  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fabs","Fgut","Rblood2plasma","Caco2.Pab")
   # In the table we create each word in most column names is capitalized:
   COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","logHenry","logWSol","MP",
                                         "MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept",
@@ -162,7 +162,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 #' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 #' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-#' 'Fgutabs', 'Rblood2plasma'.
+#' 'Fabs', 'Fgut', 'Rblood2plasma'.
 #' @param current.table This is the table to which data are being added.
 #' @param reference This is the reference for the data in the new table. This
 #' may be omitted if a column in data.list gives the reference value for each
