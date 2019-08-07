@@ -16,8 +16,6 @@
 }}
 \source{
 \url{http://www.diamondse.info/}
-
-\url{http://www.diamondse.info/}
 }
 \usage{
 armitage_input
@@ -31,18 +29,8 @@ Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
-
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and In Vivo
-Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 }
 \author{
-Greg Honda
-
-Greg Honda
-
 Greg Honda
 }
 \keyword{data}

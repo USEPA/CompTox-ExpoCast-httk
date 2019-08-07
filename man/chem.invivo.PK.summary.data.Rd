@@ -8,6 +8,9 @@
 \source{
 Wambaugh et al. 2018 Toxicological Sciences, in press
 }
+\usage{
+chem.invivo.PK.summary.data
+}
 \description{
 This data set summarizes the time course data in the chem.invivo.PK.data
 table. Maximum concentration (Cmax), time integrated plasma concentration
@@ -199,4 +202,4 @@ Metab J. 3:56-62.
 \author{
 John Wambaugh
 }
-\keyword{datasets}
+\keyword{data}

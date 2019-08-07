@@ -9,6 +9,9 @@
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
 }
+\usage{
+Wetmore.data
+}
 \description{
 This data set gives the chemical specific predictions for serum
 concentration at steady state resulting from constant infusion exposure, as
@@ -39,4 +42,4 @@ LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
 In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 Sciences, kfv171.
 }
-\keyword{datasets}
+\keyword{data}

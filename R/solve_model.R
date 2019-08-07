@@ -39,6 +39,10 @@
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' @param model Specified model to use in simulation: "pbtk", "3compartment",
+#' "3compartmentss", "1compartment", "schmitt", ...
+#' @param route Specified route of exposure for simulation: "oral", "iv", ...
+#' @param dosing $$$$ description missing $$$$
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, mg/kg BW.
@@ -317,7 +321,7 @@ solve_model <- function(chem.name = NULL,
   start.time <- times[1]
   end.time <- times[length(times)]
 
-  # We add a time point 1e-8 later than the beginnging to make the plots look
+  # We add a time point 1e-8 later than the beginning to make the plots look
   # better:
   times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
 

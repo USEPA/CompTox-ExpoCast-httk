@@ -11,6 +11,9 @@ Pearce et al. (2017), in preparation,
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
 }
+\usage{
+tissue.data
+}
 \description{
 This data set contains values from Schmitt (2008) and Ruark et al. (2014)
 describing the composition of specific tissues and from Birnbaum et al.
@@ -40,4 +43,4 @@ ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
 \author{
 John Wambaugh, Robert Pearce, and Nisha Sipes
 }
-\keyword{datasets}
+\keyword{data}

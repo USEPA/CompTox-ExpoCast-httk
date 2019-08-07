@@ -4,7 +4,11 @@
 \name{johnson}
 \alias{johnson}
 \title{Johnson 2006}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 60 rows and 11 columns.}
+\usage{
+johnson
+}
 \description{
 This data set is only used in Vignette 5.
 }
-\keyword{datasets}
+\keyword{data}
