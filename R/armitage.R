@@ -114,17 +114,19 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.f_oc 1, everything assumed to be like proteins
 #' @return tcdata
 #' @author Greg Honda
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#' 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' 
-#' Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
-#' to Evaluate Extrapolation Assumptions"
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 #' @import magrittr
+#' @examples 
+#' temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+#' this.well_number = 384, nomconc = 10)
+#' print(temp$cfree.invitro)
+#' 
 #' @export armitage_eval
-armitage_eval <- function(casrn.vector = c("81-81-2", "80-05-7"), # vector of CAS numbers
+armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values)
                           this.well_number = 384,
-                          this.FBSf = NA, # Must be set if not in tcdata, this is the most senstive parameter in the model
+                          this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
                           this.sarea = NA_real_,
                           this.v_total = NA_real_,

@@ -36,7 +36,7 @@
 #' samples from the simulation instead of the selected quantile.
 #' @param ... Additional arguments passed to name.model.
 #' @author John Wambaugh
-#' @keywords Monte Carlo
+#' @keywords Monte-Carlo
 #' @examples
 #' 
 #' #Example from httk jss paper:

@@ -4,9 +4,9 @@
 \alias{armitage_eval}
 \title{Evaluate the updated Armitage model}
 \usage{
-armitage_eval(casrn.vector = c("81-81-2", "80-05-7"),
-  nomconc.vector = 1, this.well_number = 384, this.FBSf = NA,
-  tcdata = NA, this.sarea = NA_real_, this.v_total = NA_real_,
+armitage_eval(casrn.vector = NA_character_, nomconc.vector = 1,
+  this.well_number = 384, this.FBSf = NA_real_, tcdata = NA,
+  this.sarea = NA_real_, this.v_total = NA_real_,
   this.v_working = NA_real_, this.cell_yield = NA_real_,
   this.Tsys = 37, this.Tref = 298.15, this.option.kbsa2 = F,
   this.option.swat2 = F, this.pseudooct = 0.01, this.memblip = 0.04,
@@ -73,12 +73,15 @@ as data table or vectors of values. Outputs a data table. Updates over
 the model published in Armitage et al. 2014 include binding to plastic walls
 and lipid and protein compartments in cells.
 }
-\references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+\examples{
+temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+this.well_number = 384, nomconc = 10)
+print(temp$cfree.invitro)
 
-Honda et al. (submitted) "Using the Concordance of In Vitro and In Vivo Data
-to Evaluate Extrapolation Assumptions"
+}
+\references{
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 }
 \author{
 Greg Honda

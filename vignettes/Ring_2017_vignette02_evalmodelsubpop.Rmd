@@ -1,10 +1,10 @@
 ---
-title: "Ring et al. 2017 Vignette 2: Evaluating HTTK models for subpopulations"
+title: "Ring et al. (2017) Vignette 2: Evaluating HTTK models for subpopulations"
 author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. 2017 Evaluating HTTK models for subpopulations}
+  %\VignetteIndexEntry{Ring et al. (2017) Evaluating HTTK models for subpopulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,10 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 
 Once you have generated virtual population data for each subpopulation, you probably want to do something with that data -- like run an HTTK model over each population. This vignette describes how to do that.
 
-Before running the code in this vignette, you need to generate the virtual subpopulations by running the code in the [Generating subpopulations](vignette01_subpopulations.html) vignette.
+Before running the code in this vignette, you need to generate the virtual subpopulations by running the code in the 
+<!--[Generating subpopulations](vignette01_subpopulations.html)--> 
+Generating subpopulations
+vignette.
 
 To use the code in this vignette, you'll first need to load a few packages (if you haven't already).
 ```{r load_packages, eval = FALSE}
