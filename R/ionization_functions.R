@@ -86,6 +86,8 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
     stop("pKa_Donor and pKa_Accept must be in input parameters, or chem.cas or chem.name must be supplied.")
   }
   
+
+  
   # Number of ionizations to calculate:
   if (is.null(parameters))
   {
@@ -130,27 +132,30 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   {
     if (calculations==1)
     {
+      if(is.character(pKa_Donor) | is.character(pKa_Accept)){
+        pKa_Donor <- as.numeric(unlist(strsplit(pKa_Donor, ",")))
+        pKa_Accept <- as.numeric(unlist(strsplit(pKa_Accept, ",")))
+      }
+      
+      
       this.pKa_Donor <- pKa_Donor
       this.pKa_Accept <- pKa_Accept
     } else {
       this.pKa_Donor <- pKa_Donor[[index]]
       this.pKa_Accept <- pKa_Accept[[index]]
-      if (!is.na(this.pKa_Donor))
-      {
-        if (any(regexpr(",",this.pKa_Donor)!=-1))
-        { 
-          this.pKa_Donor <- strsplit(this.pKa_Donor,",")[[1]]
-        }
-        this.pKa_Donor <- as.numeric(this.pKa_Donor)
+      
+      if (any(regexpr(",",this.pKa_Donor)!=-1))
+      { 
+        this.pKa_Donor <- strsplit(this.pKa_Donor,",")[[1]]
       }
-      if (!is.na(this.pKa_Accept))
-      {
-        if (any(regexpr(",",this.pKa_Accept)!=-1))
-        { 
-          this.pKa_Accept <- strsplit(this.pKa_Accept,",")[[1]]
-        }
-        this.pKa_Accept <- as.numeric(this.pKa_Accept)
+      this.pKa_Donor <- as.numeric(this.pKa_Donor)
+      
+      if (any(regexpr(",",this.pKa_Accept)!=-1))
+      { 
+        this.pKa_Accept <- strsplit(this.pKa_Accept,",")[[1]]
       }
+      this.pKa_Accept <- as.numeric(this.pKa_Accept)
+      
     }  
   # Need to calculate the amount of un-ionized parent:
 

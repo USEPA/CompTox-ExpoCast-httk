@@ -49,7 +49,7 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{tissue}{Desired steady state tissue conentration.}
 
-\item{IVIVE}{Honda et al. (submitted) identified six plausible sets of
+\item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
@@ -79,7 +79,7 @@ steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
 The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-assumptions identified by Honda et al. (submitted) are: \tabular{lrrrr}{
+assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -100,10 +100,23 @@ calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
 }
 
 }
+\references{
+Wetmore, Barbara A., et al. "Incorporating high-throughput 
+exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
+chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment international 106 (2017): 105-118. 
+
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+
+Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
+pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+}
 \author{
 John Wambaugh
 }
-\keyword{Carlo}
-\keyword{Monte}
-\keyword{State}
-\keyword{Steady}
+\keyword{Monte-Carlo}
+\keyword{Steady-State}

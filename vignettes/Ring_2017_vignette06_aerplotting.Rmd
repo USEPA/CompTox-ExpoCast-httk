@@ -1,10 +1,10 @@
 ---
-title: "Ring et al. 2017 AER plotting"
+title: "Ring et al. (2017) AER plotting"
 author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. 2017 AER plotting}
+  %\VignetteIndexEntry{Ring et al. (2017) AER plotting}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -73,15 +73,15 @@ Next, read in the ToxCast AC50 values.
 #Column names are Assay Endpoint, CASRN, Activity Call, Q, AC50, Emax, Log AC50,
 #B, T, W, Data Type, Chemical Name.
 #Replace names containing spaces with names without spaces.
-setnames(tc.dt, 
-         c('Assay Endpoint', 'AC 50', 'Chemical Name','Activity Call'),
-         c('Assay.Endpoint', 'AC50', 'Chemical.Name', 'Activity.Call'))
+#setnames(tc.dt, 
+#         c('Assay Endpoint', 'AC 50', 'Chemical Name','Activity Call'),
+#         c('Assay.Endpoint', 'AC50', 'Chemical.Name', 'Activity.Call'))
 ```
 Keep only the rows of ToxCast data where the chemical was judged "Active" in an assay. Note: this will remove some chemicals entirely (if they were "Inactive" in all assays).
 ```{r delete_inactives, eval=FALSE}
 #Keep only the rows with "Active" calls.
-tc.dt.sub <- tc.dt[Activity.Call=="Active", 
-                   .(Chemical.Name, CASRN, Assay.Endpoint, Activity.Call, AC50)]
+#tc.dt.sub <- tc.dt[Activity.Call=="Active", 
+#                   .(Chemical.Name, CASRN, Assay.Endpoint, Activity.Call, AC50)]
 ```
 We summarize the distribution of AC50 values across all assays for each chemical by taking several percentiles.
 ```{r compute_ac50_pctiles, eval=FALSE}

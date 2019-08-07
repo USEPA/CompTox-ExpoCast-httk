@@ -1,5 +1,6 @@
-Tables: chem.invivo.PK.aggregate.data chem.invivo.PK.data chem.invivo.PK.summary.data chem.physical_and_invitro.data physiology.data tissue.data
 armitage_input
 httkpop: age_dist_smooth bmiage mcnally_dt nhanes_mec_svy spline_heightweight spline_hematocrit spline_serumcreat wfl
-vignettes: Obach2008 Wetmore2012 howgate johnson onlyp pc.data tc.dt
+Tables: chem.invivo.PK.aggregate.data chem.invivo.PK.data chem.invivo.PK.summary.data chem.physical_and_invitro.data physiology.data Tables.Rdata.stamp tissue.data
+vignettes: howgate johnson Obach2008 onlyp pc.data ToxCast2015subset Wetmore2012
+wambaugh2019: pharma wambaugh2019 wambaugh2019.nhanes wambaugh2019.raw wambaugh2019.seem3
 well_param
