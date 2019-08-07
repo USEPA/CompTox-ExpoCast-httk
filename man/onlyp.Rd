@@ -4,7 +4,11 @@
 \name{onlyp}
 \alias{onlyp}
 \title{NHANES Exposure Data}
+\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 1060 rows and 5 columns.}
+\usage{
+onlyp
+}
 \description{
 This data set is only used in Vignette 6.
 }
-\keyword{datasets}
+\keyword{data}

@@ -122,7 +122,7 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[['million.cells.per.gliver']] <- 110
   params[["liver.density"]] <- 1.05 # g/mL
    
-   # Check the species argument for capitilization problems and whether or not it is in the table:  
+   # Check the species argument for capitalization problems and whether or not it is in the table:  
     if (!(species %in% colnames(physiology.data)))
     {
       if (toupper(species) %in% toupper(colnames(physiology.data)))

@@ -22,9 +22,8 @@ populaton median intake rate (mg/kg body weight/day), with uncertainty.
 Ring, Caroline L., et al. "Consensus modeling of median chemical 
 intake for the US population based on predictions of exposure pathways." 
 Environmental science & technology 53.2 (2018): 719-732.
-\url{https://doi.org/10.1021/acs.est.8b04056}
 }
 \author{
 John Wambaugh
 }
-\keyword{datasets}
+\keyword{data}

@@ -1,10 +1,10 @@
 ---
-title: "Pearce et al. 2017 Figures in Partition Coefficient Evaluation"
+title: "Pearce et al. (2017) Figures in Partition Coefficient Evaluation"
 author: "Robert Pearce"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Pearce et al. 2017 Creating Partition Coefficient Evaluation Plots}
+  %\VignetteIndexEntry{Pearce et al. (2017) Creating Partition Coefficient Evaluation Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
