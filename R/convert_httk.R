@@ -26,11 +26,12 @@
 #' clearance assay result has a p-values greater than the threshold are set to zero.
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \item {Fgut}. 
-#'@return A data.table whose columns are the parameters of the HTTK model
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
@@ -46,16 +47,17 @@ convert_httk <- function(indiv.model.bio,
                          restrictive.clearance=T,
                          clint.pvalue.threshold=0.05,
                          concentration = "plasma",
-                         Caco2.options = list(Caco2.Pab.default = 1.6,
+                         Caco2.options = list(Caco2.Pab.default = "1.6",
                                               Caco2.Fgut = TRUE,
                                               Caco2.Fabs = TRUE,
-                                              overwrite.invivo = FALSE)){
+                                              overwrite.invivo = FALSE,
+                                              keepit100 = FALSE)){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- Caco2.Pab <- Fgutabs <- fabs.oral <- fgut.oral <- NULL
+  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- Caco2.Pab <- Fabsgut <- Fabs <- Fgut <- fabs.oral <- fgut.oral <- NULL
   Fhep.assay.correction <- million.cells.per.gliver <- NULL
   BW <- Vliverc <- Qtotal.liverc <- Clmetabolismc <- RBC.vol <- NULL
   plasma.vol <- hematocrit <- Vdist <- Qgfrc <- liver.density <- NULL
@@ -408,29 +410,37 @@ convert_httk <- function(indiv.model.bio,
   # Determine small intestine blood flow, L/h
   indiv.model[, Qsmallintestine := Qcardiacc*Qsmallintestinef*BW^0.75]
   
-  # Update Fabsgut based on Caco-2 data, note that the if statements are redundant, but should save a little time
-  if(Caco2.options$Caco2.Fabs == TRUE & overwrite.invivo == TRUE){
-    indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab,
-                                                            "Fgutabs" = Fgutabs))]
+  if(keepit100 == TRUE){
+    indiv.model[, fabs.oral := 1]
+    indiv.model[, fgut.oral := 1]
+    indiv.model[, Fabsgut := 1]
+    
   }else{
-    indiv.model[, fabs.oral := Fabs]
-  }
-  if(Caco2.options$Caco2.Fgut == TRUE & overwrite.invivo == TRUE){
-    indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
-                                                            "cl_us" = Clmetabolismc,
-                                                            "BW" = BW,
-                                                            "Qsmallintestine" = Qsmallintestine,
-                                                            "Funbound.plasma" = Funbound.plasma,
-                                                            "Rblood2plasma" = Rblood2plasma
-    ))]
-  }else{
-    indiv.model[, fgut.oral := Fgut]
+    # Update Fabsgut based on Caco-2 data, note that the if statements are redundant, but should save a little time
+    if(Caco2.options$Caco2.Fabs == TRUE & overwrite.invivo == TRUE){
+      indiv.model[, fabs.oral := calc_fabs.oral(Params = list("Caco2.Pab" = Caco2.Pab,
+                                                              "Fabs" = Fabs))]
+    }else{
+      indiv.model[, fabs.oral := Fabs]
+    }
+    if(Caco2.options$Caco2.Fgut == TRUE & overwrite.invivo == TRUE){
+      indiv.model[, fgut.oral := calc_fgut.oral(Params = list("Caco2.Pab" = Caco2.Pab,
+                                                              "cl_us" = Clmetabolismc,
+                                                              "BW" = BW,
+                                                              "Qsmallintestine" = Qsmallintestine,
+                                                              "Funbound.plasma" = Funbound.plasma,
+                                                              "Rblood2plasma" = Rblood2plasma,
+                                                              "Fgut" = Fgut))]
+    }else{
+      indiv.model[, fgut.oral := Fgut]
+    }
+    
+    # Replace Fgutabs with a recalculated value
+    if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
+      indiv.model[, Fabsgut := fabs.oral*fgut.oral]
+    }
   }
   
-  # Replace Fgutabs with a recalculated value
-  if(Caco2.options$Caco2.Fabs == T | Caco2.options$Caco2.Fgut == T){
-    indiv.model[, Fabsgut := fabs.oral*fgut.oral]
-  }
   # Force pKa to NA_real_ so data.table doesn't replace everything with text
   if(any(c("pKa_Donor","pKa_Accept") %in% names(indiv.model))){
     suppressWarnings(indiv.model[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 

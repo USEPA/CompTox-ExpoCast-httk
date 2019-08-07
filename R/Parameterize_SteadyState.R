@@ -30,14 +30,15 @@
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1.
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #'
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
+#' fraction of the dose that enters the gutlumen.}  \item{Funbound.plasma}{Fraction of plasma
 #' that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
 #' liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
 #' BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
@@ -71,7 +72,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
                                      Caco2.options = list(Caco2.Pab.default = "1.6",
                                                           Caco2.Fgut = TRUE,
                                                           Caco2.Fabs = TRUE,
-                                                          overwrite.invivo = FALSE
+                                                          overwrite.invivo = FALSE,
+                                                          keepit100 = FALSE
                                                           ))
 {
   Parameter <- Species <- variable <- Tissue <- NULL
@@ -83,7 +85,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
   chem.name <- out$chem.name
   
   # Ammend list options
-  Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
+  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo")%in% names(Caco2.options))){
+    Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
+  }
 
   #Capitilie the first letter of spcies only:
   species <- tolower(species)
@@ -136,25 +140,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
   
   
-  # Caco-2 Pab:
-  if(!all(c("Caco2.Fabs", "Caco2.Fgut", "overwrite.invivo", "Caco2.Pab.default") %in% names(Caco2.options))){
-    Caco2.options <- ammend.caco2.options(Caco2.options)
-  }
-  Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
-  if (class(Caco2.Pab.db) == "try-error"){  
-    Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
-    warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
-  }
-  # Check if Caco2 a point value or a distribution, if a distribution, use the median:
-  if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
-  {
-    Caco2.Pab.dist <- Caco2.Pab.db
-    Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
-    if (!suppress.messages) warning("Clint is provided as a distribution.")
-  } else {
-    Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
-    Caco2.Pab.dist <- NA
-  }
+  
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
@@ -218,8 +204,6 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
   Params[["Funbound.plasma"]] <- fup.adjusted
   Params[["Funbound.plasma.dist"]] <- fup.dist
-  Params[["Caco2.Pab"]] <- Caco2.Pab.point
-  Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
@@ -248,28 +232,60 @@ parameterize_steadystate <- function(chem.cas=NULL,
           suppress.messages=T)#L/h/kg body weight
   Params[["cl_us"]] <- cl_us
   
-  # Select Fabs, optionally overwrite based on Caco2.Pab
-  Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
-  if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-    if(Caco2.options$Caco2.Fabs == FALSE){
-      Fabs <- 1
-    }else{
-      Fabs <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+  if(keepit100 == TRUE){
+    Params[["Fabs"]] <- 1
+    Params[["Fgut"]] <- 1
+    Params[["Fabsgut"]] <- 1
+    Params[["Caco2.Pab"]] <- 10
+    Params[["Caco2.Pab.dist"]] <- NA
+  }else{
+    # Caco-2 Pab:
+    if(!all(c("Caco2.Fabs", "Caco2.Fgut", "overwrite.invivo", "Caco2.Pab.default") %in% names(Caco2.options))){
+      Caco2.options <- ammend.caco2.options(Caco2.options)
     }
-  }
-  
-  Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
-  if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-    if(Caco2.options$Caco2.Fabs == FALSE){
-      Fgut <- 1
-    }else{
-      Fgut <- calc_fgut.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+    if (class(Caco2.Pab.db) == "try-error"){  
+      Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
+      warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
     }
+    # Check if Caco2 a point value or a distribution, if a distribution, use the median:
+    if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
+    {
+      Caco2.Pab.dist <- Caco2.Pab.db
+      Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
+      if (!suppress.messages) warning("Clint is provided as a distribution.")
+    } else {
+      Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
+      Caco2.Pab.dist <- NA
+    }
+    
+    Params[["Caco2.Pab"]] <- Caco2.Pab.point
+    Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
+    
+    # Select Fabs, optionally overwrite based on Caco2.Pab
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
+    if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+      if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
+        gut.params[["Fabs"]] <- 1
+        Fabs <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+      }else{
+        Fabs <- 1
+      }
+    }
+    
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
+    if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+      if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
+        gut.params[["Fgut"]] <- 1
+        Fgut <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+      }else{
+        Fgut <- 1
+      }
+    }
+    Params[['Fabsgut']] <- Fabs*Fgut
+    Params[['Fabs']] <- Fabs
+    Params[['Fgut']] <- Fgut
   }
-  Params[['Fabsgut']] <- Fabs*Fgut
-  Params[['Fabs']] <- Fabs
-  Params[['Fgut']] <- Fgut
- 
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
   if (restrictive.clearance) 
