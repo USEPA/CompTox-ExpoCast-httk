@@ -5,7 +5,7 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 param.names.1comp <- c("BW",
                      "Clint",
                      "Clint.dist",
-                     "Fgutabs",
+                     "Fabsgut",
                      "Fhep.assay.correction",
                      "Funbound.plasma",
                      "Funbound.plasma.dist",

@@ -46,10 +46,12 @@
 #' set to zero.
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1.
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#'
 #' @param concentration Blood, plasma, or tissue concentration.
 #' @return A data.table whose columns correspond to the parameters of the HTTK
 #' model specified in \code{model}, and whose rows correspond to the
@@ -90,9 +92,11 @@ get_httk_params <- function(indiv_dt,
                             regression=T,
                             well.stirred.correction=T,
                             restrictive.clearance=T,
-                            Caco2.options = list(Caco2.Pab.default = 2,
+                            Caco2.options = list(Caco2.Pab.default = "1.6",
                                                  Caco2.Fgut = TRUE,
-                                                 Caco2.Fabs = TRUE),
+                                                 Caco2.Fabs = TRUE,
+                                                 overwrite.invivo = FALSE,
+                                                 keepit100 = FALSE),
                             concentration = "plasma",
                             clint.pvalue.threshold=0.05)
 {

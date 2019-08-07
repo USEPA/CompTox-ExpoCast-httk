@@ -6,7 +6,7 @@
 #' parameterization and other functions. Options are set in the list Caco2.options.
 #' 
 #' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
-#' cl_us, BW, Qsmallintestine, Fgutabs) used in the calculation, either supplied by user
+#' cl_us, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 #' or calculated in parameterize_steady_state.
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified.
@@ -29,10 +29,12 @@
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1.
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#'
 #' 
 #'
 #' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -69,10 +71,11 @@ calc_fbio.oral <- function(Params = NULL,
                            fup.lod.default = 0.005,
                            suppress.messages = F,
                            minimum.Funbound.plasma = 0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 1.6,
+                           Caco2.options = list(Caco2.Pab.default = "1.6",
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE)
+                                                overwrite.invivo = FALSE,
+                                                keepit100 = FALSE)
 ){
   # Initialize parameters if null
   if(is.null(Params)){
@@ -93,7 +96,8 @@ calc_fbio.oral <- function(Params = NULL,
                                        Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                             Caco2.Fgut = FALSE,
                                                             Caco2.Fabs = FALSE,
-                                                            ovewrite.invivo = FALSE))
+                                                            ovewrite.invivo = FALSE,
+                                                            keepit100 = FALSE))
   }
 
   fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
@@ -125,10 +129,11 @@ calc_fabs.oral <- function(Params = NULL,
                            Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE)
+                                                overwrite.invivo = FALSE,
+                                                keepit100 = FALSE)
 ){
   # Required parameters
-  req.param <- c("Caco2.Pab", "Fgutabs")
+  req.param <- c("Caco2.Pab", "Fabs")
   
   # Header initialization  
   if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -149,16 +154,17 @@ calc_fabs.oral <- function(Params = NULL,
                                 Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                      Caco2.Fgut = FALSE,
                                                      Caco2.Fabs = FALSE,
-                                                     overwrite.invivo = FALSE))
+                                                     overwrite.invivo = FALSE,
+                                                     keepit100 = FALSE))
   }
   
-  # Detetermine Fabs.oral based on Caco2 data, or keep as Fgutabs
+  # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
   if(Caco2.options$Caco2.Fabs == TRUE){
     peffh <- 10^(0.4926 * Params$Caco2.Pab - 0.1454) # Yang 2007 for Caco2 pH7.4
     permh <- 0.66 * peffh * 3.6
     fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
   }else{
-    fabs.oral <- Params$Fabsgut
+    fabs.oral <- Params$Fabs
   }
   return(as.numeric(fabs.oral))
   
@@ -180,12 +186,13 @@ calc_fgut.oral <- function(Params = NULL,
                            Caco2.options = list(Caco2.Pab.default = 1.6,
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE)
+                                                overwrite.invivo = FALSE,
+                                                keepit100 = FALSE)
 ){
   
   if(Caco2.options$Caco2.Fgut == TRUE){
     # Required parameters
-    req.param <- c("BW", "cl_us", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma")
+    req.param <- c("BW", "cl_us", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma", "Fgut")
     
     # Header initialization  
     if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -206,7 +213,8 @@ calc_fgut.oral <- function(Params = NULL,
                                          Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                               Caco2.Fgut = FALSE,
                                                               Caco2.Fabs = FALSE,
-                                                              overwrite.invivo = FALSE))
+                                                              overwrite.invivo = FALSE,
+                                                              keepit100 = FALSE))
     }
     
     
@@ -237,7 +245,7 @@ calc_fgut.oral <- function(Params = NULL,
     }
   }else{
     # if Caco2.options$Fgut.oral == FALSE, return 1
-    fgut.oral <- 1
+    fgut.oral <- Params$Fgut
   }
   return(as.numeric(fgut.oral))
   

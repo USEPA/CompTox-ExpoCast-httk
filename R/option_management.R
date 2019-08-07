@@ -10,10 +10,11 @@
 ammend.httk.option.list <- function(httk.option.list = NULL){
   
   # List of httk options that are formatted as a list
-  httk.option.listoflists <- list('Caco2.options' = list(Caco2.Pab.default = 1.6,
+  httk.option.listoflists <- list('Caco2.options' = list(Caco2.Pab.default = "1.6",
                                                    Caco2.Fgut = TRUE,
                                                    Caco2.Fabs = TRUE,
-                                                   overwrite.invivo = FALSE)
+                                                   overwrite.invivo = FALSE,
+                                                   keepit100 = FALSE)
   )
   
   # Get the name of the input option.list

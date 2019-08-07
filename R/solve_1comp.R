@@ -68,6 +68,13 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
@@ -108,9 +115,11 @@ solve_1comp <- function(chem.name=NULL,
                         restrictive.clearance=T,
                         well.stirred.correction=T,
                         minimum.Funbound.plasma=0.0001,
-                        Caco2.options = list(Caco2.Pab.default = 2,
+                        Caco2.options = list(Caco2.Pab.default = 1.6,
                                              Caco2.Fgut = TRUE,
-                                             Caco2.Fabs = TRUE),
+                                             Caco2.Fabs = TRUE,
+                                             overwrite.invivo = FALSE,
+                                             keepit100 = FALSE),
                         ...)
 {     
    Agutlumen <- Acompartment <- Ccompartment <- NULL 
@@ -138,34 +147,34 @@ solve_1comp <- function(chem.name=NULL,
   Rb2p <- parameters[['Rblood2plasma']]
   BW <- parameters[['BW']]
    
-  parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+  parameters$Fbio.oral <- parameters$Fabsgut * parameters$hepatic.bioavailability
 
   if(is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   start <- times[1]
   end <- times[length(times)] 
-    if(iv.dose) parameters$Fgutabs <- 1
+    if(iv.dose) parameters$Fbio.oral <- 1
     if(is.null(dosing.matrix)){ 
       if(is.null(dose)){
         if(!is.null(doses.per.day)){
-          dose <- daily.dose / doses.per.day * parameters$Fgutabs
-        }else dose <- daily.dose * parameters$Fgutabs
-      }else dose <- dose * parameters$Fgutabs
+          dose <- daily.dose / doses.per.day * parameters$Fbio.oral
+        }else dose <- daily.dose * parameters$Fbio.oral
+      }else dose <- dose * parameters$Fbio.oral
     }else{
       if(!is.null(dim(dosing.matrix))){
         rc <- which(dim(dosing.matrix) == 2)
         if(rc == 1){
           if(is.null(rownames(dosing.matrix)) | any(!(rownames(dosing.matrix) %in% c('time','dose')))) stop('dosing.matrix must have column or row names of \"time\" and \"dose\" or be a vector of times.')
           dosing.times <- dosing.matrix['time',]
-          dose.vector <- dosing.matrix['dose',] * parameters$Fgutabs
+          dose.vector <- dosing.matrix['dose',] * parameters$Fbio.oral
         }else{
           if(is.null(colnames(dosing.matrix)) | any(!(colnames(dosing.matrix) %in% c('time','dose')))) stop('dosing.matrix must have column or row names of \"time\" and \"dose\" or be a vector of times.')
           dosing.times <- dosing.matrix[,'time']
-          dose.vector <- dosing.matrix[,'dose'] * parameters$Fgutabs   
+          dose.vector <- dosing.matrix[,'dose'] * parameters$Fbio.oral 
         }
       }else{
         if(is.null(dose)) stop("Argument dose must be entered to overwrite daily.dose when a time vector is entered into dosing.matrix.")
         dosing.times <- dosing.matrix
-        dose.vector <- rep(dose * parameters$Fgutabs,length(dosing.matrix))
+        dose.vector <- rep(dose * parameters$Fbio.oral,length(dosing.matrix))
       } 
       if(start == dosing.times[1]){
         dose <- dose.vector[[1]]

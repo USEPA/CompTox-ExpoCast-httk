@@ -33,11 +33,12 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code {Fabsgut}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = 1.
+#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -61,10 +62,11 @@ draw_fup_clint <- function(this.chem=NULL,
                            adjusted.Funbound.plasma=T,
                            clint.pvalue.threshold=0.05,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 1.6,
+                           Caco2.options = list(Caco2.Pab.default = "1.6",
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE))
+                                                overwrite.invivo = FALSE,
+                                                keepit100 = FALSE))
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -296,57 +298,6 @@ draw_fup_clint <- function(this.chem=NULL,
   # Store NA so data.table doesn't convert everything to text:
   indiv_tmp[,Funbound.plasma.dist:=NA]
 
-  #
-  #
-  #
-  # Caco-2 uncertainty Monte Carlo:
-  #
-  #
-  #
-  # If the default CV is set to NULL, we just use the point estimate with no
-  # uncertainty:
-  if (is.null(caco2.meas.sd))
-  {
-    Caco2.Pab <- parameters$Caco2.Pab
-    Caco2.Pab.l95 <- NULL
-    Caco2.Pab.u95 <- NULL
-    indiv_tmp[, Caco2.Pab := Caco2.Pab]
-    # We need to determine what sort of information we have been provided about
-    # measurment uncertainty. We first check for a comma separated list with a
-    # median, lower, and upper 95th credible interval limits:
-  } else if(!is.na(parameters$Caco2.Pab.dist))
-  {
-    if (nchar(parameters$Caco2.Pab.dist) - 
-        nchar(gsub(",","",parameters$Caco2.Pab.dist))!=2)
-    {
-      stop("Caco2.Pab distribution should be three values (median,low95th,high95th) separated by commas.")
-    }
-    temp <- strsplit(parameters$Caco2.Pab.dist,",")
-    Caco2.Pab <- as.numeric(temp[[1]][1])
-    Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
-    Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
-    
-    caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), function(x) (0.95 -
-                                                                                    pnorm(Caco2.Pab.u95, x[1], x[2]) +
-                                                                                    pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
-                                          (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
-    indiv_tmp[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
-    
-    # If we don't have that, we use the default coefficient of variation to
-    # generate confidence limits:
-    
-  } else if(!is.null(caco2.meas.sd)){
-    Caco2.Pab <- parameters$Caco2.Pab
-    caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
-                                        function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
-    caco2.fit$par[2] <- abs(caco2.meas.sd)
-    indiv_tmp[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
-    
-  } 
-  
-  # Store NA so data.table doesn't convert everything to text:
-  indiv_tmp[, Caco2.Pab.dist := NA]
-  
   
   #
   #
@@ -418,30 +369,85 @@ draw_fup_clint <- function(this.chem=NULL,
   indiv_tmp[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
   
-  #
-  #
-  #
-  # Caco2.Pab variability Monte Carlo:
-  #
-  #
-  #
-  #do not sample if user said not to vary Caco2.Pab.
-  if (!is.null(caco2.pop.sd))
-  {
-    #Draw Clint from a normal distribution if poor metabolizers excluded, or
-    #Gaussian mixture distribution if poor metabolizers included.
-    #Set the mean of the regular metabolizer distribution:
-    indiv_tmp[, Caco2.Pab.mu := Caco2.Pab]
+  if(Caco2.options$keepit100 == FALSE & 
+     (Caco2.options$Caco2.Fgut == TRUE | Caco2.options$Caco2.Fabs == TRUE)){
+    #
+    #
+    #
+    # Caco-2 uncertainty Monte Carlo:
+    #
+    #
+    #
+    # If the default CV is set to NULL, we just use the point estimate with no
+    # uncertainty:
+    if (is.null(caco2.meas.sd))
+    {
+      Caco2.Pab <- parameters$Caco2.Pab
+      Caco2.Pab.l95 <- NULL
+      Caco2.Pab.u95 <- NULL
+      indiv_tmp[, Caco2.Pab := Caco2.Pab]
+      # We need to determine what sort of information we have been provided about
+      # measurment uncertainty. We first check for a comma separated list with a
+      # median, lower, and upper 95th credible interval limits:
+    } else if(!is.na(parameters$Caco2.Pab.dist))
+    {
+      if (nchar(parameters$Caco2.Pab.dist) - 
+          nchar(gsub(",","",parameters$Caco2.Pab.dist))!=2)
+      {
+        stop("Caco2.Pab distribution should be three values (median,low95th,high95th) separated by commas.")
+      }
+      temp <- strsplit(parameters$Caco2.Pab.dist,",")
+      Caco2.Pab <- as.numeric(temp[[1]][1])
+      Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
+      Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
+      
+      caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), function(x) (0.95 -
+                                                                                      pnorm(Caco2.Pab.u95, x[1], x[2]) +
+                                                                                      pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                                            (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
+      indiv_tmp[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
+      
+      # If we don't have that, we use the default coefficient of variation to
+      # generate confidence limits:
+      
+    } else if(!is.null(caco2.meas.sd)){
+      Caco2.Pab <- parameters$Caco2.Pab
+      caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
+                                          function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
+      caco2.fit$par[2] <- abs(caco2.meas.sd)
+      indiv_tmp[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
+      
+    } 
     
-    #Draw Clint from a normal distribution with mean = measured Clint, and
-    #coefficient of variation given by clint.pop.cv.
-    indiv_tmp[, Caco2.Pab := truncnorm::rtruncnorm(n = 1, 
-                                                   a = -3,
-                                                   b = 3,
-                                                   mean = Caco2.Pab.mu,
-                                                   sd = abs(caco2.pop.sd))]
-
+    # Store NA so data.table doesn't convert everything to text:
+    indiv_tmp[, Caco2.Pab.dist := NA]
+    
+    
+    
+    #
+    #
+    #
+    # Caco2.Pab variability Monte Carlo:
+    #
+    #
+    #
+    #do not sample if user said not to vary Caco2.Pab.
+    if (!is.null(caco2.pop.sd))
+    {
+      #Draw Clint from a normal distribution if poor metabolizers excluded, or
+      #Gaussian mixture distribution if poor metabolizers included.
+      #Set the mean of the regular metabolizer distribution:
+      indiv_tmp[, Caco2.Pab.mu := Caco2.Pab]
+      
+      #Draw Clint from a normal distribution with mean = measured Clint, and
+      #coefficient of variation given by clint.pop.cv.
+      indiv_tmp[, Caco2.Pab := truncnorm::rtruncnorm(n = 1, 
+                                                     a = -3,
+                                                     b = 3,
+                                                     mean = Caco2.Pab.mu,
+                                                     sd = abs(caco2.pop.sd))]
+      
+    }
   }
-  
   return(indiv_tmp)
 }
