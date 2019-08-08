@@ -23,9 +23,6 @@
 #' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param exclude.fup.zero Whether or not to exclude chemicals with a fraction
-#' of unbound plasma equal to zero or include them with a value of 0.005, only
-#' used when chem.name, chem.cas, and parameters are not specified.
 #' @param doses.per.day Number of doses per day.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
@@ -61,17 +58,17 @@
 #' triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 #' 
 #' @export calc_stats
-calc_stats <-function(days,
+calc_stats <-function(
                chem.name=NULL,
                chem.cas=NULL,
                parameters=NULL,
                route="oral",
-               stats=c("AUC","peak","mean.conc"),
+               stats=c("AUC","peak","mean"),
                species='Human',
-               exclude.fup.zero=F,
+               days=28,
                daily.dose=1,
                dose=NULL,
-               doses.per.day=NULL,
+               doses.per.day=1,
                output.units='uM',
                concentration='plasma',
                tissue='plasma',
@@ -94,9 +91,9 @@ calc_stats <-function(days,
 
 # Currently we only calculate three stats:  
   valid.stats <- c("AUC","mean","peak")
-  if (any(!(tolower(this.stat) %in% tolower(valid.stats))))
+  if (any(!(tolower(stats) %in% tolower(valid.stats))))
      stop(paste("calc_stats cannot calculate",
-     this.stat,
+     stats[!(stats %in% valid.stats)],
      ". Valid stats are:",
      paste(valid.stats,collapse=" "),"."))
 
@@ -107,10 +104,10 @@ calc_stats <-function(days,
     peak.conc <- NULL
     mean.conc <- NULL
     out <- NULL
-    for(this.CAS in get_cheminfo(species=species,
-                      exclude.fup.zero = exclude.fup.zero,
-                      model=model))
+    for (this.CAS in sort(get_cheminfo(species=species,
+                      model=model)))
     {
+      cat(paste(this.CAS,"\n"))
       stat <- calc_stats(chem.cas=this.CAS,
                 days=days,
                 stats=stats,
@@ -216,10 +213,10 @@ calc_stats <-function(days,
 
   if(!suppress.messages){
     if(is.null(chem.cas) & is.null(chem.name)){
-      cat(paste(toupper(substr(concentration,1,1)),substr(concentration,2,nchar(concentration)),sep=''),"values returned in",out.units,"units.\n")
-    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",out.units,"units.\n")
+      cat(paste(toupper(substr(concentration,1,1)),substr(concentration,2,nchar(concentration)),sep=''),"values returned in",output.units,"units.\n")
+    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",output.units,"units.\n")
     
-    if('AUC' %in% stats) cat("AUC is area under plasma concentration curve in",out.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
+    if('AUC' %in% stats) cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
   }    
   }
   
