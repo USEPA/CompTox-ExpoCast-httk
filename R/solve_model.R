@@ -49,8 +49,8 @@
 #' "3compartmentss", "1compartment", "schmitt", ...
 #' @param route Specified route of exposure for simulation: "oral", "iv", ...
 #' @param dosing $$$$ description missing $$$$
-#' @param days Length of the simulation.
-#' @param tsteps The number of time steps per hour.
+#' @param days Length of the simulation. Default 10 days. 
+#' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
 #' @param doses.per.day Number of doses per day.
@@ -281,14 +281,14 @@ solve_model <- function(chem.name = NULL,
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
       ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
     }
-    ss.params[[names(ssparams) %in% names(parameters)]] <- 
-      parameters[[names(ssparams) %in% names(parameters)]]
+    ss.params[[names(ss.params) %in% names(parameters)]] <- 
+      parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
   }
   
-  # If the hepatic metabolism is now slowed by plasma protein binding (non-
+  # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
@@ -303,27 +303,27 @@ solve_model <- function(chem.name = NULL,
 
 ### STATE VECTOR
 
-# create the state vector:
+# create the default initial state vector:
   state <- rep(0,length(state.vars))
   names(state) <- state.vars
   
-# Set the initial conditions based on argument initial.values
+# Address case where initial conditions provided using argument initial.values:
   for (this.compartment in names(initial.values))
   {
-# Are we doing concentrations?
+    # Are we doing concentrations?
     if (firstchar(this.compartment)=="C")
     {
       tissue <- substring(this.compartment, 2)
       state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                             parameters[[paste("V",tissue,sep="")]]
-# Or amounts?
+    # Or amounts?
     } else if (firstchar(this.compartment)=="A")
     {
       state[this.compartment] <- initial.values[[this.compartment]]
     } else stop("Initital values must begin with \"C\" or \"A\".")
   }
-
+    
 ### SIMULATION TIME
 
 # We need to let the solver know which time points we want:
@@ -333,8 +333,9 @@ solve_model <- function(chem.name = NULL,
   end.time <- times[length(times)]
 
   # We add a time point 1e-5 later than the beginning to make the plots look
-  # better:
-  times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
+  # better. Use 'unique' function to remove redundant times that may have
+  # been generated using 'round'
+  times <- sort(unique(c(times,start.time+SMALL.TIME)))
 
 ### DOSING
 
