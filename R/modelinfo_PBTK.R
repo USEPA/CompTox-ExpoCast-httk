@@ -120,7 +120,6 @@ model.list[["pbtk"]]$compiled.param.names <- c(
   "Vrest",
   "Vven"
   )
->>>>>>> b87f57ded4c1aa0ac819e890e5c375e2051fc7d2
 
 # This function initializes the state vector for the compiled model:
 model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
