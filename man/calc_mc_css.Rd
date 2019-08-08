@@ -26,7 +26,8 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, parameters = NULL,
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
   "Non-Hispanic Black", "Other"), physiology.matrix = NULL,
   parameter.matrix = NULL, Caco2.options = list(Caco2.Pab.default = 2,
-  Caco2.Fgut = TRUE, Caco2.Fabs = TRUE), ...)
+  Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100
+  = FALSE), ...)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number, parameters, or the chemical name must
@@ -191,10 +192,11 @@ User-supplied vector must contain one or more of these strings.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = 1.}
+fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{...}{Additional parameters passed to calc_analytic_css}
 }
