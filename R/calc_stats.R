@@ -113,7 +113,7 @@ calc_stats <-function(days,
     {
       stat <- calc_stats(chem.cas=this.CAS,
                 days=days,
-                stats=stats
+                stats=stats,
                 species=species,
                 dose=dose,
                 daily.dose=daily.dose,
@@ -155,7 +155,7 @@ calc_stats <-function(days,
   
   dosing <- list(
       initial.dose=dose,
-      dosing.matrix=NULL
+      dosing.matrix=NULL,
       daily.dose=daily.dose,
       doses.per.day=doses.per.day)
       
