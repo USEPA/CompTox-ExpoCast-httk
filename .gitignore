@@ -1,0 +1,16 @@
+# Don't track content of these folders
+src-i386/
+src-x64/
+build/
+inst/
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+*.so
