@@ -29,13 +29,13 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#'
+#' 
 #' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 #' fraction of the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
@@ -117,9 +117,8 @@ parameterize_pbtk <- function(chem.cas=NULL,
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   
-  
   # Ammend list options
-  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(Caco2.options))){
+  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(unlist(Caco2.options)))){
     Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
   }
   
@@ -295,7 +294,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
         gut.params[["Fabs"]] <- 1
-        Fabs <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+        Fabs <- calc_fabs.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
       }else{
         Fabs <- 1
       }
@@ -305,7 +304,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
         gut.params[["Fgut"]] <- 1
-        Fgut <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+        Fgut <- calc_fgut.oral(Params = gut.params, species = species) # only calculable for human, assume the same across species
       }else{
         Fgut <- 1
       }

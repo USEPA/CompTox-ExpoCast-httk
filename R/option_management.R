@@ -3,7 +3,7 @@
 #' This function adds default values to httk options that are formatted as a list
 #' in the case where the user neglected to include all of the options in the list.
 #' 
-#' @param httk.option.list An httk option that is formatted as a list may be: \item{Caco2.options}
+#' @param httk.option.list An httk option that is formatted as a list may be: \code{Caco2.options}
 #'
 #' @return \item{httk.option.list}{The ammended list of options}
 #' @author Gregory Honda
@@ -11,10 +11,10 @@ ammend.httk.option.list <- function(httk.option.list = NULL){
   
   # List of httk options that are formatted as a list
   httk.option.listoflists <- list('Caco2.options' = list(Caco2.Pab.default = "1.6",
-                                                   Caco2.Fgut = TRUE,
-                                                   Caco2.Fabs = TRUE,
-                                                   overwrite.invivo = FALSE,
-                                                   keepit100 = FALSE)
+                                                         Caco2.Fgut = TRUE,
+                                                         Caco2.Fabs = TRUE,
+                                                         overwrite.invivo = FALSE,
+                                                         keepit100 = FALSE)
   )
   
   # Get the name of the input option.list
@@ -32,10 +32,10 @@ ammend.httk.option.list <- function(httk.option.list = NULL){
                    '\n with values: ', paste(httk.option.list, collapse = ', '),
                    '\n for named list items: ', paste(names(httk.option.list), collapse = ', ')))
     
-  }else if(!all(names(httk.option.listoflists[[option.name.in]]) %in% names(httk.option.list))){
+  }else if(!all(names(httk.option.listoflists[[option.name.in]]) %in% names(unlist(httk.option.list)))){
     
-    httk.option.list[names(httk.option.listoflists[[option.name.in]])[!names(httk.option.listoflists[[option.name.in]]) %in% names(httk.option.list)]] <- 
-      httk.option.listoflists[[option.name.in]][names(httk.option.listoflists[[option.name.in]])[!names(httk.option.listoflists[[option.name.in]]) %in% names(httk.option.list)]]
+    httk.option.list[names(httk.option.listoflists[[option.name.in]])[!names(httk.option.listoflists[[option.name.in]]) %in% names(unlist(httk.option.list))]] <- 
+      httk.option.listoflists[[option.name.in]][names(httk.option.listoflists[[option.name.in]])[!names(httk.option.listoflists[[option.name.in]]) %in% names(unlist(httk.option.list))]]
     warning(paste0('Updating default option list: ',option.name.in,
                    '\n with values: ', paste(httk.option.list, collapse = ', '),
                    '\n for named list items: ', paste(names(httk.option.list), collapse = ', ')))

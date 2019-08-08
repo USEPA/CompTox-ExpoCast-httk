@@ -28,13 +28,12 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#'
 #' 
 #'
 #' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -96,8 +95,8 @@ calc_fbio.oral <- function(Params = NULL,
                                        Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
                                                             Caco2.Fgut = FALSE,
                                                             Caco2.Fabs = FALSE,
-                                                            ovewrite.invivo = FALSE,
-                                                            keepit100 = FALSE))
+                                                            overwrite.invivo = FALSE,
+                                                            keepit100 = Caco2.options$keepit100))
   }
 
   fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
@@ -126,7 +125,7 @@ calc_fabs.oral <- function(Params = NULL,
                            fup.lod.default=0.005,
                            suppress.messages=F,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 1.6,
+                           Caco2.options = list(Caco2.Pab.default = "1.6",
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
                                                 overwrite.invivo = FALSE,
@@ -155,7 +154,7 @@ calc_fabs.oral <- function(Params = NULL,
                                                      Caco2.Fgut = FALSE,
                                                      Caco2.Fabs = FALSE,
                                                      overwrite.invivo = FALSE,
-                                                     keepit100 = FALSE))
+                                                     keepit100 = Caco2.options$keepit100))
   }
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
@@ -183,7 +182,7 @@ calc_fgut.oral <- function(Params = NULL,
                            fup.lod.default=0.005,
                            suppress.messages=F,
                            minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = 1.6,
+                           Caco2.options = list(Caco2.Pab.default = "1.6",
                                                 Caco2.Fgut = TRUE,
                                                 Caco2.Fabs = TRUE,
                                                 overwrite.invivo = FALSE,
@@ -214,7 +213,7 @@ calc_fgut.oral <- function(Params = NULL,
                                                               Caco2.Fgut = FALSE,
                                                               Caco2.Fabs = FALSE,
                                                               overwrite.invivo = FALSE,
-                                                              keepit100 = FALSE))
+                                                              keepit100 = Caco2.options$keepit100))
     }
     
     

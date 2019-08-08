@@ -29,13 +29,13 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#'
+#' 
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 #' fraction of the dose that enters the gutlumen.}  \item{Funbound.plasma}{Fraction of plasma
@@ -85,7 +85,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   chem.name <- out$chem.name
   
   # Ammend list options
-  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo")%in% names(Caco2.options))){
+  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(unlist(Caco2.options)))){
     Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
   }
 
@@ -232,7 +232,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
           suppress.messages=T)#L/h/kg body weight
   Params[["cl_us"]] <- cl_us
   
-  if(keepit100 == TRUE){
+  if(Caco2.options$keepit100 == TRUE){
     Params[["Fabs"]] <- 1
     Params[["Fgut"]] <- 1
     Params[["Fabsgut"]] <- 1
@@ -240,9 +240,6 @@ parameterize_steadystate <- function(chem.cas=NULL,
     Params[["Caco2.Pab.dist"]] <- NA
   }else{
     # Caco-2 Pab:
-    if(!all(c("Caco2.Fabs", "Caco2.Fgut", "overwrite.invivo", "Caco2.Pab.default") %in% names(Caco2.options))){
-      Caco2.options <- ammend.caco2.options(Caco2.options)
-    }
     Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
     if (class(Caco2.Pab.db) == "try-error"){  
       Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
@@ -266,8 +263,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
     if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
-        gut.params[["Fabs"]] <- 1
-        Fabs <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+        Params[["Fabs"]] <- 1
+        Fabs <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
       }else{
         Fabs <- 1
       }
@@ -276,8 +273,8 @@ parameterize_steadystate <- function(chem.cas=NULL,
     Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
     if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
-        gut.params[["Fgut"]] <- 1
-        Fgut <- calc_fgut.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
+        Params[["Fgut"]] <- 1
+        Fgut <- calc_fgut.oral(Params = Params, species = species) 
       }else{
         Fgut <- 1
       }
