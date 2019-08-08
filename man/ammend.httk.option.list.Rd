@@ -7,7 +7,7 @@
 ammend.httk.option.list(httk.option.list = NULL)
 }
 \arguments{
-\item{httk.option.list}{An httk option that is formatted as a list may be: \item{Caco2.options}}
+\item{httk.option.list}{An httk option that is formatted as a list may be: \code{Caco2.options}}
 }
 \value{
 \item{httk.option.list}{The ammended list of options}

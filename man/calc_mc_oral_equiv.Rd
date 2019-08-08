@@ -9,7 +9,9 @@ calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
   output.units = "mgpkgpday", suppress.messages = F,
   return.samples = F, concentration = "plasma",
   restrictive.clearance = T, bioactive.free.invivo = F,
-  tissue = NULL, IVIVE = NULL, ...)
+  tissue = NULL, IVIVE = NULL, Caco2.options = list(Caco2.Pab.default
+  = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE,
+  keepit100 = FALSE), ...)
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}
@@ -53,7 +55,14 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
-See Details below for more information.}
+See Details below for more information.
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{...}{Additional parameters passed to calc_mc_css for httkpop and
 variance of parameters.}
