@@ -10,8 +10,8 @@ draw_fup_clint(this.chem = NULL, parameters = NULL, nsamp,
   poormetab = TRUE, fup.lod = 0.01, fup.censored.dist = FALSE,
   adjusted.Funbound.plasma = T, clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 2, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE))
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
 }
 \arguments{
 \item{this.chem}{The CAS number of one of the HTTK chemicals (see
@@ -55,11 +55,12 @@ equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = 1.}
+fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 A data.table with three columns: \code{Funbound.plasma} and

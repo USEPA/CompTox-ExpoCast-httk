@@ -9,8 +9,8 @@ convert_httk(indiv.model.bio, model, this.chem = NULL,
   parameters = NULL, adjusted.Funbound.plasma = T, regression = T,
   well.stirred.correction = T, restrictive.clearance = T,
   clint.pvalue.threshold = 0.05, concentration = "plasma",
-  Caco2.options = list(Caco2.Pab.default = 2, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE))
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
 }
 \arguments{
 \item{indiv.model.bio}{A data.table containing the physiological
@@ -43,14 +43,16 @@ liver clearance if FALSE.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
 clearance assay result has a p-values greater than the threshold are set to zero.}
+
 \item{concentration}{Blood, plasma, or tissue concentration.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \item{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE). Caco2.default sets the default value for 
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \item {Fgutabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = 1.}
+fabs.oral, otherwise fabs.oral = \item {Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \item {Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
