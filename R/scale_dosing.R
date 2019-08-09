@@ -4,17 +4,22 @@
 #' handles single doses, matrices of doses, or daily repeated doses (at varying
 #' intervals. Absorption is also factored in through the parameter Fgutabs
 #' 
-#' @author John Wambaugh
-#' @param dosing
-#' @param parameters
-#' @param route
-#' @param output.units
-#' @return 
+#' @author John Wambaugh and Mark Sfeir
+#' @param dosing List of dosing metrics to be scaled, possibly including
+#' "initial.dose", "dosing.matrix", and/or "daily.dose".
+#' @param parameters List of chemical parameters, as output by 
+#' parameterize_pbtk function. Overrides chem.name and chem.cas.
+#' @param route String specification of route of exposure for simulation: 
+#' "oral", "iv", ...
+#' @param output.units String specification of desired output units, "uM",
+#' "umol", "mg", or "mg/L"
+#' @return Modified dosing list scaled with entries scaled according to desired
+#' output units, body weight, and route of exposure. 
 #' @keywords Dynamic
 scale_dosing <- function(dosing,parameters,route,output.units="uM")
 {
   if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
-    stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
+    stop("Argument \"parameters\" must specify BW, MW, and Fgutabs.")
 
     BW <- as.numeric(parameters[["BW"]])
     MW <- as.numeric(parameters[["MW"]])
@@ -30,7 +35,7 @@ scale_dosing <- function(dosing,parameters,route,output.units="uM")
   } else if (tolower(output.units) == 'mg/l' | tolower(output.units) == 'mg')
   {
     scale.factor <- BW
-  } else stop('Output.units can only be uM, umol, mg, or mg/L.')
+  } else stop('Only supported output.units values are uM, umol, mg, or mg/L.')
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
