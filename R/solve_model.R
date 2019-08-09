@@ -43,17 +43,19 @@
 #' be specified.
 #' @param times Optional time sequence for specified number of days. Dosing
 #' sequence begins at the beginning of times.
-#' @param parameters Chemical parameters from parameterize_pbtk function,
-#' overrides chem.name and chem.cas.
+#' @param parameters List of chemical parameters, as output by 
+#' parameterize_pbtk function. Overrides chem.name and chem.cas.
 #' @param model Specified model to use in simulation: "pbtk", "3compartment",
 #' "3compartmentss", "1compartment", "schmitt", ...
-#' @param route Specified route of exposure for simulation: "oral", "iv", ...
-#' @param dosing $$$$ description missing $$$$
-#' @param days Length of the simulation. Default 10 days. 
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", ...
+#' @param dosing List of dosing metrics used in simulation, including entries
+#' "initial.dose", "doses.per.day", "daily.dose", and "dosing.matrix". The
+#' "dosing.matrix" is either a vector of dosing times or a matrix consisting of
+#' two columns or rows named "dose" and "time" containing the time and amount, 
+#' in mg/kg BW, of each dose.
+#' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
-#' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
-#' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.
@@ -74,9 +76,6 @@
 #' hematocrit, Funbound.plasma, and Krbc2pu.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
-#' @param dosing.matrix Vector of dosing times or a matrix consisting of two
-#' columns or rows named "dose" and "time" containing the time and amount, in
-#' mg/kg BW, of each dose.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
