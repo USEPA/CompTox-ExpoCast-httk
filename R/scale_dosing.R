@@ -2,10 +2,14 @@
 #' 
 #' This function transforms the dose (in mg/kg) into the appropriate units. It
 #' handles single doses, matrices of doses, or daily repeated doses (at varying
-#' intervals. Absorption is also factored in through the parameter Fgutabs/
+#' intervals. Absorption is also factored in through the parameter Fgutabs
 #' 
 #' @author John Wambaugh
-#'
+#' @param dosing
+#' @param parameters
+#' @param route
+#' @param output.units
+#' @return 
 #' @keywords Dynamic
 scale_dosing <- function(dosing,parameters,route,output.units="uM")
 {
