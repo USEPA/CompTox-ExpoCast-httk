@@ -49,11 +49,13 @@
 #' "3compartmentss", "1compartment", "schmitt", ...
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", ...
-#' @param dosing List of dosing metrics used in simulation, including entries
-#' "initial.dose", "doses.per.day", "daily.dose", and "dosing.matrix". The
-#' "dosing.matrix" is either a vector of dosing times or a matrix consisting of
-#' two columns or rows named "dose" and "time" containing the time and amount, 
-#' in mg/kg BW, of each dose.
+#' @param dosing List of dosing metrics used in simulation, which must include
+#' the general entries with names "initial.dose", "doses.per.day", 
+#' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+#' precise dose regimen specification, and is either a vector of dosing times
+#' or a matrix consisting of two columns or rows named "time" and "dose"
+#' containing the time and amount, in mg/kg BW, of each dose. 
+#' Minimal usage case of all entries but "initial.dose" set to NULL in value.
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
@@ -363,28 +365,28 @@ solve_model <- function(chem.name = NULL,
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
 # dosing. Each additional dose after the initial dose is an event.
-  if (is.null(dosing.matrix) & is.null(doses.per.day))
+  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(daily.dose))
   {
-# If we are simulating a single dose then we don't need evendata:
+# If we are simulating a single dose then we don't need eventdata:
     eventdata <- NULL
   } else {
 # Either we are doing dosing at a constant interval:
     if (is.null(dosing.matrix))
     {
-      if (is.null(daily.dose)) stop("Must specifiy total \"daily.dose\" when \
-\"doses.per.day\" is not set to NULL.")
-      else if (is.null(doses.per.day)) 
-      {
-        stop("Must specifiy total \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
-      } 
+      if (is.null(daily.dose)) {stop("Must specify total
+\"daily.dose\" when \"doses.per.day\" is not set to NULL.")
+      }else if (is.null(doses.per.day)) {stop("Must specify total
+          \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
+      }
+      
       dose.times <- seq(start.time,
                         end.time-1/doses.per.day,
                         1/doses.per.day)
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
 # Or a matrix of doses (first col time, second col dose) has been specified:
     } else {
-      if (any(is.na(dosing.matrix))) stop("Dosing mstrix cannot contain NA values")
-      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix \
+      if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
+      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
 with two columns (time, dose).")
       dose.times <- dosing.matrix[,"time"]
       dose.vec <- dosing.matrix[,"dose"]
@@ -394,6 +396,8 @@ with two columns (time, dose).")
                             time = round(dose.times,8),
                             value = dose.vec, 
                             method = rep(dose.type,num.doses))
+    #Update our times vector to include times of provided dosing events, as well as
+    #the times of dosing events incremented by SMALL.TIME for visualization.
     times <- sort(unique(c(times,
     eventdata$time,
     eventdata$time+SMALL.TIME)))
