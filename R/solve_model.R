@@ -196,7 +196,7 @@ solve_model <- function(chem.name = NULL,
     derivative_output_names <- model.list[[model]]$derivative.output.names
 # calculate the number of outputs from the derivative function:
     num_outputs <- length(derivative_output_names)    
-# Which variables to we track by default (should be able to build this from
+# Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
   }
@@ -309,22 +309,23 @@ solve_model <- function(chem.name = NULL,
   names(state) <- state.vars
   
 # Address case where initial conditions provided using argument initial.values:
-  for (this.compartment in names(initial.values))
-  {
-    # Are we doing concentrations?
-    if (firstchar(this.compartment)=="C")
+  if (!is.null(initial.values)){
+    for (this.compartment in names(initial.values))
     {
-      tissue <- substring(this.compartment, 2)
-      state[paste("A",tissue,sep="")] <-
+      # Are we doing concentrations?
+      if (firstchar(this.compartment)=="C")
+      {
+        tissue <- substring(this.compartment, 2)
+        state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                             parameters[[paste("V",tissue,sep="")]]
-    # Or amounts?
-    } else if (firstchar(this.compartment)=="A")
-    {
-      state[this.compartment] <- initial.values[[this.compartment]]
-    } else stop("Initital values must begin with \"C\" or \"A\".")
+      # Or amounts?
+      } else if (firstchar(this.compartment)=="A")
+      {
+        state[this.compartment] <- initial.values[[this.compartment]]
+      } else stop("Initital values must begin with \"C\" or \"A\".")
+    }
   }
-    
 ### SIMULATION TIME
 
 # We need to let the solver know which time points we want:
@@ -422,7 +423,7 @@ with two columns (time, dose).")
       parameters[[this.param]] <- 0
   
   # Here we remove model parameters that are not needed by the C solver (via
-# only passing those parameters in solver_param_names) and add in any
+# only passing those parameters in compiled_param_names) and add in any
 # additional parameters calculated by the C code (such as body weight scaling):
   parameters <- .C(compiled_parameters_init,
     as.double(parameters[compiled_param_names]),
