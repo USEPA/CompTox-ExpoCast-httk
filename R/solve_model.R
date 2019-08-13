@@ -1,33 +1,39 @@
 #' Solve_model
 #' 
-#' This function solves for the amounts or concentrations in uM of a chemical
-#' in different tissues as functions of time based on the dose and dosing
-#' frequency. 
+#' solve_model's arguments prepare an ode system for numerical solution over
+#' time of the amounts or concentrations (uM) of chemical in the different
+#' bodily compartments of a given available species (either "Rat", "Rabbit",
+#' "Dog", "Mouse", or default "Human").
+#' 
+#' At a minimum, a chemical identifier (whether name, CAS number, or other
+#' chemical parameterization), model system of interest ("pbtk",
+#' "3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
+#' dosing regimen must be provided for solve_model to run its toxicokinetic
+#' simulations. See 'dosing' argument listing below for breakdown of how to
+#' specify dose (in terms of route of administration, frequency, and quantity)
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
 #' 
-#' Default NULL value for doses.per.day solves for a single dose.
-#' 
-#' The compartments used in this model are the gutlumen, gut, liver, kidneys,
-#' veins, arteries, lungs, and the rest of the body.
-#' 
-#' The extra compartments include the amounts or concentrations metabolized by
+#' The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
+#' kidneys, veins, arteries, lungs, and the rest of the body. The extra
+#' compartments include the amounts or concentrations metabolized by
 #' the liver and excreted by the kidneys through the tubules.
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' Model parameters are named according to the following convention:\tabular{lrrrr}{
-#' prefix \tab suffic \tab Meaning \tab units \cr
+#' Model parameters are named according to the following convention:
+#' \tabular{lrrrr}{
+#' prefix \tab suffix \tab Meaning \tab units \cr
 #' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
 #' V \tab \tab Volume \tab L \cr
 #' Q \tab \tab Flow \tab L/h \cr
 #' k \tab \tab Rate \tab 1/h \cr
 #' \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
-#' and 1/kg^(3/4) for florws \cr}
+#' and 1/kg^(3/4) for flows \cr}
 #'
 #' When species is specified but chemical-specific in vitro data are not
-#' available, the function uses the appropriate physiological data (volumes and 
+#' available, the function uses the appropriate physiological data (volumes and
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
@@ -35,15 +41,23 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param times Optional time sequence for specified number of days.  Dosing
+#' @param times Optional time sequence for specified number of days. Dosing
 #' sequence begins at the beginning of times.
-#' @param parameters Chemical parameters from parameterize_pbtk function,
-#' overrides chem.name and chem.cas.
-#' @param days Length of the simulation.
-#' @param tsteps The number of time steps per hour.
-#' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
-#' @param doses.per.day Number of doses per day.
+#' @param parameters List of chemical parameters, as output by 
+#' parameterize_pbtk function. Overrides chem.name and chem.cas.
+#' @param model Specified model to use in simulation: "pbtk", "3compartment",
+#' "3compartmentss", "1compartment", "schmitt", ...
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", ...
+#' @param dosing List of dosing metrics used in simulation, which must include
+#' the general entries with names "initial.dose", "doses.per.day", 
+#' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+#' precise dose regimen specification, and is either a vector of dosing times
+#' or a matrix consisting of two columns or rows named "time" and "dose"
+#' containing the time and amount, in mg/kg BW, of each dose. 
+#' Minimal usage case of all entries but "initial.dose" set to NULL in value.
+#' @param days Simulated period. Default 10 days. 
+#' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.
@@ -64,9 +78,6 @@
 #' hematocrit, Funbound.plasma, and Krbc2pu.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
-#' @param dosing.matrix Vector of dosing times or a matrix consisting of two
-#' columns or rows named "dose" and "time" containing the time and amount, in
-#' mg/kg BW, of each dose.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
@@ -135,7 +146,8 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     ...)
 {
-# Handy string manipulation functions:
+# Handy string manipulation functions for processing variable names that adhere
+# to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
   firstchar <- function(x){substr(x, 1,1)}
    
@@ -145,17 +157,21 @@ solve_model <- function(chem.name = NULL,
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
     stop('Parameters, chem.name, or chem.cas must be specified.')
-  
-  if (is.null(model)) stop("Model must be specified.")
 
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
+  if (is.null(model)) stop("Model must be specified.")
+  
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } else {
+    #Set more convenient names for various model-related variables (e.g. route
+    #of exposure) stored in the list of lists, model.list, compiled in the
+    #various models' associated "modelinfo_xxx.R" files:
+    
 # Available exposure routes:
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
@@ -166,11 +182,11 @@ solve_model <- function(chem.name = NULL,
 # amounts)
     state.vars <- model.list[[model]]$state.vars
     initialize_R_function <- model.list[[model]]$R.init.func
-# Function that initializes the compiled moel code:
+# name of function that initializes the compiled moel code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
-# Function that transform the paramers to those needed by the solver:
+# Function that transform the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
 # name(s)s of the compiled model parameters that control the solver:
     compiled_param_names <- model.list[[model]]$compiled.param.names
@@ -178,9 +194,9 @@ solve_model <- function(chem.name = NULL,
     derivative_function <- model.list[[model]]$derivative.func
 # ordered names of the outputs from the derivative function:
     derivative_output_names <- model.list[[model]]$derivative.output.names
-# calculate the number of outputs from the derivitive function:
+# calculate the number of outputs from the derivative function:
     num_outputs <- length(derivative_output_names)    
-# Which variables to we track by default (should be able to build this from
+# Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
   }
@@ -246,7 +262,7 @@ solve_model <- function(chem.name = NULL,
   }
   
   # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
-  # have been updated by Monte Carlo it may be that Rblood2plasma needs to be
+  # have been updated by Monte Carlo, it may be that Rblood2plasma needs to be
   # recalculated:
   if (recalc.blood2plasma) parameters[['Rblood2plasma']] <- 
     1 - 
@@ -255,8 +271,8 @@ solve_model <- function(chem.name = NULL,
     parameters[['Funbound.plasma']]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
   
-  # The unscald hepatic clearance depens on many parameters that could be changed
-  # by Monte Carlo simulation. This code recalculates it if needed:
+  # The unscaled hepatic clearance depends on many parameters that could be
+  # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
   # Do we have all the parameters we need?:
@@ -266,14 +282,14 @@ solve_model <- function(chem.name = NULL,
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
       ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
     }
-    ss.params[[names(ssparams) %in% names(parameters)]] <- 
-      parameters[[names(ssparams) %in% names(parameters)]]
+    ss.params[[names(ss.params) %in% names(parameters)]] <- 
+      parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
   }
   
-  # If the hepatic metabolism is now slowed by plasma protein binding (non-
+  # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
@@ -288,27 +304,28 @@ solve_model <- function(chem.name = NULL,
 
 ### STATE VECTOR
 
-# create the state vector:
+# create the default initial state vector:
   state <- rep(0,length(state.vars))
   names(state) <- state.vars
   
-# Set the initial conditions based on argument initial.values
-  for (this.compartment in names(initial.values))
-  {
-# Are we doing concentrations?
-    if (firstchar(this.compartment)=="C")
+# Address case where initial conditions provided using argument initial.values:
+  if (!is.null(initial.values)){
+    for (this.compartment in names(initial.values))
     {
-      tissue <- substring(this.compartment, 2)
-      state[paste("A",tissue,sep="")] <-
+      # Are we doing concentrations?
+      if (firstchar(this.compartment)=="C")
+      {
+        tissue <- substring(this.compartment, 2)
+        state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                             parameters[[paste("V",tissue,sep="")]]
-# Or amounts?
-    } else if (firstchar(this.compartment)=="A")
-    {
-      state[this.compartment] <- initial.values[[this.compartment]]
-    } else stop("Initital values must begin with \"C\" or \"A\".")
+      # Or amounts?
+      } else if (firstchar(this.compartment)=="A")
+      {
+        state[this.compartment] <- initial.values[[this.compartment]]
+      } else stop("Initital values must begin with \"C\" or \"A\".")
+    }
   }
-
 ### SIMULATION TIME
 
 # We need to let the solver know which time points we want:
@@ -317,9 +334,10 @@ solve_model <- function(chem.name = NULL,
   start.time <- times[1]
   end.time <- times[length(times)]
 
-  # We add a time point 1e-8 later than the beginnging to make the plots look
-  # better:
-  times <- sort(unique(c(times,start.time,start.time+SMALL.TIME,end.time)))
+  # We add a time point 1e-5 later than the beginning to make the plots look
+  # better. Use 'unique' function to remove redundant times that may have
+  # been generated using 'round'
+  times <- sort(unique(c(times,start.time+SMALL.TIME)))
 
 ### DOSING
 
@@ -348,28 +366,28 @@ solve_model <- function(chem.name = NULL,
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
 # dosing. Each additional dose after the initial dose is an event.
-  if (is.null(dosing.matrix) & is.null(doses.per.day))
+  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(daily.dose))
   {
-# If we are simulating a single dose then we don't need evendata:
+# If we are simulating a single dose then we don't need eventdata:
     eventdata <- NULL
   } else {
 # Either we are doing dosing at a constant interval:
     if (is.null(dosing.matrix))
     {
-      if (is.null(daily.dose)) stop("Must specifiy total \"daily.dose\" when \
-\"doses.per.day\" is not set to NULL.")
-      else if (is.null(doses.per.day)) 
-      {
-        stop("Must specifiy total \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
-      } 
+      if (is.null(daily.dose)) {stop("Must specify total
+\"daily.dose\" when \"doses.per.day\" is not set to NULL.")
+      }else if (is.null(doses.per.day)) {stop("Must specify total
+          \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
+      }
+      
       dose.times <- seq(start.time,
                         end.time-1/doses.per.day,
                         1/doses.per.day)
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
 # Or a matrix of doses (first col time, second col dose) has been specified:
     } else {
-      if (any(is.na(dosing.matrix))) stop("Dosing mstrix cannot contain NA values")
-      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix \
+      if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
+      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
 with two columns (time, dose).")
       dose.times <- dosing.matrix[,"time"]
       dose.vec <- dosing.matrix[,"dose"]
@@ -379,6 +397,8 @@ with two columns (time, dose).")
                             time = round(dose.times,8),
                             value = dose.vec, 
                             method = rep(dose.type,num.doses))
+    #Update our times vector to include times of provided dosing events, as well as
+    #the times of dosing events incremented by SMALL.TIME for visualization.
     times <- sort(unique(c(times,
     eventdata$time,
     eventdata$time+SMALL.TIME)))
@@ -403,7 +423,7 @@ with two columns (time, dose).")
       parameters[[this.param]] <- 0
   
   # Here we remove model parameters that are not needed by the C solver (via
-# only passing those parameters in solver_param_names) and add in any
+# only passing those parameters in compiled_param_names) and add in any
 # additional parameters calculated by the C code (such as body weight scaling):
   parameters <- .C(compiled_parameters_init,
     as.double(parameters[compiled_param_names]),
