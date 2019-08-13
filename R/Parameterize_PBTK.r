@@ -102,7 +102,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS, depending on what was provided:
   out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
