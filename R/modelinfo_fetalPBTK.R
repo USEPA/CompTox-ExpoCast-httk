@@ -25,7 +25,17 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Kliver2pu",
   "Klung2pu",
   "Krbc2pu",
+  "Kthyroid2pu",
+  "Kplacenta2pu",
   "Krest2pu",
+  "Kfgut2pu",
+  "Kfkidney2pu",
+  "Kfliver2pu",
+  "Kflung2pu",
+  "Kfthyroid2pu",
+  "Kfbrain2pu",
+  "Kfplacenta2pu",
+  "Kfrest2pu",
   "liver.density",
   "million.cells.per.gliver",
   "MW",
@@ -46,6 +56,32 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Vlungc",
   "Vrestc",
   "Vvenc")
+
+
+
+parms$Kfbrain2pu <- parms$Kbrain2pu
+parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
+parms$pre_pregnant_BW <- 61.103 
+parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
+parms$Vkidneyc <- 0.275/parms$pre_pregnant_BW
+parms$Vgutc <- 1.14/parms$pre_pregnant_BW
+parms$Vliverc <- 1.4/parms$pre_pregnant_BW
+parms$Vlungc <- 0.95/parms$pre_pregnant_BW
+parms$Vartc <- 0.624/parms$pre_pregnant_BW         
+parms$Vvenc <- 2.32/parms$pre_pregnant_BW
+parms$Vfgutc <- 0.0178
+
+
+
+
+
+
+
+
+
+
+
+
 
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)

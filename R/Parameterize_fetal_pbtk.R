@@ -19,7 +19,7 @@
 #' assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
 #' volume of red blood cells in the blood.} \item{Kgut2pu}{Ratio of
 #' concentration of chemical in gut tissue to unbound concentration in plasma.}
-#' \item{Kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
+#' \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
 #' \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
 #' unbound concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
 #' chemical in liver tissue to unbound concentration in plasma.}
@@ -101,7 +101,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  parms$Vartc <- 0.624/parms$pre_pregnant_BW         
  parms$Vvenc <- 2.32/parms$pre_pregnant_BW
  parms$Vfgutc <- 0.0178
-#parms$Vrestc <- parms$BW <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
+ parms$Vrestc <- parms$BW <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
 #parms$fBW <- 0.00003107 * exp(0.8137/0.06458 * (1 - exp(-0.06458 * day / 7)))  
 #parms$Vplacenta <- 0.317 * parms$fBW^0.582  
  return(parms)                             
