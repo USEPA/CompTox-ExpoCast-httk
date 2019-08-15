@@ -92,7 +92,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- parms$Kbrain2pu
   parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
-  parms$pre_pregnant_BW <- 60 
+  parms$pre_pregnant_BW <- 61.103 
  parms$Vthyroidc <- 0.017/60
  parms$Vkidneyc <- 0.275/60
  parms$Vgutc <- 1.14/60
