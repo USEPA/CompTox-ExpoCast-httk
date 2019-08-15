@@ -431,8 +431,8 @@ convert_httk <- function(indiv.model.bio,
                                                               "cl_us" = Clmetabolismc,
                                                               "BW" = BW,
                                                               "Qsmallintestine" = Qsmallintestine,
-                                                              "Funbound.plasma" = Funbound.plasma,
                                                               "Rblood2plasma" = Rblood2plasma,
+                                                              "Funbound.plasma" = Funbound.plasma,
                                                               "Fgut" = Fgut))]
     }else{
       indiv.model[, fgut.oral := Fgut]

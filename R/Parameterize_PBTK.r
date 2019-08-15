@@ -287,7 +287,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
       Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
       Caco2.Pab.dist <- NA
     }
-    gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point, 
+    gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point,
                        "Funbound.plasma" = outlist$Funbound.plasma, "Rblood2plasma" = outlist$Rblood2plasma)
     # Select Fabs, optionally overwrite based on Caco2.Pab
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)

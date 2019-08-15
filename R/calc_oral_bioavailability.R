@@ -191,7 +191,7 @@ calc_fgut.oral <- function(Params = NULL,
   
   if(Caco2.options$Caco2.Fgut == TRUE){
     # Required parameters
-    req.param <- c("BW", "cl_us", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma", "Fgut")
+    req.param <- c("BW", "cl_us", "Caco2.Pab", "Fgut", "Funbound.plasma", "Rblood2plasma")
     
     # Header initialization  
     if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -219,14 +219,12 @@ calc_fgut.oral <- function(Params = NULL,
     
     clu_hep <- Params$cl_us*Params$BW # L/h for 70 kg human
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
-    fup <- Params$Funbound.plasma
-    Rb2p <- Params$Rblood2plasma
     
     if(tolower(species) == "rat"){
       peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
       peffr <- peffh/3.6 # Fagerhol 1996
       permr <- 71/(100^2)*peffr*3.6
-      fgut.oral <- 0.65/(0.65+fup*clu_gut/Rb2p*(1+.65/permr))
+      fgut.oral <- 0.65/(0.65+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+.65/permr))
       
     }else{
       
@@ -239,7 +237,7 @@ calc_fgut.oral <- function(Params = NULL,
       
       peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
       permh <- 0.66*peffh*3.6 # L/h, 0.66 m2 area intestine
-      fgut.oral <- Qvilli/(Qvilli+fup*clu_gut/Rb2p*(1+Qvilli/permh))
+      fgut.oral <- Qvilli/(Qvilli+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+Qvilli/permh))
       
     }
   }else{
