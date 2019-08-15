@@ -67,9 +67,9 @@
    0 Inputs:
 
    37 Parameters:
-     pre_pregnant_BW = 61.103,
+     pre_pregnant_BW = 0,
      Clmetabolismc = 0.0,
-     Kgutabs = 1,
+     Kgutabs = 0,
      Kkidney2pu = 0,
      Kliver2pu = 0,
      Krbc2pu = 0,
