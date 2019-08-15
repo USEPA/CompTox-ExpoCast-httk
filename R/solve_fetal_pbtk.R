@@ -110,7 +110,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
     parameters <- parameterize_fetal_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,suppress.messages=suppress.messages,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression) 
   }else{
-    name.list <- c("pre_pregnant_BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qgfrc","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vvenc","Kfplacenta2pu","Kplacenta2pu","Vthyroidc","Kfthyroid2pu","Kthyroid2pu","Kfliver2pu","Kfbrain2pu","Kfkidney2pu","Kfrest2pu","Kfgut2pu","Kflung2pu","Vfgutc")
+    name.list <- c("pre_pregnant_BW","Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW","Qgfrc","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vvenc","Kfplacenta2pu","Kplacenta2pu","Vthyroidc","Kfthyroid2pu","Kthyroid2pu","Kfliver2pu","Kfbrain2pu","Kfkidney2pu","Kfrest2pu","Kfgut2pu","Kflung2pu","Vfgutc")
   if(!all(name.list %in% names(parameters)))stop(paste("Missing parameters:",paste(name.list[which(!name.list %in% names(parameters))],collapse=', '),".  Use parameters from parameterize_fetal_pbtk.")) 
   }
   if(is.null(times)) times <- round(seq(85,85 + days, 1/(24*tsteps)),8)
@@ -198,7 +198,7 @@ Vflung <- 0.02611 * exp(0.5898/0.07125 * (1 - exp(-0.07125 *  start/7)))/1000
   
   if(begin.css){
     if(is.null(chem.cas) & is.null(chem.name)) stop("Must enter chem.cas or chem.name to begin at steady state.")
-    parms <- c(parameterize_pbtk(chem.name=chem.name,chem.cas=chem.cas,species=species)[c('Qcardiacc','Qgutf','Qkidneyf','Qliverf','Vrestc')],parameters[c("Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","Kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW" ,"Qgfrc","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vvenc")])
+    parms <- c(parameterize_pbtk(chem.name=chem.name,chem.cas=chem.cas,species=species)[c('Qcardiacc','Qgutf','Qkidneyf','Qliverf','Vrestc')],parameters[c("Clmetabolismc","Funbound.plasma","Fgutabs","Fhep.assay.correction","hematocrit","Kgut2pu","kgutabs","Kkidney2pu","Kliver2pu","Klung2pu","Krbc2pu","Krest2pu","million.cells.per.gliver","MW" ,"Qgfrc","Rblood2plasma","Vartc","Vgutc","Vkidneyc","Vliverc","Vlungc","Vvenc")])
     parms$BW <- parameters[['pre_pregnant_BW']]
     daily.dose <- daily.dose / parms$BW
     css.days <- calc_css(parameters=parms,daily.dose=daily.dose,doses.per.day=doses.per.day,suppress.messages=T)[['the.day']]
