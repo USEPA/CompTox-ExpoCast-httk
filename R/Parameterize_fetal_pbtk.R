@@ -93,13 +93,13 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kfbrain2pu <- parms$Kbrain2pu
   parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
   parms$pre_pregnant_BW <- 61.103 
- parms$Vthyroidc <- 0.017/60
- parms$Vkidneyc <- 0.275/60
- parms$Vgutc <- 1.14/60
- parms$Vliverc <- 1.4/60
- parms$Vlungc <- 0.95/60 
- parms$Vartc <- 0.624/60           
- parms$Vvenc <- 2.32/60
+ parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
+ parms$Vkidneyc <- 0.275/parms$pre_pregnant_BW
+ parms$Vgutc <- 1.14/parms$pre_pregnant_BW
+ parms$Vliverc <- 1.4/parms$pre_pregnant_BW
+ parms$Vlungc <- 0.95/parms$pre_pregnant_BW
+ parms$Vartc <- 0.624/parms$pre_pregnant_BW         
+ parms$Vvenc <- 2.32/parms$pre_pregnant_BW
  parms$Vfgutc <- 0.0178
 parms$Vrestc <- parms$BW <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
 #parms$fBW <- 0.00003107 * exp(0.8137/0.06458 * (1 - exp(-0.06458 * day / 7)))  
