@@ -20,15 +20,29 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{times}{Optional time sequence for specified number of days.  Dosing
+\item{times}{Optional time sequence for specified number of days. Dosing
 sequence begins at the beginning of times.}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
+\item{parameters}{List of chemical parameters, as output by 
+parameterize_pbtk function. Overrides chem.name and chem.cas.}
 
-\item{days}{Length of the simulation.}
+\item{model}{Specified model to use in simulation: "pbtk", "3compartment",
+"3compartmentss", "1compartment", "schmitt", ...}
 
-\item{tsteps}{The number of time steps per hour.}
+\item{route}{String specification of route of exposure for simulation:
+"oral", "iv", ...}
+
+\item{dosing}{List of dosing metrics used in simulation, which must include
+the general entries with names "initial.dose", "doses.per.day", 
+"daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+precise dose regimen specification, and is either a vector of dosing times
+or a matrix consisting of two columns or rows named "time" and "dose"
+containing the time and amount, in mg/kg BW, of each dose. 
+Minimal usage case of all entries but "initial.dose" set to NULL in value.}
+
+\item{days}{Simulated period. Default 10 days.}
+
+\item{tsteps}{The number of time steps per hour. Default of 4.}
 
 \item{initial.values}{Vector containing the initial concentrations or
 amounts of the chemical in specified tissues with units corresponding to
@@ -71,17 +85,7 @@ partition coefficients.}
 
 \item{...}{Additional arguments passed to the integrator.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
-
-\item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
-
-\item{doses.per.day}{Number of doses per day.}
-
 \item{iv.dose}{Simulates a single i.v. dose if true.}
-
-\item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
-columns or rows named "dose" and "time" containing the time and amount, in
-mg/kg BW, of each dose.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -89,35 +93,41 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-This function solves for the amounts or concentrations in uM of a chemical
-in different tissues as functions of time based on the dose and dosing
-frequency.
+solve_model's arguments prepare an ode system for numerical solution over
+time of the amounts or concentrations (uM) of chemical in the different
+bodily compartments of a given available species (either "Rat", "Rabbit",
+"Dog", "Mouse", or default "Human").
 }
 \details{
+At a minimum, a chemical identifier (whether name, CAS number, or other
+chemical parameterization), model system of interest ("pbtk",
+"3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
+dosing regimen must be provided for solve_model to run its toxicokinetic
+simulations. See 'dosing' argument listing below for breakdown of how to
+specify dose (in terms of route of administration, frequency, and quantity)
+
 Note that the model parameters have units of hours while the model output is
 in days.
 
-Default NULL value for doses.per.day solves for a single dose.
-
-The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, and the rest of the body.
-
-The extra compartments include the amounts or concentrations metabolized by
+The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
+kidneys, veins, arteries, lungs, and the rest of the body. The extra
+compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
-Model parameters are named according to the following convention:\tabular{lrrrr}{
-prefix \tab suffic \tab Meaning \tab units \cr
+Model parameters are named according to the following convention:
+\tabular{lrrrr}{
+prefix \tab suffix \tab Meaning \tab units \cr
 K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
 V \tab \tab Volume \tab L \cr
 Q \tab \tab Flow \tab L/h \cr
 k \tab \tab Rate \tab 1/h \cr
 \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
-and 1/kg^(3/4) for florws \cr}
+and 1/kg^(3/4) for flows \cr}
 
 When species is specified but chemical-specific in vitro data are not
-available, the function uses the appropriate physiological data (volumes and 
+available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }

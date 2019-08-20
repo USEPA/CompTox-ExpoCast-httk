@@ -65,6 +65,9 @@
 #' @param begin.css Begin at steady state concentration in mother.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -103,6 +106,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              adjusted.Funbound.plasma=T,
                              regression=T,
                              restrictive.clearance = T,
+                             minimum.Funbound.plasma = 0.0001,
                              ...)
 {
   out <- solve_model(
