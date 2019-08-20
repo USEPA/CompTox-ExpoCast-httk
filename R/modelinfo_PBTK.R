@@ -62,7 +62,7 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
   Qcardiacc="Qcardiacc",
   Qgfrc="Qgfrc",
   Qgutf="Qgutf",
-  Qkidney="Qkidneyf",
+  Qkidneyf="Qkidneyf",
   Qliverf="Qliverf",
   Vartc="Vartc",
   Vgutc="Vgutc",
