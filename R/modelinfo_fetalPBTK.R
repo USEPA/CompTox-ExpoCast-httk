@@ -59,9 +59,10 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   )
 
 
-# This subset of R parameters are needed to initially parametrize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code, even if 
-# some items are omitted)
+# This subset of R parameters are needed to initially parameterize the compiled
+# code for the solver (must match ORDER under "parameters" in C code, even if 
+# some items are omitted). String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
 model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   pre_pregnant_BW = "pre_pregnant_BW",
   Clmetabolismc = "Clmetabolismc",
@@ -91,7 +92,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Vlungc = "Vlungc",
   Vthyroidc = "Vthyroidc",
   Fraction_unbound_plasma = "Funbound.plasma",
-  Ratioblood2plasma = "Ratioblood2plasma"
+  Rblood2plasma = "Rblood2plasma"
 )
 
 # This function translates the R model parameters into the compiled model
@@ -136,7 +137,7 @@ model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "Vthyroidc",
   "Vthyroid",
   "Fraction_unbound_plasma",
-  "Ratioblood2plasma",
+  "Rblood2plasma",
   "Clmetabolism"
 )
 
