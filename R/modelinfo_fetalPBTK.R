@@ -45,6 +45,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Vvenc",
   "Kfthyroid2pu",
   "Kthyroid2pu",
+  "Kadipose2pu",
   "Kfliver2pu",
   "Kfkidney2pu",
   "Kfrest2pu",
@@ -52,6 +53,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Kflung2pu",
   "Kfbrain2pu",
   "pre_pregnant_BW",
+  "BW",
   "Vthyroidc",
   "Vfgutc"
   )
@@ -88,7 +90,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Vliverc = "Vliverc",
   Vlungc = "Vlungc",
   Vthyroidc = "Vthyroidc",
-  Fraction_unbound_plasma = "Fraction_unbound_plasma",
+  Fraction_unbound_plasma = "Funbound.plasma",
   Ratioblood2plasma = "Ratioblood2plasma"
 )
 

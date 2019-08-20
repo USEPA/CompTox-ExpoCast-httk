@@ -83,8 +83,9 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),brain=c("brain")),placenta=T,
                               ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
- 
+  
   parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1
+  parms$Kadipose2pu <- 1 #set workable value for now, where an initialization was previously absent. 
   parms$Kfliver2pu <- parms$Kliver2pu
   parms$Kfkidney2pu <- parms$Kkidney2pu
   parms$Kfrest2pu <- parms$Krest2pu
@@ -93,6 +94,8 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kfbrain2pu <- parms$Kbrain2pu
   parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
   parms$pre_pregnant_BW <- 61.103 
+  parms$BW <- parms$pre_pregnant_BW #include BW listing as long as scale dosing requires
+  #entry named 'BW' 
  parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
  parms$Vkidneyc <- 0.275/parms$pre_pregnant_BW
  parms$Vgutc <- 1.14/parms$pre_pregnant_BW
@@ -101,7 +104,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  parms$Vartc <- 0.624/parms$pre_pregnant_BW         
  parms$Vvenc <- 2.32/parms$pre_pregnant_BW
  parms$Vfgutc <- 0.0178
- parms$Vrestc <- parms$BW <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
+ parms$Vrestc <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
 #parms$fBW <- 0.00003107 * exp(0.8137/0.06458 * (1 - exp(-0.06458 * day / 7)))  
 #parms$Vplacenta <- 0.317 * parms$fBW^0.582  
  return(parms)                             
