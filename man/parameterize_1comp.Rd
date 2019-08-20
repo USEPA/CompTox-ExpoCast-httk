@@ -42,7 +42,7 @@ with plasma concentration.}
 \item{suppress.messages}{Whether or not to suppress messages.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
+vitro clearance assay result has a p-value greater than the threshold are
 set to zero.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
