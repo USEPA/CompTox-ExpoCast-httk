@@ -18,7 +18,7 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data (volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters

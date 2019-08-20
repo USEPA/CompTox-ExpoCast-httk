@@ -57,104 +57,125 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   )
 
 
-
-
 # This subset of R parameters are needed to initially parametrize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code)
-model.list[["pbtk"]]$Rtosolvermap <- list(
-  BW="BW",
-  Clmetabolismc="Clmetabolismc",
-  hematocrit="hematocrit",
-  kgutabs="kgutabs",
-  Kkidney2pu="Kkidney2pu",
-  Kliver2pu="Kliver2pu",
-  Krest2pu="Krest2pu",
-  Kgut2pu="Kgut2pu",
-  Klung2pu="Klung2pu",
-  Qcardiacc="Qcardiacc",
-  Qgfrc="Qgfrc",
-  Qgutf="Qgutf",
-  Qkidney="Qkidneyf",
-  Qliverf="Qliverf",
-  Vartc="Vartc",
-  Vgutc="Vgutc",
-  Vkidneyc="Vkidneyc",
-  Vliverc="Vliverc",
-  Vlungc="Vlungc",
-  Vrestc="Vrestc",
-  Vvenc="Vvenc",
-  Fraction_unbound_plasma="Funbound.plasma",
-  Rblood2plasma="Rblood2plasma"
+# code for the solver: (must match ORDER under "parameters" in C code, even if 
+# some items are omitted)
+model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
+  pre_pregnant_BW = "pre_pregnant_BW",
+  Clmetabolismc = "Clmetabolismc",
+  kgutabs = "kgutabs",
+  Kkidney2pu = "Kkidney2pu",
+  Kliver2pu = "Kliver2pu",
+  Krbc2pu = "Krbc2pu",
+  Kadipose2pu = "Kadipose2pu",
+  Krest2pu = "Krest2pu",
+  Klung2pu = "Klung2pu",
+  Kgut2pu = "Kgut2pu",
+  Kthyroid2pu = "Kthyroid2pu",
+  Kplacenta2pu = "Kplacenta2pu",
+  Kfplacenta2pu = "Kfplacenta2pu",
+  Kfkidney2pu = "Kfkidney2pu",
+  Kfrest2pu = "Kfrest2pu",
+  Kfthyroid2pu = "Kfthyroid2pu",
+  Kfliver2pu = "Kfliver2pu",
+  Kflung2pu = "Kflung2pu",
+  Kfgut2pu = "Kfgut2pu",
+  Kfbrain2pu = "Kfbrain2pu",
+  Vartc = "Vartc",
+  Vvenc = "Vvenc",
+  Vgutc = "Vgutc",
+  Vkidneyc = "Vkidneyc",
+  Vliverc = "Vliverc",
+  Vlungc = "Vlungc",
+  Vthyroidc = "Vthyroidc",
+  Fraction_unbound_plasma = "Fraction_unbound_plasma",
+  Ratioblood2plasma = "Ratioblood2plasma"
 )
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
+model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetalpbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
-model.list[["pbtk"]]$compiled.param.names <- c(
-  "BW",
+model.list[["fetal_pbtk"]]$compiled.param.names <- c(
+  "pre_pregnant_BW",
   "Clmetabolismc",
-  "hematocrit",
   "kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
+  "Krbc2pu",
+  "Kadipose2pu",
   "Krest2pu",
-  "Kgut2pu",
   "Klung2pu",
-  "Qcardiacc",
-  "Qgfrc",
-  "Qgutf",
-  "Qkidneyf",
-  "Qliverf",
+  "Kgut2pu",
+  "Kthyroid2pu",
+  "Kplacenta2pu",
+  "Kfplacenta2pu",
+  "Kfkidney2pu",
+  "Kfrest2pu",
+  "Kfthyroid2pu",
+  "Kfliver2pu",
+  "Kflung2pu",
+  "Kfgut2pu",
+  "Kfbrain2pu",
   "Vartc",
+  "Vvenc",
   "Vgutc",
   "Vkidneyc",
   "Vliverc",
   "Vlungc",
-  "Vrestc",
-  "Vvenc",
-  "Fraction_unbound_plasma",
-  "Rblood2plasma",
-  "Clmetabolism",
-  "Qcardiac",
-  "Qgfr",
-  "Qgut",
-  "Qkidney",
-  "Qliver",
-  "Qrest",
   "Vart",
+  "Vven",
   "Vgut",
   "Vkidney",
   "Vliver",
   "Vlung",
-  "Vrest",
-  "Vven"
+  "Vthyroidc",
+  "Vthyroid",
+  "Fraction_unbound_plasma",
+  "Ratioblood2plasma",
+  "Clmetabolism"
 )
 
 # This function initializes the state vector for the compiled model:
-model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
+model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetalpbtk"
 
-# This is the function that calculates the derviative of the model as a function
+# This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
-model.list[["pbtk"]]$derivative.func <- "derivspbtk"
+model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetalpbtk"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[["pbtk"]]$derivative.output.names <- c(
+model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Cven",
   "Clung",
   "Cart",
+  "Cadipose",
   "Crest",
   "Ckidney",
-  "Cplasma",
-  "Aplasma"
+  "Cserum",
+  "Aserum",
+  "Cthyroid",
+  "Cplacenta",
+  "Cfliver",
+  "Cfven",
+  "Cfart",
+  "Cfgut",
+  "Cflung",
+  "Cfrest",
+  "Cfthyroid",
+  "Cfkidney",
+  "Cfbrain",
+  "Afserum",
+  "Cfserum"
 )
 
-model.list[["pbtk"]]$default.monitor.vars <- c(
+#Which variables to track by default (should be able to build this from
+#state vars and outputs):
+model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -165,45 +186,70 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   "Cplasma",
   "Atubules",
   "Ametabolized",
-  "AUC"
+  "AUC",
+  "fAUC",
+  "Cplacenta",
+  "Cfliver",
+  "Cfven",
+  "Cfart",
+  "Cfgut",
+  "Cflung",
+  "Cfrest",
+  "Cfthyroid",
+  "Cfkidney",
+  "Cfbrain",
+  "Cfserum"
 )
 
 # Allowable units:
-model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
+model.list[["fetal_pbtk"]]$allowed.units <- c('um', 'mg/l')
 
 # These parameters specify the exposure scenario simulated by the model:
-model.list[["pbtk"]]$dosing.params <- c("daily.dose",
+model.list[["fetal_pbtk"]]$dosing.params <- c("daily.dose",
                                         "initial.dose",
                                         "doses.per.day",
                                         "dosing.matrix")
-model.list[["pbtk"]]$routes <- c("oral","iv")
+model.list[["fetal_pbtk"]]$routes <- c("oral","iv")
 # We need to know which compartment gets the dose 
-model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
+model.list[["fetal_pbtk"]]$dose.variable <- list(oral="Agutlumen",
                                            iv="Aven")
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
 #or "multiply" to change the value to C1 <- C1*dose
-model.list[["pbtk"]]$dose.type <- list(oral="add",
+model.list[["fetal_pbtk"]]$dose.type <- list(oral="add",
                                        iv="add")
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
-model.list[["pbtk"]]$state.vars <- c(
+model.list[["fetal_pbtk"]]$state.vars <- c(
   "Agutlumen",
   "Agut",
   "Aliver",
   "Aven",
   "Alung",
   "Aart",
+  "Aadipose",
   "Arest",
   "Akidney", 
   "Atubules",
   "Ametabolized",
-  "AUC"
+  "AUC",
+  "fAUC",
+  "Athyroid",
+  "Aplacenta",
+  "Afgut",
+  "Aflung",
+  "Afliver",
+  "Afven",
+  "Afart",
+  "Afrest",
+  "Afthyroid",
+  "Afkidney",
+  "Afbrain"
 ) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["pbtk"]]$required.params <- c(
+model.list[["fetal_pbtk"]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -213,4 +259,4 @@ model.list[["pbtk"]]$required.params <- c(
 )
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["pbtk"]]$exclude.fup.zero <- T
+model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
