@@ -48,8 +48,8 @@
     "Cadipose",
     "Crest",
     "Ckidney",
-    "Cserum",
-    "Aserum",
+    "Cplasma",
+    "Aplasma",
     "Cthyroid",
     "Cplacenta",
     "Cfliver",
@@ -61,8 +61,8 @@
     "Cfthyroid",
     "Cfkidney",
     "Cfbrain",
-    "Afserum",
-    "Cfserum",
+    "Afplasma",
+    "Cfplasma",
 
    0 Inputs:
 
@@ -143,8 +143,8 @@
 #define ID_Cadipose 0x00005
 #define ID_Crest 0x00006
 #define ID_Ckidney 0x00007
-#define ID_Cserum 0x00008
-#define ID_Aserum 0x00009
+#define ID_Cplasma 0x00008
+#define ID_Aplasma 0x00009
 #define ID_Cthyroid 0x0000a
 #define ID_Cplacenta 0x0000b
 #define ID_Cfliver 0x0000c
@@ -156,8 +156,8 @@
 #define ID_Cfthyroid 0x00012
 #define ID_Cfkidney 0x00013
 #define ID_Cfbrain 0x00014
-#define ID_Afserum 0x00015
-#define ID_Cfserum 0x00016
+#define ID_Afplasma 0x00015
+#define ID_Cfplasma 0x00016
 
 /* Parameters */
 static double parms[37];
@@ -419,9 +419,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Ckidney] = y[ID_Akidney] / Vkidney ;
 
-  yout[ID_Cserum] = y[ID_Aven] / Vven / Rblood2plasma ;
+  yout[ID_Cplasma] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  yout[ID_Aserum] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
+  yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
   yout[ID_Cthyroid] = y[ID_Athyroid] / Vthyroid ;
 
@@ -445,9 +445,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Cfgut] = y[ID_Afgut] / Vfgut ;
 
-  yout[ID_Cfserum] = y[ID_Afven] / Vfven / Rblood2plasma ;
+  yout[ID_Cfplasma] = y[ID_Afven] / Vfven / Rblood2plasma ;
 
-  yout[ID_Afserum] = y[ID_Afven] / Rblood2plasma * ( 1 - fhematocrit ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / Rblood2plasma * ( 1 - fhematocrit ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
