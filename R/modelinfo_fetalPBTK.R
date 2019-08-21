@@ -159,8 +159,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cadipose",
   "Crest",
   "Ckidney",
-  "Cserum",
-  "Aserum",
+  "Cplasma",
+  "Aplasma",
   "Cthyroid",
   "Cplacenta",
   "Cfliver",
@@ -172,8 +172,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfthyroid",
   "Cfkidney",
   "Cfbrain",
-  "Afserum",
-  "Cfserum"
+  "Afplasma",
+  "Cfplasma"
 )
 
 #Which variables to track by default (should be able to build this from
@@ -184,6 +184,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cven",
   "Clung",
   "Cart",
+  "Cadipose",
   "Crest",
   "Ckidney",
   "Cplasma",
@@ -191,6 +192,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Ametabolized",
   "AUC",
   "fAUC",
+  "Aplacenta",
   "Cplacenta",
   "Cfliver",
   "Cfven",
@@ -201,7 +203,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfthyroid",
   "Cfkidney",
   "Cfbrain",
-  "Cfserum"
+  "Cfplasma"
 )
 
 # Allowable units:
