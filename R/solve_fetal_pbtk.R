@@ -107,6 +107,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              regression=T,
                              restrictive.clearance = T,
                              minimum.Funbound.plasma = 0.0001,
+                             monitor.vars = NULL,
                              ...)
 {
   out <- solve_model(
