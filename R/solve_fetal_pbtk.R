@@ -27,11 +27,10 @@
 #' be specified.
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
-#' @param parameters Chemical parameters from parameterize_fetal
-#' _pbtk function,
+#' @param parameters Chemical parameters from parameterize_fetal_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
-#' @param tsteps The number time steps per hour.
+#' @param tsteps The number time steps per hour. Default of 4. 
 #' @param daily.dose Total daily dose, mg.
 #' @param dose Amount of a single dose, mg.  Overwrites daily.dose.
 #' @param doses.per.day Number of doses per day.
@@ -74,7 +73,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh and Mark Sfeir
 #' @keywords Solve
 #' @examples
 #' 
@@ -89,8 +88,9 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              parameters=NULL,
                              days=10,
                              tsteps = 4, # tsteps is number of steps per hour
-                             daily.dose = NULL,
                              dose = 1, # Assume dose is mg, consistent with output units
+                             dosing.matrix=NULL,
+                             daily.dose = NULL,
                              doses.per.day=NULL,
                              initial.values=NULL,
                              plots=F,
@@ -102,7 +102,6 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              default.to.human=F,
                              recalc.blood2plasma=F,
                              recalc.clearance=F,
-                             dosing.matrix=NULL,
                              adjusted.Funbound.plasma=T,
                              regression=T,
                              restrictive.clearance = T,
