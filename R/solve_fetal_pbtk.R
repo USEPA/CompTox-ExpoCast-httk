@@ -1,8 +1,13 @@
 #' Solve_fetal_PBTK
 #' 
 #' This function solves for the amounts or concentrations in uM of a chemical
-#' in different tissues as functions of time based on the dose and dosing
-#' frequency.
+#' in different tissues of a maternofetal system as functions of time based on
+#' the dose and dosing frequency.
+#' 
+#' The simulation begins by default at the 13th week of pregnancy due to
+#' insufficiency of data to support parameterization prior-in line with 
+#' the recommendations of Kapraun et al. 2019 ("Empirical models for anatomical
+#' and physiological...")-and ends at the 40th week of pregnancy.
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days. Dose is in mg, not scaled for body weight.
@@ -10,7 +15,7 @@
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
 #' The compartments used in this model are the gutlumen, gut, liver, kidneys,
-#' veins, arteries, lungs, and the rest of the body.
+#' veins, arteries, lungs, and the rest of the body, as well as **
 #' 
 #' The extra compartments include the amounts or concentrations metabolized by
 #' the liver and excreted by the kidneys through the tubules.
@@ -25,8 +30,9 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param times Optional time sequence for specified number of days.  Dosing
-#' sequence begins at the beginning of times.
+#' @param times Optional time sequence in days. Dosing sequence begins at the
+#' beginning of times. Default is from 13th week of pregnancy to 40th due to 
+#' data constraints. 
 #' @param parameters Chemical parameters from parameterize_fetal_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
@@ -84,7 +90,7 @@
 #' @import deSolve
 solve_fetal_pbtk <- function(chem.name = NULL,
                              chem.cas = NULL,
-                             times=NULL,
+                             times= seq(13*7,40*7,1), #from 13th week to 40th
                              parameters=NULL,
                              days=10,
                              tsteps = 4, # tsteps is number of steps per hour
@@ -109,6 +115,12 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              monitor.vars = NULL,
                              ...)
 {
+  #Screen any 'times' input
+  if (times[1] < 13*7) stop('Existing data does not support simulation
+with current parameterization scheme prior to the 13th week of pregnancy. It is
+recommended to set \"times\" to begin at or after day 91.')
+    
+  
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
