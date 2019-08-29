@@ -78,10 +78,13 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               ...)
 {
   parms <- parameterize_pbtk(chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              species=species,
-                              tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),brain=c("brain")),placenta=T,
-                              ...)
+                            chem.name=chem.name,
+                            species=species,
+                            tissuelist=list(liver=c("liver"),
+                            kidney=c("kidney"),lung=c("lung"),
+                            gut=c("gut")), 
+                            placenta=T,
+                            ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
   
   parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1
@@ -93,7 +96,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- parms$Kbrain2pu
   parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
-  parms$pre_pregnant_BW <- 61.103 
+  parms$pre_pregnant_BW <- 61.103 #kg
   parms$BW <- parms$pre_pregnant_BW #include BW listing as long as scale dosing requires
   #entry named 'BW' 
  parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
