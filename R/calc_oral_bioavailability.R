@@ -76,6 +76,12 @@ calc_fbio.oral <- function(Params = NULL,
                                                 overwrite.invivo = FALSE,
                                                 keepit100 = FALSE)
 ){
+  
+  # Ammend list options
+  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(unlist(Caco2.options)))){
+    Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
+  }
+  
   # Initialize parameters if null
   if(is.null(Params)){
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
@@ -99,9 +105,24 @@ calc_fbio.oral <- function(Params = NULL,
                                                             keepit100 = Caco2.options$keepit100))
   }
 
-  fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
+  if(Caco2.options$keepit100 == TRUE){
+    fabs.oral <- 1
+    fgut.oral <- 1
+  }else{
+    if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)) == "try-error")){
+      fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
+    }else{
+      fabs.oral <- Params$Fabs
+    }
+    
+    if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)) == "try-error")){
+      fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
+    }else{
+      fgut.oral <- Params$Fgut
+    }
+  }
+  
   fhep.oral <- Params$hepatic.bioavailability # Determine Fhep.oral
-  fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.roal
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral # Determine Fbio.oral
   
   return(list("fbio.oral" = fbio.oral,
