@@ -292,7 +292,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     # Select Fabs, optionally overwrite based on Caco2.Pab
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
     if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
+      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
         gut.params[["Fabs"]] <- 1
         Fabs <- calc_fabs.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
       }else{
@@ -302,7 +302,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
     
     Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
     if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
+      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
         gut.params[["Fgut"]] <- 1
         Fgut <- calc_fgut.oral(Params = gut.params, species = species) # only calculable for human, assume the same across species
       }else{
