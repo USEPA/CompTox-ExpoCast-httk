@@ -5,20 +5,13 @@
 #' bodily compartments of a given available species (either "Rat", "Rabbit",
 #' "Dog", "Mouse", or default "Human").
 #' 
-#' At a minimum, a chemical identifier (whether name, CAS number, or other
-#' chemical parameterization), model system of interest ("pbtk",
-#' "3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
-#' dosing regimen must be provided for solve_model to run its toxicokinetic
-#' simulations. See 'dosing' argument listing below for breakdown of how to
-#' specify dose (in terms of route of administration, frequency, and quantity)
+#' The minimal usage case requires input that includes a chemical identifier
+#' (whether name, CAS number, or other chemical parameterization), model system
+#' of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
+#' "schmitt", ...), and dosing regimen. See 'dosing' argument listing below for
+#' breakdown of how to specify dose (in terms of route of administration,
+#' frequency, and quantity).
 #' 
-#' Note that the model parameters have units of hours while the model output is
-#' in days.
-#' 
-#' The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
-#' kidneys, veins, arteries, lungs, and the rest of the body. The extra
-#' compartments include the amounts or concentrations metabolized by
-#' the liver and excreted by the kidneys through the tubules.
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
