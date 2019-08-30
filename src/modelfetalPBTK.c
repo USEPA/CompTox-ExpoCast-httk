@@ -299,33 +299,33 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   /* local */ double Qfrest;
   /* local */ double Qfbypass;
 
-  BW = 61.103 - 0.010614 * (*pdTime) + 0.029161 * pow ( (*pdTime) , 2 ) - 5.0203 * pow ( 10 , -4 ) * pow ( (*pdTime) , 3 ) ;
+  BW = 61.103 - 0.010614 * ( (*pdTime) / 7.0 ) + 0.029161 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 5.0203 * pow ( 10 , -4 ) * pow ( ( (*pdTime) / 7.0 ) , 3 ) ;
 
-  Wadipose = 17.067 + 0.14937 * (*pdTime) ;
+  Wadipose = 17.067 + 0.14937 * ( (*pdTime) / 7.0 ) ;
 
-  Wfkidney = 6.3327 * pow ( 10 , -5 ) * exp ( 1.0409 / 0.076435 * ( 1 - exp ( -0.051995 * (*pdTime) ) ) ) ;
+  Wfkidney = 0.001 * 6.3327 * pow ( 10 , -5 ) * exp ( 1.0409 / 0.076435 * ( 1 - exp ( -0.051995 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Wfthyroid = 0.0038483 * exp ( 0.30799 / 0.039800 * ( 1 - exp ( -0.039800 * (*pdTime) ) ) ) ;
+  Wfthyroid = 0.001 * 0.0038483 * exp ( 0.30799 / 0.039800 * ( 1 - exp ( -0.039800 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Wfliver = 0.0074774 * exp ( 0.65856 / 0.061662 * ( 1 - exp ( -0.061662 * (*pdTime) ) ) ) ;
+  Wfliver = 0.001 * 0.0074774 * exp ( 0.65856 / 0.061662 * ( 1 - exp ( -0.061662 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Wfbrain = 0.01574 * exp ( 0.70707 / 0.064827 * ( 1 - exp ( -0.064827 * (*pdTime) ) ) ) ;
+  Wfbrain = 0.001 * 0.01574 * exp ( 0.70707 / 0.064827 * ( 1 - exp ( -0.064827 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Wfgut = 8.1828 * pow ( 10 , -4 ) * exp ( 0.65028 / 0.047724 * ( 1 - exp ( -0.047724 * (*pdTime) ) ) ) ;
+  Wfgut = 0.001 * 8.1828 * pow ( 10 , -4 ) * exp ( 0.65028 / 0.047724 * ( 1 - exp ( -0.047724 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Wflung = 3.0454 * pow ( 10 , -4 ) * exp ( 1.0667 / 0.084604 * ( 1 - exp ( -0.084604 * (*pdTime) ) ) ) ;
+  Wflung = 0.001 * 3.0454 * pow ( 10 , -4 ) * exp ( 1.0667 / 0.084604 * ( 1 - exp ( -0.084604 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  hematocrit = 39.192 - 0.10562 * (*pdTime) - 7.1045 * pow ( 10 , -4 ) * pow ( (*pdTime) , 2 ) ;
+  hematocrit = 39.192 - 0.10562 * ( (*pdTime) / 7.0 ) - 7.1045 * pow ( 10 , -4 ) * pow ( ( (*pdTime) / 7.0 ) , 2 ) ;
 
-  fhematocrit = 4.5061 * (*pdTime) - 0.18487 * pow ( (*pdTime) , 2 ) + 0.0026766 * pow ( (*pdTime) , 3 ) ;
+  fhematocrit = 4.5061 * ( (*pdTime) / 7.0 ) - 0.18487 * pow ( ( (*pdTime) / 7.0 ) , 2 ) + 0.0026766 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ;
 
-  fBW = 0.0018282 * exp ( 1.1735 / 0.077577 * ( 1 - exp ( -0.077577 * (*pdTime) ) ) ) ;
+  fBW = 0.001 * 0.0018282 * exp ( 1.1735 / 0.077577 * ( 1 - exp ( -0.077577 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Vplacenta = -1.7646 * (*pdTime) + 0.91775 * pow ( (*pdTime) , 2 ) - 0.011543 * pow ( (*pdTime) , 3 ) ;
+  Vplacenta = 0.001 * ( -1.7646 * ( (*pdTime) / 7.0 ) + 0.91775 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.011543 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
 
-  Vamnf = 822.34 / ( 1 + exp ( -0.26988 * ( (*pdTime) - 20.150 ) ) ) ;
+  Vamnf = 0.001 * 822.34 / ( 1 + exp ( -0.26988 * ( ( (*pdTime) / 7.0 ) - 20.150 ) ) ) ;
 
-  Vplasma = 1.2406 / ( 1 + exp ( -0.31338 * ( (*pdTime) - 17.813 ) ) ) + 2.4958 ;
+  Vplasma = 1.2406 / ( 1 + exp ( -0.31338 * ( ( (*pdTime) / 7.0 ) - 17.813 ) ) ) + 2.4958 ;
 
   Vrbcs = hematocrit / ( 1 - hematocrit ) * Vplasma ;
 
@@ -333,13 +333,13 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vffmx = 1 / 1.1 * ( BW - Wadipose - 0.001 * ( fBW + 1.02 * Vplacenta + 1.01 * Vamnf ) ) ;
 
-  Vallx = Vplasma + Vrbcs + Vthyroid + Vkidney + Vliver + Vlung ;
+  Vallx = Vplasma + Vrbcs + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
 
   Vrest = Vffmx - Vallx ;
 
-  Vfart = 0.16 * 80 / 1000 * fBW ;
+  Vfart = 0.001 * 0.16 * 80 * fBW ;
 
-  Vfven = 0.595 * 80 / 1000 * fBW ;
+  Vfven = 0.001 * 0.595 * 80 * fBW ;
 
   Vfkidney = 1 / 1.05 * Wfkidney ;
 
@@ -355,29 +355,29 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfbrain + Vfgut + Vflung ) ;
 
-  Qcardiac = 301.78 + 3.2512 * (*pdTime) + 0.15947 * pow ( (*pdTime) , 2 ) - 0.0047059 * pow ( (*pdTime) , 3 ) ;
+  Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) );
 
-  Qgut = 0.01 * ( 17 + ( 12.5 - 17.0 ) / 40 * (*pdTime) ) * Qcardiac ;
+  Qgut = 24 * 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qkidney = 53.248 + 3.6447 * (*pdTime) - 0.15357 * pow ( (*pdTime) , 2 ) + 0.0016968 * pow ( (*pdTime) , 3 ) ;
+  Qkidney = 24 * ( 53.248 + 3.6447 * ( (*pdTime) / 7.0 ) - 0.15357 * pow ( ( (*pdTime) / 7.0 ) , 2 ) + 0.0016968 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
 
-  Qliver = 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40 * (*pdTime) ) * Qcardiac ;
+  Qliver = 24 * 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40 * (*pdTime) ) * Qcardiac ;
+  Qthyroid = 24 * 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qplacenta = 0.059176 * Vplacenta ;
+  Qplacenta = 24 * 0.059176 * Vplacenta ;
 
-  Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40 * (*pdTime) ) * Qcardiac ;
+  Qadipose = 24 * 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
-  Qgfr = 113.73 + 3.578 * (*pdTime) - 0.067272 * pow ( (*pdTime) , 2 ) ;
+  Qgfr = 60 * 24 * 0.001 * ( 113.73 + 3.5784 * ( (*pdTime) / 7.0 ) - 0.067272 * pow ( ( (*pdTime) / 7.0 ) , 2 ) ) ;
 
-  Qfrvtl = 2466.5 / ( 1 + exp ( -0.14837 * ( (*pdTime) - 43.108 ) ) ) ;
+  Qfrvtl = 60 * 24 * 0.001 * 2466.5 / ( 1 + exp ( -0.14837 * ( ( (*pdTime) / 7.0 ) - 43.108 ) ) ) ;
 
-  Qflvtl = 506.30 / ( 1 + exp ( -0.21916 * ( (*pdTime) - 30.231 ) ) ) ;
+  Qflvtl = 60 * 24 * 0.001 * 506.30 / ( 1 + exp ( -0.21916 * ( ( (*pdTime) / 7.0 ) - 30.231 ) ) ) ;
 
-  Qfda = 1125.3 / ( 1 + exp ( -0.18031 * ( (*pdTime) - 35.939 ) ) ) ;
+  Qfda = 60 * 24 * 0.001 * 1125.3 / ( 1 + exp ( -0.18031 * ( ( (*pdTime) / 7.0 ) - 35.939 ) ) ) ;
 
   Qfartb = Qflvtl + Qfda ;
 
@@ -385,19 +385,19 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qflung = Qfrvtl - Qfda ;
 
-  Qfplacenta = 262.20 / ( 1 + exp ( -0.22183 * ( (*pdTime) - 28.784 ) ) ) ;
+  Qfplacenta = 60 * 24 * 0.001 * 262.20 / ( 1 + exp ( -0.22183 * ( ( (*pdTime) / 7.0 ) - 28.784 ) ) ) ;
 
-  Qfdv = 1.892 * exp ( 0.098249 / 0.0064374 * ( 1 - exp ( -0.0064374 * (*pdTime) ) ) ) ;
+  Qfdv = 60 * 24 * 0.001 * 1.892 * exp ( 0.098249 / 0.0064374 * ( 1 - exp ( -0.0064374 * ( (*pdTime) / 7.0 ) ) ) ) ;
 
-  Qfgut = 6.8 / 75 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+  Qfgut = 6.8 / 75.0 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
-  Qfkidney = 5.4 / 75 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+  Qfkidney = 5.4 / 75.0 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
-  Qfbrain = 14.3 / 75 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+  Qfbrain = 14.3 / 75.0 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
-  Qfliver = 6.5 / 54 * ( 1 - 26.5 / 75 ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+  Qfliver = 6.5 / 54.0 * ( 1 - 26.5 / 75.0 ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
-  Qfthyroid = 1.5 / 54 * ( 1 - 26.5 / 75 ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+  Qfthyroid = 1.5 / 54.0 * ( 1 - 26.5 / 75.0 ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
   Qfrest = Qfcardiac - ( Qfplacenta + Qfgut + Qfliver + Qfthyroid + Qfkidney + Qfbrain ) ;
 
