@@ -94,7 +94,9 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kfrest2pu <- parms$Krest2pu
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
+  parms$Kbrain2pu <- 1 #dummy value
   parms$Kfbrain2pu <- parms$Kbrain2pu
+  parms$Vbrainc <- 1 #dummy value
   parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
   parms$pre_pregnant_BW <- 61.103 #kg
   parms$BW <- parms$pre_pregnant_BW #include BW listing as long as scale dosing requires
