@@ -77,27 +77,40 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               species="Human",
                               ...)
 {
+  #Call parameterize_pbtk function with brain compartment specified to obtain
+  #maternal brain partitioning coefficient, to be equated to fetal Kfbrain2pu.
   parms <- parameterize_pbtk(chem.cas=chem.cas,
                             chem.name=chem.name,
                             species=species,
                             tissuelist=list(liver=c("liver"),
                             kidney=c("kidney"),lung=c("lung"),
-                            gut=c("gut")), 
+                            gut=c("gut"),adipose = c("adipose"),
+                            brain = c("brain")),
                             placenta=T,
                             ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
   
+  #Store Kbrain2pu value in intermediate variable
+  Kbrain2pu <- parms$Kbrain2pu
+  
+  #Run parameterize pbtk function again, this time with brain tacitly lumped
+  parms <- parameterize_pbtk(chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             species=species,
+                             tissuelist=list(liver=c("liver"),
+                                             kidney=c("kidney"),lung=c("lung"),
+                                             gut=c("gut"),adipose = c("adipose")),
+                             placenta=T,
+                             ...)
   parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1
-  parms$Kadipose2pu <- 1 #set workable value for now, where an initialization was previously absent. 
   parms$Kfliver2pu <- parms$Kliver2pu
   parms$Kfkidney2pu <- parms$Kkidney2pu
   parms$Kfrest2pu <- parms$Krest2pu
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
-  parms$Kbrain2pu <- 1 #dummy value
-  parms$Kfbrain2pu <- parms$Kbrain2pu
+  parms$Kfbrain2pu <- Kbrain2pu
   parms$Vbrainc <- 1 #dummy value
-  parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + parms$Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
+  parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
   parms$pre_pregnant_BW <- 61.103 #kg
   parms$BW <- parms$pre_pregnant_BW #include BW listing as long as scale dosing requires
   #entry named 'BW' 
