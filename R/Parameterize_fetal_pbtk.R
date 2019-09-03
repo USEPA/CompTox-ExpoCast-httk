@@ -90,8 +90,9 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                             ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
   
-  #Store Kbrain2pu value in intermediate variable
+  #Store Kbrain2pu and Vbrainc values in intermediate variables
   Kbrain2pu <- parms$Kbrain2pu
+  Vbrainc <- parms$Vbrainc
   
   #Run parameterize pbtk function again, this time with brain tacitly lumped
   parms <- parameterize_pbtk(chem.cas=chem.cas,
@@ -109,11 +110,12 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- Kbrain2pu
-  parms$Vbrainc <- 1 #dummy value
-  parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
+  #Weighted average no longer needed  vvv
+  #parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
   parms$pre_pregnant_BW <- 61.103 #kg
-  parms$BW <- parms$pre_pregnant_BW #include BW listing as long as scale dosing requires
-  #entry named 'BW' 
+  #Override parameterize_pbtk's body weight listing with average prepregnant
+  #case, as scale dosing requires an entry named 'BW'
+  parms$BW <- parms$pre_pregnant_BW 
  parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
  parms$Vkidneyc <- 0.275/parms$pre_pregnant_BW
  parms$Vgutc <- 1.14/parms$pre_pregnant_BW
