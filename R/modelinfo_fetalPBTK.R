@@ -10,6 +10,7 @@ model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[["fetal_pbtk"]]$param.names <- c(
+  "BW",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
@@ -19,6 +20,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Funbound.plasma.adjustment",
   "Funbound.plasma.dist",
   "hematocrit",
+  "Kadipose2pu",
   "Kfplacenta2pu",
   "Kgut2pu",
   "kgutabs",
@@ -35,7 +37,6 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "pKa_Accept",
   "pKa_Donor",
   "Pow",
-  "Qgfrc",
   "Rblood2plasma",
   "Vartc",
   "Vgutc",
@@ -45,7 +46,6 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Vvenc",
   "Kfthyroid2pu",
   "Kthyroid2pu",
-  "Kadipose2pu",
   "Kfliver2pu",
   "Kfkidney2pu",
   "Kfrest2pu",
@@ -53,7 +53,6 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Kflung2pu",
   "Kfbrain2pu",
   "pre_pregnant_BW",
-  "BW",
   "Vthyroidc",
   "Vfgutc"
   )

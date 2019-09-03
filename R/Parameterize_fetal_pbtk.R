@@ -56,7 +56,7 @@
 #' concentration of chemical in placental tissue to unbound concentration in
 #' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
 #' placental tissue to unbound concentration in fetal plasma.} 
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Robert Pearce, and Mark Sfeir
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
@@ -92,7 +92,6 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   
   #Store Kbrain2pu and Vbrainc values in intermediate variables
   Kbrain2pu <- parms$Kbrain2pu
-  Vbrainc <- parms$Vbrainc
   
   #Run parameterize pbtk function again, this time with brain tacitly lumped
   parms <- parameterize_pbtk(chem.cas=chem.cas,
@@ -123,9 +122,11 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  parms$Vlungc <- 0.95/parms$pre_pregnant_BW
  parms$Vartc <- 0.624/parms$pre_pregnant_BW         
  parms$Vvenc <- 2.32/parms$pre_pregnant_BW
- parms$Vfgutc <- 0.0178
- parms$Vrestc <- parms$Qcardiacc <- parms$Qgutf <- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qkidneyf <- parms$Vbrainc <- parms$Kbrain2pu <- NULL  
-#parms$fBW <- 0.00003107 * exp(0.8137/0.06458 * (1 - exp(-0.06458 * day / 7)))  
-#parms$Vplacenta <- 0.317 * parms$fBW^0.582  
+ #parms$Vfgutc <- 0.0178
+ parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
+ parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
+ parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
+ parms$Vfgutc <- NULL  
+
  return(parms)                             
 }
