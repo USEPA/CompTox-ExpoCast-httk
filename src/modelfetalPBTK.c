@@ -337,9 +337,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vrest = Vffmx - Vallx ;
 
-  Vfart = 0.001 * 0.16 * 80 * fBW ;
+  Vfart = 0.16 * 80 * fBW ;
 
-  Vfven = 0.001 * 0.595 * 80 * fBW ;
+  Vfven = 0.595 * 80 * fBW ;
 
   Vfkidney = 1 / 1.05 * Wfkidney ;
 
@@ -357,17 +357,17 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) );
 
-  Qgut = 24 * 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qgut = 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
   Qkidney = 24 * ( 53.248 + 3.6447 * ( (*pdTime) / 7.0 ) - 0.15357 * pow ( ( (*pdTime) / 7.0 ) , 2 ) + 0.0016968 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
 
-  Qliver = 24 * 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qliver = 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qthyroid = 24 * 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qplacenta = 24 * 0.059176 * Vplacenta ; 
+  Qplacenta = 24 * 0.059176 * 1000 * Vplacenta ; 
 
-  Qadipose = 24 * 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
