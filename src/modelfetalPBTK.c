@@ -331,7 +331,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vadipose = 1 / 0.950 * Wadipose ;
 
-  Vffmx = 1 / 1.1 * ( BW - Wadipose - 0.001 * ( fBW + 1.02 * Vplacenta + 1.01 * Vamnf ) ) ;
+  Vffmx = 1 / 1.1 * ( BW - Wadipose - ( fBW + 1.02 * Vplacenta + 1.01 * Vamnf ) ) ;
 
   Vallx = Vplasma + Vrbcs + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
 
@@ -365,7 +365,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qthyroid = 24 * 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qplacenta = 24 * 0.059176 * Vplacenta ;
+  Qplacenta = 24 * 0.059176 * Vplacenta ; 
 
   Qadipose = 24 * 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
