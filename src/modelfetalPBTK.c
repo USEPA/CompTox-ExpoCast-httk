@@ -337,9 +337,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vrest = Vffmx - Vallx ;
 
-  Vfart = 0.16 * 80 * fBW ;
+  Vfart = 0.001 * 0.16 * 80 * fBW ;
 
-  Vfven = 0.595 * 80 * fBW ;
+  Vfven = 0.001 * 0.595 * 80 * fBW ;
 
   Vfkidney = 1 / 1.05 * Wfkidney ;
 
@@ -353,7 +353,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vflung = 1 / 1.05 * Wflung ;
 
-  Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfbrain + Vfgut + Vflung ) ;
+  Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung ) ;
 
   Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) );
 
