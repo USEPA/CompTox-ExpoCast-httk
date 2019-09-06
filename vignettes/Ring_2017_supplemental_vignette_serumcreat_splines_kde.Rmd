@@ -1,10 +1,10 @@
 ---
-title: "Ring et al. 2017 Serum creatinine spline fits and residuals"
+title: "Ring et al. (2017) Serum creatinine spline fits and residuals"
 author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. 2017 Serum creatinine spline fits and residuals}
+  %\VignetteIndexEntry{Ring et al. (2017) Serum creatinine spline fits and residuals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

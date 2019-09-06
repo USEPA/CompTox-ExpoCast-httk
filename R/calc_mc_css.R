@@ -164,7 +164,7 @@
 #' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 #' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 #'
-#' @keywords Monte Carlo Steady State
+#' @keywords Monte-Carlo Steady-State
 #'
 #' @examples
 #' 
