@@ -1,9 +1,9 @@
-/* fetalPBTK2.c for R deSolve package
+/* fetalPBTK.c for R deSolve package
    ___________________________________________________
 
    Model File:  fetalPBTK.model
 
-   Date:  Fri Jun 07 15:10:38 2019
+   Date:  Fri Sep 06 17:12:23 2019
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -68,7 +68,8 @@
 
    37 Parameters:
      pre_pregnant_BW = 0,
-     Clmetabolismc = 0.0,
+     Clmetabolismc = 0,
+     Clmetabolism = 0,
      kgutabs = 0,
      Kkidney2pu = 0,
      Kliver2pu = 0,
@@ -88,22 +89,21 @@
      Kfgut2pu = 0,
      Kfbrain2pu = 0,
      Vartc = 0,
-     Vvenc = 0,
-     Vgutc = 0,
-     Vkidneyc = 0,
-     Vliverc = 0,
-     Vlungc = 0,
      Vart = 0,
+     Vvenc = 0,
      Vven = 0,
+     Vgutc = 0,
      Vgut = 0,
+     Vkidneyc = 0,
      Vkidney = 0,
+     Vliverc = 0,
      Vliver = 0,
+     Vlungc = 0,
      Vlung = 0,
      Vthyroidc = 0,
      Vthyroid = 0,
      Fraction_unbound_plasma = 0,
      Rblood2plasma = 0.0,
-     Clmetabolism = 0.0,
 */
 
 #include <R.h>
@@ -164,41 +164,41 @@ static double parms[37];
 
 #define pre_pregnant_BW parms[0]
 #define Clmetabolismc parms[1]
-#define kgutabs parms[2]
-#define Kkidney2pu parms[3]
-#define Kliver2pu parms[4]
-#define Krbc2pu parms[5]
-#define Kadipose2pu parms[6]
-#define Krest2pu parms[7]
-#define Klung2pu parms[8]
-#define Kgut2pu parms[9]
-#define Kthyroid2pu parms[10]
-#define Kplacenta2pu parms[11]
-#define Kfplacenta2pu parms[12]
-#define Kfkidney2pu parms[13]
-#define Kfrest2pu parms[14]
-#define Kfthyroid2pu parms[15]
-#define Kfliver2pu parms[16]
-#define Kflung2pu parms[17]
-#define Kfgut2pu parms[18]
-#define Kfbrain2pu parms[19]
-#define Vartc parms[20]
-#define Vvenc parms[21]
-#define Vgutc parms[22]
-#define Vkidneyc parms[23]
-#define Vliverc parms[24]
-#define Vlungc parms[25]
-#define Vart parms[26]
-#define Vven parms[27]
-#define Vgut parms[28]
-#define Vkidney parms[29]
+#define Clmetabolism parms[2]
+#define kgutabs parms[3]
+#define Kkidney2pu parms[4]
+#define Kliver2pu parms[5]
+#define Krbc2pu parms[6]
+#define Kadipose2pu parms[7]
+#define Krest2pu parms[8]
+#define Klung2pu parms[9]
+#define Kgut2pu parms[10]
+#define Kthyroid2pu parms[11]
+#define Kplacenta2pu parms[12]
+#define Kfplacenta2pu parms[13]
+#define Kfkidney2pu parms[14]
+#define Kfrest2pu parms[15]
+#define Kfthyroid2pu parms[16]
+#define Kfliver2pu parms[17]
+#define Kflung2pu parms[18]
+#define Kfgut2pu parms[19]
+#define Kfbrain2pu parms[20]
+#define Vartc parms[21]
+#define Vart parms[22]
+#define Vvenc parms[23]
+#define Vven parms[24]
+#define Vgutc parms[25]
+#define Vgut parms[26]
+#define Vkidneyc parms[27]
+#define Vkidney parms[28]
+#define Vliverc parms[29]
 #define Vliver parms[30]
-#define Vlung parms[31]
-#define Vthyroidc parms[32]
-#define Vthyroid parms[33]
-#define Fraction_unbound_plasma parms[34]
-#define Rblood2plasma parms[35]
-#define Clmetabolism parms[36]
+#define Vlungc parms[31]
+#define Vlung parms[32]
+#define Vthyroidc parms[33]
+#define Vthyroid parms[34]
+#define Fraction_unbound_plasma parms[35]
+#define Rblood2plasma parms[36]
 
 /* Forcing (Input) functions */
 static double forc[0];
@@ -355,7 +355,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung ) ;
 
-  Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) );
+  Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
 
   Qgut = 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
@@ -365,7 +365,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
-  Qplacenta = 24 * 0.059176 * 1000 * Vplacenta ; 
+  Qplacenta = 24 * 0.059176 * 1000 * Vplacenta ;
 
   Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
 
