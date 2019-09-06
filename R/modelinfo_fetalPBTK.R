@@ -103,6 +103,7 @@ model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetalpbtk"
 model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "pre_pregnant_BW",
   "Clmetabolismc",
+  "Clmetabolism",
   "kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
@@ -122,22 +123,21 @@ model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "Kfgut2pu",
   "Kfbrain2pu",
   "Vartc",
-  "Vvenc",
-  "Vgutc",
-  "Vkidneyc",
-  "Vliverc",
-  "Vlungc",
   "Vart",
+  "Vvenc",
   "Vven",
+  "Vgutc",
   "Vgut",
+  "Vkidneyc",
   "Vkidney",
+  "Vliverc",
   "Vliver",
+  "Vlungc",
   "Vlung",
   "Vthyroidc",
   "Vthyroid",
   "Fraction_unbound_plasma",
-  "Rblood2plasma",
-  "Clmetabolism"
+  "Rblood2plasma"
 )
 
 # This function initializes the state vector for the compiled model:
