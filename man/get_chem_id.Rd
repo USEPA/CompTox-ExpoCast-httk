@@ -6,6 +6,13 @@
 \usage{
 get_chem_id(chem.cas = NULL, chem.name = NULL, dtxsid = NULL)
 }
+\arguments{
+\item{chem.cas}{CAS regstry number}
+
+\item{chem.name}{Chemical name}
+
+\item{dtxsid}{DSSTox Substance identifier}
+}
 \description{
 Given one of chem.name, chem.cas (Chemical Abstract Service Registry Number),
 or DTXSID (DSStox Substance Identifier \url{https://comptox.epa.gov} this
