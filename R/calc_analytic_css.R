@@ -1,4 +1,7 @@
+#Initialize model.list for compiling multiple lists of model-related variables 
+#and information to be accessed throughout httk. 
 model.list <- list()
+
 #'Calculate the analytic steady state concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
@@ -101,6 +104,75 @@ calc_analytic_css <- function(chem.name=NULL,
 # Check that chemical info in specified somehow:
   if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
   
+### MODEL PARAMETERS FOR R
+
+# Make sure we have all the parameters necessary to describe the chemical (we don't
+# necessarily need all parameters associated with a given model to do this:)
+  if (is.null(parameters))
+  {
+  # name of function that generates the model parameters:
+    parameterize_function <- model.list[[model]]$parameterize.func
+    
+    parameters <- do.call(parameterize_function,list(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      default.to.human=default.to.human,
+      suppress.messages=suppress.messages,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      regression=regression,
+      minimum.Funbound.plasma=minimum.Funbound.plasma)) 
+  } else {
+    if (!all(compiled_param_names %in% names(parameters)))
+    {
+      stop(paste("Missing parameters:",
+        paste(compiled_param_names[which(!compiled_param_names %in% 
+        names(parameters))],collapse=', '),
+        ". Use parameters from",parameterize_function,".",sep="")) 
+    }
+  }
+  
+  # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
+  # have been updated by Monte Carlo it may be that Rblood2plasma needs to be
+  # recalculated:
+  if (recalc.blood2plasma) parameters[['Rblood2plasma']] <- 
+    1 - 
+    parameters[['hematocrit']] + 
+    parameters[['hematocrit']] * parameters[['Krbc2pu']] * 
+    parameters[['Funbound.plasma']]
+  Rblood2plasma <- parameters[["Rblood2plasma"]]
+  
+  # The unscald hepatic clearance depens on many parameters that could be changed
+  # by Monte Carlo simulation. This code recalculates it if needed:
+  if (recalc.clearance)
+  {
+  # Do we have all the parameters we need?:
+    if (!all(model.list[[model]]$param.names%in%names(parameters)))
+    {
+      if (is.null(chem.name) & is.null(chem.cas)) 
+        stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
+      ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
+    }
+    ss.params[[names(ssparams) %in% names(parameters)]] <- 
+      parameters[[names(ssparams) %in% names(parameters)]]
+    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
+      hepatic.model='unscaled',
+      suppress.messages=T)
+  }
+  
+  # If the hepatic metabolism is now slowed by plasma protein binding (non-
+  # restrictive clearance)  
+  if (!restrictive.clearance) parameters$Clmetabolismc <- 
+    parameters$Clmetabolismc / parameters$Funbound.plasma
+  
+  # If there is not an explicit liver we need to include a factor for first-
+  # pass metabolism:
+  if (!is.null(model.list[[model]]$do.first.pass))
+    if (model.list[[model]]$do.first.pass)
+  {
+    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+  }
+  
 # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
 # IVIVE parameters:
   if (!is.null(IVIVE)) 
@@ -136,18 +208,8 @@ calc_analytic_css <- function(chem.name=NULL,
 # Convert to hourly dose:
   hourly.dose <- daily.dose / 24 # mg/kg/h
 
-# Retrieve the molecular weight if the parameters argument isn't given:'
-  if (is.null(parameters) | !is.null(tissue))
-  {
-    if(is.null(chem.cas))
-    {
-      out <- get_chem_id(chem.name=chem.name)
-      chem.cas <- out$chem.cas
-    }
-    MW <- get_physchem_param('MW',chem.CAS=chem.cas)
-  }else{
-    MW <- parameters[['MW']]
-  }
+# Retrieve the molecular weight:
+  MW <- parameters[['MW']]
   
   if (model %in% names(model.list))            
   {

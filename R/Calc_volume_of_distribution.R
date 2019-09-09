@@ -33,7 +33,7 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #' @references Schmitt W. "General approach for the calculation of tissue to
 #' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 #' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
@@ -77,13 +77,19 @@ calc_vdist<- function(chem.cas=NULL,
     else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
-  if(any(names(parameters) %in% schmitt.specific.names) & !all(c(schmitt.names) %in% names(parameters))) stop("All predict_partitioning_schmitt coefficients must be included if not using pbtk or 3compartment parameters.")              
-  else if(all(schmitt.names %in% names(parameters))) schmitt.params  <- T
+  if(any(names(parameters) %in% schmitt.specific.names) & 
+    !all(schmitt.specific.names %in% names(parameters))) 
+    stop("All predict_partitioning_schmitt coefficients must be included if \
+not using pbtk or 3compartment parameters.")              
+  else if(all(model.list[["schmitt"]]$param.names %in% names(parameters))) 
+    schmitt.params  <- T
   else schmitt.params <- F                                                                                           
 
   if(schmitt.params & !('funbound.plasma' %in% tolower(names(parameters))))
   {
-    if(is.null(chem.cas) & is.null(chem.name))stop("Specify chem.name or chem.cas with correct species if not including Funbound.plasma with predict_partitioning_schmitt coefficients.")
+    if (is.null(chem.cas) & is.null(chem.name)) 
+      stop("Specify chem.name or chem.cas with correct species if not \
+including Funbound.plasma with predict_partitioning_schmitt coefficients.")
     else if(is.null(chem.cas))
     {
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
@@ -131,28 +137,33 @@ calc_vdist<- function(chem.cas=NULL,
   {
     hematocrit <- parameters[["hematocrit"]]
   } else hematocrit <- this.phys.data["Hematocrit"]
+  
+  
   plasma.vol <- this.phys.data["Plasma Volume"]/1000 # L/kg BW
-  if(schmitt.params)
+  RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
+  if (all(schmitt.specific.names %in% names(parameters)))
   {  
-     if (is.data.table(parameters))
-     {
-       PCs <- parameters[,schmitt.names,with=F]
-     } else {
-       PCs <- subset(parameters,names(parameters) %in% schmitt.names)
-     }
+    PC.names <- names(parameters)[regexpr("K",names(parameters))!=-1]
+    if (is.data.table(parameters))
+    {
+      PCs <- parameters[,PC.names,with=F]
+    } else {
+      PCs <- subset(parameters,names(parameters) %in% PC.names)
+    }
    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
     lumped_params <- lump_tissues(PCs,tissuelist=NULL,species=species)
 
-    RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
-    vol.dist <- plasma.vol + RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma   
+    vol.dist <- plasma.vol + 
+      RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+
+      lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma   
   } else {
-    if(!all(param.names.schmitt %in% names(parameters)) & 
-       !all(param.names.3comp %in% names(parameters)) & 
-       !all(param.names.pbtk %in% names(parameters))) 
+    if(!all(model.list[["schmitt"]]$param.names %in% names(parameters)) & 
+       !all(model.list[["3comp"]]$param.names %in% names(parameters)) & 
+       !all(model.list[["pbtk"]]$param.names %in% names(parameters))) 
        stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
 
-    RBC.vol <- plasma.vol/(1 - parameters$hematocrit)*parameters$hematocrit 
-    vol.dist <- plasma.vol + RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
+    vol.dist <- plasma.vol + 
+      RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
     lastchar <- function(x){substr(x, nchar(x), nchar(x))}
     firstchar <- function(x){substr(x, 1,1)}
     scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V"&lastchar(names(parameters))=="c"]

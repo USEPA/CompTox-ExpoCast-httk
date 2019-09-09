@@ -1,3 +1,25 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing other_tests.R other_tests.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_css(chem.name='nicotine')
 Human plasma concentrations returned in uM units.
 $avg
 [1] 0.6802697
@@ -11,6 +33,7 @@ $max
 $the.day
 [1] 0
 
+> calc_css(chem.name="perfluorooctanoic acid")
 Human plasma concentrations returned in uM units.
 $avg
 [1] 133.3033
@@ -24,6 +47,7 @@ $max
 $the.day
 [1] 16
 
+> calc_stats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.82 .
 $AUC
@@ -35,5 +59,8 @@ $peak
 $mean
 [1] 0.06802697
 
+> calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
++                   default.to.human=TRUE,daily.dose=2)
 Tissue concentration for liver returned in uM units.
 [1] 23.605
+> 
