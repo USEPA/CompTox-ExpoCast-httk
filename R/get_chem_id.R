@@ -6,6 +6,9 @@
 #' pieces of information.
 #' @author John Wambaugh and Robert Pearce
 #' @keywords cheminformatics
+#' @param chem.cas CAS regstry number
+#' @param chem.name Chemical name
+#' @param dtxsid DSSTox Substance identifier
 get_chem_id <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid=NULL)

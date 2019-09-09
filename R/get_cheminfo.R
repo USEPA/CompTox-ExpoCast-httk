@@ -94,7 +94,7 @@ get_cheminfo <- function(info="CAS",
     paste(valid.info,collapse=" ")))
 
 # Figure out which species we support
-  valid.species <- colnames(physiology.data)[!(colnames(physiology.data)
+  valid.species <- colnames(httk::physiology.data)[!(colnames(physiology.data)
     %in% c("Parameter","Units"))]
 # Standardize the species capitalization
   if (tolower(species) %in% tolower(valid.species)) species <-

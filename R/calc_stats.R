@@ -62,7 +62,7 @@ calc_stats <-function(days,chem.name=NULL,chem.cas=NULL,parameters=NULL,stats=c(
   out <- NULL
   
   if(is.null(chem.name) & is.null(chem.cas) & is.null(parameters)){
-    for(this.CAS in get_cheminfo(species=species,exclude.fup.zero = exclude.fup.zero,model=model)){
+    for(this.CAS in get_cheminfo(species=species,model=model)){
       stat <- calc_chem_stats(chem.cas=this.CAS,days=days,stats=stats,species=species,dose=dose,daily.dose=daily.dose,doses.per.day=doses.per.day,concentration=concentration,output.units=output.units,model=model,default.to.human=default.to.human,suppress.messages=T,...)
 
       if(length(stat)==1){
