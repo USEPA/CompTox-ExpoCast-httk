@@ -256,7 +256,5 @@ pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 
 \author{
 Caroline Ring, Robert Pearce, and John Wambaugh
 }
-\keyword{Carlo}
-\keyword{Monte}
-\keyword{State}
-\keyword{Steady}
+\keyword{Monte-Carlo}
+\keyword{Steady-State}

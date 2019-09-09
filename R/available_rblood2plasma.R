@@ -73,7 +73,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
         if (!suppress.messages) warning(paste(species,'Rblood2plasma calculated with calc_rblood2plasma.')) 
       } else if (chem.cas %in% get_cheminfo(species='Human',model='schmitt')) {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
-          species=species,
+          species="Human",
           default.to.human=T,
           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
           suppress.messages=suppress.messages)

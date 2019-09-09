@@ -24,7 +24,7 @@
 #' with plasma concentration.
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
+#' vitro clearance assay result has a p-value greater than the threshold are
 #' set to zero.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -65,9 +65,11 @@ parameterize_1comp <- function(chem.cas=NULL,
                                minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
-  if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
-  params <- list()
   
+  #Check for specified chemical
+  if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
+  
+  params <- list()
   params[['Vdist']] <- calc_vdist(chem.cas=chem.cas,
                                   chem.name=chem.name,
                                   species=species,
@@ -117,12 +119,14 @@ parameterize_1comp <- function(chem.cas=NULL,
 
   params[['kgutabs']] <- 2.18
   
-  params[['Rblood2plasma']] <- available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+  params[['Rblood2plasma']] <- 
+    available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,
+        species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
   
   params[['million.cells.per.gliver']] <- 110
   params[["liver.density"]] <- 1.05 # g/mL
    
-   # Check the species argument for capitilization problems and whether or not it is in the table:  
+   # Check the species argument for capitalization problems and whether or not it is in the table:  
     if (!(species %in% colnames(physiology.data)))
     {
       if (toupper(species) %in% toupper(colnames(physiology.data)))

@@ -28,16 +28,18 @@ Authors@R: c(
            person("Greg", "Honda", email = "honda.gregory@epa.gov", role = c("aut")), 
            person("Mark", "Sfeir", email = "sfeir.mark@epa.gov", role = c("aut")), 
            person("Jimena", "Davis", role = c("ctb")), 
+           person("James", "Sluka", email = "jsluka@indiana.edu", role = c("ctb")), 
            person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", role = c("ctb")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", role = c("ctb")), 
            person("Woodrow", "Setzer", role = c("ctb"))
            )
 Depends: R (>= 2.10)
-Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats, graphics,
-        utils, magrittr
+Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
+        graphics, utils, magrittr
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
-        EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks, stringr, reshape,
-        reshape2, gdata, viridis, CensRegMod, gmodels, colorspace
+        EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
+        stringr, reshape, reshape2, gdata, viridis, CensRegMod,
+        gmodels, colorspace
 License: GPL-3
 LazyData: true
 VignetteBuilder: knitr, R.rsp
@@ -46,13 +48,15 @@ URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
-Packaged: 2019-02-04 16:26:30 UTC; jwambaug
+Encoding: UTF-8
+Packaged: 2019-07-25 18:56:22 UTC; jwambaug
 Author: John Wambaugh [aut, cre],
   Robert Pearce [aut],
   Caroline Ring [aut],
   Greg Honda [aut],
   Mark Sfeir [aut],
   Jimena Davis [ctb],
+  James Sluka [ctb],
   Nisha Sipes [ctb],
   Barbara Wetmore [ctb],
   Woodrow Setzer [ctb]
