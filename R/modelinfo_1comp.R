@@ -40,7 +40,7 @@ model.list[["1compartment"]]$Rtosolvermap <- list(
   BW="BW")
 
 # If the model does not include an explicit gut-liver link before systemic
-# circulation, then we want to decrease the absorbed dose by the first pass
+# circulation, then we want to decrease the absorbed dose by the first past
 # hepatic extraction factor:
 model.list[["1compartment"]]$do.first.pass <- T
 
@@ -59,7 +59,7 @@ model.list[["1compartment"]]$compiled.param.names <- c(
 # This function initializes the state vector for the compiled model:
 model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
 
-# This is the function that calculates the derivative of the model as a function
+# This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
 model.list[["1compartment"]]$derivative.func <- "derivs1comp"
 
