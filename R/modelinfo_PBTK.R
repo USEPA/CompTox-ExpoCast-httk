@@ -159,7 +159,7 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
 # Allowable units:
 model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
 
-# These parameters specify the exposure scenario simulated by the model:
+# These parameters specific the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
