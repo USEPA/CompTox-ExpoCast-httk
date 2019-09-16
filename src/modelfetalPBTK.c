@@ -3,7 +3,7 @@
 
    Model File:  fetalPBTK.model
 
-   Date:  Fri Sep 06 17:12:23 2019
+   Date:  Mon Sep 16 14:26:31 2019
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -39,7 +39,8 @@
      Afkidney = 0.0,
      Afbrain = 0.0,
 
-   23 Outputs:
+   24 Outputs:
+    "tw",
     "Cgut",
     "Cliver",
     "Cven",
@@ -135,29 +136,30 @@
 #define ID_Afbrain 0x00017
 
 /* Model variables: Outputs */
-#define ID_Cgut 0x00000
-#define ID_Cliver 0x00001
-#define ID_Cven 0x00002
-#define ID_Clung 0x00003
-#define ID_Cart 0x00004
-#define ID_Cadipose 0x00005
-#define ID_Crest 0x00006
-#define ID_Ckidney 0x00007
-#define ID_Cplasma 0x00008
-#define ID_Aplasma 0x00009
-#define ID_Cthyroid 0x0000a
-#define ID_Cplacenta 0x0000b
-#define ID_Cfliver 0x0000c
-#define ID_Cfven 0x0000d
-#define ID_Cfart 0x0000e
-#define ID_Cfgut 0x0000f
-#define ID_Cflung 0x00010
-#define ID_Cfrest 0x00011
-#define ID_Cfthyroid 0x00012
-#define ID_Cfkidney 0x00013
-#define ID_Cfbrain 0x00014
-#define ID_Afplasma 0x00015
-#define ID_Cfplasma 0x00016
+#define ID_tw 0x00000
+#define ID_Cgut 0x00001
+#define ID_Cliver 0x00002
+#define ID_Cven 0x00003
+#define ID_Clung 0x00004
+#define ID_Cart 0x00005
+#define ID_Cadipose 0x00006
+#define ID_Crest 0x00007
+#define ID_Ckidney 0x00008
+#define ID_Cplasma 0x00009
+#define ID_Aplasma 0x0000a
+#define ID_Cthyroid 0x0000b
+#define ID_Cplacenta 0x0000c
+#define ID_Cfliver 0x0000d
+#define ID_Cfven 0x0000e
+#define ID_Cfart 0x0000f
+#define ID_Cfgut 0x00010
+#define ID_Cflung 0x00011
+#define ID_Cfrest 0x00012
+#define ID_Cfthyroid 0x00013
+#define ID_Cfkidney 0x00014
+#define ID_Cfbrain 0x00015
+#define ID_Afplasma 0x00016
+#define ID_Cfplasma 0x00017
 
 /* Parameters */
 static double parms[37];
@@ -299,33 +301,35 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   /* local */ double Qfrest;
   /* local */ double Qfbypass;
 
-  BW = 61.103 - 0.010614 * ( (*pdTime) / 7.0 ) + 0.029161 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 5.0203 * pow ( 10 , -4 ) * pow ( ( (*pdTime) / 7.0 ) , 3 ) ;
+  yout[ID_tw] = (*pdTime) / 7.0 ;
 
-  Wadipose = 17.067 + 0.14937 * ( (*pdTime) / 7.0 ) ;
+  BW = 61.103 - 0.010614 * yout[ID_tw] + 0.029161 * pow ( yout[ID_tw] , 2 ) - 5.0203e-4 * pow ( yout[ID_tw] , 3 ) ;
 
-  Wfkidney = 0.001 * 6.3327 * pow ( 10 , -5 ) * exp ( 1.0409 / 0.076435 * ( 1 - exp ( -0.051995 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wadipose = 17.067 + 0.14937 * yout[ID_tw] ;
 
-  Wfthyroid = 0.001 * 0.0038483 * exp ( 0.30799 / 0.039800 * ( 1 - exp ( -0.039800 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wfkidney = 0.001 * 6.3327e-5 * exp ( 1.0409 / 0.076435 * ( 1 - exp ( -0.051995 * yout[ID_tw] ) ) ) ;
 
-  Wfliver = 0.001 * 0.0074774 * exp ( 0.65856 / 0.061662 * ( 1 - exp ( -0.061662 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wfthyroid = 0.001 * 0.0038483 * exp ( 0.30799 / 0.039800 * ( 1 - exp ( -0.039800 * yout[ID_tw] ) ) ) ;
 
-  Wfbrain = 0.001 * 0.01574 * exp ( 0.70707 / 0.064827 * ( 1 - exp ( -0.064827 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wfliver = 0.001 * 0.0074774 * exp ( 0.65856 / 0.061662 * ( 1 - exp ( -0.061662 * yout[ID_tw] ) ) ) ;
 
-  Wfgut = 0.001 * 8.1828 * pow ( 10 , -4 ) * exp ( 0.65028 / 0.047724 * ( 1 - exp ( -0.047724 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wfbrain = 0.001 * 0.01574 * exp ( 0.70707 / 0.064827 * ( 1 - exp ( -0.064827 * yout[ID_tw] ) ) ) ;
 
-  Wflung = 0.001 * 3.0454 * pow ( 10 , -4 ) * exp ( 1.0667 / 0.084604 * ( 1 - exp ( -0.084604 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Wfgut = 0.001 * 8.1828e-4 * exp ( 0.65028 / 0.047724 * ( 1 - exp ( -0.047724 * yout[ID_tw] ) ) ) ;
 
-  hematocrit = 39.192 - 0.10562 * ( (*pdTime) / 7.0 ) - 7.1045 * pow ( 10 , -4 ) * pow ( ( (*pdTime) / 7.0 ) , 2 ) ;
+  Wflung = 0.001 * 3.0454e-4 * exp ( 1.0667 / 0.084604 * ( 1 - exp ( -0.084604 * yout[ID_tw] ) ) ) ;
 
-  fhematocrit = 4.5061 * ( (*pdTime) / 7.0 ) - 0.18487 * pow ( ( (*pdTime) / 7.0 ) , 2 ) + 0.0026766 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ;
+  hematocrit = 39.192 - 0.10562 * yout[ID_tw] - 7.1045e-4 * pow ( yout[ID_tw] , 2 ) ;
 
-  fBW = 0.001 * 0.0018282 * exp ( 1.1735 / 0.077577 * ( 1 - exp ( -0.077577 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  fhematocrit = 4.5061 * yout[ID_tw] - 0.18487 * pow ( yout[ID_tw] , 2 ) + 0.0026766 * pow ( yout[ID_tw] , 3 ) ;
 
-  Vplacenta = 0.001 * ( -1.7646 * ( (*pdTime) / 7.0 ) + 0.91775 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.011543 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
+  fBW = 0.001 * 0.0018282 * exp ( 1.1735 / 0.077577 * ( 1 - exp ( -0.077577 * yout[ID_tw] ) ) ) ;
 
-  Vamnf = 0.001 * 822.34 / ( 1 + exp ( -0.26988 * ( ( (*pdTime) / 7.0 ) - 20.150 ) ) ) ;
+  Vplacenta = 0.001 * ( -1.7646 * yout[ID_tw] + 0.91775 * pow ( yout[ID_tw] , 2 ) - 0.011543 * pow ( yout[ID_tw] , 3 ) ) ;
 
-  Vplasma = 1.2406 / ( 1 + exp ( -0.31338 * ( ( (*pdTime) / 7.0 ) - 17.813 ) ) ) + 2.4958 ;
+  Vamnf = 0.001 * 822.34 / ( 1 + exp ( -0.26988 * ( yout[ID_tw] - 20.150 ) ) ) ;
+
+  Vplasma = 1.2406 / ( 1 + exp ( -0.31338 * ( yout[ID_tw] - 17.813 ) ) ) + 2.4958 ;
 
   Vrbcs = hematocrit / ( 1 - hematocrit ) * Vplasma ;
 
@@ -355,29 +359,29 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung ) ;
 
-  Qcardiac = 24 * ( 301.78 + 3.2512 * ( (*pdTime) / 7.0 ) + 0.15947 * pow ( ( (*pdTime) / 7.0 ) , 2 ) - 0.0047059 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
+  Qcardiac = 24 * ( 301.78 + 3.2512 * yout[ID_tw] + 0.15947 * pow ( yout[ID_tw] , 2 ) - 0.0047059 * pow ( yout[ID_tw] , 3 ) ) ;
 
-  Qgut = 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qgut = 0.01 * ( 17.0 + ( 12.5 - 17.0 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
 
-  Qkidney = 24 * ( 53.248 + 3.6447 * ( (*pdTime) / 7.0 ) - 0.15357 * pow ( ( (*pdTime) / 7.0 ) , 2 ) + 0.0016968 * pow ( ( (*pdTime) / 7.0 ) , 3 ) ) ;
+  Qkidney = 24 * ( 53.248 + 3.6447 * yout[ID_tw] - 0.15357 * pow ( yout[ID_tw] , 2 ) + 0.0016968 * pow ( yout[ID_tw] , 3 ) ) ;
 
-  Qliver = 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qliver = 0.01 * ( 27.0 + ( 20.0 - 27.0 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
 
-  Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qthyroid = 0.01 * ( 1.5 + ( 1.1 - 1.5 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
 
   Qplacenta = 24 * 0.059176 * 1000 * Vplacenta ;
 
-  Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * ( (*pdTime) / 7.0 ) ) * Qcardiac ;
+  Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
 
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
-  Qgfr = 60 * 24 * 0.001 * ( 113.73 + 3.5784 * ( (*pdTime) / 7.0 ) - 0.067272 * pow ( ( (*pdTime) / 7.0 ) , 2 ) ) ;
+  Qgfr = 60 * 24 * 0.001 * ( 113.73 + 3.5784 * yout[ID_tw] - 0.067272 * pow ( yout[ID_tw] , 2 ) ) ;
 
-  Qfrvtl = 60 * 24 * 0.001 * 2466.5 / ( 1 + exp ( -0.14837 * ( ( (*pdTime) / 7.0 ) - 43.108 ) ) ) ;
+  Qfrvtl = 60 * 24 * 0.001 * 2466.5 / ( 1 + exp ( -0.14837 * ( yout[ID_tw] - 43.108 ) ) ) ;
 
-  Qflvtl = 60 * 24 * 0.001 * 506.30 / ( 1 + exp ( -0.21916 * ( ( (*pdTime) / 7.0 ) - 30.231 ) ) ) ;
+  Qflvtl = 60 * 24 * 0.001 * 506.30 / ( 1 + exp ( -0.21916 * ( yout[ID_tw] - 30.231 ) ) ) ;
 
-  Qfda = 60 * 24 * 0.001 * 1125.3 / ( 1 + exp ( -0.18031 * ( ( (*pdTime) / 7.0 ) - 35.939 ) ) ) ;
+  Qfda = 60 * 24 * 0.001 * 1125.3 / ( 1 + exp ( -0.18031 * ( yout[ID_tw] - 35.939 ) ) ) ;
 
   Qfartb = Qflvtl + Qfda ;
 
@@ -385,9 +389,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qflung = Qfrvtl - Qfda ;
 
-  Qfplacenta = 60 * 24 * 0.001 * 262.20 / ( 1 + exp ( -0.22183 * ( ( (*pdTime) / 7.0 ) - 28.784 ) ) ) ;
+  Qfplacenta = 60 * 24 * 0.001 * 262.20 / ( 1 + exp ( -0.22183 * ( yout[ID_tw] - 28.784 ) ) ) ;
 
-  Qfdv = 60 * 24 * 0.001 * 1.892 * exp ( 0.098249 / 0.0064374 * ( 1 - exp ( -0.0064374 * ( (*pdTime) / 7.0 ) ) ) ) ;
+  Qfdv = 60 * 24 * 0.001 * 1.892 * exp ( 0.098249 / 0.0064374 * ( 1 - exp ( -0.0064374 * yout[ID_tw] ) ) ) ;
 
   Qfgut = 6.8 / 75.0 * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
