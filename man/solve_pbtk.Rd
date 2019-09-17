@@ -87,6 +87,8 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{monitor.vars}{Which variables to track by default}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{

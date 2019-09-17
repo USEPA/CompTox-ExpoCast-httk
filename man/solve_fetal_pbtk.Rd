@@ -4,15 +4,16 @@
 \alias{solve_fetal_pbtk}
 \title{Solve_fetal_PBTK}
 \usage{
-solve_fetal_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = 1,
-  dose = NULL, doses.per.day = NULL, initial.values = NULL,
-  plots = F, suppress.messages = F, species = "Human", iv.dose = F,
-  output.units = "uM", method = "lsoda", rtol = 1e-08,
-  atol = 1e-12, begin.css = F, default.to.human = F,
-  recalc.blood2plasma = F, recalc.clearance = F,
-  dosing.matrix = NULL, adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04, ...)
+solve_fetal_pbtk(chem.name = NULL, chem.cas = NULL, times = seq(13 *
+  7, 40 * 7, 1), parameters = NULL, days = 10, tsteps = 4,
+  dose = 1, dosing.matrix = NULL, daily.dose = NULL,
+  doses.per.day = NULL, initial.values = NULL, plots = F,
+  suppress.messages = F, iv.dose = F, output.units = "uM",
+  method = "lsoda", rtol = 1e-08, atol = 1e-12,
+  default.to.human = F, recalc.blood2plasma = F,
+  recalc.clearance = F, adjusted.Funbound.plasma = T, regression = T,
+  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -21,20 +22,24 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{times}{Optional time sequence for specified number of days.  Dosing
-sequence begins at the beginning of times.}
+\item{times}{Optional time sequence in days. Dosing sequence begins at the
+beginning of times. Default is from 13th week of pregnancy to 40th due to 
+data constraints.}
 
-\item{parameters}{Chemical parameters from parameterize_fetal
-_pbtk function,
+\item{parameters}{Chemical parameters from parameterize_fetal_pbtk function,
 overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
 
-\item{tsteps}{The number time steps per hour.}
-
-\item{daily.dose}{Total daily dose, mg.}
+\item{tsteps}{The number time steps per hour. Default of 4.}
 
 \item{dose}{Amount of a single dose, mg.  Overwrites daily.dose.}
+
+\item{dosing.matrix}{A matrix of either one column (or row) with a set of
+dosing times or with two columns (or rows) correspondingly named "dose" and
+"time" containing the time and amount, in mg/kg BW, of each dose.}
+
+\item{daily.dose}{Total daily dose, mg.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -45,9 +50,6 @@ output.units.  Defaults are zero.}
 \item{plots}{Plots all outputs if true.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
@@ -60,8 +62,6 @@ default "Human").}
 
 \item{atol}{Argument passed to integrator (deSolve).}
 
-\item{begin.css}{Begin at steady state concentration in mother.}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -71,10 +71,6 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 
 \item{recalc.clearance}{Recalculates the the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
-
-\item{dosing.matrix}{A matrix of either one column (or row) with a set of
-dosing times or with two columns (or rows) correspondingly named "dose" and
-"time" containing the time and amount, in mg/kg BW, of each dose.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
@@ -89,7 +85,11 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{monitor.vars}{Which variables to track by default}
+
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{begin.css}{Begin at steady state concentration in mother.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -98,26 +98,33 @@ for each time point.
 }
 \description{
 This function solves for the amounts or concentrations in uM of a chemical
-in different tissues as functions of time based on the dose and dosing
-frequency.
+in different tissues of a maternofetal system as functions of time based on
+the dose and dosing frequency.
 }
 \details{
+The stage of pregnancy simulated here begins by default at the 13th week due
+to a relative lack of data to support parameterization prior, in line with 
+the recommendations of Kapraun et al. 2019 ("Empirical models for anatomical
+and physiological..."), and ends at the 40th week of pregnancy.
+
 Note that the model parameters have units of hours while the model output is
 in days. Dose is in mg, not scaled for body weight.
 
 Default NULL value for doses.per.day solves for a single dose.
 
-The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, and the rest of the body.
+The maternal compartments used in this model are the gut lumen, gut, liver, 
+venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+and rest of body. A placenta is modeled as a joint organ shared by mother
+and fetus, through which chemical exchange can occur with the fetus. Fetal
+compartments include arterial blood, venous blood, kidney, thyroid, liver,
+lung, gut, brain, and rest of body.
 
 The extra compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
-When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data (volumes and flows) but substitues human
-fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+This gestational model is only parameterized for humans.
 }
 \examples{
 
@@ -125,6 +132,6 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Mark Sfeir, and Dustin Kapraun
 }
 \keyword{Solve}
