@@ -56,8 +56,9 @@
 #' output.units.  Defaults are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").
+#' @param species Species desired (some models have been designed to be
+#' parameterized for some subset of the following species: "Rat", "Rabbit", 
+#' "Dog", "Mouse", or default "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").

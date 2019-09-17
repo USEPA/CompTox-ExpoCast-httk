@@ -4,10 +4,10 @@
 #' in different tissues of a maternofetal system as functions of time based on
 #' the dose and dosing frequency.
 #' 
-#' The simulation begins by default at the 13th week of pregnancy due to
-#' insufficiency of data to support parameterization prior-in line with 
+#' The stage of pregnancy simulated here begins by default at the 13th week due
+#' to a relative lack of data to support parameterization prior, in line with 
 #' the recommendations of Kapraun et al. 2019 ("Empirical models for anatomical
-#' and physiological...")-and ends at the 40th week of pregnancy.
+#' and physiological..."), and ends at the 40th week of pregnancy.
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days. Dose is in mg, not scaled for body weight.
@@ -22,9 +22,7 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data (volumes and flows) but substitues human
-#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' This gestational model is only parameterized for humans.
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -45,8 +43,6 @@
 #' output.units.  Defaults are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
@@ -79,7 +75,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh and Mark Sfeir
+#' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
 #' @keywords Solve
 #' @examples
 #' 
@@ -101,7 +97,6 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              initial.values=NULL,
                              plots=F,
                              suppress.messages=F,
-                             species="Human",
                              iv.dose=F,
                              output.units='uM',
                              method="lsoda",rtol=1e-8,atol=1e-12, #begin.css=F,
@@ -140,7 +135,7 @@ recommended to set \"times\" to begin at or after day 91.')
     plots=plots,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
-    species=species,
+    species='Human', #optionality of species not supported by solve_fetal_pbtk
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     default.to.human=default.to.human,
