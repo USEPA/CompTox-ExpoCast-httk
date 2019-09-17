@@ -14,8 +14,12 @@
 #' 
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
-#' The compartments used in this model are the gutlumen, gut, liver, kidneys,
-#' veins, arteries, lungs, and the rest of the body, as well as **
+#' The maternal compartments used in this model are the gut lumen, gut, liver, 
+#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+#' and rest of body. A placenta is modeled as a joint organ shared by mother
+#' and fetus, through which chemical exchange can occur with the fetus. Fetal
+#' compartments include arterial blood, venous blood, kidney, thyroid, liver,
+#' lung, gut, brain, and rest of body. 
 #' 
 #' The extra compartments include the amounts or concentrations metabolized by
 #' the liver and excreted by the kidneys through the tubules.
