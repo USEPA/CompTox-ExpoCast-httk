@@ -82,6 +82,7 @@ model.list <- list()
 calc_analytic_css <- function(chem.name=NULL,
                               chem.cas = NULL,
                               parameters=NULL,
+                              species="human",
                               daily.dose=1,
                               output.units='uM',
                               model = 'pbtk',

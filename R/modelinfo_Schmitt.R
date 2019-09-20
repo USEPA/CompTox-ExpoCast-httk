@@ -40,6 +40,19 @@ model.list[["schmitt"]]$required.params <- c(
   "pKa_Accept",
   "MW")
 
+#choose which parameters are not to be Monte Carlo sampled
+model.list[["schmitt"]]$noMC.params <- c(
+  'kgutabs',
+  'MW',
+  'Pow',
+  "MA",
+  'pKa_Donor',
+  'pKa_Accept',
+  "Fhep.assay.correction",
+  "Funbound.plasma.adjustment",
+  'Fgutabs'
+  )
+
 ##Define the parameter names for each model in one place so that all functions can use them:
 #schmitt.names <- c("Kadipose2pu",
 #                   "Kbone2pu",

@@ -92,7 +92,7 @@ get_httk_params <- function(indiv_dt,
   #Next add chemical-specific Funbound.plasma and CLint values
   #Just cbind them together for now
   indiv_fc <- cbind(indiv_bio,
-                    draw_fup_clint(this.chem=chemcas,
+                    draw_invitro(this.chem=chemcas,
                       parameters=parameters,
                       nsamp=nrow(indiv_bio),
                       poormetab=poormetab,

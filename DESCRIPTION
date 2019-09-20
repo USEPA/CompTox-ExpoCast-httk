@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.5.2
-Date: 2019-08-09
+Version: 99.5.3
+Date: 2019-09-20
 Title: High-Throughput Toxicokinetics
 Description: Functions and data tables for simulation and statistical analysis 
              of chemical toxicokinetics ("TK") as in Pearce et al. (2017) 

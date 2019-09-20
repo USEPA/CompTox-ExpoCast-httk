@@ -234,7 +234,14 @@ calc_mc_css <- function(chem.cas=NULL,
                         parameter.matrix=NULL,
                         ...)
 {
-  if (!(model %in% c("pbtk","1compartment","3compartment","3compartmentss"))) stop("Model must be either \"pbtk\", \"1compartment\", \"3compartmentss\", or \"3compartment\".")
+# We need to know model-specific information (from modelinfo_[MODEL].R]) 
+# to set up the solver:
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  }
 
   if (!is.null(IVIVE)) 
   {
