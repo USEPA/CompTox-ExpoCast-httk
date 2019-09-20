@@ -30,17 +30,14 @@
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
 #' @import utils
-#' @export convert_httk
-convert_httk <- function(indiv.model.bio,
+#' @export convert_httkpop
+convert_httkpop <- function(indiv.model.bio,
                          model,
                          this.chem=NULL,
                          parameters=NULL,
-                         adjusted.Funbound.plasma=T,
-                         regression=T,
-                         well.stirred.correction=T,
-                         restrictive.clearance=T,
-                         concentration = "plasma",
-                         clint.pvalue.threshold=0.05){
+                         ...
+                         )
+{
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -71,70 +68,42 @@ convert_httk <- function(indiv.model.bio,
                    'spleen',
                    'rest')
 
-  if (is.null(parameters))
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+  
+  if (is.null(model)) stop("Model must be specified.")
+
+# We need to know model-specific information (from modelinfo_[MODEL].R]) 
+# to set up the solver:
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
   {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
   #Depending on model, choose the function in HTTK that will return the default
   #HTTK parameters for this chemical
-  paramfun <- switch(model,
-                            '1compartment'='parameterize_1comp',
-                            '3compartment'='parameterize_3comp',
-                            'pbtk'='parameterize_pbtk',
-                            '3compartmentss'='parameterize_steadystate')
-  #And get the default HTTK parameters. These values will be used for all
-  #parameters not being Monte Carlo sampled
-  if(paramfun == 'parameterize_steadystate'){
-    p <- parameterize_steadystate(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
-    if(concentration == "tissue"){
-      p <- add_schmitt.param_to_3compss(parameters = p, chem.cas = this.chem)
-    }
-  } else if(paramfun == 'parameterize_1comp') p <- parameterize_1comp(chem.cas=this.chem,species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,restrictive.clearance=restrictive.clearance,clint.pvalue.threshold=clint.pvalue.threshold)
-  else{
-  p <- do.call(getFromNamespace(paramfun, "httk"),
-               args=list(chem.cas=this.chem,
-                         species='Human',adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression))
-  }
-  } else p <- parameters
+    paramfun <- model.list[[model]]$parameterize.func
   #Depending on model, choose which parameters are not to be Monte Carlo sampled
-  noMC.names <- switch(model,
-                       '1compartment'=c('kgutabs',
-                                        'MW',
-                                        'Pow',
-                                        "MA",
-                                        'pKa_Donor',
-                                        'pKa_Accept',
-                                        'Fgutabs',
-                                        "Fhep.assay.correction",
-                                        "Funbound.plasma.adjustment"),
-                       '3compartment'=c('MW',
-                                        'Pow',
-                                        "MA",
-                                        'pKa_Donor',
-                                        'pKa_Accept',
-                                        "Fhep.assay.correction",
-                                        "Funbound.plasma.adjustment",
-                                        'Fgutabs',
-                                        'kgutabs'),
-                       'pbtk'=c('kgutabs',
-                                'MW',
-                                'Pow',
-                                "MA",
-                                'pKa_Donor',
-                                'pKa_Accept',
-                                "Fhep.assay.correction",
-                                "Funbound.plasma.adjustment",
-                                'Fgutabs'),
-                       '3compartmentss'=c("Dow74",
-                                          'MW',
-                                          'Fgutabs',
-                                          "Fhep.assay.correction",
-                                          "Funbound.plasma.adjustment"))
-  
-  if(model == '3compartmentss' & concentration == "tissue"){
-    noMC.names <- c(noMC.names, "MA","Pow","pKa_Donor", "pKa_Accept")
+    noMC.names <- model.list[[model]]$noMC.params
   }
+
+  if (is.null(parameters))
+  {
+    parameters <- do.call(getFromNamespace(paramfun, "httk"),
+                    args=c(list(chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
+                      ...))
+  }
+
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
-  indiv.model[, (noMC.names):=p[noMC.names]]
+  indiv.model[, (noMC.names):=parameters[noMC.names]]
 
 # Use something like this for 1.10:
 #  # Use optim to estimate alpha and beta such that the median and 95% credible interval approximate the estimate from MCMC:

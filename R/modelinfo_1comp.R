@@ -109,5 +109,19 @@ model.list[["1compartment"]]$required.params <- c(
   "MW"
    )
 
+#choose which parameters are not to be Monte Carlo sampled
+model.list[["1compartment"]]$noMC.params <- c(
+  'kgutabs',
+  'MW',
+  'Pow',
+  "MA",
+  'pKa_Donor',
+  'pKa_Accept',
+  'Fgutabs',
+  "Fhep.assay.correction",
+  "Funbound.plasma.adjustment"
+  )
+
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T
