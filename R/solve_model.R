@@ -463,7 +463,28 @@ with two columns (time, dose).")
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
-    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))))
+    #select only monitor.vars to plot against time
+    out_plot = out[,monitor.vars]
+    
+    #extend 'out.amount' found below to the plotting case, possibly through modelinfo file system
+    
+    #assemble a y-axis units vector to correspond to each entry in monitor.vars
+    vars_monitored = length(monitor.vars)
+    plot_units_vector = rep(NA, vars_monitored)
+    for (var in 1:vars_monitored) {
+      if (firstchar(monitor.vars[var]) == 'A') {
+        if (monitor.vars[var] == 'AUC') {
+          plot_units_vector[var] = paste('','* time')
+        } else plots_units_vector[var] = 
+      plot_units_vector[variable] = 
+      } elseif (firstchar(monitor.vars[var]) == 'C') {
+        
+      } else
+        
+    }
+    
+    graphics::plot(out_plot, ylab = plot_units_vector)  #specify some subset of these?
+    #graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))))
   } 
                
 # Downselect to only the desired parameters:
