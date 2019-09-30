@@ -142,6 +142,8 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   "Aplasma"
   )
 
+#list of variables to be monitored (plotted). Should be able to be constructed
+#from states and outputs. 
 model.list[["pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
