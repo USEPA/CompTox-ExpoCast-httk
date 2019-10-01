@@ -81,6 +81,17 @@ calc_stats <-function(
                suppress.messages=F,
                ...)
 {
+<<<<<<< HEAD
+=======
+  AUC <- NULL
+  peak <- NULL
+  mean <- NULL
+  out <- NULL
+  
+  if(is.null(chem.name) & is.null(chem.cas) & is.null(parameters)){
+    for(this.CAS in get_cheminfo(species=species,model=model)){
+      stat <- calc_chem_stats(chem.cas=this.CAS,days=days,stats=stats,species=species,dose=dose,daily.dose=daily.dose,doses.per.day=doses.per.day,concentration=concentration,output.units=output.units,model=model,default.to.human=default.to.human,suppress.messages=T,...)
+>>>>>>> 7e1b273a530de98fe4b5c7f5630ba34b400ed812
 
 ### ERROR CHECKING
 
