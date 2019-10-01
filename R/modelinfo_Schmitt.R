@@ -26,8 +26,6 @@ param.names.schmitt <- c(schmitt.names,
                          "plasma.pH",                 
                          "alpha")
 
-
-<<<<<<< HEAD
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["schmitt"]]$required.params <- c(
   "Funbound.plasma",
@@ -63,8 +61,6 @@ model.list[["schmitt"]]$noMC.params <- c(
 #                   "Kspleen2pu",
 #                   "Krbc2pu",
 #                   "Krest2pu")  
-=======
->>>>>>> 7e1b273a530de98fe4b5c7f5630ba34b400ed812
 
 schmitt.specific.names <- c("Kadipose2pu",
                             "Kbone2pu",

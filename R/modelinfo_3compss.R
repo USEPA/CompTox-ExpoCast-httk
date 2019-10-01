@@ -18,7 +18,6 @@ param.names.3compss <- c("BW",
                        "Qtotal.liverc",
                        "Qgfrc",
                        "Rblood2plasma",
-<<<<<<< HEAD
                        "Vliverc")
 
 # Allowable units (and whether they are for amounts or concentration):
@@ -47,6 +46,4 @@ model.list[["3compartmentss"]]$noMC.params <- c(
    
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
-=======
-                       "Vliverc")
->>>>>>> 7e1b273a530de98fe4b5c7f5630ba34b400ed812
+
