@@ -105,6 +105,7 @@ initState3comp <- function(parms, newState = NULL) {
     AUC = 0.0
   )
 <<<<<<< HEAD
+<<<<<<< HEAD
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["3compartment"]]$required.params <- c(
@@ -132,6 +133,10 @@ model.list[["3compartment"]]$noMC.params <- c(
   Y <- with(as.list(parms), {  Y
   })
 >>>>>>> 7e1b273a530de98fe4b5c7f5630ba34b400ed812
+=======
+  Y <- with(as.list(parms), {  Y
+  })
+>>>>>>> a5840dd87739818e8a6c7782518bf81190d0ef46
 
   if (!is.null(newState)) {
     if (!all(names(newState) %in% c(names(Y)))) {
