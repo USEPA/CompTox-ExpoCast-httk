@@ -189,6 +189,7 @@
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
+                        dtxsid = NULL,
                         parameters=NULL,
                         daily.dose=1,
                         which.quantile=0.95,
@@ -230,10 +231,44 @@ calc_mc_css <- function(chem.cas=NULL,
                         weight_category =  c("Underweight", "Normal", "Overweight", "Obese"),
                         gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
                         reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White","Non-Hispanic Black", "Other"),
+
                         physiology.matrix=NULL,
+
                         parameter.matrix=NULL,
                         ...)
 {
+# Define a local function for running calc_analytic_css:
+  css_apply <- function(params)
+  {
+    params <- as.list(params)
+    css <- calc_analytic_css(parameters=params,
+                             model=model,
+                             daily.dose=daily.dose,
+                             suppress.messages=T,
+                             output.units=output.units,
+                             chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             well.stirred.correction=well.stirred.correction,
+                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                             regression=regression,
+                             IVIVE = NULL,
+                             tissue=tissue,
+                             restrictive.clearance = restrictive.clearance,
+                             bioactive.free.invivo = bioactive.free.invivo,
+                             concentration = concentration,
+                             clint.pvalue.threshold = 0.05,
+                             ...)
+    return(css)
+  }
+
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
   model <- tolower(model)
@@ -264,45 +299,30 @@ calc_mc_css <- function(chem.cas=NULL,
     concentration <- "tissue"
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
- 
-  css_apply <- function(params)
+
+  if (!is.null(parameter.matrix)) css.list <- apply(parameter.matrix,1,css_apply)
+  else
   {
-    params <- as.list(params)
-    css <- calc_analytic_css(parameters=params,
-                             model=model,
-                             daily.dose=daily.dose,
-                             suppress.messages=T,
-                             output.units=output.units,
-                             chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             well.stirred.correction=well.stirred.correction,
-                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                             regression=regression,
-                             IVIVE = NULL,
-                             tissue=tissue,
-                             restrictive.clearance = restrictive.clearance,
-                             bioactive.free.invivo = bioactive.free.invivo,
-                             concentration = concentration,
-                             clint.pvalue.threshold = 0.05,
-                             ...)
-    return(css)
-  }
-  if (httkpop == T & tolower(species) == 'human')
-  {
-    if (!is.null(parameter.matrix)) css.list <- apply(parameter.matrix,1,css_apply)
-    else
+    if (is.null(parameters))
     {
-      if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
-      if (is.null(parameters))
+      out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+      this.chem <- out$chem.cas
+    } else this.chem <- NULL
+    if (is.null(physiology.matrix))
+    {
+      nsamp <- samples
+      if (httkpop=T & tolower(species)=="human")
       {
-        out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-        this.chem <- out$chem.cas
-      } else this.chem <- NULL
-      if (is.null(physiology.matrix))
-      {
-        nsamp <- samples
-        if(is.null(method)) stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
-        else if(! method %in% c('direct resampling','virtual individuals','v','vi','direct resampling','dr','d')) stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
+        if (is.null(method)) 
+          stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
+        else if(!method %in% c('direct resampling',
+                                'virtual individuals',
+                                'v',
+                                'vi',
+                                'direct resampling',
+                                'dr',
+                                'd')) 
+          stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
         physiology.matrix <- httkpop_generate(method=method,
                                               nsamp=nsamp,
                                               gendernum=gendernum,
@@ -311,7 +331,31 @@ calc_mc_css <- function(chem.cas=NULL,
                                               weight_category=weight_category,
                                               gfr_category=gfr_category,
                                               reths=reths)
-      } 
+      } else {
+        if(httkpop==T) 
+          warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
+
+        do.call
+        physiology.matrix <- monte_carlo(params=parameters,
+                        censored.params=censored.params,
+                        which.quantile=which.quantile,
+                        cv.params=vary.params,
+                        samples=samples,model='3compartmentss',
+                        daily.dose=daily.dose,
+                        output.units=output.units,
+                        tissue=tissue,
+                        IVIVE=IVIVE,
+                        chem.name=chem.name,
+                        chem.cas=chem.cas,
+                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                        regression=regression,
+                        well.stirred.correction=well.stirred.correction,
+                        suppress.messages=T,
+                        return.samples=return.samples,
+                        restrictive.clearance=restrictive.clearance,
+                        species=species)
+      }
+      
       parameter.matrix <- get_httk_params(physiology.matrix,
                                           model=model,
                                           chemcas=this.chem,
@@ -331,64 +375,41 @@ calc_mc_css <- function(chem.cas=NULL,
                                           clint.pvalue.threshold=clint.pvalue.threshold)
       css.list <- apply(parameter.matrix,1,css_apply) 
     }
-    if (return.samples) out <- css.list
-    else out <- quantile(css.list,which.quantile,na.rm=T)       
+  
+  if (!suppress.messages & !return.samples)
+  {
+    if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
+      substr(species,2,nchar(species)),sep=''),
+      "plasma concentration returned in",
+      output.units,
+      "units for",
+      which.quantile,
+      "quantile.\n") 
+      else cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        tissue,
+        "concentration returned in",
+        output.units,
+        "units for",
+        which.quantile,
+        "quantile.\n") 
+    out <- quantile(css.list,which.quantile,na.rm=T)     
   } else {
-    if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
-    if (is.null(parameters))
+    out <- css.list  
+    if (!suppress.messages) 
     {
-        parameters <- parameterize_steadystate(chem.cas=chem.cas,
-                                               chem.name=chem.name,
-                                               species=species,
-                                               default.to.human=default.to.human,
-                                               adjusted.Funbound.plasma=adjusted.Funbound.plasma)
-    } else {
-      if (!all(param.names.3compss %in% names(parameters)))
-      {
-        stop(paste("Missing parameters:",
-                   paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
-                     collapse=', '),
-                   ".  Use parameters from parameterize_steadystate."))
-      }
-    }
-    if (well.stirred.correction & !'Rblood2plasma' %in% names(parameters)){
-      parameters[['Rblood2plasma']] <- 
-        available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,
-                                species=species,
-                                adjusted.Funbound.plasma=
-                                  adjusted.Funbound.plasma)
-    }
-    
-    out <- monte_carlo(params=parameters,
-                        censored.params=censored.params,
-                        which.quantile=which.quantile,
-                        cv.params=vary.params,
-                        samples=samples,model='3compartmentss',
-                        daily.dose=daily.dose,
-                        output.units=output.units,
-                        tissue=tissue,
-                        IVIVE=IVIVE,
-                        chem.name=chem.name,
-                        chem.cas=chem.cas,
-                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                        regression=regression,
-                        well.stirred.correction=well.stirred.correction,
-                        suppress.messages=T,
-                        return.samples=return.samples,
-                        restrictive.clearance=restrictive.clearance,
-                        species=species)
-
-    if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
-  }  
-  if(!suppress.messages & !return.samples){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      if(is.null(tissue)) cat("Plasma concentration returned in",output.units,"units.\n")
-      else cat(paste(toupper(substr(tissue,1,1)),substr(tissue,2,nchar(species)),sep=''),"concentration returned in",output.units,"units.\n")
-    }else{
-      if(is.null(tissue))cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"plasma concentration returned in",output.units,"units for",which.quantile,"quantile.\n") 
-      else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),tissue,"concentration returned in",output.units,"units.\n")
+      if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        "plasma concentration returned in",
+        output.units,
+        "units.\n") 
+      else cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        tissue,
+        "concentration returned in",
+        output.units,
+        "units.\n") 
+      out <- css.list
     }
   }
-  print(out)
-  return(as.numeric(out))
 }
