@@ -41,5 +41,15 @@ model.list[["3compartmentss"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+   
+#choose which parameters are not to be onte Carlo sampled
+model.list[["3compartmentss"]]$noMC.params <- c(
+  "Dow74",
+  'MW',
+  'Fgutabs',
+  "Fhep.assay.correction",
+  "Funbound.plasma.adjustment"
+  )
+
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
