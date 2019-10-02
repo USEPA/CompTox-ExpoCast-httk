@@ -1,4 +1,4 @@
-#' Draw Funbound.plasma and Clint from censored or non-censored distributions.
+#' Draw in vitro TK parameters including uncertainty and variability.
 #' 
 #' Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
 #' user specifications on the assumed distributions of Funbound.plasma and
@@ -38,9 +38,9 @@
 #' hepatocyte assay.
 #' @author Caroline Ring and John Wambaugh
 #' @import stats
-#' @export draw_fup_clint
+#' @export draw_invitro
 
-draw_fup_clint <- function(this.chem=NULL,
+draw_invitro <- function(this.chem=NULL,
                            parameters=NULL,
                            nsamp,
                            fup.meas.cv=0.4,

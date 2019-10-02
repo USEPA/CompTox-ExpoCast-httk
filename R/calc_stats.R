@@ -81,7 +81,6 @@ calc_stats <-function(
                suppress.messages=F,
                ...)
 {
-
 ### ERROR CHECKING
 
 # Check that this model is available in this distribution of HTTK:

@@ -5,15 +5,14 @@
 \title{Solve_PBTK}
 \usage{
 solve_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, species = "Human", iv.dose = F,
+  parameters = NULL, days = 10, tsteps = 4, daily.dose = 1,
+  dose = NULL, doses.per.day = NULL, initial.values = NULL,
+  plots = F, suppress.messages = F, species = "Human", iv.dose = F,
   output.units = "uM", method = "lsoda", rtol = 1e-08,
   atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
+  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

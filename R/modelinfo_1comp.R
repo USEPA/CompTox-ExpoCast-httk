@@ -1,8 +1,7 @@
 # Add this model to the list of models:
-
-#Analytic expression for steady-state plasma concentration.
 model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 
+<<<<<<< HEAD
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
 # These are all the parameters returned by the R model parameterization function.
@@ -40,7 +39,7 @@ model.list[["1compartment"]]$Rtosolvermap <- list(
   BW="BW")
 
 # If the model does not include an explicit gut-liver link before systemic
-# circulation, then we want to decrease the absorbed dose by the first pass
+# circulation, then we want to decrease the absorbed dose by the first past
 # hepatic extraction factor:
 model.list[["1compartment"]]$do.first.pass <- T
 
@@ -59,7 +58,7 @@ model.list[["1compartment"]]$compiled.param.names <- c(
 # This function initializes the state vector for the compiled model:
 model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
 
-# This is the function that calculates the derivative of the model as a function
+# This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
 model.list[["1compartment"]]$derivative.func <- "derivs1comp"
 
@@ -109,5 +108,91 @@ model.list[["1compartment"]]$required.params <- c(
   "MW"
    )
 
+#choose which parameters are not to be Monte Carlo sampled
+model.list[["1compartment"]]$noMC.params <- c(
+  'kgutabs',
+  'MW',
+  'Pow',
+  "MA",
+  'pKa_Donor',
+  'pKa_Accept',
+  'Fgutabs',
+  "Fhep.assay.correction",
+  "Funbound.plasma.adjustment"
+  )
+
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T
+=======
+#Define the parameter names for each model in one place so that all functions can use them:
+param.names.1comp <- c("BW",
+                     "Clint",
+                     "Clint.dist",
+                     "Fgutabs",
+                     "Fhep.assay.correction",
+                     "Funbound.plasma",
+                     "Funbound.plasma.dist",
+                     "Funbound.plasma.adjustment",
+                     "hepatic.bioavailability",
+                     "hematocrit",
+                     "kelim",
+                     "kgutabs",
+                     "liver.density",
+                     "million.cells.per.gliver",
+                     "MA",
+                     "MW",
+                     "Rblood2plasma",
+                     "Pow",
+                     "pKa_Donor",
+                     "pKa_Accept",
+                     "Vdist")
+
+param.names.1comp.solver <- c("vdist",
+                     "ke",
+                     "kgutabs")
+
+initparms1comp <- function(newParms = NULL){
+  parms <- c(
+    vdist = 0,
+    ke = 0,
+    kgutabs = 1
+  )
+  if (!is.null(newParms)) {
+    if (!all(names(newParms) %in% c(names(parms)))) {
+      stop("illegal parameter name")
+    }
+  }
+  if (!is.null(newParms)) parms[names(newParms)] <- newParms
+  out <- .C("getParms1comp",
+   as.double(parms),
+  out=double(length(parms)),
+  as.integer(length(parms)))$out
+  names(out) <- names(parms)
+  out
+}
+
+Outputs1comp <- c(
+    "Ccompartment"
+)
+
+
+initState1comp <- function(parms, newState = NULL) {
+  Y <- c(
+    Agutlumen = 0.0,
+    Acompartment = 0.0,
+    Ametabolized = 0.0,
+    AUC = 0.0
+  )
+  Y <- with(as.list(parms), {  Y
+  })
+
+  if (!is.null(newState)) {
+    if (!all(names(newState) %in% c(names(Y)))) {
+      stop("illegal state variable name in newState")
+    }
+    Y[names(newState)] <- newState
+  }
+  Y
+}
+>>>>>>> 7e1b273a530de98fe4b5c7f5630ba34b400ed812
