@@ -43,8 +43,11 @@
 #' assay using the method of Kilford et al. (2008)}
 #' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
 #' clearance, calculated from the corrected well-stirred model.}
+#'
 #' @author John Wambaugh
-#' @keywords Parameter
+#'
+#' @keywords Parameter 3compss
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')

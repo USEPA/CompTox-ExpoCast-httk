@@ -33,8 +33,10 @@
 #' constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
 #' affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 #' \item{plasma.pH}{pH of the plasma}
+#'
 #' @author Robert Pearce
-#' @keywords Parameter
+#' @keywords Parameter schmitt
+#'
 #' @examples
 #' 
 #' parameterize_schmitt(chem.name='bisphenola')

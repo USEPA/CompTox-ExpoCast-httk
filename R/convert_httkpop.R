@@ -1,23 +1,30 @@
-#'Converts HTTK-Pop virtual population into parameters relevant to an HTTK
+#'Converts HTTK-Pop physiologyn into parameters relevant to an HTTK
 #'model.
 #'
-#'@param indiv.model.bio A data.table containing the physiological
-#'  parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#'  -- if parameters is not specified then the chemical must be identified by 
+#' either CAS, name, or DTXSIDs
+#' @param parameters Parameters from the appropriate parameterization function
+#' for the model indicated by argument model
+#'@param httk.pop.biomets A data.table containing the physiological
+#'  parameterers predicted from biometric data by HTTK-pop 
+#' '(from \code{\link{httkpop_bio}}) and
 #'  \code{Funbound.plasma} and \code{Clint} values (from
 #'  \code{\link{draw_fup_clint}}).
 #'@param model Which HTTK model to use. One of '1compartment', '3compartmentss',
 #'  '3compartment', or 'pbtk'.
-#'@param this.chem CAS number for the chemical in the HTTK data set (see 
-#'  \code{\link[httk]{get_cheminfo}}) for which
-#'  parameters are to be generated.
-#'@param parameters A list of chemical-specific model parameters containing at least
-#' Funbound.plasma, Clint, and Fhep.assay.correction. 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE.
 #' @param regression Whether or not to use the regressions in calculating partition 
 #' coefficients.
 #' @param well.stirred.correction Uses correction in calculation of hepatic clearance 
 #' for well-stirred model if TRUE for hepatic.model well-stirred. This assumes 
-#' clearance relative to amount unbound in whole blood instead of plasma, but 
+#' clearance re/lative to amount unbound in whole blood instead of plasma, but 
 #' converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
@@ -29,9 +36,15 @@
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
+#'
+#' @keyword httk-pop
 #' @import utils
 #' @export convert_httkpop
-convert_httkpop <- function(indiv.model.bio,
+convert_httkpop <- function(httk.pop.biomets,
                          model,
                          this.chem=NULL,
                          parameters=NULL,
@@ -50,23 +63,15 @@ convert_httkpop <- function(indiv.model.bio,
   kelim <- Rblood2plasma <- Krbc2pu <- NULL
   Qliver<-Qcardiacc<-Qgutf<-Qliverf<-hepatic.bioavailability<-NULL
   #End R CMD CHECK appeasement.
+               
+  # Start with the biometrics from httk-pop:             
+  parameters.df <- data.table::copy(httk.pop.biomets)
 
-  indiv.model <- data.table::copy(indiv.model.bio)
-
-  #List all tissues that HTTK has tissue information for. This will be used in
-  #lumping.
-  tissuenames <- c('adipose',
-                   'bone',
-                   'brain',
-                   'gut',
-                   'heart',
-                   'kidney',
-                   'liver',
-                   'lung',
-                   'muscle',
-                   'skin',
-                   'spleen',
-                   'rest')
+# List all tissues for which HTTK has human tissue information. 
+# This will be used in lumping.  
+  tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
+# We don't use these tissues for lumping:
+  tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -75,25 +80,24 @@ convert_httkpop <- function(indiv.model.bio,
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
   
-  if (is.null(model)) stop("Model must be specified.")
-
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
+  if (is.null(model)) stop("Model must be specified.")
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } else {
-  #Depending on model, choose the function in HTTK that will return the default
-  #HTTK parameters for this chemical
-    paramfun <- model.list[[model]]$parameterize.func
   #Depending on model, choose which parameters are not to be Monte Carlo sampled
     noMC.names <- model.list[[model]]$noMC.params
   }
 
   if (is.null(parameters))
   {
+  #Depending on model, choose the function in HTTK that will return the default
+  #HTTK parameters for this chemical
+    paramfun <- model.list[[model]]$parameterize.func
     parameters <- do.call(getFromNamespace(paramfun, "httk"),
                     args=c(list(chem.cas=chem.cas,
                         chem.name=chem.name,
@@ -103,23 +107,14 @@ convert_httkpop <- function(indiv.model.bio,
 
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
-  indiv.model[, (noMC.names):=parameters[noMC.names]]
-
-# Use something like this for 1.10:
-#  # Use optim to estimate alpha and beta such that the median and 95% credible interval approximate the estimate from MCMC:
-#  ppb.fit <- optim(c(2,2), function(x) (0.95-pbeta(ppb.high95,x[1],x[2])+pbeta(ppb.low95,x[1],x[2]))^2+(ppb.median-qbeta(0.5,x[1],x[2]))^2)
-## We are drawing new values for the unadjusted Fup:
-#  pop_u_httk[, unadjusted.Funbound.plasma:=rbeta(1000,ppb.fit$par[1],ppb.fit$par[2])]
-## then we need to adjust:
-#  pop_u_httk[,Flipid:=subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(colnames(physiology.data) == 'Human')]]
-#  pop_u_httk[,Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
+  parameters.df[, (noMC.names):=parameters[noMC.names]]
 
 
-  if (model != '3compartmentss')
+# For models with tissue-to-plasma partition coefficients we neeed to calculate
+# them for each individual because each individual has a different 
+# Funbound.plasma value:
+  if (model.table[model]$ComputePCforMC)
   {
-    #For 1 compartment, 3 compartment, or PBTK models, need to compute the
-    #tissue-to-plasma partition coefficients for each individual, because each
-    #individual has a different Funbound.plasma value.
 
     #First, get the default parameters used for the Schmitt method of estimating
     #partition coefficients.
@@ -135,7 +130,7 @@ convert_httkpop <- function(indiv.model.bio,
     }
     #next, replace the single default value for Funbound.plasma with the vector
     #of Funbound.plasma values from the virtual population data.table.
-    pschmitt$Funbound.plasma<-indiv.model[, Funbound.plasma]
+    pschmitt$Funbound.plasma<-parameters.df[, Funbound.plasma]
 
     #Now, predict the partitioning coefficients using Schmitt's method. The
     #result will be a list of numerical vectors, one vector for each
@@ -174,13 +169,13 @@ convert_httkpop <- function(indiv.model.bio,
                                     c(tissue.list,
                                       'red blood cells'))]
     #Lump the volumes by simply summing them.
-    vol.restc <- indiv.model[,
+    vol.restc <- parameters.df[,
                              Reduce('+', .SD),
                              .SDcols=paste0('V',
                                             rest.tissues,
                                             'c')]
     #Lump the flows by summing them.
-    flow.restf <- indiv.model[,
+    flow.restf <- parameters.df[,
                               Reduce('+', .SD),
                               .SDcols=paste0('Q',
                                              rest.tissues,
@@ -192,7 +187,7 @@ convert_httkpop <- function(indiv.model.bio,
                                   function(x) PCs[[paste0('K',
                                                           x,
                                                           '2pu')]]*
-                                    unlist(indiv.model[,
+                                    unlist(parameters.df[,
                                                        paste0('V',
                                                               x,
                                                               'c'),
@@ -202,10 +197,10 @@ convert_httkpop <- function(indiv.model.bio,
 
     #Add lumped volumes, flows, and partition coefficients to population
     #data.table
-    indiv.model[, Vrestc:=vol.restc]
-    indiv.model[, Qrestf:=flow.restf]
-    indiv.model[, Krest2pu:=Krest2pu]
-    indiv.model[, Krbc2pu:=PCs[['Krbc2pu']]]
+    parameters.df[, Vrestc:=vol.restc]
+    parameters.df[, Qrestf:=flow.restf]
+    parameters.df[, Krest2pu:=Krest2pu]
+    parameters.df[, Krbc2pu:=PCs[['Krbc2pu']]]
 
     if (!(length(tissue.list)==0)){
       #For enumerated tissue compartments (if any), add their partitition
@@ -219,10 +214,10 @@ convert_httkpop <- function(indiv.model.bio,
       #Then add them to the population data.table. data.table syntax: wrap
       #vector of column names in parentheses to assign to multiple columns at
       #once
-      indiv.model[, (knames):=PCs[knames]]
+      parameters.df[, (knames):=PCs[knames]]
     }
 
-    if (!"Rblood2plasma" %in% colnames(indiv.model))
+    if (!"Rblood2plasma" %in% colnames(parameters.df))
     {
       #For 1 compartment, 3 compartment, or PBTK models: Calculate Rblood2plasma
       #based on hematocrit and Krbc2plasma. This is the ratio of chemical in blood
@@ -233,135 +228,27 @@ convert_httkpop <- function(indiv.model.bio,
       } else {
         Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
       }
-      indiv.model[,Rblood2plasma:=Rblood2plasma]
+      parameters.df[,Rblood2plasma:=Rblood2plasma]
     }
-    indiv.model[is.na(Rblood2plasma),
+    parameters.df[is.na(Rblood2plasma),
                 Rblood2plasma:=(1-
                                   hematocrit +
                                   hematocrit*
                                   Krbc2pu*
                                   Funbound.plasma)]
-    
-#    if (model!='1compartment'){
-      #Need to compute hepatic clearance,
-      #Clmetabolismc. Computed from Clint and hepatocellularity. Convert Clint
-      #to Clmetabolismc using unscaled model (unscaled means that it's unscaled
-      #by weight, i.e. L/h/kg bodyweight).
-
-      #First, construct a list of the parameters needed by HTTK to compute total
-      #hepatic clearance. each list element will be a vector of individual
-      #values, except liver.density and Dn, which are fixed default values.
-      calc_hep_params <- c(as.list(indiv.model[, list(Clint,
-                                                   Funbound.plasma,
-                                                   Fhep.assay.correction,
-                                                   million.cells.per.gliver,
-                                                   BW,
-                                                   Vliverc,
-                                                   Qtotal.liverc)]),
-                           liver.density=1.05,
-                           Dn=0.17)
-
-      #Call HTTK function to compute total hepatic clearance, using unscaled
-      #hepatic model.
-      indiv.model[,
-                  Clmetabolismc:=httk::calc_hepatic_clearance(hepatic.model="unscaled",
-                                                              parameters=calc_hep_params,
-                                                              suppress.messages=TRUE,
-                                                              clint.pvalue.threshold=clint.pvalue.threshold)]
-
-
-#    }else
-    if (model=='1compartment'){
-      #for 1-compartment model, don't need to compute total hepatic clearance,
-      #but do need to compute volume of distribution and elimination rate.
-
-      #HTTK contains a function to compute volume of distribution, but it pulls
-      #Funbound.plasma from its table of default values, meaning we can't give
-      #that function our vector of individual Funbound.plasma values. So
-      #instead, I've re-implemented the Vdist equation here.
-
-      #To compute volume of distribution, need to get volume of red blood cells.
-      #Can compute that from plasma volume and hematocrit.
-
-      indiv.model[, RBC.vol:=plasma.vol/
-                    (1 - hematocrit)*
-                    hematocrit]
-      #Compute Vdist, volume of distribution
-      indiv.model[,Vdist:=plasma.vol +
-                    RBC.vol*
-                    PCs[["Krbc2pu"]]*
-                    Funbound.plasma+
-                    Krest2pu*
-                    vol.restc*
-                    Funbound.plasma]
-      #Compute kelim: Elimination rate, units of 1/h. First make a list of the
-      #parameters that HTTK uses to calculate kelim. Each list element will be a
-      #vector of the values for each individual.
-      calc_elim_params <- c(as.list(indiv.model[,
-                                                list(Vdist,
-                                                  Clint,
-                                                  Funbound.plasma,
-                                                  Qtotal.liverc,
-                                                  Qgfrc,
-                                                  BW,
-                                                  million.cells.per.gliver,
-                                                  Rblood2plasma,
-                                                  Vliverc,
-                                                  Fhep.assay.correction,
-                                                  liver.density)]))
-      #Call HTTK function to calculate total elimination rate. This one is OK
-      #because it uses the vector of Funbound.plasma that we give it.
-      ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
-                                        chem.cas=this.chem,
-                                        suppress.messages=TRUE,
-                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
-                                        well.stirred.correction=well.stirred.correction,
-                                        restrictive.clearance=restrictive.clearance,
-                                        clint.pvalue.threshold=clint.pvalue.threshold)
-      #Add kelim to the population data.table.
-      indiv.model[, kelim:=ke]
-    }
-  } else {
-    calc_hep_params <- c(as.list(indiv.model[, list(Clint,
-                                                    Funbound.plasma,
-                                                    Fhep.assay.correction,
-                                                    million.cells.per.gliver,
-                                                    BW,
-                                                    Vliverc,
-                                                    Qtotal.liverc)]),
-                         liver.density=1.05,
-                         Dn=0.17)
-    indiv.model[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,
-      species='Human',
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
-      
-    indiv.model[,
-                Clmetabolismc:=httk::calc_hepatic_clearance(hepatic.model="unscaled",
-                                                            parameters=calc_hep_params,
-                                                            suppress.messages=TRUE,
-                                                            clint.pvalue.threshold=clint.pvalue.threshold)]
-    
-
-  }
-  # For models that don't described first pass blood flow from the gut, need to
-  # cacluate a hepatic bioavailability (Rowland, 2009):
-  if (model %in% c('1compartment', '3compartmentss'))
-  {
-    indiv.model[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
-    indiv.model[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
   }
 
   # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% names(indiv.model))){
-    suppressWarnings(indiv.model[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
+  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.df))){
+    suppressWarnings(parameters.df[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
       .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.
-  indiv.model<- indiv.model[,
-                            names(indiv.model)[names(indiv.model) %in% c('Rblood2plasma',names(p))],
+  parameters.df<- parameters.df[,
+                            names(parameters.df)[names(parameters.df) %in% c('Rblood2plasma',names(parameters))],
                             with=FALSE]
 
-  return(indiv.model)
+  return(parameters.df)
 }
