@@ -123,6 +123,7 @@
 #' @import deSolve
 solve_model <- function(chem.name = NULL,
                     chem.cas = NULL,
+                    dtxsid = NULL,
                     times=NULL,
                     parameters=NULL,
                     model=NULL,
@@ -155,8 +156,14 @@ solve_model <- function(chem.name = NULL,
   SMALL.TIME <- 1e-5   
 
 # We need to describe the chemical to be simulated one way or another:
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
-    stop('Parameters, chem.name, or chem.cas must be specified.')
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+  
+  if (is.null(model)) stop("Model must be specified.")
+
 
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:

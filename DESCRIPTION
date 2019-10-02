@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.5.2
-Date: 2019-08-09
+Version: 99.5.3
+Date: 2019-09-20
 Title: High-Throughput Toxicokinetics
 Description: Functions and data tables for simulation and statistical analysis 
              of chemical toxicokinetics ("TK") as in Pearce et al. (2017) 
@@ -48,7 +48,6 @@ URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
-Encoding: UTF-8
 Packaged: 2019-07-25 18:56:22 UTC; jwambaug
 Author: John Wambaugh [aut, cre],
   Robert Pearce [aut],
