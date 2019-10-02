@@ -55,13 +55,15 @@ if (getRversion() >= "2.15.1") {
 #' User-supplied vector must contain one or more of these strings.
 #' @return A data.table where each row represents an individual, and each
 #' column represents a demographic, anthropometric, or physiological parameter.
+#'
 #' @author Caroline Ring
+#'
 #' @references Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
+#'
 #' @keywords httk-pop
 #' @examples
-#' 
 #' 
 #' \dontrun{
 #' #Simply generate a virtual population of 100 individuals,

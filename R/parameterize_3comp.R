@@ -52,7 +52,7 @@
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
-#' @keywords Parameter
+#' @keywords Parameter 3compartment
 #' @examples
 #' 
 #'  parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')

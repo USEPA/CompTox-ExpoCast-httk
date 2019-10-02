@@ -43,7 +43,7 @@
 #' first pass clearance, calculated from the corrected well-stirred model.}
 #' \item{BW}{Body Weight, kg.} 
 #' @author John Wambaugh
-#' @keywords Parameter
+#' @keywords Parameter 1compartment
 #' @examples
 #' 
 #'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')

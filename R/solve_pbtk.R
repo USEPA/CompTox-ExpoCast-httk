@@ -75,15 +75,19 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
+#'
 #' @author John Wambaugh and Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve pbtk
+#'
 #' @examples
-#' 
 #' 
 #' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
 #' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 

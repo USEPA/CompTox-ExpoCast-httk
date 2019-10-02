@@ -28,12 +28,17 @@
 #' currently ignored because analytical steady-state solutions are currently
 #' used by this function.
 #' 
-#' @param chem.cas Either the CAS number, parameters, or the chemical name must
-#' be specified. 
-#' @param chem.name Either the chemical parameters, name, or the CAS number
-#' must be specified. 
-#' @param parameters Parameters from parameterize_steadystate. Not used with
-#' httkpop model.
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#'  -- if parameters is not specified then the chemical must be identified by 
+#' either CAS, name, or DTXSIDs
+#' @param parameters Parameters from the appropriate parameterization function
+#' for the model indicated by argument model
 #' @param daily.dose Total daily dose, mg/kg BW/day.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
@@ -151,6 +156,7 @@
 #' @param ... Additional parameters passed to calc_analytic_css
 #' 
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
+#'
 #' @references Wambaugh, John F., et al. "Toxicokinetic triage for 
 #' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
 #'
@@ -305,9 +311,16 @@ if (is.null(model)) stop("Model must be specified.")
   {
     if (is.null(parameters))
     {
-      out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-      this.chem <- out$chem.cas
-    } else this.chem <- NULL
+  #Depending on model, choose the function in HTTK that will return the default
+  #HTTK parameters for this chemical
+    paramfun <- model.list[[model]]$parameterize.func
+    parameters <- do.call(getFromNamespace(paramfun, "httk"),
+                    args=c(list(chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
+                      ...))
+    } 
+    
     if (is.null(physiology.matrix))
     {
       nsamp <- samples

@@ -71,15 +71,20 @@
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
+#'
 #' @author Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve 1compartment
+#'
 #' @examples
 #' 
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
+#'
 #' @import deSolve
 #' @export solve_1comp
 #' @useDynLib httk
