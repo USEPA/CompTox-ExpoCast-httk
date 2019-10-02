@@ -65,8 +65,11 @@ convert_httkpop <- function(httk.pop.biomets,
   #End R CMD CHECK appeasement.
                
   # Start with the biometrics from httk-pop:             
-  parameters.df <- data.table::copy(httk.pop.biomets)
+  parameters.dt <- data.table::copy(httk.pop.biomets)
 
+  #First convert to physiological parameters used by HTTK
+  parameters.dt <- httkpop_biotophys_default(indiv_dt = parameters.dt)
+  
 # List all tissues for which HTTK has human tissue information. 
 # This will be used in lumping.  
   tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
@@ -107,7 +110,7 @@ convert_httkpop <- function(httk.pop.biomets,
 
   #Assign the default values to the non-Monte Carlo parameters for all
   #individuals in the virtual population
-  parameters.df[, (noMC.names):=parameters[noMC.names]]
+  parameters.dt[, (noMC.names):=parameters[noMC.names]]
 
 
 # For models with tissue-to-plasma partition coefficients we neeed to calculate
@@ -130,7 +133,7 @@ convert_httkpop <- function(httk.pop.biomets,
     }
     #next, replace the single default value for Funbound.plasma with the vector
     #of Funbound.plasma values from the virtual population data.table.
-    pschmitt$Funbound.plasma<-parameters.df[, Funbound.plasma]
+    pschmitt$Funbound.plasma<-parameters.dt[, Funbound.plasma]
 
     #Now, predict the partitioning coefficients using Schmitt's method. The
     #result will be a list of numerical vectors, one vector for each
@@ -169,13 +172,13 @@ convert_httkpop <- function(httk.pop.biomets,
                                     c(tissue.list,
                                       'red blood cells'))]
     #Lump the volumes by simply summing them.
-    vol.restc <- parameters.df[,
+    vol.restc <- parameters.dt[,
                              Reduce('+', .SD),
                              .SDcols=paste0('V',
                                             rest.tissues,
                                             'c')]
     #Lump the flows by summing them.
-    flow.restf <- parameters.df[,
+    flow.restf <- parameters.dt[,
                               Reduce('+', .SD),
                               .SDcols=paste0('Q',
                                              rest.tissues,
@@ -187,7 +190,7 @@ convert_httkpop <- function(httk.pop.biomets,
                                   function(x) PCs[[paste0('K',
                                                           x,
                                                           '2pu')]]*
-                                    unlist(parameters.df[,
+                                    unlist(parameters.dt[,
                                                        paste0('V',
                                                               x,
                                                               'c'),
@@ -197,10 +200,10 @@ convert_httkpop <- function(httk.pop.biomets,
 
     #Add lumped volumes, flows, and partition coefficients to population
     #data.table
-    parameters.df[, Vrestc:=vol.restc]
-    parameters.df[, Qrestf:=flow.restf]
-    parameters.df[, Krest2pu:=Krest2pu]
-    parameters.df[, Krbc2pu:=PCs[['Krbc2pu']]]
+    parameters.dt[, Vrestc:=vol.restc]
+    parameters.dt[, Qrestf:=flow.restf]
+    parameters.dt[, Krest2pu:=Krest2pu]
+    parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
 
     if (!(length(tissue.list)==0)){
       #For enumerated tissue compartments (if any), add their partitition
@@ -214,10 +217,10 @@ convert_httkpop <- function(httk.pop.biomets,
       #Then add them to the population data.table. data.table syntax: wrap
       #vector of column names in parentheses to assign to multiple columns at
       #once
-      parameters.df[, (knames):=PCs[knames]]
+      parameters.dt[, (knames):=PCs[knames]]
     }
 
-    if (!"Rblood2plasma" %in% colnames(parameters.df))
+    if (!"Rblood2plasma" %in% colnames(parameters.dt))
     {
       #For 1 compartment, 3 compartment, or PBTK models: Calculate Rblood2plasma
       #based on hematocrit and Krbc2plasma. This is the ratio of chemical in blood
@@ -228,9 +231,9 @@ convert_httkpop <- function(httk.pop.biomets,
       } else {
         Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
       }
-      parameters.df[,Rblood2plasma:=Rblood2plasma]
+      parameters.dt[,Rblood2plasma:=Rblood2plasma]
     }
-    parameters.df[is.na(Rblood2plasma),
+    parameters.dt[is.na(Rblood2plasma),
                 Rblood2plasma:=(1-
                                   hematocrit +
                                   hematocrit*
@@ -239,16 +242,16 @@ convert_httkpop <- function(httk.pop.biomets,
   }
 
   # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.df))){
-    suppressWarnings(parameters.df[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
+  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt))){
+    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
       .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
   #Return only the HTTK parameters for the specified model. That is, only the
   #columns whose names are in the names of the default parameter set.
-  parameters.df<- parameters.df[,
-                            names(parameters.df)[names(parameters.df) %in% c('Rblood2plasma',names(parameters))],
+  parameters.dt<- parameters.dt[,
+                            names(parameters.dt)[names(parameters.dt) %in% c('Rblood2plasma',names(parameters))],
                             with=FALSE]
 
-  return(parameters.df)
+  return(parameters.dt)
 }
