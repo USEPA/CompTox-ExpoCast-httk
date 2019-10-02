@@ -71,6 +71,14 @@
 #' 
 #' @keywords httk-pop
 #' @export get_httk_params
+
+
+
+### DELETE THIS FUNCTION WHEN DONE WITH 2.0
+
+
+
+
 get_httk_params <- function(indiv_dt,
                             chemcas=NULL,
                             parameters=NULL,
@@ -90,24 +98,6 @@ get_httk_params <- function(indiv_dt,
                             clint.pvalue.threshold=0.05)
 {
   
-  #First convert to physiological parameters used by HTTK
-  indiv_bio <- httkpop_bio(indiv_dt = indiv_dt)
-  
-  #Next add chemical-specific Funbound.plasma and CLint values
-  #Just cbind them together for now
-  indiv_fc <- cbind(indiv_bio,
-                    draw_invitro(this.chem=chemcas,
-                      parameters=parameters,
-                      nsamp=nrow(indiv_bio),
-                      poormetab=poormetab,
-                      fup.meas.cv=fup.meas.cv,
-                      clint.meas.cv=clint.meas.cv,
-                      fup.pop.cv=fup.pop.cv,
-                      clint.pop.cv=clint.pop.cv,
-                      fup.censored.dist=fup.censored.dist,
-                      fup.lod=fup.lod,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      clint.pvalue.threshold=clint.pvalue.threshold))
   
   #Next convert the whole thing to the HTTK parameters for a specified model
   indiv_httk <- convert_httk(indiv.model.bio=indiv_fc, 

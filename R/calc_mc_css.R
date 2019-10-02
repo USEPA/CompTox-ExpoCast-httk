@@ -344,11 +344,15 @@ if (is.null(model)) stop("Model must be specified.")
                                               weight_category=weight_category,
                                               gfr_category=gfr_category,
                                               reths=reths)
+      #Depending on model, choose the function in HTTK that will return the default
+      #HTTK parameters for this chemical
+        converthttkfun <- model.list[[model]]$converthttk.func
+        physiology.matrix <- do.call(getFromNamespace(converthttkfun, "httk"),
+                        args=list(blah=physiology.matrix))
       } else {
         if(httkpop==T) 
           warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
 
-        do.call
         physiology.matrix <- monte_carlo(params=parameters,
                         censored.params=censored.params,
                         which.quantile=which.quantile,
@@ -369,23 +373,25 @@ if (is.null(model)) stop("Model must be specified.")
                         species=species)
       }
       
-      parameter.matrix <- get_httk_params(physiology.matrix,
-                                          model=model,
-                                          chemcas=this.chem,
-                                          parameters=parameters,
-                                          poormetab=poormetab,
-                                          fup.meas.cv=fup.meas.cv,
-                                          clint.meas.cv=clint.meas.cv,
-                                          fup.pop.cv=fup.pop.cv,
-                                          clint.pop.cv=clint.pop.cv,
-                                          fup.lod=fup.lod,
-                                          fup.censored.dist=fup.censored.dist,
-                                          well.stirred.correction=well.stirred.correction,
-                                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                          regression=regression,
-                                          restrictive.clearance=restrictive.clearance,
-                                          concentration = concentration,
-                                          clint.pvalue.threshold=clint.pvalue.threshold)
+#Next add chemical-specific Funbound.plasma and CLint values
+#Just cbind them together for now
+      parameter.matrix <- cbind(parameter.matrix,
+                    draw_invitro(this.chem=chemcas,
+                      parameters=parameters,
+                      nsamp=nrow(indiv_bio),
+                      poormetab=poormetab,
+                      fup.meas.cv=fup.meas.cv,
+                      clint.meas.cv=clint.meas.cv,
+                      fup.pop.cv=fup.pop.cv,
+                      clint.pop.cv=clint.pop.cv,
+                      fup.censored.dist=fup.censored.dist,
+                      fup.lod=fup.lod,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      clint.pvalue.threshold=clint.pvalue.threshold))
+
+
+# Calculate CSS for each row in the parameter matrix (each row corresponds to
+# a different individual):
       css.list <- apply(parameter.matrix,1,css_apply) 
     }
   
