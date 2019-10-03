@@ -237,9 +237,8 @@ calc_mc_css <- function(chem.cas=NULL,
                         weight_category =  c("Underweight", "Normal", "Overweight", "Obese"),
                         gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
                         reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White","Non-Hispanic Black", "Other"),
-
+                        httkpop.matrix=NULL,
                         physiology.matrix=NULL,
-
                         parameter.matrix=NULL,
                         ...)
 {
@@ -314,46 +313,56 @@ if (is.null(model)) stop("Model must be specified.")
 #Depending on model, choose the function in HTTK that will return the default
 #HTTK parameters for this chemical
   paramfun <- model.list[[model]]$parameterize.func
-  parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                  args=c(list(chem.cas=chem.cas,
-                      chem.name=chem.name,
-                      dtxsid=dtxsid),
-                    ...))
-  } 
+  parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                       args=c(list(chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid),
+                           ...))
+  } else parameters.mean <- parameters 
   
   if (is.null(physiology.matrix))
   {
     nsamp <- samples
     if (httkpop=T & tolower(species)=="human")
     {
-      if (is.null(method)) 
-        stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
+      if (is.null(method)) stop(
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
       else if(!method %in% c('direct resampling',
                               'virtual individuals',
                               'v',
                               'vi',
                               'direct resampling',
                               'dr',
-                              'd')) 
-        stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
-      physiology.matrix <- httkpop_generate(method=method,
-                                            nsamp=nsamp,
-                                            gendernum=gendernum,
-                                            agelim_years=agelim_years,
-                                            agelim_months=agelim_months,
-                                            weight_category=weight_category,
-                                            gfr_category=gfr_category,
-                                            reths=reths)
-    #Depending on model, choose the function in HTTK that will return the default
-    #HTTK parameters for this chemical
+                              'd')) stop( 
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
+      if (is.null(httkpop.matrix))
+        httkpop.matrix <- httkpop_generate(method=method,
+                                           nsamp=nsamp,
+                                           gendernum=gendernum,
+                                           agelim_years=agelim_years,
+                                           agelim_months=agelim_months,
+                                           weight_category=weight_category,
+                                           gfr_category=gfr_category,
+                                           reths=reths)
+
+#Depending on model, choose the function in HTTK that will return the default
+#HTTK parameters for this chemical
       converthttkfun <- model.list[[model]]$converthttk.func
-      physiology.matrix <- do.call(getFromNamespace(converthttkfun, "httk"),
-                      args=list(blah=physiology.matrix))
+      physiology.matrix <- convert_httkpop(
+                             chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             dtxsid=dtxsid,
+                             parameters=parameters,
+                             httk.pop.biomets=httkpop.matrix,
+                             model=model)
     } else {
       if(httkpop==T) 
-        warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
+        warning('httkpop model only available for human and thus not used.\n\
+Set species=\"Human\" to run httkpop model.')   
 
-      physiology.matrix <- monte_carlo(params=parameters,
+      physiology.matrix <- monte_carlo(parameters.mean,
                       censored.params=censored.params,
                       which.quantile=which.quantile,
                       cv.params=vary.params,
@@ -372,25 +381,26 @@ if (is.null(model)) stop("Model must be specified.")
                       restrictive.clearance=restrictive.clearance,
                       species=species)
     }
-    
+  }  
+
+#
+# PERFORM MONTE CARLO ON THE IN VITRO PARAMETERS
+#
 #Next add chemical-specific Funbound.plasma and CLint values
 #Just cbind them together for now
-    parameter.matrix <- cbind(parameter.matrix,
-                  draw_invitro(this.chem=chemcas,
-                    parameters=parameters,
-                    nsamp=nrow(indiv_bio),
-                    poormetab=poormetab,
-                    fup.meas.cv=fup.meas.cv,
-                    clint.meas.cv=clint.meas.cv,
-                    fup.pop.cv=fup.pop.cv,
-                    clint.pop.cv=clint.pop.cv,
-                    fup.censored.dist=fup.censored.dist,
-                    fup.lod=fup.lod,
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    clint.pvalue.threshold=clint.pvalue.threshold))
-
-
-  }
+  parameter.matrix <- cbind(physiology.matrix,
+                draw_invitro(this.chem=chemcas,
+                  parameters=parameters,
+                  nsamp=nrow(indiv_bio),
+                  poormetab=poormetab,
+                  fup.meas.cv=fup.meas.cv,
+                  clint.meas.cv=clint.meas.cv,
+                  fup.pop.cv=fup.pop.cv,
+                  clint.pop.cv=clint.pop.cv,
+                  fup.censored.dist=fup.censored.dist,
+                  fup.lod=fup.lod,
+                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                  clint.pvalue.threshold=clint.pvalue.threshold))
 
 #
 # UPDATE THE PARTITION COEFFICIENTS IF NEEDED

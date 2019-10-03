@@ -11,7 +11,7 @@ model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
 # Function fpr converting httk-pop physiology to model parameters:
-model.list[["pbtk"]]$convert.httkpop <- "convert_httkpop_pbtk"
+model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
 
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
