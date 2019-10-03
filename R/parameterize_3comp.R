@@ -2,11 +2,12 @@
 #' 
 #' This function initializes the parameters needed in the function solve_3comp.
 #' 
-#' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified. 
-#' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. 
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -61,31 +62,37 @@
 #'  out <- solve_3comp(parameters=parameters,plots=TRUE)
 #' 
 #' @export parameterize_3comp
-parameterize_3comp<- function(chem.cas=NULL,
-                              chem.name=NULL,
-                              species="Human",
-                              default.to.human=F,
-                              force.human.clint.fup = F,
-                              clint.pvalue.threshold=0.05,
-                              adjusted.Funbound.plasma=T,
-                              regression=T,
-                              suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+parameterize_3comp<- function(
+                       chem.cas = NULL,
+                       chem.name = NULL,
+                       dtxsid = NULL,
+                       species = "Human",
+                       default.to.human = F,
+                       force.human.clint.fup = F,
+                       clint.pvalue.threshold = 0.05,
+                       adjusted.Funbound.plasma = T,
+                       regression = T,
+                       suppress.messages = F,
+                       minimum.Funbound.plasma = 0.0001)
 {
-  parms <- parameterize_pbtk(chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              species=species,
-                              default.to.human=default.to.human,
-                              tissuelist=list(liver=c("liver"),gut=c("gut")),
-                              force.human.clint.fup = force.human.clint.fup,
-                              clint.pvalue.threshold=clint.pvalue.threshold,
-                              adjusted.Funbound.plasma=
-                               adjusted.Funbound.plasma,
-                              regression=regression,
-                              suppress.messages=suppress.messages,
-                              minimum.Funbound.plasma=minimum.Funbound.plasma)
+  parms <- parameterize_pbtk(
+             chem.cas = chem.cas,
+             chem.name = chem.name,
+             dtxsid = dtxsid,
+             species = species,
+             default.to.human = default.to.human,
+             tissuelist = list(
+               liver=c("liver"),
+               gut=c("gut")),
+             force.human.clint.fup = force.human.clint.fup,
+             clint.pvalue.threshold = clint.pvalue.threshold,
+             adjusted.Funbound.plasma =
+               adjusted.Funbound.plasma,
+             regression = regression,
+             suppress.messages = suppress.messages,
+             minimum.Funbound.plasma = minimum.Funbound.plasma)
                               
-parms$Qkidneyf  <- parms$Vvenc <- parms$Vartc <- NULL
+  parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
- return(parms)                             
+  return(parms)                             
 }

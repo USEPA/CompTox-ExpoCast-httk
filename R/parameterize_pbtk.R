@@ -3,11 +3,12 @@
 #' This function initializes the parameters needed in the functions solve_pbtk,
 #' calc_css, and others using the multiple compartment model.
 #' 
-#' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified. 
-#' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. 
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -68,7 +69,6 @@
 #' @keywords Parameter pbtk
 #' @examples
 #' 
-#' 
 #'  parameters <- parameterize_pbtk(chem.cas='80-05-7')
 #' 
 #'  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
@@ -78,45 +78,81 @@
 #'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 #'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
 #'                    tissuelist=compartments) 
-#'  
-#'  
-#' 
+#'
 #' @export parameterize_pbtk
-parameterize_pbtk <- function(chem.cas=NULL,
-                              chem.name=NULL,
-                              species="Human",
-                              default.to.human=F,
-                              tissuelist=list(
-                                liver=c("liver"),
-                                kidney=c("kidney"),
-                                lung=c("lung"),
-                                gut=c("gut")),
-                              force.human.clint.fup = F,
-                              clint.pvalue.threshold=0.05,
-                              adjusted.Funbound.plasma=T,
-                              regression=T,
-                              suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+parameterize_pbtk <- function(
+                       chem.cas=NULL,
+                       chem.name=NULL,
+                       species="Human",
+                       default.to.human=F,
+                       tissuelist=list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut")),
+                       force.human.clint.fup = F,
+                       clint.pvalue.threshold=0.05,
+                       adjusted.Funbound.plasma=T,
+                       regression=T,
+                       suppress.messages=F,
+                       minimum.Funbound.plasma=0.0001)
 {
+#R CMD CHECK throws notes about "no visible binding for global variable", for
+#each time a data.table column name is used without quotes. To appease R CMD
+#CHECK, a variable has to be created for each of these column names and set to
+#NULL. Note that within the data.table, these variables will not be NULL! Yes,
+#this is pointless and annoying.
   physiology.data <- physiology.data
-# Look up the chemical name/CAS, depending on what was provided:
-  out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+#End R CMD CHECK appeasement.  
+  
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  out <- get_chem_id(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid)
   chem.cas <- out$chem.cas
-  chem.name <- out$chem.name
-   
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid
+       
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param(
+                    "Clint",
+                    species,
+                    chem.CAS=chem.cas),
+                silent=T)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
-  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
+  Clint.pValue <- try(get_invitroPK_param(
+                        "Clint.pValue",
+                        species,
+                        chem.CAS=chem.cas),
+                    silent=T)
+  if ((class(Clint.db) == "try-error" & default.to.human) || 
+      force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param(
+                      "Clint",
+                      "Human",
+                      chem.CAS=chem.cas),
+                  silent=T)
+    Clint.pValue <- try(get_invitroPK_param(
+                          "Clint.pValue",
+                          "Human",
+                          chem.CAS=chem.cas),
+                      silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-  # Check if clint is a point value or a distribution, if a distribution, use the median:
+  if (class(Clint.db) == "try-error") 
+    stop("Missing metabolic clearance data for given species.\n\
+Set default.to.human to true to substitute human value.")
+# Check if clint is a point value or a distribution, if a distribution, 
+# use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
     Clint.dist <- Clint.db
@@ -131,17 +167,19 @@ parameterize_pbtk <- function(chem.cas=NULL,
 
   
 # Predict the PCs for all tissues in the tissue.data table:
-  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
-                                         species=species,
-                                         default.to.human=default.to.human,
-                                         force.human.fup=force.human.clint.fup,
-                                         suppress.messages=T,
-                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
-  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
-                                      species=species,
-                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      regression=regression,
-                                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+  schmitt.params <- parameterize_schmitt(
+                      chem.cas=chem.cas,
+                      species=species,
+                      default.to.human=default.to.human,
+                      force.human.fup=force.human.clint.fup,
+                      suppress.messages=T,
+                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+  PCs <- predict_partitioning_schmitt(
+           parameters=schmitt.params,
+           species=species,
+           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+           regression=regression,
+           minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
@@ -149,22 +187,29 @@ parameterize_pbtk <- function(chem.cas=NULL,
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
+    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).\n\
+Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param(
+                   "Fgutabs",
+                   species,
+                   chem.CAS=chem.cas),
+               silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
- # Check the species argument for capitilization problems and whether or not it is in the table:  
+# Check the species argument for capitilization problems and whether or not 
+# it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
 
@@ -173,9 +218,18 @@ parameterize_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+# acid dissociation constants
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+                                  "pKa_Donor",
+                                  chem.CAS=chem.cas)) 
+# basic association cosntants
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+                                   "pKa_Accept",
+                                   chem.CAS=chem.cas)) 
+# Octanol:water partition coeffiecient
+  Pow <- 10^get_physchem_param(
+              "logP",
+              chem.CAS=chem.cas) 
 
   outlist <- list()
    # Begin flows:
@@ -193,8 +247,10 @@ parameterize_pbtk <- function(chem.cas=NULL,
   
   # Begin volumes
   # units should be L/kgBW  
-  Vartc = this.phys.data["Plasma Volume"]/(1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
-  Vvenc = this.phys.data["Plasma Volume"]/(1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
+  Vartc = this.phys.data["Plasma Volume"]/
+          (1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
+  Vvenc = this.phys.data["Plasma Volume"]/
+          (1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
 
   outlist <- c(outlist,
     Vartc = as.numeric(Vartc),
@@ -217,7 +273,8 @@ parameterize_pbtk <- function(chem.cas=NULL,
     pKa_Accept=pKa_Accept,
     MA=schmitt.params[["MA"]]))
   
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(
               Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,
                 pKa_Donor=schmitt.params$pKa_Donor,
@@ -226,24 +283,29 @@ parameterize_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,
     list(Clint=Clint,
          Clint.dist = Clint.dist,
-         Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",
-                          parameters=list(
-                            Clint=Clint, #uL/min/10^6 cells
-                            Funbound.plasma=fup, # unitless fraction
-                            Fhep.assay.correction=outlist$Fhep.assay.correction, 
-                            million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                            liver.density= 1.05, # g/mL
-                            Dn=0.17,BW=BW,
-                            Vliverc=lumped_params$Vliverc, #L/kg
-                            Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                          suppress.messages=T)), #L/h/kg BW
+         Clmetabolismc= as.numeric(calc_hepatic_clearance(
+                                     hepatic.model="unscaled",
+                                     parameters=list(
+                                       Clint=Clint, #uL/min/10^6 cells
+                                       Funbound.plasma=fup, # unitless fraction
+                                       Fhep.assay.correction=
+                                         outlist$Fhep.assay.correction, 
+                                       million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                       liver.density= 1.05, # g/mL
+                                       Dn=0.17,
+                                       BW=BW,
+                                       Vliverc=lumped_params$Vliverc, #L/kg
+                                       Qtotal.liverc=
+                                         (lumped_params$Qtotal.liverc)/1000*60),
+                                     suppress.messages=T)), #L/h/kg BW
          million.cells.per.gliver=110, # 10^6 cells/g-liver
          liver.density=1.05, # g/mL
          Fgutabs=Fgutabs)) 
   
   if (adjusted.Funbound.plasma) 
   {
-    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
+    outlist["Funbound.plasma.adjustment"] <- 
+      schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
     outlist <- c(outlist,
