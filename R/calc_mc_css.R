@@ -28,12 +28,17 @@
 #' currently ignored because analytical steady-state solutions are currently
 #' used by this function.
 #' 
-#' @param chem.cas Either the CAS number, parameters, or the chemical name must
-#' be specified. 
-#' @param chem.name Either the chemical parameters, name, or the CAS number
-#' must be specified. 
-#' @param parameters Parameters from parameterize_steadystate. Not used with
-#' httkpop model.
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  if
+#'  parameters is not specified then the chemical must be identified by either
+#'  CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#'  -- if parameters is not specified then the chemical must be identified by 
+#' either CAS, name, or DTXSIDs
+#' @param parameters Parameters from the appropriate parameterization function
+#' for the model indicated by argument model
 #' @param daily.dose Total daily dose, mg/kg BW/day.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
@@ -151,6 +156,7 @@
 #' @param ... Additional parameters passed to calc_analytic_css
 #' 
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
+#'
 #' @references Wambaugh, John F., et al. "Toxicokinetic triage for 
 #' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
 #'
@@ -189,6 +195,7 @@
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
+                        dtxsid = NULL,
                         parameters=NULL,
                         daily.dose=1,
                         which.quantile=0.95,
@@ -230,10 +237,44 @@ calc_mc_css <- function(chem.cas=NULL,
                         weight_category =  c("Underweight", "Normal", "Overweight", "Obese"),
                         gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
                         reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White","Non-Hispanic Black", "Other"),
+
                         physiology.matrix=NULL,
+
                         parameter.matrix=NULL,
                         ...)
 {
+# Define a local function for running calc_analytic_css:
+  css_apply <- function(params)
+  {
+    params <- as.list(params)
+    css <- calc_analytic_css(parameters=params,
+                             model=model,
+                             daily.dose=daily.dose,
+                             suppress.messages=T,
+                             output.units=output.units,
+                             chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             well.stirred.correction=well.stirred.correction,
+                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                             regression=regression,
+                             IVIVE = NULL,
+                             tissue=tissue,
+                             restrictive.clearance = restrictive.clearance,
+                             bioactive.free.invivo = bioactive.free.invivo,
+                             concentration = concentration,
+                             clint.pvalue.threshold = 0.05,
+                             ...)
+    return(css)
+  }
+
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
   model <- tolower(model)
@@ -241,6 +282,9 @@ calc_mc_css <- function(chem.cas=NULL,
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
+  } else {
+#Depending on model, choose which parameters are not to be Monte Carlo sampled
+    noMC.names <- model.list[[model]]$noMC.params
   }
 
   if (!is.null(IVIVE)) 
@@ -264,131 +308,128 @@ calc_mc_css <- function(chem.cas=NULL,
     concentration <- "tissue"
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
- 
-  css_apply <- function(params)
+
+  if (is.null(parameters))
   {
-    params <- as.list(params)
-    css <- calc_analytic_css(parameters=params,
-                             model=model,
-                             daily.dose=daily.dose,
-                             suppress.messages=T,
-                             output.units=output.units,
-                             chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             well.stirred.correction=well.stirred.correction,
-                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                             regression=regression,
-                             IVIVE = NULL,
-                             tissue=tissue,
-                             restrictive.clearance = restrictive.clearance,
-                             bioactive.free.invivo = bioactive.free.invivo,
-                             concentration = concentration,
-                             clint.pvalue.threshold = 0.05,
-                             ...)
-    return(css)
-  }
-  if (httkpop == T & tolower(species) == 'human')
+#Depending on model, choose the function in HTTK that will return the default
+#HTTK parameters for this chemical
+  paramfun <- model.list[[model]]$parameterize.func
+  parameters <- do.call(getFromNamespace(paramfun, "httk"),
+                  args=c(list(chem.cas=chem.cas,
+                      chem.name=chem.name,
+                      dtxsid=dtxsid),
+                    ...))
+  } 
+  
+  if (is.null(physiology.matrix))
   {
-    if (!is.null(parameter.matrix)) css.list <- apply(parameter.matrix,1,css_apply)
-    else
+    nsamp <- samples
+    if (httkpop=T & tolower(species)=="human")
     {
-      if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
-      if (is.null(parameters))
-      {
-        out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-        this.chem <- out$chem.cas
-      } else this.chem <- NULL
-      if (is.null(physiology.matrix))
-      {
-        nsamp <- samples
-        if(is.null(method)) stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
-        else if(! method %in% c('direct resampling','virtual individuals','v','vi','direct resampling','dr','d')) stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
-        physiology.matrix <- httkpop_generate(method=method,
-                                              nsamp=nsamp,
-                                              gendernum=gendernum,
-                                              agelim_years=agelim_years,
-                                              agelim_months=agelim_months,
-                                              weight_category=weight_category,
-                                              gfr_category=gfr_category,
-                                              reths=reths)
-      } 
-      parameter.matrix <- get_httk_params(physiology.matrix,
-                                          model=model,
-                                          chemcas=this.chem,
-                                          parameters=parameters,
-                                          poormetab=poormetab,
-                                          fup.meas.cv=fup.meas.cv,
-                                          clint.meas.cv=clint.meas.cv,
-                                          fup.pop.cv=fup.pop.cv,
-                                          clint.pop.cv=clint.pop.cv,
-                                          fup.lod=fup.lod,
-                                          fup.censored.dist=fup.censored.dist,
-                                          well.stirred.correction=well.stirred.correction,
-                                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                          regression=regression,
-                                          restrictive.clearance=restrictive.clearance,
-                                          concentration = concentration,
-                                          clint.pvalue.threshold=clint.pvalue.threshold)
-      css.list <- apply(parameter.matrix,1,css_apply) 
-    }
-    if (return.samples) out <- css.list
-    else out <- quantile(css.list,which.quantile,na.rm=T)       
-  } else {
-    if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
-    if (is.null(parameters))
-    {
-        parameters <- parameterize_steadystate(chem.cas=chem.cas,
-                                               chem.name=chem.name,
-                                               species=species,
-                                               default.to.human=default.to.human,
-                                               adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+      if (is.null(method)) 
+        stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
+      else if(!method %in% c('direct resampling',
+                              'virtual individuals',
+                              'v',
+                              'vi',
+                              'direct resampling',
+                              'dr',
+                              'd')) 
+        stop('Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct resampling\" (\"dr\" or \"d\").')
+      physiology.matrix <- httkpop_generate(method=method,
+                                            nsamp=nsamp,
+                                            gendernum=gendernum,
+                                            agelim_years=agelim_years,
+                                            agelim_months=agelim_months,
+                                            weight_category=weight_category,
+                                            gfr_category=gfr_category,
+                                            reths=reths)
+    #Depending on model, choose the function in HTTK that will return the default
+    #HTTK parameters for this chemical
+      converthttkfun <- model.list[[model]]$converthttk.func
+      physiology.matrix <- do.call(getFromNamespace(converthttkfun, "httk"),
+                      args=list(blah=physiology.matrix))
     } else {
-      if (!all(param.names.3compss %in% names(parameters)))
-      {
-        stop(paste("Missing parameters:",
-                   paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
-                     collapse=', '),
-                   ".  Use parameters from parameterize_steadystate."))
-      }
-    }
-    if (well.stirred.correction & !'Rblood2plasma' %in% names(parameters)){
-      parameters[['Rblood2plasma']] <- 
-        available_rblood2plasma(chem.name=chem.name,chem.cas=chem.cas,
-                                species=species,
-                                adjusted.Funbound.plasma=
-                                  adjusted.Funbound.plasma)
+      if(httkpop==T) 
+        warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
+
+      physiology.matrix <- monte_carlo(params=parameters,
+                      censored.params=censored.params,
+                      which.quantile=which.quantile,
+                      cv.params=vary.params,
+                      samples=samples,model='3compartmentss',
+                      daily.dose=daily.dose,
+                      output.units=output.units,
+                      tissue=tissue,
+                      IVIVE=IVIVE,
+                      chem.name=chem.name,
+                      chem.cas=chem.cas,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      regression=regression,
+                      well.stirred.correction=well.stirred.correction,
+                      suppress.messages=T,
+                      return.samples=return.samples,
+                      restrictive.clearance=restrictive.clearance,
+                      species=species)
     }
     
-    out <- monte_carlo(params=parameters,
-                        censored.params=censored.params,
-                        which.quantile=which.quantile,
-                        cv.params=vary.params,
-                        samples=samples,model='3compartmentss',
-                        daily.dose=daily.dose,
-                        output.units=output.units,
-                        tissue=tissue,
-                        IVIVE=IVIVE,
-                        chem.name=chem.name,
-                        chem.cas=chem.cas,
-                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                        regression=regression,
-                        well.stirred.correction=well.stirred.correction,
-                        suppress.messages=T,
-                        return.samples=return.samples,
-                        restrictive.clearance=restrictive.clearance,
-                        species=species)
+#Next add chemical-specific Funbound.plasma and CLint values
+#Just cbind them together for now
+    parameter.matrix <- cbind(parameter.matrix,
+                  draw_invitro(this.chem=chemcas,
+                    parameters=parameters,
+                    nsamp=nrow(indiv_bio),
+                    poormetab=poormetab,
+                    fup.meas.cv=fup.meas.cv,
+                    clint.meas.cv=clint.meas.cv,
+                    fup.pop.cv=fup.pop.cv,
+                    clint.pop.cv=clint.pop.cv,
+                    fup.censored.dist=fup.censored.dist,
+                    fup.lod=fup.lod,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    clint.pvalue.threshold=clint.pvalue.threshold))
 
-    if(httkpop==T) warning('httkpop model only available for human and thus not used.  Set species=\"Human\" to run httkpop model.')   
-  }  
-  if(!suppress.messages & !return.samples){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      if(is.null(tissue)) cat("Plasma concentration returned in",output.units,"units.\n")
-      else cat(paste(toupper(substr(tissue,1,1)),substr(tissue,2,nchar(species)),sep=''),"concentration returned in",output.units,"units.\n")
-    }else{
-      if(is.null(tissue))cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"plasma concentration returned in",output.units,"units for",which.quantile,"quantile.\n") 
-      else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),tissue,"concentration returned in",output.units,"units.\n")
+
+  }
+
+# Calculate CSS for each row in the parameter matrix (each row corresponds to
+# a different individual):
+  css.list <- apply(parameter.matrix,1,css_apply) 
+  
+  if (!suppress.messages & !return.samples)
+  {
+    if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
+      substr(species,2,nchar(species)),sep=''),
+      "plasma concentration returned in",
+      output.units,
+      "units for",
+      which.quantile,
+      "quantile.\n") 
+      else cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        tissue,
+        "concentration returned in",
+        output.units,
+        "units for",
+        which.quantile,
+        "quantile.\n") 
+    out <- quantile(css.list,which.quantile,na.rm=T)     
+  } else {
+    out <- css.list  
+    if (!suppress.messages) 
+    {
+      if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        "plasma concentration returned in",
+        output.units,
+        "units.\n") 
+      else cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),
+        tissue,
+        "concentration returned in",
+        output.units,
+        "units.\n") 
+      out <- css.list
     }
   }
-  print(out)
-  return(as.numeric(out))
 }

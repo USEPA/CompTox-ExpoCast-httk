@@ -32,6 +32,7 @@
 #'@return Steady state concentration in uM units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'@keywords 3compartment
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    parameters=NULL,

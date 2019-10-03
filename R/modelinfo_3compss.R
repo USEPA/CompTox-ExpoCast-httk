@@ -1,8 +1,15 @@
 # Add this model to the list of models:
+
+#Analytic expression for steady-state plasma concentration.
 model.list[["3compartmentss"]]$analytic.css.func <- "calc_analytic_css_3compss"
 
-#Define the parameter names for each model in one place so that all functions can use them:
-param.names.3compss <- c("BW",
+# The is the R function for generating model parameters:
+model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"
+
+# These are all the parameters returned by the R model parameterization function.
+# Some of these parameters are not directly used to solve the model, but describe
+# how other parameters were calculated:
+model.list[["3compartmentss"]]$param.names <- c("BW",
                        "Clint",
                        "Clint.dist",
                        "Dow74",
@@ -15,6 +22,7 @@ param.names.3compss <- c("BW",
                        "liver.density",
                        "million.cells.per.gliver",
                        "MW",
+                       "Pow",
                        "Qtotal.liverc",
                        "Qgfrc",
                        "Rblood2plasma",
@@ -42,8 +50,6 @@ model.list[["3compartmentss"]]$noMC.params <- c(
   "Fhep.assay.correction",
   "Funbound.plasma.adjustment"
   )
-   
-   
+
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
-

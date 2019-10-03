@@ -1,7 +1,4 @@
-#Initialize model.list for compiling multiple lists of model-related variables 
-#and information to be accessed throughout httk. 
 model.list <- list()
-
 #'Calculate the analytic steady state concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
