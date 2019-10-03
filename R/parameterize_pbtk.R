@@ -61,12 +61,20 @@
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#'
 #' @author John Wambaugh and Robert Pearce
-#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#'
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter pbtk
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_pbtk(chem.cas='80-05-7')

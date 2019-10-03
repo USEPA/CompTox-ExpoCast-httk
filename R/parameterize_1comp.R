@@ -31,19 +31,34 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #'
-#' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' @return 
+#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
-#' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' dose that enters the gutlumen.} 
+#' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+#' assay using the method of Kilford et al. (2008)} 
+#' \item{kelim}{Elimination rate, units of 1/h.} 
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{kgutabs}{Rate chemical is absorbed, 1/h.}
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-#' \item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
-#' concentration of the chemical in the blood to the concentration in the
-#' plasma. Not used in calculations but included for the conversion of plasma
-#' outputs.} \item{hepatic.bioavailability}{Fraction of dose remaining after
+#' \item{MW}{Molecular Weight, g/mol.} 
+#' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the 
+#' blood to the concentration in the plasma. Not used in calculations but 
+#' included for the conversion of plasma outputs.} 
+#' \item{hepatic.bioavailability}{Fraction of dose remaining after
 #' first pass clearance, calculated from the corrected well-stirred model.}
 #' \item{BW}{Body Weight, kg.} 
+#'
 #' @author John Wambaugh
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
+#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
+#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter 1compartment
 #' @examples
 #' 
