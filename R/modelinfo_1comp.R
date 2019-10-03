@@ -10,7 +10,7 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
 # Function fpr converting httk-pop physiology to model parameters:
-model.list[["1compartment"]]$convert.httkpop <- "convert_httkpop_1comp"
+model.list[["1compartment"]]$convert.httkpop.func <- "convert_httkpop_1comp"
  
 # How the tissues from tissue.table are lumped together to form the model:
 # 1compartment model lumps everything, so list of compartments is empty.

@@ -10,7 +10,7 @@ model.list[["3compartment"]]$analytic.css.func <- "calc_analytic_css_3comp"
 model.list[["3compartment"]]$parameterize.func <- "parameterize_3comp"
 
 # Function fpr converting httk-pop physiology to model parameters:
-model.list[["3compartment"]]$convert.httkpop <- "convert_httkpop_3comp"
+model.list[["3compartment"]]$convert.httkpop.func <- "convert_httkpop_3comp"
 
 # How the tissues from tissue.table are lumped together to form the model:
 # 3 compartment model has only liver and gut compartments; everything else is
