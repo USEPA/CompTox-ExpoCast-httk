@@ -25,35 +25,48 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #'
-#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, 
-#' L/h/kg BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
+#' @return 
+#' \item{BW}{Body Weight, kg.} 
+#' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
 #' fraction of the dose that enters the gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
-#' assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
-#' volume of red blood cells in the blood.}
+#' assay using the method of Kilford et al. (2008)} 
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-#' concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
+#' concentration in plasma.} 
+#' \item{Kliver2pu}{Ratio of concentration of
 #' chemical in liver tissue to unbound concentration in plasma.}
 #' \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells to
-#' unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration of
+#' unbound concentration in plasma.} 
+#' \item{Krest2pu}{Ratio of concentration of
 #' chemical in rest of body tissue to unbound concentration in plasma.}
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-#' \item{MW}{Molecular Weight, g/mol.} \item{Qcardiacc}{Cardiac Output, L/h/kg
+#' \item{MW}{Molecular Weight, g/mol.} 
+#' \item{Qcardiacc}{Cardiac Output, L/h/kg
 #' BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of
-#' fluid filtered from kidney and excreted.} \item{Qgutf}{Fraction of cardiac
-#' output flowing to the gut.} \item{Qliverf}{Fraction of cardiac output
-#' flowing to the liver.} \item{Rblood2plasma}{The ratio of the concentration
+#' fluid filtered from kidney and excreted.} 
+#' \item{Qgutf}{Fraction of cardiac output flowing to the gut.} 
+#' \item{Qliverf}{Fraction of cardiac output flowing to the liver.} 
+#' \item{Rblood2plasma}{The ratio of the concentration
 #' of the chemical in the blood to the concentration in the plasma.}
 #' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+#'
 #' @author Robert Pearce and John Wambaugh
-#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter 3compartment
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
