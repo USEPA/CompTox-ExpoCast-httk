@@ -44,12 +44,15 @@
 #' @keyword httk-pop
 #' @import utils
 #' @export convert_httkpop
-convert_httkpop <- function(httk.pop.biomets,
-                         model,
-                         this.chem=NULL,
-                         parameters=NULL,
-                         ...
-                         )
+convert_httkpop <- function(
+                     httk.pop.biomets,
+                     model,
+                     chem.cas=NULL,
+                     chem.name=NULL,
+                     dtxsid = NULL,
+                     parameters=NULL,
+                     ...
+                     )
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD

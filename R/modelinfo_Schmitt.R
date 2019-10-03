@@ -40,6 +40,17 @@ model.list[["schmitt"]]$required.params <- c(
   "pKa_Accept",
   "MW")
 
+#Parameters needed to run parameterize function without a chemical id:
+model.list[["schmitt"]]$paramterize_params <- c(
+  "Funbound.plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MA",
+  "plasma.pH",
+  "alpha",
+  "Fprotein.plasma")
+
 #choose which parameters are not to be Monte Carlo sampled
 model.list[["schmitt"]]$noMC.params <- c(
   'kgutabs',

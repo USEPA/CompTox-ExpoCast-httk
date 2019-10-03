@@ -2,11 +2,12 @@
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
 #' 
-#' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified. 
-#' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. 
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing rat values with human values if
@@ -47,44 +48,64 @@
 #' @examples
 #' 
 #'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_1comp(chem.cas='80-05-7',restrictive.clearance=FALSE,
-#'                                   species='rabbit',default.to.human=TRUE)
+#'  parameters <- parameterize_1comp(chem.cas='80-05-7',
+#'                                   restrictive.clearance=FALSE,
+#'                                   species='rabbit',
+#'                                   default.to.human=TRUE)
 #'  out <- solve_1comp(parameters=parameters)
 #' 
 #' @export parameterize_1comp
-parameterize_1comp <- function(chem.cas=NULL,
-                               chem.name=NULL,
-                               species='Human',
-                               default.to.human=F,
-                               adjusted.Funbound.plasma=T,
-                               regression=T,
-                               restrictive.clearance=T,
-                               well.stirred.correction=T,
-                               suppress.messages=F,
-                               clint.pvalue.threshold=0.05,
-                               minimum.Funbound.plasma=0.0001)
+parameterize_1comp <- function(
+                        chem.cas=NULL,
+                        chem.name=NULL,
+                        dtxsid = NULL,
+                        species='Human',
+                        default.to.human=F,
+                        adjusted.Funbound.plasma=T,
+                        regression=T,
+                        restrictive.clearance=T,
+                        well.stirred.correction=T,
+                        suppress.messages=F,
+                        clint.pvalue.threshold=0.05,
+                        minimum.Funbound.plasma=0.0001)
 {
+#R CMD CHECK throws notes about "no visible binding for global variable", for
+#each time a data.table column name is used without quotes. To appease R CMD
+#CHECK, a variable has to be created for each of these column names and set to
+#NULL. Note that within the data.table, these variables will not be NULL! Yes,
+#this is pointless and annoying.
   physiology.data <- physiology.data
+#End R CMD CHECK appeasement.  
   
-  #Check for specified chemical
-  if(is.null(chem.cas) & is.null(chem.name)) stop('Must specify chem.name or chem.cas')
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
   
   params <- list()
-  params[['Vdist']] <- calc_vdist(chem.cas=chem.cas,
+  params[['Vdist']] <- calc_vdist(
+                         chem.cas=chem.cas,
+                         chem.name=chem.name,
+                         dtxsid=dtxsid,
+                         species=species,
+                         default.to.human=default.to.human,
+                         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                         regression=regression,
+                         suppress.messages=T)
+  
+  ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
+                                  chem.cas=chem.cas,
+                                  dtxsid=dtxsid,
                                   species=species,
                                   default.to.human=default.to.human,
-                                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                  regression=regression,suppress.messages=T)
-  
-  ss.params <- suppressWarnings(parameterize_steadystate(chem.name=chem.name,
-                 chem.cas=chem.cas,
-                 species=species,
-                 default.to.human=default.to.human,
-                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                 restrictive.clearance=restrictive.clearance,
-                 clint.pvalue.threshold=clint.pvalue.threshold,
-                 minimum.Funbound.plasma=minimum.Funbound.plasma))
+                                  adjusted.Funbound.plasma=
+                                    adjusted.Funbound.plasma,
+                                  restrictive.clearance=restrictive.clearance,
+                                  clint.pvalue.threshold=clint.pvalue.threshold,
+                                  minimum.Funbound.plasma=
+                                    minimum.Funbound.plasma))
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
@@ -104,7 +125,8 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[["Clint.dist"]] <- ss.params[["Clint.dist"]]
   params[["Funbound.plasma"]] <- ss.params[["Funbound.plasma"]] 
   params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
-  params[["Funbound.plasma.adjustment"]] <- ss.params[["Funbound.plasma.adjustment"]] 
+  params[["Funbound.plasma.adjustment"]] <- 
+    ss.params[["Funbound.plasma.adjustment"]] 
   params[["Fhep.assay.correction"]] <- ss.params[["Fhep.assay.correction"]]
   params[["Funbound.plasma.dist"]] <- ss.params[["Funbound.plasma.dist"]] 
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
@@ -126,12 +148,14 @@ parameterize_1comp <- function(chem.cas=NULL,
   params[['million.cells.per.gliver']] <- 110
   params[["liver.density"]] <- 1.05 # g/mL
    
-   # Check the species argument for capitalization problems and whether or not it is in the table:  
+# Check the species argument for capitalization problems and whether or not 
+# it is in the table:  
     if (!(species %in% colnames(physiology.data)))
     {
       if (toupper(species) %in% toupper(colnames(physiology.data)))
       {
-        phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+        phys.species <- colnames(physiology.data)[
+                          toupper(colnames(physiology.data))==toupper(species)]
       } else stop(paste("Physiological PK data for",species,"not found."))
     } else phys.species <- species
   
@@ -141,16 +165,21 @@ parameterize_1comp <- function(chem.cas=NULL,
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   
-  if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
+  if (is.null(chem.cas)) chem.cas <- get_chem_id(
+                                      chem.name=chem.name)[['chem.cas']]
   params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
-    Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+    Fgutabs <- try(
+                 get_invitroPK_param(
+                   "Fgutabs",
+                   species,
+                   chem.CAS=chem.cas),
+                 silent=T)
     if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
     params[['Fgutabs']] <- Fgutabs
-  
-    params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]  
-    
+    params[['hepatic.bioavailability']] <- 
+      ss.params[['hepatic.bioavailability']]  
     params[['BW']] <- this.phys.data[["Average BW"]]
   
   return(params)

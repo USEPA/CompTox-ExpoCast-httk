@@ -5,10 +5,12 @@
 #' compartment steady state model ('3compartmentss').  
 #' 
 #' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified.
-#' @param chem.cas Either the chemical name or the CAS number must be
-#' specified.
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
@@ -54,27 +56,46 @@
 #'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
 #' 
 #' @export parameterize_steadystate
-parameterize_steadystate <- function(chem.cas=NULL,
-                                     chem.name=NULL,
-                                     species="Human",
-                                     clint.pvalue.threshold=0.05,
-                                     default.to.human=F,
-                                     human.clint.fup=F,
-                                     adjusted.Funbound.plasma=T,
-                                     restrictive.clearance=T,
-                                     fup.lod.default=0.005,
-                                     suppress.messages=F,
-                                     minimum.Funbound.plasma=0.0001)
+parameterize_steadystate <- function(
+                              chem.cas=NULL,
+                              chem.name=NULL,
+                              dtxsid=NULL,
+                              species="Human",
+                              clint.pvalue.threshold=0.05,
+                              default.to.human=F,
+                              human.clint.fup=F,
+                              adjusted.Funbound.plasma=T,
+                              restrictive.clearance=T,
+                              fup.lod.default=0.005,
+                              suppress.messages=F,
+                              minimum.Funbound.plasma=0.0001)
 {
+#R CMD CHECK throws notes about "no visible binding for global variable", for
+#each time a data.table column name is used without quotes. To appease R CMD
+#CHECK, a variable has to be created for each of these column names and set to
+#NULL. Note that within the data.table, these variables will not be NULL! Yes,
+#this is pointless and annoying.
   Parameter <- Species <- variable <- Tissue <- NULL
   physiology.data <- physiology.data
   tissue.data <- tissue.data
-# Look up the chemical name/CAS, depending on what was provide:
-  out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-  chem.cas <- out$chem.cas
-  chem.name <- out$chem.name
+#End R CMD CHECK appeasement.  
 
-  #Capitilie the first letter of spcies only:
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  out <- get_chem_id(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid)
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid
+
+  #Capitilize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))
 
@@ -82,7 +103,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+      phys.species <- 
+        colnames(physiology.data)[toupper(colnames(physiology.data))==
+                                    toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
   this.phys.data <- physiology.data[,phys.species]
@@ -96,22 +119,45 @@ parameterize_steadystate <- function(chem.cas=NULL,
                           tolower(Species) == tolower(species) & 
                           variable == 'Flow (mL/min/kg^(3/4))' & 
                           Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
-  Vliverc <- subset(tissue.data,tolower(Species) == tolower(species) & variable == 'Vol (L/kg)' & Tissue == 'liver')[,'value'] # L/kg BW
+  Vliverc <- subset(tissue.data,
+               tolower(Species) == tolower(species) & 
+               variable == 'Vol (L/kg)' & 
+               Tissue == 'liver')[,'value'] # L/kg BW
 
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param(
+                    "Clint",
+                    species,
+                    chem.CAS=chem.cas),
+                silent=T)
+                
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
+  Clint.pValue <- try(get_invitroPK_param(
+                        "Clint.pValue",
+                        species,
+                        chem.CAS=chem.cas),
+                    silent=T)
+                    
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param(
+                      "Clint",
+                      "Human",
+                      chem.CAS=chem.cas),
+                  silent=T)
+    Clint.pValue <- try(get_invitroPK_param(
+                          "Clint.pValue",
+                          "Human",
+                          chem.CAS=chem.cas),
+                      silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
   if (class(Clint.db) == "try-error") 
-    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-  # Check if clintis a point value or a distribution, if a distribution, use the median:
+    stop("Missing metabolic clearance data for given species.\n\
+Set default.to.human to true to substitute human value.")
+# Check if clintis a point value or a distribution, if a distribution, 
+#use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
     Clint.dist <- Clint.db
@@ -122,23 +168,37 @@ parameterize_steadystate <- function(chem.cas=NULL,
     Clint.point <- Clint.db
     Clint.dist <- NA
   }
-  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
+  if (!is.na(Clint.pValue) & 
+      Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
-  fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+  fup.db <- try(get_invitroPK_param(
+                  "Funbound.plasma",
+                  species,
+                  chem.CAS=chem.cas),
+              silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fup.db<- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
-    if (!suppress.messages) warning(paste(species,"coerced to Human for protein binding data."))
+    fup.db<- try(get_invitroPK_param(
+                   "Funbound.plasma",
+                   "Human",
+                   chem.CAS=chem.cas),
+               silent=T)
+    if (!suppress.messages) 
+      warning(paste(species,"coerced to Human for protein binding data."))
   }
-  if (class(fup.db) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-  # Check if fup is a point value or a distribution, if a distribution, use the median:
+  if (class(fup.db) == "try-error") 
+    stop("Missing protein binding data for given species.\n\
+Set default.to.human to true to substitute human value.")
+# Check if fup is a point value or a distribution, if a distribution, 
+# use the median:
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
     fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
     fup.dist <- fup.db
-    if (!suppress.messages) warning("Fraction unbound is provided as a distribution.")
+    if (!suppress.messages) 
+      warning("Fraction unbound is provided as a distribution.")
   } else {
     fup.point <- fup.db
     fup.dist <- NA
@@ -149,11 +209,20 @@ parameterize_steadystate <- function(chem.cas=NULL,
     if (!suppress.messages) warning("Fraction unbound = 0, changed to 0.005.")
   }
 
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
-  ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
-  dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
+# acid dissociation constants
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+                                  "pKa_Donor",
+                                  chem.CAS=chem.cas)) 
+# basic association cosntants
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+                                   "pKa_Accept",
+                                   chem.CAS=chem.cas)) 
+# Octanol:water partition coeffiecient
+  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) 
+  ion <- calc_ionization(pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
+  dow <- Pow * (ion$fraction_neutral + 
+                0.001 * ion$fraction_charged + 
+                ion$fraction_zwitter)
 
   if (adjusted.Funbound.plasma)
   {
@@ -171,15 +240,21 @@ parameterize_steadystate <- function(chem.cas=NULL,
                         minimum.Funbound.plasma) # Enforcing a sanity check on 
                                                  # plasma binding
     fup.adjusted <- fup.point*fup.adjustment # unitless fraction
-    if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).  Set adjusted.Funbound.plasma to FALSE to use original value.')
+    if (!suppress.messages) 
+      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).\n\
+Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else {
     fup.adjusted <- fup.point
     fup.adjustment <- NA
   }
 # Restrict values of fup:
-  if (fup.adjusted < minimum.Funbound.plasma) fup.adjusted <- minimum.Funbound.plasma
+  if (fup.adjusted < minimum.Funbound.plasma) 
+    fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",
+                   species,
+                   chem.CAS=chem.cas),
+               silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
   Params <- list()
@@ -192,8 +267,10 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
-  Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
+  Params[["MW"]] <- 
+    get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
   Params[["Fhep.assay.correction"]] <- calc_fu_hep(Pow,
                                          pKa_Donor=pKa_Donor,
                                          pKa_Accept=pKa_Accept) # fraction 
@@ -220,7 +297,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   if (restrictive.clearance) 
   { 
     Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + fup.adjusted * cl / Rb2p) # Units cancel (i.e., unitless)
+      Qliver / (Qliver + fup.adjusted * cl / Rb2p) # Units cancel (unitless)
   } else {
     Params[['hepatic.bioavailability']] <- 
       Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
