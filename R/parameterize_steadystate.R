@@ -31,13 +31,16 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #'
-#' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
+#' @return 
+#' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
-#' that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
-#' liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-#' BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
-#' Weight, kg} \item{MW}{Molecular Weight, g/mol}
+#' dose that enters the gutlumen.} 
+#' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+#' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
+#' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
+#' BW^3/4, volume of fluid filtered from kidney and excreted.} 
+#' \item{BW}{Body Weight, kg} 
+#' \item{MW}{Molecular Weight, g/mol}
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{liver.density}{Liver tissue density, kg/L.}

@@ -30,26 +30,34 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-#' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
-#' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-#' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-#' chemical unbound in hepatocyte assay using the method of Kilford et al.
-#' (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' @return 
+#' \item{BW}{Body Weight, kg.} 
+#' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+#' the dose that enters the gutlumen.} 
+#' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+#' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+#' assay using the method of Kilford et al. (2008)} 
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-#' concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
-#' from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
-#' kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
-#' concentration of chemical in liver tissue to unbound concentration in
-#' plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
-#' to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
+#' concentration in plasma.} 
+#' \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 
+#' \item{Kkidney2pu}{Ratio of concentration of chemical in
+#' kidney tissue to unbound concentration in plasma.} 
+#' \item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to 
+#' unbound concentration in plasma.} 
+#' \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+#' to unbound concentration in plasma.} 
+#' \item{Krbc2pu}{Ratio of concentration
 #' of chemical in red blood cells to unbound concentration in plasma.}
 #' \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-#' unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-#' cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
-#' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
-#' Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
-#' excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+#' unbound concentration in plasma.} 
+#' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
+#' \item{MW}{Molecular Weight, g/mol.}
+#' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} 
+#' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid 
+#' filtered from kidney and excreted.} 
+#' \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 #' \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 #' \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
 #' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
@@ -63,7 +71,6 @@
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
 #'
 #' @author John Wambaugh and Robert Pearce
-#'
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
