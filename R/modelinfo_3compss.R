@@ -1,10 +1,17 @@
-# Add this model to the list of models:
+# Add the 3compartment steady-state model (Pearce et al., 2017) to the list of 
+# models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
 #Analytic expression for steady-state plasma concentration.
 model.list[["3compartmentss"]]$analytic.css.func <- "calc_analytic_css_3compss"
 
-# The is the R function for generating model parameters:
-model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"
+# Function used for generating model parameters:
+model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"  
+
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["3compartmentss"]]$convert.httkpop <- "convert_httkpop_3compss"
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
