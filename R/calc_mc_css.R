@@ -393,13 +393,14 @@ if (is.null(model)) stop("Model must be specified.")
   }
 
 #
-# UPDATE THE PARTITION COEFFICIENTS IF NEEDED AND NECESSARY
+# UPDATE THE PARTITION COEFFICIENTS IF NEEDED
 #
 # For models with tissue-to-plasma partition coefficients we neeed to calculate
 # them for each individual because each individual has a different 
 # Funbound.plasma value:
   if (model.table[model]$ComputePCforMC)
   {
+    if (apply())
 
     #First, get the default parameters used for the Schmitt method of estimating
     #partition coefficients.
@@ -428,26 +429,27 @@ if (is.null(model)) stop("Model must be specified.")
                                               adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                               regression=regression)
 
-    #Depending on model, get the list of compartments.
-    #All other tissues will be lumped into a "rest" compartment.
-    tissue.list <- switch(model,
-                          #1 compartment model lumps everything, so list of
-                          #compartments is empty.
-                          '1compartment'=vector(mode='character',
-                                                length=0),
-                          #3 compartment model has only liver and gut
-                          #compartments; everything else is lumped.
-                          '3compartment'=c('liver',
-                                           'gut'),
-                          #PBTK model has liver, kidney, gut, and lung
-                          #compartments; everything else is lumped. To do: let
-                          #user specify PBTK compartment list (but only useful
-                          #after HTTK can do something with that)
-                          'pbtk'=c('liver',
-                                   'kidney',
-                                   'lung',
-                                   'gut'))
+  # List all tissues for which HTTK has human tissue information. 
+  # This will be used in lumping.  
+    tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
+  # We don't use these tissues for lumping:
+    tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
 
+# Lump the tissues, depending on model. tissues is a list of all the 
+# unlumped compartments, all other tissues will be lumped into a "rest" 
+# compartment.
+    tissue.list <- model.table[model]$tissues
+    if (!is.null(tissue.list))
+    {
+# Check to make sure that all the requested tissues are available:
+      if (any(!(tissue.list %in% tissuenames))) stop(paste(
+                                                  "Requested tissue(s)",
+                                                  paste(tissue.list[
+                                                    !(tissue.list %in% 
+                                                    tissuenames)],
+                                                    collapse=", "),
+                                                  "are not in tissue.data."))
+    
     #Now get the list of tissues to be lumped: that is, everything in
     #tissuenames that wasn't in the list of compartments for this model.
     rest.tissues <- tissuenames[!(tissuenames %in%
