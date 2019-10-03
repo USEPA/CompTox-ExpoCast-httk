@@ -142,6 +142,7 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   "Aplasma"
   )
 
+
 #list of variables to be monitored (plotted). Should be able to be constructed
 #from states and outputs. 
 model.list[["pbtk"]]$default.monitor.vars <- c(
@@ -201,6 +202,20 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+
+
+#choose which parameters are not to be Monte Carlo sampled
+model.list[["pbtk"]]$noMC.params <- c(
+  'kgutabs',
+  'MW',
+  'Pow',
+  "MA",
+  'pKa_Donor',
+  'pKa_Accept',
+  "Fhep.assay.correction",
+  "Funbound.plasma.adjustment",
+  'Fgutabs'
+  )
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T
