@@ -470,8 +470,7 @@ with two columns (time, dose).")
  
 #Initialize string variable, 'out.amount', to represent units of amount in
 #accordance with the concentration units stored in 'output.units'. This is useful
-#for plotting and other warning messages sent to the user about calculations
-#performed. 
+#for plotting and other warning messages sent to the user. 
   if (tolower(output.units) == 'um')
   {
     out.amount <- 'umol'
