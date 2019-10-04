@@ -107,6 +107,21 @@ httkpop_generate <- function(method,
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
                                      'Other')){
+
+# Error checking:
+  if (is.null(method)) stop(
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
+  else if(!method %in% c('direct resampling',
+                          'virtual individuals',
+                          'v',
+                          'vi',
+                          'direct resampling',
+                          'dr',
+                          'd')) stop( 
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
+
   #Check age limits
   if (is.null(agelim_years) & is.null(agelim_months)){
     #Use default values

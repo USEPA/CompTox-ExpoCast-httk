@@ -54,25 +54,12 @@ convert_httkpop <- function(
                      ...
                      )
 {
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  Funbound.plasma <- Vrestc <- Qrestf <- Clint <- NULL
-  Fhep.assay.correction <- million.cells.per.gliver <- NULL
-  BW <- Vliverc <- Qtotal.liverc <- Clmetabolismc <- RBC.vol <- NULL
-  plasma.vol <- hematocrit <- Vdist <- Qgfrc <- liver.density <- NULL
-  kelim <- Rblood2plasma <- Krbc2pu <- NULL
-  Qliver<-Qcardiacc<-Qgutf<-Qliverf<-hepatic.bioavailability<-NULL
-  #End R CMD CHECK appeasement.
-               
   # Start with the biometrics from httk-pop:             
   parameters.dt <- data.table::copy(httk.pop.biomets)
 
   #First convert to physiological parameters used by HTTK
   parameters.dt <- httkpop_biotophys_default(indiv_dt = parameters.dt)
-  
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -88,9 +75,6 @@ convert_httkpop <- function(
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
-  } else {
-  #Depending on model, choose which parameters are not to be Monte Carlo sampled
-    noMC.names <- model.list[[model]]$noMC.params
   }
 
   if (is.null(parameters))
@@ -103,18 +87,6 @@ convert_httkpop <- function(
                         chem.name=chem.name,
                         dtxsid=dtxsid),
                       ...))
-  }
-
-  #Assign the default values to the non-Monte Carlo parameters for all
-  #individuals in the virtual population
-  parameters.dt[, (noMC.names):=parameters[noMC.names]]
-
-
-
-  # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt))){
-    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
-      .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
   #Return only the HTTK parameters for the specified model. That is, only the

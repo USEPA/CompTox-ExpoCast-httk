@@ -42,15 +42,30 @@
 #' @keywords httk-pop 1compartment
 #' @import utils
 #' @export convert_httkpop
-convert_httkpop_pbtk <- function(httk.pop.biomets,
-                         model,
+convert_httkpop_1comp <- function(httk.pop.biomets,
                          chem.cas=NULL,
                          chem.name=NULL,
                          dtxsid = NULL,
-                         parameters=NULL,
-                         ...
+                         parameters=NULL
                          )
 {
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+  if (is.null(parameters))
+  {
+    paramfun <- model.list[[1comp]]$parameterize.func
+    parameters <- do.call(getFromNamespace(paramfun, "httk"),
+                    args=c(list(chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
+                      ...))
+  }
+  
       #for 1-compartment model, don't need to compute total hepatic clearance,
       #but do need to compute volume of distribution and elimination rate.
 

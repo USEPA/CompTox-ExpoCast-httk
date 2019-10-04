@@ -197,10 +197,8 @@ calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         parameters=NULL,
-                        daily.dose=1,
                         which.quantile=0.95,
                         species="Human",
-                        output.units="mg/L",
                         suppress.messages=F,
                         model='3compartmentss',
                         censored.params=list(Funbound.plasma=list(cv=0.3,lod=0.01)),
@@ -218,51 +216,61 @@ calc_mc_css <- function(chem.cas=NULL,
                         return.samples=F,
                         default.to.human=F,
                         tissue=NULL,
-                        well.stirred.correction=T,
-                        adjusted.Funbound.plasma=T,
-                        regression=T,
                         clint.pvalue.threshold=0.05,
-                        restrictive.clearance = T,
-                        bioactive.free.invivo = FALSE,
-                        concentration = "plasma",
-                        IVIVE=NULL,
                         httkpop=T,
                         poormetab=T,
                         fup.censored.dist=FALSE,
                         fup.lod=0.01,
-                        method='direct resampling',
-                        gendernum=NULL,
-                        agelim_years=NULL,
-                        agelim_months=NULL,
-                        weight_category =  c("Underweight", "Normal", "Overweight", "Obese"),
-                        gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
-                        reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White","Non-Hispanic Black", "Other"),
                         httkpop.matrix=NULL,
                         physiology.matrix=NULL,
                         parameter.matrix=NULL,
-                        ...)
+                        httkpop_generate.arg.list=list(
+                          method='direct resampling',
+                          gendernum=NULL,
+                          agelim_years=NULL,
+                          agelim_months=NULL,
+                          weight_category =  c(
+                            "Underweight", 
+                            "Normal", 
+                            "Overweight", 
+                            "Obese"),
+                          gfr_category = c(
+                            "Normal", 
+                            "Kidney Disease", 
+                            "Kidney Failure"),
+                          reths = c(
+                            "Mexican American", 
+                            "Other Hispanic", 
+                            "Non-Hispanic White",
+                            "Non-Hispanic Black", 
+                            "Other")),
+                        convert.httkpop.arg.list=list(),
+                        calc.analytic.css.arg.list=list(
+                          daily.dose=1,
+                          output.units="mg/L",
+                          well.stirred.correction=T,
+                          adjusted.Funbound.plasma=T,
+                          regression=T,
+                          IVIVE = NULL,
+                          tissue=tissue,
+                          restrictive.clearance = T,
+                          bioactive.free.invivo = FALSE,
+                          concentration = "plasma"),
+                        draw_invitro.arg.list=list(),
+                        parameterize.arg.list=list())
 {
 # Define a local function for running calc_analytic_css:
   css_apply <- function(params)
   {
     params <- as.list(params)
-    css <- calc_analytic_css(parameters=params,
+    css <- do.call(calc_analytic_css,args=c(list(parameters=params,
                              model=model,
-                             daily.dose=daily.dose,
                              suppress.messages=T,
-                             output.units=output.units,
                              chem.cas=chem.cas,
                              chem.name=chem.name,
-                             well.stirred.correction=well.stirred.correction,
-                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                             regression=regression,
-                             IVIVE = NULL,
-                             tissue=tissue,
-                             restrictive.clearance = restrictive.clearance,
-                             bioactive.free.invivo = bioactive.free.invivo,
-                             concentration = concentration,
-                             clint.pvalue.threshold = 0.05,
-                             ...)
+                             dtxsid=dtxsid,
+                             clint.pvalue.threshold=clint.pvalue.threshold),
+                             calc.analytic.css.arg.list))
     return(css)
   }
 
@@ -273,7 +281,7 @@ calc_mc_css <- function(chem.cas=NULL,
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-if (is.null(model)) stop("Model must be specified.")
+  if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
   model <- tolower(model)
@@ -312,12 +320,12 @@ if (is.null(model)) stop("Model must be specified.")
   {
 #Depending on model, choose the function in HTTK that will return the default
 #HTTK parameters for this chemical
-  paramfun <- model.list[[model]]$parameterize.func
-  parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                       args=c(list(chem.cas=chem.cas,
-                           chem.name=chem.name,
-                           dtxsid=dtxsid),
-                           ...))
+    paramfun <- model.list[[model]]$parameterize.func
+    parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                         args=c(list(chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             dtxsid=dtxsid),
+                             parameterize.arg.list))
   } else parameters.mean <- parameters 
   
   if (is.null(physiology.matrix))
@@ -325,38 +333,8 @@ if (is.null(model)) stop("Model must be specified.")
     nsamp <- samples
     if (httkpop=T & tolower(species)=="human")
     {
-      if (is.null(method)) stop(
-"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
-resampling\" (\"dr\" or \"d\").")
-      else if(!method %in% c('direct resampling',
-                              'virtual individuals',
-                              'v',
-                              'vi',
-                              'direct resampling',
-                              'dr',
-                              'd')) stop( 
-"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
-resampling\" (\"dr\" or \"d\").")
-      if (is.null(httkpop.matrix))
-        httkpop.matrix <- httkpop_generate(method=method,
-                                           nsamp=nsamp,
-                                           gendernum=gendernum,
-                                           agelim_years=agelim_years,
-                                           agelim_months=agelim_months,
-                                           weight_category=weight_category,
-                                           gfr_category=gfr_category,
-                                           reths=reths)
-
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-      converthttkfun <- model.list[[model]]$converthttk.func
-      physiology.matrix <- convert_httkpop(
-                             chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid,
-                             parameters=parameters,
-                             httk.pop.biomets=httkpop.matrix,
-                             model=model)
+      physiology.matrix <- httkpop_mc(
+      )
     } else {
       if(httkpop==T) 
         warning('httkpop model only available for human and thus not used.\n\
@@ -386,8 +364,8 @@ Set species=\"Human\" to run httkpop model.')
 #
 # PERFORM MONTE CARLO ON THE IN VITRO PARAMETERS
 #
-#Next add chemical-specific Funbound.plasma and CLint values
-#Just cbind them together for now
+# Next add chemical-specific Funbound.plasma and CLint values
+# Just cbind them together for now
   parameter.matrix <- cbind(physiology.matrix,
                 draw_invitro(this.chem=chemcas,
                   parameters=parameters,
@@ -401,6 +379,18 @@ Set species=\"Human\" to run httkpop model.')
                   fup.lod=fup.lod,
                   adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                   clint.pvalue.threshold=clint.pvalue.threshold))
+
+# CLEAN UP PARAMETER MATRIX
+#
+# Assign the default values to the non-Monte Carlo parameters for all
+# individuals in the virtual population
+  parameter.matrix[, (noMC.names):=parameters.mean[noMC.names]]
+
+# Force pKa to NA_real_ so data.table doesn't replace everything with text
+  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameter.matrix))){
+    suppressWarnings(parameter.matrix[, c("pKa_Donor","pKa_Accept") := NULL]) 
+      %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  }
 
 #
 # UPDATE THE PARTITION COEFFICIENTS IF NEEDED
