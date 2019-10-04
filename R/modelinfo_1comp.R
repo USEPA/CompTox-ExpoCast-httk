@@ -1,9 +1,21 @@
-# Add this model to the list of models:
+# Add the 1compartment model (Pearce et al., 2017) to the list of models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
-#Analytic expression for steady-state plasma concentration.
+# Analytic expression for steady-state plasma concentration.
 model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 
+# Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
+
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- "convert_httkpop_1comp"
+ 
+# How the tissues from tissue.table are lumped together to form the model:
+# 1compartment model lumps everything, so list of compartments is empty.
+model.list[['1compartment']]$tissues <- vector(mode='character',
+                                                length=0)
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
