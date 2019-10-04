@@ -1,11 +1,26 @@
-# Add this model to the list of models:
+# Add the default physiologically-base toxicokinetic (PBTK) model 
+# (Pearce et al., 2017) to the list of models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
 #Analytic expression for steady-state plasma concentration.
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
-# The is the R function for generating model parameters:
+# Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
+
+# How the tissues from tissue.table are lumped together to form the model:
+# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
+# lumped.
+model.list[['pbtk']]$tissues <-'pbtk'=c('liver',
+                                         'kidney',
+                                         'lung',
+                                         'gut'))
+                                   
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
