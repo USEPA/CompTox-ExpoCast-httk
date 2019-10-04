@@ -487,7 +487,7 @@ with two columns (time, dose).")
     for (var in 1:vars_monitored) {
       if (firstchar(monitor.vars[var]) == 'A') {
         if (monitor.vars[var] == 'AUC') {
-          plot_units_vector[var] = paste(output.units,'* time')
+          plot_units_vector[var] = paste(output.units,'* days')
         } else plot_units_vector[var] = out.amount
       } else if (firstchar(monitor.vars[var]) == 'C') {
         plot_units_vector[var] = output.units
@@ -496,7 +496,7 @@ with two columns (time, dose).")
     }
     
    
-    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector)
+    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector, xlab = 'time (days)')
   } 
                
 # Downselect to only the desired parameters:
