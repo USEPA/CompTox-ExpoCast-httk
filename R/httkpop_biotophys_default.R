@@ -13,8 +13,9 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 #'
-#' @keywords httk-pop
-#' @export httkpop_bio
+#' @keywords httk-pop monte-carlo
+#'
+#' @export httkpop_biotophys_default 
 
 httkpop_biotophys_default <- function(indiv_dt){
   

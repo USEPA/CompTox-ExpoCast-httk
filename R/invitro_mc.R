@@ -37,10 +37,16 @@
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
 #' hepatocyte assay.
 #' @author Caroline Ring and John Wambaugh
+#'
+#' @reference
+#'
+#' @keyword monte-carlo in-vitro
+#'
 #' @import stats
-#' @export draw_invitro
+#'
+#' @export invitro_mc
 
-draw_invitro <- function(this.chem=NULL,
+invitro_mc <- function(this.chem=NULL,
                            parameters=NULL,
                            nsamp,
                            fup.meas.cv=0.4,

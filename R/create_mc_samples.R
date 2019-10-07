@@ -235,12 +235,13 @@ create_mc_samples <- function(chem.cas=NULL,
 #
   if (httkpop=T & tolower(species)=="human")
   {
-    parameters.dt <- httkpop_mc(
+    physiology.dt <- httkpop_mc(
                        model=model,
-                       httkpop.dt=dt,
-                       httkpop_generate.arg.list=httkpop_generate.arg.list,
-                       convert.httkpop.arg.list=convert.httkpop.arg.list,
-                       parameterize.arg.list=parameterize.arg.list)
+                       httkpop.dt=httkpop.dt,
+                       httkpop.generate.arg.list=httkpop_generate.arg.list,
+                       convert.httkpop.arg.list=convert.httkpop.arg.list)
+# Overwrite parameters specified by httk-pop:
+    parameters.dt[,names(physiology.dt):=physiology.dt]
   } else if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
@@ -255,8 +256,9 @@ Set species=\"Human\" to run httkpop model.')
 
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
+  if (invitrouv)
   parameter.matrix <- cbind(physiology.matrix,
-                draw_invitro(this.chem=chemcas,
+                invitro_mc(this.chem=chemcas,
                   parameters=parameters,
                   nsamp=nrow(indiv_bio),
                   poormetab=poormetab,
