@@ -256,7 +256,7 @@ parameterize_schmitt <- function(
                   pKa_Accept=pKa_Accept,
                   MA=MA,
                   Fprotein.plasma = Fprotein,
-                  plasma.pH=plasma.pH],
+                  plasma.pH=plasma.pH,
                   alpha=alpha)
   
   return(outlist)                                

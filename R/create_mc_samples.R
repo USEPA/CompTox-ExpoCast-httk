@@ -120,14 +120,13 @@ create_mc_samples <- function(chem.cas=NULL,
                         dtxsid = NULL,
                         parameters=NULL,
                         samples=1000,
-                        which.quantile=0.95,
                         species="Human",
                         suppress.messages=F,
                         model='3compartmentss',
                         httkpop=T,
                         invitrouv=T,
                         calcrb2p=T,
-                        censored.params=list()),
+                        censored.params=list(),
                         vary.params=list(),
                         return.samples=F,
                         tissue=NULL,
@@ -235,7 +234,7 @@ create_mc_samples <- function(chem.cas=NULL,
 # httk-pop (Ring et al., 2017)
 #
 #
-  if (httkpop=T & tolower(species)=="human")
+  if (httkpop==T & tolower(species)=="human")
   {
     physiology.dt <- httkpop_mc(
                        model=model,
@@ -259,8 +258,7 @@ Set species=\"Human\" to run httkpop model.')
 
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
-  if (invitrouv)
-  parameters.dt <- do.call(invitro_mc,args=c(list(
+  if (invitrouv) parameters.dt <- do.call(invitro_mc,args=c(list(
                        parameters.dt=parameters.dt,
                        samples=samples,
                        fup.censored.dist=fup.censored.dist,
@@ -272,9 +270,9 @@ Set species=\"Human\" to run httkpop model.')
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameters.dt))){
-    suppressWarnings(parameter.matrix[, c("pKa_Donor","pKa_Accept") := NULL]) 
-      %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt))){
+    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
+      .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
 #
@@ -295,7 +293,7 @@ Set species=\"Human\" to run httkpop model.')
                 species=species)
   parameters.dt <- cbind(parameters.dt,pschmitt)
 
-  if (model.list$[[model]]$calcpc | calcrb2p)
+  if (model.list[[model]]$calcpc | calcrb2p)
   { 
 #Now, predict the partitioning coefficients using Schmitt's method. The
 #result will be a list of numerical vectors, one vector for each
@@ -311,7 +309,7 @@ Set species=\"Human\" to run httkpop model.')
                                               regression=T)
   }
 
-  if (model.list$[[model]]$calcpc)
+  if (model.list[[model]]$calcpc)
   {
     # List all tissues for which HTTK has human tissue information. 
     # This will be used in lumping.  

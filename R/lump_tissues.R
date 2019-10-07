@@ -97,7 +97,7 @@ lump_tissues <- function(Ktissue2pu.in,
 	names(all.tissues) <- unique(tissuenames)
   #Renames pcs to match tissue names
   names(Ktissue2pu.in) <- substr(
-                            names(Ktissue2pu.in)
+                            names(Ktissue2pu.in),
                             2,
                             nchar(names(Ktissue2pu.in))-3)
   names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'rbc'] <- 'red blood cells'

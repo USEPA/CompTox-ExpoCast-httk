@@ -19,7 +19,7 @@ model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
 model.list[['pbtk']]$tissues <-'pbtk'=c('liver',
                                          'kidney',
                                          'lung',
-                                         'gut'))
+                                         'gut')
                                    
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe

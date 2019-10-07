@@ -58,7 +58,7 @@ convert_httkpop_1comp <- function(httk.pop.biomets,
 
   if (is.null(parameters))
   {
-    paramfun <- model.list[[1comp]]$parameterize.func
+    paramfun <- model.list[["1comp"]]$parameterize.func
     parameters <- do.call(getFromNamespace(paramfun, "httk"),
                     args=c(list(chem.cas=chem.cas,
                         chem.name=chem.name,
