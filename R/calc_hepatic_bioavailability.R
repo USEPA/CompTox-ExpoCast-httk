@@ -1,6 +1,10 @@
-#'Converts HTTK-Pop physiologyn into parameters relevant to an HTTK
-#'model.
+#' Calculate first pass metabolism
 #'
+#' For models that don't described first pass blood flow from the gut, need to
+#' cacluate a hepatic bioavailability, that is, the fraction of chemical 
+#' systemically available after metabolism during the first pass through the 
+#' liver (Rowland, 1973).
+  
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
@@ -13,12 +17,10 @@
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
 #'@param httk.pop.biomets A data.table containing the physiological
-#'  parameterers predicted from biometric data by HTTK-pop 
-#' '(from \code{\link{httkpop_bio}}) and
+#'  parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
 #'  \code{Funbound.plasma} and \code{Clint} values (from
 #'  \code{\link{draw_fup_clint}}).
-#'@param model Which HTTK model to use. One of '1compartment', '3compartmentss',
-#'  '3compartment', or 'pbtk'.
+#'@param model Which HTTK model to use. 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE.
 #' @param regression Whether or not to use the regressions in calculating partition 
 #' coefficients.
@@ -35,30 +37,22 @@
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
-#' @author Caroline Ring, John Wambaugh, and Greg Honda
+#' @author John Wambaugh
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
+#'@references Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
+#'"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
+#'biopharmaceutics 1.2 (1973): 123-136.
 #'
-#' @keyword httk-pop
+#' @keywords 
 #' @import utils
-#' @export convert_httkpop
-convert_httkpop <- function(
-                     httk.pop.biomets,
-                     model,
-                     chem.cas=NULL,
-                     chem.name=NULL,
-                     dtxsid = NULL,
-                     parameters=NULL,
-                     ...
-                     )
+#' @export convert_httkpop 
+calc_hepatic_bioavailability <- function(
+                         chem.cas=NULL,
+                         chem.name=NULL,
+                         dtxsid = NULL,
+                         parameters=NULL,
+                         model="3compartmentss")
 {
-  # Start with the biometrics from httk-pop:             
-  parameters.dt <- data.table::copy(httk.pop.biomets)
-
-  #First convert to physiological parameters used by HTTK
-  parameters.dt <- httkpop_biotophys_default(indiv_dt = parameters.dt)
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -66,34 +60,39 @@ convert_httkpop <- function(
       is.null(dtxsid) &
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-  
+
+  if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
-  if (is.null(model)) stop("Model must be specified.")
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
+  } else {
+#Depending on model, choose which parameters are not to be Monte Carlo sampled
+    noMC.names <- model.list[[model]]$noMC.params
   }
 
   if (is.null(parameters))
   {
-  #Depending on model, choose the function in HTTK that will return the default
-  #HTTK parameters for this chemical
+#Depending on model, choose the function in HTTK that will return the default
+#HTTK parameters for this chemical
     paramfun <- model.list[[model]]$parameterize.func
     parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                    args=c(list(chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                      ...))
+                         args=c(list(chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             dtxsid=dtxsid),
+                             parameterize.arg.list))
   }
+  
+  if (!all(c("Qlivertot","Funbound.plasma","Clmetabolismc","BW","Rblood2plasma") 
+    %in% names(parameters))) 
+    stop("Missing needed parameters in calc_hepatic_bioavailability.")
 
-  #Return only the HTTK parameters for the specified model. That is, only the
-  #columns whose names are in the names of the default parameter set.
-  parameters.dt<- parameters.dt[,
-                            names(parameters.dt)[names(parameters.dt) %in% c('Rblood2plasma',names(parameters))],
-                            with=FALSE]
-
-  return(parameters.dt)
+  return(parameters$Qlivertot / 
+    (parameters$Qlivertot + 
+    parameters$Funbound.plasma * 
+      parameters$Clmetabolismc*BW / 
+      parameters$Rblood2plasma)
 }

@@ -62,7 +62,8 @@ if (getRversion() >= "2.15.1") {
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
 #'
-#' @keywords httk-pop
+#' @keywords httk-pop monte-carlo
+#'
 #' @examples
 #' 
 #' \dontrun{

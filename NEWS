@@ -1,5 +1,25 @@
 News for R package httk
 
+Changes in version 2.0.0 ()
+  Rewrote underlying code to allow more easy integration of new models. (goodbyem, spaghetti code!)
+  Rewritten funtions include:
+    calc_analytic_css
+    calc_mc_css
+    convert_httkpop (renamed from convert_httk)
+    solve_* model functions
+    get_cheminfo
+  Renamed a few httk-pop functions for clarity:
+    httkpop_biotophys_default replaces httkpop_bio
+    convert_httkpop replaces convert_httk
+  New functions introduced:
+    solve_model (mostly used by solve_* model functions)
+    calc_mc_tk (performs Monte Carlo simulation using a solve_* function)
+  Models must be much more thoroughly described now, with all relevant information placed in modelinfo_* files in the /R directory.
+  New model-specific functions introduced:
+    analytic_css_*: Model-specific analytic steady-state solution
+    convert_httkpop_*: Model-specific functions for converting HTTK-pop biometrics to model parameters
+  EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see http://comptox.epa.gov/dashboard/) now work as chemical identifiers in addition to name and CAS.
+
 Changes in version 1.10.1 (Septmeber 9, 2019)
   Bug fixes (thank you David Trudel).
   Changed all file name starting letters to lowercase.
