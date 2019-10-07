@@ -185,7 +185,7 @@ parameterize_1comp <- function(
   params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
     Fgutabs <- try(
-                 get_invitroPK_param(
+                 get_chem_param(
                    "Fgutabs",
                    species,
                    chem.CAS=chem.cas),

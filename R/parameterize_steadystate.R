@@ -137,14 +137,14 @@ parameterize_steadystate <- function(
 
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
-  Clint.db <- try(get_invitroPK_param(
+  Clint.db <- try(get_chem_param(
                     "Clint",
                     species,
                     chem.CAS=chem.cas),
                 silent=T)
                 
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param(
+  Clint.pValue <- try(get_chem_param(
                         "Clint.pValue",
                         species,
                         chem.CAS=chem.cas),
@@ -152,12 +152,12 @@ parameterize_steadystate <- function(
                     
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param(
+    Clint.db <- try(get_chem_param(
                       "Clint",
                       "Human",
                       chem.CAS=chem.cas),
                   silent=T)
-    Clint.pValue <- try(get_invitroPK_param(
+    Clint.pValue <- try(get_chem_param(
                           "Clint.pValue",
                           "Human",
                           chem.CAS=chem.cas),
@@ -184,14 +184,14 @@ Set default.to.human to true to substitute human value.")
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
-  fup.db <- try(get_invitroPK_param(
+  fup.db <- try(get_chem_param(
                   "Funbound.plasma",
                   species,
                   chem.CAS=chem.cas),
               silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fup.db<- try(get_invitroPK_param(
+    fup.db<- try(get_chem_param(
                    "Funbound.plasma",
                    "Human",
                    chem.CAS=chem.cas),
@@ -262,7 +262,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
+  Fgutabs <- try(get_chem_param("Fgutabs",
                    species,
                    chem.CAS=chem.cas),
                silent=T)
@@ -282,7 +282,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
     get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  Params[["Fhep.assay.correction"]] <- calc_fu_hep(Pow,
+  Params[["Fhep.assay.correction"]] <- calc_hep_fu(Pow,
                                          pKa_Donor=pKa_Donor,
                                          pKa_Accept=pKa_Accept) # fraction 
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
