@@ -10,9 +10,6 @@ model.list[["3compartmentss"]]$analytic.css.func <- "calc_analytic_css_3compss"
 # Function used for generating model parameters:
 model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"  
 
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["3compartmentss"]]$convert.httkpop.func <- "convert_httkpop_3compss"
-
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
@@ -49,14 +46,35 @@ model.list[["3compartmentss"]]$required.params <- c(
   "MW"
    )
    
-#choose which parameters are not to be onte Carlo sampled
-model.list[["3compartmentss"]]$noMC.params <- c(
-  "Dow74",
-  'MW',
-  'Fgutabs',
-  "Fhep.assay.correction",
-  "Funbound.plasma.adjustment"
-  )
+# If httk-pop is enabled:
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["3compartmentss"]]$convert.httkpop.func <- "convert_httkpop_3compss"
+# These are the model parameters that are impacted by httk-pop:
+model.list[["3compartmentss"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hepatic.bioavailability",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qtotal.liverc",
+  "Qgfrc",
+  "Rblood2plasma",
+  "Vliverc")
+
+# Function fpr converting in vitro measurments to model parameters:
+model.list[["3compartmentss"]]$convert.invitro.func <- NULL
+# These model parameters are impacted by the in vitro measurements:
+model.list[["3compartmentss"]]$invitro.params <- c("BW",
+                       "Clint",
+                       "Clint.dist",
+                       "Fhep.assay.correction",
+                       "Funbound.plasma",
+                       "Funbound.plasma.dist",
+                       "Funbound.plasma.adjustment",
+                       "hepatic.bioavailability",
+                       "Rblood2plasma")
+
+
 
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
