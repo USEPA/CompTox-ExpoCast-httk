@@ -129,14 +129,13 @@ create_mc_samples <- function(chem.cas=NULL,
                         censored.params=list()),
                         vary.params=list(),
                         return.samples=F,
-                        default.to.human=F,
                         tissue=NULL,
-                        clint.pvalue.threshold=0.05,
-                        fup.censored.dist=FALSE,
-                        fup.lod=0.01,
                         httkpop.matrix=NULL,
                         invitro.mc.arg.list=list(
+                          adjusted.Funbound.plasma=T,
                           poormetab=T,
+                          fup.censored.dist=FALSE,
+                          fup.lod=0.01,
                           fup.meas.cv=0.4,
                           clint.meas.cv=0.3,
                           fup.pop.cv=0.3,
@@ -162,7 +161,9 @@ create_mc_samples <- function(chem.cas=NULL,
                             "Non-Hispanic Black", 
                             "Other")),
                         convert.httkpop.arg.list=list(),
-                        parameterize.arg.list=list())
+                        parameterize.arg.list=list(
+                          default.to.human=F,
+                          clint.pvalue.threshold=0.05))
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -237,6 +238,7 @@ create_mc_samples <- function(chem.cas=NULL,
   {
     physiology.dt <- httkpop_mc(
                        model=model,
+                       samples=samples,
                        httkpop.dt=httkpop.dt,
                        httkpop.generate.arg.list=httkpop_generate.arg.list,
                        convert.httkpop.arg.list=convert.httkpop.arg.list)
@@ -257,31 +259,26 @@ Set species=\"Human\" to run httkpop model.')
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
   if (invitrouv)
-  parameter.matrix <- cbind(physiology.matrix,
-                invitro_mc(this.chem=chemcas,
-                  parameters=parameters,
-                  nsamp=nrow(indiv_bio),
-                  poormetab=poormetab,
-                  fup.meas.cv=fup.meas.cv,
-                  clint.meas.cv=clint.meas.cv,
-                  fup.pop.cv=fup.pop.cv,
-                  clint.pop.cv=clint.pop.cv,
-                  fup.censored.dist=fup.censored.dist,
-                  fup.lod=fup.lod,
-                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                  clint.pvalue.threshold=clint.pvalue.threshold))
+  parameters.dt <- do.call(invitro_mc,args=c(list(
+                       parameters.dt=parameters.dt,
+                       samples=samples,
+                       fup.censored.dist=fup.censored.dist,
+                       fup.lod=fup.lod,
+                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                       clint.pvalue.threshold=clint.pvalue.threshold),
+                     invitro.mc.arg.list))
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameter.matrix))){
+  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameters.dt))){
     suppressWarnings(parameter.matrix[, c("pKa_Donor","pKa_Accept") := NULL]) 
       %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
 #
 #
-# MONTE CARLO STEP FOURE
+# MONTE CARLO STEP FOUR
 # UPDATE THE PARTITION COEFFICIENTS
 #
 #
@@ -289,32 +286,26 @@ Set species=\"Human\" to run httkpop model.')
 # For models with tissue-to-plasma partition coefficients we neeed to calculate
 # them for each individual because each individual has a different 
 # Funbound.plasma value:
-  #First, get the default parameters used for the Schmitt method of estimating
-  #partition coefficients.
-  if (!is.null(this.chem))
-  {
-    pschmitt <- httk::parameterize_schmitt(chem.cas=this.chem,
-                                         species='Human')
-  } else {
-    pschmitt <- parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]]
-    pschmitt.chemindependent <- httk::parameterize_schmitt(chem.cas="80-05-7",species="Human")
-    pschmitt <- c(pschmitt,pschmitt.chemindependent[c("Fprotein.plasma","plasma.pH","alpha")])
-#      pschmitt[["MA"]] <- NA
-  }
-  #next, replace the single default value for Funbound.plasma with the vector
-  #of Funbound.plasma values from the virtual population data.table.
-  pschmitt$Funbound.plasma<-parameters.dt[, Funbound.plasma]
+  pschmitt <- httk::parameterize_schmitt(
+                chem.cas=chem.cas,
+                chem.name,
+                dtxsid=dtxsid,
+                parameters=parameters.dt,
+                species=species)
+  parameters.dt <- cbind(parameters.dt,pschmitt)
 
   #Now, predict the partitioning coefficients using Schmitt's method. The
   #result will be a list of numerical vectors, one vector for each
   #tissue-to-plasma partitioning coefficient, and one element of each vector
   #for each individual. The list element names specify which partition
   #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-  PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
+  PCs <- httk::predict_partitioning_schmitt(parameters=parameters.dt,
+                                            chen.name=chem.name,
                                             chem.cas=this.chem,
-                                            species='Human',
+                                            dtxsid=dtxsid,
+                                            species=species,
                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                            regression=regression)
+                                            regression=T)
 
   if (model.list$[[model]]$calcpc)
   {
@@ -416,4 +407,8 @@ Set species=\"Human\" to run httkpop model.')
   if (firstpass)
   {
   }
+  
+#Return only the HTTK parameters for the specified model. That is, only the
+#columns whose names are in the names of the default parameter set.
+  return(parameters.dt[, names(parameters.mean)])
 }

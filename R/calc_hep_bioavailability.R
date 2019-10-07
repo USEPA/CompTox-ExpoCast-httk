@@ -43,17 +43,18 @@
 #'"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
 #'biopharmaceutics 1.2 (1973): 123-136.
 #'
-#' @keywords 
+#' @keywords physiology 
+#'
 #' @import utils
-#' @export convert_httkpop 
-calc_hepatic_bioavailability <- function(
+#'
+#' @export calc_hep_bioavailability 
+#'
+calc_hep_bioavailability <- function(
                          chem.cas=NULL,
                          chem.name=NULL,
                          dtxsid = NULL,
-                         parameters=NULL,
-                         model="3compartmentss")
+                         parameters=NULL)
 {
-
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -69,21 +70,14 @@ calc_hepatic_bioavailability <- function(
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
-  } else {
-#Depending on model, choose which parameters are not to be Monte Carlo sampled
-    noMC.names <- model.list[[model]]$noMC.params
-  }
+  } 
 
   if (is.null(parameters))
   {
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-    paramfun <- model.list[[model]]$parameterize.func
-    parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=c(list(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid),
-                             parameterize.arg.list))
+    parameters <- parameterize_pbtk(
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    dtxsid=dtxsid)
   }
   
   if (!all(c("Qlivertot","Funbound.plasma","Clmetabolismc","BW","Rblood2plasma") 

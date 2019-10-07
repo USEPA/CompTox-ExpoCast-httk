@@ -137,13 +137,13 @@ parameterize_pbtk <- function(
        
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param(
+  Clint.db <- try(get_chem_param(
                     "Clint",
                     species,
                     chem.CAS=chem.cas),
                 silent=T)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param(
+  Clint.pValue <- try(get_chem_param(
                         "Clint.pValue",
                         species,
                         chem.CAS=chem.cas),
@@ -151,12 +151,12 @@ parameterize_pbtk <- function(
   if ((class(Clint.db) == "try-error" & default.to.human) || 
       force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param(
+    Clint.db <- try(get_chem_param(
                       "Clint",
                       "Human",
                       chem.CAS=chem.cas),
                   silent=T)
-    Clint.pValue <- try(get_invitroPK_param(
+    Clint.pValue <- try(get_chem_param(
                           "Clint.pValue",
                           "Human",
                           chem.CAS=chem.cas),
@@ -209,7 +209,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param(
+  Fgutabs <- try(get_chem_param(
                    "Fgutabs",
                    species,
                    chem.CAS=chem.cas),
@@ -291,7 +291,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(
-              Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,
+              Fhep.assay.correction=calc_hep_fu(schmitt.params$Pow,
                 pKa_Donor=schmitt.params$pKa_Donor,
                 pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
 

@@ -94,7 +94,7 @@ parameterize_schmitt <- function(
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  if (is.null(parameters))
+  if (any(!is.null(chem.cas,chem.name,dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,
@@ -103,62 +103,107 @@ parameterize_schmitt <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
-                                 
-    # unitless fraction of chemical unbound with plasma
-    fup.db <- try(
-                get_invitroPK_param(
-                  "Funbound.plasma",
-                  species,
-                  chem.CAS=chem.cas),
-                silent=T)
-    if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
-    {
-      fup.db <- try(
-                  get_invitroPK_param(
-                    "Funbound.plasma",
-                    "Human",
-                    chem.CAS=chem.cas),
-                  silent=T)
-      if (!suppress.messages) 
-        warning(paste(species,"coerced to Human for protein binding data."))
-    }
-    if (class(fup.db) == "try-error") 
-      stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-
-  # Load the physico-chemical properties:  
-    pKa_Donor <- suppressWarnings(get_physchem_param(
-                                    "pKa_Donor",
-                                    chem.CAS=chem.cas))
-    pKa_Accept <- suppressWarnings(get_physchem_param(
-                                     "pKa_Accept",
-                                     chem.CAS=chem.cas))
-    Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
-    MA <- suppressWarnings(10^(get_physchem_param("logMA",chem.CAS=chem.cas))) 
-    Fprotein <- physiology.data[
-                  which(physiology.data[,'Parameter'] ==
-                    'Plasma Protein Volume Fraction'),
-                  which(tolower(colnames(physiology.data)) == tolower(species))]
-    plasma.pH <- 7.4
-    alpha <- 0.001
-  } else {
-    required.params <- model.table[["Schmitt"]]$paramterize_params
-    if (!(all(required.parasms%in%names(parameters)))) 
-      stop("Missing parameters",
-        paste(required.params[!(required.params%in%names(parameters))],
-          collapse=", "),
-        "in parameterize_schmitt")
-        
-    fup.db <- parameters$Fraction_unbound_plasma
-    Pow <- parameters$Pow,
-    pKa_Donor <- parameters$pKa_Donor,
-    pKa_Accept <- parameters$pKa_Accept,
-    MA <- parameters$MA,
-    Fprotein <- parameters$Fprotein.plasma,
-    plasma.pH <- parameters$plasma.pH,
-    alpha <- parameters$alpha
   }
 
-    
+# Check the species argument for capitilization problems and whether or not it 
+# is in the table:  
+  if (!(species %in% colnames(physiology.data)))
+  {
+    if (toupper(species) %in% toupper(colnames(physiology.data)))
+    {
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
+    } else stop(paste("Physiological PK data for",species,"not found."))
+  } else phys.species <- species                                 
+                                                           
+# Load the physiological parameters for this species
+  this.phys.data <- physiology.data[,phys.species]
+  names(this.phys.data) <- physiology.data[,1]
+
+#    required.params <- model.table[["Schmitt"]]$paramterize_params
+#    if (!(all(required.parasms%in%names(parameters)))) 
+#      stop("Missing parameters",
+#        paste(required.params[!(required.params%in%names(parameters))],
+#          collapse=", "),
+#        "in parameterize_schmitt")
+        
+  # unitless fraction of chemical unbound with plasma
+  fup.db <- try(
+              get_chem_param(
+                "Funbound.plasma",
+                species,
+                chem.CAS=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid),
+              silent=T)
+  if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
+  {
+    fup.db <- try(
+                get_chem_param(
+                  "Funbound.plasma",
+                  "Human",
+                  chem.CAS=chem.cas,
+                  chem.name=chem.name,
+                  dtxsid=dtxsid),
+                silent=T)
+    if (!suppress.messages) 
+      warning(paste(species,"coerced to Human for protein binding data."))
+  }
+  if (class(fup.db) == "try-error") 
+    stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+  if (!is.null(parameters))
+    if ("Fraction_unbound_plasma" %in% names(parameters))
+      fup.db <- parameters$Fraction_unbound_plasma
+  
+  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
+  if (!is.null(parameters))
+    if ("Pow" %in% names(parameters))
+      Pow <- parameters$Pow
+        
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+                                    "pKa_Donor",
+                                    chem.CAS=chem.cas,
+                                    chem.name=chem.name,
+                                    dtxsid=dtxsid))
+  if (!is.null(parameters))
+    if ("pKa_Donor" %in% names(parameters))
+      pKa_Donor <- parameters$pKa_Donor
+        
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+                                     "pKa_Accept",
+                                     chem.CAS=chem.cas,
+                                     chem.name=chem.name,
+                                     dtxsid=dtxsid))
+  if (!is.null(parameters))
+    if ("pKa_Accept" %in% names(parameters))
+      pKa_Accept <- parameters$pKa_Accept
+  
+  MA <- suppressWarnings(10^(get_physchem_param("logMA",
+          chem.CAS=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid))) 
+  if (!is.null(parameters))
+    if ("MA" %in% names(parameters))
+      MA <- parameters$MA
+  
+  Fprotein <- physiology.data[
+                which(physiology.data[,'Parameter'] ==
+                  'Plasma Protein Volume Fraction'),
+                which(tolower(colnames(physiology.data)) == tolower(species))]
+  if (!is.null(parameters))
+    if ("Fprotein.plasma" %in% names(parameters))
+      Fprotein <- parameters$Fprotein.plasma
+  
+  plasma.pH <- 7.4
+  if (!is.null(parameters))
+    if ("plasma.pH" %in% names(parameters))
+      plasma.pH <- parameters$plasma.pH
+
+  alpha <- 0.001
+  if (!is.null(parameters))
+    if ("alpha" %in% names(parameters))
+      alpha <- parameters$alpha
+
 # Check if fup is a point value or a distribution, if a distribution, use the median:
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
@@ -173,21 +218,6 @@ parameterize_schmitt <- function(
   
   if (fup.point == 0) stop("Fraction unbound = 0, can't predict partitioning.")
                                  
-# Check the species argument for capitilization problems and whether or not it 
-is in the table:  
-  if (!(species %in% colnames(physiology.data)))
-  {
-    if (toupper(species) %in% toupper(colnames(physiology.data)))
-    {
-      phys.species <- colnames(physiology.data)[
-                        toupper(colnames(physiology.data))==toupper(species)]
-    } else stop(paste("Physiological PK data for",species,"not found."))
-  } else phys.species <- species                                 
-                                 
-                                                           
-# Load the physiological parameters for this species
-  this.phys.data <- physiology.data[,phys.species]
-  names(this.phys.data) <- physiology.data[,1]
   
 
 
@@ -201,6 +231,10 @@ is in the table:
                    physiology.data,
                    Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
                      which(tolower(colnames(physiology.data)) == tolower(species))]
+  if (!is.null(parameters))
+    if ("Flipid" %in% names(parameters))
+      Flipid <- parameters$Flipid
+
   ion <- calc_ionization(
            pH=plasma.pH,
            pKa_Donor=pKa_Donor,
@@ -226,5 +260,4 @@ is in the table:
                   alpha=alpha)
   
   return(outlist)                                
-                                 
 }

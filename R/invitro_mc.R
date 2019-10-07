@@ -9,7 +9,7 @@
 #' \code{\link[httk]{get_cheminfo}}).
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
-#' @param nsamp The number of samples to draw.
+#' @param samples The number of samples to draw.
 #' @param fup.meas.cv Coefficient of variation of distribution of measured
 #' \code{Funbound.plasma} values. 
 #' @param clint.meas.cv Coefficient of variation of distribution of measured 
@@ -46,9 +46,8 @@
 #'
 #' @export invitro_mc
 
-invitro_mc <- function(this.chem=NULL,
-                           parameters=NULL,
-                           nsamp,
+invitro_mc <- function(parameters.dt=NULL,
+                           samples,
                            fup.meas.cv=0.4,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.3,
@@ -70,37 +69,23 @@ invitro_mc <- function(this.chem=NULL,
   Funbound.plasma.dist<-fup.sd<-NULL
   #End R CMD CHECK appeasement.
 
-  #To get the measured values of Funbound.plasma and Clint, get the HTTK default
-  #parameter set for the steady-state model, which contains the measured values
-  #of Funbound.plasma and Clint
-  if (!is.null(this.chem))
+  if (any(!(c(
+    "Funbound.plasma",
+    "Clint",
+    "pKa_Donor",
+    "pKa_Accept",
+    "Pow") %in% names(parameters.dt))))
+    stop("Funbound.plasma, Clint, pKa_Donor, pKa_Accept, Pow needed in invitro_mc.")
+
+  if (!"Dow74"%in%names(parameters.dt))
   {
-    parameters<-httk::parameterize_steadystate(chem.cas=this.chem,
-                    species='Human',
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    clint.pvalue.threshold=clint.pvalue.threshold,
-                    suppress.messages=T)
- } else {
-    if (!"Dow74"%in%names(parameters))
-    {
-      pKa_Donor <- parameters[["pKa_Donor"]]
-      pKa_Accept <- parameters[["pKa_Accept"]]
-      Pow <- parameters[["Pow"]] # Octanol:water partition coeffiecient
+      pKa_Donor <- parameters.dt[["pKa_Donor"]]
+      pKa_Accept <- parameters.dt[["pKa_Accept"]]
+      Pow <- parameters.dt[["Pow"]] # Octanol:water partition coeffiecient
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
-      parameters[["Dow74"]] <- dow
-    }
-    if (any(!(c("Funbound.plasma","Clint","Dow74","Fhep.assay.correction")%in%names(parameters))))
-    {
-      stop("Funbound.plasma, Clint, Dow74, and Fhep.assay.correction needed in draw_fup_clint.")
-    }
+      parameters.dt[,Dow74:=dow]
   }
-
-  
-  # Initalize the data.table:
-  indiv_tmp <- data.table(Funbound.plasma=rep(parameters[["Funbound.plasma"]],nsamp),
-    Clint=rep(parameters[["Clint"]],nsamp),
-    Dow74=rep(parameters[["Dow74"]],nsamp))
 
   #
   #
@@ -117,7 +102,7 @@ invitro_mc <- function(this.chem=NULL,
   # uncertainty:
   if (is.null(clint.meas.cv))
   {         
-    Clint <- parameters$Clint
+    Clint <- parameters.dt[["Clint"]]
     Clint.l95 <- NULL
     Clint.u95 <- NULL
     Clint.pvalue <- NULL
@@ -125,14 +110,14 @@ invitro_mc <- function(this.chem=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (!is.na(parameters$Clint.dist))
+  else if (!is.na(parameters.dt$Clint.dist))
   {
-    if (nchar(parameters$Clint.dist) -
-      nchar(gsub(",","",parameters$Clint.dist))!=3) 
+    if (nchar(parameters.dt$Clint.dist) -
+      nchar(gsub(",","",parameters.dt$Clint.dist))!=3) 
     {
       stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
     }
-    temp <- strsplit(parameters$Clint.dist,",")
+    temp <- strsplit(parameters.dt$Clint.dist,",")
     Clint <- as.numeric(temp[[1]][1])
     Clint.l95 <- as.numeric(temp[[1]][2])
     Clint.u95 <- as.numeric(temp[[1]][3])
@@ -140,7 +125,7 @@ invitro_mc <- function(this.chem=NULL,
   # If we don't have that, we use the default coefficient of variation to
   # generate confidence limits:
   } else {
-    Clint <- parameters$Clint
+    Clint <- parameters.dt$Clint
     if (Clint > 0)
     { 
       # zero doesn't behave well in a log-normal distribution (negatives too):
@@ -150,41 +135,41 @@ invitro_mc <- function(this.chem=NULL,
     }
   }
 
-  #Assign the HTTK default value for fraction unbound in hepatocyte assay to all
-  #individuals (this is chemical-specific and does not vary between individuals).
-  Fhep.assay.correction <- parameters$Fhep.assay.correction
-
+  # Determine the value for fraction unbound in hepatocyte assay (depends on
+  # phys-chem but does not vary biologically):
+  parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+  
   # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
   # "true" values for Clint that are consistent with the measurment .
   # If a credible interval was specified for Clint, draw from that interval:
   if (Clint == 0)
   {
-    indiv_tmp[,Clint:=0]
+    parameters.dt[,Clint:=0]
   } 
   else if (!is.null(Clint.u95))
   {
     if (Clint.u95>0& Clint>0)
     {
-      # Optimize to find parameters for a log-normal distribution that have
+      # Optimize to find parameters.dt for a log-normal distribution that have
       # the least squares difference using the three quantiles (median, l95, u95)
       clint.fit <- suppressWarnings(optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
                                               plnorm(Clint.u95,x[1],x[2])+
                                               plnorm(Clint.l95,x[1],x[2]))^2+
                                               (Clint-qlnorm(0.5,x[1],x[2]))^2))
-      indiv_tmp[,Clint:=rlnorm(n=nsamp,clint.fit$par[1],clint.fit$par[2])]
+      parameters.dt[,Clint:=rlnorm(n=samples,clint.fit$par[1],clint.fit$par[2])]
     } else if (Clint.u95>0)
     {
       # Assume that the minimum non-zero Clint is 1
       # Assume that since the median is zero but the u95 is not, that there is 
       # an exponential distribution:
       # 97.5% of clearance values will be below Clint.u95:
-      indiv_tmp[,Clint:=exp(runif(n=nsamp,log(1),(log(Clint.u95)-log(1))/0.975))]
-    } else indiv_tmp[,Clint:=Clint]
+      parameters.dt[,Clint:=exp(runif(n=samples,log(1),(log(Clint.u95)-log(1))/0.975))]
+    } else parameters.dt[,Clint:=Clint]
   # the Bayesian "p-value" here reflects how often there is no clearance:
-    indiv_tmp[as.logical(rbinom(n=nsamp,1,Clint.pvalue)),Clint:=0] 
-  } else indiv_tmp[,Clint:=Clint]
+    parameters.dt[as.logical(rbinom(n=samples,1,Clint.pvalue)),Clint:=0] 
+  } else parameters.dt[,Clint:=Clint]
   # Store NA so data.table doesn't convert everything to text:
-  indiv_tmp[,Clint.dist:=NA]
+  parameters.dt[,Clint.dist:=NA]
 
   #
   #
@@ -197,27 +182,27 @@ invitro_mc <- function(this.chem=NULL,
   # uncertainty:
   if (is.null(fup.meas.cv))
   {
-    Funbound.plasma <- parameters$Funbound.plasma
+    Funbound.plasma <- parameters.dt$Funbound.plasma
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  } else if(!is.na(parameters$Funbound.plasma.dist))
+  } else if(!is.na(parameters.dt$Funbound.plasma.dist))
   {
-    if (nchar(parameters$Funbound.plasma.dist) - 
-      nchar(gsub(",","",parameters$Funbound.plasma.dist))!=2)
+    if (nchar(parameters.dt$Funbound.plasma.dist) - 
+      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist))!=2)
     {
       stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
     }
-    temp <- strsplit(parameters$Funbound.plasma.dist,",")
+    temp <- strsplit(parameters.dt$Funbound.plasma.dist,",")
     Funbound.plasma <- as.numeric(temp[[1]][1])
     Funbound.plasma.l95 <- as.numeric(temp[[1]][2])
     Funbound.plasma.u95 <- as.numeric(temp[[1]][3])
   # If we don't have that, we use the default coefficient of variation to
   # generate confidence limits:
   } else {
-    Funbound.plasma <- parameters$Funbound.plasma
+    Funbound.plasma <- parameters.dt$Funbound.plasma
     Funbound.plasma.l95 <- max(Funbound.plasma*(1-fup.meas.cv*1.96),0)
     Funbound.plasma.u95 <- min(Funbound.plasma*(1+fup.meas.cv*1.96),1)
   }
@@ -232,7 +217,7 @@ invitro_mc <- function(this.chem=NULL,
   if (Funbound.plasma==0)
   {
   # If so, assign values between zero and the lod:
-    indiv_tmp[, fup.mean := runif(n=1,0,fup.lod)]
+    parameters.dt[, fup.mean := runif(n=1,0,fup.lod)]
   # Otherwise, check to see if fup credible interval was provided:
   } else if (!is.null(Funbound.plasma.u95)) 
   {
@@ -257,7 +242,7 @@ invitro_mc <- function(this.chem=NULL,
           method="BFGS"))
       }
       # We are drawing new values for the unadjusted Fup:
-      indiv_tmp[, unadjusted.Funbound.plasma:=rbeta(n=nsamp,
+      parameters.dt[, unadjusted.Funbound.plasma:=rbeta(n=samples,
         ppb.fit$par[1],
         ppb.fit$par[2])]
     } else if (Funbound.plasma.u95 > minimum.Funbound.plasma)
@@ -265,27 +250,27 @@ invitro_mc <- function(this.chem=NULL,
       # Assume that since the median is zero but the u95 is not, that there is 
       # an uniform distribution:
       # 97.5% of clearance values will be below Funbound.plasma.u95:
-      indiv_tmp[,unadjusted.Funbound.plasma:=runif(n=nsamp,
+      parameters.dt[,unadjusted.Funbound.plasma:=runif(n=samples,
         minimum.Funbound.plasma,
         min(1,minimum.Funbound.plasma+
         2*(Funbound.plasma.u95-minimum.Funbound.plasma)))]
-      indiv_tmp[as.logical(rbinom(n=nsamp,1,.95)),
+      parameters.dt[as.logical(rbinom(n=samples,1,.95)),
         unadjusted.Funbound.plasma:=minimum.Funbound.plasma]      
     } else {
-      indiv_tmp[,unadjusted.Funbound.plasma:=minimum.Funbound.plasma]
+      parameters.dt[,unadjusted.Funbound.plasma:=minimum.Funbound.plasma]
     }
 # Adjust for in vitro binding:    
-    indiv_tmp[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
+    parameters.dt[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
       1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
-    indiv_tmp[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
+    parameters.dt[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   # Otherwise use point estimate:
   } else {
-    indiv_tmp[,fup.mean:=Funbound.plasma]
+    parameters.dt[,fup.mean:=Funbound.plasma]
   }
   #if measured Funbound.plasma > 1, then set it to 1
-  indiv_tmp[fup.mean>1, fup.mean := 1]
+  parameters.dt[fup.mean>1, fup.mean := 1]
   # Store NA so data.table doesn't convert everything to text:
-  indiv_tmp[,Funbound.plasma.dist:=NA]
+  parameters.dt[,Funbound.plasma.dist:=NA]
 
   #
   #
@@ -305,15 +290,15 @@ invitro_mc <- function(this.chem=NULL,
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
     #Set the mean of the regular metabolizer distribution:
-    indiv_tmp[,Clint.mu:=Clint]
+    parameters.dt[,Clint.mu:=Clint]
     if (poormetab) #if poor metabolizers are included:
     {
       #Assume that 5% of the population has 10% the metabolism:
-      indiv_tmp[rbinom(n=nsamp,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
+      parameters.dt[rbinom(n=samples,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
     }
     #Draw Clint from a normal distribution with mean = measured Clint, and
     #coefficient of variation given by clint.pop.cv.
-    indiv_tmp[,Clint:=truncnorm::rtruncnorm(n=1,
+    parameters.dt[,Clint:=truncnorm::rtruncnorm(n=1,
                                                 a=0,
                                                 b=Inf,
                                                 mean=Clint.mu,
@@ -331,31 +316,31 @@ invitro_mc <- function(this.chem=NULL,
   # long as fup.pop.cv isn't NULL (otherwise, no pop variability for this)
   if (!is.null(fup.pop.cv))
   {
-    indiv_tmp[,fup.sd:=fup.pop.cv*fup.mean]
-    indiv_tmp[,fup.lod:=fup.lod]
+    parameters.dt[,fup.sd:=fup.pop.cv*fup.mean]
+    parameters.dt[,fup.lod:=fup.lod]
     # add check for fup.pop.cv=NULL, smae for clint
     if (fup.censored.dist)
     { #if user specified to use a censored distribution,
       #then draw from a normal distribution, left-censored at the specified LOD.
-      indiv_tmp[, Funbound.plasma:=r_left_censored_norm(n=1,
+      parameters.dt[, Funbound.plasma:=r_left_censored_norm(n=1,
                                                           mean=fup.mean,
                                                           sd=fup.sd,
                                                           lod=fup.lod)]
     } else { #if user specified to use a non-censored distribution
       #Draw Funbound.plasma from a normal distribution, truncated at 0 and 1.
-      indiv_tmp[, Funbound.plasma:=truncnorm::rtruncnorm(n=1,
+      parameters.dt[, Funbound.plasma:=truncnorm::rtruncnorm(n=1,
                                                              a=0,
                                                              b=1,
                                                              mean=fup.mean,
                                                              sd=fup.sd)] 
     }
   } else {
-    indiv_tmp[,Funbound.plasma:=fup.mean]
+    parameters.dt[,Funbound.plasma:=fup.mean]
   }
 
   #Enforce a minimum Funbound.plasma unless set to zero:
-  indiv_tmp[Funbound.plasma<minimum.Funbound.plasma,
+  parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
   
-  return(indiv_tmp)
+  return(parameters.dt)
 }
