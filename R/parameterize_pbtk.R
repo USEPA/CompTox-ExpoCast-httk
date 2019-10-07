@@ -98,6 +98,7 @@
 parameterize_pbtk <- function(
                        chem.cas=NULL,
                        chem.name=NULL,
+                       dtxsid=NULL,
                        species="Human",
                        default.to.human=F,
                        tissuelist=list(

@@ -16,7 +16,7 @@ model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.
-model.list[['pbtk']]$tissues <-'pbtk'=c('liver',
+model.list[["pbtk"]]$tissues <- c('liver',
                                          'kidney',
                                          'lung',
                                          'gut')

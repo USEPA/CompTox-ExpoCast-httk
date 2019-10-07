@@ -22,9 +22,8 @@ get_invitroPK_param <- function(
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
-      is.null(dtxsid) &
-      is.null(parameters)) 
-    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+      is.null(dtxsid) ) 
+    stop('Cchem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
   if (any(!is.null(chem.cas,chem.name,dtxsid)))
