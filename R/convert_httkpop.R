@@ -44,6 +44,12 @@
 #' @keyword httk-pop
 #' @import utils
 #' @export convert_httkpop
+
+#
+# DEKETE WHEN v2.0 IS FINISHED
+#
+
+
 convert_httkpop <- function(
                      httk.pop.biomets,
                      model,
@@ -57,8 +63,6 @@ convert_httkpop <- function(
   # Start with the biometrics from httk-pop:             
   parameters.dt <- data.table::copy(httk.pop.biomets)
 
-  #First convert to physiological parameters used by HTTK
-  parameters.dt <- httkpop_biotophys_default(indiv_dt = parameters.dt)
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 

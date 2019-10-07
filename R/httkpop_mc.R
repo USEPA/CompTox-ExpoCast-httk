@@ -71,14 +71,9 @@
 #' 
 #' @keywords httk-pop
 #' @export get_httk_params
-httkpop_mc <- function(chem.cas=NULL,
-                       chem.name=NULL,
-                       dtxsid = NULL,
-                       parameters=NULL,
-                       model,
-                       httkpop.matrix=NULL,
-                       physiology.matrix=NULL,
-                       parameter.matrix=NULL,
+httkpop_mc <- function(model,
+                       samples,
+                       httkpop.dt=NULL,
                        httkpop_generate.arg.list=list(
                           method='direct resampling',
                           gendernum=NULL,
@@ -117,13 +112,6 @@ httkpop_mc <- function(chem.cas=NULL,
 #                       concentration = "plasma",
 #                       clint.pvalue.threshold=0.05)
 {
-# We need to describe the chemical to be simulated one way or another:
-  if (is.null(chem.cas) & 
-      is.null(chem.name) & 
-      is.null(dtxsid) &
-      is.null(parameters)) 
-    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-
   if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
@@ -132,44 +120,31 @@ httkpop_mc <- function(chem.cas=NULL,
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
-  } else {
-#Depending on model, choose which parameters are not to be Monte Carlo sampled
-    noMC.names <- model.list[[model]]$noMC.params
   }
 
 # Generate the initial physiology data from NHANES biometrics:
-  if (is.null(httkpop.matrix))
-    httkpop.matrix <- do.call(
+  if (is.null(httkpop.dt))
+    httkpop.dt <- do.call(
                         httkpop_generate,
-                        args=httkpop_generate.arg.lis)
+                        args=c(list(namp=samples),
+                          httkpop_generate.arg.list))
 
-  #First convert to physiological parameters used by HTTK
-  parameters.dt <- httkpop_biotophys_default(indiv_dt = parameters.dt)
-
-
+  # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
+  if (model.list[[model]]$calc.standard.httkpop2httk)
+    physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
+  
 #Depending on model, choose the function in HTTK that will return the default
 #HTTK parameters for this chemical
   converthttkfun <- model.list[[model]]$converthttk.func
-  physiology.matrix <- convert_httkpop(
-                         chem.cas=chem.cas,
-                         chem.name=chem.name,
-                         dtxsid=dtxsid,
-                         parameters=parameters,
-                         httk.pop.biomets=httkpop.matrix,
-                         model=model)
+  physiology.matrix <- do.call(converthttkfun, args=c(list(
+                           chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid,
+                           parameters=parameters,
+                           httkpop.matrix=httkpop.matrix,
+                           physiology.matrix=physiology.matrix,
+                           model=model),
+                         convert.httkpop.arg.list))
   
-  
-  #Next convert the whole thing to the HTTK parameters for a specified model
-  indiv_httk <- convert_httk(indiv.model.bio=indiv_fc, 
-                 model=model,
-                 this.chem=chemcas,
-                 parameters=parameters,
-                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                 regression=regression,
-                 well.stirred.correction=well.stirred.correction,
-                 restrictive.clearance=restrictive.clearance,
-                 concentration = concentration,
-                 clint.pvalue.threshold=clint.pvalue.threshold)
-  
-  return(indiv_httk)
+  return(physiology.dt)
 }
