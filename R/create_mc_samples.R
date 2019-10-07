@@ -208,8 +208,8 @@ create_mc_samples <- function(chem.cas=NULL,
         "are specified to be sampled by monte_carlo and then overwritten by httkpop_mc."))
         
 # Make sure that parameters that monte_carlo samples won't be overwritten later:
-  if (invitrouv & any(c(names(censored.params),names(vary.params)) %in%
-    model.list[[model]]$invitro.params)) stop(paste("Parameters",
+  if (invitrouv & (any(c(names(censored.params),names(vary.params)) %in%
+    model.list[[model]]$invitro.params))) stop(paste("Parameters",
       paste(c(names(censored.params),names(vary.params))[
         c(names(censored.params),names(vary.params)) %in%
         model.list[[model]]$invitro.params],collapse=", "), 
@@ -247,7 +247,6 @@ create_mc_samples <- function(chem.cas=NULL,
   } else if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-  }
 
 #
 #
@@ -270,9 +269,9 @@ Set species=\"Human\" to run httkpop model.')
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt))){
-    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% 
-      .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
+  {
+    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
 #
@@ -369,7 +368,8 @@ Set species=\"Human\" to run httkpop model.')
       parameters.dt[, Vrestc:=vol.restc]
       parameters.dt[, Qrestf:=flow.restf]
       parameters.dt[, Krest2pu:=Krest2pu]
-      if (!(length(tissue.list)==0)){
+      if (!(length(tissue.list)==0))
+      {
         #For enumerated tissue compartments (if any), add their partitition
         #coefficients to the population data.table as well.
   
@@ -384,6 +384,7 @@ Set species=\"Human\" to run httkpop model.')
         parameters.dt[, (knames):=PCs[knames]]
       }
     }
+  }
 
   if (calcrb2p)
   {
