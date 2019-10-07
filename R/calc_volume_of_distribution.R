@@ -49,6 +49,7 @@
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
+                      dtxsid=NULL,
                       parameters=NULL,
                       default.to.human=F,
                       species="Human",
@@ -60,10 +61,27 @@ calc_vdist<- function(chem.cas=NULL,
   physiology.data <- physiology.data
   Parameter <- NULL
 
-  if (is.null(parameters))
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+    
+if (is.null(parameters))
   {
+    # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_invitroPK_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+  
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
                             chem.name=chem.name,
+                            dtxsid=dtxsid,
                             default.to.human=default.to.human,
                             species=species,
                             minimum.Funbound.plasma=minimum.Funbound.plasma)
