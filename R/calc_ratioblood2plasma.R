@@ -83,7 +83,8 @@ calc_rblood2plasma <- function(
                     default.to.human=default.to.human,
                     species=species,
                     suppress.messages=suppress.messages)
-  } else {is.null(parameters))
+  } else (is.null(parameters))
+  {
     parameters <- list(
                     hematocrit=hematocrit,
                     Krbc2pu=Krbc2pu,

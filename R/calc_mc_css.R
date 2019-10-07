@@ -172,34 +172,29 @@ calc_mc_css <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         parameters=NULL,
+                        samples=1000,
                         which.quantile=0.95,
                         species="Human",
                         suppress.messages=F,
                         model='3compartmentss',
-                        censored.params=list(Funbound.plasma=list(cv=0.3,lod=0.01)),
-                        vary.params=list(BW=0.3,
-                          Vliverc=0.3,
-                          Qgfrc=0.3,
-                          Qtotal.liverc=0.3,
-                          million.cells.per.gliver=0.3,
-                          Clint=0.3),
-                        fup.meas.cv=0.4,
-                        clint.meas.cv=0.3,
-                        fup.pop.cv=0.3,
-                        clint.pop.cv=0.3,
-                        samples=1000,
-                        return.samples=F,
-                        default.to.human=F,
-                        tissue=NULL,
-                        clint.pvalue.threshold=0.05,
                         httkpop=T,
-                        poormetab=T,
-                        fup.censored.dist=FALSE,
-                        fup.lod=0.01,
+                        invitrouv=T,
+                        calcrb2p=T,
+                        censored.params=list(),
+                        vary.params=list(),
+                        return.samples=F,
+                        tissue=NULL,
                         httkpop.matrix=NULL,
-                        physiology.matrix=NULL,
-                        parameter.matrix=NULL,
-                        httkpop_generate.arg.list=list(
+                        invitro.mc.arg.list=list(
+                          adjusted.Funbound.plasma=T,
+                          poormetab=T,
+                          fup.censored.dist=FALSE,
+                          fup.lod=0.01,
+                          fup.meas.cv=0.4,
+                          clint.meas.cv=0.3,
+                          fup.pop.cv=0.3,
+                          clint.pop.cv=0.3),
+                        httkpop.generate.arg.list=list(
                           method='direct resampling',
                           gendernum=NULL,
                           agelim_years=NULL,
@@ -220,6 +215,9 @@ calc_mc_css <- function(chem.cas=NULL,
                             "Non-Hispanic Black", 
                             "Other")),
                         convert.httkpop.arg.list=list(),
+                        parameterize.arg.list=list(
+                          default.to.human=F,
+                          clint.pvalue.threshold=0.05),
                         calc.analytic.css.arg.list=list(
                           daily.dose=1,
                           output.units="mg/L",
@@ -230,9 +228,7 @@ calc_mc_css <- function(chem.cas=NULL,
                           tissue=tissue,
                           restrictive.clearance = T,
                           bioactive.free.invivo = FALSE,
-                          concentration = "plasma"),
-                        draw_invitro.arg.list=list(),
-                        parameterize.arg.list=list())
+                          concentration = "plasma"))
 {
 # Define a local function for running calc_analytic_css:
   css_apply <- function(params)
@@ -264,11 +260,8 @@ calc_mc_css <- function(chem.cas=NULL,
   {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
-  } else {
-#Depending on model, choose which parameters are not to be Monte Carlo sampled
-    noMC.names <- model.list[[model]]$noMC.params
-  }
-
+  } 
+  
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
@@ -291,220 +284,38 @@ calc_mc_css <- function(chem.cas=NULL,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
 
-  if (is.null(parameters))
-  {
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-    paramfun <- model.list[[model]]$parameterize.func
-    parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=c(list(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid),
-                             parameterize.arg.list))
-  } else parameters.mean <- parameters 
   
-  if (is.null(physiology.matrix))
-  {
-    nsamp <- samples
-    if (httkpop=T & tolower(species)=="human")
-    {
-      physiology.matrix <- httkpop_mc(
-      )
-    } else {
-      if(httkpop==T) 
-        warning('httkpop model only available for human and thus not used.\n\
-Set species=\"Human\" to run httkpop model.')   
-
-      physiology.matrix <- monte_carlo(parameters.mean,
-                      censored.params=censored.params,
-                      which.quantile=which.quantile,
-                      cv.params=vary.params,
-                      samples=samples,model='3compartmentss',
-                      daily.dose=daily.dose,
-                      output.units=output.units,
-                      tissue=tissue,
-                      IVIVE=IVIVE,
-                      chem.name=chem.name,
-                      chem.cas=chem.cas,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      regression=regression,
-                      well.stirred.correction=well.stirred.correction,
-                      suppress.messages=T,
-                      return.samples=return.samples,
-                      restrictive.clearance=restrictive.clearance,
-                      species=species)
-    }
-  }  
-
-#
-# PERFORM MONTE CARLO ON THE IN VITRO PARAMETERS
-#
-# Next add chemical-specific Funbound.plasma and CLint values
-# Just cbind them together for now
-  parameter.matrix <- cbind(physiology.matrix,
-                draw_invitro(this.chem=chemcas,
-                  parameters=parameters,
-                  nsamp=nrow(indiv_bio),
-                  poormetab=poormetab,
-                  fup.meas.cv=fup.meas.cv,
-                  clint.meas.cv=clint.meas.cv,
-                  fup.pop.cv=fup.pop.cv,
-                  clint.pop.cv=clint.pop.cv,
-                  fup.censored.dist=fup.censored.dist,
-                  fup.lod=fup.lod,
-                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                  clint.pvalue.threshold=clint.pvalue.threshold))
-
-# CLEAN UP PARAMETER MATRIX
-#
-# Assign the default values to the non-Monte Carlo parameters for all
-# individuals in the virtual population
-  parameter.matrix[, (noMC.names):=parameters.mean[noMC.names]]
-
-# Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameter.matrix))){
-    suppressWarnings(parameter.matrix[, c("pKa_Donor","pKa_Accept") := NULL]) 
-      %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
-  }
-
-#
-# UPDATE THE PARTITION COEFFICIENTS IF NEEDED
-#
-# For models with tissue-to-plasma partition coefficients we neeed to calculate
-# them for each individual because each individual has a different 
-# Funbound.plasma value:
-  if (model.table[model]$ComputePCforMC)
-  {
-    if (apply())
-
-    #First, get the default parameters used for the Schmitt method of estimating
-    #partition coefficients.
-    if (!is.null(this.chem))
-    {
-      pschmitt <- httk::parameterize_schmitt(chem.cas=this.chem,
-                                           species='Human')
-    } else {
-      pschmitt <- parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]]
-      pschmitt.chemindependent <- httk::parameterize_schmitt(chem.cas="80-05-7",species="Human")
-      pschmitt <- c(pschmitt,pschmitt.chemindependent[c("Fprotein.plasma","plasma.pH","alpha")])
-#      pschmitt[["MA"]] <- NA
-    }
-    #next, replace the single default value for Funbound.plasma with the vector
-    #of Funbound.plasma values from the virtual population data.table.
-    pschmitt$Funbound.plasma<-parameters.dt[, Funbound.plasma]
-
-    #Now, predict the partitioning coefficients using Schmitt's method. The
-    #result will be a list of numerical vectors, one vector for each
-    #tissue-to-plasma partitioning coefficient, and one element of each vector
-    #for each individual. The list element names specify which partition
-    #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
-                                              chem.cas=this.chem,
-                                              species='Human',
-                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                              regression=regression)
-
-  # List all tissues for which HTTK has human tissue information. 
-  # This will be used in lumping.  
-    tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
-  # We don't use these tissues for lumping:
-    tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
-
-# Lump the tissues, depending on model. tissues is a list of all the 
-# unlumped compartments, all other tissues will be lumped into a "rest" 
-# compartment.
-    tissue.list <- model.table[model]$tissues
-    if (!is.null(tissue.list))
-    {
-# Check to make sure that all the requested tissues are available:
-      if (any(!(tissue.list %in% tissuenames))) stop(paste(
-                                                  "Requested tissue(s)",
-                                                  paste(tissue.list[
-                                                    !(tissue.list %in% 
-                                                    tissuenames)],
-                                                    collapse=", "),
-                                                  "are not in tissue.data."))
-    
-    #Now get the list of tissues to be lumped: that is, everything in
-    #tissuenames that wasn't in the list of compartments for this model.
-    rest.tissues <- tissuenames[!(tissuenames %in%
-                                    c(tissue.list,
-                                      'red blood cells'))]
-    #Lump the volumes by simply summing them.
-    vol.restc <- parameters.dt[,
-                             Reduce('+', .SD),
-                             .SDcols=paste0('V',
-                                            rest.tissues,
-                                            'c')]
-    #Lump the flows by summing them.
-    flow.restf <- parameters.dt[,
-                              Reduce('+', .SD),
-                              .SDcols=paste0('Q',
-                                             rest.tissues,
-                                             'f')]
-    #Lumped partition coefficient: sum partition coefficients of rest.tissues,
-    #weighted by their volumes; then divide by total lumped volume.
-    Krest2pu <- Reduce('+',
-                           lapply(as.list(rest.tissues),
-                                  function(x) PCs[[paste0('K',
-                                                          x,
-                                                          '2pu')]]*
-                                    unlist(parameters.dt[,
-                                                       paste0('V',
-                                                              x,
-                                                              'c'),
-                                                       with=FALSE])
-                           )
-    )/vol.restc
-
-    #Add lumped volumes, flows, and partition coefficients to population
-    #data.table
-    parameters.dt[, Vrestc:=vol.restc]
-    parameters.dt[, Qrestf:=flow.restf]
-    parameters.dt[, Krest2pu:=Krest2pu]
-    parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
-
-    if (!(length(tissue.list)==0)){
-      #For enumerated tissue compartments (if any), add their partitition
-      #coefficients to the population data.table as well.
-
-      #First get the vector of partition coefficient names
-      #(names of elements of PCs)
-      knames <- paste0('K',
-                       tissue.list,
-                       '2pu')
-      #Then add them to the population data.table. data.table syntax: wrap
-      #vector of column names in parentheses to assign to multiple columns at
-      #once
-      parameters.dt[, (knames):=PCs[knames]]
-    }
-
-    if (!"Rblood2plasma" %in% colnames(parameters.dt))
-    {
-      #For 1 compartment, 3 compartment, or PBTK models: Calculate Rblood2plasma
-      #based on hematocrit and Krbc2plasma. This is the ratio of chemical in blood
-      #vs. in plasma.
-      if (is.null(parameters))
-      {
-        Rblood2plasma <- get_rblood2plasma(chem.cas=this.chem,species='Human')
-      } else {
-        Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
-      }
-      parameters.dt[,Rblood2plasma:=Rblood2plasma]
-    }
-    parameters.dt[is.na(Rblood2plasma),
-                Rblood2plasma:=(1-
-                                  hematocrit +
-                                  hematocrit*
-                                  Krbc2pu*
-                                  Funbound.plasma)]
-  }
-
 #
 #
-
-
-
+# CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
+# VALUES FOR WHICH Css SHOULD BE CALCULATEDL
+#
+#
+  parameter.matrix <- create_mc_samples(
+                        chem.cas=chem.casL,
+                        chem.name=chem.name,
+                        dtxsid = dtxsid,
+                        parameters=parameters,
+                        samples=1000,
+                        species=species,
+                        suppress.messages=suppress.messages,
+                        model=model,
+                        httkpop=httkpop,
+                        invitrouv=invitrouv,
+                        calcrb2p=calcrb2p,
+                        censored.params=censored.params,
+                        vary.params=vary.params,
+                        return.samples=F,
+                        invitro.mc.arg.list=invitro.mc.arg.list,
+                        httkpop.generate.arg.list=httkpop.generate.arg.list,
+                        convert.httkpop.arg.list=convert.httkpop.arg.list,
+                        parameterize.arg.list=list(
+                          default.to.human=
+                            parameterize.arg.list$default.to.human,
+                          clint.pvalue.threshold=
+                            parameterize.arg.list$clint.pvalue.threshold,
+                          restrictive.clearance==
+                            restrictive.clearance))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
