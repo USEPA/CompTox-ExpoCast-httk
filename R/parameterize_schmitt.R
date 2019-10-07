@@ -96,7 +96,7 @@ parameterize_schmitt <- function(
 # Look up the chemical name/CAS, depending on what was provide:
   if (any(!is.null(chem.cas,chem.name,dtxsid)))
   {
-    out <- get_chem_id(
+    out <- get_invitroPK_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid)
@@ -129,7 +129,7 @@ parameterize_schmitt <- function(
         
   # unitless fraction of chemical unbound with plasma
   fup.db <- try(
-              get_chem_param(
+              get_invitroPK_param(
                 "Funbound.plasma",
                 species,
                 chem.CAS=chem.cas,
@@ -139,7 +139,7 @@ parameterize_schmitt <- function(
   if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
   {
     fup.db <- try(
-                get_chem_param(
+                get_invitroPK_param(
                   "Funbound.plasma",
                   "Human",
                   chem.CAS=chem.cas,

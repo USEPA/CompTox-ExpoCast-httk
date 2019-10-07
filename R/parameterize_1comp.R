@@ -49,7 +49,7 @@
 #' first pass clearance, calculated from the corrected well-stirred model.}
 #' \item{BW}{Body Weight, kg.} 
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -180,12 +180,12 @@ parameterize_1comp <- function(
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   
-  if (is.null(chem.cas)) chem.cas <- get_chem_id(
+  if (is.null(chem.cas)) chem.cas <- get_invitroPK_id(
                                       chem.name=chem.name)[['chem.cas']]
   params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
     Fgutabs <- try(
-                 get_chem_param(
+                 get_invitroPK_param(
                    "Fgutabs",
                    species,
                    chem.CAS=chem.cas),

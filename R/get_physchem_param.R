@@ -10,8 +10,10 @@
 #' 
 #' @return The paramters, either a single value, a named list for a single chemical, or a list of lists
 #' 
+#' @author John Wambaugh and Robert Pearcw
+#'
 #' @examples 
-#' 
+#'
 #' get_physchem_param(param = 'logP', chem.CAS = '80-05-7')
 #' get_physchem_param(param = c('logP','MW'), chem.CAS = c('80-05-7','81-81-2'))
 #' 

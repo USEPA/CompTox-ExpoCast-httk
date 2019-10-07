@@ -98,7 +98,7 @@ parameterize_steadystate <- function(
     stop('chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  out <- get_chem_id(
+  out <- get_invitroPK_id(
           chem.cas=chem.cas,
           chem.name=chem.name,
           dtxsid=dtxsid)
@@ -137,14 +137,14 @@ parameterize_steadystate <- function(
 
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
-  Clint.db <- try(get_chem_param(
+  Clint.db <- try(get_invitroPK_param(
                     "Clint",
                     species,
                     chem.CAS=chem.cas),
                 silent=T)
                 
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_chem_param(
+  Clint.pValue <- try(get_invitroPK_param(
                         "Clint.pValue",
                         species,
                         chem.CAS=chem.cas),
@@ -152,12 +152,12 @@ parameterize_steadystate <- function(
                     
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    Clint.db <- try(get_chem_param(
+    Clint.db <- try(get_invitroPK_param(
                       "Clint",
                       "Human",
                       chem.CAS=chem.cas),
                   silent=T)
-    Clint.pValue <- try(get_chem_param(
+    Clint.pValue <- try(get_invitroPK_param(
                           "Clint.pValue",
                           "Human",
                           chem.CAS=chem.cas),
@@ -184,14 +184,14 @@ Set default.to.human to true to substitute human value.")
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
-  fup.db <- try(get_chem_param(
+  fup.db <- try(get_invitroPK_param(
                   "Funbound.plasma",
                   species,
                   chem.CAS=chem.cas),
               silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fup.db<- try(get_chem_param(
+    fup.db<- try(get_invitroPK_param(
                    "Funbound.plasma",
                    "Human",
                    chem.CAS=chem.cas),
@@ -262,7 +262,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_chem_param("Fgutabs",
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
                    chem.CAS=chem.cas),
                silent=T)
@@ -305,14 +305,14 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
           suppress.messages=T)#L/h/kg body weight
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
-  if (restrictive.clearance) 
-  { 
-    Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + fup.adjusted * cl / Rb2p) # Units cancel (unitless)
-  } else {
-    Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
-  }
+  Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
+    parameters=list(Qlivertot=Qliver,
+                    Funbound.plasmafup.adjusted,
+                    Clmetabolismc=Params$cl/Params$BW,
+                    BW=Params$BW,
+                    Rb2p=Params[["Rblood2plasma"]]),
+    restrictive=restrictive)
+
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(Params)
 }

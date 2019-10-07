@@ -1,7 +1,8 @@
 #' Retrieve data from chem.physical_and_invitro.data table
 #'
 #; This function retrieves in vitro PK data (e.g. intrinsic metabolic clearance 
-#' or fraction unbound in plasma) from the main HTTK data.\
+#' or fraction unbound in plasma) from the main HTTK data. This function looks
+#' for species-specific values.
 #'
 #' @return The value of the parameter, if found
 #'
@@ -9,7 +10,7 @@
 #'
 #' @import utils
 
-get_chem_param <- function(
+get_invitroPK_param <- function(
                     param
                     species,
                     chem.name=NULL,
