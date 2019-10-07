@@ -400,7 +400,7 @@ Set species=\"Human\" to run httkpop model.')
   if (firstpass)
   {
     parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-                                      params=parameters.dt)]
+                                      paramseters=parameters.dt)]
   }
   
 #Return only the HTTK parameters for the specified model. That is, only the
