@@ -38,33 +38,64 @@
 #' calc_rblood2plasma(chem.name="Bisphenol A",species="Rat")
 #' 
 #' @export calc_rblood2plasma
-calc_rblood2plasma <- function(chem.cas=NULL,
-                              chem.name=NULL,
-                              params=NULL,
-                              hematocrit=NULL,
-                              default.to.human=F,
-                              species="Human",
-                              adjusted.Funbound.plasma=T,
-                              suppress.messages=F)
+calc_rblood2plasma <- function(
+                        chem.cas=NULL,
+                        chem.name=NULL,
+                        dtxisd=NULL,
+                        parameters=NULL,
+                        hematocrit=NULL,
+                        Krbc2pu=NULL,
+                        Funbound.plasma=NULL,
+                        default.to.human=F,
+                        species="Human",
+                        adjusted.Funbound.plasma=T,
+                        suppress.messages=F)
 {
   physiology.data <- physiology.data
 
-  if (is.null(params)) 
+  # We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters) &
+      (is.null(Krbc2pu) | is.null(hematocrit) | is.null(Funbound.plasma))) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  if (any(!is.null(chem.cas,chem.name,dtxsid)))
   {
-    parameters <- parameterize_schmitt(chem.cas=chem.cas,
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+  }
+
+  if (is.null(parameters) & 
+    (is.null(Krbc2pu) | is.null(hematocrit) | is.null(Funbound.plasma))) 
+  {
+    parameters <- parameterize_schmitt(
+                    chem.cas=chem.cas,
                     chem.name=chem.name,
+                    dtxsid=dtxsid,
                     default.to.human=default.to.human,
                     species=species,
                     suppress.messages=suppress.messages)
-  } else {
-    parameters <- params
+  } else {is.null(parameters))
+    parameters <- list(
+                    hematocrit=hematocrit,
+                    Krbc2pu=Krbc2pu,
+                    Funbound.plasma=Funbound.plasma)
   }
   
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+      phys.species <- colnames(physiology.data)[
+        toupper(colnames(physiology.data))==toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
 
@@ -72,7 +103,8 @@ calc_rblood2plasma <- function(chem.cas=NULL,
   {
     if (is.null(parameters$hematocrit))
     {
-      hematocrit <- physiology.data[physiology.data$Parameter=="Hematocrit",phys.species]
+      hematocrit <- 
+        physiology.data[physiology.data$Parameter=="Hematocrit",phys.species]
     } else {
       hematocrit <- parameters$hematocrit
     }
@@ -80,13 +112,24 @@ calc_rblood2plasma <- function(chem.cas=NULL,
   
 # Predict the PCs for all tissues in the tissue.data table:
 
-  PCs <- predict_partitioning_schmitt(parameters=parameters,
+  if (is.null(parameters$Krbc2pu))
+  {
+    PCs <- predict_partitioning_schmitt(parameters=parameters,
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
            tissues='red blood cells')  #regression not applied to Krbc2pu
-    
-  if(adjusted.Funbound.plasma) Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma
-  else Rblood2plasma = 1 - hematocrit + hematocrit * PCs[["Krbc2pu"]] * parameters$unadjusted.Funbound.plasma
+    parameters$Krbc2pu <- PCs$Krbc2pu
+  }  
+  
+  
+  
+  if  (adjusted.Funbound.plasma) 
+    Rblood2plasma = 1 - 
+      hematocrit + 
+      hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma
+  else Rblood2plasma = 1 - 
+      hematocrit + 
+      hematocrit * PCs[["Krbc2pu"]] * parameters$unadjusted.Funbound.plasma
     
   return(as.numeric(Rblood2plasma))
 }

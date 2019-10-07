@@ -126,6 +126,7 @@ create_mc_samples <- function(chem.cas=NULL,
                         model='3compartmentss',
                         httkpop=T,
                         invitrouv=T,
+                        calcrb2p=T,
                         censored.params=list()),
                         vary.params=list(),
                         return.samples=F,
@@ -294,18 +295,21 @@ Set species=\"Human\" to run httkpop model.')
                 species=species)
   parameters.dt <- cbind(parameters.dt,pschmitt)
 
-  #Now, predict the partitioning coefficients using Schmitt's method. The
-  #result will be a list of numerical vectors, one vector for each
-  #tissue-to-plasma partitioning coefficient, and one element of each vector
-  #for each individual. The list element names specify which partition
-  #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-  PCs <- httk::predict_partitioning_schmitt(parameters=parameters.dt,
-                                            chen.name=chem.name,
-                                            chem.cas=this.chem,
-                                            dtxsid=dtxsid,
-                                            species=species,
-                                            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                            regression=T)
+  if (model.list$[[model]]$calcpc | calcrb2p)
+  { 
+#Now, predict the partitioning coefficients using Schmitt's method. The
+#result will be a list of numerical vectors, one vector for each
+#tissue-to-plasma partitioning coefficient, and one element of each vector
+#for each individual. The list element names specify which partition
+#coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
+    PCs <- httk::predict_partitioning_schmitt(parameters=parameters.dt,
+                                              chem.name=chem.name,
+                                              chem.cas=this.chem,
+                                              dtxsid=dtxsid,
+                                              species=species,
+                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                              regression=T)
+  }
 
   if (model.list$[[model]]$calcpc)
   {
@@ -383,29 +387,21 @@ Set species=\"Human\" to run httkpop model.')
       }
     }
 
+  if (calcrb2p)
+  {
     parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
-
-    #For 1 compartment, 3 compartment, or PBTK models: Calculate Rblood2plasma
-    #based on hematocrit and Krbc2plasma. This is the ratio of chemical in blood
-    #vs. in plasma.
-    if (is.null(parameters))
-    {
-      Rblood2plasma <- get_rblood2plasma(chem.cas=this.chem,species='Human')
-    } else {
-      Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
-    }
-    parameters.dt[,Rblood2plasma:=Rblood2plasma]
-
-    parameters.dt[is.na(Rblood2plasma),
-                Rblood2plasma:=(1-
-                                  hematocrit +
-                                  hematocrit*
-                                  Krbc2pu*
-                                  Funbound.plasma)]
+# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
+# This is the ratio of chemical in blood vs. in plasma.
+    parameters.dt[,Rblood2plasma := calc_rblood2plasma(
+                                      hematocrit=parameters.dt$hematocrit,
+                                      Krbc2pu=parameters.dt$Krbc2pu,
+                                      Funbound.plasma=Funbound.plasma)]
   }
-
+  
   if (firstpass)
   {
+    parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
+                                      params=parameters.dt)]
   }
   
 #Return only the HTTK parameters for the specified model. That is, only the

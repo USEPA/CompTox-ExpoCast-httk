@@ -53,7 +53,8 @@ calc_hep_bioavailability <- function(
                          chem.cas=NULL,
                          chem.name=NULL,
                          dtxsid = NULL,
-                         parameters=NULL)
+                         parameters=NULL,
+                         restrictive.clearance=T)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -61,16 +62,6 @@ calc_hep_bioavailability <- function(
       is.null(dtxsid) &
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-
-  if (is.null(model)) stop("Model must be specified.")
-# We need to know model-specific information (from modelinfo_[MODEL].R]) 
-# to set up the solver:
-  model <- tolower(model)
-  if (!(model %in% names(model.list)))            
-  {
-    stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
-  } 
 
   if (is.null(parameters))
   {
@@ -84,9 +75,13 @@ calc_hep_bioavailability <- function(
     %in% names(parameters))) 
     stop("Missing needed parameters in calc_hepatic_bioavailability.")
 
-  return(parameters$Qlivertot / 
+  if (restrictive.clearance) return(parameters$Qlivertot / 
     (parameters$Qlivertot + 
     parameters$Funbound.plasma * 
-      parameters$Clmetabolismc*BW / 
+      parameters$Clmetabolismc*parameters$BW / 
+      parameters$Rblood2plasma)
+  else return(parameters$Qlivertot / 
+    (parameters$Qlivertot + 
+      parameters$Clmetabolismc*parameters$BW / 
       parameters$Rblood2plasma)
 }
