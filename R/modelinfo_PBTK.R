@@ -77,7 +77,7 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
   Qcardiacc="Qcardiacc",
   Qgfrc="Qgfrc",
   Qgutf="Qgutf",
-  Qkidney="Qkidneyf",
+  Qkidneyf="Qkidneyf",
   Qliverf="Qliverf",
   Vartc="Vartc",
   Vgutc="Vgutc",
@@ -157,6 +157,9 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   "Aplasma"
   )
 
+
+#list of variables to be monitored (plotted). Should be able to be constructed
+#from states and outputs. 
 model.list[["pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
@@ -174,7 +177,7 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
 # Allowable units:
 model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
 
-# These parameters specific the exposure scenario simulated by the model:
+# These parameters specify the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
@@ -189,8 +192,10 @@ model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["pbtk"]]$dose.type <- list(oral="add",
   iv="add")
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
 model.list[["pbtk"]]$state.vars <- c(
     "Agutlumen",
     "Agut",
@@ -214,6 +219,7 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+
 
 #choose which parameters are not to be Monte Carlo sampled
 model.list[["pbtk"]]$noMC.params <- c(
