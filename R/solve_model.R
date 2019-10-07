@@ -193,9 +193,9 @@ solve_model <- function(chem.name = NULL,
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
-# Function that transform the parameters to those needed by the solver:
+# Function that transforms the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
-# name(s)s of the compiled model parameters that control the solver:
+# name(s) of the compiled model parameters that control the solver:
     compiled_param_names <- model.list[[model]]$compiled.param.names
 # name of the function that calculates the derivative:
     derivative_function <- model.list[[model]]$derivative.func
@@ -330,7 +330,8 @@ solve_model <- function(chem.name = NULL,
       } else if (firstchar(this.compartment)=="A")
       {
         state[this.compartment] <- initial.values[[this.compartment]]
-      } else stop("Initital values must begin with \"C\" or \"A\".")
+      } else stop("Initital values must begin with \"C\" or \"A\" 
+                  to denote concentrations or amounts, respectively.")
     }
   }
 ### SIMULATION TIME
@@ -464,12 +465,38 @@ with two columns (time, dose).")
   }
 # However, we always include whatever compartment received the dose:  
   monitor.vars <- unique(c(dose.var,monitor.vars))
-  if (any(!(monitor.vars%in%colnames(out)))) stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
+  if (any(!(monitor.vars%in%colnames(out))))
+    stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
  
+#Initialize string variable, 'out.amount', to represent units of amount in
+#accordance with the concentration units stored in 'output.units'. This is useful
+#for plotting and other warning messages sent to the user. 
+  if (tolower(output.units) == 'um')
+  {
+    out.amount <- 'umol'
+  } else out.amount <- 'mg'
+  
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
-    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))))
+    
+    #assemble a y-axis units vector to correspond to each entry in monitor.vars
+    vars_monitored = length(monitor.vars)
+    plot_units_vector = rep(NA, vars_monitored)
+    
+    for (var in 1:vars_monitored) {
+      if (firstchar(monitor.vars[var]) == 'A') {
+        if (monitor.vars[var] == 'AUC') {
+          plot_units_vector[var] = paste(output.units,'* time')
+        } else plot_units_vector[var] = out.amount
+      } else if (firstchar(monitor.vars[var]) == 'C') {
+        plot_units_vector[var] = output.units
+      } else stop("State and output variables to be monitored must begin with
+                  \"C\" or \"A\" to denote concentrations or amounts, respectively.")
+    }
+    
+   
+    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector)
   } 
                
 # Downselect to only the desired parameters:
@@ -481,10 +508,7 @@ with two columns (time, dose).")
   {
     if (is.null(chem.cas) & is.null(chem.name))
     {
-      if (tolower(output.units) == 'um')
-      {
-        out.amount <- 'umol'
-      } else out.amount <- 'mg'
+      
       cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
 # If only a parameter vector is given it's good to warn people that they
 # need to make sure that these values have been appropriately recalculated:
@@ -493,10 +517,6 @@ Set recalc.blood2plasma to TRUE if desired.")
       if (!recalc.clearance) warning("Clearance not recalculated. \
 Set recalc.clearance to TRUE if desired.") 
     } else {
-      if (tolower(output.units) == 'um')
-      {
-        out.amount <- 'umol'
-      } else out.amount <- 'mg'
       cat(paste(toupper(substr(species,1,1)),
         substr(species,2,nchar(species)),sep=""),
         "amounts returned in", out.amount,

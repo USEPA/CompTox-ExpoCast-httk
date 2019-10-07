@@ -149,8 +149,10 @@ model.list[["3compartment"]]$dose.type <- list(
   oral="add",
   iv="add")
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
 model.list[["3compartment"]]$state.vars <- c(
   "Aintestine",
   "Aportven",
