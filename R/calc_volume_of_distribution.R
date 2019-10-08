@@ -112,10 +112,10 @@ if (is.null(parameters))
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
     if (class(fup) == "try-error" & default.to.human) 
     {
-      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
     if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -126,9 +126,9 @@ if (is.null(parameters))
     }
     if(adjusted.Funbound.plasma){
       Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
-      Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
+      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
+      Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
       fup <- 1 / ((dow) * Flipid + 1 / fup)

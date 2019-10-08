@@ -73,8 +73,8 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   {
     out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
     chem.cas <- out$chem.cas
-    pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-    pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
+    pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+    pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
   } else if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
   {
     pKa_Donor <- parameters$pKa_Donor

@@ -140,27 +140,35 @@ parameterize_steadystate <- function(
   Clint.db <- try(get_invitroPK_param(
                     "Clint",
                     species,
-                    chem.CAS=chem.cas),
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    dtxsid=dtxsid),
                 silent=T)
                 
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param(
                         "Clint.pValue",
                         species,
-                        chem.CAS=chem.cas),
-                    silent=T)
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
+                     silent=T)
                     
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param(
                       "Clint",
                       "Human",
-                      chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                   silent=T)
     Clint.pValue <- try(get_invitroPK_param(
                           "Clint.pValue",
                           "Human",
-                          chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                       silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
@@ -187,14 +195,18 @@ Set default.to.human to true to substitute human value.")
   fup.db <- try(get_invitroPK_param(
                   "Funbound.plasma",
                   species,
-                  chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
               silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     fup.db<- try(get_invitroPK_param(
                    "Funbound.plasma",
                    "Human",
-                   chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                silent=T)
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
@@ -223,13 +235,17 @@ Set default.to.human to true to substitute human value.")
 # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
                                   "pKa_Donor",
-                                  chem.CAS=chem.cas)) 
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid))
 # basic association cosntants
   pKa_Accept <- suppressWarnings(get_physchem_param(
                                    "pKa_Accept",
-                                   chem.CAS=chem.cas)) 
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid))
 # Octanol:water partition coeffiecient
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) 
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) 
   ion <- calc_ionization(pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
   dow <- Pow * (ion$fraction_neutral + 
                 0.001 * ion$fraction_charged + 
@@ -264,7 +280,9 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
-                   chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
@@ -279,7 +297,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- 
-    get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
+    get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
   Params[["Fhep.assay.correction"]] <- calc_hep_fu(Pow,
