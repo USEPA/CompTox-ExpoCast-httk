@@ -257,13 +257,10 @@ Set species=\"Human\" to run httkpop model.')
 
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
-  if (invitrouv) parameters.dt <- do.call(invitro_mc,args=c(list(
-                       parameters.dt=parameters.dt,
-                       samples=samples,
-                       fup.censored.dist=fup.censored.dist,
-                       fup.lod=fup.lod,
-                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                       clint.pvalue.threshold=clint.pvalue.threshold),
+  if (invitrouv) parameters.dt <- do.call(invitro_mc,
+                   args=c(list(
+                     parameters.dt=parameters.dt,
+                     samples=samples),
                      invitro.mc.arg.list))
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
@@ -399,6 +396,22 @@ Set species=\"Human\" to run httkpop model.')
   
   if (firstpass)
   {
+  
+# For models that don't described first pass blood flow from the gut, need the
+# total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
+  if (!("Qtotal.liverc" %in% names(parameters.dt)))
+    parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h
+  
+# For models that don't described first pass blood flow from the gut, need the
+# unscaled hepatic clearance to cacluate a hepatic bioavailability 
+# (Rowland, 1973):      
+  if (!("CLmetabolismc" %in% names(parameters.dt)))
+    parameters.dt[, Clmetabolismc:=
+      httk::calc_hep_clearance(
+        hepatic.model="unscaled",
+        parameters=parameters.dt,
+        suppress.messages=TRUE,
+        clint.pvalue.threshold=clint.pvalue.threshold)]
     parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
                                       parameters=parameters.dt)]
   }

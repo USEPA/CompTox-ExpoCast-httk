@@ -25,31 +25,5 @@ convert_httkpop_3compss <- function(
                              httkpop.dt,
                              ...)
 {
-#
-#    calc_hep_params <- c(as.list(parameters.df[, list(Clint,
-#                                                    Funbound.plasma,
-#                                                    Fhep.assay.correction,
-#                                                    million.cells.per.gliver,
-#                                                    BW,
-#                                                    Vliverc,
-#                                                    Qtotal.liverc)]),
-#                         liver.density=1.05,
-#                         Dn=0.17)
-#    parameters.df[,Rblood2plasma:=available_rblood2plasma(chem.cas=this.chem,
-#      species='Human',
-#      adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
-
-# For models that don't described first pass blood flow from the gut, need the
-# unscaled hepatic clearance to cacluate a hepatic bioavailability 
-# (Rowland, 1973):      
-  parameters.dt[, Clmetabolismc:=
-    httk::calc_hep_clearance(
-      hepatic.model="unscaled",
-      parameters=parameters.dt,
-      suppress.messages=TRUE,
-      clint.pvalue.threshold=clint.pvalue.threshold)]
-    
-# For models that don't described first pass blood flow from the gut, need the
-# total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
-  parameters.dt[, Qlivertot:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
+  return(parameters.dt)
 }
