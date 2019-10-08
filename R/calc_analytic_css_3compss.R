@@ -81,7 +81,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   if (recalc.blood2plasma) 
   {
     parameters$Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
-                                                   params=parameters,
+                                                   parameters=parameters,
                                                    hematocrit=parameters$hematocrit)
   }
 
