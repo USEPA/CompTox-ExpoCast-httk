@@ -92,7 +92,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
 
 # Scale up from in vitro Clint to a whole liver clearance:
-  cl <- calc_hepatic_clearance(parameters=parameters,
+  cl <- calc_hep_clearance(parameters=parameters,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
   if (!restrictive.clearance) cl <- cl*Fup

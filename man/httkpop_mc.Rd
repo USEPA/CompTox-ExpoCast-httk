@@ -5,7 +5,7 @@
 \title{Converts the HTTK-Pop population data table to a table of the parameters
 needed by HTTK, for a specific chemical.}
 \usage{
-httkpop_mc(model, samples, httkpop.dt = NULL,
+httkpop_mc(model, samples = 1000, httkpop.dt = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling",
   gendernum = NULL, agelim_years = NULL, agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),

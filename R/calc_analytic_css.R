@@ -153,7 +153,7 @@ calc_analytic_css <- function(chem.name=NULL,
     }
     ss.params[[names(ssparams) %in% names(parameters)]] <- 
       parameters[[names(ssparams) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
+    parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
   }

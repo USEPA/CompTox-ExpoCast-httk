@@ -318,7 +318,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   # Need to have a parameter with this name to calculate clearance, but need 
   # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
-  cl <- calc_hepatic_clearance(parameters=Params,
+  cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
   Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight

@@ -4,11 +4,11 @@
 \alias{monte_carlo}
 \title{Monte Carlo for pharmacokinetic models}
 \usage{
-monte_carlo(params, cv.params = NULL, censored.params = NULL,
+monte_carlo(parameters, cv.params = NULL, censored.params = NULL,
   samples = 1000)
 }
 \arguments{
-\item{params}{All parameters needed by the function indicated by the
+\item{parameters}{All parameters needed by the function indicated by the
 argument "name.model". These paramters that are also listed in either
 cv.params or censored.params are sampled using Monte Carlo.}
 
@@ -60,7 +60,7 @@ toxicokinetic models.
 library(ggplot2)
 library(scales)
 vary.params <- NULL
-params <- parameterize_pbtk(chem.name = "Zoxamide")
+parameters <- parameterize_pbtk(chem.name = "Zoxamide")
 for(this.param in names(subset(params,
 names(params) != "Funbound.plasma"))) vary.params[this.param] <- .2
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))

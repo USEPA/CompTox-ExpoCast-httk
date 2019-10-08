@@ -133,9 +133,9 @@ httkpop_mc <- function(model,
   
 #Depending on model, choose the function in HTTK that will return the default
 #HTTK parameters for this chemical
-  converthttkfun <- model.list[[model]]$converthttk.func
-  physiology.dt <- do.call(converthttkfun, args=c(list(
-                     physiology.matrix=physiology.dt,
+  converthttkpopfun <- model.list[[model]]$convert.httkpop.func
+  physiology.dt <- do.call(converthttkpopfun, args=c(list(
+                     parameters.dt=physiology.dt,
                      httkpop.dt=httkpop.dt),
                      convert.httkpop.arg.list))
   
