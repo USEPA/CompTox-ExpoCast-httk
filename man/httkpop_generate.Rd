@@ -66,7 +66,6 @@ Generate a virtual population
 }
 \examples{
 
-
 \dontrun{
 #Simply generate a virtual population of 100 individuals,
  #using the direct-resampling method
@@ -101,3 +100,4 @@ Environment International 106 (2017): 105-118
 Caroline Ring
 }
 \keyword{httk-pop}
+\keyword{monte-carlo}

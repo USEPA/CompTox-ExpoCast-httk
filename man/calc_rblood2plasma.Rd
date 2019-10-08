@@ -5,8 +5,9 @@
 \title{Calculate the constant ratio of the blood concentration to the plasma
 concentration.}
 \usage{
-calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, params = NULL,
-  hematocrit = NULL, default.to.human = F, species = "Human",
+calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, dtxisd = NULL,
+  parameters = NULL, hematocrit = NULL, Krbc2pu = NULL,
+  Funbound.plasma = NULL, default.to.human = F, species = "Human",
   adjusted.Funbound.plasma = T, suppress.messages = F)
 }
 \arguments{
@@ -15,8 +16,6 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
-
-\item{params}{Parameters from parameterize_schmitt.}
 
 \item{hematocrit}{Overwrites default hematocrit value in calculating
 Rblood2plasma.}
@@ -32,6 +31,8 @@ adjustment.}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
+
+\item{params}{Parameters from parameterize_schmitt.}
 }
 \description{
 This function calculates the constant ratio of the blood concentration to

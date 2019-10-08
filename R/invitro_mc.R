@@ -36,11 +36,14 @@
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
 #' hepatocyte assay.
+#'
 #' @author Caroline Ring and John Wambaugh
 #'
-#' @reference
+#' @references
+#' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization." Toxicological Sciences (2019).
 #'
-#' @keyword monte-carlo in-vitro
+#' @keywords monte-carlo in-vitro
 #'
 #' @import stats
 #'

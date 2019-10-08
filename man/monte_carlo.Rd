@@ -4,19 +4,13 @@
 \alias{monte_carlo}
 \title{Monte Carlo for pharmacokinetic models}
 \usage{
-monte_carlo(params, which.quantile = 0.95, cv.params = NULL,
-  censored.params = NULL, samples = 1000,
-  name.model = "calc_analytic_css", output.col.model = NA,
-  return.samples = F, ...)
+monte_carlo(params, cv.params = NULL, censored.params = NULL,
+  samples = 1000)
 }
 \arguments{
 \item{params}{All parameters needed by the function indicated by the
 argument "name.model". These paramters that are also listed in either
 cv.params or censored.params are sampled using Monte Carlo.}
-
-\item{which.quantile}{This argument specifies which quantiles are to be
-calculated. It can be a vector or a single value. It defaults to the 0.95
-quantile (95\%).}
 
 \item{cv.params}{The parameters listed in cv.params are sampled from a
 normal distribution that is truncated at zero. This argument should be a
@@ -38,6 +32,10 @@ distribution between 0 and the limit of detection.}
 \item{samples}{This argument is the number of samples to be generated for
 calculating quantiles.}
 
+\item{which.quantile}{This argument specifies which quantiles are to be
+calculated. It can be a vector or a single value. It defaults to the 0.95
+quantile (95\%).}
+
 \item{name.model}{This argument is a character vector giving the name of the
 model to be sampled.  Defaults to 'calc_analytic_css'.}
 
@@ -57,7 +55,7 @@ toxicokinetic models.
 }
 \examples{
 
-#Example from httk jss paper:
+#Example from Pearce et al. (2017):
 \dontrun{
 library(ggplot2)
 library(scales)
@@ -158,6 +156,13 @@ Fig1a.fit <- lm(log(Wetmore) ~ log(Predicted)*Percentile, Wetmore.table)
 ## End(**Not run**)
 }
 
+}
+\references{
+Wambaugh, John F., et al. "Toxicokinetic triage for 
+environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
 John Wambaugh

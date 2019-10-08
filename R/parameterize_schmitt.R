@@ -1,14 +1,9 @@
-#' Parameterize Schmitt's method.
+#' Get the Parameters for Schmitt's Tissue Partition Coefficient Method
 #' 
 #' This function provides the necessary parameters to run
 #' predict_partitioning_schmitt, excluding the data in tissue.data.
 #' 
-#' When species is specified as rabbit, dog, or mouse, the human unbound
-#' fraction is substituted.
-#' 
-#' force.human.fup calculates Funbound.plasma.corrected with the human lipid
-#' fractional volume in plasma.
-#' 
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
@@ -26,12 +21,14 @@
 #' human values if true.
 #' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
+#' When species is specified as rabbit, dog, or mouse, the human unbound
+#' fraction is substituted.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @return
 #' 
+#' @return
 #' \item{Funbound.plasma}{corrected unbound fraction in plasma}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
 #' if below limit of detection)} \item{Pow}{octonol:water partition coefficient
@@ -42,15 +39,15 @@
 #' \item{plasma.pH}{pH of the plasma}
 #'
 #' @author Robert Pearce and John Wambaugh
+#'
 #' @keywords Parameter schmitt
 #'
-#' #' @references Schmitt, Walter. "General approach for the calculation of 
+#' @references Schmitt, Walter. "General approach for the calculation of 
 #' tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 #' 457-467.
 #' 
-#' Schmitt, Walter. "Corrigendum to:“General approach for the calculation of 
-#' 'tissue to plasma partition coefficients”[Toxicology in Vitro 22 (2008) 
-#' 457–467]." Toxicology in Vitro 22.6 (2008): 1666.
+#' Schmitt, Walter. "Corrigendum to: General approach for the calculation of 
+#' tissue to plasma partition coefficients" Toxicology in Vitro 22.6 (2008): 1666.
 #' 
 #' Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
 #' for predicting partition coefficients for PBPK modeling of drugs and 
@@ -66,8 +63,8 @@
 #' parameterize_schmitt(chem.name='bisphenola')
 #' 
 #' @export parameterize_schmitt
-parameterize_schmitt <- function(
-                          chem.cas=NULL,
+
+parameterize_schmitt <- function(chem.cas=NULL,
                           chem.name=NULL,
                           dtxsid = NULL,
                           parameters=NULL,

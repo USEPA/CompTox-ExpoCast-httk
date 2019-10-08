@@ -42,6 +42,7 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         gmodels, colorspace
 License: GPL-3
 LazyData: true
+Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
 RoxygenNote: 6.1.1
 URL:

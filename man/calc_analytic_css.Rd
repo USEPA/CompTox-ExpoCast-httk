@@ -5,10 +5,11 @@
 \title{Calculate the analytic steady state concentration.}
 \usage{
 calc_analytic_css(chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, daily.dose = 1, output.units = "uM",
-  model = "pbtk", concentration = "plasma", suppress.messages = F,
-  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = F, IVIVE = NULL, ...)
+  parameters = NULL, species = "human", daily.dose = 1,
+  output.units = "uM", model = "pbtk", concentration = "plasma",
+  suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
+  restrictive.clearance = T, bioactive.free.invivo = F, IVIVE = NULL,
+  ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
