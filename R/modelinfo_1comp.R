@@ -115,13 +115,29 @@ model.list[["1compartment"]]$state.vars <- c(
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["1compartment"]]$required.params <- c(
-  "Clint",
+  "Clint", 
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
   "MW"
    )
+   
+# If httk-pop is enabled:
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- "convert_httkpop_1comp"
+# We want all the standard physiological calculations performed:
+model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["1compartment"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hepatic.bioavailability",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Rblood2plasma",
+  "Vdist")
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T

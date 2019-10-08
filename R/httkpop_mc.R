@@ -71,7 +71,7 @@
 #'
 #' @export httkpop_mc
 httkpop_mc <- function(model,
-                       samples,
+                       samples=1000,
                        httkpop.dt=NULL,
                        httkpop.generate.arg.list=list(
                           method='direct resampling',
@@ -124,7 +124,7 @@ httkpop_mc <- function(model,
   if (is.null(httkpop.dt))
     httkpop.dt <- do.call(
                         httkpop_generate,
-                        args=c(list(namp=samples),
+                        args=c(list(nsamp=samples),
                           httkpop.generate.arg.list))
 
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters

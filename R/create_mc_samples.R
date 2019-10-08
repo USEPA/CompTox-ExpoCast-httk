@@ -130,7 +130,7 @@ create_mc_samples <- function(chem.cas=NULL,
                         vary.params=list(),
                         return.samples=F,
                         tissue=NULL,
-                        httkpop.matrix=NULL,
+                        httkpop.dt=NULL,
                         invitro.mc.arg.list=list(
                           adjusted.Funbound.plasma=T,
                           poormetab=T,
@@ -240,7 +240,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        model=model,
                        samples=samples,
                        httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list=httkpop_generate.arg.list,
+                       httkpop.generate.arg.list=httkpop.generate.arg.list,
                        convert.httkpop.arg.list=convert.httkpop.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]

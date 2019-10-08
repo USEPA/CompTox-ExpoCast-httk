@@ -49,6 +49,8 @@ model.list[["3compartmentss"]]$required.params <- c(
 # If httk-pop is enabled:
 # Function fpr converting httk-pop physiology to model parameters:
 model.list[["3compartmentss"]]$convert.httkpop.func <- "convert_httkpop_3compss"
+# We want all the standard physiological calculations performed:
+model.list[["3compartmentss"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["3compartmentss"]]$httkpop.params <- c(
   "BW",
