@@ -40,12 +40,12 @@ convert_httkpop_3compss <- function(
 #      adjusted.Funbound.plasma=adjusted.Funbound.plasma)]
 
 # For models that don't described first pass blood flow from the gut, need the
-# unscaled hepatic clearanxce to cacluate a hepatic bioavailability 
+# unscaled hepatic clearance to cacluate a hepatic bioavailability 
 # (Rowland, 1973):      
   parameters.dt[, Clmetabolismc:=
-    httk::calc_hepatic_clearance(
+    httk::calc_hep_clearance(
       hepatic.model="unscaled",
-      parameters=calc_hep_params,
+      parameters=parameters.dt,
       suppress.messages=TRUE,
       clint.pvalue.threshold=clint.pvalue.threshold)]
     

@@ -298,7 +298,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   outlist <- c(outlist,
     list(Clint=Clint,
          Clint.dist = Clint.dist,
-         Clmetabolismc= as.numeric(calc_hepatic_clearance(
+         Clmetabolismc= as.numeric(calc_hep_clearance(
                                      hepatic.model="unscaled",
                                      parameters=list(
                                        Clint=Clint, #uL/min/10^6 cells

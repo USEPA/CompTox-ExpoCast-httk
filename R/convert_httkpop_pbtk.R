@@ -64,7 +64,7 @@ convert_httkpop_pbtk <- function(httk.pop.biomets,
       #Call HTTK function to compute total hepatic clearance, using unscaled
       #hepatic model.
       parameters.df[,
-                  Clmetabolismc:=httk::calc_hepatic_clearance(hepatic.model="unscaled",
+                  Clmetabolismc:=httk::calc_hep_clearance(hepatic.model="unscaled",
                                                               parameters=calc_hep_params,
                                                               suppress.messages=TRUE,
                                                               clint.pvalue.threshold=clint.pvalue.threshold)]

@@ -291,7 +291,7 @@ solve_model <- function(chem.name = NULL,
     }
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
+    parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
   }

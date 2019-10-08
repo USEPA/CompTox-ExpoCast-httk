@@ -62,7 +62,7 @@ calc_total_clearance<- function(chem.cas=NULL,
       parameters[['BW']]^0.25 #L/h/kgBW
     fup <- parameters[["Funbound.plasma"]]# unitless fraction
     clearance <- Qgfrc*fup+
-                   calc_hepatic_clearance(chem.cas=chem.cas,
+                   calc_hep_clearance(chem.cas=chem.cas,
                      chem.name=chem.name,
                      species=species,
                      parameters=parameters,
