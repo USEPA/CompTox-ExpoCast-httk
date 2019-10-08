@@ -62,7 +62,7 @@ calc_rblood2plasma <- function(
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  if (any(!is.null(chem.cas,chem.name,dtxsid)))
+  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,

@@ -23,10 +23,10 @@ get_invitroPK_param <- function(
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid) ) 
-    stop('Cchem.name, chem.cas, or dtxsid must be specified.')
+    stop('Chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  if (any(!is.null(chem.cas,chem.name,dtxsid)))
+  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,
