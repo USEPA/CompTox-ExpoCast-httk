@@ -129,7 +129,7 @@ parameterize_steadystate <- function(
   Qtotal.liverc <- subset(tissue.data,
                           tolower(Species) == tolower(species) & 
                           variable == 'Flow (mL/min/kg^(3/4))' & 
-                          Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
+                          Tissue == 'liver')[,'value']/1000*60/BW^(1/4)  #L/h/kg BW
   Vliverc <- subset(tissue.data,
                tolower(Species) == tolower(species) & 
                variable == 'Vol (L/kg)' & 
@@ -292,7 +292,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
   Params[["Funbound.plasma"]] <- fup.adjusted
   Params[["Funbound.plasma.dist"]] <- fup.dist
-  Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
+  Params[["Qtotal.liverc"]] <- Qtotal.liverc    #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
@@ -321,13 +321,12 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
-  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
+#  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
-    parameters=list(Qlivertot=Qliver,
+    parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg
                     Funbound.plasma=fup.adjusted,
-                    Clmetabolismc=cl/Params$BW,
-                    BW=Params$BW,
+                    Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]]),
     restrictive.clearance=restrictive.clearance)
 

@@ -121,7 +121,7 @@ lump_tissues <- function(Ktissue2pu.in,
         Ktissue2pu.out[["rest"]] <- 0
 			}
 # Every tissue not already lumped gets added to "Rest"
-			these.lumped.tissues <- unique(tissue.data[,'Tissue'])[!all.tissues]
+			these.lumped.tissues <- unique(tissue.data[, "Tissue"])[!all.tissues[unique(tissue.data[, "Tissue"])]]
 		}	else{
 			vol[[this.lumped.tissue]] <- 0
 			flow[[this.lumped.tissue]] <- 0

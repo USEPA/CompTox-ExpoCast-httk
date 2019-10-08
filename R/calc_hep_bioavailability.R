@@ -46,7 +46,7 @@
 #' @keywords physiology 
 #'
 #' @import utils
-#'
+#'                                                                 
 #' @export calc_hep_bioavailability 
 #'
 calc_hep_bioavailability <- function(
@@ -71,17 +71,17 @@ calc_hep_bioavailability <- function(
                     dtxsid=dtxsid)
   }
   
-  if (!all(c("Qlivertot","Funbound.plasma","Clmetabolismc","BW","Rblood2plasma") 
+  if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 
     stop("Missing needed parameters in calc_hepatic_bioavailability.")
 
-  if (restrictive.clearance) return(parameters$Qlivertot / 
-    (parameters$Qlivertot + 
+  if (restrictive.clearance) return(parameters$Qtotal.liverc / 
+    (parameters$Qtotal.liverc + 
     parameters$Funbound.plasma * 
-      parameters$Clmetabolismc*parameters$BW / 
+      parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
-  else return(parameters$Qlivertot / 
-    (parameters$Qlivertot + 
-      parameters$Clmetabolismc*parameters$BW / 
+  else return(parameters$Qtotal.liverc / 
+    (parameters$Qtotal.liverc + 
+      parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
-      }
+}
