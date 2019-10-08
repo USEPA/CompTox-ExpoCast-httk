@@ -4,7 +4,8 @@
 \alias{get_physchem_param}
 \title{Get physico-chemical parameters from chem.physical_and_invitro.data}
 \usage{
-get_physchem_param(param, chem.name = NULL, chem.CAS = NULL)
+get_physchem_param(param, chem.name = NULL, chem.CAS = NULL,
+  dtxsid = NULL)
 }
 \arguments{
 \item{param}{The desired parameters, a vector or single value.}
@@ -26,4 +27,7 @@ get_physchem_param(param = 'logP', chem.CAS = '80-05-7')
 get_physchem_param(param = c('logP','MW'), chem.CAS = c('80-05-7','81-81-2'))
 
 
+}
+\author{
+John Wambaugh and Robert Pearce
 }
