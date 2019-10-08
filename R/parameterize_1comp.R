@@ -97,7 +97,16 @@ parameterize_1comp <- function(
       is.null(chem.name) & 
       is.null(dtxsid)) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
-  
+
+# Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+     
   params <- list()
   params[['Vdist']] <- calc_vdist(
                          chem.cas=chem.cas,
@@ -180,8 +189,6 @@ parameterize_1comp <- function(
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   
-  if (is.null(chem.cas)) chem.cas <- get_invitroPK_id(
-                                      chem.name=chem.name)[['chem.cas']]
   params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
   
     Fgutabs <- try(

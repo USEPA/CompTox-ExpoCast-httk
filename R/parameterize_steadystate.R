@@ -98,7 +98,7 @@ parameterize_steadystate <- function(
     stop('chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  out <- get_invitroPK_id(
+  out <- get_chem_id(
           chem.cas=chem.cas,
           chem.name=chem.name,
           dtxsid=dtxsid)
