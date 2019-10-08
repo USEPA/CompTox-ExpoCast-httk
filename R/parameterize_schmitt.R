@@ -129,7 +129,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
               get_invitroPK_param(
                 "Funbound.plasma",
                 species,
-                chem.CAS=chem.cas,
+                chem.cas=chem.cas,
                 chem.name=chem.name,
                 dtxsid=dtxsid),
               silent=T)
@@ -139,7 +139,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 get_invitroPK_param(
                   "Funbound.plasma",
                   "Human",
-                  chem.CAS=chem.cas,
+                  chem.cas=chem.cas,
                   chem.name=chem.name,
                   dtxsid=dtxsid),
                 silent=T)
@@ -152,14 +152,14 @@ parameterize_schmitt <- function(chem.cas=NULL,
     if ("Fraction_unbound_plasma" %in% names(parameters))
       fup.db <- parameters$Fraction_unbound_plasma
   
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
   if (!is.null(parameters))
     if ("Pow" %in% names(parameters))
       Pow <- parameters$Pow
         
   pKa_Donor <- suppressWarnings(get_physchem_param(
                                     "pKa_Donor",
-                                    chem.CAS=chem.cas,
+                                    chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     dtxsid=dtxsid))
   if (!is.null(parameters))
@@ -168,7 +168,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
         
   pKa_Accept <- suppressWarnings(get_physchem_param(
                                      "pKa_Accept",
-                                     chem.CAS=chem.cas,
+                                     chem.cas=chem.cas,
                                      chem.name=chem.name,
                                      dtxsid=dtxsid))
   if (!is.null(parameters))
@@ -176,7 +176,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
       pKa_Accept <- parameters$pKa_Accept
   
   MA <- suppressWarnings(10^(get_physchem_param("logMA",
-          chem.CAS=chem.cas,
+          chem.cas=chem.cas,
           chem.name=chem.name,
           dtxsid=dtxsid))) 
   if (!is.null(parameters))

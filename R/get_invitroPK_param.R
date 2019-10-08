@@ -14,7 +14,7 @@ get_invitroPK_param <- function(
                     param,
                     species,
                     chem.name=NULL,
-                    chem.CAS=NULL,
+                    chem.cas=NULL,
                     dtxsid=NULL)
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
