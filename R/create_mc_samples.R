@@ -114,7 +114,7 @@
 #' }
 #'
 #' @import stats
-#' @export ceate_mo_samples
+#' @export create_mc_samples
 create_mc_samples <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,

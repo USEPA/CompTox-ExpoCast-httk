@@ -41,7 +41,7 @@
 #'
 #' @keywords httk-pop 1compartment
 #' @import utils
-#' @export convert_httkpop
+#' @export convert_httkpop_1comp
 convert_httkpop_1comp <- function(httk.pop.biomets,
                          chem.cas=NULL,
                          chem.name=NULL,

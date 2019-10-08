@@ -41,7 +41,7 @@
 #'
 #' @keywords httk-pop pbtk
 #' @import utils
-#' @export convert_httkpop  
+#' @export convert_httkpop_pbtk 
 convert_httkpop_pbtk <- function(httk.pop.biomets,
                          model,
                          chem.cas=NULL,

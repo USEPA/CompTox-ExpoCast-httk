@@ -69,7 +69,7 @@
 #' 
 #' @keywords httk-pop monte-carlo
 #'
-#' @export get_httk_params
+#' @export httkpop_mc
 httkpop_mc <- function(model,
                        samples,
                        httkpop.dt=NULL,
