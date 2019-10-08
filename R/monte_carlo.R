@@ -3,7 +3,7 @@
 #' This function performs Monte Carlo to assess uncertainty and variability for
 #' toxicokinetic models. 
 #' 
-#' @param params All parameters needed by the function indicated by the
+#' @param parameters All parameters needed by the function indicated by the
 #' argument "name.model". These paramters that are also listed in either
 #' cv.params or censored.params are sampled using Monte Carlo.
 #' @param which.quantile This argument specifies which quantiles are to be
@@ -54,7 +54,7 @@
 #' library(ggplot2)
 #' library(scales)
 #' vary.params <- NULL
-#' params <- parameterize_pbtk(chem.name = "Zoxamide")
+#' parameters <- parameterize_pbtk(chem.name = "Zoxamide")
 #' for(this.param in names(subset(params,
 #' names(params) != "Funbound.plasma"))) vary.params[this.param] <- .2
 #' censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
@@ -153,14 +153,14 @@
 #' @import stats msm data.table
 #' @export monte_carlo
 monte_carlo <- function(
-                 params,
+                 parameters,
                  cv.params=NULL,
                  censored.params=NULL,
                  samples=1000)
 {
 
 # Create a data table with the same parameters in every row:  
-  MC.matrix <- as.data.table(parameters.mean)[rep(1,samples)]
+  MC.matrix <- as.data.table(parameters)[rep(1,samples)]
 
 # Number of different results to be obtained for the different paramters:
   sample.vec <- rep(NA,samples)
@@ -189,7 +189,7 @@ Parameter value fixed at zero."))
     }
   }
   
-# Any parameter given in censored params is sampled from a censored distribution:
+# Any parameter given in censored parameters is sampled from a censored distribution:
   for (this.param in names(censored.params))
   {
     if (!(this.param %in% names(params))) 

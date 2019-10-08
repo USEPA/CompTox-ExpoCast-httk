@@ -173,5 +173,29 @@ model.list[["3compartment"]]$required.params <- c(
   "MW"
    )
 
+# If httk-pop is enabled:
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["3compartment"]]$convert.httkpop.func <- "convert_httkpop_3comp"
+# We want all the standard physiological calculations performed:
+model.list[["3compartment"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["3compartment"]]$httkpop.params <- c(
+  "BW",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qliverf",
+  "Vportvenc",
+  "Vliverc",
+  "Vsyscompc",
+  "Vportven",
+  "Vliver",
+  "Vsyscomp",
+  "Qcardiac",
+  "Qgfr",
+  "Qgut",
+  "Qliver",
+  "Ratioblood2plasma")
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["3compartment"]]$exclude.fup.zero <- T

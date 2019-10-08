@@ -326,10 +326,10 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qlivertot=Qliver,
                     Funbound.plasma=fup.adjusted,
-                    Clmetabolismc=Params$cl/Params$BW,
+                    Clmetabolismc=cl/Params$BW,
                     BW=Params$BW,
-                    Rb2p=Params[["Rblood2plasma"]]),
-    restrictive=restrictive)
+                    Rblood2plasma=Params[["Rblood2plasma"]]),
+    restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(Params)

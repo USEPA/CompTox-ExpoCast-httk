@@ -220,19 +220,31 @@ model.list[["pbtk"]]$required.params <- c(
   "MW"
    )
 
-
-#choose which parameters are not to be Monte Carlo sampled
-model.list[["pbtk"]]$noMC.params <- c(
-  'kgutabs',
-  'MW',
-  'Pow',
-  "MA",
-  'pKa_Donor',
-  'pKa_Accept',
-  "Fhep.assay.correction",
-  "Funbound.plasma.adjustment",
-  'Fgutabs'
-  )
-
+# If httk-pop is enabled:
+# Function fpr converting httk-pop physiology to model parameters:
+model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
+# We want all the standard physiological calculations performed:
+model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["pbtk"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
+  
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T
