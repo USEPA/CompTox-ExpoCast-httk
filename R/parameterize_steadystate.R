@@ -300,9 +300,9 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
     get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  Params[["Fhep.assay.correction"]] <- calc_hep_fu(Pow,
+  Params[["Fhep.assay.correction"]] <- calc_hep_fu(parameters=list(Pow=Pow,
                                          pKa_Donor=pKa_Donor,
-                                         pKa_Accept=pKa_Accept) # fraction 
+                                         pKa_Accept=pKa_Accept)) # fraction 
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
@@ -311,7 +311,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
             species=species,
-            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+            adjusted.Funbound.plasma=fup.adjusted,
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
 
@@ -325,7 +325,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
 
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qlivertot=Qliver,
-                    Funbound.plasmafup.adjusted,
+                    Funbound.plasma=fup.adjusted,
                     Clmetabolismc=Params$cl/Params$BW,
                     BW=Params$BW,
                     Rb2p=Params[["Rblood2plasma"]]),
