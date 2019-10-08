@@ -262,28 +262,28 @@ calc_mc_css <- function(chem.cas=NULL,
       paste(names(model.list),collapse=", ")))
   } 
   
-  if (!is.null(IVIVE)) 
-  {
-    out <- honda.ivive(method=IVIVE,tissue=tissue)
-    restrictive.clearance <- out[["restrictive.clearance"]]
-    tissue <- out[["tissue"]]
-    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
-    concentration <- out[["concentration"]]
-  }
-  
-  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
-     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
-  ){
-    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
-         Ctissue * Funbound.plasma is not a relevant concentration.\n
-         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
-  }
-  
-  if(!is.null(tissue) & tolower(concentration) != "tissue"){
-    concentration <- "tissue"
-    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
-  }
-
+#  if (!is.null(IVIVE)) 
+#  {
+#    out <- honda.ivive(method=IVIVE,tissue=tissue)
+#    restrictive.clearance <- out[["restrictive.clearance"]]
+#    tissue <- out[["tissue"]]
+#    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+#    concentration <- out[["concentration"]]
+#  }
+#  
+#  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+#     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
+#  ){
+#    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
+#         Ctissue * Funbound.plasma is not a relevant concentration.\n
+#         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
+#  }
+#  
+#  if(!is.null(tissue) & tolower(concentration) != "tissue"){
+#    concentration <- "tissue"
+#    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
+#  }
+#
   
 #
 #
@@ -292,7 +292,7 @@ calc_mc_css <- function(chem.cas=NULL,
 #
 #
   parameter.matrix <- create_mc_samples(
-                        chem.cas=chem.casL,
+                        chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid = dtxsid,
                         parameters=parameters,
@@ -309,13 +309,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         invitro.mc.arg.list=invitro.mc.arg.list,
                         httkpop.generate.arg.list=httkpop.generate.arg.list,
                         convert.httkpop.arg.list=convert.httkpop.arg.list,
-                        parameterize.arg.list=list(
-                          default.to.human=
-                            parameterize.arg.list$default.to.human,
-                          clint.pvalue.threshold=
-                            parameterize.arg.list$clint.pvalue.threshold,
-                          restrictive.clearance==
-                            restrictive.clearance))
+                        parameterize.arg.list=parameterize.arg.list)
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:

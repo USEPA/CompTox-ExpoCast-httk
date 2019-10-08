@@ -71,7 +71,7 @@ calc_vdist<- function(chem.cas=NULL,
 if (is.null(parameters))
   {
     # Look up the chemical name/CAS, depending on what was provide:
-    out <- get_invitroPK_id(
+    out <- get_chem_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid)
