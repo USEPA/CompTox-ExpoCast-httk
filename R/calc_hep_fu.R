@@ -53,16 +53,6 @@ calc_hep_fu <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  if (is.null(model)) stop("Model must be specified.")
-# We need to know model-specific information (from modelinfo_[MODEL].R]) 
-# to set up the solver:
-  model <- tolower(model)
-  if (!(model %in% names(model.list)))            
-  {
-    stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
-  }
-
   if (is.null(parameters))
   {
     parameters <- parameterize_pbtk(

@@ -84,4 +84,4 @@ calc_hep_bioavailability <- function(
     (parameters$Qlivertot + 
       parameters$Clmetabolismc*parameters$BW / 
       parameters$Rblood2plasma))
-}
+      }
