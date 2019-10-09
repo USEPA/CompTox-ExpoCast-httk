@@ -163,7 +163,8 @@ create_mc_samples <- function(chem.cas=NULL,
                         convert.httkpop.arg.list=list(),
                         parameterize.arg.list=list(
                           default.to.human=F,
-                          clint.pvalue.threshold=0.05))
+                          clint.pvalue.threshold=0.05,
+                          regression=T))
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -191,8 +192,18 @@ create_mc_samples <- function(chem.cas=NULL,
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=c(list(chem.cas=chem.cas,
                              chem.name=chem.name,
-                             dtxsid=dtxsid),
+                             dtxsid=dtxsid,
+                             species=species),
                              parameterize.arg.list))
+    pschmitt <- httk::parameterize_schmitt(
+                  chem.cas=chem.cas,
+                  chem.name,
+                  dtxsid=dtxsid,
+                  species=species,
+                  suppress.messages=T)
+# The Schmitt parameters are useful if we need to redo partitioning later:
+    pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
+    parameters.mean <- c(parameters.mean, pschmitt)
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
@@ -278,17 +289,6 @@ Set species=\"Human\" to run httkpop model.')
 #
 #
 
-# For models with tissue-to-plasma partition coefficients we neeed to calculate
-# them for each individual because each individual has a different 
-# Funbound.plasma value:
-  pschmitt <- httk::parameterize_schmitt(
-                chem.cas=chem.cas,
-                chem.name,
-                dtxsid=dtxsid,
-                parameters=parameters.dt,
-                species=species)
-  parameters.dt <- cbind(parameters.dt,pschmitt)
-
   if (model.list[[model]]$calcpc | calcrb2p)
   { 
 #Now, predict the partitioning coefficients using Schmitt's method. The
@@ -296,13 +296,14 @@ Set species=\"Human\" to run httkpop model.')
 #tissue-to-plasma partitioning coefficient, and one element of each vector
 #for each individual. The list element names specify which partition
 #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- httk::predict_partitioning_schmitt(parameters=parameters.dt,
-                                              chem.name=chem.name,
-                                              chem.cas=this.chem,
-                                              dtxsid=dtxsid,
-                                              species=species,
-                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                              regression=T)
+    PCs <- httk::predict_partitioning_schmitt(
+             parameters=parameters.dt,
+             chem.name=chem.name,
+             chem.cas=this.chem,
+             dtxsid=dtxsid,
+             species=species,
+             adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
+             regression=parameterize.arg.list$regression)
   }
 
   if (model.list[[model]]$calcpc)
@@ -316,7 +317,7 @@ Set species=\"Human\" to run httkpop model.')
   # Lump the tissues, depending on model. tissues is a list of all the 
   # unlumped compartments, all other tissues will be lumped into a "rest" 
   # compartment.
-      tissue.list <- model.table[model]$tissues
+      tissue.list <- model.list[model]$tissues
       if (!is.null(tissue.list))
       {
   # Check to make sure that all the requested tissues are available:

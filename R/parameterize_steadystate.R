@@ -79,7 +79,8 @@ parameterize_steadystate <- function(
                               restrictive.clearance=T,
                               fup.lod.default=0.005,
                               suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD

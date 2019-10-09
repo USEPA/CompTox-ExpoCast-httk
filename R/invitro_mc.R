@@ -72,13 +72,16 @@ invitro_mc <- function(parameters.dt=NULL,
   Funbound.plasma.dist<-fup.sd<-NULL
   #End R CMD CHECK appeasement.
 
+  if (!("Funbound.plasma") %in% names(parameters.dt))
+    stop("Funbound.plasma needed in invitro_mc.")
+
   if (any(!(c(
-    "Funbound.plasma",
     "Clint",
     "pKa_Donor",
     "pKa_Accept",
-    "Pow") %in% names(parameters.dt))))
-    stop("Funbound.plasma, Clint, pKa_Donor, pKa_Accept, Pow needed in invitro_mc.")
+    "Pow") %in% names(parameters.dt))) &
+    !("Dow74" %in% names(parameters.dt)))
+    stop("Either Dow74 or Clint, pKa_Donor, pKa_Accept and Pow needed in invitro_mc.")
 
   if (!"Dow74"%in%names(parameters.dt))
   {
@@ -113,10 +116,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (!is.na(parameters.dt$Clint.dist))
+  else if (!is.na(parameters.dt$Clint.dist[1]))
   {
-    if (nchar(parameters.dt$Clint.dist) -
-      nchar(gsub(",","",parameters.dt$Clint.dist))!=3) 
+    if (nchar(parameters.dt$Clint.dist[1]) -
+      nchar(gsub(",","",parameters.dt$Clint.dist[1]))!=3) 
     {
       stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
     }
@@ -191,10 +194,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  } else if(!is.na(parameters.dt$Funbound.plasma.dist))
+  } else if(!is.na(parameters.dt$Funbound.plasma.dist[1]))
   {
-    if (nchar(parameters.dt$Funbound.plasma.dist) - 
-      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist))!=2)
+    if (nchar(parameters.dt$Funbound.plasma.dist[1]) - 
+      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist[1]))!=2)
     {
       stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
     }

@@ -62,6 +62,7 @@
 #' @export predict_partitioning_schmitt
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
+                                         dtxsid=NULL,
                                          species='Human',
                                          default.to.human=F,
                                          parameters=NULL,
@@ -93,8 +94,10 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   
   if (is.null(parameters))
   {
-    parameters <- parameterize_schmitt(chem.name=chem.name,
+    parameters <- parameterize_schmitt(
+                    chem.name=chem.name,
                     chem.cas=chem.cas,
+                    dtxsid=dtxsid,
                     species=species,
                     default.to.human=default.to.human,
                     minimum.Funbound.plasma=minimum.Funbound.plasma)

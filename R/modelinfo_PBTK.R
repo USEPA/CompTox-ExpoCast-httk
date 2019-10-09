@@ -245,6 +245,9 @@ model.list[["pbtk"]]$httkpop.params <- c(
   "Vlungc",
   "Vrestc",
   "Vvenc")
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["pbtk"]]$calcpc <- TRUE
   
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

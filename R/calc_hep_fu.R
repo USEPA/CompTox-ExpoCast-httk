@@ -78,7 +78,8 @@ calc_hep_fu <- function(
   } else logPD <- log10(Pow)
   
   fu_hep <- 1/(1+ 125*Vr*10^(0.072*logPD^2+0.067*logPD-1.126))
-  if (fu_hep <0 | fu_hep>1) fu_hep <- 1
+# Vectorized check to keep fu_hep within bounds:
+  fu_hep[fu_hep <0 | fu_hep>1] <- 1
   
   return(fu_hep)
 }

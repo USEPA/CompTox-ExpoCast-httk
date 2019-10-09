@@ -41,7 +41,7 @@
 calc_rblood2plasma <- function(
                         chem.cas=NULL,
                         chem.name=NULL,
-                        dtxisd=NULL,
+                        dtxsid=NULL,
                         parameters=NULL,
                         hematocrit=NULL,
                         Krbc2pu=NULL,
