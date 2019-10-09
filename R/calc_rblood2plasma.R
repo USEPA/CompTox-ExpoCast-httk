@@ -49,7 +49,7 @@ calc_rblood2plasma <- function(
                         default.to.human=F,
                         species="Human",
                         adjusted.Funbound.plasma=T,
-                        suppress.messages=F)
+                        suppress.messages=T)
 {
   physiology.data <- physiology.data
 
@@ -62,7 +62,7 @@ calc_rblood2plasma <- function(
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+  if (any(!is.null(chem.cas),!is.null(chem.name),!is.null(dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,
@@ -113,24 +113,31 @@ calc_rblood2plasma <- function(
   
 # Predict the PCs for all tissues in the tissue.data table:
 
-  if (is.null(parameters$Krbc2pu))
+  if (is.null(parameters$Krbc2pu)&is.null(Krbc2pu))
   {
     PCs <- predict_partitioning_schmitt(parameters=parameters,
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-           tissues='red blood cells')  #regression not applied to Krbc2pu
+           tissues='red blood cells',
+           suppress.messages=suppress.messages)  #regression not applied to Krbc2pu
     parameters$Krbc2pu <- PCs$Krbc2pu
-  }  
+  } else if (!is.null(Krbc2pu))
+  {
+    parameters$Krbc2pu <- Krbc2pu
+  } 
   
   
   
-  if  (adjusted.Funbound.plasma) 
+  if (adjusted.Funbound.plasma) 
+  {
     Rblood2plasma = 1 - 
       hematocrit + 
-      hematocrit * PCs[["Krbc2pu"]] * parameters$Funbound.plasma
-  else Rblood2plasma = 1 - 
+      hematocrit * parameters$Krbc2pu * parameters$Funbound.plasma
+  } else { 
+    Rblood2plasma = 1 - 
       hematocrit + 
-      hematocrit * PCs[["Krbc2pu"]] * parameters$unadjusted.Funbound.plasma
+      hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
+  }
     
   return(as.numeric(Rblood2plasma))
 }

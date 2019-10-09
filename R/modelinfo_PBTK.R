@@ -247,5 +247,9 @@ model.list[["pbtk"]]$httkpop.params <- c(
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["pbtk"]]$calcpc <- TRUE
   
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["pbtk"]]$firstpass <- FALSE
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

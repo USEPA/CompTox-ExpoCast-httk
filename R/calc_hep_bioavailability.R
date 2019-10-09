@@ -54,7 +54,8 @@ calc_hep_bioavailability <- function(
                          chem.name=NULL,
                          dtxsid = NULL,
                          parameters=NULL,
-                         restrictive.clearance=T)
+                         restrictive.clearance=T,
+                         flow.34=F)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -74,6 +75,12 @@ calc_hep_bioavailability <- function(
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 
     stop("Missing needed parameters in calc_hepatic_bioavailability.")
+
+  if (flow.34 & !("BW" %in% names(parameters))) 
+    stop("flow.34=TRUE and missing BW in calc_hepatic_bioavailability.")
+  else {
+    parameters$Qtotal.liverc/parameters$BW^0.25
+  }
 
   if (restrictive.clearance) return(parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 

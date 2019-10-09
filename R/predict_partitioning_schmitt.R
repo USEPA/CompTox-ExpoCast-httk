@@ -213,14 +213,8 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 		pH <- as.numeric(subset(this.subset,variable=='pH')[,'value'])
 
 		# neutral phospholipid:water parition coefficient:
-		if (is.null(parameters$MA))
-		{     
-			Kn_PL <- 10^(1.294 + 0.304 * log10(parameters$Pow))
-		}else if(is.na(parameters$MA)){
- 	    Kn_PL <- 10^(1.294 + 0.304 * log10(parameters$Pow))
-    }else{
-			Kn_PL <- parameters$MA
-		}
+	  Kn_PL <- parameters$MA
+    Kn_PL[is.null(Kn_PL)] <- 10^(1.294 + 0.304 * log10(parameters$Pow))
 
     # Need to calculate the amount of un-ionized parent:
     ionization <- calc_ionization(pH=pH,parameters=parameters)
