@@ -298,6 +298,10 @@ Set species=\"Human\" to run httkpop model.')
 #
 #
 
+# Do we need to calculate first pass metabolism for this model (i.e., is flow
+# from the gut into the liver not included in the model)
+  firstpass <- model.list[[model]]$firstpass
+
   if (model.list[[model]]$calcpc | calcrb2p | firstpass)
   { 
 #Now, predict the partitioning coefficients using Schmitt's method. The
@@ -319,88 +323,11 @@ Set species=\"Human\" to run httkpop model.')
 # separately in case rest of body organ volumes or PCs vary:
   if (model.list[[model]]$calcpc)
   {
-     browser()
      lumptissues <- lump_tissues(
                       PCs,
                       parameters=parameters.dt,
                       tissuelist=model.list[[model]]$tissue.list,
                       species=species)
-  
-#  
-#    # List all tissues for which HTTK has human tissue information. 
-#    # This will be used in lumping.  
-#      tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
-#    # We don't use these tissues for lumping:
-#      tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
-#  
-#  # Lump the tissues, depending on model. tissues is a list of all the 
-#  # unlumped compartments, all other tissues will be lumped into a "rest" 
-#  # compartment.
-#      tissue.list <- model.list[model]$tissues
-#      if (!is.null(tissue.list))
-#      {
-#  # Check to make sure that all the requested tissues are available:
-#        if (any(!(tissue.list %in% tissuenames))) stop(paste(
-#                                                    "Requested tissue(s)",
-#                                                    paste(tissue.list[
-#                                                      !(tissue.list %in% 
-#                                                      tissuenames)],
-#                                                      collapse=", "),
-#                                                    "are not in tissue.data."))
-#      
-#      #Now get the list of tissues to be lumped: that is, everything in
-#      #tissuenames that wasn't in the list of compartments for this model.
-#      rest.tissues <- tissuenames[!(tissuenames %in%
-#                                      c(tissue.list,
-#                                        'red blood cells'))]
-#      #Lump the volumes by simply summing them.
-#      vol.restc <- parameters.dt[,
-#                               Reduce('+', .SD),
-#                               .SDcols=paste0('V',
-#                                              rest.tissues,
-#                                              'c')]
-#      #Lump the flows by summing them.
-#      flow.restf <- parameters.dt[,
-#                                Reduce('+', .SD),
-#                                .SDcols=paste0('Q',
-#                                               rest.tissues,
-#                                               'f')]
-#      #Lumped partition coefficient: sum partition coefficients of rest.tissues,
-#      #weighted by their volumes; then divide by total lumped volume.
-#      Krest2pu <- Reduce('+',
-#                             lapply(as.list(rest.tissues),
-#                                    function(x) PCs[[paste0('K',
-#                                                            x,
-#                                                            '2pu')]]*
-#                                      unlist(parameters.dt[,
-#                                                         paste0('V',
-#                                                                x,
-#                                                                'c'),
-#                                                         with=FALSE])
-#                             )
-#      )/vol.restc
-#  
-#      #Add lumped volumes, flows, and partition coefficients to population
-#      #data.table
-#      parameters.dt[, Vrestc:=vol.restc]
-#      parameters.dt[, Qrestf:=flow.restf]
-#      parameters.dt[, Krest2pu:=Krest2pu]
-#      if (!(length(tissue.list)==0))
-#      {
-#        #For enumerated tissue compartments (if any), add their partitition
-#        #coefficients to the population data.table as well.
-#  
-#        #First get the vector of partition coefficient names
-#        #(names of elements of PCs)
-#        knames <- paste0('K',
-#                         tissue.list,
-#                         '2pu')
-#        #Then add them to the population data.table. data.table syntax: wrap
-#        #vector of column names in parentheses to assign to multiple columns at
-#        #once
-#        parameters.dt[, (knames):=PCs[knames]]
-#      }
-#    }
   }
 
   if (calcrb2p | firstpass)
@@ -420,7 +347,7 @@ Set species=\"Human\" to run httkpop model.')
 # For models that don't described first pass blood flow from the gut, need the
 # total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
     if (!("Qtotal.liverc" %in% names(parameters.dt)))
-      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h/kgBW
+      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)/BW^1/4] # L/h/kgBW
   
 # For models that don't described first pass blood flow from the gut, need the
 # unscaled hepatic clearance to cacluate a hepatic bioavailability 
@@ -435,9 +362,19 @@ Set species=\"Human\" to run httkpop model.')
           
     parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
                                                 parameters=parameters.dt)]
+  cl <- calc_hep_clearance(parameters=Params,
+          hepatic.model='unscaled',
+          suppress.messages=T)#L/h/kg body weight
+#  Qliver <- Params$Qtotal.liverc / Params$BW^.2
+  parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
+    parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg
+                    Funbound.plasma=fup.adjusted,
+                    Clmetabolismc=cl, # L/h/kg
+                    Rblood2plasma=Params[["Rblood2plasma"]]),
+    restrictive.clearance=restrictive.clearance) 
   }
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[, parameter.names])
+  return(parameters.dt[,..parameter.names])
 }

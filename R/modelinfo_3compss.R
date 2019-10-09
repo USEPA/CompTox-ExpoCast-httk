@@ -66,8 +66,10 @@ model.list[["3compartmentss"]]$httkpop.params <- c(
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["3compartmentss"]]$calcpc <- TRUE
 
-# Function fpr converting in vitro measurments to model parameters:
-model.list[["3compartmentss"]]$convert.invitro.func <- NULL
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["3compartmentss"]]$firstpass <- TRUE
+
 # These model parameters are impacted by the in vitro measurements:
 model.list[["3compartmentss"]]$invitro.params <- c("BW",
                        "Clint",
