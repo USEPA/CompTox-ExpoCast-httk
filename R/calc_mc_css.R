@@ -185,6 +185,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         return.samples=F,
                         tissue=NULL,
                         httkpop.matrix=NULL,
+                        output.units="mg/L",
                         invitro.mc.arg.list=list(
                           adjusted.Funbound.plasma=T,
                           poormetab=T,
@@ -218,10 +219,10 @@ calc_mc_css <- function(chem.cas=NULL,
                         parameterize.arg.list=list(
                           default.to.human=F,
                           clint.pvalue.threshold=0.05,
+                          restrictive.clearance = T,
                           regression=T),
                         calc.analytic.css.arg.list=list(
                           daily.dose=1,
-                          output.units="mg/L",
                           well.stirred.correction=T,
                           adjusted.Funbound.plasma=T,
                           regression=T,
@@ -241,7 +242,8 @@ calc_mc_css <- function(chem.cas=NULL,
                              chem.cas=chem.cas,
                              chem.name=chem.name,
                              dtxsid=dtxsid,
-                             clint.pvalue.threshold=clint.pvalue.threshold),
+                             clint.pvalue.threshold=
+                               parameterize.arg.list$clint.pvalue.threshold),
                              calc.analytic.css.arg.list))
     return(css)
   }
@@ -262,30 +264,7 @@ calc_mc_css <- function(chem.cas=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
-  
-#  if (!is.null(IVIVE)) 
-#  {
-#    out <- honda.ivive(method=IVIVE,tissue=tissue)
-#    restrictive.clearance <- out[["restrictive.clearance"]]
-#    tissue <- out[["tissue"]]
-#    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
-#    concentration <- out[["concentration"]]
-#  }
-#  
-#  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
-#     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
-#  ){
-#    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
-#         Ctissue * Funbound.plasma is not a relevant concentration.\n
-#         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
-#  }
-#  
-#  if(!is.null(tissue) & tolower(concentration) != "tissue"){
-#    concentration <- "tissue"
-#    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
-#  }
-#
-  
+    
 #
 #
 # CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
@@ -318,7 +297,20 @@ calc_mc_css <- function(chem.cas=NULL,
 # Calculate CSS for each row in the parameter matrix (each row corresponds to
 # a different individual):
 #
-  css.list <- apply(parameter.matrix,1,css_apply) 
+
+  parameter.matrix[,Css:= do.call(calc_analytic_css,
+                            args=c(list(parameters=.SD,
+                              model=model,
+                              suppress.messages=T,
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              output.units=output.units,
+                              clint.pvalue.threshold=
+                                parameterize.arg.list$clint.pvalue.threshold),
+                              calc.analytic.css.arg.list))]
+
+  css.list <- parameter.matrix$Css 
   
   if (!suppress.messages & !return.samples)
   {
@@ -356,4 +348,6 @@ calc_mc_css <- function(chem.cas=NULL,
       out <- css.list
     }
   }
+  
+  return(out)
 }

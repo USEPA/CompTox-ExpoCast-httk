@@ -130,7 +130,7 @@ parameterize_steadystate <- function(
   Qtotal.liverc <- subset(tissue.data,
                           tolower(Species) == tolower(species) & 
                           variable == 'Flow (mL/min/kg^(3/4))' & 
-                          Tissue == 'liver')[,'value']/1000*60/BW^(1/4)  #L/h/kg BW
+                          Tissue == 'liver')[,'value']/1000*60 #L/h/(kg BW)^3/4
   Vliverc <- subset(tissue.data,
                tolower(Species) == tolower(species) & 
                variable == 'Vol (L/kg)' & 
@@ -325,7 +325,7 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
 #  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
-    parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg
+    parameters=list(Qtotal.liverc=Qtotal.liverc/BW^(3/4), # L/h/kg
                     Funbound.plasma=fup.adjusted,
                     Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]]),
