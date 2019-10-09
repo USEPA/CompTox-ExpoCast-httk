@@ -166,6 +166,13 @@ create_mc_samples <- function(chem.cas=NULL,
                           clint.pvalue.threshold=0.05,
                           regression=T))
 {
+
+#
+#
+# ERROR CHECKING AND INITIALIZATION:
+#
+#
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -195,6 +202,7 @@ create_mc_samples <- function(chem.cas=NULL,
                              dtxsid=dtxsid,
                              species=species),
                              parameterize.arg.list))
+    parameter.names <- names(parameters.mean)
     pschmitt <- httk::parameterize_schmitt(
                   chem.cas=chem.cas,
                   chem.name,
@@ -245,6 +253,7 @@ create_mc_samples <- function(chem.cas=NULL,
 # httk-pop (Ring et al., 2017)
 #
 #
+
   if (httkpop==T & tolower(species)=="human")
   {
     physiology.dt <- httkpop_mc(
@@ -289,7 +298,7 @@ Set species=\"Human\" to run httkpop model.')
 #
 #
 
-  if (model.list[[model]]$calcpc | calcrb2p)
+  if (model.list[[model]]$calcpc | calcrb2p | firstpass)
   { 
 #Now, predict the partitioning coefficients using Schmitt's method. The
 #result will be a list of numerical vectors, one vector for each
@@ -306,85 +315,95 @@ Set species=\"Human\" to run httkpop model.')
              regression=parameterize.arg.list$regression)
   }
 
+# If the model uses partion coefficients we need to lump each individual
+# separately in case rest of body organ volumes or PCs vary:
   if (model.list[[model]]$calcpc)
   {
-    # List all tissues for which HTTK has human tissue information. 
-    # This will be used in lumping.  
-      tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
-    # We don't use these tissues for lumping:
-      tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
+     browser()
+     lumptissues <- lump_tissues(
+                      PCs,
+                      parameters=parameters.dt,
+                      tissuelist=model.list[[model]]$tissue.list,
+                      species=species)
   
-  # Lump the tissues, depending on model. tissues is a list of all the 
-  # unlumped compartments, all other tissues will be lumped into a "rest" 
-  # compartment.
-      tissue.list <- model.list[model]$tissues
-      if (!is.null(tissue.list))
-      {
-  # Check to make sure that all the requested tissues are available:
-        if (any(!(tissue.list %in% tissuenames))) stop(paste(
-                                                    "Requested tissue(s)",
-                                                    paste(tissue.list[
-                                                      !(tissue.list %in% 
-                                                      tissuenames)],
-                                                      collapse=", "),
-                                                    "are not in tissue.data."))
-      
-      #Now get the list of tissues to be lumped: that is, everything in
-      #tissuenames that wasn't in the list of compartments for this model.
-      rest.tissues <- tissuenames[!(tissuenames %in%
-                                      c(tissue.list,
-                                        'red blood cells'))]
-      #Lump the volumes by simply summing them.
-      vol.restc <- parameters.dt[,
-                               Reduce('+', .SD),
-                               .SDcols=paste0('V',
-                                              rest.tissues,
-                                              'c')]
-      #Lump the flows by summing them.
-      flow.restf <- parameters.dt[,
-                                Reduce('+', .SD),
-                                .SDcols=paste0('Q',
-                                               rest.tissues,
-                                               'f')]
-      #Lumped partition coefficient: sum partition coefficients of rest.tissues,
-      #weighted by their volumes; then divide by total lumped volume.
-      Krest2pu <- Reduce('+',
-                             lapply(as.list(rest.tissues),
-                                    function(x) PCs[[paste0('K',
-                                                            x,
-                                                            '2pu')]]*
-                                      unlist(parameters.dt[,
-                                                         paste0('V',
-                                                                x,
-                                                                'c'),
-                                                         with=FALSE])
-                             )
-      )/vol.restc
-  
-      #Add lumped volumes, flows, and partition coefficients to population
-      #data.table
-      parameters.dt[, Vrestc:=vol.restc]
-      parameters.dt[, Qrestf:=flow.restf]
-      parameters.dt[, Krest2pu:=Krest2pu]
-      if (!(length(tissue.list)==0))
-      {
-        #For enumerated tissue compartments (if any), add their partitition
-        #coefficients to the population data.table as well.
-  
-        #First get the vector of partition coefficient names
-        #(names of elements of PCs)
-        knames <- paste0('K',
-                         tissue.list,
-                         '2pu')
-        #Then add them to the population data.table. data.table syntax: wrap
-        #vector of column names in parentheses to assign to multiple columns at
-        #once
-        parameters.dt[, (knames):=PCs[knames]]
-      }
-    }
+#  
+#    # List all tissues for which HTTK has human tissue information. 
+#    # This will be used in lumping.  
+#      tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
+#    # We don't use these tissues for lumping:
+#      tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
+#  
+#  # Lump the tissues, depending on model. tissues is a list of all the 
+#  # unlumped compartments, all other tissues will be lumped into a "rest" 
+#  # compartment.
+#      tissue.list <- model.list[model]$tissues
+#      if (!is.null(tissue.list))
+#      {
+#  # Check to make sure that all the requested tissues are available:
+#        if (any(!(tissue.list %in% tissuenames))) stop(paste(
+#                                                    "Requested tissue(s)",
+#                                                    paste(tissue.list[
+#                                                      !(tissue.list %in% 
+#                                                      tissuenames)],
+#                                                      collapse=", "),
+#                                                    "are not in tissue.data."))
+#      
+#      #Now get the list of tissues to be lumped: that is, everything in
+#      #tissuenames that wasn't in the list of compartments for this model.
+#      rest.tissues <- tissuenames[!(tissuenames %in%
+#                                      c(tissue.list,
+#                                        'red blood cells'))]
+#      #Lump the volumes by simply summing them.
+#      vol.restc <- parameters.dt[,
+#                               Reduce('+', .SD),
+#                               .SDcols=paste0('V',
+#                                              rest.tissues,
+#                                              'c')]
+#      #Lump the flows by summing them.
+#      flow.restf <- parameters.dt[,
+#                                Reduce('+', .SD),
+#                                .SDcols=paste0('Q',
+#                                               rest.tissues,
+#                                               'f')]
+#      #Lumped partition coefficient: sum partition coefficients of rest.tissues,
+#      #weighted by their volumes; then divide by total lumped volume.
+#      Krest2pu <- Reduce('+',
+#                             lapply(as.list(rest.tissues),
+#                                    function(x) PCs[[paste0('K',
+#                                                            x,
+#                                                            '2pu')]]*
+#                                      unlist(parameters.dt[,
+#                                                         paste0('V',
+#                                                                x,
+#                                                                'c'),
+#                                                         with=FALSE])
+#                             )
+#      )/vol.restc
+#  
+#      #Add lumped volumes, flows, and partition coefficients to population
+#      #data.table
+#      parameters.dt[, Vrestc:=vol.restc]
+#      parameters.dt[, Qrestf:=flow.restf]
+#      parameters.dt[, Krest2pu:=Krest2pu]
+#      if (!(length(tissue.list)==0))
+#      {
+#        #For enumerated tissue compartments (if any), add their partitition
+#        #coefficients to the population data.table as well.
+#  
+#        #First get the vector of partition coefficient names
+#        #(names of elements of PCs)
+#        knames <- paste0('K',
+#                         tissue.list,
+#                         '2pu')
+#        #Then add them to the population data.table. data.table syntax: wrap
+#        #vector of column names in parentheses to assign to multiple columns at
+#        #once
+#        parameters.dt[, (knames):=PCs[knames]]
+#      }
+#    }
   }
 
-  if (calcrb2p)
+  if (calcrb2p | firstpass)
   {
     parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
@@ -400,24 +419,25 @@ Set species=\"Human\" to run httkpop model.')
   
 # For models that don't described first pass blood flow from the gut, need the
 # total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
-  if (!("Qtotal.liverc" %in% names(parameters.dt)))
-    parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h
+    if (!("Qtotal.liverc" %in% names(parameters.dt)))
+      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h/kgBW
   
 # For models that don't described first pass blood flow from the gut, need the
 # unscaled hepatic clearance to cacluate a hepatic bioavailability 
 # (Rowland, 1973):      
-  if (!("CLmetabolismc" %in% names(parameters.dt)))
-    parameters.dt[, Clmetabolismc:=
-      httk::calc_hep_clearance(
-        hepatic.model="unscaled",
-        parameters=parameters.dt,
-        suppress.messages=TRUE,
-        clint.pvalue.threshold=clint.pvalue.threshold)]
+    if (!("CLmetabolismc" %in% names(parameters.dt)))
+      parameters.dt[, Clmetabolismc:=
+        httk::calc_hep_clearance(
+          hepatic.model="unscaled",
+          parameters=parameters.dt,
+          suppress.messages=TRUE,
+          clint.pvalue.threshold=clint.pvalue.threshold)] # L/h/kgBW
+          
     parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-                                      parameters=parameters.dt)]
+                                                parameters=parameters.dt)]
   }
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[, names(parameters.mean)])
+  return(parameters.dt[, parameter.names])
 }
