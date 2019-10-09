@@ -162,6 +162,7 @@ create_mc_samples <- function(chem.cas=NULL,
                             "Other")),
                         convert.httkpop.arg.list=list(),
                         parameterize.arg.list=list(
+                          restrictive.clearance = T,
                           default.to.human=F,
                           clint.pvalue.threshold=0.05,
                           regression=T))
@@ -327,7 +328,8 @@ Set species=\"Human\" to run httkpop model.')
                       PCs,
                       parameters=parameters.dt,
                       tissuelist=model.list[[model]]$tissue.list,
-                      species=species)
+                      species=species
+                      )
   }
 
   if (calcrb2p | firstpass)
@@ -347,31 +349,22 @@ Set species=\"Human\" to run httkpop model.')
 # For models that don't described first pass blood flow from the gut, need the
 # total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
     if (!("Qtotal.liverc" %in% names(parameters.dt)))
-      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)/BW^1/4] # L/h/kgBW
+      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h/(kgBW)^3/4
   
 # For models that don't described first pass blood flow from the gut, need the
 # unscaled hepatic clearance to cacluate a hepatic bioavailability 
 # (Rowland, 1973):      
-    if (!("CLmetabolismc" %in% names(parameters.dt)))
-      parameters.dt[, Clmetabolismc:=
-        httk::calc_hep_clearance(
-          hepatic.model="unscaled",
-          parameters=parameters.dt,
-          suppress.messages=TRUE,
-          clint.pvalue.threshold=clint.pvalue.threshold)] # L/h/kgBW
-          
-    parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-                                                parameters=parameters.dt)]
-  cl <- calc_hep_clearance(parameters=Params,
+  cl <- calc_hep_clearance(parameters=parameters.dt,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
-#  Qliver <- Params$Qtotal.liverc / Params$BW^.2
+
   parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-    parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg
-                    Funbound.plasma=fup.adjusted,
-                    Clmetabolismc=cl, # L/h/kg
-                    Rblood2plasma=Params[["Rblood2plasma"]]),
-    restrictive.clearance=restrictive.clearance) 
+    parameters=list(
+      Qtotal.liverc=parameters.dt$Qtotal.liverc/parameters.dt$BW^1/4, # L/h/kg
+      Funbound.plasma=parameters.dt$Funbound.plasma,
+      Clmetabolismc=cl, # L/h/kg
+      Rblood2plasma=parameters.dt$Rblood2plasma),
+    restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
   }
   
 #Return only the HTTK parameters for the specified model. That is, only the
