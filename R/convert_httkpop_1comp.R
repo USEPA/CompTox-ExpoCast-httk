@@ -42,30 +42,11 @@
 #' @keywords httk-pop 1compartment
 #' @import utils
 #' @export convert_httkpop_1comp
-convert_httkpop_1comp <- function(httk.pop.biomets,
-                         chem.cas=NULL,
-                         chem.name=NULL,
-                         dtxsid = NULL,
-                         parameters=NULL
-                         )
+convert_httkpop_1comp <- function(
+                             parameters.dt,
+                             httkpop.dt,
+                             ...)
 {
-# We need to describe the chemical to be simulated one way or another:
-  if (is.null(chem.cas) & 
-      is.null(chem.name) & 
-      is.null(dtxsid) &
-      is.null(parameters)) 
-    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-
-  if (is.null(parameters))
-  {
-    paramfun <- model.list[["1comp"]]$parameterize.func
-    parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                    args=c(list(chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                      ...))
-  }
-  
       #for 1-compartment model, don't need to compute total hepatic clearance,
       #but do need to compute volume of distribution and elimination rate.
 
@@ -77,11 +58,11 @@ convert_httkpop_1comp <- function(httk.pop.biomets,
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
 
-      parameters.df[, RBC.vol:=plasma.vol/
+      parameters.dt[, RBC.vol:=plasma.vol/
                     (1 - hematocrit)*
                     hematocrit]
       #Compute Vdist, volume of distribution
-      parameters.df[,Vdist:=plasma.vol +
+      parameters.dt[,Vdist:=plasma.vol +
                     RBC.vol*
                     PCs[["Krbc2pu"]]*
                     Funbound.plasma+
@@ -91,7 +72,7 @@ convert_httkpop_1comp <- function(httk.pop.biomets,
       #Compute kelim: Elimination rate, units of 1/h. First make a list of the
       #parameters that HTTK uses to calculate kelim. Each list element will be a
       #vector of the values for each individual.
-      calc_elim_params <- c(as.list(parameters.df[,
+      calc_elim_params <- c(as.list(parameters.dt[,
                                                 list(Vdist,
                                                   Clint,
                                                   Funbound.plasma,
@@ -113,15 +94,7 @@ convert_httkpop_1comp <- function(httk.pop.biomets,
                                         restrictive.clearance=restrictive.clearance,
                                         clint.pvalue.threshold=clint.pvalue.threshold)
       #Add kelim to the population data.table.
-      parameters.df[, kelim:=ke]
+      parameters.dt[, kelim:=ke]
 
-
-  # For models that don't described first pass blood flow from the gut, need to
-  # cacluate a hepatic bioavailability (Rowland, 2009):
-  if (model.table[[model]]$First.Pass.Correction)
-    if (all(c("Qgutf","Qliverf")%in%colnames(parameters.df)))
-    {
-    parameters.df[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
-    parameters.df[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
-    } else stop("Qgutf and Qliverf needed to calculate first-pass metabolism.")
+  return(parameters.dt)
 }

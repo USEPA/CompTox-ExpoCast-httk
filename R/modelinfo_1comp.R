@@ -139,5 +139,8 @@ model.list[["1compartment"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vdist")
 
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["1compartment"]]$calcpc <- TRUE
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T

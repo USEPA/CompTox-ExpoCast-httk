@@ -42,16 +42,12 @@
 #' @keywords httk-pop 3compartment
 #' @import utils
 #' @export convert_httkpop_3comp
-convert_httkpop_3comp <- function(httk.pop.biomets,
-                         model,
-                         chem.cas=NULL,
-                         chem.name=NULL,
-                         dtxsid = NULL,
-                         parameters=NULL,
-                         ...
-                         )
+convert_httkpop_3comp <- function(
+                             parameters.dt,
+                             httkpop.dt,
+                             ...)
 {
-      calc_hep_params <- c(as.list(parameters.df[, list(Clint,
+      calc_hep_params <- c(as.list(parameters.dt[, list(Clint,
                                                    Funbound.plasma,
                                                    Fhep.assay.correction,
                                                    million.cells.per.gliver,
@@ -63,7 +59,7 @@ convert_httkpop_3comp <- function(httk.pop.biomets,
 
       #Call HTTK function to compute total hepatic clearance, using unscaled
       #hepatic model.
-      parameters.df[,
+      parameters.dt[,
                   Clmetabolismc:=httk::calc_hep_clearance(hepatic.model="unscaled",
                                                               parameters=calc_hep_params,
                                                               suppress.messages=TRUE,

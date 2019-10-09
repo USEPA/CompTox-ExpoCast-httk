@@ -63,6 +63,9 @@ model.list[["3compartmentss"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vliverc")
 
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["3compartmentss"]]$calcpc <- TRUE
+
 # Function fpr converting in vitro measurments to model parameters:
 model.list[["3compartmentss"]]$convert.invitro.func <- NULL
 # These model parameters are impacted by the in vitro measurements:

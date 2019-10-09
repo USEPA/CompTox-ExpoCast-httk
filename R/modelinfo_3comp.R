@@ -197,5 +197,8 @@ model.list[["3compartment"]]$httkpop.params <- c(
   "Qliver",
   "Ratioblood2plasma")
 
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["3compartment"]]$calcpc <- TRUE
+
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["3compartment"]]$exclude.fup.zero <- T
