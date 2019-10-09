@@ -48,6 +48,7 @@
 #' 
 #' @export lump_tissues
 lump_tissues <- function(Ktissue2pu.in,
+                         parameters=NULL,
                          tissuelist=NULL,
                          species="Human",
                          tissue.vols=NULL,

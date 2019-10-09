@@ -10,16 +10,14 @@ model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
-
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.
-model.list[["pbtk"]]$tissues <- c('liver',
-                                         'kidney',
-                                         'lung',
-                                         'gut')
+model.list[["pbtk"]]$tissuelist=list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
                                    
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
