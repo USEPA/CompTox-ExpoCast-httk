@@ -1,6 +1,6 @@
-#' Parameterize_PBTK
+#' Parameterize_inhalation
 #' 
-#' This function initializes the parameters needed in the functions solve_pbtk,
+#' This function initializes the parameters needed in the functions solve_inhalation,
 #' calc_css, and others using the multiple compartment model.
 #' 
 #' 
@@ -81,8 +81,8 @@
 #'  
 #'  
 #' 
-#' @export parameterize_pbtk
-parameterize_pbtk <- function(chem.cas=NULL,
+#' @export parameterize_inhalation
+parameterize_inhalation <- function(chem.cas=NULL,
                               chem.name=NULL,
                               species="Human",
                               default.to.human=F,
@@ -106,7 +106,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS, depending on what was provided:
   out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
@@ -231,6 +231,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
               Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,
                 pKa_Donor=schmitt.params$pKa_Donor,
                 pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
+ 
  #Below added MWL 8-2-19
  if(vmax.km){
    if(vmax==0){
