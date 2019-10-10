@@ -274,15 +274,15 @@ Set species=\"Human\" to run httkpop model.')
      these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
      for (this.name in these.vols$Name)
        if (!(this.name %in% names(parameters.dt)))
-         parameters.dt[,this.name:=subset(these.vols,Name==this.name)$value]
+         parameters.dt[,eval(this.name):=subset(these.vols,Name==this.name)$value]
      these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
      these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
      these.flows$value <- these.flows$value/
-       subset(physiology.data,Parameter=="Cardiac Output")[
-       tolower(colnames(physiology.data))==tolower(species)]
+       as.numeric(subset(physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(physiology.data))==tolower(species)])
      for (this.name in these.flows$Name)
        if (!(this.name %in% names(parameters.dt)))
-         parameters.dt[,this.name:=subset(these.flows,Name==this.name)$value]
+         parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
   }
 #
 #
