@@ -28,10 +28,23 @@
 #' adjustment.
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
+#'
 #' @author John Wambaugh and Robert Pearce
-#' @references Schmitt W. "General approach for the calculation of tissue to
+#'
+#' @references 
+#' Schmitt W. "General approach for the calculation of tissue to
 #' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of 
+#' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#'
+#' Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma 
+#' partition coefficients: interindividual and interspecies variability." 
+#' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
+#'
 #' @keywords Parameter
+#'
 #' @examples
 #' 
 #' calc_rblood2plasma(chem.name="Bisphenol A")

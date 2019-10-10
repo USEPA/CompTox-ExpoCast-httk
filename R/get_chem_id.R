@@ -77,17 +77,22 @@ DTXSIDs.\n")
     !is.null(found.chem.name) & 
     !is.null(found.dtxsid))
   {
-    if (chem.cas != found.chem.cas) stop(paste("Both CAS",
-      chem.cas,"and either name or DTXSID were provided as arguments, but found 
-      other CAS -- ",found.chem.cas))
-    else if (dtxsid != found.dtxsid) stop(paste("Both DTXSID",
-      dtxsid,"and either CAS or name were provided as arguments, but found 
-      other DTXSID -- ",found.dtxsid))
-    else if (tolower(chem.name) != tolower(found.chem.name)) 
-      warning(paste("Both name",chem.name," and  either DTXSID or CASS were \
-provided as arguments, but also found name",found.chem.name))
+    if (!is.null(chem.cas)) 
+    {
+      if (chem.cas != found.chem.cas) stop(paste("Both CAS",
+        chem.cas,"and either name or DTXSID were provided as arguments, but found 
+        other CAS -- ",found.chem.cas))
+    } else if (!is.null(dtxsid)) {
+      if (dtxsid != found.dtxsid) stop(paste("Both DTXSID",
+        dtxsid,"and either CAS or name were provided as arguments, but found 
+        other DTXSID -- ",found.dtxsid))
+    } else if (!is.null(chem.name)) {
+      if (tolower(chem.name) != tolower(found.chem.name)) stop(paste("Both name",
+        chem.name,"and either CAS or DTXSID were provided as arguments, but found 
+        other name -- ",found.chem.name))
+    }
   }
-
+  
   if (is.null(chem.cas)) chem.cas <- found.chem.cas
   if (is.null(chem.name)) chem.name <- found.chem.name
   if (is.null(dtxsid)) dtxsid <- found.dtxsid
