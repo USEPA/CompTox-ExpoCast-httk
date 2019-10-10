@@ -303,7 +303,16 @@ Set species=\"Human\" to run httkpop model.')
 # from the gut into the liver not included in the model)
   firstpass <- model.list[[model]]$firstpass
 
-  if (model.list[[model]]$calcpc | calcrb2p | firstpass)
+  if (calcrb2p & any(c(!is.null(chem.cas),
+                       !is.null(chem.name),
+                       !is.null(dtxsid))))
+  {
+    Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
+                                     chem.name=chem.name,
+                                     dtxsid=dtxsid)
+  } else Rb2p.invivo <- NA
+
+  if (model.list[[model]]$calcpc | (calcrb2p & is.na(Rb2p.invivo)) | firstpass)
   { 
 #Now, predict the partitioning coefficients using Schmitt's method. The
 #result will be a list of numerical vectors, one vector for each
@@ -331,12 +340,21 @@ Set species=\"Human\" to run httkpop model.')
                       species=species
                       )
   }
-
+  
   if (calcrb2p | firstpass)
   {
-    parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
+# If we have an in vivo value, then back-calculate the partition coefficient:
+    if (!is.na(Rb2p.invivo))
+    {
+# From Pearce et al. (2017):
+      parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
+                                            parameters.mean$Funbound.plasma,
+                                            parameters.mean$hematocrit)]
+    } else { 
+      parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
+    }  
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=parameters.dt$hematocrit,
                                       Krbc2pu=parameters.dt$Krbc2pu,
