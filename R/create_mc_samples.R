@@ -265,10 +265,25 @@ create_mc_samples <- function(chem.cas=NULL,
                        convert.httkpop.arg.list=convert.httkpop.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
-  } else if(httkpop==T) 
+  } else {
+    if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-
+     this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
+     these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
+     these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
+     for (this.name in these.vols$Name)
+       if (!(this.name %in% names(parameters.dt)))
+         parameters.dt[,this.name:=subset(these.vols,Name==this.name)$value]
+     these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
+     these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
+     these.flows$value <- these.flows$value/
+       subset(physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(physiology.data))==tolower(species)]
+     for (this.name in these.flows$Name)
+       if (!(this.name %in% names(parameters.dt)))
+         parameters.dt[,this.name:=subset(these.flows,Name==this.name)$value]
+  }
 #
 #
 # MONTE CARLO STEP THREE
@@ -378,10 +393,11 @@ Set species=\"Human\" to run httkpop model.')
 
   parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
     parameters=list(
-      Qtotal.liverc=parameters.dt$Qtotal.liverc/parameters.dt$BW^1/4, # L/h/kg
+      Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
       Funbound.plasma=parameters.dt$Funbound.plasma,
       Clmetabolismc=cl, # L/h/kg
-      Rblood2plasma=parameters.dt$Rblood2plasma),
+      Rblood2plasma=parameters.dt$Rblood2plasma,
+      BW=parameters.dt$BW),
     restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
   }
   

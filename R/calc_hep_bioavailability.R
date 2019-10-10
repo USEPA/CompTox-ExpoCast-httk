@@ -55,7 +55,7 @@ calc_hep_bioavailability <- function(
                          dtxsid = NULL,
                          parameters=NULL,
                          restrictive.clearance=T,
-                         flow.34=F)
+                         flow.34=T)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 

@@ -164,12 +164,12 @@ lump_tissues <- function(Ktissue2pu.in,
                                    variable == 'Vol (L/kg)')[,'value'])
           this.flow <- as.numeric(subset(
                          this.subset,
-                         variable == 'Flow (mL/min/kg^(3/4))')[,'value']) /
-                         as.numeric(subset(variable == 'Cardiac Output')) 
+                         variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
+            as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
   			} else {
           this.vol <- tissue.vols[this.lumped.tissue]
-          this.flow <- tissue.flows[this.lumped.tissue] /
-                         as.numeric(subset(variable == 'Cardiac Output'))
+          this.flow <- tissue.flows[this.lumped.tissue] / 
+            as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
         }
       }
 # Mark that this tissue has been lumped:
