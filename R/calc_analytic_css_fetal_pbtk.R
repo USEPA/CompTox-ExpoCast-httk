@@ -10,7 +10,7 @@
 
 # Calculate steady-state plasma Css:
 
-Css <- hourly.dose / ( (1 + Clmetabolism * fup / ((Qliver + Qgut) * Rblood2plasma)) *
-  (Qcardiac - (Qrest + Qthyroid + Qadipose + Qplacenta) - Qkidney / (1 + Qgfr * fup / (Qkidney * Rblood2plasma) ) )
-   - (Qliver + Qgut) ) 
+#Css <- hourly.dose / ( (1 + Clmetabolism * fup / ((Qliver + Qgut) * Rblood2plasma)) *
+  #(Qcardiac - (Qrest + Qthyroid + Qadipose + Qplacenta) - Qkidney / (1 + Qgfr * fup / (Qkidney * Rblood2plasma) ) )
+   #- (Qliver + Qgut) ) 
 
