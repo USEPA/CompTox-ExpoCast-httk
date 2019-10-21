@@ -116,7 +116,7 @@ invitro_mc <- function(parameters.dt=NULL,
   # We need to determine what sort of information we have been provided about
   # measurment uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  else if (!is.na(parameters.dt$Clint.dist[1]))
+  else if (all(!is.na(parameters.dt$Clint.dist)))
   {
     if (nchar(parameters.dt$Clint.dist[1]) -
       nchar(gsub(",","",parameters.dt$Clint.dist[1]))!=3) 
@@ -132,14 +132,23 @@ invitro_mc <- function(parameters.dt=NULL,
   # generate confidence limits:
   } else {
     Clint <- parameters.dt$Clint
-    if (Clint > 0)
-    { 
-      # zero doesn't behave well in a log-normal distribution (negatives too):
-      Clint.l95 <- max(Clint*(1 - clint.meas.cv*1.96),1)  
-      Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
-      Clint.pvalue <- 0
-    }
+    Clint.l95 <- max(Clint*(1 - clint.meas.cv*1.96),10^-3)  
+    Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
+    Clint.pvalue <- 0
   }
+  
+# Shrink it down if we don't have unique values:
+  if (all(c(length(unique(Clint))==1,
+    length(unique(Clint.l95))==1,
+    length(unique(Clint.u95))==1,
+    length(unique(Clint.pvalue))==1)))
+  {
+    Clint <- Clint[1]
+    Clint.l95 <- Clint.l95[1]
+    Clint.u95 <- Clint.u95[1]
+    Clint.pvalue <- Clint.pvalue[1]
+  }
+    
 
   # Determine the value for fraction unbound in hepatocyte assay (depends on
   # phys-chem but does not vary biologically):
