@@ -5,15 +5,9 @@
 \title{Converts HTTK-Pop physiology into parameters relevant to the one
 compartment model}
 \usage{
-convert_httkpop_1comp(httk.pop.biomets, chem.cas = NULL,
-  chem.name = NULL, dtxsid = NULL, parameters = NULL)
+convert_httkpop_1comp(parameters.dt, httkpop.dt, ...)
 }
 \arguments{
-\item{httk.pop.biomets}{A data.table containing the physiological
-parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
-\code{Funbound.plasma} and \code{Clint} values (from
-\code{\link{draw_fup_clint}}).}
-
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
@@ -28,6 +22,11 @@ either CAS, name, or DTXSIDs}
 
 \item{parameters}{Parameters from the appropriate parameterization function
 for the model indicated by argument model}
+
+\item{httk.pop.biomets}{A data.table containing the physiological
+parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
+\code{Funbound.plasma} and \code{Clint} values (from
+\code{\link{draw_fup_clint}}).}
 
 \item{model}{Which HTTK model to use.}
 

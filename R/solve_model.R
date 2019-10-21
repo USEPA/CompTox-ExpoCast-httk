@@ -119,8 +119,10 @@
 #' }
 #' 
 #' @export solve_model
+#'
 #' @useDynLib httk
-#' @import deSolve
+#'
+#' @importFrom deSolve ode
 solve_model <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
