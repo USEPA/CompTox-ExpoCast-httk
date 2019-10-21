@@ -269,8 +269,7 @@ Set default.to.human to true to substitute human value.")
                                                  # plasma binding
     fup.adjusted <- fup.point*fup.adjustment # unitless fraction
     if (!suppress.messages) 
-      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).\n\
-Set adjusted.Funbound.plasma to FALSE to use original value.')
+      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).')
   } else {
     fup.adjusted <- fup.point
     fup.adjustment <- NA
