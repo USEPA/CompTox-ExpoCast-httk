@@ -150,7 +150,7 @@
 #' ## End(**Not run**)
 #' }
 #' 
-#' @import stats msm data.table
+#' @import stats data.table
 #' @export monte_carlo
 monte_carlo <- function(
                  parameters,

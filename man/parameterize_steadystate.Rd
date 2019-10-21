@@ -9,7 +9,7 @@ parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
   default.to.human = F, human.clint.fup = F,
   adjusted.Funbound.plasma = T, restrictive.clearance = T,
   fup.lod.default = 0.005, suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04)
+  minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 

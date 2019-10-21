@@ -5,7 +5,8 @@
 \title{Calculate first pass metabolism}
 \usage{
 calc_hep_bioavailability(chem.cas = NULL, chem.name = NULL,
-  dtxsid = NULL, parameters = NULL, restrictive.clearance = T)
+  dtxsid = NULL, parameters = NULL, restrictive.clearance = T,
+  flow.34 = T)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
