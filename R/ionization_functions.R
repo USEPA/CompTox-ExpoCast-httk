@@ -104,7 +104,7 @@ calc_ionization <- function(
   # Number of ionizations to calculate:
   if (is.null(parameters))
   {
-    calculatiosn <- 1
+    calculations <- 1
 # If pKa's aren't actually varying let's not waste computing time:    
   } else if (all(c(length(unique(parameters$pKa_Donor)==1),
       length(unique(parameters$pKa_Accept)==1),
