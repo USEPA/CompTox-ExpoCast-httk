@@ -133,8 +133,17 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
       which(tolower(colnames(httk::physiology.data)) == tolower(species))]
   }
   
-  if(!adjusted.Funbound.plasma & user.params == FALSE) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
-   
+  if (!adjusted.Funbound.plasma & user.params == FALSE) 
+    parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+    
+# If we don't have a measured value, use Yun & Edgington (2013):
+  if (any(is.na(parameters$MA)))
+  {
+warning("Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
+    parameters$MA[is.na(parameters$MA)] <- 
+      10^(1.294 + 0.304 * log10(parameters$Pow))
+  }   
+  
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
     warning('Human fractional tissue volumes used in calculating partition coefficients.')
@@ -164,6 +173,8 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   FPint <- 0.37 * parameters$Fprotein.plasma
 	# water fraction in interstitium:
   FWint <- FWpl
+  
+# These are the calibrations from Pearce et al. (2017):
   if (regression)
   {
    #  regression coefficients (intercept and slope) add to table 
@@ -237,13 +248,6 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 		# neutral phospholipid:water parition coefficient:
 	  Kn_PL <- parameters$MA
     
-    # If we don't have a measured value, use Yun & Edgington (2013):
-    if (any(is.na(parameters$MA)))
-    {
-warning("Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
-      Kn_PL[is.na(Kn_PL)] <- 10^(1.294 + 0.304 * log10(parameters$Pow))
-    }
-
     # Need to calculate the amount of un-ionized parent:
     ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
