@@ -112,8 +112,7 @@ calc_ionization <- function(
   {
     calculations <- 1
   } else {
-    calculations <- length(unique(parameters$pKa_Donor)
-    
+    calculations <- length(unique(parameters$pKa_Donor))
   }
   
   fraction_neutral <- NULL
