@@ -200,6 +200,9 @@ Set default.to.human to true to substitute human value.")
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
+  if (schmitt.params$unadjusted.Funbound.plasma == 0) 
+    stop("Fraction unbound = 0, can't predict partitioning.")
+    
 # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {

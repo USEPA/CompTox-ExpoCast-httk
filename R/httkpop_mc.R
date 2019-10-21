@@ -92,8 +92,7 @@ httkpop_mc <- function(model,
                             "Other Hispanic", 
                             "Non-Hispanic White",
                             "Non-Hispanic Black", 
-                            "Other")),
-                        convert.httkpop.arg.list=list())
+                            "Other")))
 #                       
 #                       
 #                       poormetab,
@@ -131,13 +130,6 @@ httkpop_mc <- function(model,
   if (model.list[[model]]$calc.standard.httkpop2httk)
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
   
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-  converthttkpopfun <- model.list[[model]]$convert.httkpop.func
-  physiology.dt <- do.call(converthttkpopfun, args=c(list(
-                     parameters.dt=physiology.dt,
-                     httkpop.dt=httkpop.dt),
-                     convert.httkpop.arg.list))
-  
+
   return(physiology.dt)
 }

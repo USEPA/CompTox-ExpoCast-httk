@@ -40,31 +40,10 @@
 #'International 106 (2017): 105-118
 #'
 #' @keywords httk-pop 3compartment
-#' @import utils
-#' @export convert_httkpop_3comp
 convert_httkpop_3comp <- function(
                              parameters.dt,
                              httkpop.dt,
                              ...)
 {
-      calc_hep_params <- c(as.list(parameters.dt[, list(Clint,
-                                                   Funbound.plasma,
-                                                   Fhep.assay.correction,
-                                                   million.cells.per.gliver,
-                                                   BW,
-                                                   Vliverc,
-                                                   Qtotal.liverc)]),
-                           liver.density=1.05,
-                           Dn=0.17)
-
-      #Call HTTK function to compute total hepatic clearance, using unscaled
-      #hepatic model.
-      parameters.dt[,
-                  Clmetabolismc:=httk::calc_hep_clearance(hepatic.model="unscaled",
-                                                              parameters=calc_hep_params,
-                                                              suppress.messages=TRUE,
-                                                              clint.pvalue.threshold=clint.pvalue.threshold)]
-
-
-
+  return(parameters.dt)
 }
