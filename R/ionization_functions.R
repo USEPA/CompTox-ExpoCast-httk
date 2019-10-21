@@ -52,7 +52,8 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' \item{fraction_negative}{fraction of compound negative}
 #' \item{fraction_positive}{fraction of compound positive}
 #' \item{fraction_zwitter}{fraction of compound zwitterionic}
-#' @author Robert Pearce
+#' @author Robert Pearce and John Wambaugh
+#'
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of
 #' high-throughput predictions of chemical distribution to tissues." Journal of
 #' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
@@ -101,26 +102,18 @@ calc_ionization <- function(
   }
   
   # Number of ionizations to calculate:
-  if (is.null(parameters) | 
-    all(c(length(unique(parameters$Pow)==1),
-      length(unique(parameters$pKa_Donor)==1),
+  if (is.null(parameters))
+  {
+    calculatiosn <- 1
+# If pKa's aren't actually varying let's not waste computing time:    
+  } else if (all(c(length(unique(parameters$pKa_Donor)==1),
       length(unique(parameters$pKa_Accept)==1),
       length(unique(parameters$pH)==1))))
   {
     calculations <- 1
-  } else {  # Can't use pKa's because they could be vectors even for one set of parameters
-    calculations <- length(parameters$Pow)
+  } else {
+    calculations <- length(unique(parameters$pKa_Donor)
     
-    if (calculations > 1)
-    {
-# If pKa's aren't actually varying let's not waste computing time:    
-      if (length(unique(parameters$pKa_Donor))==1 & 
-        length(unique(parameters$pKa_Accept))==1 & 
-        length(unique(pH))==1)
-      {
-        calculations <- 1
-      }
-    }
   }
   
   fraction_neutral <- NULL
@@ -130,25 +123,24 @@ calc_ionization <- function(
   fraction_zwitter <- NULL
   for (index in 1:calculations)
   {
-    Pow <- parameters$Pow[[index]]
-    pKa_Donor <- parameters$pKa_Donor[[index]]
-    pKa_Accept <- parameters$pKa_Accept[[index]]
-    pH <- parameters$pH[[index]]
+    this.pKa_Donor <- pKa_Donor[[index]]
+    this.pKa_Accept <-pKa_Accept[[index]]
+    this.pH <- pH[[index]]
     
-    if(is.character(pKa_Donor) | is.character(pKa_Accept))
+    if(is.character(this.pKa_Donor) | is.character(this.pKa_Accept))
     {
-      pKa_Donor <- as.numeric(unlist(strsplit(pKa_Donor, ",")))
-      pKa_Accept <- as.numeric(unlist(strsplit(pKa_Accept, ",")))
+      this.pKa_Donor <- as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
+      this.pKa_Accept <- as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
     }  
   # Need to calculate the amount of un-ionized parent:
 
   # Multiple equilibirum points may still be separated by commas, split them into vectors here:
      
-    if(all(is.na(pKa_Donor))) pKa_Donor <- NULL
-    if(all(is.na(pKa_Accept)))  pKa_Accept <- NULL
+    if(all(is.na(this.pKa_Donor))) this.pKa_Donor <- NULL
+    if(all(is.na(this.pKa_Accept)))  this.pKa_Accept <- NULL
   
   # Make a vector of all equilibirum points:
-    eq.points <- c(pKa_Donor,pKa_Accept)
+    eq.points <- c(this.pKa_Donor,this.pKa_Accept)
     if (all(!is.null(eq.points)))
     {
   # Annotate whether each equilibirum point is a H-donation or acceptance:
@@ -163,7 +155,7 @@ calc_ionization <- function(
     zwitter <- 0
     denom <- 1
       
-    if(is.null(pKa_Donor) & is.null(pKa_Accept)){
+    if(is.null(this.pKa_Donor) & is.null(this.pKa_Accept)){
       neutral <- 1
     }else{
       nz <- NULL;
@@ -205,7 +197,7 @@ calc_ionization <- function(
   # If pKa's aren't actually varying let's not waste computing time:  
   if (!is.null(parameters))
   {
-    if (length(parameters$Pow)>1 & calculations == 1)
+    if (length(parameters$pKa_Donor)>1 & calculations == 1)
     {
       fraction_neutral <- rep(fraction_neutral,length(parameters$Pow))
       fraction_charged <- rep(fraction_charged,length(parameters$Pow))
