@@ -111,7 +111,7 @@ parameterize_pbtk <- function(
                        adjusted.Funbound.plasma=T,
                        regression=T,
                        suppress.messages=F,
-                       restritive.clearance=T,
+                       restrictive.clearance=T,
                        minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -314,7 +314,7 @@ Set default.to.human to true to substitute human value.")
              Qtotal.liverc=
                (lumped_params$Qtotal.liverc)/1000*60),
            suppress.messages=T,
-           restritive.clearance=restritive.clearance)), #L/h/kg BW
+           restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
       Fgutabs=Fgutabs)) 
