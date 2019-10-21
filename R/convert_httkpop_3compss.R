@@ -16,10 +16,6 @@
 #'International 106 (2017): 105-118
 #'
 #' @keywords httk-pop 3oompss  monte-carlo
-#''
-#' @import utils data.table
-#'
-#' @export convert_httkpop_3compss 
 convert_httkpop_3compss <- function(
                              parameters.dt,
                              httkpop.dt,

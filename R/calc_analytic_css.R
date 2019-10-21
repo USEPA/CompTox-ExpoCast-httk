@@ -104,9 +104,8 @@ calc_analytic_css <- function(chem.name=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
-  compiled_param_names <- model.list[[model]]$compiled.param.names 
-    param.names.3compss <- model.list[["3compartmentss"]]$param.names
-  
+  param_names <- model.list[[model]]$param.names 
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -142,10 +141,10 @@ calc_analytic_css <- function(chem.name=NULL,
       regression=regression,
       minimum.Funbound.plasma=minimum.Funbound.plasma)) 
   } else {
-    if (!all(compiled_param_names %in% names(parameters)))
+    if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!compiled_param_names %in% 
+        paste(param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from",parameterize_function,".",sep="")) 
     }

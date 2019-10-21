@@ -261,11 +261,17 @@ create_mc_samples <- function(chem.cas=NULL,
                        model=model,
                        samples=samples,
                        httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list=httkpop.generate.arg.list,
-                       convert.httkpop.arg.list=convert.httkpop.arg.list)
+                       httkpop.generate.arg.list=httkpop.generate.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
-  } else {
+    
+  # Convert the httk-pop parameters to appropriate model variables
+    converthttkpopfun <- model.list[[model]]$convert.httkpop.func
+    parameters.dt <- do.call(converthttkpopfun, args=c(list(
+                       parameters.dt=parameters.dt,
+                       httkpop.dt=httkpop.dt),
+                       convert.httkpop.arg.list))
+   } else {
     if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   

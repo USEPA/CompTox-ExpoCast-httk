@@ -68,7 +68,7 @@ calc_vdist<- function(chem.cas=NULL,
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
     
-if (is.null(parameters))
+  if (is.null(parameters))
   {
     # Look up the chemical name/CAS, depending on what was provide:
     out <- get_chem_id(
