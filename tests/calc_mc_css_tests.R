@@ -1,0 +1,12 @@
+library(httk)
+set.seed(1234)
+calc_mc_css(chem.name="bisphenola")
+set.seed(1234)
+calc_mc_css(chem.cas=get_cheminfo()[10])
+set.seed(1234)
+calc_mc_css(chem.cas=get_cheminfo()[11])
+set.seed(1234)
+calc_mc_css(chem.cas=get_cheminfo()[12])
+set.seed(1234)
+calc_mc_css(chem.cas=get_cheminfo()[15])
+

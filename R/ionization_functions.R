@@ -143,7 +143,8 @@ calc_ionization <- function(
     if (all(!is.null(eq.points)))
     {
   # Annotate whether each equilibirum point is a H-donation or acceptance:
-      eq.point.types <- c(rep("Donate",length(pKa_Donor)),rep("Accept",length(pKa_Accept)))
+      eq.point.types <- c(rep("Donate",length(this.pKa_Donor)),
+        rep("Accept",length(this.pKa_Accept)))
       eq.point.types <- eq.point.types[order(eq.points)]    #label each point
       eq.points <- eq.points[order(eq.points)]     #order points
     }
