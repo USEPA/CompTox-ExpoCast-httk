@@ -173,7 +173,6 @@
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
 #'
-#' @import purrr
 #' @export calc_mc_sim
 calc_mc_sim<- function(chem.cas=NULL,
                        chem.name=NULL,
