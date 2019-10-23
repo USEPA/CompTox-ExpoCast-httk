@@ -213,10 +213,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.dist <- NA 
   }
   
-  if (fup.point == 0) stop("Fraction unbound = 0, can't predict partitioning.")
-                                 
-  
-
+  if (fup.point == 0) warning("Fraction unbound = 0, can't predict partitioning.")
 
 # Calculate Pearce (2017) in vitro plasma binding correction:
   if (force.human.fup) 

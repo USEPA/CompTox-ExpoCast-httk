@@ -54,8 +54,8 @@ or other type if specified. Based on  Ito and Houston (2004)
 }
 \examples{
 
-calc_hepatic_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
-calc_hepatic_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
+calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
+calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 
 
 }

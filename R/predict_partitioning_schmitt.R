@@ -50,16 +50,38 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#'
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
+#'
 #' @author Robert Pearce
+#'
 #' @keywords Parameter
+#'
+#' @references
+#' Schmitt, Walter. "General approach for the calculation of tissue to plasma 
+#' partition coefficients." Toxicology in Vitro 22.2 (2008): 457-467.
+#'
+#' Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
+#' International Life Sciences Institute, Risk Science Institute, Washington, 
+#' DC (1994).
+#' 
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
+#'
+#' Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
+#' tissue-to-plasma partition coefficients using readily available input 
+#' parameters." Xenobiotica 43.10 (2013): 839-852.
+#'
 #' @examples
 #' 
 #' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 #' 
 #' @import magrittr
+#'
 #' @export predict_partitioning_schmitt
+#'
 predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
                                          dtxsid=NULL,
@@ -111,15 +133,24 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
       which(tolower(colnames(httk::physiology.data)) == tolower(species))]
   }
   
-  if(!adjusted.Funbound.plasma & user.params == FALSE) parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
-   
+  if (!adjusted.Funbound.plasma & user.params == FALSE) 
+    parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+    
+# If we don't have a measured value, use Yun & Edgington (2013):
+  if (any(is.na(parameters$MA)))
+  {
+warning("Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
+    parameters$MA[is.na(parameters$MA)] <- 
+      10^(1.294 + 0.304 * log10(parameters$Pow))
+  }   
+  
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
     warning('Human fractional tissue volumes used in calculating partition coefficients.')
   }
   if (!("alpha" %in% names(parameters))) parameters$alpha <- alpha
 # For the "rest" tissue containing those tissues in "Physiological Parameter
-# Values for PBPK Models" (2004) that are not described by Schmitt (2008)
+# Values for PBPK Models" (1994) that are not described by Schmitt (2008)
 
 # we use the average values for the Schmitt (2008) tissues
   mycomps <- c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')
@@ -142,6 +173,8 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   FPint <- 0.37 * parameters$Fprotein.plasma
 	# water fraction in interstitium:
   FWint <- FWpl
+  
+# These are the calibrations from Pearce et al. (2017):
   if (regression)
   {
    #  regression coefficients (intercept and slope) add to table 
@@ -214,8 +247,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 
 		# neutral phospholipid:water parition coefficient:
 	  Kn_PL <- parameters$MA
-    Kn_PL[is.null(Kn_PL)] <- 10^(1.294 + 0.304 * log10(parameters$Pow))
-
+    
     # Need to calculate the amount of un-ionized parent:
     ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
