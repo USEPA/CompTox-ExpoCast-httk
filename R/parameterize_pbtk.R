@@ -111,6 +111,7 @@ parameterize_pbtk <- function(
                        adjusted.Funbound.plasma=T,
                        regression=T,
                        suppress.messages=F,
+                       restrictive.clearance=T,
                        minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -199,12 +200,14 @@ Set default.to.human to true to substitute human value.")
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
+  if (schmitt.params$unadjusted.Funbound.plasma == 0) 
+    stop("Fraction unbound = 0, can't predict partitioning.")
+    
 # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).\n\
-Set adjusted.Funbound.plasma to FALSE to use original value.')
+    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
@@ -295,28 +298,30 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
               Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
                 "Pow","pKa_Donor","pKa_Accept")]))  # fraction 
 
-  outlist <- c(outlist,
+  outlist <- c(
+    outlist,
     list(Clint=Clint,
          Clint.dist = Clint.dist,
          Clmetabolismc= as.numeric(calc_hep_clearance(
-                                     hepatic.model="unscaled",
-                                     parameters=list(
-                                       Clint=Clint, #uL/min/10^6 cells
-                                       Funbound.plasma=fup, # unitless fraction
-                                       Fhep.assay.correction=
-                                         outlist$Fhep.assay.correction, 
-                                       million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                                       liver.density= 1.05, # g/mL
-                                       Dn=0.17,
-                                       BW=BW,
-                                       Vliverc=lumped_params$Vliverc, #L/kg
-                                       Qtotal.liverc=
-                                         (lumped_params$Qtotal.liverc)/1000*60),
-                                     suppress.messages=T)), #L/h/kg BW
-         million.cells.per.gliver=110, # 10^6 cells/g-liver
-         liver.density=1.05, # g/mL
-         Fgutabs=Fgutabs)) 
-  
+           hepatic.model="unscaled",
+           parameters=list(
+             Clint=Clint, #uL/min/10^6 cells
+             Funbound.plasma=fup, # unitless fraction
+             Fhep.assay.correction=
+               outlist$Fhep.assay.correction, 
+             million.cells.per.gliver= 110, # 10^6 cells/g-liver
+             liver.density= 1.05, # g/mL
+             Dn=0.17,
+             BW=BW,
+             Vliverc=lumped_params$Vliverc, #L/kg
+             Qtotal.liverc=
+               (lumped_params$Qtotal.liverc)/1000*60),
+           suppress.messages=T,
+           restrictive.clearance=restrictive.clearance)), #L/h/kg BW
+      million.cells.per.gliver=110, # 10^6 cells/g-liver
+      liver.density=1.05, # g/mL
+      Fgutabs=Fgutabs)) 
+
   if (adjusted.Funbound.plasma) 
   {
     outlist["Funbound.plasma.adjustment"] <- 

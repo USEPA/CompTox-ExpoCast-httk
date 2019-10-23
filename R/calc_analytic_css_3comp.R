@@ -90,6 +90,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
              collapse=', '),
            ".  Use parameters from parameterize_3comp."))
     }
+    param.names.pbtk <- model.list[["pbtk"]]$param.names 
     if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] 
       %in% names(parameters)))
     {

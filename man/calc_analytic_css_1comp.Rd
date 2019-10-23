@@ -5,9 +5,10 @@
 \title{Calculate the analytic steady state concentration for the one compartment model.}
 \usage{
 calc_analytic_css_1comp(chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, hourly.dose = 1/24, concentration = "plasma",
-  suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
-  restrictive.clearance = T, bioactive.free.invivo = F, ...)
+  dtxsid = NULL, parameters = NULL, hourly.dose = 1/24,
+  concentration = "plasma", suppress.messages = F,
+  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
+  bioactive.free.invivo = F, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 

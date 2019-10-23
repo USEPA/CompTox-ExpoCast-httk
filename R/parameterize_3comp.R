@@ -86,6 +86,7 @@ parameterize_3comp<- function(
                        adjusted.Funbound.plasma = T,
                        regression = T,
                        suppress.messages = F,
+                       restrictive.clearance = T,
                        minimum.Funbound.plasma = 0.0001)
 {
   parms <- parameterize_pbtk(
@@ -103,6 +104,7 @@ parameterize_3comp<- function(
                adjusted.Funbound.plasma,
              regression = regression,
              suppress.messages = suppress.messages,
+             restrictive.clearance = restrictive.clearance,
              minimum.Funbound.plasma = minimum.Funbound.plasma)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL

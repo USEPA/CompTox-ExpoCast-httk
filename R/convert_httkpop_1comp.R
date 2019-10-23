@@ -40,8 +40,6 @@
 #'International 106 (2017): 105-118
 #'
 #' @keywords httk-pop 1compartment
-#' @import utils
-#' @export convert_httkpop_1comp
 convert_httkpop_1comp <- function(
                              parameters.dt,
                              httkpop.dt,
@@ -55,6 +53,16 @@ convert_httkpop_1comp <- function(
       #that function our vector of individual Funbound.plasma values. So
       #instead, I've re-implemented the Vdist equation here.
 
+      # Fist we need the partition coefficients:
+      PC.table <- predict_partitioning_schmitt(parameters=parameters.dt)
+      PC.names <- names(PC.table)[regexpr("K",names(PC.table))!=-1]
+      if (is.data.table(PC.table))
+      {
+        PCs <- PC.table[,PC.names,with=F]
+      } else {
+        PCs <- subset(PC.table,names(PC.table) %in% PC.names)
+      }
+
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
 
@@ -66,7 +74,7 @@ convert_httkpop_1comp <- function(
                     RBC.vol*
                     PCs[["Krbc2pu"]]*
                     Funbound.plasma+
-                    Krest2pu*
+                    PCs[["Krest2pu"]]*
                     vol.restc*
                     Funbound.plasma]
       #Compute kelim: Elimination rate, units of 1/h. First make a list of the

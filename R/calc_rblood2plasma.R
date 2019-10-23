@@ -96,7 +96,7 @@ calc_rblood2plasma <- function(
                     default.to.human=default.to.human,
                     species=species,
                     suppress.messages=suppress.messages)
-  } else (is.null(parameters))
+  } else if (is.null(parameters))
   {
     parameters <- list(
                     hematocrit=hematocrit,
@@ -131,8 +131,7 @@ calc_rblood2plasma <- function(
     PCs <- predict_partitioning_schmitt(parameters=parameters,
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-           tissues='red blood cells',
-           suppress.messages=suppress.messages)  #regression not applied to Krbc2pu
+           tissues='red blood cells')  
     parameters$Krbc2pu <- PCs$Krbc2pu
   } else if (!is.null(Krbc2pu))
   {

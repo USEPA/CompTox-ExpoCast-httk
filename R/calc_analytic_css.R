@@ -104,8 +104,7 @@ calc_analytic_css <- function(chem.name=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
-# name of function that generates the model parameters:
-parameterize_function <- model.list[[model]]$parameterize.func
+  parameterize_function <- model.list[[model]]$parameterize.func
       
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
