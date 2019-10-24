@@ -307,10 +307,10 @@ parameterize_inhalation <- function(chem.cas=NULL,
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma))
     
-    #alveolar ventilation:15 L/h/kg^.75 from campbell 2007
+    #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
     #human body temperature of 310 Kelvin
-    hl <- subset(chem.physical_and_invitro.data,CAS == chem.cas)[,'HL']
+    hl <- 10^chem.physical_and_invitro.data[chem.cas,'logHenry'] #for log base 10 compiled Henry's law values
     Kwater2air <- 8.314 * 310 / (hl * 101325)   #310 K body temp, 101325 atm to Pa, 
     Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma
     lKair2muc <- log10(1/Kwater2air) - (log10(Pow) - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
