@@ -109,8 +109,8 @@ calc_analytic_css <- function(chem.name=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
-  param_names <- model.list[[model]]$param.names 
-
+  parameterize_function <- model.list[[model]]$parameterize.func
+      
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -132,9 +132,6 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
-
-  # name of function that generates the model parameters:
-    parameterize_function <- model.list[[model]]$parameterize.func
     
     parameters <- do.call(parameterize_function,c(parameterize.args,list(
       chem.cas=chem.cas,
@@ -142,10 +139,11 @@ calc_analytic_css <- function(chem.name=NULL,
       species=species,
       suppress.messages=suppress.messages))) 
   } else {
-    if (!all(param_names %in% names(parameters)))
+    model_param_names <- model.list[[model]]$param.names 
+    if (!all(model_param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(param_names[which(!param_names %in% 
+        paste(model_param_names[which(!model_param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from",parameterize_function,".",sep="")) 
     }
