@@ -267,7 +267,8 @@ create_mc_samples <- function(chem.cas=NULL,
     
   # Convert the httk-pop parameters to appropriate model variables
     converthttkpopfun <- model.list[[model]]$convert.httkpop.func
-    parameters.dt <- do.call(converthttkpopfun, args=c(list(
+    if (!is.null(converthttkpopfun))
+      parameters.dt <- do.call(converthttkpopfun, args=c(list(
                        parameters.dt=parameters.dt,
                        httkpop.dt=httkpop.dt),
                        convert.httkpop.arg.list))
@@ -299,11 +300,19 @@ Set species=\"Human\" to run httkpop model.')
 
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
-  if (invitrouv) parameters.dt <- do.call(invitro_mc,
-                   args=c(list(
-                     parameters.dt=parameters.dt,
-                     samples=samples),
-                     invitro.mc.arg.list))
+  if (invitrouv) 
+  {
+    parameters.dt <- do.call(invitro_mc,
+                       args=c(list(
+                         parameters.dt=parameters.dt,
+                         samples=samples),
+                         invitro.mc.arg.list))
+    propagateinvitrouvfun <- model.list[[model]]$propagate.invitrouv.func
+    if (!is.null(propagateinvitrouvfun))
+      parameters.dt <- do.call(propagateinvitrouvfun, args=c(list(
+                       parameters.dt=parameters.dt),
+                       propogate.invitrouv.arg.list))
+  }
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #

@@ -89,7 +89,6 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-  parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
