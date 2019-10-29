@@ -12,51 +12,51 @@ model.list[["inhalation"]]$parameterize.func <- "parameterize_inhalation"
 model.list[["inhalation"]]$param.names <- c(
   "BW",
   "Clint",
+  "Clint.dist"
   "Clmetabolismc",
-  "vmax", #MWL 9-13-19
-  "km", #MWL 9-13-19
-  "Funbound.plasma",
-  "Funbound.plasma.dist",
-  "Funbound.plasma.adjustment",
   "Fgutabs",
   "Fhep.assay.correction",
+  "Funbound.plasma",
+  "Funbound.plasma.adjustment",
+  "Funbound.plasma.dist",
   "hematocrit",
   "Kblood2air", #MWL 8-1-19
-  "Kmuc2air", #MWL 8-1-19
   "Kgut2pu",
   "kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
   "Klung2pu",
+  "km", #MWL 9-13-19
+  "Km",
+  "Kmuc2air", #MWL 8-1-19
   "Krbc2pu",
   "Krest2pu",
+  "kUrtc",
   "liver.density",
+  "MA",
   "million.cells.per.gliver",
   "MW",
-  "Pow",
-  "pKa_Donor",
   "pKa_Accept",
-  "MA",
-  "Qcardiacc",
+  "pKa_Donor",
+  "Pow",
   "Qalv", #MWL 8-1-19
-  "kUrtc", #MWL 8-1-19
+  "Qcardiacc",
   "Qgfrc",
   "Qgutf",
   "Qkidneyf",
   "Qliverf",
   "Qlungf", #MWL 9-13-19
   "Rblood2plasma",
-  "Vmucc", #MWL 8-1-19
   "Vartc",
   "Vgutc",
   "Vkidneyc",
   "Vliverc",
   "Vlungc",
+  "vmax", #MWL 9-13-19
+  "Vmucc", #MWL 8-1-19
   "Vrestc",
-  "Vvenc",
-  "Vmuc", #MWL 9-13-19
-  "Vmax", #MWL 9-13-19
-  "Km") #MWL 9-13-19
+  "Vvenc"
+  ) 
                     
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
