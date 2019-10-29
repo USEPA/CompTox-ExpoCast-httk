@@ -291,6 +291,9 @@ Set species=\"Human\" to run httkpop model.')
      for (this.name in these.flows$Name)
        if (!(this.name %in% names(parameters.dt)))
          parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
+     parameters.dt[, hematocrit:=
+       as.numeric(subset(physiology.data,Parameter=="Hematocrit")[
+       tolower(colnames(physiology.data))==tolower(species)])]
   }
 #
 #
