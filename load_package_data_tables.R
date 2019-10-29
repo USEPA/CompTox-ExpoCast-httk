@@ -825,7 +825,7 @@ chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '
 
 
 # Update with DSSTox Information
-write.csv(chem.physical_and_invitro.data[,c("Compound","CAS")],file="HTTK-ChemIDs.txt",row.names=F)
+write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],file="HTTK-ChemIDs.txt",row.names=F,sep="\t")
 cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to download CAS, MW, desalted (QSAR-ready) SMILES, forumula, and DTXSIDs.\n")
 cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
 browser()
