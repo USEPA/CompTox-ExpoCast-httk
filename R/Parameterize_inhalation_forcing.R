@@ -241,63 +241,48 @@ parameterize_inhalation <- function(chem.cas=NULL,
                   list(vmax=0,km=1,Km = km,Clint=Clint,
                        Clint.dist = Clint.dist,
                        Clmetabolismc= as.numeric(calc_hepatic_clearance(chem.name = chem.name,hepatic.model="unscaled",
-                          parameters=list(
-                          Clint=Clint, #uL/min/10^6 cells
-                          Funbound.plasma=fup, # unitless fraction
-                          hep.assay.correction=outlist$Fhep.assay.correction, 
-                          million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                          liver.density= 1.05, # g/mL
-                          Dn=0.17,BW=BW,
-                          Vliverc=lumped_params$Vliverc, #L/kg
-                          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                          suppress.messages=T)), #L/h/kg BW
+                                                                        parameters=list(
+                                                                          Clint=Clint, #uL/min/10^6 cells
+                                                                          Funbound.plasma=fup, # unitless fraction
+                                                                          hep.assay.correction=outlist$Fhep.assay.correction, 
+                                                                          million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                                                          liver.density= 1.05, # g/mL
+                                                                          Dn=0.17,BW=BW,
+                                                                          Vliverc=lumped_params$Vliverc, #L/kg
+                                                                          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+                                                                        suppress.messages=T)), #L/h/kg BW
                        million.cells.per.gliver=110, # 10^6 cells/g-liver
                        liver.density=1.05, # g/mL
                        Fgutabs=Fgutabs)) #L/h/kg BW
    }else{
-     outlist <- c(outlist,list(vmax=vmax,km=km,Km = km,Clmetabolismc=0))#ML added Km = km 9-19-19
+     outlist <- c(outlist,list(vmax=vmax,km=km,Km = km,Clint=Clint,
+                               Clint.dist = Clint.dist, Clmetabolismc=0,                       
+                               million.cells.per.gliver=110, # 10^6 cells/g-liver
+                               liver.density=1.05, # g/mL
+                               Fgutabs=Fgutabs))#ML added Km = km 9-19-19
    }
  }else{
    outlist <- c(outlist,
                 list(vmax=0,km=1,Km = km,Clint=Clint,
                      Clint.dist = Clint.dist,
                      Clmetabolismc= as.numeric(calc_hepatic_clearance(chem.name = chem.name,hepatic.model="unscaled",
-                     parameters=list(
-                        Clint=Clint, #uL/min/10^6 cells
-                        Funbound.plasma=fup, # unitless fraction
-                        hep.assay.correction=outlist$Fhep.assay.correction, 
-                        million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                        liver.density= 1.05, # g/mL
-                        Dn=0.17,BW=BW,
-                        Vliverc=lumped_params$Vliverc, #L/kg
-                        Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                     suppress.messages=T)), #L/h/kg BW
+                                                                      parameters=list(
+                                                                        Clint=Clint, #uL/min/10^6 cells
+                                                                        Funbound.plasma=fup, # unitless fraction
+                                                                        hep.assay.correction=outlist$Fhep.assay.correction, 
+                                                                        million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                                                        liver.density= 1.05, # g/mL
+                                                                        Dn=0.17,BW=BW,
+                                                                        Vliverc=lumped_params$Vliverc, #L/kg
+                                                                        Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+                                                                      suppress.messages=T)), #L/h/kg BW
                      million.cells.per.gliver=110, # 10^6 cells/g-liver
                      liver.density=1.05, # g/mL
                      Fgutabs=Fgutabs)) #L/h/kg BW
  }
  
  
-
-  outlist <- c(outlist,
-    list(Clint=Clint,
-         Clint.dist = Clint.dist,
-         Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",
-                          parameters=list(
-                            Clint=Clint, #uL/min/10^6 cells
-                            Funbound.plasma=fup, # unitless fraction
-                            Fhep.assay.correction=outlist$Fhep.assay.correction, 
-                            million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                            liver.density= 1.05, # g/mL
-                            Dn=0.17,BW=BW,
-                            Vliverc=lumped_params$Vliverc, #L/kg
-                            Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                          suppress.messages=T)), #L/h/kg BW
-         million.cells.per.gliver=110, # 10^6 cells/g-liver
-         liver.density=1.05, # g/mL
-         Fgutabs=Fgutabs)) 
-  
-  if (adjusted.Funbound.plasma) 
+ if (adjusted.Funbound.plasma) 
   {
     outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
