@@ -161,6 +161,7 @@ create_mc_samples <- function(chem.cas=NULL,
                             "Non-Hispanic Black", 
                             "Other")),
                         convert.httkpop.arg.list=list(),
+                        propagate.invitrouv.arg.list=list(),
                         parameterize.arg.list=list(
                           restrictive.clearance = T,
                           default.to.human=F,
@@ -311,7 +312,7 @@ Set species=\"Human\" to run httkpop model.')
     if (!is.null(propagateinvitrouvfun))
       parameters.dt <- do.call(propagateinvitrouvfun, args=c(list(
                        parameters.dt=parameters.dt),
-                       propogate.invitrouv.arg.list))
+                       propagate.invitrouv.arg.list))
   }
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
