@@ -137,10 +137,10 @@ lump_tissues <- function(Ktissue2pu.in,
       this.flow.param <- paste("Q",this.tissue,"f",sep="")
       if (!is.null(parameters) & !(this.flow.param %in% names(parameters)))
         stop(paste(
-               "Paramters != NULL but", this.flow.param, "not in parameters."))
+               "Parameters != NULL but", this.flow.param, "not in parameters."))
       if (!is.null(parameters) & !(this.vol.param %in% names(parameters)))
         stop(paste(
-               "Paramters != NULL but", this.flow.param, "not in parameters."))
+               "Parameters != NULL but", this.flow.param, "not in parameters."))
       else if (!is.null(parameters))
       {
         this.vol <- parameters[[this.vol.param]]
@@ -199,7 +199,7 @@ lump_tissues <- function(Ktissue2pu.in,
       this.flow.param <- paste("Q",this.tissue,"f",sep="")
       if (!is.null(parameters) & !(this.flow.param %in% names(parameters)))
         stop(paste(
-               "Paramters != NULL but", this.flow.param, "not in parameters."))
+               "Parameters != NULL but", this.flow.param, "not in parameters."))
         else if (!is.null(parameters))
         {
           this.flow <- parameters[[this.flow.param]]
@@ -227,7 +227,7 @@ lump_tissues <- function(Ktissue2pu.in,
       this.vol.param <- paste("V",this.tissue,"c",sep="")
       if (!is.null(parameters) & !(this.vol.param %in% names(parameters)))
         stop(paste(
-              "Paramters != NULL but", this.flow.param, "not in parameters."))
+              "Parameters != NULL but", this.flow.param, "not in parameters."))
       else if (!is.null(parameters))
       {
         this.vol <- parameters[[this.vol.param]]
@@ -240,8 +240,8 @@ lump_tissues <- function(Ktissue2pu.in,
                          tolower(Species) == tolower(species) &  
                          variable == 'Vol (L/kg)')[,'value'])
       } else this.vol <- tissue.vols[this.tissue]
+      vol[[this.tissue]] <- this.vol
     }
-    vol[[this.tissue]] <- this.vol
   }
 
   names(Ktissue2pu.out)[names(Ktissue2pu.out) == 'red blood cells'] <- 'rbc'

@@ -315,7 +315,7 @@ Set default.to.human to true to substitute human value.")
              BW=BW,
              Vliverc=lumped_params$Vliverc, #L/kg
              Qtotal.liverc=
-               (lumped_params$Qtotal.liverc)/1000*60),
+               (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
            suppress.messages=T,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
