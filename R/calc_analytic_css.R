@@ -93,6 +93,11 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance = T,
                               bioactive.free.invivo = F,
                               IVIVE=NULL,
+                              parameterize.args = list(
+                                default.to.human=F,
+                                adjusted.Funbound.plasma=T,
+                                regression=T,
+                                minimum.Funbound.plasma=1e-4),
                               ...)
 {  
   if (is.null(model)) stop("Model must be specified.")
@@ -131,15 +136,11 @@ calc_analytic_css <- function(chem.name=NULL,
   # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
     
-    parameters <- do.call(parameterize_function,list(
+    parameters <- do.call(parameterize_function,c(parameterize.args,list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
-      default.to.human=default.to.human,
-      suppress.messages=suppress.messages,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      regression=regression,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)) 
+      suppress.messages=suppress.messages))) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {

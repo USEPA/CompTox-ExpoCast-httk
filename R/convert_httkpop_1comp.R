@@ -62,7 +62,12 @@ convert_httkpop_1comp <- function(
       } else {
         PCs <- subset(PC.table,names(PC.table) %in% PC.names)
       }
-
+      lumped_params <- lump_tissues(
+        PCs,
+        parameters=parameters.dt,
+        tissuelist=NULL,
+        species="Human")
+      
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
 
@@ -75,7 +80,7 @@ convert_httkpop_1comp <- function(
                     PCs[["Krbc2pu"]]*
                     Funbound.plasma+
                     PCs[["Krest2pu"]]*
-                    vol.restc*
+                    Vrestc*
                     Funbound.plasma]
       #Compute kelim: Elimination rate, units of 1/h. First make a list of the
       #parameters that HTTK uses to calculate kelim. Each list element will be a
@@ -95,12 +100,8 @@ convert_httkpop_1comp <- function(
       #Call HTTK function to calculate total elimination rate. This one is OK
       #because it uses the vector of Funbound.plasma that we give it.
       ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
-                                        chem.cas=this.chem,
                                         suppress.messages=TRUE,
-                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
-                                        well.stirred.correction=well.stirred.correction,
-                                        restrictive.clearance=restrictive.clearance,
-                                        clint.pvalue.threshold=clint.pvalue.threshold)
+                                        ...)
       #Add kelim to the population data.table.
       parameters.dt[, kelim:=ke]
 
