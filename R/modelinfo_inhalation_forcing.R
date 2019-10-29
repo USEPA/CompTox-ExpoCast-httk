@@ -1,15 +1,15 @@
 # Add this model to the list of models:
 
 #Analytic expression for steady-state plasma concentration.
-#model.list[["inhalation"]]$analytic.css.func <- "calc_analytic_css_inhalation"  <<<not yet implemented
+#model.list[["gas"]]$analytic.css.func <- "calc_analytic_css_gas"  <<<not yet implemented
 
 # The is the R function for generating model parameters:
-model.list[["inhalation"]]$parameterize.func <- "parameterize_inhalation"
+model.list[["gas"]]$parameterize.func <- "parameterize_gas"
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["inhalation"]]$param.names <- c(
+model.list[["gas"]]$param.names <- c(
   "BW",
   "Clint",
   "Clint.dist"
@@ -60,7 +60,7 @@ model.list[["inhalation"]]$param.names <- c(
                     
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
-model.list[["inhalation"]]$Rtosolvermap <- list(
+model.list[["gas"]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
   vmax = "vmax", #MWL 8-1-19
@@ -92,11 +92,11 @@ model.list[["inhalation"]]$Rtosolvermap <- list(
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["inhalation"]]$compiled.parameters.init <- "getParmspbtk"
+model.list[["gas"]]$compiled.parameters.init <- "getParmspbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
-model.list[["inhalation"]]$compiled.param.names <- c(
+model.list[["gas"]]$compiled.param.names <- c(
   "BW",
   "Clmetabolismc",
   "vmax",
@@ -208,15 +208,15 @@ model.list[["inhalation"]]$compiled.param.names <- c(
 #   )
 
 # This function initializes the state vector for the compiled model:
-model.list[["inhalation"]]$compiled.init.func <- "initmodpbtk"
+model.list[["gas"]]$compiled.init.func <- "initmodpbtk"
 
 # This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
-model.list[["inhalation"]]$derivative.func <- "derivspbtk"
+model.list[["gas"]]$derivative.func <- "derivspbtk"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[["inhalation"]]$derivative.output.names <- c(
+model.list[["gas"]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -232,7 +232,7 @@ model.list[["inhalation"]]$derivative.output.names <- c(
   "Cmuc"
   )
 
-model.list[["inhalation"]]$default.monitor.vars <- c(
+model.list[["gas"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -247,26 +247,26 @@ model.list[["inhalation"]]$default.monitor.vars <- c(
   )
 
 # Allowable units:
-model.list[["inhalation"]]$allowed.units <- c('um', 'mg/l', 'ppm')
+model.list[["gas"]]$allowed.units <- c('um', 'mg/l', 'ppm')
 
 # These parameters specific the exposure scenario simulated by the model:
-model.list[["inhalation"]]$dosing.params <- c("daily.dose",
+model.list[["gas"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
   "dosing.matrix")
-model.list[["inhalation"]]$routes <- c("oral","iv","inhalation")
+model.list[["gas"]]$routes <- c("oral","iv","gas")
 # We need to know which compartment gets the dose 
-model.list[["inhalation"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven", inhalation = "Ainh")
+model.list[["gas"]]$dose.variable <- list(oral="Agutlumen",
+  iv="Aven", gas = "Ainh")
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
 #or "multiply" to change the value to C1 <- C1*dose
-model.list[["inhalation"]]$dose.type <- list(oral="add",
-  iv="add", inhalation = "add")
+model.list[["gas"]]$dose.type <- list(oral="add",
+  iv="add", gas = "add")
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
-model.list[["inhalation"]]$state.vars <- c(
+model.list[["gas"]]$state.vars <- c(
     "Agutlumen",
     "Agut",
     "Aliver",
@@ -284,7 +284,7 @@ model.list[["inhalation"]]$state.vars <- c(
     ) 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["inhalation"]]$required.params <- c(
+model.list[["gas"]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -294,4 +294,4 @@ model.list[["inhalation"]]$required.params <- c(
    )
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["inhalation"]]$exclude.fup.zero <- T
+model.list[["gas"]]$exclude.fup.zero <- T

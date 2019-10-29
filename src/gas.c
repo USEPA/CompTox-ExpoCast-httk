@@ -1,7 +1,7 @@
-/* inhalation.c for R deSolve package
+/* gasalation.c for R deSolve package
    ___________________________________________________
 
-   Model File:  inhalation.model
+   Model File:  gasalation.model
 
    Date:  Mon Oct 22 11:15:43 2018
 
@@ -25,7 +25,7 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
-     Ainh = 0.0,
+     Agas = 0.0,
      Aexh = 0.0,
      Amuc = 0.0,
 
@@ -45,7 +45,7 @@
     "Cmuc",
 
    1 Input:
-     Cinh (forcing function)
+     Cgas (forcing function)
 
    53 Parameters:
      BW = 70,
@@ -117,7 +117,7 @@
 #define ID_Atubules 0x00008
 #define ID_Ametabolized 0x00009
 #define ID_AUC 0x0000a
-#define ID_Ainh 0x0000b
+#define ID_Agas 0x0000b
 #define ID_Aexh 0x0000c
 #define ID_Amuc 0x0000d
 
@@ -196,23 +196,23 @@ static double parms[53];
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cinh forc[0]
+#define Cgas forc[0]
 
 /*----- Initializers */
-void initmod_inh (void (* odeparms)(int *, double *))
+void initmod_gas (void (* odeparms)(int *, double *))
 {
   int N=53;
   odeparms(&N, parms);
 }
 
-void initforc_inh (void (* odeforcs)(int *, double *))
+void initforc_gas (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
 }
 
 
-void getParms_inh (double *inParms, double *out, int *nout) {
+void getParms_gas (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -250,7 +250,7 @@ void getParms_inh (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_gas (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
@@ -275,7 +275,7 @@ void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
 
-  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cgas ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
@@ -289,7 +289,7 @@ void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cgas - yout[ID_Calv] ) ) - ( kUrt * ( Cgas - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -301,30 +301,30 @@ void derivs_inh (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Agas] = ( Qalv * ( yout[ID_Calv] - Cgas ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
-  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
+  ydot[ID_Amuc] = ( kUrt * ( Cgas - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
 
 } /* derivs */
 
 
 /*----- Jacobian calculations: */
-void jac_inh (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event_inh (int *n, double *t, double *y)
+void event_gas (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root_inh (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
