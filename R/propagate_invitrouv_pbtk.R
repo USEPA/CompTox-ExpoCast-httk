@@ -1,5 +1,5 @@
-#'Converts HTTK-Pop physiology into parameters relevant to the default
-#' PBTK model
+#'Converts HTTK-Pop physiology into parameters relevant to the one
+#' compartment model
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -39,11 +39,29 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 #'
-#' @keywords httk-pop pbtk
-convert_httkpop_pbtk <- function(
+#' @keywords monte-carlo pbtk
+propagate_invitrouv_pbtk <- function(
                              parameters.dt,
-                             httkpop.dt,
                              ...)
 {
+      #Compute Vdist, volume of distribution
+      parameters.dt[, Clmetabolismc = 
+        as.numeric(calc_hep_clearance(
+          hepatic.model="unscaled",
+          parameters=list(
+            Clint=Clint, #uL/min/10^6 cells
+            Funbound.plasma=fup, # unitless fraction
+            Fhep.assay.correction=
+              outlist$Fhep.assay.correction, 
+            million.cells.per.gliver= 110, # 10^6 cells/g-liver
+            liver.density= 1.05, # g/mL
+            Dn=0.17,
+            BW=BW,
+            Vliverc=lumped_params$Vliverc, #L/kg
+            Qtotal.liverc=
+              (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
+          suppress.messages=T,
+          restrictive.clearance=restrictive.clearance))]
+
   return(parameters.dt)
 }

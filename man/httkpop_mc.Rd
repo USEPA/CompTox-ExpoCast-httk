@@ -11,7 +11,7 @@ httkpop_mc(model, samples = 1000, httkpop.dt = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"), reths =
   c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-  "Non-Hispanic Black", "Other")), convert.httkpop.arg.list = list())
+  "Non-Hispanic Black", "Other")))
 }
 \arguments{
 \item{model}{One of the HTTK models: "1compartment", "3compartmentss",

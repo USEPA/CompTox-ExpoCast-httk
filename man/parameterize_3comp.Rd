@@ -7,7 +7,7 @@
 parameterize_3comp(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   species = "Human", default.to.human = F, force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05, adjusted.Funbound.plasma = T,
-  regression = T, suppress.messages = F,
+  regression = T, suppress.messages = F, restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04)
 }
 \arguments{

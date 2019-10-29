@@ -218,9 +218,8 @@ model.list[["pbtk"]]$required.params <- c(
   "MW"
    )
 
-# If httk-pop is enabled:
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["pbtk"]]$propagate.invitrouv.func <- "propagate_invitrouv_pbtk"
 # We want all the standard physiological calculations performed:
 model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:

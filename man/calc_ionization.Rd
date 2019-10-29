@@ -4,8 +4,8 @@
 \alias{calc_ionization}
 \title{Calculate the ionization.}
 \usage{
-calc_ionization(chem.cas = NULL, chem.name = NULL, parameters = NULL,
-  pH = NULL, pKa_Donor = NA, pKa_Accept = NA)
+calc_ionization(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
+  parameters = NULL, pH = NULL, pKa_Donor = NA, pKa_Accept = NA)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -63,6 +63,6 @@ high-throughput predictions of chemical distribution to tissues." Journal of
 pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 }
 \author{
-Robert Pearce
+Robert Pearce and John Wambaugh
 }
 \keyword{Parameter}

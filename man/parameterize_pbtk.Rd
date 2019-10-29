@@ -9,7 +9,8 @@ parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
   force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T, regression = T,
-  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
+  suppress.messages = F, restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
