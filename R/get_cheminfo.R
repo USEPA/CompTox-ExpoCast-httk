@@ -162,6 +162,21 @@ get_cheminfo <- function(info="CAS",
     necessary.params[necessary.params=="Clint"]<-species.clint
   } 
 
+  # Identify the appropriate column for Rblood2plasma (if needed):
+  species.rblood2plasma <- NULL
+  if ("Rblood2plasma" %in% necessary.params)   
+  {
+    if (paste0(species,'.Rblood2plasma') %in% 
+      colnames(chem.physical_and_invitro.data))
+    {
+      species.rblood2plasma <- paste0(species,'.Rblood2plasma')
+    } else if (default.to.human) {
+      species.clint <- 'Human.Rblood2plasma'
+      warning('Human values substituted for Rblood2plasma.')
+    } else incomplete.data <- T
+    necessary.params[necessary.params=="Rblood2plasma"]<-species.clint
+  } 
+
   if (!incomplete.data)
   {
   # Only look for parameters that we have in the table:
@@ -238,6 +253,8 @@ get_cheminfo <- function(info="CAS",
       info[toupper(info)==toupper("Clint.pValue")] <- species.clint.pvalue
     if (toupper("Funbound.plasma") %in% toupper(info)) 
       info[toupper(info)==toupper("Funbound.plasma")] <- species.fup
+    if (toupper("Rblood2plasma") %in% toupper(info)) 
+      info[toupper(info)==toupper("Rblood2plasma")] <- species.rblood2plasma
     
     columns <- colnames(chem.physical_and_invitro.data)
     this.subset <- good.chemical.data[,

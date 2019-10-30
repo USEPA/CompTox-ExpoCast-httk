@@ -119,6 +119,9 @@ model.list[["1compartment"]]$required.params <- c(
   "MW"
    )
    
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["1compartment"]]$propagate.invitrouv.func <- "propagate_invitrouv_3comp"
+
 # If httk-pop is enabled:
 # Function fpr converting httk-pop physiology to model parameters:
 model.list[["1compartment"]]$convert.httkpop.func <- "convert_httkpop_1comp"
@@ -134,6 +137,9 @@ model.list[["1compartment"]]$httkpop.params <- c(
   "million.cells.per.gliver",
   "Rblood2plasma",
   "Vdist")
+
+#Governs how tissues are lumped:
+model.list[["1compartment"]]$tissue.list <- NULL
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["1compartment"]]$calcpc <- TRUE

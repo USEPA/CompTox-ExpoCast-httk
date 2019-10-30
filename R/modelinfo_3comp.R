@@ -171,6 +171,9 @@ model.list[["3compartment"]]$required.params <- c(
   "MW"
    )
 
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["3compartment"]]$propagate.invitrouv.func <- "propagate_invitrouv_3comp"
+
 # If httk-pop is enabled:
 # We want all the standard physiological calculations performed:
 model.list[["3compartment"]]$calc.standard.httkpop2httk <- TRUE
@@ -192,6 +195,11 @@ model.list[["3compartment"]]$httkpop.params <- c(
   "Qgut",
   "Qliver",
   "Ratioblood2plasma")
+
+#Governs how tissues are lumped:
+model.list[["pbtk"]]$tissue.list <- list(
+               liver=c("liver"),
+               gut=c("gut"))
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["3compartment"]]$calcpc <- TRUE
