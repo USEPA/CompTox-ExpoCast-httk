@@ -373,7 +373,9 @@ Set species=\"Human\" to run httkpop model.')
                       parameters=parameters.dt,
                       tissuelist=model.list[[model]]$tissue.list,
                       species=species
-                      )
+                      ) 
+                      
+     parameters.dt[, names(lumptissues):= lumptissues]
   }
   
   if (calcrb2p | firstpass)
