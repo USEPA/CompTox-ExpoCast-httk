@@ -36,10 +36,10 @@ get_chem_id <- function(chem.cas=NULL,
     if (!(chem.cas %in% chem.physical_and_invitro.data$CAS)) 
       stop("CAS number not found, use get_cheminfo() for valid CAS numbers.\n")
 #Set the chemical name:
-    found.chem.name <- chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"Compound"]
-    found.dtxsid <- chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"DTXSID"] 
+    found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
+      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"Compound"]))
+    found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
+      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"DTXSID"])) 
   }
 
   if (!is.null(chem.name))
@@ -53,10 +53,10 @@ get_chem_id <- function(chem.cas=NULL,
       stop ("Chemical name not found, use get_cheminfo(info=\"compound\") for \
 valid compound names.")
 #Set the chemical CAS:
-    found.chem.cas <- chem.physical_and_invitro.data[names.index==name.key,"CAS"]
-    found.chem.cas <- found.chem.cas[!is.na(found.chem.cas)]
-    found.dtxsid <- chem.physical_and_invitro.data[names.index==name.key,"DTXSID"]
-    found.dtxsid <- found.dtxsid[!is.na(found.dtxsid)]
+    found.chem.cas <- as.character(na.omit(chem.physical_and_invitro.data[
+      names.index==name.key,"CAS"]))
+    found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
+      names.index==name.key,"DTXSID"]))
   }
 
   if (!is.null(dtxsid))
@@ -65,12 +65,12 @@ valid compound names.")
       stop("DTXSID not found, use get_cheminfo(info=\"DTXISD\") for valid \
 DTXSIDs.\n")
 #Set the chemical name:
-    found.chem.name <- chem.physical_and_invitro.data[
+    found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
       tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
-      "Compound"]
-    found.chem.cas <- chem.physical_and_invitro.data[
+      "Compound"]))
+    found.chem.cas <- as.character(na.omit(chem.physical_and_invitro.data[
       tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
-      "CAS"] 
+      "CAS"])) 
   }
 
   if (!is.null(found.chem.cas) & 
