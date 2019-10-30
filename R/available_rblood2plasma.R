@@ -65,7 +65,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
       warning('Human in vivo measured Rblood2plasma substituted.')
   } else if (!is.na(Rblood2plasma)) 
     warning(paste(toupper(substr(species, 1, 1)), 
-      substr(species, 2, ncharspecies)),
+      substr(species, 2, ncharspecies),
       'in vivo measured Rblood2plasma used.'))
   if(is.na(Rblood2plasma))
   {
@@ -93,7 +93,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
           suppress.messages=suppress.messages)
         if (!suppress.messages) 
           warning(paste(toupper(substr(species, 1, 1)), 
-            substr(species, 2, ncharspecies)),
+            substr(species, 2, ncharspecies),
             'Rblood2plasma calculated with calc_rblood2plasma.')) 
       } else if (chem.cas %in% get_cheminfo(species='Human',model='schmitt')) 
       {
@@ -104,7 +104,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
           suppress.messages=suppress.messages)
         if (!suppress.messages) 
           warning(paste(toupper(substr(species, 1, 1)), 
-            substr(species, 2, ncharspecies)),
+            substr(species, 2, ncharspecies),
             'Rblood2plasma calculated with Human Funbound.plasma.'))
       } else {
         Rblood2plasma.data <- chem.physical_and_invitro.data[,'Human.Rblood2plasma']
