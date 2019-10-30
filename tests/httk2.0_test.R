@@ -1,4 +1,7 @@
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
+
 head(solve_pbtk(chem.name="Terbufos"))
 head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
                     initial.dose = 1, # Assume dose is in mg/kg BW/day  

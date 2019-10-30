@@ -360,7 +360,8 @@ Set species=\"Human\" to run httkpop model.')
              dtxsid=dtxsid,
              species=species,
              adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
-             regression=parameterize.arg.list$regression)
+             regression=parameterize.arg.list$regression,
+             suppress.messages=T)
   }
 
 # If the model uses partion coefficients we need to lump each individual

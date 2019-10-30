@@ -103,7 +103,8 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                                            'spleen',
                                                            'bone'),
                                          tissues=NULL,
-                                         minimum.Funbound.plasma=0.0001) 
+                                         minimum.Funbound.plasma=0.0001,
+                                         suppress.messages=F) 
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -139,14 +140,16 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 # If we don't have a measured value, use Yun & Edgington (2013):
   if (any(is.na(parameters$MA)))
   {
-warning("Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
+     if (!suppress.messages) warning(
+"Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
     parameters$MA[is.na(parameters$MA)] <- 
       10^(1.294 + 0.304 * log10(parameters$Pow))
   }   
   
   if(! tolower(species) %in% c('rat','human')){
     species <- 'Human'
-    warning('Human fractional tissue volumes used in calculating partition coefficients.')
+    if (!suppress.messages) warning(
+'Human fractional tissue volumes used in calculating partition coefficients.')
   }
   if (!("alpha" %in% names(parameters))) parameters$alpha <- alpha
 # For the "rest" tissue containing those tissues in "Physiological Parameter

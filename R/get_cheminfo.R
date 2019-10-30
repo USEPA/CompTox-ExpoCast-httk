@@ -86,6 +86,7 @@ get_cheminfo <- function(info="CAS",
                   "logMA",
                   "logP",
                   "MW",
+                  "Rblood2plasma",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
