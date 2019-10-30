@@ -4,7 +4,7 @@
 #model.list[["gas"]]$analytic.css.func <- "calc_analytic_css_gas"  <<<not yet implemented
 
 # The is the R function for generating model parameters:
-model.list[["gas"]]$parameterize.func <- "parameterize_gas"
+model.list[["gas"]]$parameterize.func <- "parameterize_inhalation" #make specifically parameterize_gas? 
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
