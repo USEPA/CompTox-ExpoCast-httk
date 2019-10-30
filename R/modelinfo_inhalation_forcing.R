@@ -87,12 +87,15 @@ model.list[["gas"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  kUrtc = "kUrtc"
+  Qalv = "Qalv",
+  Kblood2air = "Kblood2air",
+  kUrtc = "kUrtc",
+  Vmucc = "Vmucc"
 )
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["gas"]]$compiled.parameters.init <- "getParmspbtk"
+model.list[["gas"]]$compiled.parameters.init <- "getParms_gas"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
