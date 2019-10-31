@@ -12,7 +12,7 @@ model.list[["gas"]]$parameterize.func <- "parameterize_inhalation" #make specifi
 model.list[["gas"]]$param.names <- c(
   "BW",
   "Clint",
-  "Clint.dist"
+  "Clint.dist",
   "Clmetabolismc",
   "Fgutabs",
   "Fhep.assay.correction",
@@ -90,6 +90,7 @@ model.list[["gas"]]$Rtosolvermap <- list(
   Qalv = "Qalv",
   Kblood2air = "Kblood2air",
   kUrtc = "kUrtc",
+  Kmuc2air = "Kmuc2air",
   Vmucc = "Vmucc"
 )
 
@@ -154,68 +155,13 @@ model.list[["gas"]]$compiled.param.names <- c(
   "Vmax",
   "Km"
 )
-# c(
-#   "BW",
-#   "Clmetabolismc",
-#   "vmax",
-#   "km",
-#   "hematocrit",
-#   "kgutabs",
-#   "Kkidney2pu",
-#   "Kliver2pu",
-#   "Krest2pu",
-#   "Kgut2pu",
-#   "Klung2pu",
-#   "Qcardiacc",
-#   "Qgfrc",
-#   "Qgutf",
-#   "Qkidneyf",
-#   "Qliverf",
-#   "Qlungf", #MWL 9-13-19
-#   "Vartc",
-#   "Vgutc",
-#   "Vkidneyc",
-#   "Vliverc",
-#   "Vlungc",
-#   "Vrestc",
-#   "Vvenc",
-#   "Fraction_unbound_plasma",
-#   "Rblood2plasma",
-#   "kUrtc",
-#   "Vmucc",
-#   "Km",
-#   "Clmetabolism",
-#   "Qcardiac",
-#   "Qgfr",
-#   "Qgut",
-#   "Qkidney",
-#   "Qliver",
-#   "Qlung",#MWL 9-13-19
-#   "Qrest",
-#   "Vart",
-#   "Vgut",
-#   "Vkidney",
-#   "Vliver",
-#   "Vlung",
-#   "Vrest",
-#   "Vven",
-#   "Qalv",
-#   "Kblood2air",
-#   "InhMag",
-#   "Period",
-#   "Exposure",
-#   "kUrt",
-#   "Kmuc2air",
-#   "Vmuc",
-#   "Vmax"
-#   )
 
 # This function initializes the state vector for the compiled model:
-model.list[["gas"]]$compiled.init.func <- "initmodpbtk"
+model.list[["gas"]]$compiled.init.func <- "initmod_gas"
 
 # This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
-model.list[["gas"]]$derivative.func <- "derivspbtk"
+model.list[["gas"]]$derivative.func <- "derivs_gas"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
@@ -244,6 +190,10 @@ model.list[["gas"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
+  "Calv",
+  "Cendexh",
+  "Cmixexh",
+  "Cmuc",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -252,15 +202,18 @@ model.list[["gas"]]$default.monitor.vars <- c(
 # Allowable units:
 model.list[["gas"]]$allowed.units <- c('um', 'mg/l', 'ppm')
 
-# These parameters specific the exposure scenario simulated by the model:
+# These parameters specify the exposure scenario simulated by the model:
 model.list[["gas"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
   "dosing.matrix")
+
 model.list[["gas"]]$routes <- c("oral","iv","gas")
+
 # We need to know which compartment gets the dose 
 model.list[["gas"]]$dose.variable <- list(oral="Agutlumen",
   iv="Aven", gas = "Ainh")
+
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
 #or "multiply" to change the value to C1 <- C1*dose
