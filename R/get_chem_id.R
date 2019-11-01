@@ -32,22 +32,28 @@ get_chem_id <- function(chem.cas=NULL,
 
   if (!is.null(chem.cas))
   {
+# get rid of white spaces:
+    cas.key <- gsub("\\s","",chem.cas)
 #If chemical is identified by CAS, we must make sure its a valid CAS:
-    if (!(chem.cas %in% chem.physical_and_invitro.data$CAS)) 
+    if (!(cas.key %in% chem.physical_and_invitro.data$CAS)) 
       stop("CAS number not found, use get_cheminfo() for valid CAS numbers.\n")
 #Set the chemical name:
     found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"Compound"]))
+      chem.physical_and_invitro.data[,"CAS"]==cas.key,"Compound"]))
     found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"DTXSID"])) 
+      chem.physical_and_invitro.data[,"CAS"]==cas.key,"DTXSID"])) 
   }
 
+#If called by name, need to do a search to find the CAS number and DTXSID:
   if (!is.null(chem.name))
   {
-#If called by name, need to do a search to find the CAS number:
+# get rid of white spaces and capitalization:
     names.index <- gsub("\\s","",tolower(chem.physical_and_invitro.data$Compound))
+# get rid of dashes:
     names.index <- gsub("\\-","",names.index)
+# get rid of white spaces and capitalization:
     name.key <- gsub("\\s","",tolower(chem.name))
+# get rid of dashes:
     name.key <- gsub("\\-","",name.key)
     if (!any(names.index==name.key)) 
       stop ("Chemical name not found, use get_cheminfo(info=\"compound\") for \
@@ -61,15 +67,17 @@ valid compound names.")
 
   if (!is.null(dtxsid))
   {
-    if (!(dtxsid %in% chem.physical_and_invitro.data$DTXSID)) 
+# get rid of white spaces:
+    dtxsid.key <- gsub("\\s","",tolower(dtxsid))
+    if (!(dtxsid.key %in% chem.physical_and_invitro.data$DTXSID)) 
       stop("DTXSID not found, use get_cheminfo(info=\"DTXISD\") for valid \
 DTXSIDs.\n")
 #Set the chemical name:
     found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
-      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
+      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid.key),
       "Compound"]))
     found.chem.cas <- as.character(na.omit(chem.physical_and_invitro.data[
-      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
+      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid.key),
       "CAS"])) 
   }
 
