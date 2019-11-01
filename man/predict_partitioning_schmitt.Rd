@@ -9,7 +9,8 @@ predict_partitioning_schmitt(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, alpha = 0.001, adjusted.Funbound.plasma = T,
   regression = T, regression.list = c("brain", "adipose", "gut",
   "heart", "kidney", "liver", "lung", "muscle", "skin", "spleen", "bone"),
-  tissues = NULL, minimum.Funbound.plasma = 1e-04)
+  tissues = NULL, minimum.Funbound.plasma = 1e-04,
+  suppress.messages = F)
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be

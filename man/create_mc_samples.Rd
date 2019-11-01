@@ -19,6 +19,7 @@ create_mc_samples(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"), reths =
   c("Mexican American", "Other Hispanic", "Non-Hispanic White",
   "Non-Hispanic Black", "Other")), convert.httkpop.arg.list = list(),
+  propagate.invitrouv.arg.list = list(),
   parameterize.arg.list = list(restrictive.clearance = T,
   default.to.human = F, clint.pvalue.threshold = 0.05, regression = T))
 }
