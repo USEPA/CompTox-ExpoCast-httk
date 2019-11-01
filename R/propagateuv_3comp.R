@@ -1,5 +1,5 @@
-#' Propagates uncertainty and variability in in vitro HTTK data into PBPK
-#' model parameters
+#' Propagates uncertainty and variability in in vitro HTTK data into three
+#' compartment model parameters
 #'
 #' @param parameters.dt The data table of parameters being used by the Monte
 #' Carlo sampler
@@ -9,8 +9,8 @@
 #'
 #' @author John Wambaugh
 #'
-#' @keywords monte-carlo pbtk
-propagate_invitrouv_pbtk <- function(
+#' @keywords monte-carlo 3compartment
+propagateuv_3comp<- function(
                              parameters.dt,
                              ...)
 {
