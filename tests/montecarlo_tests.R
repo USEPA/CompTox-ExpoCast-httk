@@ -1,7 +1,7 @@
 #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
 #options(warn=-1)
-NSAMP <- 1000
+NSAMP <- 10
 
 
 
@@ -38,8 +38,28 @@ calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 #
 # Now test that MC works across different models:
 set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
-set.seed(1234)
 calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 set.seed(1234)
 calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+
+#
+#
+# Now do different MC sampling:
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP,httkpop=F)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP,invitrouv=F)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+calc_analytic_css(chem.cas="15972-60-8",model="pbtk",output.units="mg/L")
+
+create_mc_samples(chem.cas="15972-60-8",
+  model="pbtk",
+  samples=NSAMP,
+  httkpop=F,
+  invitrouv=F,
+  vary.params=list(Pow=0.3))
+  
+
