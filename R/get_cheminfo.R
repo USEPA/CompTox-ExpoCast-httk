@@ -93,6 +93,8 @@ get_cheminfo <- function(info="CAS",
   if (any(!(toupper(info) %in% toupper(valid.info))) & tolower(info)!="all") stop(paste("Data on",
     info[!(info %in% valid.info)],"not available. Valid options are:",
     paste(valid.info,collapse=" ")))
+  if (any(toupper(info)=="ALL")) info <- valid.info
+
 
 # Figure out which species we support
   valid.species <- colnames(physiology.data)[!(colnames(physiology.data)
@@ -131,7 +133,7 @@ get_cheminfo <- function(info="CAS",
 
   # Identify the appropriate column for Funbound (if needed):
   species.fup <- NULL
-  if ("Funbound.plasma" %in% necessary.params)
+  if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
   {
     if (paste0(species,'.Funbound.plasma') %in% 
       colnames(chem.physical_and_invitro.data)) 
@@ -147,7 +149,7 @@ get_cheminfo <- function(info="CAS",
   # Identify the appropriate column for Clint (if needed):
   species.clint <- NULL
   species.clint.pvalue <- NULL
-  if ("Clint" %in% necessary.params)   
+  if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
   {
     if (paste0(species,'.Clint') %in% 
       colnames(chem.physical_and_invitro.data))
@@ -164,7 +166,7 @@ get_cheminfo <- function(info="CAS",
 
   # Identify the appropriate column for Rblood2plasma (if needed):
   species.rblood2plasma <- NULL
-  if ("Rblood2plasma" %in% necessary.params)   
+  if (tolower("Rblood2plasma") %in% unique(tolower(c(necessary.params,info))))   
   {
     if (paste0(species,'.Rblood2plasma') %in% 
       colnames(chem.physical_and_invitro.data))
@@ -242,10 +244,7 @@ get_cheminfo <- function(info="CAS",
     if ('structure_formula' %in% tolower(info)) info <- 
       c('Structure_Formula',info[tolower(info) != 'structure_formula'])
     if ('substance_type' %in% tolower(info)) info <- 
-      c('Substance_Type',info[tolower(info) != 'substance_type'])
-    
-    if (any(toupper(info)=="ALL")) info <- valid.info
-    
+      c('Substance_Type',info[tolower(info) != 'substance_type'])    
  
     if (toupper("Clint") %in% toupper(info)) 
       info[toupper(info)==toupper("Clint")] <- species.clint
