@@ -200,10 +200,13 @@ used by this function.
 \examples{
 
 \dontrun{
+ set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
              samples=100,return.samples=TRUE)
+ set.seed(1234)
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
+ set.seed(1234)
  calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
              censored.params = list(Funbound.plasma = list(cv = 0.1, 
                                                           lod = 0.005)),
@@ -213,7 +216,43 @@ used by this function.
              output.units = "uM", samples = 2000)
 
  params <- parameterize_pbtk(chem.cas="80-05-7")
+ set.seed(1234)
  calc_mc_css(parameters=params,model="pbtk")
+
+set.seed(1234)
+# Standard HTTK Monte Carlo:
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",
+ model="pbtk",
+ samples=NSAMP,
+ invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
+   poormetab = T, 
+   fup.censored.dist = FALSE, 
+   fup.lod = 0.01, 
+   fup.meas.cv = 0.0, 
+   clint.meas.cv = 0.0, 
+   fup.pop.cv = 0.3, 
+   clint.pop.cv = 0.3))
+set.seed(1234)
+# HTTK Monte Carlo with no HTTK-Pop physiological variability):
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+set.seed(1234)
+# HTTK Monte Carlo with no in vitro uncertainty and variability):
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+set.seed(1234)
+# HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+# Should be the same as the mean result:
+calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
+set.seed(1234)
+# HTTK Monte Carlo using basic Monte Carlo sampler:
+calc_mc_css(chem.cas="90-43-7",
+ model="pbtk",
+ samples=NSAMP,
+ httkpop=F,
+ invitrouv=F,
+ vary.params=list(Pow=0.3))
 }
 
 }
