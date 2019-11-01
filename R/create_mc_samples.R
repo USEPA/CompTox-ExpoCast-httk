@@ -205,7 +205,7 @@ create_mc_samples <- function(chem.cas=NULL,
                              species=species),
                              parameterize.arg.list))
     parameter.names <- names(parameters.mean)
-    pschmitt <- httk::parameterize_schmitt(
+    pschmitt <- parameterize_schmitt(
                   chem.cas=chem.cas,
                   chem.name,
                   dtxsid=dtxsid,
@@ -311,11 +311,6 @@ Set species=\"Human\" to run httkpop model.')
                          parameters.dt=parameters.dt,
                          samples=samples),
                          invitro.mc.arg.list))
-    propagateinvitrouvfun <- model.list[[model]]$propagate.invitrouv.func
-    if (!is.null(propagateinvitrouvfun))
-      parameters.dt <- do.call(propagateinvitrouvfun, args=c(list(
-                       parameters.dt=parameters.dt),
-                       propagate.invitrouv.arg.list))
   }
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
@@ -329,7 +324,7 @@ Set species=\"Human\" to run httkpop model.')
 #
 #
 # MONTE CARLO STEP FOUR
-# UPDATE THE PARTITION COEFFICIENTS
+# PROPAGATE ANY CHANGES IN PARAMETER VALUES:
 #
 #
 
@@ -353,7 +348,7 @@ Set species=\"Human\" to run httkpop model.')
 #tissue-to-plasma partitioning coefficient, and one element of each vector
 #for each individual. The list element names specify which partition
 #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- httk::predict_partitioning_schmitt(
+    PCs <- predict_partitioning_schmitt(
              parameters=parameters.dt,
              chem.name=chem.name,
              chem.cas=this.chem,
@@ -422,6 +417,15 @@ Set species=\"Human\" to run httkpop model.')
       BW=parameters.dt$BW),
     restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
   }
+  
+#
+# Do any model-specific uncertainty propagation
+#
+  propagateuvfun <- model.list[[model]]$propagateuv.func
+  if (!is.null(propagateuvfun))
+    parameters.dt <- do.call(propagateuvfun, args=c(list(
+                       parameters.dt=parameters.dt),
+                       propagate.invitrouv.arg.list))
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.

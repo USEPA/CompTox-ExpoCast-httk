@@ -10,7 +10,7 @@
 #' @author John Wambaugh
 #'
 #' @keywords monte-carlo 1compartment
-propagate_invitrouv_1comp <- function(
+propagateuv_1comp <- function(
                              parameters.dt,
                              ...)
 {
@@ -36,6 +36,7 @@ propagate_invitrouv_1comp <- function(
         parameters=parameters.dt,
         tissuelist=NULL,
         species="Human")
+      parameters.dt[, names(lumped_params):= lumped_params]
       
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
@@ -46,9 +47,9 @@ propagate_invitrouv_1comp <- function(
       #Compute Vdist, volume of distribution
       parameters.dt[,Vdist:=plasma.vol +
                     RBC.vol*
-                    lumped_params[["Krbc2pu"]]*
+                    Krbc2pu*
                     Funbound.plasma+
-                    lumped_params[["Krest2pu"]]*
+                    Krest2pu*
                     Vrestc*
                     Funbound.plasma]
       #Compute kelim: Elimination rate, units of 1/h. First make a list of the
