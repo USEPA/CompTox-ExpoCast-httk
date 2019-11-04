@@ -69,6 +69,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
 
     parameters <- parameterize_1comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
+                                    dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
                                     ...)
