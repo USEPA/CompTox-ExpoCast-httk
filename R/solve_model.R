@@ -181,6 +181,8 @@ solve_model <- function(chem.name = NULL,
     #of exposure) stored in the list of lists, model.list, compiled in the
     #various models' associated "modelinfo_xxx.R" files:
     
+# Model parameter names:
+    param_names <- model.list[[model]]$param.names
 # Available exposure routes:
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
@@ -261,12 +263,12 @@ solve_model <- function(chem.name = NULL,
       regression=regression,
       minimum.Funbound.plasma=minimum.Funbound.plasma)) 
   } else {
-    if (!all(compiled_param_names %in% names(parameters)))
+    if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!compiled_param_names %in% 
+        paste(compiled_param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
-        ". Use parameters from",parameterize_function,".",sep="")) 
+        ". Use parameters from ",parameterize_function,".",sep="")) 
     }
   }
   
@@ -284,8 +286,8 @@ solve_model <- function(chem.name = NULL,
   # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
-  # Do we have all the parameters we need?:
-    if (!all(model.list[[model]]$param.names%in%names(parameters)))
+  # Do we have all the parameters we need:
+    if (!all(param_names%in%names(parameters)))
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
