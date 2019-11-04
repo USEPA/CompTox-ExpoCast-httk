@@ -47,7 +47,7 @@
    1 Input:
      Cgas (forcing function)
 
-   53 Parameters:
+   50 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
      vmax = 0,
@@ -91,9 +91,6 @@
      Vven = 0.0,
      Qalv = 0,
      Kblood2air = 0,
-     InhMag = 0,
-     Period = 0,
-     Exposure = 0,
      kUrtc = 11.0,
      kUrt = 0,
      Kmuc2air = 0,
@@ -137,7 +134,7 @@
 #define ID_Cmuc 0x0000c
 
 /* Parameters */
-static double parms[53];
+static double parms[50];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -182,16 +179,13 @@ static double parms[53];
 #define Vven parms[40]
 #define Qalv parms[41]
 #define Kblood2air parms[42]
-#define InhMag parms[43]
-#define Period parms[44]
-#define Exposure parms[45]
-#define kUrtc parms[46]
-#define kUrt parms[47]
-#define Kmuc2air parms[48]
-#define Vmucc parms[49]
-#define Vmuc parms[50]
-#define Vmax parms[51]
-#define Km parms[52]
+#define kUrtc parms[43]
+#define kUrt parms[44]
+#define Kmuc2air parms[45]
+#define Vmucc parms[46]
+#define Vmuc parms[47]
+#define Vmax parms[48]
+#define Km parms[49]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -201,7 +195,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_gas (void (* odeparms)(int *, double *))
 {
-  int N=53;
+  int N=50;
   odeparms(&N, parms);
 }
 
