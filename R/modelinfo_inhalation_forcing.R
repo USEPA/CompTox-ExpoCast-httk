@@ -205,17 +205,17 @@ model.list[["gas"]]$dosing.params <- c("daily.dose",
   "doses.per.day",
   "dosing.matrix")
 
-model.list[["gas"]]$routes <- c("oral","iv","gas")
+model.list[["gas"]]$routes <- c("oral","iv","inhalation")
 
 # We need to know which compartment gets the dose 
 model.list[["gas"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven", gas = "Ainh")
+  iv="Aven", inhalation = "Ainh")
 
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
 #or "multiply" to change the value to C1 <- C1*dose
 model.list[["gas"]]$dose.type <- list(oral="add",
-  iv="add", gas = "add")
+  iv="add", inhalation = "add")
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
@@ -248,3 +248,6 @@ model.list[["gas"]]$required.params <- c(
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["gas"]]$exclude.fup.zero <- T
+  
+#Name of forcing function as it appears in .c model code for specification to ode solver
+model.list[["gas"]]$initforc <- "initforc_gas"

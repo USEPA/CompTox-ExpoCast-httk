@@ -199,6 +199,9 @@ solve_model <- function(chem.name = NULL,
 # Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
+# If using forcing function for dosing, specify name of this function as 
+# it appears in model's associated .c file for passing to integrator
+    initforc <- model.list[[model]]$initforc
   }
 
 ### ERROR CHECKING
@@ -444,8 +447,9 @@ with two columns (time, dose).")
     dllname="httk",
     initfunc=initialize_compiled_function,
     nout=num_outputs,
-    outnames=derivative_output_names,                                        
+    outnames=derivative_output_names,
     events=list(data=eventdata),
+    initforc = initforc,
     ...)
 
 ### MODEL OUTPUT
