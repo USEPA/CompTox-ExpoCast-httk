@@ -5,9 +5,10 @@
 \title{Calculate the total clearance.}
 \usage{
 calc_total_clearance(chem.cas = NULL, chem.name = NULL,
-  parameters = NULL, species = "Human", suppress.messages = F,
-  default.to.human = F, well.stirred.correction = T,
-  restrictive.clearance = T, adjusted.Funbound.plasma = T, ...)
+  dtxsid = NULL, parameters = NULL, species = "Human",
+  suppress.messages = F, default.to.human = F,
+  well.stirred.correction = T, restrictive.clearance = T,
+  adjusted.Funbound.plasma = T, ...)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
@@ -59,4 +60,5 @@ calc_total_clearance(chem.name="Ibuprofen")
 \author{
 John Wambaugh
 }
+\keyword{1compartment}
 \keyword{Parameter}
