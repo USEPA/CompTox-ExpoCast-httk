@@ -193,6 +193,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.matrix=NULL,
                         output.units="mg/L",
+                        solvemodel.arg.list=list(),
                         invitro.mc.arg.list=list(
                           adjusted.Funbound.plasma=T,
                           poormetab=T,
@@ -276,11 +277,11 @@ calc_mc_tk<- function(chem.cas=NULL,
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
   model.out <- list()
-  for (i in 1:nrow(parameters)) 
-   model.out[[i]] <- do.call(solve_pbtk,args=c(list(
-     parameters=as.list(this.params[i,]),
+  for (i in 1:nrow(parameter.dt)) 
+   model.out[[i]] <- do.call(solve_model,args=c(list(
+     parameters=as.list(parameter.dt[i,]),
      model=model),
-     solvemodel.args))
+     solvemodel.arg.list))
 
   means <- Reduce("+",model.out)/length(model.out)
   sds <- (reduce(model.out,
