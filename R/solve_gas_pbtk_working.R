@@ -1,4 +1,4 @@
-#' Solve_PBTK
+#' solve_gas_pbtk
 #' 
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues as functions of time based on the dose and dosing
@@ -17,18 +17,20 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
-#' Model Figure 
-#' \if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
-#' Schematic"}}
-#' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
-#' Schematic"}}
-#' 
-#' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' Model parameters are named according to the following convention:\tabular{lrrrr}{
+#' prefix \tab suffic \tab Meaning \tab units \cr
+#' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+#' V \tab \tab Volume \tab L \cr
+#' Q \tab \tab Flow \tab L/h \cr
+#' k \tab \tab Rate \tab 1/h \cr
+#' \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
+#' and 1/kg^(3/4) for florws \cr}
+#'
+#' When species is specified but chemical-specific in vitro data are not
+#' available, the function uses the appropriate physiological data (volumes and 
+#' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-#' 
-#' 
-#' 
+#'  
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -71,14 +73,17 @@
 #' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
+#' @param period For use in assembling forcing function data series 'forcings'
+#' argument, in hours
+#' @param exposure.duration For use in assembling forcing function data 
+#' series 'forcings' argument, in hours
+#' @param fcontrol List of arguments for finetuning inhalation forcing function
+#' in conjunction with existing ode integrator methods
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Matt Linakis, and Mark Sfeir
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #' @keywords Solve
@@ -108,66 +113,91 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @import deSolve
-#' @export solve_pbtk
+#' @export solve_gas_pbtk
 #' @useDynLib httk
-solve_pbtk <- function(chem.name = NULL,
-                    chem.cas = NULL,
-                    times=NULL,
-                    parameters=NULL,
-                    days=10,
-                    tsteps = 4, # tsteps is number of steps per hour
-                    daily.dose = NULL,
-                    dose = 1, # Assume dose is in mg/kg BW/day  
-                    doses.per.day=NULL,
-                    initial.values=NULL,
-                    plots=F,
-                    suppress.messages=F,
-                    species="Human",
-                    iv.dose=F,
-                    output.units='uM',
-                    method="lsoda",rtol=1e-8,atol=1e-12,
-                    default.to.human=F,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
-                    dosing.matrix=NULL,
-                    adjusted.Funbound.plasma=T,
-                    regression=T,
-                    restrictive.clearance = T,
-                    minimum.Funbound.plasma=0.0001,
-                    monitor.vars=NULL,
-                    ...)
+#' @import deSolve
+solve_gas_pbtk <- function(chem.name = NULL,
+                           chem.cas = NULL,
+                           times=NULL,
+                           parameters=NULL,
+                           route="inhalation",
+                           dosing=NULL,
+                           days=10,
+                           period = 24, 
+                           exposure.duration = 12,
+                           fcontrol = list(method='constant',rule=2,f=0), 
+                           tsteps = 4, # tsteps is number of steps per hour
+                           initial.values=NULL,
+                           plots=F,
+                           monitor.vars=NULL,
+                           suppress.messages=F,
+                           species="Human",
+                           output.units='uM',
+                           method="lsoda",rtol=1e-8,atol=1e-12,
+                           default.to.human=F,
+                           recalc.blood2plasma=F,
+                           recalc.clearance=F,
+                           adjusted.Funbound.plasma=T,
+                           regression=T,
+                           restrictive.clearance = T,
+                           minimum.Funbound.plasma=0.0001,
+                           ...)
+
+
 {
-  out <- solve_model(
-    chem.name = chem.name,
-    chem.cas = chem.cas,
-    times=times,
-    parameters=parameters,
-    model="pbtk",
-    route= ifelse(iv.dose,"iv","oral"),
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day
-    ),
-    days=days,
-    tsteps = tsteps, # tsteps is number of steps per hour
-    initial.values=initial.values,
-    plots=plots,
-    monitor.vars=monitor.vars,
-    suppress.messages=suppress.messages,
-    species=species,
-    output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
-    recalc.blood2plasma=recalc.blood2plasma,
-    recalc.clearance=recalc.clearance,
-    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
-    minimum.Funbound.plasma=minimum.Funbound.plasma,
-    ...)
   
-  return(out) 
+  
+  
+  out <- solve_model(
+  chem.name = chem.name,
+  chem.cas = chem.cas,
+  times=times,
+  parameters=parameters,
+  model="gas",
+  route='inhalation',
+  dosing=list(
+    initial.dose=dose,
+    dosing.matrix=dosing.matrix,
+    daily.dose=daily.dose,
+    doses.per.day=doses.per.day
+  ),
+  days=days,
+  tsteps = tsteps, # tsteps is number of steps per hour
+  initial.values=initial.values,
+  plots=plots,
+  monitor.vars=monitor.vars,
+  suppress.messages=suppress.messages,
+  species=species,
+  output.units=output.units,
+  method=method,rtol=rtol,atol=atol,
+  default.to.human=default.to.human,
+  recalc.blood2plasma=recalc.blood2plasma,
+  recalc.clearance=recalc.clearance,
+  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+  regression=regression,
+  restrictive.clearance = restrictive.clearance,
+  minimum.Funbound.plasma=minimum.Funbound.plasma,
+  ...)
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
