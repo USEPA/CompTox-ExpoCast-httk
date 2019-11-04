@@ -39,7 +39,7 @@
 #' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
 #' partition coefficients for PBPK modeling of drugs and environmental
 #' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
-#' @keywords Parameter
+#' @keywords Parameter 1compartment
 #' @examples
 #' 
 #' calc_vdist(chem.cas="80-05-7")
