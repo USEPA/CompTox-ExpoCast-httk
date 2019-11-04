@@ -135,6 +135,7 @@ parameterize_1comp <- function(
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
                          chem.cas=chem.cas,
                          chem.name=chem.name,
+                         dtxsid=dtxsid,
                          species=species,
                          suppress.messages=T,
                          default.to.human=default.to.human,

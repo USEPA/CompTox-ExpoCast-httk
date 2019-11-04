@@ -69,7 +69,7 @@ valid compound names.")
   {
 # get rid of white spaces:
     dtxsid.key <- gsub("\\s","",tolower(dtxsid))
-    if (!(dtxsid.key %in% chem.physical_and_invitro.data$DTXSID)) 
+    if (!(dtxsid.key %in% tolower(chem.physical_and_invitro.data$DTXSID))) 
       stop("DTXSID not found, use get_cheminfo(info=\"DTXISD\") for valid \
 DTXSIDs.\n")
 #Set the chemical name:
