@@ -10,6 +10,9 @@ model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
+# Function called for running the model:
+model.list[["pbtk"]]$solve.func <- "solve_pbtk"
+
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.

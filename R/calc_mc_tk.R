@@ -157,20 +157,24 @@
 #' @examples
 #' 
 #' \dontrun{
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
-#'              samples=100,return.samples=TRUE)
-#'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+#' chemname="Abamectin"
+#' times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
+#' age.ranges <- seq(6,80,by=10)
+#' forward <- NULL
+#' for (age.lower in age.ranges)
+#' {
+#'   label <- paste("Ages ",age.lower,"-",age.lower+4,sep="")
+#'   set.seed(1234)
+#'   forward[[label]] <- calc_mc_tk(
+#'                         chem.name=chemname,
+#'                         samples=NSAMP,
+#'                         httkpop.generate.arg.list=list(
+#'                           method="d",
+#'                           agelim_years = c(age.lower, age.lower+9)),
+#'                         solvemodel.arg.list = list(
+#'                           times=times))
+#' }
 #' 
-#'  calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
-#'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
-#'                                                           lod = 0.005)),
-#'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-#'                                Qtotal.liverc = 0.15, 
-#'                                million.cells.per.gliver = 0.15, Clint = 0.15),
-#'              output.units = "uM", samples = 2000)
-#' 
-#'  params <- parameterize_pbtk(chem.cas="80-05-7")
-#'  calc_mc_css(parameters=params,model="pbtk")
 #' }
 #'
 #' @importFrom purrr reduce
@@ -193,7 +197,8 @@ calc_mc_tk<- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.matrix=NULL,
                         output.units="mg/L",
-                        solvemodel.arg.list=list(),
+                        solvemodel.arg.list=list(
+                          times=c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)),
                         invitro.mc.arg.list=list(
                           adjusted.Funbound.plasma=T,
                           poormetab=T,
@@ -246,6 +251,9 @@ calc_mc_tk<- function(chem.cas=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   }
+  
+  if (is.null(model.list[[model]]$solve.func)) 
+    stop(paste("Kinetic model solver not available for model ",model,".",sep="")) 
 
 #
 #
@@ -278,9 +286,9 @@ calc_mc_tk<- function(chem.cas=NULL,
 #
   model.out <- list()
   for (i in 1:nrow(parameter.dt)) 
-   model.out[[i]] <- do.call(solve_model,args=c(list(
-     parameters=as.list(parameter.dt[i,]),
-     model=model),
+   model.out[[i]] <- do.call(model.list[[model]]$solve.func,args=c(list(
+     parameters=as.list(parameter.dt[i,])),
+     suppress.messages=T,
      solvemodel.arg.list))
 
   means <- Reduce("+",model.out)/length(model.out)

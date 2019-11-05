@@ -87,5 +87,22 @@ calc_mc_css(chem.cas="90-43-7",
     
 calc_mc_tk(chem.cas="80-05-7")
 
+chemname="Abamectin"
+times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
+age.ranges <- seq(6,80,by=10)
+forward <- NULL
+for (age.lower in age.ranges)
+{
+  label <- paste("Ages ",age.lower,"-",age.lower+9,sep="")
+  set.seed(1234)
+  forward[[label]] <- calc_mc_tk(
+                        chem.name=chemname,
+                        samples=NSAMP,
+                        httkpop.generate.arg.list=list(
+                          method="d",
+                          agelim_years = c(age.lower, age.lower+4)),
+                        solvemodel.arg.list = list(
+                          times=times))
+}
 
 
