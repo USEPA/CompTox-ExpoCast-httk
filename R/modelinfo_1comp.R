@@ -9,6 +9,9 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
+# Function called for running the model:
+model.list[["1compartment"]]$solve.func <- "solve_1comp"
+
 # How the tissues from tissue.table are lumped together to form the model:
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL

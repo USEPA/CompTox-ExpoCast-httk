@@ -10,9 +10,10 @@ calc_mc_tk(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   httkpop = T, invitrouv = T, calcrb2p = T,
   censored.params = list(), vary.params = list(), return.samples = F,
   tissue = NULL, httkpop.matrix = NULL, output.units = "mg/L",
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
-  fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4,
-  clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2,
+  2.5, 3, 4, 5)), invitro.mc.arg.list = list(adjusted.Funbound.plasma =
+  T, poormetab = T, fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv
+  = 0.4, clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
   httkpop.generate.arg.list = list(method = "direct resampling",
   gendernum = NULL, agelim_years = NULL, agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
@@ -219,20 +220,24 @@ used by this function.
 \examples{
 
 \dontrun{
- calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
-             samples=100,return.samples=TRUE)
- calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+chemname="Abamectin"
+times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
+age.ranges <- seq(6,80,by=10)
+forward <- NULL
+for (age.lower in age.ranges)
+{
+  label <- paste("Ages ",age.lower,"-",age.lower+4,sep="")
+  set.seed(1234)
+  forward[[label]] <- calc_mc_tk(
+                        chem.name=chemname,
+                        samples=NSAMP,
+                        httkpop.generate.arg.list=list(
+                          method="d",
+                          agelim_years = c(age.lower, age.lower+9)),
+                        solvemodel.arg.list = list(
+                          times=times))
+}
 
- calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
-             censored.params = list(Funbound.plasma = list(cv = 0.1, 
-                                                          lod = 0.005)),
-             vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-                               Qtotal.liverc = 0.15, 
-                               million.cells.per.gliver = 0.15, Clint = 0.15),
-             output.units = "uM", samples = 2000)
-
- params <- parameterize_pbtk(chem.cas="80-05-7")
- calc_mc_css(parameters=params,model="pbtk")
 }
 
 }

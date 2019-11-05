@@ -9,6 +9,9 @@ model.list[["3compartment"]]$analytic.css.func <- "calc_analytic_css_3comp"
 # Function used for generating model parameters:
 model.list[["3compartment"]]$parameterize.func <- "parameterize_3comp"
 
+# Function called for running the model:
+model.list[["3compartment"]]$solve.func <- "solve_3comp"
+
 # How the tissues from tissue.table are lumped together to form the model:
 # 3 compartment model has only liver and gut compartments; everything else is
 # lumped.
