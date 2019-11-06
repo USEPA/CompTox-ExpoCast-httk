@@ -74,7 +74,7 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param period For use in assembling forcing function data series 'forcings'
-#' argument, in hours
+#' argument, specified in hours
 #' @param exposure.duration For use in assembling forcing function data 
 #' series 'forcings' argument, in hours
 #' @param fcontrol List of arguments for finetuning inhalation forcing function

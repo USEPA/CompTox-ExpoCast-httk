@@ -350,16 +350,19 @@ solve_gas_pbtk <- function(chem.name = NULL,
 #Include a forcing function for sustained delivery (e.g. infusion, inhalation, transdermal, etc.)
 #Added by MWL 8-2-19
 if(route %in% c("inhalation")){
-  period <- period/24
-  exposure.duration <- exposure.duration/24
-  forcing <- function(mag, Period, start, ExpDuration, times) {
-    Nrep <- ceiling(max(times) / Period) 
-    times <- rep(c(start, ExpDuration), Nrep) + rep(Period * (0:(Nrep - 1)), rep(2, Nrep))
-    y  <- rep(c(mag,0), Nrep)
-    cbind(times,y)
+  if(!is.null(dosing.matrix)) {
+    Forc <- dosing.matrix
+  } else {
+    period <- period/24
+    exposure.duration <- exposure.duration/24
+    forcing <- function(mag, Period, start, ExpDuration, times) {
+      Nrep <- ceiling(max(times) / Period) 
+      times <- rep(c(start, ExpDuration), Nrep) + rep(Period * (0:(Nrep - 1)), rep(2, Nrep))
+      y  <- rep(c(mag,0), Nrep)
+      cbind(times,y)
   }
   Forc <- list(forcing(initial.dose, period, 0,exposure.duration, times))
-  if(!is.null(dosing.matrix)) Forc <- dosing.matrix
+  }
 } else Forc <- NULL
   
 # eventdata is the deSolve object specifying "events" where the simulation 
