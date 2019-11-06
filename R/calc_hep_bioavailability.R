@@ -43,17 +43,20 @@
 #'"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
 #'biopharmaceutics 1.2 (1973): 123-136.
 #'
-#' @keywords 
+#' @keywords physiology 
+#'
 #' @import utils
-#' @export convert_httkpop 
-calc_hepatic_bioavailability <- function(
+#'                                                                 
+#' @export calc_hep_bioavailability 
+#'
+calc_hep_bioavailability <- function(
                          chem.cas=NULL,
                          chem.name=NULL,
                          dtxsid = NULL,
                          parameters=NULL,
-                         model="3compartmentss")
+                         restrictive.clearance=T,
+                         flow.34=T)
 {
-
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -61,38 +64,31 @@ calc_hepatic_bioavailability <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  if (is.null(model)) stop("Model must be specified.")
-# We need to know model-specific information (from modelinfo_[MODEL].R]) 
-# to set up the solver:
-  model <- tolower(model)
-  if (!(model %in% names(model.list)))            
-  {
-    stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
-  } else {
-#Depending on model, choose which parameters are not to be Monte Carlo sampled
-    noMC.names <- model.list[[model]]$noMC.params
-  }
-
   if (is.null(parameters))
   {
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-    paramfun <- model.list[[model]]$parameterize.func
-    parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=c(list(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid),
-                             parameterize.arg.list))
+    parameters <- parameterize_pbtk(
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    dtxsid=dtxsid)
   }
   
-  if (!all(c("Qlivertot","Funbound.plasma","Clmetabolismc","BW","Rblood2plasma") 
+  if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 
     stop("Missing needed parameters in calc_hepatic_bioavailability.")
 
-  return(parameters$Qlivertot / 
-    (parameters$Qlivertot + 
+  if (flow.34 & !("BW" %in% names(parameters))) 
+    stop("flow.34=TRUE and missing BW in calc_hepatic_bioavailability.")
+  else {
+    parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25
+  }
+
+  if (restrictive.clearance) return(parameters$Qtotal.liverc / 
+    (parameters$Qtotal.liverc + 
     parameters$Funbound.plasma * 
-      parameters$Clmetabolismc*BW / 
-      parameters$Rblood2plasma)
+      parameters$Clmetabolismc / 
+      parameters$Rblood2plasma))
+  else return(parameters$Qtotal.liverc / 
+    (parameters$Qtotal.liverc + 
+      parameters$Clmetabolismc / 
+      parameters$Rblood2plasma))
 }

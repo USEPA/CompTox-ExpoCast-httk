@@ -40,88 +40,10 @@
 #'International 106 (2017): 105-118
 #'
 #' @keywords httk-pop 1compartment
-#' @import utils
-#' @export convert_httkpop
-convert_httkpop_1comp <- function(httk.pop.biomets,
-                         chem.cas=NULL,
-                         chem.name=NULL,
-                         dtxsid = NULL,
-                         parameters=NULL
-                         )
+convert_httkpop_1comp <- function(
+                             parameters.dt,
+                             httkpop.dt,
+                             ...)
 {
-# We need to describe the chemical to be simulated one way or another:
-  if (is.null(chem.cas) & 
-      is.null(chem.name) & 
-      is.null(dtxsid) &
-      is.null(parameters)) 
-    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-
-  if (is.null(parameters))
-  {
-    paramfun <- model.list[[1comp]]$parameterize.func
-    parameters <- do.call(getFromNamespace(paramfun, "httk"),
-                    args=c(list(chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                      ...))
-  }
-  
-      #for 1-compartment model, don't need to compute total hepatic clearance,
-      #but do need to compute volume of distribution and elimination rate.
-
-      #HTTK contains a function to compute volume of distribution, but it pulls
-      #Funbound.plasma from its table of default values, meaning we can't give
-      #that function our vector of individual Funbound.plasma values. So
-      #instead, I've re-implemented the Vdist equation here.
-
-      #To compute volume of distribution, need to get volume of red blood cells.
-      #Can compute that from plasma volume and hematocrit.
-
-      parameters.df[, RBC.vol:=plasma.vol/
-                    (1 - hematocrit)*
-                    hematocrit]
-      #Compute Vdist, volume of distribution
-      parameters.df[,Vdist:=plasma.vol +
-                    RBC.vol*
-                    PCs[["Krbc2pu"]]*
-                    Funbound.plasma+
-                    Krest2pu*
-                    vol.restc*
-                    Funbound.plasma]
-      #Compute kelim: Elimination rate, units of 1/h. First make a list of the
-      #parameters that HTTK uses to calculate kelim. Each list element will be a
-      #vector of the values for each individual.
-      calc_elim_params <- c(as.list(parameters.df[,
-                                                list(Vdist,
-                                                  Clint,
-                                                  Funbound.plasma,
-                                                  Qtotal.liverc,
-                                                  Qgfrc,
-                                                  BW,
-                                                  million.cells.per.gliver,
-                                                  Rblood2plasma,
-                                                  Vliverc,
-                                                  Fhep.assay.correction,
-                                                  liver.density)]))
-      #Call HTTK function to calculate total elimination rate. This one is OK
-      #because it uses the vector of Funbound.plasma that we give it.
-      ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
-                                        chem.cas=this.chem,
-                                        suppress.messages=TRUE,
-                                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,
-                                        well.stirred.correction=well.stirred.correction,
-                                        restrictive.clearance=restrictive.clearance,
-                                        clint.pvalue.threshold=clint.pvalue.threshold)
-      #Add kelim to the population data.table.
-      parameters.df[, kelim:=ke]
-
-
-  # For models that don't described first pass blood flow from the gut, need to
-  # cacluate a hepatic bioavailability (Rowland, 2009):
-  if (model.table[[model]]$First.Pass.Correction)
-    if (all(c("Qgutf","Qliverf")%in%colnames(parameters.df)))
-    {
-    parameters.df[, Qliver:=Qcardiacc*(Qgutf+Qliverf)*BW^0.75] # L/h
-    parameters.df[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clmetabolismc*BW / Rblood2plasma)]
-    } else stop("Qgutf and Qliverf needed to calculate first-pass metabolism.")
+  return(propagate_invitrouv_1comp(parameters.dt,...))
 }

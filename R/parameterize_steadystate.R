@@ -79,7 +79,8 @@ parameterize_steadystate <- function(
                               restrictive.clearance=T,
                               fup.lod.default=0.005,
                               suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -129,7 +130,7 @@ parameterize_steadystate <- function(
   Qtotal.liverc <- subset(tissue.data,
                           tolower(Species) == tolower(species) & 
                           variable == 'Flow (mL/min/kg^(3/4))' & 
-                          Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
+                          Tissue == 'liver')[,'value']/1000*60 #L/h/(kg BW)^3/4
   Vliverc <- subset(tissue.data,
                tolower(Species) == tolower(species) & 
                variable == 'Vol (L/kg)' & 
@@ -140,27 +141,35 @@ parameterize_steadystate <- function(
   Clint.db <- try(get_invitroPK_param(
                     "Clint",
                     species,
-                    chem.CAS=chem.cas),
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    dtxsid=dtxsid),
                 silent=T)
                 
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param(
                         "Clint.pValue",
                         species,
-                        chem.CAS=chem.cas),
-                    silent=T)
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
+                     silent=T)
                     
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param(
                       "Clint",
                       "Human",
-                      chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                   silent=T)
     Clint.pValue <- try(get_invitroPK_param(
                           "Clint.pValue",
                           "Human",
-                          chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                       silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
@@ -187,14 +196,18 @@ Set default.to.human to true to substitute human value.")
   fup.db <- try(get_invitroPK_param(
                   "Funbound.plasma",
                   species,
-                  chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
               silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     fup.db<- try(get_invitroPK_param(
                    "Funbound.plasma",
                    "Human",
-                   chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                silent=T)
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
@@ -223,13 +236,17 @@ Set default.to.human to true to substitute human value.")
 # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
                                   "pKa_Donor",
-                                  chem.CAS=chem.cas)) 
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid))
 # basic association cosntants
   pKa_Accept <- suppressWarnings(get_physchem_param(
                                    "pKa_Accept",
-                                   chem.CAS=chem.cas)) 
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid))
 # Octanol:water partition coeffiecient
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) 
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) 
   ion <- calc_ionization(pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
   dow <- Pow * (ion$fraction_neutral + 
                 0.001 * ion$fraction_charged + 
@@ -252,8 +269,7 @@ Set default.to.human to true to substitute human value.")
                                                  # plasma binding
     fup.adjusted <- fup.point*fup.adjustment # unitless fraction
     if (!suppress.messages) 
-      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).\n\
-Set adjusted.Funbound.plasma to FALSE to use original value.')
+      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).')
   } else {
     fup.adjusted <- fup.point
     fup.adjustment <- NA
@@ -264,7 +280,9 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
-                   chem.CAS=chem.cas),
+                        chem.cas=chem.cas,
+                        chem.name=chem.name,
+                        dtxsid=dtxsid),
                silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
@@ -274,17 +292,17 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
   Params[["Funbound.plasma"]] <- fup.adjusted
   Params[["Funbound.plasma.dist"]] <- fup.dist
-  Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
+  Params[["Qtotal.liverc"]] <- Qtotal.liverc    #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- 
-    get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
+    get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  Params[["Fhep.assay.correction"]] <- calc_fu_hep(Pow,
+  Params[["Fhep.assay.correction"]] <- calc_hep_fu(parameters=list(Pow=Pow,
                                          pKa_Donor=pKa_Donor,
-                                         pKa_Accept=pKa_Accept) # fraction 
+                                         pKa_Accept=pKa_Accept)) # fraction 
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
@@ -293,26 +311,25 @@ Set adjusted.Funbound.plasma to FALSE to use original value.')
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
             species=species,
-            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+            adjusted.Funbound.plasma=fup.adjusted,
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
 
-  # Need to have a parameter with this name to calculate clearance, but need 
-  # clearance to calculate bioavailability:
+# Need to have a parameter with this name to calculate clearance, but need 
+# clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
-  cl <- calc_hepatic_clearance(parameters=Params,
+  cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
-  Qliver <- Params$Qtotal.liverc / Params$BW^.25 #L/h/kg body weight
 
-  if (restrictive.clearance) 
-  { 
-    Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + fup.adjusted * cl / Rb2p) # Units cancel (unitless)
-  } else {
-    Params[['hepatic.bioavailability']] <- 
-      Qliver / (Qliver + cl / Rb2p) # Units cancel (i.e., unitless)
-  }
+  Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
+    parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4
+                    Funbound.plasma=fup.adjusted,
+                    Clmetabolismc=cl, # L/h/kg
+                    Rblood2plasma=Params[["Rblood2plasma"]],
+                    BW=BW),
+    restrictive.clearance=restrictive.clearance)
+
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(Params)
 }

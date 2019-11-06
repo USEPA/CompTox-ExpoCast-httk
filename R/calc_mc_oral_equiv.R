@@ -91,6 +91,7 @@
 calc_mc_oral_equiv <- function(conc,
                                chem.name=NULL,
                                chem.cas=NULL,
+                               dtxsid=NULL,
                                which.quantile=0.95,
                                species="Human",
                                input.units='uM',
@@ -131,6 +132,7 @@ calc_mc_oral_equiv <- function(conc,
   Css <- try(calc_mc_css(daily.dose=1,
                          chem.name=chem.name,
                          chem.cas=chem.cas,
+                         dtxsid=dtxsid,
                          which.quantile=which.quantile,
                          species=species,
                          output.units=input.units,
@@ -147,7 +149,7 @@ calc_mc_oral_equiv <- function(conc,
 
   if(tolower(output.units) == 'umolpkgpday'){
     if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
-    MW <- get_physchem_param("MW",chem.CAS=chem.cas)
+    MW <- get_physchem_param("MW",chem.cas=chem.cas)
     dose <- dose /1000 / MW * 1000000 
   }else if(tolower(output.units) != 'mgpkgpday') stop("Output units can only be in mgpkgpday or mol.")
   if(!suppress.messages & !return.samples){

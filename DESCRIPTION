@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.5.3
-Date: 2019-09-20
+Version: 99.5.5
+Date: 2019-11-04
 Title: High-Throughput Toxicokinetics
 Description: Functions and data tables for simulation and statistical analysis 
              of chemical toxicokinetics ("TK") as in Pearce et al. (2017) 
@@ -42,6 +42,7 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         gmodels, colorspace
 License: GPL-3
 LazyData: true
+Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
 RoxygenNote: 6.1.1
 URL:

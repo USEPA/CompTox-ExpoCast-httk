@@ -35,6 +35,7 @@
 #'@keywords 1compartment
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
+                                   dtxsid = NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
@@ -45,14 +46,31 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    bioactive.free.invivo = F,
                                    ...)
 {
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
+
+  param.names.1comp <- model.list[["1compartment"]]$param.names
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+  
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  if (is.null(parameters))
   {
-    stop('Parameters, chem.name, or chem.cas must be specified.')
-  }
-  if(is.null(parameters))
-  {
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid  
+
     parameters <- parameterize_1comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
+                                    dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
                                     ...)
@@ -73,7 +91,6 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-  parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   Css <- hourly.dose / parameters$kelim / parameters$Vdist

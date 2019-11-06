@@ -26,7 +26,6 @@ model.list[["3compartmentss"]]$param.names <- c("BW",
                        "liver.density",
                        "million.cells.per.gliver",
                        "MW",
-                       "Pow",
                        "Qtotal.liverc",
                        "Qgfrc",
                        "Rblood2plasma",
@@ -47,8 +46,8 @@ model.list[["3compartmentss"]]$required.params <- c(
    )
    
 # If httk-pop is enabled:
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["3compartmentss"]]$convert.httkpop.func <- "convert_httkpop_3compss"
+# We want all the standard physiological calculations performed:
+model.list[["3compartmentss"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["3compartmentss"]]$httkpop.params <- c(
   "BW",
@@ -61,8 +60,13 @@ model.list[["3compartmentss"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vliverc")
 
-# Function fpr converting in vitro measurments to model parameters:
-model.list[["3compartmentss"]]$convert.invitro.func <- NULL
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["3compartmentss"]]$calcpc <- TRUE
+
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["3compartmentss"]]$firstpass <- TRUE
+
 # These model parameters are impacted by the in vitro measurements:
 model.list[["3compartmentss"]]$invitro.params <- c("BW",
                        "Clint",

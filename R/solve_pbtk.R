@@ -112,7 +112,6 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @import deSolve
 #' @export solve_pbtk
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,

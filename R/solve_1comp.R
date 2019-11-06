@@ -85,7 +85,6 @@
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
 #'
-#' @import deSolve
 #' @export solve_1comp
 #' @useDynLib httk
 solve_1comp <- function(chem.name = NULL,

@@ -10,16 +10,17 @@ model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["pbtk"]]$convert.httkpop.func <- "convert_httkpop_pbtk"
+# Function called for running the model:
+model.list[["pbtk"]]$solve.func <- "solve_pbtk"
 
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.
-model.list[['pbtk']]$tissues <-'pbtk'=c('liver',
-                                         'kidney',
-                                         'lung',
-                                         'gut'))
+model.list[["pbtk"]]$tissuelist=list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
                                    
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
@@ -220,19 +221,47 @@ model.list[["pbtk"]]$required.params <- c(
   "MW"
    )
 
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["pbtk"]]$propagateuv.func <- "propagateuv_pbtk"
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["pbtk"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
 
-#choose which parameters are not to be Monte Carlo sampled
-model.list[["pbtk"]]$noMC.params <- c(
-  'kgutabs',
-  'MW',
-  'Pow',
-  "MA",
-  'pKa_Donor',
-  'pKa_Accept',
-  "Fhep.assay.correction",
-  "Funbound.plasma.adjustment",
-  'Fgutabs'
-  )
+#Governs how tissues are lumped:
+model.list[["pbtk"]]$tissue.list <- list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
+                         
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["pbtk"]]$calcpc <- TRUE
+  
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

@@ -39,7 +39,7 @@
 #' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
 #' partition coefficients for PBPK modeling of drugs and environmental
 #' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
-#' @keywords Parameter
+#' @keywords Parameter 1compartment
 #' @examples
 #' 
 #' calc_vdist(chem.cas="80-05-7")
@@ -49,6 +49,7 @@
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
+                      dtxsid=NULL,
                       parameters=NULL,
                       default.to.human=F,
                       species="Human",
@@ -60,10 +61,27 @@ calc_vdist<- function(chem.cas=NULL,
   physiology.data <- physiology.data
   Parameter <- NULL
 
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+    
   if (is.null(parameters))
   {
+    # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+  
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
                             chem.name=chem.name,
+                            dtxsid=dtxsid,
                             default.to.human=default.to.human,
                             species=species,
                             minimum.Funbound.plasma=minimum.Funbound.plasma)
@@ -94,10 +112,10 @@ calc_vdist<- function(chem.cas=NULL,
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
     if (class(fup) == "try-error" & default.to.human) 
     {
-      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
     if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -108,9 +126,9 @@ calc_vdist<- function(chem.cas=NULL,
     }
     if(adjusted.Funbound.plasma){
       Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
-      Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
+      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
+      Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
       fup <- 1 / ((dow) * Flipid + 1 / fup)
