@@ -86,12 +86,15 @@ get_cheminfo <- function(info="CAS",
                   "logMA",
                   "logP",
                   "MW",
+                  "Rblood2plasma",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
   if (any(!(toupper(info) %in% toupper(valid.info))) & tolower(info)!="all") stop(paste("Data on",
     info[!(info %in% valid.info)],"not available. Valid options are:",
     paste(valid.info,collapse=" ")))
+  if (any(toupper(info)=="ALL")) info <- valid.info
+
 
 # Figure out which species we support
   valid.species <- colnames(physiology.data)[!(colnames(physiology.data)
@@ -130,7 +133,7 @@ get_cheminfo <- function(info="CAS",
 
   # Identify the appropriate column for Funbound (if needed):
   species.fup <- NULL
-  if ("Funbound.plasma" %in% necessary.params)
+  if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
   {
     if (paste0(species,'.Funbound.plasma') %in% 
       colnames(chem.physical_and_invitro.data)) 
@@ -140,13 +143,13 @@ get_cheminfo <- function(info="CAS",
       species.fup <- 'Human.Funbound.plasma'
       warning('Human values substituted for Funbound.plasma.')
     } else incomplete.data <- T
-    necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
+    if (!is.null(species.fup)) necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
   }
       
   # Identify the appropriate column for Clint (if needed):
   species.clint <- NULL
   species.clint.pvalue <- NULL
-  if ("Clint" %in% necessary.params)   
+  if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
   {
     if (paste0(species,'.Clint') %in% 
       colnames(chem.physical_and_invitro.data))
@@ -158,13 +161,28 @@ get_cheminfo <- function(info="CAS",
       species.clint.pvalue <- 'Human.Clint.pValue'
       warning('Human values substituted for Clint and Clint.pValue.')
     } else incomplete.data <- T
-    necessary.params[necessary.params=="Clint"]<-species.clint
+    if (!is.null(species.clint)) necessary.params[necessary.params=="Clint"]<-species.clint
+  } 
+
+  # Identify the appropriate column for Rblood2plasma (if needed):
+  species.rblood2plasma <- NULL
+  if (tolower("Rblood2plasma") %in% unique(tolower(c(necessary.params,info))))   
+  {
+    if (paste0(species,'.Rblood2plasma') %in% 
+      colnames(chem.physical_and_invitro.data))
+    {
+      species.rblood2plasma <- paste0(species,'.Rblood2plasma')
+    } else if (default.to.human) {
+      species.rblood2plasma <- 'Human.Rblood2plasma'
+      warning('Human values substituted for Rblood2plasma.')
+    } else incomplete.data <- T
+    if (!is.null(species.rblood2plasma)) necessary.params[necessary.params=="Rblood2plasma"]<-species.rblood2plasma
   } 
 
   if (!incomplete.data)
   {
-  # Only look for parameters that we have in the table:
-  necessary.params <- necessary.params[tolower(necessary.params) %in%
+    # Only look for parameters that we have in the table:
+    necessary.params <- necessary.params[tolower(necessary.params) %in%
     tolower(colnames(chem.physical_and_invitro.data))]
   
   # Pare the chemical data down to only those chemicals where all the necessary
@@ -226,10 +244,7 @@ get_cheminfo <- function(info="CAS",
     if ('structure_formula' %in% tolower(info)) info <- 
       c('Structure_Formula',info[tolower(info) != 'structure_formula'])
     if ('substance_type' %in% tolower(info)) info <- 
-      c('Substance_Type',info[tolower(info) != 'substance_type'])
-    
-    if (any(toupper(info)=="ALL")) info <- valid.info
-    
+      c('Substance_Type',info[tolower(info) != 'substance_type'])    
  
     if (toupper("Clint") %in% toupper(info)) 
       info[toupper(info)==toupper("Clint")] <- species.clint
@@ -237,6 +252,8 @@ get_cheminfo <- function(info="CAS",
       info[toupper(info)==toupper("Clint.pValue")] <- species.clint.pvalue
     if (toupper("Funbound.plasma") %in% toupper(info)) 
       info[toupper(info)==toupper("Funbound.plasma")] <- species.fup
+    if (toupper("Rblood2plasma") %in% toupper(info)) 
+      info[toupper(info)==toupper("Rblood2plasma")] <- species.rblood2plasma
     
     columns <- colnames(chem.physical_and_invitro.data)
     this.subset <- good.chemical.data[,

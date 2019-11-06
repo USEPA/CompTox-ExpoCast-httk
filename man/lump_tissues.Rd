@@ -4,7 +4,8 @@
 \alias{lump_tissues}
 \title{Lump tissue parameters}
 \usage{
-lump_tissues(Ktissue2pu.in, tissuelist = NULL, species = "Human")
+lump_tissues(Ktissue2pu.in, parameters = NULL, tissuelist = NULL,
+  species = "Human", tissue.vols = NULL, tissue.flows = NULL)
 }
 \arguments{
 \item{Ktissue2pu.in}{List of partition coefficients from
@@ -52,7 +53,12 @@ tissuelist <- list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut
 lump_tissues(pcs,tissuelist=tissuelist)
 
 }
+\references{
+Pearce, Robert G., et al. "Evaluation and calibration of 
+high-throughput predictions of chemical distribution to tissues." Journal of
+pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+}
 \author{
-John Wambaugh
+John Wambaugh and Robert Pearce
 }
 \keyword{Parameter}

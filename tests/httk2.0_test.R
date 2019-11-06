@@ -1,4 +1,7 @@
+#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 library(httk)
+options(warn=-1)
+
 head(solve_pbtk(chem.name="Terbufos"))
 head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
                     initial.dose = 1, # Assume dose is in mg/kg BW/day  
@@ -50,6 +53,7 @@ head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
 head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
 solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
+
 
 
 

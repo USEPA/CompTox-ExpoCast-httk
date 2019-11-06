@@ -69,9 +69,9 @@
 #' 
 #' @keywords httk-pop monte-carlo
 #'
-#' @export get_httk_params
+#' @export httkpop_mc
 httkpop_mc <- function(model,
-                       samples,
+                       samples=1000,
                        httkpop.dt=NULL,
                        httkpop.generate.arg.list=list(
                           method='direct resampling',
@@ -92,8 +92,7 @@ httkpop_mc <- function(model,
                             "Other Hispanic", 
                             "Non-Hispanic White",
                             "Non-Hispanic Black", 
-                            "Other")),
-                        convert.httkpop.arg.list=list())
+                            "Other")))
 #                       
 #                       
 #                       poormetab,
@@ -124,20 +123,13 @@ httkpop_mc <- function(model,
   if (is.null(httkpop.dt))
     httkpop.dt <- do.call(
                         httkpop_generate,
-                        args=c(list(namp=samples),
+                        args=c(list(nsamp=samples),
                           httkpop.generate.arg.list))
 
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
   if (model.list[[model]]$calc.standard.httkpop2httk)
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
   
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-  converthttkfun <- model.list[[model]]$converthttk.func
-  physiology.dt <- do.call(converthttkfun, args=c(list(
-                     physiology.matrix=physiology.dt,
-                     httkpop.dt=httkpop.dt),
-                     convert.httkpop.arg.list))
-  
+
   return(physiology.dt)
 }

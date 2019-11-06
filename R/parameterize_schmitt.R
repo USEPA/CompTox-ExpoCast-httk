@@ -1,14 +1,9 @@
-#' Parameterize Schmitt's method.
+#' Get the Parameters for Schmitt's Tissue Partition Coefficient Method
 #' 
 #' This function provides the necessary parameters to run
 #' predict_partitioning_schmitt, excluding the data in tissue.data.
 #' 
-#' When species is specified as rabbit, dog, or mouse, the human unbound
-#' fraction is substituted.
-#' 
-#' force.human.fup calculates Funbound.plasma.corrected with the human lipid
-#' fractional volume in plasma.
-#' 
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
@@ -26,12 +21,14 @@
 #' human values if true.
 #' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
+#' When species is specified as rabbit, dog, or mouse, the human unbound
+#' fraction is substituted.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @return
 #' 
+#' @return
 #' \item{Funbound.plasma}{corrected unbound fraction in plasma}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
 #' if below limit of detection)} \item{Pow}{octonol:water partition coefficient
@@ -42,15 +39,15 @@
 #' \item{plasma.pH}{pH of the plasma}
 #'
 #' @author Robert Pearce and John Wambaugh
+#'
 #' @keywords Parameter schmitt
 #'
-#' #' @references Schmitt, Walter. "General approach for the calculation of 
+#' @references Schmitt, Walter. "General approach for the calculation of 
 #' tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 #' 457-467.
 #' 
-#' Schmitt, Walter. "Corrigendum to:“General approach for the calculation of 
-#' 'tissue to plasma partition coefficients”[Toxicology in Vitro 22 (2008) 
-#' 457–467]." Toxicology in Vitro 22.6 (2008): 1666.
+#' Schmitt, Walter. "Corrigendum to: General approach for the calculation of 
+#' tissue to plasma partition coefficients" Toxicology in Vitro 22.6 (2008): 1666.
 #' 
 #' Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
 #' for predicting partition coefficients for PBPK modeling of drugs and 
@@ -66,8 +63,8 @@
 #' parameterize_schmitt(chem.name='bisphenola')
 #' 
 #' @export parameterize_schmitt
-parameterize_schmitt <- function(
-                          chem.cas=NULL,
+
+parameterize_schmitt <- function(chem.cas=NULL,
                           chem.name=NULL,
                           dtxsid = NULL,
                           parameters=NULL,
@@ -94,7 +91,7 @@ parameterize_schmitt <- function(
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-  if (is.null(parameters))
+  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,
@@ -103,62 +100,107 @@ parameterize_schmitt <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
-                                 
-    # unitless fraction of chemical unbound with plasma
+  }
+
+# Check the species argument for capitilization problems and whether or not it 
+# is in the table:  
+  if (!(species %in% colnames(physiology.data)))
+  {
+    if (toupper(species) %in% toupper(colnames(physiology.data)))
+    {
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
+    } else stop(paste("Physiological PK data for",species,"not found."))
+  } else phys.species <- species                                 
+                                                           
+# Load the physiological parameters for this species
+  this.phys.data <- physiology.data[,phys.species]
+  names(this.phys.data) <- physiology.data[,1]
+
+#    required.params <- model.table[["Schmitt"]]$paramterize_params
+#    if (!(all(required.parasms%in%names(parameters)))) 
+#      stop("Missing parameters",
+#        paste(required.params[!(required.params%in%names(parameters))],
+#          collapse=", "),
+#        "in parameterize_schmitt")
+        
+  # unitless fraction of chemical unbound with plasma
+  fup.db <- try(
+              get_invitroPK_param(
+                "Funbound.plasma",
+                species,
+                chem.cas=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid),
+              silent=T)
+  if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
+  {
     fup.db <- try(
                 get_invitroPK_param(
                   "Funbound.plasma",
-                  species,
-                  chem.CAS=chem.cas),
+                  "Human",
+                  chem.cas=chem.cas,
+                  chem.name=chem.name,
+                  dtxsid=dtxsid),
                 silent=T)
-    if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
-    {
-      fup.db <- try(
-                  get_invitroPK_param(
-                    "Funbound.plasma",
-                    "Human",
-                    chem.CAS=chem.cas),
-                  silent=T)
-      if (!suppress.messages) 
-        warning(paste(species,"coerced to Human for protein binding data."))
-    }
-    if (class(fup.db) == "try-error") 
-      stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-
-  # Load the physico-chemical properties:  
-    pKa_Donor <- suppressWarnings(get_physchem_param(
-                                    "pKa_Donor",
-                                    chem.CAS=chem.cas))
-    pKa_Accept <- suppressWarnings(get_physchem_param(
-                                     "pKa_Accept",
-                                     chem.CAS=chem.cas))
-    Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
-    MA <- suppressWarnings(10^(get_physchem_param("logMA",chem.CAS=chem.cas))) 
-    Fprotein <- physiology.data[
-                  which(physiology.data[,'Parameter'] ==
-                    'Plasma Protein Volume Fraction'),
-                  which(tolower(colnames(physiology.data)) == tolower(species))]
-    plasma.pH <- 7.4
-    alpha <- 0.001
-  } else {
-    required.params <- model.table[["Schmitt"]]$paramterize_params
-    if (!(all(required.parasms%in%names(parameters)))) 
-      stop("Missing parameters",
-        paste(required.params[!(required.params%in%names(parameters))],
-          collapse=", "),
-        "in parameterize_schmitt")
-        
-    fup.db <- parameters$Fraction_unbound_plasma
-    Pow <- parameters$Pow,
-    pKa_Donor <- parameters$pKa_Donor,
-    pKa_Accept <- parameters$pKa_Accept,
-    MA <- parameters$MA,
-    Fprotein <- parameters$Fprotein.plasma,
-    plasma.pH <- parameters$plasma.pH,
-    alpha <- parameters$alpha
+    if (!suppress.messages) 
+      warning(paste(species,"coerced to Human for protein binding data."))
   }
+  if (class(fup.db) == "try-error") 
+    stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+  if (!is.null(parameters))
+    if ("Fraction_unbound_plasma" %in% names(parameters))
+      fup.db <- parameters$Fraction_unbound_plasma
+  
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+  if (!is.null(parameters))
+    if ("Pow" %in% names(parameters))
+      Pow <- parameters$Pow
+        
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+                                    "pKa_Donor",
+                                    chem.cas=chem.cas,
+                                    chem.name=chem.name,
+                                    dtxsid=dtxsid))
+  if (!is.null(parameters))
+    if ("pKa_Donor" %in% names(parameters))
+      pKa_Donor <- parameters$pKa_Donor
+        
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+                                     "pKa_Accept",
+                                     chem.cas=chem.cas,
+                                     chem.name=chem.name,
+                                     dtxsid=dtxsid))
+  if (!is.null(parameters))
+    if ("pKa_Accept" %in% names(parameters))
+      pKa_Accept <- parameters$pKa_Accept
+  
+  MA <- suppressWarnings(10^(get_physchem_param("logMA",
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid))) 
+  if (!is.null(parameters))
+    if ("MA" %in% names(parameters))
+      MA <- parameters$MA
+  
+  Fprotein <- physiology.data[
+                which(physiology.data[,'Parameter'] ==
+                  'Plasma Protein Volume Fraction'),
+                which(tolower(colnames(physiology.data)) == tolower(species))]
+  if (!is.null(parameters))
+    if ("Fprotein.plasma" %in% names(parameters))
+      Fprotein <- parameters$Fprotein.plasma
+  
+  plasma.pH <- 7.4
+  if (!is.null(parameters))
+    if ("plasma.pH" %in% names(parameters))
+      plasma.pH <- parameters$plasma.pH
 
-    
+  alpha <- 0.001
+  if (!is.null(parameters))
+    if ("alpha" %in% names(parameters))
+      alpha <- parameters$alpha
+
 # Check if fup is a point value or a distribution, if a distribution, use the median:
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
   {
@@ -171,25 +213,7 @@ parameterize_schmitt <- function(
     fup.dist <- NA 
   }
   
-  if (fup.point == 0) stop("Fraction unbound = 0, can't predict partitioning.")
-                                 
-# Check the species argument for capitilization problems and whether or not it 
-is in the table:  
-  if (!(species %in% colnames(physiology.data)))
-  {
-    if (toupper(species) %in% toupper(colnames(physiology.data)))
-    {
-      phys.species <- colnames(physiology.data)[
-                        toupper(colnames(physiology.data))==toupper(species)]
-    } else stop(paste("Physiological PK data for",species,"not found."))
-  } else phys.species <- species                                 
-                                 
-                                                           
-# Load the physiological parameters for this species
-  this.phys.data <- physiology.data[,phys.species]
-  names(this.phys.data) <- physiology.data[,1]
-  
-
+  if (fup.point == 0) warning("Fraction unbound = 0, can't predict tissue partitioning.")
 
 # Calculate Pearce (2017) in vitro plasma binding correction:
   if (force.human.fup) 
@@ -201,6 +225,10 @@ is in the table:
                    physiology.data,
                    Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
                      which(tolower(colnames(physiology.data)) == tolower(species))]
+  if (!is.null(parameters))
+    if ("Flipid" %in% names(parameters))
+      Flipid <- parameters$Flipid
+
   ion <- calc_ionization(
            pH=plasma.pH,
            pKa_Donor=pKa_Donor,
@@ -222,9 +250,8 @@ is in the table:
                   pKa_Accept=pKa_Accept,
                   MA=MA,
                   Fprotein.plasma = Fprotein,
-                  plasma.pH=plasma.pH],
+                  plasma.pH=plasma.pH,
                   alpha=alpha)
   
   return(outlist)                                
-                                 
 }

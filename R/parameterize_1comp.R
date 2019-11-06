@@ -49,7 +49,7 @@
 #' first pass clearance, calculated from the corrected well-stirred model.}
 #' \item{BW}{Body Weight, kg.} 
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -97,7 +97,16 @@ parameterize_1comp <- function(
       is.null(chem.name) & 
       is.null(dtxsid)) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
-  
+
+# Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+     
   params <- list()
   params[['Vdist']] <- calc_vdist(
                          chem.cas=chem.cas,
@@ -107,7 +116,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=T)
+                         suppress.messages=F)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -126,6 +135,7 @@ parameterize_1comp <- function(
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
                          chem.cas=chem.cas,
                          chem.name=chem.name,
+                         dtxsid=dtxsid,
                          species=species,
                          suppress.messages=T,
                          default.to.human=default.to.human,
@@ -180,15 +190,13 @@ parameterize_1comp <- function(
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   
-  if (is.null(chem.cas)) chem.cas <- get_chem_id(
-                                      chem.name=chem.name)[['chem.cas']]
-  params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
+  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
     Fgutabs <- try(
                  get_invitroPK_param(
                    "Fgutabs",
                    species,
-                   chem.CAS=chem.cas),
+                   chem.cas=chem.cas),
                  silent=T)
     if (class(Fgutabs) == "try-error") Fgutabs <- 1
     

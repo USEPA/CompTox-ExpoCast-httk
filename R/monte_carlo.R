@@ -3,7 +3,7 @@
 #' This function performs Monte Carlo to assess uncertainty and variability for
 #' toxicokinetic models. 
 #' 
-#' @param params All parameters needed by the function indicated by the
+#' @param parameters All parameters needed by the function indicated by the
 #' argument "name.model". These paramters that are also listed in either
 #' cv.params or censored.params are sampled using Monte Carlo.
 #' @param which.quantile This argument specifies which quantiles are to be
@@ -12,8 +12,8 @@
 #' @param cv.params The parameters listed in cv.params are sampled from a
 #' normal distribution that is truncated at zero. This argument should be a
 #' list of coefficients of variation (cv) for the normal distribution. Each
-#' entry in the list is named for a parameter in "params". New values are
-#' sampled with mean equal to the value in "params" and standard deviation
+#' entry in the list is named for a parameter in "parameters". New values are
+#' sampled with mean equal to the value in "parameters" and standard deviation
 #' equal to the mean times the cv.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
@@ -54,12 +54,12 @@
 #' library(ggplot2)
 #' library(scales)
 #' vary.params <- NULL
-#' params <- parameterize_pbtk(chem.name = "Zoxamide")
-#' for(this.param in names(subset(params,
-#' names(params) != "Funbound.plasma"))) vary.params[this.param] <- .2
+#' parameters <- parameterize_pbtk(chem.name = "Zoxamide")
+#' for(this.param in names(subset(parameters,
+#' names(parameters) != "Funbound.plasma"))) vary.parameters[this.param] <- .2
 #' censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 #' set.seed(1)
-#' out <- monte_carlo(params, cv.params = vary.params,
+#' out <- monte_carlo(parameters, cv.params = vary.params,
 #' censored.params = censored.params, return.samples = T,
 #' model = "pbtk", suppress.messages = T)
 #' zoxamide <- ggplot(as.data.frame(out), aes(out)) +
@@ -73,11 +73,11 @@
 #' # Fig 1 in Wambaugh et al. (2015) SimCYP vs. our predictions:
 #' 
 #' vary.params <- list(BW=0.3)
-#' vary.params[["Vliverc"]]<-0.3
-#' vary.params[["Qgfrc"]]<-0.3
-#' vary.params[["Qtotal.liverc"]]<-0.3
-#' vary.params[["million.cells.per.gliver"]]<-0.3
-#' vary.params[["Clint"]]<-0.3
+#' vary.parameters[["Vliverc"]]<-0.3
+#' vary.parameters[["Qgfrc"]]<-0.3
+#' vary.parameters[["Qtotal.liverc"]]<-0.3
+#' vary.parameters[["million.cells.per.gliver"]]<-0.3
+#' vary.parameters[["Clint"]]<-0.3
 #' censored.params<-list(Funbound.plasma=list(cv=0.3,lod=0.01))
 #' 
 #' pValues <- get_cheminfo(c("Compound","CAS","Clint.pValue"))
@@ -90,11 +90,11 @@
 #'   if (this.CAS %in% get_wetmore_cheminfo()){
 #'     print(this.CAS)
 #'     these.params <- parameterize_steadystate(chem.cas=this.CAS)
-#'     if (these.params[["Funbound.plasma"]] == 0.0) 
+#'     if (these.parameters[["Funbound.plasma"]] == 0.0) 
 #'     {
-#'       these.params[["Funbound.plasma"]] <- 0.005
+#'       these.parameters[["Funbound.plasma"]] <- 0.005
 #'     }
-#'     these.params[["Fhep.assay.correction"]] <- 1
+#'     these.parameters[["Fhep.assay.correction"]] <- 1
 #'     vLiver.human.values <- monte_carlo(these.params,
 #'                                        cv.params=vary.params,
 #'                                        censored.params=censored.params,
@@ -150,17 +150,17 @@
 #' ## End(**Not run**)
 #' }
 #' 
-#' @import stats msm data.table
+#' @import stats data.table
 #' @export monte_carlo
 monte_carlo <- function(
-                 params,
+                 parameters,
                  cv.params=NULL,
                  censored.params=NULL,
                  samples=1000)
 {
 
 # Create a data table with the same parameters in every row:  
-  MC.matrix <- as.data.table(parameters.mean)[rep(1,samples)]
+  MC.matrix <- as.data.table(parameters)[rep(1,samples)]
 
 # Number of different results to be obtained for the different paramters:
   sample.vec <- rep(NA,samples)
@@ -168,16 +168,16 @@ monte_carlo <- function(
 # truncated at zero:
   for (this.param in names(cv.params))
   {
-    if (!(this.param %in% names(params))) 
+    if (!(this.param %in% names(parameters))) 
       stop(paste("Cannot find cv.params parameter",
         this.param,
         "in parameter list."))
-    if (params[[this.param]]>0) 
+    if (parameters[[this.param]]>0) 
       MC.matrix[,this.param] <- 
       rtnorm(
         samples,
-        mean=params[[this.param]],
-        sd=params[[this.param]]*cv.params[[this.param]],
+        mean=parameters[[this.param]],
+        sd=parameters[[this.param]]*cv.params[[this.param]],
         lower=0)
     else 
     {
@@ -189,10 +189,10 @@ Parameter value fixed at zero."))
     }
   }
   
-# Any parameter given in censored params is sampled from a censored distribution:
+# Any parameter given in censored parameters is sampled from a censored distribution:
   for (this.param in names(censored.params))
   {
-    if (!(this.param %in% names(params))) 
+    if (!(this.param %in% names(parameters))) 
       stop(paste("Cannot find censored.params parameter",
         this.param,"in parameter list."))
     if (!("cv" %in% names(censored.params[[this.param]]))) 
@@ -204,8 +204,8 @@ Parameter value fixed at zero."))
     if(this.param %in% c('Funbound.plasma','Fhep.assay.correction'))  upper <- 1
     else upper <- Inf
     MC.matrix[,this.param] <- r_left_censored_norm(samples,
-      mean=params[[this.param]],
-      sd=params[[this.param]]*censored.params[[this.param]]$cv,
+      mean=parameters[[this.param]],
+      sd=parameters[[this.param]]*censored.params[[this.param]]$cv,
       lod=censored.params[[this.param]]$lod,
       upper=upper)
   }

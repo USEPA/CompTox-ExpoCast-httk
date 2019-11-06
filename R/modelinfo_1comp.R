@@ -9,13 +9,12 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
-# Function fpr converting httk-pop physiology to model parameters:
-model.list[["1compartment"]]$convert.httkpop.func <- "convert_httkpop_1comp"
- 
+# Function called for running the model:
+model.list[["1compartment"]]$solve.func <- "solve_1comp"
+
 # How the tissues from tissue.table are lumped together to form the model:
 # 1compartment model lumps everything, so list of compartments is empty.
-model.list[['1compartment']]$tissues <- vector(mode='character',
-                                                length=0)
+model.list[['1compartment']]$tissuelist <- NULL
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
@@ -115,13 +114,42 @@ model.list[["1compartment"]]$state.vars <- c(
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["1compartment"]]$required.params <- c(
-  "Clint",
+  "Clint", 
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
   "MW"
    )
+   
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["1compartment"]]$propagateuv.func <- "propagateuv_1comp"
+
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["1compartment"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hepatic.bioavailability",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Rblood2plasma",
+  "Vdist")
+
+#Governs how tissues are lumped:
+model.list[["1compartment"]]$tissue.list <- NULL
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["1compartment"]]$calcpc <- TRUE
+
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["1compartment"]]$firstpass <- TRUE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T

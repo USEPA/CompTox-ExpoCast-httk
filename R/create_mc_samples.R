@@ -114,29 +114,28 @@
 #' }
 #'
 #' @import stats
-#' @export ceate_mo_samples
+#' @export create_mc_samples
 create_mc_samples <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         parameters=NULL,
                         samples=1000,
-                        which.quantile=0.95,
                         species="Human",
                         suppress.messages=F,
                         model='3compartmentss',
                         httkpop=T,
                         invitrouv=T,
-                        censored.params=list()),
+                        calcrb2p=T,
+                        censored.params=list(),
                         vary.params=list(),
                         return.samples=F,
-                        default.to.human=F,
                         tissue=NULL,
-                        clint.pvalue.threshold=0.05,
-                        fup.censored.dist=FALSE,
-                        fup.lod=0.01,
-                        httkpop.matrix=NULL,
+                        httkpop.dt=NULL,
                         invitro.mc.arg.list=list(
+                          adjusted.Funbound.plasma=T,
                           poormetab=T,
+                          fup.censored.dist=FALSE,
+                          fup.lod=0.01,
                           fup.meas.cv=0.4,
                           clint.meas.cv=0.3,
                           fup.pop.cv=0.3,
@@ -162,8 +161,20 @@ create_mc_samples <- function(chem.cas=NULL,
                             "Non-Hispanic Black", 
                             "Other")),
                         convert.httkpop.arg.list=list(),
-                        parameterize.arg.list=list())
+                        propagate.invitrouv.arg.list=list(),
+                        parameterize.arg.list=list(
+                          restrictive.clearance = T,
+                          default.to.human=F,
+                          clint.pvalue.threshold=0.05,
+                          regression=T))
 {
+
+#
+#
+# ERROR CHECKING AND INITIALIZATION:
+#
+#
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -190,8 +201,19 @@ create_mc_samples <- function(chem.cas=NULL,
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=c(list(chem.cas=chem.cas,
                              chem.name=chem.name,
-                             dtxsid=dtxsid),
+                             dtxsid=dtxsid,
+                             species=species),
                              parameterize.arg.list))
+    parameter.names <- names(parameters.mean)
+    pschmitt <- parameterize_schmitt(
+                  chem.cas=chem.cas,
+                  chem.name,
+                  dtxsid=dtxsid,
+                  species=species,
+                  suppress.messages=T)
+# The Schmitt parameters are useful if we need to redo partitioning later:
+    pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
+    parameters.mean <- c(parameters.mean, pschmitt)
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
@@ -207,8 +229,8 @@ create_mc_samples <- function(chem.cas=NULL,
         "are specified to be sampled by monte_carlo and then overwritten by httkpop_mc."))
         
 # Make sure that parameters that monte_carlo samples won't be overwritten later:
-  if (invitrouv & any(c(names(censored.params),names(vary.params)) %in%
-    model.list[[model]]$invitro.params)) stop(paste("Parameters",
+  if (invitrouv & (any(c(names(censored.params),names(vary.params)) %in%
+    model.list[[model]]$invitro.params))) stop(paste("Parameters",
       paste(c(names(censored.params),names(vary.params))[
         c(names(censored.params),names(vary.params)) %in%
         model.list[[model]]$invitro.params],collapse=", "), 
@@ -233,20 +255,46 @@ create_mc_samples <- function(chem.cas=NULL,
 # httk-pop (Ring et al., 2017)
 #
 #
-  if (httkpop=T & tolower(species)=="human")
+
+  if (httkpop==T & tolower(species)=="human")
   {
     physiology.dt <- httkpop_mc(
                        model=model,
+                       samples=samples,
                        httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list=httkpop_generate.arg.list,
-                       convert.httkpop.arg.list=convert.httkpop.arg.list)
+                       httkpop.generate.arg.list=httkpop.generate.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
-  } else if(httkpop==T) 
+    
+  # Convert the httk-pop parameters to appropriate model variables
+    converthttkpopfun <- model.list[[model]]$convert.httkpop.func
+    if (!is.null(converthttkpopfun))
+      parameters.dt <- do.call(converthttkpopfun, args=c(list(
+                       parameters.dt=parameters.dt,
+                       httkpop.dt=httkpop.dt),
+                       convert.httkpop.arg.list))
+   } else {
+    if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
+     this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
+     these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
+     these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
+     for (this.name in these.vols$Name)
+       if (!(this.name %in% names(parameters.dt)))
+         parameters.dt[,eval(this.name):=subset(these.vols,Name==this.name)$value]
+     these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
+     these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
+     these.flows$value <- these.flows$value/
+       as.numeric(subset(physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(physiology.data))==tolower(species)])
+     for (this.name in these.flows$Name)
+       if (!(this.name %in% names(parameters.dt)))
+         parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
+     parameters.dt[, hematocrit:=
+       as.numeric(subset(physiology.data,Parameter=="Hematocrit")[
+       tolower(colnames(physiology.data))==tolower(species)])]
   }
-
 #
 #
 # MONTE CARLO STEP THREE
@@ -256,164 +304,130 @@ Set species=\"Human\" to run httkpop model.')
 
 # Next add chemical-specific Funbound.plasma and CLint values
 # Just cbind them together for now
-  if (invitrouv)
-  parameter.matrix <- cbind(physiology.matrix,
-                invitro_mc(this.chem=chemcas,
-                  parameters=parameters,
-                  nsamp=nrow(indiv_bio),
-                  poormetab=poormetab,
-                  fup.meas.cv=fup.meas.cv,
-                  clint.meas.cv=clint.meas.cv,
-                  fup.pop.cv=fup.pop.cv,
-                  clint.pop.cv=clint.pop.cv,
-                  fup.censored.dist=fup.censored.dist,
-                  fup.lod=fup.lod,
-                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                  clint.pvalue.threshold=clint.pvalue.threshold))
+  if (invitrouv) 
+  {
+    parameters.dt <- do.call(invitro_mc,
+                       args=c(list(
+                         parameters.dt=parameters.dt,
+                         samples=samples),
+                         invitro.mc.arg.list))
+  }
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if(any(c("pKa_Donor","pKa_Accept") %in% colnames(parameter.matrix))){
-    suppressWarnings(parameter.matrix[, c("pKa_Donor","pKa_Accept") := NULL]) 
-      %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
+  {
+    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
   }
 
 #
 #
-# MONTE CARLO STEP FOURE
-# UPDATE THE PARTITION COEFFICIENTS
+# MONTE CARLO STEP FOUR
+# PROPAGATE ANY CHANGES IN PARAMETER VALUES:
 #
 #
 
-# For models with tissue-to-plasma partition coefficients we neeed to calculate
-# them for each individual because each individual has a different 
-# Funbound.plasma value:
-  #First, get the default parameters used for the Schmitt method of estimating
-  #partition coefficients.
-  if (!is.null(this.chem))
+# Do we need to calculate first pass metabolism for this model (i.e., is flow
+# from the gut into the liver not included in the model)
+  firstpass <- model.list[[model]]$firstpass
+
+  if (calcrb2p & any(c(!is.null(chem.cas),
+                       !is.null(chem.name),
+                       !is.null(dtxsid))))
   {
-    pschmitt <- httk::parameterize_schmitt(chem.cas=this.chem,
-                                         species='Human')
-  } else {
-    pschmitt <- parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]]
-    pschmitt.chemindependent <- httk::parameterize_schmitt(chem.cas="80-05-7",species="Human")
-    pschmitt <- c(pschmitt,pschmitt.chemindependent[c("Fprotein.plasma","plasma.pH","alpha")])
-#      pschmitt[["MA"]] <- NA
+    Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
+                                     chem.name=chem.name,
+                                     dtxsid=dtxsid)
+  } else Rb2p.invivo <- NA
+
+  if (model.list[[model]]$calcpc | (calcrb2p & is.na(Rb2p.invivo)) | firstpass)
+  { 
+#Now, predict the partitioning coefficients using Schmitt's method. The
+#result will be a list of numerical vectors, one vector for each
+#tissue-to-plasma partitioning coefficient, and one element of each vector
+#for each individual. The list element names specify which partition
+#coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
+    PCs <- predict_partitioning_schmitt(
+             parameters=parameters.dt,
+             chem.name=chem.name,
+             chem.cas=this.chem,
+             dtxsid=dtxsid,
+             species=species,
+             adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
+             regression=parameterize.arg.list$regression,
+             suppress.messages=T)
   }
-  #next, replace the single default value for Funbound.plasma with the vector
-  #of Funbound.plasma values from the virtual population data.table.
-  pschmitt$Funbound.plasma<-parameters.dt[, Funbound.plasma]
 
-  #Now, predict the partitioning coefficients using Schmitt's method. The
-  #result will be a list of numerical vectors, one vector for each
-  #tissue-to-plasma partitioning coefficient, and one element of each vector
-  #for each individual. The list element names specify which partition
-  #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-  PCs <- httk::predict_partitioning_schmitt(parameters=pschmitt,
-                                            chem.cas=this.chem,
-                                            species='Human',
-                                            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                            regression=regression)
-
-  if (model.list$[[model]]$calcpc)
+# If the model uses partion coefficients we need to lump each individual
+# separately in case rest of body organ volumes or PCs vary:
+  if (model.list[[model]]$calcpc)
   {
-    # List all tissues for which HTTK has human tissue information. 
-    # This will be used in lumping.  
-      tissuenames <- sort(unique(subset(httk::tissue.data,Species=="Human")$Tissue))
-    # We don't use these tissues for lumping:
-      tissuenames <- tissuenames[!(tissuenames %in% c("red blood cells"))]
+     lumptissues <- lump_tissues(
+                      PCs,
+                      parameters=parameters.dt,
+                      tissuelist=model.list[[model]]$tissue.list,
+                      species=species
+                      ) 
+                      
+     parameters.dt[, names(lumptissues):= lumptissues]
+  }
   
-  # Lump the tissues, depending on model. tissues is a list of all the 
-  # unlumped compartments, all other tissues will be lumped into a "rest" 
-  # compartment.
-      tissue.list <- model.table[model]$tissues
-      if (!is.null(tissue.list))
-      {
-  # Check to make sure that all the requested tissues are available:
-        if (any(!(tissue.list %in% tissuenames))) stop(paste(
-                                                    "Requested tissue(s)",
-                                                    paste(tissue.list[
-                                                      !(tissue.list %in% 
-                                                      tissuenames)],
-                                                      collapse=", "),
-                                                    "are not in tissue.data."))
-      
-      #Now get the list of tissues to be lumped: that is, everything in
-      #tissuenames that wasn't in the list of compartments for this model.
-      rest.tissues <- tissuenames[!(tissuenames %in%
-                                      c(tissue.list,
-                                        'red blood cells'))]
-      #Lump the volumes by simply summing them.
-      vol.restc <- parameters.dt[,
-                               Reduce('+', .SD),
-                               .SDcols=paste0('V',
-                                              rest.tissues,
-                                              'c')]
-      #Lump the flows by summing them.
-      flow.restf <- parameters.dt[,
-                                Reduce('+', .SD),
-                                .SDcols=paste0('Q',
-                                               rest.tissues,
-                                               'f')]
-      #Lumped partition coefficient: sum partition coefficients of rest.tissues,
-      #weighted by their volumes; then divide by total lumped volume.
-      Krest2pu <- Reduce('+',
-                             lapply(as.list(rest.tissues),
-                                    function(x) PCs[[paste0('K',
-                                                            x,
-                                                            '2pu')]]*
-                                      unlist(parameters.dt[,
-                                                         paste0('V',
-                                                                x,
-                                                                'c'),
-                                                         with=FALSE])
-                             )
-      )/vol.restc
-  
-      #Add lumped volumes, flows, and partition coefficients to population
-      #data.table
-      parameters.dt[, Vrestc:=vol.restc]
-      parameters.dt[, Qrestf:=flow.restf]
-      parameters.dt[, Krest2pu:=Krest2pu]
-      if (!(length(tissue.list)==0)){
-        #For enumerated tissue compartments (if any), add their partitition
-        #coefficients to the population data.table as well.
-  
-        #First get the vector of partition coefficient names
-        #(names of elements of PCs)
-        knames <- paste0('K',
-                         tissue.list,
-                         '2pu')
-        #Then add them to the population data.table. data.table syntax: wrap
-        #vector of column names in parentheses to assign to multiple columns at
-        #once
-        parameters.dt[, (knames):=PCs[knames]]
-      }
-    }
-
-    parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
-
-    #For 1 compartment, 3 compartment, or PBTK models: Calculate Rblood2plasma
-    #based on hematocrit and Krbc2plasma. This is the ratio of chemical in blood
-    #vs. in plasma.
-    if (is.null(parameters))
+  if (calcrb2p | firstpass)
+  {
+# If we have an in vivo value, then back-calculate the partition coefficient:
+    if (!is.na(Rb2p.invivo))
     {
-      Rblood2plasma <- get_rblood2plasma(chem.cas=this.chem,species='Human')
-    } else {
-      Rblood2plasma <- calc_rblood2plasma(params=pschmitt,species="Human")
-    }
-    parameters.dt[,Rblood2plasma:=Rblood2plasma]
-
-    parameters.dt[is.na(Rblood2plasma),
-                Rblood2plasma:=(1-
-                                  hematocrit +
-                                  hematocrit*
-                                  Krbc2pu*
-                                  Funbound.plasma)]
+# From Pearce et al. (2017):
+      parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
+                                            parameters.mean$Funbound.plasma,
+                                            parameters.mean$hematocrit)]
+    } else { 
+      parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
+# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
+# This is the ratio of chemical in blood vs. in plasma.
+    }  
+    parameters.dt[,Rblood2plasma := calc_rblood2plasma(
+                                      hematocrit=parameters.dt$hematocrit,
+                                      Krbc2pu=parameters.dt$Krbc2pu,
+                                      Funbound.plasma=Funbound.plasma)]
   }
-
+  
   if (firstpass)
   {
+  
+# For models that don't described first pass blood flow from the gut, need the
+# total liver blood flow to cacluate a hepatic bioavailability (Rowland, 1973):
+    if (!("Qtotal.liverc" %in% names(parameters.dt)))
+      parameters.dt[, Qtotal.liverc:=Qcardiacc*(Qgutf+Qliverf)] # L/h/(kgBW)^3/4
+  
+# For models that don't described first pass blood flow from the gut, need the
+# unscaled hepatic clearance to cacluate a hepatic bioavailability 
+# (Rowland, 1973):      
+  cl <- calc_hep_clearance(parameters=parameters.dt,
+          hepatic.model='unscaled',
+          suppress.messages=T)#L/h/kg body weight
+
+  parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
+    parameters=list(
+      Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
+      Funbound.plasma=parameters.dt$Funbound.plasma,
+      Clmetabolismc=cl, # L/h/kg
+      Rblood2plasma=parameters.dt$Rblood2plasma,
+      BW=parameters.dt$BW),
+    restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
   }
+  
+#
+# Do any model-specific uncertainty propagation
+#
+  propagateuvfun <- model.list[[model]]$propagateuv.func
+  if (!is.null(propagateuvfun))
+    parameters.dt <- do.call(propagateuvfun, args=c(list(
+                       parameters.dt=parameters.dt),
+                       propagate.invitrouv.arg.list))
+  
+#Return only the HTTK parameters for the specified model. That is, only the
+#columns whose names are in the names of the default parameter set.
+  return(parameters.dt[,..parameter.names])
 }

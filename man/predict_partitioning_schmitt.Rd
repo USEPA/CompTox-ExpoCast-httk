@@ -5,11 +5,12 @@
 \title{Predict partition coefficients using the method from Schmitt (2008).}
 \usage{
 predict_partitioning_schmitt(chem.name = NULL, chem.cas = NULL,
-  species = "Human", default.to.human = F, parameters = NULL,
-  alpha = 0.001, adjusted.Funbound.plasma = T, regression = T,
-  regression.list = c("brain", "adipose", "gut", "heart", "kidney",
-  "liver", "lung", "muscle", "skin", "spleen", "bone"), tissues = NULL,
-  minimum.Funbound.plasma = 1e-04)
+  dtxsid = NULL, species = "Human", default.to.human = F,
+  parameters = NULL, alpha = 0.001, adjusted.Funbound.plasma = T,
+  regression = T, regression.list = c("brain", "adipose", "gut",
+  "heart", "kidney", "liver", "lung", "muscle", "skin", "spleen", "bone"),
+  tissues = NULL, minimum.Funbound.plasma = 1e-04,
+  suppress.messages = F)
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -73,6 +74,22 @@ Human tissue volumes are used for species other than Rat.
 
 predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 
+}
+\references{
+Schmitt, Walter. "General approach for the calculation of tissue to plasma 
+partition coefficients." Toxicology in Vitro 22.2 (2008): 457-467.
+
+Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
+International Life Sciences Institute, Risk Science Institute, Washington, 
+DC (1994).
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
+
+Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
+tissue-to-plasma partition coefficients using readily available input 
+parameters." Xenobiotica 43.10 (2013): 839-852.
 }
 \author{
 Robert Pearce
