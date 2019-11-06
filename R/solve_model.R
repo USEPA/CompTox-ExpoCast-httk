@@ -368,7 +368,7 @@ solve_model <- function(chem.name = NULL,
 
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
-# dosing. Each additional dose after the initial dose is an event.
+# any dosings beyond the initial dosing. 
   if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(daily.dose))
   {
 # If we are simulating a single dose then we don't need eventdata:
