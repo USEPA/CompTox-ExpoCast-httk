@@ -302,16 +302,16 @@ parameterize_inhalation <- function(chem.cas=NULL,
     Kair2muc <- 10^(lKair2muc)
     Kmuc2air <- 1/Kair2muc
     if(exercise){
-      Qalv = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, Added 4-30-19 to allow user-input respiratory and/or work values, assumes input units of L and min^-1
+      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, Added 4-30-19 to allow user-input respiratory and/or work values, assumes input units of L and min^-1
     } else {
       #Vdot <- 24.75 #L/h, changed 4-29-19 to allow user to change inhalation physiologic parameters
       #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary
       Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
       Fds <- 0.15 #changed 4-29-19 to allow user to change inhalation physiologic parameters
       #Fds <- this.phys.data["Alveolar Dead Space Fraction"]
-      Qalv <- Vdot * (0.67) #L/h/kg^0.75
+      Qalvc <- Vdot * (0.67) #L/h/kg^0.75
     }
-    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalv=as.numeric(Qalv))
+    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
         
   return(outlist[sort(names(outlist))])
