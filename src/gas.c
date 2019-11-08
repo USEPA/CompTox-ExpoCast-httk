@@ -47,57 +47,58 @@
    1 Input:
      Cgas (forcing function)
 
-   50 Parameters:
-     BW = 70,
-     Clmetabolismc = 0.203,
+   51 Parameters:
+     BW = 0,
+     Clmetabolismc = 0,
      vmax = 0,
-     km = 1,
-     hematocrit = 0.44,
-     kgutabs = 1,
+     km = 0,
+     hematocrit = 0,
+     kgutabs = 0,
      Kkidney2pu = 0,
      Kliver2pu = 0,
      Krest2pu = 0,
      Kgut2pu = 0,
      Klung2pu = 0,
-     Qcardiacc = 4.8,
-     Qgfrc = 0.108,
-     Qgutf = 0.205,
-     Qkidneyf = 0.221,
-     Qliverf = 0.0536,
+     Qcardiacc = 0,
+     Qgfrc = 0,
+     Qgutf = 0,
+     Qkidneyf = 0,
+     Qliverf = 0,
      Qlungf = 0,
-     Vartc = 0.0487,
-     Vgutc = 0.0158,
-     Vkidneyc = 0.00119,
-     Vliverc = 0.02448,
-     Vlungc = 0.00723,
-     Vrestc = 0.77654,
-     Vvenc = 0.0487,
-     Fraction_unbound_plasma = 0.0682,
-     Rblood2plasma = 0.0,
-     Clmetabolism = 0.0,
-     Qcardiac = 0.0,
-     Qgfr = 0.0,
-     Qgut = 0.0,
-     Qkidney = 0.0,
-     Qliver = 0.0,
-     Qlung = 0.0,
-     Qrest = 0.0,
-     Vart = 0.0,
-     Vgut = 0.0,
-     Vkidney = 0.0,
-     Vliver = 0.0,
-     Vlung = 0.0,
-     Vrest = 0.0,
-     Vven = 0.0,
+     Vartc = 0,
+     Vgutc = 0,
+     Vkidneyc = 0,
+     Vliverc = 0,
+     Vlungc = 0,
+     Vrestc = 0,
+     Vvenc = 0,
+     Fraction_unbound_plasma = 0,
+     Rblood2plasma = 0,
+     Clmetabolism = 0,
+     Qcardiac = 0,
+     Qgfr = 0,
+     Qgut = 0,
+     Qkidney = 0,
+     Qliver = 0,
+     Qlung = 0,
+     Qrest = 0,
+     Vart = 0,
+     Vgut = 0,
+     Vkidney = 0,
+     Vliver = 0,
+     Vlung = 0,
+     Vrest = 0,
+     Vven = 0,
+     Qalvc = 0,
      Qalv = 0,
      Kblood2air = 0,
-     kUrtc = 11.0,
+     kUrtc = 0,
      kUrt = 0,
      Kmuc2air = 0,
-     Vmucc = 0.0001,
+     Vmucc = 0,
      Vmuc = 0.0,
      Vmax = 0,
-     Km = 1,
+     Km = 0,
 */
 
 #include <R.h>
@@ -134,7 +135,7 @@
 #define ID_Cmuc 0x0000c
 
 /* Parameters */
-static double parms[50];
+static double parms[51];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -177,15 +178,16 @@ static double parms[50];
 #define Vlung parms[38]
 #define Vrest parms[39]
 #define Vven parms[40]
-#define Qalv parms[41]
-#define Kblood2air parms[42]
-#define kUrtc parms[43]
-#define kUrt parms[44]
-#define Kmuc2air parms[45]
-#define Vmucc parms[46]
-#define Vmuc parms[47]
-#define Vmax parms[48]
-#define Km parms[49]
+#define Qalvc parms[41]
+#define Qalv parms[42]
+#define Kblood2air parms[43]
+#define kUrtc parms[44]
+#define kUrt parms[45]
+#define Kmuc2air parms[46]
+#define Vmucc parms[47]
+#define Vmuc parms[48]
+#define Vmax parms[49]
+#define Km parms[50]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -195,7 +197,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_gas (void (* odeparms)(int *, double *))
 {
-  int N=50;
+  int N=51;
   odeparms(&N, parms);
 }
 
@@ -232,7 +234,7 @@ void getParms_gas (double *inParms, double *out, int *nout) {
   Vlung = Vlungc * BW ;
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
-  Qalv = Qalv * 24 * pow ( BW , 0.75 ) ;
+  Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
   kUrt = kUrtc * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
