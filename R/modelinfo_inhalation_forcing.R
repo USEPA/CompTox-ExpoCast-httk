@@ -39,7 +39,7 @@ model.list[["gas"]]$param.names <- c(
   "pKa_Accept",
   "pKa_Donor",
   "Pow",
-  "Qalv", #MWL 8-1-19
+  "Qalvc", #MWL 8-1-19
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
@@ -87,7 +87,7 @@ model.list[["gas"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  Qalv = "Qalv",
+  Qalvc = "Qalvc",
   Kblood2air = "Kblood2air",
   kUrtc = "kUrtc",
   Kmuc2air = "Kmuc2air",
@@ -142,6 +142,7 @@ model.list[["gas"]]$compiled.param.names <- c(
   "Vlung",
   "Vrest",
   "Vven",
+  "Qalvc",
   "Qalv",
   "Kblood2air",
   "kUrtc",
