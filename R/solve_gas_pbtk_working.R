@@ -9,7 +9,7 @@
 #' 
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
-#' The compartments used in this model are the gutlumen, gut, liver, kidneys,
+#' The compartments used in this model are the gut lumen, gut, liver, kidneys,
 #' veins, arteries, lungs, and the rest of the body.
 #' 
 #' The extra compartments include the amounts or concentrations metabolized by
@@ -31,6 +31,7 @@
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -42,7 +43,7 @@
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
+#' @param dose Amount of a single dose, mg/kg BW. Overwrites daily.dose.
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -120,16 +121,16 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
                            times=NULL,
                            parameters=NULL,
-                           route="inhalation",
-                           dosing=NULL,
                            days=10,
+                           tsteps = 4, #tsteps is number of steps per hour
+                           daily.dose = NULL,
+                           doses.per.day = NULL,
+                           dose = 1, #Assume single dose is in mg/kg BW/day
                            period = 24, 
                            exposure.duration = 12,
                            fcontrol = list(method='constant',rule=2,f=0), 
-                           tsteps = 4, # tsteps is number of steps per hour
                            initial.values=NULL,
                            plots=F,
-                           monitor.vars=NULL,
                            suppress.messages=F,
                            species="Human",
                            output.units='uM',
@@ -141,12 +142,27 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            regression=T,
                            restrictive.clearance = T,
                            minimum.Funbound.plasma=0.0001,
+                           monitor.vars=NULL,
                            ...)
 
 
 {
   
   
+  #Forc initialized by default, dosing.matrix needs to be directed or specified to use concentration info in this case
+  if(!is.null(dosing.matrix)) {
+    Forc <- dosing.matrix
+  } else {
+    period <- period/24
+    exposure.duration <- exposure.duration/24
+    forcing <- function(mag, Period, start, ExpDuration, times) {
+      Nrep <- ceiling(max(times) / Period) 
+      times <- rep(c(start, ExpDuration), Nrep) + rep(Period * (0:(Nrep - 1)), rep(2, Nrep))
+      y  <- rep(c(mag,0), Nrep)
+      cbind(times,y)
+    }
+    Forc <- list(forcing(initial.dose, period, 0,exposure.duration, times))
+  }
   
   out <- solve_model(
   chem.name = chem.name,
