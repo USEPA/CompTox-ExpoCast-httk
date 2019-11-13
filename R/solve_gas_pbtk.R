@@ -163,7 +163,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #the 'forcings' argument is not otherwise specified.
   if(is.null(forcings)) {
     period <- period/24
-    exposure.duration <- exposure.duration/24
+    exp.duration <- exp.duration/24
     forcing <- function(conc, period, start.time, exp.duration, times) {
       Nrep <- ceiling(max(times) / period) 
       times <- rep(c(start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
