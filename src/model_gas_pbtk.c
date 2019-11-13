@@ -1,7 +1,7 @@
-/* gasalation.c for R deSolve package
+/* model_gas_pbtk.c for R deSolve package
    ___________________________________________________
 
-   Model File:  gasalation.model
+   Model File:  inhalation.model
 
    Date:  Mon Oct 22 11:15:43 2018
 
@@ -195,20 +195,20 @@ static double forc[1];
 #define Cgas forc[0]
 
 /*----- Initializers */
-void initmod_gas (void (* odeparms)(int *, double *))
+void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
   int N=51;
   odeparms(&N, parms);
 }
 
-void initforc_gas (void (* odeforcs)(int *, double *))
+void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
 }
 
 
-void getParms_gas (double *inParms, double *out, int *nout) {
+void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -246,7 +246,7 @@ void getParms_gas (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs_gas (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
@@ -307,20 +307,20 @@ void derivs_gas (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
 
 /*----- Jacobian calculations: */
-void jac_gas (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event_gas (int *n, double *t, double *y)
+void event_gas_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root_gas (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
