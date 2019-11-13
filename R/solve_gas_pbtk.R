@@ -57,7 +57,7 @@
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exposure.duration For use in assembling forcing function data 
-#' series 'forcings' argument, in hours
+#' series 'forcings' argument, specified in hours
 #' @param fcontrol List of arguments for finetuning inhalation forcing function
 #' in conjunction with existing ode integrator methods
 #' @param initial.values Vector containing the initial concentrations or
@@ -162,16 +162,21 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #certain periodicity and exposure concentration in default case, used if 
   #the 'forcings' argument is not otherwise specified.
   if(is.null(forcings)) {
-    period <- period/24
-    exp.duration <- exp.duration/24
-    forcing <- function(conc, period, start.time, exp.duration, times) {
-      Nrep <- ceiling(max(times) / period) 
+    if (exp.duration > period){
+      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
+      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
+      conc, period, start.time, exp.duration, conc, and days simulated.')
+    }
+    period <- period/24 #convert time period in hours to days
+    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
+    forcing <- function(conc, period, start.time, exp.duration, days) {
+      Nrep <- ceiling(days/period) 
       times <- rep(c(start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
       y  <- rep(c(conc,0), Nrep)
       conc.matrix = cbind(times,y)
       return(conc.matrix)
     }
-    forcings = forcing(conc, period, 0,exp.duration, times) 
+    forcings = forcing(conc, period, start.time = 0, exp.duration, days) 
   }
   
   out <- solve_model(
