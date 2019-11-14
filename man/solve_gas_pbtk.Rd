@@ -2,17 +2,20 @@
 % Please edit documentation in R/solve_gas_pbtk.R
 \name{solve_gas_pbtk}
 \alias{solve_gas_pbtk}
-\title{Solve_Gas_PBTK}
+\title{solve_gas_pbtk}
 \usage{
 solve_gas_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, initial.values = NULL,
-  plots = F, suppress.messages = F, species = "Human",
-  method = "lsoda", rtol = 1e-08, atol = 1e-12,
-  default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T, regression = T, use.amounts = F,
-  restrictive.clearance = T, air.concentration = 1, period = 1,
-  exposure = 0.5, vmax.km = F, vmax = 0, km = 1, ...)
+  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
+  doses.per.day = NULL, dose = NULL, dosing.matrix = NULL,
+  forcings = NULL, conc = 1, period = 24, exp.duration = 12,
+  fcontrol = list(method = "constant", rule = 2, f = 0),
+  initial.values = NULL, plots = F, suppress.messages = F,
+  species = "Human", output.units = "uM", method = "lsoda",
+  rtol = 1e-08, atol = 1e-12, default.to.human = F,
+  recalc.blood2plasma = F, recalc.clearance = F,
+  adjusted.Funbound.plasma = T, regression = T,
+  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -29,11 +32,35 @@ overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
 
-\item{tsteps}{The number time steps per hour.}
+\item{tsteps}{The number of time steps per hour.}
+
+\item{daily.dose}{Total daily dose, mg/kg BW.}
+
+\item{doses.per.day}{Number of doses per day.}
+
+\item{dose}{Amount of a single dose, mg/kg BW. Overwrites daily.dose.}
+
+\item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
+columns or rows named "dose" and "time" containing the time and amount, in
+mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
+specify forcing concentrations to the integrator, either in combination 
+with eventdata or on its own.}
+
+\item{forcings}{Manual input of 'forcings' data series argument for ode
+integrator, defaults to NULL}
+
+\item{conc}{Specified inhalation exposure concentration for use in assembling
+'forcings' data series argument for integrator. Defaults to uM/L **?}
+
+\item{period}{For use in assembling forcing function data series 'forcings'
+argument, specified in hours}
+
+\item{fcontrol}{List of arguments for finetuning inhalation forcing function
+in conjunction with existing ode integrator methods}
 
 \item{initial.values}{Vector containing the initial concentrations or
 amounts of the chemical in specified tissues with units corresponding to
-air.concentration.  Defaults are zero.}
+output.units.  Defaults are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
@@ -41,6 +68,9 @@ air.concentration.  Defaults are zero.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
+"uM").}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -58,31 +88,21 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{recalc.clearance}{Recalculates the the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
 
-\item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
-columns or rows named "dose" and "time" containing the time and amount, in
-mg/kg BW, of each dose.}
-
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
-\item{use.amounts}{Return output as concentrations (units/L) or amounts
-(units), corresponding to air.concentration units/L.}
-
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{air.concentration}{Concentration of substance in air, units/L. Output
-units will be the same.}
-
-\item{period}{Length of one cycle of exposure and non-exposure, days.}
-
-\item{exposure}{Length of exposure to air.concentration at beginning of
-exposure cycle, days.}
-
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{exposure.duration}{For use in assembling forcing function data 
+series 'forcings' argument, specified in hours}
+
+\item{iv.dose}{Simulates a single i.v. dose if true.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -90,8 +110,9 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-This function solves for the amounts or concentrations of a chemical in
-different tissues as functions of time.
+This function solves for the amounts or concentrations in uM of a chemical
+in different tissues as functions of time based on the dose and dosing
+frequency.
 }
 \details{
 Note that the model parameters have units of hours while the model output is
@@ -99,7 +120,7 @@ in days.
 
 Default NULL value for doses.per.day solves for a single dose.
 
-The compartments used in this model are the gutlumen, gut, liver, kidneys,
+The compartments used in this model are the gut lumen, gut, liver, kidneys,
 veins, arteries, lungs, and the rest of the body.
 
 The extra compartments include the amounts or concentrations metabolized by
@@ -107,11 +128,52 @@ the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
-When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+Model parameters are named according to the following convention:\tabular{lrrrr}{
+prefix \tab suffic \tab Meaning \tab units \cr
+K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+V \tab \tab Volume \tab L \cr
+Q \tab \tab Flow \tab L/h \cr
+k \tab \tab Rate \tab 1/h \cr
+\tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
+and 1/kg^(3/4) for florws \cr}
+
+When species is specified but chemical-specific in vitro data are not
+available, the function uses the appropriate physiological data (volumes and 
+flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
+\examples{
+
+
+solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
+out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
+                  plots=TRUE,initial.values=c(Agut=200))
+params <- parameterize_pbtk(chem.cas="80-05-7")
+solve_pbtk(parameters=params)
+                  
+\dontrun{
+parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
+parameters["Funbound.plasma"] <- 0.1
+out <- solve_pbtk(parameters=parameters)
+
+library("ggplot2")
+out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+plot.data <- as.data.frame(out)
+css <- calc_analytic_css(chem.name = "Bisphenol A")
+c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
+geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
+xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
+element_text(size = 16), plot.title = element_text(size = 17)) +
+ggtitle("Bisphenol A")
+print(c.vs.t)
+}
+
+}
+\references{
+Pearce, Robert G., et al. "Httk: R package for high-throughput
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+}
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Matt Linakis, and Mark Sfeir
 }
 \keyword{Solve}

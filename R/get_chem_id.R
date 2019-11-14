@@ -6,13 +6,14 @@
 #' pieces of information.
 #' @author John Wambaugh and Robert Pearce
 #' @keywords cheminformatics
+#' @export get_chem_id
 get_chem_id <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid=NULL)
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
   {
-    stop("Must specifiy compound namem, CAS, or DTXSID.\n")
+    stop("Must specifiy compound name, CAS, or DTXSID.\n")
   } else if ((!is.null(chem.cas) & 
     !any(chem.physical_and_invitro.data$CAS==chem.cas)) & 
     (!is.null(chem.name) & 
@@ -29,7 +30,7 @@ get_chem_id <- function(chem.cas=NULL,
 
   if (!is.null(chem.cas))
   {
-#If chemical is identified by CAS, we must make sure its a valid CAS:
+#If chemical is identified by CAS, we must make sure it's a valid CAS:
     if (!(chem.cas %in% chem.physical_and_invitro.data$CAS)) 
       stop("CAS number not found, use get_cheminfo() for valid CAS numbers.\n")
 #Set the chemical name:
