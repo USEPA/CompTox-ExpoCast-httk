@@ -162,13 +162,20 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #as that of glycerol, generally considered non-volatile,
   #issue warning message:
   if (!is.null(chem.name) | !is.null(chem.cas)){
-    if (!is.null(chem.name)){
-      logHenry = chem.physical_and_invitro.data(chem.name,'logHenry')
-    }else {
-      
-    }
     
+    #get chem.cas if only chem.name is specified
+    if (is.null(chem.cas)) chem.cas = get_chem_id(chem.name = chem.name)$chem.cas
+    
+    #get associated logHenry value and compare against glycerol's value, obtained
+    #from EPA dashboard
+    logHenry = chem.physical_and_invitro.data(chem.cas,'logHenry')
+    glycerol_logHenry = -7.80388
+    if (logHenry < glycerol_logHenry) warning("Value of Henry's constant of the
+    chemical queried, as a measure of volatility, is smaller than that of glycerol,
+    a chemical generally considered nonvolatile. Please proceed after having considered
+    whether the inhalation exposure route is nonetheless relevant.")
   }
+  
   
   #Assemble function for initializing 'forcings' argument data series with
   #certain periodicity and exposure concentration in default case, used if 
