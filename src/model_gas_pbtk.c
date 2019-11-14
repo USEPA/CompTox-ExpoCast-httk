@@ -25,7 +25,7 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
-     Agas = 0.0,
+     Ainh = 0.0,
      Aexh = 0.0,
      Amuc = 0.0,
 
@@ -45,60 +45,60 @@
     "Cmuc",
 
    1 Input:
-     Cgas (forcing function)
+     Cinh (forcing function)
 
    51 Parameters:
-     BW = 0,
-     Clmetabolismc = 0,
-     vmax = 0,
-     km = 0,
-     hematocrit = 0,
-     kgutabs = 0,
-     Kkidney2pu = 0,
-     Kliver2pu = 0,
-     Krest2pu = 0,
-     Kgut2pu = 0,
-     Klung2pu = 0,
-     Qcardiacc = 0,
-     Qgfrc = 0,
-     Qgutf = 0,
-     Qkidneyf = 0,
-     Qliverf = 0,
-     Qlungf = 0,
-     Vartc = 0,
-     Vgutc = 0,
-     Vkidneyc = 0,
-     Vliverc = 0,
-     Vlungc = 0,
-     Vrestc = 0,
-     Vvenc = 0,
-     Fraction_unbound_plasma = 0,
-     Rblood2plasma = 0,
-     Clmetabolism = 0,
-     Qcardiac = 0,
-     Qgfr = 0,
-     Qgut = 0,
-     Qkidney = 0,
-     Qliver = 0,
-     Qlung = 0,
-     Qrest = 0,
-     Vart = 0,
-     Vgut = 0,
-     Vkidney = 0,
-     Vliver = 0,
-     Vlung = 0,
-     Vrest = 0,
-     Vven = 0,
-     Qalvc = 0,
-     Qalv = 0,
-     Kblood2air = 0,
-     kUrtc = 0,
-     kUrt = 0,
-     Kmuc2air = 0,
-     Vmucc = 0,
+     BW = 0.0,
+     Clmetabolismc = 0.0,
+     vmax = 0.0,
+     km = 0.0,
+     hematocrit = 0.0,
+     kgutabs = 0.0,
+     Kkidney2pu = 0.0,
+     Kliver2pu = 0.0,
+     Krest2pu = 0.0,
+     Kgut2pu = 0.0,
+     Klung2pu = 0.0,
+     Qcardiacc = 0.0,
+     Qgfrc = 0.0,
+     Qgutf = 0.0,
+     Qkidneyf = 0.0,
+     Qliverf = 0.0,
+     Qlungf = 0.0,
+     Vartc = 0.0,
+     Vgutc = 0.0,
+     Vkidneyc = 0.0,
+     Vliverc = 0.0,
+     Vlungc = 0.0,
+     Vrestc = 0.0,
+     Vvenc = 0.0,
+     Fraction_unbound_plasma = 0.0,
+     Rblood2plasma = 0.0,
+     Clmetabolism = 0.0,
+     Qcardiac = 0.0,
+     Qgfr = 0.0,
+     Qgut = 0.0,
+     Qkidney = 0.0,
+     Qliver = 0.0,
+     Qlung = 0.0,
+     Qrest = 0.0,
+     Vart = 0.0,
+     Vgut = 0.0,
+     Vkidney = 0.0,
+     Vliver = 0.0,
+     Vlung = 0.0,
+     Vrest = 0.0,
+     Vven = 0.0,
+     Qalvc = 0.0,
+     Qalv = 0.0,
+     Kblood2air = 0.0,
+     kUrtc = 0.0,
+     kUrt = 0.0,
+     Kmuc2air = 0.0,
+     Vmucc = 0.0,
      Vmuc = 0.0,
-     Vmax = 0,
-     Km = 0,
+     Vmax = 0.0,
+     Km = 0.0,
 */
 
 #include <R.h>
@@ -115,7 +115,7 @@
 #define ID_Atubules 0x00008
 #define ID_Ametabolized 0x00009
 #define ID_AUC 0x0000a
-#define ID_Agas 0x0000b
+#define ID_Ainh 0x0000b
 #define ID_Aexh 0x0000c
 #define ID_Amuc 0x0000d
 
@@ -192,7 +192,7 @@ static double parms[51];
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cgas forc[0]
+#define Cinh forc[0]
 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
@@ -271,7 +271,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
 
-  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cgas ;
+  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
@@ -285,7 +285,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cgas - yout[ID_Calv] ) ) - ( kUrt * ( Cgas - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -297,11 +297,11 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Agas] = ( Qalv * ( yout[ID_Calv] - Cgas ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
-  ydot[ID_Amuc] = ( kUrt * ( Cgas - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
+  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
 
 } /* derivs */
 
