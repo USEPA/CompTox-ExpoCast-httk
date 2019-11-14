@@ -157,6 +157,18 @@ solve_gas_pbtk <- function(chem.name = NULL,
 
 {
   
+  #In case that chem.name or chem.cas is specified, if value of Henry's law
+  #constant associated with queried chemical is of same order of magnitude
+  #as that of glycerol, generally considered non-volatile,
+  #issue warning message:
+  if (!is.null(chem.name) | !is.null(chem.cas)){
+    if (!is.null(chem.name)){
+      logHenry = chem.physical_and_invitro.data(chem.name,'logHenry')
+    }else {
+      
+    }
+    
+  }
   
   #Assemble function for initializing 'forcings' argument data series with
   #certain periodicity and exposure concentration in default case, used if 
