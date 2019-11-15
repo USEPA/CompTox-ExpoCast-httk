@@ -1,5 +1,8 @@
 #' solve_gas_pbtk
 #' 
+#' Documentation not complete, still presenting much of solve_pbtk's
+#' documentation as template
+#' 
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues as functions of time based on the dose and dosing
 #' frequency. 
@@ -24,7 +27,7 @@
 #' Q \tab \tab Flow \tab L/h \cr
 #' k \tab \tab Rate \tab 1/h \cr
 #' \tab c \tab Parameter is proportional to body weight \tab 1 / kg for volumes
-#' and 1/kg^(3/4) for florws \cr}
+#' and 1/kg^(3/4) for flows \cr}
 #'
 #' When species is specified but chemical-specific in vitro data are not
 #' available, the function uses the appropriate physiological data (volumes and 
@@ -52,7 +55,7 @@
 #' with eventdata or on its own. 
 #' @param forcings Manual input of 'forcings' data series argument for ode
 #' integrator, defaults to NULL
-#' @param conc Specified inhalation exposure concentration for use in assembling
+#' @param exp.conc Specified inhalation exposure concentration for use in assembling
 #' 'forcings' data series argument for integrator. Defaults to uM/L **?
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
@@ -134,7 +137,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            dose = NULL, #Assume single dose is in mg/kg BW/day
                            dosing.matrix = NULL,
                            forcings = NULL, 
-                           conc = 1, #default exposure concentration for forcing data series
+                           exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
                            exp.duration = 12,
                            fcontrol = list(method='constant',rule=2,f=0), 
@@ -170,16 +173,13 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #from EPA dashboard
     logHenry = chem.physical_and_invitro.data(chem.cas,'logHenry')
     glycerol_logHenry = -7.80388
-    if (logHenry < glycerol_logHenry) warning("Value of Henry's constant of the
-    chemical queried, as a measure of volatility, is smaller than that of glycerol,
-    a chemical generally considered nonvolatile. Please proceed after having considered
-    whether the inhalation exposure route is nonetheless relevant.")
+    if (logHenry <= glycerol_logHenry) warning("Henry's constant, as a measure
+    of volatility, is smaller for the queried chemical than for glycerol, a 
+    chemical generally considered nonvolatile. Please proceed after having
+    considered whether the inhalation exposure route is nonetheless relevant.")
   }
   
   
-  #Assemble function for initializing 'forcings' argument data series with
-  #certain periodicity and exposure concentration in default case, used if 
-  #the 'forcings' argument is not otherwise specified.
   if(is.null(forcings)) {
     if (exp.duration > period){
       stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
@@ -188,16 +188,21 @@ solve_gas_pbtk <- function(chem.name = NULL,
     }
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-    forcing <- function(conc, period, start.time, exp.duration, days) {
+    
+    #Assemble function for initializing 'forcings' argument data series with
+    #certain periodicity and exposure concentration in default case, used if 
+    #the 'forcings' argument is not otherwise specified.
+    forcing <- function(exp.conc, period, start.time, exp.duration, days) {
       Nrep <- ceiling(days/period) 
       times <- rep(c(start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-      y  <- rep(c(conc,0), Nrep)
+      y  <- rep(c(exp.conc,0), Nrep)
       conc.matrix = cbind(times,y)
       return(conc.matrix)
     }
-    forcings = forcing(conc, period, start.time = 0, exp.duration, days) 
+    forcings = forcing(exp.conc, period, start.time = 0, exp.duration, days) 
   }
   
+  #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
   chem.name = chem.name,
   chem.cas = chem.cas,
