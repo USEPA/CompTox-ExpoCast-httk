@@ -173,10 +173,12 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #from EPA dashboard
     logHenry = chem.physical_and_invitro.data[cas.number,'logHenry']
     glycerol_logHenry = -7.80388
-    if (logHenry <= glycerol_logHenry) warning("Henry's constant, as a measure
-    of volatility, is smaller for the queried chemical than for glycerol, a 
-    chemical generally considered nonvolatile. Please proceed after having
-    considered whether the inhalation exposure route is nonetheless relevant.")
+    if (logHenry <= glycerol_logHenry){ 
+    warning("Henry's constant, as a measure of volatility, is smaller for the
+    queried chemical than for glycerol, a chemical generally considered
+    nonvolatile. Please proceed after having considered whether the inhalation
+    exposure route is nonetheless relevant.")
+    }
   }
   
   
