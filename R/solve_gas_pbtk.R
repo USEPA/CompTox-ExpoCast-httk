@@ -161,9 +161,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
 {
   
   #In case that chem.name or chem.cas is specified, if value of Henry's law
-  #constant associated with queried chemical is of same order of magnitude
-  #as that of glycerol, generally considered non-volatile,
-  #issue warning message:
+  #constant associated with queried chemical is smaller than that of glycerol,
+  #generally considered non-volatile, issue warning message:
   if (!is.null(chem.name) | !is.null(chem.cas)){
     
     #get chem.cas if only chem.name is specified
