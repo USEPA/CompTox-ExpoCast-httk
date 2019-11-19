@@ -13,7 +13,7 @@
 
    Model calculations for compartmental model:
 
-   14 States:
+   13 States:
      Agutlumen = 0.0,
      Agut = 0.0,
      Aliver = 0.0,
@@ -25,7 +25,6 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
-     Ainh = 0.0,
      Aexh = 0.0,
      Amuc = 0.0,
 
@@ -115,9 +114,8 @@
 #define ID_Atubules 0x00008
 #define ID_Ametabolized 0x00009
 #define ID_AUC 0x0000a
-#define ID_Ainh 0x0000b
-#define ID_Aexh 0x0000c
-#define ID_Amuc 0x0000d
+#define ID_Aexh 0x0000b
+#define ID_Amuc 0x0000c
 
 /* Model variables: Outputs */
 #define ID_Cgut 0x00000
@@ -296,8 +294,6 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma + Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
-
-  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
