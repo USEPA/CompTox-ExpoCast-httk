@@ -1,6 +1,7 @@
 library(httk)
-setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
+#setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
 
+# All chemicals with in vitro data:
 invitro.ids <- get_cheminfo(info="DTXSID")
 # Pull in the ADMet Predictions from Sipes (2017):
 load_sipes2017(load.image=T)
@@ -21,11 +22,15 @@ dashboard.table$Half.Life <- NA
 dashboard.table$Css.Med <- NA
 dashboard.table$Css.95 <- NA
 
-for (this.id in sort(unique(dashboard.table$DTXSID)))
- if (this.id %in% get_cheminfo(info="DTXSID")) 
+all.ids <- sort(unique(dashboard.table$DTXSID))
+num.chems <- length(all.ids)
+ids <- sort(unique(subset(dashboard.table,is.na(Css.Med))$DTXSID))
+for (this.id in ids)
+  if (this.id %in% get_cheminfo(info="DTXSID") &
+    is.na(dashboard.table[dashboard.table$DTXSID==this.id,"Css.Med"])) 
  {
    set.seed(123456)
-   print(this.id)
+   print(paste(this.id,"-",which(this.id==all.ids),"of",num.chems))
    this.cas <- subset(get_cheminfo(info=c("DTXSID","CAS")),DTXSID==this.id)[,1]
    if (this.id %in% invitro.ids) 
    {
@@ -41,20 +46,33 @@ for (this.id in sort(unique(dashboard.table$DTXSID)))
    } 
    if (dashboard.table[dashboard.table$DTXSID==this.id,"Human.Funbound.plasma"]>0)
    {
-     dashboard.table[dashboard.table$DTXSID==this.id,"Vd"] <- calc_vdist(chem.cas=this.cas)
+     dashboard.table[dashboard.table$DTXSID==this.id,"Vd"] <- try(calc_vdist(chem.cas=this.cas))
      dashboard.table[dashboard.table$DTXSID==this.id,"Half.Life"] <- 
-       log(2)/calc_elimination_rate(chem.cas=this.cas)
+       log(2)/try(calc_elimination_rate(chem.cas=this.cas))
      dashboard.table[dashboard.table$DTXSID==this.id,"Days.to.Steady.State"] <- 
-       calc_css(chem.cas=this.cas)$the.day
+       try(calc_css(chem.cas=this.cas)$the.day)
    }
    dashboard.table[dashboard.table$DTXSID==this.id,
      c("Css.Med","Css.95")] <- 
-     calc_mc_css(chem.cas=this.cas,
+     try(calc_mc_css(chem.cas=this.cas,
        which.quantile=c(0.5,0.95),
-       output.units="mg/L")
+       output.units="mg/L"))
  }
-write.csv(dashboard.table,file=paste("Dashboard-HTTK-mgL-",Sys.Date(),".txt",sep=""))
+write.csv(dashboard.table,file=paste("Dashboard-HTTK-v",sessionInfo()$otherPkgs$httk$Version,"-mgL-",Sys.Date(),".txt",sep=""),row.names=F)
 
+# Columns:
+# DTXSID: Chemical Identifier
+#	Human.Clint, Dashboard field "In Vitro Intrisntic Hepatic Clearance"), uL/min/10^6 hepatocyhtes
+# Human.Funbound.plasma, Dashboard field "Fraction Unbound in Human Plasma", unitless	
+# Clint.Measured, not currently used, experimentally measured value
+# Funbound.plasma.Measured, not currently used, experimentally measured value	
+# Clint.Predicted, not currently used, in silico prediction from Sipes et al, (2016)
+# Funbound.plasma.Predicted, not currently used, in silico prediction from Sipes et al, (2016)
+# Vd, dashboard field "Volume of Distribution", L/kg
+# Days.to.Steady.State, dashboard field "Days to Steady State", days	
+# Half.Life, dashboard field "PK Half Life", hours
+# Css.Med, not currently used, HTTK prediction of population median Css	
+# Css.95, dashboard field "Human Steady-State Plasma Concentration", mg/L
 
 
 
