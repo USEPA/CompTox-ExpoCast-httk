@@ -1,7 +1,7 @@
 #' Parameterize_inhalation
 #' 
-#' This function initializes the parameters needed in the functions solve_inhalation,
-#' calc_css, and others using the multiple compartment model.
+#' This function initializes the parameters needed in the functions solve_gas_pbtk,
+#' ...
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -60,6 +60,7 @@
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#' ...
 #' @author John Wambaugh and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -69,15 +70,6 @@
 #' @examples
 #' 
 #' 
-#'  parameters <- parameterize_pbtk(chem.cas='80-05-7')
-#' 
-#'  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
-#' 
-#'  # Change the tissue lumping (note, these model parameters will not work with our current solver):
-#'  compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
-#'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
-#'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
-#'                    tissuelist=compartments) 
 #'  
 #'  
 #' 
