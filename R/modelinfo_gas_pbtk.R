@@ -210,7 +210,7 @@ model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
 
 # We need to know which compartment gets the dose 
 model.list[["gas_pbtk"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven", inhalation = "Ainh")
+  iv="Aven", inhalation = "Amuc")
 
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
