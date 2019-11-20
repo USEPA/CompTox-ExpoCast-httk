@@ -232,7 +232,6 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "Atubules",
     "Ametabolized",
     "AUC",
-    "Aexh",
     "Amuc"
     ) 
        
