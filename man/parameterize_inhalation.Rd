@@ -79,24 +79,16 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+...
 }
 \description{
-This function initializes the parameters needed in the functions solve_inhalation,
-calc_css, and others using the multiple compartment model.
+This function initializes the parameters needed in the functions solve_gas_pbtk,
+...
 }
 \examples{
 
 
- parameters <- parameterize_pbtk(chem.cas='80-05-7')
-
- parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
-
- # Change the tissue lumping (note, these model parameters will not work with our current solver):
- compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
-                      lung=c("lung"),gut=c("gut"),slow=c("bone"))
- parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
-                   tissuelist=compartments) 
  
  
 

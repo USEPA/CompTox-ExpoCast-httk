@@ -59,7 +59,7 @@
 #' 'forcings' data series argument for integrator. Defaults to uM/L **?
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
-#' @param exposure.duration For use in assembling forcing function data 
+#' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
 #' @param fcontrol List of arguments for finetuning inhalation forcing function
 #' in conjunction with existing ode integrator methods
@@ -70,7 +70,6 @@
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param iv.dose Simulates a single i.v. dose if true.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
 #' @param method Method used by integrator (deSolve).
@@ -100,28 +99,7 @@
 #' @examples
 #' 
 #' 
-#' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-#'                   plots=TRUE,initial.values=c(Agut=200))
-#' params <- parameterize_pbtk(chem.cas="80-05-7")
-#' solve_pbtk(parameters=params)
-#'                   
-#' \dontrun{
-#' parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-#' parameters["Funbound.plasma"] <- 0.1
-#' out <- solve_pbtk(parameters=parameters)
 #' 
-#' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
-#' plot.data <- as.data.frame(out)
-#' css <- calc_analytic_css(chem.name = "Bisphenol A")
-#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-#' element_text(size = 16), plot.title = element_text(size = 17)) +
-#' ggtitle("Bisphenol A")
-#' print(c.vs.t)
-#' }
 #' 
 #' @export solve_gas_pbtk
 #' @useDynLib httk
@@ -192,7 +170,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     if (exp.duration > period){
       stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
       to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-      conc, period, start.time, exp.duration, and days simulated.')
+      exp.conc, period, start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
