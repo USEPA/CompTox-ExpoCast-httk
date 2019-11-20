@@ -160,6 +160,13 @@ solve_gas_pbtk <- function(chem.name = NULL,
 
 {
   
+  #Screen against error in user's specification of forcing function timing
+  if (exp.duration > period){
+  stop("Argument 'exp.duration' should be smaller than its subsuming argument,
+       'period', which together are set to specify a simple cyclic pattern of 
+       inhalation exposure and rest in the default case.")
+  }
+  
   #In case that chem.name or chem.cas is specified, if value of Henry's law
   #constant associated with queried chemical is smaller than that of glycerol,
   #generally considered non-volatile, issue warning message:
@@ -185,7 +192,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     if (exp.duration > period){
       stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
       to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-      conc, period, start.time, exp.duration, conc, and days simulated.')
+      conc, period, start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
