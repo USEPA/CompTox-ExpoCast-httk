@@ -1,5 +1,7 @@
 library(httk)
 #setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
+# Default is 1000, but this is more stable:
+NUM.SAMPLES <- 1e4
 
 # All chemicals with in vitro data:
 invitro.ids <- get_cheminfo(info="DTXSID")
@@ -21,6 +23,9 @@ dashboard.table$Days.to.Steady.State <- NA
 dashboard.table$Half.Life <- NA
 dashboard.table$Css.Med <- NA
 dashboard.table$Css.95 <- NA
+dashboard.table$MW <- NA
+
+
 
 all.ids <- sort(unique(dashboard.table$DTXSID))
 num.chems <- length(all.ids)
@@ -29,9 +34,9 @@ for (this.id in ids)
   if (this.id %in% get_cheminfo(info="DTXSID") &
     is.na(dashboard.table[dashboard.table$DTXSID==this.id,"Css.Med"])) 
  {
-   set.seed(123456)
    print(paste(this.id,"-",which(this.id==all.ids),"of",num.chems))
-   this.cas <- subset(get_cheminfo(info=c("DTXSID","CAS")),DTXSID==this.id)[,1]
+   this.info <- subset(get_cheminfo(info=c("DTXSID","CAS")),DTXSID==this.id)
+   this.cas <- this.info["CAS"]
    if (this.id %in% invitro.ids) 
    {
      dashboard.table[dashboard.table$DTXSID==this.id,"Clint.Measured"] <-
@@ -52,12 +57,21 @@ for (this.id in ids)
      dashboard.table[dashboard.table$DTXSID==this.id,"Days.to.Steady.State"] <- 
        try(calc_css(chem.cas=this.cas)$the.day)
    }
+   dashboard.table[dashboard.table$DTXSID==this.id,"MW"] <- this.info["MW"]
+   set.seed(123456)
    dashboard.table[dashboard.table$DTXSID==this.id,
      c("Css.Med","Css.95")] <- 
      try(calc_mc_css(chem.cas=this.cas,
        which.quantile=c(0.5,0.95),
+       samples=NUM.SAMPLES,
        output.units="mg/L"))
  }
+ 
+# Drop the Wambaugh et al. (2019) confidence intervals:
+dashboard.table$Human.Funbound.plasma <- 
+  as.numeric(lapply(strsplit(dashboard.table$Human.Funbound.plasma,","),
+    function(x) x[[1]]))
+ 
 write.csv(dashboard.table,file=paste("Dashboard-HTTK-v",sessionInfo()$otherPkgs$httk$Version,"-mgL-",Sys.Date(),".txt",sep=""),row.names=F)
 
 # Columns:
@@ -73,6 +87,9 @@ write.csv(dashboard.table,file=paste("Dashboard-HTTK-v",sessionInfo()$otherPkgs$
 # Half.Life, dashboard field "PK Half Life", hours
 # Css.Med, not currently used, HTTK prediction of population median Css	
 # Css.95, dashboard field "Human Steady-State Plasma Concentration", mg/L
+# MW, not currently used, Molecular Weght, g/mol
+
+
 
 
 
