@@ -156,7 +156,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' 
 #' 
 #' @param new.table Object of class data.frame containing one row per chemical,
-#' with each chemical minimally by described by a CAS number.
+#' with each chemical minimally described by a CAS number.
 #' @param data.list This list identifies which properties are to be read from
 #' the table. Each item in the list should point to a column in the table
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
