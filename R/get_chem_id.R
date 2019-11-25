@@ -55,6 +55,7 @@ valid compound names.")
     found.chem.cas <- found.chem.cas[!is.na(found.chem.cas)]
     found.dtxsid <- chem.physical_and_invitro.data[names.index==name.key,"DTXSID"]
     found.dtxsid <- found.dtxsid[!is.na(found.dtxsid)]
+    chem.name <- chem.physical_and_invitro.data[names.index==name.key,"Compound"]
   }
 
   if (!is.null(dtxsid))
