@@ -1,4 +1,8 @@
 library(httk)
+
+# Clear the memory:
+rm(list=ls())
+
 #setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
 # Default is 1000, but this is more stable:
 NUM.SAMPLES <- 1e4
@@ -30,13 +34,14 @@ dashboard.table$MW <- NA
 all.ids <- sort(unique(dashboard.table$DTXSID))
 num.chems <- length(all.ids)
 ids <- sort(unique(subset(dashboard.table,is.na(Css.Med))$DTXSID))
+chem.info <- get_cheminfo(info=c("DTXSID","MW","CAS"))
 for (this.id in ids)
-  if (this.id %in% get_cheminfo(info="DTXSID") &
+  if (this.id %in% chem.info[["DTXSID"]] &
     is.na(dashboard.table[dashboard.table$DTXSID==this.id,"Css.Med"])) 
  {
    print(paste(this.id,"-",which(this.id==all.ids),"of",num.chems))
-   this.info <- subset(get_cheminfo(info=c("DTXSID","CAS")),DTXSID==this.id)
-   this.cas <- this.info["CAS"]
+   this.info <- subset(chem.info,DTXSID==this.id)
+   this.cas <- this.info[["CAS"]]
    if (this.id %in% invitro.ids) 
    {
      dashboard.table[dashboard.table$DTXSID==this.id,"Clint.Measured"] <-
@@ -57,7 +62,7 @@ for (this.id in ids)
      dashboard.table[dashboard.table$DTXSID==this.id,"Days.to.Steady.State"] <- 
        try(calc_css(chem.cas=this.cas)$the.day)
    }
-   dashboard.table[dashboard.table$DTXSID==this.id,"MW"] <- this.info["MW"]
+   dashboard.table[dashboard.table$DTXSID==this.id,"MW"] <- this.info[["MW"]]
    set.seed(123456)
    dashboard.table[dashboard.table$DTXSID==this.id,
      c("Css.Med","Css.95")] <- 
@@ -88,8 +93,7 @@ write.csv(dashboard.table,file=paste("Dashboard-HTTK-v",sessionInfo()$otherPkgs$
 # Css.Med, not currently used, HTTK prediction of population median Css	
 # Css.95, dashboard field "Human Steady-State Plasma Concentration", mg/L
 # MW, not currently used, Molecular Weght, g/mol
-
-
+#
 
 
 
