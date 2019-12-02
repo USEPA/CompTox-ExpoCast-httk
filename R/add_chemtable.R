@@ -21,7 +21,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
   CHEM.PHYS.COLS<-c("MW","logP","logPwa","logHenry","logVP","logWSol","MP","pKa_Donor","pKa_Accept","logMA")
   # The colmuns have "[SPECIES]." prepended to their name:
   CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma","Caco2.Pab")
-  # In the table we create each word in most column names is capitalized:
+  # In the table we create, each word in most column names is capitalized:
   COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","logHenry","logWSol","MP",
                                         "MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept",
                                         "SMILES.desalt","DTXSID","Formula","Caco2.Pab")
