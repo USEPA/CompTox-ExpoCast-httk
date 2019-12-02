@@ -97,13 +97,13 @@ parameterize_steadystate <- function(chem.cas=NULL,
 
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=T)
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
   if (class(Clint.db) == "try-error") 
@@ -123,10 +123,10 @@ parameterize_steadystate <- function(chem.cas=NULL,
   
   # unitless fraction of chemical unbound with plasma
   # fup.db contains whatever was in the chem.phys table
-  fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+  fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fup.db<- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+    fup.db<- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
     if (!suppress.messages) warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fup.db) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -146,9 +146,9 @@ parameterize_steadystate <- function(chem.cas=NULL,
     if (!suppress.messages) warning("Fraction unbound = 0, changed to 0.005.")
   }
 
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
   ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
   dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
 
@@ -176,7 +176,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
 # Restrict values of fup:
   if (fup.adjusted < minimum.Funbound.plasma) fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
   Params <- list()
@@ -189,7 +189,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["Dow74"]] <- dow # unitless istribution coefficient at plasma pH 7.4
   Params[["BW"]] <- BW # kg
-  Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
+  Params[["MW"]] <- get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
   Params[["Fhep.assay.correction"]] <- calc_fu_hep(Pow,
                                          pKa_Donor=pKa_Donor,

@@ -151,7 +151,7 @@ add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, che
   if (is.null(parameters))
     stop("Must have input parameters to add Schmitt input to.")
   # Need to convert to 3compartmentss parameters:
-  temp.params <- get_physchem_param(chem.CAS = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
   if(!"Pow" %in% names(parameters)){
     parameters[["Pow"]] <- 10^temp.params[["logP"]]
   }

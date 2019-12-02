@@ -30,7 +30,7 @@
       out <- get_chem_id(chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    MW <- get_physchem_param('MW',chem.CAS=chem.cas)
+    MW <- get_physchem_param('MW',chem.cas=chem.cas)
   }else{
     MW <- parameters[['MW']]
   }

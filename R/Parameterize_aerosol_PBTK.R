@@ -99,15 +99,15 @@ parameterize_aerosol_pbtk <- function(chem.cas=NULL,
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
   if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
-    Clint <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
     # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
+  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas)
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
   
   
@@ -121,7 +121,7 @@ parameterize_aerosol_pbtk <- function(chem.cas=NULL,
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
   }else fup <- schmitt.params$unadjusted.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
@@ -138,7 +138,7 @@ parameterize_aerosol_pbtk <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
-  MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
+  MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
 
   outlist <- list()
    # Begin flows:

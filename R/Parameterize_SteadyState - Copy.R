@@ -39,28 +39,28 @@ parameterize_steadystate <- function(chem.cas=NULL,
                           variable == 'Flow (mL/min/kg^(3/4))' & 
                           Tissue == 'liver')[,'value']  #mL/min/kgBW^3/4
   Vliverc <- subset(tissue.data,tolower(Species) == tolower(species) & variable == 'Vol (L/kg)' & Tissue == 'liver')[,'value'] # L/kg BW
-  Clint <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
   if (class(Clint) == "try-error" & default.to.human || human.clint.fup) 
   {
-    Clint <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
+    Clint <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
   if (class(Clint) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
     # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas)
+  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas)
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
   
   # unitless fraction of chemical unbound with plasma
-  fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+  fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
   if (class(fup) == "try-error" & default.to.human || human.clint.fup) 
   {
-    fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
   if (fup == 0)
   {
     fup <- 0.005
@@ -75,7 +75,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
     warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup.adjust <- NA
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if(class(Fgutabs) == "try-error") Fgutabs <- 1
  
 
@@ -87,7 +87,7 @@ parameterize_steadystate <- function(chem.cas=NULL,
   Params[["Qtotal.liverc"]] <- Qtotal.liverc/1000*60     #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
   Params[["BW"]] <- BW # kg
-  Params[["MW"]] <- get_physchem_param("MW",chem.CAS=chem.cas) # molecular weight g/mol
+  Params[["MW"]] <- get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
 #  Params[["Pow"]] <- Pow
 #  Params[["pKa_Donor"]] <- pKa_Donor
 #  Params[["pKa_Accept"]] <- pKa_Accept

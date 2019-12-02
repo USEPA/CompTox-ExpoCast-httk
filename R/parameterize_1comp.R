@@ -142,9 +142,9 @@ parameterize_1comp <- function(chem.cas=NULL,
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   
   if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
-  params[['MW']] <- get_physchem_param("MW",chem.CAS=chem.cas)
+  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
-    Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+    Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
     if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
     params[['Fgutabs']] <- Fgutabs
