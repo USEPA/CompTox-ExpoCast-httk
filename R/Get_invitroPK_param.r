@@ -1,25 +1,25 @@
 # This function retrieves in vitro PK data (e.g. intrinsic metabolic clearance 
 # or fraction unbound in plasma) from the vLiver tables.
-get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
+get_invitroPK_param <- function(param,species,chem.name=NULL,chem.cas=NULL)
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
-  if (is.null(chem.CAS) & is.null(chem.name))
+  if (is.null(chem.cas) & is.null(chem.name))
   {
     stop("Must specify compound name or CAS.\n")
-  } else if ((!is.null(chem.CAS) & 
-             !any(chem.physical_and_invitro.data[,"CAS"]==chem.CAS)) & 
+  } else if ((!is.null(chem.cas) & 
+             !any(chem.physical_and_invitro.data[,"CAS"]==chem.cas)) & 
              (!is.null(chem.name) & 
              !any(chem.physical_and_invitro.data[,"Compound"]==chem.name)))
   {
     stop("Compound not found.\n")
   } else {
-    if (!is.null(chem.CAS)) 
+    if (!is.null(chem.cas)) 
     {
       chem.name <- chem.physical_and_invitro.data[
-                     chem.physical_and_invitro.data[,"CAS"]==chem.CAS,
+                     chem.physical_and_invitro.data[,"CAS"]==chem.cas,
                      "Compound"][1]
     } else {
-      chem.CAS <- chem.physical_and_invitro.data[
+      chem.cas <- chem.physical_and_invitro.data[
                     chem.physical_and_invitro.data[,"Compound"]==chem.name,
                     "CAS"][1]
     }
@@ -28,7 +28,7 @@ get_invitroPK_param <- function(param,species,chem.name=NULL,chem.CAS=NULL)
       stop(paste("Parameter",param,
         "not among \"Clint\", \"Clint.pValue\", and \"Funbound.plasma\".\n"))
     }
-    chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$CAS==chem.CAS)
+    chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$CAS==chem.cas)
     this.col.name <- tolower(paste(species,param,sep="."))
     if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))
     {

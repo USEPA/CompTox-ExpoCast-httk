@@ -106,13 +106,13 @@ parameterize_pbtk <- function(chem.cas=NULL,
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.CAS=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.CAS=chem.cas),silent=T)
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=T)
   if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.CAS=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.CAS=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
@@ -155,7 +155,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.CAS=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
@@ -172,10 +172,10 @@ parameterize_pbtk <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
-  MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas) # Octanol:water partition coeffiecient
+  MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
 
   outlist <- list()
    # Begin flows:

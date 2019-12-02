@@ -57,10 +57,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
   chem.name <- out$chem.name                                
                                  
   # unitless fraction of chemical unbound with plasma
-  fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+  fup.db <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
   if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
   {
-    fup.db <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+    fup.db <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
     if (!suppress.messages) warning(paste(species,"coerced to Human for protein binding data."))
   }
   if (class(fup.db) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -93,10 +93,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
 # Load the physico-chemical properties:  
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
-  Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
-  MA <- suppressWarnings(10^(get_physchem_param("logMA",chem.CAS=chem.cas))) 
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+  MA <- suppressWarnings(10^(get_physchem_param("logMA",chem.cas=chem.cas))) 
 
 # Calculate Pearce (2017) in vitro plasma binding correction:
   Fprotein <- physiology.data[which(physiology.data[,'Parameter'] =='Plasma Protein Volume Fraction'),which(tolower(colnames(physiology.data)) == tolower(species))]
