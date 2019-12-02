@@ -151,11 +151,11 @@ solve_gas_pbtk <- function(chem.name = NULL,
   if (!is.null(chem.name) | !is.null(chem.cas)){
     
     #get chem.cas if only chem.name is specified
-    if (is.null(chem.cas)) cas.number = get_chem_id(chem.name = chem.name)$chem.cas
+    if (is.null(chem.cas)) chem.cas = get_chem_id(chem.name = chem.name)$chem.cas
     
     #get associated logHenry value and compare against glycerol's value, obtained
     #from EPA dashboard
-    logHenry = chem.physical_and_invitro.data[cas.number,'logHenry']
+    logHenry = chem.physical_and_invitro.data[chem.cas,'logHenry']
     glycerol_logHenry = -7.80388
     if (logHenry <= glycerol_logHenry){ 
     warning("Henry's constant, as a measure of volatility, is smaller for the
