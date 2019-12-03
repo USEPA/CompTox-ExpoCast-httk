@@ -189,7 +189,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 liver.density= 1.05, # g/mL
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+                                Qtotal.liverf=(lumped_params$Qtotal.liverf)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
 	}else{
     	outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))
 	}
@@ -203,7 +203,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 liver.density= 1.05, # g/mL
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+                                Qtotal.liverf=(lumped_params$Qtotal.liverf)/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
   }
 
     outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
