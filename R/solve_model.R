@@ -192,8 +192,7 @@ solve_model <- function(chem.name = NULL,
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
-    initialize_R_function <- model.list[[model]]$R.init.func
-# name of function that initializes the compiled moel code:
+ # name of function that initializes the compiled model code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
