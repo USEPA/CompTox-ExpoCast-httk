@@ -6,14 +6,16 @@
 #' pieces of information.
 #' @author John Wambaugh and Robert Pearce
 #' @keywords cheminformatics
-#' @export get_chem_id
+#' @param chem.cas CAS regstry number
+#' @param chem.name Chemical name
+#' @param dtxsid DSSTox Substance identifier
 get_chem_id <- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid=NULL)
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
   {
-    stop("Must specify compound name, CAS, or DTXSID.\n")
+    stop("Must specifiy compound namem, CAS, or DTXSID.\n")
   } else if ((!is.null(chem.cas) & 
     !any(chem.physical_and_invitro.data$CAS==chem.cas)) & 
     (!is.null(chem.name) & 
@@ -30,63 +32,75 @@ get_chem_id <- function(chem.cas=NULL,
 
   if (!is.null(chem.cas))
   {
-#If chemical is identified by CAS, we must make sure it's a valid CAS:
-    if (!(chem.cas %in% chem.physical_and_invitro.data$CAS)) 
+# get rid of white spaces:
+    cas.key <- gsub("\\s","",chem.cas)
+#If chemical is identified by CAS, we must make sure its a valid CAS:
+    if (!(cas.key %in% chem.physical_and_invitro.data$CAS)) 
       stop("CAS number not found, use get_cheminfo() for valid CAS numbers.\n")
 #Set the chemical name:
-    found.chem.name <- chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"Compound"]
-    found.dtxsid <- chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data[,"CAS"]==chem.cas,"DTXSID"] 
+    found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
+      chem.physical_and_invitro.data[,"CAS"]==cas.key,"Compound"]))
+    found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
+      chem.physical_and_invitro.data[,"CAS"]==cas.key,"DTXSID"])) 
   }
 
+#If called by name, need to do a search to find the CAS number and DTXSID:
   if (!is.null(chem.name))
   {
-#If called by name, need to do a search to find the CAS number:
+# get rid of white spaces and capitalization:
     names.index <- gsub("\\s","",tolower(chem.physical_and_invitro.data$Compound))
+# get rid of dashes:
     names.index <- gsub("\\-","",names.index)
+# get rid of white spaces and capitalization:
     name.key <- gsub("\\s","",tolower(chem.name))
+# get rid of dashes:
     name.key <- gsub("\\-","",name.key)
     if (!any(names.index==name.key)) 
       stop ("Chemical name not found, use get_cheminfo(info=\"compound\") for \
 valid compound names.")
 #Set the chemical CAS:
-    found.chem.cas <- chem.physical_and_invitro.data[names.index==name.key,"CAS"]
-    found.chem.cas <- found.chem.cas[!is.na(found.chem.cas)]
-    found.dtxsid <- chem.physical_and_invitro.data[names.index==name.key,"DTXSID"]
-    found.dtxsid <- found.dtxsid[!is.na(found.dtxsid)]
-    chem.name <- chem.physical_and_invitro.data[names.index==name.key,"Compound"]
+    found.chem.cas <- as.character(na.omit(chem.physical_and_invitro.data[
+      names.index==name.key,"CAS"]))
+    found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
+      names.index==name.key,"DTXSID"]))
   }
 
   if (!is.null(dtxsid))
   {
-    if (!(dtxsid %in% chem.physical_and_invitro.data$DTXSID)) 
+# get rid of white spaces:
+    dtxsid.key <- gsub("\\s","",tolower(dtxsid))
+    if (!(dtxsid.key %in% tolower(chem.physical_and_invitro.data$DTXSID))) 
       stop("DTXSID not found, use get_cheminfo(info=\"DTXISD\") for valid \
 DTXSIDs.\n")
 #Set the chemical name:
-    found.chem.name <- chem.physical_and_invitro.data[
-      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
-      "Compound"]
-    found.chem.cas <- chem.physical_and_invitro.data[
-      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid),
-      "CAS"] 
+    found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
+      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid.key),
+      "Compound"]))
+    found.chem.cas <- as.character(na.omit(chem.physical_and_invitro.data[
+      tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(dtxsid.key),
+      "CAS"])) 
   }
 
   if (!is.null(found.chem.cas) & 
     !is.null(found.chem.name) & 
     !is.null(found.dtxsid))
   {
-    if (chem.cas != found.chem.cas) stop(paste("Both CAS",
-      chem.cas,"and either name or DTXSID were provided as arguments, but found 
-      other CAS -- ",found.chem.cas))
-    else if (dtxsid != found.dtxsid) stop(paste("Both DTXSID",
-      dtxsid,"and either CAS or name were provided as arguments, but found 
-      other DTXSID -- ",found.dtxsid))
-    else if (tolower(chem.name) != tolower(found.chem.name)) 
-      warning(paste("Both name",chem.name," and  either DTXSID or CASS were \
-provided as arguments, but also found name",found.chem.name))
+    if (!is.null(chem.cas)) 
+    {
+      if (chem.cas != found.chem.cas) stop(paste("Both CAS",
+        chem.cas,"and either name or DTXSID were provided as arguments, but found 
+        other CAS -- ",found.chem.cas))
+    } else if (!is.null(dtxsid)) {
+      if (dtxsid != found.dtxsid) stop(paste("Both DTXSID",
+        dtxsid,"and either CAS or name were provided as arguments, but found 
+        other DTXSID -- ",found.dtxsid))
+    } else if (!is.null(chem.name)) {
+      if (tolower(chem.name) != tolower(found.chem.name)) stop(paste("Both name",
+        chem.name,"and either CAS or DTXSID were provided as arguments, but found 
+        other name -- ",found.chem.name))
+    }
   }
-
+  
   if (is.null(chem.cas)) chem.cas <- found.chem.cas
   if (is.null(chem.name)) chem.name <- found.chem.name
   if (is.null(dtxsid)) dtxsid <- found.dtxsid
