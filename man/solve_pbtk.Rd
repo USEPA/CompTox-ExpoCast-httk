@@ -5,16 +5,20 @@
 \title{Solve_PBTK}
 \usage{
 solve_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = 1,
-  dose = NULL, doses.per.day = NULL, initial.values = NULL,
-  plots = F, suppress.messages = F, species = "Human", iv.dose = F,
+  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
+  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
+  suppress.messages = F, species = "Human", iv.dose = F,
   output.units = "uM", method = "lsoda", rtol = 1e-08,
   atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
+<<<<<<< HEAD
   Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
+=======
+  monitor.vars = NULL, ...)
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -134,7 +138,6 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-
 solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
 out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
                   plots=TRUE,initial.values=c(Agut=200))
@@ -167,3 +170,4 @@ toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 John Wambaugh and Robert Pearce
 }
 \keyword{Solve}
+\keyword{pbtk}

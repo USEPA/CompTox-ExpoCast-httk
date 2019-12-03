@@ -6,11 +6,18 @@
 steady-state model}
 \usage{
 calc_analytic_css_3compss(chem.name = NULL, chem.cas = NULL,
+<<<<<<< HEAD
   parameters = NULL, hourly.dose = 1/24, concentration = "plasma",
   suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
   restrictive.clearance = T, bioactive.free.invivo = F,
   Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE, overwrite.inivo = FALSE, keepit100 = FALSE), ...)
+=======
+  dtxsid = NULL, parameters = NULL, hourly.dose = 1/24,
+  concentration = "plasma", suppress.messages = F,
+  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
+  bioactive.free.invivo = FALSE, ...)
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -59,3 +66,4 @@ concentrations as a result of infusion dosing.
 \author{
 Robert Pearce and John Wambaugh
 }
+\keyword{3compss}

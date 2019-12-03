@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 #' Smoothed age distributions by race and gender.
@@ -2234,32 +2235,27 @@ NULL
 #' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
 #' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 #' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
+=======
+#' httkpop: Virtual population generator for HTTK.
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 #' 
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
+#' The httkpop package generates virtual population physiologies for use in
+#' population TK.
+#' 
+#' 
+#' @name httkpop
+#' @aliases httkpop httkpop-package
+#' @docType package
+#' @section Main function to generate a population:
+#' 
+#' If you just want to generate a table of (chemical-independent) population
+#' physiology parameters, use \code{\link{httkpop_generate}}.
+#' @author Caroline Ring
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#' @keywords httk-pop
 NULL
-
-
-
-
-
-#' Howgate 2006
-#' 
-#' This data set is only used in Vignette 5.
-#' 
-#' 
-#' @name howgate
-#' @docType data
-#' @keywords datasets
-NULL
-
 
 
 
@@ -2309,257 +2305,3 @@ NULL
 #' ExpoCast (Exposure Forecasting) Project}
 #' @keywords package
 NULL
-
-
-
-
-
-#' httkpop: Virtual population generator for HTTK.
-#' 
-#' The httkpop package generates virtual population physiologies for use in
-#' population TK.
-#' 
-#' The httkpop package generates virtual population physiologies for use in
-#' population TK.
-#' 
-#' 
-#' @name httkpop
-#' @aliases httkpop httkpop-package
-#' @docType package
-#' @section Main function to generate a population:
-#' 
-#' If you just want to generate a table of (chemical-independent) population
-#' physiology parameters, use \code{\link{httkpop_generate}}.
-#' 
-#' If you just want to generate a table of (chemical-independent) population
-#' physiology parameters, use \code{\link{httkpop_generate}}.
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
-NULL
-
-
-
-
-
-#' Johnson 2006
-#' 
-#' This data set is only used in Vignette 5.
-#' 
-#' 
-#' @name johnson
-#' @docType data
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' Reference tissue masses and flows from tables in McNally et al. 2014.
-#' 
-#' Reference tissue masses, flows, and marginal distributions from McNally et
-#' al. 2014.
-#' 
-#' Reference tissue masses, flows, and marginal distributions from McNally et
-#' al. 2014.
-#' 
-#' 
-#' @name mcnally_dt
-#' @docType data
-#' @format A data.table with variables: \describe{\item{list("tissue")}{Body
-#' tissue} \item{list("gender")}{Gender: Male or Female}
-#' \item{list("mass_ref")}{Reference mass in kg, from Reference Man}
-#' \item{list("mass_cv")}{Coefficient of variation for mass}
-#' \item{list("mass_dist")}{Distribution for mass: Normal or Log-normal}
-#' \item{list("flow_ref")}{Reference flow in L/h, from Reference Man}
-#' \item{list("flow_cv")}{Coefficient of variation for flow (all normally
-#' distributed)} \item{list("height_ref")}{Reference heights (by gender)}
-#' \item{list("CO_ref")}{Reference cardiac output by gender}
-#' \item{list("flow_frac")}{Fraction of CO flowing to each tissue:
-#' \code{flow_ref}/\code{CO_ref}}}
-#' @author Caroline Ring
-#' 
-#' Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
-#' population generator." Toxicology 315, 70-85, 2004.
-#' 
-#' McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human population
-#' generator." Toxicology 315, 70-85, 2004.
-#' @keywords data httk-pop
-NULL
-
-
-
-
-
-
-
-
-
-
-#' Published Pharmacokinetic Parameters from Obach et al. 2008
-#' 
-#' This data set is used in Vignette 4 for steady state concentration.
-#' 
-#' 
-#' @name Obach2008
-#' @docType data
-#' @format A data.frame containing 670 rows and 8 columns.
-#' @references Obach, R. Scott, Franco Lombardo, and Nigel J. Waters. "Trend
-#' analysis of a database of intravenous pharmacokinetic parameters in humans
-#' for 670 drug compounds." Drug Metabolism and Disposition 36.7 (2008):
-#' 1385-1405.
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' NHANES Exposure Data
-#' 
-#' This data set is only used in Vignette 6.
-#' 
-#' 
-#' @name onlyp
-#' @docType data
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' Partition Coefficient Data
-#' 
-#' Measured rat in vivo partition coefficients and data for predicting them.
-#' 
-#' 
-#' @name pc.data
-#' @docType data
-#' @format A data.frame.
-#' @author Jimena Davis and Robert Pearce
-#' @references Schmitt, W., General approach for the calculation of tissue to
-#' plasma partition coefficients. Toxicology in Vitro, 2008. 22(2): p. 457-467.
-#' 
-#' Schmitt, W., Corrigendum to:"General approach for the calculation of tissue
-#' to plasma partition coefficients"[Toxicology in Vitro 22 (2008) 457-467].
-#' Toxicology in Vitro, 2008. 22(6): p. 1666.
-#' 
-#' Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
-#' coefficients of drugs to facilitate the use of physiologically based
-#' pharmacokinetic models in drug discovery. Journal of pharmaceutical
-#' sciences, 2000. 89(1): p. 16-35.
-#' 
-#' Rodgers, T. and M. Rowland, Physiologically based pharmacokinetic modelling
-#' 2: predicting the tissue distribution of acids, very weak bases, neutrals
-#' and zwitterions. Journal of pharmaceutical sciences, 2006. 95(6): p.
-#' 1238-1257.
-#' 
-#' Rodgers, T., D. Leahy, and M. Rowland, Physiologically based pharmacokinetic
-#' modeling 1: predicting the tissue distribution of moderate-to-strong bases.
-#' Journal of pharmaceutical sciences, 2005. 94(6): p. 1259-1276.
-#' 
-#' Rodgers, T., D. Leahy, and M. Rowland, Tissue distribution of basic drugs:
-#' Accounting for enantiomeric, compound and regional differences amongst
-#' beta-blocking drugs in rat. Journal of pharmaceutical sciences, 2005. 94(6):
-#' p. 1237-1248.
-#' 
-#' Gueorguieva, I., et al., Development of a whole body physiologically based
-#' model to characterise the pharmacokinetics of benzodiazepines. 1: Estimation
-#' of rat tissue-plasma partition ratios. Journal of pharmacokinetics and
-#' pharmacodynamics, 2004. 31(4): p. 269-298.
-#' 
-#' Poulin, P., K. Schoenlein, and F.P. Theil, Prediction of adipose tissue:
-#' plasma partition coefficients for structurally unrelated drugs. Journal of
-#' pharmaceutical sciences, 2001. 90(4): p. 436-447.
-#' 
-#' Bjorkman, S., Prediction of the volume of distribution of a drug: which
-#' tissue-plasma partition coefficients are needed? Journal of pharmacy and
-#' pharmacology, 2002. 54(9): p. 1237-1245.
-#' 
-#' Yun, Y. and A. Edginton, Correlation-based prediction of tissue-to-plasma
-#' partition coefficients using readily available input parameters.
-#' Xenobiotica, 2013. 43(10): p. 839-852.
-#' 
-#' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
-#' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' Species-specific physiology parameters
-#' 
-#' This data set contains values from Davies and Morris (1993) necessary to
-#' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-#' The temperature for each species are taken from Robertshaw et al. (2004),
-#' Gordon (1993), and Stammers(1926).
-#' 
-#' 
-#' @name physiology.data
-#' @docType data
-#' @format A data.frame containing 11 rows and 7 columns.
-#' @author John Wambaugh and Nisha Sipes
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
-
-
-
-
-
-#' Species-specific physiology parameters
-#' 
-#' This data set contains values from Davies and Morris (1993) necessary to
-#' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-#' The temperature for each species are taken from Robertshaw et al. (2004),
-#' Gordon (1993), and Stammers(1926).
-#' 
-#' 
-#' @name physiology.data
-#' @docType data
-#' @format A data.frame containing 11 rows and 7 columns.
-#' @author John Wambaugh and Nisha Sipes
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords datasets
-NULL
-
-
-

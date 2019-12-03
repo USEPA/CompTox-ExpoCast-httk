@@ -32,8 +32,10 @@
 #'@return Steady state concentration in uM units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'@keywords 1compartment
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
+                                   dtxsid = NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
@@ -49,14 +51,31 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                                         keepit100 = FALSE),
                                    ...)
 {
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
+
+  param.names.1comp <- model.list[["1compartment"]]$param.names
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+  
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  if (is.null(parameters))
   {
-    stop('Parameters, chem.name, or chem.cas must be specified.')
-  }
-  if(is.null(parameters))
-  {
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid  
+
     parameters <- parameterize_1comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
+                                    dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
                                     Caco2.options = Caco2.options,
@@ -78,7 +97,10 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
+<<<<<<< HEAD
   parameters$Fbio.oral <- parameters$Fabsgut * parameters$hepatic.bioavailability
+=======
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
   
   hourly.dose <- hourly.dose * parameters$Fbio.oral
   Css <- hourly.dose / parameters$kelim / parameters$Vdist

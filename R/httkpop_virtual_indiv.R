@@ -33,7 +33,7 @@
 #'  each column represents a demographic, anthropometric, or physiological
 #'  parameter.
 #'
-#'@keywords httk-pop
+#' @keywords httk-pop monte-carlo
 #'
 #'@author Caroline Ring
 #'

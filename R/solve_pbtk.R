@@ -82,15 +82,19 @@
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
+#'
 #' @author John Wambaugh and Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve pbtk
+#'
 #' @examples
-#' 
 #' 
 #' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
 #' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
@@ -115,7 +119,6 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @import deSolve 
 #' @export solve_pbtk
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
@@ -124,8 +127,8 @@ solve_pbtk <- function(chem.name = NULL,
                     parameters=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
-                    daily.dose = 1,
-                    dose = NULL, # Assume dose is in mg/kg BW/day  
+                    daily.dose = NULL,
+                    dose = 1, # Assume dose is in mg/kg BW/day  
                     doses.per.day=NULL,
                     initial.values=NULL,
                     plots=F,
@@ -142,6 +145,7 @@ solve_pbtk <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
+<<<<<<< HEAD
                     Caco2.options = list(Caco2.Pab.default = 1.6,
                                          Caco2.Fgut = TRUE,
                                          Caco2.Fabs = TRUE,
@@ -374,19 +378,41 @@ parameters[["MW"]] <- NULL
       out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","Atubules","Cplasma","AUC")]
     }
   class(out) <- c('matrix','deSolve')
+=======
+                    monitor.vars=NULL,
+                    ...)
+{
+  out <- solve_model(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    times=times,
+    parameters=parameters,
+    model="pbtk",
+    route=ifelse(iv.dose,"iv","oral"),
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    ),
+    days=days,
+    tsteps = tsteps, # tsteps is number of steps per hour
+    initial.values=initial.values,
+    plots=plots,
+    monitor.vars=monitor.vars,
+    suppress.messages=suppress.messages,
+    species=species,
+    output.units=output.units,
+    method=method,rtol=rtol,atol=atol,
+    default.to.human=default.to.human,
+    recalc.blood2plasma=recalc.blood2plasma,
+    recalc.clearance=recalc.clearance,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    restrictive.clearance = restrictive.clearance,
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    ...)
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
   
-  if(!suppress.messages){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      cat("Values returned in",output.units,"units.\n")
-      if(!recalc.blood2plasma) warning('Rblood2plasma not recalculated.  Set recalc.blood2plasma to TRUE if desired.') 
-      if(!recalc.clearance) warning('Clearance not recalculated.  Set recalc.clearance to TRUE if desired.') 
-    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
-    if(tolower(output.units) == 'mg'){
-      cat("AUC is area under plasma concentration in mg/L * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-    }else if(tolower(output.units) == 'umol'){
-      cat("AUC is area under plasma concentration in uM * days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-    }else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Rblood2plasma']],".\n")
-  }
-    
   return(out) 
 }

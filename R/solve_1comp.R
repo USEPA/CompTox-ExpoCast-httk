@@ -78,18 +78,23 @@
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
+#'
 #' @author Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve 1compartment
+#'
 #' @examples
 #' 
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
-#' @import deSolve 
+#'
 #' @export solve_1comp
 #' @useDynLib httk
+<<<<<<< HEAD
 
 solve_1comp <- function(chem.name=NULL,
                         chem.cas=NULL,
@@ -195,109 +200,65 @@ solve_1comp <- function(chem.name=NULL,
     stop('Output.units can only be uM, umol, mg, or mg/L.')
 
   }
+=======
+solve_1comp <- function(chem.name = NULL,
+                    chem.cas = NULL,
+                    times=NULL,
+                    parameters=NULL,
+                    days=10,
+                    tsteps = 4, # tsteps is number of steps per hour
+                    daily.dose = NULL,
+                    dose = 1, # Assume dose is in mg/kg BW/day  
+                    doses.per.day=NULL,
+                    initial.values=NULL,
+                    plots=F,
+                    suppress.messages=F,
+                    species="Human",
+                    iv.dose=F,
+                    output.units='uM',
+                    method="lsoda",rtol=1e-8,atol=1e-12,
+                    default.to.human=F,
+                    recalc.blood2plasma=F,
+                    recalc.clearance=F,
+                    dosing.matrix=NULL,
+                    adjusted.Funbound.plasma=T,
+                    regression=T,
+                    restrictive.clearance = T,
+                    minimum.Funbound.plasma=0.0001,
+                    monitor.vars=NULL,
+                    ...)
+{
+  out <- solve_model(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    times=times,
+    parameters=parameters,
+    model="1compartment",
+    route=ifelse(iv.dose,"iv","oral"),
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    ),
+    days=days,
+    tsteps = tsteps, # tsteps is number of steps per hour
+    initial.values=initial.values,
+    plots=plots,
+    monitor.vars=monitor.vars,
+    suppress.messages=suppress.messages,
+    species=species,
+    output.units=output.units,
+    method=method,rtol=rtol,atol=atol,
+    default.to.human=default.to.human,
+    recalc.blood2plasma=recalc.blood2plasma,
+    recalc.clearance=recalc.clearance,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    restrictive.clearance = restrictive.clearance,
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    ...)
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
   
-   if (use.amounts)
-  {
-    CompartmentsToInitialize <-c("Agutlumen","Acompartment")
-  } else {
-    CompartmentsToInitialize <-c("Agutlumen","Ccompartment")
-  }
-
-  for (this.compartment in CompartmentsToInitialize)
-  {
-  # If the compartment has a value specified in the list initial.values, then set it to that value:
-    if (this.compartment %in% names(initial.values))
-    {
-      eval(parse(text=paste(this.compartment,"<-",initial.values[[this.compartment]])))
-      
-    }
-  # Otherwise set the value to zero:
-    else eval(parse(text=paste(this.compartment,"<- 0")))
-  }
-
-  if(use.amounts)
-  {
-    if(iv.dose)
-    {
-      state <- c(Agutlumen=Agutlumen,Acompartment = Acompartment + dose ,Ametabolized = 0,AUC=0)
-    }else{
-      state <- c(Agutlumen= Agutlumen + dose,Acompartment = Acompartment ,Ametabolized = 0,AUC=0)
-    }
-  }else{
-    if(iv.dose)
-    {
-      state <- c(Agutlumen=Agutlumen,Acompartment = dose + Ccompartment * parameters[['Vdist']],Ametabolized = 0,AUC=0)
-    } else{
-      state <- c(Agutlumen= Agutlumen + dose,Acompartment = Ccompartment * parameters[['Vdist']],Ametabolized = 0,AUC=0)
-    }
-  }
-  
-  if(recalc.elimination){
-  parameters$kelim <- calc_elimination_rate(parameters=parameters,chem.cas=chem.cas,chem.name=chem.name,species=species,suppress.messages=T,default.to.human=default.to.human)
-
-  }
-  parameters[['ke']] <- parameters[['kelim']]   
-  parameters[['vdist']] <- parameters[['Vdist']]
-  parameters <- initparms1comp(parameters[param.names.1comp.solver])
-  
-  state <-initState1comp(parameters,state)
-  
-
-  if(is.null(dosing.matrix)){
-    if(is.null(doses.per.day)){
-      out <- ode(y = state, times = times,func="derivs1comp", parms=parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod1comp", nout=length(Outputs1comp),outnames=Outputs1comp,...)
-    }else{
-      dosing <- seq(start + 1/doses.per.day,end-1/doses.per.day,1/doses.per.day)
-      length <- length(dosing)
-      if(iv.dose) eventdata <- data.frame(var=rep('Acompartment',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length))           
-      else eventdata <- data.frame(var=rep('Agutlumen',length),time = round(dosing,8),value = rep(dose,length), method = rep("add",length)) 
-      times <- sort(c(times,dosing + 1e-8,start + 1e-8))               
-      out <- ode(y = state, times = times, func="derivs1comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod1comp", nout=length(Outputs1comp),outnames=Outputs1comp,events=list(data=eventdata),...)
-    }
-  }else{
-    if(iv.dose) eventdata <- data.frame(var=rep('Acompartment',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))
-    else eventdata <- data.frame(var=rep('Agutlumen',length(dosing.times)),time = dosing.times,value = dose.vector, method = rep("add",length(dosing.times)))                          
-    times <- sort(c(times,dosing.times + 1e-8,start + 1e-8))
-    out <- ode(y = state, times = times, func="derivs1comp", parms = parameters, method=method,rtol=rtol,atol=atol, dllname="httk",initfunc="initmod1comp", nout=length(Outputs1comp),outnames=Outputs1comp,events=list(data=eventdata),...)
-  }
-   
-  if(use.amounts) out[,c('Agutlumen','Acompartment','Ametabolized')] <- out[,c('Agutlumen','Acompartment','Ametabolized')] * BW
-  else out[,c('Agutlumen','Ametabolized')] <- out[,c('Agutlumen','Ametabolized')] * BW
-
- if(plots==T)
-  {
-    graphics::plot(out,select=c(CompartmentsToInitialize,"Ametabolized","AUC"))
-  }
-  
-  out <- out[,c("time",CompartmentsToInitialize,"Ametabolized","AUC")]
-  class(out) <- c('matrix','deSolve')
-  
-  if(!suppress.messages){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      if(use.amounts){
-        cat("Values returned in",output.units," units.\n")
-      }else{
-        if(tolower(output.units) == 'um'){
-          out.amount <- 'umol'
-        }else out.amount <- 'mg'
-        cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
-      }
-    }else{
-      if(use.amounts){  
-        cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"values returned in",output.units,"units.\n")
-      }else{
-        if(tolower(output.units) == 'um'){
-          out.amount <- 'umol'
-        }else out.amount <- 'mg'
-        cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"amounts returned in",out.amount,"and concentration returned in",output.units,"units.\n")
-      }
-    }
-    if(tolower(output.units) == 'mg'){
-      cat("AUC is area under compartment concentration in mg/L * days units with Rblood2plasma =",Rb2p,".\n")
-    }else if(tolower(output.units) == 'umol'){
-      cat("AUC is area under compartment concentration in uM * days units with Rblood2plasma =",Rb2p,".\n")
-    }else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",Rb2p,".\n")
-  }
-
-  return(out)
+  return(out) 
 }

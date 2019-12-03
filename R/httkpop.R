@@ -17,7 +17,7 @@
 #'   \code{\link{get_httk_params}}.}
 #'   
 #'   
-#' @import data.table survey
+#' @import data.table
 #' @docType package
 #' @name httkpop
 #'

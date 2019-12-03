@@ -4,6 +4,7 @@
 \alias{calc_analytic_css}
 \title{Calculate the analytic steady state concentration.}
 \usage{
+<<<<<<< HEAD
 calc_analytic_css(chem.name = NULL, chem.cas = NULL,
   parameters = NULL, daily.dose = 1, output.units = "uM",
   model = "pbtk", concentration = "plasma", suppress.messages = F,
@@ -11,6 +12,15 @@ calc_analytic_css(chem.name = NULL, chem.cas = NULL,
   bioactive.free.invivo = F, IVIVE = NULL,
   Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
+=======
+calc_analytic_css(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  parameters = NULL, species = "human", daily.dose = 1,
+  output.units = "uM", model = "pbtk", concentration = "plasma",
+  suppress.messages = F, tissue = NULL, restrictive.clearance = T,
+  bioactive.free.invivo = F, IVIVE = NULL,
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma
+  = T, regression = T, minimum.Funbound.plasma = 1e-04), ...)
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -37,10 +47,6 @@ compartment model.}
 \item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
-in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}
@@ -70,6 +76,10 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut wit
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
+
+\item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
+in the blood to plasma using the input parameters. Use this if you have 
+'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 }
 \value{
 Steady state concentration
