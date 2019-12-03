@@ -1,22 +1,26 @@
+###################
 # Don't track content of these folders
+###################
 src-i386/
 src-x64/
+build/
+inst/
+
+###################
+# Or these R files
+###################
 .Rbuildignore
 *.Rhistory
 .gitignore
 *.Rproj
-inst/doc/
-R/.Rhistory
 .Rproj.user/
 
-
-# Compiled source #
+###################
+# Or compiled source code
 ###################
 *.com
 *.class
 *.dll
 *.exe
 *.o
-*.so
-
 *.so

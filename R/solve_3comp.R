@@ -81,17 +81,20 @@
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for
 #' each time point.
+#'
 #' @author John Wambaugh and Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve 3compartment
+#'
 #' @examples
 #' 
 #' solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,dose=.5,days=1,tsteps=2)
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
-#' @import deSolve 
 #' @export solve_3comp
 #' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
@@ -100,8 +103,8 @@ solve_3comp <- function(chem.name = NULL,
                     parameters=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
-                    daily.dose =1, # Assume dose is in mg/kg BW/day
-                    dose=NULL,
+                    daily.dose = NULL, # Assume dose is in mg/kg BW/day
+                    dose = 1,
                     doses.per.day=NULL,
                     initial.values=NULL,
                     plots=F,
@@ -118,6 +121,7 @@ solve_3comp <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
+<<<<<<< HEAD
                     Caco2.options = list(Caco2.Pab.default = 1.6,
                                          Caco2.Fgut = TRUE,
                                          Caco2.Fabs = TRUE,
@@ -296,6 +300,41 @@ if(!suppress.messages){
     }else cat("AUC is area under plasma concentration curve in",output.units,"* days units with Rblood2plasma =",parameters[['Ratioblood2plasma']],".\n")
   }
   return(out) #concentration returned in umoles/L
+=======
+                    monitor.vars=NULL,
+                    ...)
+{
+  out <- solve_model(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    times=times,
+    parameters=parameters,
+    model="3compartment",
+    route=ifelse(iv.dose,"iv","oral"),
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    ),
+    days=days,
+    tsteps = tsteps, # tsteps is number of steps per hour
+    initial.values=initial.values,
+    plots=plots,
+    monitor.vars=monitor.vars,
+    suppress.messages=suppress.messages,
+    species=species,
+    output.units=output.units,
+    method=method,rtol=rtol,atol=atol,
+    default.to.human=default.to.human,
+    recalc.blood2plasma=recalc.blood2plasma,
+    recalc.clearance=recalc.clearance,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    restrictive.clearance = restrictive.clearance,
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    ...)
+  
+  return(out) 
+>>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
-
-

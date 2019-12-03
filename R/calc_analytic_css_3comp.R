@@ -32,8 +32,10 @@
 #'@return Steady state concentration in uM units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'@keywords 3compartment
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
+                                   dtxsid=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
@@ -56,12 +58,26 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   dose <- NULL
   #End R CMD CHECK appeasement.
   
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
-  {
-    stop('Parameters, chem.name, or chem.cas must be specified.')
-  }
+  param.names.3comp <- model.list[["3compartment"]]$param.names
+  
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
   if (is.null(parameters))
   {
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid  
+
     parameters <- parameterize_3comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
@@ -79,6 +95,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
              collapse=', '),
            ".  Use parameters from parameterize_3comp."))
     }
+    param.names.pbtk <- model.list[["pbtk"]]$param.names 
     if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] 
       %in% names(parameters)))
     {

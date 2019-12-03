@@ -1,7 +1,5 @@
 #' Convert HTTK-Pop-generated parameters to HTTK physiological parameters
 #' 
-#' @export
-#' 
 #' @param indiv_dt The data.table object returned by \code{httkpop_generate()}
 #'   
 #' @return A data.table with the physiological parameters expected by any HTTK 
@@ -9,16 +7,17 @@
 #'   weight, tissue flows as fraction of CO, CO per (kg BW)^3/4, GFR per (kg
 #'   BW)^3/4, portal vein flow per (kg BW)^3/4, and liver density.
 #'
-#'@keywords httk-pop
-#'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' @export httkpop_bio
+#'
+#' @keywords httk-pop monte-carlo
+#'
+#' @export httkpop_biotophys_default 
 
-httkpop_bio <- function(indiv_dt){
+httkpop_biotophys_default <- function(indiv_dt){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
