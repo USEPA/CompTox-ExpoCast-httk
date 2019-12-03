@@ -82,9 +82,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-			      vmax.km=F,
-			      vmax = 0,
-			      km = 1,
+			                        vmax.km = F,
+			                        vmax = 0,
+			                        km = 1,
                               suppress.messages=F)
 {
   physiology.data <- physiology.data
@@ -189,10 +189,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 liver.density= 1.05, # g/mL
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc=(lumped_params$Qtotal.liverf*Qcardiacc/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+                                Qtotal.liverc=(lumped_params$Qtotal.liverf*Qcardiacc/1000*60) ),suppress.messages=T),million.cells.per.gliver=110,Fgutabs=Fgutabs))) #L/h/kg BW
 	}else{
-    	outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))
-	}
+	  outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))}
   }else{
   outlist <- c(outlist,
     list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
@@ -203,7 +202,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 liver.density= 1.05, # g/mL
                                 Dn=0.17,BW=BW,
                                 Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc =(lumped_params$Qtotal.liverf*Qcardiacc/1000*60),suppress.messages=T)),million.cells.per.gliver=110,Fgutabs=Fgutabs)) #L/h/kg BW
+                                Qtotal.liverc =(lumped_params$Qtotal.liverf*Qcardiacc/1000*60) ),suppress.messages=T),million.cells.per.gliver=110,Fgutabs=Fgutabs))) #L/h/kg BW
   }
 
     outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
