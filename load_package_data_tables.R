@@ -721,7 +721,8 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 
 
 # ADD NEW DATA HERE:
-
+volatile.data.raw <- read.xls('Linakis2019Inhalation.xlsx', stringsAsFactors = F)
+volatile.data
 
 
 # STOP ADDING NEW DATA AFTER THIS, SUBSEQUENT CODE IS TO INTERACT WITH DASHBOARD
