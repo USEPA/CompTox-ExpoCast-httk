@@ -97,22 +97,11 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance=T,
                               bioactive.free.invivo = F,
                               IVIVE=NULL,
-<<<<<<< HEAD
                               Caco2.options = list(Caco2.Pab.default = "1.6",
                                                    Caco2.Fgut = TRUE,
                                                    Caco2.Fabs = TRUE,
                                                    overwrite.invivo = FALSE,
                                                    keepit100 = FALSE),
-                              ...)
-
-{
-#  tissue.data <- tissue.data
-#  physiology.data <- physiology.data
-#  Tissue <- Species <- variable <- NULL
-  
-# Check that chemical info in specified somehow:
-  if(is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) stop('Must specify chem.cas, chem.name, or parameters.')
-=======
                               parameterize.args = list(
                                 default.to.human=F,
                                 adjusted.Funbound.plasma=T,
@@ -137,8 +126,7 @@ calc_analytic_css <- function(chem.name=NULL,
       is.null(dtxsid) &
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
-  
+
 ### MODEL PARAMETERS FOR R
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
@@ -191,7 +179,7 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fbio.oral <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
     
   if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 

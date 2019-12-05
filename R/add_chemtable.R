@@ -18,6 +18,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c("Compound","CAS","CAS.Checksum","DTXSID","Formula","SMILES.desalt")
+  # Allowed physico-chemical descriptors:
   CHEM.PHYS.COLS<-c("MW","logP","logPwa","logHenry","logVP","logWSol","MP","pKa_Donor","pKa_Accept","logMA")
   # The colmuns have "[SPECIES]." prepended to their name:
   CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fabs","Fgut","Rblood2plasma","Caco2.Pab")
