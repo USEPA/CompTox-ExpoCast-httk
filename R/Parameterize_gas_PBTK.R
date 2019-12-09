@@ -209,8 +209,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     #alveolar ventilation:15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
     #human body temperature of 310 Kelvin
-    hl <- subset(chem.physical_and_invitro.data,CAS == chem.cas)[,'HL']
-    Kwater2air <- 8.314 * 310 / (hl * 101325)   #310 K body temp, 101325 atm to Pa, 
+    log_Henry <- chem.physical_and_invitro.data[chem.cas,'logHenry']
+    Henry_constant <- 10^log_Henry
+    Kwater2air <- 8.314 * 310 / (Henry_constant * 101325)   #310 K body temp, 101325 atm to Pa, 
     Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma#((1 - parameters$hematocrit) / parameters$Funbound.plasma + parameters$hematocrit * parameters$Krbc2pu)
     #Vdot <- 300 #ml/s
     #Vdot <- Vdot / 1000 *3600 / outlist$BW^.75 #L/h/kg^.75   from ml/s
