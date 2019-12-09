@@ -1,4 +1,4 @@
-#' Parameterize_inhalation
+#' Parameterize_gas_pbtk
 #' 
 #' This function initializes the parameters needed in the functions solve_gas_pbtk,
 #' ...
@@ -73,8 +73,8 @@
 #'  
 #'  
 #' 
-#' @export parameterize_inhalation
-parameterize_inhalation <- function(chem.cas=NULL,
+#' @export parameterize_gas_pbtk
+parameterize_gas_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               species="Human",
                               default.to.human=F,
@@ -220,7 +220,7 @@ parameterize_inhalation <- function(chem.cas=NULL,
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(
-              Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,
+              Fhep.assay.correction=calc_hep_fu(schmitt.params$Pow,
                 pKa_Donor=schmitt.params$pKa_Donor,
                 pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
  
