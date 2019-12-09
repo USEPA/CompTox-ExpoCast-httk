@@ -1,11 +1,8 @@
-#' Parameterize_gas_PBTK
+#' Parameterize_inhalation
 #' 
-#' This function initializes the parameters needed in the function
-#' solve_gas_pbtk. 
+#' This function initializes the parameters needed in the functions solve_gas_pbtk,
+#' ...
 #' 
-#' This function parameterizes a PBPK model. The argument tissuelist allows the
-#' specific tissues parameerized to be customized. All tissues not specified by
-#' tissuelist are lumped into a rest of body compartment ("Rest")
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
@@ -20,16 +17,19 @@
 #' However, solve_pbtk only works with the default parameters.
 #' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
-#' @param clint.pvalue.threshold Hepatic clearances with clearance assays
-#' having p-values greater than the threshold are set to zero.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
 #' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
 #' TRUE along with parition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @return
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' 
-#' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
+#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
 #' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
 #' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
@@ -59,69 +59,106 @@
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
-#' \item{Kblood2air}{Blood: air partition coefficient.} \item{Qalv}{For gas,
-#' air flow to alevoli (Vdot * (1-Fds)).}
-#' 
+#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#' ...
 #' @author John Wambaugh and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #' @keywords Parameter
-#' @export parameterize_gas_pbtk
-
-
-
-parameterize_gas_pbtk <- function(chem.cas=NULL,
+#' @examples
+#' 
+#' 
+#'  
+#'  
+#' 
+#' @export parameterize_inhalation
+parameterize_inhalation <- function(chem.cas=NULL,
                               chem.name=NULL,
                               species="Human",
                               default.to.human=F,
-                              tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")),
+                              tissuelist=list(
+                                liver=c("liver"),
+                                kidney=c("kidney"),
+                                lung=c("lung"),
+                                gut=c("gut")),
                               force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-			                        vmax.km = F,
-			                        vmax = 0,
-			                        km = 1,
-                              suppress.messages=F)
+                              vmax.km=F,
+                              vmax = 0,
+                              km = 1,
+                              exercise = F,
+                              fR = 12,
+                              VT = 0.75,
+                              VD = 0.15,
+                              suppress.messages=F,
+                              minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS, depending on what was provided:
   out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
-  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
+  # Check that the trend in the CLint assay was significant:
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=T)
+  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
-    Clint <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-    # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas)
-  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
-  
+  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+  # Check if clint is a point value or a distribution, if a distribution, use the median:
+  if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
+  {
+    Clint.dist <- Clint.db
+    Clint<- as.numeric(strsplit(Clint.db,",")[[1]][1])
+    Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  } else {
+    Clint <- Clint.db
+    Clint.dist <- NA
+  }
+  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
+
   
 # Predict the PCs for all tissues in the tissue.data table:
-  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,force.human.fup=force.human.clint.fup)
-  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
+  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
+                                         species=species,
+                                         default.to.human=default.to.human,
+                                         force.human.fup=force.human.clint.fup,
+                                         suppress.messages=T,
+                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
+  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
+                                      species=species,
+                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                      regression=regression,
+                                      minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
-  if(adjusted.Funbound.plasma){
+  
+# Check to see if we should use the in vitro fup assay correction:  
+  if (adjusted.Funbound.plasma)
+  {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  }else fup <- schmitt.params$unadjusted.Funbound.plasma
+    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
+  } else fup <- schmitt.params$unadjusted.Funbound.plasma
+
+# Restrict the value of fup:
+  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
- # Check the species argument for capitalization problems and whether or not it is in the table:  
+ # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -135,8 +172,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
-  lP <- 1 #Set to 1 in case log P isn't available from table: Kmuc2air will then just be set to Kwater2air below
-  lP <- get_physchem_param("logP",chem.cas = chem.cas)
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
 
   outlist <- list()
    # Begin flows:
@@ -144,10 +182,10 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   QGFRc <- this.phys.data["GFR"]/1000*60 
   Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
-  omit <- 'Qtotal.liverf'
+
   outlist <- c(outlist,c(
     Qcardiacc = as.numeric(Qcardiacc),
-    flows[!names(flows) %in% omit],
+    flows[!names(flows) %in% c('Qtotal.liverf')], #MWL removed 'Qlungf', 9/19/19
     Qliverf= flows[['Qtotal.liverf']] - flows[['Qgutf']],
     Qgfrc = as.numeric(QGFRc))) 
   # end flows  
@@ -168,61 +206,105 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 1, # 1/h
-    Funbound.plasma = as.numeric(fup), # unitless fraction
+    kgutabs = 2.18, # 1/h #Where is the gut concentration coming from?
+    Funbound.plasma = fup, # unitless fraction
+    Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
-    MW = MW)) #g/mol
+    MW = MW, #g/mol
+    Pow = Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    MA=schmitt.params[["MA"]],
+    kUrtc = 11.0, #Added MWL 9-20-19
+    Vmucc = 0.0001)) #Added MWL 9-20-19
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(Fhep.assay.correction=calc_hep_fu(parameters = list(Pow = schmitt.params$Pow, pKa_Donor=schmitt.params$pKa_Donor, pKa_Accept=schmitt.params$pKa_Accept))))  # fraction 
-
-  if(vmax.km){
-    if(vmax==0){
-	#stop("Cannot calculate saturable metabolism with Vmax = 0.") #Do we want to throw an error if MM kinetics are attempted without providing Vmax, or simply default back to first-order as below?
-	warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
-	outlist <- c(outlist,
-    	list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hep_clearance(hepatic.model="unscaled",parameters=list(
-                                Clint=Clint, #uL/min/10^6 cells
-                                Funbound.plasma=fup, # unitless fraction
-                                Fhep.assay.correction=outlist$Fhep.assay.correction, 
-                                million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                                liver.density= 1.05, # g/mL
-                                Dn=0.17,BW=BW,
-                                Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc=(lumped_params$Qtotal.liverf*Qcardiacc/1000*60) ),suppress.messages=T),million.cells.per.gliver=110,Fgutabs=Fgutabs))) #L/h/kg BW
-	}else{
-	  outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))}
-  }else{
-  outlist <- c(outlist,
-    list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hep_clearance(hepatic.model="unscaled",parameters=list(
-                                Clint=Clint, #uL/min/10^6 cells
-                                Funbound.plasma=fup, # unitless fraction
-                                Fhep.assay.correction=outlist$Fhep.assay.correction, 
-                                million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                                liver.density= 1.05, # g/mL
-                                Dn=0.17,BW=BW,
-                                Vliverc=lumped_params$Vliverc, #L/kg
-                                Qtotal.liverc =(lumped_params$Qtotal.liverf*Qcardiacc/1000*60) ),suppress.messages=T),million.cells.per.gliver=110,Fgutabs=Fgutabs))) #L/h/kg BW
-  }
-
-    outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-    #alveolar ventilation:15 L/h/kg^.75 from campbell 2007
+ outlist <- c(outlist,list(
+              Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,
+                pKa_Donor=schmitt.params$pKa_Donor,
+                pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
+ 
+ #Below added MWL 8-2-19
+ if(vmax.km){
+   if(vmax==0){
+     #stop("Cannot calculate saturable metabolism with Vmax = 0.") #Do we want to throw an error if MM kinetics are attempted without providing Vmax, or simply default back to first-order as below?
+     warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
+     outlist <- c(outlist,
+                  list(vmax=0,km=1,Km = km,Clint=Clint,
+                       Clint.dist = Clint.dist,
+                       Clmetabolismc= as.numeric(calc_hep_clearance(chem.name = chem.name,hepatic.model="unscaled",
+                                                                        parameters=list(
+                                                                          Clint=Clint, #uL/min/10^6 cells
+                                                                          Funbound.plasma=fup, # unitless fraction
+                                                                          hep.assay.correction=outlist$Fhep.assay.correction, 
+                                                                          million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                                                          liver.density= 1.05, # g/mL
+                                                                          Dn=0.17,BW=BW,
+                                                                          Vliverc=lumped_params$Vliverc, #L/kg
+                                                                          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+                                                                        suppress.messages=T)), #L/h/kg BW
+                       million.cells.per.gliver=110, # 10^6 cells/g-liver
+                       liver.density=1.05, # g/mL
+                       Fgutabs=Fgutabs)) #L/h/kg BW
+   }else{
+     outlist <- c(outlist,list(vmax=vmax,km=km,Km = km,Clint=Clint,
+                               Clint.dist = Clint.dist, Clmetabolismc=0,                       
+                               million.cells.per.gliver=110, # 10^6 cells/g-liver
+                               liver.density=1.05, # g/mL
+                               Fgutabs=Fgutabs))#ML added Km = km 9-19-19
+   }
+ }else{
+   outlist <- c(outlist,
+                list(vmax=0,km=1,Km = km,Clint=Clint,
+                     Clint.dist = Clint.dist,
+                     Clmetabolismc= as.numeric(calc_hep_clearance(chem.name = chem.name,hepatic.model="unscaled",
+                                                                      parameters=list(
+                                                                        Clint=Clint, #uL/min/10^6 cells
+                                                                        Funbound.plasma=fup, # unitless fraction
+                                                                        hep.assay.correction=outlist$Fhep.assay.correction, 
+                                                                        million.cells.per.gliver= 110, # 10^6 cells/g-liver
+                                                                        liver.density= 1.05, # g/mL
+                                                                        Dn=0.17,BW=BW,
+                                                                        Vliverc=lumped_params$Vliverc, #L/kg
+                                                                        Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+                                                                      suppress.messages=T)), #L/h/kg BW
+                     million.cells.per.gliver=110, # 10^6 cells/g-liver
+                     liver.density=1.05, # g/mL
+                     Fgutabs=Fgutabs)) #L/h/kg BW
+ }
+ 
+ 
+ if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+   
+    outlist <- c(outlist,
+      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+        species=species,
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+    
+    #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
     #human body temperature of 310 Kelvin
-    log_Henry <- chem.physical_and_invitro.data[chem.cas,'logHenry']
-    Henry_constant <- 10^log_Henry
-    Kwater2air <- 8.314 * 310 / (Henry_constant * 101325)   #310 K body temp, 101325 atm to Pa, 
-    Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma#((1 - parameters$hematocrit) / parameters$Funbound.plasma + parameters$hematocrit * parameters$Krbc2pu)
-    #Vdot <- 300 #ml/s
-    #Vdot <- Vdot / 1000 *3600 / outlist$BW^.75 #L/h/kg^.75   from ml/s
-    Vdot <- 24.75 #L/h
-    #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary
-    Fds <- 0.33
-    lKair2muc <- log10(1/Kwater2air) - (lP - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
+    hl <- 10^chem.physical_and_invitro.data[chem.cas,'logHenry'] #for log base 10 compiled Henry's law values
+    Kwater2air <- 8.314 * 310 / (hl * 101325)   #310 K body temp, 101325 atm to Pa, 
+    Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma
+    lKair2muc <- log10(1/Kwater2air) - (log10(Pow) - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
     Kair2muc <- 10^(lKair2muc)
     Kmuc2air <- 1/Kair2muc
-    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalv=Vdot*(1-Fds))
-
+    if(exercise){
+      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, Added 4-30-19 to allow user-input respiratory and/or work values, assumes input units of L and min^-1
+    } else {
+      #Vdot <- 24.75 #L/h, changed 4-29-19 to allow user to change inhalation physiologic parameters
+      #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary
+      Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+      Fds <- 0.15 #changed 4-29-19 to allow user to change inhalation physiologic parameters
+      #Fds <- this.phys.data["Alveolar Dead Space Fraction"]
+      Qalvc <- Vdot * (0.67) #L/h/kg^0.75
+    }
+    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
+    
         
   return(outlist[sort(names(outlist))])
 }
