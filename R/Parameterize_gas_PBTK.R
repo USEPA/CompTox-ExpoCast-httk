@@ -181,7 +181,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 	#stop("Cannot calculate saturable metabolism with Vmax = 0.") #Do we want to throw an error if MM kinetics are attempted without providing Vmax, or simply default back to first-order as below?
 	warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
 	outlist <- c(outlist,
-    	list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+    	list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hep_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
                                 Funbound.plasma=fup, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
@@ -194,7 +194,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 	  outlist <- c(outlist,list(vmax=vmax,km=km,Clmetabolismc=0))}
   }else{
   outlist <- c(outlist,
-    list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+    list(vmax=0,km=1,Clmetabolismc= as.numeric(calc_hep_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
                                 Funbound.plasma=fup, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
