@@ -42,13 +42,13 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         gmodels, colorspace
 License: GPL-3
 LazyData: true
+Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
 RoxygenNote: 6.1.1
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
-Encoding: UTF-8
 Packaged: 2019-07-25 18:56:22 UTC; jwambaug
 Author: John Wambaugh [aut, cre],
   Robert Pearce [aut],

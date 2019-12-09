@@ -125,7 +125,6 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-
 solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
 out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
                   plots=TRUE,initial.values=c(Agut=200))
@@ -158,3 +157,4 @@ toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 John Wambaugh and Robert Pearce
 }
 \keyword{Solve}
+\keyword{pbtk}

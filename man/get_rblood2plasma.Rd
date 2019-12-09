@@ -4,7 +4,7 @@
 \alias{get_rblood2plasma}
 \title{Get ratio of the blood concentration to the plasma concentration.}
 \usage{
-get_rblood2plasma(chem.name = NULL, chem.cas = NULL,
+get_rblood2plasma(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
   species = "Human", default.to.human = F)
 }
 \arguments{
@@ -21,8 +21,8 @@ default "Human").}
 if true.}
 }
 \description{
-This function retrieves the in vivo ratio of the blood concentration to the
-plasma concentration.
+This function attempts to retrieve a measured species- and chemical-specific 
+blood:plasma concentration ratio.
 }
 \details{
 A value of NA is returned when the requested value is unavailable.  Values

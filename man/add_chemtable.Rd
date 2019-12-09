@@ -9,7 +9,7 @@ add_chemtable(new.table, data.list, current.table = NULL,
 }
 \arguments{
 \item{new.table}{Object of class data.frame containing one row per chemical,
-with each chemical minimally by described by a CAS number.}
+with each chemical minimally described by a CAS number.}
 
 \item{data.list}{This list identifies which properties are to be read from
 the table. Each item in the list should point to a column in the table

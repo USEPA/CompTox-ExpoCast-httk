@@ -5,11 +5,11 @@
 \title{Calculate Monte Carlo Oral Equivalent Dose}
 \usage{
 calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
-  which.quantile = 0.95, species = "Human", input.units = "uM",
-  output.units = "mgpkgpday", suppress.messages = F,
-  return.samples = F, concentration = "plasma",
-  restrictive.clearance = T, bioactive.free.invivo = F,
-  tissue = NULL, IVIVE = NULL, ...)
+  dtxsid = NULL, which.quantile = 0.95, species = "Human",
+  input.units = "uM", output.units = "mgpkgpday",
+  suppress.messages = F, return.samples = F,
+  concentration = "plasma", restrictive.clearance = T,
+  bioactive.free.invivo = F, tissue = NULL, IVIVE = NULL, ...)
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}

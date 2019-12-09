@@ -119,10 +119,13 @@
 #' }
 #' 
 #' @export solve_model
+#'
 #' @useDynLib httk
-#' @import deSolve
+#'
+#' @importFrom deSolve ode
 solve_model <- function(chem.name = NULL,
                     chem.cas = NULL,
+                    dtxsid = NULL,
                     times=NULL,
                     parameters=NULL,
                     model=NULL,
@@ -155,8 +158,14 @@ solve_model <- function(chem.name = NULL,
   SMALL.TIME <- 1e-5   
 
 # We need to describe the chemical to be simulated one way or another:
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters)) 
-    stop('Parameters, chem.name, or chem.cas must be specified.')
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+  
+  if (is.null(model)) stop("Model must be specified.")
+
 
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
@@ -172,6 +181,8 @@ solve_model <- function(chem.name = NULL,
     #of exposure) stored in the list of lists, model.list, compiled in the
     #various models' associated "modelinfo_xxx.R" files:
     
+# Model parameter names:
+    param_names <- model.list[[model]]$param.names
 # Available exposure routes:
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
@@ -181,14 +192,13 @@ solve_model <- function(chem.name = NULL,
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
-    initialize_R_function <- model.list[[model]]$R.init.func
-# name of function that initializes the compiled moel code:
+ # name of function that initializes the compiled model code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
-# Function that transform the parameters to those needed by the solver:
+# Function that transforms the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[[model]]$compiled.parameters.init
-# name(s)s of the compiled model parameters that control the solver:
+# name(s) of the compiled model parameters that control the solver:
     compiled_param_names <- model.list[[model]]$compiled.param.names
 # name of the function that calculates the derivative:
     derivative_function <- model.list[[model]]$derivative.func
@@ -255,12 +265,12 @@ solve_model <- function(chem.name = NULL,
       regression=regression,
       minimum.Funbound.plasma=minimum.Funbound.plasma)) 
   } else {
-    if (!all(compiled_param_names %in% names(parameters)))
+    if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!compiled_param_names %in% 
+        paste(compiled_param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
-        ". Use parameters from",parameterize_function,".",sep="")) 
+        ". Use parameters from ",parameterize_function,".",sep="")) 
     }
   }
   
@@ -278,8 +288,8 @@ solve_model <- function(chem.name = NULL,
   # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
-  # Do we have all the parameters we need?:
-    if (!all(model.list[[model]]$param.names%in%names(parameters)))
+  # Do we have all the parameters we need:
+    if (!all(param_names%in%names(parameters)))
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
@@ -287,7 +297,7 @@ solve_model <- function(chem.name = NULL,
     }
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- calc_hepatic_clearance(parameters=ss.params,
+    parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
       suppress.messages=T)
   }
@@ -326,7 +336,8 @@ solve_model <- function(chem.name = NULL,
       } else if (firstchar(this.compartment)=="A")
       {
         state[this.compartment] <- initial.values[[this.compartment]]
-      } else stop("Initital values must begin with \"C\" or \"A\".")
+      } else stop("Initital values must begin with \"C\" or \"A\" 
+                  to denote concentrations or amounts, respectively.")
     }
   }
 ### SIMULATION TIME
@@ -461,12 +472,38 @@ with two columns (time, dose).")
   }
 # However, we always include whatever compartment received the dose:  
   monitor.vars <- unique(c(dose.var,monitor.vars))
-  if (any(!(monitor.vars%in%colnames(out)))) stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
+  if (any(!(monitor.vars%in%colnames(out))))
+    stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
  
+#Initialize string variable, 'out.amount', to represent units of amount in
+#accordance with the concentration units stored in 'output.units'. This is useful
+#for plotting and other warning messages sent to the user. 
+  if (tolower(output.units) == 'um')
+  {
+    out.amount <- 'umol'
+  } else out.amount <- 'mg'
+  
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
-    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))))
+    
+    #assemble a y-axis units vector to correspond to each entry in monitor.vars
+    vars_monitored = length(monitor.vars)
+    plot_units_vector = rep(NA, vars_monitored)
+    
+    for (var in 1:vars_monitored) {
+      if (firstchar(monitor.vars[var]) == 'A') {
+        if (monitor.vars[var] == 'AUC') {
+          plot_units_vector[var] = paste(output.units,'* days')
+        } else plot_units_vector[var] = out.amount
+      } else if (firstchar(monitor.vars[var]) == 'C') {
+        plot_units_vector[var] = output.units
+      } else stop("State and output variables to be monitored must begin with
+                  \"C\" or \"A\" to denote concentrations or amounts, respectively.")
+    }
+    
+   
+    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector, xlab = 'time (days)')
   } 
                
 # Downselect to only the desired parameters:
@@ -478,10 +515,7 @@ with two columns (time, dose).")
   {
     if (is.null(chem.cas) & is.null(chem.name))
     {
-      if (tolower(output.units) == 'um')
-      {
-        out.amount <- 'umol'
-      } else out.amount <- 'mg'
+      
       cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
 # If only a parameter vector is given it's good to warn people that they
 # need to make sure that these values have been appropriately recalculated:
@@ -490,10 +524,6 @@ Set recalc.blood2plasma to TRUE if desired.")
       if (!recalc.clearance) warning("Clearance not recalculated. \
 Set recalc.clearance to TRUE if desired.") 
     } else {
-      if (tolower(output.units) == 'um')
-      {
-        out.amount <- 'umol'
-      } else out.amount <- 'mg'
       cat(paste(toupper(substr(species,1,1)),
         substr(species,2,nchar(species)),sep=""),
         "amounts returned in", out.amount,

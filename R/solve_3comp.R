@@ -74,17 +74,20 @@
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for
 #' each time point.
+#'
 #' @author John Wambaugh and Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve 3compartment
+#'
 #' @examples
 #' 
 #' solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,dose=.5,days=1,tsteps=2)
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
-#' @import deSolve 
 #' @export solve_3comp
 #' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
