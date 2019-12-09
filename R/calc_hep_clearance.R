@@ -121,7 +121,7 @@ calc_hep_clearance <- function(chem.name=NULL,
     liver.density <- get_param(
                        "liver.density",
                        parameters,
-                       "calc_Hepatic_Clearance") # g/mL
+                       "calc_hep_clearance") # g/mL
     Dn <- get_param(
             "Dn",
             parameters,
@@ -131,7 +131,7 @@ calc_hep_clearance <- function(chem.name=NULL,
     million.cells.per.gliver <- get_param(
                                   "million.cells.per.gliver",
                                   parameters,
-                                  "calc_hepatic_clearance") # 10^6 cells/g-liver
+                                  "calc_hep_clearance") # 10^6 cells/g-liver
 
   } else if (!all(name.list %in% names(parameters)))
   {
@@ -152,7 +152,7 @@ calc_hep_clearance <- function(chem.name=NULL,
   Clint <- get_param(
              "Clint",
              parameters,
-             "calc_Hepatic_Clearance") # uL/min/10^6 cells
+             "calc_hep_clearance") # uL/min/10^6 cells
              
   fu_hep <- get_param(
               "Fhep.assay.correction",
@@ -177,23 +177,23 @@ calc_hep_clearance <- function(chem.name=NULL,
   Vliverc <- get_param(
                "Vliverc",
                parameters,
-               "calc_Hepatic_Clearance") #  L/kg BW
+               "calc_hep_clearance") #  L/kg BW
                
   liver.density <- get_param(
                      "liver.density",
                      parameters,
-                     "calc_Hepatic_Clearance") # g/mL
+                     "calc_hep_clearance") # g/mL
   
   Dn <- get_param(
           "Dn",
           parameters,
-          "calc_Hepatic_Clearance",
+          "calc_hep_clearance",
           default=0.17) #
   
   million.cells.per.gliver <- get_param(
                                 "million.cells.per.gliver",
                                 parameters,
-                                "calc_Hepatic_Clearance") # 10^6 cells/g-liver
+                                "calc_hep_clearance") # 10^6 cells/g-liver
 
   if (!(tolower(model) %in% 
     c("well-stirred","parallel tube","dispersion","unscaled")))
