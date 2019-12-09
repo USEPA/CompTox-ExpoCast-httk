@@ -174,7 +174,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     MW = MW)) #g/mol
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(Fhep.assay.correction=calc_hep_fu(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
+ outlist <- c(outlist,list(Fhep.assay.correction=calc_hep_fu(parameters = list(Pow = schmitt.params$Pow, pKa_Donor=schmitt.params$pKa_Donor, pKa_Accept=schmitt.params$pKa_Accept))))  # fraction 
 
   if(vmax.km){
     if(vmax==0){
