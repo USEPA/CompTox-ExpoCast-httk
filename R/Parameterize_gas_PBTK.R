@@ -121,7 +121,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
- # Check the species argument for capitilization problems and whether or not it is in the table:  
+ # Check the species argument for capitalization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -174,7 +174,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     MW = MW)) #g/mol
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
+ outlist <- c(outlist,list(Fhep.assay.correction=calc_hep_fu(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
 
   if(vmax.km){
     if(vmax==0){
