@@ -153,6 +153,18 @@ calc_hep_clearance <- function(chem.name=NULL,
              "Clint",
              parameters,
              "calc_hep_clearance") # uL/min/10^6 cells
+  
+  #If Clint is at this point represented by a string as a distribution
+  #with median, 5th and 95th percentile values, and p value, perform
+  #string operation to obtain the numeric form of the median value for
+  #Clint. 
+  if (nchar(Clint) - nchar(gsub(",","",Clint))==3) 
+  {
+    Clint.pValue <- as.numeric(strsplit(Clint,",")[[1]][4])
+    Clint <- as.numeric(strsplit(Clint,",")[[1]][1])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  }
+  
              
   fu_hep <- get_param(
               "Fhep.assay.correction",
