@@ -133,4 +133,5 @@ toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 \author{
 John Wambaugh and Robert Pearce
 }
+\keyword{3compartment}
 \keyword{Solve}

@@ -164,4 +164,3 @@ void root1comp (int *neq, double *t, double *y, int *ng, double *gout, double *o
 {
 
 } /* root */
-

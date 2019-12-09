@@ -57,6 +57,8 @@ virtual-individuals method.
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
+
+importFrom survey svymean
 }
 \author{
 Caroline Ring
