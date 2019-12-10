@@ -1,5 +1,9 @@
 News for R package httk
 
+Changes in version 99.1.1 (12/10/2019)
+	Fixed bugs with parameterize_gas_pbtk reported by Xiaoqing Chang, updated naming conventions with gas functionality to adhere to changes made with feature/modeltable. Merged in most recent feature/modeltable work. 
+
+
 Changes in version 2.0.0 ()
   Rewrote underlying code to allow more easy integration of new models. (goodbyem, spaghetti code!)
   Rewritten funtions include:
