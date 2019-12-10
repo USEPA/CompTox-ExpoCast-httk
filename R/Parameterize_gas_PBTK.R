@@ -148,7 +148,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
+    warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
