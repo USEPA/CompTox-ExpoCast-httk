@@ -1030,7 +1030,14 @@ sipes2017.table <- add_chemtable(sipes2017,
                                   species= 'Human', 
                                   overwrite=F)
 
-if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) browser()
+if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
+{
+  cat("There are instances of chemicals with same names but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
+  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
+  browser()
+
+}
 
 
 
@@ -1057,6 +1064,9 @@ save(chem.physical_and_invitro.data,
      tissue.data,
      Tables.Rdata.stamp,
      file="Tables.RData",compress="gzip",version=2)
+
+cat("Move the Tables.RData to the httk/data directory.\n")
+cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 save(Wetmore.data,
