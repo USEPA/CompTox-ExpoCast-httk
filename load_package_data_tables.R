@@ -736,7 +736,7 @@ write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],
   file="HTTK-ChemIDs.txt",
   row.names=F,
   sep="\t")
-cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on Name.\n")
+cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n"}
@@ -777,15 +777,15 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
 # Get the chemicals we couldn't find by CAS
 write.table(subset(chem.physical_and_invitro.data,
   is.na(DTXSID))[,c("Compound","CAS")],
-  file="HTTK-NoNameMatch-ChemIDs.txt",
+  file="HTTK-NoCASMatch-ChemIDs.txt",
   row.names=F,
   sep="\t")
-cat("Chemical with NA DTXSID's written to HTTK-NoNameMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
+cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n"}
 browser()
-dsstox <- read.xlsx("HTTK-NoNameMatch-DSSTox-output.xls",stringsAsFactors=F,1)
+dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
