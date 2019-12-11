@@ -24,6 +24,7 @@ tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c("Tissue","Species"
 
 tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFactors=FALSE,skip=1)
 tissuecompdata <- subset(tissuecompdata,Species!="")
+tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
 
 colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
 for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
