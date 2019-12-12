@@ -1,7 +1,7 @@
 #' Parameterize_gas_pbtk
 #' 
 #' This function initializes the parameters needed in the functions solve_gas_pbtk,
-#' ...
+#' 
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -24,10 +24,13 @@
 #' TRUE along with parition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' @param vmax.km Logical indicator of whether to represent Michaelis-Menten 
+#' liver metabolic kinetics, if chemical data available
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param ... Other parameters? Logical vmax.km error? 
 #' 
 #' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
@@ -95,7 +98,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               VT = 0.75,
                               VD = 0.15,
                               suppress.messages=F,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              ...)
 {
   physiology.data <- physiology.data
 # Look up the chemical name/CAS, depending on what was provided:
