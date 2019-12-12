@@ -75,33 +75,11 @@
 #' poormetab=TRUE, 
 #' fup.censored.dist=TRUE)
 #' 
-<<<<<<< HEAD:R/get_httk_params.R
-#' @export get_httk_params
-get_httk_params <- function(indiv_dt,
-                            chemcas=NULL,
-                            parameters=NULL,
-                            model,
-                            poormetab,
-                            fup.censored.dist=FALSE,
-                            fup.meas.cv=0.4,
-                            caco2.meas.sd = 0.3,
-                            clint.meas.cv=0.3,
-                            fup.pop.cv=0.1,
-                            caco2.pop.sd = 0.1,
-                            clint.pop.cv=0.1,
-                            fup.lod=0.01,
-                            adjusted.Funbound.plasma=T,
-                            regression=T,
-                            well.stirred.correction=T,
-                            restrictive.clearance=T,
-                            Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                 Caco2.Fgut = TRUE,
-                                                 Caco2.Fabs = TRUE,
-                                                 overwrite.invivo = FALSE,
-                                                 keepit100 = FALSE),
-                            concentration = "plasma",
-                            clint.pvalue.threshold=0.05)
-=======
+#                            Caco2.options = list(Caco2.Pab.default = "1.6",
+#                                                 Caco2.Fgut = TRUE,
+#                                                 Caco2.Fabs = TRUE,
+#                                                 overwrite.invivo = FALSE,
+#                                                 keepit100 = FALSE),
 #' @keywords httk-pop monte-carlo
 #'
 #' @export httkpop_mc
@@ -143,7 +121,6 @@ httkpop_mc <- function(model,
 #                       restrictive.clearance=T,
 #                       concentration = "plasma",
 #                       clint.pvalue.threshold=0.05)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:R/httkpop_mc.R
 {
   if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
@@ -165,46 +142,6 @@ httkpop_mc <- function(model,
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
   if (model.list[[model]]$calc.standard.httkpop2httk)
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
-  
-<<<<<<< HEAD:R/get_httk_params.R
-  #First convert to physiological parameters used by HTTK
-  indiv_bio <- httkpop_bio(indiv_dt = indiv_dt)
-  
-  #Next add chemical-specific Funbound.plasma and CLint values
-  #Just cbind them together for now
-  indiv_fc <- cbind(indiv_bio,
-                    draw_fup_clint(this.chem=chemcas,
-                      parameters=parameters,
-                      nsamp=nrow(indiv_bio),
-                      poormetab=poormetab,
-                      fup.meas.cv=fup.meas.cv,
-                      clint.meas.cv=clint.meas.cv,
-                      caco2.meas.sd = caco2.meas.sd,
-                      fup.pop.cv=fup.pop.cv,
-                      clint.pop.cv=clint.pop.cv,
-                      caco2.pop.sd = caco2.pop.sd,
-                      fup.censored.dist=fup.censored.dist,
-                      fup.lod=fup.lod,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      clint.pvalue.threshold=clint.pvalue.threshold,
-                      Caco2.options = Caco2.options))
-  
-  #Next convert the whole thing to the HTTK parameters for a specified model
-  indiv_httk <- convert_httk(indiv.model.bio=indiv_fc, 
-                 model=model,
-                 this.chem=chemcas,
-                 parameters=parameters,
-                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                 regression=regression,
-                 well.stirred.correction=well.stirred.correction,
-                 restrictive.clearance=restrictive.clearance,
-                 Caco2.options = Caco2.options,
-                 concentration = concentration,
-                 clint.pvalue.threshold=clint.pvalue.threshold)
-  
-  return(indiv_httk)
-=======
-
+ 
   return(physiology.dt)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:R/httkpop_mc.R
 }
