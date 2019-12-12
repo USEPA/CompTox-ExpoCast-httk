@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-
 #' Smoothed age distributions by race and gender.
 #' 
 #' Distributions of ages in months, computed from NHANES data smoothed using
@@ -2235,9 +2232,8 @@ NULL
 #' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
 #' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 #' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
-=======
+
 #' httkpop: Virtual population generator for HTTK.
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 #' 
 #' The httkpop package generates virtual population physiologies for use in
 #' population TK.
