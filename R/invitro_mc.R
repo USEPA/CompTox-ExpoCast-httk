@@ -346,11 +346,14 @@ invitro_mc <- function(parameters.dt=NULL,
       Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
       Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
       
-      caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), function(x) (0.95 -
-                                                                                      pnorm(Caco2.Pab.u95, x[1], x[2]) +
-                                                                                      pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
-                                            (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
-      parameters.dt[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
+      caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), 
+                     function(x) (0.95 -
+                       pnorm(Caco2.Pab.u95, x[1], x[2]) +
+                       pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                       (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
+      parameters.dt[, Caco2.Pab := rnorm(n = nsamp, 
+                                     caco2.fit$par[1], 
+                                     caco2.fit$par[2])]
       
       # If we don't have that, we use the default coefficient of variation to
       # generate confidence limits:
@@ -366,7 +369,8 @@ invitro_mc <- function(parameters.dt=NULL,
     
     # Store NA so data.table doesn't convert everything to text:
     parameters.dt[, Caco2.Pab.dist := NA]
-
+  }
+  
   #
   #
   #
