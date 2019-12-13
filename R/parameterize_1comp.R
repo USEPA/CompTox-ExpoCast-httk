@@ -30,7 +30,6 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-<<<<<<< HEAD
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
@@ -43,17 +42,12 @@
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 #' fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 #' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-=======
-#'
-#' @return 
-#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 #' assay using the method of Kilford et al. (2008)} 
 #' \item{kelim}{Elimination rate, units of 1/h.} 
 #' \item{hematocrit}{Percent volume of red blood cells in the blood.}
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 #' \item{kgutabs}{Rate chemical is absorbed, 1/h.}
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 #' \item{MW}{Molecular Weight, g/mol.} 
@@ -85,25 +79,6 @@
 #'  out <- solve_1comp(parameters=parameters)
 #' 
 #' @export parameterize_1comp
-<<<<<<< HEAD
-parameterize_1comp <- function(chem.cas=NULL,
-                               chem.name=NULL,
-                               species='Human',
-                               default.to.human=F,
-                               adjusted.Funbound.plasma=T,
-                               regression=T,
-                               restrictive.clearance=T,
-                               well.stirred.correction=T,
-                               suppress.messages=F,
-                               clint.pvalue.threshold=0.05,
-                               minimum.Funbound.plasma=0.0001,
-                               Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                    Caco2.Fgut = TRUE,
-                                                    Caco2.Fabs = TRUE,
-                                                    overwrite.invivo = FALSE
-                                                    )
-                               )
-=======
 parameterize_1comp <- function(
                         chem.cas=NULL,
                         chem.name=NULL,
@@ -116,8 +91,13 @@ parameterize_1comp <- function(
                         well.stirred.correction=T,
                         suppress.messages=F,
                         clint.pvalue.threshold=0.05,
-                        minimum.Funbound.plasma=0.0001)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
+                        minimum.Funbound.plasma=0.0001,
+                        Caco2.options = list(Caco2.Pab.default = "1.6",
+                          Caco2.Fgut = TRUE,
+                          Caco2.Fabs = TRUE,
+                          overwrite.invivo = FALSE
+                           )
+                        )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -159,27 +139,13 @@ parameterize_1comp <- function(
                                   dtxsid=dtxsid,
                                   species=species,
                                   default.to.human=default.to.human,
-<<<<<<< HEAD
-                                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                  regression=regression,suppress.messages=T)
-  
-  ss.params <- suppressWarnings(parameterize_steadystate(chem.name=chem.name,
-                 chem.cas=chem.cas,
-                 species=species,
-                 default.to.human=default.to.human,
-                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                 restrictive.clearance=restrictive.clearance,
-                 clint.pvalue.threshold=clint.pvalue.threshold,
-                 minimum.Funbound.plasma=minimum.Funbound.plasma,
-                 Caco2.options = Caco2.options))
-=======
                                   adjusted.Funbound.plasma=
                                     adjusted.Funbound.plasma,
                                   restrictive.clearance=restrictive.clearance,
                                   clint.pvalue.threshold=clint.pvalue.threshold,
                                   minimum.Funbound.plasma=
-                                    minimum.Funbound.plasma))
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
+                                    minimum.Funbound.plasma,
+                                  Caco2.options = Caco2.options))
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
@@ -242,27 +208,14 @@ parameterize_1comp <- function(
   
   params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
-<<<<<<< HEAD
-    params[['Fabsgut']] <- ss.params[['Fabsgut']]
-    params[['Fabs']] <- ss.params[['Fabs']]
-    params[['Fgut']] <- ss.params[['Fgut']]
-    
-    params[['hepatic.bioavailability']] <- ss.params[['hepatic.bioavailability']]  
-    
-=======
-    Fgutabs <- try(
-                 get_invitroPK_param(
-                   "Fgutabs",
-                   species,
-                   chem.cas=chem.cas),
-                 silent=T)
-    if (class(Fgutabs) == "try-error") Fgutabs <- 1
-    
-    params[['Fgutabs']] <- Fgutabs
-    params[['hepatic.bioavailability']] <- 
-      ss.params[['hepatic.bioavailability']]  
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
-    params[['BW']] <- this.phys.data[["Average BW"]]
+  params[['Fabsgut']] <- ss.params[['Fabsgut']]
+  params[['Fabs']] <- ss.params[['Fabs']]
+  params[['Fgut']] <- ss.params[['Fgut']]
+   
+  params[['hepatic.bioavailability']] <- 
+    ss.params[['hepatic.bioavailability']]  
+
+  params[['BW']] <- this.phys.data[["Average BW"]]
   
   return(params)
 }
