@@ -23,7 +23,7 @@ model.list[["1compartment"]]$param.names <- c(
   "BW",
   "Clint",
   "Clint.dist",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.dist",
