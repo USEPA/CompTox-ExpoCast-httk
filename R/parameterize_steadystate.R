@@ -30,11 +30,18 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#'
-#' @return 
-#' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
+#' fraction of the dose that enters the gutlumen.}  \item{Funbound.plasma}{Fraction of plasma
+
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
 #' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
@@ -49,7 +56,7 @@
 #' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
 #' clearance, calculated from the corrected well-stirred model.}
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Greg Honda
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -80,6 +87,12 @@ parameterize_steadystate <- function(
                               fup.lod.default=0.005,
                               suppress.messages=F,
                               minimum.Funbound.plasma=0.0001,
+                              Caco2.options = list(Caco2.Pab.default = "1.6",
+                                                          Caco2.Fgut = TRUE,
+                                                          Caco2.Fabs = TRUE,
+                                                          overwrite.invivo = FALSE,
+                                                          keepit100 = FALSE
+                                                          ),
                               ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -306,7 +319,58 @@ Set default.to.human to true to substitute human value.")
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fgutabs']] <- Fgutabs
+  
+  if(Caco2.options$keepit100 == TRUE){
+    Params[["Fabs"]] <- 1
+    Params[["Fgut"]] <- 1
+    Params[["Fabsgut"]] <- 1
+    Params[["Caco2.Pab"]] <- 10
+    Params[["Caco2.Pab.dist"]] <- NA
+  }else{
+    # Caco-2 Pab:
+    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+    if (class(Caco2.Pab.db) == "try-error"){  
+      Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
+      warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
+    }
+    # Check if Caco2 a point value or a distribution, if a distribution, use the median:
+    if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
+    {
+      Caco2.Pab.dist <- Caco2.Pab.db
+      Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
+      if (!suppress.messages) warning("Clint is provided as a distribution.")
+    } else {
+      Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
+      Caco2.Pab.dist <- NA
+    }
+    
+    Params[["Caco2.Pab"]] <- Caco2.Pab.point
+    Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
+    
+    # Select Fabs, optionally overwrite based on Caco2.Pab
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
+    if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
+        Params[["Fabs"]] <- 1
+        Fabs <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
+      }else{
+        Fabs <- 1
+      }
+    }
+    
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
+    if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
+      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
+        Params[["Fgut"]] <- 1
+        Fgut <- calc_fgut.oral(Params = Params, species = species) 
+      }else{
+        Fgut <- 1
+      }
+    }
+    Params[['Fabsgut']] <- Fabs*Fgut
+    Params[['Fabs']] <- Fabs
+    Params[['Fgut']] <- Fgut
+  }
   
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
