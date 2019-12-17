@@ -291,10 +291,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
     #human body temperature of 310 Kelvin
-    hl <- 10^chem.physical_and_invitro.data[chem.cas,'logHenry'] #for log base 10 compiled Henry's law values
+    logHenry = get_physchem_param(param = 'logHenry', chem.cas=chem.cas) #for log base 10 compiled Henry's law values
+    hl <- 10^logHenry #atm*m^3 / mol 
     #Gas constant 8.314 in units of J/(mol*K), body temperature 
     body_temp = this.phys.data['Average Body Temperature'] + 273.15 #K
-    Kwater2air <- 8.314 * body_temp / (hl * 101325)   #101325 atm to Pa, 
+    Kwater2air <- 8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
     Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma
     lKair2muc <- log10(1/Kwater2air) - (log10(Pow) - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
     Kair2muc <- 10^(lKair2muc)
