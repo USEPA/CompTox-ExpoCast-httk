@@ -230,7 +230,7 @@ model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["pbtk"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hematocrit",
   "liver.density",
   "million.cells.per.gliver",
