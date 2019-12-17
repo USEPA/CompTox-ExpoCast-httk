@@ -147,6 +147,11 @@ solve_model <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
+                    parameterize.arg.list=list(
+                      default.to.human=F,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = T,
+                      regression=T),
                     ...)
 {
 # Handy string manipulation functions for processing variable names that adhere
@@ -255,15 +260,13 @@ solve_model <- function(chem.name = NULL,
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,list(
+    parameters <- do.call(parameterize_function,c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
-      default.to.human=default.to.human,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      regression=regression,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)) 
+      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list)) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {
