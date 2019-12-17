@@ -328,6 +328,17 @@ Set default.to.human to true to substitute human value.")
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
 
+  if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- 
+      schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+   
+    outlist <- c(outlist,
+      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+        species=species,
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+        
   if(Caco2.options$keepit100 == TRUE){
     outlist[["Fabs"]] <- 1
     outlist[["Fgut"]] <- 1
@@ -382,16 +393,6 @@ Set default.to.human to true to substitute human value.")
     outlist[['Caco2.Pab.dist']] <- Caco2.Pab.dist
   }
 
-  if (adjusted.Funbound.plasma) 
-  {
-    outlist["Funbound.plasma.adjustment"] <- 
-      schmitt.params$Funbound.plasma.adjustment
-  } else outlist["Funbound.plasma.adjustment"] <- NA
-   
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
         
   return(outlist[sort(names(outlist))])
 }
