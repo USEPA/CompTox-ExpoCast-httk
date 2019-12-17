@@ -328,7 +328,7 @@ Set default.to.human to true to substitute human value.")
     Params[["Caco2.Pab.dist"]] <- NA
   }else{
     # Caco-2 Pab:
-    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.cas = chem.cas), silent = T)
     if (class(Caco2.Pab.db) == "try-error"){  
       Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
       warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
@@ -348,7 +348,7 @@ Set default.to.human to true to substitute human value.")
     Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
     
     # Select Fabs, optionally overwrite based on Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
     if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
         Params[["Fabs"]] <- 1
@@ -358,7 +358,7 @@ Set default.to.human to true to substitute human value.")
       }
     }
     
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
     if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
         Params[["Fgut"]] <- 1

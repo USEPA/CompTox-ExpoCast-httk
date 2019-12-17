@@ -41,7 +41,7 @@
 #' @return 
 #' \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
 #' the dose that enters the gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
@@ -326,8 +326,7 @@ Set default.to.human to true to substitute human value.")
            suppress.messages=T,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
-      liver.density=1.05, # g/mL
-      Fgutabs=Fgutabs)) 
+      liver.density=1.05)) # g/mL
 
   if(Caco2.options$keepit100 == TRUE){
     outlist[["Fabs"]] <- 1
@@ -338,7 +337,7 @@ Set default.to.human to true to substitute human value.")
   }else{
     # Calculate Fabsgut
     # Caco-2 Pab:
-    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.CAS = chem.cas), silent = T)
+    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.cas = chem.cas), silent = T)
     if (class(Caco2.Pab.db) == "try-error"){  
       Caco2.Pab.db <- Caco2.options$Caco2.Pab.default
       warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
@@ -356,7 +355,7 @@ Set default.to.human to true to substitute human value.")
     gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point,
                        "Funbound.plasma" = outlist$Funbound.plasma, "Rblood2plasma" = outlist$Rblood2plasma)
     # Select Fabs, optionally overwrite based on Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.CAS=chem.cas),silent=T)
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
     if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
         gut.params[["Fabs"]] <- 1
@@ -366,7 +365,7 @@ Set default.to.human to true to substitute human value.")
       }
     }
     
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.CAS=chem.cas),silent=T)
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
     if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
       if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
         gut.params[["Fgut"]] <- 1
