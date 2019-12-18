@@ -724,7 +724,7 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 
 
 # ADD NEW DATA HERE:
-volatile.data.raw <- read.xls('Linakis2019Inhalation.xlsx', stringsAsFactors = F)
+volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv', stringsAsFactors = F)
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                                 current.table=chem.physical_and_invitro.data,
@@ -746,7 +746,7 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                                                DTXSID="DTXSID",
                                                                Clint="CALC_CLINT",
                                                                Funbound.plasma="CALC_FUP",
-                                                               Reference="SOURCE_MET",
+                                                               Reference="REFERENCE",
                                                                Species="SPECIES"),
                                                 overwrite=F)
 
