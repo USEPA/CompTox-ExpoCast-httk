@@ -27,7 +27,6 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "Kliver2pu",
   "Klung2pu",
   "km", #MWL 9-13-19
-  "Km",
   "Kmuc2air", #MWL 8-1-19
   "Krbc2pu",
   "Krest2pu",
