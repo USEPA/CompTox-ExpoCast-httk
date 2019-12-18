@@ -25,7 +25,7 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param vmax.km Logical indicator of whether to represent Michaelis-Menten 
-#' liver metabolic kinetics, if chemical data available
+#' liver metabolic kinetics
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -63,7 +63,7 @@
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
-#' ...
+#'
 #' @author John Wambaugh and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -90,7 +90,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-                              vmax.km=F,
+                              vmax.km = F,
                               vmax = 0,
                               km = 1,
                               exercise = F,
@@ -229,9 +229,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                 pKa_Accept=schmitt.params$pKa_Accept))))  # fraction 
  
  #Below added MWL 8-2-19
- if(vmax.km){
-   if(vmax==0){
-     #stop("Cannot calculate saturable metabolism with Vmax = 0.") #Do we want to throw an error if MM kinetics are attempted without providing Vmax, or simply default back to first-order as below?
+ if (vmax.km){
+   if (vmax==0){
+     #stop("Cannot calculate saturable metabolism with Vmax = 0.") 
+     #Do we want to throw an error if MM kinetics are attempted without providing Vmax, 
+     #or simply default back to first-order as below?
      warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
      outlist <- c(outlist,
                   list(vmax=0,km=1,Km = km,Clint=Clint,
