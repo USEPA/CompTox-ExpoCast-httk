@@ -1,6 +1,6 @@
 #' Parameterize_gas_pbtk
 #' 
-#' This function initializes the parameters needed in the functions solve_gas_pbtk,
+#' This function initializes the parameters needed in the function solve_gas_pbtk
 #' 
 #' 
 #' 
@@ -24,8 +24,6 @@
 #' TRUE along with parition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
-#' @param vmax.km Logical indicator of whether to represent Michaelis-Menten 
-#' liver metabolic kinetics
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -90,7 +88,6 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
                               regression=T,
-                              vmax.km = F,
                               vmax = 0,
                               km = 1,
                               exercise = F,
@@ -228,15 +225,13 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                 pKa_Donor=schmitt.params$pKa_Donor,
                 pKa_Accept=schmitt.params$pKa_Accept))))  # fraction 
  
- #Below added MWL 8-2-19
- if (vmax.km){
-   if (vmax==0){
-     #stop("Cannot calculate saturable metabolism with Vmax = 0.") 
-     #Do we want to throw an error if MM kinetics are attempted without providing Vmax, 
-     #or simply default back to first-order as below?
+
+
+   if (vmax==0)
+   {
      warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
      outlist <- c(outlist,
-                  list(vmax=0,km=1,Km = km,Clint=Clint,
+                  list(vmax=0,km=1,Clint=Clint, #km value of 1 is a dummy value here
                        Clint.dist = Clint.dist,
                        Clmetabolismc= as.numeric(calc_hep_clearance(chem.name = chem.name,hepatic.model="unscaled",
                                                                         parameters=list(
@@ -253,31 +248,12 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                        liver.density=1.05, # g/mL
                        Fgutabs=Fgutabs)) #L/h/kg BW
    }else{
-     outlist <- c(outlist,list(vmax=vmax,km=km,Km = km,Clint=Clint,
+     outlist <- c(outlist,list(vmax=vmax,km=km,Clint=Clint, 
                                Clint.dist = Clint.dist, Clmetabolismc=0,                       
                                million.cells.per.gliver=110, # 10^6 cells/g-liver
                                liver.density=1.05, # g/mL
                                Fgutabs=Fgutabs))#ML added Km = km 9-19-19
    }
- }else{
-   outlist <- c(outlist,
-                list(vmax=0,km=1,Km = km,Clint=Clint,
-                     Clint.dist = Clint.dist,
-                     Clmetabolismc= as.numeric(calc_hep_clearance(chem.name = chem.name,hepatic.model="unscaled",
-                                                                      parameters=list(
-                                                                        Clint=Clint, #uL/min/10^6 cells
-                                                                        Funbound.plasma=fup, # unitless fraction
-                                                                        hep.assay.correction=outlist$Fhep.assay.correction, 
-                                                                        million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                                                                        liver.density= 1.05, # g/mL
-                                                                        Dn=0.17,BW=BW,
-                                                                        Vliverc=lumped_params$Vliverc, #L/kg
-                                                                        Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                                                                      suppress.messages=T)), #L/h/kg BW
-                     million.cells.per.gliver=110, # 10^6 cells/g-liver
-                     liver.density=1.05, # g/mL
-                     Fgutabs=Fgutabs)) #L/h/kg BW
- }
  
  
  if (adjusted.Funbound.plasma) 
