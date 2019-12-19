@@ -4,23 +4,15 @@
 \alias{calc_analytic_css}
 \title{Calculate the analytic steady state concentration.}
 \usage{
-<<<<<<< HEAD
-calc_analytic_css(chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, daily.dose = 1, output.units = "uM",
-  model = "pbtk", concentration = "plasma", suppress.messages = F,
-  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = F, IVIVE = NULL,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
-=======
 calc_analytic_css(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
   parameters = NULL, species = "human", daily.dose = 1,
   output.units = "uM", model = "pbtk", concentration = "plasma",
   suppress.messages = F, tissue = NULL, restrictive.clearance = T,
   bioactive.free.invivo = F, IVIVE = NULL,
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
   parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma
   = T, regression = T, minimum.Funbound.plasma = 1e-04), ...)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 

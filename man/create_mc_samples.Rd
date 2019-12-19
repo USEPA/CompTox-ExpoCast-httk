@@ -13,6 +13,8 @@ create_mc_samples(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
   fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4,
   clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut =
+  TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
   httkpop.generate.arg.list = list(method = "direct resampling",
   gendernum = NULL, agelim_years = NULL, agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),

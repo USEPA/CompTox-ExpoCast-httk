@@ -338,9 +338,9 @@ calc_mc_css <- function(chem.cas=NULL,
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
   if(!all(httk.option.listoflists[["Caco2.options"]] %in% 
-  names(unlist(Caco2.options))))
+  names(unlist(oral.pathway.options))))
   {
-    Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
+    oral.pathway.options <- ammend.httk.option.list(httk.option.list = oral.pathway.options)
   }
 
   if (is.null(model)) stop("Model must be specified.")
@@ -373,7 +373,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         calcrb2p=calcrb2p,
                         censored.params=censored.params,
                         vary.params=vary.params,
-                        Caco2.options = Caco2.options,
+                        oral.pathway.options = oral.pathway.options,
                         return.samples=F,
                         invitro.mc.arg.list=invitro.mc.arg.list,
                         httkpop.generate.arg.list=httkpop.generate.arg.list,
