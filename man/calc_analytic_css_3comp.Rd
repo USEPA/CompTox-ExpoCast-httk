@@ -5,18 +5,11 @@
 \title{Calculate the analytic steady state concentration for model 3comp}
 \usage{
 calc_analytic_css_3comp(chem.name = NULL, chem.cas = NULL,
-<<<<<<< HEAD
-  parameters = NULL, hourly.dose = 1/24, concentration = "plasma",
-  suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
-  restrictive.clearance = T, bioactive.free.invivo = F,
-  Caco2.options = list(Caco2.Pab.default = 2, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, keepit100 = FALSE), ...)
-=======
   dtxsid = NULL, parameters = NULL, hourly.dose = 1/24,
   concentration = "plasma", suppress.messages = F,
   recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = FALSE, ...)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
+  bioactive.free.invivo = F, Caco2.options = list(Caco2.Pab.default =
+  2, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, keepit100 = FALSE), ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 

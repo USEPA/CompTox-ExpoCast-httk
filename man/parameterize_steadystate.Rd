@@ -9,13 +9,9 @@ parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
   default.to.human = F, human.clint.fup = F,
   adjusted.Funbound.plasma = T, restrictive.clearance = T,
   fup.lod.default = 0.005, suppress.messages = F,
-<<<<<<< HEAD
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
-=======
-  minimum.Funbound.plasma = 1e-04, ...)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
+  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -63,33 +59,6 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
-\value{
-\item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-<<<<<<< HEAD
-\item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-fraction of the dose that enters the gutlumen.}  \item{Funbound.plasma}{Fraction of plasma
-that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
-liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
-Weight, kg} \item{MW}{Molecular Weight, g/mol}
-=======
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-dose that enters the gutlumen.} 
-\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
-\item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
-\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-BW^3/4, volume of fluid filtered from kidney and excreted.} 
-\item{BW}{Body Weight, kg} 
-\item{MW}{Molecular Weight, g/mol}
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
-\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-\item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
-\item{liver.density}{Liver tissue density, kg/L.}
-\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
-assay using the method of Kilford et al. (2008)}
-\item{hepatic.bioavailability}{Fraction of dose remaining after first pass
-clearance, calculated from the corrected well-stirred model.}
-}
 \description{
 This function initializes the parameters needed in the functions
 calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
@@ -111,7 +80,7 @@ hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
 \author{
-John Wambaugh
+John Wambaugh and Greg Honda
 }
 \keyword{3compss}
 \keyword{Parameter}

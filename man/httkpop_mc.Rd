@@ -5,17 +5,6 @@
 \title{Converts the HTTK-Pop population data table to a table of the parameters
 needed by HTTK, for a specific chemical.}
 \usage{
-<<<<<<< HEAD:man/get_httk_params.Rd
-get_httk_params(indiv_dt, chemcas = NULL, parameters = NULL, model,
-  poormetab, fup.censored.dist = FALSE, fup.meas.cv = 0.4,
-  caco2.meas.sd = 0.3, clint.meas.cv = 0.3, fup.pop.cv = 0.1,
-  caco2.pop.sd = 0.1, clint.pop.cv = 0.1, fup.lod = 0.01,
-  adjusted.Funbound.plasma = T, regression = T,
-  well.stirred.correction = T, restrictive.clearance = T,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
-  concentration = "plasma", clint.pvalue.threshold = 0.05)
-=======
 httkpop_mc(model, samples = 1000, httkpop.dt = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling",
   gendernum = NULL, agelim_years = NULL, agelim_months = NULL,
@@ -23,7 +12,6 @@ httkpop_mc(model, samples = 1000, httkpop.dt = NULL,
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"), reths =
   c("Mexican American", "Other Hispanic", "Non-Hispanic White",
   "Non-Hispanic Black", "Other")))
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:man/httkpop_mc.Rd
 }
 \arguments{
 \item{model}{One of the HTTK models: "1compartment", "3compartmentss",
@@ -73,7 +61,10 @@ for use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE (default TRUE).}
 
-<<<<<<< HEAD:man/get_httk_params.Rd
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
+
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
@@ -81,14 +72,6 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
-
-\item{concentration}{Blood, plasma, or tissue concentration.}
-
-=======
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:man/httkpop_mc.Rd
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
-set to zero.}
 
 \item{concentration}{Blood, plasma, or tissue concentration.}
 }

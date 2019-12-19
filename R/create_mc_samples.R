@@ -140,6 +140,12 @@ create_mc_samples <- function(chem.cas=NULL,
                           clint.meas.cv=0.3,
                           fup.pop.cv=0.3,
                           clint.pop.cv=0.3),
+                        oral.pathway.options=list(
+                          Caco2.Pab.default = "1.6",
+                          Caco2.Fgut = TRUE,
+                          Caco2.Fabs = TRUE,
+                          overwrite.invivo = FALSE,
+                          keepit100 = FALSE),
                         httkpop.generate.arg.list=list(
                           method='direct resampling',
                           gendernum=NULL,
@@ -309,7 +315,8 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt <- do.call(invitro_mc,
                        args=c(list(
                          parameters.dt=parameters.dt,
-                         samples=samples),
+                         samples=samples,
+                         oral.pathway.options=oral.pathway.options),
                          invitro.mc.arg.list))
   }
 

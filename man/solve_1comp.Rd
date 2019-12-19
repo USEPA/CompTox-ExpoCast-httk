@@ -4,23 +4,19 @@
 \alias{solve_1comp}
 \title{Solve one compartment TK model}
 \usage{
-solve_1comp(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, species = "Human", iv.dose = F,
-  output.units = "uM", method = "lsoda", rtol = 1e-08,
-  atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
+solve_1comp(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  times = NULL, parameters = NULL, days = 10, tsteps = 4,
+  daily.dose = NULL, dose = 1, doses.per.day = NULL,
+  initial.values = NULL, plots = F, suppress.messages = F,
+  species = "Human", iv.dose = F, output.units = "uM",
+  method = "lsoda", rtol = 1e-08, atol = 1e-12,
+  default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
-<<<<<<< HEAD
-  restrictive.clearance = T, well.stirred.correction = T,
-  minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
-=======
   restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
+  monitor.vars = NULL, Caco2.options = list(Caco2.Pab.default = 1.6,
+  Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100
+  = FALSE), ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

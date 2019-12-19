@@ -9,7 +9,7 @@ scale_dosing(dosing, parameters, route, output.units = "uM")
 \description{
 This function transforms the dose (in mg/kg) into the appropriate units. It
 handles single doses, matrices of doses, or daily repeated doses (at varying
-intervals. Absorption is also factored in through the parameter Fgutabs/
+intervals. Absorption is also factored in through the parameter Fabsgut/
 }
 \author{
 John Wambaugh

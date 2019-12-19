@@ -4,22 +4,14 @@
 \alias{invitro_mc}
 \title{Draw in vitro TK parameters including uncertainty and variability.}
 \usage{
-<<<<<<< HEAD:man/draw_fup_clint.Rd
-draw_fup_clint(this.chem = NULL, parameters = NULL, nsamp,
-  fup.meas.cv = 0.4, clint.meas.cv = 0.3, caco2.meas.sd = 0.3,
-  fup.pop.cv = 0.3, clint.pop.cv = 0.3, caco2.pop.sd = 0.3,
-  poormetab = TRUE, fup.lod = 0.01, fup.censored.dist = FALSE,
+invitro_mc(parameters.dt = NULL, samples, fup.meas.cv = 0.4,
+  clint.meas.cv = 0.3, caco2.meas.sd = 0.3, fup.pop.cv = 0.3,
+  clint.pop.cv = 0.3, caco2.pop.sd = 0.3, poormetab = TRUE,
+  fup.lod = 0.01, fup.censored.dist = FALSE,
   adjusted.Funbound.plasma = T, clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
-=======
-invitro_mc(parameters.dt = NULL, samples, fup.meas.cv = 0.4,
-  clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3,
-  poormetab = TRUE, fup.lod = 0.01, fup.censored.dist = FALSE,
-  adjusted.Funbound.plasma = T, clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:man/invitro_mc.Rd
+  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut =
+  TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
 }
 \arguments{
 \item{samples}{The number of samples to draw.}
@@ -56,7 +48,12 @@ set to zero.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-<<<<<<< HEAD:man/draw_fup_clint.Rd
+\item{this.chem}{The CAS number of one of the HTTK chemicals (see
+\code{\link[httk]{get_cheminfo}}).}
+
+\item{parameters}{A list of chemical-specific model parameters containing at
+least Funbound.plasma, Clint, and Fhep.assay.correction.}
+
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
@@ -64,13 +61,6 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
-=======
-\item{this.chem}{The CAS number of one of the HTTK chemicals (see
-\code{\link[httk]{get_cheminfo}}).}
-
-\item{parameters}{A list of chemical-specific model parameters containing at
-least Funbound.plasma, Clint, and Fhep.assay.correction.}
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1:man/invitro_mc.Rd
 }
 \value{
 A data.table with three columns: \code{Funbound.plasma} and

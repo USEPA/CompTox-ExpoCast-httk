@@ -9,14 +9,10 @@ parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
   force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T, regression = T,
-<<<<<<< HEAD
-  suppress.messages = F, minimum.Funbound.plasma = 1e-04,
+  suppress.messages = F, restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
   Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
-=======
-  suppress.messages = F, restrictive.clearance = T,
-  minimum.Funbound.plasma = 1e-04)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -66,23 +62,14 @@ fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
-<<<<<<< HEAD
-\item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-BW.} \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-fraction of the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-chemical unbound in hepatocyte assay using the method of Kilford et al.
-(2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-=======
 \item{BW}{Body Weight, kg.} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
 the dose that enters the gutlumen.} 
 \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 assay using the method of Kilford et al. (2008)} 
 \item{hematocrit}{Percent volume of red blood cells in the blood.}
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
 concentration in plasma.} 
 \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 

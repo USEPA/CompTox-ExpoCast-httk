@@ -13,16 +13,12 @@ export(brain_mass)
 export(calc_analytic_css)
 export(calc_css)
 export(calc_elimination_rate)
-<<<<<<< HEAD
 export(calc_fabs.oral)
 export(calc_fbio.oral)
 export(calc_fgut.oral)
-export(calc_hepatic_clearance)
-=======
 export(calc_hep_bioavailability)
 export(calc_hep_clearance)
 export(calc_hep_fu)
->>>>>>> cd6935617acdc1f8696861a41ecfb6190cbebda1
 export(calc_ionization)
 export(calc_krbc2pu)
 export(calc_mc_css)
