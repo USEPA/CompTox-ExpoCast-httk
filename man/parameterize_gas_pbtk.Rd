@@ -8,9 +8,9 @@ parameterize_gas_pbtk(chem.cas = NULL, chem.name = NULL,
   species = "Human", default.to.human = F, tissuelist = list(liver =
   c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
   force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T, regression = T, vmax.km = F,
-  vmax = 0, km = 1, exercise = F, fR = 12, VT = 0.75,
-  VD = 0.15, suppress.messages = F, minimum.Funbound.plasma = 1e-04)
+  adjusted.Funbound.plasma = T, regression = T, vmax = 0, km = 1,
+  exercise = F, fR = 12, VT = 0.75, VD = 0.15,
+  suppress.messages = F, minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -47,6 +47,8 @@ partition coefficients.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{...}{Other parameters? Logical vmax.km error?}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -79,12 +81,10 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
-...
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
-This function initializes the parameters needed in the functions solve_gas_pbtk,
-...
+This function initializes the parameters needed in the function solve_gas_pbtk
 }
 \examples{
 
