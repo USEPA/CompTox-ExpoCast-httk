@@ -137,7 +137,7 @@ calc_vdist<- function(chem.cas=NULL,
   }
   
   
-# Check the species argument for capitilization problems and whether or not it is in the table:  
+# Check the species argument for capitalization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
