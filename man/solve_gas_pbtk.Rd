@@ -15,7 +15,8 @@ solve_gas_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
   recalc.blood2plasma = F, recalc.clearance = F,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
+  monitor.vars = NULL, vmax = 0, km = 1, exercise = F, fR = 12,
+  VT = 0.75, VD = 0.15, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
