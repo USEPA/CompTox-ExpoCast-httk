@@ -100,6 +100,8 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
       parameters[['hematocrit']] + 
       parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
   }
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+
 
   hourly.dose <- hourly.dose * parameters$Fgutabs
   fup <- parameters$Funbound.plasma
