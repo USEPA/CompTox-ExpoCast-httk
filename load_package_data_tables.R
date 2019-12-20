@@ -70,17 +70,17 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #
-WetmorePhaseII.fub.table <- read.xls("Supp_Table_3_061114.xls",sheet=1,skip=3,stringsAsFactors=F)
-WetmorePhaseII.fub.table$X10.mM[WetmorePhaseII.fub.table$X10.mM>100] <- 100
-WetmorePhaseII.fub.table$X10.mM <- as.numeric(WetmorePhaseII.fub.table$X10.mM)/100
-chem.prop <- add_chemtable(WetmorePhaseII.fub.table,
+WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",stringsAsFactors=F)
+WetmorePhaseII.fup.table$X10.mM[WetmorePhaseII.fup.table$X10.mM>100] <- 100
+WetmorePhaseII.fup.table$X10.mM <- as.numeric(WetmorePhaseII.fup.table$X10.mM)/100
+chem.prop <- add_chemtable(WetmorePhaseII.fup.table,
                species="Human",
                reference="Wetmore 2015",
                current.table=chem.prop,
                data.list=list(
-                 CAS="CAS..",
-                 Compound="Chemical",
-                 Funbound.plasma="X10.mM"))
+                 CAS="CASRN",
+                 Compound="PREFERRED_NAME",
+                 Funbound.plasma="X10.mM"),overwrite=T)
                  
 WetmorePhaseII.clint.table <- read.xls("Supp_Table_3_061114.xls",sheet=2,skip=4,stringsAsFactors=F)
 WetmorePhaseII.clint.table <- subset(WetmorePhaseII.clint.table,Conc.=="1 uM")
