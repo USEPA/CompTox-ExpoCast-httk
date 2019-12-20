@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "June2019-1"
+SCRIPT.VERSION <- "Novemeber2019-1"
 
 library(reshape)
 library(gdata)
@@ -12,12 +12,19 @@ source("add_chemtable.R")
 
 PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
+
+
+#
+# CREATE TABLES physiology.data and tissue.data
+#
+
 pkdata <- read.xls(PKandTISSUEDATAFILE,sheet="Basic PK",stringsAsFactors=FALSE)[1:14,]
 tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,sheet="VolumeFlow",stringsAsFactors=FALSE)
 tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c("Tissue","Species","Reference","Volume..L.kg.","Blood.Flow..ml.min.kg..3.4..")]
 
 tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFactors=FALSE,skip=1)
 tissuecompdata <- subset(tissuecompdata,Species!="")
+tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
 
 colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
 for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
@@ -29,9 +36,19 @@ tissuedata <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
 tissuedata <- rbind(tissuedata,melt(tissuevolflowdata,id.vars=c("Tissue","Species","Reference")))        
 tissuedata$Tissue <- tolower(tissuedata$Tissue)
 
-
-PK.physiology.data <- pkdata
 tissue.data <- tissuedata
+physiology.data <- pkdata
+
+#
+# END TABLES physiology.data and tissue.data
+#
+
+
+
+
+#
+# CREATE TABLE chem.physical_and_invitro.data 
+#
 
 #Table CLint units are uL/min/10^6 cells:
 Wetmore.tables <- read.xls("PublishedRawDataTables.xlsx",stringsAsFactors=F,skip=2)
@@ -254,6 +271,29 @@ for (this.row in 1:dim(Schmitt.table)[1])
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+Obach2008.table <- read.xls("Obach2008.xlsx",stringsAsFactors=F)
+Obach2008.table[Obach2008.table$CAS..=="3764-87-2","Name"] <- "Trestolone"
+# Dashboard doesn't recognize prefers other CAS:
+Obach2008.table[Obach2008.table$CAS..=="229627-58-1","CAS.."] <- "NOCAS_43930"
+Obach2008.table[Obach2008.table$CAS..=="85650-52-8","CAS.."] <- "61337-67-5"
+Obach2008.table[Obach2008.table$CAS..=="135729-61-2","CAS.."] <- "135729-56-5"
+Obach2008.table[Obach2008.table$CAS..=="51931-66-9","CAS.."] <- "32447-90-8"
+# Get rid of non-numeric fu values:
+Obach2008.table$fu <- as.numeric(Obach2008.table$fu)
+Obach2008.table <- subset(Obach2008.table,!is.na(fu))
+chem.prop <- add_chemtable(Obach2008.table,
+               species="Human",
+               reference="Obach 2008",
+               current.table=chem.prop,
+               data.list=list(
+                 CAS="CAS..",
+                 Compound="Name",
+                 Funbound.plasma="fu"))
+
+
+chem.prop[chem.prop$Compound=="Bensulide",]
+sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
 
 #Table CLint units are L/h/10^6 hepatocytes
 TNO.table <- read.xls("HT-PBPK compounds-122216.xlsx",stringsAsFactors=F)
@@ -393,25 +433,6 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 
-
-Obach2008.table <- read.xls("Obach2008.xlsx",stringsAsFactors=F)
-Obach2008.table[Obach2008.table$CAS..=="3764-87-2","Name"] <- "Trestolone"
-# Dashboard doesn't recognize prefers other CAS:
-Obach2008.table[Obach2008.table$CAS..=="229627-58-1","CAS.."] <- "NOCAS_43930"
-Obach2008.table[Obach2008.table$CAS..=="85650-52-8","CAS.."] <- "61337-67-5"
-Obach2008.table[Obach2008.table$CAS..=="135729-61-2","CAS.."] <- "135729-56-5"
-Obach2008.table[Obach2008.table$CAS..=="51931-66-9","CAS.."] <- "32447-90-8"
-# Get rid of non-numeric fu values:
-Obach2008.table$fu <- as.numeric(Obach2008.table$fu)
-Obach2008.table <- subset(Obach2008.table,!is.na(fu))
-chem.prop <- add_chemtable(Obach2008.table,
-               species="Human",
-               reference="Obach 2008",
-               current.table=chem.prop,
-               data.list=list(
-                 CAS="CAS..",
-                 Compound="Name",
-                 Funbound.plasma="fu"))
 
 Paixao2012.table2 <- read.xls("Paixao-2012.xlsx",stringsAsFactors=F,sheet=1)
 Paixao2012.table2$fup <- 1-Paixao2012.table2$fp
@@ -570,8 +591,310 @@ chem.physical_and_invitro.data <- chem.prop
 if (unique(chem.physical_and_invitro.data$CAS) < dim(chem.physical_and_invitro.data)[1]) stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
 if(any(sapply(chem.physical_and_invitro.data$CAS,function(x) !CAS.checksum(x)))) stop("Failed CAS checksum in chem.physical_and_invitro.data")
 
-#Add in vivo data from Wambaugh (2018):
-load('NewInVivoTablesForHTTK.RData')
+
+cl <- read.xls('Pirovano-2016.xlsx',stringsAsFactors=F)
+chem.physical_and_invitro.data <- add_chemtable(cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=F)
+caf.cl <- subset(cl,CAS =='58-08-2')
+chem.physical_and_invitro.data <- add_chemtable(caf.cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=T)
+rb <- read.xls('Uchimura 2010 cas.xlsx',stringsAsFactors=F)
+chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Human.Rb2p',Funbound.plasma='Human.fup',CAS='cas'),species='Human',reference='Uchimura 2010',overwrite=F)
+rb <- subset(rb,!is.na(Rat.Rb2p))
+chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Rat.Rb2p',Funbound.plasma='Rat.fup',CAS='cas'),species='Rat',reference='Uchimura 2010',overwrite=F)
+fub <- read.xls('Gulden 2002.xlsx',stringsAsFactors=F) 
+chem.physical_and_invitro.data <- add_chemtable(fub,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Funbound.plasma='fup',CAS='CAS',MW='MW'),species='Human',reference='Gulden 2002',overwrite=F)
+brown <- read.xls('Brown 2007.xlsx',stringsAsFactors=F)
+chem.physical_and_invitro.data <- add_chemtable(brown,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Clint='Clint',CAS='CAS'),species='Human',reference='Brown 2007',overwrite=T)
+
+#Add Clint data
+jones <- read.xlsx('Jones 2017 human in vitro clearance.xlsx',1)
+jones <- jones[3:12,1:3]
+colnames(jones) <- c('CAS','Compound','Clint')
+wood.rat <- read.xlsx('Wood_2017_Rat_Clint_CLh.xlsx',1)
+wood.rat <- subset(wood.rat,!is.na(Clint..uL.min.10.6.cells.) & Name != 'FK079') # No CAS for FK079
+wood.human <- read.xlsx('Wood 2017 Human Clint and CLh.xlsx',1)
+wood.human <- subset(wood.human,!is.na(Clint..uL.min.10.6.cells.))
+
+sternbeck <- read.xlsx('Sternbeck Human Clearance.xlsx',1)
+chem.physical_and_invitro.data <- add_chemtable(jones,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='Clint'),species='Human',reference='Jones 2017',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(wood.human,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Clint='Clint..uL.min.10.6.cells.'),species='Human',reference='Wood 2017',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(wood.rat,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CASRN',Clint='Clint..uL.min.10.6.cells.'),species='Rat',reference='Wood 2017',overwrite=T)
+# Add new fup from Wood 2017
+chem.physical_and_invitro.data <- add_chemtable(wood.human,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Funbound.plasma='fup'),species='Human',reference='Wood 2017',overwrite=F)
+chem.physical_and_invitro.data <- add_chemtable(wood.rat,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CASRN',Funbound.plasma='fup'),species='Rat',reference='Wood 2017',overwrite=F)
+#Add only 2 compounds with clint and fup, overwrite all Rb2p but paixao
+chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,Name %in% c('Etodolac','Bufuralol')),current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Funbound.plasma='fup',Clint='Clint'),species='Human',reference='Sternbeck 2012',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,!CAS %in% subset(chem.physical_and_invitro.data,Human.Rblood2plasma.Reference == 'Paixao 2012')[,'CAS']),current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Rblood2plasma='Rb'),species='Human',reference='Sternbeck 2012',overwrite=T)
+
+
+#Remove overwritten clint pvalues
+for(this.cas in subset(chem.physical_and_invitro.data,Human.Clint.pValue.Reference != Human.Clint.Reference)[,'CAS']) chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue.Reference'] <- NA
+
+# Load partition coefficient data from Pearce 2017:
+pc.data.raw <- read.xls('PC_Data.xlsx',stringsAsFactors=F)
+pc.data.table <- subset(pc.data.raw,tolower(Species)=='rat')
+pc.data.table[which(pc.data.table[,'CAS'] %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6','57562-99-9','59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2','60-54-8')),'fu'] <- NA
+#pc.data <- subset(pc.data, Tissue %in% c("Adipose","Bone","Brain","Gut","Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & Species == 'Rat')   
+chem.physical_and_invitro.data <- add_chemtable(pc.data.table,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(Compound='Drug',
+                                                               CAS='CAS',
+                                                               Funbound.plasma='fu',
+                                                               Species='Species',
+                                                               logP='LogP',
+                                                               logMA='logMA',
+                                                               pKa_Donor='Donor',
+                                                               pKa_Accept='Accept'),
+                                                reference='Pearce 2017',
+                                                overwrite=T)
+
+pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A.B.N','LogP','Exp_PC')]
+
+
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),'All.Compound.Names'] <- 'Acebutolol'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'All.Compound.Names'] <- 's-bioallethrin'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'All.Compound.Names'] <-  "3,3'-dimethoxybenzidine"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'All.Compound.Names'] <-  "Amiodarone"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'All.Compound.Names']  <-  "Galantamine"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '57-41-0'),'Compound'] <-  "Phenytoin"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'All.Compound.Names']  <-  "Diuron"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'All.Compound.Names']  <-  "Timolol hemihydrate"
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '101193-40-2'),'All.Compound.Names'] <- 'Quinotolast'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '77-28-1'),'All.Compound.Names'] <- 'Butylbarbitone|Butethal [nf]|Butethal'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '65216-93-5'),'All.Compound.Names'] <- 'Ethoxycoumarin|3-ethoxychromen-2-one'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '509-86-4'),'All.Compound.Names'] <- 'Heptabarbitone|Heptabarbital'
+chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '58-08-2'),'Compound'] <- 'Caffeine'
+
+#Honda 2019:
+load("Honda2019/wetmore_fup.RData") #Some where rat fups were inappropriately truncated
+wetmore.fup <- as.data.frame(wetmore.fup)
+chem.physical_and_invitro.data <- add_chemtable(wetmore.fup,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(CAS="casrn",
+                                                               Funbound.plasma="fup"),
+                                                reference="Wetmore 2013",
+                                                species="Rat",
+                                                overwrite=T)
+# New chemicals:
+load("Honda2019/full_new_rat_04Dec2018.RData")
+full.new.rat <- as.data.frame(full.new.rat)
+full.new.rat <- subset(full.new.rat,use_fup|use_clint)
+
+chemprop.new.rat <- unique(full.new.rat[,c("casrn",
+                                           "DSSTox_Substance_Id",
+                                           "logP",
+                                           "MW",
+                                           "pKa_Accept",
+                                           "pKa_Donor",
+                                           "preferred_name")])
+# update phys-chem props
+chem.physical_and_invitro.data <- add_chemtable(chemprop.new.rat,
+                                                current.table=chem.physical_and_invitro.data,
+                                                 data.list=list(CAS="casrn",
+                                                                DTXSID="DSSTox_Substance_Id",
+                                                                LogP="logP",MW="MW",
+                                                                pKa_Accept="pKa_Accept",
+                                                                pKa_Donor="pKa_Donor",
+                                                                Compound = "preferred_name"),
+                                                 reference="Honda 2019",
+                                                 species="Rat",
+                                                 overwrite=T)
+
+
+# only use the clints that greg identified as good:
+chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_clint),
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(CAS="casrn",
+                                                               DTXSID="DSSTox_Substance_Id",
+                                                               Clint="clearance",
+                                                               Compound = "preferred_name"),
+                                                reference="Honda 2019",
+                                                species="Rat",
+                                                overwrite=T)
+# only use the fups that greg identified as good:
+chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_fup),
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(CAS="casrn",
+                                                               DTXSID="DSSTox_Substance_Id",
+                                                               Funbound.plasma="Funbound.plasma",
+                                                               Compound = "preferred_name"),
+                                                reference="Honda 2019",
+                                                species="Rat",
+                                                overwrite=T)
+
+#Load data from Wambaugh 2019:
+
+load("New-HTTK-raw-2019-05-06.RData")
+
+new.httk.data$Human.Clint <- paste(new.httk.data$Human.Clint,
+                                    new.httk.data$Human.Clint.Low95,
+                                    new.httk.data$Human.Clint.High95,
+                                    new.httk.data$Human.Clint.pValue,sep=",")
+new.httk.data$Human.Funbound.plasma <- paste(new.httk.data$Human.Funbound.plasma,
+                                   new.httk.data$Human.Funbound.plasma.Low95,
+                                   new.httk.data$Human.Funbound.plasma.High95,
+                                   sep=",")
+new.httk.data[new.httk.data$Human.Clint=="NA,NA,NA,NA", "Human.Clint"] <- NA
+new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.plasma"] <-NA
+                                   
+
+chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound",
+    CAS="CAS",
+    DTXSID="DSSTox_Substance_Id",
+    Clint="Human.Clint",
+    Clint.pValue="Human.Clint.pValue",
+    Funbound.plasma="Human.Funbound.plasma",
+    LogP="logP",MW="MW",
+    pKa_Accept="pKa_Accept",
+    pKa_Donor="pKa_Donor",
+    SMILES.desalt="SMILES"),
+  reference="Wambaugh 2019",
+  species="Human",
+  overwrite=T)
+
+
+
+# ADD NEW DATA HERE:
+
+
+
+# STOP ADDING NEW DATA AFTER THIS, SUBSEQUENT CODE IS TO INTERACT WITH DASHBOARD
+
+#
+# STOP TO GET NEW PHYSCHEM
+#
+
+# Update with DSSTox Information
+write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],
+  file="HTTK-ChemIDs.txt",
+  row.names=F,
+  sep="\t")
+cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
+cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
+cat("Enter \"c\" to continue when ready.\n"}
+browser()
+
+#
+# WAIT UNTIL TABLE IS DOWNLOADED FROM DASHBOARD
+#
+
+dsstox <- read.xlsx("HTTK-DSSTox-output.xls",stringsAsFactors=F,1)
+# Get rid of the ones that weren't found:
+dsstox <- subset(dsstox,DTXSID!="-")
+dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
+dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
+chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
+                                    current.table = chem.physical_and_invitro.data,
+                                    data.list=list(Compound='PREFERRED_NAME',
+                                                   CAS='CASRN',
+                                                   DTXSID="DTXSID",
+                                                   MW='AVERAGE_MASS',
+                                                   SMILES.desalt='QSAR_READY_SMILES',
+                                                   Formula="MOLECULAR_FORMULA",
+                                                   logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+                                                   logHenry = "logHenry",
+                                                   logWSol = "logWSol",
+                                                   MP = "MELTING_POINT_DEGC_OPERA_PRED"
+                                                   ),
+                                    reference=paste('CompTox Dashboard',Sys.Date()),
+                                    overwrite=T)
+
+
+
+
+#
+# STOP TO TRY TO FIND CHEMICALS WHERE CAS DID NOT WORK
+#
+
+# Get the chemicals we couldn't find by CAS
+write.table(subset(chem.physical_and_invitro.data,
+  is.na(DTXSID))[,c("Compound","CAS")],
+  file="HTTK-NoCASMatch-ChemIDs.txt",
+  row.names=F,
+  sep="\t")
+cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
+cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
+cat("Enter \"c\" to continue when ready.\n"}
+browser()
+dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
+# Get rid of the ones that weren't found:
+dsstox <- subset(dsstox,DTXSID!="-")
+dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
+dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
+chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
+                                    current.table = chem.physical_and_invitro.data,
+                                    data.list=list(Compound='PREFERRED_NAME',
+                                                   CAS='CASRN',
+                                                   DTXSID="DTXSID",
+                                                   MW='AVERAGE_MASS',
+                                                   SMILES.desalt='QSAR_READY_SMILES',
+                                                   Formula="MOLECULAR_FORMULA",
+                                                   logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+                                                   logHenry = "logHenry",
+                                                   logWSol = "logWSol",
+                                                   MP = "MELTING_POINT_DEGC_OPERA_PRED"
+                                                   ),
+                                    reference=paste('CompTox Dashboard',Sys.Date()),
+                                    overwrite=T)
+
+# Some chemicals are missing from DSStox OPERA predictions:
+new.opera <- read.csv('MissingPhysChem.csv',stringsAsFactors=F) 
+colnames(new.opera)[1] <- "INPUT"
+new.opera[,"logHenry"] <- log10(as.numeric(new.opera$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
+new.opera[,"logWSol"] <- log10(as.numeric(new.opera$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
+chem.physical_and_invitro.data <- add_chemtable(new.opera,current.table = chem.physical_and_invitro.data,
+                                                data.list=list(CAS='CASRN',
+                                                               Compound='INPUT',
+                                                               logP='OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED',
+                                                               logHenry = "logHenry",
+                                                               logWSol = "logWSol",
+                                                               MP = "MELTING_POINT_DEGC_OPERA_PRED",
+                                                               MW='AVERAGE_MASS'),
+                                                reference='OPERA')
+
+# Not sure how to get water:air patition coefficient from OPERA 
+# (need to check into Henry's law coefficient)
+# Use EPI Suite for now
+load("chemprops-072115.RData")
+#Dashboard doesn't like this CAS:
+chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
+chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
+chemprop.table$logHenry <- log10(as.numeric(chemprop.table$Henry))
+chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
+                                                current.table = chem.physical_and_invitro.data,
+                                                data.list=list(CAS="CASRN",
+                                                               logHenry="logHenry",
+                                                               logP="LogP",
+                                                               MP="MP",
+                                                               MW="MolecularWeight",
+                                                               logPwa="logPwa37p5"),
+                                                reference="EPISuite")
+
+#Add Strope 2018 new pKa
+load('Strope2018.RData')
+cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
+cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
+cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrite)
+cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
+chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
+
+#
+# END TABLE chem.physical_and_invitro.data 
+#
+
+
+
+
+
+
+
+#
+# CREATE TABLE Wetmore.data
+#
 
 Wetmore.data <- read.xls("Supp_Table_8_SimCyp_IVIVE_input_output_083011.xls",stringsAsFactors=F,skip=1)
 
@@ -663,6 +986,16 @@ for (this.cas in unique(WetmorePhaseII.css.table$CASRN))
 
 if (any(duplicated(Wetmore.data))) stop("Duplicate entries in Wetmore.data")
 
+#
+# END TABLE Wetmore.data
+#
+
+
+
+
+#
+# CREATE chem.lists 
+#
 
 # Read in the Tox21 and ToxCast lists from the Dashboard
 Tox21 <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")
@@ -694,274 +1027,25 @@ for(i in 1:length(chem.lists))
 chem.lists[["NHANES"]] <- rbind(chem.lists[["NHANES.serum.parent"]],chem.lists[["NHANES.serum.analyte"]],chem.lists[["NHANES.blood.parent"]],chem.lists[["NHANES.blood.analyte"]],chem.lists[["NHANES.urine.parent"]],chem.lists[["NHANES.urine.analyte"]])
 chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES"]]$CAS),]
 
-physiology.data <- PK.physiology.data
-
-cl <- read.xls('Pirovano-2016.xlsx',stringsAsFactors=F)
-chem.physical_and_invitro.data <- add_chemtable(cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=F)
-caf.cl <- subset(cl,CAS =='58-08-2')
-chem.physical_and_invitro.data <- add_chemtable(caf.cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=T)
-rb <- read.xls('Uchimura 2010 cas.xlsx',stringsAsFactors=F)
-chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Human.Rb2p',Funbound.plasma='Human.fup',CAS='cas'),species='Human',reference='Uchimura 2010',overwrite=F)
-rb <- subset(rb,!is.na(Rat.Rb2p))
-chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Rat.Rb2p',Funbound.plasma='Rat.fup',CAS='cas'),species='Rat',reference='Uchimura 2010',overwrite=F)
-fub <- read.xls('Gulden 2002.xlsx',stringsAsFactors=F) 
-chem.physical_and_invitro.data <- add_chemtable(fub,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Funbound.plasma='fup',CAS='CAS',MW='MW'),species='Human',reference='Gulden 2002',overwrite=F)
-brown <- read.xls('Brown 2007.xlsx',stringsAsFactors=F)
-chem.physical_and_invitro.data <- add_chemtable(brown,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Clint='Clint',CAS='CAS'),species='Human',reference='Brown 2007',overwrite=T)
-
-#Add Clint data
-jones <- read.xlsx('Jones 2017 human in vitro clearance.xlsx',1)
-jones <- jones[3:12,1:3]
-colnames(jones) <- c('CAS','Compound','Clint')
-wood.rat <- read.xlsx('Wood_2017_Rat_Clint_CLh.xlsx',1)
-wood.rat <- subset(wood.rat,!is.na(Clint..uL.min.10.6.cells.) & Name != 'FK079') # No CAS for FK079
-wood.human <- read.xlsx('Wood 2017 Human Clint and CLh.xlsx',1)
-wood.human <- subset(wood.human,!is.na(Clint..uL.min.10.6.cells.))
-sternbeck <- read.xlsx('Sternbeck Human Clearance.xlsx',1)
-chem.physical_and_invitro.data <- add_chemtable(jones,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='Clint'),species='Human',reference='Jones 2017',overwrite=T)
-chem.physical_and_invitro.data <- add_chemtable(wood.human,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Clint='Clint..uL.min.10.6.cells.'),species='Human',reference='Wood 2017',overwrite=T)
-chem.physical_and_invitro.data <- add_chemtable(wood.rat,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CASRN',Clint='Clint..uL.min.10.6.cells.'),species='Rat',reference='Wood 2017',overwrite=T)
-# Add new fup from Wood 2017
-chem.physical_and_invitro.data <- add_chemtable(wood.human,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Funbound.plasma='fup'),species='Human',reference='Wood 2017',overwrite=F)
-chem.physical_and_invitro.data <- add_chemtable(wood.rat,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CASRN',Funbound.plasma='fup'),species='Rat',reference='Wood 2017',overwrite=F)
-#Add only 2 compounds with clint and fup, overwrite all Rb2p but paixao
-chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,Name %in% c('Etodolac','Bufuralol')),current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Funbound.plasma='fup',Clint='Clint'),species='Human',reference='Sternbeck 2012',overwrite=T)
-chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,!CAS %in% subset(chem.physical_and_invitro.data,Human.Rblood2plasma.Reference == 'Paixao 2012')[,'CAS']),current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Rblood2plasma='Rb'),species='Human',reference='Sternbeck 2012',overwrite=T)
-
-#Remove overwritten clint pvalues
-for(this.cas in subset(chem.physical_and_invitro.data,Human.Clint.pValue.Reference != Human.Clint.Reference)[,'CAS']) chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue.Reference'] <- NA
-
-load("NewInVivoTablesForHTTK.RData")
-#Honda 2019:
-load("Honda2019/wetmore_fup.RData") #Some where rat fups were inappropriately truncated
-wetmore.fup <- as.data.frame(wetmore.fup)
-chem.physical_and_invitro.data <- add_chemtable(wetmore.fup,
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(CAS="casrn",
-                                                               Funbound.plasma="fup"),
-                                                reference="Wetmore 2013",
-                                                species="Rat",
-                                                overwrite=T)
-# New chemicals:
-load("Honda2019/full_new_rat_04Dec2018.RData")
-full.new.rat <- as.data.frame(full.new.rat)
-full.new.rat <- subset(full.new.rat,use_fup|use_clint)
-
-chemprop.new.rat <- unique(full.new.rat[,c("casrn",
-                                           "DSSTox_Substance_Id",
-                                           "logP",
-                                           "MW",
-                                           "pKa_Accept",
-                                           "pKa_Donor",
-                                           "preferred_name")])
-# update phys-chem props
-chem.physical_and_invitro.data <- add_chemtable(chemprop.new.rat,
-                                                current.table=chem.physical_and_invitro.data,
-                                                 data.list=list(CAS="casrn",
-                                                                DTXSID="DSSTox_Substance_Id",
-                                                                LogP="logP",MW="MW",
-                                                                pKa_Accept="pKa_Accept",
-                                                                pKa_Donor="pKa_Donor",
-                                                                Compound = "preferred_name"),
-                                                 reference="Honda 2019",
-                                                 species="Rat",
-                                                 overwrite=T)
-
-
-# only use the clints that greg identified as good:
-chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_clint),
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(CAS="casrn",
-                                                               DTXSID="DSSTox_Substance_Id",
-                                                               Clint="clearance",
-                                                               Compound = "preferred_name"),
-                                                reference="Honda 2019",
-                                                species="Rat",
-                                                overwrite=T)
-# only use the fups that greg identified as good:
-chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_fup),
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(CAS="casrn",
-                                                               DTXSID="DSSTox_Substance_Id",
-                                                               Funbound.plasma="Funbound.plasma",
-                                                               Compound = "preferred_name"),
-                                                reference="Honda 2019",
-                                                species="Rat",
-                                                overwrite=T)
-
-#Load data from Wambaugh 2019:
-
-load("New-HTTK-raw-2019-05-06.RData")
-
-new.httk.data$Human.Clint <- paste(new.httk.data$Human.Clint,
-                                    new.httk.data$Human.Clint.Low95,
-                                    new.httk.data$Human.Clint.High95,
-                                    new.httk.data$Human.Clint.pValue,sep=",")
-new.httk.data$Human.Funbound.plasma <- paste(new.httk.data$Human.Funbound.plasma,
-                                   new.httk.data$Human.Funbound.plasma.Low95,
-                                   new.httk.data$Human.Funbound.plasma.High95,
-                                   sep=",")
-new.httk.data[new.httk.data$Human.Clint=="NA,NA,NA,NA", "Human.Clint"] <- NA
-new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.plasma"] <-NA
-                                   
-
-chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
-  current.table=chem.physical_and_invitro.data,
-  data.list=list(Compound="Compound",
-    CAS="CAS",
-    DTXSID="DSSTox_Substance_Id",
-    Clint="Human.Clint",
-    Clint.pValue="Human.Clint.pValue",
-    Funbound.plasma="Human.Funbound.plasma",
-    LogP="logP",MW="MW",
-    pKa_Accept="pKa_Accept",
-    pKa_Donor="pKa_Donor",
-    SMILES.desalt="SMILES"),
-  reference="Wambaugh Submitted",
-  species="Human",
-  overwrite=T)
-                                                
-# Load partition coefficient data from Pearce 2017:
-pc.data.raw <- read.xls('PC_Data.xlsx',stringsAsFactors=F)
-pc.data.table <- subset(pc.data.raw,tolower(Species)=='rat')
-pc.data.table[which(pc.data.table[,'CAS'] %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6','57562-99-9','59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2','60-54-8')),'fu'] <- NA
-#pc.data <- subset(pc.data, Tissue %in% c("Adipose","Bone","Brain","Gut","Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & Species == 'Rat')   
-chem.physical_and_invitro.data <- add_chemtable(pc.data.table,
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(Compound='Drug',
-                                                               CAS='CAS',
-                                                               Funbound.plasma='fu',
-                                                               Species='Species',
-                                                               logP='LogP',
-                                                               logMA='logMA',
-                                                               pKa_Donor='Donor',
-                                                               pKa_Accept='Accept'),
-                                                reference='Pearce 2017',
-                                                overwrite=T)
-
-pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A.B.N','LogP','Exp_PC')]
-
-
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),'All.Compound.Names'] <- 'Acebutolol'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'All.Compound.Names'] <- 's-bioallethrin'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'All.Compound.Names'] <-  "3,3'-dimethoxybenzidine"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'All.Compound.Names'] <-  "Amiodarone"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'All.Compound.Names']  <-  "Galantamine"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '57-41-0'),'Compound'] <-  "Phenytoin"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'All.Compound.Names']  <-  "Diuron"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'All.Compound.Names']  <-  "Timolol hemihydrate"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '101193-40-2'),'All.Compound.Names'] <- 'Quinotolast'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '77-28-1'),'All.Compound.Names'] <- 'Butylbarbitone|Butethal [nf]|Butethal'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '65216-93-5'),'All.Compound.Names'] <- 'Ethoxycoumarin|3-ethoxychromen-2-one'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '509-86-4'),'All.Compound.Names'] <- 'Heptabarbitone|Heptabarbital'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '58-08-2'),'Compound'] <- 'Caffeine'
+#
+# END chem.lists 
+#
 
 
 
-# Update with DSSTox Information
-write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],file="HTTK-ChemIDs.txt",row.names=F,sep="\t")
-cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to download CAS, MW, desalted (QSAR-ready) SMILES, forumula, and DTXSIDs.\n")
-cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
-browser()
-dsstox <- read.xlsx("HTTK-DSSTox-output.xls",stringsAsFactors=F,1)
-# Get rid of the ones that weren't found:
-dsstox <- subset(dsstox,DTXSID!="-")
-dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
-dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
-                                    current.table = chem.physical_and_invitro.data,
-                                    data.list=list(Compound='PREFERRED_NAME',
-                                                   CAS='CASRN',
-                                                   DTXSID="DTXSID",
-                                                   MW='AVERAGE_MASS',
-                                                   SMILES.desalt='QSAR_READY_SMILES',
-                                                   Formula="MOLECULAR_FORMULA",
-                                                   logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-                                                   logHenry = "logHenry",
-                                                   logWSol = "logWSol",
-                                                   MP = "MELTING_POINT_DEGC_OPERA_PRED"
-                                                   ),
-                                    reference=paste('CompTox Dashboard',Sys.Date()),
-                                    overwrite=T)
-
-# Get the chemicals we couldn't find by CAS
-write.csv(subset(chem.physical_and_invitro.data,is.na(DTXSID))[,c("Compound","CAS")],file="HTTK-BadCAS-ChemIDs.txt",row.names=F)
-cat("Chemical with NA DTXSID's written to HTTK-BadCAS-ChemIDs.txt, use that file to download CAS, MW, desalted (QSAR-ready) SMILES, forumula, and DTXSIDs.\n")
-cat("Save Dashboard output to HTTK-BadCAS-DSSTox-output.xls.\n")
-browser()
-dsstox <- read.xlsx("HTTK-BadCAS-DSSTox-output.xls",stringsAsFactors=F,1)
-# Get rid of the ones that weren't found:
-dsstox <- subset(dsstox,DTXSID!="-")
-dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
-dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
-                                    current.table = chem.physical_and_invitro.data,
-                                    data.list=list(Compound='PREFERRED_NAME',
-                                                   CAS='CASRN',
-                                                   DTXSID="DTXSID",
-                                                   MW='AVERAGE_MASS',
-                                                   SMILES.desalt='QSAR_READY_SMILES',
-                                                   Formula="MOLECULAR_FORMULA",
-                                                   logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-                                                   logHenry = "logHenry",
-                                                   logWSol = "logWSol",
-                                                   MP = "MELTING_POINT_DEGC_OPERA_PRED"
-                                                   ),
-                                    reference=paste('CompTox Dashboard',Sys.Date()),
-                                    overwrite=T)
 
 
-#chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '34590-94-8'),'MW'] <- 148.2
-#chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '34590-94-8'),'MW.Reference'] <- 'INCHEM' 
-#chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '71751-41-2'),'MW'] <- 819.01
-#chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '71751-41-2'),'MW.Reference'] <- 'Tonnelier 2012'
 
+#Add in vivo data from Wambaugh (2018):
+load('NewInVivoTablesForHTTK.RData')
 
-# Some chemicals are missing from DSStox OPERA predictions:
-new.opera <- read.csv('MissingPhysChem.csv',stringsAsFactors=F) 
-colnames(new.opera)[1] <- "INPUT"
-new.opera[,"logHenry"] <- log10(as.numeric(new.opera$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
-new.opera[,"logWSol"] <- log10(as.numeric(new.opera$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
-chem.physical_and_invitro.data <- add_chemtable(new.opera,current.table = chem.physical_and_invitro.data,
-                                                data.list=list(CAS='CASRN',
-                                                               Compound='INPUT',
-                                                               logP='OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED',
-                                                               logHenry = "logHenry",
-                                                               logWSol = "logWSol",
-                                                               MP = "MELTING_POINT_DEGC_OPERA_PRED",
-                                                               MW='AVERAGE_MASS'),
-                                                reference='OPERA')
-
-# Not sure how to get water:air patition coefficient from OPERA 
-# (need to check into Henry's law coefficient)
-# Use EPI Suite for now
-load("chemprops-072115.RData")
-#Dashboard doesn't like this CAS:
-chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
-chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
-chemprop.table$logHenry <- log10(as.numeric(chemprop.table$Henry))
-chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
-                                                current.table = chem.physical_and_invitro.data,
-                                                data.list=list(CAS="CASRN",
-                                                               logHenry="logHenry",
-                                                               logP="LogP",
-                                                               MP="MP",
-                                                               MW="MolecularWeight",
-                                                               logPwa="logPwa37p5"),
-                                                reference="EPISuite")
-
-#Add Strope 2018 new pKa
-load('Strope2018.RData')
-cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
-cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
-cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrite)
-cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
-chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
-chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
- 
+# Rename Obach data for distribution with packages                                               
+                                                 
 obach2008 <- Obach2008.table
 
+#
 # Load data from Sipes 2017:
+#
 sipes2017 <- readRDS("ADMET.data.table.RData")
 # Add the predicted parameters at the very end so that we don't overwrite measured data:
 sipes2017 <-merge(sipes2017,Tox21,by.x="CAS",by.y="CASRN",all.x=T)
@@ -981,7 +1065,22 @@ sipes2017.table <- add_chemtable(sipes2017,
                                   species= 'Human', 
                                   overwrite=F)
 
-if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) browser()
+if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
+{
+  cat("There are instances of chemicals with same names but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
+  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
+  browser()
+
+}
+
+
+
+
+
+#
+# WRITE OUT DATA
+#
 
 write.table(chem.physical_and_invitro.data,file="HTTK-Chem-Props.txt",row.names=F,quote=F,sep="\t")
 write.table(chem.invivo.PK.data,file="HTTK-Chem-InVivo-Data.txt",row.names=F,quote=F,sep="\t")
@@ -1000,6 +1099,9 @@ save(chem.physical_and_invitro.data,
      tissue.data,
      Tables.Rdata.stamp,
      file="Tables.RData",compress="gzip",version=2)
+
+cat("Move the Tables.RData to the httk/data directory.\n")
+cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 save(Wetmore.data,
