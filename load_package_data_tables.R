@@ -73,26 +73,60 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",stringsAsFactors=F)
 WetmorePhaseII.fup.table$X10.mM[WetmorePhaseII.fup.table$X10.mM>100] <- 100
 WetmorePhaseII.fup.table$X10.mM <- as.numeric(WetmorePhaseII.fup.table$X10.mM)/100
+#There were a couple of salts in this data set, let's replicate them as acids:
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "1763-23-1"
+salt$Name <- "Perfluorooctanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="29420-49-3")
+salt$CAS <- "375-73-5"
+salt$Name <- "Perfluorobutanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "3825-26-1"
+salt$Name <- "Perfluorooctanoic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="355-46-4")
+salt$CAS <- "3871-99-6"
+salt$Name <- "Perfluorohexanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
 chem.prop <- add_chemtable(WetmorePhaseII.fup.table,
                species="Human",
                reference="Wetmore 2015",
                current.table=chem.prop,
                data.list=list(
-                 CAS="CASRN",
-                 Compound="PREFERRED_NAME",
+                 CAS="CAS",
+                 Compound="Name",
                  Funbound.plasma="X10.mM"),overwrite=T)
                  
-WetmorePhaseII.clint.table <- read.xls("Supp_Table_3_061114.xls",sheet=2,skip=4,stringsAsFactors=F)
+WetmorePhaseII.clint.table <- read.table("Wetmore2015.clint.table.txt",,stringsAsFactors=F)
 WetmorePhaseII.clint.table <- subset(WetmorePhaseII.clint.table,Conc.=="1 uM")
 WetmorePhaseII.clint.table[,"P.value"] <-as.numeric(gsub("< ","",WetmorePhaseII.clint.table[,"P.value"]))
 WetmorePhaseII.clint.table[,"Adj.Cl"] <-as.numeric(WetmorePhaseII.clint.table[,"Adj.Cl"])
+#There were a couple of salts in this data set, let's replicate them as acids:
+salt <- subset(WetmorePhaseII.clint.table,CAS=="2795-39-3")
+salt$CAS <- "1763-23-1"
+salt$Name <- "Perfluorooctanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="29420-49-3")
+salt$CAS <- "375-73-5"
+salt$Name <- "Perfluorobutanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "3825-26-1"
+salt$Name <- "Perfluorooctanoic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="355-46-4")
+salt$CAS <- "3871-99-6"
+salt$Name <- "Perfluorohexanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
 chem.prop <- add_chemtable(WetmorePhaseII.clint.table,                                        
                species="Human",
                reference="Wetmore 2015",
                current.table=chem.prop,
                data.list=list(
-                 CAS="X.1",
-                 Compound="X",
+                 CAS="CAS",
+                 Compound="Name",
                  Clint="Adj.Cl",
                  Clint.pvalue="P.value"))                 
 
