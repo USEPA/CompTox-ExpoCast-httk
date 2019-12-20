@@ -159,7 +159,7 @@ calc_vdist<- function(chem.cas=NULL,
   RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
   if (all(schmitt.specific.names %in% names(parameters)))
   {
-    PC.names <- names(parameters)[regexpr("K",names(parameters))!=-1]
+    PC.names <- names(parameters)[regexpr("K",names(parameters))==1]
     if (is.data.table(parameters))
     {
       PCs <- parameters[,PC.names,with=F]
