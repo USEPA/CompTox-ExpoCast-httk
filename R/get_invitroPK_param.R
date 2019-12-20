@@ -37,7 +37,7 @@ get_invitroPK_param <- function(
     dtxsid <- out$dtxsid
   }
 
-  chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$DTXSID==dtxsid)
+  chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$DTXSID == dtxsid)
   this.col.name <- tolower(paste(species,param,sep="."))
   if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))
   {
