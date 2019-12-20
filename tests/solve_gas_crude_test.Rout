@@ -139,4 +139,4 @@ Set recalc.clearance to TRUE if desired.
 > 
 > proc.time()
    user  system elapsed 
-   2.64    0.39    2.98 
+   2.35    0.50    2.82 
