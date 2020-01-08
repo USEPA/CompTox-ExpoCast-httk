@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Novemeber2019-1"
+SCRIPT.VERSION <- "December2019-1"
 
 library(reshape)
 library(gdata)
@@ -18,12 +18,15 @@ PKandTISSUEDATAFILE <- "pkdata.xlsx"
 # CREATE TABLES physiology.data and tissue.data
 #
 
-pkdata <- read.xls(PKandTISSUEDATAFILE,sheet="Basic PK",stringsAsFactors=FALSE)[1:14,]
+pkdata <- read.xls(PKandTISSUEDATAFILE,sheet="Basic PK",stringsAsFactors=FALSE)
+pkdata <- subset(pkdata,!is.na(Human))
+
 tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,sheet="VolumeFlow",stringsAsFactors=FALSE)
 tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c("Tissue","Species","Reference","Volume..L.kg.","Blood.Flow..ml.min.kg..3.4..")]
 
 tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFactors=FALSE,skip=1)
 tissuecompdata <- subset(tissuecompdata,Species!="")
+tissuecompdata <- subset(tissuecompdata, !is.na(Cells))
 
 colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
 for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
@@ -721,6 +724,31 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 
 
 # ADD NEW DATA HERE:
+volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv', stringsAsFactors = F)
+
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(Compound="PREFERRED_NAME",
+                                                               CAS="CASRN",
+                                                               DTXSID="DTXSID",
+                                                               LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+                                                               LogHenry="LOG_HENRYS_LAW_DIMENSIONLESS",
+                                                               MW="AVERAGE_MASS",
+                                                               SMILES.desalt="QSAR_READY_SMILES",
+                                                               Species="SPECIES"),
+                                                overwrite=F,
+                                                reference="Linakis submitted")
+
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(Compound="PREFERRED_NAME",
+                                                               CAS="CASRN",
+                                                               DTXSID="DTXSID",
+                                                               Clint="CALC_CLINT",
+                                                               Funbound.plasma="CALC_FUP",
+                                                               Reference="REFERENCE",
+                                                               Species="SPECIES"),
+                                                overwrite=F)
 
 
 
@@ -776,7 +804,11 @@ browser()
 dsstox <- read.xlsx("HTTK-BadCAS-DSSTox-output.xls",stringsAsFactors=F,1)
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
-dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
+
+#Only enter conditional block to further edit if searching for bad CAS chemicals by name returns some information. 
+if (dim(dsstox)[1] > 0) 
+  {
+  dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                     current.table = chem.physical_and_invitro.data,
@@ -793,6 +825,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                                    ),
                                     reference=paste('CompTox Dashboard',Sys.Date()),
                                     overwrite=T)
+}
 
 # Some chemicals are missing from DSStox OPERA predictions:
 new.opera <- read.csv('MissingPhysChem.csv',stringsAsFactors=F) 
