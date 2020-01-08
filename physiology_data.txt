@@ -1,0 +1,24 @@
+Parameter	Units	Mouse	Rat	Dog	Human	Rabbit	Monkey
+Total Body Water	ml/kg	725.00000	668.00000	603.60000	600.00000	40.81200	693
+Plasma Volume	ml/kg	50.00000	31.20000	51.50000	42.85714	110.00000	44.8
+Cardiac Output	ml/min/kg^(3/4)	150.42412	209.30361	213.39353	231.40061	266.57589	0.052083333
+Average BW	kg	0.02000	0.25000	10.00000	70.00000	2.50000	5.00000
+Total Plasma Protein	g/ml	0.06200	0.06700	0.09000	0.07400	0.05700	0.088
+Plasma albumin	g/ml	0.03270	0.03160	0.02630	0.04180	0.03870	0.0493
+Plasma a-1-AGP	g/ml	0.01250	0.01810	0.00370	0.00180	0.00130	0.0024
+Hematocrit	fraction	0.45000	0.46000	0.42000	0.44000	0.36000	0.41000
+Urine	ml/min/kg^(3/4)	0.01306	0.09821	0.03705	0.04017	0.04170	0.150833333
+Bile	ml/min/kg^(3/4)	0.02612	0.04419	0.01482	0.01004	0.08330	0.00400641
+GFR	ml/min/kg^(3/4)	5.26484	3.70524	10.90085	5.16519	3.12000	2.08
+Average Body Temperature	C	37.00000	38.70000	38.90000	37.00000	39.35000	38.00000
+Plasma Effective Neutral Lipid Volume Fraction	unitless	0.00355	0.00174	0.00104	0.00730	0.00196	0.00730
+Plasma Protein Volume Fraction	unitless	0.06036	0.05871	0.09000	0.06951	0.05700	0.06951
+							
+References:							
+"Davies, Brian, and Tim Morris. ""Physiological parameters in laboratory animals and humans."" Pharmaceutical research 10.7 (1993): 1093-1095."							
+"Brown, Ronald P., et al. ""Physiological parameter values for physiologically based pharmacokinetic models."" Toxicology and industrial health 13.4 (1997): 407-484."							
+"Birnbaum, L., et al. ""Physiological parameter values for PBPK models."" International Life Sciences Institute, Risk Science Institute, Washington, DC (1994)."							
+"Robertshaw, D., Temperature Regulation and Thermal Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O., Ed. Copyright 2004 by Cornell University."							
+"Stammers, Arthur Dighton. ""The blood count and body temperature in normal rats."" The Journal of physiology 61.3 (1926): 329."							
+"Gordon, Christopher J. Temperature regulation in laboratory rodents. Cambridge University Press, 1993."							
+"Gauvin, David V. ""Electrocardiogram, hemodynamics, and core body temperatures of the normal freely moving cynomolgus monkey by remote radiotelemetry"", Journal of Pharmacological and Toxicological Methods"							
