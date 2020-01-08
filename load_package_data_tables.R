@@ -28,6 +28,7 @@ tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFacto
 tissuecompdata <- subset(tissuecompdata,Species!="")
 tissuecompdata <- subset(tissuecompdata, !is.na(Cells))
 
+
 colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
 for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
 
@@ -89,29 +90,63 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #
-WetmorePhaseII.fub.table <- read.xls("Supp_Table_3_061114.xls",sheet=1,skip=3,stringsAsFactors=F)
-WetmorePhaseII.fub.table$X10.mM[WetmorePhaseII.fub.table$X10.mM>100] <- 100
-WetmorePhaseII.fub.table$X10.mM <- as.numeric(WetmorePhaseII.fub.table$X10.mM)/100
-chem.prop <- add_chemtable(WetmorePhaseII.fub.table,
+WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",stringsAsFactors=F)
+WetmorePhaseII.fup.table$X10.mM[WetmorePhaseII.fup.table$X10.mM>100] <- 100
+WetmorePhaseII.fup.table$X10.mM <- as.numeric(WetmorePhaseII.fup.table$X10.mM)/100
+#There were a couple of salts in this data set, let's replicate them as acids:
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "1763-23-1"
+salt$Name <- "Perfluorooctanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="29420-49-3")
+salt$CAS <- "375-73-5"
+salt$Name <- "Perfluorobutanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "3825-26-1"
+salt$Name <- "Perfluorooctanoic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="355-46-4")
+salt$CAS <- "3871-99-6"
+salt$Name <- "Perfluorohexanesulfonic acid"
+WetmorePhaseII.fup.table <- rbind(WetmorePhaseII.fup.table,salt)
+chem.prop <- add_chemtable(WetmorePhaseII.fup.table,
                species="Human",
                reference="Wetmore 2015",
                current.table=chem.prop,
                data.list=list(
-                 CAS="CAS..",
-                 Compound="Chemical",
-                 Funbound.plasma="X10.mM"))
+                 CAS="CAS",
+                 Compound="Name",
+                 Funbound.plasma="X10.mM"),overwrite=T)
                  
-WetmorePhaseII.clint.table <- read.xls("Supp_Table_3_061114.xls",sheet=2,skip=4,stringsAsFactors=F)
+WetmorePhaseII.clint.table <- read.table("Wetmore2015.clint.table.txt",,stringsAsFactors=F)
 WetmorePhaseII.clint.table <- subset(WetmorePhaseII.clint.table,Conc.=="1 uM")
 WetmorePhaseII.clint.table[,"P.value"] <-as.numeric(gsub("< ","",WetmorePhaseII.clint.table[,"P.value"]))
 WetmorePhaseII.clint.table[,"Adj.Cl"] <-as.numeric(WetmorePhaseII.clint.table[,"Adj.Cl"])
+#There were a couple of salts in this data set, let's replicate them as acids:
+salt <- subset(WetmorePhaseII.clint.table,CAS=="2795-39-3")
+salt$CAS <- "1763-23-1"
+salt$Name <- "Perfluorooctanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="29420-49-3")
+salt$CAS <- "375-73-5"
+salt$Name <- "Perfluorobutanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="2795-39-3")
+salt$CAS <- "3825-26-1"
+salt$Name <- "Perfluorooctanoic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
+salt <- subset(WetmorePhaseII.fup.table,CAS=="355-46-4")
+salt$CAS <- "3871-99-6"
+salt$Name <- "Perfluorohexanesulfonic acid"
+WetmorePhaseII.clint.table <- rbind(WetmorePhaseII.clint.table,salt)
 chem.prop <- add_chemtable(WetmorePhaseII.clint.table,                                        
                species="Human",
                reference="Wetmore 2015",
                current.table=chem.prop,
                data.list=list(
-                 CAS="X.1",
-                 Compound="X",
+                 CAS="CAS",
+                 Compound="Name",
                  Clint="Adj.Cl",
                  Clint.pvalue="P.value"))                 
 
@@ -759,9 +794,14 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
 #
 
 # Update with DSSTox Information
-write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],file="HTTK-ChemIDs.txt",row.names=F,sep="\t")
-cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],
+  file="HTTK-ChemIDs.txt",
+  row.names=F,
+  sep="\t")
+cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
+cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
+cat("Enter \"c\" to continue when ready.\n")
 browser()
 
 #
@@ -797,11 +837,17 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
 #
 
 # Get the chemicals we couldn't find by CAS
-write.csv(subset(chem.physical_and_invitro.data,is.na(DTXSID))[,c("Compound","CAS")],file="HTTK-BadCAS-ChemIDs.txt",row.names=F)
-cat("Chemical with NA DTXSID's written to HTTK-BadCAS-ChemIDs.txt, use that file to download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
-cat("Save Dashboard output to HTTK-BadCAS-DSSTox-output.xls.\n")
+write.table(subset(chem.physical_and_invitro.data,
+  is.na(DTXSID))[,c("Compound","CAS")],
+  file="HTTK-NoCASMatch-ChemIDs.txt",
+  row.names=F,
+  sep="\t")
+cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
+cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
+cat("Enter \"c\" to continue when ready.\n")
 browser()
-dsstox <- read.xlsx("HTTK-BadCAS-DSSTox-output.xls",stringsAsFactors=F,1)
+dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 
@@ -1052,7 +1098,14 @@ sipes2017.table <- add_chemtable(sipes2017,
                                   species= 'Human', 
                                   overwrite=F)
 
-if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) browser()
+if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
+{
+  cat("There are instances of chemicals with same names but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
+  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
+  browser()
+
+}
 
 
 
@@ -1079,6 +1132,9 @@ save(chem.physical_and_invitro.data,
      tissue.data,
      Tables.Rdata.stamp,
      file="Tables.RData",compress="gzip",version=2)
+
+cat("Move the Tables.RData to the httk/data directory.\n")
+cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 save(Wetmore.data,
