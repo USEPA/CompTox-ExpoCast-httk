@@ -90,7 +90,7 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #
-WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",stringsAsFactors=F)
+WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",stringsAsFactors=F,fill = T)
 WetmorePhaseII.fup.table$X10.mM[WetmorePhaseII.fup.table$X10.mM>100] <- 100
 WetmorePhaseII.fup.table$X10.mM <- as.numeric(WetmorePhaseII.fup.table$X10.mM)/100
 #There were a couple of salts in this data set, let's replicate them as acids:
