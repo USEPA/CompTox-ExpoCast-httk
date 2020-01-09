@@ -965,7 +965,7 @@ for (this.cas in unique(WetmorePhaseII.css.table$CASRN))
   this.row["Species"] <- "Human"
   fub.index <- which(WetmorePhaseII.fup.table$CAS == this.cas)[1]
   clint.index <- which(WetmorePhaseII.clint.table$X.1 == this.cas)[1]
-  this.row["Compound"] <- WetmorePhaseII.fup.table[fub.index,"Chemical"]
+  this.row["Compound"] <- WetmorePhaseII.fup.table[fub.index,"Name"]
   this.row["CAS"] <- this.cas
   this.row["Reference"] <- "Wetmore 2015"
   if (this.cas %in% WetmorePhaseII.css.table$CASRN)
