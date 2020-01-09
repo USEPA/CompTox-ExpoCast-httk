@@ -1,15 +1,15 @@
 "Parameter"	"Units"	"Mouse"	"Rat"	"Dog"	"Human"	"Rabbit"	"Monkey"
-"Total Body Water"	"ml/kg"	"725.00000"	668	603.6	600	40.812	693
-"Plasma Volume"	"ml/kg"	"50.00000"	31.2	51.5	42.85714	110	44.8
-"Cardiac Output"	"ml/min/kg^(3/4)"	"150.42412"	209.30361	213.39353	231.40061	266.57589	0.0520833333333333
-"Average BW"	"kg"	"0.02000"	0.25	10	70	2.5	5
-"Total Plasma Protein"	"g/ml"	"0.06200"	0.067	0.09	0.074	0.057	0.088
-"Plasma albumin"	"g/ml"	"0.03270"	0.0316	0.0263	0.0418	0.0387	0.0493
-"Plasma a-1-AGP"	"g/ml"	"0.01250"	0.0181	0.0037	0.0018	0.0013	0.0024
-"Hematocrit"	"fraction"	"0.45000"	0.46	0.42	0.44	0.36	0.41
-"Urine"	"ml/min/kg^(3/4)"	"0.01306"	0.09821	0.03705	0.04017	0.0417	0.150833333333333
-"Bile"	"ml/min/kg^(3/4)"	"0.02612"	0.04419	0.01482	0.01004	0.0833	0.00400641025641026
-"GFR"	"ml/min/kg^(3/4)"	"5.26484"	3.70524	10.90085	5.16519	3.12	2.08
-"Average Body Temperature"	"C"	"37.00000"	38.7	38.9	37	39.35	38
-"Plasma Effective Neutral Lipid Volume Fraction"	"unitless"	"0.00355"	0.00174	0.00104	0.0073	0.00196	0.0073
-"Plasma Protein Volume Fraction"	"unitless"	"0.06036"	0.05871	0.09	0.06951	0.057	0.06951
+"Total Body Water"	"ml/kg"	725	668	603.6	600	40.812	693
+"Plasma Volume"	"ml/kg"	50	31.2	51.5	42.85714	110	44.8
+"Cardiac Output"	"ml/min/kg^(3/4)"	150.42412	209.30361	213.39353	231.40061	266.57589	0.0520833333333333
+"Average BW"	"kg"	0.02	0.25	10	70	2.5	5
+"Total Plasma Protein"	"g/ml"	0.062	0.067	0.09	0.074	0.057	0.088
+"Plasma albumin"	"g/ml"	0.0327	0.0316	0.0263	0.0418	0.0387	0.0493
+"Plasma a-1-AGP"	"g/ml"	0.0125	0.0181	0.0037	0.0018	0.0013	0.0024
+"Hematocrit"	"fraction"	0.45	0.46	0.42	0.44	0.36	0.41
+"Urine"	"ml/min/kg^(3/4)"	0.01306	0.09821	0.03705	0.04017	0.0417	0.150833333333333
+"Bile"	"ml/min/kg^(3/4)"	0.02612	0.04419	0.01482	0.01004	0.0833	0.00400641025641026
+"GFR"	"ml/min/kg^(3/4)"	5.26484	3.70524	10.90085	5.16519	3.12	2.08
+"Average Body Temperature"	"C"	37	38.7	38.9	37	39.35	38
+"Plasma Effective Neutral Lipid Volume Fraction"	"unitless"	0.00355	0.00174	0.00104	0.0073	0.00196	0.0073
+"Plasma Protein Volume Fraction"	"unitless"	0.06036	0.05871	0.09	0.06951	0.057	0.06951
