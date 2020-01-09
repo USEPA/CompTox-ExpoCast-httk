@@ -287,75 +287,75 @@ muscle	Monkey	Davies 1993	Vol (L/kg)	0.5
 skin	Monkey	Davies 1993	Vol (L/kg)	0.1
 spleen	Monkey	Davies 1993	Vol (L/kg)	0.00247
 rest	Monkey		Vol (L/kg)	0.0175
-adipose	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	10.74
-bone	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	9.72
-brain	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	28.93
-gut	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	47.52
-heart	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	9.92
-kidney	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	51.24
-liver	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	59.92
-lung	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	5.79
-muscle	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	30.99
-skin	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	12.4
-spleen	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	3.18
-rest	Human	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	4.19
-adipose	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	1.13
-bone	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	25.54
-brain	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	3.68
-gut	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	27.72
-heart	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	11.03
-kidney	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	26.02
-liver	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	33.38
-lung	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	4.4
-muscle	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	21.21
-skin	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	16.4
-spleen	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	2.88
-rest	Rat	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	59.66
-adipose	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	4.06
-bone	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	8.77
-brain	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	4.96
-gut	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	27.26
-heart	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	5.26
-kidney	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	24.44
-liver	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	33.85
-lung	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	0.75
-muscle	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	17.11
-skin	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	7.71
-spleen	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	2.07
-rest	Mouse	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	38.63
-adipose	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	6.22
-bone	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	2.31
-brain	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	8
-gut	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	40.9
-heart	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	9.6
-kidney	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	38.41
-liver	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	54.95
-lung	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	18.78
-muscle	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	44.46
-skin	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	17.78
-spleen	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	2.93
-rest	Dog	ILSI-RSI 1994	Flow (mL/min/kg^(3/4))	6.1
-adipose	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	16.1
-bone	Rabbit	Pearce 2017	Flow (mL/min/kg^(3/4))	15.54
-brain	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	14.2
-gut	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	55.83
-heart	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	8.05
-kidney	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	40.24
-liver	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	89.03
-lung	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	9.26
-muscle	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	77.96
-skin	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	17.76
-spleen	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	4.53
-rest	Rabbit	Davies 1993	Flow (mL/min/kg^(3/4))	0
-adipose	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	5.98
-bone	Monkey		Flow (mL/min/kg^(3/4))	0.35
-brain	Monkey		Flow (mL/min/kg^(3/4))	21.53
-gut	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	37.38
-heart	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	17.94
-kidney	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	41.27
-liver	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	65.2
-lung	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	11.29
-muscle	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	26.92
-skin	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	16.15
-spleen	Monkey	Davies 1993	Flow (mL/min/kg^(3/4))	6.28
-rest	Monkey		Flow (mL/min/kg^(3/4))	99.8
+adipose	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	10.74
+bone	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.72
+brain	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	28.93
+gut	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	47.52
+heart	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.92
+kidney	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	51.24
+liver	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	59.92
+lung	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	5.79
+muscle	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	30.99
+skin	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	12.4
+spleen	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.18
+rest	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.19
+adipose	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.13
+bone	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	25.54
+brain	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.68
+gut	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	27.72
+heart	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	11.03
+kidney	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	26.02
+liver	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	33.38
+lung	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.4
+muscle	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	21.21
+skin	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	16.4
+spleen	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.88
+rest	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	59.66
+adipose	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.06
+bone	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	8.77
+brain	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.96
+gut	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	27.26
+heart	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	5.26
+kidney	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	24.44
+liver	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	33.85
+lung	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.75
+muscle	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.11
+skin	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	7.71
+spleen	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.07
+rest	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	38.63
+adipose	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.22
+bone	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.31
+brain	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	8
+gut	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	40.9
+heart	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.6
+kidney	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	38.41
+liver	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	54.95
+lung	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	18.78
+muscle	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	44.46
+skin	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.78
+spleen	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.93
+rest	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.1
+adipose	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	16.1
+bone	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	15.54
+brain	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	14.2
+gut	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	55.83
+heart	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	8.05
+kidney	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	40.24
+liver	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	89.03
+lung	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.26
+muscle	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	77.96
+skin	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.76
+spleen	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.53
+rest	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0
+adipose	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	5.98
+bone	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.35
+brain	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	21.53
+gut	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	37.38
+heart	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.94
+kidney	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	41.27
+liver	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	65.2
+lung	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	11.29
+muscle	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	26.92
+skin	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	16.15
+spleen	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.28
+rest	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	99.8
