@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Novemeber2019-1"
+SCRIPT.VERSION <- "January2020-1"
 
 library(reshape)
 library(gdata)
@@ -18,6 +18,9 @@ PKandTISSUEDATAFILE <- "pkdata.xlsx"
 physiology.data <- read.xls(PKandTISSUEDATAFILE,
   sheet="Basic PK",
   stringsAsFactors=FALSE)[1:14,]
+# Make sure that all the values are numerical:
+for (this.col in 3:dim(physiology.data)[2])
+  physiology.data[,this.col] <- as.numeric(physiology.data[,this.col])
 # Write to text so Git can track changes:
 write.table(physiology.data,
   file="Basic-Physiology.txt",
