@@ -56,15 +56,17 @@ tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,
 tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c(
   "Tissue",
   "Species",
-  "Reference",
   "Volume..L.kg.",
-  "Blood.Flow..ml.min.kg..3.4..")]
+  "Reference",
+  "Blood.Flow..ml.min.kg..3.4..",
+  "Reference.1")]
 colnames(tissuevolflowdata) <- c(
   "Tissue",
   "Species",
-  "Reference",
   "Vol (L/kg)",
-  "Flow (mL/min/kg^(3/4))")
+  "Vol Reference",
+  "Flow (mL/min/kg^(3/4))",
+  "Flow Reference")
 for (this.col in c("Vol (L/kg)","Flow (mL/min/kg^(3/4))")) 
   tissuevolflowdata[,this.col] <- as.numeric(tissuevolflowdata[,this.col])
 # Write to text so Git can track changes:
@@ -855,12 +857,14 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 #
 
 # Update with DSSTox Information
-write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],
+write.table(chem.physical_and_invitro.data[,"CAS"],
   file="HTTK-ChemIDs.txt",
   row.names=F,
-  sep="\t")
+  sep="\t",
+  col.names=F,
+  quote=F)
 cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
-cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES, formula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
@@ -899,10 +903,12 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
 
 # Get the chemicals we couldn't find by CAS
 write.table(subset(chem.physical_and_invitro.data,
-  is.na(DTXSID))[,c("Compound","CAS")],
+  is.na(DTXSID))[,"Compound"],
   file="HTTK-NoCASMatch-ChemIDs.txt",
   row.names=F,
-  sep="\t")
+  sep="\t",
+  col.names=F,
+  quote=F)
 cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
