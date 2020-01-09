@@ -2,45 +2,125 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "December2019-1"
+SCRIPT.VERSION <- "January2020-1"
 
 library(reshape)
 library(gdata)
 library(xlsx)
 source("add_chemtable.R")
-#to use augment.table in the package use augment.table
-
-PKandTISSUEDATAFILE <- "pkdata.xlsx"
-
 
 
 #
 # CREATE TABLES physiology.data and tissue.data
 #
+PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
-pkdata <- read.xls(PKandTISSUEDATAFILE,sheet="Basic PK",stringsAsFactors=FALSE)
-pkdata <- subset(pkdata,!is.na(Human))
+physiology.data <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Basic PK",
+  stringsAsFactors=FALSE)[1:14,]
+# Make sure that all the values are numerical:
+for (this.col in 3:dim(physiology.data)[2])
+  physiology.data[,this.col] <- as.numeric(physiology.data[,this.col])
+# Write to text so Git can track changes:
+write.table(physiology.data,
+  file="Basic-Physiology.txt",
+  row.names=F,
+  sep="\t")
+  
+flowdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Flows",
+  stringsAsFactors=FALSE,
+  skip=1)[1:19,]
+write.table(flowdata,
+  file="Tissue-Flows.txt",
+  row.names=F,
+  sep="\t")
 
-tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,sheet="VolumeFlow",stringsAsFactors=FALSE)
-tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c("Tissue","Species","Reference","Volume..L.kg.","Blood.Flow..ml.min.kg..3.4..")]
-
-tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFactors=FALSE,skip=1)
+densitydata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Human Density",
+  stringsAsFactors=FALSE)[1:27,]
+write.table(flowdata,
+  file="Tissue-Density.txt",
+  row.names=F,
+  sep="\t")
+  
+percentBWdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Percent BW",
+  stringsAsFactors=FALSE,
+  skip=2)[1:20,]
+write.table(percentBWdata,
+  file="Tissue-PercentBW.txt",
+  row.names=F,
+  sep="\t")
+  
+tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="VolumeFlow",
+  stringsAsFactors=FALSE)
+tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c(
+  "Tissue",
+  "Species",
+  "Volume..L.kg.",
+  "Reference",
+  "Blood.Flow..ml.min.kg..3.4..",
+  "Reference.1")]
+colnames(tissuevolflowdata) <- c(
+  "Tissue",
+  "Species",
+  "Vol (L/kg)",
+  "Vol Reference",
+  "Flow (mL/min/kg^(3/4))",
+  "Flow Reference")
+for (this.col in c("Vol (L/kg)","Flow (mL/min/kg^(3/4))")) 
+  tissuevolflowdata[,this.col] <- as.numeric(tissuevolflowdata[,this.col])
+# Write to text so Git can track changes:
+write.table(tissuevolflowdata,
+  file="Tissue-Volumes-Flows.txt",
+  row.names=F,
+  sep="\t")
+  
+tissuecompdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="TissueComp",
+  stringsAsFactors=FALSE,
+  skip=1)
 tissuecompdata <- subset(tissuecompdata,Species!="")
-tissuecompdata <- subset(tissuecompdata, !is.na(Cells))
-
-
-colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
-for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
-
-colnames(tissuevolflowdata) <- c("Tissue","Species","Reference","Vol (L/kg)","Flow (mL/min/kg^(3/4))")
-for (this.col in c("Vol (L/kg)","Flow (mL/min/kg^(3/4))")) tissuevolflowdata[,this.col] <- as.numeric(tissuevolflowdata[,this.col])
-
-tissuedata <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
-tissuedata <- rbind(tissuedata,melt(tissuevolflowdata,id.vars=c("Tissue","Species","Reference")))        
-tissuedata$Tissue <- tolower(tissuedata$Tissue)
-
-tissue.data <- tissuedata
-physiology.data <- pkdata
+tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
+colnames(tissuecompdata) <- c(
+  "Tissue",
+  "Species",
+  "Reference",
+  "Fcell",
+  "Fint",
+  "FWc",
+  "FLc",
+  "FPc",
+  "Fn_Lc",
+  "Fn_PLc"
+  ,"Fa_PLc"
+  ,"pH")
+for (this.col in c(
+  "Fcell",
+  "Fint",
+  "FWc",
+  "FLc",
+  "FPc",
+  "Fn_Lc",
+  "Fn_PLc",
+  "Fa_PLc",
+  "pH")) 
+  tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
+# Write to text so Git can track changes:
+write.table(tissuevolflowdata,
+  file="Tissue-Composition.txt",
+  row.names=F,
+  sep="\t")
+  
+tissuedata1 <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
+tissuedata2 <- melt(tissuevolflowdata[,c("Tissue","Species","Vol (L/kg)","Vol Reference")],id.vars=c("Tissue","Species","Vol Reference"))  
+colnames(tissuedata2)[3] <- "Reference"
+tissuedata3 <- melt(tissuevolflowdata[,c("Tissue","Species","Flow (mL/min/kg^(3/4))","Flow Reference")],id.vars=c("Tissue","Species","Flow Reference"))  
+colnames(tissuedata3)[3] <- "Reference"
+tissue.data <- rbind(tissuedata1,tissuedata2,tissuedata3)      
+tissue.data$Tissue <- tolower(tissue.data$Tissue)
 
 #
 # END TABLES physiology.data and tissue.data
@@ -771,31 +851,6 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 
 
 # ADD NEW DATA HERE:
-volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv', stringsAsFactors = F)
-
-chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(Compound="PREFERRED_NAME",
-                                                               CAS="CASRN",
-                                                               DTXSID="DTXSID",
-                                                               LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-                                                               LogHenry="LOG_HENRYS_LAW_DIMENSIONLESS",
-                                                               MW="AVERAGE_MASS",
-                                                               SMILES.desalt="QSAR_READY_SMILES",
-                                                               Species="SPECIES"),
-                                                overwrite=F,
-                                                reference="Linakis submitted")
-
-chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
-                                                current.table=chem.physical_and_invitro.data,
-                                                data.list=list(Compound="PREFERRED_NAME",
-                                                               CAS="CASRN",
-                                                               DTXSID="DTXSID",
-                                                               Clint="CALC_CLINT",
-                                                               Funbound.plasma="CALC_FUP",
-                                                               Reference="REFERENCE",
-                                                               Species="SPECIES"),
-                                                overwrite=F)
 
 
 
@@ -806,12 +861,14 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
 #
 
 # Update with DSSTox Information
-write.table(chem.physical_and_invitro.data[,c("Compound","CAS")],
+write.table(chem.physical_and_invitro.data[,"CAS"],
   file="HTTK-ChemIDs.txt",
   row.names=F,
-  sep="\t")
+  sep="\t",
+  col.names=F,
+  quote=F)
 cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
-cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
+cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES, formula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
@@ -850,10 +907,12 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
 
 # Get the chemicals we couldn't find by CAS
 write.table(subset(chem.physical_and_invitro.data,
-  is.na(DTXSID))[,c("Compound","CAS")],
+  is.na(DTXSID))[,"Compound"],
   file="HTTK-NoCASMatch-ChemIDs.txt",
   row.names=F,
-  sep="\t")
+  sep="\t",
+  col.names=F,
+  quote=F)
 cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
@@ -862,11 +921,7 @@ browser()
 dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
-
-#Only enter conditional block to further edit if searching for bad CAS chemicals by name returns some information. 
-if (dim(dsstox)[1] > 0) 
-  {
-  dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
+dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                     current.table = chem.physical_and_invitro.data,
@@ -883,7 +938,6 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                                    ),
                                     reference=paste('CompTox Dashboard',Sys.Date()),
                                     overwrite=T)
-}
 
 # Some chemicals are missing from DSStox OPERA predictions:
 new.opera <- read.csv('MissingPhysChem.csv',stringsAsFactors=F) 
