@@ -8,36 +8,113 @@ library(reshape)
 library(gdata)
 library(xlsx)
 source("add_chemtable.R")
-#to use augment.table in the package use augment.table
-
-PKandTISSUEDATAFILE <- "pkdata.xlsx"
-
 
 
 #
 # CREATE TABLES physiology.data and tissue.data
 #
+PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
-pkdata <- read.xls(PKandTISSUEDATAFILE,sheet="Basic PK",stringsAsFactors=FALSE)[1:14,]
-tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,sheet="VolumeFlow",stringsAsFactors=FALSE)
-tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c("Tissue","Species","Reference","Volume..L.kg.","Blood.Flow..ml.min.kg..3.4..")]
+physiology.data <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Basic PK",
+  stringsAsFactors=FALSE)[1:14,]
+# Write to text so Git can track changes:
+write.table(physiology.data,
+  file="Basic-Physiology.txt",
+  row.names=F,
+  sep="\t")
+  
+flowdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Flows",
+  stringsAsFactors=FALSE,
+  skip=1)[1:19,]
+write.table(flowdata,
+  file="Tissue-Flows.txt",
+  row.names=F,
+  sep="\t")
 
-tissuecompdata <- read.xls(PKandTISSUEDATAFILE,sheet="TissueComp",stringsAsFactors=FALSE,skip=1)
+densitydata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Human Density",
+  stringsAsFactors=FALSE)[1:27,]
+write.table(flowdata,
+  file="Tissue-Density.txt",
+  row.names=F,
+  sep="\t")
+  
+percentBWdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="Percent BW",
+  stringsAsFactors=FALSE,
+  skip=2)[1:20,]
+write.table(percentBWdata,
+  file="Tissue-PercentBW.txt",
+  row.names=F,
+  sep="\t")
+  
+tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="VolumeFlow",
+  stringsAsFactors=FALSE)
+tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c(
+  "Tissue",
+  "Species",
+  "Reference",
+  "Volume..L.kg.",
+  "Blood.Flow..ml.min.kg..3.4..")]
+colnames(tissuevolflowdata) <- c(
+  "Tissue",
+  "Species",
+  "Reference",
+  "Vol (L/kg)",
+  "Flow (mL/min/kg^(3/4))")
+for (this.col in c("Vol (L/kg)","Flow (mL/min/kg^(3/4))")) 
+  tissuevolflowdata[,this.col] <- as.numeric(tissuevolflowdata[,this.col])
+# Write to text so Git can track changes:
+write.table(tissuevolflowdata,
+  file="Tissue-Volumes-Flows.txt",
+  row.names=F,
+  sep="\t")
+  
+tissuecompdata <- read.xls(PKandTISSUEDATAFILE,
+  sheet="TissueComp",
+  stringsAsFactors=FALSE,
+  skip=1)
 tissuecompdata <- subset(tissuecompdata,Species!="")
 tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
-
-colnames(tissuecompdata) <- c("Tissue","Species","Reference","Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")
-for (this.col in c("Fcell","Fint","FWc","FLc","FPc","Fn_Lc","Fn_PLc","Fa_PLc","pH")) tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
-
-colnames(tissuevolflowdata) <- c("Tissue","Species","Reference","Vol (L/kg)","Flow (mL/min/kg^(3/4))")
-for (this.col in c("Vol (L/kg)","Flow (mL/min/kg^(3/4))")) tissuevolflowdata[,this.col] <- as.numeric(tissuevolflowdata[,this.col])
-
+colnames(tissuecompdata) <- c(
+  "Tissue",
+  "Species",
+  "Reference",
+  "Fcell",
+  "Fint",
+  "FWc",
+  "FLc",
+  "FPc",
+  "Fn_Lc",
+  "Fn_PLc"
+  ,"Fa_PLc"
+  ,"pH")
+for (this.col in c(
+  "Fcell",
+  "Fint",
+  "FWc",
+  "FLc",
+  "FPc",
+  "Fn_Lc",
+  "Fn_PLc",
+  "Fa_PLc",
+  "pH")) 
+  tissuecompdata[,this.col] <- as.numeric(tissuecompdata[,this.col])
+# Write to text so Git can track changes:
+write.table(tissuevolflowdata,
+  file="Tissue-Composition.txt",
+  row.names=F,
+  sep="\t")
+  
 tissuedata <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
-tissuedata <- rbind(tissuedata,melt(tissuevolflowdata,id.vars=c("Tissue","Species","Reference")))        
+tissuedata <- rbind(tissuedata,
+  melt(tissuevolflowdata,id.vars=c("Tissue","Species","Reference")))        
 tissuedata$Tissue <- tolower(tissuedata$Tissue)
 
 tissue.data <- tissuedata
-physiology.data <- pkdata
 
 #
 # END TABLES physiology.data and tissue.data
