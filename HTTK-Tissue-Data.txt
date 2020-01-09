@@ -1,16 +1,16 @@
 Tissue	Species	Reference	variable	value
-adipose	Human	Ruark 2014	Fcell	0.86
-bone	Human	Ruark 2014	Fcell	0.9
-brain	Human	Ruark 2014	Fcell	0.995
-gut	Human	Ruark 2014	Fcell	0.9
-heart	Human	Ruark 2014	Fcell	0.75
-kidney	Human	Ruark 2014	Fcell	0.835
-liver	Human	Ruark 2014	Fcell	0.77
-lung	Human	Ruark 2014	Fcell	0.8
-muscle	Human	Ruark 2014	Fcell	0.85
-skin	Human	Ruark 2014	Fcell	0.4
-spleen	Human	Ruark 2014	Fcell	0.745
-red blood cells	Human	Ruark 2014	Fcell	1
+adipose	Human	Schmitt 2008	Fcell	0.86
+bone	Human	Schmitt 2008	Fcell	0.9
+brain	Human	Schmitt 2008	Fcell	0.995
+gut	Human	Schmitt 2008	Fcell	0.9
+heart	Human	Schmitt 2008	Fcell	0.75
+kidney	Human	Schmitt 2008	Fcell	0.835
+liver	Human	Schmitt 2008	Fcell	0.77
+lung	Human	Schmitt 2008	Fcell	0.8
+muscle	Human	Schmitt 2008	Fcell	0.85
+skin	Human	Schmitt 2008	Fcell	0.4
+spleen	Human	Schmitt 2008	Fcell	0.745
+red blood cells	Human	Schmitt 2008	Fcell	1
 adipose	Rat	Ruark 2014	Fcell	0.86
 bone	Rat	Ruark 2014	Fcell	0.9
 brain	Rat	Ruark 2014	Fcell	0.838
@@ -23,18 +23,18 @@ muscle	Rat	Ruark 2014	Fcell	0.876
 skin	Rat	Ruark 2014	Fcell	0.681
 spleen	Rat	Ruark 2014	Fcell	0.745
 red blood cells	Rat	Ruark 2014	Fcell	1
-adipose	Human	Ruark 2014	Fint	0.14
-bone	Human	Ruark 2014	Fint	0.1
-brain	Human	Ruark 2014	Fint	0.005
-gut	Human	Ruark 2014	Fint	0.096
-heart	Human	Ruark 2014	Fint	0.25
-kidney	Human	Ruark 2014	Fint	0.165
-liver	Human	Ruark 2014	Fint	0.23
-lung	Human	Ruark 2014	Fint	0.2
-muscle	Human	Ruark 2014	Fint	0.15
-skin	Human	Ruark 2014	Fint	0.6
-spleen	Human	Ruark 2014	Fint	0.255
-red blood cells	Human	Ruark 2014	Fint	0
+adipose	Human	Schmitt 2008	Fint	0.14
+bone	Human	Schmitt 2008	Fint	0.1
+brain	Human	Schmitt 2008	Fint	0.005
+gut	Human	Schmitt 2008	Fint	0.096
+heart	Human	Schmitt 2008	Fint	0.25
+kidney	Human	Schmitt 2008	Fint	0.165
+liver	Human	Schmitt 2008	Fint	0.23
+lung	Human	Schmitt 2008	Fint	0.2
+muscle	Human	Schmitt 2008	Fint	0.15
+skin	Human	Schmitt 2008	Fint	0.6
+spleen	Human	Schmitt 2008	Fint	0.255
+red blood cells	Human	Schmitt 2008	Fint	0
 adipose	Rat	Ruark 2014	Fint	0.14
 bone	Rat	Ruark 2014	Fint	0.1
 brain	Rat	Ruark 2014	Fint	0.162
@@ -47,18 +47,18 @@ muscle	Rat	Ruark 2014	Fint	0.124
 skin	Rat	Ruark 2014	Fint	0.319
 spleen	Rat	Ruark 2014	Fint	0.255
 red blood cells	Rat	Ruark 2014	Fint	0
-adipose	Human	Ruark 2014	FWc	0.0200177351979684
-bone	Human	Ruark 2014	FWc	0.26
-brain	Human	Ruark 2014	FWc	0.804287883832079
-gut	Human	Ruark 2014	FWc	0.78
-heart	Human	Ruark 2014	FWc	0.69569726714443
-kidney	Human	Ruark 2014	FWc	0.76610358279035
-liver	Human	Ruark 2014	FWc	0.724409737019685
-lung	Human	Ruark 2014	FWc	0.803798411122145
-muscle	Human	Ruark 2014	FWc	0.799143257334958
-skin	Human	Ruark 2014	FWc	0.427028411538259
-spleen	Human	Ruark 2014	FWc	0.769882797508953
-red blood cells	Human	Ruark 2014	FWc	0.664328657314629
+adipose	Human	Schmitt 2008	FWc	0.0200177351979684
+bone	Human	Schmitt 2008	FWc	0.26
+brain	Human	Schmitt 2008	FWc	0.804287883832079
+gut	Human	Schmitt 2008	FWc	0.78
+heart	Human	Schmitt 2008	FWc	0.69569726714443
+kidney	Human	Schmitt 2008	FWc	0.76610358279035
+liver	Human	Schmitt 2008	FWc	0.724409737019685
+lung	Human	Schmitt 2008	FWc	0.803798411122145
+muscle	Human	Schmitt 2008	FWc	0.799143257334958
+skin	Human	Schmitt 2008	FWc	0.427028411538259
+spleen	Human	Schmitt 2008	FWc	0.769882797508953
+red blood cells	Human	Schmitt 2008	FWc	0.664328657314629
 adipose	Rat	Ruark 2014	FWc	0.0288818990331598
 bone	Rat	Ruark 2014	FWc	0.26
 brain	Rat	Ruark 2014	FWc	0.802920512327267
@@ -71,18 +71,18 @@ muscle	Rat	Ruark 2014	FWc	0.776775433637221
 skin	Rat	Ruark 2014	FWc	0.522006015463339
 spleen	Rat	Ruark 2014	FWc	0.644989771780468
 red blood cells	Rat	Ruark 2014	FWc	0.663991975927783
-adipose	Human	Ruark 2014	FLc	0.933968431867003
-bone	Human	Ruark 2014	FLc	0.02
-brain	Human	Ruark 2014	FLc	0.112299173394122
-gut	Human	Ruark 2014	FLc	0.07
-heart	Human	Ruark 2014	FLc	0.13752793536187
-kidney	Human	Ruark 2014	FLc	0.0640726880002021
-liver	Human	Ruark 2014	FLc	0.0923116772893985
-lung	Human	Ruark 2014	FLc	0.0131578947368421
-muscle	Human	Ruark 2014	FLc	0.0238685970917999
-skin	Human	Ruark 2014	FLc	0.28312570781427
-spleen	Human	Ruark 2014	FLc	0.0394560837934488
-red blood cells	Human	Ruark 2014	FLc	0.00501002004008016
+adipose	Human	Schmitt 2008	FLc	0.933968431867003
+bone	Human	Schmitt 2008	FLc	0.02
+brain	Human	Schmitt 2008	FLc	0.112299173394122
+gut	Human	Schmitt 2008	FLc	0.07
+heart	Human	Schmitt 2008	FLc	0.13752793536187
+kidney	Human	Schmitt 2008	FLc	0.0640726880002021
+liver	Human	Schmitt 2008	FLc	0.0923116772893985
+lung	Human	Schmitt 2008	FLc	0.0131578947368421
+muscle	Human	Schmitt 2008	FLc	0.0238685970917999
+skin	Human	Schmitt 2008	FLc	0.28312570781427
+spleen	Human	Schmitt 2008	FLc	0.0394560837934488
+red blood cells	Human	Schmitt 2008	FLc	0.00501002004008016
 adipose	Rat	Ruark 2014	FLc	0.919180886197881
 bone	Rat	Ruark 2014	FLc	0.02
 brain	Rat	Ruark 2014	FLc	0.115353333926677
@@ -95,18 +95,18 @@ muscle	Rat	Ruark 2014	FLc	0.0231864125084399
 skin	Rat	Ruark 2014	FLc	0.0638308533451037
 spleen	Rat	Ruark 2014	FLc	0.0395703228231729
 red blood cells	Rat	Ruark 2014	FLc	0.00501504513540622
-adipose	Human	Ruark 2014	FPc	0.0460138329350287
-bone	Human	Ruark 2014	FPc	0.21
-brain	Human	Ruark 2014	FPc	0.0834129427737987
-gut	Human	Ruark 2014	FPc	0.15
-heart	Human	Ruark 2014	FPc	0.1667747974937
-kidney	Human	Ruark 2014	FPc	0.169823729209448
-liver	Human	Ruark 2014	FPc	0.183278585690916
-lung	Human	Ruark 2014	FPc	0.183043694141013
-muscle	Human	Ruark 2014	FPc	0.176988145573243
-skin	Human	Ruark 2014	FPc	0.289845880647472
-spleen	Human	Ruark 2014	FPc	0.190661118697598
-red blood cells	Human	Ruark 2014	FPc	0.330661322645291
+adipose	Human	Schmitt 2008	FPc	0.0460138329350287
+bone	Human	Schmitt 2008	FPc	0.21
+brain	Human	Schmitt 2008	FPc	0.0834129427737987
+gut	Human	Schmitt 2008	FPc	0.15
+heart	Human	Schmitt 2008	FPc	0.1667747974937
+kidney	Human	Schmitt 2008	FPc	0.169823729209448
+liver	Human	Schmitt 2008	FPc	0.183278585690916
+lung	Human	Schmitt 2008	FPc	0.183043694141013
+muscle	Human	Schmitt 2008	FPc	0.176988145573243
+skin	Human	Schmitt 2008	FPc	0.289845880647472
+spleen	Human	Schmitt 2008	FPc	0.190661118697598
+red blood cells	Human	Schmitt 2008	FPc	0.330661322645291
 adipose	Rat	Ruark 2014	FPc	0.0519372147689593
 bone	Rat	Ruark 2014	FPc	0.21
 brain	Rat	Ruark 2014	FPc	0.0817261537460569
@@ -119,18 +119,18 @@ muscle	Rat	Ruark 2014	FPc	0.20003815385434
 skin	Rat	Ruark 2014	FPc	0.414163131191557
 spleen	Rat	Ruark 2014	FPc	0.315439905396359
 red blood cells	Rat	Ruark 2014	FPc	0.33099297893681
-adipose	Human	Ruark 2014	Fn_Lc	0.936070381231672
-bone	Human	Ruark 2014	Fn_Lc	0.85
-brain	Human	Ruark 2014	Fn_Lc	0.373382011284434
-gut	Human	Ruark 2014	Fn_Lc	0.69
-heart	Human	Ruark 2014	Fn_Lc	0.89008900890089
-kidney	Human	Ruark 2014	Fn_Lc	0.637506640694174
-liver	Human	Ruark 2014	Fn_Lc	0.724353954581049
-lung	Human	Ruark 2014	Fn_Lc	0.3
-muscle	Human	Ruark 2014	Fn_Lc	0.539419087136929
-skin	Human	Ruark 2014	Fn_Lc	0.359928014397121
-spleen	Human	Ruark 2014	Fn_Lc	0.534147272033575
-red blood cells	Human	Ruark 2014	Fn_Lc	0.4
+adipose	Human	Schmitt 2008	Fn_Lc	0.936070381231672
+bone	Human	Schmitt 2008	Fn_Lc	0.85
+brain	Human	Schmitt 2008	Fn_Lc	0.373382011284434
+gut	Human	Schmitt 2008	Fn_Lc	0.69
+heart	Human	Schmitt 2008	Fn_Lc	0.89008900890089
+kidney	Human	Schmitt 2008	Fn_Lc	0.637506640694174
+liver	Human	Schmitt 2008	Fn_Lc	0.724353954581049
+lung	Human	Schmitt 2008	Fn_Lc	0.3
+muscle	Human	Schmitt 2008	Fn_Lc	0.539419087136929
+skin	Human	Schmitt 2008	Fn_Lc	0.359928014397121
+spleen	Human	Schmitt 2008	Fn_Lc	0.534147272033575
+red blood cells	Human	Schmitt 2008	Fn_Lc	0.4
 adipose	Rat	Ruark 2014	Fn_Lc	0.99766081871345
 bone	Rat	Ruark 2014	Fn_Lc	0.85
 brain	Rat	Ruark 2014	Fn_Lc	0.953545232273839
@@ -143,18 +143,18 @@ muscle	Rat	Ruark 2014	Fn_Lc	0.533902829684997
 skin	Rat	Ruark 2014	Fn_Lc	0.807537012113055
 spleen	Rat	Ruark 2014	Fn_Lc	0.36563071297989
 red blood cells	Rat	Ruark 2014	Fn_Lc	0.227272727272727
-adipose	Human	Ruark 2014	Fn_PLc	0.0560703812316716
-bone	Human	Ruark 2014	Fn_PLc	0.11
-brain	Human	Ruark 2014	Fn_PLc	0.458845004978427
-gut	Human	Ruark 2014	Fn_PLc	0.26
-heart	Human	Ruark 2014	Fn_PLc	0.079007900790079
-kidney	Human	Ruark 2014	Fn_PLc	0.293961395431202
-liver	Human	Ruark 2014	Fn_PLc	0.225137039937353
-lung	Human	Ruark 2014	Fn_PLc	0.56
-muscle	Human	Ruark 2014	Fn_PLc	0.381742738589212
-skin	Human	Ruark 2014	Fn_PLc	0.501899620075985
-spleen	Human	Ruark 2014	Fn_PLc	0.392979778710416
-red blood cells	Human	Ruark 2014	Fn_PLc	0.5
+adipose	Human	Schmitt 2008	Fn_PLc	0.0560703812316716
+bone	Human	Schmitt 2008	Fn_PLc	0.11
+brain	Human	Schmitt 2008	Fn_PLc	0.458845004978427
+gut	Human	Schmitt 2008	Fn_PLc	0.26
+heart	Human	Schmitt 2008	Fn_PLc	0.079007900790079
+kidney	Human	Schmitt 2008	Fn_PLc	0.293961395431202
+liver	Human	Schmitt 2008	Fn_PLc	0.225137039937353
+lung	Human	Schmitt 2008	Fn_PLc	0.56
+muscle	Human	Schmitt 2008	Fn_PLc	0.381742738589212
+skin	Human	Schmitt 2008	Fn_PLc	0.501899620075985
+spleen	Human	Schmitt 2008	Fn_PLc	0.392979778710416
+red blood cells	Human	Schmitt 2008	Fn_PLc	0.5
 adipose	Rat	Ruark 2014	Fn_PLc	0.00187134502923977
 bone	Rat	Ruark 2014	Fn_PLc	0.11
 brain	Rat	Ruark 2014	Fn_PLc	0.0366748166259169
@@ -167,18 +167,18 @@ muscle	Rat	Ruark 2014	Fn_PLc	0.384410037373198
 skin	Rat	Ruark 2014	Fn_PLc	0.148048452220727
 spleen	Rat	Ruark 2014	Fn_PLc	0.489031078610603
 red blood cells	Rat	Ruark 2014	Fn_PLc	0.659090909090909
-adipose	Human	Ruark 2014	Fa_PLc	0.00785923753665689
-bone	Human	Ruark 2014	Fa_PLc	0.04
-brain	Human	Ruark 2014	Fa_PLc	0.167772983737139
-gut	Human	Ruark 2014	Fa_PLc	0.05
-heart	Human	Ruark 2014	Fa_PLc	0.0309030903090309
-kidney	Human	Ruark 2014	Fa_PLc	0.0685319638746237
-liver	Human	Ruark 2014	Fa_PLc	0.0505090054815975
-lung	Human	Ruark 2014	Fa_PLc	0.14
-muscle	Human	Ruark 2014	Fa_PLc	0.0788381742738589
-skin	Human	Ruark 2014	Fa_PLc	0.138172365526895
-spleen	Human	Ruark 2014	Fa_PLc	0.0728729492560092
-red blood cells	Human	Ruark 2014	Fa_PLc	0.1
+adipose	Human	Schmitt 2008	Fa_PLc	0.00785923753665689
+bone	Human	Schmitt 2008	Fa_PLc	0.04
+brain	Human	Schmitt 2008	Fa_PLc	0.167772983737139
+gut	Human	Schmitt 2008	Fa_PLc	0.05
+heart	Human	Schmitt 2008	Fa_PLc	0.0309030903090309
+kidney	Human	Schmitt 2008	Fa_PLc	0.0685319638746237
+liver	Human	Schmitt 2008	Fa_PLc	0.0505090054815975
+lung	Human	Schmitt 2008	Fa_PLc	0.14
+muscle	Human	Schmitt 2008	Fa_PLc	0.0788381742738589
+skin	Human	Schmitt 2008	Fa_PLc	0.138172365526895
+spleen	Human	Schmitt 2008	Fa_PLc	0.0728729492560092
+red blood cells	Human	Schmitt 2008	Fa_PLc	0.1
 adipose	Rat	Ruark 2014	Fa_PLc	0.000467836257309942
 bone	Rat	Ruark 2014	Fa_PLc	0.04
 brain	Rat	Ruark 2014	Fa_PLc	0.0097799511002445
@@ -191,18 +191,18 @@ muscle	Rat	Ruark 2014	Fa_PLc	0.0816871329418046
 skin	Rat	Ruark 2014	Fa_PLc	0.044414535666218
 spleen	Rat	Ruark 2014	Fa_PLc	0.145338208409506
 red blood cells	Rat	Ruark 2014	Fa_PLc	0.113636363636364
-adipose	Human	Ruark 2014	pH	7.1
-bone	Human	Ruark 2014	pH	7
-brain	Human	Ruark 2014	pH	7.1
-gut	Human	Ruark 2014	pH	7
-heart	Human	Ruark 2014	pH	7.1
-kidney	Human	Ruark 2014	pH	7.22
-liver	Human	Ruark 2014	pH	7.23
-lung	Human	Ruark 2014	pH	6.6
-muscle	Human	Ruark 2014	pH	6.81
-skin	Human	Ruark 2014	pH	7
-spleen	Human	Ruark 2014	pH	7
-red blood cells	Human	Ruark 2014	pH	7.2
+adipose	Human	Schmitt 2008	pH	7.1
+bone	Human	Schmitt 2008	pH	7
+brain	Human	Schmitt 2008	pH	7.1
+gut	Human	Schmitt 2008	pH	7
+heart	Human	Schmitt 2008	pH	7.1
+kidney	Human	Schmitt 2008	pH	7.22
+liver	Human	Schmitt 2008	pH	7.23
+lung	Human	Schmitt 2008	pH	6.6
+muscle	Human	Schmitt 2008	pH	6.81
+skin	Human	Schmitt 2008	pH	7
+spleen	Human	Schmitt 2008	pH	7
+red blood cells	Human	Schmitt 2008	pH	7.2
 adipose	Rat	Ruark 2014	pH	7.1
 bone	Rat	Ruark 2014	pH	7
 brain	Rat	Ruark 2014	pH	7.1
@@ -215,123 +215,147 @@ muscle	Rat	Ruark 2014	pH	6.81
 skin	Rat	Ruark 2014	pH	7
 spleen	Rat	Ruark 2014	pH	7
 red blood cells	Rat	Ruark 2014	pH	7.2
-adipose	Mouse	Schmitt 2008	Vol (L/kg)	0.0732
-bone	Mouse	Schmitt 2008	Vol (L/kg)	0.0543
-brain	Mouse	Schmitt 2008	Vol (L/kg)	0.0159
-gut	Mouse	Schmitt 2008	Vol (L/kg)	0.0404
-heart	Mouse	Schmitt 2008	Vol (L/kg)	0.00485
-kidney	Mouse	Schmitt 2008	Vol (L/kg)	0.0159
-liver	Mouse	Schmitt 2008	Vol (L/kg)	0.0523
-lung	Mouse	Schmitt 2008	Vol (L/kg)	0.00695
-muscle	Mouse	Schmitt 2008	Vol (L/kg)	0.369
-skin	Mouse	Schmitt 2008	Vol (L/kg)	0.148
-spleen	Mouse	Schmitt 2008	Vol (L/kg)	0.00105
-rest	Mouse	Schmitt 2008	Vol (L/kg)	0.0254
-adipose	Rat	Schmitt 2008	Vol (L/kg)	0.0726
-bone	Rat	Schmitt 2008	Vol (L/kg)	0.0369
-brain	Rat	Schmitt 2008	Vol (L/kg)	0.0055
-gut	Rat	Schmitt 2008	Vol (L/kg)	0.0259
-heart	Rat	Schmitt 2008	Vol (L/kg)	0.0032
-kidney	Rat	Schmitt 2008	Vol (L/kg)	0.00695
-liver	Rat	Schmitt 2008	Vol (L/kg)	0.0349
-lung	Rat	Schmitt 2008	Vol (L/kg)	0.00476
-muscle	Rat	Schmitt 2008	Vol (L/kg)	0.388
-skin	Rat	Schmitt 2008	Vol (L/kg)	0.17
-spleen	Rat	Schmitt 2008	Vol (L/kg)	0.0019
-rest	Rat	Schmitt 2008	Vol (L/kg)	0.0524
-adipose	Dog	Schmitt 2008	Vol (L/kg)	0.0473
-bone	Dog	Schmitt 2008	Vol (L/kg)	0.041
-brain	Dog	Schmitt 2008	Vol (L/kg)	0.00753
-gut	Dog	Schmitt 2008	Vol (L/kg)	0.0352
-heart	Dog	Schmitt 2008	Vol (L/kg)	0.00757
-kidney	Dog	Schmitt 2008	Vol (L/kg)	0.00524
-liver	Dog	Schmitt 2008	Vol (L/kg)	0.0313
-lung	Dog	Schmitt 2008	Vol (L/kg)	0.00781
-muscle	Dog	Schmitt 2008	Vol (L/kg)	0.439
-skin	Dog	Schmitt 2008	Vol (L/kg)	0.17
-spleen	Dog	Schmitt 2008	Vol (L/kg)	0.00256
-rest	Dog	Schmitt 2008	Vol (L/kg)	0.00236
-adipose	Human	Schmitt 2008	Vol (L/kg)	0.209
-bone	Human	Schmitt 2008	Vol (L/kg)	0.0723
-brain	Human	Schmitt 2008	Vol (L/kg)	0.0193
-gut	Human	Schmitt 2008	Vol (L/kg)	0.0158
-heart	Human	Schmitt 2008	Vol (L/kg)	0.00456
-kidney	Human	Schmitt 2008	Vol (L/kg)	0.00419
-liver	Human	Schmitt 2008	Vol (L/kg)	0.0245
-lung	Human	Schmitt 2008	Vol (L/kg)	0.00723
-muscle	Human	Schmitt 2008	Vol (L/kg)	0.384
-skin	Human	Schmitt 2008	Vol (L/kg)	0.0332
-spleen	Human	Schmitt 2008	Vol (L/kg)	0.00247
-rest	Human	Schmitt 2008	Vol (L/kg)	0.0518
-adipose	Rabbit	Pearce 2016	Vol (L/kg)	0.048
-bone	Rabbit	Pearce 2016	Vol (L/kg)	0.0369
-brain	Rabbit	Pearce 2016	Vol (L/kg)	0.0055
-gut	Rabbit	Pearce 2016	Vol (L/kg)	0.048
-heart	Rabbit	Pearce 2016	Vol (L/kg)	0.0024
-kidney	Rabbit	Pearce 2016	Vol (L/kg)	0.006
-liver	Rabbit	Pearce 2016	Vol (L/kg)	0.04
-lung	Rabbit	Pearce 2016	Vol (L/kg)	0.0068
-muscle	Rabbit	Pearce 2016	Vol (L/kg)	0.54
-skin	Rabbit	Pearce 2016	Vol (L/kg)	0.044
-spleen	Rabbit	Pearce 2016	Vol (L/kg)	4e-04
-rest	Rabbit	Pearce 2016	Vol (L/kg)	0.0254
-adipose	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	4.06
-bone	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	8.77
-brain	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	4.96
-gut	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	27.26
-heart	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	5.26
-kidney	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	24.44
-liver	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	33.85
-lung	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	0.75
-muscle	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	17.11
-skin	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	7.71
-spleen	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	2.07
-rest	Mouse	Schmitt 2008	Flow (mL/min/kg^(3/4))	38.63
-adipose	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	1.13
-bone	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	25.54
-brain	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	3.68
-gut	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	27.72
-heart	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	11.03
-kidney	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	26.02
-liver	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	33.38
-lung	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	4.4
-muscle	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	21.21
-skin	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	16.4
-spleen	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	2.88
-rest	Rat	Schmitt 2008	Flow (mL/min/kg^(3/4))	59.66
-adipose	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	6.22
-bone	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	2.31
-brain	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	8
-gut	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	40.9
-heart	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	9.6
-kidney	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	38.41
-liver	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	54.95
-lung	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	18.78
-muscle	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	44.46
-skin	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	17.78
-spleen	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	2.93
-rest	Dog	Schmitt 2008	Flow (mL/min/kg^(3/4))	6.1
-adipose	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	10.74
-bone	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	9.72
-brain	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	28.93
-gut	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	47.52
-heart	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	9.92
-kidney	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	51.24
-liver	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	59.92
-lung	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	5.79
-muscle	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	30.99
-skin	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	12.4
-spleen	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	3.18
-rest	Human	Schmitt 2008	Flow (mL/min/kg^(3/4))	4.19
-adipose	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	16.0951478999416
-bone	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	45.4084360127102
-brain	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	6.53865383435126
-gut	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	55.8300442779223
-heart	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	8.04757394997079
-kidney	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	40.2378697498539
-liver	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	89.0262868215518
-lung	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	7.81620619890913
-muscle	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	77.960872640342
-skin	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	29.1724555686441
-spleen	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	4.52676034685857
-rest	Rabbit	Pearce 2016	Flow (mL/min/kg^(3/4))	113.171523538324
+adipose	Human	Davies and Morris 1993	Vol (L/kg)	0.209
+bone	Human	Davies and Morris 1993	Vol (L/kg)	0.0723
+brain	Human	Davies and Morris 1993	Vol (L/kg)	0.0193
+gut	Human	Davies and Morris 1993	Vol (L/kg)	0.0158
+heart	Human	Davies and Morris 1993	Vol (L/kg)	0.00456
+kidney	Human	Davies and Morris 1993	Vol (L/kg)	0.00419
+liver	Human	Davies and Morris 1993	Vol (L/kg)	0.0245
+lung	Human	Davies and Morris 1993	Vol (L/kg)	0.00723
+muscle	Human	Davies and Morris 1993	Vol (L/kg)	0.384
+skin	Human	Davies and Morris 1993	Vol (L/kg)	0.0332
+spleen	Human	Davies and Morris 1993	Vol (L/kg)	0.00247
+rest	Human	Davies and Morris 1993	Vol (L/kg)	0.0518
+adipose	Rat	Davies and Morris 1993	Vol (L/kg)	0.0726
+bone	Rat	Davies and Morris 1993	Vol (L/kg)	0.0369
+brain	Rat	Davies and Morris 1993	Vol (L/kg)	0.0055
+gut	Rat	Davies and Morris 1993	Vol (L/kg)	0.0259
+heart	Rat	Davies and Morris 1993	Vol (L/kg)	0.0032
+kidney	Rat	Davies and Morris 1993	Vol (L/kg)	0.00695
+liver	Rat	Davies and Morris 1993	Vol (L/kg)	0.0349
+lung	Rat	Davies and Morris 1993	Vol (L/kg)	0.00476
+muscle	Rat	Davies and Morris 1993	Vol (L/kg)	0.388
+skin	Rat	Davies and Morris 1993	Vol (L/kg)	0.17
+spleen	Rat	Davies and Morris 1993	Vol (L/kg)	0.0019
+rest	Rat	Davies and Morris 1993	Vol (L/kg)	0.0524
+adipose	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0732
+bone	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0543
+brain	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0159
+gut	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0404
+heart	Mouse	Davies and Morris 1993	Vol (L/kg)	0.00485
+kidney	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0159
+liver	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0523
+lung	Mouse	Davies and Morris 1993	Vol (L/kg)	0.00695
+muscle	Mouse	Davies and Morris 1993	Vol (L/kg)	0.369
+skin	Mouse	Davies and Morris 1993	Vol (L/kg)	0.148
+spleen	Mouse	Davies and Morris 1993	Vol (L/kg)	0.00105
+rest	Mouse	Davies and Morris 1993	Vol (L/kg)	0.0254
+adipose	Dog	Davies and Morris 1993	Vol (L/kg)	0.0473
+bone	Dog	Davies and Morris 1993	Vol (L/kg)	0.041
+brain	Dog	Davies and Morris 1993	Vol (L/kg)	0.00753
+gut	Dog	Davies and Morris 1993	Vol (L/kg)	0.0352
+heart	Dog	Davies and Morris 1993	Vol (L/kg)	0.00757
+kidney	Dog	Davies and Morris 1993	Vol (L/kg)	0.00524
+liver	Dog	Davies and Morris 1993	Vol (L/kg)	0.0313
+lung	Dog	Davies and Morris 1993	Vol (L/kg)	0.00781
+muscle	Dog	Davies and Morris 1993	Vol (L/kg)	0.439
+skin	Dog	Davies and Morris 1993	Vol (L/kg)	0.17
+spleen	Dog	Davies and Morris 1993	Vol (L/kg)	0.00256
+rest	Dog	Davies and Morris 1993	Vol (L/kg)	0.00236
+adipose	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.048
+bone	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.0369
+brain	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.0055
+gut	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.048
+heart	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.0024
+kidney	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.006
+liver	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.04
+lung	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.0068
+muscle	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.54
+skin	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.044
+spleen	Rabbit	Davies and Morris 1993	Vol (L/kg)	4e-04
+rest	Rabbit	Davies and Morris 1993	Vol (L/kg)	0.0254
+adipose	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+bone	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+brain	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+gut	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+heart	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+kidney	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+liver	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+lung	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+muscle	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+skin	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+spleen	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+rest	Monkey	Davies and Morris 1993	Vol (L/kg)	NA
+adipose	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	10.74
+bone	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.72
+brain	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	28.93
+gut	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	47.52
+heart	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.92
+kidney	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	51.24
+liver	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	59.92
+lung	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	5.79
+muscle	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	30.99
+skin	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	12.4
+spleen	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.18
+rest	Human	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.19
+adipose	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.13
+bone	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	25.54
+brain	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.68
+gut	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	27.72
+heart	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	11.03
+kidney	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	26.02
+liver	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	33.38
+lung	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.4
+muscle	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	21.21
+skin	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	16.4
+spleen	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.88
+rest	Rat	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	59.66
+adipose	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.06
+bone	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	8.77
+brain	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.96
+gut	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	27.26
+heart	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	5.26
+kidney	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	24.44
+liver	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	33.85
+lung	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.75
+muscle	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.11
+skin	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	7.71
+spleen	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.07
+rest	Mouse	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	38.63
+adipose	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.22
+bone	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.31
+brain	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	8
+gut	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	40.9
+heart	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.6
+kidney	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	38.41
+liver	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	54.95
+lung	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	18.78
+muscle	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	44.46
+skin	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	17.78
+spleen	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	2.93
+rest	Dog	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.1
+adipose	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.32
+bone	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.28
+brain	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.17
+gut	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	4.59
+heart	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.66
+kidney	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.31
+liver	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	7.31
+lung	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.76
+muscle	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.4
+skin	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	1.46
+spleen	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.37
+rest	Rabbit	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0
+adipose	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.56
+bone	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	0.21
+brain	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	12.8
+gut	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	22.23
+heart	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	10.67
+kidney	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	24.54
+liver	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	38.77
+lung	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	6.71
+muscle	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	16
+skin	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	9.6
+spleen	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	3.73
+rest	Monkey	Davies and Morris 1993	Flow (mL/min/kg^(3/4))	59.34
