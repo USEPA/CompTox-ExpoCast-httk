@@ -1,73 +1,73 @@
-"Tissue"	"Species"	"Reference"	"Vol (L/kg)"	"Flow (mL/min/kg^(3/4))"
-"Adipose"	"Human"	"ILSI-RSI 1994"	0.209	10.74
-"Bone"	"Human"	"ILSI-RSI 1994"	0.0723	9.72
-"Brain"	"Human"	"ILSI-RSI 1994"	0.0193	28.93
-"Gut"	"Human"	"ILSI-RSI 1994"	0.0158	47.52
-"Heart"	"Human"	"ILSI-RSI 1994"	0.00456	9.92
-"Kidney"	"Human"	"ILSI-RSI 1994"	0.00419	51.24
-"Liver"	"Human"	"ILSI-RSI 1994"	0.0245	59.92
-"Lung"	"Human"	"ILSI-RSI 1994"	0.00723	5.79
-"Muscle"	"Human"	"ILSI-RSI 1994"	0.384	30.99
-"Skin"	"Human"	"ILSI-RSI 1994"	0.0332	12.4
-"Spleen"	"Human"	"ILSI-RSI 1994"	0.00247	3.18
-"Rest"	"Human"	"ILSI-RSI 1994"	0.0518	4.19
-"Adipose"	"Rat"	"ILSI-RSI 1994"	0.0726	1.13
-"Bone"	"Rat"	"ILSI-RSI 1994"	0.0369	25.54
-"Brain"	"Rat"	"ILSI-RSI 1994"	0.0055	3.68
-"Gut"	"Rat"	"ILSI-RSI 1994"	0.0259	27.72
-"Heart"	"Rat"	"ILSI-RSI 1994"	0.0032	11.03
-"Kidney"	"Rat"	"ILSI-RSI 1994"	0.00695	26.02
-"Liver"	"Rat"	"ILSI-RSI 1994"	0.0349	33.38
-"Lung"	"Rat"	"ILSI-RSI 1994"	0.00476	4.4
-"Muscle"	"Rat"	"ILSI-RSI 1994"	0.388	21.21
-"Skin"	"Rat"	"ILSI-RSI 1994"	0.17	16.4
-"Spleen"	"Rat"	"ILSI-RSI 1994"	0.0019	2.88
-"Rest"	"Rat"	"ILSI-RSI 1994"	0.0524	59.66
-"Adipose"	"Mouse"	"ILSI-RSI 1994"	0.0732	4.06
-"Bone"	"Mouse"	"ILSI-RSI 1994"	0.0543	8.77
-"Brain"	"Mouse"	"ILSI-RSI 1994"	0.0159	4.96
-"Gut"	"Mouse"	"ILSI-RSI 1994"	0.0404	27.26
-"Heart"	"Mouse"	"ILSI-RSI 1994"	0.00485	5.26
-"Kidney"	"Mouse"	"ILSI-RSI 1994"	0.0159	24.44
-"Liver"	"Mouse"	"ILSI-RSI 1994"	0.0523	33.85
-"Lung"	"Mouse"	"ILSI-RSI 1994"	0.00695	0.75
-"Muscle"	"Mouse"	"ILSI-RSI 1994"	0.369	17.11
-"Skin"	"Mouse"	"ILSI-RSI 1994"	0.148	7.71
-"Spleen"	"Mouse"	"ILSI-RSI 1994"	0.00105	2.07
-"Rest"	"Mouse"	"ILSI-RSI 1994"	0.0254	38.63
-"Adipose"	"Dog"	"ILSI-RSI 1994"	0.0473	6.22
-"Bone"	"Dog"	"ILSI-RSI 1994"	0.041	2.31
-"Brain"	"Dog"	"ILSI-RSI 1994"	0.00753	8
-"Gut"	"Dog"	"ILSI-RSI 1994"	0.0352	40.9
-"Heart"	"Dog"	"ILSI-RSI 1994"	0.00757	9.6
-"Kidney"	"Dog"	"ILSI-RSI 1994"	0.00524	38.41
-"Liver"	"Dog"	"ILSI-RSI 1994"	0.0313	54.95
-"Lung"	"Dog"	"ILSI-RSI 1994"	0.00781	18.78
-"Muscle"	"Dog"	"ILSI-RSI 1994"	0.439	44.46
-"Skin"	"Dog"	"ILSI-RSI 1994"	0.17	17.78
-"Spleen"	"Dog"	"ILSI-RSI 1994"	0.00256	2.93
-"Rest"	"Dog"	"ILSI-RSI 1994"	0.00236	6.1
-"Adipose"	"Rabbit"	"Davies 1993"	0.048	16.1
-"Bone"	"Rabbit"	"Pearce 2017"	0.0369	15.54
-"Brain"	"Rabbit"	"Davies 1993"	0.0055	14.2
-"Gut"	"Rabbit"	"Davies 1993"	0.048	55.83
-"Heart"	"Rabbit"	"Davies 1993"	0.0024	8.05
-"Kidney"	"Rabbit"	"Davies 1993"	0.006	40.24
-"Liver"	"Rabbit"	"Davies 1993"	0.04	89.03
-"Lung"	"Rabbit"	"Davies 1993"	0.0068	9.26
-"Muscle"	"Rabbit"	"Davies 1993"	0.54	77.96
-"Skin"	"Rabbit"	"Davies 1993"	0.044	17.76
-"Spleen"	"Rabbit"	"Davies 1993"	4e-04	4.53
-"Rest"	"Rabbit"	"Davies 1993"	0.0257	0
-"Adipose"	"Monkey"	"Davies 1993"	0.027	5.98
-"Bone"	"Monkey"	""	0.0723	0.35
-"Brain"	"Monkey"	""	0.0193	21.53
-"Gut"	"Monkey"	"Davies 1993"	0.046	37.38
-"Heart"	"Monkey"	"Davies 1993"	0.0034	17.94
-"Kidney"	"Monkey"	"Davies 1993"	0.006	41.27
-"Liver"	"Monkey"	"Davies 1993"	0.027	65.2
-"Lung"	"Monkey"	"Davies 1993"	0.00723	11.29
-"Muscle"	"Monkey"	"Davies 1993"	0.5	26.92
-"Skin"	"Monkey"	"Davies 1993"	0.1	16.15
-"Spleen"	"Monkey"	"Davies 1993"	0.00247	6.28
-"Rest"	"Monkey"	""	0.0175	99.8
+"Tissue"	"Species"	"Vol (L/kg)"	"Vol Reference"	"Flow (mL/min/kg^(3/4))"	"Flow Reference"
+"Adipose"	"Human"	0.209	"ILSI-RSI 1994"	10.74	"Davies and Morris 1993"
+"Bone"	"Human"	0.0723	"ILSI-RSI 1994"	9.72	"Davies and Morris 1993"
+"Brain"	"Human"	0.0193	"ILSI-RSI 1994"	28.93	"Davies and Morris 1993"
+"Gut"	"Human"	0.0158	"ILSI-RSI 1994"	47.52	"Davies and Morris 1993"
+"Heart"	"Human"	0.00456	"ILSI-RSI 1994"	9.92	"Davies and Morris 1993"
+"Kidney"	"Human"	0.00419	"ILSI-RSI 1994"	51.24	"Davies and Morris 1993"
+"Liver"	"Human"	0.0245	"ILSI-RSI 1994"	59.92	"Davies and Morris 1993"
+"Lung"	"Human"	0.00723	"ILSI-RSI 1994"	5.79	"Davies and Morris 1993"
+"Muscle"	"Human"	0.384	"ILSI-RSI 1994"	30.99	"Davies and Morris 1993"
+"Skin"	"Human"	0.0332	"ILSI-RSI 1994"	12.4	"Davies and Morris 1993"
+"Spleen"	"Human"	0.00247	"ILSI-RSI 1994"	3.18	"Davies and Morris 1993"
+"Rest"	"Human"	0.0518	"ILSI-RSI 1994"	4.19	"Davies and Morris 1993"
+"Adipose"	"Rat"	0.0726	"ILSI-RSI 1994"	1.13	"Davies and Morris 1993"
+"Bone"	"Rat"	0.0369	"ILSI-RSI 1994"	25.54	"Davies and Morris 1993"
+"Brain"	"Rat"	0.0055	"ILSI-RSI 1994"	3.68	"Davies and Morris 1993"
+"Gut"	"Rat"	0.0259	"ILSI-RSI 1994"	27.72	"Davies and Morris 1993"
+"Heart"	"Rat"	0.0032	"ILSI-RSI 1994"	11.03	"Davies and Morris 1993"
+"Kidney"	"Rat"	0.00695	"ILSI-RSI 1994"	26.02	"Davies and Morris 1993"
+"Liver"	"Rat"	0.0349	"ILSI-RSI 1994"	33.38	"Davies and Morris 1993"
+"Lung"	"Rat"	0.00476	"ILSI-RSI 1994"	4.4	"Davies and Morris 1993"
+"Muscle"	"Rat"	0.388	"ILSI-RSI 1994"	21.21	"Davies and Morris 1993"
+"Skin"	"Rat"	0.17	"ILSI-RSI 1994"	16.4	"Davies and Morris 1993"
+"Spleen"	"Rat"	0.0019	"ILSI-RSI 1994"	2.88	"Davies and Morris 1993"
+"Rest"	"Rat"	0.0524	"ILSI-RSI 1994"	59.66	"Davies and Morris 1993"
+"Adipose"	"Mouse"	0.0732	"ILSI-RSI 1994"	4.06	"Davies and Morris 1993"
+"Bone"	"Mouse"	0.0543	"ILSI-RSI 1994"	8.77	"Davies and Morris 1993"
+"Brain"	"Mouse"	0.0159	"ILSI-RSI 1994"	4.96	"Davies and Morris 1993"
+"Gut"	"Mouse"	0.0404	"ILSI-RSI 1994"	27.26	"Davies and Morris 1993"
+"Heart"	"Mouse"	0.00485	"ILSI-RSI 1994"	5.26	"Davies and Morris 1993"
+"Kidney"	"Mouse"	0.0159	"ILSI-RSI 1994"	24.44	"Davies and Morris 1993"
+"Liver"	"Mouse"	0.0523	"ILSI-RSI 1994"	33.85	"Davies and Morris 1993"
+"Lung"	"Mouse"	0.00695	"ILSI-RSI 1994"	0.75	"Davies and Morris 1993"
+"Muscle"	"Mouse"	0.369	"ILSI-RSI 1994"	17.11	"Davies and Morris 1993"
+"Skin"	"Mouse"	0.148	"ILSI-RSI 1994"	7.71	"Davies and Morris 1993"
+"Spleen"	"Mouse"	0.00105	"ILSI-RSI 1994"	2.07	"Davies and Morris 1993"
+"Rest"	"Mouse"	0.0254	"ILSI-RSI 1994"	38.63	"Davies and Morris 1993"
+"Adipose"	"Dog"	0.0473	"ILSI-RSI 1994"	6.22	"Davies and Morris 1993"
+"Bone"	"Dog"	0.041	"ILSI-RSI 1994"	2.31	"Davies and Morris 1993"
+"Brain"	"Dog"	0.00753	"ILSI-RSI 1994"	8	"Davies and Morris 1993"
+"Gut"	"Dog"	0.0352	"ILSI-RSI 1994"	40.9	"Davies and Morris 1993"
+"Heart"	"Dog"	0.00757	"ILSI-RSI 1994"	9.6	"Davies and Morris 1993"
+"Kidney"	"Dog"	0.00524	"ILSI-RSI 1994"	38.41	"Davies and Morris 1993"
+"Liver"	"Dog"	0.0313	"ILSI-RSI 1994"	54.95	"Davies and Morris 1993"
+"Lung"	"Dog"	0.00781	"ILSI-RSI 1994"	18.78	"Davies and Morris 1993"
+"Muscle"	"Dog"	0.439	"ILSI-RSI 1994"	44.46	"Davies and Morris 1993"
+"Skin"	"Dog"	0.17	"ILSI-RSI 1994"	17.78	"Davies and Morris 1993"
+"Spleen"	"Dog"	0.00256	"ILSI-RSI 1994"	2.93	"Davies and Morris 1993"
+"Rest"	"Dog"	0.00236	"ILSI-RSI 1994"	6.1	"Davies and Morris 1993"
+"Adipose"	"Rabbit"	0.048	"Davies 1993"	16.1	"Davies and Morris 1993"
+"Bone"	"Rabbit"	0.0369	"Pearce 2017"	15.54	"Davies and Morris 1993"
+"Brain"	"Rabbit"	0.0055	"Davies 1993"	14.2	"Davies and Morris 1993"
+"Gut"	"Rabbit"	0.048	"Davies 1993"	55.83	"Davies and Morris 1993"
+"Heart"	"Rabbit"	0.0024	"Davies 1993"	8.05	"Davies and Morris 1993"
+"Kidney"	"Rabbit"	0.006	"Davies 1993"	40.24	"Davies and Morris 1993"
+"Liver"	"Rabbit"	0.04	"Davies 1993"	89.03	"Davies and Morris 1993"
+"Lung"	"Rabbit"	0.0068	"Davies 1993"	9.26	"Davies and Morris 1993"
+"Muscle"	"Rabbit"	0.54	"Davies 1993"	77.96	"Davies and Morris 1993"
+"Skin"	"Rabbit"	0.044	"Davies 1993"	17.76	"Davies and Morris 1993"
+"Spleen"	"Rabbit"	4e-04	"Davies 1993"	4.53	"Davies and Morris 1993"
+"Rest"	"Rabbit"	0.0257	"Davies 1993"	0	"Davies and Morris 1993"
+"Adipose"	"Monkey"	0.027	"Davies 1993"	5.98	"Davies and Morris 1993"
+"Bone"	"Monkey"	0.0723	""	0.35	"Davies and Morris 1993"
+"Brain"	"Monkey"	0.0193	""	21.53	"Davies and Morris 1993"
+"Gut"	"Monkey"	0.046	"Davies 1993"	37.38	"Davies and Morris 1993"
+"Heart"	"Monkey"	0.0034	"Davies 1993"	17.94	"Davies and Morris 1993"
+"Kidney"	"Monkey"	0.006	"Davies 1993"	41.27	"Davies and Morris 1993"
+"Liver"	"Monkey"	0.027	"Davies 1993"	65.2	"Davies and Morris 1993"
+"Lung"	"Monkey"	0.00723	"Davies 1993"	11.29	"Davies and Morris 1993"
+"Muscle"	"Monkey"	0.5	"Davies 1993"	26.92	"Davies and Morris 1993"
+"Skin"	"Monkey"	0.1	"Davies 1993"	16.15	"Davies and Morris 1993"
+"Spleen"	"Monkey"	0.00247	"Davies 1993"	6.28	"Davies and Morris 1993"
+"Rest"	"Monkey"	0.0175	""	99.8	"Davies and Morris 1993"

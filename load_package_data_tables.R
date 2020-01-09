@@ -111,12 +111,13 @@ write.table(tissuevolflowdata,
   row.names=F,
   sep="\t")
   
-tissuedata <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
-tissuedata <- rbind(tissuedata,
-  melt(tissuevolflowdata,id.vars=c("Tissue","Species","Reference")))        
-tissuedata$Tissue <- tolower(tissuedata$Tissue)
-
-tissue.data <- tissuedata
+tissuedata1 <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
+tissuedata2 <- melt(tissuevolflowdata[,c("Tissue","Species","Vol (L/kg)","Vol Reference")],id.vars=c("Tissue","Species","Vol Reference"))  
+colnames(tissuedata2)[3] <- "Reference"
+tissuedata3 <- melt(tissuevolflowdata[,c("Tissue","Species","Flow (mL/min/kg^(3/4))","Flow Reference")],id.vars=c("Tissue","Species","Flow Reference"))  
+colnames(tissuedata3)[3] <- "Reference"
+tissue.data <- rbind(tissuedata1,tissuedata2,tissuedata3)      
+tissue.data$Tissue <- tolower(tissue.data$Tissue)
 
 #
 # END TABLES physiology.data and tissue.data
