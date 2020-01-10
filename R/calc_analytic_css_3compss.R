@@ -52,7 +52,8 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 {
 
   param.names.3compss <- model.list[["3compartmentss"]]$param.names
-  
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+    
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
