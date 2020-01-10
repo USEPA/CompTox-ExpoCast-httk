@@ -15,31 +15,44 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-save adddata_test.R adddata_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
 > fake <- data.frame(Compound="Tester",
 +                    CASRN="222-11-1",
++                    DTXSID="DTX111222",
 +                    MW=200,
 +                    logP=3.5,
 +                    Fup=0.1,
 +                    Clint=0.1,
 +                    Clint.pValue=0.001)
-> chem.physical_and_invitro.data <- add_chemtable(fake,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Compound",CAS="CASRN",MW="MW",logP="logP",Funbound.plasma="Fup",Clint="Clint",Clint.pValue="Clint.pValue"),species="Human",reference="Fake")
+> chem.physical_and_invitro.data <- add_chemtable(
++   fake,
++   current.table=chem.physical_and_invitro.data,
++   data.list=list(
++     Compound="Compound",
++     CAS="CASRN",
++     DTXSID="DTXSID",
++     MW="MW",
++     logP="logP",
++     Funbound.plasma="Fup",
++     Clint="Clint",
++     Clint.pValue="Clint.pValue"),
++   species="Human",
++   reference="Fake")
 > calc_css(chem.name="Tester")
-Human plasma concentrations returned in uM units.
 $avg
-[1] 51.10475
+[1] 50.84895
 
 $frac
-[1] 0.9755664
+[1] 0.9837744
 
 $max
-[1] 51.63859
+[1] 51.38491
 
 $the.day
-[1] 26
+[1] 42
 
 > 
 > load_sipes2017()
@@ -49,7 +62,6 @@ $the.day
 > # But we should have the ADMet Predicted chemicals from Sipes et al. (2017),
 > # this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
-Human plasma concentrations returned in uM units.
 $avg
 [1] 0.0001163777
 

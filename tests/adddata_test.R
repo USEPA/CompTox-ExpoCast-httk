@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save adddata_test.R adddata_test.Rout
 library(httk)
 options(warn=-1)
 
