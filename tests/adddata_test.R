@@ -1,20 +1,31 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-save adddata_test.R adddata_test.Rout
 library(httk)
 options(warn=-1)
 
 fake <- data.frame(Compound="Tester",
                    CASRN="222-11-1",
-                   DTXSID = 'DTXSID1994030999',
+                   DTXSID="DTX111222",
                    MW=200,
                    logP=3.5,
                    Fup=0.1,
                    Clint=0.1,
                    Clint.pValue=0.001)
-chem.physical_and_invitro.data <- 
-  add_chemtable(fake,current.table=chem.physical_and_invitro.data,
-                data.list=list(Compound="Compound",CAS="CASRN",DTXSID = "DTXSID", MW="MW",
-                               logP="logP", Funbound.plasma="Fup",Clint="Clint",
-                               Clint.pValue="Clint.pValue"),species="Human",reference="Fake")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  fake,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(
+    Compound="Compound",
+    CAS="CASRN",
+    DTXSID="DTXSID",
+    MW="MW",
+    logP="logP",
+    Funbound.plasma="Fup",
+    Clint="Clint",
+    Clint.pValue="Clint.pValue"),
+  species="Human",
+  reference="Fake")
+
 calc_css(chem.name="Tester")
 
 load_sipes2017()
