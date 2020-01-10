@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > options(warn=-1)
 > 
 > script.args <- commandArgs(TRUE)
@@ -62,4 +69,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   1.57    0.54    2.09 
+   1.90    0.45    2.31 
