@@ -145,7 +145,7 @@ solve_pbtk <- function(chem.name = NULL,
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
-    dtxsid=DTXSID,
+    dtxsid=dtxsid,
     times=times,
     parameters=parameters,
     model="pbtk",

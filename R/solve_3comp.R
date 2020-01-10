@@ -92,6 +92,7 @@
 #' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
                     chem.cas = NULL,
+                    dtxsid = NULL,
                     times=NULL,
                     parameters=NULL,
                     days=10,
@@ -120,6 +121,7 @@ solve_3comp <- function(chem.name = NULL,
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
+    dtxsid = dtxsid,
     times=times,
     parameters=parameters,
     model="3compartment",
