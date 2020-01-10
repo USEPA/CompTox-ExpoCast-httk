@@ -154,4 +154,4 @@ Volume of distribution returned in units of L/kg BW.
 > 
 > proc.time()
    user  system elapsed 
-   5.42    0.53    6.35 
+   5.67    0.50    6.23 
