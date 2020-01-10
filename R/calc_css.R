@@ -104,6 +104,7 @@
 calc_css <- function(parameters=NULL,
                     chem.name=NULL,
                     chem.cas=NULL, 
+                    dtxsid=NULL,
                     species='Human',
                     f = .01,
                     daily.dose=1,
@@ -119,34 +120,87 @@ calc_css <- function(parameters=NULL,
                     regression=T,
                     well.stirred.correction=T,
                     restrictive.clearance=T,
+                    dosing=NULL,
                     ...)
 {
+  # We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
   
-  if(is.null(parameters)){
-    if(tolower(model)=='pbtk'){
-      parameters <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
-    }else if(tolower(model)=='3compartment'){
-      parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
-    }else if(tolower(model)=='1compartment'){
-      parameters <- parameterize_1comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance)
-    }
-  } 
+# We need to know model-specific information (from modelinfo_[MODEL].R]) 
+# to set up the solver:
+  if (is.null(model)) stop("Model must be specified.")
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
+    #Set more convenient names for various model-related variables (e.g. route
+    #of exposure) stored in the list of lists, model.list, compiled in the
+    #various models' associated "modelinfo_xxx.R" files:
+    #
+    # name of function that generates the model parameters:
+    parameterize_function <- model.list[[model]]$parameterize.func
+    # the names of the state variables of the model (so far, always in units of 
+    # amounts)
+    state.vars <- model.list[[model]]$default.monitor.vars
+    state.vars <- state.vars[!(state.vars %in% c(
+      "Atubules",
+      "Ametabolized",
+      "AUC"))]
+  }   
 
-  css <- calc_analytic_css(parameters=parameters,daily.dose=daily.dose,concentration='plasma',model=model,suppress.messages=T,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance) 
+  # We only want to call the parameterize function once:
+  if (is.null(parameters))
+  {
+    parameters <- do.call(parameterize_function,list(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid=dtxsid,
+      species=species,
+      default.to.human=default.to.human,
+      suppress.messages=suppress.messages,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      regression=regression)) 
+  }
+
+  if (is.null(dosing))
+  {
+    dosing <- list(
+      initial.dose=0,
+      dosing.matrix=NULL,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    )
+  }
+  
+  # We need to find out what concentrations (roughly) we should reach before
+  # stopping:
+  css <- calc_analytic_css(
+    parameters=parameters,
+    daily.dose=daily.dose,
+    concentration='plasma',
+    model=model,
+    suppress.messages=T,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    well.stirred.correction=well.stirred.correction,
+    restrictive.clearance=restrictive.clearance) 
   target.conc <- (1 - f) * css 
 
   # Initially simulate for a time perioud of length "days":
-  if(tolower(model) == 'pbtk'){
-    out <- solve_pbtk(parameters=parameters, daily.dose=daily.dose,doses.per.day=doses.per.day,days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
-  }else if(tolower(model) =='3compartment'){
-    out <- solve_3comp(parameters=parameters, daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cgut","Cliver","Crest")]
-  }else if(tolower(model)=='1compartment'){
-    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Ccompartment")]
-  }else stop('The model options are only: 1compartment, 3compartment, and pbtk.')
-  
+  out <- solve_model(parameters=parameters,
+    model=model, 
+    dosing=dosing,
+    suppress.messages=T,
+    days=days,
+    restrictive.clearance=restrictive.clearance,
+    ...)
+  Final_Conc <- out[dim(out)[1],state.vars]
   total.days <- days
   additional.days <- days
 
@@ -163,16 +217,15 @@ calc_css <- function(parameters=NULL,
     #}
     total.days <- total.days + additional.days
     
-  if(tolower(model) == 'pbtk'){
-    out <- solve_pbtk(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
-  }else if(tolower(model) =='3compartment'){
-    out <- solve_3comp(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cgut","Cliver","Crest")]
-  }else if(tolower(model)=='1compartment'){
-    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,initial.values=Final_Conc,...)
-    Final_Conc <- out[dim(out)[1],c('Agutlumen','Ccompartment')]
-  }
+    out <- solve_model(parameters=parameters,
+      model=model,
+      initial.values = Final_Conc,  
+      dosing=dosing,
+      days = additional.days,
+      suppress.messages=T,
+      restrictive.clearance=restrictive.clearance,
+      ...)
+    Final_Conc <- out[dim(out)[1],state.vars]
   
     if(total.days > 36500) break 
   }
@@ -205,38 +258,56 @@ calc_css <- function(parameters=NULL,
   {
       out[,'AUC'] <- out[,'AUC']/1e+06 * parameters[["MW"]] * 1000
       css <- css /1e+06 * parameters[["MW"]] * 1000
-      if(tolower(model)=='1compartment'){
-        out[,'Ccompartment'] <- out[,'Ccompartment']/1e+06 * parameters[["MW"]] * 1000
-      }else{  
+      if (tolower(model)=='1compartment'){
+        out[,'Ccompartment'] <- out[,'Ccompartment'] /
+          1e+06 * parameters[["MW"]] * 1000
+      } else {  
         out[,'Cplasma'] <- out[,'Cplasma']/1e+06 * parameters[["MW"]] * 1000
       }
-  } else if (tolower(output.units) != tolower("uM")) stop("Currently can only return units of mg/L and uM")
-  
-  if(tolower(concentration)=='plasma'){
-    if(tolower(model)=='1compartment'){
+  } else if (tolower(output.units) != tolower("uM")) { 
+    stop("Currently can only return units of mg/L and uM")
+  }
+
+  if (tolower(concentration)=='plasma')
+  {
+    if (tolower(model)=='1compartment')
+    {
       max=as.numeric(max(out[,'Ccompartment']))
-    }else{
+    } else {
       max=as.numeric(max(out[,'Cplasma']))
     }
     avg=as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])
-  }else if(tolower(concentration)=='blood'){
-    if(tolower(model)=='pbtk'){
+  } else if (tolower(concentration)=='blood')
+  {
+    if (tolower(model)=='pbtk')
+    {
       max=as.numeric(max(out[,'Cven']))
-    }else if(tolower(model) == '3compartment'){
+    } else if (tolower(model) == '3compartment')
+    {
       max=as.numeric(max(out[,'Cplasma'] * parameters[['Rblood2plasma']]))
-    }else{
+    } else {
       max=as.numeric(max(out[,'Ccompartment'] * parameters[['Rblood2plasma']]))
     }   
-   avg=as.numeric((out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])*parameters[['Rblood2plasma']])
-  }else stop("Only blood and plasma concentrations are calculated.")
-  if(!suppress.messages){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      cat(paste(toupper(substr(concentration,1,1)),substr(concentration,2,nchar(concentration)),sep=''),"concentrations returned in",output.units,"units.\n")
-    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",output.units,"units.\n")
+    avg <- as.numeric((out[dim(out)[1],'AUC'] - 
+      out[match(additional.days-1,out[,'time']),'AUC'])*
+      parameters[['Rblood2plasma']])
+  } else stop("Only blood and plasma concentrations are calculated.")
+  if (!suppress.messages)
+  {
+    if (is.null(chem.cas) & is.null(chem.name))
+    {
+      cat(paste(toupper(substr(concentration,1,1)),
+        substr(concentration,2,nchar(concentration)),sep=''),
+        "concentrations returned in",output.units,"units.\n")
+    } else {
+      cat(paste(toupper(substr(species,1,1)),
+        substr(species,2,nchar(species)),sep=''),concentration,
+        "concentrations returned in",output.units,"units.\n")
+    }
   }
-  
 
-  return(list(avg=avg,
+  return(list(
+    avg=avg,
     frac=frac_achieved, 
     max=max,
     the.day =as.numeric(css.day)))
