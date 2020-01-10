@@ -255,6 +255,7 @@ solve_model <- function(chem.name = NULL,
     parameters <- do.call(parameterize_function,list(
       chem.cas=chem.cas,
       chem.name=chem.name,
+      dtxsid=dtxsid,
       species=species,
       default.to.human=default.to.human,
       suppress.messages=suppress.messages,
