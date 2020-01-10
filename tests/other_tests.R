@@ -14,5 +14,13 @@ calc_stats(dtxsid="DTXSID0020442",days=10)
 
 calc_stats(dtxsid="DTXSID0020442",days=100)
 
-calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-                  default.to.human=TRUE,daily.dose=2)
+calc_analytic_css(
+  chem.name='Bisphenol-A',
+  tissue='liver',
+  species='rabbit',
+  parameterize.args = list(
+    default.to.human=T,
+    adjusted.Funbound.plasma=T,
+    regression=T,
+    minimum.Funbound.plasma=1e-4),
+  daily.dose=2)
