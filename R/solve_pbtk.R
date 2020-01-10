@@ -116,6 +116,7 @@
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
+                    dtxsid = NULL,
                     times=NULL,
                     parameters=NULL,
                     days=10,
@@ -144,6 +145,7 @@ solve_pbtk <- function(chem.name = NULL,
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
+    dtxsid=DTXSID,
     times=times,
     parameters=parameters,
     model="pbtk",
