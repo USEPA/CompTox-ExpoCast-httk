@@ -55,7 +55,8 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   #End R CMD CHECK appeasement.
   
   param.names.3comp <- model.list[["3compartment"]]$param.names
-  
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+    
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 

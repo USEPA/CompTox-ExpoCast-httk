@@ -55,7 +55,8 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   #End R CMD CHECK appeasement.
   
   param.names.pbtk <- model.list[["pbtk"]]$param.names
-  
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+    
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
