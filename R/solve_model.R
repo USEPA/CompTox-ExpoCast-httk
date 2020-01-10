@@ -263,6 +263,7 @@ solve_model <- function(chem.name = NULL,
     parameters <- do.call(parameterize_function,c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
+      dtxsid=dtxsid,
       species=species,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
