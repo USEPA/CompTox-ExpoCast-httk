@@ -111,8 +111,8 @@ calc_css <- function(parameters=NULL,
                     doses.per.day=3,
                     days = 21,
                     output.units = "uM",
-                    concentration='plasma',
                     suppress.messages=F,
+                    tissue="plasma",
                     model='pbtk',
                     default.to.human=F,
                     f.change = 0.00001,
@@ -151,7 +151,8 @@ calc_css <- function(parameters=NULL,
     state.vars <- state.vars[!(state.vars %in% c(
       "Atubules",
       "Ametabolized",
-      "AUC"))]
+      "AUC",
+      "Cplasma"))]
   }   
 
   # We only want to call the parameterize function once:
@@ -185,6 +186,7 @@ calc_css <- function(parameters=NULL,
     daily.dose=daily.dose,
     concentration='plasma',
     model=model,
+    output.units = output.units,
     suppress.messages=T,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
@@ -198,16 +200,21 @@ calc_css <- function(parameters=NULL,
     dosing=dosing,
     suppress.messages=T,
     days=days,
+    output.units = output.units,
     restrictive.clearance=restrictive.clearance,
     ...)
   Final_Conc <- out[dim(out)[1],state.vars]
   total.days <- days
   additional.days <- days
 
+  target <- paste("C",tissue,sep="") 
+  if (!(target %in% colnames(out))) stop(paste(
+    "Requested tissue",tissue,"is not an output of model",model))
+    
   while(all(out[,"Cplasma"] < target.conc) & 
-       ((out[match((additional.days - 1),out[,'time']),'Cplasma']-
-        out[match((additional.days - 2),out[,'time']),'Cplasma'])/
-        out[match((additional.days - 2),out[,'time']),'Cplasma'] > f.change))
+       ((out[match((additional.days - 1),out[,'time']),target]-
+        out[match((additional.days - 2),out[,'time']),target])/
+        out[match((additional.days - 2),out[,'time']),target] > f.change))
   {
     if(additional.days < 1000)
     {
@@ -236,9 +243,9 @@ calc_css <- function(parameters=NULL,
     # The day the simulation started:
     sim.start.day <- total.days - additional.days
     # The day the current simulation reached Css:
-    if(any(out[,"Cplasma"] >= target.conc))
+    if(any(out[,target] >= target.conc))
     {
-      sim.css.day <- floor(min(out[out[,"Cplasma"]>=target.conc,"time"]))
+      sim.css.day <- floor(min(out[out[,target]>=target.conc,"time"]))
     } else {
       sim.css.day <- additional.days
     }
@@ -247,68 +254,19 @@ calc_css <- function(parameters=NULL,
     # Fraction of analytic Css achieved:
     last.day.subset<-subset(out,out[,"time"]<(sim.css.day+1) &
                                 out[,"time"]>=(sim.css.day))
-    frac_achieved <- as.numeric(mean(last.day.subset[,"Cplasma"])/css)
+    frac_achieved <- as.numeric(mean(last.day.subset[,target])/css)
   } else{ 
    if(!suppress.messages)cat("Analytic css not reached after 100 years.")
    css.day  <- 36500
-   frac_achieved <- as.numeric(max(out[,"Cplasma"])/css)  
+   frac_achieved <- as.numeric(max(out[,target])/css)  
   }     
+  
+  max.conc <- as.numeric(max(out[,target]))
+  avg.conc <- as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC']) 
    
-  if (tolower(output.units) == tolower("mg/L")) 
-  {
-      out[,'AUC'] <- out[,'AUC']/1e+06 * parameters[["MW"]] * 1000
-      css <- css /1e+06 * parameters[["MW"]] * 1000
-      if (tolower(model)=='1compartment'){
-        out[,'Ccompartment'] <- out[,'Ccompartment'] /
-          1e+06 * parameters[["MW"]] * 1000
-      } else {  
-        out[,'Cplasma'] <- out[,'Cplasma']/1e+06 * parameters[["MW"]] * 1000
-      }
-  } else if (tolower(output.units) != tolower("uM")) { 
-    stop("Currently can only return units of mg/L and uM")
-  }
-
-  if (tolower(concentration)=='plasma')
-  {
-    if (tolower(model)=='1compartment')
-    {
-      max=as.numeric(max(out[,'Ccompartment']))
-    } else {
-      max=as.numeric(max(out[,'Cplasma']))
-    }
-    avg=as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])
-  } else if (tolower(concentration)=='blood')
-  {
-    if (tolower(model)=='pbtk')
-    {
-      max=as.numeric(max(out[,'Cven']))
-    } else if (tolower(model) == '3compartment')
-    {
-      max=as.numeric(max(out[,'Cplasma'] * parameters[['Rblood2plasma']]))
-    } else {
-      max=as.numeric(max(out[,'Ccompartment'] * parameters[['Rblood2plasma']]))
-    }   
-    avg <- as.numeric((out[dim(out)[1],'AUC'] - 
-      out[match(additional.days-1,out[,'time']),'AUC'])*
-      parameters[['Rblood2plasma']])
-  } else stop("Only blood and plasma concentrations are calculated.")
-  if (!suppress.messages)
-  {
-    if (is.null(chem.cas) & is.null(chem.name))
-    {
-      cat(paste(toupper(substr(concentration,1,1)),
-        substr(concentration,2,nchar(concentration)),sep=''),
-        "concentrations returned in",output.units,"units.\n")
-    } else {
-      cat(paste(toupper(substr(species,1,1)),
-        substr(species,2,nchar(species)),sep=''),concentration,
-        "concentrations returned in",output.units,"units.\n")
-    }
-  }
-
   return(list(
-    avg=avg,
+    avg=avg.conc,
     frac=frac_achieved, 
-    max=max,
+    max=max.conc,
     the.day =as.numeric(css.day)))
 }

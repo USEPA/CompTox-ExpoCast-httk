@@ -4,7 +4,7 @@ options(warn=-1)
 
 calc_css(chem.name='nicotine')
 
-calc_css(chem.name="perfluorooctanoic acid")
+calc_css(chem.name="endrin")
 
 calc_stats(chem.name='nicotine',days=10)
 
