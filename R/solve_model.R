@@ -170,7 +170,6 @@ solve_model <- function(chem.name = NULL,
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
   if (is.null(model)) stop("Model must be specified.")
-  
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
