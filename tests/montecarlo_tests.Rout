@@ -38,12 +38,12 @@ The following object is masked _by_ '.GlobalEnv':
 > # Test that the underlying PK models give the same answers:
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
-[1] 0.1913081
+[1] 0.2025794
 There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 0.2250561
+[1] 0.2383172
 Warning messages:
 1: NAs introduced by coercion 
 2: NAs introduced by coercion 
@@ -51,11 +51,11 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 0.1913081
+[1] 0.2025794
 There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 0.2260238
+[1] 0.2392652
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > 
@@ -68,14 +68,14 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-111.9084 
+111.9067 
 There were 12 warnings (use warnings() to see them)
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-4.504298 
+4.385428 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -91,7 +91,7 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-31.61724 
+31.60291 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound = 0, changed to 0.005.
@@ -109,8 +109,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-     95% 
-1.444518 
+    95% 
+1.54814 
 There were 16 warnings (use warnings() to see them)
 > 
 > 
@@ -122,20 +122,20 @@ There were 16 warnings (use warnings() to see them)
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-1.444844 
+1.553322 
 There were 50 or more warnings (use warnings() to see the first 50)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-     95% 
-1.444518 
+    95% 
+1.54814 
 There were 14 warnings (use warnings() to see them)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-0.980383 
+1.022164 
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #
@@ -145,8 +145,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # Standard HTTK Monte Carlo:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-     95% 
-87.23028 
+    95% 
+86.2491 
 There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
@@ -163,33 +163,33 @@ There were 39 warnings (use warnings() to see them)
 +     clint.pop.cv = 0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-64.97997 
+64.30589 
 There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-56.86515 
+57.01489 
 There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-29.10453 
+28.91873 
 There were 36 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-13.29465 
+13.20496 
 There were 36 warnings (use warnings() to see them)
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
-[1] 13.2816
+[1] 13.192
 There were 34 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo using basic Monte Carlo sampler:
@@ -201,7 +201,7 @@ There were 34 warnings (use warnings() to see them)
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-13.53525 
+13.43767 
 There were 36 warnings (use warnings() to see them)
 > 
 > 
@@ -210,84 +210,84 @@ There were 36 warnings (use warnings() to see them)
 $means
       time     Agutlumen      Cgut       Cliver         Cven        Clung
 1  0.00000  3.329101e+02 0.0000000 0.000000e+00 0.000000e+00 0.000000e+00
-2  0.00001  3.327360e+02 0.1742374 6.672430e-05 8.019151e-09 4.160096e-10
-3  0.25000  6.946331e-04 7.8432101 1.066748e+01 5.680323e-01 4.311539e+00
-4  0.50000  1.449891e-09 7.0809619 9.622974e+00 5.160486e-01 3.898032e+00
-5  0.75000  4.933307e-14 6.4532044 8.801641e+00 4.720919e-01 3.551646e+00
-6  1.00000 -1.226001e-15 5.9113288 8.089601e+00 4.339686e-01 3.252719e+00
-7  1.50000 -1.552391e-15 5.0255952 6.918859e+00 3.712625e-01 2.764271e+00
-8  2.00000  5.406544e-17 4.3350980 5.999557e+00 3.220015e-01 2.383662e+00
-9  2.50000 -5.402036e-15 3.7842353 5.261431e+00 2.824306e-01 2.080154e+00
-10 3.00000  1.639576e-15 3.3364380 4.657941e+00 2.500607e-01 1.833537e+00
-11 4.00000  2.360297e-15 2.6573657 3.736003e+00 2.005677e-01 1.459764e+00
-12 5.00000  3.925348e-15 2.1719712 3.071244e+00 1.648357e-01 1.192784e+00
+2  0.00001  3.327360e+02 0.1742374 6.672456e-05 8.019200e-09 4.160123e-10
+3  0.25000  6.946331e-04 7.8431920 1.066747e+01 5.680332e-01 4.311517e+00
+4  0.50000  1.449876e-09 7.0809473 9.622968e+00 5.160495e-01 3.898013e+00
+5  0.75000  5.330789e-14 6.4531922 8.801637e+00 4.720928e-01 3.551630e+00
+6  1.00000 -4.359861e-15 5.9113185 8.089598e+00 4.339695e-01 3.252705e+00
+7  1.50000  6.968797e-16 5.0255877 6.918859e+00 3.712633e-01 2.764259e+00
+8  2.00000 -1.672325e-15 4.3350926 5.999557e+00 3.220023e-01 2.383652e+00
+9  2.50000 -1.511265e-15 3.7842315 5.261433e+00 2.824313e-01 2.080147e+00
+10 3.00000 -3.259430e-15 3.3364353 4.657943e+00 2.500614e-01 1.833531e+00
+11 4.00000 -4.197319e-15 2.6573645 3.736006e+00 2.005684e-01 1.459759e+00
+12 5.00000  2.304215e-15 2.1719709 3.071247e+00 1.648362e-01 1.192781e+00
            Cart        Crest      Ckidney      Cplasma     Atubules
 1  0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-2  1.399719e-12 5.946699e-16 2.819246e-14 1.064862e-08 3.610207e-21
-3  5.681917e-01 3.519450e+00 1.209597e+01 7.392804e-01 6.771637e-01
-4  5.161671e-01 3.194252e+00 1.094444e+01 6.728909e-01 1.197017e+00
-5  4.721944e-01 2.914017e+00 9.980986e+00 6.165314e-01 1.671513e+00
-6  4.340581e-01 2.671822e+00 9.148492e+00 5.675303e-01 2.106815e+00
-7  3.713320e-01 2.275299e+00 7.785972e+00 4.866750e-01 2.878777e+00
-8  3.220569e-01 1.965553e+00 6.722180e+00 4.229171e-01 3.543495e+00
-9  2.824755e-01 1.717990e+00 5.872415e+00 3.715359e-01 4.122889e+00
-10 2.500976e-01 1.516406e+00 5.180861e+00 3.293870e-01 4.633132e+00
-11 2.005938e-01 1.210035e+00 4.130662e+00 2.647176e-01 5.492271e+00
-12 1.648549e-01 9.904559e-01 3.378766e+00 2.178426e-01 6.189599e+00
+2  1.399359e-12 5.945071e-16 2.817329e-14 1.064868e-08 3.617180e-21
+3  5.681927e-01 3.519453e+00 1.209594e+01 7.392816e-01 6.771590e-01
+4  5.161680e-01 3.194256e+00 1.094442e+01 6.728920e-01 1.197009e+00
+5  4.721953e-01 2.914021e+00 9.980969e+00 6.165325e-01 1.671501e+00
+6  4.340590e-01 2.671826e+00 9.148477e+00 5.675314e-01 2.106801e+00
+7  3.713329e-01 2.275303e+00 7.785962e+00 4.866760e-01 2.878758e+00
+8  3.220576e-01 1.965557e+00 6.722172e+00 4.229181e-01 3.543472e+00
+9  2.824762e-01 1.717994e+00 5.872410e+00 3.715368e-01 4.122864e+00
+10 2.500983e-01 1.516410e+00 5.180857e+00 3.293879e-01 4.633103e+00
+11 2.005945e-01 1.210038e+00 4.130660e+00 2.647184e-01 5.492238e+00
+12 1.648554e-01 9.904593e-01 3.378766e+00 2.178433e-01 6.189563e+00
    Ametabolized          AUC
 1  0.000000e+00 0.000000e+00
-2  1.853355e-09 2.667234e-14
-3  5.700866e+01 2.219443e-01
-4  7.743755e+01 3.981654e-01
-5  9.541753e+01 5.591739e-01
-6  1.113625e+02 7.070432e-01
-7  1.383332e+02 9.697543e-01
-8  1.602019e+02 1.196553e+00
-9  1.782243e+02 1.394726e+00
-10 1.932804e+02 1.569623e+00
-11 2.168673e+02 1.864836e+00
-12 2.343371e+02 2.104939e+00
+2  1.853360e-09 2.667237e-14
+3  5.700849e+01 2.219446e-01
+4  7.743735e+01 3.981661e-01
+5  9.541730e+01 5.591749e-01
+6  1.113623e+02 7.070444e-01
+7  1.383329e+02 9.697560e-01
+8  1.602017e+02 1.196556e+00
+9  1.782240e+02 1.394728e+00
+10 1.932801e+02 1.569626e+00
+11 2.168671e+02 1.864840e+00
+12 2.343369e+02 2.104943e+00
 
 $sds
            time    Agutlumen        Cgut       Cliver         Cven        Clung
 1  0.000000e+00 5.784721e+00 0.000000000 0.000000e+00 0.000000e+00 0.000000e+00
-2  7.610898e-21 5.781695e+00 0.002691846 1.285129e-06 2.349366e-11 5.759665e-12
-3  0.000000e+00 1.207010e-05 0.008201589 6.662537e-02 6.769673e-03 3.495736e-03
-4  0.000000e+00 2.519868e-11 0.026330052 8.994389e-02 7.844658e-03 6.526116e-03
-5  0.000000e+00 7.269109e-16 0.040503526 1.069694e-01 8.686236e-03 1.453514e-02
-6  0.000000e+00 2.092340e-16 0.052089043 1.207407e-01 9.355730e-03 2.110969e-02
-7  0.000000e+00 1.055160e-17 0.069371065 1.408602e-01 1.030262e-02 3.099233e-02
-8  0.000000e+00 8.445545e-18 0.080958594 1.537846e-01 1.087070e-02 3.771334e-02
-9  0.000000e+00 1.643573e-16 0.088589122 1.617028e-01 1.117671e-02 4.223399e-02
-10 0.000000e+00 5.085845e-17 0.093398945 1.660548e-01 1.129737e-02 4.518300e-02
-11 0.000000e+00 7.507701e-17 0.097410342 1.676971e-01 1.117624e-02 4.794575e-02
-12 0.000000e+00 1.243187e-16 0.096828647 1.636202e-01 1.076790e-02 4.812563e-02
+2  7.610898e-21 5.781695e+00 0.002691846 1.285125e-06 2.349278e-11 5.759626e-12
+3  0.000000e+00 1.207010e-05 0.008201311 6.662451e-02 6.769596e-03 3.495792e-03
+4  0.000000e+00 2.518465e-11 0.026329699 8.994295e-02 7.844584e-03 6.525994e-03
+5  0.000000e+00 1.837420e-14 0.040503132 1.069685e-01 8.686165e-03 1.453497e-02
+6  0.000000e+00 1.505037e-16 0.052088620 1.207397e-01 9.355661e-03 2.110948e-02
+7  0.000000e+00 5.231154e-17 0.069370610 1.408592e-01 1.030256e-02 3.099207e-02
+8  0.000000e+00 8.145451e-17 0.080958130 1.537837e-01 1.087065e-02 3.771306e-02
+9  0.000000e+00 1.890974e-16 0.088588662 1.617020e-01 1.117665e-02 4.223369e-02
+10 0.000000e+00 7.418256e-17 0.093398499 1.660540e-01 1.129732e-02 4.518270e-02
+11 0.000000e+00 1.425532e-16 0.097409936 1.676964e-01 1.117620e-02 4.794546e-02
+12 0.000000e+00 6.695310e-17 0.096828289 1.636196e-01 1.076787e-02 4.812536e-02
            Cart        Crest      Ckidney      Cplasma     Atubules
 1  0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-2  1.530810e-14 1.637318e-17 6.031593e-16 7.905957e-11 5.947619e-23
-3  6.765802e-03 1.767360e-02 3.956401e-02 1.373610e-02 2.219842e-03
-4  7.841899e-03 2.504057e-02 6.624835e-02 1.498170e-02 3.659258e-03
-5  8.683959e-03 3.104195e-02 8.735890e-02 1.594080e-02 4.005050e-03
-6  9.353844e-03 3.590486e-02 1.045390e-01 1.668582e-02 3.444048e-03
-7  1.030132e-02 4.304011e-02 1.299489e-01 1.768782e-02 1.705813e-04
-8  1.086982e-02 4.767287e-02 1.467026e-01 1.821879e-02 5.251713e-03
-9  1.117611e-02 5.057035e-02 1.574440e-01 1.842494e-02 1.218521e-02
-10 1.129699e-02 5.223481e-02 1.639051e-01 1.840276e-02 2.017167e-02
-11 1.117613e-02 5.312692e-02 1.683413e-01 1.791734e-02 3.804622e-02
-12 1.076794e-02 5.204598e-02 1.658680e-01 1.709126e-02 5.708316e-02
+2  1.529653e-14 1.636801e-17 6.025510e-16 7.905832e-11 5.969665e-23
+3  6.765725e-03 1.767353e-02 3.956328e-02 1.373597e-02 2.219802e-03
+4  7.841824e-03 2.504050e-02 6.624753e-02 1.498157e-02 3.659205e-03
+5  8.683887e-03 3.104188e-02 8.735803e-02 1.594068e-02 4.004994e-03
+6  9.353775e-03 3.590479e-02 1.045381e-01 1.668570e-02 3.443996e-03
+7  1.030126e-02 4.304005e-02 1.299480e-01 1.768771e-02 1.705544e-04
+8  1.086976e-02 4.767282e-02 1.467016e-01 1.821869e-02 5.251700e-03
+9  1.117606e-02 5.057031e-02 1.574431e-01 1.842485e-02 1.218515e-02
+10 1.129694e-02 5.223478e-02 1.639042e-01 1.840267e-02 2.017156e-02
+11 1.117609e-02 5.312691e-02 1.683405e-01 1.791727e-02 3.804598e-02
+12 1.076791e-02 5.204599e-02 1.658674e-01 1.709120e-02 5.708280e-02
    Ametabolized          AUC
 1  0.000000e+00 0.000000e+00
-2  2.066073e-11 1.969090e-16
-3  8.909666e-01 4.853540e-03
-4  1.202735e+00 8.451152e-03
-5  1.444664e+00 1.232143e-02
-6  1.629637e+00 1.640375e-02
-7  1.865552e+00 2.502076e-02
-8  1.967784e+00 3.401352e-02
-9  1.974809e+00 4.318569e-02
-10 1.913286e+00 5.240057e-02
-11 1.655190e+00 7.059942e-02
-12 1.291764e+00 8.812329e-02
+2  2.066082e-11 1.969098e-16
+3  8.909618e-01 4.853507e-03
+4  1.202730e+00 8.451086e-03
+5  1.444659e+00 1.232133e-02
+6  1.629632e+00 1.640362e-02
+7  1.865548e+00 2.502058e-02
+8  1.967781e+00 3.401328e-02
+9  1.974807e+00 4.318539e-02
+10 1.913284e+00 5.240023e-02
+11 1.655191e+00 7.059900e-02
+12 1.291766e+00 8.812281e-02
 
 There were 37 warnings (use warnings() to see them)
 > 
@@ -314,4 +314,4 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
-  70.51   21.56   87.40 
+  73.65   22.84   95.67 

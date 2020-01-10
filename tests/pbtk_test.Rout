@@ -32,13 +32,13 @@ The following object is masked _by_ '.GlobalEnv':
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173914
+[1] 1.173919
 > calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173914
+[1] 1.173919
 > calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173914
+[1] 1.173919
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
 Error in predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in%  : 
   object 'param.names.schmitt' not found

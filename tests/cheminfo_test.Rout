@@ -35,11 +35,11 @@ The following object is masked _by_ '.GlobalEnv':
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 8841
-> length(pbpk.list)
 [1] 8783
+> length(pbpk.list)
+[1] 8727
 > length(rat.list)
-[1] 212
+[1] 171
 >                                                  
 > # check for duplicate entries (all of the following should be TRUE):
 > length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
@@ -48,9 +48,9 @@ The following object is masked _by_ '.GlobalEnv':
 [1] FALSE
 > length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
 +   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
-[1] FALSE
+[1] TRUE
 >   
 > 
 > proc.time()
    user  system elapsed 
-   2.25    0.45    2.71 
+   2.62    0.67    3.42 
