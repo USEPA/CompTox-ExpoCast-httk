@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > #options(warn=-1)
 > NSAMP <- 10
 > 
@@ -32,40 +39,24 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
 [1] 0.1913081
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
+There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 0.2250561
-Warning message:
-In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+Warning messages:
+1: NAs introduced by coercion 
+2: NAs introduced by coercion 
+3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
 [1] 0.1913081
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
+There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
 [1] 0.2260238
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
+There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > 
 > 
@@ -78,19 +69,7 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 111.9084 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Clint is provided as a distribution.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Fraction unbound is provided as a distribution.
-3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-5: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-6: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 12 warnings (use warnings() to see them)
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
@@ -112,7 +91,7 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-31.61728 
+31.61724 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound = 0, changed to 0.005.
@@ -132,15 +111,7 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 1.444518 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 16 warnings (use warnings() to see them)
 > 
 > 
 > 
@@ -152,44 +123,20 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 1.444844 
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 50 or more warnings (use warnings() to see the first 50)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 1.444518 
-Warning messages:
-1: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-2: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-3: In predict_partitioning_schmitt(parameters = parameters.dt) :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 14 warnings (use warnings() to see them)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 0.980383 
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #
 > #
@@ -200,13 +147,7 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 87.23028 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
 > calc_mc_css(chem.cas="90-43-7",
@@ -223,61 +164,33 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 64.97997 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 56.86515 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 39 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 29.10453 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 36 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 13.29465 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 36 warnings (use warnings() to see them)
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
 [1] 13.2816
-Warning messages:
-1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
+There were 34 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo using basic Monte Carlo sampler:
 > calc_mc_css(chem.cas="90-43-7",
@@ -289,13 +202,7 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
 13.53525 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 36 warnings (use warnings() to see them)
 > 
 > 
 >     
@@ -382,15 +289,7 @@ $sds
 11 1.655190e+00 7.059942e-02
 12 1.291764e+00 8.812329e-02
 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Clint is provided as a distribution.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
+There were 37 warnings (use warnings() to see them)
 > 
 > chemname="Abamectin"
 > times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
@@ -409,10 +308,10 @@ Warning messages:
 +                         solvemodel.arg.list = list(
 +                           times=times))
 + }
-There were 40 warnings (use warnings() to see them)
+There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > 
 > 
 > proc.time()
    user  system elapsed 
-  61.18   19.54   76.21 
+  70.51   21.56   87.40 

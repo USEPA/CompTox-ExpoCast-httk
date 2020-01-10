@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > options(warn=-1)
 > 
 > # Check if the number of chemicals has changed:
@@ -28,9 +35,9 @@ Type 'q()' to quit R.
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 985
+[1] 8841
 > length(pbpk.list)
-[1] 915
+[1] 8783
 > length(rat.list)
 [1] 212
 >                                                  
@@ -46,4 +53,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-   1.71    0.48    2.15 
+   2.25    0.45    2.71 

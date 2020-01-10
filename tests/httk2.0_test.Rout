@@ -21,6 +21,13 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
 > library(httk)
+
+Attaching package: 'httk'
+
+The following object is masked _by_ '.GlobalEnv':
+
+    chem.physical_and_invitro.data
+
 > options(warn=-1)
 > 
 > head(solve_pbtk(chem.name="Terbufos"))
@@ -253,21 +260,21 @@ Rblood2plasma = 0.679.
 [16,] 2.869051 7.694127 1.862352 12.31102     178.2692 2.205767
 > 
 > length(get_cheminfo())
-[1] 985
+[1] 8841
 > length(get_cheminfo(species="rat"))
 [1] 212
 > length(get_cheminfo(model="pbtk"))
-[1] 915
+[1] 8783
 > length(get_cheminfo(model="pbtk",species="rat"))
 [1] 181
 > length(get_cheminfo(info="all"))
 [1] 13
 > length(get_cheminfo(model="schmitt"))
-[1] 1380
+[1] 9005
 > length(get_cheminfo(model="schmitt",species="rat"))
 [1] 293
 > length(get_cheminfo(model="1compartment"))
-[1] 915
+[1] 8783
 > length(get_cheminfo(model="1compartment",species="rat"))
 [1] 181
 > 
@@ -449,4 +456,4 @@ Rblood2plasma = 0.679.
 > 
 > proc.time()
    user  system elapsed 
-   5.06    0.53    5.60 
+   8.18    0.53    8.67 
