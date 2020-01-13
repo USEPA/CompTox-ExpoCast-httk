@@ -90,4 +90,4 @@ $the.day
 > 
 > proc.time()
    user  system elapsed 
-   5.04    0.70    5.85 
+   6.06    0.78    8.95 

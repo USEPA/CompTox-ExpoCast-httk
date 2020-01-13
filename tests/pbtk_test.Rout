@@ -168,4 +168,4 @@ Rblood2plasma = 0.79.
 > 
 > proc.time()
    user  system elapsed 
-   3.73    0.50    4.17 
+   6.78    0.81   11.01 

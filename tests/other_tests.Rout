@@ -125,4 +125,4 @@ Tissue concentration for liver returned in uM units.
 > 
 > proc.time()
    user  system elapsed 
-  15.48    0.78   16.25 
+  20.98    0.95   28.18 
