@@ -35,9 +35,9 @@ The following object is masked _by_ '.GlobalEnv':
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 8783
+[1] 8836
 > length(pbpk.list)
-[1] 8727
+[1] 8778
 > length(rat.list)
 [1] 171
 >                                                  
@@ -53,4 +53,4 @@ The following object is masked _by_ '.GlobalEnv':
 > 
 > proc.time()
    user  system elapsed 
-   2.62    0.67    3.42 
+   3.54    0.78    4.28 

@@ -69,4 +69,4 @@ The following object is masked _by_ '.GlobalEnv':
 > 
 > proc.time()
    user  system elapsed 
-   2.06    0.67    2.81 
+   2.85    0.73    3.53 

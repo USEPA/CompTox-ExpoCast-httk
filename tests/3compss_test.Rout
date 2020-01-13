@@ -86,4 +86,4 @@ Plasma concentration returned in uM units.
 > 
 > proc.time()
    user  system elapsed 
-   3.20    0.60    4.32 
+   2.95    0.35    3.28 
