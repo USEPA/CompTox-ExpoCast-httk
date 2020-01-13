@@ -177,7 +177,6 @@
 #' 
 #' }
 #'
-#' @importFrom purrr reduce
 #' @export calc_mc_tk
 calc_mc_tk<- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -292,7 +291,7 @@ calc_mc_tk<- function(chem.cas=NULL,
      solvemodel.arg.list))
 
   means <- Reduce("+",model.out)/length(model.out)
-  sds <- (reduce(model.out,
+  sds <- (purrr::reduce(model.out,
     function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2)
 
   out <- list(means=means,sds=sds)
