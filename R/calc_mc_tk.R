@@ -176,7 +176,7 @@
 #' }
 #' 
 #' }
-#'
+#' @importFrom purrr reduce
 #' @export calc_mc_tk
 calc_mc_tk<- function(chem.cas=NULL,
                         chem.name=NULL,

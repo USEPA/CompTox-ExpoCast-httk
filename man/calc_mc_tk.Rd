@@ -239,7 +239,6 @@ for (age.lower in age.ranges)
 }
 
 }
-
 }
 \author{
 John Wambaugh
