@@ -4,12 +4,13 @@
 \alias{solve_3comp}
 \title{Solve_3comp}
 \usage{
-solve_3comp(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, species = "Human", iv.dose = F,
-  output.units = "uM", method = "lsoda", rtol = 1e-08,
-  atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
+solve_3comp(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  times = NULL, parameters = NULL, days = 10, tsteps = 4,
+  daily.dose = NULL, dose = 1, doses.per.day = NULL,
+  initial.values = NULL, plots = F, suppress.messages = F,
+  species = "Human", iv.dose = F, output.units = "uM",
+  method = "lsoda", rtol = 1e-08, atol = 1e-12,
+  default.to.human = F, recalc.blood2plasma = F,
   recalc.clearance = F, dosing.matrix = NULL,
   adjusted.Funbound.plasma = T, regression = T,
   restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,

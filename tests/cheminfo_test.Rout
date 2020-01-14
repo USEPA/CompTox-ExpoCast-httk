@@ -17,17 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
 > #R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > options(warn=-1)
 > 
 > # Check if the number of chemicals has changed:
@@ -35,9 +26,9 @@ The following object is masked _by_ '.GlobalEnv':
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 8836
+[1] 946
 > length(pbpk.list)
-[1] 8778
+[1] 876
 > length(rat.list)
 [1] 171
 >                                                  
@@ -45,7 +36,7 @@ The following object is masked _by_ '.GlobalEnv':
 > length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
 [1] TRUE
 > length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
-[1] FALSE
+[1] TRUE
 > length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
 +   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
 [1] TRUE
@@ -53,4 +44,4 @@ The following object is masked _by_ '.GlobalEnv':
 > 
 > proc.time()
    user  system elapsed 
-   3.67    0.70    5.51 
+   1.60    0.53    2.09 
