@@ -17,17 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
@@ -166,6 +157,4 @@ Rblood2plasma = 0.79.
 +   }
 + }
 > 
-> proc.time()
-   user  system elapsed 
-   6.78    0.81   11.01 
+> quit("no")

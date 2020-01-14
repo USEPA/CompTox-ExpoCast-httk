@@ -17,17 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > options(warn=-1)
 > 
 > head(solve_pbtk(chem.name="Terbufos"))
@@ -260,21 +251,21 @@ Rblood2plasma = 0.679.
 [16,] 2.869051 7.694127 1.862352 12.31102     178.2692 2.205767
 > 
 > length(get_cheminfo())
-[1] 8836
+[1] 946
 > length(get_cheminfo(species="rat"))
 [1] 171
 > length(get_cheminfo(model="pbtk"))
-[1] 8778
+[1] 876
 > length(get_cheminfo(model="pbtk",species="rat"))
 [1] 140
 > length(get_cheminfo(info="all"))
 [1] 13
 > length(get_cheminfo(model="schmitt"))
-[1] 9000
+[1] 1344
 > length(get_cheminfo(model="schmitt",species="rat"))
 [1] 254
 > length(get_cheminfo(model="1compartment"))
-[1] 8778
+[1] 876
 > length(get_cheminfo(model="1compartment",species="rat"))
 [1] 140
 > 
@@ -449,11 +440,4 @@ Rblood2plasma = 0.679.
 [15,] 2.020833 1.461887e+01 8.777173 2.823484 35.19454     169.2974 3.736027
 [16,] 2.031250 8.476629e+00 8.631028 2.909191 35.47631     170.7177 3.765938
 > 
-> 
-> 
-> 
-> 
-> 
-> proc.time()
-   user  system elapsed 
-  15.43    0.89   20.07 
+> quit("no")

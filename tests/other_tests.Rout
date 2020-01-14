@@ -17,17 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
-> #R CMD BATCH --no-timing other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > options(warn=-1)
 > 
 > calc_css(chem.name='nicotine')
@@ -123,6 +114,4 @@ $mean
 Tissue concentration for liver returned in uM units.
 [1] 23.60498
 > 
-> proc.time()
-   user  system elapsed 
-  20.98    0.95   28.18 
+> quit("no")
