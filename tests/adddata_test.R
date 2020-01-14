@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save adddata_test.R adddata_test.Rout
+#R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
 library(httk)
 options(warn=-1)
 
@@ -32,3 +32,5 @@ load_sipes2017()
 # But we should have the ADMet Predicted chemicals from Sipes et al. (2017),
 # this one is a good test since the logP is nearly 10!
 calc_css(chem.cas="26040-51-7")
+
+quit("no")

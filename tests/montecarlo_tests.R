@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 library(httk)
 #options(warn=-1)
 NSAMP <- 10
@@ -105,4 +105,4 @@ for (age.lower in age.ranges)
                           times=times))
 }
 
-
+quit("no")
