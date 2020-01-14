@@ -17,17 +17,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-[Previously saved workspace restored]
-
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
-
-Attaching package: 'httk'
-
-The following object is masked _by_ '.GlobalEnv':
-
-    chem.physical_and_invitro.data
-
 > options(warn=-1)
 > 
 > script.args <- commandArgs(TRUE)
@@ -67,6 +58,4 @@ The following object is masked _by_ '.GlobalEnv':
 +   3/Css
 + }
 > 
-> proc.time()
-   user  system elapsed 
-   3.35    0.64    5.01 
+> quit("no")

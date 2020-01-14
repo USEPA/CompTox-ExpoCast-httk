@@ -17,7 +17,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
@@ -41,7 +41,4 @@ Type 'q()' to quit R.
 +   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
 [1] TRUE
 >   
-> 
-> proc.time()
-   user  system elapsed 
-   1.60    0.53    2.09 
+> quit("no")
