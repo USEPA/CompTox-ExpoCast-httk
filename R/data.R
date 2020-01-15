@@ -1434,3 +1434,51 @@
 #' @keywords data
 "Wetmore2012"
 
+#' Metabolism data involved in Linakis 2020 vignette analysis.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing x rows and y columns.
+#' @author Matt Linakis
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' @source Matt Linakis
+#' @keywords data
+"metabolism_data_Linakis2020"
+
+#' Concentration data involved in Linakis 2020 vignette analysis.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing x rows and y columns.
+#' @author Matt Linakis
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' @source Matt Linakis
+#' @keywords data
+"concentration_data_Linakis2020"
+
+#' Supplementary output from Linakis 2020 vignette analysis.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing x rows and y columns.
+#' @author Matt Linakis
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' @source Matt Linakis
+#' @keywords data
+"supptab1_Linakis2020"
+
+#' More supplementary output from Linakis 2020 vignette analysis.
+#' 
+#' 
+#' @docType data
+#' @format A data.frame containing x rows and y columns.
+#' @author Matt Linakis
+#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' 
+#' @source Matt Linakis
+#' @keywords data
+"supptab2_Linakis2020"
+
