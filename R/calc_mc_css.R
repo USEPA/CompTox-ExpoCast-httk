@@ -278,6 +278,11 @@ calc_mc_css <- function(chem.cas=NULL,
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
   if (is.null(model)) stop("Model must be specified.")
+  
+  #Appease R CMD check --as-cran variable binding:
+  Css <- NULL
+  
+  
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
   model <- tolower(model)
