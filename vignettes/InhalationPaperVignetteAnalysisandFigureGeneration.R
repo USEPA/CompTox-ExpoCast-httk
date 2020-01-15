@@ -15,10 +15,11 @@ library(forcats)
 library(smatr)
 
 
-# Set working directory as appropriate for your system, namely, the directory where you have 
-# the met_data and conc_data datasets stored. See example below.
-#setwd("C:\\Users\\mlinakis.UES\\Desktop\\Vignette_Test")
-# setwd("Your\\Directory\\Here")
+# Set working directory as appropriate for your system, namely, the directory 
+#where you want the supplementary tables written out to as .csv files. 
+#Accessing met_data and conc_data through directory should no longer 
+#be needed.
+setwd("C:/Users/msfeir/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Misc. Project Docs")
 
 #Get metabolism and concentration data handy
 met_data = met_data_Linakis2020
