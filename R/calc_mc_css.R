@@ -10,9 +10,9 @@
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' Tissue concentrations are calculated for the pbtk model with oral infusion
-#' dosing.  All tissues other than gut, liver, and lung are the product of the
-#' steady state plasma concentration and the tissue to plasma partition
+#' Tissue concentrations are calculated for the pbtk model with a default oral
+#' infusion dosing. All tissues other than gut, liver, and lung are the product
+#' of the steady state plasma concentration and the tissue to plasma partition
 #' coefficient.
 #' 
 #' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
@@ -39,7 +39,6 @@
 #' either CAS, name, or DTXSIDs
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
-#' @param daily.dose Total daily dose, mg/kg BW/day.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -157,7 +156,7 @@
 #'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 #' 
 #'  set.seed(1234)
-#'  calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+#'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
 #'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
 #'                                                           lod = 0.005)),
 #'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
@@ -262,7 +261,6 @@ calc_mc_css <- function(chem.cas=NULL,
                           restrictive.clearance = T,
                           regression=T),
                         calc.analytic.css.arg.list=list(
-                          daily.dose=1,
                           well.stirred.correction=T,
                           adjusted.Funbound.plasma=T,
                           regression=T,

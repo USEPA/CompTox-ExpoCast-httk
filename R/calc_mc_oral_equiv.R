@@ -129,8 +129,7 @@ calc_mc_oral_equiv <- function(conc,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
-  Css <- try(calc_mc_css(daily.dose=1,
-                         chem.name=chem.name,
+  Css <- try(calc_mc_css(chem.name=chem.name,
                          chem.cas=chem.cas,
                          dtxsid=dtxsid,
                          which.quantile=which.quantile,
