@@ -39,7 +39,7 @@ Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, gdata, viridis, CensRegMod,
-        gmodels, colorspace
+        gmodels, colorspace, cowplot, ggrepel, dplyr, forcats, smatr
 License: GPL-3
 LazyData: true
 Encoding: UTF-8

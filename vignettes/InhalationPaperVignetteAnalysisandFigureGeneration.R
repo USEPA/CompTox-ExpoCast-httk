@@ -22,7 +22,7 @@ library(smatr)
 setwd("C:/Users/msfeir/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Misc. Project Docs")
 
 #Get metabolism and concentration data handy
-met_data = met_data_Linakis2020
+met_data = metabolism_data_Linakis2020
 conc_data = concentration_data_Linakis2020
 #met_data <- read.csv("met_data.csv") 
 #conc_data <- read.csv("conc_data.csv")
