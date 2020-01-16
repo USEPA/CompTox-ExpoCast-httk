@@ -15,7 +15,7 @@
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").  Species must be set to "Human" to run httkpop model. 
+#' default "Human"). Species must be set to "Human" to run httkpop model. 
 #' @param suppress.messages Whether or not to suppress output message.
 #' @param model Model used in calculation: 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, '3compartmentss' for
@@ -192,6 +192,12 @@ create_mc_samples <- function(chem.cas=NULL,
       paste(names(model.list),collapse=", ")))
   }
 
+  #Appease R CMD check --as-cran variable binding:
+  tissue.data <- variable <- Name <- physiology.data <- Parameter <- NULL
+  hematocrit <- this.chem <- Krbc2pu <- Rblood2plasma <- Qgutf <- NULL
+  Funbound.plasma <- Qtotal.liverc <- Qcardiacc <- Qliverf <- NULL
+  hepatic.bioavailability <- ..parameter.names <- NULL
+  
 # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
   {
@@ -277,7 +283,7 @@ create_mc_samples <- function(chem.cas=NULL,
     if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-     this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
+     this.tissuedata <- subset(tissue.data, tolower(species)==tolower(species))
      these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
      these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
      for (this.name in these.vols$Name)
