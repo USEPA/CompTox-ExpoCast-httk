@@ -93,12 +93,6 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
-#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
-#' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
