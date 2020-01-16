@@ -135,11 +135,12 @@ calc_mc_oral_equiv <- function(conc,
                          which.quantile=which.quantile,
                          species=species,
                          output.units=input.units,
-                         suppress.messages=T,
-                         concentration = concentration,
-                         restrictive.clearance=restrictive.clearance,
-                         bioactive.free.invivo = bioactive.free.invivo,
-                         tissue=tissue,
+                         suppress.messages=T, 
+                         calc.analytic.css.arg.list=
+                           list(concentration = concentration,
+                           restrictive.clearance=restrictive.clearance,
+                           bioactive.free.invivo = bioactive.free.invivo,
+                           tissue = tissue),
                          return.samples=return.samples,
                          ...))
                          
