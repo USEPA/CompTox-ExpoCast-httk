@@ -10,7 +10,7 @@
 #' @author John Wambaugh
 #'
 #' @keywords monte-carlo 1compartment
-propagateuv_1comp <- function(
+propagate_invitrouv_1comp <- function(
                              parameters.dt,
                              ...)
 {
