@@ -129,6 +129,15 @@ calc_mc_oral_equiv <- function(conc,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
+  
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  well.stirred.correction <- adjusted.Funbound.plasma <- NULL
+  #End R CMD CHECK appeasement.
+  
   Css <- try(calc_mc_css(chem.name=chem.name,
                          chem.cas=chem.cas,
                          dtxsid=dtxsid,
