@@ -17,7 +17,7 @@ PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
 physiology.data <- read.xls(PKandTISSUEDATAFILE,
   sheet="Basic PK",
-  stringsAsFactors=FALSE)[1:14,]
+  stringsAsFactors=FALSE)[1:16,]
 # Make sure that all the values are numerical:
 for (this.col in 3:dim(physiology.data)[2])
   physiology.data[,this.col] <- as.numeric(physiology.data[,this.col])
