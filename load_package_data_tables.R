@@ -852,7 +852,23 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 
 
 # ADD NEW DATA HERE:
+volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv',stringsAsFactors = F)
 
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='PREFERRED_NAME',
+                                 CAS = 'CASRN',DTXSID='DTXSID',
+                                 LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+                                 LogHenry='LOG_HENRYS_LAW_DIMENSIONLESS',
+                                 MW = 'AVERAGE_MASS',SMILES.desalt='QSAR_READY_SMILES',
+                                 Species='SPECIES'),overwrite=F,reference='Linakis submitted')
+
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(Compound='PREFERRED_NAME',
+                                  CAS = 'CASRN',DTXSID='DTXSID',Clint='CALC_CLINT',
+                                  Funbound.plasma='CALC_FUP',Reference = 'REFERENCE',
+                                  Species='SPECIES'),overwrite=F)
 
 
 # STOP ADDING NEW DATA AFTER THIS, SUBSEQUENT CODE IS TO INTERACT WITH DASHBOARD
