@@ -10,10 +10,20 @@
 #' @author John Wambaugh
 #'
 #' @keywords monte-carlo pbtk
-propagateuv_pbtk <- function(
+propagate_invitrouv_pbtk <- function(
                              parameters.dt,
                              ...)
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Clmetabolismc<-Clint<-Funbound.plasma<-Fhep.assay.correction<-Qgutf<-NULL
+  liver.density<-million.cells.per.gliver<-BW<-Vliverc<-Qliverf<-NULL
+  Qcardiacc<- NULL
+  #End R CMD CHECK appeasement.
+  
       #Compute Vdist, volume of distribution
       parameters.dt[, Clmetabolismc := 
         as.numeric(calc_hep_clearance(

@@ -69,7 +69,7 @@ invitro_mc <- function(parameters.dt=NULL,
   #this is pointless and annoying.
   Clint.mu<-Clint.sd<-unadjusted.Funbound.plasma<-Flipid<-physiology.data<-NULL
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
-  Funbound.plasma.dist<-fup.sd<-NULL
+  Funbound.plasma.dist<-fup.sd<-Fhep.assay.correction <- NULL
   #End R CMD CHECK appeasement.
 
   if (!("Funbound.plasma") %in% names(parameters.dt))

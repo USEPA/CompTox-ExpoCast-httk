@@ -14,6 +14,18 @@ propagate_invitrouv_1comp <- function(
                              parameters.dt,
                              ...)
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  RBC.vol<-plasma.vol<-hematocrit<-Vdist<-Krbc2pu<-Funbound.plasma <- NULL
+  Krest2pu<-Vrestc<-Clint<-Qtotal.liverc<-Qgfrc<-million.cells.per.gliver<-NULL
+  BW<-Rblood2plasma<-Vliverc<-Fhep.assay.correction<-liver.density<-NULL
+  kelim<-NULL
+  #End R CMD CHECK appeasement.
+  
+  
       #for 1-compartment model, don't need to compute total hepatic clearance,
       #but do need to compute volume of distribution and elimination rate.
 
