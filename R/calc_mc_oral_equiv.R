@@ -140,7 +140,9 @@ calc_mc_oral_equiv <- function(conc,
                            list(concentration = concentration,
                            restrictive.clearance=restrictive.clearance,
                            bioactive.free.invivo = bioactive.free.invivo,
-                           tissue = tissue),
+                           tissue = tissue,IVIVE=IVIVE,
+                           well.stirred.correction=well.stirred.correction,
+                           adjusted.Funbound.plasma=adjusted.Funbound.plasma),
                          return.samples=return.samples,
                          ...))
                          

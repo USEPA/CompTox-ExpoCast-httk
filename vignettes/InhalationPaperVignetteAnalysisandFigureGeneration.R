@@ -22,10 +22,9 @@ library(smatr)
 setwd("C:/Users/msfeir/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Misc. Project Docs")
 
 #Get metabolism and concentration data handy
-met_data = metabolism_data_Linakis2020
-conc_data = concentration_data_Linakis2020
-#met_data <- read.csv("met_data.csv") 
-#conc_data <- read.csv("conc_data.csv")
+met_data <- metabolism_data_Linakis2020
+conc_data <- concentration_data_Linakis2020
+
 
 # ANALYSIS ------------
 
@@ -53,7 +52,7 @@ plist <- list()
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
-  tryCatch({
+  #tryCatch({
     relconc <- subset(conc_data,conc_data$DTXSID == unique_scenarios$DTXSID[i] & conc_data$DOSE == unique_scenarios$DOSE[i] & conc_data$EXP_LENGTH == unique_scenarios$EXP_LENGTH[i] & conc_data$CONC_SPECIES == unique_scenarios$CONC_SPECIES[i] & conc_data$SAMPLING_MATRIX == unique_scenarios$SAMPLING_MATRIX[i])
     obslist[[i]] <- relconc
     name <- paste0("out",i)
@@ -62,6 +61,7 @@ for(i in 1:nrow(unique_scenarios)){
     } else {
       solve <- assign(name, solve_gas_pbtk(chem.cas = unique_scenarios$CASRN[i], days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), tsteps = 500, exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, exp.duration = unique_scenarios$EXP_LENGTH[i]*24, period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, species = as.character(unique_scenarios$CONC_SPECIES[i]), vmax.km = T, vmax = met_data$VMAX[met_data$CASRN %in% unique_scenarios$CASRN[i] & met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]], km = met_data$KM[met_data$CASRN %in% unique_scenarios$CASRN[i] & met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]]))
     }
+    browser()
     solve <- as.data.frame(solve)
     # Sets the output units appropriate for the sampling matrix
     if(unique_scenarios$SAMPLING_MATRIX[i] == "VBL" | unique_scenarios$SAMPLING_MATRIX[i] == "BL" | unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)"){
@@ -88,7 +88,7 @@ for(i in 1:nrow(unique_scenarios)){
     name1 <- paste0("c.vs.t",i)
     plots <- assign(name1, ggplot(plot.data, aes(time*24, simconc)) + geom_line() + xlab("Time (h)") + ylab(paste0("Simulated ", unique_scenarios$SAMPLING_MATRIX[i], "\nConcentration (" , solve$unit, ")")) + ggtitle(paste0(unique_scenarios$PREFERRED_NAME[i]," (", unique_scenarios$CONC_SPECIES[i], ", ",round(as.numeric(unique_scenarios$DOSE[i]), digits = 2),unique_scenarios$DOSE_U[i], " for ",round(unique_scenarios$EXP_LENGTH[i]*24, digits = 2),"h in ", unique_scenarios$SAMPLING_MATRIX[i], ")")) + geom_point(data = relconc, aes(TIME*24,CONCENTRATION)) + theme_bw()) #Right now this is only calculating real concentrations according to mg/L in blood
     plist[[i]] <- plots
-  }, error = function(e){})
+  #}, error = function(e){})
 }
 rm(list=ls(pattern='out'))
 rm(list=ls(pattern='c.vs.t'))

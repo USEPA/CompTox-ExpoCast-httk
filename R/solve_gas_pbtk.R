@@ -39,6 +39,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
@@ -106,6 +108,7 @@
 #' @import deSolve
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
+                           dtxsid = NULL,
                            times=NULL,
                            parameters=NULL,
                            days=10,
@@ -151,14 +154,19 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
-  #In case that chem.name or chem.cas is specified, if value of Henry's law
-  #constant associated with queried chemical is smaller than that of glycerol,
-  #generally considered non-volatile, issue warning message:
-  if (!is.null(chem.name) | !is.null(chem.cas)){
-    
-    #get chem.cas if only chem.name is specified
-    if (is.null(chem.cas)) chem.cas = get_chem_id(chem.name = chem.name)$chem.cas
-    
+  # Look up the chemical name/CAS, depending on what was provided:
+  out <- get_chem_id(
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid)
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid
+  
+  #If value of Henry's law constant associated with queried chemical is smaller
+  #than that of glycerol, generally considered non-volatile, issue warning
+  #message:
+ 
     #get associated logHenry value and compare against glycerol's value, obtained
     #from EPA dashboard
     logHenry = chem.physical_and_invitro.data[chem.cas,'logHenry']
@@ -169,9 +177,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     nonvolatile. Please proceed after having considered whether the inhalation
     exposure route is nonetheless relevant.")
     }
-  }
   
-  
+    #Screen for compatible input that goes on to specify forcing function data series. 
   if(is.null(forcings)) {
     if (exp.duration > period){
       stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
@@ -198,6 +205,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   out <- solve_model(
   chem.name = chem.name,
   chem.cas = chem.cas,
+  dtxsid=dtxsid,
   times=times,
   parameters=parameters,
   model="gas_pbtk",
