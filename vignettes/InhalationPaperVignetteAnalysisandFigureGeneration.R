@@ -14,14 +14,11 @@ library(stringr)
 library(forcats)
 library(smatr)
 
+#Script now assumes that it is run from the same directory where the user will
+#accept the plot/supplementary table output files. 
 
-# Set working directory as appropriate for your system, namely, the directory 
-#where you want the supplementary tables written out to as .csv files. 
-#Accessing met_data and conc_data through directory should no longer 
-#be needed.
-setwd("C:/Users/msfeir/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Misc. Project Docs")
 
-#Get metabolism and concentration data handy
+#Get metabolism and concentration data handy (now stored in data folder)
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
 
@@ -61,7 +58,7 @@ for(i in 1:nrow(unique_scenarios)){
     } else {
       solve <- assign(name, solve_gas_pbtk(chem.cas = unique_scenarios$CASRN[i], days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), tsteps = 500, exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, exp.duration = unique_scenarios$EXP_LENGTH[i]*24, period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, species = as.character(unique_scenarios$CONC_SPECIES[i]), vmax.km = T, vmax = met_data$VMAX[met_data$CASRN %in% unique_scenarios$CASRN[i] & met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]], km = met_data$KM[met_data$CASRN %in% unique_scenarios$CASRN[i] & met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]]))
     }
-    browser()
+    #browser()
     solve <- as.data.frame(solve)
     # Sets the output units appropriate for the sampling matrix
     if(unique_scenarios$SAMPLING_MATRIX[i] == "VBL" | unique_scenarios$SAMPLING_MATRIX[i] == "BL" | unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)"){

@@ -42,7 +42,7 @@ for the model indicated by argument model}
 \item{samples}{Number of samples generated in calculating quantiles.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").  Species must be set to "Human" to run httkpop model.}
+default "Human"). Species must be set to "Human" to run httkpop model.}
 
 \item{suppress.messages}{Whether or not to suppress output message.}
 

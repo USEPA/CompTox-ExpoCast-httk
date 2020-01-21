@@ -4,12 +4,12 @@
 \alias{solve_gas_pbtk}
 \title{solve_gas_pbtk}
 \usage{
-solve_gas_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  doses.per.day = NULL, dose = NULL, dosing.matrix = NULL,
-  forcings = NULL, exp.conc = 1, period = 24, exp.duration = 12,
-  fcontrol = list(method = "constant", rule = 2, f = 0),
-  initial.values = NULL, plots = F, suppress.messages = F,
+solve_gas_pbtk(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  times = NULL, parameters = NULL, days = 10, tsteps = 4,
+  daily.dose = NULL, doses.per.day = NULL, dose = NULL,
+  dosing.matrix = NULL, forcings = NULL, exp.conc = 1, period = 24,
+  exp.duration = 12, fcontrol = list(method = "constant", rule = 2, f =
+  0), initial.values = NULL, plots = F, suppress.messages = F,
   species = "Human", output.units = "uM", method = "lsoda",
   rtol = 1e-08, atol = 1e-12, default.to.human = F,
   recalc.blood2plasma = F, recalc.clearance = F,
@@ -24,6 +24,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}

@@ -21,10 +21,10 @@ calc_mc_css(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
   "Non-Hispanic Black", "Other")), convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = F,
   clint.pvalue.threshold = 0.05, restrictive.clearance = T, regression =
-  T), calc.analytic.css.arg.list = list(daily.dose = 1,
-  well.stirred.correction = T, adjusted.Funbound.plasma = T, regression =
-  T, IVIVE = NULL, tissue = tissue, restrictive.clearance = T,
-  bioactive.free.invivo = FALSE, concentration = "plasma"))
+  T), calc.analytic.css.arg.list = list(well.stirred.correction = T,
+  adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue =
+  tissue, restrictive.clearance = T, bioactive.free.invivo = FALSE,
+  concentration = "plasma"))
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
@@ -96,8 +96,6 @@ parameterize_* function for the model.}
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW/day.}
-
 \item{fup.meas.cv}{Coefficient of variation of distribution of measured
 \code{Funbound.plasma} values.}
 
@@ -129,15 +127,6 @@ partition coefficients.}
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
-
-\item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
-as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
-bioactive in vivo. Only works with tissue = NULL in current implementation.}
-
-\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
 
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
@@ -179,9 +168,9 @@ When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
-Tissue concentrations are calculated for the pbtk model with oral infusion
-dosing.  All tissues other than gut, liver, and lung are the product of the
-steady state plasma concentration and the tissue to plasma partition
+Tissue concentrations are calculated for the pbtk model with a default oral
+infusion dosing. All tissues other than gut, liver, and lung are the product
+of the steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
 The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
@@ -207,7 +196,7 @@ used by this function.
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
  set.seed(1234)
- calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+ calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
              censored.params = list(Funbound.plasma = list(cv = 0.1, 
                                                           lod = 0.005)),
              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
