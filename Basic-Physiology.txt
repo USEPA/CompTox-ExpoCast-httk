@@ -1,4 +1,4 @@
-"Parameter"	"Units"	"Mouse"	"Rat"	"Dog"	"Human"	"Rabbit"	"Monkeya"
+"Parameter"	"Units"	"Mouse"	"Rat"	"Dog"	"Human"	"Rabbit"	"Monkey"
 "Total Body Water"	"ml/kg"	725	668	603.6	600	40.812	693
 "Plasma Volume"	"ml/kg"	50	31.2	51.5	42.85714	110	44.8
 "Cardiac Output"	"ml/min/kg^(3/4)"	150.42412	209.30361	213.39353	231.40061	266.57589	0.0520833333333333
