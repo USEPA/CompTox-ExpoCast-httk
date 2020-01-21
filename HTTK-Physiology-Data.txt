@@ -1,4 +1,4 @@
-Parameter	Units	Mouse	Rat	Dog	Human	Rabbit	Monkey
+Parameter	Units	Mouse	Rat	Dog	Human	Rabbit	Monkeya
 Total Body Water	ml/kg	725	668	603.6	600	40.812	693
 Plasma Volume	ml/kg	50	31.2	51.5	42.85714	110	44.8
 Cardiac Output	ml/min/kg^(3/4)	150.42412	209.30361	213.39353	231.40061	266.57589	0.0520833333333333
@@ -13,5 +13,5 @@ GFR	ml/min/kg^(3/4)	5.26484	3.70524	10.90085	5.16519	3.12	2.08
 Average Body Temperature	C	37	38.7	38.9	37	39.35	38
 Plasma Effective Neutral Lipid Volume Fraction	unitless	0.00355	0.00174	0.00104	0.0073	0.00196	0.0073
 Plasma Protein Volume Fraction	unitless	0.06036	0.05871	0.09	0.06951	0.057	0.06951
-Pulmonary Ventilation Rate	l/h/kg^(3/4)	24.75	24.75	24.75	27.75	24.75	NA
-Alveolar Dead Space Fraction	unitless	0.33	0.33	0.33	0.33	0.33	NA
+Pulmonary Ventilation Rate	l/h/kg^(3/4)	24.75	24.75	24.75	27.75	24.75	27.75
+Alveolar Dead Space Fraction	unitless	0.33	0.33	0.33	0.33	0.33	0.33
