@@ -102,10 +102,11 @@ get_cheminfo <- function(info="CAS",
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   physiology.data <- NULL
+  
   #End R CMD CHECK appeasement.
 
 # Figure out which species we support
-  valid.species <- colnames(physiology.data)[!(colnames(physiology.data)
+  valid.species <- colnames(httk::physiology.data)[!(colnames(httk::physiology.data)
     %in% c("Parameter","Units"))]
 # Standardize the species capitalization
   if (tolower(species) %in% tolower(valid.species)) species <-
