@@ -335,7 +335,7 @@ solve_model <- function(chem.name = NULL,
         state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                             parameters[[paste("V",tissue,"c",sep="")]] *
-                            parameters[["BW"]]^(3/4)
+                            parameters[["BW"]]
       # Or amounts?
       } else if (firstchar(this.compartment)=="A")
       {
