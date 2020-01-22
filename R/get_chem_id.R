@@ -16,7 +16,7 @@ get_chem_id <- function(chem.cas=NULL,
 {
   if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
   {
-    stop("Must specifiy compound namem, CAS, or DTXSID.\n")
+    stop("Must specify compound name, CAS, or DTXSID.\n")
   } else if ((!is.null(chem.cas) & 
     !any(chem.physical_and_invitro.data$CAS==chem.cas)) & 
     (!is.null(chem.name) & 

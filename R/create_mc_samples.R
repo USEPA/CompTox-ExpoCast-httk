@@ -193,10 +193,11 @@ create_mc_samples <- function(chem.cas=NULL,
   }
 
   #Appease R CMD check --as-cran variable binding:
-  tissue.data <- variable <- Name <- physiology.data <- Parameter <- NULL
+  variable <- Name  <- Parameter <- physiology.data <- tissue.data <- NULL
   hematocrit <- this.chem <- Krbc2pu <- Rblood2plasma <- Qgutf <- NULL
   Funbound.plasma <- Qtotal.liverc <- Qcardiacc <- Qliverf <- NULL
   hepatic.bioavailability <- ..parameter.names <- NULL
+  
   
 # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
@@ -283,7 +284,7 @@ create_mc_samples <- function(chem.cas=NULL,
     if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-     this.tissuedata <- subset(tissue.data, tolower(species)==tolower(species))
+     this.tissuedata <- subset(httk::tissue.data, tolower(species)==tolower(species))
      these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
      these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
      for (this.name in these.vols$Name)
@@ -292,14 +293,14 @@ Set species=\"Human\" to run httkpop model.')
      these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
      these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
      these.flows$value <- these.flows$value/
-       as.numeric(subset(physiology.data,Parameter=="Cardiac Output")[
-       tolower(colnames(physiology.data))==tolower(species)])
+       as.numeric(subset(httk::physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(httk::physiology.data))==tolower(species)])
      for (this.name in these.flows$Name)
        if (!(this.name %in% names(parameters.dt)))
          parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
      parameters.dt[, hematocrit:=
-       as.numeric(subset(physiology.data,Parameter=="Hematocrit")[
-       tolower(colnames(physiology.data))==tolower(species)])]
+       as.numeric(subset(httk::physiology.data,Parameter=="Hematocrit")[
+       tolower(colnames(httk::physiology.data))==tolower(species)])]
   }
 #
 #
