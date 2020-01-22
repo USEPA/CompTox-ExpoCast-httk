@@ -69,10 +69,15 @@
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #' @keywords Parameter
 #' @examples
+#' parameters <- parameterize__gas_pbtk(chem.cas='129-00-0')
 #' 
+#' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
-#'  
-#'  
+#' # Change the tissue lumping:
+#' compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
+#'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
+#' parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
+#'                    tissuelist=compartments) 
 #' 
 #' @export parameterize_gas_pbtk
 parameterize_gas_pbtk <- function(chem.cas=NULL,
