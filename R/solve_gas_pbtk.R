@@ -154,7 +154,10 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
-  # Look up the chemical name/CAS, depending on what was provided:
+  #Look up the chemical name/CAS to get some info about the chemical in
+  #question and screen it for relevance of its logHenry value. Should not
+  #be necessary if user manually specifies 'parameters'
+  if (is.null(parameters)){
   out <- get_chem_id(
     chem.cas=chem.cas,
     chem.name=chem.name,
@@ -162,6 +165,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
+  
   
   #If value of Henry's law constant associated with queried chemical is smaller
   #than that of glycerol, generally considered non-volatile, issue warning
@@ -177,6 +181,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     nonvolatile. Please proceed after having considered whether the inhalation
     exposure route is nonetheless relevant.")
     }
+  }
   
     #Screen for compatible input that goes on to specify forcing function data series. 
   if(is.null(forcings)) {
