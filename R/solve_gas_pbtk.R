@@ -100,8 +100,13 @@
 #' @keywords Solve
 #' @examples
 #' 
+#' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days=1,doses.per.day=2,tsteps=2)
 #' 
-#' 
+#' out <- solve_gas_pbtk(chem.name='pyrene',dose=0,output.units='mg', 
+#'                   plots=TRUE,initial.values=c(Agut=200))
+#'                   
+#' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
+#' solve_gas_pbtk(parameters=params)
 #' 
 #' @export solve_gas_pbtk
 #' @useDynLib httk
