@@ -92,31 +92,6 @@
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #' @keywords Solve
-#' @examples
-#' 
-#' 
-#' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-#'                   plots=TRUE,initial.values=c(Agut=200))
-#' params <- parameterize_pbtk(chem.cas="80-05-7")
-#' solve_pbtk(parameters=params)
-#'                   
-#' \dontrun{
-#' parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-#' parameters["Funbound.plasma"] <- 0.1
-#' out <- solve_pbtk(parameters=parameters)
-#' 
-#' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
-#' plot.data <- as.data.frame(out)
-#' css <- calc_analytic_css(chem.name = "Bisphenol A")
-#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-#' element_text(size = 16), plot.title = element_text(size = 17)) +
-#' ggtitle("Bisphenol A")
-#' print(c.vs.t)
-#' }
 #' 
 #' @export solve_model
 #'
@@ -349,7 +324,7 @@ solve_model <- function(chem.name = NULL,
 # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   times <- sort(times)
-  start.time <- times[1]
+  start.time <- 0 # Simulation always starts at t = 0
   end.time <- times[length(times)]
 
   # We add a time point 1e-5 later than the beginning to make the plots look
@@ -363,6 +338,7 @@ solve_model <- function(chem.name = NULL,
   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
     model.list[[model]]$dosing.params)) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
+  # Scale into intended units
   dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
