@@ -57,6 +57,8 @@
 #' with eventdata or on its own. 
 #' @param forcings Manual input of 'forcings' data series argument for ode
 #' integrator, defaults to NULL
+#' @param exp.start.time Start time in specifying forcing exposure series,
+#' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in assembling
 #' 'forcings' data series argument for integrator. Defaults to uM/L **?
 #' @param period For use in assembling forcing function data series 'forcings'
@@ -100,10 +102,13 @@
 #' @keywords Solve
 #' @examples
 #' 
-#' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days=1,doses.per.day=2,tsteps=2)
+#' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
 #' 
-#' out <- solve_gas_pbtk(chem.name='pyrene',dose=0,output.units='mg', 
-#'                   plots=TRUE,initial.values=c(Agut=200))
+#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
+#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' 
+#' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
+#' exp.duration = 6, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 #' solve_gas_pbtk(parameters=params)
@@ -123,6 +128,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            dose = NULL, #Assume single dose is in mg/kg BW/day
                            dosing.matrix = NULL,
                            forcings = NULL, 
+                           exp.start.time = 0, #default starting time in specifying forcing exposure
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
                            exp.duration = 12,
@@ -201,14 +207,14 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #Assemble function for initializing 'forcings' argument data series with
     #certain periodicity and exposure concentration in default case, used if 
     #the 'forcings' argument is not otherwise specified.
-    forcing <- function(exp.conc, period, start.time, exp.duration, days) {
-      Nrep <- ceiling(days/period) 
-      times <- rep(c(start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+      Nrep <- ceiling((days - start.time)/period) 
+      times <- rep(c(expstart.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
       y  <- rep(c(exp.conc,0), Nrep)
       conc.matrix = cbind(times,y)
       return(conc.matrix)
     }
-    forcings = forcing(exp.conc, period, start.time = 0, exp.duration, days) 
+    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
   
   #Now make call to solve_model with gas model specific arguments configured 
