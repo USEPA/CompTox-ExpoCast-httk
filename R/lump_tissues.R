@@ -59,8 +59,6 @@ lump_tissues <- function(Ktissue2pu.in,
 #CHECK, a variable has to be created for each of these column names and set to
 #NULL. Note that within the data.table, these variables will not be NULL! Yes,
 #this is pointless and annoying.
-  physiology.data <- physiology.data
-  tissue.data <- tissue.data
   Tissue <- Species <- varable <- Parameter <- variable <- NULL
 #End R CMD CHECK appeasement.
 
