@@ -87,10 +87,15 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 This function initializes the parameters needed in the function solve_gas_pbtk
 }
 \examples{
+parameters <- parameterize__gas_pbtk(chem.cas='129-00-0')
 
+parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
- 
- 
+# Change the tissue lumping:
+compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
+                      lung=c("lung"),gut=c("gut"),slow=c("bone"))
+parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
+                   tissuelist=compartments) 
 
 }
 \references{

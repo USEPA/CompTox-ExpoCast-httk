@@ -135,33 +135,6 @@ available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
-\examples{
-
-
-solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-                  plots=TRUE,initial.values=c(Agut=200))
-params <- parameterize_pbtk(chem.cas="80-05-7")
-solve_pbtk(parameters=params)
-                  
-\dontrun{
-parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-parameters["Funbound.plasma"] <- 0.1
-out <- solve_pbtk(parameters=parameters)
-
-library("ggplot2")
-out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
-plot.data <- as.data.frame(out)
-css <- calc_analytic_css(chem.name = "Bisphenol A")
-c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-element_text(size = 16), plot.title = element_text(size = 17)) +
-ggtitle("Bisphenol A")
-print(c.vs.t)
-}
-
-}
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
