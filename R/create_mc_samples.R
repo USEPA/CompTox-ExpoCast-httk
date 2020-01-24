@@ -193,10 +193,9 @@ create_mc_samples <- function(chem.cas=NULL,
   }
 
   #Appease R CMD check --as-cran variable binding:
-  variable <- Name  <- Parameter <- physiology.data <- tissue.data <- NULL
-  hematocrit <- this.chem <- Krbc2pu <- Rblood2plasma <- Qgutf <- NULL
-  Funbound.plasma <- Qtotal.liverc <- Qcardiacc <- Qliverf <- NULL
-  hepatic.bioavailability <- ..parameter.names <- NULL
+  variable <- Name  <- Parameter <- hematocrit <- this.chem <- Krbc2pu <- NULL
+  Rblood2plasma <- Qgutf <- Funbound.plasma <- Qtotal.liverc <- NULL
+  Qcardiacc <- Qliverf <- hepatic.bioavailability <- ..parameter.names <- NULL
   
   
 # Check to see if we need to call the parameterize_MODEL function:
