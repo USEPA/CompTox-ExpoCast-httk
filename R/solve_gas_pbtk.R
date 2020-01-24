@@ -199,7 +199,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     if (exp.duration > period){
       stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
       to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-      exp.conc, period, start.time, exp.duration, and days simulated.')
+      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
@@ -208,8 +208,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #certain periodicity and exposure concentration in default case, used if 
     #the 'forcings' argument is not otherwise specified.
     forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-      Nrep <- ceiling((days - start.time)/period) 
-      times <- rep(c(expstart.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+      Nrep <- ceiling((days - exp.start.time)/period) 
+      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
       y  <- rep(c(exp.conc,0), Nrep)
       conc.matrix = cbind(times,y)
       return(conc.matrix)
