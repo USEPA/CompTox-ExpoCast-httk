@@ -27,27 +27,7 @@ for the model indicated by argument model}
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}
 
-\item{httk.pop.biomets}{A data.table containing the physiological
-parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
-\code{Funbound.plasma} and \code{Clint} values (from
-\code{\link{draw_fup_clint}}).}
-
-\item{model}{Which HTTK model to use.}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE.}
-
-\item{regression}{Whether or not to use the regressions in calculating partition 
-coefficients.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic clearance 
-for well-stirred model if TRUE for hepatic.model well-stirred. This assumes 
-clearance re/lative to amount unbound in whole blood instead of plasma, but 
-converted to use with plasma concentration.}
-
-\item{concentration}{Blood, plasma, or tissue concentration.}
-
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in vitro 
-clearance assay result has a p-values greater than the threshold are set to zero.}
+\item{flow.34}{A logical constraint %%%%}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
