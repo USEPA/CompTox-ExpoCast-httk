@@ -17,6 +17,7 @@ solve_gas_pbtk(
   dose = NULL,
   dosing.matrix = NULL,
   forcings = NULL,
+  exp.start.time = 0,
   exp.conc = 1,
   period = 24,
   exp.duration = 12,
@@ -43,7 +44,8 @@ solve_gas_pbtk(
   fR = 12,
   VT = 0.75,
   VD = 0.15,
-  ...)
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
