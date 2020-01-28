@@ -4,14 +4,30 @@
 \alias{calc_stats}
 \title{Calculate toxicokinetic summary statistics.}
 \usage{
-calc_stats(chem.name = NULL, chem.cas = NULL, parameters = NULL,
-  route = "oral", stats = c("AUC", "peak", "mean"),
-  species = "Human", days = 28, daily.dose = 1, dose = NULL,
-  doses.per.day = 1, output.units = "uM", concentration = "plasma",
-  tissue = "plasma", model = "pbtk", default.to.human = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  suppress.messages = F, ...)
+calc_stats(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  route = "oral",
+  stats = c("AUC", "peak", "mean"),
+  species = "Human",
+  days = 28,
+  daily.dose = 1,
+  dose = NULL,
+  doses.per.day = 1,
+  output.units = "uM",
+  concentration = "plasma",
+  tissue = "plasma",
+  model = "pbtk",
+  default.to.human = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  suppress.messages = F,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Name of desired chemical.}
@@ -59,8 +75,6 @@ partition coefficients.}
 1) in liver clearance if FALSE.}
 
 \item{suppress.messages}{Whether to suppress output message.}
-
-\item{...}{Additional arguments passed to the integrator.}
 
 \item{...}{Arguments passed to solve function.}
 }
