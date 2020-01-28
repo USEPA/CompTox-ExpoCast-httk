@@ -4,9 +4,14 @@
 \alias{available_rblood2plasma}
 \title{Find the best available ratio of the blood to plasma concentration constant.}
 \usage{
-available_rblood2plasma(chem.cas = NULL, chem.name = NULL,
-  dtxsid = NULL, species = "Human", adjusted.Funbound.plasma = T,
-  suppress.messages = F)
+available_rblood2plasma(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  adjusted.Funbound.plasma = T,
+  suppress.messages = F
+)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be

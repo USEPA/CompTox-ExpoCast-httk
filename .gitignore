@@ -11,5 +11,3 @@ build/
 *.exe
 *.o
 *.so
-
-*.so

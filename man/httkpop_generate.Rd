@@ -4,12 +4,17 @@
 \alias{httkpop_generate}
 \title{Generate a virtual population}
 \usage{
-httkpop_generate(method, nsamp = NULL, gendernum = NULL,
-  agelim_years = NULL, agelim_months = NULL,
+httkpop_generate(
+  method,
+  nsamp = NULL,
+  gendernum = NULL,
+  agelim_years = NULL,
+  agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-  "Non-Hispanic Black", "Other"))
+    "Non-Hispanic Black", "Other")
+)
 }
 \arguments{
 \item{method}{The population-generation method to use. Either "virtual
