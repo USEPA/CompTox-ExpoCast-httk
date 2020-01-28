@@ -2,7 +2,7 @@
 #' compartment model
 #'
 #' @param parameters.dt Data table returned by \code{\link{create_mc_samples}}
-#' @param httkpop.dt %%%%
+#' @param httkpop.dt Data table returned by \code{\link{httkpop_generate}}
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.

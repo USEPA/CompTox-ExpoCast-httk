@@ -73,7 +73,7 @@ Changes in version 1.9 (February 4, 2019)
   Updated load_sipes2017 to be much faster by loading an image by default
   Updated help files for Sipes2017 and load_sipes2017.
   get_wetmore functions changed to get_lit
-  httkpop_bio exported to user functions
+  httkpop_bio exported to user functions (fx name since changed to 'httkpop_biotophys_default')
   Corrected mistake in get_cheminfo help file: exlude.fub.zero defaults to FALSE for 3compartmentss and TRUE for others
   Corrected (thank you Jason Phillips), updated, and added pKa values from Strope et al., 2018
   For time point after first dose: bug now corrected when not starting at time 0(thank you Xiaoqing Chang)

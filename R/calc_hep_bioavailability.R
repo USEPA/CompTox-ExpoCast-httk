@@ -65,7 +65,8 @@ calc_hep_bioavailability <- function(
   if (flow.34 & !("BW" %in% names(parameters))) 
     stop("flow.34=TRUE and missing BW in calc_hepatic_bioavailability.")
   else {
-    parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25
+    #converting from L/h/kg^3/4 to L/h/kg
+    parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25 
   }
 
   if (restrictive.clearance) return(parameters$Qtotal.liverc / 
