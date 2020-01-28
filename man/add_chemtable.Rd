@@ -4,8 +4,14 @@
 \alias{add_chemtable}
 \title{Add a table of chemical information for use in making httk predictions.}
 \usage{
-add_chemtable(new.table, data.list, current.table = NULL,
-  reference = NULL, species = NULL, overwrite = F)
+add_chemtable(
+  new.table,
+  data.list,
+  current.table = NULL,
+  reference = NULL,
+  species = NULL,
+  overwrite = F
+)
 }
 \arguments{
 \item{new.table}{Object of class data.frame containing one row per chemical,

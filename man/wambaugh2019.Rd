@@ -3,7 +3,7 @@
 \docType{data}
 \name{wambaugh2019}
 \alias{wambaugh2019}
-\title{in vitro Toxicokinetic Data from Wambaugh et al. (submitted)}
+\title{in vitro Toxicokinetic Data from Wambaugh et al. (2019)}
 \format{A data frame with 496 rows and 17 variables:
 \describe{
   \item{Compound}{The name of the chemical}
@@ -36,14 +36,14 @@ chemical free in the presence of plasma}
   \item{logP}{log base ten of octanol:water partiion coefficient}
 }}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019
 }
 \description{
 These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-et al. (submitted) They
+et al. (2019) They
 are the processed values used to make the figures in that manuscript.
 These data summarize the results of Bayesian analysis of the in vitro
 toxicokinetic experiments conducted by Cyprotex to characterize fraction 
@@ -51,8 +51,8 @@ unbound in the presence of pooled human plasma protein and the intrnsic
 hepatic clearance of the chemical by pooled human hepatocytes.
 }
 \references{
-Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization", submitted.
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

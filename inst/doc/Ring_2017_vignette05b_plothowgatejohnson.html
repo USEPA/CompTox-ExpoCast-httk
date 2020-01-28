@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Caroline Ring" />
+
+<meta name="date" content="2018-01-23" />
+
+<title>Ring et al. 2017 Plotting Howgate/Johnson data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Ring et al. 2017 Plotting Howgate/Johnson data</h1>
+<h4 class="author"><em>Caroline Ring</em></h4>
+<h4 class="date"><em>2018-01-23</em></h4>
+
+
+
+<p>This vignette plots HTTK-Pop-predicted Css against <em>in vivo</em> Css from Howgate 2006 and Johnson 2006.</p>
+<p>First load some packages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'data.table'</span>)
+<span class="kw">library</span>(<span class="st">'httk'</span>)
+<span class="kw">library</span>(<span class="st">'ggplot2'</span>)
+<span class="kw">library</span>(<span class="st">'RColorBrewer'</span>)</code></pre></div>
+<p>Then, we need to read in the study data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jhchem &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file=</span><span class="st">&quot;data/jhchem.Rdata&quot;</span>)
+<span class="co">#Get Funbound.plasma measured values from HTTK</span>
+chem.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk::<span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'3compartmentss'</span>,
+                                            <span class="dt">species=</span><span class="st">'Human'</span>,
+                                            <span class="dt">info=</span><span class="kw">c</span>(<span class="st">'CAS'</span>, <span class="st">&quot;MW&quot;</span>, <span class="st">&quot;Funbound.plasma&quot;</span>),
+                                            <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))
+<span class="co">#Get CLint measured values from HTTK</span>
+chem.dt[, Clint:<span class="er">=</span><span class="kw">sapply</span>(CAS, 
+                        function(x) <span class="kw">parameterize_steadystate</span>(<span class="dt">chem.cas=</span>x,
+                                                             <span class="dt">species=</span><span class="st">'Human'</span>)$Clint)]
+<span class="kw">setnames</span>(chem.dt, <span class="st">'Human.Funbound.plasma'</span>, <span class="st">'Funbound.plasma'</span>)
+chem.dt[, fup.zero:<span class="er">=</span>Funbound.plasma==<span class="fl">0.005</span>]
+chem.dt[, Clint.zero:<span class="er">=</span>Clint==<span class="dv">0</span>]
+
+jhchem &lt;-<span class="st"> </span><span class="kw">merge</span>(jhchem,chem.dt,<span class="dt">by=</span><span class="st">'CAS'</span>)</code></pre></div>
+<p>Define a function to plot the confidence intervals as ellipses. This function takes the confidence interval bounds in two dimensions and returns points along the circumference of an ellipse with major and minor axes defined by the confidence intervals in each dimension. By default it returns 100 points; this seems to be plenty to draw a smooth-looking ellipse.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ellipse_fun &lt;-<span class="st"> </span>function(x.CI.max,
+                        x.CI.min,
+                        y.CI.max,
+                        y.CI.min,
+                        <span class="dt">npts=</span><span class="dv">100</span>){
+  <span class="co">#Compute length of axes</span>
+  a &lt;-<span class="st"> </span>(x.CI.max -<span class="st"> </span>x.CI.min)/<span class="dv">2</span>
+  b &lt;-<span class="st"> </span>(y.CI.max -<span class="st"> </span>y.CI.min)/<span class="dv">2</span>
+  <span class="co">#Compute center point</span>
+  x0 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(x.CI.min,x.CI.max))
+  y0 &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(y.CI.min,y.CI.max))
+  <span class="co">#get x and y coordinates of ellipse circumference</span>
+  ellipse.x &lt;-<span class="st"> </span>a*<span class="kw">cos</span>(<span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">0</span>, 
+                         <span class="dt">to=</span><span class="dv">2</span>*pi, 
+                         <span class="dt">length.out=</span>npts)) +<span class="st"> </span>x0
+  ellipse.y &lt;-<span class="st"> </span>b*<span class="kw">sin</span>(<span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">0</span>, 
+                         <span class="dt">to=</span><span class="dv">2</span>*pi, 
+                         <span class="dt">length.out=</span>npts)) +<span class="st"> </span>y0
+  <span class="kw">return</span>(<span class="kw">data.table</span>(<span class="dt">ellipse.x=</span>ellipse.x,
+                    <span class="dt">ellipse.y=</span>ellipse.y))
+  
+  }</code></pre></div>
+<p>Next, define a function to actually do the plotting – one that can be called with arguments for poormetab and fup.censor.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_virtstudy_innerfunction &lt;-<span class="st"> </span>function(model,
+                                              fup.censor,
+                                              poormetab,
+                                         fuptofub,
+                                              jhchem){
+  
+  if (fuptofub){
+  overall.dt &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
+                               <span class="kw">paste</span>(<span class="st">'virtstudypop'</span>, <span class="st">'overallstats'</span>, model,
+                                     <span class="st">'poormetab'</span>, poormetab,
+                                     <span class="st">'fup.censor'</span>, fup.censor, 
+                                     <span class="st">&quot;FuptoFub&quot;</span>, <span class="dt">sep=</span><span class="st">'_'</span>),
+                               <span class="st">'.Rdata'</span>))
+  }else{
+    overall.dt &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
+                               <span class="kw">paste</span>(<span class="st">'virtstudypop'</span>, <span class="st">'overallstats'</span>, model,
+                                     <span class="st">'poormetab'</span>, poormetab,
+                                     <span class="st">'fup.censor'</span>, fup.censor, <span class="dt">sep=</span><span class="st">'_'</span>),
+                               <span class="st">'.Rdata'</span>))
+  }
+  overall.dt &lt;-<span class="st"> </span><span class="kw">merge</span>(overall.dt,
+                      jhchem[, .(Study.id,
+                                 Compound,
+                                 Total.subjects,
+                                 Clearance.median,
+                                 Clearance.95CI.min,
+                                 Clearance.95CI.max,
+                                 Clearance.units,
+                                 src,
+                                 MW,
+                                 fup.zero,
+                                 Clint.zero)],
+                      <span class="dt">by=</span><span class="st">'Study.id'</span>)
+  overall.dt[Clearance.units==<span class="st">'1/h'</span>,
+             Clearance.units:<span class="er">=</span><span class="st">'L/h'</span>] <span class="co">#correct typo/misreading of &quot;1&quot; for lowercase &quot;L&quot;</span>
+  <span class="co">#For clearances given as L/h/kg:</span>
+  <span class="co">#1 mg/kg/day over L/day/kg = Css in mg/L</span>
+  <span class="co">#Css in mg/L divided by MW in mg/umol = umol/L = uM</span>
+  overall.dt[Clearance.units==<span class="st">'L/h/kg'</span>,
+             css.median.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.median*(MW/<span class="dv">1000</span>))]
+  overall.dt[Clearance.units==<span class="st">'L/h/kg'</span>,
+             css.95CImax.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.95CI.min*(MW/<span class="dv">1000</span>))]
+  overall.dt[Clearance.units==<span class="st">'L/h/kg'</span>,
+             css.95CImin.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.95CI.max*(MW/<span class="dv">1000</span>))]
+  <span class="co">#For clearances given as L/h:</span>
+  <span class="co">#1 mg/kg/day over L/day = mg/L/kg = Css/kg BW</span>
+  <span class="co">#mg/L/kg divided by MW in mg/umol = uM/kg = Css/kg BW</span>
+  overall.dt[Clearance.units==<span class="st">'L/h'</span>,
+             css.bw.median.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.median*(MW/<span class="dv">1000</span>))]
+  overall.dt[Clearance.units==<span class="st">'L/h'</span>,
+             css.bw.95CImax.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.95CI.min*(MW/<span class="dv">1000</span>))]
+  overall.dt[Clearance.units==<span class="st">'L/h'</span>,
+             css.bw.95CImin.invivo:<span class="er">=</span><span class="dv">1</span>/(<span class="dv">24</span>*Clearance.95CI.max*(MW/<span class="dv">1000</span>))]
+  <span class="co">#Get overall bounds on Css and clearance</span>
+  overall.dt[, mean.css.95CI.max:<span class="er">=</span>mean.css.95CI.max.fold*median.css.median]
+  overall.dt[, mean.css.95CI.min:<span class="er">=</span>mean.css.95CI.min.fold*median.css.median]
+  overall.dt[, mean.css.bw.95CI.max:<span class="er">=</span>mean.css.bw.95CI.max.fold*median.css.bw.median]
+  overall.dt[, mean.css.bw.95CI.min:<span class="er">=</span>mean.css.bw.95CI.min.fold*median.css.bw.median]
+  overall.dt[, poormetab:<span class="er">=</span>poormetab]
+  overall.dt[, fup.censor:<span class="er">=</span>fup.censor]
+  overall.dt[, fuptofub:<span class="er">=</span>fuptofub]
+
+  <span class="co">#Generate ellipses for Css</span>
+  overall.ellipse &lt;-<span class="st"> </span>overall.dt[Clearance.units==<span class="st">'L/h/kg'</span>,
+                                <span class="kw">ellipse_fun</span>(<span class="dt">x.CI.max=</span><span class="kw">log10</span>(css.95CImax.invivo), 
+                                            <span class="dt">x.CI.min=</span><span class="kw">log10</span>(css.95CImin.invivo), 
+                                            <span class="dt">y.CI.max=</span><span class="kw">log10</span>(mean.css.95CI.max), 
+                                            <span class="dt">y.CI.min=</span><span class="kw">log10</span>(mean.css.95CI.min)), 
+                                by=.(Study.id, Compound, Clearance.units, src)]
+  <span class="co">#Define colors for plotting</span>
+  <span class="co">#from ColorBrewer2.org -- qualitative scale with 12 colors (the max), plus 3 greys</span>
+  colvect &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">brewer.pal</span>(<span class="dv">12</span>, <span class="st">'Paired'</span>),
+               <span class="kw">c</span>(<span class="st">&quot;gray75&quot;</span>, <span class="st">&quot;gray50&quot;</span>, <span class="st">&quot;black&quot;</span>))
+  <span class="kw">names</span>(colvect) &lt;-<span class="st"> </span>overall.dt[, <span class="kw">unique</span>(Compound)]
+  <span class="co">#swap alprazolam (light blue) and omeprazole (light purple)</span>
+  <span class="co">#makes it easier to tell differences</span>
+  tmp &lt;-<span class="st"> </span>colvect[<span class="st">'omeprazole'</span>]
+  colvect[<span class="st">'omeprazole'</span>] &lt;-<span class="st"> </span>colvect[<span class="st">'alprazolam'</span>]
+  colvect[<span class="st">'alprazolam'</span>] &lt;-<span class="st"> </span>tmp
+  <span class="kw">rm</span>(tmp)
+  <span class="co">#colvect['theophylline']&lt;-'gray50'</span>
+  <span class="co">#Set up function to rescale axis labels</span>
+  labels.rescale &lt;-<span class="st"> </span>function(){
+    function(x) <span class="dv">10</span>^x
+    }
+  
+  
+  <span class="co">#Generate ellipses for Css/kg BW</span>
+  overall.ellipse2 &lt;-<span class="st"> </span>overall.dt[Clearance.units==<span class="st">'L/h'</span>,
+                                 <span class="kw">ellipse_fun</span>(<span class="dt">x.CI.max=</span><span class="kw">log10</span>(css.bw.95CImax.invivo),
+                                             <span class="dt">x.CI.min=</span><span class="kw">log10</span>(css.bw.95CImin.invivo),
+                                             <span class="dt">y.CI.max=</span><span class="kw">log10</span>(mean.css.bw.95CI.max),
+                                             <span class="dt">y.CI.min=</span><span class="kw">log10</span>(mean.css.bw.95CI.min)),
+                                 by=.(Study.id, Compound, Clearance.units, src)]
+
+
+ellipse.dt &lt;-<span class="st"> </span><span class="kw">rbind</span>(overall.ellipse, overall.ellipse2)
+
+ellipse.dt[Clearance.units==<span class="st">&quot;L/h&quot;</span>, Css.units:<span class="er">=</span><span class="st">&quot;Css in uM/kg&quot;</span>]
+ellipse.dt[Clearance.units==<span class="st">&quot;L/h/kg&quot;</span>, Css.units:<span class="er">=</span><span class="st">&quot;Css in uM&quot;</span>]
+
+ptest &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>ellipse.dt)
+
+for (i in ellipse.dt[, <span class="kw">unique</span>(Study.id)]) {
+ptest &lt;-<span class="st"> </span>ptest +<span class="st"> </span><span class="kw">geom_path</span>(<span class="dt">data=</span>ellipse.dt[Study.id==i,],
+<span class="kw">aes</span>(<span class="dt">x=</span>ellipse.x, <span class="dt">y=</span>ellipse.y,
+<span class="dt">color=</span>Compound))
+}
+
+ptest&lt;-<span class="st"> </span>ptest +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>,<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">linetype=</span><span class="dv">2</span>)+
+<span class="kw">scale_color_manual</span>(<span class="dt">limits=</span>ellipse.dt[, <span class="kw">unique</span>(Compound)],
+<span class="dt">values=</span>colvect)+
+<span class="kw">scale_x_continuous</span>(<span class="dt">labels=</span><span class="kw">labels.rescale</span>()) +<span class="st"> </span><span class="co">#force axes equal range</span>
+<span class="kw">scale_y_continuous</span>(<span class="dt">labels=</span><span class="kw">labels.rescale</span>()) +<span class="st"> </span><span class="co">#force axes equal range</span>
+<span class="kw">facet_wrap</span>(~Css.units, <span class="dt">scales=</span><span class="st">&quot;free&quot;</span>) +<span class="st"> </span><span class="co">#, space=&quot;free&quot;) +</span>
+<span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dt">ratio=</span><span class="dv">1</span>) +<span class="st"> </span>
+<span class="kw">labs</span>(<span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(C[ss], <span class="st">' in vivo'</span>)),
+<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(C[ss], <span class="st">' predicted'</span>))) +
+<span class="kw">theme_bw</span>() +
+<span class="kw">theme</span>(<span class="dt">legend.key=</span><span class="kw">element_blank</span>(),
+<span class="dt">aspect.ratio=</span><span class="dv">1</span>,
+<span class="dt">strip.background=</span><span class="kw">element_blank</span>(),
+<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)
+
+
+  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">ptest=</span><span class="kw">list</span>(ptest), <span class="dt">ov.dt=</span><span class="kw">list</span>(overall.dt)))
+  }</code></pre></div>
+<p>Finally, let’s call the plotting function for the four combinations of poormetab and fup.censor.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">args.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="kw">expand.grid</span>(<span class="dt">poormetab=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), 
+                         <span class="dt">fup.censor=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), 
+                         <span class="dt">fuptofub=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)))
+out.dt &lt;-<span class="st"> </span>args.dt[, <span class="kw">plot_virtstudy_innerfunction</span>(<span class="dt">model=</span><span class="st">&quot;3compartmentss&quot;</span>,
+                                       <span class="dt">poormetab=</span>poormetab,
+                                       <span class="dt">fup.censor=</span>fup.censor,
+                                       <span class="dt">fuptofub=</span>fuptofub,
+                                       <span class="dt">jhchem=</span>jhchem),
+        by=.(poormetab, fup.censor, fuptofub)]
+
+plotfun &lt;-<span class="st"> </span>function(ptmp, poormetab, fup.censor, fuptofub){
+  <span class="kw">print</span>(ptmp[[<span class="dv">1</span>]] +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">paste</span>(<span class="kw">c</span>(<span class="st">&quot;poormetab&quot;</span>,
+                               <span class="st">&quot;fup.censor&quot;</span>,
+                               <span class="st">&quot;Fup to Fub&quot;</span>),
+                             <span class="kw">c</span>(poormetab,
+                               fup.censor,
+                               fuptofub),
+                             <span class="dt">sep=</span><span class="st">&quot; = &quot;</span>,
+                             <span class="dt">collapse=</span><span class="st">&quot;, &quot;</span>)))
+  <span class="kw">ggsave</span>(<span class="kw">paste0</span>(<span class="kw">paste</span>(<span class="st">&quot;pdf_figures/howgatejohnson_css_poormetab&quot;</span>,
+               poormetab,
+               <span class="st">&quot;fupcensor&quot;</span>,
+               fup.censor,
+               <span class="st">&quot;FuptoFub&quot;</span>,
+               fuptofub,
+               <span class="dt">sep=</span><span class="st">&quot;_&quot;</span>),
+               <span class="st">&quot;.pdf&quot;</span>),
+         ptmp[[<span class="dv">1</span>]],
+         <span class="dt">width=</span><span class="fl">8.5</span>,
+         <span class="dt">height=</span><span class="fl">5.4</span>)
+}
+
+out.dt[, <span class="kw">plotfun</span>(<span class="dt">ptmp=</span>ptest, 
+                 <span class="dt">poormetab=</span>poormetab, 
+                 <span class="dt">fup.censor=</span>fup.censor, 
+                 <span class="dt">fuptofub=</span>fuptofub), 
+       by=.(poormetab, fup.censor, fuptofub)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stats.dt &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(out.dt[, ov.dt])
+<span class="co">#Also show a table of how many are within 2-fold, 5-fold, 10-fold</span>
+<span class="co">#Compare Css medians:</span>
+stats.dt[src==<span class="st">&quot;Howgate et al. 2006&quot;</span>,
+           css.median.pred.over.lit:<span class="er">=</span>median.css.bw.median/css.bw.median.invivo]
+stats.dt[src==<span class="st">&quot;Johnson et al. 2006&quot;</span>,
+           css.median.pred.over.lit:<span class="er">=</span>median.css.median/css.median.invivo]
+<span class="co">#Compare 95% CI ranges:</span>
+stats.dt[src==<span class="st">&quot;Johnson et al. 2006&quot;</span>,
+           css.95CI.range.pred.over.lit:<span class="er">=</span>(mean.css.95CI.max-mean.css.95CI.min)/(css.95CImax.invivo -<span class="st"> </span>css.95CImin.invivo)]
+stats.dt[src==<span class="st">&quot;Howgate et al. 2006&quot;</span>,
+           css.95CI.range.pred.over.lit:<span class="er">=</span>(mean.css.bw.95CI.max-mean.css.bw.95CI.min)/(css.bw.95CImax.invivo -<span class="st"> </span>css.bw.95CImin.invivo)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cssmed.dt &lt;-<span class="st"> </span>stats.dt[, <span class="kw">list</span>(<span class="kw">sum</span>(css.median.pred.over.lit&lt;=<span class="dv">2</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.median.pred.over.lit&gt;=<span class="fl">0.5</span>),
+                                              <span class="kw">sum</span>(css.median.pred.over.lit&lt;=<span class="dv">5</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.median.pred.over.lit&gt;=<span class="fl">0.2</span>),
+                                              <span class="kw">sum</span>(css.median.pred.over.lit&lt;=<span class="dv">10</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.median.pred.over.lit&gt;=<span class="fl">0.1</span>),
+                                      <span class="kw">length</span>(<span class="kw">unique</span>(Study.id))),
+                   by=.(poormetab, fup.censor, fuptofub, src)]
+<span class="kw">setnames</span>(cssmed.dt, <span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>, <span class="dv">1</span>:<span class="dv">4</span>), <span class="kw">c</span>(<span class="st">&quot;within.2fold&quot;</span>,
+                       <span class="st">&quot;within.5fold&quot;</span>,
+                       <span class="st">&quot;within.10fold&quot;</span>,
+                       <span class="st">&quot;Total&quot;</span>))
+knitr::<span class="kw">kable</span>(cssmed.dt,
+             <span class="dt">format=</span><span class="st">&quot;html&quot;</span>,
+             <span class="dt">col.names=</span><span class="kw">c</span>(<span class="st">&quot;PMs included?&quot;</span>,
+                         <span class="st">&quot;Funbound.plasma censored below avg LOD?&quot;</span>,
+                         <span class="st">&quot;Funbound.plasma converted to Funbound.blood?&quot;</span>,
+               <span class="st">&quot;Data from&quot;</span>,
+                         <span class="st">&quot;Within 2-fold&quot;</span>,
+                         <span class="st">&quot;Within 5-fold&quot;</span>,
+                         <span class="st">&quot;Within 10-fold&quot;</span>,
+                         <span class="st">&quot;Total&quot;</span>),
+             <span class="dt">caption=</span><span class="st">&quot;Css median, predicted vs. literature in vivo, number of studies&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">css95CI.dt &lt;-<span class="st"> </span>stats.dt[, <span class="kw">list</span>(<span class="kw">sum</span>(css.95CI.range.pred.over.lit&lt;=<span class="dv">2</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.95CI.range.pred.over.lit&gt;=<span class="fl">0.5</span>),
+                                              <span class="kw">sum</span>(css.95CI.range.pred.over.lit&lt;=<span class="dv">5</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.95CI.range.pred.over.lit&gt;=<span class="fl">0.2</span>),
+                                              <span class="kw">sum</span>(css.95CI.range.pred.over.lit&lt;=<span class="dv">10</span> &amp;<span class="st"> </span>
+<span class="st">                                                    </span>css.95CI.range.pred.over.lit&gt;=<span class="fl">0.1</span>),
+                                      <span class="kw">length</span>(<span class="kw">unique</span>(Study.id))),
+                   by=.(poormetab, fup.censor, fuptofub, src)]
+<span class="kw">setnames</span>(css95CI.dt, <span class="kw">paste0</span>(<span class="st">&quot;V&quot;</span>, <span class="dv">1</span>:<span class="dv">4</span>), <span class="kw">c</span>(<span class="st">&quot;within.2fold&quot;</span>,
+                       <span class="st">&quot;within.5fold&quot;</span>,
+                       <span class="st">&quot;within.10fold&quot;</span>,
+                       <span class="st">&quot;Total&quot;</span>))
+knitr::<span class="kw">kable</span>(css95CI.dt,
+             <span class="dt">format=</span><span class="st">&quot;html&quot;</span>,
+             <span class="dt">col.names=</span><span class="kw">c</span>(<span class="st">&quot;PMs included?&quot;</span>,
+                         <span class="st">&quot;Funbound.plasma censored below avg LOD?&quot;</span>,
+                         <span class="st">&quot;Funbound.plasma converted to Funbound.blood?&quot;</span>,
+               <span class="st">&quot;Data from&quot;</span>,
+                         <span class="st">&quot;Within 2-fold&quot;</span>,
+                         <span class="st">&quot;Within 5-fold&quot;</span>,
+                         <span class="st">&quot;Within 10-fold&quot;</span>,
+                         <span class="st">&quot;Total&quot;</span>),
+             <span class="dt">caption=</span><span class="st">&quot;Css 95% CI range, predicted vs. literature in vivo, number of studies&quot;</span>)</code></pre></div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
