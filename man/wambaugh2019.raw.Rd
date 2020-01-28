@@ -3,7 +3,7 @@
 \docType{data}
 \name{wambaugh2019.raw}
 \alias{wambaugh2019.raw}
-\title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)}
+\title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)}
 \format{A data frame with 530 rows and 28 variables:
 \describe{
   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
@@ -72,14 +72,14 @@ concentration(uL/min/million hepatocytes)}
 description}
 }}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019.raw
 }
 \description{
 These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-et al. (submitted) They
+et al. (2019) They
 are the output of different Bayesian models evaluated to compare using a
 single protein concentration vs. the new three concentration titration
 protocol. These data summarize the results of Bayesian analysis of the in vitro
@@ -89,8 +89,8 @@ hepatic clearance of the chemical by pooled human hepatocytes.
 This file includes replicates (diferent CompoundName id's but same chemical')
 }
 \references{
-Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization", submitted.
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

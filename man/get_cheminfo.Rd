@@ -4,9 +4,13 @@
 \alias{get_cheminfo}
 \title{Retrieve chemical information from HTTK package}
 \usage{
-get_cheminfo(info = "CAS", species = "Human",
-  fup.lod.default = 0.005, model = "3compartmentss",
-  default.to.human = F)
+get_cheminfo(
+  info = "CAS",
+  species = "Human",
+  fup.lod.default = 0.005,
+  model = "3compartmentss",
+  default.to.human = F
+)
 }
 \arguments{
 \item{info}{A single character vector (or collection of character vectors)

@@ -6,7 +6,7 @@
 \title{ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates}
 \format{A data frame with 385 rows and 38 variables:}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019.seem3
@@ -22,6 +22,9 @@ populaton median intake rate (mg/kg body weight/day), with uncertainty.
 Ring, Caroline L., et al. "Consensus modeling of median chemical 
 intake for the US population based on predictions of exposure pathways." 
 Environmental science & technology 53.2 (2018): 719-732.
+
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

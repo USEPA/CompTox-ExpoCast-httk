@@ -4,9 +4,14 @@
 \alias{export_pbtk_sbml}
 \title{Export model to sbml.}
 \usage{
-export_pbtk_sbml(chem.cas = NULL, chem.name = NULL,
-  species = "Human", initial.amounts = list(Agutlumen = 0),
-  filename = "default.xml", digits = 4)
+export_pbtk_sbml(
+  chem.cas = NULL,
+  chem.name = NULL,
+  species = "Human",
+  initial.amounts = list(Agutlumen = 0),
+  filename = "default.xml",
+  digits = 4
+)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or CAS number must be specified.}

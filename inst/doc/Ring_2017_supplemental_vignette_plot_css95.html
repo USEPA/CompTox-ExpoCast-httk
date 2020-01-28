@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Caroline Ring" />
+
+<meta name="date" content="2018-01-23" />
+
+<title>Ring et al. 2017 Plotting Css95</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Ring et al. 2017 Plotting Css95</h1>
+<h4 class="author"><em>Caroline Ring</em></h4>
+<h4 class="date"><em>2018-01-23</em></h4>
+
+
+
+<p>This vignette contains the code to plot Css95 values vs. independent MC (Supplemental Figures).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'data.table'</span>)
+<span class="kw">library</span>(<span class="st">'ggplot2'</span>)
+<span class="kw">library</span>(<span class="st">'httk'</span>)
+<span class="kw">library</span>(<span class="st">'reshape2'</span>)</code></pre></div>
+<p>First, we set up a function to read in the data files and do some reshaping.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data_read &lt;-<span class="st"> </span>function(model, poormetab, fup.censor, chemlist){
+httk.dat &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
+                      <span class="kw">paste</span>(<span class="st">'allchems'</span>, <span class="st">'indepMC'</span>,
+                            <span class="st">'poormetab'</span>, poormetab,
+                            <span class="st">'fup.censor'</span>, fup.censor,
+                            model, <span class="st">&quot;FuptoFub&quot;</span>, <span class="dt">sep=</span><span class="st">'_'</span>),
+                      <span class="st">'.Rdata'</span>))
+
+httk.LCL &lt;-<span class="st"> </span><span class="kw">melt</span>(httk.dat[, 
+                                       <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                                         <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                              <span class="dt">pattern=</span><span class="st">'LCLcss'</span>, 
+                                              <span class="dt">value=</span><span class="ot">TRUE</span>)), 
+                                       <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                         <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                           <span class="dt">pattern=</span><span class="st">'LCLcss'</span>, 
+                                           <span class="dt">value=</span><span class="ot">TRUE</span>),
+                         <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                         <span class="dt">value.name=</span><span class="st">'LCL'</span>)
+httk.LCL[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                           <span class="dt">pattern=</span><span class="st">'LCLcss'</span>,
+                                           <span class="dt">replacement=</span><span class="st">''</span>))]
+httk.UCL &lt;-<span class="st"> </span><span class="kw">melt</span>(httk.dat[, 
+                          <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                            <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                 <span class="dt">pattern=</span><span class="st">'UCLcss'</span>, 
+                                 <span class="dt">value=</span><span class="ot">TRUE</span>)), 
+                          <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                 <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                   <span class="dt">pattern=</span><span class="st">'UCLcss'</span>, 
+                                   <span class="dt">value=</span><span class="ot">TRUE</span>),
+                 <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                 <span class="dt">value.name=</span><span class="st">'UCL'</span>)
+httk.UCL[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                   <span class="dt">pattern=</span><span class="st">'UCLcss'</span>,
+                                   <span class="dt">replacement=</span><span class="st">''</span>))]
+
+httk.cssval &lt;-<span class="st"> </span><span class="kw">melt</span>(httk.dat[, 
+                                       <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                                         <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                              <span class="dt">pattern=</span><span class="st">'(?&lt;!CL)css</span><span class="ch">\\</span><span class="st">d{1}'</span>, 
+                                              <span class="dt">perl=</span><span class="ot">TRUE</span>, 
+                                              <span class="dt">value=</span><span class="ot">TRUE</span>)), 
+                                       <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                         <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httk.dat), 
+                                           <span class="dt">pattern=</span><span class="st">'(?&lt;!CL)css</span><span class="ch">\\</span><span class="st">d{1}'</span>, 
+                                           <span class="dt">perl=</span><span class="ot">TRUE</span>, 
+                                           <span class="dt">value=</span><span class="ot">TRUE</span>),
+                         <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                         <span class="dt">value.name=</span><span class="st">'css'</span>)
+httk.cssval[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                           <span class="dt">pattern=</span><span class="st">'css'</span>,
+                                           <span class="dt">replacement=</span><span class="st">''</span>))]
+httk.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(httk.cssval, 
+                       httk.LCL, 
+                       <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'chemcas'</span>,
+                            <span class="st">'pctile'</span>))
+httk.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(httk.tmp,
+                  httk.UCL,
+                  <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'chemcas'</span>,
+                       <span class="st">'pctile'</span>))
+httk.tmp[, method:<span class="er">=</span><span class="st">'independentMC'</span>]
+httk.tmp[, ExpoCast.group:<span class="er">=</span><span class="st">'none'</span>]
+
+ExpoCast.groups&lt;-<span class="kw">list</span>(<span class="st">&quot;Total&quot;</span>,
+                      <span class="st">&quot;Age.6.11&quot;</span>,
+                      <span class="st">&quot;Age.12.19&quot;</span>,
+                      <span class="st">&quot;Age.20.65&quot;</span>,
+                      <span class="st">&quot;Age.GT65&quot;</span>,
+                      <span class="st">&quot;BMIgt30&quot;</span>,
+                      <span class="st">&quot;BMIle30&quot;</span>,
+                      <span class="st">&quot;Females&quot;</span>,
+                      <span class="st">&quot;Males&quot;</span>,
+                      <span class="st">&quot;ReproAgeFemale&quot;</span>,
+                      <span class="st">&quot;Age.20.50.nonobese&quot;</span>)
+
+tmpfun &lt;-<span class="st"> </span>function(grp, popmethod, poormetab, fup.censor){
+  tmp.dt &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">'data/'</span>,
+                              <span class="kw">paste</span>(<span class="st">'allchems'</span>, grp, popmethod,
+                                    <span class="st">'poormetab'</span>, poormetab,
+                                    <span class="st">'fup.censor'</span>, fup.censor,
+                                    model, <span class="st">&quot;FuptoFub&quot;</span>, <span class="dt">sep=</span><span class="st">'_'</span>),
+                              <span class="st">'.Rdata'</span>))
+  tmp.dt[, ExpoCast.group:<span class="er">=</span>grp]
+  <span class="kw">return</span>(tmp.dt)
+  
+}
+httkpop.dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(<span class="kw">lapply</span>(ExpoCast.groups, tmpfun, <span class="dt">popmethod=</span><span class="st">'dr'</span>,
+                                <span class="dt">poormetab=</span>poormetab,
+                                <span class="dt">fup.censor=</span>fup.censor))
+
+httkpop.LCL &lt;-<span class="st"> </span><span class="kw">melt</span>(httkpop.dat[, 
+                                    <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                                      <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                           <span class="dt">pattern=</span><span class="st">'LCLcss'</span>, 
+                                           <span class="dt">value=</span><span class="ot">TRUE</span>),
+                                      <span class="st">'ExpoCast.group'</span>), 
+                                    <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                      <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                        <span class="dt">pattern=</span><span class="st">'LCLcss'</span>, 
+                                        <span class="dt">value=</span><span class="ot">TRUE</span>),
+                      <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                      <span class="dt">value.name=</span><span class="st">'LCL'</span>)
+httkpop.LCL[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                        <span class="dt">pattern=</span><span class="st">'LCLcss'</span>,
+                                        <span class="dt">replacement=</span><span class="st">''</span>))]
+
+httkpop.UCL &lt;-<span class="st"> </span><span class="kw">melt</span>(httkpop.dat[, 
+                               <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                                 <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                      <span class="dt">pattern=</span><span class="st">'UCLcss'</span>, 
+                                      <span class="dt">value=</span><span class="ot">TRUE</span>),
+                                 <span class="st">'ExpoCast.group'</span>), 
+                               <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                      <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                        <span class="dt">pattern=</span><span class="st">'UCLcss'</span>, 
+                                        <span class="dt">value=</span><span class="ot">TRUE</span>),
+                      <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                      <span class="dt">value.name=</span><span class="st">'UCL'</span>)
+httkpop.UCL[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                        <span class="dt">pattern=</span><span class="st">'UCLcss'</span>,
+                                        <span class="dt">replacement=</span><span class="st">''</span>))]
+
+httkpop.cssval &lt;-<span class="st"> </span><span class="kw">melt</span>(httkpop.dat[, 
+                                       <span class="kw">c</span>(<span class="st">'chemcas'</span>, 
+                                         <span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                              <span class="dt">pattern=</span><span class="st">'(?&lt;!CL)css</span><span class="ch">\\</span><span class="st">d{1}'</span>, 
+                                              <span class="dt">perl=</span><span class="ot">TRUE</span>, 
+                                              <span class="dt">value=</span><span class="ot">TRUE</span>), 
+                                         <span class="st">'ExpoCast.group'</span>), 
+                                       <span class="dt">with=</span><span class="ot">FALSE</span>], 
+                         <span class="dt">measure.vars=</span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(httkpop.dat), 
+                                           <span class="dt">pattern=</span><span class="st">'(?&lt;!CL)css</span><span class="ch">\\</span><span class="st">d{1}'</span>, 
+                                           <span class="dt">perl=</span><span class="ot">TRUE</span>, 
+                                           <span class="dt">value=</span><span class="ot">TRUE</span>),
+                         <span class="dt">variable.name=</span><span class="st">'pctile'</span>,
+                         <span class="dt">value.name=</span><span class="st">'css'</span>)
+httkpop.cssval[, pctile:<span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">gsub</span>(<span class="dt">x=</span>pctile,
+                                           <span class="dt">pattern=</span><span class="st">'css'</span>,
+                                           <span class="dt">replacement=</span><span class="st">''</span>))]
+httkpop.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(httkpop.cssval, 
+                       httkpop.LCL, 
+                       <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'chemcas'</span>,
+                            <span class="st">'ExpoCast.group'</span>,
+                            <span class="st">'pctile'</span>))
+httkpop.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(httkpop.tmp,
+                       httkpop.UCL,
+                       <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'chemcas'</span>,
+                            <span class="st">'ExpoCast.group'</span>,
+                            <span class="st">'pctile'</span>))
+httkpop.tmp[, method:<span class="er">=</span><span class="st">'dr'</span>]
+
+m.dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(<span class="kw">list</span>(httkpop.tmp,  
+               httk.tmp), 
+               <span class="dt">use.names=</span><span class="ot">TRUE</span>)
+m.dat &lt;-<span class="st"> </span><span class="kw">merge</span>(m.dat, chemlist, <span class="dt">by=</span><span class="st">'chemcas'</span>) <span class="co">#Add compound name and MW columns</span>
+m.dat[, poormetab:<span class="er">=</span>poormetab]
+m.dat[, fup.censor:<span class="er">=</span>fup.censor]
+
+paramfun &lt;-<span class="st"> </span>switch(model,
+                   <span class="st">'3compartmentss'</span>=<span class="st">'parameterize_steadystate'</span>,
+                   <span class="st">'3compartment'</span>=<span class="st">'parameterize_3comp'</span>,
+                   <span class="st">'pbtk'</span>=<span class="st">'parameterize_pbtk'</span>,
+                   <span class="st">'1compartment'</span>=<span class="st">'parameterize_1comp'</span>)
+paramfunargs &lt;-<span class="st"> '(chem.cas=chemcas, species=&quot;Human&quot;, default.to.human=TRUE)'</span>
+if (model!=<span class="st">'1compartment'</span>){
+p.dt &lt;-<span class="st"> </span>chemlist[, <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">paste</span>(paramfun,
+                                           paramfunargs))),
+                   by=chemcas]
+}
+
+
+if (model==<span class="st">'1compartment'</span>){ <span class="co">#get metabolism by doing steady-state parameterization</span>
+  p.dt &lt;-<span class="st"> </span>chemlist[, <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">paste</span>(<span class="st">'parameterize_steadystate'</span>,
+                                            paramfunargs))),
+                    by=chemcas]
+}
+
+metabname &lt;-<span class="st"> </span>switch(model, 
+                    <span class="st">'3compartmentss'</span>=<span class="st">'Clint'</span>,
+                    <span class="st">'3compartment'</span>=<span class="st">'Clmetabolismc'</span>,
+                    <span class="st">'pbtk'</span>=<span class="st">'Clmetabolismc'</span>,
+                    <span class="st">'1compartment'</span>=<span class="st">'Clint'</span>)
+
+m.dat&lt;-<span class="kw">merge</span>(m.dat,
+      p.dt[, <span class="kw">c</span>(<span class="st">'chemcas'</span>,
+               metabname,
+               <span class="st">'Funbound.plasma'</span>),
+           <span class="dt">with=</span><span class="ot">FALSE</span>],
+      <span class="dt">by=</span><span class="st">'chemcas'</span>)
+
+<span class="kw">setnames</span>(m.dat,
+         <span class="kw">c</span>(metabname,
+                  <span class="st">'Funbound.plasma'</span>),
+         <span class="kw">c</span>(<span class="st">'metab'</span>,
+           <span class="st">'fup'</span>))
+
+
+m.dat[, fup.lod:<span class="er">=</span><span class="kw">factor</span>(<span class="kw">ifelse</span>(fup&lt;=<span class="fl">0.01</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                        <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                        <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'below LOD'</span>,
+                                 <span class="st">'above LOD'</span>))]
+m.dat[, metab.zero:<span class="er">=</span><span class="kw">factor</span>(<span class="kw">ifelse</span>(metab==<span class="dv">0</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                           <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                           <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'zero'</span>,
+                                    <span class="st">'nonzero'</span>))]
+
+<span class="kw">return</span>(m.dat)
+}</code></pre></div>
+<p>Then we read in the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> '3compartmentss'</span>
+css.method &lt;-<span class="st"> 'analytic'</span>
+use.seed &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+pmlist &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)
+fclist &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)
+pmfc &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">poormetab=</span>pmlist,<span class="dt">fup.censor=</span>fclist)
+chemlist &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="kw">c</span>(<span class="st">'CAS'</span>, <span class="st">'Compound'</span>, <span class="st">'MW'</span>),
+                                         <span class="dt">species=</span><span class="st">'Human'</span>,
+                                         <span class="dt">model=</span>model,
+                                         <span class="dt">exclude.fub.zero=</span><span class="ot">FALSE</span>))
+  <span class="kw">setnames</span>(chemlist, <span class="st">'CAS'</span>, <span class="st">'chemcas'</span>)
+  
+  data.read.list &lt;-<span class="st"> </span><span class="kw">mapply</span>(data_read,
+                           <span class="dt">fup.censor=</span>pmfc$fup.censor,
+                           <span class="dt">poormetab=</span>pmfc$poormetab,
+                           <span class="dt">MoreArgs=</span><span class="kw">list</span>(<span class="dt">model=</span><span class="st">'3compartmentss'</span>,
+                                         <span class="dt">chemlist=</span>chemlist),
+                           <span class="dt">SIMPLIFY=</span><span class="ot">FALSE</span>)
+  m.dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(data.read.list)</code></pre></div>
+<p>We then need to cast m.dat so we can compare the Css percentiles directly.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">methodvect &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'dr'</span>, <span class="st">'independentMC'</span>)
+pctilevect &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">50</span>, <span class="dv">95</span>)
+<span class="co">#First: cast the data table into appropriate form</span>
+tmp.css&lt;-<span class="kw">dcast.data.table</span>(m.dat[method %in%<span class="st"> </span>methodvect &amp;
+<span class="st">                                  </span>pctile %in%<span class="st"> </span>pctilevect], 
+                          Compound+chemcas+ExpoCast.group+pctile+fup.lod+
+<span class="st">                            </span>metab.zero+fup.censor+poormetab+metab+fup~method, 
+                          <span class="dt">value.var=</span><span class="kw">c</span>(<span class="st">'css'</span>))
+<span class="kw">setnames</span>(tmp.css, methodvect,
+        <span class="kw">paste</span>(methodvect,
+              <span class="st">'css'</span>,
+              <span class="dt">sep=</span><span class="st">'.'</span>))
+tmp.LCL &lt;-<span class="st"> </span><span class="kw">dcast.data.table</span>(m.dat[method %in%<span class="st"> </span>methodvect &amp;
+<span class="st">                                    </span>pctile %in%<span class="st"> </span>pctilevect], 
+                            Compound+chemcas+ExpoCast.group+pctile+
+<span class="st">                              </span>fup.lod+metab.zero+fup.censor+poormetab+metab+fup~method, 
+                            <span class="dt">value.var=</span><span class="kw">c</span>(<span class="st">'LCL'</span>))
+<span class="kw">setnames</span>(tmp.LCL, methodvect,
+         <span class="kw">paste</span>(methodvect,
+               <span class="st">'LCL'</span>,
+               <span class="dt">sep=</span><span class="st">'.'</span>))
+tmp.UCL &lt;-<span class="st"> </span><span class="kw">dcast.data.table</span>(m.dat[method %in%<span class="st"> </span>methodvect &amp;
+<span class="st">                                    </span>pctile %in%<span class="st"> </span>pctilevect], 
+                            Compound+chemcas+ExpoCast.group+pctile+
+<span class="st">                              </span>fup.lod+metab.zero+fup.censor+poormetab+metab+fup~method, 
+                            <span class="dt">value.var=</span><span class="kw">c</span>(<span class="st">'UCL'</span>))
+<span class="kw">setnames</span>(tmp.UCL, methodvect,
+         <span class="kw">paste</span>(methodvect,
+               <span class="st">'UCL'</span>,
+               <span class="dt">sep=</span><span class="st">'.'</span>))
+tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(tmp.css,
+             tmp.LCL,
+             <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'Compound'</span>,
+                  <span class="st">'chemcas'</span>,
+                  <span class="st">'ExpoCast.group'</span>,
+                  <span class="st">'pctile'</span>,
+                  <span class="st">'fup.lod'</span>,
+                  <span class="st">'metab.zero'</span>,
+                  <span class="st">'poormetab'</span>,
+                  <span class="st">'fup.censor'</span>,
+                  <span class="st">'metab'</span>,
+                  <span class="st">'fup'</span>))
+tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(tmp,
+             tmp.UCL,
+             <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'Compound'</span>,
+                  <span class="st">'chemcas'</span>,
+                  <span class="st">'ExpoCast.group'</span>,
+                  <span class="st">'pctile'</span>,
+                  <span class="st">'fup.lod'</span>,
+                  <span class="st">'metab.zero'</span>,
+                  <span class="st">'poormetab'</span>,
+                  <span class="st">'fup.censor'</span>,
+                  <span class="st">'metab'</span>,
+                  <span class="st">'fup'</span>))</code></pre></div>
+<p>And we need to handle the independent MC values properly.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> xonlynames&lt;-<span class="kw">c</span>(<span class="st">'dr.css'</span>,
+                                                           <span class="st">'dr.UCL'</span>,
+                                                           <span class="st">'dr.LCL'</span>)
+                                              yonlynames&lt;-<span class="kw">c</span>(<span class="st">'independentMC.css'</span>,
+                                                           <span class="st">'independentMC.LCL'</span>,
+                                                           <span class="st">'independentMC.UCL'</span>)
+<span class="co">#Handle the independent MC numbers properly</span>
+tmp.httk &lt;-<span class="st"> </span>tmp[ExpoCast.group==<span class="st">'none'</span>,]
+tmp[, (yonlynames):<span class="er">=</span><span class="ot">NULL</span>, with=<span class="ot">FALSE</span>]
+tmp.httkpop &lt;-<span class="st"> </span>tmp[ExpoCast.group!=<span class="st">'none'</span>,]
+tmp.httk[, (xonlynames):<span class="er">=</span><span class="ot">NULL</span>, with=<span class="ot">FALSE</span>]
+tmp.httk[, ExpoCast.group:<span class="er">=</span><span class="ot">NULL</span>]
+tmp.merge &lt;-<span class="st"> </span><span class="kw">merge</span>(tmp.httkpop, 
+                   tmp.httk, 
+                   <span class="dt">by=</span><span class="kw">c</span>(<span class="st">'Compound'</span>,
+                        <span class="st">'chemcas'</span>, 
+                        <span class="st">'pctile'</span>,
+                        <span class="st">'fup.lod'</span>, 
+                        <span class="st">'metab.zero'</span>,
+                        <span class="st">'poormetab'</span>,
+                        <span class="st">'fup.censor'</span>,
+                        <span class="st">'metab'</span>,
+                        <span class="st">'fup'</span>))
+tmp &lt;-<span class="st"> </span><span class="kw">copy</span>(tmp.merge)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ExpoCast.groups&lt;-<span class="kw">list</span>(<span class="st">&quot;Total&quot;</span>,
+                      <span class="st">&quot;Age.6.11&quot;</span>,
+                      <span class="st">&quot;Age.12.19&quot;</span>,
+                      <span class="st">&quot;Age.20.65&quot;</span>,
+                      <span class="st">&quot;Age.GT65&quot;</span>,
+                      <span class="st">&quot;BMIgt30&quot;</span>,
+                      <span class="st">&quot;BMIle30&quot;</span>,
+                      <span class="st">&quot;Females&quot;</span>,
+                      <span class="st">&quot;Males&quot;</span>,
+                      <span class="st">&quot;ReproAgeFemale&quot;</span>,
+                      <span class="st">&quot;Age.20.50.nonobese&quot;</span>)
+ tmp[, poormetab:<span class="er">=</span><span class="kw">factor</span>(poormetab,
+                          <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                          <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'included'</span>, <span class="st">'excluded'</span>))]
+  <span class="kw">setnames</span>(tmp, <span class="st">'fup.censor'</span>, <span class="st">'Fub'</span>) <span class="co">#rename this column for better labeling</span>
+  tmp[, Fub:<span class="er">=</span><span class="kw">factor</span>(Fub,
+                    <span class="dt">levels=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
+                    <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">'&lt;lod censored'</span>, <span class="st">'&lt;lod=lod/2'</span>))]
+  tmp[, metab.zero:<span class="er">=</span><span class="kw">factor</span>(metab.zero, <span class="dt">levels=</span><span class="kw">c</span>(<span class="st">'nonzero'</span>, <span class="st">'zero'</span>))]
+  tmp[, fup.lod:<span class="er">=</span><span class="kw">factor</span>(fup.lod)]
+  tmp[, metab.zero.fup.lod:<span class="er">=</span><span class="kw">factor</span>(<span class="kw">paste</span>(<span class="st">'CLint'</span>,
+                                         <span class="kw">paste0</span>(metab.zero, <span class="st">','</span>),
+                                         <span class="st">'Fub'</span>,
+                                         fup.lod))]
+  tmp[, ExpoCast.group:<span class="er">=</span><span class="kw">factor</span>(ExpoCast.group, 
+                           <span class="dt">levels=</span>ExpoCast.groups)]</code></pre></div>
+<p>Now, do the plotting by subsets of demographic groups.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> subset.list &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">age=</span><span class="kw">c</span>(<span class="st">'Total'</span>, 
+                            <span class="st">'Age.6.11'</span>, 
+                            <span class="st">'Age.12.19'</span>,
+                            <span class="st">'Age.20.65'</span>,
+                            <span class="st">'Age.GT65'</span>),
+                      <span class="dt">bmi=</span><span class="kw">c</span>(<span class="st">'Total'</span>, 
+                            <span class="st">'BMIle30'</span>,
+                            <span class="st">'BMIgt30'</span>),
+                      <span class="dt">sex=</span><span class="kw">c</span>(<span class="st">'Total'</span>, 
+                            <span class="st">'Males'</span>,
+                            <span class="st">'Females'</span>,
+                            <span class="st">'ReproAgeFemale'</span>))
+
+axis.text.size &lt;-<span class="st"> </span><span class="fl">1.2</span>
+axis.title.size &lt;-<span class="st"> </span><span class="fl">1.2</span>
+legend.text.size &lt;-<span class="st"> </span><span class="fl">1.2</span>
+point.size &lt;-<span class="st"> </span><span class="fl">1.5</span>
+legend.title.size &lt;-<span class="st"> </span><span class="fl">1.2</span>
+strip.text.size &lt;-<span class="st"> </span><span class="fl">1.2</span>
+for (pct in <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">50</span>,<span class="dv">95</span>)){
+    for (i in <span class="kw">seq_along</span>(subset.list)){
+       
+       p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>tmp[pctile==pct &amp;<span class="st"> </span>
+<span class="st">                                      </span>ExpoCast.group %in%<span class="st"> </span>subset.list[[i]],]) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>independentMC.css,
+                 <span class="dt">y=</span>dr.css,
+                 <span class="dt">color=</span>ExpoCast.group),
+             <span class="dt">alpha=</span><span class="fl">0.3</span>,
+             <span class="dt">size=</span>point.size) +
+<span class="st">  </span><span class="kw">scale_x_log10</span>() +
+<span class="st">  </span><span class="kw">scale_y_log10</span>() +
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>,<span class="dt">intercept=</span><span class="dv">0</span>)+
+<span class="st">  </span><span class="kw">facet_grid</span>(poormetab~Fub, <span class="dt">labeller=</span><span class="kw">labeller</span>(<span class="dt">poormetab=</span>function(x) <span class="kw">paste</span>(<span class="st">&quot;CLint: PMs&quot;</span>, x), <span class="dt">Fub=</span>label_both)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">type=</span><span class="st">'qual'</span>, <span class="dt">palette=</span><span class="dv">2</span>) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="kw">bquote</span>(<span class="kw">paste</span>(C[ss]^.(pct), <span class="st">'(uM) using independent MC'</span>)), 
+       <span class="dt">y=</span><span class="kw">bquote</span>(<span class="kw">paste</span>(C[ss]^.(pct), <span class="st">'(uM) using HTTK-Pop'</span>)),
+       <span class="dt">color=</span><span class="st">'Demographic'</span>) +
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">override.aes=</span><span class="kw">list</span>(<span class="dt">size=</span><span class="dv">4</span>,<span class="dt">alpha=</span><span class="dv">1</span>)))+
+<span class="st">  </span><span class="kw">theme_bw</span>() +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.background=</span><span class="kw">element_blank</span>(),
+        <span class="dt">legend.key=</span><span class="kw">element_blank</span>(),
+        <span class="dt">legend.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(legend.title.size)),
+        <span class="dt">axis.text.x=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(axis.text.size)),
+        <span class="dt">axis.text.y=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(axis.text.size)),
+        <span class="dt">axis.title.x=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(axis.title.size)),
+        <span class="dt">axis.title.y=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(axis.title.size)),
+        <span class="dt">legend.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(legend.text.size)),
+        <span class="dt">strip.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(strip.text.size)))
+      
+  <span class="kw">ggsave</span>(<span class="dt">plot=</span>p,
+         <span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">'pdf_figures/'</span>,
+                                        <span class="st">'cssplot_'</span>,
+                                        <span class="kw">names</span>(subset.list)[i],
+                                        <span class="st">'_drvsindep_'</span>,
+                                        model,
+                                        <span class="st">'_'</span>,
+                                        pct,
+                         <span class="st">&quot;FuptoFub&quot;</span>,
+                                        <span class="st">'.pdf'</span>),
+         <span class="dt">width=</span><span class="dv">11</span>,
+         <span class="dt">height=</span><span class="fl">8.5</span>)
+  <span class="kw">print</span>(p)
+    }
+  }</code></pre></div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

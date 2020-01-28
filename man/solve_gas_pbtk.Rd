@@ -4,19 +4,47 @@
 \alias{solve_gas_pbtk}
 \title{solve_gas_pbtk}
 \usage{
-solve_gas_pbtk(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  times = NULL, parameters = NULL, days = 10, tsteps = 4,
-  daily.dose = NULL, doses.per.day = NULL, dose = NULL,
-  dosing.matrix = NULL, forcings = NULL, exp.conc = 1, period = 24,
-  exp.duration = 12, fcontrol = list(method = "constant", rule = 2, f =
-  0), initial.values = NULL, plots = F, suppress.messages = F,
-  species = "Human", output.units = "uM", method = "lsoda",
-  rtol = 1e-08, atol = 1e-12, default.to.human = F,
-  recalc.blood2plasma = F, recalc.clearance = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, vmax = 0, km = 1, exercise = F, fR = 12,
-  VT = 0.75, VD = 0.15, ...)
+solve_gas_pbtk(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  times = NULL,
+  parameters = NULL,
+  days = 10,
+  tsteps = 4,
+  daily.dose = NULL,
+  doses.per.day = NULL,
+  dose = NULL,
+  dosing.matrix = NULL,
+  forcings = NULL,
+  exp.conc = 1,
+  period = 24,
+  exp.duration = 12,
+  fcontrol = list(method = "constant", rule = 2, f = 0),
+  initial.values = NULL,
+  plots = F,
+  suppress.messages = F,
+  species = "Human",
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  default.to.human = F,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL,
+  vmax = 0,
+  km = 1,
+  exercise = F,
+  fR = 12,
+  VT = 0.75,
+  VD = 0.15,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -118,7 +146,7 @@ documentation as template
 \details{
 This function solves for the amounts or concentrations in uM of a chemical
 in different tissues as functions of time based on the dose and dosing
-frequency.
+frequency. 
 
 Note that the model parameters have units of hours while the model output is
 in days.
