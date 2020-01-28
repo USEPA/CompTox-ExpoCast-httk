@@ -5,8 +5,7 @@
 \title{Returns draws from a normal distribution with a lower censoring limit of lod
 (limit of detection)}
 \usage{
-r_left_censored_norm(n, mean = 0, sd = 1, lod = 0.005, lower = 0,
-  upper = 1)
+r_left_censored_norm(n, mean = 0, sd = 1, lod = 0.005, lower = 0, upper = 1)
 }
 \arguments{
 \item{n}{Number of samples to take}
