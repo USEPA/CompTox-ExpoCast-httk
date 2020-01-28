@@ -281,7 +281,7 @@ create_mc_samples <- function(chem.cas=NULL,
     if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-     this.tissuedata <- subset(httk::tissue.data, tolower(species)==tolower(species))
+     this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
      these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
      these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
      for (this.name in these.vols$Name)
