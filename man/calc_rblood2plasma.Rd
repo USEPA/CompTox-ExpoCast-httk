@@ -5,10 +5,19 @@
 \title{Calculate the constant ratio of the blood concentration to the plasma
 concentration.}
 \usage{
-calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  parameters = NULL, hematocrit = NULL, Krbc2pu = NULL,
-  Funbound.plasma = NULL, default.to.human = F, species = "Human",
-  adjusted.Funbound.plasma = T, suppress.messages = T)
+calc_rblood2plasma(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  hematocrit = NULL,
+  Krbc2pu = NULL,
+  Funbound.plasma = NULL,
+  default.to.human = F,
+  species = "Human",
+  adjusted.Funbound.plasma = T,
+  suppress.messages = T
+)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be

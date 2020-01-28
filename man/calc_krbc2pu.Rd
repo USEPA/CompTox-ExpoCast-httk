@@ -4,8 +4,14 @@
 \alias{calc_krbc2pu}
 \title{Back-calculates the Red Blood Cell to Unbound Plasma Partition Coefficient}
 \usage{
-calc_krbc2pu(Rb2p, Funbound.plasma, hematocrit = NULL,
-  default.to.human = F, species = "Human", suppress.messages = T)
+calc_krbc2pu(
+  Rb2p,
+  Funbound.plasma,
+  hematocrit = NULL,
+  default.to.human = F,
+  species = "Human",
+  suppress.messages = T
+)
 }
 \arguments{
 \item{hematocrit}{Overwrites default hematocrit value in calculating

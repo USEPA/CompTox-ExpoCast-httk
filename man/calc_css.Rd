@@ -4,12 +4,29 @@
 \alias{calc_css}
 \title{Find the steady state concentration and the day it is reached.}
 \usage{
-calc_css(parameters = NULL, chem.name = NULL, chem.cas = NULL,
-  species = "Human", f = 0.01, daily.dose = 1, doses.per.day = 3,
-  days = 21, output.units = "uM", concentration = "plasma",
-  suppress.messages = F, model = "pbtk", default.to.human = F,
-  f.change = 1e-05, adjusted.Funbound.plasma = T, regression = T,
-  well.stirred.correction = T, restrictive.clearance = T, ...)
+calc_css(
+  parameters = NULL,
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  f = 0.01,
+  daily.dose = 1,
+  doses.per.day = 3,
+  days = 21,
+  output.units = "uM",
+  suppress.messages = F,
+  tissue = "plasma",
+  model = "pbtk",
+  default.to.human = F,
+  f.change = 1e-05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  well.stirred.correction = T,
+  restrictive.clearance = T,
+  dosing = NULL,
+  ...
+)
 }
 \arguments{
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
@@ -36,9 +53,6 @@ each iteration.}
 
 \item{output.units}{Units for returned concentrations, defaults to uM
 (specify units = "uM") but can also be mg/L.}
-
-\item{concentration}{Desired concentration type, 'blood' or default
-'plasma'.}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
 
@@ -68,6 +82,9 @@ instead of plasma, but converted to use with plasma concentration.}
 
 \item{...}{Additional arguments passed to model solver (default of
 solve_pbtk).}
+
+\item{concentration}{Desired concentration type, 'blood' or default
+'plasma'.}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state
