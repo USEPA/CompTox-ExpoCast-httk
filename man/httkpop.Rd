@@ -23,7 +23,7 @@ To generate a population and then run an
   \item Generate a population using \code{\link{httkpop_generate}}. \item For
   a given HTTK chemical and general model, convert the population data to 
   corresponding sets of HTTK model parameters using 
-  \code{\link{get_httk_params}}.}
+  \code{\link{httkpop_mc}}.}
 }
 
 \references{

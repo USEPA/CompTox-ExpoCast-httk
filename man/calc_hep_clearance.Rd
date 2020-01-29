@@ -4,11 +4,20 @@
 \alias{calc_hep_clearance}
 \title{Calculate the hepatic clearance.}
 \usage{
-calc_hep_clearance(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  parameters = NULL, species = "Human", default.to.human = F,
-  hepatic.model = "well-stirred", suppress.messages = F,
-  well.stirred.correction = T, restrictive.clearance = T,
-  adjusted.Funbound.plasma = T, ...)
+calc_hep_clearance(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  default.to.human = F,
+  hepatic.model = "well-stirred",
+  suppress.messages = F,
+  well.stirred.correction = T,
+  restrictive.clearance = T,
+  adjusted.Funbound.plasma = T,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

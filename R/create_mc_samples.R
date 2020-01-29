@@ -76,8 +76,8 @@
 #' convert_httkpop_* function for the model.
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #' \code{\link{calc_analytic_css}}.
-#' @param draw_invitro.arg.list Additional parameters passed to 
-#' \code{\link{draw_invitro}}.
+#' @param invitro.mc.arg.list Additional parameters passed to 
+#' \code{\link{invitro_mc}}.
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
