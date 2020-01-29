@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 library(httk)
 options(warn=-1)
 
