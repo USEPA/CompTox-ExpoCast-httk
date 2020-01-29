@@ -5,21 +5,21 @@
 #'concentrations as a result of infusion dosing.
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
-#'be specified.
+#' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
-#'be specified.
+#' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
-#''pbtk'), parameterize_3comp (for model = '3compartment), 
-#'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
-#'(for model = '3compartmentss'), overrides chem.name and chem.cas.
+#' 'pbtk'), parameterize_3comp (for model = '3compartment), 
+#' parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#' (for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
 #'@param concentration Desired concentration type, 'blood' or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
-#'in the blood to plasma using the input parameters. Use this if you have 
-#''altered hematocrit, Funbound.plasma, or Krbc2pu.
-#'
-#'
+#' in the blood to plasma using the input parameters. Use this if you have 
+#' 'altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
@@ -29,7 +29,6 @@
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
