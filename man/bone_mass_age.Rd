@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{bone_mass_age}
 \alias{bone_mass_age}
-\title{Predict bone mass.}
+\title{Predict bone mass}
 \usage{
 bone_mass_age(age_years, age_months, height, weight, gender)
 }

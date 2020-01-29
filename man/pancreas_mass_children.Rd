@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{pancreas_mass_children}
 \alias{pancreas_mass_children}
-\title{Predict pancreas mass for children.}
+\title{Predict pancreas mass for children}
 \usage{
 pancreas_mass_children(height, weight, gender)
 }

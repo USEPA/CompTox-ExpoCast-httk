@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{skeletal_muscle_mass_children}
 \alias{skeletal_muscle_mass_children}
-\title{Predict skeletal muscle mass for children.}
+\title{Predict skeletal muscle mass for children}
 \usage{
 skeletal_muscle_mass_children(gender, age_years)
 }

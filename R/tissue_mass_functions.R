@@ -128,7 +128,7 @@ body_surface_area <- function(BW, H, age_years) {
 }
 
 
-#' Predict bone mass.
+#' Predict bone mass
 #' 
 #' Predict bone mass from age_years, height, weight, gender, using logistic
 #' equations fit to data from Baxter-Jones et al. 2011, or for infants < 1
@@ -250,7 +250,7 @@ brain_mass <- function(gender, age_years){
 }
 
 
-#' Predict kidney mass for children.
+#' Predict kidney mass for children
 #' 
 #' For individuals under age 18, predict kidney mass from weight, height, and
 #' gender. using equations from Ogiu et al. 1997
@@ -296,7 +296,7 @@ kidney_mass_children <- function(weight, height, gender){
 }
 
 
-#' Predict liver mass for children.
+#' Predict liver mass for children
 #' 
 #' For individuals under 18, predict the liver mass from height, weight, and
 #' gender, using equations from Ogiu et al. 1997
@@ -335,11 +335,10 @@ liver_mass_children <- function(height, weight, gender){
 }
 
 
-#' Predict lung mass for children.
+#' Predict lung mass for children
 #' 
 #' For individuals under 18, predict the liver mass from height, weight, and
 #' gender, using equations from Ogiu et al. 1997
-#' 
 #' 
 #' @param height Vector of heights in cm.
 #' @param weight Vector of weights in kg.
@@ -349,6 +348,10 @@ liver_mass_children <- function(height, weight, gender){
 #' @references 
 #' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
 #' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
+#'
+#' Price, Paul S., et al. "Modeling interindividual variation in physiological 
+#' factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
+#' (2003): 469-503.
 #'
 #' Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
@@ -382,7 +385,7 @@ lung_mass_children <- function(height, weight, gender){
 }
 
 
-#' Predict pancreas mass for children.
+#' Predict pancreas mass for children
 #' 
 #' For individuals under 18, predict the pancreas mass from height, weight, and
 #' gender, using equations from Ogiu et al.
@@ -423,13 +426,85 @@ pancreas_mass_children <- function(height, weight, gender){
 }
 
 
-#' Predict skeletal muscle mass for children.
+#' Predict skin mass
+#' 
+#' Using equation from Bosgra et al. 2012, predict skin mass from body surface
+#' area.
+#' 
+#' @param BSA Vector of body surface areas in cm^2.
+#'
+#' @return Vector of skin masses in kg.
+#'
+#' @references Bosgra, Sieto, et al. "An improved model to predict 
+#' physiologically based model parameters and their inter-individual variability 
+#' from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
+#'
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#'
+#' @author Caroline Ring
+#'
+#' @keywords httk-pop
+#'
+#' @export skin_mass_bosgra
+skin_mass_bosgra <- function(BSA){
+  wskin <- exp(1.64*(BSA/100^2)-1.93)
+  return(wskin)
+}
+
+
+#' Predict spleen mass for children
+#' 
+#' For individuals under 18, predict the spleen mass from height, weight, and
+#' gender, using equations from Ogiu et al. (1997)
+#' 
+#' @param height Vector of heights in cm.
+#' @param weight Vector of weights in kg.
+#' @param gender Vector of genders (either 'Male' or 'Female').
+#'
+#' @references
+#' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
+#' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
+#'
+#' Price, Paul S., et al. "Modeling interindividual variation in physiological 
+#' factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
+#' (2003): 469-503.
+#'
+#' Ring, Caroline L., et al. "Identifying populations sensitive to
+#' environmental chemicals by simulating toxicokinetic variability."
+#' Environment International 106 (2017): 105-118
+#'
+#' @author Caroline Ring
+#'
+#' @keywords httk-pop
+#'
+#' @return A vector of spleen masses in kg.
+spleen_mass_children <- function(height, weight, gender){
+  
+  #equations from Ogiu et al. 1997
+  #see also Price et al. 2003 (P3M paper)
+  sm <- rep(NA, length(gender))
+  sm[gender=='Male'] <- (8.75*height[gender=='Male']/100*
+                           sqrt(weight[gender=='Male']) +
+                           11.06)/1000
+  
+  sm[gender=='Female'] <- (9.36*height[gender=='Female']/100*
+                             sqrt(weight[gender=='Female']) +
+                             7.98)/1000
+  
+  return(sm)
+}
+
+
+#' Predict skeletal muscle mass for children
 #' 
 #' For individuals under age 18, predict skeletal muscle mass from gender and
 #' age, using a nonlinear equation from Webber and Barr (2012)
 #' 
 #' @param gender Vector of genders (either 'Male' or 'Female').
 #' @param age_years Vector of ages in years.
+#' 
 #' @return Vector of skeletal muscle masses in kg.
 #'
 #' @references
@@ -448,7 +523,6 @@ pancreas_mass_children <- function(height, weight, gender){
 #' @export skeletal_muscle_mass_children
 skeletal_muscle_mass_children <- function(gender, age_years){
   #Equation from Webber and Barr (2012)
-  
   if (gender=='Male'){
     C1<-12.4
     C2<-11.0
@@ -469,8 +543,7 @@ skeletal_muscle_mass_children <- function(gender, age_years){
   return(smm)
 }
 
-
-#' Predict skeletal muscle mass.
+#' Predict skeletal muscle mass
 #' 
 #' Predict skeletal muscle mass from age, height, and gender.
 #' 
@@ -487,8 +560,8 @@ skeletal_muscle_mass_children <- function(gender, age_years){
 #' @seealso \code{\link{skeletal_muscle_mass_children}}
 #'
 #' @references
-#' Janssen, Ian, et al. "Skeletal muscle mass and distribution in 468 men and 
-#' women aged 18–88 yr." Journal of applied physiology 89.1 (2000): 81-88.
+#' Janssen, Ian, et al. "Skeletal muscle mass and distribution in 468 men and
+#' women aged 18-88 yer." Journal of Applied Physiology 89.1 (2000): 81-88
 #'
 #' Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
@@ -499,7 +572,7 @@ skeletal_muscle_mass_children <- function(gender, age_years){
 #' @keywords httk-pop
 #'
 #' @export skeletal_muscle_mass
-skeletal_muscle_mass <- function(smm, age_years, height, gender){  
+skeletal_muscle_mass <- function(smm, age_years, height, gender){
   #Age-related decrease in skeletal muscle mass
   #Janssen et al. 2000 (see Figure 2)
   smm[gender=='Male' &
@@ -526,72 +599,4 @@ skeletal_muscle_mass <- function(smm, age_years, height, gender){
 }
 
 
-#' Predict skin mass.
-#' 
-#' Using equation from Bosgra et al. 2012, predict skin mass from body surface
-#' area.
-#' 
-#' 
-#' @param BSA Vector of body surface areas in cm^2.
-#'
-#' @return Vector of skin masses in kg.
-#'
-#'
-#' @references Bosgra, Sieto, et al. "An improved model to predict 
-#' physiologically based model parameters and their inter-individual variability 
-#' from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
-#'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#'
-#' @author Caroline Ring
-#'
-#' @keywords httk-pop
-#'
-#' @export skin_mass_bosgra
-skin_mass_bosgra <- function(BSA){
-  wskin <- exp(1.64*(BSA/100^2)-1.93)
-  return(wskin)
-}
 
-
-
-#' Predict spleen mass for children.
-#' 
-#' For individuals under 18, predict the spleen mass from height, weight, and
-#' gender, using equations from Ogiu et al.
-#' 
-#' 
-#' @param height Vector of heights in cm.
-#' @param weight Vector of weights in kg.
-#' @param gender Vector of genders (either 'Male' or 'Female').
-#'
-#' @references
-#' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
-#' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
-#'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#'
-#' @author Caroline Ring
-#'
-#' @keywords httk-pop
-#'
-#' @return A vector of spleen masses in kg.
-spleen_mass_children <- function(height, weight, gender){
-  
-  #equations from Ogiu et al. 1997
-  #see also Price et al. 2003 (P3M paper)
-  sm <- rep(NA, length(gender))
-  sm[gender=='Male'] <- (8.75*height[gender=='Male']/100*
-                           sqrt(weight[gender=='Male']) +
-                           11.06)/1000
-  
-  sm[gender=='Female'] <- (9.36*height[gender=='Female']/100*
-                             sqrt(weight[gender=='Female']) +
-                             7.98)/1000
-  
-  return(sm)
-}
