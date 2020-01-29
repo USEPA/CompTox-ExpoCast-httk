@@ -12,13 +12,14 @@
 #' specified. 
 #' @param chem.cas Either the chemical name, CAS number, or parameters must be
 #' specified. 
-#' @param f Fractional distance from the final steady state concentration that
-#' the average concentration must come within to be considered at steady state.
-#' 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param f Fractional distance from the final steady state concentration that
+#' the average concentration must come within to be considered at steady state.
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
 #' @param days Initial number of days to run simulation that is multiplied on
@@ -26,8 +27,10 @@
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
 #' @param concentration Desired concentration type, 'blood' or default
-#' 'plasma'.
+#' 'plasma'. %%%%
 #' @param suppress.messages Whether or not to suppress messages.
+#' @param tissue Desired tissue conentration (defaults to whole body 
+#' concentration.)
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
@@ -107,10 +110,10 @@
 #' }
 #' 
 #' @export calc_css
-calc_css <- function(parameters=NULL,
-                    chem.name=NULL,
+calc_css <- function(chem.name=NULL,
                     chem.cas=NULL, 
                     dtxsid=NULL,
+                    parameters=NULL,
                     species='Human',
                     f = .01,
                     daily.dose=1,
