@@ -4,14 +4,8 @@
 \alias{calc_hep_fu}
 \title{Calculate the free chemical in the hepaitic clearance assay}
 \usage{
-calc_hep_fu(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  parameters = NULL,
-  Vr = 0.005,
-  pH = 7.4
-)
+calc_hep_fu(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
+  parameters = NULL, Vr = 0.005, pH = 7.4)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if

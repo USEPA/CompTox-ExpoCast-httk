@@ -5,20 +5,11 @@
 \title{Calculate the analytic steady state concentration for the three oompartment
 steady-state model}
 \usage{
-calc_analytic_css_3compss(
-  chem.name = NULL,
-  chem.cas = NULL,
-  dtxsid = NULL,
-  parameters = NULL,
-  hourly.dose = 1/24,
-  concentration = "plasma",
-  suppress.messages = F,
-  recalc.blood2plasma = F,
-  tissue = NULL,
-  restrictive.clearance = T,
-  bioactive.free.invivo = FALSE,
-  ...
-)
+calc_analytic_css_3compss(chem.name = NULL, chem.cas = NULL,
+  dtxsid = NULL, parameters = NULL, hourly.dose = 1/24,
+  concentration = "plasma", suppress.messages = F,
+  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
+  bioactive.free.invivo = FALSE, ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 

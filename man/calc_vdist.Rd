@@ -4,18 +4,10 @@
 \alias{calc_vdist}
 \title{Calculate the volume of distribution for a one compartment model.}
 \usage{
-calc_vdist(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  parameters = NULL,
-  default.to.human = F,
-  species = "Human",
-  suppress.messages = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  minimum.Funbound.plasma = 1e-04
-)
+calc_vdist(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
+  parameters = NULL, default.to.human = F, species = "Human",
+  suppress.messages = F, adjusted.Funbound.plasma = T,
+  regression = T, minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be specified

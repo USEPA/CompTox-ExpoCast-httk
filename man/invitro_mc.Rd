@@ -4,20 +4,11 @@
 \alias{invitro_mc}
 \title{Draw in vitro TK parameters including uncertainty and variability.}
 \usage{
-invitro_mc(
-  parameters.dt = NULL,
-  samples,
-  fup.meas.cv = 0.4,
-  clint.meas.cv = 0.3,
-  fup.pop.cv = 0.3,
-  clint.pop.cv = 0.3,
-  poormetab = TRUE,
-  fup.lod = 0.01,
-  fup.censored.dist = FALSE,
-  adjusted.Funbound.plasma = T,
-  clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
-)
+invitro_mc(parameters.dt = NULL, samples, fup.meas.cv = 0.4,
+  clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3,
+  poormetab = TRUE, fup.lod = 0.01, fup.censored.dist = FALSE,
+  adjusted.Funbound.plasma = T, clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{samples}{The number of samples to draw.}

@@ -4,39 +4,25 @@
 \alias{calc_mc_tk}
 \title{Conduct multiple TK simulations using Monte Carlo}
 \usage{
-calc_mc_tk(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  parameters = NULL,
-  samples = 1000,
-  which.quantile = 0.95,
-  species = "Human",
-  suppress.messages = F,
-  model = "pbtk",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
-  censored.params = list(),
-  vary.params = list(),
-  return.samples = F,
-  tissue = NULL,
-  httkpop.matrix = NULL,
-  output.units = "mg/L",
-  solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
-    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
-  convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
-  return.all.sims = FALSE
-)
+calc_mc_tk(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
+  parameters = NULL, samples = 1000, which.quantile = 0.95,
+  species = "Human", suppress.messages = F, model = "pbtk",
+  httkpop = T, invitrouv = T, calcrb2p = T,
+  censored.params = list(), vary.params = list(), return.samples = F,
+  tissue = NULL, httkpop.matrix = NULL, output.units = "mg/L",
+  solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2,
+  2.5, 3, 4, 5)), invitro.mc.arg.list = list(adjusted.Funbound.plasma =
+  T, poormetab = T, fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv
+  = 0.4, clint.meas.cv = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  httkpop.generate.arg.list = list(method = "direct resampling",
+  gendernum = NULL, agelim_years = NULL, agelim_months = NULL,
+  weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
+  gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"), reths =
+  c("Mexican American", "Other Hispanic", "Non-Hispanic White",
+  "Non-Hispanic Black", "Other")), convert.httkpop.arg.list = list(),
+  parameterize.arg.list = list(default.to.human = F,
+  clint.pvalue.threshold = 0.05, restrictive.clearance = T, regression =
+  T), return.all.sims = FALSE)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number, parameters, or the chemical name must

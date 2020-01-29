@@ -4,13 +4,8 @@
 \alias{get_rblood2plasma}
 \title{Get ratio of the blood concentration to the plasma concentration.}
 \usage{
-get_rblood2plasma(
-  chem.name = NULL,
-  chem.cas = NULL,
-  dtxsid = NULL,
-  species = "Human",
-  default.to.human = F
-)
+get_rblood2plasma(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  species = "Human", default.to.human = F)
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be

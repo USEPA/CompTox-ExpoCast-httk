@@ -4,13 +4,8 @@
 \alias{get_invitroPK_param}
 \title{Retrieve data from chem.physical_and_invitro.data table}
 \usage{
-get_invitroPK_param(
-  param,
-  species,
-  chem.name = NULL,
-  chem.cas = NULL,
-  dtxsid = NULL
-)
+get_invitroPK_param(param, species, chem.name = NULL, chem.cas = NULL,
+  dtxsid = NULL)
 }
 \value{
 The value of the parameter, if found

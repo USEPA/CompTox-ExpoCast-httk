@@ -4,7 +4,8 @@
 \alias{load_sipes2017}
 \title{Load data from Sipes et al 2017.}
 \usage{
-load_sipes2017(load.image = T, overwrite = F, target.env = .GlobalEnv)
+load_sipes2017(load.image = T, overwrite = F,
+  target.env = .GlobalEnv)
 }
 \arguments{
 \item{load.image}{If overwrite=TRUE (DEFAULT)) then the default HTTK

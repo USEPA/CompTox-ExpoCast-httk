@@ -4,27 +4,13 @@
 \alias{parameterize_gas_pbtk}
 \title{Parameterize_gas_pbtk}
 \usage{
-parameterize_gas_pbtk(
-  chem.cas = NULL,
-  chem.name = NULL,
-  species = "Human",
-  default.to.human = F,
-  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
-    c("gut")),
-  force.human.clint.fup = F,
-  clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  vmax = 0,
-  km = 1,
-  exercise = F,
-  fR = 12,
-  VT = 0.75,
-  VD = 0.15,
-  suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04,
-  ...
-)
+parameterize_gas_pbtk(chem.cas = NULL, chem.name = NULL,
+  species = "Human", default.to.human = F, tissuelist = list(liver =
+  c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
+  force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
+  adjusted.Funbound.plasma = T, regression = T, vmax = 0, km = 1,
+  exercise = F, fR = 12, VT = 0.75, VD = 0.15,
+  suppress.messages = F, minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
