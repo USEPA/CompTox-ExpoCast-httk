@@ -65,7 +65,10 @@
 #' 
 #' 
 #' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' out <- solve_pbtk(chem.name = "Bisphenol A",
+#'   days = 50, 
+#'   daily.dose=1,
+#'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
@@ -75,10 +78,12 @@
 #' ggtitle("Bisphenol A")
 #' print(c.vs.t)
 #' 
+#' # Make a plot for all chemicals (takes a while):
+#' \dontrun{
 #' days <- NULL
 #' avg <- NULL
 #' max <- NULL
-#' for(this.cas in get_cheminfo()){
+#' for(this.cas in get_cheminfo(model="pbtk")){
 #' css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
 #' days[[this.cas]] <- css.info[["the.day"]]
 #' avg[[this.cas]] <- css.info[["avg"]]
@@ -98,6 +103,7 @@
 #' theme(axis.text = element_text(size = 16),
 #' axis.title = element_text(size = 16))
 #' print(avg.vs.max)
+#' }
 #' }
 #' 
 #' @export calc_css
@@ -206,6 +212,9 @@ calc_css <- function(parameters=NULL,
   Final_Conc <- out[dim(out)[1],state.vars]
   total.days <- days
   additional.days <- days
+
+  # For the 3-compartment model:  
+  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
   target <- paste("C",tissue,sep="") 
   if (!(target %in% colnames(out))) stop(paste(

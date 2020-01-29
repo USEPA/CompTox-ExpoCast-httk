@@ -150,5 +150,8 @@ solve_3comp <- function(chem.name = NULL,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     ...)
   
+  out <- cbind(out,out[,"Csyscomp"])
+  colnames(out)[length(colnames(out))]<-"Cplasma"
+    
   return(out) 
 }
