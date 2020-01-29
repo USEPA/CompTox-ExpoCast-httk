@@ -16,4 +16,7 @@ Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro
 data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006): 
 473-497.
 }
+\author{
+Caroline Ring
+}
 \keyword{data}
