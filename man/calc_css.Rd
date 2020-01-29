@@ -125,10 +125,12 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 print(c.vs.t)
 
+# Make a plot for all chemicals (takes a while):
+\dontrun{
 days <- NULL
 avg <- NULL
 max <- NULL
-for(this.cas in get_cheminfo()){
+for(this.cas in get_cheminfo(model="pbtk")){
 css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
 days[[this.cas]] <- css.info[["the.day"]]
 avg[[this.cas]] <- css.info[["avg"]]
@@ -148,6 +150,7 @@ ylab("Max Concentration at Steady State (uM)") +
 theme(axis.text = element_text(size = 16),
 axis.title = element_text(size = 16))
 print(avg.vs.max)
+}
 }
 
 }
