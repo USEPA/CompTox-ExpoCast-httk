@@ -1,3 +1,6 @@
+#Initialize model.list to be fleshed out in the model info files and elsewhere. 
+model.list <- list()
+
 #'Calculate the analytic steady state concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
