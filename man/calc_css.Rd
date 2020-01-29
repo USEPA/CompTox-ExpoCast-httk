@@ -105,17 +105,17 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-\dontrun{
+
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
 calc_css(parms,concentration='blood',model='3compartment')
 
-
-library("ggplot2")
 out <- solve_pbtk(chem.name = "Bisphenol A",
   days = 50, 
   daily.dose=1,
   doses.per.day = 3)
+\dontrun{
+library("ggplot2")
 plot.data <- as.data.frame(out)
 css <- calc_analytic_css(chem.name = "Bisphenol A")
 c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
@@ -123,7 +123,9 @@ geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
 xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
 element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
+
 print(c.vs.t)
+}
 
 # Make a plot for all chemicals (takes a while):
 \dontrun{
@@ -150,7 +152,6 @@ ylab("Max Concentration at Steady State (uM)") +
 theme(axis.text = element_text(size = 16),
 axis.title = element_text(size = 16))
 print(avg.vs.max)
-}
 }
 
 }
