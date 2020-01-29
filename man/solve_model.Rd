@@ -4,37 +4,18 @@
 \alias{solve_model}
 \title{Solve_model}
 \usage{
-solve_model(
-  chem.name = NULL,
-  chem.cas = NULL,
-  dtxsid = NULL,
-  times = NULL,
-  parameters = NULL,
-  model = NULL,
-  route = "oral",
-  dosing = NULL,
-  days = 10,
-  tsteps = 4,
-  initial.values = NULL,
-  plots = F,
-  monitor.vars = NULL,
-  suppress.messages = F,
-  species = "Human",
-  output.units = "uM",
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
-  minimum.Funbound.plasma = 1e-04,
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
-  ...
-)
+solve_model(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
+  times = NULL, parameters = NULL, model = NULL, route = "oral",
+  dosing = NULL, days = 10, tsteps = 4, initial.values = NULL,
+  plots = F, monitor.vars = NULL, suppress.messages = F,
+  species = "Human", output.units = "uM", method = "lsoda",
+  rtol = 1e-08, atol = 1e-12, default.to.human = F,
+  recalc.blood2plasma = F, recalc.clearance = F,
+  adjusted.Funbound.plasma = T, regression = T,
+  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
+  parameterize.arg.list = list(default.to.human = F,
+  clint.pvalue.threshold = 0.05, restrictive.clearance = T, regression =
+  T), ...)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters

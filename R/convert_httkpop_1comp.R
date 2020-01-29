@@ -4,12 +4,12 @@
 #' @param parameters.dt Data table returned by \code{\link{create_mc_samples}}
 #' @param httkpop.dt Data table returned by \code{\link{httkpop_generate}}
 #'
-#'@return A data.table whose columns are the parameters of the HTTK model
+#' @return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
 #'
 #' @author Caroline Ring, John Wambaugh, and Greg Honda
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#' @references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 #'

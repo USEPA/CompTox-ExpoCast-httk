@@ -4,14 +4,8 @@
 \alias{lump_tissues}
 \title{Lump tissue parameters}
 \usage{
-lump_tissues(
-  Ktissue2pu.in,
-  parameters = NULL,
-  tissuelist = NULL,
-  species = "Human",
-  tissue.vols = NULL,
-  tissue.flows = NULL
-)
+lump_tissues(Ktissue2pu.in, parameters = NULL, tissuelist = NULL,
+  species = "Human", tissue.vols = NULL, tissue.flows = NULL)
 }
 \arguments{
 \item{Ktissue2pu.in}{List of partition coefficients from

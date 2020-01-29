@@ -4,20 +4,12 @@
 \alias{parameterize_1comp}
 \title{Parameterize_1comp}
 \usage{
-parameterize_1comp(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  species = "Human",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
-  well.stirred.correction = T,
-  suppress.messages = F,
-  clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
-)
+parameterize_1comp(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
+  species = "Human", default.to.human = F,
+  adjusted.Funbound.plasma = T, regression = T,
+  restrictive.clearance = T, well.stirred.correction = T,
+  suppress.messages = F, clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 

@@ -4,21 +4,12 @@
 \alias{parameterize_steadystate}
 \title{Parameterize_SteadyState}
 \usage{
-parameterize_steadystate(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  species = "Human",
-  clint.pvalue.threshold = 0.05,
-  default.to.human = F,
-  human.clint.fup = F,
-  adjusted.Funbound.plasma = T,
-  restrictive.clearance = T,
-  fup.lod.default = 0.005,
-  suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04,
-  ...
-)
+parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
+  dtxsid = NULL, species = "Human", clint.pvalue.threshold = 0.05,
+  default.to.human = F, human.clint.fup = F,
+  adjusted.Funbound.plasma = T, restrictive.clearance = T,
+  fup.lod.default = 0.005, suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04, ...)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 

@@ -4,12 +4,8 @@
 \alias{monte_carlo}
 \title{Monte Carlo for pharmacokinetic models}
 \usage{
-monte_carlo(
-  parameters,
-  cv.params = NULL,
-  censored.params = NULL,
-  samples = 1000
-)
+monte_carlo(parameters, cv.params = NULL, censored.params = NULL,
+  samples = 1000)
 }
 \arguments{
 \item{parameters}{All parameters needed by the function indicated by the
@@ -135,9 +131,9 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
 
 scientific_10 <- function(x) {
   out <- gsub("1e", "10^", scientific_format()(x))
-  out <- gsub("\+","",out)
-  out <- gsub("10\^01","10",out)
-  out <- parse(text=gsub("10\^00","1",out))
+  out <- gsub("\\+","",out)
+  out <- gsub("10\\^01","10",out)
+  out <- parse(text=gsub("10\\^00","1",out))
 }
 
 

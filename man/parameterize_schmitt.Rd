@@ -4,17 +4,10 @@
 \alias{parameterize_schmitt}
 \title{Get the Parameters for Schmitt's Tissue Partition Coefficient Method}
 \usage{
-parameterize_schmitt(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  parameters = NULL,
-  species = "Human",
-  default.to.human = F,
-  force.human.fup = F,
-  suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04
-)
+parameterize_schmitt(chem.cas = NULL, chem.name = NULL,
+  dtxsid = NULL, parameters = NULL, species = "Human",
+  default.to.human = F, force.human.fup = F, suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if

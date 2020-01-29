@@ -10,7 +10,7 @@ convert_httkpop_1comp(parameters.dt, httkpop.dt, ...)
 \arguments{
 \item{parameters.dt}{Data table returned by \code{\link{create_mc_samples}}}
 
-\item{httkpop.dt}{%%%%}
+\item{httkpop.dt}{Data table returned by \code{\link{httkpop_generate}}}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
