@@ -65,7 +65,10 @@
 #' 
 #' 
 #' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' out <- solve_pbtk(chem.name = "Bisphenol A",
+#'   days = 50, 
+#'   daily.dose=1,
+#'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
@@ -206,6 +209,9 @@ calc_css <- function(parameters=NULL,
   Final_Conc <- out[dim(out)[1],state.vars]
   total.days <- days
   additional.days <- days
+
+  # For the 3-compartment model:  
+  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
   target <- paste("C",tissue,sep="") 
   if (!(target %in% colnames(out))) stop(paste(
