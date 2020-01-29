@@ -7,8 +7,6 @@ R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
 
-  Natural language support but running in an English locale
-
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
 'citation()' on how to cite R or R packages in publications.
@@ -251,23 +249,23 @@ Rblood2plasma = 0.679.
 [16,] 2.869051 7.694127 1.862352 12.31102     178.2692 2.205767
 > 
 > length(get_cheminfo())
-[1] 946
+[1] 987
 > length(get_cheminfo(species="rat"))
-[1] 171
+[1] 212
 > length(get_cheminfo(model="pbtk"))
-[1] 876
+[1] 917
 > length(get_cheminfo(model="pbtk",species="rat"))
-[1] 140
+[1] 181
 > length(get_cheminfo(info="all"))
 [1] 13
 > length(get_cheminfo(model="schmitt"))
-[1] 1344
+[1] 1382
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 254
+[1] 295
 > length(get_cheminfo(model="1compartment"))
-[1] 876
+[1] 917
 > length(get_cheminfo(model="1compartment",species="rat"))
-[1] 140
+[1] 181
 > 
 > 
 > calc_analytic_css(chem.name="Betaxolol")

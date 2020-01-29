@@ -115,12 +115,9 @@ solve_model <- function(chem.name = NULL,
                     species="Human",
                     output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
-                    default.to.human=F,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
                     adjusted.Funbound.plasma=T,
-                    regression=T,
-                    restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(
                       default.to.human=F,
@@ -282,7 +279,7 @@ solve_model <- function(chem.name = NULL,
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
-  if (!restrictive.clearance) parameters$Clmetabolismc <- 
+  if (!parameterize.arg.list$restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
   
   # If there is not an explicit liver we need to include a factor for first-

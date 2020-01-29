@@ -15,56 +15,67 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 1.485863
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 1.485863
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 1.485863
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
+Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
 [1] 26.97508
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
+Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
 [1] 8.567839
 > 
 > head(solve_1comp(chem.name="bisphenol a"))
+Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen Ccompartment Ametabolized         AUC
-[1,] 0.00000000 273.23708    0.0000000    0.0000000 0.000000000
-[2,] 0.01041667 158.43425    0.3262474    0.3410791 0.001854788
-[3,] 0.02083333  91.86683    0.5136427    1.1620850 0.006319416
-[4,] 0.03125000  53.26822    0.6205357    2.2579802 0.012278893
-[5,] 0.04166667  30.88713    0.6807596    3.5098925 0.019086790
-[6,] 0.05208333  17.90966    0.7139324    4.8489120 0.026368376
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+           time Agutlumen Ccompartment Ametabolized          AUC
+[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
+[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
+[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
+[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
+[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
+[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
 > head(solve_1comp(chem.cas="80-05-7"))
+Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen Ccompartment Ametabolized         AUC
-[1,] 0.00000000 273.23708    0.0000000    0.0000000 0.000000000
-[2,] 0.01041667 158.43425    0.3262474    0.3410791 0.001854788
-[3,] 0.02083333  91.86683    0.5136427    1.1620850 0.006319416
-[4,] 0.03125000  53.26822    0.6205357    2.2579802 0.012278893
-[5,] 0.04166667  30.88713    0.6807596    3.5098925 0.019086790
-[6,] 0.05208333  17.90966    0.7139324    4.8489120 0.026368376
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+           time Agutlumen Ccompartment Ametabolized          AUC
+[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
+[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
+[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
+[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
+[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
+[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
+Human volume of distribution returned in units of L/kg BW.
 Amounts returned in umol  and concentration returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen Ccompartment Ametabolized         AUC
-[1,] 0.00000000 273.23708    0.0000000    0.0000000 0.000000000
-[2,] 0.01041667 158.43425    0.3262474    0.3410791 0.001854788
-[3,] 0.02083333  91.86683    0.5136427    1.1620850 0.006319416
-[4,] 0.03125000  53.26822    0.6205357    2.2579802 0.012278893
-[5,] 0.04166667  30.88713    0.6807596    3.5098925 0.019086790
-[6,] 0.05208333  17.90966    0.7139324    4.8489120 0.026368376
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+           time Agutlumen Ccompartment Ametabolized          AUC
+[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
+[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
+[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
+[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
+[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
+[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
 > 
 > calc_vdist(chem.name="triclosan")
 Human volume of distribution returned in units of L/kg BW.
@@ -130,3 +141,4 @@ Volume of distribution returned in units of L/kg BW.
 +   }
 + }
 > 
+> quit("no")

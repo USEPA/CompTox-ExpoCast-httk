@@ -32,7 +32,7 @@ for the model indicated by argument model}
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}
 
-\item{flow.34}{A logical constraint %%%%}
+\item{flow.34}{A logical constraint}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model

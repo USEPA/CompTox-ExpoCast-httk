@@ -90,6 +90,9 @@ samples from the simulation instead of the selected quantile.}
 
 \item{tissue}{Desired steady state tissue conentration.}
 
+\item{invitro.mc.arg.list}{Additional parameters passed to 
+\code{\link{invitro_mc}}.}
+
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
@@ -139,9 +142,6 @@ censored below \code{lod/2}. Default value is 0.01.}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
-
-\item{draw_invitro.arg.list}{Additional parameters passed to 
-\code{\link{draw_invitro}}.}
 }
 \description{
 This function creates a data table of draws of parameter values for use with 

@@ -76,8 +76,8 @@
 #' convert_httkpop_* function for the model.
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #' \code{\link{calc_analytic_css}}.
-#' @param draw_invitro.arg.list Additional parameters passed to 
-#' \code{\link{draw_invitro}}.
+#' @param invitro.mc.arg.list Additional parameters passed to 
+#' \code{\link{invitro_mc}}.
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
@@ -281,7 +281,7 @@ create_mc_samples <- function(chem.cas=NULL,
     if(httkpop==T) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
-     this.tissuedata <- subset(httk::tissue.data, tolower(species)==tolower(species))
+     this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
      these.vols <- subset(this.tissuedata,variable=="Vol (L/kg)")
      these.vols$Name <- paste("V",these.vols$Tissue,"c",sep="")
      for (this.name in these.vols$Name)

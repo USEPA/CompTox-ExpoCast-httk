@@ -24,12 +24,9 @@ solve_model(
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
   recalc.blood2plasma = F,
   recalc.clearance = F,
   adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
     restrictive.clearance = T, regression = T),
@@ -87,9 +84,6 @@ default "Human").}
 
 \item{atol}{Argument passed to integrator (deSolve).}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
@@ -100,15 +94,18 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
 
+\item{...}{Additional arguments passed to the integrator.}
+
+\item{iv.dose}{Simulates a single i.v. dose if true.}
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
-
-\item{...}{Additional arguments passed to the integrator.}
-
-\item{iv.dose}{Simulates a single i.v. dose if true.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
