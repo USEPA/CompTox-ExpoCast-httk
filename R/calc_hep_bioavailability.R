@@ -4,7 +4,7 @@
 #' cacluate a hepatic bioavailability, that is, the fraction of chemical 
 #' systemically available after metabolism during the first pass through the 
 #' liver (Rowland, 1973).
-  
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
@@ -18,7 +18,7 @@
 #' for the model indicated by argument model
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
-#' @param flow.34 A logical constraint %%%%
+#' @param flow.34 A logical constraint
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.

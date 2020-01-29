@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
 > options(warn=-1)
 > 
@@ -35,16 +35,16 @@ $the.day
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 1579.328
+[1] 1704.06
 
 $frac
-[1] 0.98988
+[1] 0.989916
 
 $max
-[1] 1579.644
+[1] 1704.366
 
 $the.day
-[1] 3055
+[1] 2584
 
 > 
 > calc_stats(chem.name='nicotine',days=10)
@@ -112,3 +112,4 @@ $mean
 Tissue concentration for liver returned in uM units.
 [1] 23.60498
 > 
+> quit("no")
