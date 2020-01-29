@@ -138,13 +138,15 @@ solve_1comp <- function(chem.name = NULL,
     species=species,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression),
     ...)
   
   return(out) 
