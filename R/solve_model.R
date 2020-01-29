@@ -279,7 +279,7 @@ solve_model <- function(chem.name = NULL,
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
-  if (!restrictive.clearance) parameters$Clmetabolismc <- 
+  if (!parameterize.arg.list$restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
   
   # If there is not an explicit liver we need to include a factor for first-
