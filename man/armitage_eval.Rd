@@ -4,15 +4,31 @@
 \alias{armitage_eval}
 \title{Evaluate the updated Armitage model}
 \usage{
-armitage_eval(casrn.vector = NA_character_, nomconc.vector = 1,
-  this.well_number = 384, this.FBSf = NA_real_, tcdata = NA,
-  this.sarea = NA_real_, this.v_total = NA_real_,
-  this.v_working = NA_real_, this.cell_yield = NA_real_,
-  this.Tsys = 37, this.Tref = 298.15, this.option.kbsa2 = F,
-  this.option.swat2 = F, this.pseudooct = 0.01, this.memblip = 0.04,
-  this.nlom = 0.2, this.P_nlom = 0.035, this.P_dom = 0.05,
-  this.P_cells = 1, this.csalt = 0.15, this.celldensity = 1,
-  this.cellmass = 3, this.f_oc = 1)
+armitage_eval(
+  casrn.vector = NA_character_,
+  nomconc.vector = 1,
+  this.well_number = 384,
+  this.FBSf = NA_real_,
+  tcdata = NA,
+  this.sarea = NA_real_,
+  this.v_total = NA_real_,
+  this.v_working = NA_real_,
+  this.cell_yield = NA_real_,
+  this.Tsys = 37,
+  this.Tref = 298.15,
+  this.option.kbsa2 = F,
+  this.option.swat2 = F,
+  this.pseudooct = 0.01,
+  this.memblip = 0.04,
+  this.nlom = 0.2,
+  this.P_nlom = 0.035,
+  this.P_dom = 0.05,
+  this.P_cells = 1,
+  this.csalt = 0.15,
+  this.celldensity = 1,
+  this.cellmass = 3,
+  this.f_oc = 1
+)
 }
 \arguments{
 \item{casrn.vector}{For vector or single value, CAS number}

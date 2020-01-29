@@ -16,12 +16,11 @@
 #'   \item Generate a population using \code{\link{httkpop_generate}}. \item For
 #'   a given HTTK chemical and general model, convert the population data to 
 #'   corresponding sets of HTTK model parameters using 
-#'   \code{\link{get_httk_params}}.}
+#'   \code{\link{httkpop_mc}}.}
 #'   
 #'   
 #' @import data.table
 #' @docType package
-#' @name httkpop
 #'
 #'@keywords httk-pop
 #'
