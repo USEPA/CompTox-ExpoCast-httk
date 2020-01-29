@@ -50,12 +50,15 @@
 #' @keywords Solve Statistics
 #' @examples
 #' 
-#' calc_stats(chem.name='Bisphenol-A',days=100,stats='mean.conc',model='3compartment')
+#' calc_stats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+#' 
 #' calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+#' 
 #' \dontrun{
 #' # If you do not specify a chemical, calc_stats runs for all chemicals:
 #' all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
 #' }
+#' 
 #' triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 #' 
 #' @export calc_stats
