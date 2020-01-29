@@ -31,10 +31,16 @@ be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
 parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
@@ -68,12 +74,19 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
+\item{parameterize.args}{List of arguments passed to model's associated
+parameterization function, including default.to.human, 
+adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
+default.to.human argument substitutes missing animal values with human values
+if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
+to TRUE along with parition coefficients calculated with this value, 
+regression indicates whether or not to use the regressions in calculating
+partition coefficients, and minimum.Funbound.plasma is the value to which
+Monte Carlo draws less than this value are set (default is 0.0001 -- half
+the lowest measured Fup in our dataset).}
+
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
-
-\item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
-in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 }
 \value{
 Steady state concentration
