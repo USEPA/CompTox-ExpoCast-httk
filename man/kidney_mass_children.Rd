@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{kidney_mass_children}
 \alias{kidney_mass_children}
-\title{Predict kidney mass for children.}
+\title{Predict kidney mass for children}
 \usage{
 kidney_mass_children(weight, height, gender)
 }
