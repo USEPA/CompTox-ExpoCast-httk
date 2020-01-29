@@ -106,7 +106,13 @@
 #'International 106 (2017): 105-118
 "spline_heightweight"
 
-#'A timestamp of table creation
+#' A timestamp of table creation
+#' 
+#' The Tables.RData file is separately created as part of building a new
+#' release of HTTK. This time stamp indicates the script used to build the file
+#' and when it was run.
+#'
+#' @author John Wambaugh
 "Tables.Rdata.stamp"
 
 #'Pre-processed NHANES data.
@@ -1230,12 +1236,19 @@
 #' 
 #' This data set is only used in Vignette 5.
 #' 
-#' 
-#'@author Caroline Ring
 #' @docType data
+#'
+#' @format A data.table containing 60 rows and 11 columns.
+#' 
+#' @author Caroline Ring
+#' @references
+#' Johnson, Trevor N., Amin Rostami-Hodjegan, and Geoffrey T. Tucker. 
+#' "Prediction of the clearance of eleven drugs and associated variability in 
+#' neonates, infants and children." Clinical pharmacokinetics 45.9 (2006): 
+#' 931-956.
+#' 
 #' @keywords data
 "johnson"
-
 
 
 #' Published Pharmacokinetic Parameters from Obach et al. 2008
@@ -1257,8 +1270,17 @@
 #' 
 #' This data set is only used in Vignette 6.
 #' 
-#' 
 #' @docType data
+#'
+#' @format A data.table containing 1060 rows and 5 columns.
+#' 
+#' @author Caroline Ring
+#' 
+#' @references
+#' Wambaugh, John F., et al. "High throughput heuristics for prioritizing human 
+#' exposure to environmental chemicals." Environmental science & technology 
+#' 48.21 (2014): 12760-12767.
+#'
 #' @keywords data
 "onlyp"
 
@@ -1490,4 +1512,3 @@
 #' @source Matt Linakis
 #' @keywords data
 "supptab2_Linakis2020"
-
