@@ -26,3 +26,15 @@ If blood mass from \code{\link{blood_weight}} is negative or very small,
 then just default to the mean blood mass by age. (Geigy Scientific Tables,
 7th ed.)
 }
+\references{
+Geigy Pharmaceuticals, "Scientific Tables", 7th Edition, 
+John Wiley and Sons (1970)
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

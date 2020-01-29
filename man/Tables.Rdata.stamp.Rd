@@ -9,6 +9,11 @@
 Tables.Rdata.stamp
 }
 \description{
-A timestamp of table creation
+The Tables.RData file is separately created as part of building a new
+release of HTTK. This time stamp indicates the script used to build the file
+and when it was run.
+}
+\author{
+John Wambaugh
 }
 \keyword{datasets}
