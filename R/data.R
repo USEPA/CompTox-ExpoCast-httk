@@ -1056,10 +1056,6 @@
 #' @keywords data
 "sipes2017"
 
-
-
-
-
 #' Physico-chemical properties and toxicokinetics, measured values and Sipes et
 #' al. (2017)
 #' 
@@ -1206,9 +1202,9 @@
 #' 
 #' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput 
 #' screening data." Bioinformatics 33.4 (2016): 618-620.
+#'
 #' 
 #' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
-#'
 #' @keywords data
 "ToxCast2015subset"
 
@@ -1220,7 +1216,13 @@
 #' 
 #' 
 #' @docType data
+#' @format A data.table containing 24 rows and 11 columns.
 #' @keywords data
+#' @author Caroline Ring
+#' @references 
+#' Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro 
+#' data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006): 
+#' 473-497.
 "howgate"
 
 
@@ -1229,6 +1231,7 @@
 #' This data set is only used in Vignette 5.
 #' 
 #' 
+#'@author Caroline Ring
 #' @docType data
 #' @keywords data
 "johnson"
