@@ -190,11 +190,12 @@ create_mc_samples <- function(chem.cas=NULL,
       paste(names(model.list),collapse=", ")))
   }
 
-  #Appease R CMD check --as-cran variable binding:
+  # Column names for data.tables
+  # Appease R CMD check --as-cran variable binding:
   variable <- Name  <- Parameter <- hematocrit <- this.chem <- Krbc2pu <- NULL
   Rblood2plasma <- Qgutf <- Funbound.plasma <- Qtotal.liverc <- NULL
   Qcardiacc <- Qliverf <- hepatic.bioavailability <- ..parameter.names <- NULL
-  
+  Species <- NULL
   
 # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))

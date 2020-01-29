@@ -106,7 +106,13 @@
 #'International 106 (2017): 105-118
 "spline_heightweight"
 
-#'A timestamp of table creation
+#' A timestamp of table creation
+#' 
+#' The Tables.RData file is separately created as part of building a new
+#' release of HTTK. This time stamp indicates the script used to build the file
+#' and when it was run.
+#'
+#' @author John Wambaugh
 "Tables.Rdata.stamp"
 
 #'Pre-processed NHANES data.
@@ -1056,10 +1062,6 @@
 #' @keywords data
 "sipes2017"
 
-
-
-
-
 #' Physico-chemical properties and toxicokinetics, measured values and Sipes et
 #' al. (2017)
 #' 
@@ -1206,9 +1208,9 @@
 #' 
 #' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput 
 #' screening data." Bioinformatics 33.4 (2016): 618-620.
+#'
 #' 
 #' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
-#'
 #' @keywords data
 "ToxCast2015subset"
 
@@ -1220,7 +1222,13 @@
 #' 
 #' 
 #' @docType data
+#' @format A data.table containing 24 rows and 11 columns.
 #' @keywords data
+#' @author Caroline Ring
+#' @references 
+#' Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro 
+#' data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006): 
+#' 473-497.
 "howgate"
 
 
@@ -1228,11 +1236,19 @@
 #' 
 #' This data set is only used in Vignette 5.
 #' 
-#' 
 #' @docType data
+#'
+#' @format A data.table containing 60 rows and 11 columns.
+#' 
+#' @author Caroline Ring
+#' @references
+#' Johnson, Trevor N., Amin Rostami-Hodjegan, and Geoffrey T. Tucker. 
+#' "Prediction of the clearance of eleven drugs and associated variability in 
+#' neonates, infants and children." Clinical pharmacokinetics 45.9 (2006): 
+#' 931-956.
+#' 
 #' @keywords data
 "johnson"
-
 
 
 #' Published Pharmacokinetic Parameters from Obach et al. 2008
@@ -1254,8 +1270,17 @@
 #' 
 #' This data set is only used in Vignette 6.
 #' 
-#' 
 #' @docType data
+#'
+#' @format A data.table containing 1060 rows and 5 columns.
+#' 
+#' @author Caroline Ring
+#' 
+#' @references
+#' Wambaugh, John F., et al. "High throughput heuristics for prioritizing human 
+#' exposure to environmental chemicals." Environmental science & technology 
+#' 48.21 (2014): 12760-12767.
+#'
 #' @keywords data
 "onlyp"
 
@@ -1487,4 +1512,3 @@
 #' @source Matt Linakis
 #' @keywords data
 "supptab2_Linakis2020"
-

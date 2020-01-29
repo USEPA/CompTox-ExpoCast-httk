@@ -20,6 +20,10 @@ Predict blood mass based on body surface area and gender, using equations
 from Bosgra et al. 2012
 }
 \references{
+Bosgra, Sieto, et al. "An improved model to predict 
+physiologically based model parameters and their inter-individual variability 
+from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
+
 Ring, Caroline L., et al. "Identifying populations sensitive to
 environmental chemicals by simulating toxicokinetic variability."
 Environment International 106 (2017): 105-118

@@ -104,9 +104,9 @@ calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
                  model='3compartment',concentration='blood')
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
                  parameterize.args = list(
-                                default.to.human=T,
-                                adjusted.Funbound.plasma=T,
-                                regression=T,
+                                default.to.human=TRUE,
+                                adjusted.Funbound.plasma=TRUE,
+                                regression=TRUE,
                                 minimum.Funbound.plasma=1e-4),daily.dose=2)
 calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
