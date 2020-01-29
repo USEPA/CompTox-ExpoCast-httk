@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 library(httk)
 options(warn=-1)
 
