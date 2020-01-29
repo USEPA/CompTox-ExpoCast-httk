@@ -1,3 +1,6 @@
+#Initialize model.list to be fleshed out in the model info files and elsewhere. 
+model.list <- list()
+
 #' Solve_model
 #' 
 #' solve_model's arguments prepare an ode system for numerical solution over
