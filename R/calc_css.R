@@ -7,7 +7,6 @@
 #' that day, the maximum concentration, and the average concentration at the
 #' end of the simulation.
 #' 
-#' 
 #' @param chem.name Either the chemical name, CAS number, or parameters must be
 #' specified. 
 #' @param chem.cas Either the chemical name, CAS number, or parameters must be
@@ -27,7 +26,7 @@
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
 #' @param concentration Desired concentration type, 'blood' or default
-#' 'plasma'. %%%%
+#' 'plasma'.##MARKER##
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue conentration (defaults to whole body 
 #' concentration.)
@@ -56,24 +55,27 @@
 #' \item{avg}{The average concentration on the final day of the simulation.}
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
+#'
 #' @author Robert Pearce, John Wambaugh
-#' @keywords Steady-deState
+#'
+#' @keywords Steady-State
+#'
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
-#' calc_css(parms,concentration='blood',model='3compartment')
+#' calc_css(parameters=parms,concentration='blood',model='3compartment')
 #' 
 #' out <- solve_pbtk(chem.name = "Bisphenol A",
 #'   days = 50, 
 #'   daily.dose=1,
 #'   doses.per.day = 3)
-#' \dontrun{
-#' library("ggplot2")
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
+#' \dontrun{
+#' library("ggplot2")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
 #' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
 #' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
@@ -89,10 +91,10 @@
 #' avg <- NULL
 #' max <- NULL
 #' for(this.cas in get_cheminfo(model="pbtk")){
-#' css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
-#' days[[this.cas]] <- css.info[["the.day"]]
-#' avg[[this.cas]] <- css.info[["avg"]]
-#' max[[this.cas]] <- css.info[["max"]]
+#'   css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+#'   days[[this.cas]] <- css.info[["the.day"]]
+#'   avg[[this.cas]] <- css.info[["avg"]]
+#'   max[[this.cas]] <- css.info[["max"]]
 #' }
 #' days.data <- as.data.frame(days)
 #' hist <- ggplot(days.data, aes(days)) +

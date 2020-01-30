@@ -22,6 +22,21 @@ Given a data.table describing a virtual population by the NHANES quantities,
 generates HTTK physiological parameters for each individual.
 }
 \references{
+Barter, Zoe E., et al. "Scaling factors for the extrapolation of in vivo 
+metabolic drug clearance from in vitro data: reaching a consensus on values 
+of human micro-somal protein and hepatocellularity per gram of liver." Current 
+Drug Metabolism 8.1 (2007): 33-45.
+
+Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
+International Life Sciences Institute, Risk Science Institute, Washington, 
+DC (1994).
+
+Geigy Pharmaceuticals, "Scientific Tables", 7th Edition, 
+John Wiley and Sons (1970)
+
+McNally, Kevin, et al. "PopGen: a virtual human population generator." 
+Toxicology 315 (2014): 70-85.
+
 Ring, Caroline L., et al. "Identifying populations sensitive to 
 environmental chemicals by simulating toxicokinetic variability." Environment 
 International 106 (2017): 105-118
