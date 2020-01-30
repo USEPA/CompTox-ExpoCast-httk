@@ -70,8 +70,8 @@ void R_init_httk(DllInfo *dll)
 }
 
 ///*----- A single wrapper to call initializers */
-//void initmod(void (* odeparms)(int *, double *))
+//void initmod(void (*f),int *N, double *parms))
 //{
-//  odeparms(N, parms);
+//  (*f)(N, parms);
 //}
 
