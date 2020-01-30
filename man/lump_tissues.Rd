@@ -17,11 +17,18 @@ lump_tissues(
 \item{Ktissue2pu.in}{List of partition coefficients from
 predict_partitioning_schmitt.}
 
+\item{parameters}{A list of physiological parameters including flows and
+volumes for tissues in \code{tissuelist}}
+
 \item{tissuelist}{Specifies compartment names and tissues groupings.
 Remaining tissues in tissue.data are lumped in the rest of the body.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}}
+
+\item{tissue.flows}{A list of flows for tissues in \code{tissuelist}}
 }
 \value{
 \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells

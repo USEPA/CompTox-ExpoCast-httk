@@ -25,8 +25,6 @@
 #' each iteration.
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
-#' @param concentration Desired concentration type, 'blood' or default
-#' 'plasma'.##MARKER##
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue conentration (defaults to whole body 
 #' concentration.)
@@ -47,8 +45,11 @@
 #' instead of plasma, but converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param dosing The dosing object for more complicated scenarios. Defaults to
+#' repeated \code{daily.dose} spread out over \code{doses.per.day}
 #' @param ... Additional arguments passed to model solver (default of
-#' solve_pbtk).
+#' \code{\link{solve_pbtk}}).
+#'
 #' @return \item{frac}{Ratio of the mean concentration on the day steady state
 #' is reached (baed on doses.per.day) to the analytical Css (based on infusion
 #' dosing).} \item{max}{The maximum concentration of the simulation.}

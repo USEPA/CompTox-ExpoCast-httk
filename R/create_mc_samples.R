@@ -210,7 +210,7 @@ create_mc_samples <- function(chem.cas=NULL,
                              parameterize.arg.list)
     # Make sure all the arguments are used by the function:
     parameterize.args <- parameterize.args[names(parameterize.args) %in% 
-      formalArgs(paramfun)]
+      methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=parameterize.args)
     parameter.names <- names(parameters.mean)

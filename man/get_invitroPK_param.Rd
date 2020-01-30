@@ -12,6 +12,21 @@ get_invitroPK_param(
   dtxsid = NULL
 )
 }
+\arguments{
+\item{param}{The in vitro pharmacokinetic parameter needed.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
+\item{chem.name}{Either the chemical name, CAS number, or the parameters
+must be specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
+be specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+}
 \value{
 The value of the parameter, if found
 }
