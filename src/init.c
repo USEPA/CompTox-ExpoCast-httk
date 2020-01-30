@@ -66,3 +66,4 @@ void R_init_httk(DllInfo *dll)
     R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
     R_useDynamicSymbols(dll, TRUE);
 }
+

@@ -73,6 +73,9 @@ output.units.  Defaults are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Default values of NULL looks up variables specified in modelinfo_MODEL.R}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -98,8 +101,6 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 TRUE along with partition coefficients calculated with this value.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{iv.dose}{Simulates a single i.v. dose if true.}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
