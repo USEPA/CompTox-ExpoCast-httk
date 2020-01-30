@@ -15,7 +15,7 @@
 #' @param days Length of the simulation.
 #' @param chem.name Name of desired chemical.
 #' @param chem.cas CAS number of desired chemical.
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
