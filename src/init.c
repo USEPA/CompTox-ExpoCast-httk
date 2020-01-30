@@ -16,6 +16,7 @@ extern void initmodpbtk(void *);
 extern void initmod1comp(void *);
 extern void initmod3comp(void *);
 extern void initmod_gas_pbtk(void *);
+//extern void initmod(void *);
 extern void derivspbtk(int *, double *, double *, double *, double *, int *);
 extern void derivs1comp(int *, double *, double *, double *, double *, int *);
 extern void derivs3comp(int *, double *, double *, double *, double *, int *);
@@ -38,6 +39,7 @@ static const R_CMethodDef CEntries[] = {
     {"getParms1comp", (DL_FUNC) &getParms1comp, 3},
     {"getParms3comp", (DL_FUNC) &getParms3comp, 3},
     {"getParms_gas_pbtk", (DL_FUNC) &getParms_gas_pbtk, 3},
+ //   {"initmod", (DL_FUNC) &initmod, 1},
     {"initmodpbtk", (DL_FUNC) &initmodpbtk, 1},
     {"initmod1comp", (DL_FUNC) &initmod1comp, 1},
     {"initmod3comp", (DL_FUNC) &initmod3comp, 1},
@@ -66,4 +68,10 @@ void R_init_httk(DllInfo *dll)
     R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
     R_useDynamicSymbols(dll, TRUE);
 }
+
+///*----- A single wrapper to call initializers */
+//void initmod(void (* odeparms)(int *, double *))
+//{
+//  odeparms(N, parms);
+//}
 
