@@ -3,6 +3,7 @@
 #'
 #' @param parameters.dt Data table returned by \code{\link{create_mc_samples}}
 #' @param httkpop.dt Data table returned by \code{\link{httkpop_generate}}
+#' @param ... Additional arguments passed to \code{\link{propagate_invitrouv_1comp}}
 #'
 #' @return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.

@@ -16,8 +16,7 @@ parameterize_steadystate(
   restrictive.clearance = T,
   fup.lod.default = 0.005,
   suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04,
-  ...
+  minimum.Funbound.plasma = 1e-04
 )
 }
 \arguments{

@@ -11,6 +11,8 @@ convert_httkpop_1comp(parameters.dt, httkpop.dt, ...)
 \item{parameters.dt}{Data table returned by \code{\link{create_mc_samples}}}
 
 \item{httkpop.dt}{Data table returned by \code{\link{httkpop_generate}}}
+
+\item{...}{Additional arguments passed to \code{\link{propagate_invitrouv_1comp}}}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
