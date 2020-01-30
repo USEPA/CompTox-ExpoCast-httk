@@ -149,7 +149,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,dose=.5,days=1,tsteps=2)
+solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,daily.dose=.5,days=1,tsteps=2)
+
 params <-parameterize_3comp(chem.cas="80-05-7")
 solve_3comp(parameters=params)
 

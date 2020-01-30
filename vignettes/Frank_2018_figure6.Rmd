@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Frank et al. (2018): Creating Figure Six (IVIVE)"
 author: "John F. Wambaugh"
 date: "September 25, 2019"
