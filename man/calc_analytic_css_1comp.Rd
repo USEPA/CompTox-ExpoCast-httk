@@ -26,6 +26,9 @@ be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
 parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
@@ -39,7 +42,7 @@ parmeterize_1comp(for model = '1compartment') or parameterize_steadystate
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
 in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
+altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}

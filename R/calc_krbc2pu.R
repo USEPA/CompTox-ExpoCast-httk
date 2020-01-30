@@ -4,11 +4,12 @@
 #' function calculates a Red Blood Cell to unbound plasma (Krbc2pu) partition
 #' coefficient that would be consistent with that observation.
 #' 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified.
-#' @param chem.cas Either the CAS number or the chemical name must be
-#' specified.
-#' @param params Parameters from parameterize_schmitt.
+#' @param Rb2p The chemical blood:plasma concentration ratop
+#' @param Funbound.plasma The free fraction of chemical in the presence of 
+#' plasma protein
+#' Rblood2plasma.
+#' @param hematocrit Overwrites default hematocrit value in calculating
+#' Rblood2plasma.
 #' @param hematocrit Overwrites default hematocrit value in calculating
 #' Rblood2plasma.
 #' @param default.to.human Substitutes missing animal values with human values
@@ -34,8 +35,7 @@
 #' @keywords Parameter
 #'
 #' @export calc_krbc2pu
-calc_krbc2pu <- function(
-                         Rb2p,
+calc_krbc2pu <- function(Rb2p,
                          Funbound.plasma,
                          hematocrit=NULL,
                          default.to.human=F,

@@ -32,6 +32,9 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
 concentration quantile is the same population as the 5th dose quantile.}
