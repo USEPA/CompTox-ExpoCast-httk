@@ -155,8 +155,9 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
 
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-                  plots=TRUE,initial.values=c(Agut=200))
+out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
+                  initial.values=c(Agut=200))
+
 params <- parameterize_pbtk(chem.cas="80-05-7")
 solve_pbtk(parameters=params)
                   
