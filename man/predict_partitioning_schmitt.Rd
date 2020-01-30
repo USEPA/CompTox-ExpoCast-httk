@@ -28,7 +28,7 @@ specified.}
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -37,8 +37,8 @@ default "Human").}
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
-\item{parameters}{Chemical parameters from the parameterize_schmitt
-function, overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters from \code{\link{parameterize_schmitt}}
+overrides chem.name, dtxsid, and chem.cas.}
 
 \item{alpha}{Ratio of Distribution coefficient D of totally charged species
 and that of the neutral form}

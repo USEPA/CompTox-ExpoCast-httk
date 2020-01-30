@@ -40,7 +40,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days. Dosing
@@ -99,6 +99,13 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset)}
+
+\item{parameterize.arg.list}{Additional parameterized passed to the model
+parameterization function.}
 
 \item{...}{Additional arguments passed to the integrator.}
 

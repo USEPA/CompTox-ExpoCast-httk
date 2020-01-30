@@ -41,7 +41,7 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days. Dosing
 #' sequence begins at the beginning of times.
@@ -88,6 +88,11 @@
 #' @param ... Additional arguments passed to the integrator.
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Default values of NULL looks up variables specified in modelinfo_MODEL.R
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset)
+#' @param parameterize.arg.list Additional parameterized passed to the model
+#' parameterization function.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row

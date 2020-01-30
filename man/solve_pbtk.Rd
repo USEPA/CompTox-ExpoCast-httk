@@ -43,7 +43,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
@@ -153,7 +153,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
+solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
+
 out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
                   plots=TRUE,initial.values=c(Agut=200))
 params <- parameterize_pbtk(chem.cas="80-05-7")
