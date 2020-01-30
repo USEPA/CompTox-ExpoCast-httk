@@ -136,6 +136,11 @@ partition coefficients.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
+"Crest", "Ckidney", "Cplasma", "Calv", "Cendexh", "Cmixexh", "Cmuc", 
+"Atubules", "Ametabolized", "AUC"}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
@@ -194,10 +199,13 @@ solve_gas_pbtk(parameters=params)
 
 }
 \references{
+Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
+Inhalation Model for Organic Chemicals", submitted
+
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
-John Wambaugh, Matt Linakis, and Mark Sfeir
+Matt Linakis, John Wambaugh, and Mark Sfeir
 }
 \keyword{Solve}

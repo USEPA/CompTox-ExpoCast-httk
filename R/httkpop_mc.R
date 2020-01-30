@@ -61,7 +61,7 @@
 #' 
 #' set.seed(42)
 #' indiv_examp <- httkpop_generate(method="d", nsamp=100)
-#' httk_param <- httkpop_mc(indiv_dt=indiv_examp, 
+#' httk_param <- httkpop_mc(httkpop.dt=indiv_examp, 
 #' model="1compartment")
 #' 
 #' @keywords httk-pop monte-carlo

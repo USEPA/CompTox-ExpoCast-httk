@@ -67,7 +67,6 @@
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param iv.dose Simulates a single i.v. dose if true.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
 #' @param method Method used by integrator (deSolve).
@@ -87,12 +86,18 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param ... Additional arguments passed to the integrator.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Default values of NULL looks up variables specified in modelinfo_MODEL.R
+#' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
+#' 
 #' @author John Wambaugh and Robert Pearce
+#' 
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' 
 #' @keywords Solve
 #' 
 #' @export solve_model

@@ -111,6 +111,10 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
+"Ametabolized", "AUC"}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{

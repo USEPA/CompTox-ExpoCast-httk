@@ -100,6 +100,10 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
+"AUC"}
+
 \item{...}{Additional arguments passed to the integrator.}
 
 \item{recalc.elimination}{Whether or not to recalculate the elimination

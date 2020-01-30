@@ -92,14 +92,27 @@
 #' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
+#' "Crest", "Ckidney", "Cplasma", "Calv", "Cendexh", "Cmixexh", "Cmuc", 
+#' "Atubules", "Ametabolized", "AUC"
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
-#' @author John Wambaugh, Matt Linakis, and Mark Sfeir
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#'
+#' @author Matt Linakis, John Wambaugh, and Mark Sfeir
+#'
+#' @references 
+#' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
+#' Inhalation Model for Organic Chemicals", submitted
+#' 
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
 #' @keywords Solve
+#'
 #' @examples
 #' 
 #' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)

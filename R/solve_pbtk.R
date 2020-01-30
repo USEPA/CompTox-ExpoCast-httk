@@ -76,6 +76,9 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
+#' "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"
 #' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
