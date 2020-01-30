@@ -154,11 +154,16 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
     
-    parameters <- do.call(parameterize_function,c(parameterize.args,list(
+    
+    parameterize.args <- c(parameterize.args,list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
-      suppress.messages=suppress.messages))) 
+      suppress.messages=suppress.messages))
+# Make sure all the arguments are used by the function:
+    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+      formalArgs(parameterize_function)]
+    parameters <- do.call(parameterize_function, parameterize.args) 
   } else {
     model_param_names <- model.list[[model]]$param.names 
     if (!all(model_param_names %in% names(parameters)))

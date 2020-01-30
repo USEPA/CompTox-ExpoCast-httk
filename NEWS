@@ -31,6 +31,9 @@ Changes in version 2.0.0 ()
     and humans.
   Beta testing and bug reports provided by Xiaoqing Chang.
   New physiological parameters have been added for monkeys
+  Added vignette for Figure 6 from Frank, Christopher L., et al. 
+    "Defining toxicological tipping points in neuronal network development." 
+    Toxicology and Applied Pharmacology 354 (2018): 81-93.
    
 Changes in version 1.10.1 (Septmeber 9, 2019)
   Bug fixes (thank you David Trudel).

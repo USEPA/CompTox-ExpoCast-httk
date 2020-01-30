@@ -5,8 +5,7 @@
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions.
 #' 
-#' @param this.chem The CAS number of one of the HTTK chemicals (see
-#' \code{\link[httk]{get_cheminfo}}).
+#' @param parameters.dt A data table of physiological parameters
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
 #' @param samples The number of samples to draw.

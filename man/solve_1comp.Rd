@@ -86,6 +86,12 @@ output.units.  Defaults are zero.}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
+\item{recalc.blood2plasma}{Whether or not to recalculate the blood:plasma
+chemical concentrationr ratio}
+
+\item{recalc.clearance}{Whether or not to recalculate the elimination
+rate.}
+
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
 mg/kg BW, of each dose.}
@@ -108,14 +114,6 @@ Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{recalc.elimination}{Whether or not to recalculate the elimination
-rate.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
 }
 \value{
 A matrix with a column for time(in days) and a column for the
