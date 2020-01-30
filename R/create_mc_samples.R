@@ -112,6 +112,7 @@
 #' }
 #'
 #' @import stats
+#' @import methods
 #' @export create_mc_samples
 create_mc_samples <- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -271,7 +272,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        model=model,
                        samples=samples,
                        httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list=httkpop.generate.arg.list)
+                       httkpop.generate.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
