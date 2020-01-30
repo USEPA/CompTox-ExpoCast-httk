@@ -39,17 +39,24 @@
 #' either CAS, name, or DTXSIDs
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
+#' @param samples Number of samples generated in calculating quantiles.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").  Species must be set to "Human" to run httkpop model. 
-#' @param output.units Plasma concentration units, either uM or default mg/L.
+#' default "Human").  Species must be set to "Human" to run httkpop model.
 #' @param suppress.messages Whether or not to suppress output message.
 #' @param model Model used in calculation: 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, '3compartmentss' for
 #' the three compartment steady state model, and '1compartment' for one
 #' compartment model.  This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
+#' @param httkpop Whether or not to use population generator and sampler from
+#' httkpop.  This is overwrites censored.params and vary.params and is only for
+#' human physiology.  Species must also be set to 'Human'.
+#' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
+#' metabolizers)
+#' @param invitrouv ##Marker##
+#' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
 #' of detection (specified separately for each paramter). This argument should
@@ -74,7 +81,6 @@
 #' \code{Funbound.plasma} values.
 #' @param clint.pop.cv Coefficient of variation of distribution of population
 #' \code{Clint} values.
-#' @param samples Number of samples generated in calculating quantiles.
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
 #' @param default.to.human Substitutes missing rat values with human values if
@@ -98,11 +104,6 @@
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
 #' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
 #' See Details below for more information.
-#' @param httkpop Whether or not to use population generator and sampler from
-#' httkpop.  This is overwrites censored.params and vary.params and is only for
-#' human physiology.  Species must also be set to 'Human'.
-#' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
-#' metabolizers)
 #' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
 #' @param fup.lod The average limit of detection for Funbound.plasma. if
