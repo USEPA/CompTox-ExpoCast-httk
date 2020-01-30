@@ -86,11 +86,11 @@ instead of plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{...}{Additional arguments passed to model solver (default of
-solve_pbtk).}
+\item{dosing}{The dosing object for more complicated scenarios. Defaults to
+repeated \code{daily.dose} spread out over \code{doses.per.day}}
 
-\item{concentration}{Desired concentration type, 'blood' or default
-'plasma'.##MARKER##}
+\item{...}{Additional arguments passed to model solver (default of
+\code{\link{solve_pbtk}}).}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state
