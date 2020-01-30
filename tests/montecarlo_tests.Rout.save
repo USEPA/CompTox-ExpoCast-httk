@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -72,8 +72,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-     95% 
-111.9084 
+   95% 
+146.74 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -94,7 +94,7 @@ Warning messages:
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-4.504298 
+10.08783 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -112,7 +112,7 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-31.61728 
+37.07424 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound = 0, changed to 0.005.
@@ -133,7 +133,7 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-1.444518 
+2.314536 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -155,7 +155,7 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-1.444844 
+2.316193 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
@@ -172,7 +172,7 @@ Warning messages:
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-1.444518 
+2.314536 
 Warning messages:
 1: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
@@ -188,7 +188,7 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-0.980383 
+1.471638 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
@@ -209,7 +209,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-87.23028 
+176.7115 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -234,7 +234,7 @@ Warning messages:
 +     clint.pop.cv = 0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-64.97997 
+120.5482 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -249,7 +249,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-56.86515 
+85.72126 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -264,7 +264,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-29.10453 
+24.46588 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -308,7 +308,7 @@ Warning messages:
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
      95% 
-13.53525 
+13.41496 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -321,88 +321,88 @@ Warning messages:
 > 
 > 
 >     
-> calc_mc_tk(chem.cas="80-05-7")
+> calc_mc_tk(chem.cas="80-05-7",samples=NSAMP)
 $means
       time     Agutlumen      Cgut       Cliver         Cven        Clung
-1  0.00000  3.329101e+02 0.0000000 0.000000e+00 0.000000e+00 0.000000e+00
-2  0.00001  3.327360e+02 0.1742374 6.672430e-05 8.019151e-09 4.160096e-10
-3  0.25000  6.946331e-04 7.8432101 1.066748e+01 5.680323e-01 4.311539e+00
-4  0.50000  1.449891e-09 7.0809619 9.622974e+00 5.160486e-01 3.898032e+00
-5  0.75000  4.933307e-14 6.4532044 8.801641e+00 4.720919e-01 3.551646e+00
-6  1.00000 -1.226001e-15 5.9113288 8.089601e+00 4.339686e-01 3.252719e+00
-7  1.50000 -1.552391e-15 5.0255952 6.918859e+00 3.712625e-01 2.764271e+00
-8  2.00000  5.406544e-17 4.3350980 5.999557e+00 3.220015e-01 2.383662e+00
-9  2.50000 -5.402036e-15 3.7842353 5.261431e+00 2.824306e-01 2.080154e+00
-10 3.00000  1.639576e-15 3.3364380 4.657941e+00 2.500607e-01 1.833537e+00
-11 4.00000  2.360297e-15 2.6573657 3.736003e+00 2.005677e-01 1.459764e+00
-12 5.00000  3.925348e-15 2.1719712 3.071244e+00 1.648357e-01 1.192784e+00
+1  0.00000  3.977528e+02 0.0000000 0.000000e+00 0.000000e+00 0.000000e+00
+2  0.00001  3.975447e+02 0.1981245 8.235887e-05 8.781807e-09 5.260237e-10
+3  0.25000  8.299305e-04 7.8966766 1.051387e+01 5.189787e-01 4.386892e+00
+4  0.50000  1.732313e-09 7.2347458 9.652979e+00 4.775172e-01 4.025371e+00
+5  0.75000  6.759998e-14 6.6772192 8.942620e+00 4.414835e-01 3.714843e+00
+6  1.00000  1.112535e-14 6.1883368 8.315593e+00 4.096317e-01 3.442826e+00
+7  1.50000  5.189993e-15 5.3758839 7.263777e+00 3.561111e-01 2.991405e+00
+8  2.00000  5.109706e-15 4.7323050 6.420652e+00 3.131433e-01 2.634416e+00
+9  2.50000 -1.096379e-14 4.2124209 5.732350e+00 2.780480e-01 2.346429e+00
+10 3.00000 -3.571702e-14 3.7845978 5.160777e+00 2.489216e-01 2.109669e+00
+11 4.00000  1.053504e-13 3.1220353 4.266438e+00 2.034775e-01 1.743260e+00
+12 5.00000 -2.876088e-15 2.6310236 3.597317e+00 1.697091e-01 1.471688e+00
            Cart        Crest      Ckidney      Cplasma     Atubules
 1  0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-2  1.399719e-12 5.946699e-16 2.819246e-14 1.064862e-08 3.610207e-21
-3  5.681917e-01 3.519450e+00 1.209597e+01 7.392804e-01 6.771637e-01
-4  5.161671e-01 3.194252e+00 1.094444e+01 6.728909e-01 1.197017e+00
-5  4.721944e-01 2.914017e+00 9.980986e+00 6.165314e-01 1.671513e+00
-6  4.340581e-01 2.671822e+00 9.148492e+00 5.675303e-01 2.106815e+00
-7  3.713320e-01 2.275299e+00 7.785972e+00 4.866750e-01 2.878777e+00
-8  3.220569e-01 1.965553e+00 6.722180e+00 4.229171e-01 3.543495e+00
-9  2.824755e-01 1.717990e+00 5.872415e+00 3.715359e-01 4.122889e+00
-10 2.500976e-01 1.516406e+00 5.180861e+00 3.293870e-01 4.633132e+00
-11 2.005938e-01 1.210035e+00 4.130662e+00 2.647176e-01 5.492271e+00
-12 1.648549e-01 9.904559e-01 3.378766e+00 2.178426e-01 6.189599e+00
+2  9.095679e-13 1.148780e-16 1.219607e-14 1.140195e-08 4.073266e-21
+3  5.191068e-01 3.532680e+00 1.202991e+01 6.504776e-01 8.337105e-01
+4  4.776148e-01 3.250170e+00 1.104507e+01 5.991999e-01 1.436904e+00
+5  4.415682e-01 3.002283e+00 1.019885e+01 5.544280e-01 1.993993e+00
+6  4.097057e-01 2.784477e+00 9.455632e+00 5.147043e-01 2.510719e+00
+7  3.561684e-01 2.421457e+00 8.217787e+00 4.476159e-01 3.441427e+00
+8  3.131887e-01 2.132799e+00 7.234550e+00 3.934250e-01 4.259178e+00
+9  2.780848e-01 1.898815e+00 6.438441e+00 3.489401e-01 4.985970e+00
+10 2.489519e-01 1.705690e+00 5.782091e+00 3.118780e-01 5.638109e+00
+11 2.034992e-01 1.405611e+00 4.763807e+00 2.538508e-01 6.764786e+00
+12 1.697256e-01 1.182619e+00 4.008426e+00 2.106661e-01 7.707897e+00
    Ametabolized          AUC
 1  0.000000e+00 0.000000e+00
-2  1.853355e-09 2.667234e-14
-3  5.700866e+01 2.219443e-01
-4  7.743755e+01 3.981654e-01
-5  9.541753e+01 5.591739e-01
-6  1.113625e+02 7.070432e-01
-7  1.383332e+02 9.697543e-01
-8  1.602019e+02 1.196553e+00
-9  1.782243e+02 1.394726e+00
-10 1.932804e+02 1.569623e+00
-11 2.168673e+02 1.864836e+00
-12 2.343371e+02 2.104939e+00
+2  2.371066e-09 2.854720e-14
+3  6.588443e+01 2.136488e-01
+4  8.707198e+01 3.696676e-01
+5  1.059166e+02 5.137575e-01
+6  1.227812e+02 6.473019e-01
+7  1.516631e+02 8.872626e-01
+8  1.754756e+02 1.097060e+00
+9  1.954518e+02 1.282300e+00
+10 2.124678e+02 1.447234e+00
+11 2.399759e+02 1.728578e+00
+12 2.613125e+02 1.959844e+00
 
 $sds
-           time    Agutlumen        Cgut       Cliver         Cven        Clung
-1  0.000000e+00 5.784721e+00 0.000000000 0.000000e+00 0.000000e+00 0.000000e+00
-2  7.610898e-21 5.781695e+00 0.002691846 1.285129e-06 2.349366e-11 5.759665e-12
-3  0.000000e+00 1.207010e-05 0.008201589 6.662537e-02 6.769673e-03 3.495736e-03
-4  0.000000e+00 2.519868e-11 0.026330052 8.994389e-02 7.844658e-03 6.526116e-03
-5  0.000000e+00 7.269109e-16 0.040503526 1.069694e-01 8.686236e-03 1.453514e-02
-6  0.000000e+00 2.092340e-16 0.052089043 1.207407e-01 9.355730e-03 2.110969e-02
-7  0.000000e+00 1.055160e-17 0.069371065 1.408602e-01 1.030262e-02 3.099233e-02
-8  0.000000e+00 8.445545e-18 0.080958594 1.537846e-01 1.087070e-02 3.771334e-02
-9  0.000000e+00 1.643573e-16 0.088589122 1.617028e-01 1.117671e-02 4.223399e-02
-10 0.000000e+00 5.085845e-17 0.093398945 1.660548e-01 1.129737e-02 4.518300e-02
-11 0.000000e+00 7.507701e-17 0.097410342 1.676971e-01 1.117624e-02 4.794575e-02
-12 0.000000e+00 1.243187e-16 0.096828647 1.636202e-01 1.076790e-02 4.812563e-02
+   time    Agutlumen        Cgut       Cliver         Cven        Clung
+1     0 1.032179e+01 0.000000000 0.000000e+00 0.000000e+00 0.000000e+00
+2     0 1.031639e+01 0.005457557 1.650086e-05 2.620629e-09 3.069981e-10
+3     0 2.153693e-05 0.119525453 3.239679e-01 7.650195e-02 1.631524e-01
+4     0 4.496280e-11 0.063197773 3.601831e-01 7.403211e-02 1.274712e-01
+5     0 2.394675e-14 0.030546335 3.635781e-01 7.083087e-02 1.031749e-01
+6     0 6.946345e-15 0.010783297 3.544207e-01 6.722798e-02 8.654823e-02
+7     0 4.848413e-15 0.001052858 3.104587e-01 5.935023e-02 6.999061e-02
+8     0 2.369161e-14 0.010716367 2.467317e-01 5.120072e-02 6.800879e-02
+9     0 6.790850e-15 0.035156533 1.749097e-01 4.326322e-02 7.425900e-02
+10    0 1.076275e-14 0.065327668 1.021997e-01 3.581436e-02 8.468070e-02
+11    0 3.471102e-14 0.127364314 3.068089e-02 2.287015e-02 1.088237e-01
+12    0 9.111551e-16 0.179683631 1.367086e-01 1.267756e-02 1.299852e-01
            Cart        Crest      Ckidney      Cplasma     Atubules
 1  0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-2  1.530810e-14 1.637318e-17 6.031593e-16 7.905957e-11 5.947619e-23
-3  6.765802e-03 1.767360e-02 3.956401e-02 1.373610e-02 2.219842e-03
-4  7.841899e-03 2.504057e-02 6.624835e-02 1.498170e-02 3.659258e-03
-5  8.683959e-03 3.104195e-02 8.735890e-02 1.594080e-02 4.005050e-03
-6  9.353844e-03 3.590486e-02 1.045390e-01 1.668582e-02 3.444048e-03
-7  1.030132e-02 4.304011e-02 1.299489e-01 1.768782e-02 1.705813e-04
-8  1.086982e-02 4.767287e-02 1.467026e-01 1.821879e-02 5.251713e-03
-9  1.117611e-02 5.057035e-02 1.574440e-01 1.842494e-02 1.218521e-02
-10 1.129699e-02 5.223481e-02 1.639051e-01 1.840276e-02 2.017167e-02
-11 1.117613e-02 5.312692e-02 1.683413e-01 1.791734e-02 3.804622e-02
-12 1.076794e-02 5.204598e-02 1.658680e-01 1.709126e-02 5.708316e-02
+2  6.885637e-13 5.918353e-17 6.248470e-15 4.419843e-09 1.236183e-21
+3  7.648198e-02 6.280636e-02 1.345343e-01 1.528583e-01 8.422175e-02
+4  7.402060e-02 7.608474e-02 1.921568e-01 1.458131e-01 1.335856e-01
+5  7.082225e-02 8.307854e-02 2.215315e-01 1.381962e-01 1.774775e-01
+6  6.722166e-02 8.497911e-02 2.330531e-01 1.303670e-01 2.171659e-01
+7  5.934714e-02 7.811806e-02 2.184576e-01 1.146227e-01 2.876704e-01
+8  5.119958e-02 6.260781e-02 1.729107e-01 9.938872e-02 3.507792e-01
+9  4.326321e-02 4.297425e-02 1.121009e-01 8.512187e-02 4.100057e-01
+10 3.581495e-02 2.204258e-02 4.587176e-02 7.205284e-02 4.674494e-01
+11 2.287106e-02 1.760367e-02 8.135096e-02 4.977009e-02 5.811447e-01
+12 1.267829e-02 4.991450e-02 1.858500e-01 3.238377e-02 6.955797e-01
    Ametabolized          AUC
 1  0.000000e+00 0.000000e+00
-2  2.066073e-11 1.969090e-16
-3  8.909666e-01 4.853540e-03
-4  1.202735e+00 8.451152e-03
-5  1.444664e+00 1.232143e-02
-6  1.629637e+00 1.640375e-02
-7  1.865552e+00 2.502076e-02
-8  1.967784e+00 3.401352e-02
-9  1.974809e+00 4.318569e-02
-10 1.913286e+00 5.240057e-02
-11 1.655190e+00 7.059942e-02
-12 1.291764e+00 8.812329e-02
+2  4.612694e-10 1.106549e-14
+3  2.723516e+00 4.418118e-02
+4  1.883033e+00 8.154231e-02
+5  7.772574e-01 1.170497e-01
+6  5.065925e-01 1.506228e-01
+7  3.368137e+00 2.118626e-01
+8  6.343270e+00 2.653325e-01
+9  9.219890e+00 3.114137e-01
+10 1.187979e+01 3.506548e-01
+11 1.635224e+01 4.111383e-01
+12 1.965570e+01 4.518323e-01
 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :

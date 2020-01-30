@@ -272,7 +272,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        model=model,
                        samples=samples,
                        httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list)
+                                             httkpop.generate.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
@@ -439,5 +439,5 @@ Set species=\"Human\" to run httkpop model.')
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[,..parameter.names])
+  return(parameters.dt[,parameter.names,with=F])
 }
