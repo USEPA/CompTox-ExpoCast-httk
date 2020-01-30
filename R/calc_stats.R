@@ -178,6 +178,9 @@ calc_stats <-function(
                       output.units=output.units,
                       ...)
     
+    # For the 3-compartment model:  
+    colnames(PKtimecourse)[colnames(PKtimecourse)=="Csyscomp"]<-"Cplasma"
+      
     out <- list()
   
     if (any(c("mean","peak") %in% tolower(stats)))
