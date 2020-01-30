@@ -14,6 +14,12 @@ calc_krbc2pu(
 )
 }
 \arguments{
+\item{Rb2p}{The chemical blood:plasma concentration ratop}
+
+\item{Funbound.plasma}{The free fraction of chemical in the presence of 
+plasma protein
+Rblood2plasma.}
+
 \item{hematocrit}{Overwrites default hematocrit value in calculating
 Rblood2plasma.}
 
@@ -25,14 +31,6 @@ default "Human").}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
-
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
-
-\item{chem.cas}{Either the CAS number or the chemical name must be
-specified.}
-
-\item{params}{Parameters from parameterize_schmitt.}
 
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment.}

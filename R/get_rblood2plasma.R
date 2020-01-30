@@ -11,6 +11,8 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
 #' @param default.to.human Substitutes missing animal values with human values

@@ -34,6 +34,9 @@ calc_stats(
 
 \item{chem.cas}{CAS number of desired chemical.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
 

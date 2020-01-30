@@ -41,6 +41,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days. Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters List of chemical parameters, as output by 

@@ -12,6 +12,9 @@ get_physchem_param(param, chem.name = NULL, chem.cas = NULL, dtxsid = NULL)
 \item{chem.name}{The chemical names that you want parameters for, a vector or single value}
 
 \item{chem.cas}{The chemical CAS numbers that you want parameters for, a vector or single value}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 }
 \value{
 The paramters, either a single value, a named list for a single chemical, or a list of lists

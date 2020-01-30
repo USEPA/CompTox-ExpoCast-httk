@@ -5,10 +5,10 @@
 \title{Find the steady state concentration and the day it is reached.}
 \usage{
 calc_css(
-  parameters = NULL,
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  parameters = NULL,
   species = "Human",
   f = 0.01,
   daily.dose = 1,
@@ -29,14 +29,17 @@ calc_css(
 )
 }
 \arguments{
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
-
 \item{chem.name}{Either the chemical name, CAS number, or parameters must be
 specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Chemical parameters from parameterize_pbtk function,
+overrides chem.name and chem.cas.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -55,6 +58,9 @@ each iteration.}
 (specify units = "uM") but can also be mg/L.}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
+
+\item{tissue}{Desired tissue conentration (defaults to whole body 
+concentration.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
@@ -84,7 +90,7 @@ instead of plasma, but converted to use with plasma concentration.}
 solve_pbtk).}
 
 \item{concentration}{Desired concentration type, 'blood' or default
-'plasma'.}
+'plasma'. %%%%}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state

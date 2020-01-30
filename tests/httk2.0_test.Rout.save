@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save httk2.0_test.R httk2.0_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
@@ -361,13 +361,13 @@ Rblood2plasma = 0.668.
 [4,] 0.02083333   81.60030 16.899473231 2.248166e+00 2.933450e-02 6.466514e+00
 [5,] 0.03125000   47.31526 14.769661307 2.883969e+00 6.351531e-02 9.540430e+00
 [6,] 0.04166667   27.43536 13.459204401 3.237252e+00 1.040418e-01 1.228429e+01
-              AUC
-[1,] 0.000000e+00
-[2,] 1.102733e-13
-[3,] 5.017625e-03
-[4,] 2.321018e-02
-[5,] 5.025487e-02
-[6,] 8.232043e-02
+              AUC      Cplasma
+[1,] 0.000000e+00 0.000000e+00
+[2,] 1.102733e-13 4.400650e-08
+[3,] 5.017625e-03 1.154907e+00
+[4,] 2.321018e-02 2.248166e+00
+[5,] 5.025487e-02 2.883969e+00
+[6,] 8.232043e-02 3.237252e+00
 > head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
@@ -379,13 +379,13 @@ Rblood2plasma = 0.668.
 [4,] 0.02083333 216.4886 12.247804568 3.924489 1.060132e-01 4.030962e+00
 [5,] 0.03125000 214.2451 12.144164731 3.883821 1.574100e-01 6.411832e+00
 [6,] 0.04166667 212.0582 12.021159422 3.844176 2.082800e-01 8.769664e+00
-              AUC
-[1,] 0.000000e+00
-[2,] 4.399083e-05
-[3,] 4.274596e-02
-[4,] 8.388028e-02
-[5,] 1.245467e-01
-[6,] 1.647963e-01
+              AUC  Cplasma
+[1,] 0.000000e+00 4.399678
+[2,] 4.399083e-05 4.398489
+[3,] 4.274596e-02 3.980542
+[4,] 8.388028e-02 3.924489
+[5,] 1.245467e-01 3.883821
+[6,] 1.647963e-01 3.844176
 > solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
@@ -403,19 +403,19 @@ Rblood2plasma = 0.706.
 [10,] 2.031250 4.867204e+02 116.8137554 28.8091483 5167.162            0
 [11,] 2.041667 2.822208e+02 118.6903847 30.5983868 5269.663            0
 [12,] 2.052083 1.636435e+02 117.0711091 30.8976694 5375.502            0
-           AUC
- [1,] 15.09608
- [2,] 15.09922
- [3,] 15.10220
- [4,] 15.10502
- [5,] 15.10769
- [6,] 15.11022
- [7,] 15.11022
- [8,] 15.19121
- [9,] 15.40318
-[10,] 15.68319
-[11,] 15.99430
-[12,] 16.31554
+           AUC    Cplasma
+ [1,] 15.09608  0.3101632
+ [2,] 15.09922  0.2936837
+ [3,] 15.10220  0.2780798
+ [4,] 15.10502  0.2633049
+ [5,] 15.10769  0.2493151
+ [6,] 15.11022  0.2360686
+ [7,] 15.11022  0.2360583
+ [8,] 15.19121 15.3184406
+ [9,] 15.40318 24.3788814
+[10,] 15.68319 28.8091483
+[11,] 15.99430 30.5983868
+[12,] 16.31554 30.8976694
 > solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
@@ -437,5 +437,22 @@ Rblood2plasma = 0.679.
 [14,] 2.010417 2.521181e+01 8.963491 2.655789 34.92485     167.8497 3.707398
 [15,] 2.020833 1.461887e+01 8.777173 2.823484 35.19454     169.2974 3.736027
 [16,] 2.031250 8.476629e+00 8.631028 2.909191 35.47631     170.7177 3.765938
+       Cplasma
+ [1,] 2.687007
+ [2,] 2.662801
+ [3,] 2.638700
+ [4,] 2.614750
+ [5,] 2.590979
+ [6,] 2.567402
+ [7,] 2.544026
+ [8,] 2.520857
+ [9,] 2.497893
+[10,] 2.475137
+[11,] 2.452586
+[12,] 2.430240
+[13,] 2.430218
+[14,] 2.655789
+[15,] 2.823484
+[16,] 2.909191
 > 
 > quit("no")
