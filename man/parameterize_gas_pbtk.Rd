@@ -7,6 +7,7 @@
 parameterize_gas_pbtk(
   chem.cas = NULL,
   chem.name = NULL,
+  dtxsid = NULL,
   species = "Human",
   default.to.human = F,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
@@ -32,6 +33,9 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -62,7 +66,7 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{...}{Other parameters? Logical vmax.km error?}
+\item{...}{Other parameters}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -101,7 +105,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 This function initializes the parameters needed in the function solve_gas_pbtk
 }
 \examples{
-parameters <- parameterize__gas_pbtk(chem.cas='129-00-0')
+parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 
 parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
@@ -113,12 +117,15 @@ parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRU
 
 }
 \references{
+Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
+Inhalation Model for Organic Chemicals", submitted
+
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
 \author{
-John Wambaugh and Robert Pearce
+Matt Linakis, Robert Pearce, John Wambaugh
 }
 \keyword{Parameter}

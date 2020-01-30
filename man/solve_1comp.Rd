@@ -43,6 +43,9 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{times}{Optional time sequence for specified number of days.}
 
 \item{parameters}{Chemical parameters from parameterize_1comp function,

@@ -3,6 +3,7 @@
 #'
 #' @param parameters.dt The data table of parameters being used by the Monte
 #' Carlo sampler
+#' @param ... Additional arguments passed to \code{\link{calc_elimination_rate}}
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.

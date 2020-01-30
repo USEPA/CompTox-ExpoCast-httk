@@ -10,6 +10,8 @@ propagate_invitrouv_pbtk(parameters.dt, ...)
 \arguments{
 \item{parameters.dt}{The data table of parameters being used by the Monte
 Carlo sampler}
+
+\item{...}{Additional arguments passed to \code{\link{calc_hep_clearance}}}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model

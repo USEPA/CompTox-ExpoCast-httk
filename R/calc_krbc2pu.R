@@ -10,14 +10,10 @@
 #' Rblood2plasma.
 #' @param hematocrit Overwrites default hematocrit value in calculating
 #' Rblood2plasma.
-#' @param hematocrit Overwrites default hematocrit value in calculating
-#' Rblood2plasma.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
-#' adjustment.
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'

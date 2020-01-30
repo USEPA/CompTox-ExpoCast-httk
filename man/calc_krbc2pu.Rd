@@ -31,9 +31,6 @@ default "Human").}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
-
-\item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
-adjustment.}
 }
 \description{
 Given and observed ratio of chemial concentration in blood to plasma, this

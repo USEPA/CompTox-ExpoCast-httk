@@ -8,6 +8,8 @@
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -28,7 +30,7 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @param ... Other parameters? Logical vmax.km error? 
+#' @param ... Other parameters
 #' 
 #' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
 #' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
@@ -62,14 +64,21 @@
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
 #'
-#' @author John Wambaugh and Robert Pearce
-#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' @author Matt Linakis, Robert Pearce, John Wambaugh
+#'
+#' @references 
+#' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
+#' Inhalation Model for Organic Chemicals", submitted
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter
+#'
 #' @examples
-#' parameters <- parameterize__gas_pbtk(chem.cas='129-00-0')
+#' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 #' 
 #' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
@@ -82,6 +91,7 @@
 #' @export parameterize_gas_pbtk
 parameterize_gas_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
+                              dtxsid=NULL,
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(
@@ -104,10 +114,21 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               ...)
 {
   physiology.data <- physiology.data
-# Look up the chemical name/CAS, depending on what was provided:
-  out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
+  out <- get_chem_id(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid)
   chem.cas <- out$chem.cas
-  chem.name <- out$chem.name
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
