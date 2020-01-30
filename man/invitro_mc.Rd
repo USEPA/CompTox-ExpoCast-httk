@@ -20,6 +20,8 @@ invitro_mc(
 )
 }
 \arguments{
+\item{parameters.dt}{A data table of physiological parameters}
+
 \item{samples}{The number of samples to draw.}
 
 \item{fup.meas.cv}{Coefficient of variation of distribution of measured
@@ -53,9 +55,6 @@ set to zero.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
-
-\item{this.chem}{The CAS number of one of the HTTK chemicals (see
-\code{\link[httk]{get_cheminfo}}).}
 
 \item{parameters}{A list of chemical-specific model parameters containing at
 least Funbound.plasma, Clint, and Fhep.assay.correction.}

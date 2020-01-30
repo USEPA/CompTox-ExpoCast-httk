@@ -203,12 +203,16 @@ create_mc_samples <- function(chem.cas=NULL,
 #Depending on model, choose the function in HTTK that will return the default
 #HTTK parameters for this chemical
     paramfun <- model.list[[model]]$parameterize.func
-    parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=c(list(chem.cas=chem.cas,
+    parameterize.args <- c(list(chem.cas=chem.cas,
                              chem.name=chem.name,
                              dtxsid=dtxsid,
                              species=species),
-                             parameterize.arg.list))
+                             parameterize.arg.list)
+    # Make sure all the arguments are used by the function:
+    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+      formalArgs(paramfun)]
+    parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                         args=parameterize.args)
     parameter.names <- names(parameters.mean)
     pschmitt <- parameterize_schmitt(
                   chem.cas=chem.cas,
