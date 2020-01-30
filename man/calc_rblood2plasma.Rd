@@ -26,8 +26,16 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Parameters from \code{\link{parameterize_schmitt}}}
+
 \item{hematocrit}{Overwrites default hematocrit value in calculating
 Rblood2plasma.}
+
+\item{Krbc2pu}{The red blood cell to unbound plasma chemical partition
+coefficient, typically from \code{\link{predict_partitioning_schmitt}}}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
@@ -41,7 +49,8 @@ adjustment.}
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
 
-\item{params}{Parameters from parameterize_schmitt.}
+\item{Funbound_plasma}{The fraction of chemical unbdound (free) in the
+presence of plasma protein}
 }
 \description{
 This function calculates the constant ratio of the blood concentration to
