@@ -55,7 +55,8 @@
 #' human physiology.  Species must also be set to 'Human'.
 #' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
 #' metabolizers)
-#' @param invitrouv ##Marker##
+#' @param invitrouv Logical to indicate whether to include in vitro parameters
+#' in uncertainty and variability analysis
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
