@@ -47,7 +47,7 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr
+        graphics, utils, magrittr, purrr, methods
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, gdata, viridis, CensRegMod,
