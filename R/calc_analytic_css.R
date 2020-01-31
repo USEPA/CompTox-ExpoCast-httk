@@ -98,8 +98,9 @@ model.list <- list()
 #'
 #' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 #' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
-#''
+#'
 #' @export calc_analytic_css
+#' @import methods
 calc_analytic_css <- function(chem.name=NULL,
                               chem.cas = NULL,
                               dtxsid = NULL,
