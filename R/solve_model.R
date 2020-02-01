@@ -428,7 +428,8 @@ with two columns (time, dose).")
   # Here we remove model parameters that are not needed by the C solver (via
 # only passing those parameters in compiled_param_names) and add in any
 # additional parameters calculated by the C code (such as body weight scaling):
-  parameters <- .C(compiled_parameters_init,
+  parameters <- .C(
+    getDLLRegisteredRoutines("httk")[[".C"]][[compiled_parameters_init]]$address,
     as.double(parameters[compiled_param_names]),
     out=double(length(parameters[compiled_param_names])),
     as.integer(length(parameters[compiled_param_names])))$out
