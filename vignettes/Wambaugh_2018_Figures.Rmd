@@ -12,7 +12,47 @@ vignette: >
 ```{r, include=FALSE, eval=F}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
-This vignette provides the code used to generate the figures in Wambaugh et al. (2018) "Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics" from Toxicological Sciences
+
+# Wambaugh et al. (2018): Creating All Figures
+
+This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
+"Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics"
+
+John F Wambaugh, Michael F Hughes, Caroline L Ring, Denise K MacMillan, Jermaine Ford, 
+Timothy R Fennell, Sherry R Black, Rodney W Snyder, Nisha S Sipes, Barbara A Wetmore, 
+Joost Westerhout, R Woodrow Setzer, Robert G Pearce, Jane Ellen Simmons, Russell S Thomas
+
+Toxicological Sciences, Volume 163, Issue 1, May 2018, Pages 152-169,
+
+https://doi.org/10.1093/toxsci/kfy020
+
+## Abstract
+Prioritizing the risk posed by thousands of chemicals potentially present in the 
+environment requires exposure, toxicity, and toxicokinetic (TK) data, which are 
+often unavailable. Relatively high throughput, in vitro TK (HTTK) assays and in 
+vitro-to-in vivo extrapolation (IVIVE) methods have been developed to predict TK, 
+but most of the in vivo TK data available to benchmark these methods are from 
+pharmaceuticals. Here we report on new, in vivo rat TK experiments for 26 
+non-pharmaceutical chemicals with environmental relevance. Both intravenous and 
+oral dosing were used to calculate bioavailability. These chemicals, and an 
+additional 19 chemicals (including some pharmaceuticals) from previously published 
+in vivo rat studies, were systematically analyzed to estimate in vivo TK 
+parameters (e.g., volume of distribution [Vd], elimination rate). For each of the 
+chemicals, rat-specific HTTK data were available and key TK predictions were 
+examined: oral bioavailability, clearance, Vd, and uncertainty. For the 
+non-pharmaceutical chemicals, predictions for bioavailability were not effective. 
+While no pharmaceutical was absorbed at less than 10%, the fraction bioavailable 
+for non-pharmaceutical chemicals was as low as 0.3%. Total clearance was 
+generally more under-estimated for nonpharmaceuticals and Vd methods calibrated 
+to pharmaceuticals may not be appropriate for other chemicals. However, the 
+steady-state, peak, and time-integrated plasma concentrations of 
+non-pharmaceuticals were predicted with reasonable accuracy. The plasma 
+concentration predictions improved when experimental measurements of 
+bioavailability were incorporated. In summary, HTTK and IVIVE methods are 
+adequately robust to be applied to high throughput in vitro toxicity 
+screening data of environmentally relevant chemicals for prioritizing based 
+on human health risks.
+
 
 To use the code in this vignette, you'll first need to load a few packages.
 ```{r load_packages, eval=FALSE}
