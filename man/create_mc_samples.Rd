@@ -67,6 +67,13 @@ otherwise '3compartmentss' is used.}
 \item{httkpop}{Whether or not to use the Ring et al. (2017) "httkpop"
 population generator. Species must be 'Human'.}
 
+\item{invitrouv}{Logical to indicate whether to include in vitro parameters
+(like x and y basketball) in uncertainty and variability analysis}
+
+\item{calcrb2p}{Logical determining how in vivo measured ratio of blood 
+to plasma for the chemical is or isn't factored into the calculation of
+partitioning coefficients basketball}
+
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
 of detection (specified separately for each paramter). This argument should

@@ -15,7 +15,7 @@ sipes2017.table
 }
 \description{
 This is an image of the chem.phys_and_invitro.data table that has had the
-Sipes et al. (2017) ADMET predictions adfdded to it. The data set contains 
+Sipes et al. (2017) ADMET predictions adfdded to it. The data set contains
 the necessary information to make basic,
 high-throughput toxicokinetic (HTTK) predictions for compounds, including
 Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),

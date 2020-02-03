@@ -1,15 +1,55 @@
 ---
-title: "Wambaugh et al. (submitted): Creating Figures for the Manuscript"
+title: "Wambaugh et al. (2019): Creating Figures for the Manuscript"
 author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (submitted): Creating Figures for the Manuscript}
+  %\VignetteIndexEntry{Wambaugh et al. (2019): Creating Figures for the Manuscript}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-#Wambaugh et al. (submitted): Creating Figures for the Manuscript
+# Wambaugh et al. (2019): Creating All Figures
+
+This vignette provides the code used to generate the figures in Wambaugh et al. (2019) 
+"Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization." 
+
+John F Wambaugh, Barbara A Wetmore, Caroline L Ring, Chantel I Nicolas, 
+Robert G Pearce, Gregory S Honda, Roger Dinallo, Derek Angus, Jon Gilbert, 
+Teresa Sierra, Akshay Badrinarayanan, Bradley Snodgrass, Adam Brockman, 
+Chris Strock, R Woodrow Setzer, Russell S Thomas
+
+Toxicological Sciences, Volume 172, Issue 2, December 2019, Pages 235-251
+
+https://doi.org/10.1093/toxsci/kfz205
+
+## Abstract
+High(er) throughput toxicokinetics (HTTK) encompasses in vitro measures of 
+key determinants of chemical toxicokinetics and reverse dosimetry 
+approaches for in vitro-in vivo extrapolation (IVIVE). With HTTK, the 
+bioactivity identified by any in vitro assay can be converted to human 
+equivalent doses and compared with chemical intake estimates. Biological 
+variability in HTTK has been previously considered, but the relative 
+impact of measurement uncertainty has not. Bayesian methods were 
+developed to provide chemical-specific uncertainty estimates for 2 in 
+vitro toxicokinetic parameters: unbound fraction in plasma (fup) and 
+intrinsic hepatic clearance (Clint). New experimental measurements of 
+fup and Clint are reported for 418 and 467 chemicals, respectively. 
+These data raise the HTTK chemical coverage of the ToxCast Phase I and II 
+libraries to 57%. Although the standard protocol for Clint was followed, 
+a revised protocol for fup measured unbound chemical at 10%, 30%, and 
+100% of physiologic plasma protein concentrations, allowing estimation of 
+protein binding affinity. This protocol reduced the occurrence of 
+chemicals with fup too low to measure from 44% to 9.1%. Uncertainty in 
+fup was also reduced, with the median coefficient of variation dropping 
+from 0.4 to 0.1. Monte Carlo simulation was used to propagate both 
+measurement uncertainty and biological variability into IVIVE. The 
+uncertainty propagation techniques used here also allow incorporation of 
+other sources of uncertainty such as in silico predictors of HTTK 
+parameters. These methods have the potential to inform risk-based 
+prioritization based on the relationship between in vitro bioactivities 
+and exposures.
+
 ##Prepate for session
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
@@ -903,7 +943,7 @@ High throughput risk-based prioritization can be conducted by using doses predic
 #Tox21.acc.numeric <- subset(Tox21.acc.rows,!is.na(value))
 
 # In this vignette we use the AC50's (as in Ring 2017) rather than ACC's
-# (as in Wambaugh submitted) to help keep the HTTK package smaller:
+# (as in Wambaugh 2019) to help keep the HTTK package smaller:
 Tox21.acc.numeric <- httk::ToxCast2015subset[,c("Chemical.Name",
   "CASRN",
   "Assay.Endpoint",
