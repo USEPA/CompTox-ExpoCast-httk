@@ -24,7 +24,7 @@
 #' Rblood2plasma.
 #' @param Krbc2pu The red blood cell to unbound plasma chemical partition
 #' coefficient, typically from \code{\link{predict_partitioning_schmitt}}
-#' @param Funbound_plasma The fraction of chemical unbdound (free) in the
+#' @param Funbound.plasma The fraction of chemical unbound (free) in the
 #' presence of plasma protein
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
