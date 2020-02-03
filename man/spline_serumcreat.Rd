@@ -5,15 +5,15 @@
 \alias{spline_serumcreat}
 \title{Smoothing splines for log serum creatinine vs. age in months, along with KDE
 residuals, by race and gender.}
-\format{A data.table with 6 variables: \describe{ 
+\format{A data.table with 6 variables: \describe{
 \item{\code{gender}}{Gender:
- Male or Female} 
- \item{\code{reth}}{Race/ethnicity: Mexican American, Other 
- Hispanic, Non-Hispanic White, Non-Hispanic Black, Other} 
- \item{\code{sc_spline}}{A list of smooth.spline objects, each giving a 
- smoothed relationship between log serum creatinine and age in months} 
- \item{\code{sc_kde}}{A list of kde 
- objects; each is a KDE of the distribution of residuals about the smoothing 
+ Male or Female}
+ \item{\code{reth}}{Race/ethnicity: Mexican American, Other
+ Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
+ \item{\code{sc_spline}}{A list of smooth.spline objects, each giving a
+ smoothed relationship between log serum creatinine and age in months}
+ \item{\code{sc_kde}}{A list of kde
+ objects; each is a KDE of the distribution of residuals about the smoothing
  spline.}
   }}
 \usage{
@@ -24,8 +24,8 @@ spline_serumcreat
 age data by race/ethnicity and gender.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability." Environment
 International 106 (2017): 105-118
 }
 \author{

@@ -12,8 +12,8 @@ howgate
 This data set is only used in Vignette 5.
 }
 \references{
-Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro 
-data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006): 
+Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro
+data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006):
 473-497.
 }
 \author{
