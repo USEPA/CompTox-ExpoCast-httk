@@ -30,6 +30,14 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param vmax Michaelis-Menten vmax value in reactions/min
+#' @param km Michaelis-Menten concentration of half-maximal reaction velocity
+#' in desired output concentration units. 
+#' @param exercise Logical indicator of whether to simulate an exercise-induced
+#' heightened respiration rate
+#' @param fR
+#' @param VT
+#' @param VD
 #' @param ... Other parameters
 #' 
 #' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -305,7 +313,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     Kair2muc <- 10^(lKair2muc)
     Kmuc2air <- 1/Kair2muc
     if(exercise){
-      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, Added 4-30-19 to allow user-input respiratory and/or work values, assumes input units of L and min^-1
+      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
+      #Added 4-30-19 to allow user-input respiratory and/or work values,
+      #assumes input units of L and min^-1
     } else {
       #Vdot <- 24.75 #L/h, changed 4-29-19 to allow user to change inhalation physiologic parameters
       #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary

@@ -41,15 +41,15 @@
 #' be specified.
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param times Optional time sequence for specified number of days.  Dosing
-#' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' @param times Optional time sequence for specified number of days.  Dosing
+#' sequence begins at the beginning of times.
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW. Overwrites daily.dose.
 #' @param doses.per.day Number of doses per day.
+#' @param dose Amount of a single dose, mg/kg BW. Overwrites daily.dose.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
@@ -60,7 +60,7 @@
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to uM/L **?
+#' 'forcings' data series argument for integrator. Defaults to uM/L 
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
@@ -92,10 +92,21 @@
 #' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 #' "Crest", "Ckidney", "Cplasma", "Calv", "Cendexh", "Cmixexh", "Cmuc", 
 #' "Atubules", "Ametabolized", "AUC"
+#' @param vmax Michaelis-Menten vmax value in reactions/min
+#' @param km Michaelis-Menten concentration of half-maximal reaction velocity
+#' in desired output concentration units. 
+#' @param exercise Logical indicator of whether to simulate an exercise-induced
+#' heightened respiration rate
+#' @param fR
+#' @param VT
+#' @param VD
 #' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -132,8 +143,8 @@
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
                            dtxsid = NULL,
-                           times=NULL,
                            parameters=NULL,
+                           times=NULL,
                            days=10,
                            tsteps = 4, #tsteps is number of steps per hour
                            daily.dose = NULL,
