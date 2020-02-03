@@ -27,11 +27,11 @@ National Health and Nutrition Examination Survey (NHANES). They reflect the
 populaton median intake rate (mg/kg body weight/day), with uncertainty.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-evironmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+evironmental chemicals by simulating toxicokinetic variability." Environment
 international 106 (2017): 105-118
 
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
 Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{

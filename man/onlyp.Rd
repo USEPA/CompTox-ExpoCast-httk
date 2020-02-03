@@ -12,8 +12,8 @@ onlyp
 This data set is only used in Vignette 6.
 }
 \references{
-Wambaugh, John F., et al. "High throughput heuristics for prioritizing human 
-exposure to environmental chemicals." Environmental science & technology 
+Wambaugh, John F., et al. "High throughput heuristics for prioritizing human
+exposure to environmental chemicals." Environmental science & technology
 48.21 (2014): 12760-12767.
 }
 \author{

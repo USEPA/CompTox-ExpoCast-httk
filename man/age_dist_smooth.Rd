@@ -4,10 +4,10 @@
 \name{age_dist_smooth}
 \alias{age_dist_smooth}
 \title{Smoothed age distributions by race and gender.}
-\format{A data.table object with three variables: \describe{ 
- \item{\code{gender}}{Gender: Male or Female} 
- \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of 
- \code{svysmooth} objects, each encoding a weighted smoothed distribution of 
+\format{A data.table object with three variables: \describe{
+ \item{\code{gender}}{Gender: Male or Female}
+ \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of
+ \code{svysmooth} objects, each encoding a weighted smoothed distribution of
  ages.}}}
 \usage{
 age_dist_smooth
@@ -17,8 +17,8 @@ Distributions of ages in months, computed from NHANES data smoothed using
 survey::svysmooth(), for each combination of race/ethnicity and gender.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability." Environment
 International 106 (2017): 105-118
 }
 \author{

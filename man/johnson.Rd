@@ -12,9 +12,9 @@ johnson
 This data set is only used in Vignette 5.
 }
 \references{
-Johnson, Trevor N., Amin Rostami-Hodjegan, and Geoffrey T. Tucker. 
-"Prediction of the clearance of eleven drugs and associated variability in 
-neonates, infants and children." Clinical pharmacokinetics 45.9 (2006): 
+Johnson, Trevor N., Amin Rostami-Hodjegan, and Geoffrey T. Tucker.
+"Prediction of the clearance of eleven drugs and associated variability in
+neonates, infants and children." Clinical pharmacokinetics 45.9 (2006):
 931-956.
 }
 \author{
