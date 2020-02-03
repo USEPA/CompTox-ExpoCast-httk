@@ -4,9 +4,9 @@ author: "Matt Linakis"
 date: "January 30, 2020"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Linakis et al. (Submitted): Analysis and Figure Generation}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+ %\VignetteIndexEntry{Linakis et al. (Submitted): Analysis and Figure Generation}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
 ---
 #Inhalation Paper Vignette Analysis and Figure Generation
 Code by Matt Linakis
