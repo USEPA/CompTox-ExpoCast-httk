@@ -19,6 +19,8 @@
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", "inhalation", ...
 #' @param stats Desired values (either 'AUC', 'mean', 'peak', or a vector
 #' containing any combination).
 #' @param daily.dose Total daily dose, mg/kg BW.
@@ -34,6 +36,7 @@
 #' compartment model.
 #' @param concentration Desired concentration type, 'blood' or default
 #' 'plasma'.
+#' @param tissue Desired steady state tissue conentration.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
@@ -84,7 +87,6 @@ calc_stats <-function(
                adjusted.Funbound.plasma=T,
                regression=T,
                restrictive.clearance = T,
-               minimum.Funbound.plasma=0.0001,
                suppress.messages=F,
                ...)
 {
