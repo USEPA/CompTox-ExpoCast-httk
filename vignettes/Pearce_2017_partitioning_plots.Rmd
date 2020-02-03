@@ -9,10 +9,58 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Pearce et al. (2017): Creating Partition Coefficient Evaluation Plots
+
+This vignette generates the data and figures from "Evaluation and calibration 
+of high-throughput predictions of chemical distribution to tissues".
+
+Robert G. Pearce, R. Woodrow Setzer, Jimena L. Davis & John F. Wambaugh
+
+Journal of Pharmacokinetics and Pharmacodynamics volume 44, pages549-565 (2017)
+
+https://dx.doi.org/10.1007%2Fs10928-017-9548-7
+
+## Abstract
+Toxicokinetics (TK) provides critical information for integrating chemical 
+toxicity and exposure assessments in order to determine potential chemical 
+risk (i.e., the margin between toxic doses and plausible exposures). For 
+thousands of chemicals that are present in our environment, in vivo TK 
+data are lacking. The publicly available R package "httk" (version 1.8, 
+named for "high throughput TK") draws from a database of in vitro data and 
+physico-chemical properties in order to run physiologically-based TK (PBTK) 
+models for 553 compounds. The PBTK model parameters include tissue:plasma 
+partition coefficients (Kp) which the httk software predicts using the 
+model of Schmitt (Toxicol In Vitro 22 (2):457-467, 2008). In this paper we 
+evaluated and modified httk predictions, and quantified confidence using 
+in vivo literature data. We used 964 rat Kp measured by in vivo experiments 
+for 143 compounds. Initially, predicted Kp were significantly larger than 
+measured Kp for many lipophilic compounds (log10 octanol:water partition 
+coefficient > 3). Hence the approach for predicting Kp was revised to 
+account for possible deficiencies in the in vitro protein binding assay, 
+and the method for predicting membrane affinity was revised. These changes 
+yielded improvements ranging from a factor of 10 to nearly a factor of 
+10,000 for 83 Kp across 23 compounds with only 3 Kp worsening by more than 
+a factor of 10. The vast majority (92%) of Kp were predicted within a 
+factor of 10 of the measured value (overall root mean squared error of 
+0.59 on log10-transformed scale). After applying the adjustments, 
+regressions were performed to calibrate and evaluate the predictions for 
+12 tissues. Predictions for some tissues (e.g., spleen, bone, gut, lung) 
+were observed to be better than predictions for other tissues (e.g., skin, 
+brain, fat), indicating that confidence in the application of in silico 
+tools to predict chemical partitioning varies depending upon the tissues 
+involved. Our calibrated model was then evaluated using a second data set 
+of human in vivo measurements of volume of distribution (Vss) for 498 
+compounds reviewed by Obach et al. (Drug Metab Dispos 36(7):1385-1405, 
+2008). We found that calibration of the model improved performance: a 
+regression of the measured values as a function of the predictions has a 
+slope of 1.03, intercept of ??? 0.04, and R2 of 0.43. Through careful 
+evaluation of predictive methods for chemical partitioning into tissues, 
+we have improved and calibrated these methods and quantified confidence 
+for TK predictions in humans and rats.
+
 ```{r, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
-This vignette generates the data and figures from the partition coefficient evaluation paper.
 
 ```{r, eval=FALSE}
 library(gdata)
