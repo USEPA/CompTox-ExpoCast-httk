@@ -12,7 +12,7 @@ extern void getParmspbtk(double *, double *, int *);
 extern void getParms1comp(double *, double *, int *);
 extern void getParms3comp(double *, double *, int *);
 extern void getParms_gas_pbtk(double *, double *, int *);
-extern void getParms(void *(double *, double *, int *),double *, double *, int *);
+//extern void getParms(void *(double *, double *, int *),double *, double *, int *);
 extern void initmodpbtk(void *);
 extern void initmod1comp(void *);
 extern void initmod3comp(void *);
@@ -39,7 +39,7 @@ static const R_CMethodDef CEntries[] = {
     {"getParms1comp", (DL_FUNC) &getParms1comp, 3},
     {"getParms3comp", (DL_FUNC) &getParms3comp, 3},
     {"getParms_gas_pbtk", (DL_FUNC) &getParms_gas_pbtk, 3},
-    {"getParms", (DL_FUNC) &getParms, 4},
+//    {"getParms", (DL_FUNC) &getParms, 4},
     {"initmodpbtk", (DL_FUNC) &initmodpbtk, 1},
     {"initmod1comp", (DL_FUNC) &initmod1comp, 1},
     {"initmod3comp", (DL_FUNC) &initmod3comp, 1},
@@ -70,7 +70,7 @@ void R_init_httk(DllInfo *dll)
 }
 
 ///*----- Initializers */
-void getParms(void *parmsInit(double *, double *, int *), double *inParms, double *out, int *nout)
-{
-  parmsInit(inParms, out, nout);
-}
+//void getParms(void *parmsInit(double *, double *, int *), double *inParms, double *out, int *nout)
+//{
+//  parmsInit(inParms, out, nout);
+//}
