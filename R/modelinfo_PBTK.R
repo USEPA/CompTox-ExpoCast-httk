@@ -95,6 +95,10 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
 # parameters:
 model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
 
+# This needs to be a global variable so that R CMD check --as-cran can test
+# the code (the HTTK package does not use this):
+compiled_parameters_init <- "getParmspbtk"
+
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
 model.list[["pbtk"]]$compiled.param.names <- c(
