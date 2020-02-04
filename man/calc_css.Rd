@@ -59,7 +59,7 @@ each iteration.}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
 
-\item{tissue}{Desired tissue conentration (defaults to whole body 
+\item{tissue}{Desired tissue concentration (defaults to whole body 
 concentration.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
@@ -114,7 +114,7 @@ calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
-calc_css(parameters=parms,concentration='blood',model='3compartment')
+calc_css(parameters=parms,model='3compartment')
 
 out <- solve_pbtk(chem.name = "Bisphenol A",
   days = 50, 

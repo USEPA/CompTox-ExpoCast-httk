@@ -26,7 +26,7 @@
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
 #' @param suppress.messages Whether or not to suppress messages.
-#' @param tissue Desired tissue conentration (defaults to whole body 
+#' @param tissue Desired tissue concentration (defaults to whole body 
 #' concentration.)
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
@@ -67,7 +67,7 @@
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
-#' calc_css(parameters=parms,concentration='blood',model='3compartment')
+#' calc_css(parameters=parms,model='3compartment')
 #' 
 #' out <- solve_pbtk(chem.name = "Bisphenol A",
 #'   days = 50, 
@@ -207,7 +207,7 @@ calc_css <- function(chem.name=NULL,
     restrictive.clearance=restrictive.clearance) 
   target.conc <- (1 - f) * css 
 
-  # Initially simulate for a time perioud of length "days":
+  # Initially simulate for a time period of length "days":
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
