@@ -57,6 +57,8 @@ default.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 Returns tissue to unbound plasma partition coefficients for each
