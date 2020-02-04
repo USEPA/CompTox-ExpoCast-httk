@@ -21,7 +21,6 @@ calc_mc_tk(
   vary.params = list(),
   return.samples = F,
   tissue = NULL,
-  httkpop.matrix = NULL,
   output.units = "mg/L",
   solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
   invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
@@ -71,6 +70,13 @@ otherwise '3compartmentss' is used.}
 httkpop.  This is overwrites censored.params and vary.params and is only for
 human physiology.  Species must also be set to 'Human'.}
 
+\item{invitrouv}{Logical to indicate whether to include in vitro parameters
+in uncertainty and variability analysis}
+
+\item{calcrb2p}{Logical determining how in vivo measured ratio of blood 
+to plasma for the chemical is or isn't factored into the calculation of
+partitioning coefficients basketball}
+
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
 of detection (specified separately for each paramter). This argument should
@@ -96,87 +102,23 @@ samples from the simulation instead of the selected quantile.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
-\item{fup.meas.cv}{Coefficient of variation of distribution of measured
-\code{Funbound.plasma} values.}
+\item{solvemodel.arg.list}{Additional arguments ultimately passed to 
+\code{\link{solve_model}}}
 
-\item{clint.meas.cv}{Coefficient of variation of distribution of measured 
-\code{Clint} values.}
+\item{invitro.mc.arg.list}{List of additional parameters passed to 
+\code{\link{invitro_mc}}}
 
-\item{fup.pop.cv}{Coefficient of variation of distribution of population
-\code{Funbound.plasma} values.}
+\item{httkpop.generate.arg.list}{Additional parameters passed to 
+\code{\link{httkpop_generate}}.}
 
-\item{clint.pop.cv}{Coefficient of variation of distribution of population
-\code{Clint} values.}
+\item{convert.httkpop.arg.list}{Additional parameters passed to the 
+convert_httkpop_* function for the model.}
 
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
+\item{parameterize.arg.list}{Additional parameters passed to the 
+parameterize_* function for the model.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
-set to zero.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
-
-\item{poormetab}{TRUE (include poor metabolizers) or FALSE (exclude poor
-metabolizers)}
-
-\item{fup.censored.dist}{Logical. Whether to draw \code{Funbound.plasma} from a
-censored distribution or not.}
-
-\item{fup.lod}{The average limit of detection for Funbound.plasma. if
-\code{fup.censor == TRUE}, the \code{Funbound.plasma} distribution will be
-censored below \code{lod/2}. Default value is 0.01.}
-
-\item{method}{The population-generation method to use. Either "virtual
-individuals" or "direct resampling" (default). Short names may be used: "d"
-or "dr" for "direct resampling", and "v" or "vi" for "virtual individuals".}
-
-\item{gendernum}{Optional: A named list giving the numbers of male and
-female individuals to include in the population, e.g. \code{list(Male=100,
-Female=100)}. Default is NULL, meaning both males and females are included,
-in their proportions in the NHANES data. If both \code{nsamp} and
-\code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
-the sum of \code{gendernum}).}
-
-\item{agelim_years}{Optional: A two-element numeric vector giving the
-minimum and maximum ages (in years) to include in the population. Default is
-c(0,79). If only a single value is provided, both minimum and maximum ages
-will be set to that value; e.g. \code{agelim_years=3} is equivalent to
-\code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
-\code{agelim_months} is not, \code{agelim_years} will override the default
-value of \code{agelim_months}.}
-
-\item{agelim_months}{Optional: A two-element numeric vector giving the
-minimum and maximum ages (in months) to include in the population. Default
-is c(0, 959), equivalent to the default \code{agelim_years}. If only a
-single value is provided, both minimum and maximum ages will be set to that
-value; e.g. \code{agelim_months=36} is equivalent to
-\code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
-\code{agelim_years} is not, \code{agelim_months} will override the default
-values of \code{agelim_years}.}
-
-\item{weight_category}{Optional: The weight categories to include in the
-population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-'Obese')}. User-supplied vector must contain one or more of these strings.}
-
-\item{gfr_category}{The kidney function categories to include in the
-population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
-to include all kidney function levels.}
-
-\item{reths}{Optional: a character vector giving the races/ethnicities to
-include in the population. Default is \code{c('Mexican American','Other
-Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-all races and ethnicities in their proportions in the NHANES data.
-User-supplied vector must contain one or more of these strings.}
-
-\item{...}{Additional parameters passed to calc_analytic_css}
+\item{return.all.sims}{Logical indicating whether to return the results
+of all simulations, in addition to the default toxicokinetic statistics}
 }
 \description{
 This function finds the analytical steady state plasma concentration(from

@@ -24,7 +24,6 @@ calc_stats(
   adjusted.Funbound.plasma = T,
   regression = T,
   restrictive.clearance = T,
-  minimum.Funbound.plasma = 1e-04,
   suppress.messages = F,
   ...
 )
@@ -39,6 +38,9 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
+
+\item{route}{String specification of route of exposure for simulation:
+"oral", "iv", "inhalation", ...}
 
 \item{stats}{Desired values (either 'AUC', 'mean', 'peak', or a vector
 containing any combination).}
@@ -59,6 +61,8 @@ default "Human").}
 
 \item{concentration}{Desired concentration type, 'blood' or default
 'plasma'.}
+
+\item{tissue}{Desired steady state tissue conentration.}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, '3compartmentss' for
