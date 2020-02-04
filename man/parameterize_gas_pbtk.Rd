@@ -60,6 +60,14 @@ TRUE along with parition coefficients calculated with this value.}
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
+\item{vmax}{Michaelis-Menten vmax value in reactions/min}
+
+\item{km}{Michaelis-Menten concentration of half-maximal reaction velocity
+in desired output concentration units.}
+
+\item{exercise}{Logical indicator of whether to simulate an exercise-induced
+heightened respiration rate}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
@@ -99,7 +107,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} basketball
 }
 \description{
 This function initializes the parameters needed in the function solve_gas_pbtk
