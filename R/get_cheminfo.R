@@ -9,9 +9,8 @@
 #' human values are given instead.
 #' 
 #' @param info A single character vector (or collection of character vectors)
-#' from "Compound", "CAS", "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
-#' "Clint.pValue", "Funbound.plasma",
-#' "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type". info="all"
+#' from "Compound", "CAS", "DTXSID, "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
+#' "Clint.pValue", "Funbound.plasma","Structure_Formula", or "Substance_Type". info="all"
 #' gives all information for the model and species.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
