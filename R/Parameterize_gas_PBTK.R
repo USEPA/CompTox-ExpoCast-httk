@@ -70,7 +70,7 @@
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} basketball
 #'
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
