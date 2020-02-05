@@ -35,33 +35,63 @@
 #' in desired output concentration units. 
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
-#' @param fR
-#' @param VT
-#' @param VD
+#' @param fR Respiratory frequency (breaths/minute), used especially to adjust
+#' breathing rate in the case of exercise. This parameter, along with VT and VD
+#' (below) gives another option for calculating Qalv (Alveolar ventilation) 
+#' in case pulmonary ventilation rate is not known 
+#' @param VT Tidal volume (L), to be modulated especially as part of simulating
+#' the state of exercise
+#' @param VD Anatomical dead space (L), to be modulated especially as part of
+#' simulating the state of exercise
 #' @param ... Other parameters
 #' 
-#' @return \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-#' BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
-#' the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-#' plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-#' chemical unbound in hepatocyte assay using the method of Kilford et al.
-#' (2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' @return \item{BW}{Body Weight, kg.} 
+#' \item{Clint}{Hepatic intrinsic clearance, uL/min/10^6 cells}
+#' \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
+#' (median, lower 95th, upper 95th, p value)} 
+#' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' dose that enters the gut lumen.}
+#' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
+#' assay using the method of Kilford et al. (2008)} 
+#' \item{Funbound.plasma}{Fraction of chemical unbound to plasma.} 
+#' \item{Funbound.plasma.adjustment}{Fraction unbound to plasma, adjusted for basketball}
+#' \item{Funbound.plasma.dist}{Distribution of fraction unbound to plasma (median,
+#' lower 95th, upper 95th)}
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' \item{Kblood2air}{Ratio of concentration of chemical in blood to air}
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-#' concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
-#' from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
-#' kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
-#' concentration of chemical in liver tissue to unbound concentration in
-#' plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
-#' to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
-#' of chemical in red blood cells to unbound concentration in plasma.}
+#' concentration in plasma.} 
+#' \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 
+#' \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
+#' unbound concentration in plasma.} 
+#' \item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to
+#' unbound concentration in plasma.} 
+#' \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+#' to unbound concentration in plasma.} 
+#' \item{km}{Michaelis-Menten concentration of half-maximal activity}
+#' \item{Kmuc2air}{Mucus to air partition coefficient}
+#' \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells to
+#' unbound concentration in plasma.}
 #' \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-#' unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-#' cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
-#' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
-#' Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
-#' excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+#' unbound concentration in plasma.} 
+#' \item{kUrtc}{Unscaled upper respiratory tract uptake parameter (L/h/kg^0.75)}
+#' \item{liver.density}{Density of liver in g/mL}
+#' \item{MA}{phospholipid:water distribution coefficient, membrane affinity}
+#' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
+#' \item{MW}{Molecular Weight, g/mol.}
+#' \item{pKa_Accept}{compound H association equilibrium constant(s)}
+#' \item{pKa_Donor}{compound H dissociation equilibirum constant(s)}
+#' \item{Pow}{octanol:water partition coefficient (not log transformed)}
+#' \item{Qalvc}{Unscaled alveolar ventilation rate (L/h/kg^0.75)}
+#' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} 
+#' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^0.75, volume of fluid
+#' filtered from kidney and excreted.} 
+#' \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 #' \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 #' \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
+#' \item{Qlungf}{Fraction of cardiac output flowing to lung tissue.}
+#' \item{Qrestf}{Fraction of blood flow to rest of body}
 #' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
 #' blood to the concentration in the plasma from available_rblood2plasma.}
 #' \item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
@@ -69,6 +99,8 @@
 #' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+#' \item{vmax}{Michaelis-Menten maximum reaction velocity (1/min)}
+#' \item{Vmucc}{Unscaled mucosal volume (L/kg BW^0.75}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
 #'
@@ -241,7 +273,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 2.18, # 1/h #Where is the gut concentration coming from?
+    kgutabs = 2.18, # 1/h 
     Funbound.plasma = fup, # unitless fraction
     Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -317,11 +349,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       #Added 4-30-19 to allow user-input respiratory and/or work values,
       #assumes input units of L and min^-1
     } else {
-      #Vdot <- 24.75 #L/h, changed 4-29-19 to allow user to change inhalation physiologic parameters
-      #Vdot <- Vdot * outlist$BW^.75 #This is scaled in the model code, making scaling here unnecessary
       Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
-      Fds <- 0.15 #changed 4-29-19 to allow user to change inhalation physiologic parameters
-      #Fds <- this.phys.data["Alveolar Dead Space Fraction"]
       Qalvc <- Vdot * (0.67) #L/h/kg^0.75
     }
     outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
