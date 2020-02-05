@@ -90,7 +90,7 @@ get_cheminfo <- function(info="CAS",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
-  if (any(!(toupper(info) %in% toupper(valid.info))) & tolower(info)!="all") stop(paste("Data on",
+  if (any(!(toupper(info) %in% toupper(valid.info))) & any(tolower(info)!="all")) stop(paste("Data on",
     info[!(info %in% valid.info)],"not available. Valid options are:",
     paste(valid.info,collapse=" ")))
   if (any(toupper(info)=="ALL")) info <- valid.info

@@ -52,8 +52,7 @@ names(parameters) != "Funbound.plasma"))) vary.parameters[this.param] <- .2
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 set.seed(1)
 out <- monte_carlo(parameters, cv.params = vary.params,
-censored.params = censored.params, return.samples = T, #basketball return.samples in use?
-model = "pbtk", suppress.messages = T)
+censored.params = censored.params, model = "pbtk", suppress.messages = T)
 zoxamide <- ggplot(as.data.frame(out), aes(out)) +
 geom_histogram(fill="blue", binwidth=1/6) + scale_x_log10() +
 ylab("Number of Samples") + xlab("Steady State Concentration (uM)") +
@@ -90,7 +89,6 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
     vLiver.human.values <- monte_carlo(these.params,
                                        cv.params=vary.params,
                                        censored.params=censored.params,
-                                       which.quantile=c(0.05,0.5,0.95), #basketball -- which.quantile in use??
                                        output.units="mg/L",
                                        model='3compartmentss',
                                        suppress.messages=T,
@@ -99,8 +97,7 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
     percentiles <- c("5","50","95")
     for (this.index in 1:3)
     {
-      this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS,
-                                which.quantile=as.numeric(percentiles[this.index])/100)) #basketball --which.quantile in use?
+      this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS)) 
       this.row <- cbind(this.row, as.data.frame(vLiver.human.values[this.index]))
       this.row <- cbind(this.row, as.data.frame(percentiles[this.index]))
       this.row <- cbind(this.row, as.data.frame("Human"))
