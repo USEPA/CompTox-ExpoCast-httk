@@ -107,7 +107,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} basketball
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
 This function initializes the parameters needed in the function solve_gas_pbtk

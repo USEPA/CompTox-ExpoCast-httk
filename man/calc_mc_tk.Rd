@@ -73,9 +73,8 @@ human physiology.  Species must also be set to 'Human'.}
 \item{invitrouv}{Logical to indicate whether to include in vitro parameters
 in uncertainty and variability analysis}
 
-\item{calcrb2p}{Logical determining how in vivo measured ratio of blood 
-to plasma for the chemical is or isn't factored into the calculation of
-partitioning coefficients basketball}
+\item{calcrb2p}{Logical determining whether or not to recalculate the 
+chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
