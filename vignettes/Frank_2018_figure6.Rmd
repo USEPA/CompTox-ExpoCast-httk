@@ -46,11 +46,15 @@ suggests there is potential for using tipping points for chemical prioritization
 ## Prepare for session
 ### Load the relevant libraries
 ```{r setup}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 library(gdata)
 library(httk)
 library(ggplot2)
 library(scales)
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
 ```
 ### Function to format scientific notation 
 From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales

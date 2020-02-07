@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r, include=FALSE, eval=F}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
 ```
 
 # Wambaugh et al. (2018): Creating All Figures
@@ -56,6 +56,10 @@ on human health risks.
 
 To use the code in this vignette, you'll first need to load a few packages.
 ```{r load_packages, eval=FALSE}
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
 library(scales)
 library(ggplot2)
 library(data.table)

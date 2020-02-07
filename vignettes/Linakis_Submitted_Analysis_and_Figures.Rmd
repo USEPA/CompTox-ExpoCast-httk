@@ -36,7 +36,7 @@ high-throughput estimates of inhalation chemical exposures.
 ## Prepare for session
 ### Load the relevant libraries
 ```{r setup}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 library(httk)
 library(ggplot2)
 library(gridExtra)
@@ -46,6 +46,10 @@ library(dplyr)
 library(stringr)
 library(forcats)
 library(smatr)
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
 ```
 ###Get metabolism and concentration data 
 ```{r data}
