@@ -9,11 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r knitrPRrep, include=FALSE, eval=F}
+```{r knitrPRrep, include=FALSE, eval=TRUE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=8, fig.height=5)
 ```
-
-# Wambaugh et al. (2018): Creating All Figures
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
 "Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics"
@@ -632,7 +630,7 @@ for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log
 
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=T))/sd(x,na.rm=T))
 
-dev.new(width=8,height=8)
+#dev.new(width=8,height=8)
 main_title="in vivo Toxicokinetic Parameters"
 heatmap.2(physprop.matrix, 
           hclustfun=myclust,
@@ -741,7 +739,7 @@ FigVdistb <- ggplot(data=subset(FitData.Fup,!is.na(Vdist.1comp.pred.nocal))) +
 
 
 
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(FigVdista,FigVdistb,cols=2,widths=c(1.75,1.75))
 
 
@@ -803,7 +801,7 @@ Fig.SelectedClearance<- ggplot(data=FitData.Fup,aes(y=SelectedCLtot,x=CLtot.1com
     guides(shape=guide_legend(nrow=2,byrow=TRUE),color=guide_legend(nrow=2,byrow=TRUE))
 
 
-dev.new(width=6,height=6)
+#dev.new(width=6,height=6)
 print(Fig.SelectedClearance)
 
 paste("with",with(FitData.Fup,sum(SelectedCLtot<CLtot.1comp.pred,na.rm=T)),"chemicals over-estimated and",with(FitData.Fup,sum(SelectedCLtot>CLtot.1comp.pred,na.rm=T)),"under-estimated")
@@ -822,7 +820,7 @@ Figkgutabs <- ggplot(subset(FitData,Selectedkgutabs<999), aes(Selectedkgutabs, f
      theme_bw() +
         theme(legend.position="bottom")
      
-dev.new(width=6,height=6)
+#dev.new(width=6,height=6)
 print(Figkgutabs) 
 
 mean(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
@@ -868,7 +866,7 @@ FigFbiob <- ggplot(FitData, aes(SelectedFbio, fill = Chemical)) +
 
      
 
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(FigFbioa,FigFbiob,cols=2,widths=c(1.75,1.75))
 
 summary(lm(log(SelectedFbio)~log(Fbio.pred),data=FitData))
@@ -945,7 +943,7 @@ Fig.Cssb <- ggplot(data=FitData) +
   annotate("text",x = textx, y = texty,size=6, label = lm_R2(Fig.1compCssb.fit),parse=T)+
     guides(shape=guide_legend(nrow=2,byrow=TRUE),color=guide_legend(nrow=2,byrow=TRUE)) 
 
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(Fig.Cssa,Fig.Cssb,cols=2,widths=c(1.75,1.75))
 
                         
@@ -980,7 +978,7 @@ Fig.Triage <- ggplot(data=subset(FitData,!is.na(TriageCat)&is.finite(CssResidual
     guides(shape=guide_legend(nrow=2,byrow=TRUE),color=guide_legend(nrow=2,byrow=TRUE))
 
 
-dev.new(width=6,height=6)
+#dev.new(width=6,height=6)
 print(Fig.Triage)
 
 
@@ -1039,7 +1037,7 @@ FigCmaxb <- ggplot(data=subset(PKstats,is.finite(Cmax))) +
     theme(legend.position="bottom")+
     guides(shape=guide_legend(nrow=2,byrow=TRUE),color=guide_legend(nrow=2,byrow=TRUE))
 
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(FigCmaxa,FigCmaxb,cols=2,widths=c(1.75,1.75))
                         
 ```
@@ -1086,8 +1084,7 @@ FigAUCb <- ggplot(data=subset(PKstats,is.finite(log(AUC)))) +
     theme(legend.position="bottom")+
     guides(shape=guide_legend(nrow=2,byrow=TRUE),color=guide_legend(nrow=2,byrow=TRUE))
 
-
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(FigAUCa,FigAUCb,cols=2,widths=c(1.75,1.75))
                         
 ```

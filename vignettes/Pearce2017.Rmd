@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Pearce et al. (2017): Creating Partition Coefficient Evaluation Plots
-
 This vignette generates the data and figures from "Evaluation and calibration 
 of high-throughput predictions of chemical distribution to tissues".
 
@@ -57,9 +55,11 @@ slope of 1.03, intercept of ??? 0.04, and R2 of 0.43. Through careful
 evaluation of predictive methods for chemical partitioning into tissues, 
 we have improved and calibrated these methods and quantified confidence 
 for TK predictions in humans and rats.
-
+```{r knitrPRrep, include=FALSE, eval=TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
+```
 ```{r InitialPrep, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)library(httk)
+library(httk)
 library(gdata)
 library(ggplot2)
 library(viridis)

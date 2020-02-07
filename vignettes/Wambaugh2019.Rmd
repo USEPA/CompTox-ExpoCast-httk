@@ -9,7 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Wambaugh et al. (2019): Creating All Figures
+```{r knitrPRrep, include=FALSE, eval=TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=8, fig.height=5)
+```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2019) 
 "Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization." 
@@ -52,7 +54,6 @@ and exposures.
 
 ##Prepate for session
 ```{r setup}
-knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 # We love to give warning messages whenever assumptions are used by HTTK,
 # but they will overwhelm the output of this vignette so we turn them
 # off:
@@ -470,7 +471,7 @@ Fig1a <- ggplot(Fig1.table)+
     theme_bw()+
     theme( text  = element_text(size=10)) +
     annotate("text", x=10^-6,y=80,size=8,label="a")
-dev.new()        
+#dev.new()        
 print(Fig1a)    
     
 print(paste("Median 100%:",signif(median(Fig1.table$Base.Fup.Med,na.rm=T),2)))
@@ -533,7 +534,7 @@ Fig1d <- ggplot(Fig1.table)+
 print(Fig1d)  
 print(paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))
 
-dev.new()
+#dev.new()
 multiplot(Fig1a,Fig1c,Fig1b,Fig1d,cols=2,widths=c(1.75,1.75))
 ```
 
@@ -662,7 +663,7 @@ print(paste("Among the chemicals that were uncertain using the original protocol
 
 summary(lm(data=subset(Fig2.table,!is.na(Base.Fup.Med)&Affinity.Fup.Med>0&Base.Fup.Med>0),log(Base.Fup.Med)~log(Affinity.Fup.Med)))
 
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(Fig2a,Fig2b,cols=2,widths=c(1.75,1.75))
 ```
 
@@ -682,7 +683,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
       theme_bw()  +
     theme(legend.position="bottom", text  = element_text(size=18))
       
-  dev.new()
+ # dev.new()
   print(Fig3)
 ```
 
@@ -737,7 +738,7 @@ Fig4 <- ggplot(clearance.table, aes(x=CLint.1uM.Point,y=CLint.1uM.Median,colour=
   guides(colour=guide_legend(nrow=2,byrow=TRUE))+
   annotate("text",x = 10^2, y = 10^0,size=6, label = lm_R2(clearance.fit,prefix=""),parse=T)
 
-dev.new()
+#dev.new()
 print(Fig4)  
 
 summary(clearance.fit)
@@ -817,7 +818,7 @@ Fig5b <- ggplot(data=ceetox,aes(x=cssmed,y=cssmed_u)) +
   annotate("text",x = 10^2, y = 10^-3,size=5, label = lm_R2(cssfit,prefix=""),parse=T)  
 
 
-dev.new(width=8,height=5)
+#dev.new(width=8,height=5)
 multiplot(Fig5a,Fig5b,cols=2,widths=c(1.75,1.75))
 ```
 
@@ -928,7 +929,7 @@ Fig6 <- ggplot(data=dt_melt) +
   annotate("text", size=8,x = levels(dt_melt$Compound)[length(unique(dt_melt$Compound))/2], y = 200, label = paste("Median Ratio for Variability:",signif(median(subset(dt_melt,type=="Variability")$Norm),3)))+
   annotate("text", size=8,x = levels(dt_melt$Compound)[length(unique(dt_melt$Compound))/2], y = 100, label = paste("Median Ratio for Both:",signif(median(subset(dt_melt,type=="Both")$Norm),3)))
     
-dev.new(width=10,height=6)  
+#dev.new(width=10,height=6)  
 print(Fig6)
 ```
 
@@ -1076,7 +1077,7 @@ Fig7c <- ggplot() +
  
 
 #print(Fig10b)
-dev.new(width=10,height=6)
+#dev.new(width=10,height=6)
 multiplot(Fig7a,Fig7c,cols=1,heights=c(0.5,0.5))
 
 write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("SupTable5-",Sys.Date(),".txt",sep=""),row.names=F)
