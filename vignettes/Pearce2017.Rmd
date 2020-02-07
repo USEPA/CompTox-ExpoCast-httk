@@ -62,7 +62,8 @@ for TK predictions in humans and rats.
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
 ```
 
-```{r, eval=FALSE}
+```{r InitialPrep, eval=TRUE}
+library(httk)
 library(gdata)
 library(ggplot2)
 library(viridis)
@@ -81,9 +82,9 @@ and these are all consolidated into a table for analysis and plotting. Note that
 and improvements derived from subtracting these values. Only relevant rat values are used. Compounds with Funbound.plasma and partition 
 coefficients of zero are removed as well as compounds with approximated Funbound.plasma values.
 
-```{r, eval=FALSE}
+```{r FilterData}
 pc.table <- NULL
-pc.data <- subset(pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
+pc.data <- subset(httk::pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
     "Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & 
     tolower(Species) == 'rat' & !CAS %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6',
     '57562-99-9','59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2','60-54-8'))
@@ -142,12 +143,14 @@ init.plot <- ggplot() + geom_point(data=pc.table,aes(10^(init.Predicted),10^(Exp
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
     plot.title=element_text(size=18,hjust = 0.5)) + scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
     scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + ggtitle('(A)')
+print(init.plot)
 
 final.plot <- ggplot() + geom_point(data=pc.table,aes(10^(Predicted),10^(Experimental))) +
     geom_abline() + labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p]))) +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
     plot.title=element_text(size=18,hjust=0.5)) + scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
     scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + ggtitle('(B)')
+print(final.plot)
 
 fup.change.plot <-  ggplot() +
     geom_point(data=pc.table[order(pc.table[,'fup.improvement'],decreasing=F),],
@@ -157,6 +160,8 @@ fup.change.plot <-  ggplot() +
     scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
     scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
     scale_color_viridis(direction=-1,option='inferno')
+print(fup.change.plot)
+
 ma.subset <- subset(pc.table,!CAS %in% ma.data.list)
 ma.change.plot <- ggplot() +
     geom_point(data=ma.subset[order(ma.subset[,'ma.improvement'],decreasing=F),]
@@ -166,10 +171,11 @@ ma.change.plot <- ggplot() +
     scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
     scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
     scale_color_viridis(direction=-1,option='inferno')
+print(ma.change.plot)
 ```
 Now we calculate and plot the regressions for all tissues, together with their 95% confidence intervals.
 
-```{r, eval=FALSE}
+```{r Regressions}
 regressions <- NULL
 
 for(tissue in as.character(unique(pc.table[,'Tissue']))){
@@ -229,7 +235,7 @@ for(tissue in  as.character(unique(pc.table[,'Tissue']))){
 ```
 In vivo volume of distribution data are compared with the predictions, and errors are calculated.  Regressions and improvements are calculated and plotted.
 
-```{r,eval=FALSE}
+```{r VolumeofDistributionEvaluation}
 obach <- subset(Obach2008,CAS %in% get_cheminfo(model='schmitt'))
 vd.table <- NULL
 
@@ -286,6 +292,7 @@ init.vd.plot <- ggplot(vd.table,aes(10^(init.vdist),10^(Experimental))) + geom_p
     scale_x_log10(label=scientific_10,limits=c(10^(-1.5),10^(8.5))) + 
     scale_y_log10(label=scientific_10,limits=c(10^(-1.5),10^(8.5))) +
     ggtitle('(A)')
+print(init.vd.plot)
 
 adjustment.plot <- ggplot() +
     geom_point(data=vd.table[order(vd.table[,'adjustment.improvement'],decreasing=F),],
@@ -298,6 +305,7 @@ adjustment.plot <- ggplot() +
     axis.title=element_text(size=16),plot.title=element_text(size=18,hjust = 0.5)) +
     scale_x_log10(limits=c(10^(-1.5),10^(3))) + scale_y_log10(limits=c(10^(-1.5),10^(3))) +
     ggtitle('(B)') + scale_color_viridis(direction=-1,option='inferno')
+print(adjustment.plot)
 
 calibration.plot <- ggplot() +
     geom_point(data=vd.table[order(vd.table[,'calibration.improvement'],decreasing=F),],
@@ -310,12 +318,13 @@ calibration.plot <- ggplot() +
     axis.title=element_text(size=16),plot.title=element_text(size=18,hjust = 0.5)) +
     scale_x_log10(limits=c(10^(-1.5),10^(3))) + scale_y_log10(limits=c(10^(-1.5),10^(3))) +
     ggtitle('(C)') + scale_color_viridis(direction=-1,option='inferno')
+print(calibration.plot)
 ```
 
 Now we pull in the in vivo blood to plasma ratios, use these to calculate the inferred red blood cell to plasma ratios, and then make predictions for these values.
 A censored regressions is performed, and predictions are plotted against errors.
 
-```{r,eval=FALSE}
+```{r RBCtoplasma}
 rb2p.data <- subset(chem.physical_and_invitro.data,!is.na(Human.Rblood2plasma))
 measured.rb2p <- NULL
 measured.krbc <- NULL
@@ -381,10 +390,11 @@ rb2p.plot <- ggplot(rb2p.table,aes(predicted.rb2p,measured.rb2p)) +
     x="Predicted B:P Ratio") +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
     plot.title=element_text(size=18,hjust=0.5)) + ggtitle('(A)')
+print(rb2p.plot)
 ```
 
 Lastly, we make the heatmap.
-```{r,eval=FALSE}
+```{r MakeHeatmap}
 heatmap.table <- NULL
 for(this.cas in get_cheminfo(model='schmitt')){
     parms <- parameterize_schmitt(chem.cas=this.cas)
