@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 ```
 # Honda et al. (2019): Updated Armitage et al. (2014) Model
 
@@ -60,6 +60,10 @@ library(data.table)
 library(magrittr)
 library(ggplot2)
 library(httk)
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
 armitage.dt <- copy(armitage_input)
 armitage.dt[,well_number:=384] %>% 
   .[,option.bottom:=TRUE] %>% 

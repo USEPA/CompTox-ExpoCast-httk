@@ -59,7 +59,7 @@ we have improved and calibrated these methods and quantified confidence
 for TK predictions in humans and rats.
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
 ```
 
 ```{r, eval=FALSE}
@@ -71,6 +71,10 @@ library(gmodels)
 library(gplots)
 library(scales)
 library(colorspace)
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
 ```
 We first filter the measured rat Kp data, pc.data. Then the old and new Kp predictions are made, along with error and improvement measures, 
 and these are all consolidated into a table for analysis and plotting. Note that the final table contains log10-transformed values and error 
