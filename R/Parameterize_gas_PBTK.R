@@ -3,7 +3,6 @@
 #' This function initializes the parameters needed in the function solve_gas_pbtk
 #' 
 #' 
-#' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
