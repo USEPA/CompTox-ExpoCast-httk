@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Frank et al. (2018): Creating Figure Six for the Manuscript
-
 from "Defining toxicological tipping points in neuronal network development"
 
 Christopher L. Frank, Jasmine P. Brown, Kathleen Wallace, John F. Wambaugh, Imran Shah, and Timothy J. Shafer

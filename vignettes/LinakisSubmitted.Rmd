@@ -8,8 +8,6 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
-#Inhalation Paper Vignette Analysis and Figure Generation
-Code by Matt Linakis
 mlinak01@gmail.com
 
 ## Abstract

@@ -12,8 +12,6 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 ```
-# Honda et al. (2019): Updated Armitage et al. (2014) Model
-
 from "Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionst"
 
 Gregory S. Honda, Robert G. Pearce, Ly L. Pham, R. W. Setzer, Barbara A. Wetmore,
