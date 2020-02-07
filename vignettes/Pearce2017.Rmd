@@ -58,12 +58,8 @@ evaluation of predictive methods for chemical partitioning into tissues,
 we have improved and calibrated these methods and quantified confidence 
 for TK predictions in humans and rats.
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
-```
-
 ```{r InitialPrep, eval=TRUE}
-library(httk)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)library(httk)
 library(gdata)
 library(ggplot2)
 library(viridis)
@@ -248,7 +244,7 @@ for(this.cas in obach[,'CAS']){
   pcs <- predict_partitioning_schmitt(parameters=parameters,regression=F)
   init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,regression=F)
   reg.pcs <- predict_partitioning_schmitt(parameters=parameters,regression=T)
-  vdist <- calc_vdist(parameters=c(pcs,Funbound.plasma=parameters$Funbound.plasma))
+  vdist <- calc_vdist(parameters=c(pcs,Funbound.plasma=parameters$Funbound.plasma),suppress.messages = TRUE)
   init.vdist <- calc_vdist(parameters=c(init.pcs,Funbound.plasma=parameters$unadjusted.Funbound.plasma))
   reg.vdist <- calc_vdist(parameters=c(reg.pcs,Funbound.plasma=parameters$Funbound.plasma))
   vd.table <- rbind(vd.table,cbind(as.data.frame(this.cas),as.data.frame(log10(init.vdist)),

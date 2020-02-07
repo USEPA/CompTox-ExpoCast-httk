@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include=FALSE, eval=F}
+```{r knitrPRrep, include=FALSE, eval=F}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
 ```
 
@@ -55,7 +55,7 @@ on human health risks.
 
 
 To use the code in this vignette, you'll first need to load a few packages.
-```{r load_packages, eval=FALSE}
+```{r load_packages}
 # We love to give warning messages whenever assumptions are used by HTTK,
 # but they will overwhelm the output of this vignette so we turn them
 # off:
@@ -72,11 +72,12 @@ library(gplots)
 
 ```
 
-The data we analyze were originally generated with the R package invivoPKfit, but all the outputs of that analysis are provided with httk >v1.8.
+The data we analyze were originally generated with the R package invivoPKfit (https://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
+of that analysis are provided with httk >v1.8.
 
 # Plot functions
 These functions, which have been cobbled togethe from the internet, are reused in multiple figure to make things look nice.
-```{r plot_funcs,eval=FALSE}
+```{r plot_funcs}
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
