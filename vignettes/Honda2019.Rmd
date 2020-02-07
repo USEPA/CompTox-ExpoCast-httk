@@ -55,7 +55,7 @@ for predicting in vivo toxicity in humans.
 
 This produces an updated version of the top panel of Figure 3 from the paper Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779.
 
-```{r, eval=F}
+```{r}
 library(data.table)
 library(magrittr)
 library(ggplot2)
@@ -78,13 +78,11 @@ armitage_output1 <- armitage_eval(tcdata = armitage.dt2)
 armitage_output2 <- armitage_eval(tcdata = armitage.dt2[,ac50:=1])
 armitage_output3 <- armitage_eval(tcdata = armitage.dt2[,ac50:=0.001])
 
-
-
 ```
 
 ## Plot results
 
-```{r, echo=TRUE, eval=F}
+```{r, echo=TRUE}
 armitage_output <- rbind(armitage_output1[,xfill:="50 \U00B5M"],
                          armitage_output2[,xfill:="1 \U00B5M"],
                          armitage_output3[,xfill:="1 nM"])
