@@ -880,6 +880,7 @@ min(FitData$SelectedFbio,na.rm=T)
 ## Figure Eight
 Rat in vivo data were collected for diverse environmental chemicals to evaluate the predictive ability of HTTK, especially with respect to predicting steady-state serum concentration (Css). Chemicals can be identified by their chemical abbreviation given in Table 1. The abbreviations are centered at the measured and predicted values. The solid line indicates the identity line (1:1, perfect predictions). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately.
 ```{r fig8, eval=TRUE}
+FitData$SelectedFbio <- FitData$Fbio
 FitData$SelectedCss <- FitData$Css
 FitData$SelectedCss.sd <- FitData$Css.sd
 FitData$Css.1comp.pred <- sapply(FitData$CAS,function(x) calc_analytic_css(chem.cas=x,species="Rat",
