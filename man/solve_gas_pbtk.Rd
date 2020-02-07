@@ -54,7 +54,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
@@ -152,6 +152,17 @@ in desired output concentration units.}
 
 \item{exercise}{Logical indicator of whether to simulate an exercise-induced
 heightened respiration rate}
+
+\item{fR}{Respiratory frequency (breaths/minute), used especially to adjust
+breathing rate in the case of exercise. This parameter, along with VT and VD
+(below) gives another option for calculating Qalv (Alveolar ventilation) 
+in case pulmonary ventilation rate is not known}
+
+\item{VT}{Tidal volume (L), to be modulated especially as part of simulating
+the state of exercise}
+
+\item{VD}{Anatomical dead space (L), to be modulated especially as part of
+simulating the state of exercise}
 
 \item{...}{Additional arguments passed to the integrator.}
 }

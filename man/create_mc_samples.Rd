@@ -44,7 +44,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -68,11 +68,11 @@ otherwise '3compartmentss' is used.}
 population generator. Species must be 'Human'.}
 
 \item{invitrouv}{Logical to indicate whether to include in vitro parameters
-(like x and y basketball) in uncertainty and variability analysis}
+such as intrinsic hepatic clearance rate and fraction unbound in plasma
+in uncertainty and variability analysis}
 
-\item{calcrb2p}{Logical determining how in vivo measured ratio of blood 
-to plasma for the chemical is or isn't factored into the calculation of
-partitioning coefficients basketball}
+\item{calcrb2p}{Logical determining whether or not to recalculate the 
+chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit

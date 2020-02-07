@@ -1,11 +1,13 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R Under development (unstable) (2020-01-27 r77730) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -83,10 +85,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo measured Rblood2plasma used.
-5: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-6: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
@@ -98,10 +96,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 2: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > # Human.Funbound.plasma is below LOD (0.005), can't do PBPK, can't predict
 > # Rblood2plasma
 > set.seed(1234)
@@ -118,10 +112,6 @@ Warning messages:
   Average in vivo Human Rblood2plasma (0.846) substituted.
 4: In parameterize_schmitt(chem.cas = chem.cas, chem.name, dtxsid = dtxsid,  :
   Fraction unbound = 0, can't predict tissue partitioning.
-5: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-6: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > # well-behaved chemical with a measured Rblood2plasma:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
@@ -133,10 +123,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
   Human in vivo measured Rblood2plasma used.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > 
 > 
 > 
@@ -155,8 +141,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
@@ -166,12 +150,8 @@ Human plasma concentration returned in mg/L units for 0.95 quantile.
 Warning messages:
 1: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
-2: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
-3: In predict_partitioning_schmitt(parameters = parameters.dt) :
+2: In predict_partitioning_schmitt(parameters = parameters.dt) :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
@@ -184,8 +164,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > 
 > #
 > #
@@ -201,8 +179,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
 > calc_mc_css(chem.cas="90-43-7",
@@ -224,8 +200,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
@@ -237,8 +211,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
@@ -250,8 +222,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
@@ -263,8 +233,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
@@ -290,8 +258,6 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-3: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > 
 > 
 >     
@@ -385,7 +351,5 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In if (nchar(Clint) - nchar(gsub(",", "", Clint)) == 3) { :
-  the condition has length > 1 and only the first element will be used
 > 
 > quit("no")

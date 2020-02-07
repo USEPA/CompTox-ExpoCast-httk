@@ -34,7 +34,7 @@
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
 #' @param parameters Parameters from the appropriate parameterization function
@@ -55,9 +55,8 @@
 #' human physiology.  Species must also be set to 'Human'.
 #' @param invitrouv Logical to indicate whether to include in vitro parameters
 #' in uncertainty and variability analysis
-#' @param calcrb2p Logical determining how in vivo measured ratio of blood 
-#' to plasma for the chemical is or isn't factored into the calculation of
-#' partitioning coefficients basketball 
+#' @param calcrb2p Logical determining whether or not to recalculate the 
+#' chemical ratio of blood to plasma
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
 #' of detection (specified separately for each paramter). This argument should
@@ -226,8 +225,7 @@ calc_mc_css <- function(chem.cas=NULL,
                           IVIVE = NULL,
                           tissue=tissue,
                           restrictive.clearance = T,
-                          bioactive.free.invivo = FALSE,
-                          concentration = "plasma")) #basketball - concentration arg?
+                          bioactive.free.invivo = FALSE)) 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 

@@ -1,7 +1,7 @@
 #' Retrieve chemical identity from HTTK package
 #' 
 #' Given one of chem.name, chem.cas (Chemical Abstract Service Registry Number),
-#' or DTXSID (DSStox Substance Identifier \url{https://comptox.epa.gov} this
+#' or DTXSID (DSStox Substance Identifier \url{https://comptox.epa.gov/dashboard}) this
 #' function checks if the chemical is available and, if so, returns all three
 #' pieces of information.
 #' @author John Wambaugh and Robert Pearce
