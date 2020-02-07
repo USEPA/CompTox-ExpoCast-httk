@@ -21,6 +21,9 @@ PLoS ONE 14(5): e0217564.
 
 https://doi.org/10.1371/journal.pone.0217564
 
+The authors thank James Armitage for providing a revised version of his model (
+https://doi.org/10.1021/es501955g). 
+
 ## Abstract
 Linking in vitro bioactivity and in vivo toxicity on a dose basis enables the 
 use of high-throughput in vitro assays as an alternative to traditional animal 
