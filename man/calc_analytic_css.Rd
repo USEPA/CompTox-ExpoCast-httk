@@ -4,11 +4,25 @@
 \alias{calc_analytic_css}
 \title{Calculate the analytic steady state concentration.}
 \usage{
-calc_analytic_css(chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, daily.dose = 1, output.units = "uM",
-  model = "pbtk", concentration = "plasma", suppress.messages = F,
-  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = F, IVIVE = NULL, ...)
+calc_analytic_css(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "human",
+  daily.dose = 1,
+  output.units = "uM",
+  model = "pbtk",
+  concentration = "plasma",
+  suppress.messages = F,
+  tissue = NULL,
+  restrictive.clearance = T,
+  bioactive.free.invivo = F,
+  IVIVE = NULL,
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
+    regression = T, minimum.Funbound.plasma = 1e-04),
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -17,10 +31,16 @@ be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
 parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
@@ -35,10 +55,6 @@ compartment model.}
 \item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
-in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}
@@ -57,6 +73,17 @@ assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda4". If used, this function 
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
+
+\item{parameterize.args}{List of arguments passed to model's associated
+parameterization function, including default.to.human, 
+adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
+default.to.human argument substitutes missing animal values with human values
+if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
+to TRUE along with parition coefficients calculated with this value, 
+regression indicates whether or not to use the regressions in calculating
+partition coefficients, and minimum.Funbound.plasma is the value to which
+Monte Carlo draws less than this value are set (default is 0.0001 -- half
+the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
@@ -88,18 +115,26 @@ Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
 \examples{
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
                  model='3compartment',concentration='blood')
+
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-                 default.to.human=TRUE,daily.dose=2)
+                 parameterize.args = list(
+                                default.to.human=TRUE,
+                                adjusted.Funbound.plasma=TRUE,
+                                regression=TRUE,
+                                minimum.Funbound.plasma=1e-4),daily.dose=2)
+
 calc_analytic_css(chem.name="bisphenol a",model="1compartment")
+
 calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
+
 params <- parameterize_pbtk(chem.cas="80-05-7") 
+
 calc_analytic_css(parameters=params,model="pbtk")
 
 }
 \references{
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
-'
 }
 \author{
 Robert Pearce, John Wambaugh, and Greg Honda

@@ -4,15 +4,18 @@
 \alias{get_cheminfo}
 \title{Retrieve chemical information from HTTK package}
 \usage{
-get_cheminfo(info = "CAS", species = "Human",
-  fup.lod.default = 0.005, model = "3compartmentss",
-  default.to.human = F)
+get_cheminfo(
+  info = "CAS",
+  species = "Human",
+  fup.lod.default = 0.005,
+  model = "3compartmentss",
+  default.to.human = F
+)
 }
 \arguments{
 \item{info}{A single character vector (or collection of character vectors)
-from "Compound", "CAS", "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
-"Clint.pValue", "Funbound.plasma",
-"DSSTox_Substance_Id","Structure_Formula", or "Substance_Type". info="all"
+from "Compound", "CAS", "DTXSID, "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
+"Clint.pValue", "Funbound.plasma","Structure_Formula", or "Substance_Type". info="all"
 gives all information for the model and species.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or

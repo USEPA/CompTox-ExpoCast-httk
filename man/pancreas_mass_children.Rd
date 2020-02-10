@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{pancreas_mass_children}
 \alias{pancreas_mass_children}
-\title{Predict pancreas mass for children.}
+\title{Predict pancreas mass for children}
 \usage{
 pancreas_mass_children(height, weight, gender)
 }
@@ -20,3 +20,15 @@ A vector of pancreas masses in kg.
 For individuals under 18, predict the pancreas mass from height, weight, and
 gender, using equations from Ogiu et al.
 }
+\references{
+Ogiu, Nobuko, et al. "A statistical analysis of the internal 
+organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

@@ -3,17 +3,13 @@
 #' This function performs Monte Carlo to assess uncertainty and variability for
 #' toxicokinetic models. 
 #' 
-#' @param params All parameters needed by the function indicated by the
-#' argument "name.model". These paramters that are also listed in either
+#' @param parameters These parameters that are also listed in either
 #' cv.params or censored.params are sampled using Monte Carlo.
-#' @param which.quantile This argument specifies which quantiles are to be
-#' calculated. It can be a vector or a single value. It defaults to the 0.95
-#' quantile (95\%).
 #' @param cv.params The parameters listed in cv.params are sampled from a
 #' normal distribution that is truncated at zero. This argument should be a
 #' list of coefficients of variation (cv) for the normal distribution. Each
-#' entry in the list is named for a parameter in "params". New values are
-#' sampled with mean equal to the value in "params" and standard deviation
+#' entry in the list is named for a parameter in "parameters". New values are
+#' sampled with mean equal to the value in "parameters" and standard deviation
 #' equal to the mean times the cv.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
@@ -26,32 +22,32 @@
 #' distribution between 0 and the limit of detection.
 #' @param samples This argument is the number of samples to be generated for
 #' calculating quantiles.
-#' @param name.model This argument is a character vector giving the name of the
-#' model to be sampled.  Defaults to 'calc_analytic_css'.
-#' @param output.col.model If the evaluation of the function indicated by
-#' "model" returns a list, then model.output.col is the element from that list
-#' that is sampled and is used for calculating quantiles. Defaults to NA (i.e.,
-#' the function returns a single value).
-#' @param return.samples Whether or not to return the vector containing the
-#' samples from the simulation instead of the selected quantile.
-#' @param ... Additional arguments passed to name.model.
+#'
 #' @author John Wambaugh
+#'
+#' @references 
+#' Wambaugh, John F., et al. "Toxicokinetic triage for 
+#' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+#'
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
 #' @keywords Monte-Carlo
+#'
 #' @examples
 #' 
-#' #Example from httk jss paper:
+#' #Example from Pearce et al. (2017):
 #' \dontrun{
 #' library(ggplot2)
 #' library(scales)
 #' vary.params <- NULL
-#' params <- parameterize_pbtk(chem.name = "Zoxamide")
-#' for(this.param in names(subset(params,
-#' names(params) != "Funbound.plasma"))) vary.params[this.param] <- .2
+#' parameters <- parameterize_pbtk(chem.name = "Zoxamide")
+#' for(this.param in names(subset(parameters,
+#' names(parameters) != "Funbound.plasma"))) vary.parameters[this.param] <- .2
 #' censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 #' set.seed(1)
-#' out <- monte_carlo(params, cv.params = vary.params,
-#' censored.params = censored.params, return.samples = T,
-#' model = "pbtk", suppress.messages = T)
+#' out <- monte_carlo(parameters, cv.params = vary.params,
+#' censored.params = censored.params, model = "pbtk", suppress.messages = T)
 #' zoxamide <- ggplot(as.data.frame(out), aes(out)) +
 #' geom_histogram(fill="blue", binwidth=1/6) + scale_x_log10() +
 #' ylab("Number of Samples") + xlab("Steady State Concentration (uM)") +
@@ -63,11 +59,11 @@
 #' # Fig 1 in Wambaugh et al. (2015) SimCYP vs. our predictions:
 #' 
 #' vary.params <- list(BW=0.3)
-#' vary.params[["Vliverc"]]<-0.3
-#' vary.params[["Qgfrc"]]<-0.3
-#' vary.params[["Qtotal.liverc"]]<-0.3
-#' vary.params[["million.cells.per.gliver"]]<-0.3
-#' vary.params[["Clint"]]<-0.3
+#' vary.parameters[["Vliverc"]]<-0.3
+#' vary.parameters[["Qgfrc"]]<-0.3
+#' vary.parameters[["Qtotal.liverc"]]<-0.3
+#' vary.parameters[["million.cells.per.gliver"]]<-0.3
+#' vary.parameters[["Clint"]]<-0.3
 #' censored.params<-list(Funbound.plasma=list(cv=0.3,lod=0.01))
 #' 
 #' pValues <- get_cheminfo(c("Compound","CAS","Clint.pValue"))
@@ -80,15 +76,14 @@
 #'   if (this.CAS %in% get_wetmore_cheminfo()){
 #'     print(this.CAS)
 #'     these.params <- parameterize_steadystate(chem.cas=this.CAS)
-#'     if (these.params[["Funbound.plasma"]] == 0.0) 
+#'     if (these.parameters[["Funbound.plasma"]] == 0.0) 
 #'     {
-#'       these.params[["Funbound.plasma"]] <- 0.005
+#'       these.parameters[["Funbound.plasma"]] <- 0.005
 #'     }
-#'     these.params[["Fhep.assay.correction"]] <- 1
+#'     these.parameters[["Fhep.assay.correction"]] <- 1
 #'     vLiver.human.values <- monte_carlo(these.params,
 #'                                        cv.params=vary.params,
 #'                                        censored.params=censored.params,
-#'                                        which.quantile=c(0.05,0.5,0.95),
 #'                                        output.units="mg/L",
 #'                                        model='3compartmentss',
 #'                                        suppress.messages=T,
@@ -97,8 +92,7 @@
 #'     percentiles <- c("5","50","95")
 #'     for (this.index in 1:3)
 #'     {
-#'       this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS,
-#'                                 which.quantile=as.numeric(percentiles[this.index])/100))
+#'       this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS)) 
 #'       this.row <- cbind(this.row, as.data.frame(vLiver.human.values[this.index]))
 #'       this.row <- cbind(this.row, as.data.frame(percentiles[this.index]))
 #'       this.row <- cbind(this.row, as.data.frame("Human"))
@@ -140,64 +134,67 @@
 #' ## End(**Not run**)
 #' }
 #' 
-#' @import stats msm
+#' @import stats data.table
 #' @export monte_carlo
-monte_carlo <- function(params,which.quantile=0.95,
-                        cv.params=NULL,censored.params=NULL,samples=1000,
-                        name.model='calc_analytic_css',output.col.model=NA,
-                        return.samples=F,...)
+monte_carlo <- function(
+                 parameters,
+                 cv.params=NULL,
+                 censored.params=NULL,
+                 samples=1000)
 {
-# A matrix where each column corresponds to a parameter that is varied
-# and each row is a different draw of parameter values:  
-  MC.matrix <- matrix(NA,nrow=samples,ncol=(length(cv.params)+length(censored.params)))
-  colnames(MC.matrix) <- c(names(cv.params),names(censored.params))
+
+# Create a data table with the same parameters in every row:  
+  MC.matrix <- as.data.table(parameters)[rep(1,samples)]
+
 # Number of different results to be obtained for the different paramters:
   sample.vec <- rep(NA,samples)
-# Any parameter given in censored params is sampled from a normal distribution truncated at zero:
+# Any parameter given in cv.params is sampled from a normal distribution 
+# truncated at zero:
   for (this.param in names(cv.params))
   {
-    if (!(this.param %in% names(params))) stop(paste("Cannot find cv.params parameter",this.param,"in parameter list."))
-    if (params[[this.param]]>0) MC.matrix[,this.param] <- rtnorm(samples,mean=params[[this.param]],sd=params[[this.param]]*cv.params[[this.param]],lower=0)
+    if (!(this.param %in% names(parameters))) 
+      stop(paste("Cannot find cv.params parameter",
+        this.param,
+        "in parameter list."))
+    if (parameters[[this.param]]>0) 
+      MC.matrix[,this.param] <- 
+      rtnorm(
+        samples,
+        mean=parameters[[this.param]],
+        sd=parameters[[this.param]]*cv.params[[this.param]],
+        lower=0)
     else 
     {
       MC.matrix[,this.param] <- 0  
-      warning(paste(this.param,"has mean of zero, yielding SD of zero for fixed cv.  Parameter value fixed at zero."))
+      warning(paste(
+        this.param,
+        "has mean of zero, yielding SD of zero for fixed cv.\n\
+Parameter value fixed at zero."))
     }
   }
-# Any parameter given in censored params is sampled from a censored distribution:
+  
+# Any parameter given in censored parameters is sampled from a censored distribution:
   for (this.param in names(censored.params))
   {
-    if (!(this.param %in% names(params))) stop(paste("Cannot find censored.params parameter",this.param,"in parameter list."))
-    if (!("cv" %in% names(censored.params[[this.param]]))) stop(paste("cv (coefficient of variation) must be specified for parameter",this.param))
-    if (!("lod" %in% names(censored.params[[this.param]]))) stop(paste("lod (limit of detection) must be specified for parameter",this.param))
+    if (!(this.param %in% names(parameters))) 
+      stop(paste("Cannot find censored.params parameter",
+        this.param,"in parameter list."))
+    if (!("cv" %in% names(censored.params[[this.param]]))) 
+      stop(paste("cv (coefficient of variation) must be specified for parameter",
+        this.param))
+    if (!("lod" %in% names(censored.params[[this.param]]))) 
+      stop(paste("lod (limit of detection) must be specified for parameter",
+        this.param))
     if(this.param %in% c('Funbound.plasma','Fhep.assay.correction'))  upper <- 1
     else upper <- Inf
-    MC.matrix[,this.param] <- r_left_censored_norm(samples,mean=params[[this.param]],sd=params[[this.param]]*censored.params[[this.param]]$cv,lod=censored.params[[this.param]]$lod,upper=upper)
+    MC.matrix[,this.param] <- r_left_censored_norm(samples,
+      mean=parameters[[this.param]],
+      sd=parameters[[this.param]]*censored.params[[this.param]]$cv,
+      lod=censored.params[[this.param]]$lod,
+      upper=upper)
   }
-# these.params starts with the default paramter values from the argument 
-# provided to the function
-  these.params <- params
-  for (this.sample in 1:samples)
-  {
-# Those paramters that have been varied in the Monte Carlo simulation are
-# overwritten:  
-    these.params[colnames(MC.matrix)] <- MC.matrix[this.sample,]
-# Arguments for the do.call statement include "parameters" and anything extra
-# given in ...
-    these.args <- c(list(parameters = these.params),list(...))
-# If model.output.col is set we expect the call to the model to return a list
-# with multiple values and we only keep the one in model.output.col
-    if (is.na(output.col.model)) 
-    {
-      out <- do.call(name.model,these.args)
-      if (length(out) > 1) stop(paste("Must specific output.col.model because model returned the following arguments:",names(out),collapse=" "))
-      sample.vec[this.sample] <- do.call(name.model,these.args)
-    } else sample.vec[this.sample] <- do.call(name.model,these.args)[[output.col.model]]
-  }
-   if(return.samples) out <- sample.vec
-   else out <- quantile(sample.vec,which.quantile)
 
-  return(out)
+  return(MC.matrix)
 }
 
 

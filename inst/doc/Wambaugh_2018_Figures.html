@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="John Wambaugh" />
+
+<meta name="date" content="2018-01-23" />
+
+<title>Wambaugh et al. (2018): Creating All Figures</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Wambaugh et al. (2018): Creating All Figures</h1>
+<h4 class="author"><em>John Wambaugh</em></h4>
+<h4 class="date"><em>2018-01-23</em></h4>
+
+
+
+<p>This vignette provides the code used to generate the figures in Wambaugh et al. (2018) “Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics” from Toxicological Sciences</p>
+<p>To use the code in this vignette, you’ll first need to load a few packages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scales)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(data.table)
+<span class="kw">library</span>(gdata)
+<span class="kw">library</span>(gtools)
+<span class="kw">library</span>(httk)
+<span class="kw">library</span>(RColorBrewer)
+<span class="kw">library</span>(grid)
+<span class="kw">library</span>(gplots)</code></pre></div>
+<p>The data we analyze were originally generated with the R package invivoPKfit, but all the outputs of that analysis are provided with httk &gt;v1.8.</p>
+<div id="plot-functions" class="section level1">
+<h1>Plot functions</h1>
+<p>These functions, which have been cobbled togethe from the internet, are reused in multiple figure to make things look nice.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Multiple plot function</span>
+<span class="co">#</span>
+<span class="co"># ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)</span>
+<span class="co"># - cols:   Number of columns in layout</span>
+<span class="co"># - layout: A matrix specifying the layout. If present, 'cols' is ignored.</span>
+<span class="co">#</span>
+<span class="co"># If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),</span>
+<span class="co"># then plot 1 will go in the upper left, 2 will go in the upper right, and</span>
+<span class="co"># 3 will go all the way across the bottom.</span>
+<span class="co">#</span>
+multiplot &lt;-<span class="st"> </span>function(..., <span class="dt">plotlist=</span><span class="ot">NULL</span>, file, <span class="dt">cols=</span><span class="dv">1</span>, <span class="dt">layout=</span><span class="ot">NULL</span>, <span class="dt">widths=</span><span class="kw">unit</span>(<span class="kw">rep_len</span>(<span class="dv">1</span>, cols), <span class="st">&quot;null&quot;</span>)) {
+
+  <span class="co"># Make a list from the ... arguments and plotlist</span>
+  plots &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">list</span>(...), plotlist)
+
+  numPlots =<span class="st"> </span><span class="kw">length</span>(plots)
+
+  <span class="co"># If layout is NULL, then use 'cols' to determine layout</span>
+  if (<span class="kw">is.null</span>(layout)) {
+    <span class="co"># Make the panel</span>
+    <span class="co"># ncol: Number of columns of plots</span>
+    <span class="co"># nrow: Number of rows needed, calculated from # of cols</span>
+    layout &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">seq</span>(<span class="dv">1</span>, cols *<span class="st"> </span><span class="kw">ceiling</span>(numPlots/cols)),
+                    <span class="dt">ncol =</span> cols, <span class="dt">nrow =</span> <span class="kw">ceiling</span>(numPlots/cols))
+  }
+
+ if (numPlots==<span class="dv">1</span>) {
+    <span class="kw">print</span>(plots[[<span class="dv">1</span>]])
+
+  } else {
+    <span class="co"># Set up the page</span>
+    <span class="kw">grid.newpage</span>()
+    <span class="kw">pushViewport</span>(<span class="kw">viewport</span>(<span class="dt">layout =</span> <span class="kw">grid.layout</span>(<span class="kw">nrow</span>(layout), <span class="kw">ncol</span>(layout),<span class="dt">widths=</span>widths)))
+
+    <span class="co"># Make each plot, in the correct location</span>
+    for (i in <span class="dv">1</span>:numPlots) {
+      <span class="co"># Get the i,j matrix positions of the regions that contain this subplot</span>
+      matchidx &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">which</span>(layout ==<span class="st"> </span>i, <span class="dt">arr.ind =</span> <span class="ot">TRUE</span>))
+
+      <span class="kw">print</span>(plots[[i]], <span class="dt">vp =</span> <span class="kw">viewport</span>(<span class="dt">layout.pos.row =</span> matchidx$row,
+                                      <span class="dt">layout.pos.col =</span> matchidx$col))
+    }
+  }
+}
+                                                                
+scientific_10 &lt;-<span class="st"> </span>function(x) {                                  
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;1e&quot;</span>, <span class="st">&quot;10^&quot;</span>, <span class="kw">scientific_format</span>()(x))              
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+&quot;</span>,<span class="st">&quot;&quot;</span>,out)                                     
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;10</span><span class="ch">\\</span><span class="st">^01&quot;</span>,<span class="st">&quot;10&quot;</span>,out)                               
+  out &lt;-<span class="st"> </span><span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">gsub</span>(<span class="st">&quot;10</span><span class="ch">\\</span><span class="st">^00&quot;</span>,<span class="st">&quot;1&quot;</span>,out))                    
+}  
+
+ 
+lm_R2 &lt;-<span class="st"> </span>function(m,<span class="dt">prefix=</span><span class="ot">NULL</span>){
+    out &lt;-<span class="st"> </span><span class="kw">substitute</span>(<span class="st">&quot;MSE = &quot;</span>~mse*<span class="st">&quot;,&quot;</span>~<span class="er">~</span><span class="kw">italic</span>(R)^<span class="dv">2</span>~<span class="st">&quot;=&quot;</span>~r2, 
+         <span class="kw">list</span>(<span class="dt">mse =</span> <span class="kw">signif</span>(<span class="kw">mean</span>(m$residuals^<span class="dv">2</span>),<span class="dv">3</span>),
+              <span class="dt">r2 =</span> <span class="kw">format</span>(<span class="kw">summary</span>(m)$adj.r.squared, <span class="dt">digits =</span> <span class="dv">2</span>)))
+    <span class="kw">paste</span>(prefix,<span class="kw">as.character</span>(<span class="kw">as.expression</span>(out)))                 
+}
+  
+heatmap<span class="fl">.3</span> &lt;-<span class="st"> </span>function(x,
+                      <span class="dt">Rowv =</span> <span class="ot">TRUE</span>, <span class="dt">Colv =</span> if (symm) <span class="st">&quot;Rowv&quot;</span> else <span class="ot">TRUE</span>,
+                      <span class="dt">distfun =</span> dist,
+                      <span class="dt">hclustfun =</span> hclust,
+                      <span class="dt">dendrogram =</span> <span class="kw">c</span>(<span class="st">&quot;both&quot;</span>,<span class="st">&quot;row&quot;</span>, <span class="st">&quot;column&quot;</span>, <span class="st">&quot;none&quot;</span>),
+                      <span class="dt">symm =</span> <span class="ot">FALSE</span>,
+                      <span class="dt">scale =</span> <span class="kw">c</span>(<span class="st">&quot;none&quot;</span>,<span class="st">&quot;row&quot;</span>, <span class="st">&quot;column&quot;</span>),
+                      <span class="dt">na.rm =</span> <span class="ot">TRUE</span>,
+                      <span class="dt">revC =</span> <span class="kw">identical</span>(Colv,<span class="st">&quot;Rowv&quot;</span>),
+                      add.expr,
+                      breaks,
+                      <span class="dt">symbreaks =</span> <span class="kw">max</span>(x &lt;<span class="st"> </span><span class="dv">0</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) ||<span class="st"> </span>scale !=<span class="st"> &quot;none&quot;</span>,
+                      <span class="dt">col =</span> <span class="st">&quot;heat.colors&quot;</span>,
+                      colsep,
+                      rowsep,
+                      <span class="dt">sepcolor =</span> <span class="st">&quot;white&quot;</span>,
+                      <span class="dt">sepwidth =</span> <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>),
+                      cellnote,
+                      <span class="dt">notecex =</span> <span class="dv">1</span>,
+                      <span class="dt">notecol =</span> <span class="st">&quot;cyan&quot;</span>,
+                      <span class="dt">na.color =</span> <span class="kw">par</span>(<span class="st">&quot;bg&quot;</span>),
+                      <span class="dt">trace =</span> <span class="kw">c</span>(<span class="st">&quot;none&quot;</span>, <span class="st">&quot;column&quot;</span>,<span class="st">&quot;row&quot;</span>, <span class="st">&quot;both&quot;</span>),
+                      <span class="dt">tracecol =</span> <span class="st">&quot;cyan&quot;</span>,
+                      <span class="dt">hline =</span> <span class="kw">median</span>(breaks),
+                      <span class="dt">vline =</span> <span class="kw">median</span>(breaks),
+                      <span class="dt">linecol =</span> tracecol,
+                      <span class="dt">margins =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>),
+                      ColSideColors,
+                      RowSideColors,
+                      <span class="dt">side.height.fraction=</span><span class="fl">0.3</span>,
+                      <span class="dt">cexRow =</span> <span class="fl">0.2</span> +<span class="st"> </span><span class="dv">1</span>/<span class="kw">log10</span>(nr),
+                      <span class="dt">cexCol =</span> <span class="fl">0.2</span> +<span class="st"> </span><span class="dv">1</span>/<span class="kw">log10</span>(nc),
+                      <span class="dt">labRow =</span> <span class="ot">NULL</span>,
+                      <span class="dt">labCol =</span> <span class="ot">NULL</span>,
+                      <span class="dt">key =</span> <span class="ot">TRUE</span>,
+                      <span class="dt">keysize =</span> <span class="fl">1.5</span>,
+                      <span class="dt">density.info =</span> <span class="kw">c</span>(<span class="st">&quot;none&quot;</span>, <span class="st">&quot;histogram&quot;</span>, <span class="st">&quot;density&quot;</span>),
+                      <span class="dt">denscol =</span> tracecol,
+                      <span class="dt">symkey =</span> <span class="kw">max</span>(x &lt;<span class="st"> </span><span class="dv">0</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) ||<span class="st"> </span>symbreaks,
+                      <span class="dt">densadj =</span> <span class="fl">0.25</span>,
+                      <span class="dt">main =</span> <span class="ot">NULL</span>,
+                      <span class="dt">xlab =</span> <span class="ot">NULL</span>,
+                      <span class="dt">ylab =</span> <span class="ot">NULL</span>,
+                      <span class="dt">lmat =</span> <span class="ot">NULL</span>,
+                      <span class="dt">lhei =</span> <span class="ot">NULL</span>,
+                      <span class="dt">lwid =</span> <span class="ot">NULL</span>,
+                      <span class="dt">ColSideColorsSize =</span> <span class="dv">1</span>,
+                      <span class="dt">RowSideColorsSize =</span> <span class="dv">1</span>,
+                      <span class="dt">KeyValueName=</span><span class="st">&quot;Value&quot;</span>,...){
+
+    invalid &lt;-<span class="st"> </span>function (x) {
+      if (<span class="kw">missing</span>(x) ||<span class="st"> </span><span class="kw">is.null</span>(x) ||<span class="st"> </span><span class="kw">length</span>(x) ==<span class="st"> </span><span class="dv">0</span>)
+          <span class="kw">return</span>(<span class="ot">TRUE</span>)
+      if (<span class="kw">is.list</span>(x))
+          <span class="kw">return</span>(<span class="kw">all</span>(<span class="kw">sapply</span>(x, invalid)))
+      else if (<span class="kw">is.vector</span>(x))
+          <span class="kw">return</span>(<span class="kw">all</span>(<span class="kw">is.na</span>(x)))
+      else <span class="kw">return</span>(<span class="ot">FALSE</span>)
+    }
+
+    x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(x)
+    scale01 &lt;-<span class="st"> </span>function(x, <span class="dt">low =</span> <span class="kw">min</span>(x), <span class="dt">high =</span> <span class="kw">max</span>(x)) {
+        x &lt;-<span class="st"> </span>(x -<span class="st"> </span>low)/(high -<span class="st"> </span>low)
+        x
+    }
+    retval &lt;-<span class="st"> </span><span class="kw">list</span>()
+    scale &lt;-<span class="st"> </span>if (symm &amp;&amp;<span class="st"> </span><span class="kw">missing</span>(scale))
+        <span class="st">&quot;none&quot;</span>
+    else <span class="kw">match.arg</span>(scale)
+    dendrogram &lt;-<span class="st"> </span><span class="kw">match.arg</span>(dendrogram)
+    trace &lt;-<span class="st"> </span><span class="kw">match.arg</span>(trace)
+    density.info &lt;-<span class="st"> </span><span class="kw">match.arg</span>(density.info)
+    if (<span class="kw">length</span>(col) ==<span class="st"> </span><span class="dv">1</span> &amp;&amp;<span class="st"> </span><span class="kw">is.character</span>(col))
+        col &lt;-<span class="st"> </span><span class="kw">get</span>(col, <span class="dt">mode =</span> <span class="st">&quot;function&quot;</span>)
+    if (!<span class="kw">missing</span>(breaks) &amp;&amp;<span class="st"> </span>(scale !=<span class="st"> &quot;none&quot;</span>))
+        <span class="kw">warning</span>(<span class="st">&quot;Using scale=</span><span class="ch">\&quot;</span><span class="st">row</span><span class="ch">\&quot;</span><span class="st"> or scale=</span><span class="ch">\&quot;</span><span class="st">column</span><span class="ch">\&quot;</span><span class="st"> when breaks are&quot;</span>,
+            <span class="st">&quot;specified can produce unpredictable results.&quot;</span>, <span class="st">&quot;Please consider using only one or the other.&quot;</span>)
+    if (<span class="kw">is.null</span>(Rowv) ||<span class="st"> </span><span class="kw">is.na</span>(Rowv))
+        Rowv &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+    if (<span class="kw">is.null</span>(Colv) ||<span class="st"> </span><span class="kw">is.na</span>(Colv))
+        Colv &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+    else if (Colv ==<span class="st"> &quot;Rowv&quot;</span> &amp;&amp;<span class="st"> </span>!<span class="kw">isTRUE</span>(Rowv))
+        Colv &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+    if (<span class="kw">length</span>(di &lt;-<span class="st"> </span><span class="kw">dim</span>(x)) !=<span class="st"> </span><span class="dv">2</span> ||<span class="st"> </span>!<span class="kw">is.numeric</span>(x))
+        <span class="kw">stop</span>(<span class="st">&quot;`x' must be a numeric matrix&quot;</span>)
+    nr &lt;-<span class="st"> </span>di[<span class="dv">1</span>]
+    nc &lt;-<span class="st"> </span>di[<span class="dv">2</span>]
+    if (nr &lt;=<span class="st"> </span><span class="dv">1</span> ||<span class="st"> </span>nc &lt;=<span class="st"> </span><span class="dv">1</span>)
+        <span class="kw">stop</span>(<span class="st">&quot;`x' must have at least 2 rows and 2 columns&quot;</span>)
+    if (!<span class="kw">is.numeric</span>(margins) ||<span class="st"> </span><span class="kw">length</span>(margins) !=<span class="st"> </span><span class="dv">2</span>)
+        <span class="kw">stop</span>(<span class="st">&quot;`margins' must be a numeric vector of length 2&quot;</span>)
+    if (<span class="kw">missing</span>(cellnote))
+        cellnote &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="st">&quot;&quot;</span>, <span class="dt">ncol =</span> <span class="kw">ncol</span>(x), <span class="dt">nrow =</span> <span class="kw">nrow</span>(x))
+    if (!<span class="kw">inherits</span>(Rowv, <span class="st">&quot;dendrogram&quot;</span>)) {
+        if (((!<span class="kw">isTRUE</span>(Rowv)) ||<span class="st"> </span>(<span class="kw">is.null</span>(Rowv))) &amp;&amp;<span class="st"> </span>(dendrogram %in%
+<span class="st">            </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;row&quot;</span>))) {
+            if (<span class="kw">is.logical</span>(Colv) &amp;&amp;<span class="st"> </span>(Colv))
+                dendrogram &lt;-<span class="st"> &quot;column&quot;</span>
+            else dedrogram &lt;-<span class="st"> &quot;none&quot;</span>
+            <span class="kw">warning</span>(<span class="st">&quot;Discrepancy: Rowv is FALSE, while dendrogram is `&quot;</span>,
+                dendrogram, <span class="st">&quot;'. Omitting row dendogram.&quot;</span>)
+        }
+    }
+    if (!<span class="kw">inherits</span>(Colv, <span class="st">&quot;dendrogram&quot;</span>)) {
+        if (((!<span class="kw">isTRUE</span>(Colv)) ||<span class="st"> </span>(<span class="kw">is.null</span>(Colv))) &amp;&amp;<span class="st"> </span>(dendrogram %in%
+<span class="st">            </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;column&quot;</span>))) {
+            if (<span class="kw">is.logical</span>(Rowv) &amp;&amp;<span class="st"> </span>(Rowv))
+                dendrogram &lt;-<span class="st"> &quot;row&quot;</span>
+            else dendrogram &lt;-<span class="st"> &quot;none&quot;</span>
+            <span class="kw">warning</span>(<span class="st">&quot;Discrepancy: Colv is FALSE, while dendrogram is `&quot;</span>,
+                dendrogram, <span class="st">&quot;'. Omitting column dendogram.&quot;</span>)
+        }
+    }
+    if (<span class="kw">inherits</span>(Rowv, <span class="st">&quot;dendrogram&quot;</span>)) {
+        ddr &lt;-<span class="st"> </span>Rowv
+        rowInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddr)
+    }
+    else if (<span class="kw">is.integer</span>(Rowv)) {
+        hcr &lt;-<span class="st"> </span><span class="kw">hclustfun</span>(<span class="kw">distfun</span>(x))
+        ddr &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hcr)
+        ddr &lt;-<span class="st"> </span><span class="kw">reorder</span>(ddr, Rowv)
+        rowInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddr)
+        if (nr !=<span class="st"> </span><span class="kw">length</span>(rowInd))
+            <span class="kw">stop</span>(<span class="st">&quot;row dendrogram ordering gave index of wrong length&quot;</span>)
+    }
+    else if (<span class="kw">isTRUE</span>(Rowv)) {
+        Rowv &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(x, <span class="dt">na.rm =</span> na.rm)
+        hcr &lt;-<span class="st"> </span><span class="kw">hclustfun</span>(<span class="kw">distfun</span>(x))
+        ddr &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hcr)
+        ddr &lt;-<span class="st"> </span><span class="kw">reorder</span>(ddr, Rowv)
+        rowInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddr)
+        if (nr !=<span class="st"> </span><span class="kw">length</span>(rowInd))
+            <span class="kw">stop</span>(<span class="st">&quot;row dendrogram ordering gave index of wrong length&quot;</span>)
+    }
+    else {
+        rowInd &lt;-<span class="st"> </span>nr:<span class="dv">1</span>
+    }
+    if (<span class="kw">inherits</span>(Colv, <span class="st">&quot;dendrogram&quot;</span>)) {
+        ddc &lt;-<span class="st"> </span>Colv
+        colInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddc)
+    }
+    else if (<span class="kw">identical</span>(Colv, <span class="st">&quot;Rowv&quot;</span>)) {
+        if (nr !=<span class="st"> </span>nc)
+            <span class="kw">stop</span>(<span class="st">&quot;Colv = </span><span class="ch">\&quot;</span><span class="st">Rowv</span><span class="ch">\&quot;</span><span class="st"> but nrow(x) != ncol(x)&quot;</span>)
+        if (<span class="kw">exists</span>(<span class="st">&quot;ddr&quot;</span>)) {
+            ddc &lt;-<span class="st"> </span>ddr
+            colInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddc)
+        }
+        else colInd &lt;-<span class="st"> </span>rowInd
+    }
+    else if (<span class="kw">is.integer</span>(Colv)) {
+        hcc &lt;-<span class="st"> </span><span class="kw">hclustfun</span>(<span class="kw">distfun</span>(if (symm)
+            x
+        else <span class="kw">t</span>(x)))
+        ddc &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hcc)
+        ddc &lt;-<span class="st"> </span><span class="kw">reorder</span>(ddc, Colv)
+        colInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddc)
+        if (nc !=<span class="st"> </span><span class="kw">length</span>(colInd))
+            <span class="kw">stop</span>(<span class="st">&quot;column dendrogram ordering gave index of wrong length&quot;</span>)
+    }
+    else if (<span class="kw">isTRUE</span>(Colv)) {
+        Colv &lt;-<span class="st"> </span><span class="kw">colMeans</span>(x, <span class="dt">na.rm =</span> na.rm)
+        hcc &lt;-<span class="st"> </span><span class="kw">hclustfun</span>(<span class="kw">distfun</span>(if (symm)
+            x
+        else <span class="kw">t</span>(x)))
+        ddc &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hcc)
+        ddc &lt;-<span class="st"> </span><span class="kw">reorder</span>(ddc, Colv)
+        colInd &lt;-<span class="st"> </span><span class="kw">order.dendrogram</span>(ddc)
+        if (nc !=<span class="st"> </span><span class="kw">length</span>(colInd))
+            <span class="kw">stop</span>(<span class="st">&quot;column dendrogram ordering gave index of wrong length&quot;</span>)
+    }
+    else {
+        colInd &lt;-<span class="st"> </span><span class="dv">1</span>:nc
+    }
+    retval$rowInd &lt;-<span class="st"> </span>rowInd
+    retval$colInd &lt;-<span class="st"> </span>colInd
+    retval$call &lt;-<span class="st"> </span><span class="kw">match.call</span>()
+    x &lt;-<span class="st"> </span>x[rowInd, colInd]
+    x.unscaled &lt;-<span class="st"> </span>x
+    cellnote &lt;-<span class="st"> </span>cellnote[rowInd, colInd]
+    if (<span class="kw">is.null</span>(labRow))
+        labRow &lt;-<span class="st"> </span>if (<span class="kw">is.null</span>(<span class="kw">rownames</span>(x)))
+            (<span class="dv">1</span>:nr)[rowInd]
+        else <span class="kw">rownames</span>(x)
+    else labRow &lt;-<span class="st"> </span>labRow[rowInd]
+    if (<span class="kw">is.null</span>(labCol))
+        labCol &lt;-<span class="st"> </span>if (<span class="kw">is.null</span>(<span class="kw">colnames</span>(x)))
+            (<span class="dv">1</span>:nc)[colInd]
+        else <span class="kw">colnames</span>(x)
+    else labCol &lt;-<span class="st"> </span>labCol[colInd]
+    if (scale ==<span class="st"> &quot;row&quot;</span>) {
+        retval$rowMeans &lt;-<span class="st"> </span>rm &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(x, <span class="dt">na.rm =</span> na.rm)
+        x &lt;-<span class="st"> </span><span class="kw">sweep</span>(x, <span class="dv">1</span>, rm)
+        retval$rowSDs &lt;-<span class="st"> </span>sx &lt;-<span class="st"> </span><span class="kw">apply</span>(x, <span class="dv">1</span>, sd, <span class="dt">na.rm =</span> na.rm)
+        x &lt;-<span class="st"> </span><span class="kw">sweep</span>(x, <span class="dv">1</span>, sx, <span class="st">&quot;/&quot;</span>)
+    }
+    else if (scale ==<span class="st"> &quot;column&quot;</span>) {
+        retval$colMeans &lt;-<span class="st"> </span>rm &lt;-<span class="st"> </span><span class="kw">colMeans</span>(x, <span class="dt">na.rm =</span> na.rm)
+        x &lt;-<span class="st"> </span><span class="kw">sweep</span>(x, <span class="dv">2</span>, rm)
+        retval$colSDs &lt;-<span class="st"> </span>sx &lt;-<span class="st"> </span><span class="kw">apply</span>(x, <span class="dv">2</span>, sd, <span class="dt">na.rm =</span> na.rm)
+        x &lt;-<span class="st"> </span><span class="kw">sweep</span>(x, <span class="dv">2</span>, sx, <span class="st">&quot;/&quot;</span>)
+    }
+    if (<span class="kw">missing</span>(breaks) ||<span class="st"> </span><span class="kw">is.null</span>(breaks) ||<span class="st"> </span><span class="kw">length</span>(breaks) &lt;<span class="st"> </span><span class="dv">1</span>) {
+        if (<span class="kw">missing</span>(col) ||<span class="st"> </span><span class="kw">is.function</span>(col))
+            breaks &lt;-<span class="st"> </span><span class="dv">16</span>
+        else breaks &lt;-<span class="st"> </span><span class="kw">length</span>(col) +<span class="st"> </span><span class="dv">1</span>
+    }
+    if (<span class="kw">length</span>(breaks) ==<span class="st"> </span><span class="dv">1</span>) {
+        if (!symbreaks)
+            breaks &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="kw">min</span>(x, <span class="dt">na.rm =</span> na.rm), <span class="kw">max</span>(x, <span class="dt">na.rm =</span> na.rm),
+                <span class="dt">length =</span> breaks)
+        else {
+            extreme &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(x), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+            breaks &lt;-<span class="st"> </span><span class="kw">seq</span>(-extreme, extreme, <span class="dt">length =</span> breaks)
+        }
+    }
+    nbr &lt;-<span class="st"> </span><span class="kw">length</span>(breaks)
+    ncol &lt;-<span class="st"> </span><span class="kw">length</span>(breaks) -<span class="st"> </span><span class="dv">1</span>
+    if (<span class="kw">class</span>(col) ==<span class="st"> &quot;function&quot;</span>)
+        col &lt;-<span class="st"> </span><span class="kw">col</span>(ncol)
+    min.breaks &lt;-<span class="st"> </span><span class="kw">min</span>(breaks)
+    max.breaks &lt;-<span class="st"> </span><span class="kw">max</span>(breaks)
+    x[x &lt;<span class="st"> </span>min.breaks] &lt;-<span class="st"> </span>min.breaks
+    x[x &gt;<span class="st"> </span>max.breaks] &lt;-<span class="st"> </span>max.breaks
+    if (<span class="kw">missing</span>(lhei) ||<span class="st"> </span><span class="kw">is.null</span>(lhei))
+        lhei &lt;-<span class="st"> </span><span class="kw">c</span>(keysize, <span class="dv">4</span>)
+    if (<span class="kw">missing</span>(lwid) ||<span class="st"> </span><span class="kw">is.null</span>(lwid))
+        lwid &lt;-<span class="st"> </span><span class="kw">c</span>(keysize, <span class="dv">4</span>)
+    if (<span class="kw">missing</span>(lmat) ||<span class="st"> </span><span class="kw">is.null</span>(lmat)) {
+        lmat &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="dv">4</span>:<span class="dv">3</span>, <span class="dv">2</span>:<span class="dv">1</span>)
+
+        if (!<span class="kw">missing</span>(ColSideColors)) {
+           <span class="co">#if (!is.matrix(ColSideColors))</span>
+           <span class="co">#stop(&quot;'ColSideColors' must be a matrix&quot;)</span>
+            if (!<span class="kw">is.character</span>(ColSideColors) ||<span class="st"> </span><span class="kw">nrow</span>(ColSideColors) !=<span class="st"> </span>nc)
+                <span class="kw">stop</span>(<span class="st">&quot;'ColSideColors' must be a matrix of nrow(x) rows&quot;</span>)
+            lmat &lt;-<span class="st"> </span><span class="kw">rbind</span>(lmat[<span class="dv">1</span>, ] +<span class="st"> </span><span class="dv">1</span>, <span class="kw">c</span>(<span class="ot">NA</span>, <span class="dv">1</span>), lmat[<span class="dv">2</span>, ] +<span class="st"> </span><span class="dv">1</span>)
+            <span class="co">#lhei &lt;- c(lhei[1], 0.2, lhei[2])</span>
+             lhei=<span class="kw">c</span>(lhei[<span class="dv">1</span>], side.height.fraction*ColSideColorsSize/<span class="dv">2</span>, lhei[<span class="dv">2</span>])
+        }
+
+        if (!<span class="kw">missing</span>(RowSideColors)) {
+            <span class="co">#if (!is.matrix(RowSideColors))</span>
+            <span class="co">#stop(&quot;'RowSideColors' must be a matrix&quot;)</span>
+            if (!<span class="kw">is.character</span>(RowSideColors) ||<span class="st"> </span><span class="kw">ncol</span>(RowSideColors) !=<span class="st"> </span>nr)
+                <span class="kw">stop</span>(<span class="st">&quot;'RowSideColors' must be a matrix of ncol(x) columns&quot;</span>)
+            lmat &lt;-<span class="st"> </span><span class="kw">cbind</span>(lmat[, <span class="dv">1</span>] +<span class="st"> </span><span class="dv">1</span>, <span class="kw">c</span>(<span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">nrow</span>(lmat) -<span class="st"> </span><span class="dv">1</span>), <span class="dv">1</span>), lmat[,<span class="dv">2</span>] +<span class="st"> </span><span class="dv">1</span>)
+            <span class="co">#lwid &lt;- c(lwid[1], 0.2, lwid[2])</span>
+            lwid &lt;-<span class="st"> </span><span class="kw">c</span>(lwid[<span class="dv">1</span>], side.height.fraction*RowSideColorsSize/<span class="dv">2</span>, lwid[<span class="dv">2</span>])
+        }
+        lmat[<span class="kw">is.na</span>(lmat)] &lt;-<span class="st"> </span><span class="dv">0</span>
+    }
+
+    if (<span class="kw">length</span>(lhei) !=<span class="st"> </span><span class="kw">nrow</span>(lmat))
+        <span class="kw">stop</span>(<span class="st">&quot;lhei must have length = nrow(lmat) = &quot;</span>, <span class="kw">nrow</span>(lmat))
+    if (<span class="kw">length</span>(lwid) !=<span class="st"> </span><span class="kw">ncol</span>(lmat))
+        <span class="kw">stop</span>(<span class="st">&quot;lwid must have length = ncol(lmat) =&quot;</span>, <span class="kw">ncol</span>(lmat))
+    op &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">no.readonly =</span> <span class="ot">TRUE</span>)
+    <span class="kw">on.exit</span>(<span class="kw">par</span>(op))
+
+    <span class="kw">layout</span>(lmat, <span class="dt">widths =</span> lwid, <span class="dt">heights =</span> lhei, <span class="dt">respect =</span> <span class="ot">FALSE</span>)
+
+    if (!<span class="kw">missing</span>(RowSideColors)) {
+        if (!<span class="kw">is.matrix</span>(RowSideColors)){
+                <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(margins[<span class="dv">1</span>], <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.5</span>))
+                <span class="kw">image</span>(<span class="kw">rbind</span>(<span class="dv">1</span>:nr), <span class="dt">col =</span> RowSideColors[rowInd], <span class="dt">axes =</span> <span class="ot">FALSE</span>)
+        } else {
+            <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(margins[<span class="dv">1</span>], <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.5</span>))
+            rsc =<span class="st"> </span><span class="kw">t</span>(RowSideColors[,rowInd, <span class="dt">drop=</span>F])
+            rsc.colors =<span class="st"> </span><span class="kw">matrix</span>()
+            rsc.names =<span class="st"> </span><span class="kw">names</span>(<span class="kw">table</span>(rsc))
+            rsc.i =<span class="st"> </span><span class="dv">1</span>
+            for (rsc.name in rsc.names) {
+                rsc.colors[rsc.i] =<span class="st"> </span>rsc.name
+                rsc[rsc ==<span class="st"> </span>rsc.name] =<span class="st"> </span>rsc.i
+                rsc.i =<span class="st"> </span>rsc.i +<span class="st"> </span><span class="dv">1</span>
+            }
+            rsc =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">as.numeric</span>(rsc), <span class="dt">nrow =</span> <span class="kw">dim</span>(rsc)[<span class="dv">1</span>])
+            <span class="kw">image</span>(<span class="kw">t</span>(rsc), <span class="dt">col =</span> <span class="kw">as.vector</span>(rsc.colors), <span class="dt">axes =</span> <span class="ot">FALSE</span>)
+            if (<span class="kw">length</span>(<span class="kw">rownames</span>(RowSideColors)) &gt;<span class="st"> </span><span class="dv">0</span>) {
+                <span class="kw">axis</span>(<span class="dv">1</span>, <span class="dv">0</span>:(<span class="kw">dim</span>(rsc)[<span class="dv">2</span>] -<span class="st"> </span><span class="dv">1</span>)/<span class="kw">max</span>(<span class="dv">1</span>,(<span class="kw">dim</span>(rsc)[<span class="dv">2</span>] -<span class="st"> </span><span class="dv">1</span>)), <span class="kw">rownames</span>(RowSideColors), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">tick =</span> <span class="ot">FALSE</span>)
+            }
+        }
+    }
+
+    if (!<span class="kw">missing</span>(ColSideColors)) {
+
+        if (!<span class="kw">is.matrix</span>(ColSideColors)){
+            <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>, margins[<span class="dv">2</span>]))
+            <span class="kw">image</span>(<span class="kw">cbind</span>(<span class="dv">1</span>:nc), <span class="dt">col =</span> ColSideColors[colInd], <span class="dt">axes =</span> <span class="ot">FALSE</span>)
+        } else {
+            <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>, margins[<span class="dv">2</span>]))
+            csc =<span class="st"> </span>ColSideColors[colInd, , drop=F]
+            csc.colors =<span class="st"> </span><span class="kw">matrix</span>()
+            csc.names =<span class="st"> </span><span class="kw">names</span>(<span class="kw">table</span>(csc))
+            csc.i =<span class="st"> </span><span class="dv">1</span>
+            for (csc.name in csc.names) {
+                csc.colors[csc.i] =<span class="st"> </span>csc.name
+                csc[csc ==<span class="st"> </span>csc.name] =<span class="st"> </span>csc.i
+                csc.i =<span class="st"> </span>csc.i +<span class="st"> </span><span class="dv">1</span>
+            }
+            csc =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">as.numeric</span>(csc), <span class="dt">nrow =</span> <span class="kw">dim</span>(csc)[<span class="dv">1</span>])
+            <span class="kw">image</span>(csc, <span class="dt">col =</span> <span class="kw">as.vector</span>(csc.colors), <span class="dt">axes =</span> <span class="ot">FALSE</span>)
+            if (<span class="kw">length</span>(<span class="kw">colnames</span>(ColSideColors)) &gt;<span class="st"> </span><span class="dv">0</span>) {
+                <span class="kw">axis</span>(<span class="dv">2</span>, <span class="dv">0</span>:(<span class="kw">dim</span>(csc)[<span class="dv">2</span>] -<span class="st"> </span><span class="dv">1</span>)/<span class="kw">max</span>(<span class="dv">1</span>,(<span class="kw">dim</span>(csc)[<span class="dv">2</span>] -<span class="st"> </span><span class="dv">1</span>)), <span class="kw">colnames</span>(ColSideColors), <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">tick =</span> <span class="ot">FALSE</span>)
+            }
+        }
+    }
+
+    <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(margins[<span class="dv">1</span>], <span class="dv">0</span>, <span class="dv">0</span>, margins[<span class="dv">2</span>]))
+    x &lt;-<span class="st"> </span><span class="kw">t</span>(x)
+    cellnote &lt;-<span class="st"> </span><span class="kw">t</span>(cellnote)
+    if (revC) {
+        iy &lt;-<span class="st"> </span>nr:<span class="dv">1</span>
+        if (<span class="kw">exists</span>(<span class="st">&quot;ddr&quot;</span>))
+            ddr &lt;-<span class="st"> </span><span class="kw">rev</span>(ddr)
+        x &lt;-<span class="st"> </span>x[, iy]
+        cellnote &lt;-<span class="st"> </span>cellnote[, iy]
+    }
+    else iy &lt;-<span class="st"> </span><span class="dv">1</span>:nr
+    <span class="kw">image</span>(<span class="dv">1</span>:nc, <span class="dv">1</span>:nr, x, <span class="dt">xlim =</span> <span class="fl">0.5</span> +<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, nc), <span class="dt">ylim =</span> <span class="fl">0.5</span> +<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, nr), <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">col =</span> col, <span class="dt">breaks =</span> breaks, ...)
+    retval$carpet &lt;-<span class="st"> </span>x
+    if (<span class="kw">exists</span>(<span class="st">&quot;ddr&quot;</span>))
+        retval$rowDendrogram &lt;-<span class="st"> </span>ddr
+    if (<span class="kw">exists</span>(<span class="st">&quot;ddc&quot;</span>))
+        retval$colDendrogram &lt;-<span class="st"> </span>ddc
+    retval$breaks &lt;-<span class="st"> </span>breaks
+    retval$col &lt;-<span class="st"> </span>col
+    if (!<span class="kw">invalid</span>(na.color) &amp;<span class="st"> </span><span class="kw">any</span>(<span class="kw">is.na</span>(x))) { <span class="co"># load library(gplots)</span>
+        mmat &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(x), <span class="dv">1</span>, <span class="ot">NA</span>)
+        <span class="kw">image</span>(<span class="dv">1</span>:nc, <span class="dv">1</span>:nr, mmat, <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
+            <span class="dt">col =</span> na.color, <span class="dt">add =</span> <span class="ot">TRUE</span>)
+    }
+    <span class="kw">axis</span>(<span class="dv">1</span>, <span class="dv">1</span>:nc, <span class="dt">labels =</span> labCol, <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">line =</span> -<span class="fl">0.5</span>, <span class="dt">tick =</span> <span class="dv">0</span>,
+        <span class="dt">cex.axis =</span> cexCol)
+    if (!<span class="kw">is.null</span>(xlab))
+        <span class="kw">mtext</span>(xlab, <span class="dt">side =</span> <span class="dv">1</span>, <span class="dt">line =</span> margins[<span class="dv">1</span>] -<span class="st"> </span><span class="fl">1.25</span>)
+    <span class="kw">axis</span>(<span class="dv">4</span>, iy, <span class="dt">labels =</span> labRow, <span class="dt">las =</span> <span class="dv">2</span>, <span class="dt">line =</span> -<span class="fl">0.5</span>, <span class="dt">tick =</span> <span class="dv">0</span>,
+        <span class="dt">cex.axis =</span> cexRow)
+    if (!<span class="kw">is.null</span>(ylab))
+        <span class="kw">mtext</span>(ylab, <span class="dt">side =</span> <span class="dv">4</span>, <span class="dt">line =</span> margins[<span class="dv">2</span>] -<span class="st"> </span><span class="fl">1.25</span>)
+    if (!<span class="kw">missing</span>(add.expr))
+        <span class="kw">eval</span>(<span class="kw">substitute</span>(add.expr))
+    if (!<span class="kw">missing</span>(colsep))
+        for (csep in colsep) <span class="kw">rect</span>(<span class="dt">xleft =</span> csep +<span class="st"> </span><span class="fl">0.5</span>, <span class="dt">ybottom =</span> <span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(csep)), <span class="dt">xright =</span> csep +<span class="st"> </span><span class="fl">0.5</span> +<span class="st"> </span>sepwidth[<span class="dv">1</span>], <span class="dt">ytop =</span> <span class="kw">rep</span>(<span class="kw">ncol</span>(x) +<span class="st"> </span><span class="dv">1</span>, csep), <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> sepcolor, <span class="dt">border =</span> sepcolor)
+    if (!<span class="kw">missing</span>(rowsep))
+        for (rsep in rowsep) <span class="kw">rect</span>(<span class="dt">xleft =</span> <span class="dv">0</span>, <span class="dt">ybottom =</span> (<span class="kw">ncol</span>(x) +<span class="st"> </span><span class="dv">1</span> -<span class="st"> </span>rsep) -<span class="st"> </span><span class="fl">0.5</span>, <span class="dt">xright =</span> <span class="kw">nrow</span>(x) +<span class="st"> </span><span class="dv">1</span>, <span class="dt">ytop =</span> (<span class="kw">ncol</span>(x) +<span class="st"> </span><span class="dv">1</span> -<span class="st"> </span>rsep) -<span class="st"> </span><span class="fl">0.5</span> -<span class="st"> </span>sepwidth[<span class="dv">2</span>], <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> sepcolor, <span class="dt">border =</span> sepcolor)
+    min.scale &lt;-<span class="st"> </span><span class="kw">min</span>(breaks)
+    max.scale &lt;-<span class="st"> </span><span class="kw">max</span>(breaks)
+    x.scaled &lt;-<span class="st"> </span><span class="kw">scale01</span>(<span class="kw">t</span>(x), min.scale, max.scale)
+    if (trace %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;column&quot;</span>)) {
+        retval$vline &lt;-<span class="st"> </span>vline
+        vline.vals &lt;-<span class="st"> </span><span class="kw">scale01</span>(vline, min.scale, max.scale)
+        for (i in colInd) {
+            if (!<span class="kw">is.null</span>(vline)) {
+                <span class="kw">abline</span>(<span class="dt">v =</span> i -<span class="st"> </span><span class="fl">0.5</span> +<span class="st"> </span>vline.vals, <span class="dt">col =</span> linecol,
+                  <span class="dt">lty =</span> <span class="dv">2</span>)
+            }
+            xv &lt;-<span class="st"> </span><span class="kw">rep</span>(i, <span class="kw">nrow</span>(x.scaled)) +<span class="st"> </span>x.scaled[, i] -<span class="st"> </span><span class="fl">0.5</span>
+            xv &lt;-<span class="st"> </span><span class="kw">c</span>(xv[<span class="dv">1</span>], xv)
+            yv &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(xv) -<span class="st"> </span><span class="fl">0.5</span>
+            <span class="kw">lines</span>(<span class="dt">x =</span> xv, <span class="dt">y =</span> yv, <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> tracecol, <span class="dt">type =</span> <span class="st">&quot;s&quot;</span>)
+        }
+    }
+    if (trace %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;row&quot;</span>)) {
+        retval$hline &lt;-<span class="st"> </span>hline
+        hline.vals &lt;-<span class="st"> </span><span class="kw">scale01</span>(hline, min.scale, max.scale)
+        for (i in rowInd) {
+            if (!<span class="kw">is.null</span>(hline)) {
+                <span class="kw">abline</span>(<span class="dt">h =</span> i +<span class="st"> </span>hline, <span class="dt">col =</span> linecol, <span class="dt">lty =</span> <span class="dv">2</span>)
+            }
+            yv &lt;-<span class="st"> </span><span class="kw">rep</span>(i, <span class="kw">ncol</span>(x.scaled)) +<span class="st"> </span>x.scaled[i, ] -<span class="st"> </span><span class="fl">0.5</span>
+            yv &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">c</span>(yv[<span class="dv">1</span>], yv))
+            xv &lt;-<span class="st"> </span><span class="kw">length</span>(yv):<span class="dv">1</span> -<span class="st"> </span><span class="fl">0.5</span>
+            <span class="kw">lines</span>(<span class="dt">x =</span> xv, <span class="dt">y =</span> yv, <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> tracecol, <span class="dt">type =</span> <span class="st">&quot;s&quot;</span>)
+        }
+    }
+    if (!<span class="kw">missing</span>(cellnote))
+        <span class="kw">text</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">row</span>(cellnote)), <span class="dt">y =</span> <span class="kw">c</span>(<span class="kw">col</span>(cellnote)), <span class="dt">labels =</span> <span class="kw">c</span>(cellnote),
+            <span class="dt">col =</span> notecol, <span class="dt">cex =</span> notecex)
+    <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(margins[<span class="dv">1</span>], <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))
+    if (dendrogram %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;row&quot;</span>)) {
+        <span class="kw">plot</span>(ddr, <span class="dt">horiz =</span> <span class="ot">TRUE</span>, <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">yaxs =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">leaflab =</span> <span class="st">&quot;none&quot;</span>)
+    }
+    else <span class="kw">plot.new</span>()
+    <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, if (!<span class="kw">is.null</span>(main)) <span class="dv">5</span> else <span class="dv">0</span>, margins[<span class="dv">2</span>]))
+    if (dendrogram %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;both&quot;</span>, <span class="st">&quot;column&quot;</span>)) {
+        <span class="kw">plot</span>(ddc, <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">xaxs =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">leaflab =</span> <span class="st">&quot;none&quot;</span>)
+    }
+    else <span class="kw">plot.new</span>()
+    if (!<span class="kw">is.null</span>(main))
+        <span class="kw">title</span>(main, <span class="dt">cex.main =</span> <span class="fl">1.5</span> *<span class="st"> </span>op[[<span class="st">&quot;cex.main&quot;</span>]])
+    if (key) {
+        <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">cex =</span> <span class="fl">0.75</span>)
+        tmpbreaks &lt;-<span class="st"> </span>breaks
+        if (symkey) {
+            max.raw &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(<span class="kw">c</span>(x, breaks)), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+            min.raw &lt;-<span class="st"> </span>-max.raw
+            tmpbreaks[<span class="dv">1</span>] &lt;-<span class="st"> </span>-<span class="kw">max</span>(<span class="kw">abs</span>(x), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+            tmpbreaks[<span class="kw">length</span>(tmpbreaks)] &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">abs</span>(x), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+        }
+        else {
+            min.raw &lt;-<span class="st"> </span><span class="kw">min</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+            max.raw &lt;-<span class="st"> </span><span class="kw">max</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+        }
+
+        z &lt;-<span class="st"> </span><span class="kw">seq</span>(min.raw, max.raw, <span class="dt">length =</span> <span class="kw">length</span>(col))
+        <span class="kw">image</span>(<span class="dt">z =</span> <span class="kw">matrix</span>(z, <span class="dt">ncol =</span> <span class="dv">1</span>), <span class="dt">col =</span> col, <span class="dt">breaks =</span> tmpbreaks,
+            <span class="dt">xaxt =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">yaxt =</span> <span class="st">&quot;n&quot;</span>)
+        <span class="kw">par</span>(<span class="dt">usr =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>))
+        lv &lt;-<span class="st"> </span><span class="kw">pretty</span>(breaks)
+        xv &lt;-<span class="st"> </span><span class="kw">scale01</span>(<span class="kw">as.numeric</span>(lv), min.raw, max.raw)
+        <span class="kw">axis</span>(<span class="dv">1</span>, <span class="dt">at =</span> xv, <span class="dt">labels =</span> lv)
+        if (scale ==<span class="st"> &quot;row&quot;</span>)
+            <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="st">&quot;Row Z-Score&quot;</span>, <span class="dt">line =</span> <span class="dv">2</span>)
+        else if (scale ==<span class="st"> &quot;column&quot;</span>)
+            <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, <span class="st">&quot;Column Z-Score&quot;</span>, <span class="dt">line =</span> <span class="dv">2</span>)
+        else <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">1</span>, KeyValueName, <span class="dt">line =</span> <span class="dv">2</span>)
+        if (density.info ==<span class="st"> &quot;density&quot;</span>) {
+            dens &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> densadj, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+            omit &lt;-<span class="st"> </span>dens$x &lt;<span class="st"> </span><span class="kw">min</span>(breaks) |<span class="st"> </span>dens$x &gt;<span class="st"> </span><span class="kw">max</span>(breaks)
+            dens$x &lt;-<span class="st"> </span>dens$x[-omit]
+            dens$y &lt;-<span class="st"> </span>dens$y[-omit]
+            dens$x &lt;-<span class="st"> </span><span class="kw">scale01</span>(dens$x, min.raw, max.raw)
+            <span class="kw">lines</span>(dens$x, dens$y/<span class="kw">max</span>(dens$y) *<span class="st"> </span><span class="fl">0.95</span>, <span class="dt">col =</span> denscol,
+                <span class="dt">lwd =</span> <span class="dv">1</span>)
+            <span class="kw">axis</span>(<span class="dv">2</span>, <span class="dt">at =</span> <span class="kw">pretty</span>(dens$y)/<span class="kw">max</span>(dens$y) *<span class="st"> </span><span class="fl">0.95</span>, <span class="kw">pretty</span>(dens$y))
+            <span class="kw">title</span>(<span class="st">&quot;Color Key</span><span class="ch">\n</span><span class="st">and Density Plot&quot;</span>)
+            <span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">0.5</span>)
+            <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="st">&quot;Density&quot;</span>, <span class="dt">line =</span> <span class="dv">2</span>)
+        }
+        else if (density.info ==<span class="st"> &quot;histogram&quot;</span>) {
+            h &lt;-<span class="st"> </span><span class="kw">hist</span>(x, <span class="dt">plot =</span> <span class="ot">FALSE</span>, <span class="dt">breaks =</span> breaks)
+            hx &lt;-<span class="st"> </span><span class="kw">scale01</span>(breaks, min.raw, max.raw)
+            hy &lt;-<span class="st"> </span><span class="kw">c</span>(h$counts, h$counts[<span class="kw">length</span>(h$counts)])
+            <span class="kw">lines</span>(hx, hy/<span class="kw">max</span>(hy) *<span class="st"> </span><span class="fl">0.95</span>, <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;s&quot;</span>,
+                <span class="dt">col =</span> denscol)
+            <span class="kw">axis</span>(<span class="dv">2</span>, <span class="dt">at =</span> <span class="kw">pretty</span>(hy)/<span class="kw">max</span>(hy) *<span class="st"> </span><span class="fl">0.95</span>, <span class="kw">pretty</span>(hy))
+            <span class="kw">title</span>(<span class="st">&quot;Color Key</span><span class="ch">\n</span><span class="st">and Histogram&quot;</span>)
+            <span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">0.5</span>)
+            <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="st">&quot;Count&quot;</span>, <span class="dt">line =</span> <span class="dv">2</span>)
+        }
+        else <span class="kw">title</span>(<span class="st">&quot;Color Key&quot;</span>)
+    }
+    else <span class="kw">plot.new</span>()
+    retval$colorTable &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">low =</span> retval$breaks[-<span class="kw">length</span>(retval$breaks)],
+        <span class="dt">high =</span> retval$breaks[-<span class="dv">1</span>], <span class="dt">color =</span> retval$col)
+    <span class="kw">invisible</span>(retval)
+}
+
+myclust &lt;-<span class="st"> </span>function(c)
+{
+  <span class="kw">hclust</span>(c,<span class="dt">method=</span><span class="st">&quot;average&quot;</span>)
+}
+
+na.dist &lt;-<span class="st"> </span>function(x,<span class="dt">method=</span><span class="st">&quot;euclidian&quot;</span>,...) 
+{
+  t.dist &lt;-<span class="st"> </span><span class="kw">dist</span>(x,...)
+  t.dist &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(t.dist)
+  t.limit &lt;-<span class="st"> </span><span class="fl">1.1</span>*<span class="kw">max</span>(t.dist,<span class="dt">na.rm=</span>T)
+  t.dist[<span class="kw">is.na</span>(t.dist)] &lt;-<span class="st"> </span>t.limit
+  t.dist &lt;-<span class="st"> </span><span class="kw">as.dist</span>(t.dist)
+  <span class="kw">return</span>(t.dist)
+}</code></pre></div>
+<div id="figure-three" class="section level2">
+<h2>Figure Three</h2>
+<p>A “heatmap” of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by “neutral ph74”, “positive ph74” and “negative ph74”. The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">physprop.matrix &lt;-<span class="st"> </span>chem.invivo.PK.aggregate.data[,<span class="kw">c</span>(<span class="st">&quot;MW&quot;</span>,
+                                    <span class="st">&quot;logP&quot;</span>,
+                                    <span class="st">&quot;WaterSol&quot;</span>,
+                                    <span class="st">&quot;Neutral.pH74&quot;</span>,
+                                    <span class="st">&quot;Positive.pH74&quot;</span>,
+                                    <span class="st">&quot;Negative.pH74&quot;</span>,
+                                    <span class="st">&quot;Clint&quot;</span>,
+                                    <span class="st">&quot;Fup&quot;</span>,
+                                    <span class="st">&quot;Vdist&quot;</span>,
+                                    <span class="st">&quot;kelim&quot;</span>,
+                                    <span class="st">&quot;kgutabs&quot;</span>,
+                                    <span class="st">&quot;Fbio&quot;</span>)]
+rnames &lt;-<span class="st"> </span>chem.invivo.PK.aggregate.data$Compound
+rnames[rnames==<span class="st">&quot;Bensulide&quot;</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Bensulide.Joint&quot;</span>,<span class="st">&quot;Bensulide.NHEERL&quot;</span>,<span class="st">&quot;Bensulide.RTI&quot;</span>)
+rnames[rnames==<span class="st">&quot;Propyzamide&quot;</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Propyzamide.Joint&quot;</span>,<span class="st">&quot;Propyzamide.NHEERL&quot;</span>,<span class="st">&quot;Propyzamide.RTI&quot;</span>)
+<span class="kw">rownames</span>(physprop.matrix) &lt;-<span class="st"> </span>rnames
+
+row.side.cols &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;Black&quot;</span>,<span class="kw">dim</span>(physprop.matrix)[<span class="dv">1</span>])
+row.side.cols[<span class="kw">sapply</span>(chem.invivo.PK.aggregate.data$CAS,is.pharma)] &lt;-<span class="st"> &quot;Grey&quot;</span>
+
+<span class="kw">apply</span>(physprop.matrix,<span class="dv">2</span>,function(x) <span class="kw">mean</span>(x,<span class="dt">na.rm=</span>T))
+for (this.col in <span class="kw">c</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">9</span>:<span class="dv">11</span>),<span class="kw">c</span>(<span class="dv">4</span>:<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">12</span>))) physprop.matrix[,this.col] &lt;-<span class="st"> </span><span class="kw">log10</span>(<span class="dv">10</span>^-<span class="dv">6</span>+physprop.matrix[,this.col])
+
+
+physprop.matrix &lt;-<span class="st"> </span><span class="kw">apply</span>(physprop.matrix,<span class="dv">2</span>,function(x) (x-<span class="kw">mean</span>(x,<span class="dt">na.rm=</span>T))/<span class="kw">sd</span>(x,<span class="dt">na.rm=</span>T))
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">8</span>,<span class="dt">height=</span><span class="dv">8</span>)
+main_title=<span class="st">&quot;in vivo Toxicokinetic Parameters&quot;</span>
+<span class="kw">heatmap.2</span>(physprop.matrix, 
+          <span class="dt">hclustfun=</span>myclust,
+          <span class="dt">Colv=</span><span class="ot">FALSE</span>,
+          <span class="dt">distfun=</span>na.dist, 
+          <span class="dt">na.rm =</span> <span class="ot">TRUE</span>, 
+          <span class="dt">scale=</span><span class="st">&quot;none&quot;</span>,
+          <span class="dt">trace=</span><span class="st">&quot;none&quot;</span>,
+          <span class="dt">RowSideColors=</span>row.side.cols,
+          <span class="dt">col=</span><span class="kw">brewer.pal</span>(<span class="dv">11</span>,<span class="st">&quot;Spectral&quot;</span>),
+          <span class="dt">margins=</span><span class="kw">c</span>(<span class="dv">8</span>,<span class="dv">10</span>)) 
+<span class="co"># The following has to be adjusted manually:</span>
+<span class="kw">rect</span>(<span class="fl">0.65</span>, <span class="fl">0.01</span>, <span class="fl">0.87</span>, <span class="fl">0.78</span>, <span class="dt">border=</span><span class="st">&quot;blue&quot;</span>) 
+<span class="kw">text</span>(<span class="fl">0.75</span>,<span class="fl">0.81</span>,<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Estimated from &quot;</span>,<span class="kw">italic</span>(<span class="st">&quot;In Vivo&quot;</span>),<span class="st">&quot; Data&quot;</span>)))</code></pre></div>
+<p>The original scripts used a data.table called FitData that contains a lot of stuff we don’t need to make these figures. We recreate it from the httk object chem.invivo.PK.aggregate.data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use joint analysis data from both labs:</span>
+FitData &lt;-<span class="st"> </span><span class="kw">subset</span>(chem.invivo.PK.aggregate.data,Compound!=<span class="st">&quot;Bensulide&quot;</span>|Source==<span class="st">&quot;Wambaugh et al. (2018), NHEERL/RTI&quot;</span>)
+FitData &lt;-<span class="st"> </span><span class="kw">subset</span>(FitData,Compound!=<span class="st">&quot;Propyzamide&quot;</span>|Source==<span class="st">&quot;Wambaugh et al. (2018), NHEERL/RTI&quot;</span>)
+<span class="co"># Rename some columns to match original data files:</span>
+FitData$Compound.abbrev &lt;-<span class="st"> </span>FitData$Abbrev
+<span class="co"># Add a column indicating chemical type:</span>
+FitData$Chemical &lt;-<span class="st"> &quot;Other&quot;</span>
+FitData[<span class="kw">sapply</span>(FitData$CAS,is.pharma),<span class="st">&quot;Chemical&quot;</span>] &lt;-<span class="st"> &quot;Pharmaceutical&quot;</span></code></pre></div>
+</div>
+<div id="figure-four" class="section level2">
+<h2>Figure Four</h2>
+<p>Comparison of measured volumes of distribution (Vd) with predictions based upon in vitro data and in silico methods (Pearce, et al., 2017a; Schmitt, 2008). The solid line in each panel indicates the identity line (1:1, perfect predictions). Chemicals can be identified by their chemical abbreviation given in Table 1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get rid of chemicals with Fup &lt; LOD:</span>
+FitData.Fup &lt;-<span class="st"> </span><span class="kw">subset</span>(FitData,!(CAS%in%<span class="kw">subset</span>(chem.physical_and_invitro.data,Human.Funbound.plasma==<span class="dv">0</span>)$CAS))
+
+<span class="co"># Rename some columns to match original data files:</span>
+FitData.Fup$SelectedVdist &lt;-<span class="st"> </span>FitData.Fup$Vdist
+FitData.Fup$SelectedVdist.sd &lt;-<span class="st"> </span>FitData.Fup$Vdist.sd
+
+<span class="co">#Predict volume of Distribution</span>
+FitData.Fup$Vdist.1comp.pred &lt;-<span class="st"> </span><span class="kw">sapply</span>(FitData.Fup$CAS,function(x) <span class="kw">calc_vdist</span>(<span class="dt">chem.cas=</span>x,<span class="dt">species=</span><span class="st">&quot;Rat&quot;</span>,<span class="dt">default.to.human =</span> T))
+FitData.Fup$Vdist.1comp.pred.nocal &lt;-<span class="st"> </span><span class="kw">sapply</span>(FitData.Fup$CAS,function(x) <span class="kw">calc_vdist</span>(<span class="dt">chem.cas=</span>x,<span class="dt">regression=</span>F,<span class="dt">species=</span><span class="st">&quot;Rat&quot;</span>,<span class="dt">default.to.human =</span> T))
+
+
+FigVdista.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedVdist)&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdista.fit)
+
+FigVdista.fit.weighted &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedVdist)&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)),<span class="dt">weights=</span><span class="dv">1</span>/SelectedVdist.sd^<span class="dv">2</span>)
+<span class="kw">summary</span>(FigVdista.fit)
+
+FigVdista.fit.pharm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical!=<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdista.fit.pharm)
+
+FigVdista.fit.other &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical==<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdista.fit.other)
+
+<span class="kw">dim</span>(<span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedVdist.sd)&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))[<span class="dv">1</span>]
+
+FigVdista &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(Vdist.1comp.pred))) +
+<span class="st">    </span><span class="kw">geom_segment</span>(<span class="dt">color=</span><span class="st">&quot;Grey&quot;</span>,<span class="kw">aes</span>(<span class="dt">x=</span>Vdist.1comp.pred,<span class="dt">y=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedVdist)-SelectedVdist.sd),<span class="dt">xend=</span>Vdist.1comp.pred,<span class="dt">yend=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedVdist)+SelectedVdist.sd)))+
+<span class="st">    </span><span class="kw">geom_text</span>(<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedVdist&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;Vdist.1comp.pred&quot;</span>,
+                         <span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">2</span>, <span class="dv">10</span>^<span class="dv">2</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">2</span>, <span class="dv">10</span>^<span class="dv">2</span>)) +
+<span class="st">   </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">   </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">   </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">1</span>*<span class="dv">10</span>^-<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">label =</span> <span class="st">&quot;A&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>)  +
+<span class="st">   </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated Volume of Distribution (L/kg)&quot;</span>))) +<span class="st"> </span>
+<span class="st">   </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Calibrated &quot;</span>,<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted &quot;</span>,V[d],<span class="st">&quot; (L/kg)&quot;</span>))) +
+<span class="st">   </span><span class="kw">theme_bw</span>()  +
+<span class="st">   </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+   
+FigVdistb.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred.nocal),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdistb.fit)
+
+FigVdistb.fit.weighted &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred.nocal),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(Vdist.1comp.pred)),<span class="dt">weights=</span><span class="dv">1</span>/SelectedVdist.sd^<span class="dv">2</span>)
+<span class="kw">summary</span>(FigVdistb.fit)
+
+FigVdistb.fit.pharm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred.nocal),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical!=<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdistb.fit.pharm)
+
+FigVdistb.fit.other&lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedVdist)~<span class="kw">log</span>(Vdist.1comp.pred.nocal),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical==<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred)))
+<span class="kw">summary</span>(FigVdistb.fit.other)
+
+FigVdistb &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(Vdist.1comp.pred.nocal))) +
+<span class="st">   </span><span class="kw">geom_segment</span>(<span class="dt">color=</span><span class="st">&quot;Grey&quot;</span>,<span class="kw">aes</span>(<span class="dt">x=</span>Vdist.1comp.pred.nocal,<span class="dt">y=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedVdist)-SelectedVdist.sd),<span class="dt">xend=</span>Vdist.1comp.pred.nocal,<span class="dt">yend=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedVdist)+SelectedVdist.sd)))+
+<span class="st">   </span><span class="kw">geom_text</span>(<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedVdist&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;Vdist.1comp.pred.nocal&quot;</span>,
+                         <span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">2</span>, <span class="dv">10</span>^<span class="dv">2</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">2</span>, <span class="dv">10</span>^<span class="dv">2</span>)) +
+<span class="st">   </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">   </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">   </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">1</span>*<span class="dv">10</span>^-<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">label =</span> <span class="st">&quot;B&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">   </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated Volume of Distribution (L/kg)&quot;</span>))) +<span class="st"> </span>
+<span class="st">   </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Original &quot;</span>,<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted &quot;</span>,V[d],<span class="st">&quot; (L/kg)&quot;</span>))) +
+<span class="st">   </span><span class="kw">theme_bw</span>()  +
+<span class="st">   </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">10</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">multiplot</span>(FigVdista,FigVdistb,<span class="dt">cols=</span><span class="dv">2</span>,<span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))
+
+
+Fig4a.data &lt;-<span class="st"> </span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedVdist)&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred))
+Fig4a.MSE &lt;-<span class="st"> </span><span class="kw">mean</span>((<span class="kw">log</span>(Fig4a.data$Vdist.1comp.pred)-<span class="kw">log</span>(Fig4a.data$SelectedVdist))^<span class="dv">2</span>)
+
+
+Fig4b.data &lt;-<span class="st"> </span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedVdist)&amp;!<span class="kw">is.na</span>(Vdist.1comp.pred.nocal))
+Fig4b.MSE &lt;-<span class="st"> </span><span class="kw">mean</span>((<span class="kw">log</span>(Fig4b.data$Vdist.1comp.pred.nocal)-<span class="kw">log</span>(Fig4b.data$SelectedVdist))^<span class="dv">2</span>)</code></pre></div>
+</div>
+<div id="figure-five" class="section level2">
+<h2>Figure Five</h2>
+<p>Comparison of the TK clearance estimated from the in vivo data with the clearance predictions made using HTTK data. The more likely empirical TK model (either one or two-compartments, as in Figure 2) is selected for each chemical using the AIC (Akaike, 1974). A non-compartmental estimate of clearance is used if neither model is selected. Estimated standard deviation is indicated by a vertical line, and is often smaller than the plot point. The solid line indicates the identity line (1:1, perfect predictions), while the dotted and dashed lines indicate the linear regression (log-scale) trend-lines for pharmaceuticals and other chemicals, respectively. Chemicals can be identified by their chemical abbreviation given in Table 1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#FitData.Fup$CLtot.1comp &lt;- FitData.Fup$Vdist.1comp.meas*FitData.Fup$kelim.1comp.meas</span>
+<span class="co">#FitData.Fup$CLtot.1comp.sd &lt;- (FitData.Fup$Vdist.1comp.meas.sd^2+FitData.Fup$kelim.1comp.meas.sd^2)^(1/2)</span>
+<span class="co">#FitData.Fup[is.na(CLtot.1comp.sd)]$CLtot.1comp.sd &lt;- Inf</span>
+
+<span class="co">#FitData.Fup[is.na(SelectedCLtot.sd)]$SelectedClearance.sd &lt;- Inf</span>
+
+FitData.Fup$SelectedCLtot &lt;-<span class="st"> </span>FitData.Fup$Vdist*FitData.Fup$kelim 
+FitData.Fup$SelectedCLtot.sd &lt;-<span class="st"> </span>(FitData.Fup$Vdist.sd^<span class="dv">2</span>+FitData.Fup$kelim.sd^<span class="dv">2</span>)^(<span class="dv">1</span>/<span class="dv">2</span>)
+FitData.Fup$CLtot.1comp.pred &lt;-<span class="st"> </span><span class="kw">sapply</span>(FitData.Fup$CAS,function(x) <span class="kw">calc_total_clearance</span>(<span class="dt">chem.cas=</span>x,<span class="dt">species=</span><span class="st">&quot;Rat&quot;</span>,<span class="dt">default.to.human =</span> T))
+
+Fig.SelectedClearance.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedCLtot.sd)))
+<span class="kw">summary</span>(Fig.SelectedClearance.fit)
+Fig.SelectedClearance.fit.weighted &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,!<span class="kw">is.na</span>(SelectedCLtot.sd)),<span class="dt">weights=</span><span class="dv">1</span>/SelectedCLtot.sd^<span class="dv">2</span>)
+<span class="kw">summary</span>(Fig.SelectedClearance.fit.weighted)
+Fig.SelectedClearance.fit.pharma &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical!=<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(SelectedCLtot.sd)),<span class="dt">weights=</span><span class="dv">1</span>/SelectedCLtot.sd^<span class="dv">2</span>)
+<span class="kw">summary</span>(Fig.SelectedClearance.fit.pharma)
+Fig.SelectedClearance.fit.other&lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical==<span class="st">&quot;Other&quot;</span>&amp;!<span class="kw">is.na</span>(SelectedCLtot.sd)),<span class="dt">weights=</span><span class="dv">1</span>/SelectedCLtot.sd^<span class="dv">2</span>)
+<span class="kw">summary</span>(Fig.SelectedClearance.fit.other)
+Fig.SelectedClearance.fit.pharma &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical!=<span class="st">&quot;Other&quot;</span>))
+<span class="kw">summary</span>(Fig.SelectedClearance.fit.pharma)
+Fig.SelectedClearance.fit.other&lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCLtot)~<span class="kw">log</span>(CLtot.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,Chemical==<span class="st">&quot;Other&quot;</span>))
+<span class="kw">summary</span>(Fig.SelectedClearance.fit.other)
+
+Fig.SelectedClearance&lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>FitData.Fup,<span class="kw">aes</span>(<span class="dt">y=</span>SelectedCLtot,<span class="dt">x=</span>CLtot.1comp.pred)) +
+<span class="st">    </span><span class="kw">geom_segment</span>(<span class="dt">data=</span><span class="kw">subset</span>(FitData.Fup,<span class="kw">is.finite</span>(SelectedCLtot.sd)),<span class="dt">color=</span><span class="st">&quot;grey&quot;</span>,<span class="kw">aes</span>(<span class="dt">x=</span>CLtot.1comp.pred,<span class="dt">y=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCLtot)-SelectedCLtot.sd),<span class="dt">xend=</span>CLtot.1comp.pred,<span class="dt">yend=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCLtot)+SelectedCLtot.sd)))+
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedCLtot&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;CLtot.1comp.pred&quot;</span>,
+                         <span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="co">#    geom_point(data=twocomp.data,color=&quot;White&quot;,size=2,aes(shape=Source))+ </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">3</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">3</span>)) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">     </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> CLtot.1comp.pred, <span class="dt">y =</span> <span class="kw">exp</span>(Fig.SelectedClearance.fit.pharma$coefficients[<span class="dv">1</span>]+Fig.SelectedClearance.fit.pharma$coefficients[<span class="dv">2</span>]*<span class="kw">log</span>(CLtot.1comp.pred))), <span class="dt">colour =</span> <span class="st">&quot;darkturquoise&quot;</span>, <span class="dt">linetype=</span><span class="st">&quot;dotted&quot;</span>, <span class="dt">size=</span><span class="fl">1.5</span>) +
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> CLtot.1comp.pred, <span class="dt">y =</span> <span class="kw">exp</span>(Fig.SelectedClearance.fit.other$coefficients[<span class="dv">1</span>]+Fig.SelectedClearance.fit.other$coefficients[<span class="dv">2</span>]*<span class="kw">log</span>(CLtot.1comp.pred))), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>, <span class="dt">size=</span><span class="fl">1.5</span>) +
+<span class="st">     </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated clearance (mg/L/h)&quot;</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted clearance (mg/L/h)&quot;</span>))) +
+<span class="st">    </span><span class="kw">theme_bw</span>()   +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">10</span>^<span class="dv">2</span>/<span class="dv">3</span>/<span class="dv">3</span>/<span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">3</span>*<span class="dv">3</span>*<span class="dv">10</span>^-<span class="dv">4</span>,<span class="dt">size=</span><span class="dv">4</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(Fig.SelectedClearance.fit.pharma,<span class="dt">prefix=</span><span class="st">&quot;Pharmaceutical:&quot;</span>),<span class="dt">parse=</span>T)+<span class="st"> </span>
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">10</span>^<span class="dv">2</span>/<span class="dv">3</span>/<span class="dv">3</span>/<span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">3</span>*<span class="dv">3</span>*<span class="dv">3</span>*<span class="dv">10</span>^-<span class="dv">5</span>,<span class="dt">size=</span><span class="dv">4</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(Fig.SelectedClearance.fit.other,<span class="dt">prefix=</span><span class="st">&quot;Other:&quot;</span>),<span class="dt">parse=</span>T)+
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">&quot;cm&quot;</span>))+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">6</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">print</span>(Fig.SelectedClearance)
+
+<span class="kw">paste</span>(<span class="st">&quot;with&quot;</span>,<span class="kw">with</span>(FitData.Fup,<span class="kw">sum</span>(SelectedCLtot&lt;CLtot.1comp.pred,<span class="dt">na.rm=</span>T)),<span class="st">&quot;chemicals over-estimated and&quot;</span>,<span class="kw">with</span>(FitData.Fup,<span class="kw">sum</span>(SelectedCLtot&gt;CLtot.1comp.pred,<span class="dt">na.rm=</span>T)),<span class="st">&quot;under-estimated&quot;</span>)</code></pre></div>
+</div>
+<div id="figure-six" class="section level2">
+<h2>Figure Six</h2>
+<p>Distribution of Gut Absorption Rate for Environmental and Pharmaceutical Chemicals.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FitData$Selectedkgutabs &lt;-<span class="st"> </span>FitData$kgutabs
+<span class="co"># Cutoff from optimizer is 1000:</span>
+Figkgutabs &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs&lt;<span class="dv">999</span>), <span class="kw">aes</span>(Selectedkgutabs, <span class="dt">fill =</span> Chemical)) +
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth=</span><span class="fl">0.5</span>) +
+<span class="st">     </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10) +
+<span class="st">     </span><span class="kw">ylab</span>(<span class="st">&quot;Number of Chemicals&quot;</span>)+
+<span class="st">     </span><span class="kw">xlab</span>(<span class="st">&quot;Absorption Rate from Gut (1/h)&quot;</span>)+
+<span class="st">     </span><span class="kw">theme_bw</span>() +
+<span class="st">        </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)
+     
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">6</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">print</span>(Figkgutabs) 
+
+<span class="kw">mean</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs&lt;<span class="dv">999</span>)$Selectedkgutabs)
+<span class="kw">min</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs&lt;<span class="dv">999</span>)$Selectedkgutabs)
+<span class="kw">max</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs&lt;<span class="dv">999</span>)$Selectedkgutabs)
+<span class="kw">median</span>(<span class="kw">subset</span>(FitData,Selectedkgutabs&lt;<span class="dv">999</span>)$Selectedkgutabs)</code></pre></div>
+</div>
+<div id="figure-seven" class="section level2">
+<h2>Figure Seven</h2>
+<p>In panel A, the observed fraction of oral dose absorbed from the gut is compared with predictions made using Gastroplus (Simulations Plus, 2017). The solid line indicates the identity line (1:1, perfect predictions). These fractions are distrusted from nearly zero to effectively 100% (Panel B). Chemicals can be identified by their chemical abbreviation given in Table 1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FitData$SelectedFbio &lt;-<span class="st"> </span>FitData$Fbio
+
+FigFbioa &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>FitData) +
+<span class="st">    </span><span class="kw">geom_text</span>(<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedFbio&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;Fbio.pred&quot;</span>,
+                         <span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>,<span class="dv">1</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>,<span class="dv">1</span>)) +
+<span class="co">#    xlim(0, 1)+</span>
+<span class="co">#    ylim(0, 1)+</span>
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> .<span class="dv">015</span>/<span class="dv">10</span>, <span class="dt">y =</span> <span class="fl">0.55</span>, <span class="dt">label =</span> <span class="st">&quot;A&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated Fraction Bioavailable&quot;</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In silico&quot;</span>),<span class="st">&quot; predicted &quot;</span>,F[bio]))) +
+<span class="co">#    scale_color_brewer(palette=&quot;Set2&quot;) + </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+FigFbiob &lt;-<span class="st"> </span><span class="kw">ggplot</span>(FitData, <span class="kw">aes</span>(SelectedFbio, <span class="dt">fill =</span> Chemical)) +
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth=</span><span class="fl">0.5</span>) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>,<span class="dv">3</span>)) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> .<span class="dv">001</span>, <span class="dt">y =</span> <span class="dv">18</span>, <span class="dt">label =</span> <span class="st">&quot;B&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Number of Chemicals&quot;</span>)+
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated Fraction Bioavailable&quot;</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">fill=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+     
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">10</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">multiplot</span>(FigFbioa,FigFbiob,<span class="dt">cols=</span><span class="dv">2</span>,<span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))
+
+<span class="kw">summary</span>(<span class="kw">lm</span>(<span class="kw">log</span>(SelectedFbio)~<span class="kw">log</span>(Fbio.pred),<span class="dt">data=</span>FitData))
+
+<span class="kw">paste</span>(<span class="st">&quot;Fbio ranged from&quot;</span>,<span class="kw">signif</span>(<span class="kw">min</span>(FitData[FitData$Chemical==<span class="st">&quot;Pharmaceutical&quot;</span>,<span class="st">&quot;SelectedFbio&quot;</span>],<span class="dt">na.rm=</span>T),<span class="dv">2</span>),<span class="st">&quot;to&quot;</span>,<span class="kw">signif</span>(<span class="kw">max</span>(FitData[FitData$Chemical==<span class="st">&quot;Pharmaceutical&quot;</span>,<span class="st">&quot;SelectedFbio&quot;</span>],<span class="dt">na.rm=</span>T),<span class="dv">2</span>),<span class="st">&quot;for pharmaceutical compounds, but was observed to be as low as&quot;</span>, <span class="kw">signif</span>(<span class="kw">min</span>(FitData[FitData$Chemical==<span class="st">&quot;Other&quot;</span>,<span class="st">&quot;SelectedFbio&quot;</span>],<span class="dt">na.rm=</span>T),<span class="dv">3</span>),<span class="st">&quot;for other compounds.&quot;</span>)
+
+<span class="kw">min</span>(FitData$SelectedFbio,<span class="dt">na.rm=</span>T)                       </code></pre></div>
+</div>
+<div id="figure-eight" class="section level2">
+<h2>Figure Eight</h2>
+<p>Rat in vivo data were collected for diverse environmental chemicals to evaluate the predictive ability of HTTK, especially with respect to predicting steady-state serum concentration (Css). Chemicals can be identified by their chemical abbreviation given in Table 1. The abbreviations are centered at the measured and predicted values. The solid line indicates the identity line (1:1, perfect predictions). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FitData$SelectedCss &lt;-<span class="st"> </span>FitData$Css
+FitData$SelectedCss.sd &lt;-<span class="st"> </span>FitData$Css.sd
+FitData$Css.1comp.pred &lt;-<span class="st"> </span><span class="kw">sapply</span>(FitData$CAS,function(x) <span class="kw">calc_analytic_css</span>(<span class="dt">chem.cas=</span>x,<span class="dt">species=</span><span class="st">&quot;Rat&quot;</span>,<span class="dt">default.to.human=</span>T))
+
+Fig.1compCss.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.1comp.pred),<span class="dt">data=</span>FitData,<span class="dt">na.rm=</span>T)
+Fig.1compCss.fit.weighted &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.1comp.pred),<span class="dt">data=</span>FitData,<span class="dt">na.rm=</span>T,<span class="dt">weights=</span><span class="dv">1</span>/SelectedCss.sd^<span class="dv">2</span>)
+Fig.1compCss.fit.pharma &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData,Chemical!=<span class="st">&quot;Other&quot;</span>),<span class="dt">na.rm=</span>T)
+Fig.1compCss.fit.other &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.1comp.pred),<span class="dt">data=</span><span class="kw">subset</span>(FitData,Chemical==<span class="st">&quot;Other&quot;</span>),<span class="dt">na.rm=</span>T)
+
+<span class="kw">summary</span>(Fig.1compCss.fit)
+<span class="kw">summary</span>(Fig.1compCss.fit.pharma)
+<span class="kw">summary</span>(Fig.1compCss.fit.other)
+
+
+textx &lt;-<span class="st"> </span><span class="dv">10</span>^-<span class="dv">3</span>
+texty &lt;-<span class="st"> </span><span class="dv">1</span>*<span class="dv">10</span>^<span class="dv">1</span>
+
+Fig.Cssa &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>FitData) +
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">color=</span><span class="st">&quot;grey&quot;</span>,<span class="kw">aes</span>(<span class="dt">x=</span>Css.1comp.pred,<span class="dt">y=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCss)-SelectedCss.sd),<span class="dt">xend=</span>Css.1comp.pred,<span class="dt">yend=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCss)+SelectedCss.sd)))+
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="dv">4</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedCss&quot;</span>, <span class="dt">x=</span><span class="st">&quot;Css.1comp.pred&quot;</span>,<span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,<span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">6</span>, <span class="dv">110</span>)) +
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">6</span>, <span class="dv">110</span>)) +
+<span class="st">  </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated &quot;</span>,C[ss],<span class="st">&quot; (mg/L)&quot;</span>))) +<span class="st"> </span>
+<span class="st"> </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted &quot;</span>,C[ss],<span class="st">&quot; (mg/L)&quot;</span>))) +
+<span class="co">#  scale_color_brewer(palette=&quot;Set2&quot;) + </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()  +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> textx/<span class="dv">15</span>, <span class="dt">y =</span> <span class="dv">5</span>*texty, <span class="dt">label =</span> <span class="st">&quot;A&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> textx, <span class="dt">y =</span> texty,<span class="dt">size=</span><span class="dv">6</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(Fig.1compCss.fit),<span class="dt">parse=</span>T)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>)) 
+<span class="co">#  annotate(&quot;text&quot;,x = textx/3, y = texty/3,size=4, label = lm_R2(Fig.1compCss.fit.weighted,prefix=&quot;Weighted:&quot;),parse=T) </span>
+<span class="co">#  annotate(&quot;text&quot;,x = textx, y = texty,size=4, label = lm_R2(Fig.1compCss.fit.pharma,prefix=&quot;Pharmaceutical:&quot;),parse=T)</span>
+<span class="co">#  annotate(&quot;text&quot;,x = textx, y = texty/3,size=4, label = lm_R2(Fig.1compCss.fit.other,prefix=&quot;Other:&quot;),parse=T) </span>
+
+FitData$Css.Bio &lt;-<span class="st"> </span>FitData$Css.1comp.pred*FitData$SelectedFbio
+Fig.1compCssb.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.Bio),<span class="dt">data=</span>FitData,<span class="dt">na.rm=</span>T)
+Fig.1compCssb.fit.weighted &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.Bio),<span class="dt">data=</span>FitData,<span class="dt">na.rm=</span>T,<span class="dt">weights=</span><span class="dv">1</span>/SelectedCss.sd^<span class="dv">2</span>)
+Fig.1compCssb.fit.pharma &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.Bio),<span class="dt">data=</span><span class="kw">subset</span>(FitData,Chemical!=<span class="st">&quot;Other&quot;</span>),<span class="dt">na.rm=</span>T)
+Fig.1compCssb.fit.other &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(SelectedCss)~<span class="kw">log</span>(Css.Bio),<span class="dt">data=</span><span class="kw">subset</span>(FitData,Chemical==<span class="st">&quot;Other&quot;</span>),<span class="dt">na.rm=</span>T)
+
+Fig.Cssb &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>FitData) +
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">color=</span><span class="st">&quot;grey&quot;</span>,<span class="kw">aes</span>(<span class="dt">x=</span>Css.Bio,<span class="dt">y=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCss)-SelectedCss.sd),<span class="dt">xend=</span>Css.Bio,<span class="dt">yend=</span><span class="kw">exp</span>(<span class="kw">log</span>(SelectedCss)+SelectedCss.sd)))+
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="dv">4</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;SelectedCss&quot;</span>, <span class="dt">x=</span><span class="st">&quot;Css.Bio&quot;</span>,<span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,<span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">6</span>, <span class="dv">110</span>)) +
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">5</span>*<span class="dv">10</span>^-<span class="dv">6</span>, <span class="dv">110</span>)) +
+<span class="st">  </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated &quot;</span>,C[ss],<span class="st">&quot; (mg/L)&quot;</span>))) +<span class="st"> </span>
+<span class="st"> </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted &quot;</span>,C[ss],<span class="st">&quot; (mg/L) Using Measured &quot;</span>, F[bio]))) +<span class="st"> </span>
+<span class="st"> </span><span class="co"># scale_color_brewer(palette=&quot;Set2&quot;) + </span>
+<span class="st">  </span><span class="kw">theme_bw</span>()  +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> textx/<span class="dv">15</span>, <span class="dt">y =</span> <span class="dv">5</span>*texty, <span class="dt">label =</span> <span class="st">&quot;B&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> textx, <span class="dt">y =</span> texty,<span class="dt">size=</span><span class="dv">6</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(Fig.1compCssb.fit),<span class="dt">parse=</span>T)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>)) 
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">10</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">multiplot</span>(Fig.Cssa,Fig.Cssb,<span class="dt">cols=</span><span class="dv">2</span>,<span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))
+
+                        </code></pre></div>
+</div>
+<div id="figure-nine" class="section level2">
+<h2>Figure Nine</h2>
+<p>Evaluation of Wambaugh et al. (2015) classification scheme for predicting errors made when using HTTK data to predict in vivo steady state plasma concentration (Css). Chemicals were placed into categories, depending upon the size of the error. “On the Order” represented the best case, where errors were within 3.2 times over or under the true value. Some chemicals were determined to be problematic due to limitations in the HTTK methods (e.g., plasma protein binding estimation) or failure to come to steady state. Wherever the chemical names overlap the vertical, gray bands, the observed errors are consistent with predicted error. Chemicals can be identified by their chemical abbreviation given in Table 1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FitData$TriageCat &lt;-<span class="st"> </span>FitData$Triage.Call
+FitData$CssResidual &lt;-<span class="st"> </span><span class="kw">log10</span>(FitData$Css.1comp.pred/FitData$Css)
+FitData[FitData$TriageCat%in%<span class="kw">c</span>(<span class="st">&quot;Does Not Reach Steady State&quot;</span>,<span class="st">&quot;Plasma Binding Assay Failed&quot;</span>),<span class="st">&quot;TriageCat&quot;</span>]&lt;-<span class="st">&quot;Problem&quot;</span>
+FitData$TriageCat &lt;-<span class="st"> </span><span class="kw">factor</span>(FitData$TriageCat,<span class="dt">levels=</span><span class="kw">c</span>(<span class="st">&quot;&gt;10x Underestimated&quot;</span>,<span class="st">&quot;&gt;3.2x Underestimated&quot;</span>,<span class="st">&quot;On the Order&quot;</span>,<span class="st">&quot;&gt;3.2x Overestimated&quot;</span>,<span class="st">&quot;&gt;10x Overestimated&quot;</span>,<span class="st">&quot;Problem&quot;</span>))
+
+
+Fig.Triage &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(FitData,!<span class="kw">is.na</span>(TriageCat)&amp;<span class="kw">is.finite</span>(CssResidual))) +
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="dv">4</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;CssResidual&quot;</span>, <span class="dt">x=</span><span class="st">&quot;TriageCat&quot;</span>,<span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,<span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;10x Underestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">y =</span> <span class="kw">log10</span>(<span class="dv">1</span>/<span class="dv">10</span>), <span class="dt">xend =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;10x Underestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">yend =</span> <span class="kw">log10</span>(<span class="dv">1</span>/<span class="dv">30</span>)), <span class="dt">size=</span><span class="dv">3</span>,<span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) +
+<span class="st"> </span><span class="co"># geom_segment(aes(x = factor(&quot;&gt;3.2x Underestimated&quot;,levels=levels(FitData$TriageCat)), y = log10(1/10), xend = factor(&quot;&gt;3.2x Underestimated&quot;,levels=levels(FitData$TriageCat)), yend = log10(1/3.2)), size=3,colour = &quot;grey&quot;) +</span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;On the Order&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">y =</span> <span class="kw">log10</span>(<span class="dv">1</span>/<span class="fl">3.2</span>), <span class="dt">xend =</span> <span class="kw">factor</span>(<span class="st">&quot;On the Order&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">yend =</span> <span class="kw">log10</span>(<span class="fl">3.2</span>)), <span class="dt">size=</span><span class="dv">3</span>,<span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;3.2x Overestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">y =</span> <span class="kw">log10</span>(<span class="fl">3.2</span>), <span class="dt">xend =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;3.2x Overestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">yend =</span> <span class="kw">log10</span>(<span class="dv">10</span>)), <span class="dt">size=</span><span class="dv">3</span>,<span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;10x Overestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">y =</span> <span class="kw">log10</span>(<span class="dv">10</span>), <span class="dt">xend =</span> <span class="kw">factor</span>(<span class="st">&quot;&gt;10x Overestimated&quot;</span>,<span class="dt">levels=</span><span class="kw">levels</span>(FitData$TriageCat)), <span class="dt">yend =</span> <span class="kw">log10</span>(<span class="dv">500</span>)), <span class="dt">size=</span><span class="dv">3</span>,<span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) +
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">0</span>)+
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="kw">log10</span>(<span class="dv">1</span>/<span class="dv">10</span>),<span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>)+
+<span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="kw">log10</span>(<span class="dv">1</span>/<span class="fl">3.2</span>),<span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>)+
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="kw">log10</span>(<span class="fl">3.2</span>),<span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>)+
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="kw">log10</span>(<span class="dv">10</span>),<span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>)+
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="dv">4</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;CssResidual&quot;</span>, <span class="dt">x=</span><span class="st">&quot;TriageCat&quot;</span>,<span class="dt">label=</span><span class="st">&quot;Compound.abbrev&quot;</span>,<span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">name=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Actual error in &quot;</span>,C[ss],<span class="st">&quot; prediction&quot;</span>)),<span class="dt">breaks=</span><span class="kw">c</span>(<span class="kw">log10</span>(<span class="dv">1</span>/<span class="dv">10</span>),<span class="kw">log10</span>(<span class="dv">1</span>/<span class="fl">3.2</span>),<span class="dv">0</span>,<span class="kw">log10</span>(<span class="fl">3.2</span>),<span class="dv">1</span>),<span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;&gt;10x Under&quot;</span>,<span class="st">&quot;&gt;3.2x Under&quot;</span>,<span class="st">&quot;On the Order&quot;</span>,<span class="st">&quot;&gt;3.2x Over&quot;</span>,<span class="st">&quot;&gt;10x Over&quot;</span>)) +<span class="st"> </span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Predicted Error&quot;</span>) +
+<span class="st">  </span><span class="kw">theme_bw</span>()  +
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">6</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">print</span>(Fig.Triage)
+
+                        </code></pre></div>
+</div>
+<div id="figure-ten" class="section level2">
+<h2>Figure Ten</h2>
+<p>Evaluation of the ability of in vitro HTTK data, coupled with a one-compartment model, to predict important TK statistics like the maximum plasma concentration (Cmax) for characterizing tissue exposure. A single point is plotted for each combination of chemical, dose amount, and dose route, either intravenous (iv) or per oral (po). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PKstats &lt;-<span class="st"> </span>chem.invivo.PK.summary.data
+<span class="co"># Add a column indicating chemical type:</span>
+PKstats$Chemical &lt;-<span class="st"> &quot;Other&quot;</span>
+PKstats[<span class="kw">sapply</span>(PKstats$CAS,is.pharma),<span class="st">&quot;Chemical&quot;</span>] &lt;-<span class="st"> &quot;Pharmaceutical&quot;</span>
+
+FigCmaxa.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(Cmax)~<span class="kw">log</span>(Cmax.pred),<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(Cmax)))
+<span class="kw">summary</span>(FigCmaxa.fit)
+                    
+FigCmaxa &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(Cmax))) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">3</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;Cmax&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;Cmax.pred&quot;</span>,
+                         <span class="dt">shape=</span><span class="st">&quot;Route&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated &quot;</span>,C[max]))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted &quot;</span>,C[max]))) +
+<span class="co">#    scale_color_brewer(palette=&quot;Set2&quot;) +</span>
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">10</span>^-<span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">300</span>, <span class="dt">label =</span> <span class="st">&quot;A&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">10</span>^-<span class="dv">3</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(FigCmaxa.fit),<span class="dt">parse=</span>T,<span class="dt">size=</span><span class="dv">6</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+
+
+FigCmaxb.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(Cmax)~<span class="kw">log</span>(Cmax.pred.Fbio),<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(Cmax)))
+<span class="kw">summary</span>(FigCmaxb.fit)
+
+FigCmaxb &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(Cmax))) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">3</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;Cmax&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;Cmax.pred.Fbio&quot;</span>,
+                         <span class="dt">shape=</span><span class="st">&quot;Route&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">4</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated &quot;</span>,C[max]))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>, C[max], <span class="st">&quot; Using Measured &quot;</span>, F[bio ]))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">10</span>^-<span class="dv">3</span>, <span class="dt">y =</span> <span class="dv">300</span>, <span class="dt">label =</span> <span class="st">&quot;B&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">10</span>^-<span class="dv">3</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(FigCmaxb.fit),<span class="dt">parse=</span>T,<span class="dt">size=</span><span class="dv">6</span>) +<span class="st"> </span>
+<span class="co">#    scale_color_brewer(palette=&quot;Set2&quot;) + </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">10</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">multiplot</span>(FigCmaxa,FigCmaxb,<span class="dt">cols=</span><span class="dv">2</span>,<span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))
+                        </code></pre></div>
+</div>
+<div id="figure-eleven" class="section level2">
+<h2>Figure Eleven</h2>
+<p>Evaluation of predictions for the time integrated plasma concentration (i.e., area under the curve or AUC). A single point is plotted for each combination of chemical, dose amount, and dose route, either intravenous (iv) or per oral (po). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately. The solid line in each panel indicates the identity line (1:1, perfect predictions).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FigAUCa.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(AUC)~<span class="kw">log</span>(AUC.pred),<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(<span class="kw">log</span>(AUC))))
+FigAUCb.fit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(AUC)~<span class="kw">log</span>(AUC.pred.Fbio),<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(<span class="kw">log</span>(AUC))))
+<span class="kw">summary</span>(FigAUCa.fit)
+<span class="kw">summary</span>(FigAUCb.fit)
+                                              
+FigAUCa &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(<span class="kw">log</span>(AUC)))) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">3</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;AUC&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;AUC.pred&quot;</span>,
+                         <span class="dt">shape=</span><span class="st">&quot;Route&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated AUC (mg*h/L)&quot;</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vitro&quot;</span>),<span class="st">&quot; predicted Area under the Curve (AUC, mg*h/L)&quot;</span>))) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">10</span>^-<span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">3000</span>, <span class="dt">label =</span> <span class="st">&quot;A&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">10</span>^-<span class="dv">2</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(FigAUCa.fit),<span class="dt">parse=</span>T,<span class="dt">size=</span><span class="dv">6</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+FigAUCb &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span><span class="kw">subset</span>(PKstats,<span class="kw">is.finite</span>(<span class="kw">log</span>(AUC)))) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">3</span>,<span class="kw">aes_string</span>(<span class="dt">y=</span><span class="st">&quot;AUC&quot;</span>,
+                         <span class="dt">x=</span><span class="st">&quot;AUC.pred.Fbio&quot;</span>,
+                         <span class="dt">shape=</span><span class="st">&quot;Route&quot;</span>,
+                         <span class="dt">color=</span><span class="st">&quot;Chemical&quot;</span>))+<span class="st"> </span>
+<span class="st">   </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">   </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">10</span>^-<span class="dv">3</span>, <span class="dv">10</span>^<span class="dv">4</span>)) +
+<span class="st">    </span><span class="kw">annotation_logticks</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">ylab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="kw">italic</span>(<span class="st">&quot;In vivo&quot;</span>),<span class="st">&quot; estimated AUC (mg*h/L)&quot;</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted AUC (mg*h/L) Using Measured &quot;</span>, F[bio]))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="dv">10</span>^-<span class="dv">2</span>, <span class="dt">y =</span> <span class="dv">3000</span>, <span class="dt">label =</span> <span class="st">&quot;B&quot;</span>,<span class="dt">size=</span><span class="dv">6</span>) +
+<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,<span class="dt">x =</span> <span class="dv">3</span>*<span class="dv">10</span>^<span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">10</span>^-<span class="dv">2</span>, <span class="dt">label =</span> <span class="kw">lm_R2</span>(FigAUCb.fit),<span class="dt">parse=</span>T,<span class="dt">size=</span><span class="dv">6</span>) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>()  +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)+
+<span class="st">    </span><span class="kw">guides</span>(<span class="dt">shape=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>),<span class="dt">color=</span><span class="kw">guide_legend</span>(<span class="dt">nrow=</span><span class="dv">2</span>,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+
+
+<span class="kw">dev.new</span>(<span class="dt">width=</span><span class="dv">10</span>,<span class="dt">height=</span><span class="dv">6</span>)
+<span class="kw">multiplot</span>(FigAUCa,FigAUCb,<span class="dt">cols=</span><span class="dv">2</span>,<span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))
+                        </code></pre></div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

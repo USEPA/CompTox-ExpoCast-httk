@@ -12,14 +12,14 @@
 pharma
 }
 \description{
-SWISSPHARMA is a list of pharmaceuticals with consumption data from 
-Switzerland, France, Germany and the USA, used for a suspect 
-screening/exposure modelling approach described in 
-Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is 
+SWISSPHARMA is a list of pharmaceuticals with consumption data from
+Switzerland, France, Germany and the USA, used for a suspect
+screening/exposure modelling approach described in
+Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is
 available on the NORMAN Suspect List Exchange.
 }
 \references{
-Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization ", submitted.
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \keyword{data}

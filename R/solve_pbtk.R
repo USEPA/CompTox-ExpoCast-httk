@@ -33,6 +33,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
@@ -74,21 +76,29 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @param monitor.vars Which variables to track by default 
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
+#' "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
+#'
 #' @author John Wambaugh and Robert Pearce
+#'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' @keywords Solve
+#'
+#' @keywords Solve pbtk
+#'
 #' @examples
 #' 
-#' 
-#' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-#'                   plots=TRUE,initial.values=c(Agut=200))
+#' solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
+#'
+#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
+#'                   initial.values=c(Agut=200))
+#'
 #' params <- parameterize_pbtk(chem.cas="80-05-7")
 #' solve_pbtk(parameters=params)
 #'                   
@@ -109,11 +119,12 @@
 #' print(c.vs.t)
 #' }
 #' 
-#' @import deSolve
 #' @export solve_pbtk
+#'
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
+                    dtxsid = NULL,
                     times=NULL,
                     parameters=NULL,
                     days=10,
@@ -142,10 +153,11 @@ solve_pbtk <- function(chem.name = NULL,
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
+    dtxsid=dtxsid,
     times=times,
     parameters=parameters,
     model="pbtk",
-    route=ifelse(iv.dose,"iv","oral"),
+    route= ifelse(iv.dose,"iv","oral"),
     dosing=list(
       initial.dose=dose,
       dosing.matrix=dosing.matrix,
@@ -161,13 +173,15 @@ solve_pbtk <- function(chem.name = NULL,
     species=species,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression),
     ...)
   
   return(out) 

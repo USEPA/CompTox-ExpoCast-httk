@@ -4,9 +4,14 @@
 \alias{available_rblood2plasma}
 \title{Find the best available ratio of the blood to plasma concentration constant.}
 \usage{
-available_rblood2plasma(chem.cas = NULL, chem.name = NULL,
-  species = "Human", adjusted.Funbound.plasma = T,
-  suppress.messages = F)
+available_rblood2plasma(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  adjusted.Funbound.plasma = T,
+  suppress.messages = F
+)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
@@ -14,6 +19,9 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -30,6 +38,10 @@ concentration to the plasma concentration, using get_rblood2plasma and
 calc_rblood2plasma.
 }
 \details{
+Either retrieves a measured blood:plasma concentration ratio from the
+chem.physical_and_invitro.data table or calculates it using the red blood cell
+partition coefficient predicted with Schmitt's method
+
 If available, in vivo data (from chem.physical_and_invitro.data) for the
 given species is returned, substituting the human in vivo value when missing
 for other species.  In the absence of in vivo data, the value is calculated

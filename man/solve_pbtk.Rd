@@ -4,16 +4,37 @@
 \alias{solve_pbtk}
 \title{Solve_PBTK}
 \usage{
-solve_pbtk(chem.name = NULL, chem.cas = NULL, times = NULL,
-  parameters = NULL, days = 10, tsteps = 4, daily.dose = NULL,
-  dose = 1, doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, species = "Human", iv.dose = F,
-  output.units = "uM", method = "lsoda", rtol = 1e-08,
-  atol = 1e-12, default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
+solve_pbtk(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  times = NULL,
+  parameters = NULL,
+  days = 10,
+  tsteps = 4,
+  daily.dose = NULL,
+  dose = 1,
+  doses.per.day = NULL,
+  initial.values = NULL,
+  plots = F,
+  suppress.messages = F,
+  species = "Human",
+  iv.dose = F,
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  default.to.human = F,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  dosing.matrix = NULL,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -21,6 +42,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -87,7 +111,9 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{monitor.vars}{Which variables to track by default}
+\item{monitor.vars}{Which variables are returned as a function of time. 
+The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
+"Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
@@ -127,10 +153,11 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
+solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
 
-solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-                  plots=TRUE,initial.values=c(Agut=200))
+out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
+                  initial.values=c(Agut=200))
+
 params <- parameterize_pbtk(chem.cas="80-05-7")
 solve_pbtk(parameters=params)
                   
@@ -160,3 +187,4 @@ toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 John Wambaugh and Robert Pearce
 }
 \keyword{Solve}
+\keyword{pbtk}

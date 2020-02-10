@@ -1,9 +1,3 @@
-# Writen by Robert Pearce and John Wambaugh
-# Adds the predicted data from Sipes et al. (2017) for the Tox21 library
-
-
-
-
 #' Load data from Sipes et al 2017.
 #' 
 #' This function returns an updated version of chem.physical_and_invitro.data

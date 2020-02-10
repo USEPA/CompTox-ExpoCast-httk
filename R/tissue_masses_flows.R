@@ -13,9 +13,26 @@
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
+#'@references 
+#' Barter, Zoe E., et al. "Scaling factors for the extrapolation of in vivo 
+#' metabolic drug clearance from in vitro data: reaching a consensus on values 
+#' of human micro-somal protein and hepatocellularity per gram of liver." Current 
+#' Drug Metabolism 8.1 (2007): 33-45.
+#'
+#' Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
+#' International Life Sciences Institute, Risk Science Institute, Washington, 
+#' DC (1994).
+#'
+#' Geigy Pharmaceuticals, "Scientific Tables", 7th Edition, 
+#' John Wiley and Sons (1970)
+#'
+#' McNally, Kevin, et al. "PopGen: a virtual human population generator." 
+#' Toxicology 315 (2014): 70-85.
+#'
+#' Ring, Caroline L., et al. "Identifying populations sensitive to 
+#' environmental chemicals by simulating toxicokinetic variability." Environment 
+#' International 106 (2017): 105-118
+#'
 #'@import stats
 #'@export tissue_masses_flows
 
@@ -147,7 +164,7 @@ tissue_masses_flows <- function(tmf_dt){
          mass:=truncnorm::rtruncnorm(n=length(mass_dist),
                                      a=0, #truncated at zero below (because mass can't be negative)
                                      mean=mass_mean, #with mean = mass predicted above,
-                                     sd=mass_cv*mass_mean)]  #cv given by the mass_cv from mcNally et al,
+                                     sd=mass_cv*mass_mean)]  #cv given by the mass_cv from McNally et al, (2014)
   #For those tissues with log-normal distribution of residual variability:
   #draw individual tissue mass from a log-normal distribution,
   #with mean = log(mass predicted above),
@@ -235,7 +252,7 @@ tissue_masses_flows <- function(tmf_dt){
   #To compute adipose weight: first calculate sum of non-adipose tissues.
   #Include GI tract contents (1.4% of body weight) 
   #and rest of body (3.3% of body weight)
-  #(Birnbaum et al.)
+  #(Birnbaum et al. 1994)
   tmf_dt[, Other_mass:=(0.033+0.014)*weight]
   tmf_dt[, org_mass_sum:=org_mass_sum+Other_mass]
   
@@ -245,7 +262,7 @@ tissue_masses_flows <- function(tmf_dt){
   tmf_dt[(weight-org_mass_sum)>1, 
          Adipose_mass:=exp(rnorm(n=length(weight),
                                  mean=log(weight-org_mass_sum),
-                                 sd=sqrt(log(0.42^2+1)) #CV from McNally et al. table 5
+                                 sd=sqrt(log(0.42^2+1)) #CV from McNally et al. (2014) table 5
          ))]
   
   #If non-adipose tissues accounted for all of body mass,
@@ -272,15 +289,15 @@ tissue_masses_flows <- function(tmf_dt){
                                       age_years=age_years)] #in cm^2
   #And do hepatocellularity
   #   million.cells.per.gliver  Millions cells per gram of liver tissue.
-  #From Barter et al.
+  #From Barter et al. 2007
   #geometric mean = exp(mean (log million.cells.per.gliver)) = 99
   #95% CI for observations is 23-444
   #log(444)-log(99) = 2sigma (approximately)
-  mu <- log(10^(-0.66*log10(tmf_dt[,age_years])+3.10)) #From Figure 5 of barter et al.
+  mu <- log(10^(-0.66*log10(tmf_dt[,age_years])+3.10)) #From Figure 5 of Barter et al. (2007))
   mu[tmf_dt[,age_years<20]] <- log(10^(-0.66*log10(19)+3.10)) #For people below age 20, just set it at the age-19 prediction
-  #(because data in Barter et al. only goes back to age 20)
+  #(because data in Barter et al. (2007) only goes back to age 20)
   sigma.total <- ((log(444) -log(99))/2 + 
-                    (log(99)-log(23))/2)/2 #Estimate variance from overall population (from Barter et al.)
+                    (log(99)-log(23))/2)/2 #Estimate variance from overall population (from Barter et al. 2007)
   #This gives TOTAL variance of ln data
   #Get R2 from linear fit to log10 data
   Fval <- qf(0.012/2, 

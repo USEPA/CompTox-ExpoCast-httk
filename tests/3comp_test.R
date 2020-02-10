@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save 3comp_test.R 3comp_test.Rout
 library(httk)
 options(warn=-1)
 
@@ -55,3 +55,5 @@ if (length(script.args) > 0)
     #print(test.fig)
   }
 }
+
+quit("no")

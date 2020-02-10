@@ -3,7 +3,7 @@
 \docType{data}
 \name{wambaugh2019.nhanes}
 \alias{wambaugh2019.nhanes}
-\title{NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))}
+\title{NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)}
 \format{A data frame with 20 rows and 4 variables:
 \describe{
   \item{lP}{The median of the Bayesian credible interval for median population
@@ -15,7 +15,7 @@ intake rate (mg/kg bodyweight/day)}
   \item{CASRN}{The Chemical Abstracts Service Registry Number}
 }}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019.nhanes
@@ -27,9 +27,12 @@ National Health and Nutrition Examination Survey (NHANES). They reflect the
 populaton median intake rate (mg/kg body weight/day), with uncertainty.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-evironmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+evironmental chemicals by simulating toxicokinetic variability." Environment
 international 106 (2017): 105-118
+
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

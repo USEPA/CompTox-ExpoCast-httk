@@ -2,7 +2,6 @@
 src-i386/
 src-x64/
 build/
-inst/
 
 # Compiled source #
 ###################
@@ -11,6 +10,4 @@ inst/
 *.dll
 *.exe
 *.o
-*.so
-
 *.so

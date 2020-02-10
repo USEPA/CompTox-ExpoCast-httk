@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save cheminfo_test.R cheminfo_test.Rout
+#R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
 library(httk)
 options(warn=-1)
 
@@ -16,3 +16,4 @@ length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and
 length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
   
+quit("no")

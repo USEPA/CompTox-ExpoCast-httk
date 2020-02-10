@@ -4,12 +4,16 @@
 \alias{httkpop_virtual_indiv}
 \title{Generate a virtual population by the virtual individuals method.}
 \usage{
-httkpop_virtual_indiv(nsamp = NULL, gendernum = NULL,
-  agelim_years = NULL, agelim_months = NULL,
+httkpop_virtual_indiv(
+  nsamp = NULL,
+  gendernum = NULL,
+  agelim_years = NULL,
+  agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-  "Non-Hispanic Black", "Other"))
+    "Non-Hispanic Black", "Other")
+)
 }
 \arguments{
 \item{nsamp}{The desired number of individuals in the virtual population. 
@@ -64,3 +68,4 @@ International 106 (2017): 105-118
 Caroline Ring
 }
 \keyword{httk-pop}
+\keyword{monte-carlo}

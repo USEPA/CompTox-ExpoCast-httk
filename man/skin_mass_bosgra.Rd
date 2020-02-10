@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{skin_mass_bosgra}
 \alias{skin_mass_bosgra}
-\title{Predict skin mass.}
+\title{Predict skin mass}
 \usage{
 skin_mass_bosgra(BSA)
 }
@@ -16,3 +16,16 @@ Vector of skin masses in kg.
 Using equation from Bosgra et al. 2012, predict skin mass from body surface
 area.
 }
+\references{
+Bosgra, Sieto, et al. "An improved model to predict 
+physiologically based model parameters and their inter-individual variability 
+from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

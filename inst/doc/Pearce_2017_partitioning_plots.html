@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Robert Pearce" />
+
+<meta name="date" content="2018-01-23" />
+
+<title>Pearce et al. 2017 Figures in Partition Coefficient Evaluation</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Pearce et al. 2017 Figures in Partition Coefficient Evaluation</h1>
+<h4 class="author"><em>Robert Pearce</em></h4>
+<h4 class="date"><em>2018-01-23</em></h4>
+
+
+
+<p>This vignette generates the data and figures from the partition coefficient evaluation paper.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(httk)
+<span class="kw">library</span>(gdata)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(viridis)
+<span class="kw">library</span>(CensRegMod)
+<span class="kw">library</span>(gmodels)
+<span class="kw">library</span>(gplots)
+<span class="kw">library</span>(scales)
+<span class="kw">library</span>(colorspace)</code></pre></div>
+<p>We first filter the measured rat Kp data, pc.data. Then the old and new Kp predictions are made, along with error and improvement measures, and these are all consolidated into a table for analysis and plotting. Note that the final table contains log10-transformed values and error and improvements derived from subtracting these values. Only relevant rat values are used. Compounds with Funbound.plasma and partition coefficients of zero are removed as well as compounds with approximated Funbound.plasma values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pc.table &lt;-<span class="st"> </span><span class="ot">NULL</span>
+pc.data &lt;-<span class="st"> </span><span class="kw">subset</span>(pc.data,fu !=<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>Exp_PC !=<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>Tissue %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Adipose&quot;</span>,<span class="st">&quot;Bone&quot;</span>,<span class="st">&quot;Brain&quot;</span>,<span class="st">&quot;Gut&quot;</span>,
+    <span class="st">&quot;Heart&quot;</span>,<span class="st">&quot;Kidney&quot;</span>,<span class="st">&quot;Liver&quot;</span>,<span class="st">&quot;Lung&quot;</span>,<span class="st">&quot;Muscle&quot;</span>,<span class="st">&quot;Skin&quot;</span>,<span class="st">&quot;Spleen&quot;</span>,<span class="st">&quot;Blood Cells&quot;</span>) &amp;<span class="st"> </span>
+<span class="st">    </span><span class="kw">tolower</span>(Species) ==<span class="st"> 'rat'</span> &amp;<span class="st"> </span>!CAS %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">'10457-90-6'</span>,<span class="st">'5786-21-0'</span>,<span class="st">'17617-23-1'</span>,<span class="st">'69-23-8'</span>,<span class="st">'2898-12-6'</span>,
+    <span class="st">'57562-99-9'</span>,<span class="st">'59-99-4'</span>,<span class="st">'2955-38-6'</span>,<span class="st">'155-97-5'</span>,<span class="st">'41903-57-5'</span>,<span class="st">'58-55-9'</span>,<span class="st">'77-32-7'</span>,<span class="st">'59-05-2'</span>,<span class="st">'60-54-8'</span>))
+cas.list &lt;-<span class="st"> </span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'schmitt'</span>,<span class="dt">species=</span><span class="st">'rat'</span>)
+cas.list &lt;-<span class="st">  </span>cas.list[cas.list %in%<span class="st"> </span>pc.data[,<span class="st">'CAS'</span>]]
+ma.data.list &lt;-<span class="st"> </span><span class="kw">subset</span>(chem.physical_and_invitro.data,!<span class="kw">is.na</span>(logMA))[,<span class="st">'CAS'</span>]
+for(this.cas in cas.list){
+  parameters &lt;-<span class="st"> </span><span class="kw">parameterize_schmitt</span>(<span class="dt">chem.cas=</span>this.cas,<span class="dt">species=</span><span class="st">'rat'</span>)
+  init.parameters &lt;-<span class="st"> </span>parameters
+  charge &lt;-<span class="st"> </span><span class="kw">calc_ionization</span>(<span class="dt">chem.cas=</span>this.cas,<span class="dt">pH=</span><span class="fl">7.4</span>)$fraction_charged
+  if(!this.cas %in%<span class="st"> </span>ma.data.list){
+    init.parameters$MA &lt;-<span class="st"> </span><span class="dv">10</span>^(<span class="fl">0.999831</span> -<span class="st"> </span><span class="fl">0.016578</span>*<span class="fl">38.7</span> +<span class="st"> </span><span class="fl">0.881721</span> *<span class="st"> </span><span class="kw">log10</span>(parameters$Pow))
+  }
+  pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>parameters,<span class="dt">species=</span><span class="st">'rat'</span>,<span class="dt">regression=</span>F)
+  init.pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>init.parameters,<span class="dt">species=</span><span class="st">'rat'</span>,<span class="dt">regression=</span>F)
+  for(this.tissue in <span class="kw">subset</span>(pc.data,CAS==this.cas)[,<span class="st">'Tissue'</span>]){
+    if(this.tissue ==<span class="st"> 'Blood Cells'</span>) this.pc &lt;-<span class="st"> 'rbc'</span>
+    else this.pc &lt;-<span class="st"> </span>this.tissue
+    pc.table &lt;-<span class="st"> </span><span class="kw">rbind</span>(pc.table,<span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(this.cas),<span class="kw">as.data.frame</span>(this.tissue),
+    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(init.pcs[[<span class="kw">which</span>(<span class="kw">substr</span>(<span class="kw">names</span>(init.pcs),<span class="dv">2</span>,<span class="kw">nchar</span>(<span class="kw">names</span>(init.pcs))-<span class="dv">3</span>)
+                                  ==<span class="st"> </span><span class="kw">tolower</span>(this.pc))]] *<span class="st"> </span>init.parameters$Funbound.plasma)),
+    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(pcs[[<span class="kw">which</span>(<span class="kw">substr</span>(<span class="kw">names</span>(pcs),<span class="dv">2</span>,<span class="kw">nchar</span>(<span class="kw">names</span>(pcs))-<span class="dv">3</span>)
+                             ==<span class="st"> </span><span class="kw">tolower</span>(this.pc))]] *<span class="st"> </span>parameters$unadjusted.Funbound.plasma)),
+    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(init.pcs[[<span class="kw">which</span>(<span class="kw">substr</span>(<span class="kw">names</span>(init.pcs),<span class="dv">2</span>,<span class="kw">nchar</span>(<span class="kw">names</span>(init.pcs))-<span class="dv">3</span>)
+                                  ==<span class="st"> </span><span class="kw">tolower</span>(this.pc))]] *<span class="st"> </span>init.parameters$unadjusted.Funbound.plasma)),
+    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(pcs[[<span class="kw">which</span>(<span class="kw">substr</span>(<span class="kw">names</span>(pcs),<span class="dv">2</span>,<span class="kw">nchar</span>(<span class="kw">names</span>(pcs))-<span class="dv">3</span>)
+                             ==<span class="st"> </span><span class="kw">tolower</span>(this.pc))]] *<span class="st"> </span>parameters$Funbound.plasma)),
+    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(<span class="kw">subset</span>(pc.data,CAS==this.cas &amp;<span class="st"> </span>Tissue==this.tissue)[,<span class="st">'Exp_PC'</span>])),
+    <span class="kw">as.data.frame</span>(<span class="kw">subset</span>(pc.data,CAS==this.cas &amp;<span class="st"> </span>Tissue==this.tissue)[,<span class="st">'LogP'</span>]),<span class="kw">as.data.frame</span>(charge),
+    <span class="kw">as.data.frame</span>(<span class="kw">as.character</span>(<span class="kw">subset</span>(pc.data,CAS ==<span class="st"> </span>this.cas)[<span class="dv">1</span>,<span class="st">'A.B.N'</span>])),
+    <span class="kw">as.data.frame</span>(<span class="kw">subset</span>(pc.data,CAS ==<span class="st"> </span>this.cas)[<span class="dv">1</span>,<span class="st">'fu'</span>])))
+  }
+}
+<span class="kw">colnames</span>(pc.table) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'CAS'</span>,<span class="st">'Tissue'</span>,<span class="st">'fup.adjustment'</span>,<span class="st">'ma.adjustment'</span>,<span class="st">'init.Predicted'</span>,
+                        <span class="st">'Predicted'</span>,<span class="st">'Experimental'</span>,<span class="st">'logP'</span>,<span class="st">'charge'</span>,<span class="st">'type'</span>,<span class="st">'fup'</span>)
+init.error &lt;-<span class="st"> </span>pc.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>pc.table[,<span class="st">'init.Predicted'</span>]
+fup.error &lt;-<span class="st"> </span>pc.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>pc.table[,<span class="st">'fup.adjustment'</span>]
+ma.error &lt;-<span class="st"> </span>pc.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>pc.table[,<span class="st">'ma.adjustment'</span>]
+final.error &lt;-<span class="st"> </span>pc.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>pc.table[,<span class="st">'Predicted'</span>]
+fup.improvement &lt;-<span class="st"> </span><span class="kw">abs</span>(init.error) -<span class="st"> </span><span class="kw">abs</span>(fup.error)
+ma.improvement &lt;-<span class="st"> </span><span class="kw">abs</span>(init.error) -<span class="st"> </span><span class="kw">abs</span>(ma.error)
+final.improvement &lt;-<span class="st"> </span><span class="kw">abs</span>(init.error) -<span class="st"> </span><span class="kw">abs</span>(final.error)
+pc.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(pc.table,fup.improvement,ma.improvement, final.improvement,
+                  final.error,init.error,ma.error,fup.error)
+
+scientific_10 &lt;-<span class="st"> </span>function(x) {                                  
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;1e&quot;</span>, <span class="st">&quot;10^&quot;</span>, <span class="kw">scientific_format</span>()(x))              
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+&quot;</span>,<span class="st">&quot;&quot;</span>,out)                                     
+  out &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;10</span><span class="ch">\\</span><span class="st">^01&quot;</span>,<span class="st">&quot;10&quot;</span>,out)                               
+  out &lt;-<span class="st"> </span><span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">gsub</span>(<span class="st">&quot;10</span><span class="ch">\\</span><span class="st">^00&quot;</span>,<span class="st">&quot;1&quot;</span>,out))                    
+}  
+
+
+init.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>pc.table,<span class="kw">aes</span>(<span class="dv">10</span>^(init.Predicted),<span class="dv">10</span>^(Experimental))) +
+<span class="st">    </span><span class="kw">geom_abline</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Measured &quot;</span>,K[p])), <span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>,K[p]))) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust =</span> <span class="fl">0.5</span>)) +<span class="st"> </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'(A)'</span>)
+
+final.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>pc.table,<span class="kw">aes</span>(<span class="dv">10</span>^(Predicted),<span class="dv">10</span>^(Experimental))) +
+<span class="st">    </span><span class="kw">geom_abline</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Measured &quot;</span>,K[p])),<span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>,K[p]))) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust=</span><span class="fl">0.5</span>)) +<span class="st"> </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'(B)'</span>)
+
+fup.change.plot &lt;-<span class="st">  </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>pc.table[<span class="kw">order</span>(pc.table[,<span class="st">'fup.improvement'</span>],<span class="dt">decreasing=</span>F),],
+    <span class="kw">aes</span>(<span class="dv">10</span>^(fup.adjustment),<span class="dv">10</span>^(Experimental),<span class="dt">color=</span>fup.improvement)) +<span class="st"> </span><span class="kw">geom_abline</span>() +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Measured &quot;</span>,K[p])),<span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>,K[p])),<span class="dt">color=</span><span class="st">'Improvement'</span>) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +
+<span class="st">    </span><span class="kw">scale_color_viridis</span>(<span class="dt">direction=</span>-<span class="dv">1</span>,<span class="dt">option=</span><span class="st">'inferno'</span>)
+ma.subset &lt;-<span class="st"> </span><span class="kw">subset</span>(pc.table,!CAS %in%<span class="st"> </span>ma.data.list)
+ma.change.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>ma.subset[<span class="kw">order</span>(ma.subset[,<span class="st">'ma.improvement'</span>],<span class="dt">decreasing=</span>F),]
+    ,<span class="kw">aes</span>(<span class="dv">10</span>^(ma.adjustment),<span class="dv">10</span>^(Experimental),<span class="dt">color=</span>ma.improvement)) +<span class="st"> </span><span class="kw">geom_abline</span>() +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Measured &quot;</span>,K[p])),<span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>,K[p])),<span class="dt">color=</span><span class="st">'Improvement'</span>) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="dv">10</span>^<span class="fl">4.5</span>)) +
+<span class="st">    </span><span class="kw">scale_color_viridis</span>(<span class="dt">direction=</span>-<span class="dv">1</span>,<span class="dt">option=</span><span class="st">'inferno'</span>)</code></pre></div>
+<p>Now we calculate and plot the regressions for all tissues, together with their 95% confidence intervals.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regressions &lt;-<span class="st"> </span><span class="ot">NULL</span>
+
+for(tissue in <span class="kw">as.character</span>(<span class="kw">unique</span>(pc.table[,<span class="st">'Tissue'</span>]))){
+  fit &lt;-<span class="st"> </span><span class="kw">lm</span>(Experimental ~<span class="st"> </span>Predicted ,<span class="dt">data=</span><span class="kw">subset</span>(pc.table,Tissue==tissue))
+  smry &lt;-<span class="st"> </span><span class="kw">summary</span>(fit)
+  est &lt;-<span class="st"> </span><span class="kw">estimable</span>(fit, <span class="dt">cm=</span><span class="kw">diag</span>(<span class="dv">2</span>), <span class="dt">beta0=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">joint.test=</span><span class="ot">TRUE</span>)
+  regressions &lt;-<span class="st"> </span><span class="kw">rbind</span>(regressions,<span class="kw">cbind</span>(tissue,<span class="kw">as.data.frame</span>(fit$coefficients[[<span class="st">'(Intercept)'</span>]]),
+      <span class="kw">as.data.frame</span>(fit$coefficients[[<span class="st">'Predicted'</span>]]),
+      <span class="kw">as.data.frame</span>(smry$coefficients[[<span class="st">'Predicted'</span>,<span class="st">'Pr(&gt;|t|)'</span>]]),
+      <span class="kw">as.data.frame</span>(smry$sigma),<span class="kw">as.data.frame</span>(smry$r.squared),
+      <span class="kw">as.data.frame</span>(smry[[<span class="dv">11</span>]][<span class="dv">1</span>,<span class="dv">1</span>]),<span class="kw">as.data.frame</span>(smry[[<span class="dv">11</span>]][<span class="dv">2</span>,<span class="dv">2</span>]),
+      <span class="kw">as.data.frame</span>(smry[[<span class="dv">11</span>]][<span class="dv">1</span>,<span class="dv">2</span>]),<span class="kw">as.data.frame</span>(smry$df[<span class="dv">2</span>]),<span class="kw">as.data.frame</span>(est[[<span class="dv">3</span>]])))
+}
+<span class="kw">colnames</span>(regressions) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'Tissue'</span>,<span class="st">'Intercept'</span>,<span class="st">'Slope'</span>,<span class="st">'P-value'</span>,<span class="st">'SE'</span>,<span class="st">'R-squared'</span>,
+                           <span class="st">'Int Var'</span>,<span class="st">'Slp Var'</span>,<span class="st">'Cov'</span>,<span class="st">'df'</span>,<span class="st">'estimable'</span>)
+x.cf &lt;-<span class="st"> </span><span class="kw">seq</span>(-<span class="dv">2</span>,<span class="fl">3.5</span>,.<span class="dv">01</span>)
+for(tissue in  <span class="kw">as.character</span>(<span class="kw">unique</span>(pc.table[,<span class="st">'Tissue'</span>]))){
+  conf &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="fl">0.975</span>,<span class="dt">df=</span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'df'</span>]]+<span class="dv">1</span>) *
+<span class="st">      </span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'SE'</span>]] *
+<span class="st">      </span><span class="kw">sqrt</span>(<span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'Int Var'</span>]] +
+<span class="st">      </span>x.cf^<span class="dv">2</span> *<span class="st"> </span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'Slp Var'</span>]] +
+<span class="st">      </span><span class="dv">2</span> *<span class="st"> </span>x.cf *<span class="st"> </span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'Cov'</span>]] +<span class="st"> </span><span class="dv">1</span>)
+  line &lt;-<span class="st"> </span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'Intercept'</span>]] +
+<span class="st">      </span>x.cf *<span class="st"> </span><span class="kw">subset</span>(regressions,Tissue==tissue)[[<span class="st">'Slope'</span>]]
+  y.cf &lt;-<span class="st"> </span>line +<span class="st"> </span>conf
+  y.ncf &lt;-<span class="st"> </span>line -<span class="st"> </span>conf
+
+  cf &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(x.cf),<span class="kw">as.data.frame</span>(y.cf),<span class="kw">as.data.frame</span>(y.ncf))
+  if(tissue ==<span class="st"> 'Blood Cells'</span>){
+    <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span> <span class="kw">paste</span>(<span class="st">'Blood &lt;- ggplot() + labs(y=expression(paste(&quot;Inferred &quot;,K[p])),</span>
+<span class="st">                               x=expression(paste(&quot;Predicted &quot;,K[p]))) + geom_abline(linetype = &quot;dashed&quot;) +</span>
+<span class="st">                               geom_point(data=subset(pc.table,Tissue == </span><span class="ch">\'</span><span class="st">'</span>,tissue,<span class="st">'</span><span class="ch">\'</span><span class="st">),aes(10^(Predicted),</span>
+<span class="st">                               10^(Experimental)))  +  theme(axis.text=element_text(size=14),</span>
+<span class="st">                               axis.title=element_text(size=14),plot.title=element_text(size=14,hjust=0.5)) +</span>
+<span class="st">                               scale_x_log10(label=scientific_10,limits=c(0.01,1000)) + </span>
+<span class="st">                               scale_y_log10(label=scientific_10,limits=c(0.01,1000)) +</span>
+<span class="st">                               geom_line(data=cf,aes(10^(x.cf),10^(y.cf))) +</span>
+<span class="st">                               geom_line(data=cf,aes(10^(x.cf),10^(y.ncf))) +</span>
+<span class="st">                               geom_abline(intercept=subset(regressions,Tissue==tissue)[[</span><span class="ch">\'</span><span class="st">Intercept</span><span class="ch">\'</span><span class="st">]],</span>
+<span class="st">                               slope=subset(regressions,Tissue==tissue)[[</span><span class="ch">\'</span><span class="st">Slope</span><span class="ch">\'</span><span class="st">]]) +</span>
+<span class="st">                               ggtitle(</span><span class="ch">\'</span><span class="st">Red Blood Cells</span><span class="ch">\'</span><span class="st">)'</span>,<span class="dt">sep=</span><span class="st">''</span>)))
+  }else{
+    <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span> <span class="kw">paste</span>(tissue,<span class="st">' &lt;- ggplot() + labs(y=expression(paste(&quot;Measured &quot;,K[p]))</span>
+<span class="st">                               ,x=expression(paste(&quot;Predicted &quot;,K[p]))) + geom_abline(linetype = &quot;dashed&quot;) +</span>
+<span class="st">                               geom_point(data=subset(pc.table,Tissue == </span><span class="ch">\'</span><span class="st">'</span>,tissue,<span class="st">'</span><span class="ch">\'</span><span class="st">),</span>
+<span class="st">                               aes(10^(Predicted),10^(Experimental))) + theme(axis.text=element_text(size=14),</span>
+<span class="st">                               axis.title=element_text(size=14),plot.title=element_text(size=14,hjust=0.5)) +</span>
+<span class="st">                               scale_x_log10(label=scientific_10,limits=c(0.01,1000)) + </span>
+<span class="st">                               scale_y_log10(label=scientific_10,limits=c(0.01,1000)) +</span>
+<span class="st">                               geom_line(data=cf,aes(10^(x.cf),10^(y.cf))) +</span>
+<span class="st">                               geom_line(data=cf,aes(10^(x.cf),10^(y.ncf))) +</span>
+<span class="st">                               geom_abline(intercept=subset(regressions,Tissue==tissue)[[</span><span class="ch">\'</span><span class="st">Intercept</span><span class="ch">\'</span><span class="st">]],</span>
+<span class="st">                               slope=subset(regressions,Tissue==tissue)[[</span><span class="ch">\'</span><span class="st">Slope</span><span class="ch">\'</span><span class="st">]]) +</span>
+<span class="st">                               ggtitle(</span><span class="ch">\'</span><span class="st">'</span>,tissue,<span class="st">'</span><span class="ch">\'</span><span class="st">)'</span>,<span class="dt">sep=</span><span class="st">''</span>)))
+  }
+}</code></pre></div>
+<p>In vivo volume of distribution data are compared with the predictions, and errors are calculated. Regressions and improvements are calculated and plotted.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">obach &lt;-<span class="st"> </span><span class="kw">subset</span>(Obach2008,CAS %in%<span class="st"> </span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'schmitt'</span>))
+vd.table &lt;-<span class="st"> </span><span class="ot">NULL</span>
+
+for(this.cas in obach[,<span class="st">'CAS'</span>]){
+  parameters &lt;-<span class="st"> </span><span class="kw">parameterize_schmitt</span>(<span class="dt">chem.cas=</span>this.cas)
+  init.parameters &lt;-<span class="st"> </span>parameters
+  if(!this.cas %in%<span class="st"> </span>ma.data.list){
+    init.parameters$MA &lt;-<span class="st"> </span><span class="dv">10</span>^(<span class="fl">0.999831</span> -<span class="st"> </span><span class="fl">0.016578</span>*<span class="dv">37</span> +<span class="st"> </span><span class="fl">0.881721</span> *<span class="st"> </span><span class="kw">log10</span>(parameters$Pow))
+  }
+  pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>parameters,<span class="dt">regression=</span>F)
+  init.pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>init.parameters,<span class="dt">regression=</span>F)
+  reg.pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>parameters,<span class="dt">regression=</span>T)
+  vdist &lt;-<span class="st"> </span><span class="kw">calc_vdist</span>(<span class="dt">parameters=</span><span class="kw">c</span>(pcs,<span class="dt">Funbound.plasma=</span>parameters$Funbound.plasma))
+  init.vdist &lt;-<span class="st"> </span><span class="kw">calc_vdist</span>(<span class="dt">parameters=</span><span class="kw">c</span>(init.pcs,<span class="dt">Funbound.plasma=</span>parameters$unadjusted.Funbound.plasma))
+  reg.vdist &lt;-<span class="st"> </span><span class="kw">calc_vdist</span>(<span class="dt">parameters=</span><span class="kw">c</span>(reg.pcs,<span class="dt">Funbound.plasma=</span>parameters$Funbound.plasma))
+  vd.table &lt;-<span class="st"> </span><span class="kw">rbind</span>(vd.table,<span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(this.cas),<span class="kw">as.data.frame</span>(<span class="kw">log10</span>(init.vdist)),
+                    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(vdist)),<span class="kw">as.data.frame</span>(<span class="kw">log10</span>(reg.vdist)),
+                    <span class="kw">as.data.frame</span>(<span class="kw">log10</span>(<span class="kw">subset</span>(obach,CAS==this.cas)[[<span class="st">'VDss (L/kg)'</span>]]))))
+}
+<span class="kw">colnames</span>(vd.table) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'CAS'</span>,<span class="st">'init.vdist'</span>,<span class="st">'adjusted.vdist'</span>,<span class="st">'calibrated.vdist'</span>,<span class="st">'Experimental'</span>)
+init.error &lt;-<span class="st"> </span>vd.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>vd.table[,<span class="st">'init.vdist'</span>]
+adjustment.error &lt;-<span class="st"> </span>vd.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>vd.table[,<span class="st">'adjusted.vdist'</span>]
+calibration.error &lt;-<span class="st"> </span>vd.table[,<span class="st">'Experimental'</span>] -<span class="st"> </span>vd.table[,<span class="st">'calibrated.vdist'</span>]
+adjustment.improvement &lt;-<span class="st"> </span><span class="kw">abs</span>(init.error) -<span class="st"> </span><span class="kw">abs</span>(adjustment.error)
+calibration.improvement &lt;-<span class="st"> </span><span class="kw">abs</span>(adjustment.error) -<span class="st"> </span><span class="kw">abs</span>(calibration.error)
+vd.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(vd.table,adjustment.improvement,calibration.improvement,
+                  init.error,adjustment.error,calibration.error)
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(Experimental ~<span class="st"> </span>calibrated.vdist,<span class="dt">data=</span>vd.table)
+smry &lt;-<span class="st"> </span><span class="kw">summary</span>(fit)
+calibrated.reg &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'(Intercept)'</span>]),
+                        <span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'calibrated.vdist'</span>]),
+                        <span class="kw">as.data.frame</span>(smry$coefficients[<span class="st">'calibrated.vdist'</span>,<span class="st">'Pr(&gt;|t|)'</span>]),
+                        <span class="kw">as.data.frame</span>(smry$sigma),<span class="kw">as.data.frame</span>(smry$r.squared))
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(Experimental ~<span class="st"> </span>init.vdist,<span class="dt">data=</span>vd.table)
+smry &lt;-<span class="st"> </span><span class="kw">summary</span>(fit)
+init.reg &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'(Intercept)'</span>]),
+                  <span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'init.vdist'</span>]),
+                  <span class="kw">as.data.frame</span>(smry$coefficients[<span class="st">'init.vdist'</span>,<span class="st">'Pr(&gt;|t|)'</span>]),
+                  <span class="kw">as.data.frame</span>(smry$sigma),<span class="kw">as.data.frame</span>(smry$r.squared))
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(Experimental ~<span class="st"> </span>adjusted.vdist,<span class="dt">data=</span>vd.table)
+smry &lt;-<span class="st"> </span><span class="kw">summary</span>(fit)
+adjustment.reg &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'(Intercept)'</span>]),
+                       <span class="kw">as.data.frame</span>(fit$coefficients[<span class="st">'adjusted.vdist'</span>]),
+                       <span class="kw">as.data.frame</span>(smry$coefficients[<span class="st">'adjusted.vdist'</span>,<span class="st">'Pr(&gt;|t|)'</span>]),
+                       <span class="kw">as.data.frame</span>(smry$sigma),<span class="kw">as.data.frame</span>(smry$r.squared))
+<span class="kw">colnames</span>(init.reg) &lt;-<span class="st"> </span><span class="kw">colnames</span>(adjustment.reg) &lt;-
+<span class="kw">colnames</span>(calibrated.reg) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'Intercept'</span>,<span class="st">'Slope'</span>,<span class="st">'P-value'</span>,<span class="st">'Std Err'</span>,<span class="st">'R-squared'</span>)
+
+init.vd.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(vd.table,<span class="kw">aes</span>(<span class="dv">10</span>^(init.vdist),<span class="dv">10</span>^(Experimental))) +<span class="st"> </span><span class="kw">geom_point</span>() +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> init.reg[[<span class="st">'Intercept'</span>]], <span class="dt">slope =</span> init.reg[[<span class="st">&quot;Slope&quot;</span>]]) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Predicted Volume of Distribution&quot;</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Measured Volume of Distribution&quot;</span>) +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust =</span> <span class="fl">0.5</span>)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="fl">8.5</span>))) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scientific_10,<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="fl">8.5</span>))) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">'(A)'</span>)
+
+adjustment.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>vd.table[<span class="kw">order</span>(vd.table[,<span class="st">'adjustment.improvement'</span>],<span class="dt">decreasing=</span>F),],
+    <span class="kw">aes</span>(<span class="dv">10</span>^(adjusted.vdist),<span class="dv">10</span>^(Experimental),<span class="dt">color=</span>adjustment.improvement)) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> adjustment.reg[[<span class="st">'Intercept'</span>]],<span class="dt">slope =</span> adjustment.reg[[<span class="st">&quot;Slope&quot;</span>]]) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Predicted Volume of Distribution&quot;</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Measured Volume of Distribution&quot;</span>) +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">95</span>),
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;top&quot;</span>),<span class="dt">legend.box.just =</span> <span class="st">&quot;right&quot;</span>,
+    <span class="dt">legend.margin =</span> <span class="kw">margin</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>),<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust =</span> <span class="fl">0.5</span>)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="dv">3</span>))) +<span class="st"> </span><span class="kw">scale_y_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="dv">3</span>))) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">'(B)'</span>) +<span class="st"> </span><span class="kw">scale_color_viridis</span>(<span class="dt">direction=</span>-<span class="dv">1</span>,<span class="dt">option=</span><span class="st">'inferno'</span>)
+
+calibration.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>vd.table[<span class="kw">order</span>(vd.table[,<span class="st">'calibration.improvement'</span>],<span class="dt">decreasing=</span>F),],
+    <span class="kw">aes</span>(<span class="dv">10</span>^(calibrated.vdist),<span class="dv">10</span>^(Experimental),<span class="dt">color=</span>calibration.improvement)) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> calibrated.reg[[<span class="st">'Intercept'</span>]],<span class="dt">slope =</span> calibrated.reg[[<span class="st">&quot;Slope&quot;</span>]]) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) +<span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;Predicted Volume of Distribution&quot;</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Measured Volume of Distribution&quot;</span>) +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">95</span>, .<span class="dv">95</span>),
+    <span class="dt">legend.justification =</span> <span class="kw">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;top&quot;</span>),<span class="dt">legend.box.just =</span> <span class="st">&quot;right&quot;</span>,
+    <span class="dt">legend.margin =</span> <span class="kw">margin</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>),<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust =</span> <span class="fl">0.5</span>)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="dv">3</span>))) +<span class="st"> </span><span class="kw">scale_y_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="dv">10</span>^(-<span class="fl">1.5</span>),<span class="dv">10</span>^(<span class="dv">3</span>))) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">'(C)'</span>) +<span class="st"> </span><span class="kw">scale_color_viridis</span>(<span class="dt">direction=</span>-<span class="dv">1</span>,<span class="dt">option=</span><span class="st">'inferno'</span>)</code></pre></div>
+<p>Now we pull in the in vivo blood to plasma ratios, use these to calculate the inferred red blood cell to plasma ratios, and then make predictions for these values. A censored regressions is performed, and predictions are plotted against errors.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rb2p.data &lt;-<span class="st"> </span><span class="kw">subset</span>(chem.physical_and_invitro.data,!<span class="kw">is.na</span>(Human.Rblood2plasma))
+measured.rb2p &lt;-<span class="st"> </span><span class="ot">NULL</span>
+measured.krbc &lt;-<span class="st"> </span><span class="ot">NULL</span>
+predicted.rb2p &lt;-<span class="st"> </span><span class="ot">NULL</span>
+predicted.krbc &lt;-<span class="st"> </span><span class="ot">NULL</span>
+cas &lt;-<span class="st"> </span><span class="ot">NULL</span>
+charge &lt;-<span class="st"> </span><span class="ot">NULL</span>
+fup &lt;-<span class="st"> </span><span class="ot">NULL</span>
+logP &lt;-<span class="st"> </span><span class="ot">NULL</span>
+pka_donor &lt;-<span class="st"> </span><span class="ot">NULL</span>
+pka_accept &lt;-<span class="st"> </span><span class="ot">NULL</span>
+for(this.cas in rb2p.data[rb2p.data[,<span class="st">'CAS'</span>] %in%<span class="st"> </span><span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'schmitt'</span>),<span class="st">'CAS'</span>]){
+  rb2p &lt;-<span class="st"> </span><span class="kw">get_rblood2plasma</span>(<span class="dt">chem.cas=</span>this.cas)
+  krbc &lt;-<span class="st"> </span>(rb2p +<span class="st"> </span>.<span class="dv">44</span> -<span class="st"> </span><span class="dv">1</span>) /<span class="st"> </span><span class="fl">0.44</span>
+  measured.rb2p &lt;-<span class="st"> </span><span class="kw">c</span>(measured.rb2p,rb2p)
+  measured.krbc &lt;-<span class="st"> </span><span class="kw">c</span>(measured.krbc,krbc)
+  parameters &lt;-<span class="st"> </span><span class="kw">parameterize_schmitt</span>(<span class="dt">chem.cas=</span>this.cas)
+  pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>parameters)
+  predicted.krbc &lt;-<span class="st"> </span><span class="kw">c</span>(predicted.krbc,pcs[[<span class="st">'Krbc2pu'</span>]] *<span class="st"> </span>parameters$Funbound.plasma)
+  cas &lt;-<span class="st"> </span><span class="kw">c</span>(cas,this.cas)
+  charge &lt;-<span class="st"> </span><span class="kw">c</span>(charge,<span class="kw">calc_ionization</span>(<span class="dt">chem.cas=</span>this.cas,<span class="dt">pH=</span><span class="fl">7.4</span>)$fraction_charged)
+  fup &lt;-<span class="st"> </span><span class="kw">c</span>(fup,parameters$unadjusted.Funbound.plasma)
+  logP &lt;-<span class="st">  </span><span class="kw">c</span>(logP,<span class="kw">log10</span>(parameters$Pow))
+  pka_donor &lt;-<span class="st"> </span><span class="kw">c</span>(pka_donor,<span class="kw">paste</span>(parameters$pKa_Donor,<span class="dt">collapse=</span><span class="st">','</span>))
+  pka_accept &lt;-<span class="st"> </span><span class="kw">c</span>(pka_accept,<span class="kw">paste</span>(parameters$pKa_Accept,<span class="dt">collapse=</span><span class="st">','</span>))
+}
+predicted.rb2p &lt;-<span class="st">  </span><span class="dv">1</span> -<span class="st"> </span><span class="fl">0.44</span> +<span class="st"> </span><span class="fl">0.44</span> *<span class="st"> </span>predicted.krbc
+rb2p.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(cas),<span class="kw">as.data.frame</span>(predicted.rb2p),<span class="kw">as.data.frame</span>(measured.rb2p))
+<span class="kw">colnames</span>(rb2p.table) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'cas'</span>,<span class="st">'predicted.rb2p'</span>,<span class="st">'measured.rb2p'</span>)
+error &lt;-<span class="st"> </span><span class="kw">log10</span>(rb2p.table[,<span class="st">'measured.rb2p'</span>]) -<span class="st"> </span><span class="kw">log10</span>(rb2p.table[,<span class="st">'predicted.rb2p'</span>])
+rb2p.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(rb2p.table,error,charge,fup,logP)
+
+error &lt;-<span class="st"> </span><span class="kw">log10</span>(measured.krbc) -<span class="st">  </span><span class="kw">log10</span>(predicted.krbc)
+krbc.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.data.frame</span>(cas),<span class="kw">as.data.frame</span>(predicted.krbc),<span class="kw">as.data.frame</span>(measured.krbc),
+                    <span class="kw">as.data.frame</span>(error),charge,fup,logP,pka_donor,pka_accept)
+
+pdta &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> predicted.krbc,
+                   <span class="dt">y =</span> measured.krbc)
+pdta$y[pdta$y &lt;=<span class="st"> </span><span class="fl">0.1</span>] &lt;-<span class="st"> </span><span class="fl">0.1</span>
+pdta$Censoring &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;Not Censored&quot;</span>,<span class="st">&quot;Censored&quot;</span>)[<span class="kw">as.numeric</span>(pdta$y &lt;=<span class="st"> </span><span class="fl">0.1</span>) +<span class="st"> </span><span class="dv">1</span>])
+y &lt;-<span class="st"> </span>measured.krbc
+x &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(y)),-<span class="dv">1</span> *<span class="st"> </span><span class="kw">log10</span>(predicted.krbc))
+<span class="kw">colnames</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Intercept&quot;</span>,<span class="st">&quot;Predicted&quot;</span>)
+cc &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(y &lt;=<span class="st"> </span><span class="fl">0.1</span>)
+y[y &lt;<span class="st"> </span><span class="fl">0.1</span>] &lt;-<span class="st"> </span><span class="fl">0.1</span>
+y &lt;-<span class="st"> </span>-<span class="kw">log10</span>(y)
+
+out &lt;-<span class="st"> </span><span class="kw">em.cens</span>(cc, x, y, <span class="dt">dist=</span><span class="st">&quot;Normal&quot;</span>)
+
+censored.regression &lt;-<span class="st"> </span><span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>pdta,<span class="kw">aes</span>(<span class="dt">x=</span>x,<span class="dt">y=</span>y, <span class="dt">color=</span>Censoring)) +
+<span class="st">    </span><span class="kw">scale_x_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(.<span class="dv">0009</span>,<span class="dv">40</span>)) +<span class="st"> </span><span class="kw">scale_y_log10</span>(<span class="dt">limits=</span><span class="kw">c</span>(.<span class="dv">1</span>,<span class="dv">4</span>),<span class="dt">breaks=</span><span class="kw">c</span>(.<span class="dv">1</span>,.<span class="dv">5</span>,<span class="fl">2.5</span>)) +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Inferred &quot;</span>,K[p])),<span class="dt">x=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Predicted &quot;</span>,K[p]))) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">linetype=</span><span class="st">'dashed'</span>) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust=</span><span class="fl">0.5</span>),<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.11</span>, .<span class="dv">8</span>)) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span>out$betas[<span class="dv">2</span>],<span class="dt">intercept=</span>-out$betas[<span class="dv">1</span>]) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'(B)'</span>)
+
+rb2p.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(rb2p.table,<span class="kw">aes</span>(predicted.rb2p,measured.rb2p)) +
+<span class="st">    </span><span class="kw">geom_point</span>()  +<span class="st"> </span><span class="kw">scale_x_log10</span>(<span class="dt">lim=</span><span class="kw">c</span>(.<span class="dv">52</span>,<span class="dv">18</span>)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">scale_y_log10</span>(<span class="dt">lim=</span><span class="kw">c</span>(.<span class="dv">52</span>,<span class="fl">2.5</span>),<span class="dt">breaks=</span><span class="kw">c</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">2</span>)) +<span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">linetype=</span><span class="st">'dashed'</span>) +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="st">&quot;Measured B:P Ratio &quot;</span>,
+    <span class="dt">x=</span><span class="st">&quot;Predicted B:P Ratio&quot;</span>) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),<span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">16</span>),
+    <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">hjust=</span><span class="fl">0.5</span>)) +<span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">'(A)'</span>)</code></pre></div>
+<p>Lastly, we make the heatmap.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">heatmap.table &lt;-<span class="st"> </span><span class="ot">NULL</span>
+for(this.cas in <span class="kw">get_cheminfo</span>(<span class="dt">model=</span><span class="st">'schmitt'</span>)){
+    parms &lt;-<span class="st"> </span><span class="kw">parameterize_schmitt</span>(<span class="dt">chem.cas=</span>this.cas)
+    pcs &lt;-<span class="st"> </span><span class="kw">predict_partitioning_schmitt</span>(<span class="dt">parameters=</span>parms)
+    heatmap.table &lt;-<span class="st"> </span><span class="kw">cbind</span>(heatmap.table,<span class="kw">log10</span>(<span class="kw">unlist</span>(pcs)[<span class="dv">1</span>:<span class="dv">11</span>]*parms$Funbound.plasma))
+}
+<span class="kw">rownames</span>(heatmap.table) &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">'Adipose'</span>,<span class="st">'Bone'</span>,<span class="st">'Brain'</span>,<span class="st">'Gut'</span>,<span class="st">'Heart'</span>,
+                              <span class="st">'Kidney'</span>,<span class="st">'Liver'</span>,<span class="st">'Lung'</span>,<span class="st">'Muscle'</span>,<span class="st">'Skin'</span>,<span class="st">'Spleen'</span>)
+<span class="kw">colnames</span>(heatmap.table) &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="st">&quot;&quot;</span>,<span class="kw">dim</span>(heatmap.table)[<span class="dv">2</span>])
+
+pal &lt;-<span class="st"> </span>function (n, <span class="dt">h =</span> <span class="kw">c</span>(<span class="dv">260</span>, -<span class="dv">328</span>), <span class="dt">c =</span> <span class="dv">80</span>, <span class="dt">l =</span> <span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">100</span>), <span class="dt">power =</span> <span class="fl">1.5</span>,
+    <span class="dt">fixup =</span> <span class="ot">TRUE</span>, <span class="dt">gamma =</span> <span class="ot">NULL</span>, <span class="dt">alpha =</span> <span class="dv">1</span>, ...)
+{
+    if (!<span class="kw">is.null</span>(gamma))
+        <span class="kw">warning</span>(<span class="st">&quot;'gamma' is deprecated and has no effect&quot;</span>)
+    if (n &lt;<span class="st"> </span>1L)
+        <span class="kw">return</span>(<span class="kw">character</span>(0L))
+   h &lt;-<span class="st"> </span><span class="kw">rep</span>(h, <span class="dt">length.out =</span> 2L)
+    c &lt;-<span class="st"> </span>c[1L]
+    l &lt;-<span class="st"> </span><span class="kw">rep</span>(l, <span class="dt">length.out =</span> 2L)
+    power &lt;-<span class="st"> </span><span class="kw">rep</span>(power, <span class="dt">length.out =</span> 2L)
+    rval &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, -<span class="dv">1</span>, <span class="dt">length =</span> n)
+    rval &lt;-<span class="st"> </span><span class="kw">hex</span>(<span class="kw">polarLUV</span>(<span class="dt">L =</span> l[2L] -<span class="st"> </span><span class="kw">diff</span>(l) *<span class="st"> </span><span class="kw">abs</span>(rval)^power[2L],
+        <span class="dt">C =</span> c *<span class="st"> </span><span class="kw">abs</span>(rval)^power[1L], <span class="dt">H =</span> <span class="kw">ifelse</span>(rval &gt;<span class="st"> </span><span class="dv">0</span>, h[1L],
+            h[2L])), <span class="dt">fixup =</span> fixup, ...)
+    if (!<span class="kw">missing</span>(alpha)) {
+        alpha &lt;-<span class="st"> </span><span class="kw">pmax</span>(<span class="kw">pmin</span>(alpha, <span class="dv">1</span>), <span class="dv">0</span>)
+        alpha &lt;-<span class="st"> </span><span class="kw">format</span>(<span class="kw">as.hexmode</span>(<span class="kw">round</span>(alpha *<span class="st"> </span><span class="dv">255</span> +<span class="st"> </span><span class="fl">1e-04</span>)),
+            <span class="dt">width =</span> 2L, <span class="dt">upper.case =</span> <span class="ot">TRUE</span>)
+        rval &lt;-<span class="st"> </span><span class="kw">paste</span>(rval, alpha, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)
+    }
+    <span class="kw">return</span>(rval)
+}
+
+hclust.ave &lt;-<span class="st"> </span>function(x) <span class="kw">hclust</span>(x, <span class="dt">method=</span><span class="st">&quot;ward.D2&quot;</span>)
+<span class="kw">par</span>(<span class="dt">cex.main=</span><span class="fl">1.5</span>,<span class="dt">cex.lab=</span><span class="dv">2</span>)
+lhei &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)
+lwid &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">1.25</span>,<span class="dv">2</span>)
+lmat &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">1</span>))
+<span class="kw">heatmap.2</span>(heatmap.table,<span class="dt">dendrogram=</span><span class="st">'column'</span>,<span class="dt">col=</span>pal,<span class="dt">trace=</span><span class="st">&quot;none&quot;</span>,
+          <span class="dt">hclustfun=</span>hclust.ave,<span class="dt">key.xlab=</span><span class="kw">expression</span>(<span class="kw">paste</span>(log[<span class="dv">10</span>],K[p],<span class="st">&quot; Value&quot;</span>)),
+          <span class="dt">key.ylab=</span><span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Number of &quot;</span>,K[p])),
+          <span class="dt">key.title=</span><span class="st">&quot;Partition Coefficients&quot;</span>,<span class="dt">xlab=</span><span class="st">&quot;Chemicals&quot;</span>,<span class="dt">cex.lab=</span><span class="dv">2</span>,
+          <span class="dt">lmat=</span>lmat,<span class="dt">margins=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>),<span class="dt">lwid=</span>lwid,<span class="dt">lhei=</span>lhei)</code></pre></div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
