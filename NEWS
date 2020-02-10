@@ -1,6 +1,11 @@
 News for R package httk
 
 Changes in version 2.0.0 ()
+ 	New generic inhalation PBPK model included, consistent with Linakis et al. 
+    (submitted) "Development and Evaluation of a High Throughput Inhalation Model 
+    for Organic Chemicals"
+  New chemical specific paramters have been added for volatile chemicals in rat
+    and humans.
   Rewrote underlying code to allow more easy integration of new models. 
     (goodbye, spaghetti code!)
   Rewritten funtions include:
@@ -24,11 +29,6 @@ Changes in version 2.0.0 ()
   EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see 
     http://comptox.epa.gov/dashboard/) now work as chemical identifiers in 
     addition to name and CAS.
- 	New generic inhalation PBPK model included, consistent with Linakis et al. 
-    (submitted) "Development and Evaluation of a High Throughput Inhalation Model 
-    for Organic Chemicals"
-  New chemical specific paramters have been added for volatile chemicals in rat
-    and humans.
   Beta testing and bug reports provided by Xiaoqing Chang.
   New physiological parameters have been added for monkeys
   Added vignette for Figure 6 from Frank, Christopher L., et al. 
