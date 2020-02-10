@@ -1,11 +1,27 @@
-# Add this model to the list of models:
+# Add the default physiologically-base toxicokinetic (PBTK) model 
+# (Pearce et al., 2017) to the list of models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
 #Analytic expression for steady-state plasma concentration.
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
-# The is the R function for generating model parameters:
+# Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 
+# Function called for running the model:
+model.list[["pbtk"]]$solve.func <- "solve_pbtk"
+
+# How the tissues from tissue.table are lumped together to form the model:
+# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
+# lumped.
+model.list[["pbtk"]]$tissuelist=list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
+                                   
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
@@ -80,6 +96,10 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
 # parameters:
 model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
 
+# This needs to be a global variable so that R CMD check --as-cran can test
+# the code (the HTTK package does not use this):
+compiled_parameters_init <- "getParmspbtk"
+
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
 model.list[["pbtk"]]$compiled.param.names <- c(
@@ -143,8 +163,9 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   "Aplasma"
   )
 
-#Which variables to track by default (should be able to build this from
-#state vars and outputs):
+
+#list of variables to be monitored (plotted). This list should be able to be
+#constructed from states and outputs. 
 model.list[["pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
@@ -177,8 +198,10 @@ model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["pbtk"]]$dose.type <- list(oral="add",
   iv="add")
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
 model.list[["pbtk"]]$state.vars <- c(
     "Agutlumen",
     "Agut",
@@ -202,6 +225,48 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["pbtk"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
+
+#Governs how tissues are lumped:
+model.list[["pbtk"]]$tissue.list <- list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
+                         
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["pbtk"]]$calcpc <- TRUE
+  
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T

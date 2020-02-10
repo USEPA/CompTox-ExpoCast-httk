@@ -4,22 +4,43 @@
 \alias{calc_stats}
 \title{Calculate toxicokinetic summary statistics.}
 \usage{
-calc_stats(chem.name = NULL, chem.cas = NULL, parameters = NULL,
-  route = "oral", stats = c("AUC", "peak", "mean"),
-  species = "Human", days = 28, daily.dose = 1, dose = NULL,
-  doses.per.day = 1, output.units = "uM", concentration = "plasma",
-  tissue = "plasma", model = "pbtk", default.to.human = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  suppress.messages = F, ...)
+calc_stats(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  route = "oral",
+  stats = c("AUC", "peak", "mean"),
+  species = "Human",
+  days = 28,
+  daily.dose = 1,
+  dose = NULL,
+  doses.per.day = 1,
+  output.units = "uM",
+  concentration = "plasma",
+  tissue = "plasma",
+  model = "pbtk",
+  default.to.human = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  suppress.messages = F,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Name of desired chemical.}
 
 \item{chem.cas}{CAS number of desired chemical.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
+
+\item{route}{String specification of route of exposure for simulation:
+"oral", "iv", "inhalation", ...}
 
 \item{stats}{Desired values (either 'AUC', 'mean', 'peak', or a vector
 containing any combination).}
@@ -41,6 +62,8 @@ default "Human").}
 \item{concentration}{Desired concentration type, 'blood' or default
 'plasma'.}
 
+\item{tissue}{Desired steady state tissue conentration.}
+
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, '3compartmentss' for
 the three compartment steady state model, and '1compartment' for one
@@ -59,8 +82,6 @@ partition coefficients.}
 1) in liver clearance if FALSE.}
 
 \item{suppress.messages}{Whether to suppress output message.}
-
-\item{...}{Additional arguments passed to the integrator.}
 
 \item{...}{Arguments passed to solve function.}
 }
@@ -84,11 +105,15 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-calc_stats(chem.name='Bisphenol-A',days=100,stats='mean.conc',model='3compartment')
-calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak.conc','mean.conc'),species='Rat')
+calc_stats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+
+calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+
 \dontrun{
-all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak.conc")
+# If you do not specify a chemical, calc_stats runs for all chemicals:
+all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
 }
+
 triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 
 }

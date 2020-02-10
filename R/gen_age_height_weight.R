@@ -43,7 +43,10 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' @export gen_age_height_weight
+#' 
+#'importFrom survey svymean
+#' 
+#'@export gen_age_height_weight
 
 gen_age_height_weight <- function(nsamp=NULL, 
                                   gendernum=NULL, 

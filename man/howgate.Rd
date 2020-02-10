@@ -4,11 +4,19 @@
 \name{howgate}
 \alias{howgate}
 \title{Howgate 2006}
-\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 24 rows and 11 columns.}
+\format{A data.table containing 24 rows and 11 columns.}
 \usage{
 howgate
 }
 \description{
 This data set is only used in Vignette 5.
+}
+\references{
+Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro
+data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006):
+473-497.
+}
+\author{
+Caroline Ring
 }
 \keyword{data}

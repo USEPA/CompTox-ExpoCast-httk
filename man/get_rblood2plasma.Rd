@@ -4,8 +4,13 @@
 \alias{get_rblood2plasma}
 \title{Get ratio of the blood concentration to the plasma concentration.}
 \usage{
-get_rblood2plasma(chem.name = NULL, chem.cas = NULL,
-  species = "Human", default.to.human = F)
+get_rblood2plasma(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -14,6 +19,9 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
@@ -21,8 +29,8 @@ default "Human").}
 if true.}
 }
 \description{
-This function retrieves the in vivo ratio of the blood concentration to the
-plasma concentration.
+This function attempts to retrieve a measured species- and chemical-specific 
+blood:plasma concentration ratio.
 }
 \details{
 A value of NA is returned when the requested value is unavailable.  Values

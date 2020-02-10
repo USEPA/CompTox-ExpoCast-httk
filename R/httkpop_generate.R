@@ -55,13 +55,16 @@ if (getRversion() >= "2.15.1") {
 #' User-supplied vector must contain one or more of these strings.
 #' @return A data.table where each row represents an individual, and each
 #' column represents a demographic, anthropometric, or physiological parameter.
+#'
 #' @author Caroline Ring
+#'
 #' @references Ring, Caroline L., et al. "Identifying populations sensitive to
 #' environmental chemicals by simulating toxicokinetic variability."
 #' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
+#'
+#' @keywords httk-pop monte-carlo
+#'
 #' @examples
-#' 
 #' 
 #' \dontrun{
 #' #Simply generate a virtual population of 100 individuals,
@@ -105,6 +108,21 @@ httkpop_generate <- function(method,
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
                                      'Other')){
+
+# Error checking:
+  if (is.null(method)) stop(
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
+  else if(!method %in% c('direct resampling',
+                          'virtual individuals',
+                          'v',
+                          'vi',
+                          'direct resampling',
+                          'dr',
+                          'd')) stop( 
+"Specify method as \"virtual individuals\" (\"v\" or \"vi\") or \"direct\n\
+resampling\" (\"dr\" or \"d\").")
+
   #Check age limits
   if (is.null(agelim_years) & is.null(agelim_months)){
     #Use default values

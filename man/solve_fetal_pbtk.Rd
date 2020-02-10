@@ -4,16 +4,35 @@
 \alias{solve_fetal_pbtk}
 \title{Solve_fetal_PBTK}
 \usage{
-solve_fetal_pbtk(chem.name = NULL, chem.cas = NULL, times = seq(13 *
-  7, 40 * 7, 1), parameters = NULL, days = 10, tsteps = 4,
-  dose = 1, dosing.matrix = NULL, daily.dose = NULL,
-  doses.per.day = NULL, initial.values = NULL, plots = F,
-  suppress.messages = F, iv.dose = F, output.units = "uM",
-  method = "lsoda", rtol = 1e-08, atol = 1e-12,
-  default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, ...)
+solve_fetal_pbtk(
+  chem.name = NULL,
+  chem.cas = NULL,
+  times = seq(13 * 7, 40 * 7, 1),
+  parameters = NULL,
+  days = 10,
+  tsteps = 4,
+  dose = 1,
+  dosing.matrix = NULL,
+  daily.dose = NULL,
+  doses.per.day = NULL,
+  initial.values = NULL,
+  plots = F,
+  suppress.messages = F,
+  iv.dose = F,
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  default.to.human = F,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -117,7 +136,7 @@ venous blood, arterial blood, lung, adipose tissue, kidney, thyroid,
 and rest of body. A placenta is modeled as a joint organ shared by mother
 and fetus, through which chemical exchange can occur with the fetus. Fetal
 compartments include arterial blood, venous blood, kidney, thyroid, liver,
-lung, gut, brain, and rest of body.
+lung, gut, brain, and rest of body. 
 
 The extra compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.

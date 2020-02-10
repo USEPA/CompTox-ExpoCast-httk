@@ -4,12 +4,24 @@
 \alias{calc_mc_oral_equiv}
 \title{Calculate Monte Carlo Oral Equivalent Dose}
 \usage{
-calc_mc_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
-  which.quantile = 0.95, species = "Human", input.units = "uM",
-  output.units = "mgpkgpday", suppress.messages = F,
-  return.samples = F, concentration = "plasma",
-  restrictive.clearance = T, bioactive.free.invivo = F,
-  tissue = NULL, IVIVE = NULL, ...)
+calc_mc_oral_equiv(
+  conc,
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  which.quantile = 0.95,
+  species = "Human",
+  input.units = "uM",
+  output.units = "mgpkgpday",
+  suppress.messages = F,
+  return.samples = F,
+  concentration = "plasma",
+  restrictive.clearance = T,
+  bioactive.free.invivo = F,
+  tissue = NULL,
+  IVIVE = NULL,
+  ...
+)
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of uM.}
@@ -19,6 +31,9 @@ specified.}
 
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (calc_mc_css) is requested. Can be a vector. Note that 95th

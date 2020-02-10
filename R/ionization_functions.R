@@ -38,6 +38,8 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from a parameterize_MODEL function,
 #' overrides chem.name and chem.cas.
 #' @param pH pH where ionization is evaluated.
@@ -52,7 +54,8 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' \item{fraction_negative}{fraction of compound negative}
 #' \item{fraction_positive}{fraction of compound positive}
 #' \item{fraction_zwitter}{fraction of compound zwitterionic}
-#' @author Robert Pearce
+#' @author Robert Pearce and John Wambaugh
+#'
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of
 #' high-throughput predictions of chemical distribution to tissues." Journal of
 #' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
@@ -63,64 +66,55 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' calc_ionization(pKa_Donor=8,pKa_Accept=c(1,4),pH=9)
 #' 
 #' @export calc_ionization
-calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL,pKa_Donor=NA,pKa_Accept=NA)
+calc_ionization <- function(
+                     chem.cas=NULL,
+                     chem.name=NULL,
+                     dtxsid=NULL,
+                     parameters=NULL,
+                     pH=NULL,
+                     pKa_Donor=NA,
+                     pKa_Accept=NA)
 {
-
   if (is.null(pH)) stop("pH is required to calculate the ionization.")
-  if (!is.null(chem.cas) | !is.null(chem.name) & 
+
+  if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid)) & 
       !all(c("pKa_Donor","pKa_Accept") %in% names(parameters)) &
        (is.null(pKa_Donor) | is.null(pKa_Accept))) 
   {
-    out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+    out <- get_chem_id(
+             chem.cas=chem.cas,
+             chem.name=chem.name,
+             dtxsid=dtxsid)
     chem.cas <- out$chem.cas
-    pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-    pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
+    parameters$pKa_Donor <- 
+      suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+    parameters$pKa_Accept <- 
+      suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
   } else if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
   {
     pKa_Donor <- parameters$pKa_Donor
     pKa_Accept <- parameters$pKa_Accept
-  } else if(!is.null(pKa_Donor) & !is.null(pKa_Accept)){
+  } else if(!is.null(pKa_Donor) & !is.null(pKa_Accept))
+  {
     pKa_Donor <- pKa_Donor
     pKa_Accept <- pKa_Accept
   } else {
-    stop("pKa_Donor and pKa_Accept must be in input parameters, or chem.cas or chem.name must be supplied.")
+    stop(
+"pKa_Donor and pKa_Accept must be in input parameters, or chem.cas or chem.name must be supplied.")
   }
-  
-
   
   # Number of ionizations to calculate:
   if (is.null(parameters))
   {
     calculations <- 1
-  } else {  # Can't use pKa's because they could be vectors even for one set of parameters
-    calculations <- length(parameters$Pow)
-    if (calculations > 1)
-    {
 # If pKa's aren't actually varying let's not waste computing time:    
-      if (length(unique(pKa_Donor))==1 & length(unique(pKa_Accept))==1 & length(unique(pH))==1)
-      {
-        calculations <- 1
-        pKa_Donor <- pKa_Donor[1]
-        pKa_Accept <- pKa_Accept[1]
-        pH <- pH[1]
-        if (!is.na(pKa_Donor))
-        {
-          if (any(regexpr(",",pKa_Donor)!=-1))
-          { 
-            pKa_Donor <- strsplit(pKa_Donor,",")[[1]]
-          }
-          pKa_Donor <- as.numeric(pKa_Donor)
-        }
-        if (!is.na(pKa_Accept))
-        {
-          if (any(regexpr(",",pKa_Accept)!=-1))
-          { 
-            pKa_Accept <- strsplit(pKa_Accept,",")[[1]]
-          }
-          pKa_Accept <- as.numeric(pKa_Accept)
-        }
-      }
-    }
+  } else if (all(c(length(unique(parameters$pKa_Donor)==1),
+      length(unique(parameters$pKa_Accept)==1),
+      length(unique(parameters$pH)==1))))
+  {
+    calculations <- 1
+  } else {
+    calculations <- length(unique(parameters$pKa_Donor))
   }
   
   fraction_neutral <- NULL
@@ -130,37 +124,17 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   fraction_zwitter <- NULL
   for (index in 1:calculations)
   {
-    if (calculations==1)
+    this.pKa_Donor <- pKa_Donor[[index]]
+    this.pKa_Accept <-pKa_Accept[[index]]
+    this.pH <- pH[[index]]
+    
+    if(is.character(this.pKa_Donor) | is.character(this.pKa_Accept))
     {
-      if(is.character(pKa_Donor) | is.character(pKa_Accept)){
-        pKa_Donor <- as.numeric(unlist(strsplit(pKa_Donor, ",")))
-        pKa_Accept <- as.numeric(unlist(strsplit(pKa_Accept, ",")))
-      }
-      
-      
-      this.pKa_Donor <- pKa_Donor
-      this.pKa_Accept <- pKa_Accept
-    } else {
-      this.pKa_Donor <- pKa_Donor[[index]]
-      this.pKa_Accept <- pKa_Accept[[index]]
-      
-      if (any(regexpr(",",this.pKa_Donor)!=-1))
-      { 
-        this.pKa_Donor <- strsplit(this.pKa_Donor,",")[[1]]
-      }
-      this.pKa_Donor <- as.numeric(this.pKa_Donor)
-      
-      if (any(regexpr(",",this.pKa_Accept)!=-1))
-      { 
-        this.pKa_Accept <- strsplit(this.pKa_Accept,",")[[1]]
-      }
-      this.pKa_Accept <- as.numeric(this.pKa_Accept)
-      
+      this.pKa_Donor <- as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
+      this.pKa_Accept <- as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
     }  
   # Need to calculate the amount of un-ionized parent:
 
-
-  
   # Multiple equilibirum points may still be separated by commas, split them into vectors here:
      
     if(all(is.na(this.pKa_Donor))) this.pKa_Donor <- NULL
@@ -171,7 +145,8 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
     if (all(!is.null(eq.points)))
     {
   # Annotate whether each equilibirum point is a H-donation or acceptance:
-      eq.point.types <- c(rep("Donate",length(this.pKa_Donor)),rep("Accept",length(this.pKa_Accept)))
+      eq.point.types <- c(rep("Donate",length(this.pKa_Donor)),
+        rep("Accept",length(this.pKa_Accept)))
       eq.point.types <- eq.point.types[order(eq.points)]    #label each point
       eq.points <- eq.points[order(eq.points)]     #order points
     }
@@ -224,7 +199,7 @@ calc_ionization <- function(chem.cas=NULL,chem.name=NULL,parameters=NULL,pH=NULL
   # If pKa's aren't actually varying let's not waste computing time:  
   if (!is.null(parameters))
   {
-    if (length(parameters$Pow)>1 & calculations == 1)
+    if (length(parameters$pKa_Donor)>1 & calculations == 1)
     {
       fraction_neutral <- rep(fraction_neutral,length(parameters$Pow))
       fraction_charged <- rep(fraction_charged,length(parameters$Pow))

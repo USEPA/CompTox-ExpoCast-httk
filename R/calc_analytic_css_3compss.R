@@ -5,21 +5,21 @@
 #'concentrations as a result of infusion dosing.
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
-#'be specified.
+#' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
-#'be specified.
+#' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})   
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
-#''pbtk'), parameterize_3comp (for model = '3compartment), 
-#'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
-#'(for model = '3compartmentss'), overrides chem.name and chem.cas.
+#' 'pbtk'), parameterize_3comp (for model = '3compartment), 
+#' parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#' (for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
 #'@param concentration Desired concentration type, 'blood' or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
-#'in the blood to plasma using the input parameters. Use this if you have 
-#''altered hematocrit, Funbound.plasma, or Krbc2pu.
-#'
-#'
+#' in the blood to plasma using the input parameters. Use this if you have 
+#' 'altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
@@ -29,15 +29,16 @@
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
 #'@return Steady state concentration in uM units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'@keywords 3compss
 calc_analytic_css_3compss <- function(chem.name=NULL,
                                    chem.cas = NULL,
+                                   dtxsid = NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
@@ -48,17 +49,36 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    bioactive.free.invivo = FALSE,
                                    ...)
 {
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(parameters))
-  {
-    stop('Parameters, chem.name, or chem.cas must be specified.')
-  }
+
+  param.names.3compss <- model.list[["3compartmentss"]]$param.names
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+    
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provide:
   if (is.null(parameters))
   {
-    parameters <- parameterize_steadystate(chem.cas=chem.cas,
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid  
+
+    parameters <- parameterize_steadystate(
+                                    chem.cas=chem.cas,
                                     chem.name=chem.name,
+                                    dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
                                     ...)
+
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
@@ -80,7 +100,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   if (recalc.blood2plasma) 
   {
     parameters$Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
-                                                   params=parameters,
+                                                   parameters=parameters,
                                                    hematocrit=parameters$hematocrit)
   }
 
@@ -91,7 +111,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
 
 # Scale up from in vitro Clint to a whole liver clearance:
-  cl <- calc_hepatic_clearance(parameters=parameters,
+  cl <- calc_hep_clearance(parameters=parameters,
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
   if (!restrictive.clearance) cl <- cl*Fup
@@ -151,7 +171,7 @@ add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, che
   if (is.null(parameters))
     stop("Must have input parameters to add Schmitt input to.")
   # Need to convert to 3compartmentss parameters:
-  temp.params <- get_physchem_param(chem.CAS = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
   if(!"Pow" %in% names(parameters)){
     parameters[["Pow"]] <- 10^temp.params[["logP"]]
   }

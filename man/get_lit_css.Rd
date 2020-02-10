@@ -4,10 +4,16 @@
 \alias{get_lit_css}
 \title{Get literature Css}
 \usage{
-get_lit_css(chem.cas = NULL, chem.name = NULL, daily.dose = 1,
-  which.quantile = 0.95, species = "Human",
-  clearance.assay.conc = NULL, output.units = "mg/L",
-  suppress.messages = F)
+get_lit_css(
+  chem.cas = NULL,
+  chem.name = NULL,
+  daily.dose = 1,
+  which.quantile = 0.95,
+  species = "Human",
+  clearance.assay.conc = NULL,
+  output.units = "mg/L",
+  suppress.messages = F
+)
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be

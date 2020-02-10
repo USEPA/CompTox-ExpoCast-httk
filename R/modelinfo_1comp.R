@@ -1,9 +1,20 @@
-# Add this model to the list of models:
+# Add the 1compartment model (Pearce et al., 2017) to the list of models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
-#Analytic expression for steady-state plasma concentration.
+# Analytic expression for steady-state plasma concentration.
 model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 
+# Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
+
+# Function called for running the model:
+model.list[["1compartment"]]$solve.func <- "solve_1comp"
+
+# How the tissues from tissue.table are lumped together to form the model:
+# 1compartment model lumps everything, so list of compartments is empty.
+model.list[['1compartment']]$tissuelist <- NULL
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
@@ -40,7 +51,7 @@ model.list[["1compartment"]]$Rtosolvermap <- list(
   BW="BW")
 
 # If the model does not include an explicit gut-liver link before systemic
-# circulation, then we want to decrease the absorbed dose by the first pass
+# circulation, then we want to decrease the absorbed dose by the first past
 # hepatic extraction factor:
 model.list[["1compartment"]]$do.first.pass <- T
 
@@ -59,7 +70,7 @@ model.list[["1compartment"]]$compiled.param.names <- c(
 # This function initializes the state vector for the compiled model:
 model.list[["1compartment"]]$compiled.init.func <- "initmod1comp"
 
-# This is the function that calculates the derivative of the model as a function
+# This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
 model.list[["1compartment"]]$derivative.func <- "derivs1comp"
 
@@ -91,8 +102,10 @@ model.list[["1compartment"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["1compartment"]]$dose.type <- list(oral="add",
   iv="add")
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
 model.list[["1compartment"]]$state.vars <- c(
     "Agutlumen",
     "Acompartment",
@@ -101,13 +114,42 @@ model.list[["1compartment"]]$state.vars <- c(
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["1compartment"]]$required.params <- c(
-  "Clint",
+  "Clint", 
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
   "MW"
    )
+   
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["1compartment"]]$propagateuv.func <- "propagate_invitrouv_1comp"
+
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["1compartment"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hepatic.bioavailability",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Rblood2plasma",
+  "Vdist")
+
+#Governs how tissues are lumped:
+model.list[["1compartment"]]$tissue.list <- NULL
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["1compartment"]]$calcpc <- TRUE
+
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["1compartment"]]$firstpass <- TRUE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T

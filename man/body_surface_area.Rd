@@ -20,3 +20,19 @@ A vector of body surface areas in cm^2.
 Predict body surface area from weight, height, and age, using Mosteller's
 formula for age>18 and Haycock's formula for age<18
 }
+\references{
+Mosteller, R. D. "Simplified calculation of body surface area." 
+N Engl J Med 317 (1987): 1098..
+
+Haycock, George B., George J. Schwartz, and David H. Wisotsky. "Geometric 
+method for measuring body surface area: a height-weight formula validated in 
+infants, children, and adults." The Journal of pediatrics 93.1 (1978): 62-66.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

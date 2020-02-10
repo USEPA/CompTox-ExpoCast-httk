@@ -30,14 +30,17 @@
 #'  each column represents a demographic, anthropometric, or physiological
 #'  parameter.
 #'
-#'@keywords httk-pop
+#'@keywords httk-pop monte-carlo
 #'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
-#' @export httkpop_direct_resample_inner
+#'
+#'@import survey
+#'
+#'@export httkpop_direct_resample_inner
 httkpop_direct_resample_inner <- function(nsamp,
                                           gendernum,
                                           agelim_months,

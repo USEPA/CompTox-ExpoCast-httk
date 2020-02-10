@@ -1,10 +1,23 @@
-# Add this model to the list of models:
+# Add the 3compartment model (Pearce et al., 2017) to the list of models:
+#
+# Pearce, Robert G., et al. "Httk: R package for high-throughput 
+# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
 #Analytic expression for steady-state plasma concentration.
 model.list[["3compartment"]]$analytic.css.func <- "calc_analytic_css_3comp"
 
-# The is the R function for generating model parameters:
+# Function used for generating model parameters:
 model.list[["3compartment"]]$parameterize.func <- "parameterize_3comp"
+
+# Function called for running the model:
+model.list[["3compartment"]]$solve.func <- "solve_3comp"
+
+# How the tissues from tissue.table are lumped together to form the model:
+# 3 compartment model has only liver and gut compartments; everything else is
+# lumped.
+model.list[['3compartment']]$tissuelist = list(
+               liver=c("liver"),
+               gut=c("gut"))
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
@@ -137,8 +150,10 @@ model.list[["3compartment"]]$dose.type <- list(
   oral="add",
   iv="add")
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
 model.list[["3compartment"]]$state.vars <- c(
   "Aintestine",
   "Aportven",
@@ -158,6 +173,43 @@ model.list[["3compartment"]]$required.params <- c(
   "pKa_Accept",
   "MW"
    )
+
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["3compartment"]]$propagateuv.func <- "propagate_invitrouv_3comp"
+
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["1compartment"]]$convert.httkpop.func <- NULL# We want all the standard physiological calculations performed:
+model.list[["3compartment"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["3compartment"]]$httkpop.params <- c(
+  "BW",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qliverf",
+  "Vportvenc",
+  "Vliverc",
+  "Vsyscompc",
+  "Vportven",
+  "Vliver",
+  "Vsyscomp",
+  "Qcardiac",
+  "Qgfr",
+  "Qgut",
+  "Qliver",
+  "Ratioblood2plasma")
+
+#Governs how tissues are lumped:
+model.list[["pbtk"]]$tissue.list <- list(
+               liver=c("liver"),
+               gut=c("gut"))
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["3compartment"]]$calcpc <- TRUE
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["3compartment"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["3compartment"]]$exclude.fup.zero <- T
