@@ -98,9 +98,10 @@ dose that enters the gut lumen.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 
 \item{Funbound.plasma}{Fraction of chemical unbound to plasma.} 
-\item{Funbound.plasma.adjustment}{Fraction unbound to plasma, adjusted for basketball}
-\item{Funbound.plasma.dist}{Distribution of fraction unbound to plasma (median,
-lower 95th, upper 95th)}
+\item{Funbound.plasma.adjustment}{Fraction unbound to plasma adjusted as
+described in Pearce et al. 2017}
+\item{Funbound.plasma.dist}{Distribution of fraction unbound to plasma
+(median, lower 95th, upper 95th)}
 \item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{Kblood2air}{Ratio of concentration of chemical in blood to air}
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
