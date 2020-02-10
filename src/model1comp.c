@@ -53,10 +53,6 @@ static double parms[4];
 #define kgutabs parms[2]
 #define BW parms[3]
 
-/* Forcing (Input) functions */
-static double forc[0];
-
-
 /* Function definitions for delay differential equations */
 
 int Nout=1;
@@ -90,13 +86,6 @@ void initmod1comp (void (* odeparms)(int *, double *))
   int N=4;
   odeparms(&N, parms);
 }
-
-void initforc (void (* odeforcs)(int *, double *))
-{
-  int N=0;
-  odeforcs(&N, forc);
-}
-
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
