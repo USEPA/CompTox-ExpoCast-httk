@@ -1,7 +1,17 @@
 #' solve_gas_pbtk
 #' 
-#' Documentation not complete, still presenting much of solve_pbtk's
-#' documentation as template
+#' This function solves for the amounts or concentrations of a chemical
+#' in different tissues as functions of time as a result of inhalation 
+#' exposure. 
+#' 
+#' The default dosing scheme involves specifying the start time
+#' of exposure, the concentration of gas inhaled, the period of a given 
+#' assumed cycle of exposure, and the duration of the exposure during that 
+#' period. Together, these arguments determine the forcings passed to the 
+#' ODE integrator. Forcings can also be specified manually, or effectively 
+#' turned off by setting exposure concentration to zero, if the user prefers
+#' to simulate dosing by other means. 
+#' 
 #' 
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues as functions of time based on the dose and dosing
@@ -192,6 +202,14 @@ solve_gas_pbtk <- function(chem.name = NULL,
   stop("Argument 'exp.duration' should be smaller than its subsuming argument,
        'period', which together are set to specify a simple cyclic pattern of 
        inhalation exposure and rest in the default case.")
+  }
+  
+  #Screen against case in which forcing function is specified, but output.units
+  #are specified as other than 'uM'. Units of forcing function exposure 
+  #concentration are only supported as 'uM' for now.
+  if ((!is.null(forcings) | exp.conc > 0) & tolower(output.units) != 'um') {
+    stop('Forcings exposure data series not yet supported 
+         in units other than uM.')
   }
   
   #Look up the chemical name/CAS to get some info about the chemical in

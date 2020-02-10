@@ -172,10 +172,20 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-Documentation not complete, still presenting much of solve_pbtk's
-documentation as template
+This function solves for the amounts or concentrations of a chemical
+in different tissues as functions of time as a result of inhalation 
+exposure.
 }
 \details{
+The default dosing scheme involves specifying the start time
+of exposure, the concentration of gas inhaled, the period of a given 
+assumed cycle of exposure, and the duration of the exposure during that 
+period. Together, these arguments determine the forcings passed to the 
+ODE integrator. Forcings can also be specified manually, or effectively 
+turned off by setting exposure concentration to zero, if the user prefers
+to simulate dosing by other means. 
+
+
 This function solves for the amounts or concentrations in uM of a chemical
 in different tissues as functions of time based on the dose and dosing
 frequency. 
