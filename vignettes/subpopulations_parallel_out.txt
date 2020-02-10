@@ -1,0 +1,46 @@
+starting worker pid=13616 on localhost:11782 at 07:33:14.738
+starting worker pid=15332 on localhost:11782 at 07:33:15.249
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+[1] "Error occurred: Error in gzfile(file, mode): cannot open the connection\n"
+There were 12 warnings (use warnings() to see them)
+Warning messages:
+1: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_vi_Age.6.11.Rdata', probable reason 'No such file or directory'
+2: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_vi_Age.20.65.Rdata', probable reason 'No such file or directory'
+3: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_vi_BMIgt30.Rdata', probable reason 'No such file or directory'
+4: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_vi_Females.Rdata', probable reason 'No such file or directory'
+5: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_vi_ReproAgeFemale.Rdata', probable reason 'No such file or directory'
+6: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_dr_Age.6.11.Rdata', probable reason 'No such file or directory'
+7: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_dr_Age.20.65.Rdata', probable reason 'No such file or directory'
+8: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_dr_BMIgt30.Rdata', probable reason 'No such file or directory'
+9: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_dr_Females.Rdata', probable reason 'No such file or directory'
+10: In gzfile(file, mode) :
+  cannot open compressed file 'data/httkpop_dr_ReproAgeFemale.Rdata', probable reason 'No such file or directory'
