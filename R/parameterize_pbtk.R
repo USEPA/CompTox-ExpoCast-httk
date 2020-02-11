@@ -118,42 +118,42 @@ parameterize_pbtk <- function(chem.cas=NULL,
   #Give a binding to the physiology.data
   physiology.data <- physiology.data
   
-#We need to describe the chemical to be simulated one way or another:
+  #We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid))
     stop('chem.name, chem.cas, or dtxsid must be specified.')
   
-# Look up the chemical name/CAS, depending on what was provided:
+  # Look up the chemical name/CAS, depending on what was provided:
   out <- get_chem_id(chem.cas=chem.cas,
                      chem.name=chem.name,
                      dtxsid=dtxsid)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
-   
+  
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",
                                       species,
                                       chem.cas=chem.cas),
-                                    silent=T)
+                  silent=T)
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param("Clint.pValue",
                                           species,
                                           chem.cas=chem.cas),
-                                        silent=T)
+                      silent=T)
   if ((class(Clint.db) == "try-error" & default.to.human) ||
       force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint",
                                         "Human",
                                         chem.cas=chem.cas),
-                                      silent=T)
+                    silent=T)
     Clint.pValue <- try(get_invitroPK_param("Clint.pValue",
                                             "Human",
                                             chem.cas=chem.cas),
-                                          silent=T)
+                        silent=T)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") 
@@ -171,62 +171,62 @@ parameterize_pbtk <- function(chem.cas=NULL,
     Clint.dist <- NA
   }
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
-
   
-# Predict the PCs for all tissues in the tissue.data table:
+  
+  # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
-                      chem.cas=chem.cas,
-                      species=species,
-                      default.to.human=default.to.human,
-                      force.human.fup=force.human.clint.fup,
-                      suppress.messages=T,
-                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+    chem.cas=chem.cas,
+    species=species,
+    default.to.human=default.to.human,
+    force.human.fup=force.human.clint.fup,
+    suppress.messages=T,
+    minimum.Funbound.plasma=minimum.Funbound.plasma)
   
   if(placenta){
     schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
     PCs <- predict_partitioning_schmitt(
-              parameters=schmitt.params,
-              regression=regression,
-              species=species,
-              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-              minimum.Funbound.plasma=minimum.Funbound.plasma)
+      parameters=schmitt.params,
+      regression=regression,
+      species=species,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      minimum.Funbound.plasma=minimum.Funbound.plasma)
     p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
     PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
     lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   }else{  
     PCs <- predict_partitioning_schmitt(
-              parameters=schmitt.params,
-              species=species,
-              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-              regression=regression,
-              minimum.Funbound.plasma=minimum.Funbound.plasma)
-
-# Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-  lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
+      parameters=schmitt.params,
+      species=species,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      regression=regression,
+      minimum.Funbound.plasma=minimum.Funbound.plasma)
+    
+    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
+    lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   }
   
   if (schmitt.params$unadjusted.Funbound.plasma == 0)
     stop("Fraction unbound = 0, can't predict partitioning.")
   
-# Check to see if we should use the in vitro fup assay correction:  
+  # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
     warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
-
-# Restrict the value of fup:
+  
+  # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
-
+  
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                                      species,
                                      chem.CAS=chem.cas),
-                                  silent=T)
+                 silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
-    
   
- # Check the species argument for capitalization problems and whether or not
- # it is in the table:  
+  
+  # Check the species argument for capitalization problems and whether or not
+  # it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -235,32 +235,32 @@ parameterize_pbtk <- function(chem.cas=NULL,
         toupper(colnames(physiology.data))==toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
-
-# Load the physiological parameters for this species
+  
+  # Load the physiological parameters for this species
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.CAS=chem.cas) #g/mol
   # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
-                                  "pKa_Donor",
-                                  chem.CAS=chem.cas)) 
+    "pKa_Donor",
+    chem.CAS=chem.cas)) 
   # basic association cosntants
   pKa_Accept <- suppressWarnings(get_physchem_param(
-                                    "pKa_Accept",
-                                    chem.CAS=chem.cas)) 
+    "pKa_Accept",
+    chem.CAS=chem.cas)) 
   # Octanol:water partition coefficient
   Pow <- 10^get_physchem_param(
-              "logP",
-              chem.CAS=chem.cas) 
-
+    "logP",
+    chem.CAS=chem.cas) 
+  
   outlist <- list()
-   # Begin flows:
+  # Begin flows:
   #mL/min/kgBW converted to L/h/kgBW:
   QGFRc <- this.phys.data["GFR"]/1000*60 
   Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
-
+  
   outlist <- c(outlist,c(
     Qcardiacc = as.numeric(Qcardiacc),
     flows[!names(flows) %in% c('Qlungf','Qtotal.liverf')],
@@ -274,55 +274,55 @@ parameterize_pbtk <- function(chem.cas=NULL,
     (1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
   Vvenc = this.phys.data["Plasma Volume"]/
     (1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
-
+  
   outlist <- c(outlist,
-    Vartc = as.numeric(Vartc),
-    Vvenc = as.numeric(Vvenc),
-    lumped_params[substr(names(lumped_params),1,1) == 'V'],
-    lumped_params[substr(names(lumped_params),1,1) == 'K'])
+               Vartc = as.numeric(Vartc),
+               Vvenc = as.numeric(Vvenc),
+               lumped_params[substr(names(lumped_params),1,1) == 'V'],
+               lumped_params[substr(names(lumped_params),1,1) == 'K'])
   
   if(placenta) outlist <- c(outlist,
                             Kplacenta2pu=as.numeric(p.list$Kplacenta2pu),
                             Kfplacenta2pu=as.numeric(p.list$Kfplacenta2pu))  
-# Create the list of parameters:
+  # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 2.18, # 1/h
-    Funbound.plasma = fup, # unitless fraction
-    Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
-    hematocrit = as.numeric(hematocrit), # unitless ratio
-    MW = MW, #g/mol
-    Pow = Pow,
-    pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept,
-    MA=schmitt.params[["MA"]]))
+                            kgutabs = 2.18, # 1/h
+                            Funbound.plasma = fup, # unitless fraction
+                            Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
+                            hematocrit = as.numeric(hematocrit), # unitless ratio
+                            MW = MW, #g/mol
+                            Pow = Pow,
+                            pKa_Donor=pKa_Donor,
+                            pKa_Accept=pKa_Accept,
+                            MA=schmitt.params[["MA"]]))
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic
   #clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,
-              Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
-                "Pow","pKa_Donor","pKa_Accept")])) #fraction
-
- outlist <- c(
-   outlist,
-   list(Clint=Clint,
-        Clint.dist = Clint.dist,
-        Clmetabolismc = as.numeric(calc_hep_clearance(
-            hepatic.model="unscaled",
-            parameters=list(
-            Clint=Clint, #uL/min/10^6 cells
-            Funbound.plasma=fup, # unitless fraction
-            Fhep.assay.correction=outlist$Fhep.assay.correction, 
-            million.cells.per.gliver= 110, # 10^6 cells/g-liver
-            liver.density= 1.05, # g/mL
-            Dn=0.17,
-            BW=BW,
-            Vliverc=lumped_params$Vliverc, #L/kg
-            Qtotal.liverc=
-              (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
-            suppress.messages=T,
-            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
+  outlist <- c(outlist,
+               Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
+                 "Pow","pKa_Donor","pKa_Accept")])) #fraction
+  
+  outlist <- c(
+    outlist,
+    list(Clint=Clint,
+         Clint.dist = Clint.dist,
+         Clmetabolismc = as.numeric(calc_hep_clearance(
+           hepatic.model="unscaled",
+           parameters=list(
+             Clint=Clint, #uL/min/10^6 cells
+             Funbound.plasma=fup, # unitless fraction
+             Fhep.assay.correction=outlist$Fhep.assay.correction, 
+             million.cells.per.gliver= 110, # 10^6 cells/g-liver
+             liver.density= 1.05, # g/mL
+             Dn=0.17,
+             BW=BW,
+             Vliverc=lumped_params$Vliverc, #L/kg
+             Qtotal.liverc=
+               (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
+           suppress.messages=T,
+           restrictive.clearance=restrictive.clearance)), #L/h/kg BW
          million.cells.per.gliver=110, # 10^6 cells/g-liver
          liver.density=1.05, # g/mL
          Fgutabs=Fgutabs)) 
@@ -332,11 +332,11 @@ parameterize_pbtk <- function(chem.cas=NULL,
     outlist["Funbound.plasma.adjustment"] <- 
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
-   
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-        
+  
+  outlist <- c(outlist,
+               Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+                                                     species=species,
+                                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+  
   return(outlist[sort(names(outlist))])
 }
