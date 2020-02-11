@@ -107,25 +107,6 @@ double ytau3comp[1] = {0.0};
 
 static double yini3comp[7] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
-void lagvalue3comp(double T, int *nr, int N, double *ytau) {
-  static void(*fun)(double, int*, int, double*) = NULL;
-  if (fun == NULL)
-    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-  return fun(T, nr, N, ytau);
-}
-
-double CalcDelay3comp(int hvar, double dTime, double delay) {
-  double T = dTime-delay;
-  if (dTime > delay){
-    nr3comp[0] = hvar;
-    lagvalue3comp( T, nr3comp, Nout3comp, ytau3comp );
-}
-  else{
-    ytau3comp[0] = yini3comp[hvar];
-}
-  return(ytau3comp[0]);
-}
-
 /*----- Initializers */
 void initmod3comp (void (* odeparms)(int *, double *))
 {
