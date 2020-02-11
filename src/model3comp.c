@@ -99,10 +99,6 @@ static double parms[22];
 #define Krest2plasma parms[20]
 #define Ratioblood2plasma parms[21]
 
-/* Forcing (Input) functions */
-static double forc[0];
-
-
 /* Function definitions for delay differential equations */
 
 int Nout3comp=1;
@@ -136,13 +132,6 @@ void initmod3comp (void (* odeparms)(int *, double *))
   int N=22;
   odeparms(&N, parms);
 }
-
-void initforc3comp (void (* odeforcs)(int *, double *))
-{
-  int N=0;
-  odeforcs(&N, forc);
-}
-
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
