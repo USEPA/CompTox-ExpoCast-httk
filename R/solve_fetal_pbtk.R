@@ -83,7 +83,8 @@
 #' @keywords Solve
 #' @examples
 #' 
-#' 
+#' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
+#' doses.per.day = 3, plots = T)
 #' 
 #' @export solve_fetal_pbtk
 #' @useDynLib httk
