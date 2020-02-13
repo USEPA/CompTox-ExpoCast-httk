@@ -242,41 +242,41 @@ Rblood2plasma = 0.679.
 [16,] 7.69208 1.86168  12.3090      178.327 2.20509
 > 
 > length(get_cheminfo())
-[1] 946
+[1] 987
 > length(get_cheminfo(species="rat"))
-[1] 171
+[1] 212
 > length(get_cheminfo(model="pbtk"))
-[1] 876
+[1] 917
 > length(get_cheminfo(model="pbtk",species="rat"))
-[1] 140
+[1] 181
 > length(get_cheminfo(info="all"))
 [1] 13
 > length(get_cheminfo(model="schmitt"))
-[1] 1346
+[1] 1384
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 255
+[1] 296
 > length(get_cheminfo(model="1compartment"))
-[1] 876
+[1] 917
 > length(get_cheminfo(model="1compartment",species="rat"))
-[1] 140
+[1] 181
 > 
 > 
 > calc_analytic_css(chem.name="Betaxolol")
 Plasma concentration returned in uM units.
-[1] 0.7362897
+[1] 0.7363
 > calc_analytic_css(chem.name="Tacrine",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 0.001847382
+[1] 0.001847
 > calc_analytic_css(chem.name="Dicofol",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 11.49973
+[1] 11.5
 > calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 43.29768
+[1] 43.3
 > calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 0.003170619
+[1] 0.003171
 > 
 > head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
 Human volume of distribution returned in units of L/kg BW.

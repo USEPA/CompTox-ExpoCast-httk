@@ -21,19 +21,19 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.172519
+[1] 1.173
 > calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.172519
+[1] 1.173
 > calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.172519
+[1] 1.173
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 21.96348
+[1] 21.96
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 6.758546
+[1] 6.759
 > 
 > head(solve_pbtk(chem.name="bisphenol a"))
 Human amounts returned in umol and concentration returned in uM units.
