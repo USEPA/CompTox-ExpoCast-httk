@@ -26,7 +26,7 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
-     fAUC = 0.0,
+     AUC_fetus = 0.0,
      Athyroid = 0.0,
      Aplacenta = 0.0,
      Afgut = 0.0,
@@ -122,7 +122,7 @@
 #define ID_Atubules 0x00009
 #define ID_Ametabolized 0x0000a
 #define ID_AUC 0x0000b
-#define ID_fAUC 0x0000c
+#define ID_AUC_fetus 0x0000c
 #define ID_Athyroid 0x0000d
 #define ID_Aplacenta 0x0000e
 #define ID_Afgut 0x0000f
@@ -499,7 +499,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Afbrain] = Qfbrain * ( y[ID_Afart] / Vfart - y[ID_Afbrain] / Vfbrain * Rblood2plasma / Kfbrain2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_fAUC] = y[ID_Afven] / Vfven / Rblood2plasma ;
+  ydot[ID_AUC_fetus] = y[ID_Afven] / Vfven / Rblood2plasma ;
 
 } /* derivs */
 
