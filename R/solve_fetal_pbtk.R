@@ -32,6 +32,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence in days. Dosing sequence begins at the
 #' beginning of times. Default is from 13th week of pregnancy to 40th due to 
 #' data constraints. 
@@ -67,7 +69,6 @@
 #' TRUE along with partition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
-#' @param begin.css Begin at steady state concentration in mother.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
@@ -84,13 +85,14 @@
 #' @examples
 #' 
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
-#' doses.per.day = 3, plots = T)
+#' doses.per.day = 3, plots = TRUE)
 #' 
 #' @export solve_fetal_pbtk
 #' @useDynLib httk
 #' @import deSolve
 solve_fetal_pbtk <- function(chem.name = NULL,
                              chem.cas = NULL,
+                             dtxsid = NULL,
                              times= seq(13*7,40*7,1), #from 13th week to 40th
                              parameters=NULL,
                              days=10,
@@ -104,7 +106,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              suppress.messages=F,
                              iv.dose=F,
                              output.units='uM',
-                             method="lsoda",rtol=1e-8,atol=1e-12, #begin.css=F,
+                             method="lsoda",rtol=1e-8,atol=1e-12, #begin.css = F,
                              default.to.human=F,
                              recalc.blood2plasma=F,
                              recalc.clearance=F,
@@ -124,6 +126,7 @@ recommended to set \"times\" to begin at or after day 91.')
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
+    dtxsid=dtxsid,
     times=times,
     parameters=parameters,
     model="fetal_pbtk",
