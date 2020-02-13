@@ -52,7 +52,7 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
+\item{dose}{Amount of a single dose at time zero, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 

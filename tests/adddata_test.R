@@ -2,6 +2,9 @@
 library(httk)
 options(warn=-1)
 
+# Number of chemicals distributed with the package:
+num.chems <- length(get_cheminfo())
+
 fake <- data.frame(Compound="Tester",
                    CASRN="222-11-1",
                    DTXSID="DTX111222",
@@ -29,10 +32,18 @@ chem.physical_and_invitro.data <- add_chemtable(
 calc_css(chem.name="Tester")
 
 load_sipes2017()
-# "Tester" should be gone because chem.physical_an_invitro_data was just overwritten:
-"Tester" %in% get_cheminfo(info="Compound")
-# But we should have the ADMet Predicted chemicals from Sipes et al. (2017),
+
+# We should have the ADMet Predicted chemicals from Sipes et al. (2017),
 # this one is a good test since the logP is nearly 10!
 calc_css(chem.cas="26040-51-7")
+
+#Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
+length(get_cheminfo())
+
+#Now let's reset
+reset_httk()
+
+# We should be back to our original number:
+num.chems == length(get_cheminfo())
 
 quit("no")
