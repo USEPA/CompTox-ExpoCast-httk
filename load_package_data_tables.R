@@ -820,13 +820,13 @@ chem.physical_and_invitro.data <- add_chemtable(subset(full.new.rat,use_fup),
 
 load("New-HTTK-raw-2019-05-06.RData")
 
-new.httk.data$Human.Clint <- paste(new.httk.data$Human.Clint,
-                                    new.httk.data$Human.Clint.Low95,
-                                    new.httk.data$Human.Clint.High95,
-                                    new.httk.data$Human.Clint.pValue,sep=",")
-new.httk.data$Human.Funbound.plasma <- paste(new.httk.data$Human.Funbound.plasma,
-                                   new.httk.data$Human.Funbound.plasma.Low95,
-                                   new.httk.data$Human.Funbound.plasma.High95,
+new.httk.data$Human.Clint <- paste(signif(new.httk.data$Human.Clint,3),
+                                    signif(new.httk.data$Human.Clint.Low95,3),
+                                    signif(new.httk.data$Human.Clint.High95,3),
+                                    signif(new.httk.data$Human.Clint.pValue,3),sep=",")
+new.httk.data$Human.Funbound.plasma <- paste(signif(new.httk.data$Human.Funbound.plasma,3),
+                                   signif(new.httk.data$Human.Funbound.plasma.Low95,3),
+                                   signif(new.httk.data$Human.Funbound.plasma.High95,3),
                                    sep=",")
 new.httk.data[new.httk.data$Human.Clint=="NA,NA,NA,NA", "Human.Clint"] <- NA
 new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.plasma"] <-NA
@@ -848,6 +848,27 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   species="Human",
   overwrite=T)
 
+#
+# Load predictions from Sipes 2017:
+#
+sipes2017 <- readRDS("ADMET.data.table.RData")
+# Add the predicted parameters at the very end so that we don't overwrite measured data:
+#sipes2017 <-merge(sipes2017,Tox21,by.x="CAS",by.y="CASRN",all.x=T)
+
+# Store the chemical physprop, but don't add Fup and Clint yet:
+chem.physical_and_invitro.data <- add_chemtable(sipes2017,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list=list(Compound='Compound', 
+                                    CAS='CAS',
+                         #           DTXSID="DTXSID", 
+                                    MW = 'MW', 
+                                    logP = 'logP',
+                                    pKa_Donor = 'pKa_Donor', 
+                                    pKa_Accept = 'pKa_Accept',
+                                    SMILES.desalt = 'SMILES.desalt'),
+                                  reference = 'Sipes 2017', 
+                                  species= 'Human', 
+                                  overwrite=F)
 
 
 # ADD NEW DATA HERE:
@@ -1142,27 +1163,6 @@ load('NewInVivoTablesForHTTK.RData')
                                                  
 obach2008 <- Obach2008.table
 
-#
-# Load data from Sipes 2017:
-#
-sipes2017 <- readRDS("ADMET.data.table.RData")
-# Add the predicted parameters at the very end so that we don't overwrite measured data:
-sipes2017 <-merge(sipes2017,Tox21,by.x="CAS",by.y="CASRN",all.x=T)
-sipes2017.table <- add_chemtable(sipes2017,
-                                  current.table=chem.physical_and_invitro.data,
-                                  data.list=list(Compound='Compound', 
-                                    CAS='CAS',
-                                    DTXSID="DTXSID", 
-                                    MW = 'MW', 
-                                    logP = 'logP',
-                                    pKa_Donor = 'pKa_Donor', 
-                                    pKa_Accept = 'pKa_Accept',
-                                    Funbound.plasma = 'Human.Funbound.plasma', 
-                                    Clint = 'Human.Clint', 
-                                    SMILES.desalt = 'SMILES.desalt'),
-                                  reference = 'Sipes 2017', 
-                                  species= 'Human', 
-                                  overwrite=F)
 
 if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
 {
@@ -1203,11 +1203,17 @@ cat("Move the Tables.RData to the httk/data directory.\n")
 cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
+sipes2017 <- sipes2017[,c(
+               'CAS',
+               'Human.Funbound.plasma',
+               'Human.Clint')]
+
 save(Wetmore.data,
      sipes2017,
-     sipes2017.table,
      chem.lists,
      sysdata.rda.stamp,                 
      file="sysdata.rda",compress="gzip",version=2)
      
+
+
      
