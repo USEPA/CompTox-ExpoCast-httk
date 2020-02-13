@@ -24,7 +24,7 @@
 #' @param stats Desired values (either 'AUC', 'mean', 'peak', or a vector
 #' containing any combination).
 #' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
+#' @param dose Amount of a single dose at time zero, mg/kg BW. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param doses.per.day Number of doses per day.
