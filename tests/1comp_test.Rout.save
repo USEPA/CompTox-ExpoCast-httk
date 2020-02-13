@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2020-01-27 r77730) -- "Unsuffered Consequences"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -24,80 +22,80 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485863
+[1] 1.484097
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485863
+[1] 1.484097
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485863
+[1] 1.484097
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
-[1] 26.97508
+[1] 26.9318
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.567839
+[1] 8.554526
 > 
 > head(solve_1comp(chem.name="bisphenol a"))
 Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-           time Agutlumen Ccompartment Ametabolized          AUC
-[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
-[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
-[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
-[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
-[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
-[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
+          time Agutlumen Ccompartment Ametabolized         AUC
+[1,] 0.0000000  273.2000  0.000000000  0.00000e+00 0.00000e+00
+[2,] 0.0000100  273.0580  0.000407485  3.75093e-07 2.03761e-09
+[3,] 0.0104167  158.4130  0.326346000  3.41543e-01 1.85535e-03
+[4,] 0.0208333   91.8545  0.513795000  1.16366e+00 6.32131e-03
+[5,] 0.0312500   53.2611  0.620716000  2.26103e+00 1.22825e-02
+[6,] 0.0416667   30.8830  0.680953000  3.51463e+00 1.90924e-02
 > head(solve_1comp(chem.cas="80-05-7"))
 Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-           time Agutlumen Ccompartment Ametabolized          AUC
-[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
-[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
-[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
-[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
-[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
-[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
+          time Agutlumen Ccompartment Ametabolized         AUC
+[1,] 0.0000000  273.2000  0.000000000  0.00000e+00 0.00000e+00
+[2,] 0.0000100  273.0580  0.000407485  3.75093e-07 2.03761e-09
+[3,] 0.0104167  158.4130  0.326346000  3.41543e-01 1.85535e-03
+[4,] 0.0208333   91.8545  0.513795000  1.16366e+00 6.32131e-03
+[5,] 0.0312500   53.2611  0.620716000  2.26103e+00 1.22825e-02
+[6,] 0.0416667   30.8830  0.680953000  3.51463e+00 1.90924e-02
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
 Human volume of distribution returned in units of L/kg BW.
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-           time Agutlumen Ccompartment Ametabolized          AUC
-[1,] 0.00000000 273.23708 0.0000000000 0.000000e+00 0.000000e+00
-[2,] 0.00001000 273.09416 0.0004073608 3.745833e-07 2.036983e-09
-[3,] 0.01041667 158.43425 0.3262473701 3.410791e-01 1.854788e-03
-[4,] 0.02083333  91.86683 0.5136426692 1.162085e+00 6.319416e-03
-[5,] 0.03125000  53.26822 0.6205356928 2.257980e+00 1.227889e-02
-[6,] 0.04166667  30.88713 0.6807596248 3.509893e+00 1.908679e-02
+          time Agutlumen Ccompartment Ametabolized         AUC
+[1,] 0.0000000  273.2000  0.000000000  0.00000e+00 0.00000e+00
+[2,] 0.0000100  273.0580  0.000407485  3.75093e-07 2.03761e-09
+[3,] 0.0104167  158.4130  0.326346000  3.41543e-01 1.85535e-03
+[4,] 0.0208333   91.8545  0.513795000  1.16366e+00 6.32131e-03
+[5,] 0.0312500   53.2611  0.620716000  2.26103e+00 1.22825e-02
+[6,] 0.0416667   30.8830  0.680953000  3.51463e+00 1.90924e-02
 > 
 > calc_vdist(chem.name="triclosan")
 Human volume of distribution returned in units of L/kg BW.
-[1] 2.301855
+[1] 2.301479
 > calc_vdist(chem.cas="80-05-7")
 Human volume of distribution returned in units of L/kg BW.
-[1] 5.012049
+[1] 5.009845
 > params <- parameterize_schmitt(chem.name="triclosan")
 > params <- c(params, predict_partitioning_schmitt(parameters = params))
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301855
+[1] 2.301479
 > params <- parameterize_3comp(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301855
+[1] 2.301479
 > params <- parameterize_pbtk(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301855
+[1] 2.301479
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
