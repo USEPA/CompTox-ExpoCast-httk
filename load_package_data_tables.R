@@ -1206,8 +1206,11 @@ if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0)
   cat("There are instances of chemicals with same names but differing in other properties.\n")
   dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
   subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
+  
   browser()
-
+# Get rid of duplicates (shouldn't be any!)
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+    !duplicated(Compound))
 }
 
 
