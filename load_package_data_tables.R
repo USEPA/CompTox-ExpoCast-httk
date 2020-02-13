@@ -170,6 +170,7 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #
+
 WetmorePhaseII.fup.table <- read.table("Wetmore2015.fup.table.txt",
   stringsAsFactors=F,
   fill=T,
