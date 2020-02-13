@@ -332,6 +332,9 @@ calc_mc_css <- function(chem.cas=NULL,
       out <- css.list
     }
   }
+
+# Cannot guarantee arbitrary precision:
+  out <- signif(out,4)
   
   return(out)
 }
