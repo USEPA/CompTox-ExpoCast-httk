@@ -8,6 +8,8 @@
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param ... Arguments passed to parameterize_pbtk.
@@ -74,6 +76,7 @@
 #' @export parameterize_fetal_pbtk
 parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               chem.name=NULL,
+                              dtxsid = NULL,
                               species="Human",
                               ...)
 {
@@ -81,12 +84,13 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #maternal brain partitioning coefficient, to be equated to fetal Kfbrain2pu.
   parms <- parameterize_pbtk(chem.cas=chem.cas,
                             chem.name=chem.name,
+                            dtxsid=dtxsid,
                             species=species,
                             tissuelist=list(liver=c("liver"),
                             kidney=c("kidney"),lung=c("lung"),
                             gut=c("gut"),adipose = c("adipose"),
                             brain = c("brain")),
-                            placenta=T,
+                            placenta=TRUE,
                             ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
   
@@ -96,11 +100,12 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #Run parameterize pbtk function again, this time with brain tacitly lumped
   parms <- parameterize_pbtk(chem.cas=chem.cas,
                              chem.name=chem.name,
+                             dtxsid=dtxsid,
                              species=species,
                              tissuelist=list(liver=c("liver"),
                                              kidney=c("kidney"),lung=c("lung"),
                                              gut=c("gut"),adipose = c("adipose")),
-                             placenta=T,
+                             placenta=TRUE,
                              ...)
   parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1
   parms$Kfliver2pu <- parms$Kliver2pu
