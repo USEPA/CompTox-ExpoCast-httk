@@ -56,7 +56,7 @@ evaluation of predictive methods for chemical partitioning into tissues,
 we have improved and calibrated these methods and quantified confidence 
 for TK predictions in humans and rats.
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=5)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=4)
 ```
 ```{r InitialPrep, eval=TRUE}
 library(httk)
