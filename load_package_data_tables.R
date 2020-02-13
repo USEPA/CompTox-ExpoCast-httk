@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "January2020-1"
+SCRIPT.VERSION <- "February2020-1"
 
 library(reshape)
 library(gdata)
@@ -853,8 +853,15 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 # Load predictions from Sipes 2017:
 #
 sipes2017 <- readRDS("ADMET.data.table.RData")
-# Add the predicted parameters at the very end so that we don't overwrite measured data:
-#sipes2017 <-merge(sipes2017,Tox21,by.x="CAS",by.y="CASRN",all.x=T)
+
+# Replace "bad" CAS:
+sipes.bad.cas <- read.xls("SipesBadCAS.xls",stringsAsFactors=F)
+for (this.row in 1:dim(sipes.bad.cas)[1])
+{
+  index <- which(sipes2017$Compound==sipes.bad.cas[this.row,"INPUT"])
+  sipes2017[index,"Compound"] <- sipes.bad.cas[this.row,"PREFERRED_NAME"]
+  sipes2017[index,"CAS"] <- sipes.bad.cas[this.row,"CASRN"]
+}
 
 # Store the chemical physprop, but don't add Fup and Clint yet:
 chem.physical_and_invitro.data <- add_chemtable(sipes2017,
@@ -883,15 +890,24 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 #
 
 # Update with DSSTox Information
-write.table(chem.physical_and_invitro.data[,"CAS"],
-  file="HTTK-ChemIDs.txt",
-  row.names=F,
-  sep="\t",
-  col.names=F,
-  quote=F)
-cat("Chemical ID's written to HTTK-ChemIDs.txt, use that file to Batch Search based on CAS.\n")
-cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES, formula, DTXSIDs, and OPERA properties.\n")
-cat("Save Dashboard output to HTTK-DSSTox-output.xls.\n")
+# Have to chop this into chunks because the dashboard batch mode can't handle
+# more than 5000 chemicals at once (going with 2000 now for sanity's sake)
+blocks <- seq(1,dim(chem.physical_and_invitro.data)[1],2000)
+blocks <- c(blocks,dim(chem.physical_and_invitro.data)[1]+1)
+for (i in 1:(length(blocks)-1))
+{
+  write.table(chem.physical_and_invitro.data[blocks[i]:(blocks[i+1]-1),"CAS"],
+    file=paste("HTTK-ChemIDs-",i,".txt",sep=""),
+    row.names=F,
+    sep="\t",
+    col.names=F,
+    quote=F)
+  cat(paste("Chemical ID's written to HTTK-ChemIDs-",i,".txt,",sep=""))
+  cat(" use that file to Batch Search based on CAS.\n")
+  cat(paste("Save Dashboard output to HTTK-DSSTox-output-",i,".xls.\n",sep=""))
+}
+cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES,")
+cat(" formula, DTXSIDs, and OPERA properties.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
 
@@ -899,7 +915,17 @@ browser()
 # WAIT UNTIL TABLE IS DOWNLOADED FROM DASHBOARD
 #
 
-dsstox <- read.xlsx("HTTK-DSSTox-output.xls",stringsAsFactors=F,1)
+
+#
+# READ IN DSSTOX INFORMATION
+#
+dsstox <- NULL
+for (i in 1:(length(blocks)-1))
+{
+  dsstox <- rbind(dsstox,read.xlsx(paste("HTTK-DSSTox-output-",i,".xls",sep=""),
+    stringsAsFactors=F,1))
+}
+
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
@@ -945,6 +971,16 @@ dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
+
+# Replace any bad CASRN's:
+for (this.row in 1:dim(dsstox)[1])
+{
+  chem.physical_and_invitro.data[
+    chem.physical_and_invitro.data$Compound ==
+    dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
+    dsstox[this.row,"CASRN"]
+}
+
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                     current.table = chem.physical_and_invitro.data,
                                     data.list=list(Compound='PREFERRED_NAME',
