@@ -17,7 +17,7 @@ PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
 physiology.data <- read.xls(PKandTISSUEDATAFILE,
   sheet="Basic PK",
-  stringsAsFactors=FALSE)[1:14,]
+  stringsAsFactors=FALSE)[1:16,]
 # Make sure that all the values are numerical:
 for (this.col in 3:dim(physiology.data)[2])
   physiology.data[,this.col] <- as.numeric(physiology.data[,this.col])
@@ -880,7 +880,23 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 
 # ADD NEW DATA HERE:
+volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv',stringsAsFactors = F)
 
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='PREFERRED_NAME',
+                                 CAS = 'CASRN',DTXSID='DTXSID',
+                                 LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+                                 LogHenry='LOG_HENRYS_LAW_DIMENSIONLESS',
+                                 MW = 'AVERAGE_MASS',SMILES.desalt='QSAR_READY_SMILES',
+                                 Species='SPECIES'),overwrite=F,reference='Linakis submitted')
+
+chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(Compound='PREFERRED_NAME',
+                                  CAS = 'CASRN',DTXSID='DTXSID',Clint='CALC_CLINT',
+                                  Funbound.plasma='CALC_FUP',Reference = 'REFERENCE',
+                                  Species='SPECIES'),overwrite=F)
 
 
 # STOP ADDING NEW DATA AFTER THIS, SUBSEQUENT CODE IS TO INTERACT WITH DASHBOARD
@@ -902,11 +918,11 @@ for (i in 1:(length(blocks)-1))
     sep="\t",
     col.names=F,
     quote=F)
-  cat(paste("Chemical ID's written to HTTK-ChemIDs-",i,".txt,",sep=""))
+  cat(paste("Chemical ID's written to HTTK-ChemIDs-",i,".txt,\n",sep=""))
   cat(" use that file to Batch Search based on CAS.\n")
   cat(paste("Save Dashboard output to HTTK-DSSTox-output-",i,".xls.\n",sep=""))
 }
-cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES,")
+cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES,\n")
 cat(" formula, DTXSIDs, and OPERA properties.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
