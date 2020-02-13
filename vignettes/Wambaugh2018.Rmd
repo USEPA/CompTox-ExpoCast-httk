@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=8, fig.height=5)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=4)
 ```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
