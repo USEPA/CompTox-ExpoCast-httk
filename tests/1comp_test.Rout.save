@@ -22,23 +22,23 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484097
+[1] 1.484
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484097
+[1] 1.484
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484097
+[1] 1.484
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
-[1] 26.9318
+[1] 26.93
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.554526
+[1] 8.555
 > 
 > head(solve_1comp(chem.name="bisphenol a"))
 Human volume of distribution returned in units of L/kg BW.
