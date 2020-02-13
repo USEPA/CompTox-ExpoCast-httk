@@ -7,6 +7,7 @@
 solve_fetal_pbtk(
   chem.name = NULL,
   chem.cas = NULL,
+  dtxsid = NULL,
   times = seq(13 * 7, 40 * 7, 1),
   parameters = NULL,
   days = 10,
@@ -40,6 +41,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence in days. Dosing sequence begins at the
 beginning of times. Default is from 13th week of pregnancy to 40th due to 
@@ -107,8 +111,6 @@ dataset).}
 \item{monitor.vars}{Which variables to track by default}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{begin.css}{Begin at steady state concentration in mother.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -148,7 +150,7 @@ This gestational model is only parameterized for humans.
 \examples{
 
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
-doses.per.day = 3, plots = T)
+doses.per.day = 3, plots = TRUE)
 
 }
 \author{
