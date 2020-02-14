@@ -281,8 +281,8 @@ calc_css <- function(chem.name=NULL,
   avg.conc <- as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC']) 
    
   return(list(
-    avg=avg.conc,
-    frac=frac_achieved, 
-    max=max.conc,
-    the.day =as.numeric(css.day)))
+    avg=signif(avg.conc,4),
+    frac=signif(frac_achieved,4), 
+    max=signif(max.conc,4),
+    the.day =signif(as.numeric(css.day),4)))
 }
