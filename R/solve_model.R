@@ -455,6 +455,8 @@ with two columns (time, dose).")
 
 # Cannot guarantee arbitrary precision for deSolve:
   out <- signif(out)
+  out[abs(out) < 1e-12] <- 0
+
   
 ### MODEL OUTPUT
   
