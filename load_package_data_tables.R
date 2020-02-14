@@ -959,10 +959,10 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                                    logWSol = "logWSol",
                                                    MP = "MELTING_POINT_DEGC_OPERA_PRED"
                                                    ),
-                                    reference=paste('CompTox Dashboard',Sys.Date()),
+                                    reference="EPA",
                                     overwrite=T)
 
-
+EPA.ref <- paste('CompTox Dashboard',Sys.Date())
 
 
 #
@@ -1010,7 +1010,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
                                                    logWSol = "logWSol",
                                                    MP = "MELTING_POINT_DEGC_OPERA_PRED"
                                                    ),
-                                    reference=paste('CompTox Dashboard',Sys.Date()),
+                                    reference="EPA",
                                     overwrite=T)
 
 # Some chemicals are missing from DSStox OPERA predictions:
@@ -1253,6 +1253,7 @@ save(chem.physical_and_invitro.data,
      physiology.data,
      tissue.data,
      Tables.Rdata.stamp,
+     EPA.ref,
      file="Tables.RData",compress="gzip",version=2)
 
 cat("Move the Tables.RData to the httk/data directory.\n")
