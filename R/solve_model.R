@@ -480,13 +480,14 @@ with two columns (time, dose).")
     
     for (var in 1:vars_monitored) {
       if (firstchar(monitor.vars[var]) == 'A') {
-        if (monitor.vars[var] == 'AUC') {
+        if (substr(monitor.vars[var], start=1, stop=3) == 'AUC') {
           plot_units_vector[var] = paste(output.units,'* days')
         } else plot_units_vector[var] = out.amount
       } else if (firstchar(monitor.vars[var]) == 'C') {
         plot_units_vector[var] = output.units
       } else stop("State and output variables to be monitored must begin with
-                  \"C\" or \"A\" to denote concentrations or amounts, respectively.")
+                  \"C\", \"A\", or \"AUC\" to denote concentrations, amounts,
+                  or areas under the curve, respectively.")
     }
     
    
