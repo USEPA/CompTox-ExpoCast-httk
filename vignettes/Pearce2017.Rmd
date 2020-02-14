@@ -56,7 +56,7 @@ evaluation of predictive methods for chemical partitioning into tissues,
 we have improved and calibrated these methods and quantified confidence 
 for TK predictions in humans and rats.
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=4)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=4, fig.height=3)
 ```
 ```{r InitialPrep, eval=TRUE}
 library(httk)
@@ -244,9 +244,15 @@ for(this.cas in obach[,'CAS']){
   pcs <- predict_partitioning_schmitt(parameters=parameters,regression=F)
   init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,regression=F)
   reg.pcs <- predict_partitioning_schmitt(parameters=parameters,regression=T)
-  vdist <- calc_vdist(parameters=c(pcs,Funbound.plasma=parameters$Funbound.plasma),suppress.messages = TRUE)
-  init.vdist <- calc_vdist(parameters=c(init.pcs,Funbound.plasma=parameters$unadjusted.Funbound.plasma))
-  reg.vdist <- calc_vdist(parameters=c(reg.pcs,Funbound.plasma=parameters$Funbound.plasma))
+  vdist <- calc_vdist(parameters=c(pcs,
+    Funbound.plasma=parameters$Funbound.plasma),
+    suppress.messages = TRUE)
+  init.vdist <- calc_vdist(parameters=c(init.pcs,
+    Funbound.plasma=parameters$unadjusted.Funbound.plasma),
+    suppress.messages = TRUE)
+  reg.vdist <- calc_vdist(parameters=c(reg.pcs,
+    Funbound.plasma=parameters$Funbound.plasma),
+    suppress.messages = TRUE)
   vd.table <- rbind(vd.table,cbind(as.data.frame(this.cas),as.data.frame(log10(init.vdist)),
                     as.data.frame(log10(vdist)),as.data.frame(log10(reg.vdist)),
                     as.data.frame(log10(subset(obach,CAS==this.cas)[['VDss (L/kg)']]))))

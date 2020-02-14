@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=4)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
 ```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
@@ -673,8 +673,17 @@ FitData.Fup$SelectedVdist <- FitData.Fup$Vdist
 FitData.Fup$SelectedVdist.sd <- FitData.Fup$Vdist.sd
 
 #Predict volume of Distribution
-FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,function(x) calc_vdist(chem.cas=x,species="Rat",default.to.human = T))
-FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,function(x) calc_vdist(chem.cas=x,regression=F,species="Rat",default.to.human = T))
+FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,
+  function(x) calc_vdist(chem.cas=x,
+  species="Rat",
+  default.to.human = T,
+  suppress.messages=T))
+FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
+  function(x) calc_vdist(chem.cas=x,
+  regression=F,
+  species="Rat",
+  default.to.human = T,
+  suprress.messages=T))
 
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
