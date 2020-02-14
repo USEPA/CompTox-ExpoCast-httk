@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2020-01-27 r77730) -- "Unsuffered Consequences"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -17,121 +15,84 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #Branch specific 'solve' function tests 
+> #R CMD BATCH --no-timing --no-restore --no-save solve_gas_crude_test.R solve_gas_crude_test.Rout
 > library(httk)
+> options(warn=-1)
 > 
 > head(solve_gas_pbtk(chem.name="pyrene"))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.75.
-           time        Amuc         Cgut       Cliver         Cven        Clung
-[1,] 0.00000000   0.0000000 0.000000e+00 0.000000e+00 0.000000e+00 0.0000000000
-[2,] 0.00001000   0.0638873 1.219902e-04 2.052942e-05 5.041081e-08 0.0000324864
-[3,] 0.01041667  64.5339588 6.747627e+00 1.158906e+00 1.866966e-01 2.1124904721
-[4,] 0.02083333 125.1954259 1.109982e+01 1.912717e+00 2.789816e-01 3.9184167716
-[5,] 0.03125000 182.2168851 1.385564e+01 2.389883e+00 3.496968e-01 5.3213298092
-[6,] 0.04166667 235.8167026 1.585109e+01 2.735052e+00 4.149745e-01 6.4432256124
-           Cart        Crest      Ckidney      Cplasma         Calv
-[1,] 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 0.01621828 5.978920e-06 4.957694e-04 6.721442e-08 1.012865e-08
-[3,] 0.75267258 4.650122e-01 1.609834e+01 2.489288e-01 4.700597e-07
-[4,] 0.86879970 1.011013e+00 2.076394e+01 3.719754e-01 5.425835e-07
-[5,] 0.96087311 1.576472e+00 2.340532e+01 4.662624e-01 6.000852e-07
-[6,] 1.04603306 2.149998e+00 2.564171e+01 5.532993e-01 6.532694e-07
-          Cendexh   Cmixexh         Cmuc     Atubules Ametabolized          AUC
-[1,] 0.000000e+00 0.3000000     0.000000 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 2.244445e-05 0.3000157     9.126758 1.570500e-11 4.306999e-08 1.685360e-13
-[3,] 1.780870e-02 0.3124661  9219.136966 9.606377e-04 3.905853e+00 1.430968e-03
-[4,] 3.466947e-02 0.3242686 17885.060841 2.813922e-03 1.415446e+01 4.712445e-03
-[5,] 5.057477e-02 0.3354023 26030.983582 5.000347e-03 2.832494e+01 9.088768e-03
-[6,] 6.506185e-02 0.3455433 33688.100377 7.423059e-03 4.512885e+01 1.440244e-02
-Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
-  Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-3: In parameterize_steadystate(chem.cas = chem.cas, chem.name = chem.name,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
+          time        Amuc        Cgut      Cliver        Cven       Clung
+[1,] 0.0000000   0.0000000  0.00000000 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0000100   0.0638873  0.00012199 2.05294e-05 5.04108e-08 3.24864e-05
+[3,] 0.0104167  64.5340000  6.74763000 1.15891e+00 1.86697e-01 2.11249e+00
+[4,] 0.0208333 125.1950000 11.09980000 1.91272e+00 2.78982e-01 3.91842e+00
+[5,] 0.0312500 182.2170000 13.85560000 2.38988e+00 3.49697e-01 5.32133e+00
+[6,] 0.0416667 235.8170000 15.85110000 2.73505e+00 4.14974e-01 6.44323e+00
+          Cart       Crest     Ckidney     Cplasma        Calv     Cendexh
+[1,] 0.0000000 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0162183 5.97892e-06 4.95769e-04 6.72144e-08 1.01287e-08 2.24444e-05
+[3,] 0.7526730 4.65012e-01 1.60983e+01 2.48929e-01 4.70060e-07 1.78087e-02
+[4,] 0.8688000 1.01101e+00 2.07639e+01 3.71975e-01 5.42583e-07 3.46695e-02
+[5,] 0.9608730 1.57647e+00 2.34053e+01 4.66262e-01 6.00085e-07 5.05748e-02
+[6,] 1.0460300 2.15000e+00 2.56417e+01 5.53299e-01 6.53269e-07 6.50618e-02
+      Cmixexh        Cmuc    Atubules Ametabolized         AUC
+[1,] 0.300000     0.00000 0.00000e+00  0.00000e+00 0.00000e+00
+[2,] 0.300016     9.12676 1.57050e-11  4.30700e-08 1.68536e-13
+[3,] 0.312466  9219.14000 9.60638e-04  3.90585e+00 1.43097e-03
+[4,] 0.324269 17885.10000 2.81392e-03  1.41545e+01 4.71245e-03
+[5,] 0.335402 26031.00000 5.00035e-03  2.83249e+01 9.08877e-03
+[6,] 0.345543 33688.10000 7.42306e-03  4.51288e+01 1.44024e-02
 > head(solve_gas_pbtk(chem.cas="129-00-0"))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.75.
-           time        Amuc         Cgut       Cliver         Cven        Clung
-[1,] 0.00000000   0.0000000 0.000000e+00 0.000000e+00 0.000000e+00 0.0000000000
-[2,] 0.00001000   0.0638873 1.219902e-04 2.052942e-05 5.041081e-08 0.0000324864
-[3,] 0.01041667  64.5339588 6.747627e+00 1.158906e+00 1.866966e-01 2.1124904721
-[4,] 0.02083333 125.1954259 1.109982e+01 1.912717e+00 2.789816e-01 3.9184167716
-[5,] 0.03125000 182.2168851 1.385564e+01 2.389883e+00 3.496968e-01 5.3213298092
-[6,] 0.04166667 235.8167026 1.585109e+01 2.735052e+00 4.149745e-01 6.4432256124
-           Cart        Crest      Ckidney      Cplasma         Calv
-[1,] 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 0.01621828 5.978920e-06 4.957694e-04 6.721442e-08 1.012865e-08
-[3,] 0.75267258 4.650122e-01 1.609834e+01 2.489288e-01 4.700597e-07
-[4,] 0.86879970 1.011013e+00 2.076394e+01 3.719754e-01 5.425835e-07
-[5,] 0.96087311 1.576472e+00 2.340532e+01 4.662624e-01 6.000852e-07
-[6,] 1.04603306 2.149998e+00 2.564171e+01 5.532993e-01 6.532694e-07
-          Cendexh   Cmixexh         Cmuc     Atubules Ametabolized          AUC
-[1,] 0.000000e+00 0.3000000     0.000000 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 2.244445e-05 0.3000157     9.126758 1.570500e-11 4.306999e-08 1.685360e-13
-[3,] 1.780870e-02 0.3124661  9219.136966 9.606377e-04 3.905853e+00 1.430968e-03
-[4,] 3.466947e-02 0.3242686 17885.060841 2.813922e-03 1.415446e+01 4.712445e-03
-[5,] 5.057477e-02 0.3354023 26030.983582 5.000347e-03 2.832494e+01 9.088768e-03
-[6,] 6.506185e-02 0.3455433 33688.100377 7.423059e-03 4.512885e+01 1.440244e-02
-Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
-  Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-3: In parameterize_steadystate(chem.cas = chem.cas, chem.name = chem.name,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
+          time        Amuc        Cgut      Cliver        Cven       Clung
+[1,] 0.0000000   0.0000000  0.00000000 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0000100   0.0638873  0.00012199 2.05294e-05 5.04108e-08 3.24864e-05
+[3,] 0.0104167  64.5340000  6.74763000 1.15891e+00 1.86697e-01 2.11249e+00
+[4,] 0.0208333 125.1950000 11.09980000 1.91272e+00 2.78982e-01 3.91842e+00
+[5,] 0.0312500 182.2170000 13.85560000 2.38988e+00 3.49697e-01 5.32133e+00
+[6,] 0.0416667 235.8170000 15.85110000 2.73505e+00 4.14974e-01 6.44323e+00
+          Cart       Crest     Ckidney     Cplasma        Calv     Cendexh
+[1,] 0.0000000 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0162183 5.97892e-06 4.95769e-04 6.72144e-08 1.01287e-08 2.24444e-05
+[3,] 0.7526730 4.65012e-01 1.60983e+01 2.48929e-01 4.70060e-07 1.78087e-02
+[4,] 0.8688000 1.01101e+00 2.07639e+01 3.71975e-01 5.42583e-07 3.46695e-02
+[5,] 0.9608730 1.57647e+00 2.34053e+01 4.66262e-01 6.00085e-07 5.05748e-02
+[6,] 1.0460300 2.15000e+00 2.56417e+01 5.53299e-01 6.53269e-07 6.50618e-02
+      Cmixexh        Cmuc    Atubules Ametabolized         AUC
+[1,] 0.300000     0.00000 0.00000e+00  0.00000e+00 0.00000e+00
+[2,] 0.300016     9.12676 1.57050e-11  4.30700e-08 1.68536e-13
+[3,] 0.312466  9219.14000 9.60638e-04  3.90585e+00 1.43097e-03
+[4,] 0.324269 17885.10000 2.81392e-03  1.41545e+01 4.71245e-03
+[5,] 0.335402 26031.00000 5.00035e-03  2.83249e+01 9.08877e-03
+[6,] 0.345543 33688.10000 7.42306e-03  4.51288e+01 1.44024e-02
 > head(solve_gas_pbtk(parameters=parameterize_gas_pbtk(chem.cas="129-00-0")))
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.75.
-           time        Amuc         Cgut       Cliver         Cven        Clung
-[1,] 0.00000000   0.0000000 0.000000e+00 0.000000e+00 0.000000e+00 0.0000000000
-[2,] 0.00001000   0.0638873 1.219902e-04 2.052942e-05 5.041081e-08 0.0000324864
-[3,] 0.01041667  64.5339588 6.747627e+00 1.158906e+00 1.866966e-01 2.1124904721
-[4,] 0.02083333 125.1954259 1.109982e+01 1.912717e+00 2.789816e-01 3.9184167716
-[5,] 0.03125000 182.2168851 1.385564e+01 2.389883e+00 3.496968e-01 5.3213298092
-[6,] 0.04166667 235.8167026 1.585109e+01 2.735052e+00 4.149745e-01 6.4432256124
-           Cart        Crest      Ckidney      Cplasma         Calv
-[1,] 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 0.01621828 5.978920e-06 4.957694e-04 6.721442e-08 1.012865e-08
-[3,] 0.75267258 4.650122e-01 1.609834e+01 2.489288e-01 4.700597e-07
-[4,] 0.86879970 1.011013e+00 2.076394e+01 3.719754e-01 5.425835e-07
-[5,] 0.96087311 1.576472e+00 2.340532e+01 4.662624e-01 6.000852e-07
-[6,] 1.04603306 2.149998e+00 2.564171e+01 5.532993e-01 6.532694e-07
-          Cendexh   Cmixexh         Cmuc     Atubules Ametabolized          AUC
-[1,] 0.000000e+00 0.3000000     0.000000 0.000000e+00 0.000000e+00 0.000000e+00
-[2,] 2.244445e-05 0.3000157     9.126758 1.570500e-11 4.306999e-08 1.685360e-13
-[3,] 1.780870e-02 0.3124661  9219.136966 9.606377e-04 3.905853e+00 1.430968e-03
-[4,] 3.466947e-02 0.3242686 17885.060841 2.813922e-03 1.415446e+01 4.712445e-03
-[5,] 5.057477e-02 0.3354023 26030.983582 5.000347e-03 2.832494e+01 9.088768e-03
-[6,] 6.506185e-02 0.3455433 33688.100377 7.423059e-03 4.512885e+01 1.440244e-02
-Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-2: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
-  Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-3: In parameterize_steadystate(chem.cas = chem.cas, chem.name = chem.name,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Rblood2plasma not recalculated. 
-Set recalc.blood2plasma to TRUE if desired.
-7: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Clearance not recalculated. 
-Set recalc.clearance to TRUE if desired.
+          time        Amuc        Cgut      Cliver        Cven       Clung
+[1,] 0.0000000   0.0000000  0.00000000 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0000100   0.0638873  0.00012199 2.05294e-05 5.04108e-08 3.24864e-05
+[3,] 0.0104167  64.5340000  6.74763000 1.15891e+00 1.86697e-01 2.11249e+00
+[4,] 0.0208333 125.1950000 11.09980000 1.91272e+00 2.78982e-01 3.91842e+00
+[5,] 0.0312500 182.2170000 13.85560000 2.38988e+00 3.49697e-01 5.32133e+00
+[6,] 0.0416667 235.8170000 15.85110000 2.73505e+00 4.14974e-01 6.44323e+00
+          Cart       Crest     Ckidney     Cplasma        Calv     Cendexh
+[1,] 0.0000000 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00
+[2,] 0.0162183 5.97892e-06 4.95769e-04 6.72144e-08 1.01287e-08 2.24444e-05
+[3,] 0.7526730 4.65012e-01 1.60983e+01 2.48929e-01 4.70060e-07 1.78087e-02
+[4,] 0.8688000 1.01101e+00 2.07639e+01 3.71975e-01 5.42583e-07 3.46695e-02
+[5,] 0.9608730 1.57647e+00 2.34053e+01 4.66262e-01 6.00085e-07 5.05748e-02
+[6,] 1.0460300 2.15000e+00 2.56417e+01 5.53299e-01 6.53269e-07 6.50618e-02
+      Cmixexh        Cmuc    Atubules Ametabolized         AUC
+[1,] 0.300000     0.00000 0.00000e+00  0.00000e+00 0.00000e+00
+[2,] 0.300016     9.12676 1.57050e-11  4.30700e-08 1.68536e-13
+[3,] 0.312466  9219.14000 9.60638e-04  3.90585e+00 1.43097e-03
+[4,] 0.324269 17885.10000 2.81392e-03  1.41545e+01 4.71245e-03
+[5,] 0.335402 26031.00000 5.00035e-03  2.83249e+01 9.08877e-03
+[6,] 0.345543 33688.10000 7.42306e-03  4.51288e+01 1.44024e-02
 > 
+> quit("no")

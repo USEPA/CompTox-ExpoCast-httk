@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2020-01-27 r77730) -- "Unsuffered Consequences"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -23,13 +21,13 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name='nicotine')
 $avg
-[1] 0.6725338
+[1] 0.6727
 
 $frac
-[1] 1.136473
+[1] 1.136455
 
 $max
-[1] 1.452225
+[1] 1.45255
 
 $the.day
 [1] 0
@@ -37,42 +35,42 @@ $the.day
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 1704.06
+[1] 1710
 
 $frac
-[1] 0.989916
+[1] 0.9899572
 
 $max
-[1] 1704.366
+[1] 1704.37
 
 $the.day
-[1] 2584
+[1] 2583
 
 > 
 > calc_stats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
 $AUC
-[1] 6.724792
+[1] 6.72605
 
 $peak
-[1] 3.913157
+[1] 3.91421
 
 $mean
-[1] 0.6724792
+[1] 0.672605
 
 > 
 > calc_stats(dtxsid="DTXSID0020442",days=1)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
 $AUC
-[1] 9.453003
+[1] 9.453
 
 $peak
-[1] 10.56953
+[1] 10.5695
 
 $mean
-[1] 9.453003
+[1] 9.453
 
 > 
 > calc_stats(dtxsid="DTXSID0020442",days=10)
@@ -82,7 +80,7 @@ $AUC
 [1] 295.547
 
 $peak
-[1] 44.63396
+[1] 44.634
 
 $mean
 [1] 29.5547
@@ -92,13 +90,13 @@ $mean
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
 $AUC
-[1] 4248.953
+[1] 4248.95
 
 $peak
-[1] 48.82769
+[1] 48.8277
 
 $mean
-[1] 42.48953
+[1] 42.4895
 
 > 
 > calc_analytic_css(
@@ -112,6 +110,6 @@ $mean
 +     minimum.Funbound.plasma=1e-4),
 +   daily.dose=2)
 Tissue concentration for liver returned in uM units.
-[1] 23.60498
+[1] 23.57
 > 
 > quit("no")

@@ -260,5 +260,8 @@ calc_analytic_css <- function(chem.name=NULL,
     else cat(paste(concentration,"concentration for",tissue,"returned in",output.units,"units.\n"))
   }
   
+# Cannot guarantee arbitrary precision:
+  Css <- signif(Css,4)
+  
   return(as.numeric(Css))
 }

@@ -447,6 +447,9 @@ with two columns (time, dose).")
     initforc = initforc,
     ...)
 
+# Cannot guarantee arbitrary precision for deSolve:
+  out <- signif(out)
+  
 ### MODEL OUTPUT
   
 # The monitored variables can be altered by the user:

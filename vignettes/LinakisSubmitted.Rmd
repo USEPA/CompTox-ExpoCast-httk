@@ -34,7 +34,7 @@ high-throughput estimates of inhalation chemical exposures.
 ## Prepare for session
 ### Load the relevant libraries
 ```{r setup}
-knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 library(httk)
 library(ggplot2)
 library(gridExtra)

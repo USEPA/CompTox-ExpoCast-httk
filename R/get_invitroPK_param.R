@@ -47,7 +47,13 @@ get_invitroPK_param <- function(
     dtxsid <- out$dtxsid
   }
 
-  chem.physical_and_invitro.data.index <- which(chem.physical_and_invitro.data$DTXSID == dtxsid)
+  if (length(dtxsid)!=0) chem.physical_and_invitro.data.index <- 
+    which(chem.physical_and_invitro.data$DTXSID == dtxsid)
+  else if (length(chem.cas)!=0) chem.physical_and_invitro.data.index <- 
+    which(chem.physical_and_invitro.data$CAS == chem.cas)
+  else chem.physical_and_invitro.data.index <- 
+    which(chem.physical_and_invitro.data$Compound == chem.name)
+
   this.col.name <- tolower(paste(species,param,sep="."))
   if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))
   {

@@ -63,7 +63,13 @@ get_physchem_param <- function(
   if(!all(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP"))){
     stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
   }
-  this.index <- match(dtxsid, chem.physical_and_invitro.data[,"DTXSID"])
+
+  if (length(dtxsid)!=0) this.index <- 
+    match(dtxsid, chem.physical_and_invitro.data[,"DTXSID"])
+  else if (length(chem.cas)!=0) this.index <- 
+    match(chem.cas, chem.physical_and_invitro.data[,"CAS"])
+  else this.index <- 
+    match(chem.name, chem.physical_and_invitro.data[,"Compound"])
   if(!any(is.na(suppressWarnings(chem.physical_and_invitro.data[this.index,
                                                                 param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
