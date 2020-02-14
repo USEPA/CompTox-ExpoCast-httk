@@ -128,7 +128,7 @@ for(i in 1:nrow(unique_scenarios)){
         met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]], 
         km = met_data$KM[met_data$CASRN %in% unique_scenarios$CASRN[i] &
         met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]],
-        suppress.messafes=T))
+        suppress.messages=T))
     }
     #browser()
     solve <- as.data.frame(solve)
@@ -386,8 +386,8 @@ plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
 dev.off()
 ```
 
-### Figure 3: Separation by chemical class=====
-```{r Fig3plot}
+### Figure 3: Separation by chemical class
+```{r Fig3plot, eval=F}
 simobsfull$aggscen <- as.factor(paste(simobsfull$chem, simobsfull$species, simobsfull$matrix))
 chem.lm <- lm(log10(simconc) - log10(obsconc) ~ aggscen, data = simobsfull[simobsfull$simconc >0 & simobsfull$obsconc > 0,])
 chem.res <- resid(chem.lm)

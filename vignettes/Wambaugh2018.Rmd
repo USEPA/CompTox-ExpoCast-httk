@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=4)
 ```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
@@ -683,7 +683,7 @@ FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
   regression=F,
   species="Rat",
   default.to.human = T,
-  suprress.messages=T))
+  suppress.messages=T))
 
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
@@ -771,8 +771,13 @@ Comparison of the TK clearance estimated from the in vivo data with the clearanc
 #FitData.Fup[is.na(SelectedCLtot.sd)]$SelectedClearance.sd <- Inf
 
 FitData.Fup$SelectedCLtot <- FitData.Fup$Vdist*FitData.Fup$kelim 
-FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2+FitData.Fup$kelim.sd^2)^(1/2)
-FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS,function(x) calc_total_clearance(chem.cas=x,species="Rat",default.to.human = T))
+FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2 + 
+  FitData.Fup$kelim.sd^2)^(1/2)
+FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS, 
+  function(x) calc_total_clearance(chem.cas=x,
+  species="Rat",
+  default.to.human = T,
+  suppress.messages=T))
 
 Fig.SelectedClearance.fit <- lm(log(SelectedCLtot)~log(CLtot.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedCLtot.sd)))
 summary(Fig.SelectedClearance.fit)
@@ -890,13 +895,16 @@ Rat in vivo data were collected for diverse environmental chemicals to evaluate 
 FitData$SelectedFbio <- FitData$Fbio
 FitData$SelectedCss <- FitData$Css
 FitData$SelectedCss.sd <- FitData$Css.sd
-FitData$Css.1comp.pred <- sapply(FitData$CAS,function(x) calc_analytic_css(chem.cas=x,species="Rat",
-                                                                           model="3compartmentss",
-                                                                           parameterize.args = list(
-                                                                             default.to.human=T,
-                                                                             adjusted.Funbound.plasma=T,
-                                                                             regression=T,
-                                                                             minimum.Funbound.plasma=1e-4)))
+FitData$Css.1comp.pred <- sapply(FitData$CAS,
+  function(x) calc_analytic_css(chem.cas=x,
+  species="Rat",
+  model="3compartmentss",
+  suppress.messages=T,
+  parameterize.args = list(
+    default.to.human=T,
+    adjusted.Funbound.plasma=T,
+    regression=T,
+    minimum.Funbound.plasma=1e-4)))
 
 Fig.1compCss.fit <- lm(log(SelectedCss)~log(Css.1comp.pred),data=FitData,na.rm=T)
 Fig.1compCss.fit.weighted <- lm(log(SelectedCss)~log(Css.1comp.pred),data=FitData,na.rm=T,weights=1/SelectedCss.sd^2)
