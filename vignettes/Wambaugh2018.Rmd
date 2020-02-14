@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=4)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
 ```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
@@ -629,8 +629,8 @@ for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log
 
 
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=T))/sd(x,na.rm=T))
-
-#dev.new(width=8,height=8)
+```
+```{r PlotFigure3, eval = FALSE}
 main_title="in vivo Toxicokinetic Parameters"
 heatmap.2(physprop.matrix, 
           hclustfun=myclust,
@@ -645,8 +645,7 @@ heatmap.2(physprop.matrix,
 # The following has to be adjusted manually:
 rect(0.65, 0.01, 0.87, 0.78, border="blue") 
 text(0.75,0.81,expression(paste("Estimated from ",italic("In Vivo")," Data")))
-
-```
+ ```
 
 
 The original scripts used a data.table called FitData that contains a lot of stuff we don't need to make these figures. 
@@ -967,7 +966,7 @@ multiplot(Fig.Cssa,Fig.Cssb,cols=2,widths=c(1.75,1.75))
 ```
 ## Figure Nine
 Evaluation of Wambaugh et al. (2015) classification scheme for predicting errors made when using HTTK data to predict in vivo steady state plasma concentration (Css). Chemicals were placed into categories, depending upon the size of the error. "On the Order" represented the best case, where errors were within 3.2 times over or under the true value. Some chemicals were determined to be problematic due to limitations in the HTTK methods (e.g., plasma protein binding estimation) or failure to come to steady state. Wherever the chemical names overlap the vertical, gray bands, the observed errors are consistent with predicted error. Chemicals can be identified by their chemical abbreviation given in Table 1.
-```{r fig9, eval=TRUE}
+```{r fig9, eval = FALSE}
 FitData$TriageCat <- FitData$Triage.Call
 FitData$CssResidual <- log10(FitData$Css.1comp.pred/FitData$Css)
 FitData[FitData$TriageCat%in%c("Does Not Reach Steady State","Plasma Binding Assay Failed"),"TriageCat"]<-"Problem"
