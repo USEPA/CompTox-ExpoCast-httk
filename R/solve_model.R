@@ -136,9 +136,7 @@ solve_model <- function(chem.name = NULL,
 # to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
   firstchar <- function(x){substr(x, 1,1)}
-   
-# Small time delta for plotting changes:
-  SMALL.TIME <- 1e-5   
+  
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -324,10 +322,13 @@ solve_model <- function(chem.name = NULL,
   }
 ### SIMULATION TIME
 
+# Small time delta for plotting changes:
+  SMALL.TIME <- 1e-5  
+  
 # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   times <- sort(times)
-  start.time <- 0 # Simulation always starts at t = 0
+  start.time <- times[1]
   end.time <- times[length(times)]
 
   # We add a time point 1e-5 later than the beginning to make the plots look
