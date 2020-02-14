@@ -115,6 +115,16 @@
 #' @author John Wambaugh
 "Tables.Rdata.stamp"
 
+#' Reference for EPA Physico-Chemical Data
+#'
+#' The physico-chemical data in the chem.phys_and_invitro.data table are
+#' obtained from EPA's Comptox Chemicals dashboard. This variable indicates
+#' the date the Dashboard was accessed.
+#' @source \url{https://comptox.epa.gov/dashboard}
+#'
+#' @author John Wambaugh
+"EPA.ref"
+
 #'Pre-processed NHANES data.
 #'
 #'NHANES data on demographics, anthropometrics, and some laboratory measures,
@@ -941,8 +951,7 @@
 #' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
 #' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
 #' compiled from multiple sources, and can be used to parameterize a variety of
-#' toxicokinetic models.
-#'
+#' toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 #'
 #' @docType data
 #' @format A data.frame containing 565 rows and 33 columns.
@@ -1107,7 +1116,6 @@
 #' Howgate 2006
 #'
 #' This data set is only used in Vignette 5.
-#'
 #'
 #' @docType data
 #' @format A data.table containing 24 rows and 11 columns.

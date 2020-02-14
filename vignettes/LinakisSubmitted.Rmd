@@ -411,7 +411,7 @@ fig3
 ```
 
 ### Figures S1A-S1D: Separation by time quartile and physicochemical properties=====
-```{r FigS1}
+```{r FigS1, eval = FALSE}
 figs1a <- ggplot(data = simobsfull[simobsfull$simconc >0 & simobsfull$obsconc > 0,], aes(x = tquart, y = log10(simconc)-log10(obsconc))) +
   geom_boxplot()+
   geom_hline(yintercept = 0)+
@@ -459,7 +459,7 @@ plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), lab
 ```
 
 ### Supplemental Table 2: Leave-one-out Chemical Sensitivity Analysis=====
-```{r SupTable2}
+```{r SupTable2, eval = FALSE}
 senschem <- list()
 sensslope <- list()
 sensrsq <- list()
@@ -518,7 +518,7 @@ write.csv(sensitivitydf, 'supptab2.csv',row.names = F)
 ```
 
 ### Supplemental Table 1
-```{r SupTable1}
+```{r SupTable1, eval = FALSE}
 supptab1 <- subset(unique_scenarios, !duplicated(unique_scenarios$PREFERRED_NAME) | !duplicated(unique_scenarios$SOURCE_CVT) | !duplicated(unique_scenarios$CONC_SPECIES))
 for(i in 1:nrow(supptab1)){
   tryCatch({

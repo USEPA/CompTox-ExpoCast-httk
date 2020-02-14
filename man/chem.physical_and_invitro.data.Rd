@@ -18,7 +18,7 @@ high-throughput toxicokinetic (HTTK) predictions for compounds, including
 Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
 intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
 compiled from multiple sources, and can be used to parameterize a variety of
-toxicokinetic models.
+toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 }
 \references{
 DSStox database (http:// www.epa.gov/ncct/dsstox
