@@ -425,7 +425,7 @@ hlfun_u <- function(chemcas,
 ```
 
 ### Figure 1: 
-Histograms depicting the median measured values (a, b) and 95% credible intervals (c, d) for fraction unbound in plasma (fup, a,c) and intrinsic hepatic clearance (Clint, b,d). In panel a, the distribution of estimated fup for the single protein concentration assay (solid line) is compared with the protein titration (three concentrations) method (dotted) line. In panel b, the median estimated Clint is shown. In panel c, the distribution with larger credible intervals corresponds to the single protein concentration assay, with a median credible interval is 0.1, corresponding to a precision of roughly ±0.05. When data from the protein titration are jointly analyzed (smaller credible intervals), the certainty is increased to a median credible interval of 0.029, or roughly ±0.015. The width of the credible interval is a measure of the certainty in an estimate, i.e., a smaller credible interval indicates greater certainty. For the fup values, a credible interval approaching 1 indicates that all possible values are consistent with the data, that is, the data do not help identify fup since fup must be between 0 and 1. In panel d the distribution of credible intervals for Clint is shown.
+Histograms depicting the median measured values (a, b) and 95% credible intervals (c, d) for fraction unbound in plasma (fup, a,c) and intrinsic hepatic clearance (Clint, b,d). In panel a, the distribution of estimated fup for the single protein concentration assay (solid line) is compared with the protein titration (three concentrations) method (dotted) line. In panel b, the median estimated Clint is shown. In panel c, the distribution with larger credible intervals corresponds to the single protein concentration assay, with a median credible interval is 0.1, corresponding to a precision of roughly +-0.05. When data from the protein titration are jointly analyzed (smaller credible intervals), the certainty is increased to a median credible interval of 0.029, or roughly +-0.015. The width of the credible interval is a measure of the certainty in an estimate, i.e., a smaller credible interval indicates greater certainty. For the fup values, a credible interval approaching 1 indicates that all possible values are consistent with the data, that is, the data do not help identify fup since fup must be between 0 and 1. In panel d the distribution of credible intervals for Clint is shown.
 ```{R Wambaugh2019.Fig1}
 Fig1.table <- httk::wambaugh2019.raw
 Fig1.table$Error1 <- Fig1.table$Base.Fup.High - Fig1.table$Base.Fup.Low
@@ -475,7 +475,7 @@ print(paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=
 
 Fig1b <- ggplot(Fig1.table)+
    geom_histogram(binwidth = 0.5,alpha=0.6,fill="green",aes(CLint.1uM.Median))+              
-   xlab(expression(paste("Measured ",Cl[int]," (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµL/min/",10^6," hepatocytes)"))) +
+   xlab(expression(paste("Measured ",Cl[int]," (uL/min/",10^6," hepatocytes)"))) +
   ylab("Number of chemicals")+
   scale_x_log10(label=scientific_10,limits=c(10^-1,5*10^3))+
   labs(title=paste(length(unique(subset(Fig1.table,!is.na(CLint.1uM.Median))$CAS)),"Chemicals Measured"))+
@@ -668,7 +668,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
 ```
 
 #Figure 4:
-Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM chemical concentration displayed, though 1 and 10 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material 
+Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM chemical concentration displayed, though 1 and 10 uM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material 
 <!-- (https://doi.org/10.5061/dryad.nf40jb4) -->.
 ```{R Wambaugh2019.Fig4}
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
@@ -789,8 +789,8 @@ Fig5b <- ggplot(data=ceetox,aes(x=cssmed,y=cssmed_u)) +
   geom_errorbar(aes(ymin=css25_u,ymax=css975_u),alpha=0.3)+
   scale_y_log10(label=scientific_10,limits=c(10^-3,10^5)) +
   scale_x_log10(label=scientific_10,limits=c(10^-3,10^5)) +
-  xlab(expression(paste(C[ss]," Point Estimate (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM)")))+
-  ylab(expression(paste("Bayesian ",C[ss]," (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM)")))+
+  xlab(expression(paste(C[ss]," Point Estimate (uM)")))+
+  ylab(expression(paste("Bayesian ",C[ss]," (uM)")))+
   annotate("text", size=8,x = 10^-3, y = 10^5, label = "B")+
   theme_bw() +
   theme(text  = element_text(size=18)) +
