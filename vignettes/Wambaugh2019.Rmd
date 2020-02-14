@@ -425,7 +425,7 @@ hlfun_u <- function(chemcas,
 ```
 
 ### Figure 1: 
-Histograms depicting the median measured values (a, b) and 95% credible intervals (c, d) for fraction unbound in plasma (fup, a,c) and intrinsic hepatic clearance (Clint, b,d). In panel a, the distribution of estimated fup for the single protein concentration assay (solid line) is compared with the protein titration (three concentrations) method (dotted) line. In panel b, the median estimated Clint is shown. In panel c, the distribution with larger credible intervals corresponds to the single protein concentration assay, with a median credible interval is 0.1, corresponding to a precision of roughly Ãƒâ€šÃ‚Â±0.05. When data from the protein titration are jointly analyzed (smaller credible intervals), the certainty is increased to a median credible interval of 0.029, or roughly Ãƒâ€šÃ‚Â±0.015. The width of the credible interval is a measure of the certainty in an estimate, i.e., a smaller credible interval indicates greater certainty. For the fup values, a credible interval approaching 1 indicates that all possible values are consistent with the data ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ that is, the data do not help identify fup since fup must be between 0 and 1. In panel d the distribution of credible intervals for Clint is shown.
+Histograms depicting the median measured values (a, b) and 95% credible intervals (c, d) for fraction unbound in plasma (fup, a,c) and intrinsic hepatic clearance (Clint, b,d). In panel a, the distribution of estimated fup for the single protein concentration assay (solid line) is compared with the protein titration (three concentrations) method (dotted) line. In panel b, the median estimated Clint is shown. In panel c, the distribution with larger credible intervals corresponds to the single protein concentration assay, with a median credible interval is 0.1, corresponding to a precision of roughly ±0.05. When data from the protein titration are jointly analyzed (smaller credible intervals), the certainty is increased to a median credible interval of 0.029, or roughly ±0.015. The width of the credible interval is a measure of the certainty in an estimate, i.e., a smaller credible interval indicates greater certainty. For the fup values, a credible interval approaching 1 indicates that all possible values are consistent with the data, that is, the data do not help identify fup since fup must be between 0 and 1. In panel d the distribution of credible intervals for Clint is shown.
 ```{R Wambaugh2019.Fig1}
 Fig1.table <- httk::wambaugh2019.raw
 Fig1.table$Error1 <- Fig1.table$Base.Fup.High - Fig1.table$Base.Fup.Low
@@ -475,7 +475,7 @@ print(paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=
 
 Fig1b <- ggplot(Fig1.table)+
    geom_histogram(binwidth = 0.5,alpha=0.6,fill="green",aes(CLint.1uM.Median))+              
-   xlab(expression(paste("Measured ",Cl[int]," (Ãƒâ€šÃ‚ÂµL/min/",10^6," hepatocytes)"))) +
+   xlab(expression(paste("Measured ",Cl[int]," (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµL/min/",10^6," hepatocytes)"))) +
   ylab("Number of chemicals")+
   scale_x_log10(label=scientific_10,limits=c(10^-1,5*10^3))+
   labs(title=paste(length(unique(subset(Fig1.table,!is.na(CLint.1uM.Median))$CAS)),"Chemicals Measured"))+
@@ -648,7 +648,7 @@ multiplot(Fig2a,Fig2b,cols=2,widths=c(1.75,1.75))
 ```
 
 #Figure 3:
-Comparison of Bayesian fup and Uncertainty Estimations to Experimental Point Estimates. Two separate Bayesian analyses were performed: one including only those data collected at 100% PPP, and a second that used a binding model to relate data collected at 10%, 30%, and 100% PPP. In (A), fup point estimates <0 are plotted on the y-axis. These values are considered ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œgoodÃƒÂ¢Ã¢â€šÂ¬Ã‚Â if they lie between 0 and 1. The Bayesian median fup values (x-axis) derived from the 100% PPP data and the associated uncertainty estimates (vertical lines) were correlated with point estimates. Bayesian model estimates were constrained to be greater than zero and less than 1;. The red dotted line (at 1%) represents a previously assumed generic limit of quantification (Wetmore, et al., 2015; Wetmore, et al., 2012).  In (B), the medians from the two Bayesian analyses are compared. In both plots, the diagonal dashed line indicates the identity line (ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œperfect predictionsÃƒÂ¢Ã¢â€šÂ¬Ã‚Â). In both panels the Bayesian estimates are ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œuncertainÃƒÂ¢Ã¢â€šÂ¬Ã‚Â (semi-solid) if the CV was larger than 0.5 and certain (solid) otherwise.
+Comparison of Bayesian fup and Uncertainty Estimations to Experimental Point Estimates. Two separate Bayesian analyses were performed: one including only those data collected at 100% PPP, and a second that used a binding model to relate data collected at 10%, 30%, and 100% PPP. In (A), fup point estimates <0 are plotted on the y-axis. These values are considered "good" if they lie between 0 and 1. The Bayesian median fup values (x-axis) derived from the 100% PPP data and the associated uncertainty estimates (vertical lines) were correlated with point estimates. Bayesian model estimates were constrained to be greater than zero and less than 1;. The red dotted line (at 1%) represents a previously assumed generic limit of quantification (Wetmore, et al., 2015; Wetmore, et al., 2012).  In (B), the medians from the two Bayesian analyses are compared. In both plots, the diagonal dashed line indicates the identity line ("perfect predictions"). In both panels the Bayesian estimates are "uncertain" (semi-solid) if the CV was larger than 0.5 and certain (solid) otherwise.
 ```{R Wambaugh2019.Fig3}
 Fig1.table$Class <- "Other"
 Fig1.table[Fig1.table$DTXSID %in% pharma$DTXSID,"Class"]<-"Pharmaceutical"
@@ -668,7 +668,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
 ```
 
 #Figure 4:
-Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 Ãƒâ€šÃ‚ÂµM chemical concentration displayed, though 1 and 10 Ãƒâ€šÃ‚ÂµM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material 
+Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM chemical concentration displayed, though 1 and 10 ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material 
 <!-- (https://doi.org/10.5061/dryad.nf40jb4) -->.
 ```{R Wambaugh2019.Fig4}
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
@@ -789,8 +789,8 @@ Fig5b <- ggplot(data=ceetox,aes(x=cssmed,y=cssmed_u)) +
   geom_errorbar(aes(ymin=css25_u,ymax=css975_u),alpha=0.3)+
   scale_y_log10(label=scientific_10,limits=c(10^-3,10^5)) +
   scale_x_log10(label=scientific_10,limits=c(10^-3,10^5)) +
-  xlab(expression(paste(C[ss]," Point Estimate (Ãƒâ€šÃ‚ÂµM)")))+
-  ylab(expression(paste("Bayesian ",C[ss]," (Ãƒâ€šÃ‚ÂµM)")))+
+  xlab(expression(paste(C[ss]," Point Estimate (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM)")))+
+  ylab(expression(paste("Bayesian ",C[ss]," (ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂµM)")))+
   annotate("text", size=8,x = 10^-3, y = 10^5, label = "B")+
   theme_bw() +
   theme(text  = element_text(size=18)) +
@@ -803,7 +803,7 @@ multiplot(Fig5a,Fig5b,cols=2,widths=c(1.75,1.75))
 ```
 
 #Figure 6:
-Relative contributions of uncertainty and variability to differences between the 95th percentile and median Css. Monte Carlo analysis of both variability (triangles) and uncertainty (circles) give distributions that can be characterized by a 95th percentile Css for which individuals achieve a higher Css for the same fixed dose rate ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ these individuals can be considered more ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œsensitiveÃƒÂ¢Ã¢â€šÂ¬Ã‚Â to chemical exposure. Uncertainty and variability can be combined (squares) to estimate a 95th percentile reflecting both factors. For most chemicals, variability contributes more than uncertainty to the difference between the Css predicted for the median Clint and fup values. 
+Relative contributions of uncertainty and variability to differences between the 95th percentile and median Css. Monte Carlo analysis of both variability (triangles) and uncertainty (circles) give distributions that can be characterized by a 95th percentile Css for which individuals achieve a higher Css for the same fixed dose rate -- these individuals can be considered more "sensitive" to chemical exposure. Uncertainty and variability can be combined (squares) to estimate a 95th percentile reflecting both factors. For most chemicals, variability contributes more than uncertainty to the difference between the Css predicted for the median Clint and fup values. 
 ```{R Wambaugh2019.Fig6, eval=F}
 set.seed(42)
 ceetox[CAS%in%httk_cas,
@@ -914,7 +914,7 @@ print(Fig6)
 ```
 
 #Figure 7:
-High throughput risk-based prioritization can be conducted by using doses predicted to cause bioactivity identified by high throughput screening. High throughput exposure estimates have large uncertainty, indicated by the triangles (median of distribution) and vertical bar (upper 95th percentile range). There are many in vitro activities identified for each chemical, the 80% interval of equivalent dose rates is indicated by the vertical red bar, with a horizontal slash indicating the median and the circle plot points indicating the 10th percentile of the bioactive concentration. Anywhere the entire exposure bar is below the bioactivity circle there is 95% probability that the median exposure will not cause a dose sufficient to cause the 10th percentile in vitro bioactivity. Chemicals are sorted from left-to-right by the margin between the 10th percentile bioactivity (small circle) and the upper 95th percentile limit on estimated median intake rate. In panel A, all chemicals for which Css could be calculated are shown using only variability. In panel B, the shaded region of panel A is shown, using both variability and uncertainty to calculate the bioactive dose. Arrows in panel B identify six chemicals where exposure and 10th percentile bioactivity potentially overlap that would have been missed as priority chemicals if uncertainty analysis was not performed. Two overlapping bars are shown for each chemicalÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s bioactive doses ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ the upper one is for variability alone (as in Panel A), the lower is for uncertainty and variability together.
+High throughput risk-based prioritization can be conducted by using doses predicted to cause bioactivity identified by high throughput screening. High throughput exposure estimates have large uncertainty, indicated by the triangles (median of distribution) and vertical bar (upper 95th percentile range). There are many in vitro activities identified for each chemical, the 80% interval of equivalent dose rates is indicated by the vertical red bar, with a horizontal slash indicating the median and the circle plot points indicating the 10th percentile of the bioactive concentration. Anywhere the entire exposure bar is below the bioactivity circle there is 95% probability that the median exposure will not cause a dose sufficient to cause the 10th percentile in vitro bioactivity. Chemicals are sorted from left-to-right by the margin between the 10th percentile bioactivity (small circle) and the upper 95th percentile limit on estimated median intake rate. In panel A, all chemicals for which Css could be calculated are shown using only variability. In panel B, the shaded region of panel A is shown, using both variability and uncertainty to calculate the bioactive dose. Arrows in panel B identify six chemicals where exposure and 10th percentile bioactivity potentially overlap that would have been missed as priority chemicals if uncertainty analysis was not performed. Two overlapping bars are shown for each chemical''s bioactive doses -- the upper one is for variability alone (as in Panel A), the lower is for uncertainty and variability together.
 ```{R Wambaugh2019.Fig7, eval=F}
 # Head to ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/ to get the ToxCast/Tox21 data:
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
