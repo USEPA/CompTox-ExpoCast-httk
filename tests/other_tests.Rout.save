@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name='nicotine')
 $avg
-[1] 0.6727
+[1] 0.67
 
 $frac
 [1] 1.136
@@ -37,16 +37,16 @@ $the.day
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 1710
+[1] 3000
 
 $frac
-[1] 0.99
+[1] 0.9896
 
 $max
 [1] 1704
 
 $the.day
-[1] 2583
+[1] 2582
 
 > 
 > calc_stats(chem.name='nicotine',days=10)

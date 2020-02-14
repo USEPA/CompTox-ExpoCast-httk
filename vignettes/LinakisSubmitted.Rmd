@@ -307,7 +307,7 @@ table(chemunderpred$chemclass)/table(simobsfull$chemclass)*100
 ## TABLE AND PLOT GENERATION
 
 ### Concentration vs. time
-```{r cvtplots}
+```{r cvtplots, eval = F}
 # Create pdfs of simulated concentration-time plots against observed c-t values
 pdf("simdataplots.pdf")
 for (i in 1:length(plist)) {
@@ -315,7 +315,7 @@ for (i in 1:length(plist)) {
 }
 dev.off()
 ```
-```{r obsvspredplots}
+```{r obsvspredplots, eval = F}
 # Create pdfs of observed vs. predicted concentration plots
 pdf("obvpredplots.pdf", width = 10, height = 10)
 for (i in 1:length(obvpredlist)) {
@@ -333,9 +333,9 @@ fig2 <- fig2 + geom_text(data = simobsfull[abs(log10(simobsfull$simconc)-log10(s
 fig2 <- fig2 + scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat"))
 fig2 <- fig2 + theme(plot.title = element_text(face = 'bold', size = 15),axis.title.x = element_text(face = 'bold', size = 20), axis.text.x = element_text(size=16), axis.title.y = element_text(face = 'bold', size = 20), axis.text.y = element_text(size = 16),legend.title = element_text(face = 'bold', size = 16),legend.text = element_text(face = 'bold',size = 14))
 fig2 #Display plot in R
-pdf("Figure2.pdf", width = 10, height = 10)
-print(fig2)
-dev.off()
+#pdf("Figure2.pdf", width = 10, height = 10)
+#print(fig2)
+#dev.off()
 ```
 
 ### Create and read out plots of overall cvt, cmax, and auc observed vs. pred
@@ -381,9 +381,9 @@ aucp <- aucp + geom_text(data = aucfull[(log10(aucfull$AUCsim)-log10(aucfull$AUC
 aucp <- aucp + scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat"))
 aucp <- aucp + theme(plot.title = element_text(face = 'bold', size = 15),axis.title.x = element_text(face = 'bold', size = 20), axis.text.x = element_text(size=16), axis.title.y = element_text(face = 'bold', size = 20), axis.text.y = element_text(size = 16),legend.title = element_text(face = 'bold', size = 16),legend.text = element_text(face = 'bold',size = 14))
 aucp
-pdf("Figure4.pdf", width = 20, height = 10)
-plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
-dev.off()
+#pdf("Figure4.pdf", width = 20, height = 10)
+#plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
+#dev.off()
 ```
 
 ### Figure 3: Separation by chemical class
@@ -405,9 +405,9 @@ fig3 <- ggplot(data = simobsfull[simobsfull$simconc >0 & simobsfull$obsconc > 0,
   geom_text(data = numpt, aes(x = Inf, y = -Inf, hjust = 1.05, vjust = -0.5, label = n), size = 10, colour = 'black', inherit.aes = F, parse = F)+
   theme(axis.text.x = element_text(angle = 90, hjust = 1,vjust=0.5,size = 20, face = 'bold'), strip.text.x = element_text(face = 'bold', size = 24), legend.position = 'none', axis.title.x = element_text(face = 'bold', size = 30), axis.title.y = element_text(face = 'bold', size = 30), axis.text.y = element_text(face = 'bold',size = 25, color = 'black'))
 fig3
-pdf("Figure3.pdf", width = 40, height = 13)
-print(fig3)
-dev.off()
+#pdf("Figure3.pdf", width = 40, height = 13)
+#print(fig3)
+#dev.off()
 ```
 
 ### Figures S1A-S1D: Separation by time quartile and physicochemical properties=====
@@ -453,9 +453,9 @@ figs1d <- ggplot(data = simobsfull[simobsfull$simconc >0 & simobsfull$obsconc > 
   theme_bw() +
   theme(axis.text.x = element_text(size = 20, face = 'bold'), strip.text.x = element_text(face = 'bold', size = 20), legend.position = 'none', axis.title.x = element_text(face = 'bold', size = 20), axis.title.y = element_text(face = 'bold', size = 20), axis.text.y = element_text(size = 20, face = 'bold'))
 figs1d
-pdf("FigureS1.pdf", width = 20, height = 20)
+#pdf("FigureS1.pdf", width = 20, height = 20)
 plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
-dev.off()
+#dev.off()
 ```
 
 ### Supplemental Table 2: Leave-one-out Chemical Sensitivity Analysis=====
