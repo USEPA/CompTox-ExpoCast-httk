@@ -53,8 +53,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Kflung2pu",
   "Kfbrain2pu",
   "pre_pregnant_BW",
-  "Vthyroidc",
-  "Vfgutc"
+  "Vthyroidc"
   )
 
 
