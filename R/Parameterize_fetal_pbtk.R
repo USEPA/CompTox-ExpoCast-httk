@@ -36,8 +36,7 @@
 #' concentration of the chemical in the blood to the concentration in the
 #' plasma from available_rblood2plasma.} \item{Vartc}{Volume of the arteries
 #' per kg body weight, L/kg BW.} \item{Vgutc}{Volume of the gut per kg body
-#' weight, L/kg BW.} \item{Vfgutc}{Volume of the fetal gut per kg body weight,
-#' L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
+#' weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
 #' BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
@@ -127,11 +126,12 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  parms$Vlungc <- 0.95/parms$pre_pregnant_BW
  parms$Vartc <- 0.624/parms$pre_pregnant_BW         
  parms$Vvenc <- 2.32/parms$pre_pregnant_BW
- #parms$Vfgutc <- 0.0178
+ 
+ #Remove parameters from parameterize_pbtk that aren't used in the gestational model
  parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
  parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
  parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
- parms$Vfgutc <- NULL  
+ parms$Qrestf <- NULL  
 
  return(parms)                             
 }
