@@ -7,6 +7,8 @@ R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
 
+  Natural language support but running in an English locale
+
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
 'citation()' on how to cite R or R packages in publications.
@@ -39,56 +41,56 @@ Tissue concentration for brain returned in uM units.
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-          time Aintestine      Cliver    Csyscomp    Atubules Ametabolized
-[1,] 0.0000000   306.6260  0.00000000 0.00000e+00 0.00000e+00  0.00000e+00
-[2,] 0.0000100   306.4660  0.00199531 3.18209e-08 1.89468e-13  7.42518e-08
-[3,] 0.0104167   177.7950 35.57290000 1.13526e+00 1.09491e-02  2.82883e+00
-[4,] 0.0208333   103.0930 32.21510000 2.53238e+00 5.72345e-02  6.84929e+00
-[5,] 0.0312500    59.7775 26.19990000 3.44891e+00 1.32211e-01  1.02198e+01
-[6,] 0.0416667    34.6615 22.02570000 3.98591e+00 2.24847e-01  1.29949e+01
-             AUC     Cplasma
-[1,] 0.00000e+00 0.00000e+00
-[2,] 7.97330e-14 3.18209e-08
-[3,] 4.60763e-03 1.13526e+00
-[4,] 2.40857e-02 2.53238e+00
-[5,] 5.56377e-02 3.44891e+00
-[6,] 9.46211e-02 3.98591e+00
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > head(solve_3comp(chem.cas="80-05-7"))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-          time Aintestine      Cliver    Csyscomp    Atubules Ametabolized
-[1,] 0.0000000   306.6260  0.00000000 0.00000e+00 0.00000e+00  0.00000e+00
-[2,] 0.0000100   306.4660  0.00199531 3.18209e-08 1.89468e-13  7.42518e-08
-[3,] 0.0104167   177.7950 35.57290000 1.13526e+00 1.09491e-02  2.82883e+00
-[4,] 0.0208333   103.0930 32.21510000 2.53238e+00 5.72345e-02  6.84929e+00
-[5,] 0.0312500    59.7775 26.19990000 3.44891e+00 1.32211e-01  1.02198e+01
-[6,] 0.0416667    34.6615 22.02570000 3.98591e+00 2.24847e-01  1.29949e+01
-             AUC     Cplasma
-[1,] 0.00000e+00 0.00000e+00
-[2,] 7.97330e-14 3.18209e-08
-[3,] 4.60763e-03 1.13526e+00
-[4,] 2.40857e-02 2.53238e+00
-[5,] 5.56377e-02 3.44891e+00
-[6,] 9.46211e-02 3.98591e+00
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
-          time Aintestine      Cliver    Csyscomp    Atubules Ametabolized
-[1,] 0.0000000   306.6260  0.00000000 0.00000e+00 0.00000e+00  0.00000e+00
-[2,] 0.0000100   306.4660  0.00199531 3.18209e-08 1.89468e-13  7.42518e-08
-[3,] 0.0104167   177.7950 35.57290000 1.13526e+00 1.09491e-02  2.82883e+00
-[4,] 0.0208333   103.0930 32.21510000 2.53238e+00 5.72345e-02  6.84929e+00
-[5,] 0.0312500    59.7775 26.19990000 3.44891e+00 1.32211e-01  1.02198e+01
-[6,] 0.0416667    34.6615 22.02570000 3.98591e+00 2.24847e-01  1.29949e+01
-             AUC     Cplasma
-[1,] 0.00000e+00 0.00000e+00
-[2,] 7.97330e-14 3.18209e-08
-[3,] 4.60763e-03 1.13526e+00
-[4,] 2.40857e-02 2.53238e+00
-[5,] 5.56377e-02 3.44891e+00
-[6,] 9.46211e-02 3.98591e+00
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

@@ -202,14 +202,15 @@ calc_stats <-function(
     for (this.stat in stats)
     {
       if (tolower(this.stat) == "auc") 
-        out[["AUC"]] <- as.numeric(PKtimecourse[dim(PKtimecourse)[1],'AUC'])
+        out[["AUC"]] <- signif(as.numeric(
+          PKtimecourse[dim(PKtimecourse)[1],'AUC']) ,4)
       if (tolower(this.stat) == "peak") 
         out[["peak"]] <- calc_timecourse_peak(PKtimecourse[,c("time",tissue)])
       if (tolower(this.stat) == "mean")
       {
-        if (!is.null(out[["AUC"]])) out[["mean"]] <- out[["AUC"]]/days
+        if (!is.null(out[["AUC"]])) out[["mean"]] <- signif(out[["AUC"]]/days,4)
         else out[["mean"]] <- 
-          as.numeric(PKtimecourse[dim(PKtimecourse)[1],'AUC']/days) 
+          signif(as.numeric(PKtimecourse[dim(PKtimecourse)[1],'AUC']/days),4) 
       }
     }
   
@@ -222,7 +223,8 @@ calc_stats <-function(
       } else {
         for (this.stat in stats)
         {
-          out[[this.stat]] <- out[[this.stat]] *  parameters[['Rblood2plasma']]
+          out[[this.stat]] <- signif(out[[this.stat]] *  
+            parameters[['Rblood2plasma']],4)
         }
       }
     } else if (tolower(concentration) != 'plasma') { 

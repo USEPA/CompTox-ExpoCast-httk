@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r knitrPRrep, include=FALSE, eval=TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=6, fig.height=4)
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
 ```
 
 This vignette provides the code used to generate the figures in Wambaugh et al. (2018) 
@@ -629,8 +629,8 @@ for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log
 
 
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=T))/sd(x,na.rm=T))
-
-#dev.new(width=8,height=8)
+```
+```{r PlotFigure3, eval = FALSE}
 main_title="in vivo Toxicokinetic Parameters"
 heatmap.2(physprop.matrix, 
           hclustfun=myclust,
@@ -645,8 +645,7 @@ heatmap.2(physprop.matrix,
 # The following has to be adjusted manually:
 rect(0.65, 0.01, 0.87, 0.78, border="blue") 
 text(0.75,0.81,expression(paste("Estimated from ",italic("In Vivo")," Data")))
-
-```
+ ```
 
 
 The original scripts used a data.table called FitData that contains a lot of stuff we don't need to make these figures. 
@@ -673,8 +672,17 @@ FitData.Fup$SelectedVdist <- FitData.Fup$Vdist
 FitData.Fup$SelectedVdist.sd <- FitData.Fup$Vdist.sd
 
 #Predict volume of Distribution
-FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,function(x) calc_vdist(chem.cas=x,species="Rat",default.to.human = T))
-FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,function(x) calc_vdist(chem.cas=x,regression=F,species="Rat",default.to.human = T))
+FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,
+  function(x) calc_vdist(chem.cas=x,
+  species="Rat",
+  default.to.human = T,
+  suppress.messages=T))
+FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
+  function(x) calc_vdist(chem.cas=x,
+  regression=F,
+  species="Rat",
+  default.to.human = T,
+  suppress.messages=T))
 
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
@@ -762,8 +770,13 @@ Comparison of the TK clearance estimated from the in vivo data with the clearanc
 #FitData.Fup[is.na(SelectedCLtot.sd)]$SelectedClearance.sd <- Inf
 
 FitData.Fup$SelectedCLtot <- FitData.Fup$Vdist*FitData.Fup$kelim 
-FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2+FitData.Fup$kelim.sd^2)^(1/2)
-FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS,function(x) calc_total_clearance(chem.cas=x,species="Rat",default.to.human = T))
+FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2 + 
+  FitData.Fup$kelim.sd^2)^(1/2)
+FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS, 
+  function(x) calc_total_clearance(chem.cas=x,
+  species="Rat",
+  default.to.human = T,
+  suppress.messages=T))
 
 Fig.SelectedClearance.fit <- lm(log(SelectedCLtot)~log(CLtot.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedCLtot.sd)))
 summary(Fig.SelectedClearance.fit)
@@ -881,13 +894,16 @@ Rat in vivo data were collected for diverse environmental chemicals to evaluate 
 FitData$SelectedFbio <- FitData$Fbio
 FitData$SelectedCss <- FitData$Css
 FitData$SelectedCss.sd <- FitData$Css.sd
-FitData$Css.1comp.pred <- sapply(FitData$CAS,function(x) calc_analytic_css(chem.cas=x,species="Rat",
-                                                                           model="3compartmentss",
-                                                                           parameterize.args = list(
-                                                                             default.to.human=T,
-                                                                             adjusted.Funbound.plasma=T,
-                                                                             regression=T,
-                                                                             minimum.Funbound.plasma=1e-4)))
+FitData$Css.1comp.pred <- sapply(FitData$CAS,
+  function(x) calc_analytic_css(chem.cas=x,
+  species="Rat",
+  model="3compartmentss",
+  suppress.messages=T,
+  parameterize.args = list(
+    default.to.human=T,
+    adjusted.Funbound.plasma=T,
+    regression=T,
+    minimum.Funbound.plasma=1e-4)))
 
 Fig.1compCss.fit <- lm(log(SelectedCss)~log(Css.1comp.pred),data=FitData,na.rm=T)
 Fig.1compCss.fit.weighted <- lm(log(SelectedCss)~log(Css.1comp.pred),data=FitData,na.rm=T,weights=1/SelectedCss.sd^2)
@@ -950,7 +966,7 @@ multiplot(Fig.Cssa,Fig.Cssb,cols=2,widths=c(1.75,1.75))
 ```
 ## Figure Nine
 Evaluation of Wambaugh et al. (2015) classification scheme for predicting errors made when using HTTK data to predict in vivo steady state plasma concentration (Css). Chemicals were placed into categories, depending upon the size of the error. "On the Order" represented the best case, where errors were within 3.2 times over or under the true value. Some chemicals were determined to be problematic due to limitations in the HTTK methods (e.g., plasma protein binding estimation) or failure to come to steady state. Wherever the chemical names overlap the vertical, gray bands, the observed errors are consistent with predicted error. Chemicals can be identified by their chemical abbreviation given in Table 1.
-```{r fig9, eval=TRUE}
+```{r fig9, eval = FALSE}
 FitData$TriageCat <- FitData$Triage.Call
 FitData$CssResidual <- log10(FitData$Css.1comp.pred/FitData$Css)
 FitData[FitData$TriageCat%in%c("Does Not Reach Steady State","Plasma Binding Assay Failed"),"TriageCat"]<-"Problem"
