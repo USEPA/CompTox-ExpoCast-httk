@@ -69,10 +69,10 @@ httk.table[,"Tox21"] <- ""
 httk.table[,"ToxCast"] <- ""
 httk.table[,"ExpoCast"] <- ""
 httk.table[,"PBTK"] <- ""
-# To make this example run quickly, this loop is only over the first fifty 
+# To make this example run quickly, this loop is only over the first ten 
 # chemicals. To build a table with all available chemicals use:
 # for (this.cas in httk.table$CAS)
-for (this.cas in httk.table$CAS[1:50])
+for (this.cas in httk.table$CAS[1:10])
 {
   this.index <- httk.table$CAS==this.cas
   if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"

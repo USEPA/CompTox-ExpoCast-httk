@@ -115,6 +115,16 @@
 #' @author John Wambaugh
 "Tables.Rdata.stamp"
 
+#' Reference for EPA Physico-Chemical Data
+#'
+#' The physico-chemical data in the chem.phys_and_invitro.data table are
+#' obtained from EPA's Comptox Chemicals dashboard. This variable indicates
+#' the date the Dashboard was accessed.
+#' @source \url{https://comptox.epa.gov/dashboard}
+#'
+#' @author John Wambaugh
+"EPA.ref"
+
 #'Pre-processed NHANES data.
 #'
 #'NHANES data on demographics, anthropometrics, and some laboratory measures,
@@ -941,8 +951,7 @@
 #' Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
 #' intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
 #' compiled from multiple sources, and can be used to parameterize a variety of
-#' toxicokinetic models.
-#'
+#' toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 #'
 #' @docType data
 #' @format A data.frame containing 565 rows and 33 columns.
@@ -1065,7 +1074,7 @@
 "sipes2017"
 
 
-#' ToxCast and Tox21 2015 Active Hit Calls (EPA)
+#' Tox21 2015 Active Hit Calls (EPA)
 #'
 #' The ToxCast and Tox21 research programs employ batteries of high throughput
 #' assays to assess chemical bioactivity in vitro. Not every chemical is tested
@@ -1076,13 +1085,13 @@
 #' Here, only the hits are treated as potential indicators of bioactivity. This
 #' bioactivity does not have a direct toxicological interpretation. The October
 #' 2015 release (invitrodb_v2) of the ToxCast and Tox21 data were used for this
-#' analysis.
+#' analysis. This object contains just the chemicals in Wambaugh et al. (2019)
+#' and only the quantiles across all assays for the ACC.
 #'
-#' @name ToxCast2015subset
-#' @aliases tc.dt.sub
+#' @name wambaugh2019.tox21
 #' @docType data
-#' @format A data.table with 62412 rows and 5 columns
-#' @author Caroline Ring
+#' @format A data.table with 401 rows and 6 columns
+#' @author John Wambaugh
 #' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program:
 #' providing high throughput decision support tools for chemical risk
 #' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
@@ -1096,18 +1105,21 @@
 #'
 #' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput
 #' screening data." Bioinformatics 33.4 (2016): 618-620.
+#' 
+#' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
+#' Variability in Risk Prioritization." Toxicological Sciences 172.2 (2019): 
+#' 235-251.
 #'
 #'
 #' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
 #' @keywords data
-"ToxCast2015subset"
+"wambaugh2019.tox21"
 
 
 
 #' Howgate 2006
 #'
 #' This data set is only used in Vignette 5.
-#'
 #'
 #' @docType data
 #' @format A data.table containing 24 rows and 11 columns.
