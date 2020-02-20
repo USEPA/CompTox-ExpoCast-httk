@@ -175,9 +175,20 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
+  #"Atubules",
+  #"Ametabolized",
+  "AUC",
+  ##
+  "Agutlumen",
+  "Agut",
+  "Aliver",
+  "Aven",
+  "Alung",
+  "Aart",
+  "Arest",
+  "Akidney", 
   "Atubules",
-  "Ametabolized",
-  "AUC"
+  "Ametabolized"
   )
 
 # Allowable units:
