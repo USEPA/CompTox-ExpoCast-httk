@@ -132,6 +132,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
  parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
  parms$Qrestf <- NULL  
-
+ 
+ 
  return(parms)                             
 }
