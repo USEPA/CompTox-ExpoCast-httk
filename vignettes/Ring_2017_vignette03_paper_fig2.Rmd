@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. (2017) Generating Figure 2}
+  %\VignetteIndexEntry{Ring et al. (2017): Generating Figure 2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,7 +28,7 @@ library('ggplot2')
 ```
 
 Next, read in the data. Figure 2 used the Age 20-65 subpopulation.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 subpop <- 'Age.20.65'
 pop.vi <- readRDS(paste0('data/', paste('httkpop',
                                'vi',
@@ -41,7 +41,7 @@ pop.dr <- readRDS(paste0('data/', paste('httkpop',
 ```
 
 Add a factor to each data table showing which method was used to generate that population.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 pop.vi[, which_method:='virtual individuals']
 pop.dr[, which_method:='direct resampling']
 ```
@@ -58,7 +58,7 @@ The physiological variables of interest here are:
 
 Portal vein flow is the only one not already included in the data tables. To calculate it, we just need to sum the arterial flows to the liver and to the gut. Let's do that for both the virtual-individuals and the direct-resampling virtual populations.
 
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 pop.vi[, portalvein_flow:=Liver_flow+
           Stomach_flow+
           Small_intestine_flow+
@@ -71,7 +71,7 @@ pop.dr[, portalvein_flow:=Liver_flow+
 ```
 
 Next, let's define the variables of interest and `rbind` together those variables from the two virtual populations.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 #List the variables of interest
 inboth <- c('age_years',
             'height',
@@ -87,7 +87,7 @@ bothpop <- rbind(pop.vi[, c(inboth, 'which_method'), with=FALSE],
 ```
 
 For better readability in the plot, let's change the capitalization and punctuation of the variable names, since they'll be used for labels.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 setnames(bothpop, inboth,
          c('Age',
            'Height',
@@ -110,7 +110,7 @@ inboth <- c('Age',
 ```
 
 Finally, let's make the plot.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
   theme_set(theme_bw())
   p <- ggpairs(data=bothpop,
                columns=1:9,

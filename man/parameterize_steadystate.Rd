@@ -4,19 +4,30 @@
 \alias{parameterize_steadystate}
 \title{Parameterize_SteadyState}
 \usage{
-parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
-  species = "Human", clint.pvalue.threshold = 0.05,
-  default.to.human = F, human.clint.fup = F,
-  adjusted.Funbound.plasma = T, restrictive.clearance = T,
-  fup.lod.default = 0.005, suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04)
+parameterize_steadystate(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  clint.pvalue.threshold = 0.05,
+  default.to.human = F,
+  human.clint.fup = F,
+  adjusted.Funbound.plasma = T,
+  restrictive.clearance = T,
+  fup.lod.default = 0.005,
+  suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
+chemical must be identified by either CAS, name, or DTXISD}
 
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
+chemical must be identified by either CAS, name, or DTXISD}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+-- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -49,11 +60,13 @@ dataset).}
 \value{
 \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of plasma
-that is not bound.} \item{Qtotal.liverc}{Flow rate of blood exiting the
-liver, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
-BW^3/4, volume of fluid filtered from kidney and excreted.} \item{BW}{Body
-Weight, kg} \item{MW}{Molecular Weight, g/mol}
+dose that enters the gutlumen.} 
+\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+\item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
+\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
+BW^3/4, volume of fluid filtered from kidney and excreted.} 
+\item{BW}{Body Weight, kg} 
+\item{MW}{Molecular Weight, g/mol}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{liver.density}{Liver tissue density, kg/L.}
@@ -73,7 +86,17 @@ compartment steady state model ('3compartmentss').
  parameters <- parameterize_steadystate(chem.cas='80-05-7')
 
 }
+\references{
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+(2008). Hepatocellular binding of drugs: correction for unbound fraction in
+hepatocyte incubations using microsomal binding or drug lipophilicity data.
+Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+}
 \author{
 John Wambaugh
 }
+\keyword{3compss}
 \keyword{Parameter}

@@ -1,21 +1,34 @@
 #' httkpop: Virtual population generator for HTTK.
 #' 
-#' The httkpop package generates virtual population physiologies for use in
+#' The httkpop package generates virtual population physiologies for use in 
 #' population TK.
-#' 
 #' 
 #' @name httkpop
 #' @aliases httkpop httkpop-package
+#' @section Main function to generate a population: 
+#' If you just want to generate
+#'   a table of (chemical-independent) population physiology parameters, use 
+#'   \code{\link{httkpop_generate}}.
+#'   
+#' @section Using HTTK-Pop with HTTK: 
+#' To generate a population and then run an 
+#'   HTTK model for that population, the workflow is as follows: \enumerate{ 
+#'   \item Generate a population using \code{\link{httkpop_generate}}. \item For
+#'   a given HTTK chemical and general model, convert the population data to 
+#'   corresponding sets of HTTK model parameters using 
+#'   \code{\link{httkpop_mc}}.}
+#'   
+#'   
+#' @import data.table
 #' @docType package
-#' @section Main function to generate a population:
-#' 
-#' If you just want to generate a table of (chemical-independent) population
-#' physiology parameters, use \code{\link{httkpop_generate}}.
-#' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
-#' @keywords httk-pop
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
+#'environmental chemicals by simulating toxicokinetic variability." Environment 
+#'International 106 (2017): 105-118
 NULL
 
 
@@ -61,6 +74,9 @@ NULL
 #'
 #' \href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019):
 #' Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionss}
+#' 
+#' \href{https://doi.org/10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
+#' Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
 #' 
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
 #' ExpoCast (Exposure Forecasting) Project}

@@ -9,16 +9,11 @@
 #' human values are given instead.
 #' 
 #' @param info A single character vector (or collection of character vectors)
-#' from "Compound", "CAS", "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
-#' "Clint.pValue", "Funbound.plasma",
-#' "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type". info="all"
+#' from "Compound", "CAS", "DTXSID, "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
+#' "Clint.pValue", "Funbound.plasma","Structure_Formula", or "Substance_Type". info="all"
 #' gives all information for the model and species.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param exclude.fup.zero Whether or not to exclude chemicals with a fraction
-#' of unbound plasma equal to zero or include them with a value of
-#' fup.lod.default. Defaults to FALSE for '3compartmentss' and TRUE for pk
-#' models and schmitt.
 #' @param fup.lod.default Default value used for fraction of unbound plasma for
 #' chemicals where measured value was below the limit of detection. Default
 #' value is 0.0005.
@@ -75,7 +70,6 @@
 #' @export get_cheminfo
 get_cheminfo <- function(info="CAS",
                          species="Human",
-                         exclude.fup.zero=NA,
                          fup.lod.default=0.005,
                          model='3compartmentss',
                          default.to.human=F)
@@ -91,117 +85,143 @@ get_cheminfo <- function(info="CAS",
                   "logMA",
                   "logP",
                   "MW",
+                  "Rblood2plasma",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
-                  
-  chem.physical_and_invitro.data <- chem.physical_and_invitro.data
-  if (tolower(species) == 'human') species <- 'Human' 
-  else if (tolower(species) == 'rat') species <- 'Rat'
-  else if (tolower(species) == 'dog') species <- 'Dog'
-  else if (tolower(species) == 'rabbit') species <- 'Rabbit'
-  else if (tolower(species) == 'mouse') species <- 'Mouse'
-  else stop("Only species of human, rat, mouse, rabbit, and dog accepted.")
+  if (any(!(toupper(info) %in% toupper(valid.info))) & any(tolower(info)!="all")) stop(paste("Data on",
+    info[!(info %in% valid.info)],"not available. Valid options are:",
+    paste(valid.info,collapse=" ")))
+  if (any(toupper(info)=="ALL")) info <- valid.info
+
   
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  physiology.data <- NULL
+  
+  #End R CMD CHECK appeasement.
+
+# Figure out which species we support
+  valid.species <- colnames(httk::physiology.data)[!(colnames(httk::physiology.data)
+    %in% c("Parameter","Units"))]
+# Standardize the species capitalization
+  if (tolower(species) %in% tolower(valid.species)) species <-
+    valid.species[tolower(valid.species)==tolower(species)]
+  else stop("Requested species not found in physiology.table.")
+  
+# We need to know model-specific information (from modelinfo_[MODEL].R]): 
   model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
+    necessary.params <- model.list[[model]]$required.params
+    exclude.fup.zero <- model.list[[model]]$exclude.fup.zero
+  }
+  if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
+    model,"have not been defined."))
+  
+  # For now let's not require these because it's still hard to distringuish
+  # between compounds that don't ionize and those for which we don't have
+  # good predictions
+  necessary.params <- necessary.params[!(tolower(necessary.params)%in%
+    tolower(c("pKa_Donor","pKa_Accept","Dow74")))]
+  
+  # Change to the names in chem.physical_and_invitro.table:
+  if ("pow" %in% tolower(necessary.params)) 
+    necessary.params[tolower(necessary.params)=="pow"] <-
+    "logP"
+  
+  # Flag in case we can't find a column for every parameter:
+  incomplete.data <- F
+
+  # Identify the appropriate column for Funbound (if needed):
   species.fup <- NULL
+  if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
+  {
+    if (paste0(species,'.Funbound.plasma') %in% 
+      colnames(chem.physical_and_invitro.data)) 
+      species.fup <- paste0(species,'.Funbound.plasma')
+    else if (default.to.human)
+    {
+      species.fup <- 'Human.Funbound.plasma'
+      warning('Human values substituted for Funbound.plasma.')
+    } else incomplete.data <- T
+    if (!is.null(species.fup)) necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
+  }
+      
+  # Identify the appropriate column for Clint (if needed):
   species.clint <- NULL
   species.clint.pvalue <- NULL
-  if (model == "pbtk" | 
-      model == "3compartment" | 
-      model == "1compartment" | 
-      model == "3compartmentss")
+  if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
   {
-    if (!all(c(paste0(species,'.Funbound.plasma'),paste0(species,'.Clint')) %in% 
-        colnames(chem.physical_and_invitro.data)) & 
-        !default.to.human) incomplete.data <- T
-    else
-    {    
-      if (paste0(species,'.Funbound.plasma') %in% 
-        colnames(chem.physical_and_invitro.data)) 
-        species.fup <- paste0(species,'.Funbound.plasma')
-      else
-      {
-        species.fup <- 'Human.Funbound.plasma'
-        warning('Human values substituted for Funbound.plasma.')
-      }
-      if (paste0(species,'.Clint') %in% 
-        colnames(chem.physical_and_invitro.data))
-      {
-        species.clint <- paste0(species,'.Clint')
-        species.clint.pvalue <- paste0(species,'.Clint.pValue')
-      } else {
-        species.clint <- 'Human.Clint'
-        species.clint.pvalue <- 'Human.Clint.pValue'
-        warning('Human values substituted for Clint and Clint.pValue.')
-      }
-
-      if (model == '3compartmentss')
-      {
-        necessary.params <- c(species.clint,"MW","logP")
-        if(is.na(exclude.fup.zero)) exclude.fup.zero <- F 
-      } else {
-        necessary.params <- c(species.clint,"MW","logP")
-        if(is.na(exclude.fup.zero)) exclude.fup.zero <- T
-      }
-      incomplete.data <- F
-    }
-  } else if (model == 'schmitt'){
-    if (!paste0(species,'.Funbound.plasma') %in% 
-      colnames(chem.physical_and_invitro.data) & 
-      !default.to.human) incomplete.data <- T
-    else
+    if (paste0(species,'.Clint') %in% 
+      colnames(chem.physical_and_invitro.data))
     {
-      if (paste0(species,'.Funbound.plasma') %in% 
-        colnames(chem.physical_and_invitro.data)) 
-        species.fup <- paste0(species,'.Funbound.plasma')
-      else
-      {
-        species.fup <- 'Human.Funbound.plasma'
-        warning('Human values substituted for Funbound.plasma.')
-      }
-      if ('clint.pvalue' %in% tolower(info) | any(tolower(info) == 'all'))
-      {
-        if (paste0(species,'.Clint') %in% 
-        colnames(chem.physical_and_invitro.data))
-        {
-          species.clint <- paste0(species,'.Clint')
-          species.clint.pvalue <- paste0(species,'.Clint.pValue')
-        } else if (default.to.human) {
-          species.clint <- 'Human.Clint'
-          species.clint.pvalue <- 'Human.Clint.pValue'
-          warning('Human values substituted for Clint and Clint.pValue.')
-        } else stop('Set default.to.human to TRUE for Clint values with selected species') 
-      }   
-      necessary.params <- c(species.fup,"logP")
-      exclude.fup.zero <- T  
-      incomplete.data <- F
-    } 
-  } else stop("Valid models are currently only: pbtk, 1compartment, 3compartment, schmitt, and 3compartmentss.")
+      species.clint <- paste0(species,'.Clint')
+      species.clint.pvalue <- paste0(species,'.Clint.pValue')
+    } else if (default.to.human) {
+      species.clint <- 'Human.Clint'
+      species.clint.pvalue <- 'Human.Clint.pValue'
+      warning('Human values substituted for Clint and Clint.pValue.')
+    } else incomplete.data <- T
+    if (!is.null(species.clint)) necessary.params[necessary.params=="Clint"]<-species.clint
+  } 
+
+  # Identify the appropriate column for Rblood2plasma (if needed):
+  species.rblood2plasma <- NULL
+  if (tolower("Rblood2plasma") %in% unique(tolower(c(necessary.params,info))))   
+  {
+    if (paste0(species,'.Rblood2plasma') %in% 
+      colnames(chem.physical_and_invitro.data))
+    {
+      species.rblood2plasma <- paste0(species,'.Rblood2plasma')
+    } else if (default.to.human) {
+      species.rblood2plasma <- 'Human.Rblood2plasma'
+      warning('Human values substituted for Rblood2plasma.')
+    } else incomplete.data <- T
+    if (!is.null(species.rblood2plasma)) necessary.params[necessary.params=="Rblood2plasma"]<-species.rblood2plasma
+  } 
+
   if (!incomplete.data)
   {
+    # Only look for parameters that we have in the table:
+    necessary.params <- necessary.params[tolower(necessary.params) %in%
+    tolower(colnames(chem.physical_and_invitro.data))]
+  
   # Pare the chemical data down to only those chemicals where all the necessary
   # parameters are not NA
     good.chemicals.index <- apply(chem.physical_and_invitro.data[,necessary.params],
       1,function(x) all(!is.na(x)))
-# Make sure that we have a usable fup:
-    fup.values <- chem.physical_and_invitro.data[,species.fup]
-    fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
-# If we are exclude the fups with a zero, then get rid of those:
-    if (exclude.fup.zero) 
-    {
-      fup.values.numeric[as.numeric(fup.values)==0] <- F
-      fup.values.numeric[is.na(fup.values.numeric)] <- F 
+      
+  # If we need fup:
+    if (!is.null(species.fup))
+    {  
+  # Make sure that we have a usable fup:
+      fup.values <- chem.physical_and_invitro.data[,species.fup]
+      fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
+  # If we are exclude the fups with a zero, then get rid of those:
+      if (exclude.fup.zero) 
+      {
+        suppressWarnings(fup.values.numeric[as.numeric(fup.values)==0] <- F)
+        fup.values.numeric[is.na(fup.values.numeric)] <- F 
+      }
+  # However, we want to include the fups that are distributions:
+      fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
+      fup.values.dist[is.na(fup.values.dist)] <- F
+      good.chemicals.index <- good.chemicals.index & 
+  # Either a numeric value:
+        (fup.values.numeric |
+  # or three values separated by two commas:
+        fup.values.dist)
     }
-    fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
-    fup.values.dist[is.na(fup.values.dist)] <- F
-    good.chemicals.index <- good.chemicals.index & 
-# Either a numeric value:
-      (fup.values.numeric |
-# or three values separated by two commas:
-      fup.values.dist)
-# Make sure that we have a usable clint:    
-    if (!(model %in% c("schmitt")))
+    
+# If we need Clint:
+    if (!is.null(species.clint))
     {
       clint.values <- chem.physical_and_invitro.data[,species.clint]
       clint.values.numeric <- suppressWarnings(!is.na(as.numeric(clint.values)))
@@ -213,8 +233,10 @@ get_cheminfo <- function(info="CAS",
 # or four values separated by three commas:
         clint.values.dist)
     }
+# Kep just the chemicals we want:    
     good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
     
+# Get the calpitalizes tion correct on the information requested:
     if ('mw' %in% tolower(info)) info <- c('MW',info[tolower(info) != 'mw'])
     if ('pka_accept' %in% tolower(info)) info <- 
       c('pKa_Accept',info[tolower(info) != 'pka_accept'])
@@ -230,20 +252,16 @@ get_cheminfo <- function(info="CAS",
     if ('structure_formula' %in% tolower(info)) info <- 
       c('Structure_Formula',info[tolower(info) != 'structure_formula'])
     if ('substance_type' %in% tolower(info)) info <- 
-      c('Substance_Type',info[tolower(info) != 'substance_type'])
-    
-    if (any(toupper(info)=="ALL")) info <- valid.info
-    
-    if (any(!(toupper(info) %in% toupper(valid.info)))) stop(paste("Data on",
-      info[!(info %in% valid.info)],"not available. Valid options are:",
-      paste(valid.info,collapse=" ")))
-  
+      c('Substance_Type',info[tolower(info) != 'substance_type'])    
+ 
     if (toupper("Clint") %in% toupper(info)) 
       info[toupper(info)==toupper("Clint")] <- species.clint
     if (toupper("Clint.pValue") %in% toupper(info)) 
       info[toupper(info)==toupper("Clint.pValue")] <- species.clint.pvalue
     if (toupper("Funbound.plasma") %in% toupper(info)) 
       info[toupper(info)==toupper("Funbound.plasma")] <- species.fup
+    if (toupper("Rblood2plasma") %in% toupper(info)) 
+      info[toupper(info)==toupper("Rblood2plasma")] <- species.rblood2plasma
     
     columns <- colnames(chem.physical_and_invitro.data)
     this.subset <- good.chemical.data[,
@@ -258,8 +276,7 @@ get_cheminfo <- function(info="CAS",
       this.subset[fup.zero.chems, species.fup] <- fup.lod.default
     }
                                 
-    data.table <- this.subset
-    return.info <- data.table[,info]
+    return.info <- this.subset[,info]
   } else return.info <- NULL 
     
   return(return.info)

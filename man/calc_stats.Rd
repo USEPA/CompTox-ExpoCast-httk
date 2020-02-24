@@ -2,24 +2,45 @@
 % Please edit documentation in R/calc_stats.R
 \name{calc_stats}
 \alias{calc_stats}
-\title{Calculate the statistics.}
+\title{Calculate toxicokinetic summary statistics.}
 \usage{
-calc_stats(days, chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, stats = c("AUC", "peak", "mean"),
-  species = "Human", exclude.fup.zero = F, daily.dose = 1,
-  dose = NULL, doses.per.day = NULL, output.units = "uM",
-  concentration = "plasma", model = "pbtk", default.to.human = F,
-  suppress.messages = F, ...)
+calc_stats(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  route = "oral",
+  stats = c("AUC", "peak", "mean"),
+  species = "Human",
+  days = 28,
+  daily.dose = 1,
+  dose = NULL,
+  doses.per.day = 1,
+  output.units = "uM",
+  concentration = "plasma",
+  tissue = "plasma",
+  model = "pbtk",
+  default.to.human = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  suppress.messages = F,
+  ...
+)
 }
 \arguments{
-\item{days}{Length of the simulation.}
-
 \item{chem.name}{Name of desired chemical.}
 
 \item{chem.cas}{CAS number of desired chemical.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
+
+\item{route}{String specification of route of exposure for simulation:
+"oral", "iv", "inhalation", ...}
 
 \item{stats}{Desired values (either 'AUC', 'mean', 'peak', or a vector
 containing any combination).}
@@ -27,13 +48,11 @@ containing any combination).}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{exclude.fup.zero}{Whether or not to exclude chemicals with a fraction
-of unbound plasma equal to zero or include them with a value of 0.005, only
-used when chem.name, chem.cas, and parameters are not specified.}
+\item{days}{Length of the simulation.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
+\item{dose}{Amount of a single dose at time zero, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -43,6 +62,8 @@ used when chem.name, chem.cas, and parameters are not specified.}
 \item{concentration}{Desired concentration type, 'blood' or default
 'plasma'.}
 
+\item{tissue}{Desired steady state tissue conentration.}
+
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, '3compartmentss' for
 the three compartment steady state model, and '1compartment' for one
@@ -51,14 +72,23 @@ compartment model.}
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
+TRUE along with partition coefficients calculated with this value.}
+
+\item{regression}{Whether or not to use the regressions in calculating
+partition coefficients.}
+
+\item{restrictive.clearance}{Protein binding not taken into account (set to
+1) in liver clearance if FALSE.}
+
 \item{suppress.messages}{Whether to suppress output message.}
 
 \item{...}{Arguments passed to solve function.}
 }
 \value{
 \item{AUC}{Area under the plasma concentration curve.}
-\item{mean}{The area under the curve divided by the number of days.}
-\item{peak}{The highest concentration.}
+\item{mean.conc}{The area under the curve divided by the number of days.}
+\item{peak.conc}{The highest concentration.}
 }
 \description{
 This function calculates the area under the curve, the mean, and the peak values
@@ -76,15 +106,19 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \examples{
 
 calc_stats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+
 calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+
 \dontrun{
-all.peak.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
+# If you do not specify a chemical, calc_stats runs for all chemicals:
+all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
 }
+
 triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 
 }
 \author{
-John Wambaugh and Robert Pearce
+Robert Pearce and John Wambaugh
 }
 \keyword{Solve}
 \keyword{Statistics}

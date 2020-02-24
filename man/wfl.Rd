@@ -6,7 +6,7 @@
 \title{WHO weight-for-length charts}
 \format{A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
  or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
- \code{S}}{LMS parameters; see 
+ \code{S}}{LMS parameters; see
  \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
  \code{P95}, and \code{P97.7}}{weight percentiles} }}
@@ -27,8 +27,8 @@ For infants under age 2, weight class depends on weight for length percentile.
 weight}{2.3rd-97.7th percentile} \item{Obese}{>=97.7th percentile} }
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability." Environment
 International 106 (2017): 105-118
 }
 \author{

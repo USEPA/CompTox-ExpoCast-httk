@@ -7,27 +7,27 @@
 #' that day, the maximum concentration, and the average concentration at the
 #' end of the simulation.
 #' 
-#' 
 #' @param chem.name Either the chemical name, CAS number, or parameters must be
 #' specified. 
 #' @param chem.cas Either the chemical name, CAS number, or parameters must be
 #' specified. 
-#' @param f Fractional distance from the final steady state concentration that
-#' the average concentration must come within to be considered at steady state.
-#' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})   
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param f Fractional distance from the final steady state concentration that
+#' the average concentration must come within to be considered at steady state.
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
-#' @param concentration Desired concentration type, 'blood' or default
-#' 'plasma'.
 #' @param suppress.messages Whether or not to suppress messages.
+#' @param tissue Desired tissue concentration (defaults to whole body 
+#' concentration.)
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
@@ -45,44 +45,57 @@
 #' instead of plasma, but converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' @param dosing The dosing object for more complicated scenarios. Defaults to
+#' repeated \code{daily.dose} spread out over \code{doses.per.day}
 #' @param ... Additional arguments passed to model solver (default of
-#' solve_pbtk).
+#' \code{\link{solve_pbtk}}).
+#'
 #' @return \item{frac}{Ratio of the mean concentration on the day steady state
 #' is reached (baed on doses.per.day) to the analytical Css (based on infusion
 #' dosing).} \item{max}{The maximum concentration of the simulation.}
 #' \item{avg}{The average concentration on the final day of the simulation.}
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
+#'
 #' @author Robert Pearce, John Wambaugh
+#'
 #' @keywords Steady-State
+#'
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-#' \dontrun{
+#' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
-#' calc_css(parms,concentration='blood',model='3compartment')
+#' calc_css(parameters=parms,model='3compartment')
 #' 
-#' 
-#' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' out <- solve_pbtk(chem.name = "Bisphenol A",
+#'   days = 50, 
+#'   daily.dose=1,
+#'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
+#' \dontrun{
+#' library("ggplot2")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
 #' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
 #' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
 #' element_text(size = 16), plot.title = element_text(size = 17)) +
 #' ggtitle("Bisphenol A")
+#'
 #' print(c.vs.t)
+#' }
 #' 
+#' # Make a plot for all chemicals (takes a while):
+#' \dontrun{
 #' days <- NULL
 #' avg <- NULL
 #' max <- NULL
-#' for(this.cas in get_cheminfo()){
-#' css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
-#' days[[this.cas]] <- css.info[["the.day"]]
-#' avg[[this.cas]] <- css.info[["avg"]]
-#' max[[this.cas]] <- css.info[["max"]]
+#' for(this.cas in get_cheminfo(model="pbtk")){
+#'   css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+#'   days[[this.cas]] <- css.info[["the.day"]]
+#'   avg[[this.cas]] <- css.info[["avg"]]
+#'   max[[this.cas]] <- css.info[["max"]]
 #' }
 #' days.data <- as.data.frame(days)
 #' hist <- ggplot(days.data, aes(days)) +
@@ -101,17 +114,18 @@
 #' }
 #' 
 #' @export calc_css
-calc_css <- function(parameters=NULL,
-                    chem.name=NULL,
+calc_css <- function(chem.name=NULL,
                     chem.cas=NULL, 
+                    dtxsid=NULL,
+                    parameters=NULL,
                     species='Human',
                     f = .01,
                     daily.dose=1,
                     doses.per.day=3,
                     days = 21,
                     output.units = "uM",
-                    concentration='plasma',
                     suppress.messages=F,
+                    tissue="plasma",
                     model='pbtk',
                     default.to.human=F,
                     f.change = 0.00001,
@@ -119,41 +133,104 @@ calc_css <- function(parameters=NULL,
                     regression=T,
                     well.stirred.correction=T,
                     restrictive.clearance=T,
+                    dosing=NULL,
                     ...)
 {
+  # We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
   
-  if(is.null(parameters)){
-    if(tolower(model)=='pbtk'){
-      parameters <- parameterize_pbtk(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
-    }else if(tolower(model)=='3compartment'){
-      parameters <- parameterize_3comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
-    }else if(tolower(model)=='1compartment'){
-      parameters <- parameterize_1comp(chem.cas=chem.cas,chem.name=chem.name,species=species,default.to.human=default.to.human,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance)
-    }
-  } 
+# We need to know model-specific information (from modelinfo_[MODEL].R]) 
+# to set up the solver:
+  if (is.null(model)) stop("Model must be specified.")
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
+    #Set more convenient names for various model-related variables (e.g. route
+    #of exposure) stored in the list of lists, model.list, compiled in the
+    #various models' associated "modelinfo_xxx.R" files:
+    #
+    # name of function that generates the model parameters:
+    parameterize_function <- model.list[[model]]$parameterize.func
+    # the names of the state variables of the model (so far, always in units of 
+    # amounts)
+    state.vars <- model.list[[model]]$default.monitor.vars
+    state.vars <- state.vars[!(state.vars %in% c(
+      "Atubules",
+      "Ametabolized",
+      "AUC",
+      "Cplasma"))]
+  }   
 
-  css <- calc_analytic_css(parameters=parameters,daily.dose=daily.dose,concentration='plasma',model=model,suppress.messages=T,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression,well.stirred.correction=well.stirred.correction,restrictive.clearance=restrictive.clearance) 
+  # We only want to call the parameterize function once:
+  if (is.null(parameters))
+  {
+    parameters <- do.call(parameterize_function,list(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid=dtxsid,
+      species=species,
+      default.to.human=default.to.human,
+      suppress.messages=suppress.messages,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      regression=regression)) 
+  }
+
+  if (is.null(dosing))
+  {
+    dosing <- list(
+      initial.dose=0,
+      dosing.matrix=NULL,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    )
+  }
+  
+  # We need to find out what concentrations (roughly) we should reach before
+  # stopping:
+  css <- calc_analytic_css(
+    parameters=parameters,
+    daily.dose=daily.dose,
+    concentration='plasma',
+    model=model,
+    output.units = output.units,
+    suppress.messages=T,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    well.stirred.correction=well.stirred.correction,
+    restrictive.clearance=restrictive.clearance) 
   target.conc <- (1 - f) * css 
 
-  # Initially simulate for a time perioud of length "days":
-  if(tolower(model) == 'pbtk'){
-    out <- solve_pbtk(parameters=parameters, daily.dose=daily.dose,doses.per.day=doses.per.day,days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
-  }else if(tolower(model) =='3compartment'){
-    out <- solve_3comp(parameters=parameters, daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cgut","Cliver","Crest")]
-  }else if(tolower(model)=='1compartment'){
-    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = days,suppress.messages=T,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Ccompartment")]
-  }else stop('The model options are only: 1compartment, 3compartment, and pbtk.')
-  
+  # Initially simulate for a time period of length "days":
+  out <- solve_model(parameters=parameters,
+    model=model, 
+    dosing=dosing,
+    suppress.messages=T,
+    days=days,
+    output.units = output.units,
+    restrictive.clearance=restrictive.clearance,
+    ...)
+  Final_Conc <- out[dim(out)[1],state.vars]
   total.days <- days
   additional.days <- days
 
+  # For the 3-compartment model:  
+  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
+
+  target <- paste("C",tissue,sep="") 
+  if (!(target %in% colnames(out))) stop(paste(
+    "Requested tissue",tissue,"is not an output of model",model))
+    
   while(all(out[,"Cplasma"] < target.conc) & 
-       ((out[match((additional.days - 1),out[,'time']),'Cplasma']-
-        out[match((additional.days - 2),out[,'time']),'Cplasma'])/
-        out[match((additional.days - 2),out[,'time']),'Cplasma'] > f.change))
+       ((out[match((additional.days - 1),out[,'time']),target]-
+        out[match((additional.days - 2),out[,'time']),target])/
+        out[match((additional.days - 2),out[,'time']),target] > f.change))
   {
     if(additional.days < 1000)
     {
@@ -163,16 +240,15 @@ calc_css <- function(parameters=NULL,
     #}
     total.days <- total.days + additional.days
     
-  if(tolower(model) == 'pbtk'){
-    out <- solve_pbtk(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cart","Cven","Clung","Cgut","Cliver","Ckidney","Crest")]
-  }else if(tolower(model) =='3compartment'){
-    out <- solve_3comp(parameters=parameters,initial.values = Final_Conc, daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,restrictive.clearance=restrictive.clearance,...)
-    Final_Conc <- out[dim(out)[1],c("Agutlumen","Cgut","Cliver","Crest")]
-  }else if(tolower(model)=='1compartment'){
-    out <- solve_1comp(parameters=parameters,daily.dose=daily.dose,doses.per.day=doses.per.day, days = additional.days,suppress.messages=T,initial.values=Final_Conc,...)
-    Final_Conc <- out[dim(out)[1],c('Agutlumen','Ccompartment')]
-  }
+    out <- solve_model(parameters=parameters,
+      model=model,
+      initial.values = Final_Conc,  
+      dosing=dosing,
+      days = additional.days,
+      suppress.messages=T,
+      restrictive.clearance=restrictive.clearance,
+      ...)
+    Final_Conc <- out[dim(out)[1],state.vars]
   
     if(total.days > 36500) break 
   }
@@ -183,9 +259,9 @@ calc_css <- function(parameters=NULL,
     # The day the simulation started:
     sim.start.day <- total.days - additional.days
     # The day the current simulation reached Css:
-    if(any(out[,"Cplasma"] >= target.conc))
+    if(any(out[,target] >= target.conc))
     {
-      sim.css.day <- floor(min(out[out[,"Cplasma"]>=target.conc,"time"]))
+      sim.css.day <- floor(min(out[out[,target]>=target.conc,"time"]))
     } else {
       sim.css.day <- additional.days
     }
@@ -194,50 +270,19 @@ calc_css <- function(parameters=NULL,
     # Fraction of analytic Css achieved:
     last.day.subset<-subset(out,out[,"time"]<(sim.css.day+1) &
                                 out[,"time"]>=(sim.css.day))
-    frac_achieved <- as.numeric(mean(last.day.subset[,"Cplasma"])/css)
+    frac_achieved <- as.numeric(mean(last.day.subset[,target])/css)
   } else{ 
    if(!suppress.messages)cat("Analytic css not reached after 100 years.")
    css.day  <- 36500
-   frac_achieved <- as.numeric(max(out[,"Cplasma"])/css)  
+   frac_achieved <- as.numeric(max(out[,target])/css)  
   }     
+  
+  max.conc <- as.numeric(max(out[,target]))
+  avg.conc <- as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC']) 
    
-  if (tolower(output.units) == tolower("mg/L")) 
-  {
-      out[,'AUC'] <- out[,'AUC']/1e+06 * parameters[["MW"]] * 1000
-      css <- css /1e+06 * parameters[["MW"]] * 1000
-      if(tolower(model)=='1compartment'){
-        out[,'Ccompartment'] <- out[,'Ccompartment']/1e+06 * parameters[["MW"]] * 1000
-      }else{  
-        out[,'Cplasma'] <- out[,'Cplasma']/1e+06 * parameters[["MW"]] * 1000
-      }
-  } else if (tolower(output.units) != tolower("uM")) stop("Currently can only return units of mg/L and uM")
-  
-  if(tolower(concentration)=='plasma'){
-    if(tolower(model)=='1compartment'){
-      max=as.numeric(max(out[,'Ccompartment']))
-    }else{
-      max=as.numeric(max(out[,'Cplasma']))
-    }
-    avg=as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])
-  }else if(tolower(concentration)=='blood'){
-    if(tolower(model)=='pbtk'){
-      max=as.numeric(max(out[,'Cven']))
-    }else if(tolower(model) == '3compartment'){
-      max=as.numeric(max(out[,'Cplasma'] * parameters[['Rblood2plasma']]))
-    }else{
-      max=as.numeric(max(out[,'Ccompartment'] * parameters[['Rblood2plasma']]))
-    }   
-   avg=as.numeric((out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC'])*parameters[['Rblood2plasma']])
-  }else stop("Only blood and plasma concentrations are calculated.")
-  if(!suppress.messages){
-    if(is.null(chem.cas) & is.null(chem.name)){
-      cat(paste(toupper(substr(concentration,1,1)),substr(concentration,2,nchar(concentration)),sep=''),"concentrations returned in",output.units,"units.\n")
-    }else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",output.units,"units.\n")
-  }
-  
-
-  return(list(avg=avg,
-    frac=frac_achieved, 
-    max=max,
-    the.day =as.numeric(css.day)))
+  return(list(
+    avg=signif(avg.conc,4),
+    frac=signif(frac_achieved,4), 
+    max=signif(max.conc,4),
+    the.day =signif(as.numeric(css.day),4)))
 }

@@ -4,12 +4,22 @@
 \alias{predict_partitioning_schmitt}
 \title{Predict partition coefficients using the method from Schmitt (2008).}
 \usage{
-predict_partitioning_schmitt(chem.name = NULL, chem.cas = NULL,
-  species = "Human", default.to.human = F, parameters = NULL,
-  alpha = 0.001, adjusted.Funbound.plasma = T, regression = T,
-  regression.list = c("brain", "adipose", "gut", "heart", "kidney",
-  "liver", "lung", "muscle", "skin", "spleen", "bone"), tissues = NULL,
-  minimum.Funbound.plasma = 1e-04)
+predict_partitioning_schmitt(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  parameters = NULL,
+  alpha = 0.001,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  regression.list = c("brain", "adipose", "gut", "heart", "kidney", "liver", "lung",
+    "muscle", "skin", "spleen", "bone"),
+  tissues = NULL,
+  minimum.Funbound.plasma = 1e-04,
+  suppress.messages = F
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name or the CAS number must be
@@ -18,14 +28,17 @@ specified.}
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
-\item{parameters}{Chemical parameters from the parameterize_schmitt
-function, overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters from \code{\link{parameterize_schmitt}}
+overrides chem.name, dtxsid, and chem.cas.}
 
 \item{alpha}{Ratio of Distribution coefficient D of totally charged species
 and that of the neutral form}
@@ -44,6 +57,8 @@ default.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 Returns tissue to unbound plasma partition coefficients for each
@@ -73,6 +88,22 @@ Human tissue volumes are used for species other than Rat.
 
 predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 
+}
+\references{
+Schmitt, Walter. "General approach for the calculation of tissue to plasma 
+partition coefficients." Toxicology in Vitro 22.2 (2008): 457-467.
+
+Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
+International Life Sciences Institute, Risk Science Institute, Washington, 
+DC (1994).
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
+
+Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
+tissue-to-plasma partition coefficients using readily available input 
+parameters." Xenobiotica 43.10 (2013): 839-852.
 }
 \author{
 Robert Pearce

@@ -4,11 +4,19 @@
 \name{onlyp}
 \alias{onlyp}
 \title{NHANES Exposure Data}
-\format{An object of class \code{data.table} (inherits from \code{data.frame}) with 1060 rows and 5 columns.}
+\format{A data.table containing 1060 rows and 5 columns.}
 \usage{
 onlyp
 }
 \description{
 This data set is only used in Vignette 6.
+}
+\references{
+Wambaugh, John F., et al. "High throughput heuristics for prioritizing human
+exposure to environmental chemicals." Environmental science & technology
+48.21 (2014): 12760-12767.
+}
+\author{
+Caroline Ring
 }
 \keyword{data}

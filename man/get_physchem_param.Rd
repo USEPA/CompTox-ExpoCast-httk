@@ -4,26 +4,32 @@
 \alias{get_physchem_param}
 \title{Get physico-chemical parameters from chem.physical_and_invitro.data}
 \usage{
-get_physchem_param(param, chem.name = NULL, chem.CAS = NULL)
+get_physchem_param(param, chem.name = NULL, chem.cas = NULL, dtxsid = NULL)
 }
 \arguments{
 \item{param}{The desired parameters, a vector or single value.}
 
 \item{chem.name}{The chemical names that you want parameters for, a vector or single value}
 
-\item{chem.CAS}{The chemical CAS numbers that you want parameters for, a vector or single value}
+\item{chem.cas}{The chemical CAS numbers that you want parameters for, a vector or single value}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 }
 \value{
 The paramters, either a single value, a named list for a single chemical, or a list of lists
 }
 \description{
 This function retrives physico-chemical properties ("param") for the chemical specified 
-by chem.name or chem.CAS from the vLiver tables.
+by chem.name or chem.cas from the vLiver tables.
 }
 \examples{
 
-get_physchem_param(param = 'logP', chem.CAS = '80-05-7')
-get_physchem_param(param = c('logP','MW'), chem.CAS = c('80-05-7','81-81-2'))
+get_physchem_param(param = 'logP', chem.cas = '80-05-7')
+get_physchem_param(param = c('logP','MW'), chem.cas = c('80-05-7','81-81-2'))
 
 
+}
+\author{
+John Wambaugh and Robert Pearce
 }

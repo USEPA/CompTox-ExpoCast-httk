@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{skeletal_muscle_mass_children}
 \alias{skeletal_muscle_mass_children}
-\title{Predict skeletal muscle mass for children.}
+\title{Predict skeletal muscle mass for children}
 \usage{
 skeletal_muscle_mass_children(gender, age_years)
 }
@@ -16,6 +16,18 @@ Vector of skeletal muscle masses in kg.
 }
 \description{
 For individuals under age 18, predict skeletal muscle mass from gender and
-age, using a nonlinear equation from J Cachexia Sarcopenia Muscle 2012
-3:25-29.
+age, using a nonlinear equation from Webber and Barr (2012)
 }
+\references{
+Webber, Colin E., and Ronald D. Barr. "Age-and gender-dependent values of 
+skeletal muscle mass in healthy children and adolescents." Journal of 
+cachexia, sarcopenia and muscle 3.1 (2012): 25-29.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

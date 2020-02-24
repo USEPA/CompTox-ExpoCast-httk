@@ -1,15 +1,15 @@
-/* pbtk1comp.c for R deSolve package
+/* 1comp.C for R deSolve package
    ___________________________________________________
 
    Model File:  pbtk1comp.model
 
-   Date:  Tue Mar 17 18:43:00 2015
+   Date:  Wed Jul 24 14:54:59 2019
 
-   Created by:  "L:/Lab/NCCT_E~1/MCSim/mod/mod.exe v5.5.0"
+   Created by:  "c:/users/jwambaug/MCSim under R/mod/mod v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2013 Free Software Foundation, Inc.
+   Copyright (c) 1993-2019 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
@@ -24,42 +24,61 @@
 
    0 Inputs:
 
-   3 Parameters:
+   4 Parameters:
      vdist = 0,
      ke = 0,
      kgutabs = 1,
+     BW = 70,
 */
 
 #include <R.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R_ext/Rdynload.h>
 
 /* Model variables: States */
-#define ID_Agutlumen 0x0000
-#define ID_Acompartment 0x0001
-#define ID_Ametabolized 0x0002
-#define ID_AUC 0x0003
+#define ID_Agutlumen 0x00000
+#define ID_Acompartment 0x00001
+#define ID_Ametabolized 0x00002
+#define ID_AUC 0x00003
 
 /* Model variables: Outputs */
-#define ID_Ccompartment 0x0000
+#define ID_Ccompartment 0x00000
 
 /* Parameters */
-static double parms[3];
+static double parms[4];
 
 #define vdist parms[0]
 #define ke parms[1]
 #define kgutabs parms[2]
+#define BW parms[3]
 
+/* Function definitions for delay differential equations */
 
+int Nout=1;
+int nr[1]={0};
+double ytau[1] = {0.0};
 
+static double yini[4] = {0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
 /*----- Initializers */
 void initmod1comp (void (* odeparms)(int *, double *))
 {
-  int N=3;
+  int N=4;
   odeparms(&N, parms);
 }
 
+/* Calling R code will ensure that input y has same
+   dimension as yini */
+void initState (double *y)
+{
+  int i;
 
-
+  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+  {
+    yini[i] = y[i];
+  }
+}
 
 void getParms1comp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -71,6 +90,7 @@ void getParms1comp (double *inParms, double *out, int *nout) {
   }
 
 
+  vdist = vdist * BW ;
   kgutabs = kgutabs * 24 ;
   ke = ke * 24 ;
 
@@ -87,9 +107,9 @@ void derivs1comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Acompartment] = kgutabs * y[ID_Agutlumen] - ke * y[ID_Acompartment];
+  ydot[ID_Acompartment] = kgutabs * y[ID_Agutlumen] - ke * y[ID_Acompartment] ;
 
-  ydot[ID_Ametabolized] = ke * y[ID_Acompartment];
+  ydot[ID_Ametabolized] = ke * y[ID_Acompartment] ;
 
   ydot[ID_AUC] = yout[ID_Ccompartment] ;
 

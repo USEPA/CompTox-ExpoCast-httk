@@ -1,11 +1,13 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -15,77 +17,80 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save 3comp_test.R 3comp_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.4897
+[1] 1.488
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.4897
+[1] 1.488
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.4897
+[1] 1.488
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 27.10683
+[1] 27.06
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 8.589967
+[1] 8.577
 > 
 > head(solve_3comp(chem.name="bisphenol a"))
-Human values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen     Cgut   Cliver     Crest  Cplasma         AUC
-[1,] 0.00000000 306.62619  0.00000  0.00000 0.0000000 0.000000 0.000000000
-[2,] 0.01041667 177.79465 70.97651 23.57004 0.1597692 1.298304 0.005432548
-[3,] 0.02083333 103.09280 68.34520 46.96083 0.7626077 2.586734 0.026458787
-[4,] 0.03125000  59.77750 51.22601 53.60504 1.5763080 2.952716 0.056014080
-[5,] 0.04166667  34.66149 36.03581 49.56272 2.3521898 2.730054 0.085935981
-[6,] 0.05208333  20.09819 25.60039 41.64270 2.9753651 2.293797 0.112169855
-     Ametabolized     Atubules
-[1,]     0.000000 0.0000000000
-[2,]     1.095100 0.0003818546
-[3,]     5.333595 0.0040674331
-[4,]    11.291388 0.0140330864
-[5,]    17.323082 0.0309308243
-[6,]    22.611339 0.0538564616
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > head(solve_3comp(chem.cas="80-05-7"))
-Human values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen     Cgut   Cliver     Crest  Cplasma         AUC
-[1,] 0.00000000 306.62619  0.00000  0.00000 0.0000000 0.000000 0.000000000
-[2,] 0.01041667 177.79465 70.97651 23.57004 0.1597692 1.298304 0.005432548
-[3,] 0.02083333 103.09280 68.34520 46.96083 0.7626077 2.586734 0.026458787
-[4,] 0.03125000  59.77750 51.22601 53.60504 1.5763080 2.952716 0.056014080
-[5,] 0.04166667  34.66149 36.03581 49.56272 2.3521898 2.730054 0.085935981
-[6,] 0.05208333  20.09819 25.60039 41.64270 2.9753651 2.293797 0.112169855
-     Ametabolized     Atubules
-[1,]     0.000000 0.0000000000
-[2,]     1.095100 0.0003818546
-[3,]     5.333595 0.0040674331
-[4,]    11.291388 0.0140330864
-[5,]    17.323082 0.0309308243
-[6,]    22.611339 0.0538564616
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
-Values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.79 .
-           time Agutlumen     Cgut   Cliver     Crest  Cplasma         AUC
-[1,] 0.00000000 306.62619  0.00000  0.00000 0.0000000 0.000000 0.000000000
-[2,] 0.01041667 177.79465 70.97651 23.57004 0.1597692 1.298304 0.005432548
-[3,] 0.02083333 103.09280 68.34520 46.96083 0.7626077 2.586734 0.026458787
-[4,] 0.03125000  59.77750 51.22601 53.60504 1.5763080 2.952716 0.056014080
-[5,] 0.04166667  34.66149 36.03581 49.56272 2.3521898 2.730054 0.085935981
-[6,] 0.05208333  20.09819 25.60039 41.64270 2.9753651 2.293797 0.112169855
-     Ametabolized     Atubules
-[1,]     0.000000 0.0000000000
-[2,]     1.095100 0.0003818546
-[3,]     5.333595 0.0040674331
-[4,]    11.291388 0.0140330864
-[5,]    17.323082 0.0309308243
-[6,]    22.611339 0.0538564616
+Amounts returned in umol  and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
+[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 0.00001     306.50  0.001995 3.182e-08  0.00000    7.425e-08 0.000000
+[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
+[4,] 0.02083     103.10 32.220000 2.532e+00  0.05723    6.849e+00 0.024090
+[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
+[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+       Cplasma
+[1,] 0.000e+00
+[2,] 3.182e-08
+[3,] 1.135e+00
+[4,] 2.532e+00
+[5,] 3.449e+00
+[6,] 3.986e+00
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
@@ -131,3 +136,4 @@ AUC is area under plasma concentration curve in uM * days units with Rblood2plas
 +   }
 + }
 > 
+> quit("no")

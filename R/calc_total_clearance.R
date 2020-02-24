@@ -10,6 +10,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -29,7 +31,7 @@
 #' parameters is NULL.
 #' @return \item{Total Clearance}{Units of L/h/kg BW.}
 #' @author John Wambaugh
-#' @keywords Parameter
+#' @keywords Parameter 1compartment
 #' @examples
 #' 
 #' calc_total_clearance(chem.name="Ibuprofen") 
@@ -38,10 +40,11 @@
 #' @export calc_total_clearance
 calc_total_clearance<- function(chem.cas=NULL,
                                 chem.name=NULL,
+                                dtxsid=NULL,
                                 parameters=NULL,
                                 species="Human",
                                 suppress.messages=F,
-                                 default.to.human=F,
+                                default.to.human=F,
                                 well.stirred.correction=T,
                                 restrictive.clearance=T,
                                 adjusted.Funbound.plasma=T,
@@ -52,6 +55,7 @@ calc_total_clearance<- function(chem.cas=NULL,
     {
       parameters <- parameterize_steadystate(chem.cas=chem.cas, 
                                              chem.name=chem.name, 
+                                             dtxsid=dtxsid,
                                              species=species,
                                              default.to.human=default.to.human,
                                              adjusted.Funbound.plasma=
@@ -62,8 +66,9 @@ calc_total_clearance<- function(chem.cas=NULL,
       parameters[['BW']]^0.25 #L/h/kgBW
     fup <- parameters[["Funbound.plasma"]]# unitless fraction
     clearance <- Qgfrc*fup+
-                   calc_hepatic_clearance(chem.cas=chem.cas,
+                   calc_hep_clearance(chem.cas=chem.cas,
                      chem.name=chem.name,
+                     dtxsid=dtxsid,
                      species=species,
                      parameters=parameters,
                      suppress.messages=T,

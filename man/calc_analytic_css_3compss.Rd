@@ -5,10 +5,20 @@
 \title{Calculate the analytic steady state concentration for the three oompartment
 steady-state model}
 \usage{
-calc_analytic_css_3compss(chem.name = NULL, chem.cas = NULL,
-  parameters = NULL, hourly.dose = 1/24, concentration = "plasma",
-  suppress.messages = F, recalc.blood2plasma = F, tissue = NULL,
-  restrictive.clearance = T, bioactive.free.invivo = FALSE, ...)
+calc_analytic_css_3compss(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  hourly.dose = 1/24,
+  concentration = "plasma",
+  suppress.messages = F,
+  recalc.blood2plasma = F,
+  tissue = NULL,
+  restrictive.clearance = T,
+  bioactive.free.invivo = FALSE,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -16,6 +26,9 @@ be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
@@ -57,3 +70,4 @@ concentrations as a result of infusion dosing.
 \author{
 Robert Pearce and John Wambaugh
 }
+\keyword{3compss}
