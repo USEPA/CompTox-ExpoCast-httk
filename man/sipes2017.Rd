@@ -13,9 +13,12 @@ ADMET, Simulations Plus
 sipes2017
 }
 \description{
-This table includes data predicted with Simulations Plus' ADMET predictor,
-used in load_sipes2017, that was used in Sipes et al. 2017. The column names
-are equivalent to those of chem.physical_and_invitro.data.
+This table includes in silico predicted chemical-specifc plasma protein 
+unbound fraction (fup) and intrinsic hepatic clearance values for the entire
+Tox21 library 
+(see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
+Predictions were made with Simulations Plus ADMET predictor,
+as reported in Sipes et al. (2017).
 }
 \references{
 Sipes, Nisha S., et al. "An Intuitive Approach for Predicting

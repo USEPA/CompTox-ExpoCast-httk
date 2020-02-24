@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. (2017) Generating subpopulations}
+  %\VignetteIndexEntry{Ring et al. (2017): Generating subpopulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 This vignette provides the code used to generate the virtual populations for the ten subpopulations of interest, plus a non-obese adult subpopulation.
 
 To use the code in this vignette, you'll first need to load a few packages.
-```{r load_packages, eval = FALSE}
+```{r load_packages, eval = TRUE}
 library("httk")
 library("data.table")
 ```
@@ -24,7 +24,7 @@ Because we'll be writing some files (and then reading them in other vignettes),
 be aware of where your current working directory is -- the files will be written there.
 # Set up subpopulation specs
 Here, we set the number of individuals in each virtual population (1000). We also specify a list of names for the virtual populations. Then we specify corresponding lists of gender, age limits, and BMI categories. HTTK-Pop default values will be used for other population specifications (e.g. race/ethnicity, kidney function categories).
-```{r subpop_specs, eval=FALSE}
+```{r subpop_specs, eval = TRUE}
 nsamp<-1000
 #List subpop names
 ExpoCast.group<-list("Total",
@@ -70,7 +70,7 @@ bmi_category <- c(rep(list(c('Underweight',
 
 ## Generate populations
 First, define the loop body as a function; then use `parallel::clusterMap` to parallelize it. Warning: This might take a couple of minutes to run.
-```{r generate_parallel, eval=FALSE}
+```{r generate_parallel, eval = FALSE}
 tmpfun <- function(gendernum, agelim, bmi_category, ExpoCast_grp,
                    nsamp, method){
   result <- tryCatch({

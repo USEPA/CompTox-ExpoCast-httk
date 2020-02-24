@@ -3,56 +3,56 @@
 \docType{data}
 \name{wambaugh2019}
 \alias{wambaugh2019}
-\title{in vitro Toxicokinetic Data from Wambaugh et al. (submitted)}
+\title{in vitro Toxicokinetic Data from Wambaugh et al. (2019)}
 \format{A data frame with 496 rows and 17 variables:
 \describe{
   \item{Compound}{The name of the chemical}
-  \item{CAS}{The Chemical Abstracts Service Registry Number}                         
-  \item{Human.Clint}{Median of Bayesian credible interval for intrinsic 
+  \item{CAS}{The Chemical Abstracts Service Registry Number}
+  \item{Human.Clint}{Median of Bayesian credible interval for intrinsic
 hepatic clearance (uL/min/million hepatocytes)]}
-  \item{Human.Clint.pValue}{Probability that there is no clearance}          
-  \item{Human.Funbound.plasma}{Median of Bayesian credibl interval for 
+  \item{Human.Clint.pValue}{Probability that there is no clearance}
+  \item{Human.Funbound.plasma}{Median of Bayesian credibl interval for
 fraction of chemical free in the presence of plasma}
-  \item{pKa_Accept}{pH(s) at which hydrogen acceptor sites (if any) are at 
-equilibrium}                  
-  \item{pKa_Donor}{pH(s) at which hydrogne donor sites (if any) are at 
+  \item{pKa_Accept}{pH(s) at which hydrogen acceptor sites (if any) are at
 equilibrium}
-  \item{DSSTox_Substance_Id}{Identifier for CompTox Chemical Dashboard}         
-  \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
+  \item{pKa_Donor}{pH(s) at which hydrogne donor sites (if any) are at
+equilibrium}
+  \item{DSSTox_Substance_Id}{Identifier for CompTox Chemical Dashboard}
+  \item{SMILES}{Simplified Molecular-Input Line-Entry System structure
 description}
-  \item{Human.Clint.Low95}{Lower 95th percentile of Bayesian credible 
-interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}        
-  \item{Human.Clint.High95}{Uppper 95th percentile of Bayesian credible 
+  \item{Human.Clint.Low95}{Lower 95th percentile of Bayesian credible
 interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}
-  \item{Human.Clint.Point}{Point estimate of intrinsic hepatic clearance 
+  \item{Human.Clint.High95}{Uppper 95th percentile of Bayesian credible
+interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}
+  \item{Human.Clint.Point}{Point estimate of intrinsic hepatic clearance
 (uL/min/million hepatocytes)}
-  \item{Human.Funbound.plasma.Low95}{Lower 95th percentile of Bayesian credible 
+  \item{Human.Funbound.plasma.Low95}{Lower 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma}
-  \item{Human.Funbound.plasma.High95}{Upper 95th percentile of Bayesian credible 
+  \item{Human.Funbound.plasma.High95}{Upper 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma}
   \item{Human.Funbound.plasma.Point}{Point estimate of the fraction of
 chemical free in the presence of plasma}
-  \item{MW}{Molecular weight (Daltons)}                         
+  \item{MW}{Molecular weight (Daltons)}
   \item{logP}{log base ten of octanol:water partiion coefficient}
 }}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019
 }
 \description{
 These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-et al. (submitted) They
+et al. (2019) They
 are the processed values used to make the figures in that manuscript.
 These data summarize the results of Bayesian analysis of the in vitro
-toxicokinetic experiments conducted by Cyprotex to characterize fraction 
-unbound in the presence of pooled human plasma protein and the intrnsic 
+toxicokinetic experiments conducted by Cyprotex to characterize fraction
+unbound in the presence of pooled human plasma protein and the intrnsic
 hepatic clearance of the chemical by pooled human hepatocytes.
 }
 \references{
-Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization", submitted.
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

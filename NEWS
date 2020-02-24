@@ -1,12 +1,43 @@
 News for R package httk
 
+Changes in version 2.0.0 (February 10, 2020)
+ 	New generic inhalation PBPK model included, consistent with Linakis et al. (submitted) "Development and Evaluation of a High Throughput Inhalation Model for Organic Chemicals"
+  New chemical specific parameters for volatile chemicals have been added:
+    43 in human
+    41 in rat
+  Rewrote underlying code to allow more easy integration of new models. (goodbye, spaghetti code!)
+  Rewritten funtions include:
+    calc_analytic_css
+    calc_mc_css
+    convert_httkpop (renamed from convert_httk)
+    solve_* model functions
+    get_cheminfo
+  Renamed a few httk-pop functions for clarity:
+    httkpop_biotophys_default replaces httkpop_bio
+    convert_httkpop replaces convert_httk
+  New functions introduced:
+    solve_model (mostly used by solve_* model functions)
+    calc_mc_tk (performs Monte Carlo simulation using a solve_* function)
+  Models must be much more thoroughly described now, with all relevant information placed in modelinfo_* files in the /R directory.
+  New model-specific functions introduced:
+    analytic_css_*: Model-specific analytic steady-state solution
+    convert_httkpop_*: Model-specific functions for converting HTTK-pop 
+      biometrics to model parameters
+  EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see http://comptox.epa.gov/dashboard/) now work as chemical identifiers in addition to name and CAS.
+  Results now truncated to appropriate significant figures.
+  Beta testing and bug reports provided by Xiaoqing Chang.
+  New physiological parameters have been added for monkeys
+  To decrease package size the load image option of load_sipes2017 was eliminated
+  Added vignette for Figure 6 from Frank, Christopher L., et al. "Defining toxicological tipping points in neuronal network development." Toxicology and Applied Pharmacology 354 (2018): 81-93.
+   
 Changes in version 1.10.1 (Septmeber 9, 2019)
   Bug fixes (thank you David Trudel).
   Changed all file name starting letters to lowercase.
   
 Changes in version 1.10.0 (July 9, 2019)
 
-  This version is consistent with the submitted manuscript Wambaugh et al. "Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization"
+  This version is consistent with the submitted manuscript Wambaugh et al. 
+    "Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization"
   New human experimental measurements of fup and Clint are reported for 418 and 467 chemicals, respectively.
   Data on both fup and Clint are jointly available for 389 of those chemicals.
   Clint and fup values can now be either numeric values (as before) or distributions characterized by as "MEDIAN,LOWER95TH,UPPER95TH,PVALUE" for Clint and "MEDIAN,LOWER95TH,UPPER95TH" for fup. The code has been substantially revised to accomodate this.
@@ -49,7 +80,7 @@ Changes in version 1.9 (February 4, 2019)
   Updated load_sipes2017 to be much faster by loading an image by default
   Updated help files for Sipes2017 and load_sipes2017.
   get_wetmore functions changed to get_lit
-  httkpop_bio exported to user functions
+  httkpop_bio exported to user functions (fx name since changed to 'httkpop_biotophys_default')
   Corrected mistake in get_cheminfo help file: exlude.fub.zero defaults to FALSE for 3compartmentss and TRUE for others
   Corrected (thank you Jason Phillips), updated, and added pKa values from Strope et al., 2018
   For time point after first dose: bug now corrected when not starting at time 0(thank you Xiaoqing Chang)

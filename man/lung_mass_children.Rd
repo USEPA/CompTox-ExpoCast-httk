@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{lung_mass_children}
 \alias{lung_mass_children}
-\title{Predict lung mass for children.}
+\title{Predict lung mass for children}
 \usage{
 lung_mass_children(height, weight, gender)
 }
@@ -18,5 +18,21 @@ A vector of lung masses in kg.
 }
 \description{
 For individuals under 18, predict the liver mass from height, weight, and
-gender, using equations from Ogiu et al.
+gender, using equations from Ogiu et al. 1997
 }
+\references{
+Ogiu, Nobuko, et al. "A statistical analysis of the internal 
+organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
+
+Price, Paul S., et al. "Modeling interindividual variation in physiological 
+factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
+(2003): 469-503.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

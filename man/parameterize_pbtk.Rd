@@ -4,19 +4,32 @@
 \alias{parameterize_pbtk}
 \title{Parameterize_PBTK}
 \usage{
-parameterize_pbtk(chem.cas = NULL, chem.name = NULL,
-  species = "Human", default.to.human = F, tissuelist = list(liver =
-  c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
-  force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T, regression = T,
-  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
+parameterize_pbtk(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
+    c("gut")),
+  force.human.clint.fup = F,
+  clint.pvalue.threshold = 0.05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  suppress.messages = F,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
+chemical must be identified by either CAS, name, or DTXISD}
 
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
+chemical must be identified by either CAS, name, or DTXISD}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+-- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -43,31 +56,41 @@ partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
+\item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
+binding is not taken into account (set to 1) in liver clearance if FALSE.}
+
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 }
 \value{
-\item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
-the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-chemical unbound in hepatocyte assay using the method of Kilford et al.
-(2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{BW}{Body Weight, kg.} 
+\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+the dose that enters the gutlumen.} 
+\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+assay using the method of Kilford et al. (2008)} 
+\item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
-from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
-kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
-concentration of chemical in liver tissue to unbound concentration in
-plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
-to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
+concentration in plasma.} 
+\item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 
+\item{Kkidney2pu}{Ratio of concentration of chemical in
+kidney tissue to unbound concentration in plasma.} 
+\item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to 
+unbound concentration in plasma.} 
+\item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+to unbound concentration in plasma.} 
+\item{Krbc2pu}{Ratio of concentration
 of chemical in red blood cells to unbound concentration in plasma.}
 \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
-\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
-Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
-excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+unbound concentration in plasma.} 
+\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
+\item{MW}{Molecular Weight, g/mol.}
+\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} 
+\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid 
+filtered from kidney and excreted.} 
+\item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
 \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
@@ -86,7 +109,6 @@ calc_css, and others using the multiple compartment model.
 }
 \examples{
 
-
  parameters <- parameterize_pbtk(chem.cas='80-05-7')
 
  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
@@ -96,11 +118,12 @@ calc_css, and others using the multiple compartment model.
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
- 
- 
 
 }
 \references{
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
@@ -110,3 +133,4 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 John Wambaugh and Robert Pearce
 }
 \keyword{Parameter}
+\keyword{pbtk}

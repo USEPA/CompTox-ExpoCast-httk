@@ -3,40 +3,40 @@
 \docType{data}
 \name{wambaugh2019.raw}
 \alias{wambaugh2019.raw}
-\title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)}
+\title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)}
 \format{A data frame with 530 rows and 28 variables:
 \describe{
-  \item{DTXSID}{Identifier for CompTox Chemical Dashboard}         
+  \item{DTXSID}{Identifier for CompTox Chemical Dashboard}
   \item{Name}{The name of the chemical}
-  \item{CAS}{The Chemical Abstracts Service Registry Number}                         
+  \item{CAS}{The Chemical Abstracts Service Registry Number}
   \item{CompoundName}{Sample name provided by EPA to Cyprotex}
   \item{Fup.point}{Point estimate of the fraction of
 chemical free in the presence of plasma}
-  \item{Base.Fup.Med}{Median of Bayesian credible interval for 
+  \item{Base.Fup.Med}{Median of Bayesian credible interval for
 fraction of chemical free in the presence of plasma for analysis of 100%
 physiological plasma protein data only (base model)}
-  \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible 
+  \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma for analysis of 100%
 physiological plasma protein data only (base model)}
-  \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible 
+  \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma for analysis of 100%
 physiological plasma protein data only (base model)}
-  \item{Affinity.Fup.Med}{Median of Bayesian credible interval for 
+  \item{Affinity.Fup.Med}{Median of Bayesian credible interval for
 fraction of chemical free in the presence of plasma for analysis of protein
 titration protocol data (affinity model)}
-  \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible 
+  \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma for analysis of protein
 titration protocol data (affinity model)}
-  \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible 
+  \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible
 interval for fraction of chemical free in the presence of plasma for analysis of protein
 titration protocol data (affinity model)}
-  \item{Affinity.Kd.Med}{Median of Bayesian credible interval for 
+  \item{Affinity.Kd.Med}{Median of Bayesian credible interval for
 protein binding affinity from analysis of protein
 titration protocol data (affinity model)}
-  \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible 
+  \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible
 interval for protein binding affinity from analysis of protein
 titration protocol data (affinity model)}
-  \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible 
+  \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible
 interval for protein binding affinity from analysis of protein
 titration protocol data (affinity model)}
   \item{Decreases.Prob}{Probability that the chemical concentration decreased
@@ -47,50 +47,50 @@ decrease varied between the 1 and 10 uM hepatic clearance experiments.}
 in the 1 uM hepatic clearance assay.}
   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
 in the 10 uM hepatic clearance assay.}
-  \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic 
+  \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic
 hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
-  \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible 
-interval for intrinsic hepatic clearance at 1 uM initital chemical 
-concentration (uL/min/million hepatocytes)}        
-  \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible 
-interval for intrinsic hepatic clearance at 1 uM initital chemical 
+  \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible
+interval for intrinsic hepatic clearance at 1 uM initital chemical
+concentration (uL/min/million hepatocytes)}
+  \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible
+interval for intrinsic hepatic clearance at 1 uM initital chemical
 concentration(uL/min/million hepatocytes)}
-  \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic 
+  \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic
 hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
-  \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible 
-interval for intrinsic hepatic clearance at 10 uM initital chemical 
-concentration (uL/min/million hepatocytes)}        
-  \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible 
-interval for intrinsic hepatic clearance at 10 uM initital chemical 
+  \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible
+interval for intrinsic hepatic clearance at 10 uM initital chemical
+concentration (uL/min/million hepatocytes)}
+  \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible
+interval for intrinsic hepatic clearance at 10 uM initital chemical
 concentration(uL/min/million hepatocytes)}
-  \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance 
+  \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance
 (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
-  \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance 
+  \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance
 (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
-  \item{Fit}{Classification of clearance observed}                         
-  \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
+  \item{Fit}{Classification of clearance observed}
+  \item{SMILES}{Simplified Molecular-Input Line-Entry System structure
 description}
 }}
 \source{
-Wambaugh et al. (submitted)
+Wambaugh et al. (2019)
 }
 \usage{
 wambaugh2019.raw
 }
 \description{
 These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-et al. (submitted) They
+et al. (2019) They
 are the output of different Bayesian models evaluated to compare using a
 single protein concentration vs. the new three concentration titration
 protocol. These data summarize the results of Bayesian analysis of the in vitro
-toxicokinetic experiments conducted by Cyprotex to characterize fraction 
-unbound in the presence of pooled human plasma protein and the intrnsic 
+toxicokinetic experiments conducted by Cyprotex to characterize fraction
+unbound in the presence of pooled human plasma protein and the intrnsic
 hepatic clearance of the chemical by pooled human hepatocytes.
 This file includes replicates (diferent CompoundName id's but same chemical')
 }
 \references{
-Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization", submitted.
+Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
+Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 }
 \author{
 John Wambaugh

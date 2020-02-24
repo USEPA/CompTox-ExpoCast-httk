@@ -1,0 +1,154 @@
+---
+title: "Frank et al. (2018): Creating Figure Six (IVIVE)"
+author: "John F. Wambaugh"
+date: "September 25, 2019"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Frank et al. (2018): Creating IVIVE Figure (Fig. 6)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+from "Defining toxicological tipping points in neuronal network development"
+
+Christopher L. Frank, Jasmine P. Brown, Kathleen Wallace, John F. Wambaugh, Imran Shah, and Timothy J. Shafer
+
+Toxicology and Applied Pharmacology 354 (2018) 81-93
+
+https://doi.org/10.1016/j.taap.2018.01.017
+
+## Abstract
+Measuring electrical activity of neural networks by microelectrode array (MEA) has recently 
+shown promise for screening level assessments of chemical toxicity on network development 
+and function. Important aspects of interneuronal communication can be quantified from a 
+single MEA recording, including individual firing rates, coordinated bursting, and measures 
+of network synchrony, providing rich datasets to evaluate chemical effects. Further, 
+multiple recordings can be made from the same network, including during the formation of 
+these networks in vitro. The ability to perform multiple recording sessions over the in 
+vitro development of network activity may provide further insight into developmental 
+effects of neurotoxicants. In the current study, a recently described MEA-based screen of 
+86 compounds in primary rat cortical cultures over 12 days in vitro was revisited to 
+establish a framework that integrates all available primary measures of electrical 
+activity from MEA recordings into a composite metric for deviation from normal activity 
+(total scalar perturbation). Examining scalar perturbations over time and increasing 
+concentration of compound allowed for definition of critical concentrations or "tipping 
+points" at which the neural networks switched from recovery to non-recovery trajectories
+for 42 compounds. These tipping point concentrations occurred at predominantly lower 
+concentrations than those causing overt cell viability loss or disrupting individual 
+network parameters, suggesting tipping points may be a more sensitive measure of network 
+functional loss. Comparing tipping points for six compounds with plasma concentrations 
+known to cause developmental neurotoxicity in vivo demonstrated strong concordance and
+suggests there is potential for using tipping points for chemical prioritization.
+
+
+## Prepare for session
+### Load the relevant libraries
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+library(gdata)
+library(httk)
+library(ggplot2)
+library(scales)
+# We love to give warning messages whenever assumptions are used by HTTK,
+# but they will overwhelm the output of this vignette so we turn them
+# off:
+options(warn = -1)
+```
+### Function to format scientific notation 
+From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
+```{R scientific.notation}
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+```
+### Load the data
+```{r Frank2018data}
+chem.table <- Frank2018invivo
+```
+## Use HTTK to perform IVIVE
+### This loops through each study design in the table and runs solve_pbtk:
+```{R ivive.loop}
+for (this.row in 1:dim(chem.table))
+{
+  this.cas <- chem.table[this.row,"Substance_CASRN"]
+  if (tolower(chem.table[this.row,"Species"])=="rodent") 
+  {  
+    this.species <- "rat"
+  } else if (tolower(chem.table[this.row,"Species"])=="rat") 
+  {
+    this.species <- "rat"
+  } else if (tolower(chem.table[this.row,"Species"])=="human")
+  {
+    this.species <- "human"
+  }
+  else if (tolower(chem.table[this.row,"Species"])=="mouse") 
+  {
+    this.species <- "mouse"
+  }
+  else browser()
+  if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =T
+  else if (chem.table[this.row,"Route"]=="oral") iv.dose = F
+  else browser()
+  this.dose <- chem.table[this.row,"Dose"]
+  this.days <- chem.table[this.row,"Days"]
+# Make sure the dose units are in mg/kg body weight:
+  if (regexpr("ug",chem.table[this.row,"Dose.Units"])!=-1) 
+  {
+    this.dose <- this.dose/1000
+  }
+  if (regexpr("/kg",chem.table[this.row,"Dose.Units"])==-1) 
+  {
+    this.dose <- this.dose/0.25
+  }
+# Here we run the HTTK PBPK Model:
+  out <- solve_pbtk(chem.cas=this.cas,
+           dose=this.dose,
+           species=this.species,
+# This was used in 2017 but I don't agree with it anymore:
+#           restrictive.clearance=F,
+           days=this.days,
+           iv.dose=iv.dose,
+           default.to.human=T)
+# Record the Cmax and the AUC:
+  chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
+  chem.table[this.row,"AUC"] <- max(out[,"AUC"])
+}
+```
+## Make the plot
+Comparison between predicted plasma levels for critical
+concentrations and in vivo estimates from the httk model. For
+those chemicals with 1) in vitro predicted critical concentrations,
+2) in vivo studies indicating neurological effect, and 3)
+available toxicokinetic data the time-integrated plasma concentration
+(area under the curve or AUC) was predicted for the
+LOEL associated with each chemical-specific study. The chemical-
+specific prediction is indicated by the first four letters of
+each chemicals name. There were two available studies for each
+chemical. The identity ("perfect predictor") line is indicated by
+a solid black line, while the dashed lines indicate ten-fold above
+and below perfect prediction. Because all in vitro treatments
+were exposed for the same amount of time, the relationship
+between nominal in vitro concentration and time-integrated
+concentration is a constant.
+```{R Frank2018.Fig6}
+Fig.AUC <- ggplot(data=chem.table) +
+  geom_segment(color="grey",aes(x=AUC,y=Lower.95..CI,xend=AUC,yend=Higher.95..CI))+    
+#  geom_point(aes(x=AUC,y=Critical.concentration,color="Chemical"))+ 
+   geom_text(aes(x=AUC,y=Critical.concentration,label=Compound.abbrev,color=Chemical)) +
+   scale_y_log10(label=scientific_10,limits=c(10^-7,100)) +
+   scale_x_log10(label=scientific_10,limits=c(10^-7,100)) +
+    annotation_logticks() + 
+    geom_abline(slope=1, intercept=0) + 
+    geom_abline(slope=1, intercept=1,linetype="dashed") + 
+    geom_abline(slope=1, intercept=-1,linetype="dashed") + 
+    xlab(expression(paste(italic("In vivo")," AUC estimated with HTTK (uM*day)"))) + 
+    ylab(expression(paste(italic("In vitro")," predicted Critical Conc. (uM)"))) +
+    scale_color_brewer(palette="Set2") + 
+    theme_bw()  +
+    theme(legend.position="bottom")
+    
+print(Fig.AUC)
+```

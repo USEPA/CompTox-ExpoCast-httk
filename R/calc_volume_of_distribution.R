@@ -18,6 +18,8 @@
 #' specified when Funbound.plasma is not given in parameter list. 
 #' @param chem.cas Either the CAS number or the chemical name must be specified
 #' when Funbound.plasma is not given in parameter list. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
 #' predict_partitioning_schmitt.
 #' @param default.to.human Substitutes missing animal values with human values
@@ -33,13 +35,13 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
-#' @author John Wambaugh
+#' @author John Wambaugh and Robert Pearce
 #' @references Schmitt W. "General approach for the calculation of tissue to
 #' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 #' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
 #' partition coefficients for PBPK modeling of drugs and environmental
 #' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
-#' @keywords Parameter
+#' @keywords Parameter 1compartment
 #' @examples
 #' 
 #' calc_vdist(chem.cas="80-05-7")
@@ -49,6 +51,7 @@
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
+                      dtxsid=NULL,
                       parameters=NULL,
                       default.to.human=F,
                       species="Human",
@@ -60,10 +63,27 @@ calc_vdist<- function(chem.cas=NULL,
   physiology.data <- physiology.data
   Parameter <- NULL
 
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid) &
+      is.null(parameters)) 
+    stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+    
   if (is.null(parameters))
   {
+    # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+  
     schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
                             chem.name=chem.name,
+                            dtxsid=dtxsid,
                             default.to.human=default.to.human,
                             species=species,
                             minimum.Funbound.plasma=minimum.Funbound.plasma)
@@ -77,22 +97,27 @@ calc_vdist<- function(chem.cas=NULL,
     else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
-  if(any(names(parameters) %in% schmitt.specific.names) & !all(c(schmitt.names) %in% names(parameters))) stop("All predict_partitioning_schmitt coefficients must be included if not using pbtk or 3compartment parameters.")              
-  else if(all(schmitt.names %in% names(parameters))) schmitt.params  <- T
-  else schmitt.params <- F                                                                                           
+  if(any(names(parameters) %in% schmitt.specific.names) &
+    !all(schmitt.specific.names %in% names(parameters)))
+    stop("All predict_partitioning_schmitt coefficients must be included if not using pbtk or 3compartment parameters.")
+  else if(all(model.list[["schmitt"]]$param.names %in% names(parameters)))
+    schmitt.params  <- T
+  else schmitt.params <- F
+                                                                                       
 
   if(schmitt.params & !('funbound.plasma' %in% tolower(names(parameters))))
   {
-    if(is.null(chem.cas) & is.null(chem.name))stop("Specify chem.name or chem.cas with correct species if not including Funbound.plasma with predict_partitioning_schmitt coefficients.")
+    if (is.null(chem.cas) & is.null(chem.name))
+      stop("Specify chem.name or chem.cas with correct species if not including Funbound.plasma with predict_partitioning_schmitt coefficients.")
     else if(is.null(chem.cas))
     {
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.CAS=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
     if (class(fup) == "try-error" & default.to.human) 
     {
-      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.CAS=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
     if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -103,9 +128,9 @@ calc_vdist<- function(chem.cas=NULL,
     }
     if(adjusted.Funbound.plasma){
       Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.CAS=chem.cas))
-      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.CAS=chem.cas))
-      Pow <- 10^get_physchem_param("logP",chem.CAS=chem.cas)
+      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
+      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
+      Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
       dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
       fup <- 1 / ((dow) * Flipid + 1 / fup)
@@ -114,7 +139,7 @@ calc_vdist<- function(chem.cas=NULL,
   }
   
   
-# Check the species argument for capitilization problems and whether or not it is in the table:  
+# Check the species argument for capitalization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -131,28 +156,33 @@ calc_vdist<- function(chem.cas=NULL,
   {
     hematocrit <- parameters[["hematocrit"]]
   } else hematocrit <- this.phys.data["Hematocrit"]
+
   plasma.vol <- this.phys.data["Plasma Volume"]/1000 # L/kg BW
-  if(schmitt.params)
-  {  
-     if (is.data.table(parameters))
-     {
-       PCs <- parameters[,schmitt.names,with=F]
-     } else {
-       PCs <- subset(parameters,names(parameters) %in% schmitt.names)
-     }
+  RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
+  if (all(schmitt.specific.names %in% names(parameters)))
+  {
+    PC.names <- names(parameters)[regexpr("K",names(parameters))==1] #Should pass only
+    #partition coefficients to lump_tissues()
+    if (is.data.table(parameters))
+    {
+      PCs <- parameters[,PC.names,with=F]
+    } else {
+      PCs <- subset(parameters,names(parameters) %in% PC.names)
+    }
    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
     lumped_params <- lump_tissues(PCs,tissuelist=NULL,species=species)
+ 
+   vol.dist <- plasma.vol +
+      RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+
+      lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma
+    } else {
+     if(!all(model.list[["schmitt"]]$param.names %in% names(parameters)) &
+        !all(model.list[["3comp"]]$param.names %in% names(parameters)) &
+        !all(model.list[["pbtk"]]$param.names %in% names(parameters)))
+        stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
 
-    RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
-    vol.dist <- plasma.vol + RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+lumped_params$Krest2pu*lumped_params$Vrestc*parameters$Funbound.plasma   
-  } else {
-    if(!all(param.names.schmitt %in% names(parameters)) & 
-       !all(param.names.3comp %in% names(parameters)) & 
-       !all(param.names.pbtk %in% names(parameters))) 
-       stop("Use parameter lists from parameterize_pbtk, parameterize_3compartment, or predict_partitioning_schmitt only.")
-
-    RBC.vol <- plasma.vol/(1 - parameters$hematocrit)*parameters$hematocrit 
-    vol.dist <- plasma.vol + RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
+    vol.dist <- plasma.vol +
+      RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
     lastchar <- function(x){substr(x, nchar(x), nchar(x))}
     firstchar <- function(x){substr(x, 1,1)}
     scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V"&lastchar(names(parameters))=="c"]

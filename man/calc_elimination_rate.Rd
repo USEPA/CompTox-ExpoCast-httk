@@ -4,12 +4,21 @@
 \alias{calc_elimination_rate}
 \title{Calculate the elimination rate for a one compartment model.}
 \usage{
-calc_elimination_rate(chem.cas = NULL, chem.name = NULL,
-  parameters = NULL, species = "Human", suppress.messages = F,
-  default.to.human = F, restrictive.clearance = T,
-  adjusted.Funbound.plasma = T, regression = T,
-  well.stirred.correction = T, clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04)
+calc_elimination_rate(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  suppress.messages = F,
+  default.to.human = F,
+  restrictive.clearance = T,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  well.stirred.correction = T,
+  clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
 \item{chem.cas}{Either the cas number or the chemical name must be
@@ -17,6 +26,9 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the cas number must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
@@ -76,4 +88,5 @@ calc_elimination_rate(chem.cas="80-05-7")
 \author{
 John Wambaugh
 }
+\keyword{1compartment}
 \keyword{Parameter}

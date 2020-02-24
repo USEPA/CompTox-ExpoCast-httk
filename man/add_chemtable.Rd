@@ -4,12 +4,18 @@
 \alias{add_chemtable}
 \title{Add a table of chemical information for use in making httk predictions.}
 \usage{
-add_chemtable(new.table, data.list, current.table = NULL,
-  reference = NULL, species = NULL, overwrite = F)
+add_chemtable(
+  new.table,
+  data.list,
+  current.table = NULL,
+  reference = NULL,
+  species = NULL,
+  overwrite = F
+)
 }
 \arguments{
 \item{new.table}{Object of class data.frame containing one row per chemical,
-with each chemical minimally by described by a CAS number.}
+with each chemical minimally described by a CAS number.}
 
 \item{data.list}{This list identifies which properties are to be read from
 the table. Each item in the list should point to a column in the table
@@ -50,17 +56,20 @@ modeled.
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
                      stringsAsFactors=FALSE))
+my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
+                    stringsAsFactors=FALSE))
 my.new.data <- cbind(my.new.data,as.data.frame(c(200,200,200)))
 my.new.data <- cbind(my.new.data,as.data.frame(c(2,3,4)))
 my.new.data <- cbind(my.new.data,as.data.frame(c(0.01,0.02,0.3)))
 my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
-colnames(my.new.data) <- c("Name","CASRN","MW","LogP","Fup","CLint")
+colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 
 chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list=list(
                                   Compound="Name",
                                   CAS="CASRN",
+                                  DTXSID="DTXSID",
                                   MW="MW",
                                   logP="LogP",
                                   Funbound.plasma="Fup",

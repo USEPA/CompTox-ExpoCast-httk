@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 library(httk)
 options(warn=-1)
 
@@ -38,3 +38,5 @@ if (length(script.args) > 0) if (script.args[1]=="mctest")
   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",IVIVE="Honda6")
   3/Css
 }
+
+quit("no")

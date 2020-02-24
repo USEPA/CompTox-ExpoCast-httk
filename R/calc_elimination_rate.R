@@ -15,6 +15,8 @@
 #' specified. 
 #' @param chem.name Either the chemical name or the cas number must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -40,7 +42,7 @@
 #' dataset).
 #' @return \item{Elimination rate}{Units of 1/h.}
 #' @author John Wambaugh
-#' @keywords Parameter
+#' @keywords Parameter  1compartment
 #' @examples
 #' 
 #' calc_elimination_rate(chem.name="Bisphenol A")
@@ -50,6 +52,7 @@
 #' @export calc_elimination_rate
 calc_elimination_rate <- function(chem.cas=NULL,
                                   chem.name=NULL,
+                                  dtxsid=NULL,
                                   parameters=NULL,
                                   species="Human",
                                   suppress.messages=F,
@@ -85,6 +88,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
   {
     parameters <- parameterize_steadystate(chem.cas=chem.cas,
                     chem.name=chem.name,
+                    dtxsid=dtxsid,
                     species=species,
                     default.to.human=default.to.human,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -93,7 +97,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
     Vd <- calc_vdist(chem.cas=chem.cas,
                      chem.name=chem.name,
                      species=species,
-                     suppress.messages=T,
+                     suppress.messages=suppress.messages,
                      default.to.human=default.to.human,
                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                      regression=regression,
@@ -107,6 +111,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
       }
       params <- parameterize_steadystate(chem.cas=chem.cas,
                   chem.name=chem.name,
+                  dtxsid=dtxsid,
                   species=species,
                   default.to.human=default.to.human,
                   adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -119,9 +124,10 @@ calc_elimination_rate <- function(chem.cas=NULL,
 #        if(is.null(chem.name) & is.null(chem.cas))stop('chem.cas or chem.name must be specified when Vdist is not included in parameters.')
       Vd <- calc_vdist(chem.cas=chem.cas,
                        chem.name=chem.name,
+                       dtxsid=dtxsid,
                        parameters=parameters,
                        species=species,
-                       suppress.messages=T,
+                       suppress.messages=suppress.messages,
                        default.to.human=default.to.human,
                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                        regression=regression,
@@ -130,9 +136,10 @@ calc_elimination_rate <- function(chem.cas=NULL,
   } 
   clearance <- calc_total_clearance(chem.name=chem.name,
                                     chem.cas=chem.cas,
+                                    dtxsid=dtxsid,
                                     species=species,
                                     parameters=parameters,
-                                    suppress.messages=T,
+                                    suppress.messages=suppress.messages,
                                     default.to.human=default.to.human,
                                     restrictive.clearance=restrictive.clearance,
                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,

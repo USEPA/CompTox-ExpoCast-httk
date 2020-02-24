@@ -230,7 +230,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
     tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
              get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
-                                chem.CAS = casrn)]
+                                chem.cas = casrn)]
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
 

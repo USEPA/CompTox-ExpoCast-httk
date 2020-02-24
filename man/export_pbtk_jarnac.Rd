@@ -4,9 +4,14 @@
 \alias{export_pbtk_jarnac}
 \title{Export model to jarnac.}
 \usage{
-export_pbtk_jarnac(chem.cas = NULL, chem.name = NULL,
-  species = "Human", initial.amounts = list(Agutlumen = 0),
-  filename = "default.jan", digits = 4)
+export_pbtk_jarnac(
+  chem.cas = NULL,
+  chem.name = NULL,
+  species = "Human",
+  initial.amounts = list(Agutlumen = 0),
+  filename = "default.jan",
+  digits = 4
+)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or CAS number must be specified.}

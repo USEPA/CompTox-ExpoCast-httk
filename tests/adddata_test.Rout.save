@@ -1,11 +1,13 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -15,51 +17,81 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
+> # Number of chemicals distributed with the package:
+> num.chems <- length(get_cheminfo())
+> 
 > fake <- data.frame(Compound="Tester",
 +                    CASRN="222-11-1",
++                    DTXSID="DTX111222",
 +                    MW=200,
 +                    logP=3.5,
 +                    Fup=0.1,
 +                    Clint=0.1,
 +                    Clint.pValue=0.001)
-> chem.physical_and_invitro.data <- add_chemtable(fake,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Compound",CAS="CASRN",MW="MW",logP="logP",Funbound.plasma="Fup",Clint="Clint",Clint.pValue="Clint.pValue"),species="Human",reference="Fake")
+> 
+> chem.physical_and_invitro.data <- add_chemtable(
++   fake,
++   current.table=chem.physical_and_invitro.data,
++   data.list=list(
++     Compound="Compound",
++     CAS="CASRN",
++     DTXSID="DTXSID",
++     MW="MW",
++     logP="logP",
++     Funbound.plasma="Fup",
++     Clint="Clint",
++     Clint.pValue="Clint.pValue"),
++   species="Human",
++   reference="Fake")
+> 
 > calc_css(chem.name="Tester")
-Human plasma concentrations returned in uM units.
 $avg
-[1] 51.10475
+[1] 53
 
 $frac
-[1] 0.9755664
+[1] 0.9755
 
 $max
-[1] 51.63859
+[1] 51.64
 
 $the.day
 [1] 26
 
 > 
 > load_sipes2017()
-> # "Tester" should be gone because chem.physical_an_invitro_data was just overwritten:
-> "Tester" %in% get_cheminfo(info="Compound")
-[1] FALSE
-> # But we should have the ADMet Predicted chemicals from Sipes et al. (2017),
+Loading predictions from Sipes et al. (2017) for 8758 chemicals.
+Existing data are not being overwritten.
+Please wait...
+> 
+> # We should have the ADMet Predicted chemicals from Sipes et al. (2017),
 > # this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
-Human plasma concentrations returned in uM units.
 $avg
-[1] 0.0001163777
+[1] 0.0247
 
 $frac
-[1] 0.0004910016
+[1] 0.1845
 
 $max
-[1] 0.0003750942
+[1] 0.03868
 
 $the.day
 [1] 21
 
 > 
+> #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
+> length(get_cheminfo())
+[1] 8798
+> 
+> #Now let's reset
+> reset_httk()
+> 
+> # We should be back to our original number:
+> num.chems == length(get_cheminfo())
+[1] TRUE
+> 
+> quit("no")

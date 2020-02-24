@@ -1,4 +1,4 @@
-#' Calculate the statistics.
+#' Calculate toxicokinetic summary statistics.
 #' 
 #' This function calculates the area under the curve, the mean, and the peak values
 #' for the venous blood or plasma concentration of a specified chemical or all
@@ -15,17 +15,18 @@
 #' @param days Length of the simulation.
 #' @param chem.name Name of desired chemical.
 #' @param chem.cas CAS number of desired chemical.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", "inhalation", ...
 #' @param stats Desired values (either 'AUC', 'mean', 'peak', or a vector
 #' containing any combination).
 #' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW.  Overwrites daily.dose.
+#' @param dose Amount of a single dose at time zero, mg/kg BW. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param exclude.fup.zero Whether or not to exclude chemicals with a fraction
-#' of unbound plasma equal to zero or include them with a value of 0.005, only
-#' used when chem.name, chem.cas, and parameters are not specified.
 #' @param doses.per.day Number of doses per day.
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
@@ -35,56 +36,221 @@
 #' compartment model.
 #' @param concentration Desired concentration type, 'blood' or default
 #' 'plasma'.
+#' @param tissue Desired steady state tissue conentration.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param ... Additional arguments passed to the integrator.
 #' @param suppress.messages Whether to suppress output message.
 #' @param ... Arguments passed to solve function.
 #' @return \item{AUC}{Area under the plasma concentration curve.}
-#' \item{mean}{The area under the curve divided by the number of days.}
-#' \item{peak}{The highest concentration.}
-#' @author John Wambaugh and Robert Pearce
+#' \item{mean.conc}{The area under the curve divided by the number of days.}
+#' \item{peak.conc}{The highest concentration.}
+#' @author Robert Pearce and John Wambaugh 
 #' @keywords Solve Statistics
 #' @examples
 #' 
 #' calc_stats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+#' 
 #' calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+#' 
 #' \dontrun{
-#' all.peak.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
+#' # If you do not specify a chemical, calc_stats runs for all chemicals:
+#' all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
 #' }
+#' 
 #' triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
 #' 
 #' @export calc_stats
-calc_stats <-function(days,chem.name=NULL,chem.cas=NULL,parameters=NULL,stats=c("AUC","peak","mean"),species='Human',exclude.fup.zero=F,daily.dose=1,dose=NULL,doses.per.day=NULL,output.units='uM',concentration='plasma',model='pbtk',default.to.human=F,suppress.messages=F,...)
+calc_stats <-function(
+               chem.name=NULL,
+               chem.cas=NULL,
+               dtxsid=NULL,
+               parameters=NULL,
+               route="oral",
+               stats=c("AUC","peak","mean"),
+               species='Human',
+               days=28,
+               daily.dose=1,
+               dose=NULL,
+               doses.per.day=1,
+               output.units='uM',
+               concentration='plasma',
+               tissue='plasma',
+               model='pbtk',
+               default.to.human=F,
+               adjusted.Funbound.plasma=T,
+               regression=T,
+               restrictive.clearance = T,
+               suppress.messages=F,
+               ...)
 {
-  AUC <- NULL
-  peak <- NULL
-  mean <- NULL
-  out <- NULL
-  
-  if(is.null(chem.name) & is.null(chem.cas) & is.null(parameters)){
-    for(this.CAS in get_cheminfo(species=species,model=model)){
-      stat <- calc_chem_stats(chem.cas=this.CAS,days=days,stats=stats,species=species,dose=dose,daily.dose=daily.dose,doses.per.day=doses.per.day,concentration=concentration,output.units=output.units,model=model,default.to.human=default.to.human,suppress.messages=T,...)
+### ERROR CHECKING
 
-      if(length(stat)==1){
+# Check that this model is available in this distribution of HTTK:
+  if (!(model %in% names(model.list)))            
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+
+# Currently we only calculate three stats:  
+  valid.stats <- c("AUC","mean","peak")
+  if (any(!(tolower(stats) %in% tolower(valid.stats))))
+     stop(paste("calc_stats cannot calculate",
+     stats[!(stats %in% valid.stats)],
+     ". Valid stats are:",
+     paste(valid.stats,collapse=" "),"."))
+
+# Stats for all chemicals in HTTK:  
+  if(is.null(chem.name) & 
+     is.null(chem.cas) & 
+     is.null(dtxsid) & 
+     is.null(parameters))
+  {
+    AUC <- NULL
+    peak.conc <- NULL
+    mean.conc <- NULL
+    out <- NULL
+    for (this.CAS in sort(get_cheminfo(species=species,
+                      model=model)))
+    {
+      cat(paste(this.CAS,"\n"))
+      stat <- calc_stats(chem.cas=this.CAS,
+                days=days,
+                stats=stats,
+                species=species,
+                dose=dose,
+                daily.dose=daily.dose,
+                doses.per.day=doses.per.day,
+                concentration=concentration,
+                output.units=output.units,
+                model=model,
+                default.to.human=default.to.human,
+                suppress.messages=T,
+                ...)
+
+      if (length(stat)==1)
+      {
         out[this.CAS] <-  stat 
-      }else{
+      } else {
         AUC[this.CAS] <- stat[["AUC"]]
-        peak[this.CAS] <- stat[["peak"]] 
-        mean[this.CAS] <- stat[["mean"]] 
+        peak.conc[this.CAS] <- stat[["peak.conc"]] 
+        mean.conc[this.CAS] <- stat[["mean.conc"]] 
       }
     }
-    if(length(stat)!=1){
-      if(!is.null(AUC) & !is.null(peak) & is.null(mean)) out <- list(AUC=AUC,peak=peak)
-      else if(!is.null(AUC) & is.null(peak) & !is.null(mean)) out <- list(AUC=AUC,mean=mean)
-      else if(is.null(AUC) & !is.null(peak) & !is.null(mean)) out <- list(mean=mean,peak=peak)
-      else out <- list(AUC=AUC,peak=peak,mean=mean)
+    if (length(stat)!=1)
+    {
+      out <- list()
+      if (!is.null(AUC)) out[["AUC"]] <- AUC
+      if (!is.null(peak.conc)) out[["peak.conc"]] <- peak.conc
+      if (!is.null(mean.conc)) out[["mean.conc"]] <- mean.conc
     }
-    if(!suppress.messages){
-      cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),concentration,"concentrations returned in",output.units,"units.\n")
-      if('auc' %in% tolower(stats)) cat("AUC is area under plasma concentration curve in",output.units,"* days units.\n")
+    if (!suppress.messages)
+    {
+      cat(paste(toupper(substr(species,1,1)),
+            substr(species,2,nchar(species)),sep=''),
+        concentration,"concentrations returned in",output.units,"units.\n")
+      if ('auc' %in% tolower(stats)) 
+        cat("AUC is area under plasma concentration curve in",
+          output.units, "* days units.\n")
     }
-  }else{
-    out <- calc_chem_stats(chem.name=chem.name,chem.cas=chem.cas,parameters=parameters,days=days,stats=stats,species=species,daily.dose=daily.dose,dose=dose,doses.per.day=doses.per.day,concentration=concentration,output.units=output.units,model=model,default.to.human=default.to.human,suppress.messages=suppress.messages,...)
-  } 
+# Stats for a particular chemical:    
+  } else {
+    dosing <- list(
+        initial.dose=dose,
+        dosing.matrix=NULL,
+        daily.dose=daily.dose,
+        doses.per.day=doses.per.day)
+        
+    PKtimecourse <- solve_model(
+                      chem.name=chem.name,
+                      chem.cas=chem.cas,
+                      dtxsid=dtxsid,
+                      parameters=parameters,
+                      model=model,
+                      route=route,
+                      days = days,
+                      species=species,
+                      dosing=dosing,
+                      suppress.messages=T,
+                      output.units=output.units,
+                      ...)
+    
+    # For the 3-compartment model:  
+    colnames(PKtimecourse)[colnames(PKtimecourse)=="Csyscomp"]<-"Cplasma"
+      
+    out <- list()
+  
+    if (any(c("mean","peak") %in% tolower(stats)))
+    {
+      # Which column do we want peak and mean from:
+      tissue <- paste("C",tolower(tissue),sep="")
+      if (!(tissue %in% colnames(PKtimecourse)))
+        stop(tissue,"is not a column output by model",model)
+    }
+  
+    if ("auc" %in% tolower (stats) &
+      !("AUC" %in% colnames(PKtimecourse)))
+      stop("AUC is not a column output by model",model)
+    
+    # If mean is requested, calculate it last in case AUC is also requested:
+    if ("mean" %in% stats) stats <- c(stats[stats!="mean"],"mean")
+    for (this.stat in stats)
+    {
+      if (tolower(this.stat) == "auc") 
+        out[["AUC"]] <- signif(as.numeric(
+          PKtimecourse[dim(PKtimecourse)[1],'AUC']) ,4)
+      if (tolower(this.stat) == "peak") 
+        out[["peak"]] <- calc_timecourse_peak(PKtimecourse[,c("time",tissue)])
+      if (tolower(this.stat) == "mean")
+      {
+        if (!is.null(out[["AUC"]])) out[["mean"]] <- signif(out[["AUC"]]/days,4)
+        else out[["mean"]] <- 
+          signif(as.numeric(PKtimecourse[dim(PKtimecourse)[1],'AUC']/days),4) 
+      }
+    }
+  
+    # Blood or plasma concentration:
+    if (tolower(concentration)=='blood')
+    {
+      if (length(out) == 1)
+      {
+        out <- out * parameters[['Rblood2plasma']]
+      } else {
+        for (this.stat in stats)
+        {
+          out[[this.stat]] <- signif(out[[this.stat]] *  
+            parameters[['Rblood2plasma']],4)
+        }
+      }
+    } else if (tolower(concentration) != 'plasma') { 
+      stop("Only blood and plasma concentrations are calculated.")
+    }
+  
+    if (!suppress.messages)
+    {
+      if (is.null(chem.cas) & is.null(chem.name))
+      {
+        cat(paste(toupper(substr(concentration,1,1)),
+          substr(concentration,2,nchar(concentration)),sep=''),
+          "values returned in",output.units,"units.\n")
+      } else {
+        cat(paste(toupper(substr(species,1,1)),
+          substr(species,2,nchar(species)),sep=''),
+          concentration,"concentrations returned in",output.units,"units.\n")
+      }
+      if ('AUC' %in% stats) cat("AUC is area under plasma concentration curve in",
+        output.units,"* days units with Rblood2plasma =",
+        parameters[['Rblood2plasma']],".\n")
+    }    
+  }
+  
+  # If only one stat was asked for, don't return a list, return just the first entry in the list:
+  if (length(out) == 1) out <- out[[1]]
+  
   return(out)
 }

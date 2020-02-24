@@ -4,19 +4,30 @@
 \alias{parameterize_1comp}
 \title{Parameterize_1comp}
 \usage{
-parameterize_1comp(chem.cas = NULL, chem.name = NULL,
-  species = "Human", default.to.human = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, well.stirred.correction = T,
-  suppress.messages = F, clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04)
+parameterize_1comp(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  well.stirred.correction = T,
+  suppress.messages = F,
+  clint.pvalue.threshold = 0.05,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
+chemical must be identified by either CAS, name, or DTXISD}
 
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
+chemical must be identified by either CAS, name, or DTXISD}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+-- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -42,7 +53,7 @@ with plasma concentration.}
 \item{suppress.messages}{Whether or not to suppress messages.}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
+vitro clearance assay result has a p-value greater than the threshold are
 set to zero.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
@@ -52,14 +63,18 @@ dataset).}
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
 \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
-1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+dose that enters the gutlumen.} 
+\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+assay using the method of Kilford et al. (2008)} 
+\item{kelim}{Elimination rate, units of 1/h.} 
+\item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{kgutabs}{Rate chemical is absorbed, 1/h.}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
-\item{MW}{Molecular Weight, g/mol.} \item{Rblood2plasma}{The ratio of the
-concentration of the chemical in the blood to the concentration in the
-plasma. Not used in calculations but included for the conversion of plasma
-outputs.} \item{hepatic.bioavailability}{Fraction of dose remaining after
+\item{MW}{Molecular Weight, g/mol.} 
+\item{Rblood2plasma}{The ratio of the concentration of the chemical in the 
+blood to the concentration in the plasma. Not used in calculations but 
+included for the conversion of plasma outputs.} 
+\item{hepatic.bioavailability}{Fraction of dose remaining after
 first pass clearance, calculated from the corrected well-stirred model.}
 \item{BW}{Body Weight, kg.}
 }
@@ -69,12 +84,24 @@ This function initializes the parameters needed in the function solve_1comp.
 \examples{
 
  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
- parameters <- parameterize_1comp(chem.cas='80-05-7',restrictive.clearance=FALSE,
-                                  species='rabbit',default.to.human=TRUE)
+ parameters <- parameterize_1comp(chem.cas='80-05-7',
+                                  restrictive.clearance=FALSE,
+                                  species='rabbit',
+                                  default.to.human=TRUE)
  out <- solve_1comp(parameters=parameters)
 
 }
-\author{
-John Wambaugh
+\references{
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+(2008). Hepatocellular binding of drugs: correction for unbound fraction in
+hepatocyte incubations using microsomal binding or drug lipophilicity data.
+Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
+\author{
+John Wambaugh and Robert Pearce
+}
+\keyword{1compartment}
 \keyword{Parameter}

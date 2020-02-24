@@ -4,16 +4,16 @@
 \name{nhanes_mec_svy}
 \alias{nhanes_mec_svy}
 \title{Pre-processed NHANES data.}
-\format{A survey.design2 object, including masked cluster and strata. 
- Variables are available as a data.table by \code{nhanes_mec_svy$variables}. 
- Variables are as described in NHANES Demographics and Examination 
- documentation, with the exception of: \describe{ 
- \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles, 
- computed by dividing 2-year sample weights by 3.} 
- \item{\code{bmxhtlenavg}}{Average of height and recumbent length if both 
- were measured; if only one was measured, takes value of the one that was 
- measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.} 
- \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.} 
+\format{A survey.design2 object, including masked cluster and strata.
+ Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
+ Variables are as described in NHANES Demographics and Examination
+ documentation, with the exception of: \describe{
+ \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
+ computed by dividing 2-year sample weights by 3.}
+ \item{\code{bmxhtlenavg}}{Average of height and recumbent length if both
+ were measured; if only one was measured, takes value of the one that was
+ measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.}
+ \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.}
  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
  Assigned using methods in \code{get_weight_class}.} }}
 \source{
@@ -23,12 +23,12 @@
 nhanes_mec_svy
 }
 \description{
-NHANES data on demographics, anthropometrics, and some laboratory measures, 
+NHANES data on demographics, anthropometrics, and some laboratory measures,
 cleaned and combined into a single data set.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability." Environment
 International 106 (2017): 105-118
 }
 \author{

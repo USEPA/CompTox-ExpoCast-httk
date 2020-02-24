@@ -2,18 +2,35 @@
 % Please edit documentation in R/parameterize_schmitt.R
 \name{parameterize_schmitt}
 \alias{parameterize_schmitt}
-\title{Parameterize Schmitt's method.}
+\title{Get the Parameters for Schmitt's Tissue Partition Coefficient Method}
 \usage{
-parameterize_schmitt(chem.cas = NULL, chem.name = NULL,
-  species = "Human", default.to.human = F, force.human.fup = F,
-  suppress.messages = F, minimum.Funbound.plasma = 1e-04)
+parameterize_schmitt(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  default.to.human = F,
+  force.human.fup = F,
+  suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
+parameters is not specified then the chemical must be identified by either
+CAS, name, or DTXISD}
 
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{Chemical name (spaces and capitalization ignored) --  if
+parameters is not specified then the chemical must be identified by either
+CAS, name, or DTXISD}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+ -- if parameters is not specified then the chemical must be identified by 
+either CAS, name, or DTXSIDs}
+
+\item{parameters}{Chemcial and physiological description parameters needed
+to run the Schmitt et al. (2008) model}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -22,7 +39,9 @@ default "Human").}
 human values if true.}
 
 \item{force.human.fup}{Returns human fraction of unbound plasma in
-calculation for rats if true.}
+calculation for rats if true.
+When species is specified as rabbit, dog, or mouse, the human unbound
+fraction is substituted.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
@@ -44,19 +63,30 @@ affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 This function provides the necessary parameters to run
 predict_partitioning_schmitt, excluding the data in tissue.data.
 }
-\details{
-When species is specified as rabbit, dog, or mouse, the human unbound
-fraction is substituted.
-
-force.human.fup calculates Funbound.plasma.corrected with the human lipid
-fractional volume in plasma.
-}
 \examples{
 
 parameterize_schmitt(chem.name='bisphenola')
 
 }
+\references{
+Schmitt, Walter. "General approach for the calculation of 
+tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
+457-467.
+
+Schmitt, Walter. "Corrigendum to: General approach for the calculation of 
+tissue to plasma partition coefficients" Toxicology in Vitro 22.6 (2008): 1666.
+
+Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
+for predicting partition coefficients for PBPK modeling of drugs and 
+environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
+197-207.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
+}
 \author{
-Robert Pearce
+Robert Pearce and John Wambaugh
 }
 \keyword{Parameter}
+\keyword{schmitt}

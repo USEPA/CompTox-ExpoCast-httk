@@ -4,25 +4,22 @@
 \alias{monte_carlo}
 \title{Monte Carlo for pharmacokinetic models}
 \usage{
-monte_carlo(params, which.quantile = 0.95, cv.params = NULL,
-  censored.params = NULL, samples = 1000,
-  name.model = "calc_analytic_css", output.col.model = NA,
-  return.samples = F, ...)
+monte_carlo(
+  parameters,
+  cv.params = NULL,
+  censored.params = NULL,
+  samples = 1000
+)
 }
 \arguments{
-\item{params}{All parameters needed by the function indicated by the
-argument "name.model". These paramters that are also listed in either
+\item{parameters}{These parameters that are also listed in either
 cv.params or censored.params are sampled using Monte Carlo.}
-
-\item{which.quantile}{This argument specifies which quantiles are to be
-calculated. It can be a vector or a single value. It defaults to the 0.95
-quantile (95\%).}
 
 \item{cv.params}{The parameters listed in cv.params are sampled from a
 normal distribution that is truncated at zero. This argument should be a
 list of coefficients of variation (cv) for the normal distribution. Each
-entry in the list is named for a parameter in "params". New values are
-sampled with mean equal to the value in "params" and standard deviation
+entry in the list is named for a parameter in "parameters". New values are
+sampled with mean equal to the value in "parameters" and standard deviation
 equal to the mean times the cv.}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
@@ -37,19 +34,6 @@ distribution between 0 and the limit of detection.}
 
 \item{samples}{This argument is the number of samples to be generated for
 calculating quantiles.}
-
-\item{name.model}{This argument is a character vector giving the name of the
-model to be sampled.  Defaults to 'calc_analytic_css'.}
-
-\item{output.col.model}{If the evaluation of the function indicated by
-"model" returns a list, then model.output.col is the element from that list
-that is sampled and is used for calculating quantiles. Defaults to NA (i.e.,
-the function returns a single value).}
-
-\item{return.samples}{Whether or not to return the vector containing the
-samples from the simulation instead of the selected quantile.}
-
-\item{...}{Additional arguments passed to name.model.}
 }
 \description{
 This function performs Monte Carlo to assess uncertainty and variability for
@@ -57,19 +41,18 @@ toxicokinetic models.
 }
 \examples{
 
-#Example from httk jss paper:
+#Example from Pearce et al. (2017):
 \dontrun{
 library(ggplot2)
 library(scales)
 vary.params <- NULL
-params <- parameterize_pbtk(chem.name = "Zoxamide")
-for(this.param in names(subset(params,
-names(params) != "Funbound.plasma"))) vary.params[this.param] <- .2
+parameters <- parameterize_pbtk(chem.name = "Zoxamide")
+for(this.param in names(subset(parameters,
+names(parameters) != "Funbound.plasma"))) vary.parameters[this.param] <- .2
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 set.seed(1)
-out <- monte_carlo(params, cv.params = vary.params,
-censored.params = censored.params, return.samples = T,
-model = "pbtk", suppress.messages = T)
+out <- monte_carlo(parameters, cv.params = vary.params,
+censored.params = censored.params, model = "pbtk", suppress.messages = T)
 zoxamide <- ggplot(as.data.frame(out), aes(out)) +
 geom_histogram(fill="blue", binwidth=1/6) + scale_x_log10() +
 ylab("Number of Samples") + xlab("Steady State Concentration (uM)") +
@@ -81,11 +64,11 @@ print(zoxamide)
 # Fig 1 in Wambaugh et al. (2015) SimCYP vs. our predictions:
 
 vary.params <- list(BW=0.3)
-vary.params[["Vliverc"]]<-0.3
-vary.params[["Qgfrc"]]<-0.3
-vary.params[["Qtotal.liverc"]]<-0.3
-vary.params[["million.cells.per.gliver"]]<-0.3
-vary.params[["Clint"]]<-0.3
+vary.parameters[["Vliverc"]]<-0.3
+vary.parameters[["Qgfrc"]]<-0.3
+vary.parameters[["Qtotal.liverc"]]<-0.3
+vary.parameters[["million.cells.per.gliver"]]<-0.3
+vary.parameters[["Clint"]]<-0.3
 censored.params<-list(Funbound.plasma=list(cv=0.3,lod=0.01))
 
 pValues <- get_cheminfo(c("Compound","CAS","Clint.pValue"))
@@ -98,15 +81,14 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
   if (this.CAS \%in\% get_wetmore_cheminfo()){
     print(this.CAS)
     these.params <- parameterize_steadystate(chem.cas=this.CAS)
-    if (these.params[["Funbound.plasma"]] == 0.0) 
+    if (these.parameters[["Funbound.plasma"]] == 0.0) 
     {
-      these.params[["Funbound.plasma"]] <- 0.005
+      these.parameters[["Funbound.plasma"]] <- 0.005
     }
-    these.params[["Fhep.assay.correction"]] <- 1
+    these.parameters[["Fhep.assay.correction"]] <- 1
     vLiver.human.values <- monte_carlo(these.params,
                                        cv.params=vary.params,
                                        censored.params=censored.params,
-                                       which.quantile=c(0.05,0.5,0.95),
                                        output.units="mg/L",
                                        model='3compartmentss',
                                        suppress.messages=T,
@@ -115,8 +97,7 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
     percentiles <- c("5","50","95")
     for (this.index in 1:3)
     {
-      this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS,
-                                which.quantile=as.numeric(percentiles[this.index])/100))
+      this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS)) 
       this.row <- cbind(this.row, as.data.frame(vLiver.human.values[this.index]))
       this.row <- cbind(this.row, as.data.frame(percentiles[this.index]))
       this.row <- cbind(this.row, as.data.frame("Human"))
@@ -133,9 +114,9 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
 
 scientific_10 <- function(x) {
   out <- gsub("1e", "10^", scientific_format()(x))
-  out <- gsub("\\+","",out)
-  out <- gsub("10\\^01","10",out)
-  out <- parse(text=gsub("10\\^00","1",out))
+  out <- gsub("\+","",out)
+  out <- gsub("10\^01","10",out)
+  out <- parse(text=gsub("10\^00","1",out))
 }
 
 
@@ -158,6 +139,13 @@ Fig1a.fit <- lm(log(Wetmore) ~ log(Predicted)*Percentile, Wetmore.table)
 ## End(**Not run**)
 }
 
+}
+\references{
+Wambaugh, John F., et al. "Toxicokinetic triage for 
+environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
 John Wambaugh

@@ -66,7 +66,7 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   Wetmore.data <- Wetmore.data
   if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
   if(tolower(input.units) =='mg/l' | tolower(output.units) == 'mol'){
-    MW <- get_physchem_param("MW",chem.CAS=chem.cas)
+    MW <- get_physchem_param("MW",chem.cas=chem.cas)
   }   
   if(tolower(input.units) == 'mg/l'){
     conc <- conc / 1000 / MW * 1000000
