@@ -4,10 +4,18 @@
 \alias{get_lit_oral_equiv}
 \title{Get Literature Oral Equivalent Dose}
 \usage{
-get_lit_oral_equiv(conc, chem.name = NULL, chem.cas = NULL,
-  suppress.messages = F, which.quantile = 0.95, species = "Human",
-  input.units = "uM", output.units = "mg",
-  clearance.assay.conc = NULL, ...)
+get_lit_oral_equiv(
+  conc,
+  chem.name = NULL,
+  chem.cas = NULL,
+  suppress.messages = F,
+  which.quantile = 0.95,
+  species = "Human",
+  input.units = "uM",
+  output.units = "mg",
+  clearance.assay.conc = NULL,
+  ...
+)
 }
 \arguments{
 \item{conc}{Bioactive in vitro concentration in units of specified

@@ -4,8 +4,7 @@
 \alias{get_physchem_param}
 \title{Get physico-chemical parameters from chem.physical_and_invitro.data}
 \usage{
-get_physchem_param(param, chem.name = NULL, chem.cas = NULL,
-  dtxsid = NULL)
+get_physchem_param(param, chem.name = NULL, chem.cas = NULL, dtxsid = NULL)
 }
 \arguments{
 \item{param}{The desired parameters, a vector or single value.}
