@@ -285,14 +285,14 @@
 #'@source \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 #'@keywords data
 #'
-#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-#'Variability in Risk Prioritization ", submitted.
+#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 "pharma"
 
-#' in vitro Toxicokinetic Data from Wambaugh et al. (submitted)
+#' in vitro Toxicokinetic Data from Wambaugh et al. (2019)
 #'
 #' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-#' et al. (submitted) They
+#' et al. (2019) They
 #' are the processed values used to make the figures in that manuscript.
 #' These data summarize the results of Bayesian analysis of the in vitro
 #' toxicokinetic experiments conducted by Cyprotex to characterize fraction 
@@ -330,14 +330,14 @@
 #'   \item{MW}{Molecular weight (Daltons)}                         
 #'   \item{logP}{log base ten of octanol:water partiion coefficient}
 #' }
-#' @source Wambaugh et al. (submitted)
+#' @source Wambaugh et al. (2019)
 #'
 #'@keywords data
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization", submitted.
+#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 "wambaugh2019"
 
 
@@ -783,10 +783,10 @@
 "chem.lists"
 
 
-#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (submitted)
+#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)
 #'
 #' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-#' et al. (submitted) They
+#' et al. (2019) They
 #' are the output of different Bayesian models evaluated to compare using a
 #' single protein concentration vs. the new three concentration titration
 #' protocol. These data summarize the results of Bayesian analysis of the in vitro
@@ -862,17 +862,17 @@
 #'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure 
 #' description}
 #' }
-#' @source Wambaugh et al. (submitted)
+#' @source Wambaugh et al. (2019)
 #'
 #'@keywords data
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization", submitted.
+#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 "wambaugh2019.raw"
 
-#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (submitted))
+#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)
 #'
 #' These data are a subset of the Bayesian inferrences reported by Ring et al.
 #' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
@@ -889,7 +889,7 @@
 #' intake rate (mg/kg bodyweight/day)}
 #'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
 #' }
-#' @source Wambaugh et al. (submitted)
+#' @source Wambaugh et al. (2019)
 #'
 #'@keywords data
 #'
@@ -898,6 +898,9 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
 #' evironmental chemicals by simulating toxicokinetic variability." Environment 
 #' international 106 (2017): 105-118
+#'
+#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 "wambaugh2019.nhanes"
 
 #' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
@@ -910,7 +913,7 @@
 #' populaton median intake rate (mg/kg body weight/day), with uncertainty.
 #'
 #' @format A data frame with 385 rows and 38 variables:
-#' @source Wambaugh et al. (submitted)
+#' @source Wambaugh et al. (2019)
 #'
 #'@keywords data
 #'
@@ -919,6 +922,9 @@
 #'@references Ring, Caroline L., et al. "Consensus modeling of median chemical 
 #' intake for the US population based on predictions of exposure pathways." 
 #' Environmental science & technology 53.2 (2018): 719-732.
+#'
+#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and 
+#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
 "wambaugh2019.seem3"
 
 

@@ -4,11 +4,20 @@
 \alias{parameterize_3comp}
 \title{Parameterize_3comp}
 \usage{
-parameterize_3comp(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  species = "Human", default.to.human = F, force.human.clint.fup = F,
-  clint.pvalue.threshold = 0.05, adjusted.Funbound.plasma = T,
-  regression = T, suppress.messages = F, restrictive.clearance = T,
-  minimum.Funbound.plasma = 1e-04)
+parameterize_3comp(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  force.human.clint.fup = F,
+  clint.pvalue.threshold = 0.05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  suppress.messages = F,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 

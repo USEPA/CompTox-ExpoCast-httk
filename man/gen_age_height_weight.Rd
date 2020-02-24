@@ -5,8 +5,14 @@
 \title{Generate ages, heights, and weights for a virtual population using the 
 virtual-individuals method.}
 \usage{
-gen_age_height_weight(nsamp = NULL, gendernum = NULL, reths,
-  weight_category, agelim_years, agelim_months)
+gen_age_height_weight(
+  nsamp = NULL,
+  gendernum = NULL,
+  reths,
+  weight_category,
+  agelim_years,
+  agelim_months
+)
 }
 \arguments{
 \item{nsamp}{The desired number of individuals in the virtual population. 
