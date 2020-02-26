@@ -1,7 +1,7 @@
 #' Scale mg/kg body weight doses according to body weight and units
 #' 
 #' This function transforms the dose (in mg/kg) into the appropriate units. It
-#' handles single doses, matrices of doses, or daily repeated doses (at varying
+#' handles single doses, matrices of doses, or daily repeated doses at varying
 #' intervals. Gut absorption is also factored in through the parameter Fgutabs,
 #' and scaling is currently avoided in the inhalation exposure case with a 
 #' scale factor of 1
