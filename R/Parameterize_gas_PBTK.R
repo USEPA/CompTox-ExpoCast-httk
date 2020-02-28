@@ -179,7 +179,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
     Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
-    warning(paste(species,"coerced to Human for metabolic clearance data."))
+    if (!suppress.messages)
+      warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
@@ -215,7 +216,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
+    if (!suppress.messages) warning(
+'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:

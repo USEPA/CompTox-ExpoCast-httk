@@ -129,17 +129,24 @@ calc_ionization <- function(
     this.pKa_Accept <-pKa_Accept[[index]]
     this.pH <- pH[[index]]
     
-    if(is.character(this.pKa_Donor)) this.pKa_Donor <- 
+    if (!is.na(this.pKa_Donor))
     {
-      if (regexpr(",",this.pKa_Donor)!=-1)
-        as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
-      else this.pKa_Donor <- NA
+      if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
+      {
+        if (regexpr(",",this.pKa_Donor)!=-1)
+          as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
+        else this.pKa_Donor <- NA
+      }
     }
-    if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
+
+    if (!is.na(this.pKa_Accept))
     {
-      if (regexpr(",",this.pKa_Accept)!=-1)
-        as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
-      else this.pKa_Accept <- NA
+      if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
+      {
+        if (regexpr(",",this.pKa_Accept)!=-1)
+          as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
+        else this.pKa_Accept <- NA
+      }
     }
 
   # Need to calculate the amount of un-ionized parent:
