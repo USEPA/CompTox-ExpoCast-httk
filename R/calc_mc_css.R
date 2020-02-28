@@ -296,6 +296,8 @@ calc_mc_css <- function(chem.cas=NULL,
 
   css.list <- parameter.dt$Css 
   
+  if (!return.samples) out <- quantile(css.list,which.quantile,na.rm=T)  
+  
   if (!suppress.messages & !return.samples)
   {
     if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
@@ -312,8 +314,7 @@ calc_mc_css <- function(chem.cas=NULL,
         output.units,
         "units for",
         which.quantile,
-        "quantile.\n") 
-    out <- quantile(css.list,which.quantile,na.rm=T)     
+        "quantile.\n")    
   } else {
     out <- css.list  
     if (!suppress.messages) 
