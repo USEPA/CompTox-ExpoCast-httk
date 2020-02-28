@@ -334,7 +334,7 @@ calc_mc_css <- function(chem.cas=NULL,
   }
 
 # Cannot guarantee arbitrary precision:
-  out <- signif(out,4)
+  out <- set_httk_precision(out)
   
   return(out)
 }

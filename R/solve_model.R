@@ -454,9 +454,7 @@ with two columns (time, dose).")
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
-  out <- signif(out, 4)
-  out[abs(out) < 1e-12] <- 0
-
+  out <- set_httk_precision(out)
   
 ### MODEL OUTPUT
   
