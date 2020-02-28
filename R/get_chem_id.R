@@ -104,17 +104,28 @@ get_chem_id <- function(chem.cas=NULL,
     {
       if (!is.null(this.chem.cas)) 
       {
-        if (this.chem.cas != found.chem.cas) stop(paste("Both CAS",
-          this.chem.cas,"and either name or this.dtxsid were provided as arguments, but found 
-          other CAS -- ",found.chem.cas))
-      } else if (!is.null(this.dtxsid)) {
-        if (this.dtxsid != found.dtxsid) stop(paste("Both this.dtxsid",
-          this.dtxsid,"and either CAS or name were provided as arguments, but found 
-          other this.dtxsid -- ",found.dtxsid))
-      } else if (!is.null(this.chem.name)) {
-        if (tolower(this.chem.name) != tolower(found.chem.name)) stop(paste("Both name",
-          this.chem.name,"and either CAS or this.dtxsid were provided as arguments, but found 
-          other name -- ",found.chem.name))
+        if (!is.na(found.chem.cas)) 
+        {
+          if (this.chem.cas != found.chem.cas) stop(paste("Both CAS",
+            this.chem.cas,"and either name or this.dtxsid were provided as arguments, but found 
+            other CAS -- ",found.chem.cas))
+        }
+      } else if (!is.null(this.dtxsid)) 
+      {
+        if (!is.na(found.dtxsid))
+        {
+          if (this.dtxsid != found.dtxsid) stop(paste("Both this.dtxsid",
+            this.dtxsid,"and either CAS or name were provided as arguments, but found 
+            other this.dtxsid -- ",found.dtxsid))
+        }
+      } else if (!is.null(this.chem.name)) 
+      {
+        if (!is.na(found.chem.name))
+        {
+          if (tolower(this.chem.name) != tolower(found.chem.name)) stop(paste("Both name",
+            this.chem.name,"and either CAS or this.dtxsid were provided as arguments, but found 
+            other name -- ",found.chem.name))
+        }
       }
     }
     

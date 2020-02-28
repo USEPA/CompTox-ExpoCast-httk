@@ -335,5 +335,5 @@ Set default.to.human to true to substitute human value.")
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma))
         
-  return(outlist[sort(names(outlist))])
+  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }

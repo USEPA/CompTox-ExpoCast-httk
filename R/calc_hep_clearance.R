@@ -110,6 +110,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                     species=species,
                     default.to.human=default.to.human,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    suppress.messages=suppress.messages,
                     ...)
     Qtotal.liverc <- get_param(
                        "Qtotal.liverc",
@@ -146,6 +147,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                 species=species,
                 default.to.human=default.to.human,
                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                suppress.messages=suppress.messages,
                 ...)
     parameters <- c(parameters,params[
                       name.list[!(name.list %in% names(parameters))]])
@@ -236,7 +238,8 @@ calc_hep_clearance <- function(chem.name=NULL,
         Rblood2plasma <- available_rblood2plasma(chem.name=chem.name,
           chem.cas=chem.cas,
           species=species,
-          adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+          suppress.messages=suppress.messages)
       } else(stop("Enter chem.cas or chem.name with corresponding species or enter Rblood2plasma as a parameter for the well-stirred model correction."))
       CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint / Rblood2plasma)
     } else CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint)   
@@ -254,7 +257,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                             "Hepatic clearance calculated with the",
                             hepatic.model,
                             "model in units of L/h/kg.\n")  
-  return(as.numeric(CLh))
+  return(set_httk_precision(as.numeric(CLh)))
 }
 
 #' Calculate the hepatic clearance (deprecated).

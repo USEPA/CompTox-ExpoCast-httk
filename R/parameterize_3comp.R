@@ -111,5 +111,5 @@ parameterize_3comp<- function(
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(parms)                             
+  return(lapply(params,set_httk_precision))                          
 }

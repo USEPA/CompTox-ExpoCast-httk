@@ -71,7 +71,7 @@ Please wait...
 > # this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
 $avg
-[1] 0.0247
+[1] 0.0248
 
 $frac
 [1] 0.1845

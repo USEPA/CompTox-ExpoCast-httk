@@ -157,5 +157,5 @@ calc_rblood2plasma <- function(
       hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
   }
     
-  return(as.numeric(Rblood2plasma))
+  return(set_httk_precision(as.numeric(Rblood2plasma)))
 }

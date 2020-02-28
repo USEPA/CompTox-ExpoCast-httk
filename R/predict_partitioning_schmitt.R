@@ -292,5 +292,6 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 	}
   if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
  # if(user.params) warning(paste(species,' fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
- 	return(Ktissue2pu)
+
+ 	return(lapply(Ktissue2pu,set_httk_precision))
 }
