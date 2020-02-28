@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 > library(httk)
-> #options(warn=-1)
+> options(warn=-1)
 > NSAMP <- 10
 > 
 > 
@@ -30,24 +30,16 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
 [1] 0.1913
-There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 0.2251
-Warning messages:
-1: NAs introduced by coercion 
-2: NAs introduced by coercion 
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
 [1] 0.1913
-There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
 [1] 0.226
-There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > 
 > 
@@ -60,32 +52,12 @@ There were 50 or more warnings (use warnings() to see the first 50)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 131.2 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Clint is provided as a distribution.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Fraction unbound is provided as a distribution.
-3: NAs introduced by coercion 
-4: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-5: NAs introduced by coercion 
-6: NAs introduced by coercion 
-7: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-8: NAs introduced by coercion 
-9: NAs introduced by coercion 
-10: NAs introduced by coercion 
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 10.09 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-2: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
 > # Human.Funbound.plasma is below LOD (0.005), can't do PBPK, can't predict
 > # Rblood2plasma
 > set.seed(1234)
@@ -93,22 +65,12 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 37.07 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Fraction unbound = 0, changed to 0.005.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Average in vivo Human Rblood2plasma (0.846) substituted.
-4: In parameterize_schmitt(chem.cas = chem.cas, chem.name, dtxsid = dtxsid,  :
-  Fraction unbound = 0, can't predict tissue partitioning.
 > # well-behaved chemical with a measured Rblood2plasma:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 2.314 
-There were 14 warnings (use warnings() to see them)
 > 
 > 
 > 
@@ -120,20 +82,17 @@ There were 14 warnings (use warnings() to see them)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 2.316 
-There were 50 or more warnings (use warnings() to see the first 50)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 2.314 
-There were 12 warnings (use warnings() to see them)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 1.472 
-There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #
 > #
@@ -144,7 +103,6 @@ There were 50 or more warnings (use warnings() to see the first 50)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 176.7 
-There were 38 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
 > calc_mc_css(chem.cas="90-43-7",
@@ -161,33 +119,28 @@ There were 38 warnings (use warnings() to see them)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 120.6 
-There were 38 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 85.73 
-There were 38 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 24.46 
-There were 35 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 13.29 
-There were 35 warnings (use warnings() to see them)
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
 [1] 13.28
-There were 34 warnings (use warnings() to see them)
 > set.seed(1234)
 > # HTTK Monte Carlo using basic Monte Carlo sampler:
 > calc_mc_css(chem.cas="90-43-7",
@@ -199,7 +152,6 @@ There were 34 warnings (use warnings() to see them)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 13.41 
-There were 35 warnings (use warnings() to see them)
 > 
 > 
 > set.seed(1234)    
@@ -261,6 +213,12 @@ $sds
 11 4.493e-02  0.77330    3.333e-02 0.26570
 12 4.347e-02  0.92200    3.267e+00 0.31000
 
-There were 36 warnings (use warnings() to see them)
+> 
+> set.seed(1234)    
+> # make sure the oral equivalent function works:
+> calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+      95% 
+0.2437241 
 > 
 > quit("no")
