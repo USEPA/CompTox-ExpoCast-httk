@@ -16,7 +16,10 @@
 #' @author John Wambaugh 
 set_httk_precision <- function(in.num, sig.fig = 4, num.prec = 9)
 {  
-  out <- signif(in.num, sig.fig)
-  out <- round(out, num.prec)
+  if (is.numeric(in.num))
+  {
+    out <- signif(in.num, sig.fig)
+    out <- round(out, num.prec)
+  } else out <- in.num
   return(out)
 }

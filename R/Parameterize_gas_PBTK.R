@@ -330,7 +330,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     outlist <- c(outlist,
       Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
         species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+        suppress.messages=T))
     
     #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
@@ -355,5 +356,5 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
         
-  return(outlist[sort(names(outlist))])
+  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }
