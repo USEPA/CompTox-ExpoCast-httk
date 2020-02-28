@@ -65,7 +65,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
                        species='Human')
     if (!is.na(Rblood2plasma) & !suppress.messages) 
       warning('Human in vivo measured Rblood2plasma substituted.')
-  } else if (!is.na(Rblood2plasma)) 
+  } else if (!is.na(Rblood2plasma) & !suppress.messages) 
     warning(paste(toupper(substr(species, 1, 1)), 
       substr(species, 2, nchar(species)),
       ' in vivo measured Rblood2plasma used.',sep=""))

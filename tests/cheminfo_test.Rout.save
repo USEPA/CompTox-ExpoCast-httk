@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2020-01-27 r77730) -- "Unsuffered Consequences"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -40,5 +40,26 @@ Type 'q()' to quit R.
 > length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
 +   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
 [1] TRUE
+>   
+> # Check if the requirements for diffrent models has changed:
+> length(get_cheminfo())
+[1] 987
+> length(get_cheminfo(species="rat"))
+[1] 212
+> length(get_cheminfo(model="pbtk"))
+[1] 917
+> length(get_cheminfo(model="pbtk",species="rat"))
+[1] 181
+> length(get_cheminfo(info="all"))
+[1] 13
+> length(get_cheminfo(model="schmitt"))
+[1] 1384
+> length(get_cheminfo(model="schmitt",species="rat"))
+[1] 296
+> length(get_cheminfo(model="1compartment"))
+[1] 917
+> length(get_cheminfo(model="1compartment",species="rat"))
+[1] 181
+>   
 >   
 > quit("no")
