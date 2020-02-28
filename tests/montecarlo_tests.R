@@ -84,7 +84,8 @@ calc_mc_css(chem.cas="90-43-7",
   vary.params=list(Pow=0.3))
 
 
-    
+set.seed(1234)    
+# well-behaved chemical with a measured Rblood2plasma:
 calc_mc_tk(chem.cas="80-05-7",samples=NSAMP)
 
 quit("no")

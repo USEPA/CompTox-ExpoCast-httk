@@ -297,28 +297,28 @@ calc_mc_css <- function(chem.cas=NULL,
   css.list <- parameter.dt$Css 
   
   if (!return.samples) out <- quantile(css.list,which.quantile,na.rm=T)  
-  
-  if (!suppress.messages & !return.samples)
+  else out <- css.list  
+
+  if (!suppress.messages)
   {
-    if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
-      substr(species,2,nchar(species)),sep=''),
-      "plasma concentration returned in",
-      output.units,
-      "units for",
-      which.quantile,
-      "quantile.\n") 
-      else cat(paste(toupper(substr(species,1,1)),
+    if (!return.samples))
+    {
+      if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
         substr(species,2,nchar(species)),sep=''),
-        tissue,
-        "concentration returned in",
+        "plasma concentration returned in",
         output.units,
         "units for",
         which.quantile,
-        "quantile.\n")    
-  } else {
-    out <- css.list  
-    if (!suppress.messages) 
-    {
+        "quantile.\n") 
+        else cat(paste(toupper(substr(species,1,1)),
+          substr(species,2,nchar(species)),sep=''),
+          tissue,
+          "concentration returned in",
+          output.units,
+          "units for",
+          which.quantile,
+          "quantile.\n")    
+    } else {
       if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
         substr(species,2,nchar(species)),sep=''),
         "plasma concentration returned in",
@@ -330,7 +330,6 @@ calc_mc_css <- function(chem.cas=NULL,
         "concentration returned in",
         output.units,
         "units.\n") 
-      out <- css.list
     }
   }
 
