@@ -301,7 +301,7 @@ calc_mc_css <- function(chem.cas=NULL,
 
   if (!suppress.messages)
   {
-    if (!return.samples))
+    if (!return.samples)
     {
       if (is.null(tissue)) cat(paste(toupper(substr(species,1,1)),
         substr(species,2,nchar(species)),sep=''),
