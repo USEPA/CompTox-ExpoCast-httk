@@ -175,7 +175,6 @@ simobslist <- list()
 obvpredlist <- list()
 for(i in 1:length(simlist))
 {
-  print(i)
   obsdata <- as.data.frame(obslist[[i]])
   simdata <- as.data.frame(simlist[[i]])
   if (!is.null(simlist[[i]]) & !is.null(obslist[[i]]))
@@ -268,7 +267,6 @@ for(i in 1:length(simlist))
       simobscomb$Cmaxsim <- 0
     }
     simobslist[[i]] <- simobscomb
-    print(dim(unique_scenarios))
     unique_scenarios$RSQD[i] <- 1 - (
       sum((simobscomb$obsconc - simobscomb$simconc)^2) / 
       sum((simobscomb$obsconc-mean(simobscomb$obsconc))^2)

@@ -328,8 +328,7 @@ Set default.to.human to true to substitute human value.")
                     Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]],
                     BW=BW),
-    restrictive.clearance=restrictive.clearance,
-    suppress.messages=suppress.messages)
+    restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
   return(lapply(Params,set_httk_precision))
