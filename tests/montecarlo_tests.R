@@ -86,7 +86,7 @@ calc_mc_css(chem.cas="90-43-7",
 
 set.seed(1234)    
 # well-behaved chemical with a measured Rblood2plasma:
-calc_mc_tk(chem.cas="80-05-7",samples=NSAMP)
+ lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 
 set.seed(1234)    
 # make sure the oral equivalent function works:
