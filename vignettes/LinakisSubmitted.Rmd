@@ -175,11 +175,7 @@ for(i in 1:length(simlist)){
   obsdata <- as.data.frame(obslist[[i]])
   simdata <- as.data.frame(simlist[[i]])
   if(!is.null(simlist[[i]]) & !is.null(obslist[[i]])){ #skips over anything for which there was no observed data or insufficient information to run simulation
-    obsdata$TIME <- round(obsdata$TIME, digits = 3)  #4 digits to provide better resolution
-    obsdata <- subset(obsdata, !duplicated(obsdata$TIME))
-    simdata$time <- round(simdata$time, digits = 3) #4 digits to provide better resolution
-    simdata <- subset(simdata, !duplicated(simdata$time))
-    simobscomb <- subset(simdata, simdata$time %in% obsdata$TIME == T)
+    simobscomb <- simdata[findInterval(obsdata$TIME,simdata$time),] #Added 2/19/20, MWL
     simobscomb$obstime <- obsdata$TIME
     simobscomb$obsconc <- obsdata$CONCENTRATION
     simobscomb$chem <- obsdata$PREFERRED_NAME

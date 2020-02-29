@@ -5,6 +5,7 @@ Changes in version 2.0.1 (February 28, 2020)
   Added calc_hepatic_clearance wrapper function for calc_hep_clearance to allow backwards compatibility
   Fixed output of calc_mc_oral_equivalent (was sometimes returning all samples unasked, thank you Dan Dawson)
   Revised get_chemid to not crash in certain cases (thank you, Shannon Bell)
+  Revised Linakis et al. (submitted) vignette
 
 Changes in version 2.0.0 (February 10, 2020)
  	New generic inhalation PBPK model included, consistent with Linakis et al. (submitted) "Development and Evaluation of a High Throughput Inhalation Model for Organic Chemicals"
