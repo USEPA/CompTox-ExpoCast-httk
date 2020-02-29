@@ -166,13 +166,15 @@ rm(list=ls(pattern='c.vs.t'))
 ```
 
 
-```{r dataset}
+```{r init_dataset}
 # Creation of simulated vs. observed concentration dataset
 unique_scenarios$RSQD <- NA
 unique_scenarios$RMSE <- NA
 unique_scenarios$AIC <- NA
 simobslist <- list()
 obvpredlist <- list()
+```
+```{r dataset}
 for(i in 1:length(simlist))
 {
   obsdata <- as.data.frame(obslist[[i]])
@@ -201,6 +203,7 @@ for(i in 1:length(simlist))
       unique(simobscomb$chem)][1]
     simobscomb$km <- met_data$KM[unique(met_data$PREFERRED_NAME) %in%
       unique(simobscomb$chem)][1]
+# Match the matrix for each observation:    
     if (nrow(simobscomb)>0) 
       for (j in 1:nrow(simobscomb))
     {
@@ -236,24 +239,31 @@ for(i in 1:length(simlist))
                 simobscomb$time[j]/max(simobscomb$time) <= 1){
         simobscomb$tquart[j] <- "4"
       }
-    }
-    for (k in 2:max(nrow(simobscomb)-1,2,na.rm=T))
-    {
-      simobscomb$obsAUCtrap[1] <- 0
-      simobscomb$simAUCtrap[1] <- 0
-      if (min(simobscomb$time) <= (simobscomb$explen[1]*1.03) & 
-          nrow(simobscomb) >=2)
-      {
-        simobscomb$obsAUCtrap[k] <- simobscomb$obsAUCtrap[k-1] + 
-          0.5*(simobscomb$time[k] - simobscomb$time[k-1]) * 
-          (simobscomb$obsconc[k] + simobscomb$obsconc[k-1])
-        simobscomb$simAUCtrap[k] <- simobscomb$simAUCtrap[k-1] + 
-          0.5*(simobscomb$time[k]-simobscomb$time[k-1]) * 
-          (simobscomb$simconc[k] + simobscomb$simconc[k-1])
-      } else{
-        simobscomb$obsAUCtrap <- 0
-        simobscomb$simAUCtrap <- 0
       }
+# Calculat the AUC with the trapezoidal rule:    
+    if (nrow(simobscomb)>1) 
+    {
+      for (k in 2:max(nrow(simobscomb)-1,2,na.rm=T))
+      {
+        simobscomb$obsAUCtrap[1] <- 0
+        simobscomb$simAUCtrap[1] <- 0
+        if (min(simobscomb$time) <= (simobscomb$explen[1]*1.03) & 
+            nrow(simobscomb) >=2)
+        {
+          simobscomb$obsAUCtrap[k] <- simobscomb$obsAUCtrap[k-1] + 
+            0.5*(simobscomb$time[k] - simobscomb$time[k-1]) * 
+            (simobscomb$obsconc[k] + simobscomb$obsconc[k-1])
+          simobscomb$simAUCtrap[k] <- simobscomb$simAUCtrap[k-1] + 
+            0.5*(simobscomb$time[k]-simobscomb$time[k-1]) * 
+            (simobscomb$simconc[k] + simobscomb$simconc[k-1])
+        } else {
+          simobscomb$obsAUCtrap <- 0
+          simobscomb$simAUCtrap <- 0
+        }
+      }
+    } else {
+      simobscomb$obsAUCtrap <- 0
+      simobscomb$simAUCtrap <- 0
     }
     simobscomb$AUCobs <- max(simobscomb$obsAUCtrap)
     simobscomb$AUCsim <- max(simobscomb$simAUCtrap)
