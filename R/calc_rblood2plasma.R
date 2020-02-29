@@ -137,7 +137,8 @@ calc_rblood2plasma <- function(
     PCs <- predict_partitioning_schmitt(parameters=parameters,
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-           tissues='red blood cells')  
+           tissues='red blood cells',
+           suppress.messages=T)  
     parameters$Krbc2pu <- PCs$Krbc2pu
   } else if (!is.null(Krbc2pu))
   {
