@@ -157,20 +157,20 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
-      is.null(chem.name) & 
-      is.null(dtxsid)) 
+    is.null(chem.name) & 
+    is.null(dtxsid)) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
   out <- get_chem_id(
-          chem.cas=chem.cas,
-          chem.name=chem.name,
-          dtxsid=dtxsid)
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
    
-  if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+  if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
   # Check that the trend in the CLint assay was significant:
@@ -182,7 +182,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     if (!suppress.messages)
       warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint.db) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+  if (class(Clint.db) == "try-error") 
+    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
@@ -208,6 +209,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                       species=species,
                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                                       regression=regression,
+                                      suppress.messages=suppress.messages,
                                       minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
@@ -225,7 +227,6 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
-    
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
@@ -288,40 +289,48 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     Vmucc = 0.0001)) #Added MWL 9-20-19
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(
-              Fhep.assay.correction=calc_hep_fu(parameters = list(Pow = schmitt.params$Pow,
-                pKa_Donor=schmitt.params$pKa_Donor,
-                pKa_Accept=schmitt.params$pKa_Accept))))  # fraction 
- 
+  outlist <- c(outlist,list(
+    Fhep.assay.correction=calc_hep_fu(
+      parameters = list(Pow = schmitt.params$Pow,
+      pKa_Donor=schmitt.params$pKa_Donor,
+      pKa_Accept=schmitt.params$pKa_Accept,
+      suppress.messages=suppress.messages))))  # fraction 
 
-
-   if (vmax==0)
-   {
-     warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
-     outlist <- c(outlist,
-                  list(vmax=0,km=1,Clint=Clint, #km value of 1 is a dummy value here
-                       Clint.dist = Clint.dist,
-                       Clmetabolismc= as.numeric(calc_hep_clearance(chem.name = chem.name,hepatic.model="unscaled",
-                                                                        parameters=list(
-                                                                          Clint=Clint, #uL/min/10^6 cells
-                                                                          Funbound.plasma=fup, # unitless fraction
-                                                                          hep.assay.correction=outlist$Fhep.assay.correction, 
-                                                                          million.cells.per.gliver= 110, # 10^6 cells/g-liver
-                                                                          liver.density= 1.05, # g/mL
-                                                                          Dn=0.17,BW=BW,
-                                                                          Vliverc=lumped_params$Vliverc, #L/kg
-                                                                          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-                                                                        suppress.messages=T)), #L/h/kg BW
-                       million.cells.per.gliver=110, # 10^6 cells/g-liver
-                       liver.density=1.05, # g/mL
-                       Fgutabs=Fgutabs)) #L/h/kg BW
-   }else{
-     outlist <- c(outlist,list(vmax=vmax,km=km,Clint=Clint, 
-                               Clint.dist = Clint.dist, Clmetabolismc=0,                       
-                               million.cells.per.gliver=110, # 10^6 cells/g-liver
-                               liver.density=1.05, # g/mL
-                               Fgutabs=Fgutabs))#ML added Km = km 9-19-19
-   }
+  if (vmax==0)
+  {
+    if (!suppress.messages) 
+      warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
+    outlist <- c(outlist, list(
+      vmax=0,
+      km=1, #km value of 1 is a dummy value here
+      Clint=Clint, 
+      Clint.dist = Clint.dist,
+      Clmetabolismc = as.numeric(calc_hep_clearance(
+        chem.name = chem.name,
+        hepatic.model="unscaled",
+        parameters=list(
+          Clint=Clint, #uL/min/10^6 cells
+          Funbound.plasma=fup, # unitless fraction
+          hep.assay.correction=outlist$Fhep.assay.correction, 
+          million.cells.per.gliver= 110, # 10^6 cells/g-liver
+          liver.density= 1.05, # g/mL
+          Dn=0.17,BW=BW,
+          Vliverc=lumped_params$Vliverc, #L/kg
+          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+        suppress.messages=T)), #L/h/kg BW
+      million.cells.per.gliver=110, # 10^6 cells/g-liver
+      liver.density=1.05, # g/mL
+      Fgutabs=Fgutabs)) #L/h/kg BW
+  } else {
+    outlist <- c(outlist,list(
+      vmax=vmax,km=km,
+      Clint=Clint, 
+      Clint.dist = Clint.dist, 
+      Clmetabolismc=0,                       
+      million.cells.per.gliver=110, # 10^6 cells/g-liver
+      liver.density=1.05, # g/mL
+      Fgutabs=Fgutabs))#ML added Km = km 9-19-19
+  }
  
  
  if (adjusted.Funbound.plasma) 
