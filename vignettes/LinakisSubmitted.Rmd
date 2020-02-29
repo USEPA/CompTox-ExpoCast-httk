@@ -44,6 +44,8 @@ library(dplyr)
 library(stringr)
 library(forcats)
 library(smatr)
+# Delete all objects from memory:
+rm(list=ls())
 # We love to give warning messages whenever assumptions are used by HTTK,
 # but they will overwhelm the output of this vignette so we turn them
 # off:
@@ -171,10 +173,13 @@ unique_scenarios$RMSE <- NA
 unique_scenarios$AIC <- NA
 simobslist <- list()
 obvpredlist <- list()
-for(i in 1:length(simlist)){
+for(i in 1:length(simlist))
+{
+  print(i)
   obsdata <- as.data.frame(obslist[[i]])
   simdata <- as.data.frame(simlist[[i]])
-  if(!is.null(simlist[[i]]) & !is.null(obslist[[i]])){ #skips over anything for which there was no observed data or insufficient information to run simulation
+  if (!is.null(simlist[[i]]) & !is.null(obslist[[i]]))
+  { #skips over anything for which there was no observed data or insufficient information to run simulation
     simobscomb <- simdata[findInterval(obsdata$TIME,simdata$time),] #Added 2/19/20, MWL
     simobscomb$obstime <- obsdata$TIME
     simobscomb$obsconc <- obsdata$CONCENTRATION
@@ -184,43 +189,68 @@ for(i in 1:length(simlist)){
     simobscomb$species <- obsdata$CONC_SPECIES
     simobscomb$matrix <- obsdata$SAMPLING_MATRIX
     simobscomb$mw <- obsdata$AVERAGE_MASS
-    simobscomb$chemclass <- met_data$CHEM_CLASS[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$logp <- met_data$OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$sol <- met_data$WATER_SOLUBILITY_MOL.L_OPERA_PRED[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$henry <- met_data$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
+    simobscomb$chemclass <- met_data$CHEM_CLASS[unique(met_data$PREFERRED_NAME) %in%
+      unique(simobscomb$chem)][1]
+    simobscomb$logp <- met_data$OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED[
+      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
+    simobscomb$sol <- met_data$WATER_SOLUBILITY_MOL.L_OPERA_PRED[
+      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
+    simobscomb$henry <- met_data$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED[
+      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
     simobscomb$orig_conc_u <- obsdata$ORIG_CONC_U
-    simobscomb$vmax <- met_data$VMAX[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$km <- met_data$KM[unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    for(j in 1:nrow(simobscomb)){
-      if(simobscomb$matrix[j] == "VBL" | simobscomb$matrix[j] == "BL" | simobscomb$matrix[j] == "BL (+W)"){
+    simobscomb$vmax <- met_data$VMAX[unique(met_data$PREFERRED_NAME) %in%
+      unique(simobscomb$chem)][1]
+    simobscomb$km <- met_data$KM[unique(met_data$PREFERRED_NAME) %in%
+      unique(simobscomb$chem)][1]
+    if (nrow(simobscomb)>0) 
+      for (j in 1:nrow(simobscomb))
+    {
+      if (simobscomb$matrix[j] == "VBL" | 
+          simobscomb$matrix[j] == "BL" | 
+          simobscomb$matrix[j] == "BL (+W)")
+      {
         simobscomb$simconc[j] <- simobscomb$Cven[j]
-      } else if (simobscomb$matrix[j] == "ABL"){
+      } else if (simobscomb$matrix[j] == "ABL") {
         simobscomb$simconc[j] <- simobscomb$Cart[j]
-      } else if (simobscomb$matrix[j] == "EB" | simobscomb$matrix[j] == "EEB" | simobscomb$matrix[j] == "EB (+W)"){
+      } else if (simobscomb$matrix[j] == "EB" | 
+                 simobscomb$matrix[j] == "EEB" | 
+                 simobscomb$matrix[j] == "EB (+W)") {
         simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
-      } else if (simobscomb$matrix[j] == "MEB"){
+      } else if (simobscomb$matrix[j] == "MEB") {
         simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
-      } else if (simobscomb$matrix[j] == "PL"){
+      } else if (simobscomb$matrix[j] == "PL") {
         simobscomb$simconc[j] <- simobscomb$Cplasma[j]
       } else {
         simobscomb$simconc[j] <- NA
       }
-      if(simobscomb$time[j]/max(simobscomb$time) >= 0 & simobscomb$time[j]/max(simobscomb$time) < 0.25){
+      if (simobscomb$time[j]/max(simobscomb$time) >= 0 & 
+          simobscomb$time[j]/max(simobscomb$time) < 0.25)
+      {
         simobscomb$tquart[j] <- "1"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.25 & simobscomb$time[j]/max(simobscomb$time) < 0.5){
+      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.25 & 
+                simobscomb$time[j]/max(simobscomb$time) < 0.5) {
         simobscomb$tquart[j] <- "2"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.5 & simobscomb$time[j]/max(simobscomb$time) < 0.75){
+      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.5 & 
+                simobscomb$time[j]/max(simobscomb$time) < 0.75) {
         simobscomb$tquart[j] <- "3"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.75 & simobscomb$time[j]/max(simobscomb$time) <= 1){
+      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.75 & 
+                simobscomb$time[j]/max(simobscomb$time) <= 1){
         simobscomb$tquart[j] <- "4"
       }
     }
-    for(k in 2:max(nrow(simobscomb)-1,2)){
+    for (k in 2:max(nrow(simobscomb)-1,2,na.rm=T))
+    {
       simobscomb$obsAUCtrap[1] <- 0
       simobscomb$simAUCtrap[1] <- 0
-      if(min(simobscomb$time) <= (simobscomb$explen[1]*1.03) & nrow(simobscomb) >=2){
-        simobscomb$obsAUCtrap[k] <- simobscomb$obsAUCtrap[k-1] + 0.5*(simobscomb$time[k]-simobscomb$time[k-1]) * (simobscomb$obsconc[k] + simobscomb$obsconc[k-1])
-        simobscomb$simAUCtrap[k] <- simobscomb$simAUCtrap[k-1] + 0.5*(simobscomb$time[k]-simobscomb$time[k-1]) * (simobscomb$simconc[k] + simobscomb$simconc[k-1])
+      if (min(simobscomb$time) <= (simobscomb$explen[1]*1.03) & 
+          nrow(simobscomb) >=2)
+      {
+        simobscomb$obsAUCtrap[k] <- simobscomb$obsAUCtrap[k-1] + 
+          0.5*(simobscomb$time[k] - simobscomb$time[k-1]) * 
+          (simobscomb$obsconc[k] + simobscomb$obsconc[k-1])
+        simobscomb$simAUCtrap[k] <- simobscomb$simAUCtrap[k-1] + 
+          0.5*(simobscomb$time[k]-simobscomb$time[k-1]) * 
+          (simobscomb$simconc[k] + simobscomb$simconc[k-1])
       } else{
         simobscomb$obsAUCtrap <- 0
         simobscomb$simAUCtrap <- 0
@@ -229,18 +259,52 @@ for(i in 1:length(simlist)){
     simobscomb$AUCobs <- max(simobscomb$obsAUCtrap)
     simobscomb$AUCsim <- max(simobscomb$simAUCtrap)
     simobscomb$calcAUC <- max(simobscomb$AUC)
-    if(min(simobscomb$time) <= simobscomb$explen[1]*1.03){
+    if (min(simobscomb$time) <= simobscomb$explen[1]*1.03)
+    {
       simobscomb$Cmaxobs <- max(simobscomb$obsconc)
       simobscomb$Cmaxsim <- max(simobscomb$simconc)
-    } else{
+    } else {
       simobscomb$Cmaxobs <- 0
       simobscomb$Cmaxsim <- 0
     }
     simobslist[[i]] <- simobscomb
-    unique_scenarios$RSQD[i] <- 1 - (sum((simobscomb$obsconc-simobscomb$simconc)^2)/sum((simobscomb$obsconc-mean(simobscomb$obsconc))^2))
-    unique_scenarios$RMSE[i] <- sqrt(mean((simobscomb$simconc - simobscomb$obsconc)^2))
-    unique_scenarios$AIC[i] <- nrow(simobscomb)*(log(2*pi)+1+log((sum((simobscomb$obsconc-simobscomb$simconc)^2)/nrow(simobscomb))))+((44+1)*2) #44 is the number of parameters from inhalation_inits.R
-    obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + geom_point() + geom_abline() + xlab("Simulated Concentrations (uM)") + ylab("Observed Concentrations (uM)") + ggtitle(paste0(unique_scenarios$PREFERRED_NAME[i]," (", unique_scenarios$CONC_SPECIES[i], ", ",round(as.numeric(unique_scenarios$DOSE[i]), digits = 2),unique_scenarios$DOSE_U[i], " for ",round(unique_scenarios$EXP_LENGTH[i]*24, digits = 2),"h in ", unique_scenarios$SAMPLING_MATRIX[i], ")")) + theme_bw() + theme(plot.title = element_text(face = 'bold', size = 20),axis.title.x = element_text(face = 'bold', size = 20), axis.text.x = element_text(size=16), axis.title.y = element_text(face = 'bold', size = 20), axis.text.y = element_text(size = 16),legend.title = element_text(face = 'bold', size = 16),legend.text = element_text(face = 'bold',size = 14))
+    print(dim(unique_scenarios))
+    unique_scenarios$RSQD[i] <- 1 - (
+      sum((simobscomb$obsconc - simobscomb$simconc)^2) / 
+      sum((simobscomb$obsconc-mean(simobscomb$obsconc))^2)
+      )
+    unique_scenarios$RMSE[i] <- 
+      sqrt(mean((simobscomb$simconc - simobscomb$obsconc)^2))
+    unique_scenarios$AIC[i] <- 
+      nrow(simobscomb)*(
+        log(2*pi) + 1 +
+        log((sum((simobscomb$obsconc-simobscomb$simconc)^2) /
+          nrow(simobscomb)))
+      ) + ((44+1)*2) #44 is the number of parameters from inhalation_inits.R
+    obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+      geom_point() + 
+      geom_abline() + 
+      xlab("Simulated Concentrations (uM)") + 
+      ylab("Observed Concentrations (uM)") + 
+      ggtitle(paste0(
+        unique_scenarios$PREFERRED_NAME[i],
+        " (", 
+        unique_scenarios$CONC_SPECIES[i],
+        ", ",
+        round(as.numeric(unique_scenarios$DOSE[i]), digits = 2),
+        unique_scenarios$DOSE_U[i], 
+        " for ",
+        round(unique_scenarios$EXP_LENGTH[i]*24, digits = 2),
+        "h in ", 
+        unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
+      theme_bw() + 
+      theme(plot.title = element_text(face = 'bold', size = 20),
+        axis.title.x = element_text(face = 'bold', size = 20), 
+        axis.text.x = element_text(size=16), 
+        axis.title.y = element_text(face = 'bold', size = 20), 
+        axis.text.y = element_text(size = 16),
+        legend.title = element_text(face = 'bold', size = 16),
+        legend.text = element_text(face = 'bold',size = 14))
     obvpredlist[[i]] <- obvpredplot
   }
 }
