@@ -645,7 +645,7 @@ heatmap.2(physprop.matrix,
 # The following has to be adjusted manually:
 rect(0.65, 0.01, 0.87, 0.78, border="blue") 
 text(0.75,0.81,expression(paste("Estimated from ",italic("In Vivo")," Data")))
- ```
+```
 
 
 The original scripts used a data.table called FitData that contains a lot of stuff we don't need to make these figures. 
