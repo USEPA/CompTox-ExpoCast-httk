@@ -104,8 +104,10 @@ for(i in 1:nrow(unique_scenarios)){
     obslist[[i]] <- relconc
     name <- paste0("out",i)
     if(as.character(unique_scenarios$CONC_SPECIES[i]) == "Human"){
-      solve <- assign(name, solve_gas_pbtk(chem.cas = unique_scenarios$CASRN[i], 
+      solve <- assign(name, solve_gas_pbtk(
+        chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+        times=obslist[[i]]$TIME,
         tsteps = 500, 
         exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
@@ -118,8 +120,10 @@ for(i in 1:nrow(unique_scenarios)){
         met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]],
         suppress.messages=T))
     } else {
-      solve <- assign(name, solve_gas_pbtk(chem.cas = unique_scenarios$CASRN[i], 
+      solve <- assign(name, solve_gas_pbtk(
+        chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+        times=obslist[[i]]$TIME,
         tsteps = 500, 
         exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
@@ -168,9 +172,9 @@ rm(list=ls(pattern='c.vs.t'))
 
 ```{r init_dataset}
 # Creation of simulated vs. observed concentration dataset
-unique_scenarios$RSQD <- NA
-unique_scenarios$RMSE <- NA
-unique_scenarios$AIC <- NA
+unique_scenarios$RSQD <- 0
+unique_scenarios$RMSE <- 0
+unique_scenarios$AIC <- 0
 simobslist <- list()
 obvpredlist <- list()
 ```
@@ -181,7 +185,7 @@ for(i in 1:length(simlist))
   simdata <- as.data.frame(simlist[[i]])
   if (!is.null(simlist[[i]]) & !is.null(obslist[[i]]))
   { #skips over anything for which there was no observed data or insufficient information to run simulation
-    simobscomb <- simdata[findInterval(obsdata$TIME,simdata$time),] #Added 2/19/20, MWL
+    simobscomb <- simdata[simdata$time %in% signif(obsdata$TIME,4),] 
     simobscomb$obstime <- obsdata$TIME
     simobscomb$obsconc <- obsdata$CONCENTRATION
     simobscomb$chem <- obsdata$PREFERRED_NAME
