@@ -274,37 +274,49 @@ for(i in 1:length(simobslist))
     simobscomb <- simobslist[[i]]
   # Match the matrix for each observation:    
     for (j in 1:nrow(simobscomb))
-    {
-      if (simobscomb$matrix[j] == "VBL" | 
-          simobscomb$matrix[j] == "BL" | 
-          simobscomb$matrix[j] == "BL (+W)")
+      if(!is.na(simobscomb$matrix[j]))
       {
-        simobscomb$simconc[j] <- simobscomb$Cven[j]
-      } else if (simobscomb$matrix[j] == "ABL") {
-        simobscomb$simconc[j] <- simobscomb$Cart[j]
-      } else if (simobscomb$matrix[j] == "EB" | 
-                 simobscomb$matrix[j] == "EEB" | 
-                 simobscomb$matrix[j] == "EB (+W)") {
-        simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
-      } else if (simobscomb$matrix[j] == "MEB") {
-        simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
-      } else if (simobscomb$matrix[j] == "PL") {
-        simobscomb$simconc[j] <- simobscomb$Cplasma[j]
-      } else {
-        simobscomb$simconc[j] <- NA
+        if (simobscomb$matrix[j] == "VBL" | 
+            simobscomb$matrix[j] == "BL" | 
+            simobscomb$matrix[j] == "BL (+W)")
+        {
+          simobscomb$simconc[j] <- simobscomb$Cven[j]
+        } else if (simobscomb$matrix[j] == "ABL") {
+          simobscomb$simconc[j] <- simobscomb$Cart[j]
+        } else if (simobscomb$matrix[j] == "EB" | 
+                   simobscomb$matrix[j] == "EEB" | 
+                   simobscomb$matrix[j] == "EB (+W)") {
+          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+        } else if (simobscomb$matrix[j] == "MEB") {
+          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+        } else if (simobscomb$matrix[j] == "PL") {
+          simobscomb$simconc[j] <- simobscomb$Cplasma[j]
+        } else {
+          simobscomb$simconc[j] <- NA
+        }
       }
-      if (simobscomb$time[j]/max(simobscomb$time) >= 0 & 
-          simobscomb$time[j]/max(simobscomb$time) < 0.25)
+    simobslist[[i]] <- simobscomb
+  }
+```
+```{r time_quartile}
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
+    for (j in 1:nrow(simobscomb))
+    {
+      if (simobscomb$time[j]/max(simobscomb$time,na.rm=T) >= 0 & 
+          simobscomb$time[j]/max(simobscomb$time,na.rm=T) < 0.25)
       {
         simobscomb$tquart[j] <- "1"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.25 & 
-                simobscomb$time[j]/max(simobscomb$time) < 0.5) {
+      } else if(simobscomb$time[j]/max(simobscomb$time,na.rm=T) >= 0.25 & 
+                simobscomb$time[j]/max(simobscomb$time,na.rm=T) < 0.5) {
         simobscomb$tquart[j] <- "2"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.5 & 
-                simobscomb$time[j]/max(simobscomb$time) < 0.75) {
+      } else if(simobscomb$time[j]/max(simobscomb$time,na.rm=T) >= 0.5 & 
+                simobscomb$time[j]/max(simobscomb$time,na.rm=T) < 0.75) {
         simobscomb$tquart[j] <- "3"
-      } else if(simobscomb$time[j]/max(simobscomb$time) >= 0.75 & 
-                simobscomb$time[j]/max(simobscomb$time) <= 1){
+      } else if(simobscomb$time[j]/max(simobscomb$time,na.rm=T) >= 0.75 & 
+                simobscomb$time[j]/max(simobscomb$time,na.rm=T) <= 1){
         simobscomb$tquart[j] <- "4"
       }
       }
