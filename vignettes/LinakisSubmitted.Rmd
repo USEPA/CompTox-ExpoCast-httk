@@ -107,7 +107,8 @@ for(i in 1:nrow(unique_scenarios)){
       solve <- assign(name, solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
-        times=obslist[[i]]$TIME,
+# Make sure we get conc's at the observed times:
+        times=signif(obslist[[i]]$TIME,4), 
         tsteps = 500, 
         exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
@@ -123,7 +124,8 @@ for(i in 1:nrow(unique_scenarios)){
       solve <- assign(name, solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
-        times=obslist[[i]]$TIME,
+# Make sure we get conc's at the observed times:
+        times=signif(obslist[[i]]$TIME,4),
         tsteps = 500, 
         exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
@@ -183,9 +185,20 @@ for(i in 1:length(simlist))
 {
   obsdata <- as.data.frame(obslist[[i]])
   simdata <- as.data.frame(simlist[[i]])
+# skips over anything for which there was no observed data or 
+# insufficient information to run simulation:
   if (!is.null(simlist[[i]]) & !is.null(obslist[[i]]))
-  { #skips over anything for which there was no observed data or insufficient information to run simulation
-    simobscomb <- simdata[simdata$time %in% signif(obsdata$TIME,4),] 
+  { 
+# Make sure we are looking at consistent time points:
+    simobscomb <- simdata[simdata$time %in% signif(obsdata$TIME,4),]
+    obsdata <- subset(obsdata,signif(TIME,4) %in% simobscomb$time)
+# If multiple observations are mapped onto the same simulated time,
+# then duplicate that row of the simulation:    
+    simobscomb <- rbind(simobscomb,subset(simobscomb,time %in%
+      signif(obsdata$TIME,4)[duplicated(signif(obsdata$TIME,4))]))
+# Get everything in order chronologically:
+    simobscomb <- simobscomb[order(simobscomb$time),]
+# Merge with obsdata (why not use merge?)
     simobscomb$obstime <- obsdata$TIME
     simobscomb$obsconc <- obsdata$CONCENTRATION
     simobscomb$chem <- obsdata$PREFERRED_NAME
