@@ -304,6 +304,7 @@ for(i in 1:length(simobslist))
   {
     simobscomb <- simobslist[[i]]
     for (j in 1:nrow(simobscomb))
+      if (!is.na(simobscomb$time[j])) 
     {
       if (simobscomb$time[j]/max(simobscomb$time,na.rm=T) >= 0 & 
           simobscomb$time[j]/max(simobscomb$time,na.rm=T) < 0.25)
