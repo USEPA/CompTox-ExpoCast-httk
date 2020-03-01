@@ -180,7 +180,7 @@ unique_scenarios$AIC <- 0
 simobslist <- list()
 obvpredlist <- list()
 ```
-```{r dataset}
+```{r merge_datasets}
 for(i in 1:length(simlist))
 {
   obsdata <- as.data.frame(obslist[[i]])
@@ -192,37 +192,88 @@ for(i in 1:length(simlist))
 # Make sure we are looking at consistent time points:
     simobscomb <- simdata[simdata$time %in% signif(obsdata$TIME,4),]
     obsdata <- subset(obsdata,signif(TIME,4) %in% simobscomb$time)
-# If multiple observations are mapped onto the same simulated time,
-# then duplicate that row of the simulation:    
-    simobscomb <- rbind(simobscomb,subset(simobscomb,time %in%
-      signif(obsdata$TIME,4)[duplicated(signif(obsdata$TIME,4))]))
-# Get everything in order chronologically:
-    simobscomb <- simobscomb[order(simobscomb$time),]
-# Merge with obsdata (why not use merge?)
-    simobscomb$obstime <- obsdata$TIME
-    simobscomb$obsconc <- obsdata$CONCENTRATION
-    simobscomb$chem <- obsdata$PREFERRED_NAME
-    simobscomb$dose <- obsdata$DOSE
-    simobscomb$explen <- obsdata$EXP_LENGTH
-    simobscomb$species <- obsdata$CONC_SPECIES
-    simobscomb$matrix <- obsdata$SAMPLING_MATRIX
-    simobscomb$mw <- obsdata$AVERAGE_MASS
-    simobscomb$chemclass <- met_data$CHEM_CLASS[unique(met_data$PREFERRED_NAME) %in%
-      unique(simobscomb$chem)][1]
-    simobscomb$logp <- met_data$OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED[
-      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$sol <- met_data$WATER_SOLUBILITY_MOL.L_OPERA_PRED[
-      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$henry <- met_data$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED[
-      unique(met_data$PREFERRED_NAME) %in% unique(simobscomb$chem)][1]
-    simobscomb$orig_conc_u <- obsdata$ORIG_CONC_U
-    simobscomb$vmax <- met_data$VMAX[unique(met_data$PREFERRED_NAME) %in%
-      unique(simobscomb$chem)][1]
-    simobscomb$km <- met_data$KM[unique(met_data$PREFERRED_NAME) %in%
-      unique(simobscomb$chem)][1]
-# Match the matrix for each observation:    
-    if (nrow(simobscomb)>0) 
-      for (j in 1:nrow(simobscomb))
+# Merge with obsdata
+    colnames(obsdata)[colnames(obsdata) ==
+      "TIME"] <- 
+      "obstime"
+# Round to match sim time:
+    obsdata$time <- signif(obsdata$obstime,4)
+    colnames(obsdata)[colnames(obsdata) ==
+      "CONCENTRATION"] <- 
+      "obsconc"
+    colnames(obsdata)[colnames(obsdata) ==
+      "PREFERRED_NAME"] <- 
+      "chem"
+    colnames(obsdata)[colnames(obsdata) ==
+      "DOSE"] <- 
+      "dose"
+    colnames(obsdata)[colnames(obsdata) ==
+      "EXP_LENGTH"] <- 
+      "explen"
+    colnames(obsdata)[colnames(obsdata) ==
+      "CONC_SPECIES"] <- 
+      "species"
+    colnames(obsdata)[colnames(obsdata) ==
+      "SAMPLING_MATRIX"] <- 
+      "matrix"
+    colnames(obsdata)[colnames(obsdata) ==
+      "AVERAGE_MASS"] <- 
+      "mw"
+    colnames(obsdata)[colnames(obsdata) ==
+      "ORIG_CONC_U"] <- 
+      "orig_conc_u"
+    simobscomb <- suppressWarnings(merge(obsdata[,c(
+      "time",
+      "obstime",
+      "obsconc",
+      "chem",
+      "dose",
+      "explen",
+      "species",
+      "matrix",
+      "mw",
+      "orig_conc_u"
+      )], simobscomb, by="time", all.x=T))
+
+# Merge with met_data
+    this.met_data <- subset(met_data,
+      PREFERRED_NAME == simobscomb[1,"chem"] &
+      SPECIES == simobscomb[1,"species"])
+    colnames(this.met_data)[colnames(this.met_data)=="CHEM_CLASS"] <-
+      "chemclass"
+    colnames(this.met_data)[colnames(this.met_data) ==
+      "OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED"] <-
+      "logp"
+    colnames(this.met_data)[colnames(this.met_data) ==
+      "WATER_SOLUBILITY_MOL.L_OPERA_PRED"] <-
+      "sol"
+    colnames(this.met_data)[colnames(this.met_data) ==
+      "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"] <-
+      "henry"
+    colnames(this.met_data)[colnames(this.met_data) ==
+      "VMAX"] <-
+      "vmax"
+    colnames(this.met_data)[colnames(this.met_data) ==
+      "KM"] <-
+      "km"
+    simobscomb <- suppressWarnings(cbind(simobscomb,this.met_data[c(
+      "chemclass",
+      "logp",
+      "sol",
+      "henry",
+      "vmax",
+      "km")]))
+    simobslist[[i]] <- simobscomb
+  }
+}
+```
+```{r match_matrix}
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
+  # Match the matrix for each observation:    
+    for (j in 1:nrow(simobscomb))
     {
       if (simobscomb$matrix[j] == "VBL" | 
           simobscomb$matrix[j] == "BL" | 
@@ -257,6 +308,14 @@ for(i in 1:length(simlist))
         simobscomb$tquart[j] <- "4"
       }
       }
+    simobslist[[i]] <- simobscomb
+  }
+```
+```{r calc_AUC}
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
 # Calculat the AUC with the trapezoidal rule:    
     if (nrow(simobscomb)>1) 
     {
@@ -294,6 +353,13 @@ for(i in 1:length(simlist))
       simobscomb$Cmaxsim <- 0
     }
     simobslist[[i]] <- simobscomb
+  }
+```
+```{r calc_error}
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
     unique_scenarios$RSQD[i] <- 1 - (
       sum((simobscomb$obsconc - simobscomb$simconc)^2) / 
       sum((simobscomb$obsconc-mean(simobscomb$obsconc))^2)
@@ -306,6 +372,14 @@ for(i in 1:length(simlist))
         log((sum((simobscomb$obsconc-simobscomb$simconc)^2) /
           nrow(simobscomb)))
       ) + ((44+1)*2) #44 is the number of parameters from inhalation_inits.R
+    simobslist[[i]] <- simobscomb
+  }
+```
+```{r make_plots}
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
     obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
       geom_point() + 
       geom_abline() + 
@@ -332,7 +406,7 @@ for(i in 1:length(simlist))
         legend.text = element_text(face = 'bold',size = 14))
     obvpredlist[[i]] <- obvpredplot
   }
-}
+
 simobsfull <- do.call("rbind",simobslist)
 simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
 simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
