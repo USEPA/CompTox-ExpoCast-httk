@@ -94,7 +94,7 @@
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
-#' @param recalc.clearance Recalculates the the hepatic clearance
+#' @param recalc.clearance Recalculates the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
