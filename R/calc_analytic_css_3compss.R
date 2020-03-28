@@ -20,7 +20,7 @@
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
 #' 'altered hematocrit, Funbound.plasma, or Krbc2pu.
-#'@param tissue Desired tissue conentration (defaults to whole body 
+#'@param tissue Desired tissue concentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
@@ -60,7 +60,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS, depending on what was provided:
   if (is.null(parameters))
   {
     out <- get_chem_id(
