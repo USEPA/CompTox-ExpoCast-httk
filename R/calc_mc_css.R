@@ -7,7 +7,7 @@
 #' to "Human".
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data (volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' Tissue concentrations are calculated for the pbtk model with a default oral
@@ -15,7 +15,7 @@
 #' of the steady state plasma concentration and the tissue to plasma partition
 #' coefficient.
 #' 
-#' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+#' The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 #' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -109,7 +109,7 @@
 #' 
 #' \dontrun{
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
+#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
 #'              samples=100,return.samples=TRUE)
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
