@@ -129,8 +129,8 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   {
 # We need logP, which currently isn't one of the 3compss parameters, so unless
 # the user gives chem.name/chem.cas, we can't run:
-    if (is.null(chem.cas) & is.null(chem.name) & !any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters)))
-      stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
+    if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid) & !any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters)))
+      stop("Either chem.cas, chem.name, or dtxsid must be specified to give tissue concs with this model. Try model=\"pbtk\".")
 # Need to convert to 3compartmentss parameters:
     if(!all(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters))){
       parameters <- add_schmitt.param_to_3compss(parameters = parameters, chem.cas = chem.cas, chem.name = chem.name)
@@ -166,12 +166,13 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Add some parameters to the output from parameterize_steady_state so that predict_partitioning_schmitt can run without reparameterizing
 add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, chem.name = NULL){
   
-  if ((is.null(chem.cas) & is.null(chem.name)))
+  if ((is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)))
     stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
   if (is.null(parameters))
     stop("Must have input parameters to add Schmitt input to.")
   # Need to convert to 3compartmentss parameters:
-  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name,
+                                    dtxsid = dtxsid, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
   if(!"Pow" %in% names(parameters)){
     parameters[["Pow"]] <- 10^temp.params[["logP"]]
   }
