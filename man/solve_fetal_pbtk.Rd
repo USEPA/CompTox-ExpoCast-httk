@@ -10,7 +10,7 @@ solve_fetal_pbtk(
   dtxsid = NULL,
   times = seq(13 * 7, 40 * 7, 1),
   parameters = NULL,
-  days = 10,
+  days = NULL,
   tsteps = 4,
   dose = 1,
   dosing.matrix = NULL,

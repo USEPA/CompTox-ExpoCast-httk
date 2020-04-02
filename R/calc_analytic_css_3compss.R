@@ -1,4 +1,4 @@
-#'Calculate the analytic steady state concentration for the three oompartment
+#'Calculate the analytic steady state concentration for the three compartment
 #'steady-state model
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
@@ -133,9 +133,10 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       stop("Either chem.cas, chem.name, or dtxsid must be specified to give tissue concs with this model. Try model=\"pbtk\".")
 # Need to convert to 3compartmentss parameters:
     if(!all(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters))){
-      parameters <- add_schmitt.param_to_3compss(parameters = parameters, chem.cas = chem.cas, chem.name = chem.name)
+      parameters <- add_schmitt.param_to_3compss(parameters = parameters,
+                      chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid)
     }
-    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
+    pcs <- predict_partitioning_schmitt(parameters = parameters[, list(param.names.schmitt[param.names.schmitt %in% names(parameters)])])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
@@ -163,16 +164,17 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 
 
 
-# Add some parameters to the output from parameterize_steady_state so that predict_partitioning_schmitt can run without reparameterizing
-add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, chem.name = NULL){
+# Add some parameters to the output from parameterize_steady_state so that
+# predict_partitioning_schmitt can run without reparameterizing
+add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, chem.name = NULL, dtxsid = NULL){
   
   if ((is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)))
-    stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
+    stop("Either chem.cas, chem.name, or dtxsid must be specified to give tissue concs with this model. Try model=\"pbtk\".")
   if (is.null(parameters))
     stop("Must have input parameters to add Schmitt input to.")
   # Need to convert to 3compartmentss parameters:
   temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name,
-                                    dtxsid = dtxsid, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+      dtxsid = dtxsid, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
   if(!"Pow" %in% names(parameters)){
     parameters[["Pow"]] <- 10^temp.params[["logP"]]
   }

@@ -124,7 +124,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
 
-\item{recalc.clearance}{Recalculates the the hepatic clearance
+\item{recalc.clearance}{Recalculates the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
