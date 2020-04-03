@@ -261,7 +261,7 @@ calc_analytic_css <- function(chem.name=NULL,
   }
   
 # Cannot guarantee arbitrary precision:
-  Css <- signif(Css,4)
+  Css <- set_httk_precision(Css)
   
   return(as.numeric(Css))
 }

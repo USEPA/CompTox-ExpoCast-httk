@@ -396,7 +396,7 @@ print(rb2p.plot)
 ```
 
 Lastly, we make the heatmap.
-```{r MakeHeatmap}
+```{r MakeHeatmap, eval=FALSE}
 heatmap.table <- NULL
 for(this.cas in get_cheminfo(model='schmitt')){
     parms <- parameterize_schmitt(chem.cas=this.cas)

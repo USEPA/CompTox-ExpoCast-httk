@@ -24,23 +24,23 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 1.485
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 1.485
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 1.485
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
-[1] 26.93
+[1] 26.95
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.555
+[1] 8.559
 > 
 > head(solve_1comp(chem.name="bisphenol a"))
 Human volume of distribution returned in units of L/kg BW.
@@ -49,11 +49,11 @@ AUC is area under plasma concentration in uM * days units with
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.751e-07 2.038e-09
-[3,] 0.01042    158.40    0.3263000    3.415e-01 1.855e-03
-[4,] 0.02083     91.85    0.5138000    1.164e+00 6.321e-03
-[5,] 0.03125     53.26    0.6207000    2.261e+00 1.228e-02
-[6,] 0.04167     30.88    0.6810000    3.515e+00 1.909e-02
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
 > head(solve_1comp(chem.cas="80-05-7"))
 Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
@@ -61,11 +61,11 @@ AUC is area under plasma concentration in uM * days units with
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.751e-07 2.038e-09
-[3,] 0.01042    158.40    0.3263000    3.415e-01 1.855e-03
-[4,] 0.02083     91.85    0.5138000    1.164e+00 6.321e-03
-[5,] 0.03125     53.26    0.6207000    2.261e+00 1.228e-02
-[6,] 0.04167     30.88    0.6810000    3.515e+00 1.909e-02
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
 Human volume of distribution returned in units of L/kg BW.
 Amounts returned in umol  and concentration returned in uM units.
@@ -73,31 +73,31 @@ AUC is area under plasma concentration in uM * days units with
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.751e-07 2.038e-09
-[3,] 0.01042    158.40    0.3263000    3.415e-01 1.855e-03
-[4,] 0.02083     91.85    0.5138000    1.164e+00 6.321e-03
-[5,] 0.03125     53.26    0.6207000    2.261e+00 1.228e-02
-[6,] 0.04167     30.88    0.6810000    3.515e+00 1.909e-02
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
 > 
 > calc_vdist(chem.name="triclosan")
 Human volume of distribution returned in units of L/kg BW.
-[1] 2.301479
+[1] 2.454
 > calc_vdist(chem.cas="80-05-7")
 Human volume of distribution returned in units of L/kg BW.
-[1] 5.009845
+[1] 5.009
 > params <- parameterize_schmitt(chem.name="triclosan")
 > params <- c(params, predict_partitioning_schmitt(parameters = params))
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301479
+[1] 2.454
 > params <- parameterize_3comp(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301479
+[1] 2.455
 > params <- parameterize_pbtk(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.301479
+[1] 2.454
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

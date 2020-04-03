@@ -65,7 +65,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
                        species='Human')
     if (!is.na(Rblood2plasma) & !suppress.messages) 
       warning('Human in vivo measured Rblood2plasma substituted.')
-  } else if (!is.na(Rblood2plasma)) 
+  } else if (!is.na(Rblood2plasma) & !suppress.messages) 
     warning(paste(toupper(substr(species, 1, 1)), 
       substr(species, 2, nchar(species)),
       ' in vivo measured Rblood2plasma used.',sep=""))
@@ -111,11 +111,13 @@ available_rblood2plasma <- function(chem.cas=NULL,
       } else {
         Rblood2plasma.data <- chem.physical_and_invitro.data[,'Human.Rblood2plasma']
         Rblood2plasma <- mean(Rblood2plasma.data[which(!is.na(Rblood2plasma.data))])
-        warning(paste('Average in vivo Human Rblood2plasma (',
+        if (!suppress.messages) 
+          warning(paste('Average in vivo Human Rblood2plasma (',
                       signif(Rblood2plasma,3),
                       ') substituted.',sep=""))
       }
     }
   }
-  return(Rblood2plasma)
+  
+  return(set_httk_precision(Rblood2plasma))
 }
