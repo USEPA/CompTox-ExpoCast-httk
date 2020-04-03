@@ -110,6 +110,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                     species=species,
                     default.to.human=default.to.human,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    suppress.messages=suppress.messages,
                     ...)
     Qtotal.liverc <- get_param(
                        "Qtotal.liverc",
@@ -146,6 +147,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                 species=species,
                 default.to.human=default.to.human,
                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                suppress.messages=suppress.messages,
                 ...)
     parameters <- c(parameters,params[
                       name.list[!(name.list %in% names(parameters))]])
@@ -236,7 +238,8 @@ calc_hep_clearance <- function(chem.name=NULL,
         Rblood2plasma <- available_rblood2plasma(chem.name=chem.name,
           chem.cas=chem.cas,
           species=species,
-          adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+          suppress.messages=suppress.messages)
       } else(stop("Enter chem.cas or chem.name with corresponding species or enter Rblood2plasma as a parameter for the well-stirred model correction."))
       CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint / Rblood2plasma)
     } else CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint)   
@@ -254,5 +257,86 @@ calc_hep_clearance <- function(chem.name=NULL,
                             "Hepatic clearance calculated with the",
                             hepatic.model,
                             "model in units of L/h/kg.\n")  
-  return(as.numeric(CLh))
+  return(set_httk_precision(as.numeric(CLh)))
+}
+
+#' Calculate the hepatic clearance (deprecated).
+#' 
+#' This function is included for backward compatibility. It calls
+#' \code{\link{calc_hep_clearance}} which
+#' calculates the hepatic clearance in plasma for a well-stirred model
+#' or other type if specified. Based on  Ito and Houston (2004)
+#' 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or the parameters
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or the parameters must
+#' be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human"). 
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true.
+#' @param parameters Chemical parameters from parameterize_steadystate
+#' function, overrides chem.name and chem.cas.
+#' @param hepatic.model Model used in calculating hepatic clearance, unscaled,
+#' parallel tube, dispersion, or default well-stirred.
+#' @param suppress.messages Whether or not to suppress the output message.
+#' @param well.stirred.correction Uses correction in calculation of hepatic
+#' clearance for well-stirred model if TRUE for hepatic.model well-stirred.
+#' This assumes clearance relative to amount unbound in whole blood instead of
+#' plasma, but converted to use with plasma concentration.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE.
+#' @param ... Additional parameters passed to parameterize_steadystate if
+#' parameters is NULL.
+#'
+#' @return \item{Hepatic Clearance}{Units of L/h/kg BW.}
+#'
+#' @author John Wambaugh and Robert Pearce
+#'
+#' @keywords Parameter
+#'
+#' @references
+#' Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
+#' predicting drug clearance using in vitro kinetic data from hepatic microsomes 
+#' and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
+#'
+#' @examples
+#' 
+#' calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
+#' calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
+#' 
+#' 
+#' @export calc_hepatic_clearance
+calc_hepatic_clearance <- function(chem.name=NULL,
+                               chem.cas=NULL,
+                               dtxsid = NULL,
+                               parameters=NULL,
+                               species='Human',
+                               default.to.human=F,
+                               hepatic.model='well-stirred',
+                               suppress.messages=F,
+                               well.stirred.correction=T,
+                               restrictive.clearance=T,
+                               adjusted.Funbound.plasma=T,
+                               ...)
+{
+  return(calc_hep_clearance(chem.name=chem.name,
+                               chem.cas=chem.cas,
+                               dtxsid = dtxsid,
+                               parameters = parameters,
+                               species = species,
+                               default.to.human = default.to.human,
+                               hepatic.model = hepatic.model,
+                               suppress.messages = suppress.messages,
+                               well.stirred.correction = 
+                                 well.stirred.correction,
+                               restrictive.clearance = restrictive.clearance,
+                               adjusted.Funbound.plasma = 
+                                 adjusted.Funbound.plasma,
+                               ...))
 }

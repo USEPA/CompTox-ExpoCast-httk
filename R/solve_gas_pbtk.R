@@ -232,6 +232,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #get associated logHenry value and compare against glycerol's value, obtained
     #from EPA dashboard
     logHenry = chem.physical_and_invitro.data[chem.cas,'logHenry']
+    if (is.na(logHenry)) stop (
+"Henry's constant is not available for this compound")
     glycerol_logHenry = -7.80388
     if (logHenry <= glycerol_logHenry){ 
     warning("Henry's constant, as a measure of volatility, is smaller for the
@@ -266,44 +268,45 @@ solve_gas_pbtk <- function(chem.name = NULL,
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
-  chem.name = chem.name,
-  chem.cas = chem.cas,
-  dtxsid=dtxsid,
-  times=times,
-  parameters=parameters,
-  model="gas_pbtk",
-  route='inhalation',
-  dosing=list(
-    initial.dose=dose,
-    dosing.matrix=dosing.matrix,
-    daily.dose=daily.dose,
-    doses.per.day=doses.per.day
-  ),
-  days=days,
-  tsteps = tsteps, # tsteps is number of steps per hour
-  initial.values=initial.values,
-  plots=plots,
-  monitor.vars=monitor.vars,
-  suppress.messages=suppress.messages,
-  species=species,
-  output.units=output.units,
-  method=method,rtol=rtol,atol=atol,
-  recalc.blood2plasma=recalc.blood2plasma,
-  recalc.clearance=recalc.clearance,
-  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-  parameterize.arg.list = list(regression=regression,
-                               default.to.human=default.to.human,
-                               restrictive.clearance = restrictive.clearance,
-                               exercise = exercise,
-                               vmax = vmax,
-                               km = km,
-                               fR = fR,
-                               VT = VT,
-                               VD = VD),
-  minimum.Funbound.plasma=minimum.Funbound.plasma,
-  fcontrol = fcontrol,
-  forcings = forcings,
-  ...)
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    dtxsid=dtxsid,
+    times=times,
+    parameters=parameters,
+    model="gas_pbtk",
+    route='inhalation',
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    ),
+    days=days,
+    tsteps = tsteps, # tsteps is number of steps per hour
+    initial.values=initial.values,
+    plots=plots,
+    monitor.vars=monitor.vars,
+    suppress.messages=suppress.messages,
+    species=species,
+    output.units=output.units,
+    method=method,rtol=rtol,atol=atol,
+    recalc.blood2plasma=recalc.blood2plasma,
+    recalc.clearance=recalc.clearance,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    parameterize.arg.list = list(
+      regression=regression,
+      default.to.human=default.to.human,
+      restrictive.clearance = restrictive.clearance,
+      exercise = exercise,
+      vmax = vmax,
+      km = km,
+      fR = fR,
+      VT = VT,
+      VD = VD),
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    fcontrol = fcontrol,
+    forcings = forcings,
+    ...)
   
   return(out)
 }

@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 > library(httk)
-> #options(warn=-1)
+> options(warn=-1)
 > NSAMP <- 10
 > 
 > 
@@ -30,24 +30,16 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
 [1] 0.1913
-There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
 [1] 0.2251
-Warning messages:
-1: NAs introduced by coercion 
-2: NAs introduced by coercion 
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
 [1] 0.1913
-There were 50 or more warnings (use warnings() to see the first 50)
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
 [1] 0.226
-There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > 
 > 
@@ -59,33 +51,13 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-131.2 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Clint is provided as a distribution.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Fraction unbound is provided as a distribution.
-3: NAs introduced by coercion 
-4: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-5: NAs introduced by coercion 
-6: NAs introduced by coercion 
-7: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Human in vivo measured Rblood2plasma used.
-8: NAs introduced by coercion 
-9: NAs introduced by coercion 
-10: NAs introduced by coercion 
+167.4 
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 10.09 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-2: In predict_partitioning_schmitt(parameters = parameters, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
 > # Human.Funbound.plasma is below LOD (0.005), can't do PBPK, can't predict
 > # Rblood2plasma
 > set.seed(1234)
@@ -93,22 +65,12 @@ Warning messages:
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 37.07 
-Warning messages:
-1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Fraction unbound = 0, changed to 0.005.
-2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-3: In available_rblood2plasma(chem.name = chem.name, chem.cas = chem.cas,  :
-  Average in vivo Human Rblood2plasma (0.846) substituted.
-4: In parameterize_schmitt(chem.cas = chem.cas, chem.name, dtxsid = dtxsid,  :
-  Fraction unbound = 0, can't predict tissue partitioning.
 > # well-behaved chemical with a measured Rblood2plasma:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-2.314 
-There were 14 warnings (use warnings() to see them)
+2.315 
 > 
 > 
 > 
@@ -120,20 +82,17 @@ There were 14 warnings (use warnings() to see them)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 2.316 
-There were 50 or more warnings (use warnings() to see the first 50)
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-2.314 
-There were 12 warnings (use warnings() to see them)
+2.315 
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
 1.472 
-There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #
 > #
@@ -142,9 +101,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > # Standard HTTK Monte Carlo:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-176.7 
-There were 38 warnings (use warnings() to see them)
+95% 
+177 
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
 > calc_mc_css(chem.cas="90-43-7",
@@ -160,34 +118,29 @@ There were 38 warnings (use warnings() to see them)
 +     clint.pop.cv = 0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-120.6 
-There were 38 warnings (use warnings() to see them)
+120.7 
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-85.73 
-There were 38 warnings (use warnings() to see them)
+85.87 
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-24.46 
-There were 35 warnings (use warnings() to see them)
+24.49 
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-13.29 
-There were 35 warnings (use warnings() to see them)
+13.31 
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
-[1] 13.28
-There were 34 warnings (use warnings() to see them)
+[1] 13.31
 > set.seed(1234)
 > # HTTK Monte Carlo using basic Monte Carlo sampler:
 > calc_mc_css(chem.cas="90-43-7",
@@ -198,68 +151,70 @@ There were 34 warnings (use warnings() to see them)
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-13.41 
-There were 35 warnings (use warnings() to see them)
+13.42 
 > 
 > 
->     
-> calc_mc_tk(chem.cas="80-05-7",samples=NSAMP)
+> set.seed(1234)    
+> # well-behaved chemical with a measured Rblood2plasma:
+>  lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 $means
-      time Agutlumen   Cgut    Cliver      Cven     Clung   Cart Crest Ckidney
-1  0.00000 3.978e+02 0.0000 0.000e+00 0.000e+00 0.000e+00 0.0000 0.000   0.000
-2  0.00001 3.975e+02 0.1981 8.239e-05 8.790e-09 5.265e-10 0.0000 0.000   0.000
-3  0.25000 8.298e-04 7.8940 1.051e+01 5.191e-01 4.385e+00 0.5192 3.532  12.030
-4  0.50000 1.732e-09 7.2310 9.649e+00 4.775e-01 4.023e+00 0.4776 3.249  11.040
-5  0.75000 0.000e+00 6.6740 8.936e+00 4.415e-01 3.712e+00 0.4416 3.001  10.190
-6  1.00000 0.000e+00 6.1840 8.311e+00 4.096e-01 3.440e+00 0.4097 2.783   9.450
-7  1.50000 0.000e+00 5.3720 7.259e+00 3.560e-01 2.989e+00 0.3561 2.420   8.211
-8  2.00000 0.000e+00 4.7280 6.414e+00 3.130e-01 2.632e+00 0.3131 2.131   7.228
-9  2.50000 0.000e+00 4.2080 5.728e+00 2.779e-01 2.344e+00 0.2780 1.897   6.433
-10 3.00000 0.000e+00 3.7810 5.156e+00 2.488e-01 2.108e+00 0.2488 1.704   5.777
-11 4.00000 0.000e+00 3.1190 4.262e+00 2.034e-01 1.741e+00 0.2034 1.404   4.759
-12 5.00000 0.000e+00 2.6280 3.593e+00 1.696e-01 1.470e+00 0.1696 1.181   4.004
-     Cplasma Atubules Ametabolized    AUC
-1  0.000e+00   0.0000    0.000e+00 0.0000
-2  1.141e-08   0.0000    2.373e-09 0.0000
-3  6.506e-01   0.8333    6.591e+01 0.2137
-4  5.992e-01   1.4360    8.711e+01 0.3697
-5  5.544e-01   1.9930    1.060e+02 0.5138
-6  5.147e-01   2.5100    1.229e+02 0.6474
-7  4.475e-01   3.4400    1.517e+02 0.8873
-8  3.933e-01   4.2570    1.756e+02 1.0970
-9  3.488e-01   4.9830    1.955e+02 1.2820
-10 3.118e-01   5.6340    2.126e+02 1.4470
-11 2.537e-01   6.7590    2.401e+02 1.7280
-12 2.105e-01   7.7010    2.614e+02 1.9590
+      time Agutlumen  Cgut Cliver   Cven Clung   Cart Crest Ckidney Cplasma
+ [1,] 0.00 3.137e+02 0.000  0.000 0.0000 0.000 0.0000 0.000   0.000  0.0000
+ [2,] 0.25 6.546e-04 7.860 11.080 0.6816 4.274 0.6819 3.596  12.340  0.9515
+ [3,] 0.50 1.000e-09 7.182 10.120 0.6311 3.907 0.6312 3.306  11.320  0.8853
+ [4,] 0.75 0.000e+00 6.607  9.356 0.5865 3.589 0.5866 3.044  10.430  0.8266
+ [5,] 1.00 0.000e+00 6.092  8.670 0.5464 3.304 0.5465 2.810   9.638  0.7735
+ [6,] 1.50 0.000e+00 5.214  7.498 0.4775 2.818 0.4776 2.410   8.282  0.6822
+ [7,] 2.00 0.000e+00 4.503  6.542 0.4212 2.426 0.4212 2.085   7.180  0.6072
+ [8,] 2.50 0.000e+00 3.922  5.756 0.3748 2.106 0.3748 1.820   6.279  0.5451
+ [9,] 3.00 0.000e+00 3.444  5.105 0.3363 1.843 0.3364 1.602   5.535  0.4933
+[10,] 4.00 0.000e+00 2.717  4.107 0.2771 1.444 0.2771 1.269   4.404  0.4132
+[11,] 5.00 0.000e+00 2.204  3.393 0.2346 1.163 0.2346 1.034   3.601  0.3550
+      Atubules Ametabolized    AUC
+ [1,]    0.000         0.00 0.0000
+ [2,]    0.611        54.89 0.2634
+ [3,]    1.099        74.89 0.4927
+ [4,]    1.545        92.82 0.7066
+ [5,]    1.954       108.90 0.9064
+ [6,]    2.675       136.60 1.2700
+ [7,]    3.289       159.20 1.5910
+ [8,]    3.815       177.80 1.8790
+ [9,]    4.270       193.30 2.1380
+[10,]    5.014       217.20 2.5890
+[11,]    5.596       234.40 2.9720
 
 $sds
-   time Agutlumen     Cgut    Cliver      Cven     Clung    Cart   Crest
-1     0 1.030e+01 0.000000 0.0000000 0.000e+00 0.000e+00 0.00000 0.00000
-2     0 1.033e+01 0.005467 0.0000165 2.623e-09 3.072e-10 0.00000 0.00000
-3     0 2.157e-05 0.118700 0.3267000 7.657e-02 1.627e-01 0.07657 0.06300
-4     0 4.500e-11 0.062000 0.3603000 7.413e-02 1.267e-01 0.07413 0.07667
-5     0 0.000e+00 0.029330 0.3647000 7.093e-02 1.023e-01 0.07090 0.08367
-6     0 0.000e+00 0.009333 0.3563000 6.733e-02 8.567e-02 0.06733 0.08567
-7     0 0.000e+00 0.002333 0.3127000 5.947e-02 6.933e-02 0.05947 0.07867
-8     0 0.000e+00 0.009000 0.2493000 5.133e-02 6.733e-02 0.05130 0.06333
-9     0 0.000e+00 0.033670 0.1770000 4.340e-02 7.333e-02 0.04337 0.04367
-10    0 0.000e+00 0.064000 0.1043000 3.593e-02 8.400e-02 0.03593 0.02267
-11    0 0.000e+00 0.126300 0.0286700 2.297e-02 1.080e-01 0.02297 0.01700
-12    0 0.000e+00 0.178700 0.1350000 1.277e-02 1.293e-01 0.01277 0.04933
-   Ckidney   Cplasma Atubules Ametabolized    AUC
-1  0.00000 0.000e+00  0.00000    0.000e+00 0.0000
-2  0.00000 4.423e-09  0.00000    4.610e-10 0.0000
-3  0.13330 1.531e-01  0.08413    2.740e+00 0.0442
-4  0.19330 1.459e-01  0.13330    1.903e+00 0.0816
-5  0.22330 1.384e-01  0.17730    8.000e-01 0.1172
-6  0.23670 1.305e-01  0.21700    4.667e-01 0.1509
-7  0.22100 1.148e-01  0.28730    3.333e+00 0.2122
-8  0.17530 9.957e-02  0.35030    6.300e+00 0.2657
-9  0.11430 8.527e-02  0.40930    9.200e+00 0.3120
-10 0.04800 7.217e-02  0.46630    1.183e+01 0.3510
-11 0.07933 4.990e-02  0.57930    1.630e+01 0.4117
-12 0.18400 3.250e-02  0.69330    1.960e+01 0.4527
+      time Agutlumen   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney
+ [1,]    0 1.853e+01 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000  0.0000
+ [2,]    0 3.867e-05 0.4033 0.3533 0.05177 0.2787 0.05180 0.1030  0.4133
+ [3,]    0 0.000e+00 0.4433 0.3533 0.04503 0.3030 0.04503 0.1347  0.4900
+ [4,]    0 0.000e+00 0.4870 0.4147 0.03880 0.3250 0.03880 0.1573  0.5633
+ [5,]    0 0.000e+00 0.5180 0.4567 0.03360 0.3407 0.03360 0.1743  0.6173
+ [6,]    0 0.000e+00 0.5517 0.5077 0.02573 0.3560 0.02573 0.1947  0.6793
+ [7,]    0 0.000e+00 0.5560 0.5207 0.02053 0.3550 0.02050 0.2017  0.6973
+ [8,]    0 0.000e+00 0.5403 0.5080 0.01727 0.3433 0.01723 0.1987  0.6833
+ [9,]    0 0.000e+00 0.5117 0.4783 0.01537 0.3247 0.01540 0.1893  0.6490
+[10,]    0 0.000e+00 0.4337 0.3900 0.01430 0.2763 0.01430 0.1607  0.5447
+[11,]    0 0.000e+00 0.3463 0.2887 0.01520 0.2240 0.01520 0.1263  0.4237
+      Cplasma Atubules Ametabolized     AUC
+ [1,] 0.00000  0.00000      0.00000 0.00000
+ [2,] 0.10860  0.04933      3.27300 0.02490
+ [3,] 0.09853  0.09400      4.49700 0.05083
+ [4,] 0.08923  0.14130      5.33700 0.07427
+ [5,] 0.08127  0.19100      5.82700 0.09553
+ [6,] 0.06877  0.29400      6.06700 0.13300
+ [7,] 0.05990  0.39770      5.53300 0.16470
+ [8,] 0.05370  0.49970      4.46700 0.19330
+ [9,] 0.04943  0.59670      3.13300 0.21900
+[10,] 0.04493  0.77300      0.03333 0.26570
+[11,] 0.04347  0.92170      3.26700 0.31000
 
-There were 36 warnings (use warnings() to see them)
+> 
+> set.seed(1234)    
+> # make sure the oral equivalent function works:
+> calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+      95% 
+0.2437241 
 > 
 > quit("no")

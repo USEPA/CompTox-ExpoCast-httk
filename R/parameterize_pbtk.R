@@ -334,11 +334,11 @@ parameterize_pbtk <- function(chem.cas=NULL,
     outlist["Funbound.plasma.adjustment"] <- 
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
-  
-  outlist <- c(outlist,
-               Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-                                                     species=species,
-                                                     adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-  
-  return(outlist[sort(names(outlist))])
+   
+    outlist <- c(outlist,
+      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+        species=species,
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+        
+  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }
