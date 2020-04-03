@@ -136,7 +136,9 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       parameters <- add_schmitt.param_to_3compss(parameters = parameters,
                       chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid)
     }
-    pcs <- predict_partitioning_schmitt(parameters = parameters[, param.names.schmitt[param.names.schmitt %in% names(parameters)],with = F])
+    pcs <- predict_partitioning_schmitt(parameters =
+      parameters[, param.names.schmitt[param.names.schmitt %in% 
+                                         names(parameters)], with = F])
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
