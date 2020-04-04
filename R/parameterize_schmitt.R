@@ -253,5 +253,5 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   plasma.pH=plasma.pH,
                   alpha=alpha)
   
-  return(outlist)                                
+  return(lapply(outlist,set_httk_precision))                                
 }

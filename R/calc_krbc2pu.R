@@ -57,5 +57,5 @@ calc_krbc2pu <- function(Rb2p,
   
   Krbp2pu <- (Rb2p - 1 + hematocrit)  / Funbound.plasma / hematocrit
     
-  return(as.numeric(Krbp2pu))
+  return(set_httk_precision(as.numeric(Krbp2pu)))
 }

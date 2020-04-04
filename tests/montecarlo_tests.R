@@ -1,6 +1,6 @@
 #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 library(httk)
-#options(warn=-1)
+options(warn=-1)
 NSAMP <- 10
 
 
@@ -84,7 +84,12 @@ calc_mc_css(chem.cas="90-43-7",
   vary.params=list(Pow=0.3))
 
 
-    
-calc_mc_tk(chem.cas="80-05-7",samples=NSAMP)
+set.seed(1234)    
+# well-behaved chemical with a measured Rblood2plasma:
+ lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
+
+set.seed(1234)    
+# make sure the oral equivalent function works:
+calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
 
 quit("no")

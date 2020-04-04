@@ -148,5 +148,6 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     minimum.Funbound.plasma=minimum.Funbound.plasma) #L/h/kgBW
 
   if(!suppress.messages)cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"elimination rate returned in units of 1/h.\n")
-  return(as.numeric(clearance/Vd))
+
+  return(set_httk_precision(as.numeric(clearance/Vd)))
 }

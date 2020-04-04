@@ -226,11 +226,9 @@ calc_mc_tk<- function(chem.cas=NULL,
      suppress.messages=T,
      solvemodel.arg.list))
 
-  means <- signif(Reduce("+",model.out)/length(model.out),4)
-  sds <- signif((purrr::reduce(model.out,
-    function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2),4)
-  means[means<1e-12] <- 0
-  sds[sds<1e-12] <- 0
+  means <- set_httk_precision(Reduce("+",model.out)/length(model.out))
+  sds <- set_httk_precision((purrr::reduce(model.out,
+    function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2))
   
   out <- list(means=means,sds=sds)
   if (return.all.sims) out <- list(stats=out,sims=model.out)
