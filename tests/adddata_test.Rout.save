@@ -50,13 +50,13 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 53
+[1] 54
 
 $frac
-[1] 0.9755
+[1] 0.9756
 
 $max
-[1] 51.64
+[1] 51.63
 
 $the.day
 [1] 26
@@ -71,13 +71,13 @@ Please wait...
 > # this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
 $avg
-[1] 0.0247
+[1] 0.0248
 
 $frac
-[1] 0.1845
+[1] 0.1846
 
 $max
-[1] 0.03868
+[1] 0.0387
 
 $the.day
 [1] 21

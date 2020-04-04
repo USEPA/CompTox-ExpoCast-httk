@@ -198,5 +198,5 @@ calc_vdist<- function(chem.cas=NULL,
     if(is.null(chem.name) & is.null(chem.cas)) cat("Volume of distribution returned in units of L/kg BW.\n")
     else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"volume of distribution returned in units of L/kg BW.\n")
   }
-  return(as.numeric(vol.dist))
+  return(set_httk_precision(as.numeric(vol.dist)))
 }

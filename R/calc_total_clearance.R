@@ -60,6 +60,7 @@ calc_total_clearance<- function(chem.cas=NULL,
                                              default.to.human=default.to.human,
                                              adjusted.Funbound.plasma=
                                                adjusted.Funbound.plasma,
+                                             suppress.messages=suppress.messages,
                                              ...)
     }
     Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / 
@@ -84,5 +85,5 @@ calc_total_clearance<- function(chem.cas=NULL,
         "total clearance returned in units of L/h/kg BW.\n")
     }
     
-    return(as.numeric(clearance))
+    return(set_httk_precision(as.numeric(clearance)))
 }
