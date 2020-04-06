@@ -82,8 +82,8 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
-be a list of sub-lists. Each sublist is named for a parameter in
+of detection (specified separately for each parameter). This argument should
+be a list of sublists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New
 values are sampled with mean equal to the value in "parameters" and standard
@@ -101,7 +101,7 @@ equal to the mean times the CV. Not used with httkpop model.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{tissue}{Desired steady state tissue conentration.}
+\item{tissue}{Desired steady state tissue concentration.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
