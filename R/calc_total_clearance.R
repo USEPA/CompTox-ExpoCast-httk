@@ -10,6 +10,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -58,6 +60,7 @@ calc_total_clearance<- function(chem.cas=NULL,
                                              default.to.human=default.to.human,
                                              adjusted.Funbound.plasma=
                                                adjusted.Funbound.plasma,
+                                             suppress.messages=suppress.messages,
                                              ...)
     }
     Qgfrc <- get_param("Qgfrc",parameters,"calc_Css") / 
@@ -82,5 +85,5 @@ calc_total_clearance<- function(chem.cas=NULL,
         "total clearance returned in units of L/h/kg BW.\n")
     }
     
-    return(as.numeric(clearance))
+    return(set_httk_precision(as.numeric(clearance)))
 }

@@ -29,6 +29,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days.  The
 #' dosing sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_3comp function,
@@ -77,7 +79,11 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
+#' "Ametabolized", "AUC"
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for
 #' each time point.
@@ -91,7 +97,8 @@
 #'
 #' @examples
 #' 
-#' solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,dose=.5,days=1,tsteps=2)
+#' solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,daily.dose=.5,days=1,tsteps=2)
+#'
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
@@ -163,5 +170,8 @@ solve_3comp <- function(chem.name = NULL,
     Caco2.options = Caco2.options,
     ...)
   
+  out <- cbind(out,out[,"Csyscomp"])
+  colnames(out)[length(colnames(out))]<-"Cplasma"
+    
   return(out) 
 }

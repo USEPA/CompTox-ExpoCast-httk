@@ -1,4 +1,4 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save httk2.0_test.R httk2.0_test.Rout
 library(httk)
 options(warn=-1)
 
@@ -27,16 +27,6 @@ solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
   dosing.matrix=NULL))[190:205,]
 solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 
-length(get_cheminfo())
-length(get_cheminfo(species="rat"))
-length(get_cheminfo(model="pbtk"))
-length(get_cheminfo(model="pbtk",species="rat"))
-length(get_cheminfo(info="all"))
-length(get_cheminfo(model="schmitt"))
-length(get_cheminfo(model="schmitt",species="rat"))
-length(get_cheminfo(model="1compartment"))
-length(get_cheminfo(model="1compartment",species="rat"))
-
 
 calc_analytic_css(chem.name="Betaxolol")
 calc_analytic_css(chem.name="Tacrine",model="pbtk")
@@ -54,7 +44,4 @@ head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
 solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 
-
-
-
-
+quit("no")

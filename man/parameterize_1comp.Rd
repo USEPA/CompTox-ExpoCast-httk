@@ -4,14 +4,22 @@
 \alias{parameterize_1comp}
 \title{Parameterize_1comp}
 \usage{
-parameterize_1comp(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  species = "Human", default.to.human = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, well.stirred.correction = T,
-  suppress.messages = F, clint.pvalue.threshold = 0.05,
+parameterize_1comp(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  well.stirred.correction = T,
+  suppress.messages = F,
+  clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE))
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE)
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -20,7 +28,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or

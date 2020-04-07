@@ -4,11 +4,20 @@
 \alias{parameterize_3comp}
 \title{Parameterize_3comp}
 \usage{
-parameterize_3comp(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  species = "Human", default.to.human = F, force.human.clint.fup = F,
-  clint.pvalue.threshold = 0.05, adjusted.Funbound.plasma = T,
-  regression = T, suppress.messages = F, restrictive.clearance = T,
-  minimum.Funbound.plasma = 1e-04)
+parameterize_3comp(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  force.human.clint.fup = F,
+  clint.pvalue.threshold = 0.05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  suppress.messages = F,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -39,6 +48,9 @@ TRUE along with parition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
+binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our

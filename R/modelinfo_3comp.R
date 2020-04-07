@@ -175,7 +175,7 @@ model.list[["3compartment"]]$required.params <- c(
    )
 
 # Function for calculating Clmetabolismc after Clint is varied:
-model.list[["3compartment"]]$propagateuv.func <- "propagateuv_3comp"
+model.list[["3compartment"]]$propagateuv.func <- "propagate_invitrouv_3comp"
 
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:

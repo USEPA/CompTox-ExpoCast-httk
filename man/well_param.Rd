@@ -4,17 +4,24 @@
 \name{well_param}
 \alias{well_param}
 \title{Microtiter Plate Well Descriptions for Armitage et al. (2014) Model}
-\format{A data frame with 53940 rows and 10 variables:
+\format{
+A data frame with 53940 rows and 10 variables:
 \describe{
   \item{area_bottom}{}
   \item{cell_yield}{}
-  \item{diam}{} 
+  \item{diam}{}
   \item{sysID}{}
-  \item{v_total}{} 
-  \item{v_working}{} 
+  \item{v_total}{}
+  \item{v_working}{}
   \item{well_desc}{}
   \item{well_number}{}
-}}
+}
+
+A data frame with 53940 rows and 10 variables: \describe{
+\item{area_bottom}{} \item{cell_yield}{} \item{diam}{} \item{sysID}{}
+\item{v_total}{} \item{v_working}{} \item{well_desc}{} \item{well_number}{}
+}
+}
 \source{
 \url{http://www.diamondse.info/}
 
@@ -31,10 +38,10 @@ Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
 Honda et al. (2019)
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.

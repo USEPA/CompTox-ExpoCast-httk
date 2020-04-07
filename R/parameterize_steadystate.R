@@ -9,7 +9,7 @@
 #' chemical must be identified by either CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -315,7 +315,8 @@ Set default.to.human to true to substitute human value.")
 # clearance assay (Kilford et al., 2008)
   Params[["Fhep.assay.correction"]] <- calc_hep_fu(parameters=list(Pow=Pow,
                                          pKa_Donor=pKa_Donor,
-                                         pKa_Accept=pKa_Accept)) # fraction 
+                                         pKa_Accept=pKa_Accept,
+                                         suppress.messages=suppress.messages)) # fraction 
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
@@ -395,5 +396,5 @@ Set default.to.human to true to substitute human value.")
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
-  return(Params)
+  return(lapply(Params,set_httk_precision))
 }

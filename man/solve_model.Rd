@@ -4,15 +4,34 @@
 \alias{solve_model}
 \title{Solve_model}
 \usage{
-solve_model(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  times = NULL, parameters = NULL, model = NULL, route = "oral",
-  dosing = NULL, days = 10, tsteps = 4, initial.values = NULL,
-  plots = F, monitor.vars = NULL, suppress.messages = F,
-  species = "Human", output.units = "uM", method = "lsoda",
-  rtol = 1e-08, atol = 1e-12, default.to.human = F,
-  recalc.blood2plasma = F, recalc.clearance = F,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04, ...)
+solve_model(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  times = NULL,
+  parameters = NULL,
+  model = NULL,
+  route = "oral",
+  dosing = NULL,
+  days = 10,
+  tsteps = 4,
+  initial.values = NULL,
+  plots = F,
+  monitor.vars = NULL,
+  suppress.messages = F,
+  species = "Human",
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  adjusted.Funbound.plasma = T,
+  minimum.Funbound.plasma = 1e-04,
+  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = T, regression = T),
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -20,6 +39,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days. Dosing
 sequence begins at the beginning of times.}
@@ -31,7 +53,7 @@ parameterize_pbtk function. Overrides chem.name and chem.cas.}
 "3compartmentss", "1compartment", "schmitt", ...}
 
 \item{route}{String specification of route of exposure for simulation:
-"oral", "iv", ...}
+"oral", "iv", "inhalation", ...}
 
 \item{dosing}{List of dosing metrics used in simulation, which must include
 the general entries with names "initial.dose", "doses.per.day", 
@@ -51,6 +73,9 @@ output.units.  Defaults are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Default values of NULL looks up variables specified in modelinfo_MODEL.R}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -65,9 +90,6 @@ default "Human").}
 
 \item{atol}{Argument passed to integrator (deSolve).}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
@@ -78,15 +100,23 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
 
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset)}
+
+\item{parameterize.arg.list}{Additional parameterized passed to the model
+parameterization function.}
+
+\item{...}{Additional arguments passed to the integrator.}
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
-
-\item{...}{Additional arguments passed to the integrator.}
-
-\item{iv.dose}{Simulates a single i.v. dose if true.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -131,33 +161,6 @@ When species is specified but chemical-specific in vitro data are not
 available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-}
-\examples{
-
-
-solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-                  plots=TRUE,initial.values=c(Agut=200))
-params <- parameterize_pbtk(chem.cas="80-05-7")
-solve_pbtk(parameters=params)
-                  
-\dontrun{
-parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-parameters["Funbound.plasma"] <- 0.1
-out <- solve_pbtk(parameters=parameters)
-
-library("ggplot2")
-out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
-plot.data <- as.data.frame(out)
-css <- calc_analytic_css(chem.name = "Bisphenol A")
-c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-element_text(size = 16), plot.title = element_text(size = 17)) +
-ggtitle("Bisphenol A")
-print(c.vs.t)
-}
-
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput

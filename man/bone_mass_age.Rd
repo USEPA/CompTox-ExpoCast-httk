@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{bone_mass_age}
 \alias{bone_mass_age}
-\title{Predict bone mass.}
+\title{Predict bone mass}
 \usage{
 bone_mass_age(age_years, age_months, height, weight, gender)
 }
@@ -25,3 +25,23 @@ Predict bone mass from age_years, height, weight, gender, using logistic
 equations fit to data from Baxter-Jones et al. 2011, or for infants < 1
 year, using equation from Koo et al. 2000 (See Price et al. 2003)
 }
+\references{
+Baxter-Jones, Adam DG, et al. "Bone mineral accrual from 8 to 30 years of age: 
+an estimation of peak bone mass." Journal of Bone and Mineral Research 26.8 
+(2011): 1729-1739.
+
+Koo, Winston WK, and Elaine M. Hockman. "Physiologic predictors of lumbar 
+spine bone mass in neonates." Pediatric research 48.4 (2000): 485-489.
+
+Price, Paul S., et al. "Modeling interindividual variation in physiological 
+factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
+(2003): 469-503.
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}

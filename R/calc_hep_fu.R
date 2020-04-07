@@ -9,7 +9,7 @@
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
 #' @param parameters Parameters from the appropriate parameterization function
@@ -63,7 +63,7 @@ calc_hep_fu <- function(
   
   if (!all(c("Pow","pKa_Donor","pKa_Accept") 
     %in% names(parameters))) 
-    stop("Missing needed parameters in calc_fu_hep.")            
+    stop("Missing parameters needed in calc_fu_hep.")            
                  
   Pow <- parameters$Pow
   pKa_Donor <- parameters$pKa_Donor
@@ -81,5 +81,5 @@ calc_hep_fu <- function(
 # Vectorized check to keep fu_hep within bounds:
   fu_hep[fu_hep <0 | fu_hep>1] <- 1
   
-  return(fu_hep)
+  return(set_httk_precision(fu_hep))
 }

@@ -4,13 +4,22 @@
 \alias{calc_analytic_css_1comp}
 \title{Calculate the analytic steady state concentration for the one compartment model.}
 \usage{
-calc_analytic_css_1comp(chem.name = NULL, chem.cas = NULL,
-  dtxsid = NULL, parameters = NULL, hourly.dose = 1/24,
-  concentration = "plasma", suppress.messages = F,
-  recalc.blood2plasma = F, tissue = NULL, restrictive.clearance = T,
-  bioactive.free.invivo = F, Caco2.options = list(Caco2.Pab.default =
-  "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE,
-  keepit100 = FALSE), ...)
+calc_analytic_css_1comp(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  hourly.dose = 1/24,
+  concentration = "plasma",
+  suppress.messages = F,
+  recalc.blood2plasma = F,
+  tissue = NULL,
+  restrictive.clearance = T,
+  bioactive.free.invivo = F,
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE),
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters must 
@@ -18,6 +27,9 @@ be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
@@ -32,7 +44,7 @@ parmeterize_1comp(for model = '1compartment') or parameterize_steadystate
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
 in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
+altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}

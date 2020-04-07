@@ -4,19 +4,39 @@
 \alias{solve_1comp}
 \title{Solve one compartment TK model}
 \usage{
-solve_1comp(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  times = NULL, parameters = NULL, days = 10, tsteps = 4,
-  daily.dose = NULL, dose = 1, doses.per.day = NULL,
-  initial.values = NULL, plots = F, suppress.messages = F,
-  species = "Human", iv.dose = F, output.units = "uM",
-  method = "lsoda", rtol = 1e-08, atol = 1e-12,
-  default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL, Caco2.options = list(Caco2.Pab.default = 1.6,
-  Caco2.Fgut = TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100
-  = FALSE), ...)
+solve_1comp(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  times = NULL,
+  parameters = NULL,
+  days = 10,
+  tsteps = 4,
+  daily.dose = NULL,
+  dose = 1,
+  doses.per.day = NULL,
+  initial.values = NULL,
+  plots = F,
+  suppress.messages = F,
+  species = "Human",
+  iv.dose = F,
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  default.to.human = F,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  dosing.matrix = NULL,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  monitor.vars = NULL,
+  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE),
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -24,6 +44,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.}
 
@@ -65,6 +88,12 @@ output.units.  Defaults are zero.}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
+\item{recalc.blood2plasma}{Whether or not to recalculate the blood:plasma
+chemical concentrationr ratio}
+
+\item{recalc.clearance}{Whether or not to recalculate the elimination
+rate.}
+
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
 mg/kg BW, of each dose.}
@@ -82,6 +111,10 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
+"AUC"}
+
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
@@ -91,14 +124,6 @@ fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{recalc.elimination}{Whether or not to recalculate the elimination
-rate.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
 }
 \value{
 A matrix with a column for time(in days) and a column for the

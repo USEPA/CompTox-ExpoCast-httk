@@ -1,6 +1,6 @@
-#R CMD BATCH --no-timing --no-save other_tests.R other_tests.Rout
+#R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 library(httk)
-#options(warn=-1)
+options(warn=-1)
 NSAMP <- 10
 
 
@@ -84,25 +84,12 @@ calc_mc_css(chem.cas="90-43-7",
   vary.params=list(Pow=0.3))
 
 
-    
-calc_mc_tk(chem.cas="80-05-7")
+set.seed(1234)    
+# well-behaved chemical with a measured Rblood2plasma:
+ lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 
-chemname="Abamectin"
-times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
-age.ranges <- seq(6,80,by=10)
-forward <- NULL
-for (age.lower in age.ranges)
-{
-  label <- paste("Ages ",age.lower,"-",age.lower+9,sep="")
-  set.seed(1234)
-  forward[[label]] <- calc_mc_tk(
-                        chem.name=chemname,
-                        samples=NSAMP,
-                        httkpop.generate.arg.list=list(
-                          method="d",
-                          agelim_years = c(age.lower, age.lower+4)),
-                        solvemodel.arg.list = list(
-                          times=times))
-}
+set.seed(1234)    
+# make sure the oral equivalent function works:
+calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
 
-
+quit("no")

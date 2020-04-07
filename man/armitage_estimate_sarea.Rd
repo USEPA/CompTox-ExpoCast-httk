@@ -4,8 +4,12 @@
 \alias{armitage_estimate_sarea}
 \title{Estimate well surface area}
 \usage{
-armitage_estimate_sarea(tcdata = NA, this.well_number = 384,
-  this.cell_yield = NA, this.v_working = NA)
+armitage_estimate_sarea(
+  tcdata = NA,
+  this.well_number = 384,
+  this.cell_yield = NA,
+  this.v_working = NA
+)
 }
 \arguments{
 \item{tcdata}{A data table with well_number corresponding to plate format,

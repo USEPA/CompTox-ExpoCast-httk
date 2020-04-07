@@ -4,16 +4,28 @@
 \alias{invitro_mc}
 \title{Draw in vitro TK parameters including uncertainty and variability.}
 \usage{
-invitro_mc(parameters.dt = NULL, samples, fup.meas.cv = 0.4,
-  clint.meas.cv = 0.3, caco2.meas.sd = 0.3, fup.pop.cv = 0.3,
-  clint.pop.cv = 0.3, caco2.pop.sd = 0.3, poormetab = TRUE,
-  fup.lod = 0.01, fup.censored.dist = FALSE,
-  adjusted.Funbound.plasma = T, clint.pvalue.threshold = 0.05,
+invitro_mc(
+  parameters.dt = NULL,
+  samples,
+  fup.meas.cv = 0.4,
+  clint.meas.cv = 0.3,
+  caco2.meas.sd = 0.3,
+  fup.pop.cv = 0.3,
+  clint.pop.cv = 0.3,
+  caco2.pop.sd = 0.3,
+  poormetab = TRUE,
+  fup.lod = 0.01,
+  fup.censored.dist = FALSE,
+  adjusted.Funbound.plasma = T,
+  clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut =
-  TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
+  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs
+    = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE)
+)
 }
 \arguments{
+\item{parameters.dt}{A data table of physiological parameters}
+
 \item{samples}{The number of samples to draw.}
 
 \item{fup.meas.cv}{Coefficient of variation of distribution of measured
@@ -47,9 +59,6 @@ set to zero.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
-
-\item{this.chem}{The CAS number of one of the HTTK chemicals (see
-\code{\link[httk]{get_cheminfo}}).}
 
 \item{parameters}{A list of chemical-specific model parameters containing at
 least Funbound.plasma, Clint, and Fhep.assay.correction.}

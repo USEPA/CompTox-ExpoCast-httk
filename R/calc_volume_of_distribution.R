@@ -18,6 +18,8 @@
 #' specified when Funbound.plasma is not given in parameter list. 
 #' @param chem.cas Either the CAS number or the chemical name must be specified
 #' when Funbound.plasma is not given in parameter list. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
 #' predict_partitioning_schmitt.
 #' @param default.to.human Substitutes missing animal values with human values
@@ -137,7 +139,7 @@ calc_vdist<- function(chem.cas=NULL,
   }
   
   
-# Check the species argument for capitilization problems and whether or not it is in the table:  
+# Check the species argument for capitalization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -159,7 +161,8 @@ calc_vdist<- function(chem.cas=NULL,
   RBC.vol <- plasma.vol/(1 - hematocrit)*hematocrit
   if (all(schmitt.specific.names %in% names(parameters)))
   {
-    PC.names <- names(parameters)[regexpr("K",names(parameters))!=-1]
+    PC.names <- names(parameters)[regexpr("K",names(parameters))==1] #Should pass only
+    #partition coefficients to lump_tissues()
     if (is.data.table(parameters))
     {
       PCs <- parameters[,PC.names,with=F]
@@ -195,5 +198,5 @@ calc_vdist<- function(chem.cas=NULL,
     if(is.null(chem.name) & is.null(chem.cas)) cat("Volume of distribution returned in units of L/kg BW.\n")
     else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"volume of distribution returned in units of L/kg BW.\n")
   }
-  return(as.numeric(vol.dist))
+  return(set_httk_precision(as.numeric(vol.dist)))
 }

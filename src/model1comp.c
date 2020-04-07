@@ -53,10 +53,6 @@ static double parms[4];
 #define kgutabs parms[2]
 #define BW parms[3]
 
-/* Forcing (Input) functions */
-static double forc[0];
-
-
 /* Function definitions for delay differential equations */
 
 int Nout=1;
@@ -65,38 +61,12 @@ double ytau[1] = {0.0};
 
 static double yini[4] = {0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
-void lagvalue(double T, int *nr, int N, double *ytau) {
-  static void(*fun)(double, int*, int, double*) = NULL;
-  if (fun == NULL)
-    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-  return fun(T, nr, N, ytau);
-}
-
-double CalcDelay(int hvar, double dTime, double delay) {
-  double T = dTime-delay;
-  if (dTime > delay){
-    nr[0] = hvar;
-    lagvalue( T, nr, Nout, ytau );
-}
-  else{
-    ytau[0] = yini[hvar];
-}
-  return(ytau[0]);
-}
-
 /*----- Initializers */
 void initmod1comp (void (* odeparms)(int *, double *))
 {
   int N=4;
   odeparms(&N, parms);
 }
-
-void initforc (void (* odeforcs)(int *, double *))
-{
-  int N=0;
-  odeforcs(&N, forc);
-}
-
 
 /* Calling R code will ensure that input y has same
    dimension as yini */

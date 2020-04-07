@@ -5,8 +5,7 @@
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions.
 #' 
-#' @param this.chem The CAS number of one of the HTTK chemicals (see
-#' \code{\link[httk]{get_cheminfo}}).
+#' @param parameters.dt A data table of physiological parameters
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
 #' @param samples The number of samples to draw.
@@ -83,7 +82,7 @@ invitro_mc <- function(parameters.dt=NULL,
   #this is pointless and annoying.
   Clint.mu<-Clint.sd<-unadjusted.Funbound.plasma<-Flipid<-physiology.data<-NULL
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
-  Funbound.plasma.dist<-fup.sd<-NULL
+  Funbound.plasma.dist<-fup.sd<-Fhep.assay.correction <- NULL
   #End R CMD CHECK appeasement.
 
   if (!("Funbound.plasma") %in% names(parameters.dt))

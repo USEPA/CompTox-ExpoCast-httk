@@ -4,10 +4,17 @@
 \alias{parameterize_schmitt}
 \title{Get the Parameters for Schmitt's Tissue Partition Coefficient Method}
 \usage{
-parameterize_schmitt(chem.cas = NULL, chem.name = NULL,
-  dtxsid = NULL, parameters = NULL, species = "Human",
-  default.to.human = F, force.human.fup = F, suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04)
+parameterize_schmitt(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  default.to.human = F,
+  force.human.fup = F,
+  suppress.messages = F,
+  minimum.Funbound.plasma = 1e-04
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
@@ -18,7 +25,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 

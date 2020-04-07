@@ -33,6 +33,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
@@ -81,6 +83,9 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
+#' "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"
 #' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -96,9 +101,11 @@
 #'
 #' @examples
 #' 
-#' solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-#'                   plots=TRUE,initial.values=c(Agut=200))
+#' solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
+#'
+#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
+#'                   initial.values=c(Agut=200))
+#'
 #' params <- parameterize_pbtk(chem.cas="80-05-7")
 #' solve_pbtk(parameters=params)
 #'                   
@@ -120,6 +127,7 @@
 #' }
 #' 
 #' @export solve_pbtk
+#'
 #' @useDynLib httk
 solve_pbtk <- function(chem.name = NULL,
                     chem.cas = NULL,
@@ -161,7 +169,7 @@ solve_pbtk <- function(chem.name = NULL,
     times=times,
     parameters=parameters,
     model="pbtk",
-    route=ifelse(iv.dose,"iv","oral"),
+    route= ifelse(iv.dose,"iv","oral"),
     dosing=list(
       initial.dose=dose,
       dosing.matrix=dosing.matrix,
@@ -177,14 +185,16 @@ solve_pbtk <- function(chem.name = NULL,
     species=species,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     Caco2.options=Caco2.options,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression),
     ...)
   
   return(out) 
