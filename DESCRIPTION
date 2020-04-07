@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.3.2
-Date: 2019-12-02
+Version: 99.3.3
+Date: 2020-04-06
 Title: High-Throughput Toxicokinetics
 Description: Functions and data tables for simulation and statistical analysis 
              of chemical toxicokinetics ("TK") as in Pearce et al. (2017) 
@@ -22,42 +22,56 @@ Description: Functions and data tables for simulation and statistical analysis
              reverse dosimetry (also known as "RTK") 
              (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
 Authors@R: c(
-           person("John", "Wambaugh", email = "wambaugh.john@epa.gov", role = c("aut", "cre")), 
-           person("Robert", "Pearce", role = c("aut")), 
-           person("Caroline", "Ring", email = "cring@toxstrategies.com", role = c("aut")), 
-           person("Greg", "Honda", email = "honda.gregory@epa.gov", role = c("aut")), 
-           person("Mark", "Sfeir", email = "sfeir.mark@epa.gov", role = c("aut")), 
+           person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-4024-534X")), 
+           person("Robert", "Pearce", role = c("aut"),
+             comment = c(ORCID = "0000-0003-3168-4049")), 
+           person("Caroline", "Ring", email = "cring@toxstrategies.com", 
+             role = c("aut"), comment = c(ORCID = "0000-0002-0463-1251")), 
+           person("Greg", "Honda", email = "honda.gregory@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0001-7713-9850")), 
+           person("Mark", "Sfeir", email = "sfeir.mark@epa.gov", 
+             role = c("aut")), 
+           person("Matt", "Linakis", email = "matthew.linakis.1@us.af.mil", 
+             role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Jimena", "Davis", role = c("ctb")), 
-           person("James", "Sluka", email = "jsluka@indiana.edu", role = c("ctb")), 
-           person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", role = c("ctb")), 
-           person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", role = c("ctb")), 
-           person("Woodrow", "Setzer", role = c("ctb"))
+           person("James", "Sluka", email = "jsluka@indiana.edu", 
+             role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
+           person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", 
+             role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
+           person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
+             role = c("ctb")), 
+           person("Woodrow", "Setzer", role = c("ctb"),
+             comment = c(ORCID = "0000-0002-6709-9186"))
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr
+        graphics, utils, magrittr, purrr, methods
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, gdata, viridis, CensRegMod,
-        gmodels, colorspace
+        gmodels, colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gtools, 
+        gridExtra
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
 Packaged: 2019-07-25 18:56:22 UTC; jwambaug
-Author: John Wambaugh [aut, cre],
-  Robert Pearce [aut],
-  Caroline Ring [aut],
-  Greg Honda [aut],
-  Mark Sfeir [aut],
-  Jimena Davis [ctb],
-  James Sluka [ctb],
-  Nisha Sipes [ctb],
-  Barbara Wetmore [ctb],
-  Woodrow Setzer [ctb]
+Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
+  Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
+  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>), 
+  Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
+  Mark Sfeir [aut], 
+  Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
+  Jimena Davis [ctb], 
+  James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
+  Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
+  Barbara Wetmore [ctb], 
+  Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>

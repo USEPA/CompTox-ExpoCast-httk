@@ -4,7 +4,9 @@
 \name{httk.option.listoflists}
 \alias{httk.option.listoflists}
 \title{Ammend an httk option list}
-\format{An object of class \code{list} of length 1.}
+\format{
+An object of class \code{list} of length 1.
+}
 \usage{
 httk.option.listoflists
 }

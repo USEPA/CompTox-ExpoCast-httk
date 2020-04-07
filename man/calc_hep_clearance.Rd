@@ -4,11 +4,20 @@
 \alias{calc_hep_clearance}
 \title{Calculate the hepatic clearance.}
 \usage{
-calc_hep_clearance(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  parameters = NULL, species = "Human", default.to.human = F,
-  hepatic.model = "well-stirred", suppress.messages = F,
-  well.stirred.correction = T, restrictive.clearance = T,
-  adjusted.Funbound.plasma = T, ...)
+calc_hep_clearance(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  default.to.human = F,
+  hepatic.model = "well-stirred",
+  suppress.messages = F,
+  well.stirred.correction = T,
+  restrictive.clearance = T,
+  adjusted.Funbound.plasma = T,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -16,6 +25,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate
 function, overrides chem.name and chem.cas.}

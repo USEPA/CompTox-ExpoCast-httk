@@ -31,6 +31,7 @@ model.list[["3compartmentss"]]$param.names <- c("BW",
                        "Rblood2plasma",
                        "Vliverc")
 
+
 # Allowable units (and whether they are for amounts or concentration):
 model.list[["3compartmentss"]]$conc.units <- c('um', 'mg/l')
 model.list[["3compartmentss"]]$amount.units <- c('umol', 'mg')
@@ -82,3 +83,4 @@ model.list[["3compartmentss"]]$invitro.params <- c("BW",
 
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
+

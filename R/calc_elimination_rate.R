@@ -15,6 +15,8 @@
 #' specified. 
 #' @param chem.name Either the chemical name or the cas number must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -146,5 +148,6 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                     minimum.Funbound.plasma=minimum.Funbound.plasma) #L/h/kgBW
 
   if(!suppress.messages)cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"elimination rate returned in units of 1/h.\n")
-  return(as.numeric(clearance/Vd))
+
+  return(set_httk_precision(as.numeric(clearance/Vd)))
 }

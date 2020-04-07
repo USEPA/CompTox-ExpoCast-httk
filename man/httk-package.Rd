@@ -40,6 +40,9 @@ Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
 \href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019):
 Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionss}
 
+\href{https://doi.org/10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
+Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
+
 \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
 ExpoCast (Exposure Forecasting) Project}
 }

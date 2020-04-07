@@ -4,19 +4,39 @@
 \alias{solve_pbtk}
 \title{Solve_PBTK}
 \usage{
-solve_pbtk(chem.name = NULL, chem.cas = NULL, dtxsid = NULL,
-  times = NULL, parameters = NULL, days = 10, tsteps = 4,
-  daily.dose = NULL, dose = 1, doses.per.day = NULL,
-  initial.values = NULL, plots = F, suppress.messages = F,
-  species = "Human", iv.dose = F, output.units = "uM",
-  method = "lsoda", rtol = 1e-08, atol = 1e-12,
-  default.to.human = F, recalc.blood2plasma = F,
-  recalc.clearance = F, dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T, regression = T,
-  restrictive.clearance = T, minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
-  monitor.vars = NULL, ...)
+solve_pbtk(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  times = NULL,
+  parameters = NULL,
+  days = 10,
+  tsteps = 4,
+  daily.dose = NULL,
+  dose = 1,
+  doses.per.day = NULL,
+  initial.values = NULL,
+  plots = F,
+  suppress.messages = F,
+  species = "Human",
+  iv.dose = F,
+  output.units = "uM",
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
+  default.to.human = F,
+  recalc.blood2plasma = F,
+  recalc.clearance = F,
+  dosing.matrix = NULL,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE),
+  monitor.vars = NULL,
+  ...
+)
 }
 \arguments{
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
@@ -24,6 +44,9 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -98,6 +121,10 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
+"Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
@@ -136,9 +163,11 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_pbtk(chem.name='Bisphenol-A',dose=.5,days=1,doses.per.day=2,tsteps=2)
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units='mg', 
-                  plots=TRUE,initial.values=c(Agut=200))
+solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
+
+out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
+                  initial.values=c(Agut=200))
+
 params <- parameterize_pbtk(chem.cas="80-05-7")
 solve_pbtk(parameters=params)
                   

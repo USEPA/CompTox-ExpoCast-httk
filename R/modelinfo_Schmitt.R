@@ -3,6 +3,7 @@
 # The is the R function for generating model parameters:
 model.list[["schmitt"]]$parameterize.func <- "parameterize_schmitt"
 
+
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
@@ -78,6 +79,7 @@ model.list[["schmitt"]]$noMC.params <- c(
 #                   "Kspleen2pu",
 #                   "Krbc2pu",
 #                   "Krest2pu")  
+
 
 schmitt.specific.names <- c("Kadipose2pu",
                             "Kbone2pu",

@@ -6,7 +6,7 @@
 #' chemical must be identified by either CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -191,21 +191,20 @@ parameterize_1comp <- function(
    
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
-    if (!(species %in% colnames(physiology.data)))
+  if (!(species %in% colnames(physiology.data)))
+  {
+    if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      if (toupper(species) %in% toupper(colnames(physiology.data)))
-      {
-        phys.species <- colnames(physiology.data)[
-                          toupper(colnames(physiology.data))==toupper(species)]
-      } else stop(paste("Physiological PK data for",species,"not found."))
-    } else phys.species <- species
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
+    } else stop(paste("Physiological PK data for",species,"not found."))
+  } else phys.species <- species
+
+# Load the physiological parameters for this species
+  this.phys.data <- physiology.data[,phys.species]
+  names(this.phys.data) <- physiology.data[,1]
   
-  # Load the physiological parameters for this species
-    this.phys.data <- physiology.data[,phys.species]
-    names(this.phys.data) <- physiology.data[,1]
-    
-    params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
-  
+  params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
   params[['Fabsgut']] <- ss.params[['Fabsgut']]
@@ -216,6 +215,7 @@ parameterize_1comp <- function(
     ss.params[['hepatic.bioavailability']]  
 
   params[['BW']] <- this.phys.data[["Average BW"]]
+
   
-  return(params)
+  return(lapply(params,set_httk_precision))
 }

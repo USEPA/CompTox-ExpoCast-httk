@@ -27,6 +27,8 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param times Optional time sequence for specified number of days.
 #' @param parameters Chemical parameters from parameterize_1comp function,
 #' overrides chem.name and chem.cas.
@@ -53,18 +55,16 @@
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose.
-#' @param recalc.elimination Whether or not to recalculate the elimination
+#' @param recalc.clearance Whether or not to recalculate the elimination
 #' rate.
+#' @param recalc.blood2plasma Whether or not to recalculate the blood:plasma
+#' chemical concentrationr ratio
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with volume of distribution calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients in volume of distribution calculation.
 #' @param restrictive.clearance In calculating elimination rate, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' @param well.stirred.correction Uses correction in calculation of hepatic
-#' clearance for well-stirred model if TRUE.  This assumes clearance relative
-#' to amount unbound in whole blood instead of plasma, but converted to use
-#' with plasma concentration.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
@@ -75,7 +75,11 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
+#' "AUC"
 #' @param ... Additional arguments passed to the integrator.
+#'
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
 #'
@@ -150,14 +154,16 @@ solve_1comp <- function(chem.name = NULL,
     species=species,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     Caco2.options=Caco2.options,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression),
     ...)
   
   return(out) 

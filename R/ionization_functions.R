@@ -38,6 +38,8 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from a parameterize_MODEL function,
 #' overrides chem.name and chem.cas.
 #' @param pH pH where ionization is evaluated.
@@ -120,17 +122,33 @@ calc_ionization <- function(
   fraction_negative <- NULL
   fraction_positive <- NULL
   fraction_zwitter <- NULL
+  
   for (index in 1:calculations)
   {
     this.pKa_Donor <- pKa_Donor[[index]]
     this.pKa_Accept <-pKa_Accept[[index]]
     this.pH <- pH[[index]]
     
-    if(is.character(this.pKa_Donor) | is.character(this.pKa_Accept))
+    if (!is.na(this.pKa_Donor))
     {
-      this.pKa_Donor <- as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
-      this.pKa_Accept <- as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
-    }  
+      if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
+      {
+        if (regexpr(",",this.pKa_Donor)!=-1)
+          as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
+        else this.pKa_Donor <- NA
+      }
+    }
+
+    if (!is.na(this.pKa_Accept))
+    {
+      if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
+      {
+        if (regexpr(",",this.pKa_Accept)!=-1)
+          as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
+        else this.pKa_Accept <- NA
+      }
+    }
+
   # Need to calculate the amount of un-ionized parent:
 
   # Multiple equilibirum points may still be separated by commas, split them into vectors here:

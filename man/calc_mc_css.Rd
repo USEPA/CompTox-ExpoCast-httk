@@ -4,30 +4,42 @@
 \alias{calc_mc_css}
 \title{Find the monte carlo steady state concentration.}
 \usage{
-calc_mc_css(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  parameters = NULL, samples = 1000, which.quantile = 0.95,
-  species = "Human", suppress.messages = F, model = "3compartmentss",
-  httkpop = T, invitrouv = T, calcrb2p = T,
-  censored.params = list(), vary.params = list(Caco2.Pab = 0.3),
-  return.samples = F, tissue = NULL, httkpop.matrix = NULL,
-  output.units = "mg/L", oral.pathway = T,
-  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut =
-  TRUE, Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
+calc_mc_css(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  samples = 1000,
+  which.quantile = 0.95,
+  species = "Human",
+  suppress.messages = F,
+  model = "3compartmentss",
+  httkpop = T,
+  invitrouv = T,
+  calcrb2p = T,
+  censored.params = list(),
+  vary.params = list(Caco2.Pab = 0.3),
+  return.samples = F,
+  tissue = NULL,
+  output.units = "mg/L",
+  oral.pathway = T,
+  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs
+    = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
   invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
-  fup.censored.dist = FALSE, fup.lod = 0.01, caco2.meas.sd = 0.3,
-  fup.meas.cv = 0.4, clint.meas.cv = 0.3, caco2.pop.sd = 0.3, fup.pop.cv =
-  0.3, clint.pop.cv = 0.3), httkpop.generate.arg.list = list(method =
-  "direct resampling", gendernum = NULL, agelim_years = NULL, agelim_months
-  = NULL, weight_category = c("Underweight", "Normal", "Overweight",
-  "Obese"), gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
-  reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-  "Non-Hispanic Black", "Other")), convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F,
-  clint.pvalue.threshold = 0.05, restrictive.clearance = T, regression =
-  T), calc.analytic.css.arg.list = list(daily.dose = 1,
-  well.stirred.correction = T, adjusted.Funbound.plasma = T, regression =
-  T, IVIVE = NULL, tissue = tissue, restrictive.clearance = T,
-  bioactive.free.invivo = FALSE, concentration = "plasma"))
+    fup.censored.dist = FALSE, fup.lod = 0.01, caco2.meas.sd = 0.3, fup.meas.cv = 0.4,
+    clint.meas.cv = 0.3, caco2.pop.sd = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
+    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
+    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
+    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
+    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  convert.httkpop.arg.list = list(),
+  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = T, regression = T),
+  calc.analytic.css.arg.list = list(well.stirred.correction = T,
+    adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
+    restrictive.clearance = T, bioactive.free.invivo = FALSE)
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
@@ -38,7 +50,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -65,6 +77,12 @@ otherwise '3compartmentss' is used.}
 httkpop.  This is overwrites censored.params and vary.params and is only for
 human physiology.  Species must also be set to 'Human'.}
 
+\item{invitrouv}{Logical to indicate whether to include in vitro parameters
+in uncertainty and variability analysis}
+
+\item{calcrb2p}{Logical determining whether or not to recalculate the 
+chemical ratio of blood to plasma}
+
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
 of detection (specified separately for each paramter). This argument should
@@ -90,6 +108,12 @@ samples from the simulation instead of the selected quantile.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
+\item{invitro.mc.arg.list}{List of additional parameters passed to 
+\code{\link{invitro_mc}}}
+
+\item{httkpop.generate.arg.list}{Additional parameters passed to 
+\code{\link{httkpop_generate}}.}
+
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
@@ -98,23 +122,6 @@ parameterize_* function for the model.}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
-
-\item{daily.dose}{Total daily dose, mg/kg BW/day.}
-
-\item{fup.meas.cv}{Coefficient of variation of distribution of measured
-\code{Funbound.plasma} values.}
-
-\item{clint.meas.cv}{Coefficient of variation of distribution of measured 
-\code{Clint} values.}
-
-\item{fup.pop.cv}{Coefficient of variation of distribution of population
-\code{Funbound.plasma} values.}
-
-\item{clint.pop.cv}{Coefficient of variation of distribution of population
-\code{Clint} values.}
-
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
 
 \item{well.stirred.correction}{If TRUE (default) then the well-stirred
 correction (Rowland et al., 1973) is used in the calculation of hepatic
@@ -200,9 +207,6 @@ Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
 
-\item{physiology.matrix}{A data table generated by
-\code{httkpop_generate()}.}
-
 \item{parameter.matrix}{A data table generated by \code{get_httk_params()}.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
@@ -219,13 +223,7 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut wit
 \item{parameter.dt}{A data table generated by 
 \code{\link{get_httk_params}}.}
 
-\item{httkpop_generate.arg.list}{Additional parameters passed to 
-\code{\link{httkpop_generate}}.}
-
-\item{draw_invitro.arg.list}{Additional parameters passed to 
-\code{\link{draw_invitro}}.}
-
-\item{...}{Additional parameters passed to calc_analytic_css}
+\item{httkpop_generate.arg.list}{Additional parameters passed to}
 }
 \description{
 This function finds the analytical steady state plasma concentration(from
@@ -239,9 +237,9 @@ When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
-Tissue concentrations are calculated for the pbtk model with oral infusion
-dosing.  All tissues other than gut, liver, and lung are the product of the
-steady state plasma concentration and the tissue to plasma partition
+Tissue concentrations are calculated for the pbtk model with a default oral
+infusion dosing. All tissues other than gut, liver, and lung are the product
+of the steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
 The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
@@ -267,7 +265,7 @@ used by this function.
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
  set.seed(1234)
- calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+ calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
              censored.params = list(Funbound.plasma = list(cv = 0.1, 
                                                           lod = 0.005)),
              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,

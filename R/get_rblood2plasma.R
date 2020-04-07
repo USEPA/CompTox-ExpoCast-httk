@@ -11,6 +11,8 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
 #' @param default.to.human Substitutes missing animal values with human values
@@ -27,6 +29,7 @@
 #' 
 #' @export get_rblood2plasma
 
+
 get_rblood2plasma <- function(
                        chem.name=NULL,
                        chem.cas=NULL,
@@ -34,6 +37,15 @@ get_rblood2plasma <- function(
                        species='Human',
                        default.to.human=F)
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  CAS <- NULL
+  #End R CMD CHECK appeasement.
+  
+  
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
 
 # We need to describe the chemical to be simulated one way or another:

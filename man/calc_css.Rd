@@ -4,22 +4,42 @@
 \alias{calc_css}
 \title{Find the steady state concentration and the day it is reached.}
 \usage{
-calc_css(parameters = NULL, chem.name = NULL, chem.cas = NULL,
-  species = "Human", f = 0.01, daily.dose = 1, doses.per.day = 3,
-  days = 21, output.units = "uM", concentration = "plasma",
-  suppress.messages = F, model = "pbtk", default.to.human = F,
-  f.change = 1e-05, adjusted.Funbound.plasma = T, regression = T,
-  well.stirred.correction = T, restrictive.clearance = T, ...)
+calc_css(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  species = "Human",
+  f = 0.01,
+  daily.dose = 1,
+  doses.per.day = 3,
+  days = 21,
+  output.units = "uM",
+  suppress.messages = F,
+  tissue = "plasma",
+  model = "pbtk",
+  default.to.human = F,
+  f.change = 1e-05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  well.stirred.correction = T,
+  restrictive.clearance = T,
+  dosing = NULL,
+  ...
+)
 }
 \arguments{
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
-
 \item{chem.name}{Either the chemical name, CAS number, or parameters must be
 specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
 specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Chemical parameters from parameterize_pbtk function,
+overrides chem.name and chem.cas.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -37,10 +57,10 @@ each iteration.}
 \item{output.units}{Units for returned concentrations, defaults to uM
 (specify units = "uM") but can also be mg/L.}
 
-\item{concentration}{Desired concentration type, 'blood' or default
-'plasma'.}
-
 \item{suppress.messages}{Whether or not to suppress messages.}
+
+\item{tissue}{Desired tissue concentration (defaults to whole body 
+concentration.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
@@ -66,8 +86,11 @@ instead of plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
+\item{dosing}{The dosing object for more complicated scenarios. Defaults to
+repeated \code{daily.dose} spread out over \code{doses.per.day}}
+
 \item{...}{Additional arguments passed to model solver (default of
-solve_pbtk).}
+\code{\link{solve_pbtk}}).}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state
@@ -88,31 +111,38 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-\dontrun{
+
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
-calc_css(parms,concentration='blood',model='3compartment')
+calc_css(parameters=parms,model='3compartment')
 
-
-library("ggplot2")
-out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+out <- solve_pbtk(chem.name = "Bisphenol A",
+  days = 50, 
+  daily.dose=1,
+  doses.per.day = 3)
 plot.data <- as.data.frame(out)
 css <- calc_analytic_css(chem.name = "Bisphenol A")
+\dontrun{
+library("ggplot2")
 c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
 geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
 xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
 element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
-print(c.vs.t)
 
+print(c.vs.t)
+}
+
+# Make a plot for all chemicals (takes a while):
+\dontrun{
 days <- NULL
 avg <- NULL
 max <- NULL
-for(this.cas in get_cheminfo()){
-css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
-days[[this.cas]] <- css.info[["the.day"]]
-avg[[this.cas]] <- css.info[["avg"]]
-max[[this.cas]] <- css.info[["max"]]
+for(this.cas in get_cheminfo(model="pbtk")){
+  css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+  days[[this.cas]] <- css.info[["the.day"]]
+  avg[[this.cas]] <- css.info[["avg"]]
+  max[[this.cas]] <- css.info[["max"]]
 }
 days.data <- as.data.frame(days)
 hist <- ggplot(days.data, aes(days)) +

@@ -157,7 +157,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' 
 #' 
 #' @param new.table Object of class data.frame containing one row per chemical,
-#' with each chemical minimally by described by a CAS number.
+#' with each chemical minimally described by a CAS number.
 #' @param data.list This list identifies which properties are to be read from
 #' the table. Each item in the list should point to a column in the table
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
@@ -184,17 +184,20 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
+#' my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
+#'                     stringsAsFactors=FALSE))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c(200,200,200)))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c(2,3,4)))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c(0.01,0.02,0.3)))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
-#' colnames(my.new.data) <- c("Name","CASRN","MW","LogP","Fup","CLint")
+#' colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 #' 
 #' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
 #'                                   current.table=chem.physical_and_invitro.data,
 #'                                   data.list=list(
 #'                                   Compound="Name",
 #'                                   CAS="CASRN",
+#'                                   DTXSID="DTXSID",
 #'                                   MW="MW",
 #'                                   logP="LogP",
 #'                                   Funbound.plasma="Fup",

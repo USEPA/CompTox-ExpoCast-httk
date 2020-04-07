@@ -34,6 +34,8 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param suppress.messages Suppress text messages. 
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
@@ -141,18 +143,29 @@ calc_mc_oral_equiv <- function(conc,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
-  Css <- try(calc_mc_css(daily.dose=1,
-                         chem.name=chem.name,
+  
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  well.stirred.correction <- adjusted.Funbound.plasma <- NULL
+  #End R CMD CHECK appeasement.
+  
+  Css <- try(calc_mc_css(chem.name=chem.name,
                          chem.cas=chem.cas,
                          dtxsid=dtxsid,
                          which.quantile=which.quantile,
                          species=species,
                          output.units=input.units,
-                         suppress.messages=T,
-                         concentration = concentration,
-                         restrictive.clearance=restrictive.clearance,
-                         bioactive.free.invivo = bioactive.free.invivo,
-                         tissue=tissue,
+                         suppress.messages=T, 
+                         calc.analytic.css.arg.list=
+                           list(concentration = concentration,
+                           restrictive.clearance=restrictive.clearance,
+                           bioactive.free.invivo = bioactive.free.invivo,
+                           tissue = tissue,IVIVE=IVIVE,
+                           well.stirred.correction=well.stirred.correction,
+                           adjusted.Funbound.plasma=adjusted.Funbound.plasma),
                          return.samples=return.samples,
                          Caco2.options = Caco2.options,
                          ...))

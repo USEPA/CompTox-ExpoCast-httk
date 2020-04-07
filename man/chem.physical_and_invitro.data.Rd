@@ -6,7 +6,15 @@
 \alias{httkpop}
 \alias{httkpop-package}
 \title{Physico-chemical properties and in vitro measurements for toxicokinetics}
-\format{A data.frame containing 565 rows and 33 columns.}
+\format{
+A data.frame containing 565 rows and 33 columns.
+
+A data.frame containing 565 rows and 33 columns.
+
+A data.frame containing 565 rows and 33 columns.
+
+A data.frame containing 565 rows and 33 columns.
+}
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
@@ -26,7 +34,7 @@ high-throughput toxicokinetic (HTTK) predictions for compounds, including
 Funbound.plasma, molecular weight (g/mol), logP, logMA (membrane affinity),
 intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
 compiled from multiple sources, and can be used to parameterize a variety of
-toxicokinetic models.
+toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 
 This data set contains the necessary information to make basic,
 high-throughput toxicokinetic (HTTK) predictions for compounds, including
@@ -50,10 +58,20 @@ compiled from multiple sources, and can be used to parameterize a variety of
 toxicokinetic models.
 }
 \section{Main function to generate a population}{
+ 
+If you just want to generate
+  a table of (chemical-independent) population physiology parameters, use 
+  \code{\link{httkpop_generate}}.
+}
 
-
-If you just want to generate a table of (chemical-independent) population
-physiology parameters, use \code{\link{httkpop_generate}}.
+\section{Using HTTK-Pop with HTTK}{
+ 
+To generate a population and then run an 
+  HTTK model for that population, the workflow is as follows: \enumerate{ 
+  \item Generate a population using \code{\link{httkpop_generate}}. \item For
+  a given HTTK chemical and general model, convert the population data to 
+  corresponding sets of HTTK model parameters using 
+  \code{\link{httkpop_mc}}.}
 }
 
 \references{
@@ -415,12 +433,12 @@ In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
 httkpop: Virtual population generator for HTTK.
 
-The httkpop package generates virtual population physiologies for use in
+The httkpop package generates virtual population physiologies for use in 
 population TK.
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to 
+environmental chemicals by simulating toxicokinetic variability." Environment 
+International 106 (2017): 105-118
 }
 \author{
 John Wambaugh

@@ -4,14 +4,23 @@
 \alias{parameterize_steadystate}
 \title{Parameterize_SteadyState}
 \usage{
-parameterize_steadystate(chem.cas = NULL, chem.name = NULL,
-  dtxsid = NULL, species = "Human", clint.pvalue.threshold = 0.05,
-  default.to.human = F, human.clint.fup = F,
-  adjusted.Funbound.plasma = T, restrictive.clearance = T,
-  fup.lod.default = 0.005, suppress.messages = F,
+parameterize_steadystate(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  clint.pvalue.threshold = 0.05,
+  default.to.human = F,
+  human.clint.fup = F,
+  adjusted.Funbound.plasma = T,
+  restrictive.clearance = T,
+  fup.lod.default = 0.005,
+  suppress.messages = F,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE), ...)
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE),
+  ...
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -20,7 +29,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -58,6 +67,9 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+}
+\value{
+
 }
 \description{
 This function initializes the parameters needed in the functions

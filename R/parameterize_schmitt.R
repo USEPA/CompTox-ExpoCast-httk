@@ -10,7 +10,7 @@
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
 #' @param parameters Chemcial and physiological description parameters needed
@@ -253,5 +253,5 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   plasma.pH=plasma.pH,
                   alpha=alpha)
   
-  return(outlist)                                
+  return(lapply(outlist,set_httk_precision))                                
 }

@@ -17,9 +17,15 @@
 #' specified.
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified.
-#' @param params Parameters from parameterize_schmitt.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param parameters Parameters from \code{\link{parameterize_schmitt}}
 #' @param hematocrit Overwrites default hematocrit value in calculating
 #' Rblood2plasma.
+#' @param Krbc2pu The red blood cell to unbound plasma chemical partition
+#' coefficient, typically from \code{\link{predict_partitioning_schmitt}}
+#' @param Funbound.plasma The fraction of chemical unbound (free) in the
+#' presence of plasma protein
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -131,7 +137,8 @@ calc_rblood2plasma <- function(
     PCs <- predict_partitioning_schmitt(parameters=parameters,
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-           tissues='red blood cells')  
+           tissues='red blood cells',
+           suppress.messages=T)  
     parameters$Krbc2pu <- PCs$Krbc2pu
   } else if (!is.null(Krbc2pu))
   {
@@ -151,5 +158,5 @@ calc_rblood2plasma <- function(
       hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
   }
     
-  return(as.numeric(Rblood2plasma))
+  return(set_httk_precision(as.numeric(Rblood2plasma)))
 }

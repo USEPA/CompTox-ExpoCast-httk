@@ -4,8 +4,15 @@
 \alias{calc_ionization}
 \title{Calculate the ionization.}
 \usage{
-calc_ionization(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  parameters = NULL, pH = NULL, pKa_Donor = NA, pKa_Accept = NA)
+calc_ionization(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  pH = NULL,
+  pKa_Donor = NA,
+  pKa_Accept = NA
+)
 }
 \arguments{
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -13,6 +20,9 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from a parameterize_MODEL function,
 overrides chem.name and chem.cas.}

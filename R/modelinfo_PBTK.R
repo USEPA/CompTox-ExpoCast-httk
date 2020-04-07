@@ -94,6 +94,10 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
 # parameters:
 model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
 
+# This needs to be a global variable so that R CMD check --as-cran can test
+# the code (the HTTK package does not use this):
+compiled_parameters_init <- "getParmspbtk"
+
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
 model.list[["pbtk"]]$compiled.param.names <- c(
@@ -221,7 +225,7 @@ model.list[["pbtk"]]$required.params <- c(
    )
 
 # Function for calculating Clmetabolismc after Clint is varied:
-model.list[["pbtk"]]$propagateuv.func <- "propagateuv_pbtk"
+model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:
 model.list[["1compartment"]]$convert.httkpop.func <- NULL

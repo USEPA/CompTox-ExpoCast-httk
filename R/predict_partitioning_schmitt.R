@@ -32,12 +32,14 @@
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' @param parameters Chemical parameters from the parameterize_schmitt
-#' function, overrides chem.name and chem.cas.
+#' @param parameters Chemical parameters from \code{\link{parameterize_schmitt}}
+#' overrides chem.name, dtxsid, and chem.cas.
 #' @param alpha Ratio of Distribution coefficient D of totally charged species
 #' and that of the neutral form
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
@@ -50,6 +52,7 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
@@ -289,5 +292,6 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 	}
   if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
  # if(user.params) warning(paste(species,' fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
- 	return(Ktissue2pu)
+
+ 	return(lapply(Ktissue2pu,set_httk_precision))
 }

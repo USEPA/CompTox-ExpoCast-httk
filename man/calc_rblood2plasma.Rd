@@ -5,10 +5,19 @@
 \title{Calculate the constant ratio of the blood concentration to the plasma
 concentration.}
 \usage{
-calc_rblood2plasma(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  parameters = NULL, hematocrit = NULL, Krbc2pu = NULL,
-  Funbound.plasma = NULL, default.to.human = F, species = "Human",
-  adjusted.Funbound.plasma = T, suppress.messages = T)
+calc_rblood2plasma(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  hematocrit = NULL,
+  Krbc2pu = NULL,
+  Funbound.plasma = NULL,
+  default.to.human = F,
+  species = "Human",
+  adjusted.Funbound.plasma = T,
+  suppress.messages = T
+)
 }
 \arguments{
 \item{chem.cas}{Either the CAS number or the chemical name must be
@@ -17,8 +26,19 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Parameters from \code{\link{parameterize_schmitt}}}
+
 \item{hematocrit}{Overwrites default hematocrit value in calculating
 Rblood2plasma.}
+
+\item{Krbc2pu}{The red blood cell to unbound plasma chemical partition
+coefficient, typically from \code{\link{predict_partitioning_schmitt}}}
+
+\item{Funbound.plasma}{The fraction of chemical unbound (free) in the
+presence of plasma protein}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
@@ -31,8 +51,6 @@ adjustment.}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
-
-\item{params}{Parameters from parameterize_schmitt.}
 }
 \description{
 This function calculates the constant ratio of the blood concentration to

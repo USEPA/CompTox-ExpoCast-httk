@@ -17,10 +17,15 @@
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
 #' predict_partitioning_schmitt.
+#' @param parameters A list of physiological parameters including flows and
+#' volumes for tissues in \code{tissuelist}
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
+#' @param tissue.flows A list of flows for tissues in \code{tissuelist}
+#'
 #' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
 #' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration
 #' of chemical in rest of body tissue to unbound concentration in plasma.}
@@ -59,8 +64,6 @@ lump_tissues <- function(Ktissue2pu.in,
 #CHECK, a variable has to be created for each of these column names and set to
 #NULL. Note that within the data.table, these variables will not be NULL! Yes,
 #this is pointless and annoying.
-  physiology.data <- physiology.data
-  tissue.data <- tissue.data
   Tissue <- Species <- varable <- Parameter <- variable <- NULL
 #End R CMD CHECK appeasement.
 

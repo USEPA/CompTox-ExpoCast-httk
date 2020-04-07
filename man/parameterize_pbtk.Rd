@@ -4,15 +4,24 @@
 \alias{parameterize_pbtk}
 \title{Parameterize_PBTK}
 \usage{
-parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  species = "Human", default.to.human = F, tissuelist = list(liver =
-  c("liver"), kidney = c("kidney"), lung = c("lung"), gut = c("gut")),
-  force.human.clint.fup = F, clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T, regression = T,
-  suppress.messages = F, restrictive.clearance = T,
+parameterize_pbtk(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
+    c("gut")),
+  force.human.clint.fup = F,
+  clint.pvalue.threshold = 0.05,
+  adjusted.Funbound.plasma = T,
+  regression = T,
+  suppress.messages = F,
+  restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
+  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE)
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -21,7 +30,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -48,6 +57,9 @@ TRUE along with parition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
+binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our

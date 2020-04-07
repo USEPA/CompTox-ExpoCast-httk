@@ -1,20 +1,25 @@
+#Initialize model.list to be fleshed out in the model info files and elsewhere. 
 model.list <- list()
+
 #'Calculate the analytic steady state concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing for the three compartment and 
 #'multiple compartment PBTK models.
 #'
-#'@export
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #'be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #'be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #''pbtk'), parameterize_3comp (for model = '3compartment), 
 #'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #'(for model = '3compartmentss'), overrides chem.name and chem.cas.
+#'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
 #'@param daily.dose Total daily dose, mg/kg BW.
 #'@param output.units Units for returned concentrations, defaults to uM 
 #'(specify units = "uM") but can also be mg/L.
@@ -24,16 +29,8 @@ model.list <- list()
 #'compartment model.
 #'@param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
-#'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
-#'in the blood to plasma using the input parameters. Use this if you have 
-#''altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #'concentration.)
-#'@param IVIVE Honda et al. (2019) identified four plausible sets of 
-#'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
-#'Argument may be set to "Honda1" through "Honda4". If used, this function 
-#'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
-#'See Details below for more information.
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
@@ -48,6 +45,21 @@ model.list <- list()
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#'@param IVIVE Honda et al. (2019) identified four plausible sets of 
+#'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
+#'Argument may be set to "Honda1" through "Honda4". If used, this function 
+#'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
+#'See Details below for more information.
+#'@param parameterize.args List of arguments passed to model's associated
+#' parameterization function, including default.to.human, 
+#' adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
+#' default.to.human argument substitutes missing animal values with human values
+#' if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
+#' to TRUE along with parition coefficients calculated with this value, 
+#' regression indicates whether or not to use the regressions in calculating
+#' partition coefficients, and minimum.Funbound.plasma is the value to which
+#' Monte Carlo draws less than this value are set (default is 0.0001 -- half
+#' the lowest measured Fup in our dataset).
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -68,11 +80,20 @@ model.list <- list()
 #'@examples 
 #'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
 #'                  model='3compartment',concentration='blood')
+#' 
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-#'                  default.to.human=TRUE,daily.dose=2)
+#'                  parameterize.args = list(
+#'                                 default.to.human=TRUE,
+#'                                 adjusted.Funbound.plasma=TRUE,
+#'                                 regression=TRUE,
+#'                                 minimum.Funbound.plasma=1e-4),daily.dose=2)
+#' 
 #'calc_analytic_css(chem.name="bisphenol a",model="1compartment")
+#' 
 #'calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
+#' 
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
+#' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
 #'@author Robert Pearce, John Wambaugh, and Greg Honda
@@ -81,8 +102,9 @@ model.list <- list()
 #'
 #' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 #' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
-#''
+#'
 #' @export calc_analytic_css
+#' @import methods
 calc_analytic_css <- function(chem.name=NULL,
                               chem.cas = NULL,
                               dtxsid = NULL,
@@ -142,11 +164,16 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
     
-    parameters <- do.call(parameterize_function,c(parameterize.args,list(
+    
+    parameterize.args <- c(parameterize.args,list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
-      suppress.messages=suppress.messages))) 
+      suppress.messages=suppress.messages))
+# Make sure all the arguments are used by the function:
+    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+      methods::formalArgs(parameterize_function)]
+    parameters <- do.call(parameterize_function, parameterize.args) 
   } else {
     model_param_names <- model.list[[model]]$param.names 
     if (!all(model_param_names %in% names(parameters)))
@@ -242,6 +269,9 @@ calc_analytic_css <- function(chem.name=NULL,
     if(is.null(tissue)) cat(paste(concentration,"concentration returned in",output.units,"units.\n"))
     else cat(paste(concentration,"concentration for",tissue,"returned in",output.units,"units.\n"))
   }
+  
+# Cannot guarantee arbitrary precision:
+  Css <- set_httk_precision(Css)
   
   return(as.numeric(Css))
 }

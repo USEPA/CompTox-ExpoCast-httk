@@ -50,7 +50,7 @@ export_pbtk_jarnac <- function(chem.cas=NULL,
   
      if (is.null(chem.cas) & is.null(chem.name))
   {
-    stop("Must specifiy compound name or CAS.\n")
+    stop("Must specify compound name or CAS.\n")
   } else if ((!is.null(chem.cas) & !any(chem.invivo.PK.data$CAS==chem.cas)) & (!is.null(chem.name) & !any(chem.invivo.PK.data$Compound==chem.name)))
   {
     stop("Compound not found.\n")

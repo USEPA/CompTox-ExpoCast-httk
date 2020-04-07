@@ -4,8 +4,14 @@
 \alias{calc_hep_fu}
 \title{Calculate the free chemical in the hepaitic clearance assay}
 \usage{
-calc_hep_fu(chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
-  parameters = NULL, Vr = 0.005, pH = 7.4)
+calc_hep_fu(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  parameters = NULL,
+  Vr = 0.005,
+  pH = 7.4
+)
 }
 \arguments{
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
@@ -16,7 +22,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 

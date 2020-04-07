@@ -7,7 +7,7 @@
 #' chemical must be identified by either CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})   
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -26,6 +26,8 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' @param restrictive.clearance In calculating hepatic.bioavailability, protein
+#' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
@@ -394,5 +396,6 @@ Set default.to.human to true to substitute human value.")
   }
 
         
-  return(outlist[sort(names(outlist))])
+
+  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }

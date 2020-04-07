@@ -32,20 +32,28 @@
 #' be specified. 
 #' @param chem.name Either the chemical parameters, name, or the CAS number
 #' must be specified. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.
-#' @param daily.dose Total daily dose, mg/kg BW/day.
+#' @param samples Number of samples generated in calculating quantiles.
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model. 
-#' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param suppress.messages Whether or not to suppress output message.
 #' @param model Model used in calculation: 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, '3compartmentss' for
 #' the three compartment steady state model, and '1compartment' for one
 #' compartment model.  This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
+#' @param httkpop Whether or not to use population generator and sampler from
+#' httkpop.  This is overwrites censored.params and vary.params and is only for
+#' human physiology.  Species must also be set to 'Human'.
+#' @param invitrouv Logical to indicate whether to include in vitro parameters
+#' in uncertainty and variability analysis
+#' @param calcrb2p Logical determining whether or not to recalculate the 
+#' chemical ratio of blood to plasma
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
 #' of detection (specified separately for each paramter). This argument should
@@ -62,93 +70,22 @@
 #' entry in the list is named for a parameter in "parameters". New values are
 #' sampled with mean equal to the value in "parameters" and standard deviation
 #' equal to the mean times the CV. Not used with httkpop model.
-#' @param fup.meas.cv Coefficient of variation of distribution of measured
-#' \code{Funbound.plasma} values. 
-#' @param clint.meas.cv Coefficient of variation of distribution of measured 
-#' \code{Clint} values.
-#' @param fup.pop.cv Coefficient of variation of distribution of population
-#' \code{Funbound.plasma} values.
-#' @param clint.pop.cv Coefficient of variation of distribution of population
-#' \code{Clint} values.
-#' @param samples Number of samples generated in calculating quantiles.
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
-#' @param default.to.human Substitutes missing rat values with human values if
-#' true.
 #' @param tissue Desired steady state tissue conentration.
-#' @param well.stirred.correction If TRUE (default) then the well-stirred
-#' correction (Rowland et al., 1973) is used in the calculation of hepatic
-#' clearance for the models that do not include flows for first-pass metabolism
-#' (currently, 1compartment and 3compartmentss). This assumes clearance
-#' relative to amount unbound in whole blood instead of plasma, but converted
-#' for use with plasma concentration.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
-#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
-#' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
-#' @param IVIVE Honda et al. (2019) identified six plausible sets of
-#' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
-#' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
-#' See Details below for more information.
-#' @param httkpop Whether or not to use population generator and sampler from
-#' httkpop.  This is overwrites censored.params and vary.params and is only for
-#' human physiology.  Species must also be set to 'Human'.
-#' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
-#' metabolizers)
-#' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
-#' censored distribution or not.
-#' @param fup.lod The average limit of detection for Funbound.plasma. if
-#' \code{fup.censor == TRUE}, the \code{Funbound.plasma} distribution will be
-#' censored below \code{lod/2}. Default value is 0.01.
-#' @param method The population-generation method to use. Either "virtual
-#' individuals" or "direct resampling" (default). Short names may be used: "d"
-#' or "dr" for "direct resampling", and "v" or "vi" for "virtual individuals".
-#' @param gendernum Optional: A named list giving the numbers of male and
-#' female individuals to include in the population, e.g. \code{list(Male=100,
-#' Female=100)}. Default is NULL, meaning both males and females are included,
-#' in their proportions in the NHANES data. If both \code{nsamp} and
-#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
-#' the sum of \code{gendernum}).
-#' @param agelim_years Optional: A two-element numeric vector giving the
-#' minimum and maximum ages (in years) to include in the population. Default is
-#' c(0,79). If only a single value is provided, both minimum and maximum ages
-#' will be set to that value; e.g. \code{agelim_years=3} is equivalent to
-#' \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
-#' \code{agelim_months} is not, \code{agelim_years} will override the default
-#' value of \code{agelim_months}.
-#' @param agelim_months Optional: A two-element numeric vector giving the
-#' minimum and maximum ages (in months) to include in the population. Default
-#' is c(0, 959), equivalent to the default \code{agelim_years}. If only a
-#' single value is provided, both minimum and maximum ages will be set to that
-#' value; e.g. \code{agelim_months=36} is equivalent to
-#' \code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
-#' \code{agelim_years} is not, \code{agelim_months} will override the default
-#' values of \code{agelim_years}.
-#' @param weight_category Optional: The weight categories to include in the
-#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-#' 'Obese')}. User-supplied vector must contain one or more of these strings.
-#' @param gfr_category The kidney function categories to include in the
-#' population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
-#' to include all kidney function levels.
-#' @param reths Optional: a character vector giving the races/ethnicities to
-#' include in the population. Default is \code{c('Mexican American','Other
-#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-#' all races and ethnicities in their proportions in the NHANES data.
-#' User-supplied vector must contain one or more of these strings.
-#' @param physiology.matrix A data table generated by
-#' \code{httkpop_generate()}.
-#' @param parameter.matrix A data table generated by \code{get_httk_params()}.
-#' @param ... Additional parameters passed to calc_analytic_css
+#' @param output.units Plasma concentration units, either uM or default mg/L.
+#' @param solvemodel.arg.list Additional arguments ultimately passed to 
+#' \code{\link{solve_model}}
+#' @param invitro.mc.arg.list List of additional parameters passed to 
+#' \code{\link{invitro_mc}}
+#' @param httkpop.generate.arg.list Additional parameters passed to 
+#' \code{\link{httkpop_generate}}.
+#' @param convert.httkpop.arg.list Additional parameters passed to the 
+#' convert_httkpop_* function for the model.
+#' @param parameterize.arg.list Additional parameters passed to the 
+#' parameterize_* function for the model.
+#' @param return.all.sims Logical indicating whether to return the results
+#' of all simulations, in addition to the default toxicokinetic statistics
 #' 
 #' @author  John Wambaugh
 #'
@@ -176,7 +113,6 @@
 #' }
 #' 
 #' }
-#'
 #' @importFrom purrr reduce
 #' @export calc_mc_tk
 calc_mc_tk<- function(chem.cas=NULL,
@@ -195,7 +131,6 @@ calc_mc_tk<- function(chem.cas=NULL,
                         vary.params=list(),
                         return.samples=F,
                         tissue=NULL,
-                        httkpop.matrix=NULL,
                         output.units="mg/L",
                         solvemodel.arg.list=list(
                           times=c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)),
@@ -273,7 +208,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         chem.name=chem.name,
                         dtxsid = dtxsid,
                         parameters=parameters,
-                        samples=1000,
+                        samples=samples,
                         species=species,
                         suppress.messages=suppress.messages,
                         model=model,
@@ -299,10 +234,10 @@ calc_mc_tk<- function(chem.cas=NULL,
      suppress.messages=T,
      solvemodel.arg.list))
 
-  means <- Reduce("+",model.out)/length(model.out)
-  sds <- (reduce(model.out,
-    function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2)
-
+  means <- set_httk_precision(Reduce("+",model.out)/length(model.out))
+  sds <- set_httk_precision((purrr::reduce(model.out,
+    function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2))
+  
   out <- list(means=means,sds=sds)
   if (return.all.sims) out <- list(stats=out,sims=model.out)
   return(out)

@@ -4,14 +4,22 @@
 \alias{calc_fbio.oral}
 \title{Parameterize_SteadyState}
 \usage{
-calc_fbio.oral(Params = NULL, chem.cas = NULL, chem.name = NULL,
-  species = "Human", clint.pvalue.threshold = 0.05,
-  default.to.human = F, human.clint.fup = F,
-  adjusted.Funbound.plasma = T, restrictive.clearance = T,
-  fup.lod.default = 0.005, suppress.messages = F,
+calc_fbio.oral(
+  Params = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  species = "Human",
+  clint.pvalue.threshold = 0.05,
+  default.to.human = F,
+  human.clint.fup = F,
+  adjusted.Funbound.plasma = T,
+  restrictive.clearance = T,
+  fup.lod.default = 0.005,
+  suppress.messages = F,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE))
+  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE, keepit100 = FALSE)
+)
 }
 \arguments{
 \item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,

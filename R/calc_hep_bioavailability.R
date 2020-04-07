@@ -4,35 +4,21 @@
 #' cacluate a hepatic bioavailability, that is, the fraction of chemical 
 #' systemically available after metabolism during the first pass through the 
 #' liver (Rowland, 1973).
-  
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
-#'@param httk.pop.biomets A data.table containing the physiological
-#'  parameters as expected by HTTK (from \code{\link{httkpop_bio}}) and
-#'  \code{Funbound.plasma} and \code{Clint} values (from
-#'  \code{\link{draw_fup_clint}}).
-#'@param model Which HTTK model to use. 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE.
-#' @param regression Whether or not to use the regressions in calculating partition 
-#' coefficients.
-#' @param well.stirred.correction Uses correction in calculation of hepatic clearance 
-#' for well-stirred model if TRUE for hepatic.model well-stirred. This assumes 
-#' clearance re/lative to amount unbound in whole blood instead of plasma, but 
-#' converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
-#' @param concentration Blood, plasma, or tissue concentration. 
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in vitro 
-#' clearance assay result has a p-values greater than the threshold are set to zero.
+#' @param flow.34 A logical constraint
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
@@ -79,16 +65,23 @@ calc_hep_bioavailability <- function(
   if (flow.34 & !("BW" %in% names(parameters))) 
     stop("flow.34=TRUE and missing BW in calc_hepatic_bioavailability.")
   else {
-    parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25
+    #converting from L/h/kg^3/4 to L/h/kg
+    parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25 
   }
 
-  if (restrictive.clearance) return(parameters$Qtotal.liverc / 
+  if (restrictive.clearance) 
+  {
+    bioavail <- (parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 
     parameters$Funbound.plasma * 
       parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
-  else return(parameters$Qtotal.liverc / 
+  } else {
+    bioavail <- (parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 
       parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
+  }
+      
+  return(set_httk_precision(bioavail))
 }

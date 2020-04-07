@@ -4,10 +4,22 @@
 \alias{calc_krbc2pu}
 \title{Back-calculates the Red Blood Cell to Unbound Plasma Partition Coefficient}
 \usage{
-calc_krbc2pu(Rb2p, Funbound.plasma, hematocrit = NULL,
-  default.to.human = F, species = "Human", suppress.messages = T)
+calc_krbc2pu(
+  Rb2p,
+  Funbound.plasma,
+  hematocrit = NULL,
+  default.to.human = F,
+  species = "Human",
+  suppress.messages = T
+)
 }
 \arguments{
+\item{Rb2p}{The chemical blood:plasma concentration ratop}
+
+\item{Funbound.plasma}{The free fraction of chemical in the presence of 
+plasma protein
+Rblood2plasma.}
+
 \item{hematocrit}{Overwrites default hematocrit value in calculating
 Rblood2plasma.}
 
@@ -19,17 +31,6 @@ default "Human").}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
-
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
-
-\item{chem.cas}{Either the CAS number or the chemical name must be
-specified.}
-
-\item{params}{Parameters from parameterize_schmitt.}
-
-\item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
-adjustment.}
 }
 \description{
 Given and observed ratio of chemial concentration in blood to plasma, this

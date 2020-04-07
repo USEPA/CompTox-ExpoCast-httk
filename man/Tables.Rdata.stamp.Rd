@@ -4,11 +4,18 @@
 \name{Tables.Rdata.stamp}
 \alias{Tables.Rdata.stamp}
 \title{A timestamp of table creation}
-\format{An object of class \code{character} of length 1.}
+\format{
+An object of class \code{character} of length 1.
+}
 \usage{
 Tables.Rdata.stamp
 }
 \description{
-A timestamp of table creation
+The Tables.RData file is separately created as part of building a new
+release of HTTK. This time stamp indicates the script used to build the file
+and when it was run.
+}
+\author{
+John Wambaugh
 }
 \keyword{datasets}

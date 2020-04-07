@@ -3,12 +3,8 @@
 #' This function performs Monte Carlo to assess uncertainty and variability for
 #' toxicokinetic models. 
 #' 
-#' @param parameters All parameters needed by the function indicated by the
-#' argument "name.model". These paramters that are also listed in either
+#' @param parameters These parameters that are also listed in either
 #' cv.params or censored.params are sampled using Monte Carlo.
-#' @param which.quantile This argument specifies which quantiles are to be
-#' calculated. It can be a vector or a single value. It defaults to the 0.95
-#' quantile (95\%).
 #' @param cv.params The parameters listed in cv.params are sampled from a
 #' normal distribution that is truncated at zero. This argument should be a
 #' list of coefficients of variation (cv) for the normal distribution. Each
@@ -26,15 +22,6 @@
 #' distribution between 0 and the limit of detection.
 #' @param samples This argument is the number of samples to be generated for
 #' calculating quantiles.
-#' @param name.model This argument is a character vector giving the name of the
-#' model to be sampled.  Defaults to 'calc_analytic_css'.
-#' @param output.col.model If the evaluation of the function indicated by
-#' "model" returns a list, then model.output.col is the element from that list
-#' that is sampled and is used for calculating quantiles. Defaults to NA (i.e.,
-#' the function returns a single value).
-#' @param return.samples Whether or not to return the vector containing the
-#' samples from the simulation instead of the selected quantile.
-#' @param ... Additional arguments passed to name.model.
 #'
 #' @author John Wambaugh
 #'
@@ -60,8 +47,7 @@
 #' censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 #' set.seed(1)
 #' out <- monte_carlo(parameters, cv.params = vary.params,
-#' censored.params = censored.params, return.samples = T,
-#' model = "pbtk", suppress.messages = T)
+#' censored.params = censored.params, model = "pbtk", suppress.messages = T)
 #' zoxamide <- ggplot(as.data.frame(out), aes(out)) +
 #' geom_histogram(fill="blue", binwidth=1/6) + scale_x_log10() +
 #' ylab("Number of Samples") + xlab("Steady State Concentration (uM)") +
@@ -98,7 +84,6 @@
 #'     vLiver.human.values <- monte_carlo(these.params,
 #'                                        cv.params=vary.params,
 #'                                        censored.params=censored.params,
-#'                                        which.quantile=c(0.05,0.5,0.95),
 #'                                        output.units="mg/L",
 #'                                        model='3compartmentss',
 #'                                        suppress.messages=T,
@@ -107,8 +92,7 @@
 #'     percentiles <- c("5","50","95")
 #'     for (this.index in 1:3)
 #'     {
-#'       this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS,
-#'                                 which.quantile=as.numeric(percentiles[this.index])/100))
+#'       this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS)) 
 #'       this.row <- cbind(this.row, as.data.frame(vLiver.human.values[this.index]))
 #'       this.row <- cbind(this.row, as.data.frame(percentiles[this.index]))
 #'       this.row <- cbind(this.row, as.data.frame("Human"))

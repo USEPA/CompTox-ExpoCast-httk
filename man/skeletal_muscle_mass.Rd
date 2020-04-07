@@ -2,7 +2,7 @@
 % Please edit documentation in R/tissue_mass_functions.R
 \name{skeletal_muscle_mass}
 \alias{skeletal_muscle_mass}
-\title{Predict skeletal muscle mass.}
+\title{Predict skeletal muscle mass}
 \usage{
 skeletal_muscle_mass(smm, age_years, height, gender)
 }
@@ -27,6 +27,18 @@ age-based scaling factor, to account for loss of muscle mass with age
 (Janssen et al. 2000). For individuals under age 18, use
 \code{\link{skeletal_muscle_mass_children}}.
 }
+\references{
+Janssen, Ian, et al. "Skeletal muscle mass and distribution in 468 men and
+women aged 18-88 yer." Journal of Applied Physiology 89.1 (2000): 81-88
+
+Ring, Caroline L., et al. "Identifying populations sensitive to
+environmental chemicals by simulating toxicokinetic variability."
+Environment International 106 (2017): 105-118
+}
 \seealso{
 \code{\link{skeletal_muscle_mass_children}}
 }
+\author{
+Caroline Ring
+}
+\keyword{httk-pop}
