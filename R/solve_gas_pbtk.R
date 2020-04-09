@@ -59,7 +59,7 @@
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
-#' @param dose Amount of a single dose, mg/kg BW. Overwrites daily.dose.
+#' @param dose Amount of a single dose, mg/kg BW. 
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
@@ -257,10 +257,15 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #certain periodicity and exposure concentration in default case, used if 
     #the 'forcings' argument is not otherwise specified.
     forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+      #Provide for case in which forcing functionality is effectively turned off
+      if (exp.conc == 0) {
+        conc.matrix = NULL
+      } else {
       Nrep <- ceiling((days - exp.start.time)/period) 
       times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
       y  <- rep(c(exp.conc,0), Nrep)
       conc.matrix = cbind(times,y)
+      }
       return(conc.matrix)
     }
     forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 

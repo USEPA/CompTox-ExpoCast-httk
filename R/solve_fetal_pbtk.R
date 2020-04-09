@@ -42,7 +42,7 @@
 #' @param days Length of the simulation.
 #' @param tsteps The number time steps per hour. Default of 4. 
 #' @param daily.dose Total daily dose, mg.
-#' @param dose Amount of a single dose, mg.  Overwrites daily.dose.
+#' @param dose Amount of a single dose, mg/kg BW.  
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -97,7 +97,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              parameters=NULL,
                              days=NULL,
                              tsteps = 4, # tsteps is number of steps per hour
-                             dose = 1, # Assume dose is mg/kg BW/day
+                             dose = NULL, 
                              dosing.matrix=NULL,
                              daily.dose = NULL,
                              doses.per.day=NULL,
