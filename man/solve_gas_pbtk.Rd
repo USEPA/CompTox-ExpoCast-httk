@@ -71,7 +71,7 @@ sequence begins at the beginning of times.}
 
 \item{doses.per.day}{Number of doses per day.}
 
-\item{dose}{Amount of a single dose, mg/kg BW. Overwrites daily.dose.}
+\item{dose}{Amount of a single dose, mg/kg BW.}
 
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in

@@ -12,7 +12,7 @@ solve_fetal_pbtk(
   parameters = NULL,
   days = NULL,
   tsteps = 4,
-  dose = 1,
+  dose = NULL,
   dosing.matrix = NULL,
   daily.dose = NULL,
   doses.per.day = NULL,
@@ -56,7 +56,7 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number time steps per hour. Default of 4.}
 
-\item{dose}{Amount of a single dose, mg.  Overwrites daily.dose.}
+\item{dose}{Amount of a single dose, mg/kg BW.}
 
 \item{dosing.matrix}{A matrix of either one column (or row) with a set of
 dosing times or with two columns (or rows) correspondingly named "dose" and
