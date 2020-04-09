@@ -354,13 +354,12 @@ solve_model <- function(chem.name = NULL,
   #Capture forcings argument from args passed to solve_model in ellipsis form,
   #in case a model is set to make use of the 'forcings' argument to the ode
   #function in dosing (which should in turn be passed with a name of
-  #'forcings'):
+  # "forcings"):
   forcings <- list(...)$forcings #NULL if forcings not specified
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (!any(!is.null(unique(c("initial.dose","dosing.matrix","daily.dose",
-        "doses.per.day", model.list[[model]]$dosing.params), forcings))))
+  if (!any(!is.null(c(dosing, model.list[[model]]$dosing.params, forcings))))
       dosing$initial.dose <- 1 #mg/kg BW
 
   #Scale dose into intended units
@@ -467,7 +466,7 @@ with two columns (time, dose).")
     outnames=derivative_output_names,
     events=list(data=eventdata),
     initforc = initforc,
-    forcings = forcings
+    forcings = forcings,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
