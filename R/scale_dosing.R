@@ -9,10 +9,10 @@
 #' @param dosing List of dosing metrics used in simulation, which must include
 #' the general entries with names "initial.dose", "doses.per.day", 
 #' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
-#' precise dose regimen specification, and is either a vector of dosing times
-#' or a matrix consisting of two columns or rows named "time" and "dose"
-#' containing the time and amount, in mg/kg BW, of each dose. 
-#' Minimal usage case of all entries but "initial.dose" set to NULL in value.
+#' precise dose regimen specification, and is a matrix consisting of two
+#' columns or rows named "time" and "dose" containing the time and amount,
+#' in mg/kg BW, of each dose. The minimal usage case involves all entries but
+#' "initial.dose" set to NULL in value.
 #' @param parameters  Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param route String specification of route of exposure for simulation:
