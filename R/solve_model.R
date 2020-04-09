@@ -359,8 +359,8 @@ solve_model <- function(chem.name = NULL,
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (!any(!is.null(c(dosing, model.list[[model]]$dosing.params, forcings))))
-      dosing$initial.dose <- 1 #mg/kg BW
+  if (!any(!is.null(c(unlist(dosing), forcings)))) 
+    dosing$initial.dose <- 1 #mg/kg BW
 
   #Scale dose into intended units
   dosing <- scale_dosing(dosing,parameters,route,output.units)
@@ -466,7 +466,6 @@ with two columns (time, dose).")
     outnames=derivative_output_names,
     events=list(data=eventdata),
     initforc = initforc,
-    forcings = forcings,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
