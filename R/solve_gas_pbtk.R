@@ -51,8 +51,8 @@
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param parameters Chemical parameters from parameterize_pbtk function,
-#' overrides chem.name and chem.cas.
+#' @param parameters Chemical parameters from parameterize_gas_pbtk (or other
+#' bespoke) function, overrides chem.name and chem.cas.
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param days Length of the simulation.
@@ -70,7 +70,7 @@
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to uM/L 
+#' 'forcings' data series argument for integrator. Defaults to umol/L 
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
