@@ -57,8 +57,8 @@ be specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters from parameterize_gas_pbtk (or other
+bespoke) function, overrides chem.name and chem.cas.}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -86,7 +86,7 @@ integrator, defaults to NULL}
 default 0.}
 
 \item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
+'forcings' data series argument for integrator. Defaults to umol/L}
 
 \item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}
