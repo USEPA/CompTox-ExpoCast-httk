@@ -10,7 +10,7 @@ NUM.SAMPLES <- 1e4
 # All chemicals with in vitro data:
 invitro.ids <- get_cheminfo(info="DTXSID")
 # Pull in the ADMet Predictions from Sipes (2017):
-load_sipes2017(load.image=T)
+load_sipes2017()
 insilico.ids <- get_cheminfo(info="DTXSID")
 insilico.ids <- insilico.ids[!is.na(insilico.ids)]
 insilico.ids <- insilico.ids[!(insilico.ids %in% invitro.ids)]
@@ -58,7 +58,7 @@ for (this.id in ids)
    {
      dashboard.table[dashboard.table$DTXSID==this.id,"Vd"] <- try(calc_vdist(chem.cas=this.cas))
      dashboard.table[dashboard.table$DTXSID==this.id,"Half.Life"] <- 
-       log(2)/try(calc_elimination_rate(chem.cas=this.cas))
+       signif(log(2)/try(calc_elimination_rate(chem.cas=this.cas)),3)
      dashboard.table[dashboard.table$DTXSID==this.id,"Days.to.Steady.State"] <- 
        try(calc_css(chem.cas=this.cas)$the.day)
    }
@@ -76,8 +76,29 @@ for (this.id in ids)
 dashboard.table$Human.Funbound.plasma <- 
   as.numeric(lapply(strsplit(dashboard.table$Human.Funbound.plasma,","),
     function(x) x[[1]]))
+# Drop the Wambaugh et al. (2019) confidence intervals:
+dashboard.table$Human.Clint <- 
+  as.numeric(lapply(strsplit(dashboard.table$Human.Clint,","),
+    function(x) x[[1]]))
+# Drop the Wambaugh et al. (2019) confidence intervals:
+dashboard.table$Funbound.plasma.Measured <- 
+  as.numeric(lapply(strsplit(dashboard.table$Funbound.plasma.Measured,","),
+    function(x) x[[1]]))
+# Drop the Wambaugh et al. (2019) confidence intervals:
+dashboard.table$Clint.Measured <- 
+  as.numeric(lapply(strsplit(dashboard.table$Clint.Measured,","),
+    function(x) x[[1]]))
  
-write.csv(dashboard.table,file=paste("Dashboard-HTTK-v",sessionInfo()$otherPkgs$httk$Version,"-mgL-",Sys.Date(),".txt",sep=""),row.names=F)
+write.table(
+  dashboard.table,
+  file=paste(
+    "Dashboard-HTTK-v",
+    sessionInfo()$otherPkgs$httk$Version,
+    "-mgL-",Sys.Date(),
+    ".txt",sep=""),
+  row.names=F,
+  quote=F,
+  sep="\t")
 
 # Columns:
 # DTXSID: Chemical Identifier
