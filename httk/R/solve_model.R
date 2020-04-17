@@ -118,6 +118,7 @@ solve_model <- function(chem.name = NULL,
                     model=NULL,
                     route="oral",
                     dosing=NULL,
+                    forcings=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
@@ -344,15 +345,16 @@ solve_model <- function(chem.name = NULL,
 ### DOSING
 
   # Parse the dosing parameter into recognized values:
-  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-    model.list[[model]]$dosing.params)) %in% 
-    names(dosing))) stop("Dosing descriptor(s) missing")
+#  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+#    model.list[[model]]$dosing.params)) %in% 
+#    names(dosing))) stop("Dosing descriptor(s) missing")
   # Scale into intended units
   dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
+
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -366,35 +368,47 @@ solve_model <- function(chem.name = NULL,
      else state[dose.var] <- initial.dose
   }
 
+# If there is no dosing matrix but the user provides sufficient info to create
+# one, then do so:
+  if (is.null(dosing.matrix))
+  {
+    if (route %in% c("oral","iv"))
+    {
+      if (is.null(doses.per.day) & is.null(daily.dose))
+      {
+# If we are simulating a single dose then we don't need eventdata:
+        eventdata <- NULL
+      } else {
+    # Either we are doing dosing at a constant interval:
+        if (is.null(dosing.matrix))
+        {
+          if (is.null(daily.dose)| is.null(doses.per.day)) {
+            stop("For oral and iv routes you must specify total
+              \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
+          }
+          
+          dose.times <- seq(start.time,
+                            end.time-1/doses.per.day,
+                            1/doses.per.day)
+          dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
+          dosing.matrix <- cbind(dose.vec,dose.times)
+          colnames(dosing.matrix) <- c("dose","time")
+        }
+      }   
+    } else eventdata <- NULL
+  } else {
+    if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
+    if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
+with two columns (time, dose).")
+  }
+  
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
 # any dosings beyond the initial dosing. 
-  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(daily.dose))
-  {
-# If we are simulating a single dose then we don't need eventdata:
-    eventdata <- NULL
-  } else {
-# Either we are doing dosing at a constant interval:
-    if (is.null(dosing.matrix))
-    {
-      if (is.null(daily.dose)) {stop("Must specify total
-\"daily.dose\" when \"doses.per.day\" is not set to NULL.")
-      }else if (is.null(doses.per.day)) {stop("Must specify total
-          \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
-      }
-      
-      dose.times <- seq(start.time,
-                        end.time-1/doses.per.day,
-                        1/doses.per.day)
-      dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
-# Or a matrix of doses (first col time, second col dose) has been specified:
-    } else {
-      if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
-      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
-with two columns (time, dose).")
-      dose.times <- dosing.matrix[,"time"]
-      dose.vec <- dosing.matrix[,"dose"]
-    }
+  if (!is.null(dosing.matrix))
+  {  
+    dose.times <- dosing.matrix[,"time"]
+    dose.vec <- dosing.matrix[,"dose"]
     num.doses <- length(dose.times)
     eventdata <- data.frame(var=rep(dose.var,num.doses),
                             time = round(dose.times,8),
@@ -406,7 +420,7 @@ with two columns (time, dose).")
     eventdata$time,
     eventdata$time+SMALL.TIME)))
   }  
-  
+    
 ### MODEL PARAMETERS FOR DESOLVE
 
   # Map the R parameters onto the names for the C code:
@@ -451,6 +465,7 @@ with two columns (time, dose).")
     outnames=derivative_output_names,
     events=list(data=eventdata),
     initforc = initforc,
+    forcings = forcings,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
