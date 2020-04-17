@@ -345,15 +345,3 @@ solve_gas_pbtk <- function(chem.name = NULL,
   return(out)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
