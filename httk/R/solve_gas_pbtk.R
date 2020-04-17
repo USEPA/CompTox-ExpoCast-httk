@@ -128,7 +128,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #'
-#' @author Matt Linakis, John Wambaugh, and Mark Sfeir
+#' @author Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 #'
 #' @references 
 #' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
@@ -141,13 +141,10 @@
 #'
 #' @examples
 #' 
-#' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
-#' 
-#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
-#' exp.duration = 6, exercise = TRUE)
+#' exp.duration = 8, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 #' solve_gas_pbtk(parameters=params)
@@ -166,6 +163,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            doses.per.day = NULL,
                            dose = NULL, #Assume single dose is in mg/kg BW/day
                            dosing.matrix = NULL,
+                           forcings = NULL, 
                            exp.start.time = 0, #default starting time in specifying forcing exposure
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
@@ -192,6 +190,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            VT = 0.75,
                            VD = 0.15,
                            ...)
+
+
 {
   
   #Screen against error in user's specification of forcing function timing
@@ -204,7 +204,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #Screen against case in which forcing function is specified, but output.units
   #are specified as other than 'uM'. Units of forcing function exposure 
   #concentration are only supported as 'uM' for now.
-  if ((!is.null(dosing.matrix) | exp.conc > 0) & tolower(output.units) != 'um') {
+  if ((!is.null(forcings) | exp.conc > 0) & tolower(output.units) != 'um') {
     stop('Forcings exposure data series not yet supported 
          in units other than uM.')
   }
@@ -241,43 +241,26 @@ solve_gas_pbtk <- function(chem.name = NULL,
   }
   
     #Screen for compatible input that goes on to specify forcing function data series. 
-#  if(is.null(forcings)) {
-#    if (exp.duration > period){
-#      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
-#      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-#      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
-#    }
-#    period <- period/24 #convert time period in hours to days
-#    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-#    
-#    #Assemble function for initializing 'forcings' argument data series with
-#    #certain periodicity and exposure concentration in default case, used if 
-#    #the 'forcings' argument is not otherwise specified.
-#    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-#      Nrep <- ceiling((days - exp.start.time)/period) 
-#      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-#      y  <- rep(c(exp.conc,0), Nrep)
-#      conc.matrix = cbind(times,y)
-#      return(conc.matrix)
-#    }
-#    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
-#  }
-  
-  if(is.null(dosing.matrix))
-  {
+  if(is.null(forcings)) {
     if (exp.duration > period){
-      stop('If not specifying \'dose.matrix\' data series explicitly, additional arguments are needed
-      to generate a \'dose.matrix\' argument with a cyclic exposure pattern across the simulation:
+      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
+      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
       exp.conc, period, exp.start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-    Nrep <- ceiling((days - exp.start.time)/period)
-# We want the start and stop timeS:
-    time <- sort(c(period * (0:(Nrep - 1)), # Start times
-      period * (0:(Nrep - 1))+exp.duration)) # End times
-    dose  <- rep(c(exp.conc,0), Nrep)
-    dosing.matrix = cbind(dose,time)
+    
+    #Assemble function for initializing 'forcings' argument data series with
+    #certain periodicity and exposure concentration in default case, used if 
+    #the 'forcings' argument is not otherwise specified.
+    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+      Nrep <- ceiling((days - exp.start.time)/period) 
+      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+      y  <- rep(c(exp.conc,0), Nrep)
+      conc.matrix = cbind(times,y)
+      return(conc.matrix)
+    }
+    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
   
   #Now make call to solve_model with gas model specific arguments configured 
@@ -319,6 +302,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
       VD = VD),
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     fcontrol = fcontrol,
+    forcings = forcings,
     ...)
   
   return(out)
