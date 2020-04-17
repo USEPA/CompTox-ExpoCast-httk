@@ -1,7 +1,5 @@
-# Add this model to the list of models:
-
 #Analytic expression for steady-state plasma concentration.
-#model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas"  <<<not yet implemented
+model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
 
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 

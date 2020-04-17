@@ -12,7 +12,7 @@ model.list <- list()
 #'be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #'be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#'@param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #''pbtk'), parameterize_3comp (for model = '3compartment), 
@@ -21,6 +21,12 @@ model.list <- list()
 #'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #'@param daily.dose Total daily dose, mg/kg BW.
+#' @param exp.conc Specified inhalation exposure concentration for use in assembling
+#' 'forcings' data series argument for integrator. Defaults to uM/L 
+#' @param period For use in assembling forcing function data series 'forcings'
+#' argument, specified in hours
+#' @param exp.duration For use in assembling forcing function data 
+#' series 'forcings' argument, specified in hours
 #'@param output.units Units for returned concentrations, defaults to uM 
 #'(specify units = "uM") but can also be mg/L.
 #'@param model Model used in calculation, 'pbtk' for the multiple compartment 
@@ -88,25 +94,32 @@ model.list <- list()
 #' 
 #'calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 #' 
+#'calc_analytic_css(chem.name="pyrene",model="gas_pbtk")
+#'
+#'calc_analytic_css(chem.cas="129-00-0",model="gas_pbtk")
+#' 
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
-#'@author Robert Pearce, John Wambaugh, and Greg Honda
+#'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
 #'@keywords Solve
 #'
-#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#'In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 #'
-#' @export calc_analytic_css
-#' @import methods
+#'@export calc_analytic_css
+#'@import methods
 calc_analytic_css <- function(chem.name=NULL,
                               chem.cas = NULL,
                               dtxsid = NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
+                              exp.conc = 1, #default exposure concentration for forcing data series
+                              period = 24,
+                              exp.duration = 24,
                               output.units='uM',
                               model = 'pbtk',
                               concentration='plasma',
@@ -146,7 +159,7 @@ calc_analytic_css <- function(chem.name=NULL,
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS/dtxsid, depending on what was provided:
     out <- get_chem_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
@@ -187,7 +200,7 @@ calc_analytic_css <- function(chem.name=NULL,
     concentration <- out[["concentration"]]
   }
     
-# If the hepatic metabolism is now slowed by plasma protein binding (non-
+# If the hepatic metabolism is not slowed by plasma protein binding (non-
 # restrictive clearance)  
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
@@ -229,16 +242,33 @@ calc_analytic_css <- function(chem.name=NULL,
   
   if (model %in% names(model.list))            
   {
-    Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-      chem.cas = chem.cas,
-      parameters=parameters,
-      hourly.dose=hourly.dose,
-      concentration=concentration,
-      suppress.messages=suppress.messages,
-      tissue=tissue,
-      restrictive.clearance=restrictive.clearance,
-      bioactive.free.invivo = bioactive.free.invivo),
-      list(...)))
+    if (model == "gas_pbtk"){
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        parameters=parameters,
+        exp.conc = exp.conc,
+        period = period,
+        exp.duration = exp.duration,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+      
+    } else if (model %in% c("pbtk","3compartmentss","1compartment"))
+      {
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        parameters=parameters,
+        hourly.dose=hourly.dose,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+    }
   } else {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
