@@ -45,7 +45,7 @@ calc_analytic_css_gas <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   dosing <- list(
+                                   dosing = list(
                                      exp.conc = 1, #default exposure concentration for forcing data series                              
                                      period = 24,
                                      exp.duration = 24
