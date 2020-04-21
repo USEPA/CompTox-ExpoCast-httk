@@ -39,7 +39,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing = list(hourly.dose=1/24),
                                    concentration='plasma',
                                    suppress.messages=F,
                                    recalc.blood2plasma=F,
@@ -94,6 +94,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
     }
   }
   
+  hourly.dose <- dosing$hourly.dose
   hourly.dose <- hourly.dose * parameters$Fgutabs
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
 

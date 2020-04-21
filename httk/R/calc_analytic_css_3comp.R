@@ -39,7 +39,8 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(
+                                     hourly.dose=1/24),
                                    concentration='plasma',
                                    suppress.messages=F,
                                    recalc.blood2plasma=F,
@@ -58,7 +59,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   
   param.names.3comp <- model.list[["3compartment"]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
-    
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -105,7 +106,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   }
   param.names.schmitt <- model.list[["schmitt"]]$param.names
 
-
+  hourly.dose <- dosing$hourly.dose
   hourly.dose <- hourly.dose * parameters$Fgutabs
   fup <- parameters$Funbound.plasma
   Rblood2plasma <- parameters$Rblood2plasma

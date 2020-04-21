@@ -213,3 +213,6 @@ model.list[["3compartment"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["3compartment"]]$exclude.fup.zero <- T
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["3compartment"]]$css.dosing.params <- c("hourly.dose")

@@ -117,6 +117,7 @@ calc_analytic_css <- function(chem.name=NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
+                              dosing = list(),
                               exp.conc = 1, #default exposure concentration for forcing data series
                               period = 24,
                               exp.duration = 24,
@@ -189,6 +190,14 @@ calc_analytic_css <- function(chem.name=NULL,
     }
   }
 
+# Make sure that we have all the dosing parameters that we need:
+  dosing.param.names <- model.list[[model]]$css.dosing.params
+  if (!all(dosing.param.names %in% dosing)) stop(paste(
+    "Model",
+    model,
+    "is missing steady-state dose parameters",
+    dosing.param.names[!(dosing.param.names %in% dosing)])
+
 # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
 # IVIVE parameters:
   if (!is.null(IVIVE)) 
@@ -242,33 +251,16 @@ calc_analytic_css <- function(chem.name=NULL,
   
   if (model %in% names(model.list))            
   {
-    if (model == "gas_pbtk"){
-      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-        chem.cas = chem.cas,
-        parameters=parameters,
-        exp.conc = exp.conc,
-        period = period,
-        exp.duration = exp.duration,
-        concentration=concentration,
-        suppress.messages=suppress.messages,
-        tissue=tissue,
-        restrictive.clearance=restrictive.clearance,
-        bioactive.free.invivo = bioactive.free.invivo),
-        list(...)))
-      
-    } else if (model %in% c("pbtk","3compartmentss","1compartment"))
-      {
-      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-        chem.cas = chem.cas,
-        parameters=parameters,
-        hourly.dose=hourly.dose,
-        concentration=concentration,
-        suppress.messages=suppress.messages,
-        tissue=tissue,
-        restrictive.clearance=restrictive.clearance,
-        bioactive.free.invivo = bioactive.free.invivo),
-        list(...)))
-    }
+    Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+      chem.cas = chem.cas,
+      parameters=parameters,
+      dosing = dosing,
+      concentration=concentration,
+      suppress.messages=suppress.messages,
+      tissue=tissue,
+      restrictive.clearance=restrictive.clearance,
+      bioactive.free.invivo = bioactive.free.invivo),
+      list(...)))
   } else {
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
