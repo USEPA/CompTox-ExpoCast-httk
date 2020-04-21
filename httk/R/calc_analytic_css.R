@@ -117,7 +117,8 @@ calc_analytic_css <- function(chem.name=NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
-                              dosing = list(),
+                              dosing=list(
+                                hourly.dose=1/24),
                               exp.conc = 1, #default exposure concentration for forcing data series
                               period = 24,
                               exp.duration = 24,
@@ -196,7 +197,7 @@ calc_analytic_css <- function(chem.name=NULL,
     "Model",
     model,
     "is missing steady-state dose parameters",
-    dosing.param.names[!(dosing.param.names %in% dosing)])
+    dosing.param.names[!(dosing.param.names %in% dosing)]))
 
 # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
 # IVIVE parameters:
