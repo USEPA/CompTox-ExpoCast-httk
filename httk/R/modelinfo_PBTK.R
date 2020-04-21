@@ -269,3 +269,6 @@ model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["pbtk"]]$css.dosing.params <- c("hourly.dose")

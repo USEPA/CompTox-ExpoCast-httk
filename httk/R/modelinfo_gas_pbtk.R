@@ -247,3 +247,7 @@ model.list[["gas_pbtk"]]$exclude.fup.zero <- T
   
 #Name of forcing function as it appears in .c model code for specification to ode solver
 model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
+
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")

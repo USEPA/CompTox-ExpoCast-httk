@@ -45,9 +45,11 @@ calc_analytic_css_gas <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   exp.conc = 1, #default exposure concentration for forcing data series
-                                   period = 24,
-                                   exp.duration = 24,
+                                   dosing <- list(
+                                     exp.conc = 1, #default exposure concentration for forcing data series                              
+                                     period = 24,
+                                     exp.duration = 24
+                                     ),
                                    concentration='plasma',
                                    suppress.messages=F,
                                    recalc.blood2plasma=F,
@@ -110,6 +112,10 @@ calc_analytic_css_gas <- function(chem.name=NULL,
     }
   }
   
+  exp.conc <- dosing$exp.conc
+  period <- dosing$period
+  exp.duration <- dosing$exp.duration
+ 
   Qcardiac <-  parameters[["Qcardiacc"]]/parameters[['BW']]^0.25
   Qgfr <-  parameters[["Qgfrc"]]/parameters[['BW']]^0.25
   Clmetabolism <-  parameters[["Clmetabolismc"]]
