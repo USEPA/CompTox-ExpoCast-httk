@@ -60,9 +60,11 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-# Expand on any provided chemical identifiers if possible:
-  if (any(!is.null(c(chem.cas, chem.name, dtxsid))) & 
-      (!all(!is.null(chem.cas, chem.name, dtxsid)))) {
+# Expand on any provided chemical identifiers if possible (if any but not
+# all chemical descriptors are NULL):
+  chem_id_list  = list(chem.cas, chem.name, dtxsid)
+  if (any(lapply(chem_id_list, is.null)) &
+      !all(lapply(chem_id_list, is.null))){
   out <- get_chem_id(
     chem.cas=chem.cas,
     chem.name=chem.name,

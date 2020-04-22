@@ -231,6 +231,8 @@ calc_analytic_css <- function(chem.name=NULL,
   {
     Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
       chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
       parameters=parameters,
       hourly.dose=hourly.dose,
       concentration=concentration,
