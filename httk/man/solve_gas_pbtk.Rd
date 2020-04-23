@@ -85,8 +85,9 @@ integrator, defaults to NULL}
 \item{exp.start.time}{Start time in specifying forcing exposure series,
 default 0.}
 
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to umol/L}
+\item{exp.conc}{Specified inhalation exposure concentration for use in 
+assembling "forcings" data series argument for integrator. Defaults to
+uM, in line with output.units}
 
 \item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}

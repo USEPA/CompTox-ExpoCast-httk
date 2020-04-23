@@ -69,8 +69,9 @@
 #' integrator, defaults to NULL
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
-#' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to umol/L 
+#' @param exp.conc Specified inhalation exposure concentration for use in 
+#' assembling "forcings" data series argument for integrator. Defaults to
+#' uM, in line with output.units
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
