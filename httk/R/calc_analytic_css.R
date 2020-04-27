@@ -193,7 +193,7 @@ calc_analytic_css <- function(chem.name=NULL,
 
 # Make sure that we have all the dosing parameters that we need:
   dosing.param.names <- model.list[[model]]$css.dosing.params
-  if (!all(dosing.param.names %in% dosing)) stop(paste(
+  if (!all(dosing.param.names %in% names(dosing))) stop(paste(
     "Model",
     model,
     "is missing steady-state dose parameters",
