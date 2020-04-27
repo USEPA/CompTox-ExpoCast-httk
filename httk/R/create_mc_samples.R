@@ -73,24 +73,11 @@
 #' Environment international 106 (2017): 105-118. 
 #'
 #' @keywords Monte-Carlo
-#'
-#' @examples
+#' 
+#' @examples 
 #' 
 #' \dontrun{
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
-#'              samples=100,return.samples=TRUE)
-#'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
-#' 
-#'  calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
-#'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
-#'                                                           lod = 0.005)),
-#'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-#'                                Qtotal.liverc = 0.15, 
-#'                                million.cells.per.gliver = 0.15, Clint = 0.15),
-#'              output.units = "uM", samples = 2000)
-#' 
-#'  params <- parameterize_pbtk(chem.cas="80-05-7")
-#'  calc_mc_css(parameters=params,model="pbtk")
+#' sample_set = create_mc_samples(chem.name = 'bisphenol a')
 #' }
 #'
 #' @import stats
@@ -421,5 +408,5 @@ Set species=\"Human\" to run httkpop model.')
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[,parameter.names,with=F])
+  return(parameters.dt[,model.list[[model]]$param.names,with=F])
 }
