@@ -4,7 +4,9 @@
 \name{Frank2018invivo}
 \alias{Frank2018invivo}
 \title{Literature In Vivo Data on Doses Causing Neurological Effects}
-\format{A data.frame containing 14 rows and 16 columns.}
+\format{
+A data.frame containing 14 rows and 16 columns.
+}
 \usage{
 Frank2018invivo
 }

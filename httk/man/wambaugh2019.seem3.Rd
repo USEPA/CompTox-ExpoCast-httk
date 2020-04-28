@@ -4,7 +4,9 @@
 \name{wambaugh2019.seem3}
 \alias{wambaugh2019.seem3}
 \title{ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates}
-\format{A data frame with 385 rows and 38 variables:}
+\format{
+A data frame with 385 rows and 38 variables:
+}
 \source{
 Wambaugh et al. (2019)
 }
