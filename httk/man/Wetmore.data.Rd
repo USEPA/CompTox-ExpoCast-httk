@@ -4,7 +4,9 @@
 \name{Wetmore.data}
 \alias{Wetmore.data}
 \title{Published toxicokinetic predictions based on in vitro data}
-\format{A data.frame containing 577 rows and 20 columns.}
+\format{
+A data.frame containing 577 rows and 20 columns.
+}
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.

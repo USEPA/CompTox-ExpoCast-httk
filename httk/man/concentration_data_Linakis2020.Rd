@@ -4,7 +4,9 @@
 \name{concentration_data_Linakis2020}
 \alias{concentration_data_Linakis2020}
 \title{Concentration data involved in Linakis 2020 vignette analysis.}
-\format{A data.frame containing x rows and y columns.}
+\format{
+A data.frame containing x rows and y columns.
+}
 \source{
 Matt Linakis
 }
