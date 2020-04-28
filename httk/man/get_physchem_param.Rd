@@ -17,10 +17,10 @@ get_physchem_param(param, chem.name = NULL, chem.cas = NULL, dtxsid = NULL)
 the chemical must be identified by either CAS, name, or DTXSIDs}
 }
 \value{
-The paramters, either a single value, a named list for a single chemical, or a list of lists
+The parameters, either a single value, a named list for a single chemical, or a list of lists
 }
 \description{
-This function retrives physico-chemical properties ("param") for the chemical specified 
+This function retrieves physico-chemical properties ("param") for the chemical specified 
 by chem.name or chem.cas from the vLiver tables.
 }
 \examples{

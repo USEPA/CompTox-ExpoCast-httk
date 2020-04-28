@@ -51,15 +51,15 @@
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param parameters Chemical parameters from parameterize_pbtk function,
-#' overrides chem.name and chem.cas.
+#' @param parameters Chemical parameters from parameterize_gas_pbtk (or other
+#' bespoke) function, overrides chem.name and chem.cas.
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
-#' @param dose Amount of a single dose, mg/kg BW. Overwrites daily.dose.
+#' @param dose Amount of a single dose, mg/kg BW. 
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
@@ -69,8 +69,9 @@
 #' integrator, defaults to NULL
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
-#' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to uM/L 
+#' @param exp.conc Specified inhalation exposure concentration for use in 
+#' assembling "forcings" data series argument for integrator. Defaults to
+#' uM, in line with output.units
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
@@ -94,7 +95,7 @@
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
-#' @param recalc.clearance Recalculates the the hepatic clearance
+#' @param recalc.clearance Recalculates the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
@@ -166,7 +167,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            doses.per.day = NULL,
                            dose = NULL, #Assume single dose is in mg/kg BW/day
                            dosing.matrix = NULL,
-                           forcings = NULL, 
                            exp.start.time = 0, #default starting time in specifying forcing exposure
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
@@ -193,8 +193,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            VT = 0.75,
                            VD = 0.15,
                            ...)
-
-
 {
   
   #Screen against error in user's specification of forcing function timing
@@ -207,7 +205,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #Screen against case in which forcing function is specified, but output.units
   #are specified as other than 'uM'. Units of forcing function exposure 
   #concentration are only supported as 'uM' for now.
-  if ((!is.null(forcings) | exp.conc > 0) & tolower(output.units) != 'um') {
+  if ((!is.null(dosing.matrix) | exp.conc > 0) & tolower(output.units) != 'um') {
     stop('Forcings exposure data series not yet supported 
          in units other than uM.')
   }
@@ -232,6 +230,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #get associated logHenry value and compare against glycerol's value, obtained
     #from EPA dashboard
     logHenry = chem.physical_and_invitro.data[chem.cas,'logHenry']
+    if (is.na(logHenry)) stop (
+"Henry's constant is not available for this compound")
     glycerol_logHenry = -7.80388
     if (logHenry <= glycerol_logHenry){ 
     warning("Henry's constant, as a measure of volatility, is smaller for the
@@ -242,10 +242,33 @@ solve_gas_pbtk <- function(chem.name = NULL,
   }
   
     #Screen for compatible input that goes on to specify forcing function data series. 
-  if(is.null(forcings)) {
+#  if(is.null(forcings)) {
+#    if (exp.duration > period){
+#      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
+#      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
+#      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
+#    }
+#    period <- period/24 #convert time period in hours to days
+#    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
+#    
+#    #Assemble function for initializing 'forcings' argument data series with
+#    #certain periodicity and exposure concentration in default case, used if 
+#    #the 'forcings' argument is not otherwise specified.
+#    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+#      Nrep <- ceiling((days - exp.start.time)/period) 
+#      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+#      y  <- rep(c(exp.conc,0), Nrep)
+#      conc.matrix = cbind(times,y)
+#      return(conc.matrix)
+#    }
+#    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
+#  }
+  
+  if(is.null(dosing.matrix))
+  {
     if (exp.duration > period){
-      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
-      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
+      stop('If not specifying \'dose.matrix\' data series explicitly, additional arguments are needed
+      to generate a \'dose.matrix\' argument with a cyclic exposure pattern across the simulation:
       exp.conc, period, exp.start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days
@@ -255,68 +278,71 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #certain periodicity and exposure concentration in default case, used if 
     #the 'forcings' argument is not otherwise specified.
     forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+      #Provide for case in which forcing functionality is effectively turned off
+      if (exp.conc == 0) {
+        conc.matrix = NULL
+      } else {
       Nrep <- ceiling((days - exp.start.time)/period) 
       times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
       y  <- rep(c(exp.conc,0), Nrep)
       conc.matrix = cbind(times,y)
+      }
       return(conc.matrix)
     }
     forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
+      
+      #Comment out tentative alternate scheme to forcings for now
+      ###
+    #Nrep <- ceiling((days - exp.start.time)/period)
+# We want the start and stop timeS:
+    #time <- sort(c(period * (0:(Nrep - 1)), # Start times
+      #period * (0:(Nrep - 1))+exp.duration)) # End times
+    #dose  <- rep(c(exp.conc,0), Nrep)
+    #dosing.matrix = cbind(dose,time)
+      ###
   }
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
-  chem.name = chem.name,
-  chem.cas = chem.cas,
-  dtxsid=dtxsid,
-  times=times,
-  parameters=parameters,
-  model="gas_pbtk",
-  route='inhalation',
-  dosing=list(
-    initial.dose=dose,
-    dosing.matrix=dosing.matrix,
-    daily.dose=daily.dose,
-    doses.per.day=doses.per.day
-  ),
-  days=days,
-  tsteps = tsteps, # tsteps is number of steps per hour
-  initial.values=initial.values,
-  plots=plots,
-  monitor.vars=monitor.vars,
-  suppress.messages=suppress.messages,
-  species=species,
-  output.units=output.units,
-  method=method,rtol=rtol,atol=atol,
-  recalc.blood2plasma=recalc.blood2plasma,
-  recalc.clearance=recalc.clearance,
-  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-  parameterize.arg.list = list(regression=regression,
-                               default.to.human=default.to.human,
-                               restrictive.clearance = restrictive.clearance,
-                               exercise = exercise,
-                               vmax = vmax,
-                               km = km,
-                               fR = fR,
-                               VT = VT,
-                               VD = VD),
-  minimum.Funbound.plasma=minimum.Funbound.plasma,
-  fcontrol = fcontrol,
-  forcings = forcings,
-  ...)
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    dtxsid=dtxsid,
+    times=times,
+    parameters=parameters,
+    model="gas_pbtk",
+    route='inhalation',
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day
+    ),
+    days=days,
+    tsteps = tsteps, # tsteps is number of steps per hour
+    initial.values=initial.values,
+    plots=plots,
+    monitor.vars=monitor.vars,
+    suppress.messages=suppress.messages,
+    species=species,
+    output.units=output.units,
+    method=method,rtol=rtol,atol=atol,
+    recalc.blood2plasma=recalc.blood2plasma,
+    recalc.clearance=recalc.clearance,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    parameterize.arg.list = list(
+      regression=regression,
+      default.to.human=default.to.human,
+      restrictive.clearance = restrictive.clearance,
+      exercise = exercise,
+      vmax = vmax,
+      km = km,
+      fR = fR,
+      VT = VT,
+      VD = VD),
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    fcontrol = fcontrol,
+    ...)
   
   return(out)
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

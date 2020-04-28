@@ -1,5 +1,12 @@
 News for R package httk
 
+Changes in version 2.0.1 (February 28, 2020)
+  New function set_httk_precision is now used throughout code to enforce a standard set of significant figures (4) and precision (nothing less than 1e-9).
+  Added calc_hepatic_clearance wrapper function for calc_hep_clearance to allow backwards compatibility
+  Fixed output of calc_mc_oral_equivalent (was sometimes returning all samples unasked, thank you Dan Dawson)
+  Revised get_chemid to not crash in certain cases (thank you, Shannon Bell)
+  Revised Linakis et al. (submitted) vignette
+
 Changes in version 2.0.0 (February 10, 2020)
  	New generic inhalation PBPK model included, consistent with Linakis et al. (submitted) "Development and Evaluation of a High Throughput Inhalation Model for Organic Chemicals"
   New chemical specific parameters for volatile chemicals have been added:
@@ -24,7 +31,7 @@ Changes in version 2.0.0 (February 10, 2020)
     convert_httkpop_*: Model-specific functions for converting HTTK-pop 
       biometrics to model parameters
   EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see http://comptox.epa.gov/dashboard/) now work as chemical identifiers in addition to name and CAS.
-  Results now truncated to appropriate significant figures.
+  Results now truncated to appropriate significant figures (4) and precision (1e-12).
   Beta testing and bug reports provided by Xiaoqing Chang.
   New physiological parameters have been added for monkeys
   To decrease package size the load image option of load_sipes2017 was eliminated

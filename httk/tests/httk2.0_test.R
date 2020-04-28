@@ -27,16 +27,6 @@ solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
   dosing.matrix=NULL))[190:205,]
 solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 
-length(get_cheminfo())
-length(get_cheminfo(species="rat"))
-length(get_cheminfo(model="pbtk"))
-length(get_cheminfo(model="pbtk",species="rat"))
-length(get_cheminfo(info="all"))
-length(get_cheminfo(model="schmitt"))
-length(get_cheminfo(model="schmitt",species="rat"))
-length(get_cheminfo(model="1compartment"))
-length(get_cheminfo(model="1compartment",species="rat"))
-
 
 calc_analytic_css(chem.name="Betaxolol")
 calc_analytic_css(chem.name="Tacrine",model="pbtk")

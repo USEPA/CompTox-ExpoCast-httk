@@ -51,8 +51,7 @@ filtered from kidney and excreted.} \item{Rblood2plasma}{The ratio of the
 concentration of the chemical in the blood to the concentration in the
 plasma from available_rblood2plasma.} \item{Vartc}{Volume of the arteries
 per kg body weight, L/kg BW.} \item{Vgutc}{Volume of the gut per kg body
-weight, L/kg BW.} \item{Vfgutc}{Volume of the fetal gut per kg body weight,
-L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
+weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
 BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
