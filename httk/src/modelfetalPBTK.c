@@ -371,7 +371,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qplacenta = 24 * 0.059176 * 1000 * Vplacenta ;
 
-  Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
+  Qadipose = Qadipose = 0.01 * ( 8.5 + ( 7.8 - 8.5 ) / 40.0 * yout[ID_tw] ) * Qcardiac ;
 
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
@@ -389,7 +389,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qflung = Qfrvtl - Qfda ;
 
-  Qfplacenta = 60 * 24 * 0.001 * 262.20 / ( 1 + exp ( -0.22183 * ( yout[ID_tw] - 28.784 ) ) ) ;
+  Qfplacenta = 60 * 24 * 0.001 * 262.20 / ( 1 + exp ( -0.22183 * ( yout[ID_tw] - 28.784 ) ) )  ;
 
   Qfdv = 60 * 24 * 0.001 * 1.892 * exp ( 0.098249 / 0.0064374 * ( 1 - exp ( -0.0064374 * yout[ID_tw] ) ) ) ;
 

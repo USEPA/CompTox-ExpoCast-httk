@@ -101,7 +101,21 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
   if (!is.null(tissue))
   {
 # Need to convert to Schmitt parameters:
-    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
+    #The parameters used in predict_partitioning_schmitt may be a compound
+    #data.table/data.frame or list object, however, depending on the source 
+    #of the parameters. In calc_mc_css, for example, parameters is received 
+    #as a "data.table" object. Screen for processing appropriately.
+    if (any(class(parameters) == "data.table")){
+      pcs <- predict_partitioning_schmitt(parameters =
+            parameters[, param.names.schmitt[param.names.schmitt %in% 
+                                             names(parameters)], with = F])
+    }else if (class(parameters) == "list") {
+      pcs <- predict_partitioning_schmitt(parameters =
+         parameters[param.names.schmitt[param.names.schmitt %in% 
+                                    names(parameters)]])
+    }else stop('httk is only configured to process parameters as objects of 
+               class list or class compound data.table/data.frame.')
+      
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {

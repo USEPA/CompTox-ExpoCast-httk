@@ -3,7 +3,6 @@
 #' This function solves for the amounts or concentrations of a chemical in
 #' different tissues as functions of time based on the dose and dosing
 #' frequency.  It uses a three compartment model with partition coefficients.
-#'  function does. ~~
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
@@ -105,7 +104,7 @@ solve_3comp <- function(chem.name = NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     daily.dose = NULL, # Assume dose is in mg/kg BW/day
-                    dose = 1,
+                    dose = NULL,
                     doses.per.day=NULL,
                     initial.values=NULL,
                     plots=F,

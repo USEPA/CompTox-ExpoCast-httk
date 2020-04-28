@@ -81,5 +81,5 @@ calc_hep_fu <- function(
 # Vectorized check to keep fu_hep within bounds:
   fu_hep[fu_hep <0 | fu_hep>1] <- 1
   
-  return(fu_hep)
+  return(set_httk_precision(fu_hep))
 }
