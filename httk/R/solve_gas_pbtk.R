@@ -205,10 +205,10 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #Screen against case in which forcing function is specified, but output.units
   #are specified as other than 'uM'. Units of forcing function exposure 
   #concentration are only supported as 'uM' for now.
-  if ((!is.null(dosing.matrix) | exp.conc > 0) & tolower(output.units) != 'um') {
-    stop('Forcings exposure data series not yet supported 
-         in units other than uM.')
-  }
+  #if ((!is.null(dosing.matrix) | exp.conc > 0) & tolower(output.units) != 'um') {
+    #stop('Forcings exposure data series not yet supported 
+      #   in units other than uM.')
+  #}
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
