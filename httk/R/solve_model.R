@@ -302,6 +302,9 @@ solve_model <- function(chem.name = NULL,
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
 
+# Molecular weight:
+  MW <- parameters[["MW"]]
+
 ### STATE VECTOR
 
 # create the default initial state vector:
@@ -558,5 +561,5 @@ Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
       " * days units with Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
   }
     
-  return(out) 
+  return(set_httk_precision(out)) 
 }
