@@ -5,20 +5,18 @@
 #' bodily compartments of a given available species (either "Rat", "Rabbit",
 #' "Dog", "Mouse", or default "Human").
 #' 
-#' At a minimum, a chemical identifier (whether name, CAS number, or other
-#' chemical parameterization), model system of interest ("pbtk",
-#' "3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
-#' dosing regimen must be provided for solve_model to run its toxicokinetic
-#' simulations. See 'dosing' argument listing below for breakdown of how to
-#' specify dose (in terms of route of administration, frequency, and quantity)
+#' The minimal usage case requires input that includes a chemical identifier
+#' (whether name, CAS number, or other chemical parameterization) and a model
+#' system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
+#' "schmitt", ...).
 #' 
-#' Note that the model parameters have units of hours while the model output is
-#' in days.
-#' 
-#' The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
-#' kidneys, veins, arteries, lungs, and the rest of the body. The extra
-#' compartments include the amounts or concentrations metabolized by
-#' the liver and excreted by the kidneys through the tubules.
+#' The 'dosing' argument includes all parameters needed to describe exposure
+#' in terms of route of administration, frequency, and quantity short of 
+#' scenarios that require use of a more precise forcing function. If the dosing
+#' argument's namesake entries are left NULL, solve_model defaults to a
+#' single-time dose of 1 mg/kg BW according to the given dosing route and 
+#' associated type (either add/multiply, e.g. typically adds dose to gut lumen 
+#' when oral route is specified).
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
@@ -51,13 +49,15 @@
 #' "3compartmentss", "1compartment", "schmitt", ...
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
-#' @param dosing List of dosing metrics used in simulation, which must include
-#' the general entries with names "initial.dose", "doses.per.day", 
-#' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
-#' precise dose regimen specification, and is either a vector of dosing times
-#' or a matrix consisting of two columns or rows named "time" and "dose"
-#' containing the time and amount, in mg/kg BW, of each dose. 
-#' Minimal usage case of all entries but "initial.dose" set to NULL in value.
+#' @param dosing List of dosing metrics passed to solver for a given model,
+#' which must at least include entries with names "initial.dose", 
+#' "doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
+#' be used for more precise dose regimen specification, and is a matrix
+#' consisting of two columns or rows named "time" and "dose" which contain the
+#' time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
+#' of the dosing list is set to a non-NULL value, solve_model uses a default
+#' dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
+#' a given route (e.g. add the dose to gut lumen for oral route)
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
@@ -65,8 +65,9 @@
 #' output.units.  Defaults are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").
+#' @param species Species desired (models have been designed to be
+#' parameterized for some subset of the following species: "Rat", "Rabbit", 
+#' "Dog", "Mouse", or default "Human").
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
 #' @param method Method used by integrator (deSolve).
@@ -118,7 +119,6 @@ solve_model <- function(chem.name = NULL,
                     model=NULL,
                     route="oral",
                     dosing=NULL,
-                    forcings=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
@@ -143,9 +143,7 @@ solve_model <- function(chem.name = NULL,
 # to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
   firstchar <- function(x){substr(x, 1,1)}
-   
-# Small time delta for plotting changes:
-  SMALL.TIME <- 1e-5   
+  
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -202,6 +200,7 @@ solve_model <- function(chem.name = NULL,
 # it appears in model's associated .c file for passing to integrator
     initforc <- model.list[[model]]$initforc
   }
+  
 
 ### ERROR CHECKING
 
@@ -331,10 +330,13 @@ solve_model <- function(chem.name = NULL,
   }
 ### SIMULATION TIME
 
+# Small time delta for plotting changes:
+  SMALL.TIME <- 1e-5  
+  
 # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   times <- sort(times)
-  start.time <- 0 # Simulation always starts at t = 0
+  start.time <- times[1]
   end.time <- times[length(times)]
 
   # We add a time point 1e-5 later than the beginning to make the plots look
@@ -345,16 +347,27 @@ solve_model <- function(chem.name = NULL,
 ### DOSING
 
   # Parse the dosing parameter into recognized values:
-#  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-#    model.list[[model]]$dosing.params)) %in% 
-#    names(dosing))) stop("Dosing descriptor(s) missing")
-  # Scale into intended units
+  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+    model.list[[model]]$dosing.params)) %in% 
+    names(dosing))) stop("Dosing descriptor(s) missing")
+  
+  #Capture forcings argument from args passed to solve_model in ellipsis form,
+  #in case a model is set to make use of the 'forcings' argument to the ode
+  #function in dosing (which should in turn be passed with a name of
+  # "forcings"):
+  forcings <- list(...)$forcings #NULL if forcings not specified
+  
+  #Provide default, somewhat arbitrary, single-time dosing case of
+  #1 mg/kg BW for when no dosing is specified by user.
+  if (all(lapply(dosing, is.null)) & is.null(forcings)) 
+    dosing$initial.dose <- 1 #mg/kg BW
+
+  #Scale dose into intended units
   dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -368,47 +381,35 @@ solve_model <- function(chem.name = NULL,
      else state[dose.var] <- initial.dose
   }
 
-# If there is no dosing matrix but the user provides sufficient info to create
-# one, then do so:
-  if (is.null(dosing.matrix))
-  {
-    if (route %in% c("oral","iv"))
-    {
-      if (is.null(doses.per.day) & is.null(daily.dose))
-      {
-# If we are simulating a single dose then we don't need eventdata:
-        eventdata <- NULL
-      } else {
-    # Either we are doing dosing at a constant interval:
-        if (is.null(dosing.matrix))
-        {
-          if (is.null(daily.dose)| is.null(doses.per.day)) {
-            stop("For oral and iv routes you must specify total
-              \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
-          }
-          
-          dose.times <- seq(start.time,
-                            end.time-1/doses.per.day,
-                            1/doses.per.day)
-          dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
-          dosing.matrix <- cbind(dose.vec,dose.times)
-          colnames(dosing.matrix) <- c("dose","time")
-        }
-      }   
-    } else eventdata <- NULL
-  } else {
-    if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
-    if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
-with two columns (time, dose).")
-  }
-  
 # eventdata is the deSolve object specifying "events" where the simulation 
 # stops and variables are potentially changed. We use this object to perform 
 # any dosings beyond the initial dosing. 
-  if (!is.null(dosing.matrix))
-  {  
-    dose.times <- dosing.matrix[,"time"]
-    dose.vec <- dosing.matrix[,"dose"]
+  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(daily.dose))
+  {
+# If we are simulating a single dose then we don't need eventdata:
+    eventdata <- NULL
+  } else {
+# Either we are doing dosing at a constant interval:
+    if (is.null(dosing.matrix))
+    {
+      if (is.null(daily.dose)) {stop("Must specify total
+\"daily.dose\" when \"doses.per.day\" is not set to NULL.")
+      }else if (is.null(doses.per.day)) {stop("Must specify total
+          \"doses.per.day\" when \"daily.dose\" is not set to NULL.")
+      }
+      
+      dose.times <- seq(start.time,
+                        end.time-1/doses.per.day,
+                        1/doses.per.day)
+      dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
+# Or a matrix of doses (first col time, second col dose) has been specified:
+    } else { #Do some screening on the dosing.matrix's contents first.
+      if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
+      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
+with two columns (time, dose).")
+      dose.times <- dosing.matrix[,"time"]
+      dose.vec <- dosing.matrix[,"dose"]
+    }
     num.doses <- length(dose.times)
     eventdata <- data.frame(var=rep(dose.var,num.doses),
                             time = round(dose.times,8),
@@ -420,7 +421,7 @@ with two columns (time, dose).")
     eventdata$time,
     eventdata$time+SMALL.TIME)))
   }  
-    
+  
 ### MODEL PARAMETERS FOR DESOLVE
 
   # Map the R parameters onto the names for the C code:
@@ -465,7 +466,6 @@ with two columns (time, dose).")
     outnames=derivative_output_names,
     events=list(data=eventdata),
     initforc = initforc,
-    forcings = forcings,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
@@ -501,13 +501,14 @@ with two columns (time, dose).")
     
     for (var in 1:vars_monitored) {
       if (firstchar(monitor.vars[var]) == 'A') {
-        if (monitor.vars[var] == 'AUC') {
+        if (substr(monitor.vars[var], start=1, stop=3) == 'AUC') {
           plot_units_vector[var] = paste(output.units,'* days')
         } else plot_units_vector[var] = out.amount
       } else if (firstchar(monitor.vars[var]) == 'C') {
         plot_units_vector[var] = output.units
       } else stop("State and output variables to be monitored must begin with
-                  \"C\" or \"A\" to denote concentrations or amounts, respectively.")
+                  \"C\", \"A\", or \"AUC\" to denote concentrations, amounts,
+                  or areas under the curve, respectively.")
     }
     
    
@@ -518,6 +519,14 @@ with two columns (time, dose).")
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
 
+
+# Convert from uM to mg/l if requested
+  if (tolower(output.units)=='mg/l')
+  { 
+    time.index <- which(colnames(out)=="time")
+    out[,-time.index] <- out[,-time.index] * 1e3 * MW / 1e6 # uM -> mg/L
+  }
+  
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
