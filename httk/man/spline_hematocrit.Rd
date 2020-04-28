@@ -5,13 +5,15 @@
 \alias{spline_hematocrit}
 \title{Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
 race and gender.}
-\format{A data.table with 6 variables: \describe{ \item{\code{gender}}{Gender:
+\format{
+A data.table with 6 variables: \describe{ \item{\code{gender}}{Gender:
  Male or Female} \item{\code{reth}}{Race/ethnicity: Mexican American, Other
  Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
  \item{\code{hct_spline}}{A list of smooth.spline objects, each giving a
  smoothed relationship between log hematocrit and age in months}
  \item{\code{hct_kde}}{A list of kde objects; each is a KDE of the
- distribution of residuals about the smoothing spline.}}}
+ distribution of residuals about the smoothing spline.}}
+}
 \usage{
 spline_hematocrit
 }

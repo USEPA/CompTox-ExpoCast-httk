@@ -4,7 +4,9 @@
 \name{howgate}
 \alias{howgate}
 \title{Howgate 2006}
-\format{A data.table containing 24 rows and 11 columns.}
+\format{
+A data.table containing 24 rows and 11 columns.
+}
 \usage{
 howgate
 }

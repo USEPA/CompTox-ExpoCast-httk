@@ -60,7 +60,7 @@ bioactive in vivo. Only works with \code{tissue = NULL} in current implementatio
 parameters is NULL.}
 }
 \value{
-Steady state concentration in uM units
+Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 

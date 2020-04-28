@@ -4,7 +4,8 @@
 \name{mcnally_dt}
 \alias{mcnally_dt}
 \title{Reference tissue masses and flows from tables in McNally et al. 2014.}
-\format{A data.table with variables: \describe{\item{\code{tissue}}{Body
+\format{
+A data.table with variables: \describe{\item{\code{tissue}}{Body
   tissue} \item{\code{gender}}{Gender: Male or Female}
   \item{\code{mass_ref}}{Reference mass in kg, from Reference Man}
   \item{\code{mass_cv}}{Coefficient of variation for mass}
@@ -14,7 +15,8 @@
   distributed)} \item{\code{height_ref}}{Reference heights (by gender)}
   \item{\code{CO_ref}}{Reference cardiac output by gender}
   \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
-  \code{flow_ref}/\code{CO_ref}}}}
+  \code{flow_ref}/\code{CO_ref}}}
+}
 \source{
 McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
   population generator." Toxicology 315, 70-85, 2004.
