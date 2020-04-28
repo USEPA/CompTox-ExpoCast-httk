@@ -13,12 +13,12 @@
 #' equal to the mean times the cv.
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each paramter). This argument should
+#' of detection (specified separately for each parameter). This argument should
 #' be a list of sub-lists. Each sublist is named for a parameter in "params"
 #' and contains two elements: "cv" (coefficient of variation) and "LOD" (limit
 #' of detection), below which parameter values are censored. New values are
 #' sampled with mean equal to the value in "params" and standard deviation
-#' equal to the mean times the cv.Censored values are sampled on a uniform
+#' equal to the mean times the cv. Censored values are sampled on a uniform
 #' distribution between 0 and the limit of detection.
 #' @param samples This argument is the number of samples to be generated for
 #' calculating quantiles.

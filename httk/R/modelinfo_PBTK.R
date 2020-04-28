@@ -64,7 +64,8 @@ model.list[["pbtk"]]$param.names <- c(
   "Vvenc")
                     
 # This subset of R parameters are needed to initially parametrize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code)
+# code for the solver: (must match ORDER under "parameters" in C code, even if 
+# some items are omitted)
 model.list[["pbtk"]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
@@ -163,8 +164,8 @@ model.list[["pbtk"]]$derivative.output.names <- c(
   )
 
 
-#list of variables to be monitored (plotted). Should be able to be constructed
-#from states and outputs. 
+#list of variables to be monitored (plotted). This list should be able to be
+#constructed from states and outputs. 
 model.list[["pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",

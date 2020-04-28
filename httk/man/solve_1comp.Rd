@@ -13,7 +13,7 @@ solve_1comp(
   days = 10,
   tsteps = 4,
   daily.dose = NULL,
-  dose = 1,
+  dose = NULL,
   doses.per.day = NULL,
   initial.values = NULL,
   plots = F,
@@ -57,7 +57,7 @@ overrides chem.name and chem.cas.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
+\item{dose}{Amount of a single dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
