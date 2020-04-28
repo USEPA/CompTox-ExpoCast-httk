@@ -1,7 +1,7 @@
 #Initialize model.list to be fleshed out in the model info files and elsewhere. 
 model.list <- list()
 
-#'Calculate the analytic steady state concentration.
+#'Calculate the analytic steady state plasma concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing for the three compartment and 
@@ -56,7 +56,7 @@ model.list <- list()
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
-#'@return Steady state concentration
+#'@return Steady state plasma concentration in specified units
 #'
 #'@details Concentrations are calculated for the specifed model with constant 
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 

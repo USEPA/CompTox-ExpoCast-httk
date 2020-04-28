@@ -1,4 +1,4 @@
-#'Calculate the analytic steady state concentration for model pbtk.
+#'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing.
@@ -31,7 +31,7 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords pbtk
