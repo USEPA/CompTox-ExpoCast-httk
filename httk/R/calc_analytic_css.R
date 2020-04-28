@@ -1,7 +1,7 @@
 #Initialize model.list to be fleshed out in the model info files and elsewhere. 
 model.list <- list()
 
-#'Calculate the analytic steady state concentration.
+#'Calculate the analytic steady state plasma concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing for the three compartment and 
@@ -12,7 +12,7 @@ model.list <- list()
 #'be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #'be specified.
-#'@param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #''pbtk'), parameterize_3comp (for model = '3compartment), 
@@ -21,12 +21,6 @@ model.list <- list()
 #'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #'@param daily.dose Total daily dose, mg/kg BW.
-#' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to uM/L 
-#' @param period For use in assembling forcing function data series 'forcings'
-#' argument, specified in hours
-#' @param exp.duration For use in assembling forcing function data 
-#' series 'forcings' argument, specified in hours
 #'@param output.units Units for returned concentrations, defaults to uM 
 #'(specify units = "uM") but can also be mg/L.
 #'@param model Model used in calculation, 'pbtk' for the multiple compartment 
@@ -62,7 +56,7 @@ model.list <- list()
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
-#'@return Steady state concentration
+#'@return Steady state plasma concentration in specified units
 #'
 #'@details Concentrations are calculated for the specifed model with constant 
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 
@@ -94,15 +88,11 @@ model.list <- list()
 #' 
 #'calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 #' 
-#'calc_analytic_css(chem.name="pyrene",model="gas_pbtk")
-#'
-#'calc_analytic_css(chem.cas="129-00-0",model="gas_pbtk")
-#' 
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
-#'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
+#'@author Robert Pearce, John Wambaugh, and Greg Honda
 #'
 #'@keywords Solve
 #'
@@ -117,11 +107,6 @@ calc_analytic_css <- function(chem.name=NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
-                              dosing=list(
-                                hourly.dose=1/24),
-                              exp.conc = 1, #default exposure concentration for forcing data series
-                              period = 24,
-                              exp.duration = 24,
                               output.units='uM',
                               model = 'pbtk',
                               concentration='plasma',
@@ -191,14 +176,6 @@ calc_analytic_css <- function(chem.name=NULL,
     }
   }
 
-# Make sure that we have all the dosing parameters that we need:
-  dosing.param.names <- model.list[[model]]$css.dosing.params
-  if (!all(dosing.param.names %in% names(dosing))) stop(paste(
-    "Model",
-    model,
-    "is missing steady-state dose parameters",
-    dosing.param.names[!(dosing.param.names %in% dosing)]))
-
 # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
 # IVIVE parameters:
   if (!is.null(IVIVE)) 
@@ -254,8 +231,10 @@ calc_analytic_css <- function(chem.name=NULL,
   {
     Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
       chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
       parameters=parameters,
-      dosing = dosing,
+      hourly.dose=hourly.dose,
       concentration=concentration,
       suppress.messages=suppress.messages,
       tissue=tissue,
