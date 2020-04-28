@@ -82,8 +82,8 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
-be a list of sub-lists. Each sublist is named for a parameter in
+of detection (specified separately for each parameter). This argument should
+be a list of sublists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New
 values are sampled with mean equal to the value in "parameters" and standard
@@ -101,7 +101,7 @@ equal to the mean times the CV. Not used with httkpop model.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{tissue}{Desired steady state tissue conentration.}
+\item{tissue}{Desired steady state tissue concentration.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
@@ -129,7 +129,7 @@ All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data (volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 Tissue concentrations are calculated for the pbtk model with a default oral
@@ -137,7 +137,7 @@ infusion dosing. All tissues other than gut, liver, and lung are the product
 of the steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -154,7 +154,7 @@ used by this function.
 
 \dontrun{
  set.seed(1234)
- calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
+ calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)
  set.seed(1234)
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')

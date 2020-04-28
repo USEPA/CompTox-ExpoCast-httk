@@ -6,12 +6,17 @@
 #' "Dog", "Mouse", or default "Human").
 #' 
 #' The minimal usage case requires input that includes a chemical identifier
-#' (whether name, CAS number, or other chemical parameterization), model system
-#' of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
-#' "schmitt", ...), and dosing regimen. See 'dosing' argument listing below for
-#' breakdown of how to specify dose (in terms of route of administration,
-#' frequency, and quantity).
+#' (whether name, CAS number, or other chemical parameterization) and a model
+#' system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
+#' "schmitt", ...).
 #' 
+#' The 'dosing' argument includes all parameters needed to describe exposure
+#' in terms of route of administration, frequency, and quantity short of 
+#' scenarios that require use of a more precise forcing function. If the dosing
+#' argument's namesake entries are left NULL, solve_model defaults to a
+#' single-time dose of 1 mg/kg BW according to the given dosing route and 
+#' associated type (either add/multiply, e.g. typically adds dose to gut lumen 
+#' when oral route is specified).
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
@@ -44,13 +49,15 @@
 #' "3compartmentss", "1compartment", "schmitt", ...
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
-#' @param dosing List of dosing metrics used in simulation, which must include
-#' the general entries with names "initial.dose", "doses.per.day", 
-#' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
-#' precise dose regimen specification, and is either a vector of dosing times
-#' or a matrix consisting of two columns or rows named "time" and "dose"
-#' containing the time and amount, in mg/kg BW, of each dose. 
-#' Minimal usage case of all entries but "initial.dose" set to NULL in value.
+#' @param dosing List of dosing metrics passed to solver for a given model,
+#' which must at least include entries with names "initial.dose", 
+#' "doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
+#' be used for more precise dose regimen specification, and is a matrix
+#' consisting of two columns or rows named "time" and "dose" which contain the
+#' time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
+#' of the dosing list is set to a non-NULL value, solve_model uses a default
+#' dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
+#' a given route (e.g. add the dose to gut lumen for oral route)
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
@@ -193,6 +200,7 @@ solve_model <- function(chem.name = NULL,
 # it appears in model's associated .c file for passing to integrator
     initforc <- model.list[[model]]$initforc
   }
+  
 
 ### ERROR CHECKING
 
@@ -342,7 +350,19 @@ solve_model <- function(chem.name = NULL,
   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
     model.list[[model]]$dosing.params)) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
-  # Scale into intended units
+  
+  #Capture forcings argument from args passed to solve_model in ellipsis form,
+  #in case a model is set to make use of the 'forcings' argument to the ode
+  #function in dosing (which should in turn be passed with a name of
+  # "forcings"):
+  forcings <- list(...)$forcings #NULL if forcings not specified
+  
+  #Provide default, somewhat arbitrary, single-time dosing case of
+  #1 mg/kg BW for when no dosing is specified by user.
+  if (all(lapply(dosing, is.null)) & is.null(forcings)) 
+    dosing$initial.dose <- 1 #mg/kg BW
+
+  #Scale dose into intended units
   dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
@@ -383,7 +403,7 @@ solve_model <- function(chem.name = NULL,
                         1/doses.per.day)
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
 # Or a matrix of doses (first col time, second col dose) has been specified:
-    } else {
+    } else { #Do some screening on the dosing.matrix's contents first.
       if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
       if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
 with two columns (time, dose).")
@@ -449,9 +469,7 @@ with two columns (time, dose).")
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
-  out <- signif(out, 4)
-  out[abs(out) < 1e-12] <- 0
-
+  out <- set_httk_precision(out)
   
 ### MODEL OUTPUT
   

@@ -1,4 +1,4 @@
-#'Calculate the analytic steady state concentration for the three oompartment
+#'Calculate the analytic steady state concentration for the three compartment
 #'steady-state model
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
@@ -20,7 +20,7 @@
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
 #' 'altered hematocrit, Funbound.plasma, or Krbc2pu.
-#'@param tissue Desired tissue conentration (defaults to whole body 
+#'@param tissue Desired tissue concentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
@@ -60,17 +60,28 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-# Look up the chemical name/CAS, depending on what was provide:
+# Expand on any provided chemical identifiers if possible (if any but not
+# all chemical descriptors are NULL):
+  chem_id_list  = list(chem.cas, chem.name, dtxsid)
+  if (any(lapply(chem_id_list, is.null)) &
+      !all(lapply(chem_id_list, is.null))){
+  out <- get_chem_id(
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid)
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid  
+  }
+  
+# Fetch some parameters using parameterize_steadstate, if needed:
   if (is.null(parameters))
   {
-    out <- get_chem_id(
-            chem.cas=chem.cas,
-            chem.name=chem.name,
-            dtxsid=dtxsid)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name                                
-    dtxsid <- out$dtxsid  
-
+    if (recalc.blood2plasma) 
+    {
+      warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
+    }
+    
     parameters <- parameterize_steadystate(
                                     chem.cas=chem.cas,
                                     chem.name=chem.name,
@@ -79,10 +90,6 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                     restrictive.clearance=restrictive.clearance,
                                     ...)
 
-    if (recalc.blood2plasma) 
-    {
-      warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
-    }
   } else {
     if (!all(param.names.3compss %in% names(parameters)))
     {
@@ -127,15 +134,36 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
-# We need logP, which currently isn't one of the 3compss parameters, so unless
-# the user gives chem.name/chem.cas, we can't run:
-    if (is.null(chem.cas) & is.null(chem.name) & !any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters)))
-      stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
-# Need to convert to 3compartmentss parameters:
-    if(!all(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% names(parameters))){
-      parameters <- add_schmitt.param_to_3compss(parameters = parameters, chem.cas = chem.cas, chem.name = chem.name)
+    # We need logP, the pKa's, and membrane affinity, which currently isn't one 
+    # of the 3compss parameters, so unless the user provides these parameters,
+    # they need to give a chemical identifier like chem.name/chem.cas/dtxsid, or
+    # we can't find them in the chem.physical_and_invitro.data set and run:
+    if (!any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% 
+             names(parameters))) {
+      #We do a lookup of these needed parameters using a targeted version of 
+      #get_physchem_param for the 3 compss model, add_schmitt.param_to_3compss
+      #(function definition nested at bottom):
+        parameters <- add_schmitt.param_to_3compss(parameters = parameters,
+           chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid)
     }
-    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
+
+    #The parameters used in predict_partitioning_schmitt may be a compound
+    #data.table/data.frame or list object, however, depending on the source 
+    #of the parameters. In calc_mc_css, for example, parameters is received 
+    #as a "data.table" object. Screen for processing appropriately, and 
+    #pass our parameters to predict_partitioning_schmitt so we can get
+    #the needed pc's.
+    if (any(class(parameters) == "data.table")){
+      pcs <- predict_partitioning_schmitt(parameters =
+          parameters[, param.names.schmitt[param.names.schmitt %in% 
+          names(parameters)], with = F])
+    }else if (class(parameters) == "list") {
+      pcs <- predict_partitioning_schmitt(parameters =
+          parameters[param.names.schmitt[param.names.schmitt %in% 
+          names(parameters)]])
+    }else stop('httk is only configured to process parameters as objects of 
+               class list or class compound data.table/data.frame.')
+    
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
@@ -161,17 +189,19 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 }
 
 
-
-
-# Add some parameters to the output from parameterize_steady_state so that predict_partitioning_schmitt can run without reparameterizing
-add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL, chem.name = NULL){
+# Add some parameters to the output from parameterize_steady_state so that
+# predict_partitioning_schmitt can run without reparameterizing
+add_schmitt.param_to_3compss <- function(parameters = NULL, chem.cas = NULL,
+                                         chem.name = NULL, dtxsid = NULL){
   
-  if ((is.null(chem.cas) & is.null(chem.name)))
-    stop("Either chem.cas or chem.name must be specified to give tissue concs with this model. Try model=\"pbtk\".")
+  if ((is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)))
+    stop("Either chem.cas, chem.name, or dtxsid must be specified to give 
+          tissue concs with this model. Try model=\"pbtk\".")
   if (is.null(parameters))
     stop("Must have input parameters to add Schmitt input to.")
   # Need to convert to 3compartmentss parameters:
-  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
+  temp.params <- get_physchem_param(chem.cas = chem.cas, chem.name = chem.name,
+      dtxsid = dtxsid, param = c("logP", "logMA", "pKa_Accept","pKa_Donor"))
   if(!"Pow" %in% names(parameters)){
     parameters[["Pow"]] <- 10^temp.params[["logP"]]
   }

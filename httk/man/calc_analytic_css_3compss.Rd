@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_analytic_css_3compss.R
 \name{calc_analytic_css_3compss}
 \alias{calc_analytic_css_3compss}
-\title{Calculate the analytic steady state concentration for the three oompartment
+\title{Calculate the analytic steady state concentration for the three compartment
 steady-state model}
 \usage{
 calc_analytic_css_3compss(
@@ -45,7 +45,7 @@ parmeterize_1comp(for model = '1compartment') or parameterize_steadystate
 in the blood to plasma using the input parameters. Use this if you have 
 'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
-\item{tissue}{Desired tissue conentration (defaults to whole body 
+\item{tissue}{Desired tissue concentration (defaults to whole body 
 concentration.)}
 
 \item{restrictive.clearance}{If TRUE (default), then only the fraction of

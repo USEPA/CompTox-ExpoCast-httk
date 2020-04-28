@@ -187,11 +187,11 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
-  #"Atubules",
-  #"Ametabolized",
+  "Atubules",
+  "Ametabolized",
   "AUC",
   "AUC_fetus",
-  #"Aplacenta",
+  "Aplacenta",
   "Cplacenta",
   "Cfliver",
   "Cfven",
@@ -202,30 +202,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfthyroid",
   "Cfkidney",
   "Cfbrain",
-  "Cfplasma",
-  
-  ####
-  "Agut",
-  "Aliver",
-  "Aven",
-  "Alung",
-  "Aart",
-  "Aadipose",
-  "Arest",
-  "Akidney", 
-  "Atubules",
-  "Ametabolized",
-  "Athyroid",
-  "Aplacenta",
-  "Afgut",
-  "Aflung",
-  "Afliver",
-  "Afven",
-  "Afart",
-  "Afrest",
-  "Afthyroid",
-  "Afkidney",
-  "Afbrain"
+  "Cfplasma"
 )
 
 # Allowable units:

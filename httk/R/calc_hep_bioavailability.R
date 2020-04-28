@@ -69,13 +69,19 @@ calc_hep_bioavailability <- function(
     parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25 
   }
 
-  if (restrictive.clearance) return(parameters$Qtotal.liverc / 
+  if (restrictive.clearance) 
+  {
+    bioavail <- (parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 
     parameters$Funbound.plasma * 
       parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
-  else return(parameters$Qtotal.liverc / 
+  } else {
+    bioavail <- (parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 
       parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
+  }
+      
+  return(set_httk_precision(bioavail))
 }
