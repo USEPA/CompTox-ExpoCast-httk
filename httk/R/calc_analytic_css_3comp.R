@@ -31,7 +31,7 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords 3compartment
@@ -39,8 +39,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,
                                    parameters=NULL,
-                                   dosing=list(
-                                     hourly.dose=1/24),
+                                   hourly.dose=1/24,
                                    concentration='plasma',
                                    suppress.messages=F,
                                    recalc.blood2plasma=F,
@@ -59,7 +58,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   
   param.names.3comp <- model.list[["3compartment"]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
-
+    
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -106,7 +105,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   }
   param.names.schmitt <- model.list[["schmitt"]]$param.names
 
-  hourly.dose <- dosing$hourly.dose
+
   hourly.dose <- hourly.dose * parameters$Fgutabs
   fup <- parameters$Funbound.plasma
   Rblood2plasma <- parameters$Rblood2plasma
@@ -123,7 +122,21 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   if (!is.null(tissue))
   {
 # Need to convert to Schmitt parameters:
-    pcs <- predict_partitioning_schmitt(parameters = parameters[param.names.schmitt[param.names.schmitt %in% names(parameters)]])
+    #The parameters used in predict_partitioning_schmitt may be a compound
+    #data.table/data.frame or list object, however, depending on the source 
+    #of the parameters. In calc_mc_css, for example, parameters is received 
+    #as a "data.table" object. Screen for processing appropriately.
+    if (any(class(parameters) == "data.table")){
+      pcs <- predict_partitioning_schmitt(parameters =
+          parameters[, param.names.schmitt[param.names.schmitt %in% 
+          names(parameters)], with = F])
+    }else if (class(parameters) == "list") {
+      pcs <- predict_partitioning_schmitt(parameters =
+          parameters[param.names.schmitt[param.names.schmitt %in% 
+          names(parameters)]])
+    }else stop('httk is only configured to process parameters as objects of 
+               class list or class compound data.table/data.frame.')
+    
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {

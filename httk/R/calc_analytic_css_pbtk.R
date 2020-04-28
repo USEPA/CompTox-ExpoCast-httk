@@ -1,4 +1,4 @@
-#'Calculate the analytic steady state concentration for model pbtk.
+#'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing.
@@ -31,7 +31,7 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords pbtk
@@ -39,7 +39,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   dosing = list(hourly.dose=1/24),
+                                   hourly.dose=1/24,
                                    concentration='plasma',
                                    suppress.messages=F,
                                    recalc.blood2plasma=F,
@@ -100,7 +100,6 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     }
   }
   
-  hourly.dose <- dosing$hourly.dose
   Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25  
   Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25    
   Clmetabolism <-  parameters[["Clmetabolismc"]]  
@@ -127,7 +126,21 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   if (!is.null(tissue))
   {
 # Need to convert to schmitt parameters:
-    pcs <- predict_partitioning_schmitt(parameters=parameters[param.names.schmitt[param.names.schmitt%in%names(parameters)]])
+    #The parameters used in predict_partitioning_schmitt may be a compound
+    #data.table/data.frame or list object, however, depending on the source 
+    #of the parameters. In calc_mc_css, for example, parameters is received 
+    #as a "data.table" object. Screen for processing appropriately.
+    if (any(class(parameters) == "data.table")){
+      pcs <- predict_partitioning_schmitt(parameters =
+        parameters[, param.names.schmitt[param.names.schmitt %in% 
+        names(parameters)], with = F])
+    }else if (class(parameters) == "list") {
+      pcs <- predict_partitioning_schmitt(parameters =
+        parameters[param.names.schmitt[param.names.schmitt %in% 
+        names(parameters)]])
+    }else stop('httk is only configured to process parameters as objects of 
+               class list or class compound data.table/data.frame.')
+    
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {
