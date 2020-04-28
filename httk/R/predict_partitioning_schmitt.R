@@ -159,17 +159,18 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 # Values for PBPK Models" (1994) that are not described by Schmitt (2008)
 
 # we use the average values for the Schmitt (2008) tissues
-  mycomps <- c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')
-  tissue.data <- as.data.table(tissue.data)[Tissue != 'red blood cells' & 
-                                              variable %in% mycomps & 
-                                              tolower(Species) == tolower(species),
-                                            .(value = mean(value, na.rm = T),
-                                              Tissue = 'rest',
-                                              Reference = NA_character_), 
-                                            .(variable, Species)] %>% 
-    rbind(.,tissue.data) %>% 
+for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
+  this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,Tissue != 'red blood cells' & tolower(Species) == tolower(species) & variable == this.comp)[,'value'])))
+  colnames(this.row) <- colnames(tissue.data)
+  tissue.data <- rbind(tissue.data,this.row) %>%
+  as.data.frame()
+}
+  if('fetal.plasma.pH' %in% names(parameters)){
+    placenta.tissue.data <- cbind(rep('placenta',9),rep(species,9),rep(NA,9),c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH'),c(.724,.276,.793,.0083,.1535,as.numeric(subset(tissue.data,Tissue=='rest' & Species==species & variable %in% c('Fn_Lc','Fn_PLc','Fa_PLc'))[,'value']),7.24))
+    colnames(placenta.tissue.data) <- colnames(tissue.data)
+    tissue.data <- rbind(tissue.data,placenta.tissue.data) %>%
     as.data.frame()
-
+  }
 
 	Ktissue2pu <- list()
 	
@@ -281,8 +282,18 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
     fraction_charged_plasma <- plasma[['fraction_charged']] 
     KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + parameters$alpha * fraction_charged_plasma)/(fraction_neutral + fraction_zwitter + parameters$alpha * fraction_charged)
     
-    if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell" ,sep='')))
- 	  else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
+    if('fetal.plasma.pH' %in% names(parameters) & this.tissue == 'placenta'){
+      fetal.plasma <- calc_ionization(pH=parameters$fetal.plasma.pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)    
+      fraction_neutral_fetal_plasma <- fetal.plasma[['fraction_neutral']]
+      fraction_zwitter_fetal_plasma <- fetal.plasma[['fraction_zwitter']]    
+      fraction_charged_fetal_plasma <- fetal.plasma[['fraction_charged']]  
+      KAPPAcell2puFetus <- (fraction_neutral_fetal_plasma + parameters$alpha * fraction_charged_fetal_plasma + fraction_zwitter_fetal_plasma) /(fraction_neutral + parameters$alpha * fraction_charged + fraction_zwitter)
+      Ktissue2pu[['Kplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2pu*Fcell * Kcell)
+      Ktissue2pu[['Kfplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2puFetus*Fcell * Kcell)
+    }else{
+      if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell" ,sep='')))
+ 	    else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
+    }    
    
     if(regression & this.tissue %in% regression.list){
       #if(parameters$Pow > 4){

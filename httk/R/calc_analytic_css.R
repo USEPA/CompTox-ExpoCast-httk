@@ -56,7 +56,11 @@ model.list <- list()
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
+<<<<<<< HEAD
 #'@return Steady state plasma concentration in specified units
+=======
+#'@return Steady state concentration
+>>>>>>> 30f2f4077939dfd60c528589f98e6c149fbef217
 #'
 #'@details Concentrations are calculated for the specifed model with constant 
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 

@@ -36,7 +36,7 @@ specified.}
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
-simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
+simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
 concentration quantile is the same population as the 5th dose quantile.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -70,7 +70,7 @@ Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
 See Details below for more information.}
 
-\item{...}{Additional parameters passed to calc_mc_css for httkpop and
+\item{...}{Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 variance of parameters.}
 }
 \value{
@@ -78,14 +78,14 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
 This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from calc_mc_css.
+dose using a concentration obtained from \code{\link{calc_mc_css}}.
 }
 \details{
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 Tissue concentrations are calculated for the pbtk model with oral infusion
@@ -93,7 +93,7 @@ dosing.  All tissues other than gut, liver, and lung are the product of the
 steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -111,7 +111,7 @@ used by this function.
 
 \dontrun{
 calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
-                   method='vi',samples=100,tissue='brain')
+       tissue='brain')
 }
 
 }

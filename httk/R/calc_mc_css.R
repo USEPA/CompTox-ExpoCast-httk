@@ -7,7 +7,7 @@
 #' to "Human".
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data (volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' Tissue concentrations are calculated for the pbtk model with a default oral
@@ -15,7 +15,7 @@
 #' of the steady state plasma concentration and the tissue to plasma partition
 #' coefficient.
 #' 
-#' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+#' The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 #' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -59,8 +59,8 @@
 #' chemical ratio of blood to plasma
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each paramter). This argument should
-#' be a list of sub-lists. Each sublist is named for a parameter in
+#' of detection (specified separately for each parameter). This argument should
+#' be a list of sublists. Each sublist is named for a parameter in
 #' "parameters" and contains two elements: "CV" (coefficient of variation) and
 #' "LOD" (limit of detection, below which parameter values are censored. New
 #' values are sampled with mean equal to the value in "parameters" and standard
@@ -75,7 +75,7 @@
 #' equal to the mean times the CV. Not used with httkpop model.
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
-#' @param tissue Desired steady state tissue conentration.
+#' @param tissue Desired steady state tissue concentration.
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param invitro.mc.arg.list List of additional parameters passed to 
 #' \code{\link{invitro_mc}}
@@ -109,30 +109,30 @@
 #' 
 #' \dontrun{
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
+#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
 #'              samples=100,return.samples=TRUE)
+#'              
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 #' 
 #'  set.seed(1234)
 #'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
-#'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
-#'                                                           lod = 0.005)),
-#'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-#'                                Qtotal.liverc = 0.15, 
-#'                                million.cells.per.gliver = 0.15, Clint = 0.15),
-#'              output.units = "uM", samples = 2000)
+#'              output.units = "uM", samples = 2000,
+#'              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
+#'              agelim_years=NULL, agelim_months=NULL, weight_category = 
+#'              c("Underweight", "Normal", "Overweight", "Obese")))
 #' 
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  set.seed(1234)
 #'  calc_mc_css(parameters=params,model="pbtk")
 #'
-#'set.seed(1234)
-#'# Standard HTTK Monte Carlo:
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
-#'set.seed(1234)
-# HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
-#'calc_mc_css(chem.cas="90-43-7",
+#'  set.seed(1234)
+#'  # Standard HTTK Monte Carlo:
+#'  NSAMP = 500
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+#'  set.seed(1234)
+#   HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
+#'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
 #'  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
@@ -143,20 +143,20 @@
 #'    clint.meas.cv = 0.0, 
 #'    fup.pop.cv = 0.3, 
 #'    clint.pop.cv = 0.3))
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no HTTK-Pop physiological variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no in vitro uncertainty and variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
-#'# Should be the same as the mean result:
-#'calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-#'set.seed(1234)
-#'# HTTK Monte Carlo using basic Monte Carlo sampler:
-#'calc_mc_css(chem.cas="90-43-7",
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no in vitro uncertainty and variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+#'  # Should be the same as the mean result:
+#'  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo using basic Monte Carlo sampler:
+#'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
 #'  httkpop=F,

@@ -519,7 +519,6 @@ with two columns (time, dose).")
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
 
-
 # Convert from uM to mg/l if requested
   if (tolower(output.units)=='mg/l')
   { 
