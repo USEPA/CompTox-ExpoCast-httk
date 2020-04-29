@@ -4,7 +4,8 @@
 \name{bmiage}
 \alias{bmiage}
 \title{CDC BMI-for-age charts}
-\format{A data.table object with variables \describe{
+\format{
+A data.table object with variables \describe{
 \item{\code{Sex}}{'Male' or 'Female'}
  \item{\code{Agemos}}{Age in months}
  \item{\code{L},
@@ -12,7 +13,8 @@
  \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}}
  \item{\code{P3},
  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P85},
- \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}}
+ \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
+}
 \source{
 \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
 }
