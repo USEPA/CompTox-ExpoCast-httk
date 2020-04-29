@@ -57,7 +57,7 @@ License: GPL-3
 LazyData: true
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk

@@ -4,7 +4,9 @@
 \name{chem.invivo.PK.data}
 \alias{chem.invivo.PK.data}
 \title{Published toxicokinetic time course measurements}
-\format{A data.frame containing 597 rows and 13 columns.}
+\format{
+A data.frame containing 597 rows and 13 columns.
+}
 \source{
 Wambaugh et al. 2018 Toxicological Sciences, in press
 }
