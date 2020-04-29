@@ -4,7 +4,8 @@
 \name{wambaugh2019}
 \alias{wambaugh2019}
 \title{in vitro Toxicokinetic Data from Wambaugh et al. (2019)}
-\format{A data frame with 496 rows and 17 variables:
+\format{
+A data frame with 496 rows and 17 variables:
 \describe{
   \item{Compound}{The name of the chemical}
   \item{CAS}{The Chemical Abstracts Service Registry Number}
@@ -34,7 +35,8 @@ interval for fraction of chemical free in the presence of plasma}
 chemical free in the presence of plasma}
   \item{MW}{Molecular weight (Daltons)}
   \item{logP}{log base ten of octanol:water partiion coefficient}
-}}
+}
+}
 \source{
 Wambaugh et al. (2019)
 }
