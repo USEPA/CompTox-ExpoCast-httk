@@ -19,6 +19,8 @@
 #' default "Human").
 #' @param f Fractional distance from the final steady state concentration that
 #' the average concentration must come within to be considered at steady state.
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
 #' @param exp.conc Specified inhalation exposure concentration for use in assembling
@@ -34,9 +36,11 @@
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue concentration (defaults to whole body 
 #' concentration.)
-#' @param model Model used in calculation, 'pbtk' for the multiple compartment
-#' model,'3compartment' for the three compartment model, and '1compartment' for
-#' the one compartment model.
+#' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#' 'pbtk' for the multiple compartment model,
+#' '3compartment' for the three compartment model, '3compartmentss' for 
+#' the three compartment steady state model, and '1compartment' for one 
+#' compartment model.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param f.change Fractional change of daily steady state concentration
