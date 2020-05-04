@@ -12,19 +12,28 @@ model.list <- list()
 #'be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #'be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs
+#'@param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#'the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #''pbtk'), parameterize_3comp (for model = '3compartment), 
 #'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #'(for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
 #'@param daily.dose Total daily dose, mg/kg BW.
+#'@param exp.conc Specified inhalation exposure concentration for use in assembling
+#''forcings' data series argument for integrator. Defaults to uM/L 
+#'@param period For use in assembling forcing function data series 'forcings'
+#'argument, specified in hours
+#'@param exp.duration For use in assembling forcing function data 
+#'series 'forcings' argument, specified in hours
 #'@param output.units Units for returned concentrations, defaults to uM 
 #'(specify units = "uM") but can also be mg/L.
-#'@param model Model used in calculation, 'pbtk' for the multiple compartment 
-#'model,'3compartment' for the three compartment model, '3compartmentss' for 
+#'@param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#''pbtk' for the multiple compartment model,
+#''3compartment' for the three compartment model, '3compartmentss' for 
 #'the three compartment steady state model, and '1compartment' for one 
 #'compartment model.
 #'@param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
@@ -88,11 +97,15 @@ model.list <- list()
 #' 
 #'calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 #' 
+#'calc_analytic_css(chem.name="pyrene",route="inhalation",model="gas_pbtk")
+#'
+#'calc_analytic_css(chem.cas="129-00-0",route="inhalation",model="gas_pbtk")
+#' 
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
-#'@author Robert Pearce, John Wambaugh, and Greg Honda
+#'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
 #'@keywords Solve
 #'
@@ -107,6 +120,10 @@ calc_analytic_css <- function(chem.name=NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
+                              route="oral",
+                              exp.conc = 1, #default exposure concentration for forcing data series
+                              period = 24,
+                              exp.duration = 24,
                               output.units='uM',
                               model = 'pbtk',
                               concentration='plasma',
@@ -229,23 +246,38 @@ calc_analytic_css <- function(chem.name=NULL,
   
   if (model %in% names(model.list))            
   {
-    Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-      chem.cas = chem.cas,
-      chem.name = chem.name,
-      dtxsid = dtxsid,
-      parameters=parameters,
-      hourly.dose=hourly.dose,
-      concentration=concentration,
-      suppress.messages=suppress.messages,
-      tissue=tissue,
-      restrictive.clearance=restrictive.clearance,
-      bioactive.free.invivo = bioactive.free.invivo),
-      list(...)))
+    if (route == "inhalation"){
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        parameters=parameters,
+        exp.conc = exp.conc,
+        period = period,
+        exp.duration = exp.duration,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+      
+    } else if (route %in% c("oral","iv"))
+    {
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        parameters=parameters,
+        hourly.dose=hourly.dose,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+    }
   } else {
     stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
+               paste(names(model.list),collapse=", ")))
   }
-
+  
 # Convert to uM if requested
   if (tolower(output.units)=='um')
   { 
