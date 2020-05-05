@@ -99,7 +99,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Robert Pearce, Miyuki Breen
 #' 
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -349,10 +349,11 @@ solve_model <- function(chem.name = NULL,
 
 ### DOSING
 
-  # Parse the dosing parameter into recognized values:
-  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-    model.list[[model]]$dosing.params)) %in% 
-    names(dosing))) stop("Dosing descriptor(s) missing")
+  # Parse the dosing parameter into recognized values if route is not "inhalation":
+  if (route!="inhalation"){
+   if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
+     model.list[[model]]$dosing.params)) %in% 
+     names(dosing))) stop("Dosing descriptor(s) missing")}
   
   #Capture forcings argument from args passed to solve_model in ellipsis form,
   #in case a model is set to make use of the 'forcings' argument to the ode
