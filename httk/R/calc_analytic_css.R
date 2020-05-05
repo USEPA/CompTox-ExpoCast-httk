@@ -278,10 +278,12 @@ calc_analytic_css <- function(chem.name=NULL,
                paste(names(model.list),collapse=", ")))
   }
   
-# Convert to uM if requested
-  if (tolower(output.units)=='um')
-  { 
-    Css <- Css / 1e3 / MW * 1e6 # mg/L -> uM
+# Convert to uM (inhalation already uM) if requested
+  if (route != "inhalation"){
+    if (tolower(output.units)=='um')
+    { 
+      Css <- Css / 1e3 / MW * 1e6 # mg/L -> uM
+    }
   }
 
 #User message:
