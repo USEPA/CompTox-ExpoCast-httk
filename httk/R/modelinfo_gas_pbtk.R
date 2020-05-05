@@ -251,3 +251,48 @@ model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")
+
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["gas_pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["gas_pbtk"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["gas_pbtk"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["gas_pbtk"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
+
+#Governs how tissues are lumped:
+model.list[["gas_pbtk"]]$tissue.list <- list(
+  liver=c("liver"),
+  kidney=c("kidney"),
+  lung=c("lung"),
+  gut=c("gut"))
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["gas_pbtk"]]$calcpc <- TRUE
+
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["gas_pbtk"]]$firstpass <- FALSE
+
+# Do we ignore the Fups where the value was below the limit of detection?
+model.list[["gas_pbtk"]]$exclude.fup.zero <- T
