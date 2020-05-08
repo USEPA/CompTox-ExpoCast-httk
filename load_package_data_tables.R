@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "February2020-1"
+SCRIPT.VERSION <- "May2020-1"
 
 library(reshape)
 library(gdata)
@@ -367,24 +367,22 @@ for (this.row in 1:dim(Schmitt.table)[1])
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
-Obach2008.table <- read.xls("Obach2008.xlsx",stringsAsFactors=F)
-Obach2008.table[Obach2008.table$CAS..=="3764-87-2","Name"] <- "Trestolone"
-# Dashboard doesn't recognize prefers other CAS:
-Obach2008.table[Obach2008.table$CAS..=="229627-58-1","CAS.."] <- "NOCAS_43930"
-Obach2008.table[Obach2008.table$CAS..=="85650-52-8","CAS.."] <- "61337-67-5"
-Obach2008.table[Obach2008.table$CAS..=="135729-61-2","CAS.."] <- "135729-56-5"
-Obach2008.table[Obach2008.table$CAS..=="51931-66-9","CAS.."] <- "32447-90-8"
+Obach2018.table <- read.csv(
+  "Lombardo2018-Supplemental_82966_revised_corrected.csv",
+  skip=8,stringsAsFactors=F)
+
+
 # Get rid of non-numeric fu values:
-Obach2008.table$fu <- as.numeric(Obach2008.table$fu)
-Obach2008.table <- subset(Obach2008.table,!is.na(fu))
-chem.prop <- add_chemtable(Obach2008.table,
+Obach2018.table$fu <- as.numeric(Obach2018.table$fraction.unbound..in.plasma..fu.)
+Obach2018.table <- subset(Obach2018.table,!is.na(fraction.unbound..in.plasma..fu.))
+chem.prop <- add_chemtable(Obach2018.table,
                species="Human",
-               reference="Obach 2008",
+               reference="Lombardo 2018",
                current.table=chem.prop,
                data.list=list(
                  CAS="CAS..",
                  Compound="Name",
-                 Funbound.plasma="fu"))
+                 Funbound.plasma="fraction.unbound..in.plasma..fu."))
 
 
 chem.prop[chem.prop$Compound=="Bensulide",]
@@ -880,7 +878,7 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 
 # ADD NEW DATA HERE:
-volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv',stringsAsFactors = F)
+volatile.data.raw <- read.csv('gas_model_CLint_updates_4-22-20.csv',stringsAsFactors = F)
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                 current.table = chem.physical_and_invitro.data, 
@@ -889,14 +887,14 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                  LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
                                  LogHenry='LOG_HENRYS_LAW_DIMENSIONLESS',
                                  MW = 'AVERAGE_MASS',SMILES.desalt='QSAR_READY_SMILES',
-                                 Species='SPECIES'),overwrite=F,reference='Linakis submitted')
+                                 Species='SPECIES'),overwrite=F,reference='Linakis 2020')
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(Compound='PREFERRED_NAME',
                                   CAS = 'CASRN',DTXSID='DTXSID',Clint='CALC_CLINT',
-                                  Funbound.plasma='CALC_FUP',Reference = 'REFERENCE',
-                                  Species='SPECIES'),overwrite=F)
+                                  Funbound.plasma='CALC_FUP',
+                                  Species='SPECIES'),overwrite=F,reference='Linakis 2020')
 
 
 # STOP ADDING NEW DATA AFTER THIS, SUBSEQUENT CODE IS TO INTERACT WITH DASHBOARD
@@ -1211,10 +1209,6 @@ chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES
 
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
-
-# Rename Obach data for distribution with packages                                               
-                                                 
-obach2008 <- Obach2008.table
 
 
 if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
