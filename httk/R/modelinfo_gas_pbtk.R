@@ -195,13 +195,14 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   )
 
 # Allowable units:
-model.list[["gas_pbtk"]]$allowed.units <- c('um', 'mg/l', 'ppm')
+model.list[["gas_pbtk"]]$allowed.units <- c('um', 'mg/l', 'ppmv')
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",
   "initial.dose",
   "doses.per.day",
-  "dosing.matrix")
+  "dosing.matrix",
+  "forcings")
 
 model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
 
