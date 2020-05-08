@@ -86,7 +86,7 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' "uM"). Gas is assumed to be ideal. 
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -277,19 +277,19 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #Assemble function for initializing 'forcings' argument data series with
     #certain periodicity and exposure concentration in default case, used if 
     #the 'forcings' argument is not otherwise specified.
-    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
+    forcings_gen <- function(exp.conc, period, exp.start.time, exp.duration, days) {
       #Provide for case in which forcing functionality is effectively turned off
       if (exp.conc == 0) {
         conc.matrix = NULL
       } else {
       Nrep <- ceiling((days - exp.start.time)/period) 
       times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-      y  <- rep(c(exp.conc,0), Nrep)
-      conc.matrix = cbind(times,y)
+      conc  <- rep(c(exp.conc,0), Nrep)
+      conc.matrix = cbind(times,conc)
       }
       return(conc.matrix)
     }
-    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
+    forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
       
       #Comment out tentative alternate scheme to forcings for now
       ###
@@ -315,7 +315,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
       initial.dose=dose,
       dosing.matrix=dosing.matrix,
       daily.dose=daily.dose,
-      doses.per.day=doses.per.day
+      doses.per.day=doses.per.day,
+      forcings
     ),
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour

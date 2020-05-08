@@ -69,7 +69,7 @@
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' "uM"). 
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -350,19 +350,13 @@ solve_model <- function(chem.name = NULL,
 ### DOSING
 
   # Parse the dosing parameter into recognized values:
-  if (!all(unique(c("initial.dose","dosing.matrix","daily.dose","doses.per.day",
-    model.list[[model]]$dosing.params)) %in% 
+  if (!all(unique(model.list[[model]]$dosing.params) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
   
-  #Capture forcings argument from args passed to solve_model in ellipsis form,
-  #in case a model is set to make use of the 'forcings' argument to the ode
-  #function in dosing (which should in turn be passed with a name of
-  # "forcings"):
-  forcings <- list(...)$forcings #NULL if forcings not specified
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (all(lapply(dosing, is.null)) & is.null(forcings)) 
+  if (all(lapply(dosing, is.null)) 
     dosing$initial.dose <- 1 #mg/kg BW
 
   #Scale dose into intended units
@@ -371,6 +365,7 @@ solve_model <- function(chem.name = NULL,
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
+  forcings <- dosing$forcings
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -469,6 +464,7 @@ with two columns (time, dose).")
     outnames=derivative_output_names,
     events=list(data=eventdata),
     initforc = initforc,
+    forcings = forcings,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
