@@ -11,8 +11,7 @@
 #' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
 #' precise dose regimen specification, and is a matrix consisting of two
 #' columns or rows named "time" and "dose" containing the time and amount,
-#' in mg/kg BW, of each dose. The minimal usage case involves all entries but
-#' "initial.dose" set to NULL in value.
+#' in mg/kg BW, of each dose. 
 #' @param parameters  Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param route String specification of route of exposure for simulation:
@@ -42,7 +41,7 @@ scale_dosing <- function(dosing,parameters,route,output.units="uM")
   } else if (tolower(output.units) == 'mg/l' | tolower(output.units) == 'mg')
   {
     scale.factor <- BW
-  } else stop('Output.units can only be uM, umol, mg, or mg/L.')
+  } else stop('Output.units can only be uM, umol, or mg/L.')
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")

@@ -2,7 +2,7 @@
 #' 
 #' This function solves for the amounts or concentrations of a chemical
 #' in different tissues as functions of time as a result of inhalation 
-#' exposure. 
+#' exposure to an ideal gas.
 #' 
 #' The default dosing scheme involves specifying the start time
 #' of exposure, the concentration of gas inhaled, the period of a given 
@@ -85,8 +85,8 @@
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM"). Gas is assumed to be ideal. 
+#' @param output.units Desired units (either "mg/L", "mg" as abbreviation for
+#' "mg/L", "ppmv", "umol", or default "uM").
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).

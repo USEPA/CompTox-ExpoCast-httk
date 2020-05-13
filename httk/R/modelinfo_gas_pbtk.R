@@ -195,7 +195,11 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   )
 
 # Allowable units:
-model.list[["gas_pbtk"]]$allowed.units <- c('um', 'mg/l', 'ppmv')
+model.list[["gas_pbtk"]]$allowed.input.units <- c('um','umol','mg/kg','mg/kg BW',
+                                                  'ppmv')
+
+model.list[["gas_pbtk"]]$allowed.output.units <- c('um', 'umol','mg/l','mg',
+                                                   'ppmv')
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",
