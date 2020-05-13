@@ -12,8 +12,7 @@ the general entries with names "initial.dose", "doses.per.day",
 "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
 precise dose regimen specification, and is a matrix consisting of two
 columns or rows named "time" and "dose" containing the time and amount,
-in mg/kg BW, of each dose. The minimal usage case involves all entries but
-"initial.dose" set to NULL in value.}
+in mg/kg BW, of each dose.}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
