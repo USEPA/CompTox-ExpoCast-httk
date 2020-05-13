@@ -105,8 +105,8 @@ output.units.  Defaults are zero.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{output.units}{Desired units (either "mg/L", "mg" as abbreviation for
+"mg/L", "ppmv", "umol", or default "uM").}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -174,7 +174,7 @@ for each time point.
 \description{
 This function solves for the amounts or concentrations of a chemical
 in different tissues as functions of time as a result of inhalation 
-exposure.
+exposure to an ideal gas.
 }
 \details{
 The default dosing scheme involves specifying the start time

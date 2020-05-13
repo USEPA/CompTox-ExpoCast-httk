@@ -4,9 +4,7 @@
 \name{pc.data}
 \alias{pc.data}
 \title{Partition Coefficient Data}
-\format{
-A data.frame.
-}
+\format{A data.frame.}
 \usage{
 pc.data
 }
