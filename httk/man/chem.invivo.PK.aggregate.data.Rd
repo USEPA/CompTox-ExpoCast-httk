@@ -4,9 +4,7 @@
 \name{chem.invivo.PK.aggregate.data}
 \alias{chem.invivo.PK.aggregate.data}
 \title{Parameter Estimates from Wambaugh et al. (2018)}
-\format{
-data.frame
-}
+\format{data.frame}
 \source{
 Wambaugh et al. 2018 Toxicological Sciences, in press
 }
