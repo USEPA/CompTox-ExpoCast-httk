@@ -116,13 +116,19 @@ if (!(input.units %in% httk_units_list) |
        conversion_factor <- 
          amounts_units_conversion_frame[input.units, output.units]
     } else stop('Conversion from ', input.units, ' to ', output.units, 'is not
-                 supported.')
+                 supported. Supported extrinsic amount units include mg and
+                 umol, and supported intrinsic concentration units include
+                 mg/L, uM, and in the case of gas models where the gas is
+                 assumed ideal, ppmv.')
   } else if (input.units %in% names(conc_units_conversion_frame)) {
     if (output.units %in% names(conc_units_conversion_frame)) {
       conversion_factor <- 
         conc_units_conversion_frame[input.units, output.units]
     } else stop('Conversion from ', input.units, ' to ', output.units, 'is not
-                 supported.'))
+                 supported. Supported extrinsic amount units include mg and
+                 umol, and supported intrinsic concentration units include
+                 mg/L, uM, and in the case of gas models where the gas is
+                 assumed ideal, ppmv.')
   }
 }
   
