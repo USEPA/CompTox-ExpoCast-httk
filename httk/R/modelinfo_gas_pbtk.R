@@ -195,11 +195,29 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   )
 
 # Allowable units:
-model.list[["gas_pbtk"]]$allowed.input.units <- c('um','umol','mg/kg','mg/kg BW',
-                                                  'ppmv')
+model.list[["gas_pbtk"]]$allowed.units.input <- c('um','umol','mg/kg',
+                                                  'mg/l','ppmv')
 
-model.list[["gas_pbtk"]]$allowed.output.units <- c('um', 'umol','mg/l','mg',
+model.list[["gas_pbtk"]]$allowed.units.output <- c('um', 'umol','mg/l','mg',
                                                    'ppmv')
+
+model.list[["gas_pbtk"]]$allowed.units.output.by.compartment <-
+                                       c(
+                                          "Cgut"='um',
+                                          "Cliver"='um',
+                                          "Cven"='um',
+                                          "Clung"='um',
+                                          "Cart"='um',
+                                          "Crest"='um',
+                                          "Ckidney"='um',
+                                          "Cplasma"='um',
+                                          "Aplasma"='umol',
+                                          "Calv"='um',
+                                          "Cendexh"='ppmv',
+                                          "Cmixexh"='ppmv',
+                                          "Cmuc"
+                                            )
+  
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",

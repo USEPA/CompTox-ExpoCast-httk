@@ -4,18 +4,18 @@
 #' in different tissues as functions of time as a result of inhalation 
 #' exposure to an ideal gas.
 #' 
-#' The default dosing scheme involves specifying the start time
-#' of exposure, the concentration of gas inhaled, the period of a given 
-#' assumed cycle of exposure, and the duration of the exposure during that 
-#' period. Together, these arguments determine the forcings passed to the 
-#' ODE integrator. Forcings can also be specified manually, or effectively 
-#' turned off by setting exposure concentration to zero, if the user prefers
-#' to simulate dosing by other means. 
+#' The default dosing scheme involves a specification of the start time
+#' of exposure (exp.start.time), the concentration of gas inhaled (exp.conc),
+#' the period of a cycle of exposure and non-exposure (period), the
+#' duration of the exposure during that period (exp.duration), and the total
+#' days simulated. Together,these arguments determine the "forcings" passed to
+#' the ODE integrator. Forcings can also be specified manually, or effectively
+#' turned off by setting exposure concentration to zero, if the user prefers to 
+#' simulate dosing by other means. 
 #' 
-#' 
-#' This function solves for the amounts or concentrations in uM of a chemical
-#' in different tissues as functions of time based on the dose and dosing
-#' frequency. 
+#' The "forcings" object is configured to be passed to the integrator with,
+#' at the most, a basic unit conversion among ppmv, mg/L, and uM. No scaling by
+#' BW is set to be performed on the forcings series.
 #' 
 #' Note that the model parameters have units of hours while the model output is
 #' in days.
@@ -267,8 +267,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
   if(is.null(dosing.matrix))
   {
     if (exp.duration > period){
-      stop('If not specifying \'dose.matrix\' data series explicitly, additional arguments are needed
-      to generate a \'dose.matrix\' argument with a cyclic exposure pattern across the simulation:
+      stop('If not specifying \'dose.matrix\' data series explicitly, 
+      additional arguments are needed to generate a \'dose.matrix\' argument
+      with a cyclic exposure pattern across the simulation:
       exp.conc, period, exp.start.time, exp.duration, and days simulated.')
     }
     period <- period/24 #convert time period in hours to days

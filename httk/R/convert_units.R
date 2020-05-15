@@ -11,11 +11,14 @@
 #' handling of 'ppmv,' as the function is only set up to convert between ppmv 
 #' and mass-based units (like mg/m^3 or umol/L) in the context of ideal gases.
 #' 
-#' The function supports a limited set of most relevant units across
-#' toxicological models, currently include umol, uM, mg, mg/L, mg/m^3, and, 
-#' in the context of ideal gases, ppmv. 
+#' convert_units is not directly configured to accept and convert units based
+#' on BW, like mg/kg. For this purpose, see \code{\link{scale_dosing}}.
 #' 
-#' @param input.units Queried input units of interest
+#' The function supports a limited set of most relevant units across
+#' toxicological models, currently including umol, uM, mg, mg/L, mg/m^3, and
+#' in the context of gases assumed to be ideal, ppmv. 
+#' 
+#' @param input.units Assigned input units of interest
 #' @param output.units Desired output units
 #' @param MW Molecular weight of substance of interest in g/mole 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
@@ -105,11 +108,10 @@ if (is.null(MW)) {
 #the requested units conversion, and if so, provide the conversion factor.
 if (!(input.units %in% httk_units_list) |
     !(output.units %in% httk_units_list)) {
-  stop("Requested units not directly supported in httk. Extrinsic
-        amounts are supported in units of 'mg' and 'umol', and
-        intrinsic concentrations are supported in 'mg/L', 'uM', and, 
-        in the case of gas models where the gas is assumed ideal,
-        'ppmv'.")
+  stop("Requested units not supported. Extrinsic amounts are supported 
+        in units of 'mg' and 'umol', and intrinsic concentrations are
+        supported in 'mg/L', 'uM', and, in the case of gas models where 
+        the gas is assumed ideal, 'ppmv'.")
 } else {
   if (input.units %in% names(amounts_units_conversion_frame)){
     if (output.units %in% names(amounts_units_conversion_frame)) {
