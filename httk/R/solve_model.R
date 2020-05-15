@@ -49,14 +49,15 @@
 #' "3compartmentss", "1compartment", "schmitt", ...
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
-#' @param dosing List of dosing metrics passed to solver for a given model,
-#' which must at least include entries with names "initial.dose", 
-#' "doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
-#' be used for more precise dose regimen specification, and is a matrix
-#' consisting of two columns or rows named "time" and "dose" which contain the
-#' time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
-#' of the dosing list is set to a non-NULL value, solve_model uses a default
-#' dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
+#' @param dosing List of dosing metrics used in simulation, which includes
+#' the namesake entries of a model's associated dosing.params. In the case
+#' of most httk models, these should include "initial.dose", "doses.per.day", 
+#' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+#' precise dose regimen specification, and is a matrix consisting of two
+#' columns or rows named "time" and "dose" containing the time and amount,
+#' in mg/kg BW, of each dose. If none of the namesake entries of the dosing 
+#' list is set to a non-NULL value, solve_model uses a default dose of 
+#' 1 mg/kg BW along with the dose type (add/multiply) specified for 
 #' a given route (e.g. add the dose to gut lumen for oral route)
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
@@ -68,8 +69,7 @@
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM"). 
+#' @param input.units Input units of interest assigned to dosing
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -126,7 +126,7 @@ solve_model <- function(chem.name = NULL,
                     monitor.vars=NULL,
                     suppress.messages=F,
                     species="Human",
-                    output.units='uM',
+                    input.units=NULL,
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
@@ -174,8 +174,12 @@ solve_model <- function(chem.name = NULL,
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# allowable names of units for the model that are based on amounts (e.g., umol, mg)
-    allowed_units <- model.list[[model]]$allowed.units
+# allowable names of input units for the model that are based on or derived
+# from amounts (e.g., umol, mg, mg/kg, ppmv)
+    allowed_input_units <- model.list[[model]]$allowed.units.input
+# allowable names of output units for the model that are based on or derived
+# from amounts (e.g., umol, mg, ppmv)
+    allowed_output_units <- model.list[[model]]$allowed.units.output
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
@@ -353,19 +357,20 @@ solve_model <- function(chem.name = NULL,
   if (!all(unique(model.list[[model]]$dosing.params) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
   
-  
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
   if (all(lapply(dosing, is.null))) 
     dosing$initial.dose <- 1 #mg/kg BW
 
-  #Scale dose into intended units
+  #Scale dose if input.units is an intrinsic quantity in body weight (mg/kg) 
+  if (grepl("/kg", tolower(input.units))) {
   dosing <- scale_dosing(dosing,parameters,route,output.units)
   initial.dose <- dosing$initial.dose
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
   forcings <- dosing$forcings
+  }
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -514,7 +519,7 @@ with two columns (time, dose).")
     graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector, xlab = 'time (days)')
   } 
                
-# Downselect to only the desired parameters:
+# Down-select to only the desired parameters:
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
   class(out) <- c('matrix','deSolve')
 
