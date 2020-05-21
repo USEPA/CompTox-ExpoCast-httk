@@ -1,14 +1,17 @@
 #' Solve_model
 #' 
-#' solve_model's arguments prepare an ode system for numerical solution over
-#' time of the amounts or concentrations (uM) of chemical in the different
-#' bodily compartments of a given available species (either "Rat", "Rabbit",
-#' "Dog", "Mouse", or default "Human").
+#' solve_model is designed to accept systematized metadata for a given 
+#' toxicokinetic model, including names of variables, parameterization
+#' functions, and key units, and use it along with chemical information
+#' to prepare an ode system for numerical solution over time of the amounts
+#' or concentrations of chemical in different bodily compartments of a given
+#' species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 #' 
-#' The minimal usage case requires input that includes a chemical identifier
-#' (whether name, CAS number, or other chemical parameterization) and a model
-#' system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
-#' "schmitt", ...).
+#' Dosing values with certain acceptable associated input.units (like mg/kg BW)
+#' are configured to undergo a unit conversion, as all model simulations are 
+#' intended to run with chemical amounts in umol, and concentrations in uM. 
+#' Model outputs are configured to be presented in certain alternative units as 
+#' well. 
 #' 
 #' The 'dosing' argument includes all parameters needed to describe exposure
 #' in terms of route of administration, frequency, and quantity short of 
@@ -63,7 +66,7 @@
 #' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
-#' output.units.  Defaults are zero.
+#' those specified for the model outputs. Default values are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (models have been designed to be
@@ -99,7 +102,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Robert Pearce, and Mark Sfeir
 #' 
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -152,6 +155,7 @@ solve_model <- function(chem.name = NULL,
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
   
+  
   if (is.null(model)) stop("Model must be specified.")
 
 
@@ -174,12 +178,15 @@ solve_model <- function(chem.name = NULL,
     model_routes <- model.list[[model]]$routes
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# allowable names of input units for the model that are based on or derived
-# from amounts (e.g., umol, mg, mg/kg, ppmv)
-    allowed_input_units <- model.list[[model]]$allowed.units.input
-# allowable names of output units for the model that are based on or derived
-# from amounts (e.g., umol, mg, ppmv)
-    allowed_output_units <- model.list[[model]]$allowed.units.output
+# allowable names of input units for the model for a given route that are based
+# on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
+    allowed_units_input <- model.list[[model]]$allowed.units.input[[route]]
+# allowable names of output units for the model for a given route that are
+# based on or derived from amounts (e.g., umol, mg, ppmv)
+    allowed_units_output <- model.list[[model]]$allowed.units.output[[route]]
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system  
+    compartment_units <- model.list[[model]]$compartment.units
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
@@ -237,9 +244,30 @@ solve_model <- function(chem.name = NULL,
     }
   }
   
-  # Check the units that we want the solver to use:   
-  if (!(tolower(output.units) %in% allowed_units)) stop(
-    paste("Units",output.units,"unavailable for model",model))
+  #Make basic checks for variable name convention observance in objects of
+  #interest:
+  if (any(!firstchar(names(compartment_units)) %in% c("A","C"))) {
+    stop("The names of compartment_units for model, " model, " must begin with
+          \"A\" for amounts, or \"C\" for concentration.")
+  } else if (any(!firstchar(names(state.vars)) %in% c("A","C"))) {
+    stop("The names of state.vars for model, " model, " must begin with \"A\"
+          for amounts, or \"C\" for concentration.")
+  } 
+  #These names should match
+  if (any(!names(compartment_units) %in% derivative_output_names)) {
+    stop("The names of the compartments in compartment_units must correspond 
+          to the names of the derivative_output_names in model ",model)
+  }
+  
+  # Check the units-related objects that we want the solver to use:   
+  if (!(tolower(input.units) %in% allowed_units_input)) {
+    stop(paste("Units",input.units,"unavailable for model",model))
+  } else if (any(!compartment_units %in% allowed_units_output)) {
+    stop("The compartment.units list specified for the model outputs contains
+          units not allowed per allowed.units.output for model ", model)
+  }
+  
+  
   
 ### MODEL PARAMETERS FOR R
 
@@ -319,22 +347,69 @@ solve_model <- function(chem.name = NULL,
   if (!is.null(initial.values)){
     for (this.compartment in names(initial.values))
     {
-      # Are we doing concentrations?
-      if (firstchar(this.compartment)=="C")
-      {
-        tissue <- substring(this.compartment, 2)
-        state[paste("A",tissue,sep="")] <-
+      #Capture tissue signifier first
+      tissue <- substring(this.compartment, 2)
+      
+      #Make a basic check for whether the names of tissues/compartments in the
+      #initial.values vector correspond to the state.vars names
+      if !(any(grepl(tissue, state.vars))) {
+        stop("Initital values must begin with \"C\" or \"A\"to denote 
+              concentrations or amounts, respectively, and correspond
+              to the names of the state.vars thereafter.")
+      }
+      
+      #Determine whether units scaling factor to umol-based system needed.
+      #It is assumed the units of this.compartment in initial.values is
+      #a simple "tissue" volume scaling away from the units specified for
+      #the amount in compartment_units.
+      if (any(firstchar(names(compartment_units)[grepl(tissue,
+                         names(compartment_units)) = TRUE]) == "C"))
+          {#Use the units for this compartment from compartment_units to
+           #get a units conversion factor, even if trivially 1
+            this.compartment.units = compartment_units[this.compartment]
+            units_conversion_factor = 
+              convert_units(input.units=this.compartment.units,
+                            output.units='uM',
+                            chem.cas = chem.cas,
+                            chem.name = chem.name,
+                            dtxsid = dtxsid,
+                            parameters = parameters)
+            
+       } else if (any(firstchar(names(compartment_units)[grepl(tissue,
+                                  names(compartment_units)) = TRUE]) == "A")){
+       #Again it is assumed the units of this.compartment in initial.values is
+       #a simple "tissue" volume scaling away from the units specified for
+       #the amount in compartment_units
+            this.state.units = compartment_units[paste("A",tissue,sep="")]
+            units_conversion_factor = 
+              convert_units(input.units=this.state.units,
+                            output.units='umol',
+                            chem.cas = chem.cas,
+                            chem.name = chem.name,
+                            dtxsid = dtxsid,
+                            parameters = parameters)
+            
+        } else {
+              #If units for this initial.values entry aren't specified,
+              #they are assumed to be in the desired uM or umol units.
+                units_conversion_factor = 1 #no conversion should be needed
+            }
+          
+      #Now scale by tissue volume if necessary...
+      if (firstchar(this.compartment) == "C") {
+        units_conversion_factor = units_conversion_factor * 
+                       parameters[[paste("V",tissue,"c",sep="")]] *
+                                 parameters[["BW"]]
+      }
+      
+      #...and apply units conversion factor to get the state value in 
+      #umol-based units.
+          state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
-                            parameters[[paste("V",tissue,"c",sep="")]] *
-                            parameters[["BW"]]
-      # Or amounts?
-      } else if (firstchar(this.compartment)=="A")
-      {
-        state[this.compartment] <- initial.values[[this.compartment]]
-      } else stop("Initital values must begin with \"C\" or \"A\" 
-                  to denote concentrations or amounts, respectively.")
+                              units_conversion_factor
+      }
     }
-  }
+  
 ### SIMULATION TIME
 
 # Small time delta for plotting changes:
@@ -352,25 +427,66 @@ solve_model <- function(chem.name = NULL,
   times <- sort(unique(c(times,start.time+SMALL.TIME)))
 
 ### DOSING
-
+  
+  #Sanitize the input.units
+  input.units <- tolower(input.units)
+  
   # Parse the dosing parameter into recognized values:
   if (!all(unique(model.list[[model]]$dosing.params) %in% 
     names(dosing))) stop("Dosing descriptor(s) missing")
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (all(lapply(dosing, is.null))) 
-    dosing$initial.dose <- 1 #mg/kg BW
-
-  #Scale dose if input.units is an intrinsic quantity in body weight (mg/kg) 
-  if (grepl("/kg", tolower(input.units))) {
-  dosing <- scale_dosing(dosing,parameters,route,output.units)
-  initial.dose <- dosing$initial.dose
+  if (all(lapply(dosing, is.null))) dosing$initial.dose <- 1 #mg/kg BW
+  
+  #Assign input.units to new key units variable, intended as post-scaling
+  #units that are ready for any necessary conversion
+  dosing.units <- input.units
+  
+  #Scale dose if input.units is measured in (mg/kg) 
+  if (input.units == "mg/kg") {
+  dosing <- scale_dosing(dosing,parameters,route)
+  dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
+  }
+  
+  #Apply a units conversion scaling factor to make sure all dosing metrics are
+  #based in micromoles
+  intrinsic.units <- c('mg/l','um','ppmv')
+  extrinsic.units <- c('mg','umol')
+  if (dosing.units %in% intrinsic.units) {
+      dose_units_conversion_factor <- 
+                 convert_units(input.units=dosing.units,
+                               output.units='um',
+                               chem.cas = chem.cas,
+                               chem.name = chem.name,
+                               dtxsid = dtxsid,
+                               parameters = parameters)
+  } else if (dosing.units %in% extrinsic.units) {
+      dose_units_conversion_factor <- 
+                 convert_units(input.units=dosing.units,
+                               output.units='umol',
+                               chem.cas = chem.cas,
+                               chem.name = chem.name,
+                               dtxsid = dtxsid,
+                               parameters = parameters)
+  }
+  
+  #Extract our dosing parameters for use
+  initial.dose <- dosing$initial.dose 
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-  forcings <- dosing$forcings
-  }
+  forcings <- dosing$forcings #Not intended to be changed by scale_dosing
+  
+  if (!is.null(initial.dose)) initial.dose <- 
+    as.numeric(initial.dose) * dose_units_conversion_factor               
+  if (!is.null(dosing.matrix)) dosing.matrix[,"dose"] <- 
+    as.numeric(dosing.matrix[,"dose"]) * dose_units_conversion_factor
+  if (!is.null(daily.dose)) daily.dose <- 
+    as.numeric(daily.dose) * dose_units_conversion_factor
+  if (!is.null(forcings)) forcings <- 
+    as.numeric(forcings[,"forcing_values"]) * dose_units_conversion_factor
+  
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -485,7 +601,9 @@ with two columns (time, dose).")
 # However, we always include whatever compartment received the dose:  
   monitor.vars <- unique(c(dose.var,monitor.vars))
   if (any(!(monitor.vars%in%colnames(out))))
-    stop("Some of the requested variables to monitor (monitor.vars) are not in the derivative_output_names.")
+    stop("Some of the requested variables to monitor (monitor.vars) are not in the 
+         columns of the deSolve output object. These variables should belong to
+         either the states or outputs of the model.")
  
 #Initialize string variable, 'out.amount', to represent units of amount in
 #accordance with the concentration units stored in 'output.units'. This is useful

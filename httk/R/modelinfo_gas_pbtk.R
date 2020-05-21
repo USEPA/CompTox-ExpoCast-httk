@@ -176,6 +176,8 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cmuc"
   )
 
+#list of variables to be monitored (plotted). This list should be able to be
+#constructed from states and outputs. 
 model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
@@ -194,30 +196,36 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["gas_pbtk"]]$allowed.units.input <- c('um','umol','mg/kg',
-                                                  'mg/l','ppmv')
+# Allowable units assigned to dosing input:
+model.list[["gas_pbtk"]]$allowed.units.input <- 
+  list("oral" = c('umol','mg','mg/kg'),
+    "iv" = c('umol','mg','mg/kg'),
+    "inhalation" = c('ppmv','mg/l','um','umol','mg'))
 
-model.list[["gas_pbtk"]]$allowed.units.output <- c('um', 'umol','mg/l','mg',
-                                                   'ppmv')
+# Allowable units assigned to "outputs" of the ode system
+model.list[["gas_pbtk"]]$allowed.units.output <- 
+  list("oral" = c('um','mg/l','ppmv','umol','mg'),
+       "iv" = c('um','mg/l','ppmv','umol','mg'),
+       "inhalation" = c('um','mg/l','ppmv','umol','mg'))
 
-model.list[["gas_pbtk"]]$allowed.units.output.by.compartment <-
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system 
+model.list[["gas_pbtk"]]$compartment.units <-
                                        c(
-                                          "Cgut"='um',
-                                          "Cliver"='um',
-                                          "Cven"='um',
-                                          "Clung"='um',
-                                          "Cart"='um',
-                                          "Crest"='um',
-                                          "Ckidney"='um',
-                                          "Cplasma"='um',
-                                          "Aplasma"='umol',
-                                          "Calv"='um',
-                                          "Cendexh"='ppmv',
-                                          "Cmixexh"='ppmv',
-                                          "Cmuc"
+                                          "Cgut"="um",
+                                          "Cliver"="um",
+                                          "Cven"="um",
+                                          "Clung"="um",
+                                          "Cart"="um",
+                                          "Crest"="um",
+                                          "Ckidney"="um",
+                                          "Cplasma"="um",
+                                          "Aplasma"="umol",
+                                          "Calv"="ppmv",
+                                          "Cendexh"="ppmv",
+                                          "Cmixexh"="ppmv",
+                                          "Cmuc"="umol"
                                             )
-  
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",

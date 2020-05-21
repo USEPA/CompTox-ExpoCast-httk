@@ -84,8 +84,23 @@ model.list[["1compartment"]]$default.monitor.vars <- c(
   "Ametabolized",
   "AUC")
 
-# Allowable units:
-model.list[["1compartment"]]$allowed.units <- c('um', 'mg/l')
+
+# Allowable units assigned to dosing input:
+model.list[["1compartment"]]$allowed.units.input <- 
+  list("oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg')
+
+# Allowable units assigned to "outputs" of the ode system
+model.list[["1compartment"]]$allowed.units.output <- 
+  list("oral" = c('um','mg/l'),
+       "iv" = c('um','mg/l'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system 
+model.list[["1compartment"]]$compartment.units <-
+  c(
+    "Ccompartment"="um"
+  )
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["1compartment"]]$dosing.params <- c("daily.dose",
