@@ -57,9 +57,9 @@
 #' sequence begins at the beginning of times.
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
-#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param daily.dose Total daily dose
 #' @param doses.per.day Number of doses per day.
-#' @param dose Amount of a single dose, mg/kg BW. 
+#' @param dose Amount of a single dose
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
@@ -176,7 +176,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=F,
                            suppress.messages=F,
                            species="Human",
-                           output.units='uM',
                            method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=F,
                            recalc.blood2plasma=F,
@@ -285,8 +284,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
       } else {
       Nrep <- ceiling((days - exp.start.time)/period) 
       times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-      conc  <- rep(c(exp.conc,0), Nrep)
-      conc.matrix = cbind(times,conc)
+      forcing_values  <- rep(c(exp.conc,0), Nrep)
+      conc.matrix = cbind(times,forcing_values)
       }
       return(conc.matrix)
     }
@@ -326,7 +325,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
