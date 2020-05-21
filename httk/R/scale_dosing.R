@@ -32,10 +32,15 @@ scale_dosing <- function(dosing,parameters,route)
   if (route=="oral")
   {
     scale.factor <- BW*as.numeric(parameters[['Fgutabs']])
-  } else if (route == "inhalation"){ #Added 9-25-19 MWL, obviously needs touching up, but for now, takes uM inputs and returns uM outputs
+  } else if (route == "iv")
+    {
+    scale.factor <- BW
+  } else if (route == "inhalation")
+    { #Added 9-25-19 MWL, obviously needs touching up, but for now,
+      #takes uM inputs and returns uM outputs
     scale.factor <- 1
   }
-  
+    
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 
     as.numeric(dosing$initial.dose) * scale.factor                 
   if (!is.null(dosing$dosing.matrix)) dosing$dosing.matrix[,"dose"] <- 

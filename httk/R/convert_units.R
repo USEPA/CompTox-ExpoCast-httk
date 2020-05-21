@@ -97,20 +97,24 @@ if (is.null(MW)) {
                          #name of 'mg/L' not supported for assignment
                          um = c(10^3/MW, 1, 1/24.45),
                          ppmv = c(10^3*24.45/MW, 24.45, 1))
+  #Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
+  #conditions, according to the Environmental Science and Technology Briefs for 
+  #Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
+  
   colnames(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
   row.names(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
   
   #initialize master list of names of chemical amounts/concentration-based
-  #units supported in httk
-  httk_units_list <- c('mg','umol','mg/l','um','ppmv')
+  #units supported in httk, excluding those scaled to body weight 
+  httk_dose_units_list <- c('mg','umol','mg/l','um','ppmv')
   
 #Now check to see if our compiled information can appropriately support
 #the requested units conversion, and if so, provide the conversion factor.
-if (!(input.units %in% httk_units_list) |
-    !(output.units %in% httk_units_list)) {
-  stop("Requested units not supported. Extrinsic amounts are supported 
-        in units of 'mg' and 'umol', and intrinsic concentrations are
-        supported in 'mg/L', 'uM', and, in the case of gas models where 
+if (!(input.units %in% httk_dose_units_list) |
+    !(output.units %in% httk_dose_units_list)) {
+  stop("Requested units not supported for unit conversion. Extrinsic amounts
+        are supported in units of 'mg' and 'umol', and intrinsic concentrations
+        are supported in 'mg/L', 'uM', and, in the case of gas models where 
         the gas is assumed ideal, 'ppmv'.")
 } else {
   if (input.units %in% names(amounts_units_conversion_frame)){

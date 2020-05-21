@@ -180,8 +180,30 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
+# Allowable units assigned to dosing input:
+model.list[["pbtk"]]$allowed.units.input <- 
+  list("oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to "outputs" of the ode system
+model.list[["pbtk"]]$allowed.units.output <- 
+  list("oral" = c('um','mg/l','umol','mg'),
+       "iv" = c('um','mg/l','umol','mg'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system 
+model.list[["pbtk"]]$compartment.units <-
+  c(
+    "Cgut"="um",
+    "Cliver"="um",
+    "Cven"="um",
+    "Clung"="um",
+    "Cart"="um",
+    "Crest"="um",
+    "Ckidney"="um",
+    "Cplasma"="um",
+    "Aplasma"="umol"
+  )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
