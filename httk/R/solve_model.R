@@ -647,7 +647,7 @@ for (this.compartment in names(compartment_units)){
     n_monitor_vars = length(monitor.vars)
     plot_units_vector = rep(NA, n_monitor_vars) 
     
-    for (var in 1:N_monitor_vars) {
+    for (var in 1:n_monitor_vars) {
       if (monitor.vars[var] %in% names(compartment_units)) {
         plot_units_vector[var] = compartment_units[[monitor.vars[var]]]
       } else if (firstchar(monitor.vars[var]) == 'A') {
@@ -674,8 +674,8 @@ for (this.compartment in names(compartment_units)){
     cat(paste(toupper(substr(species,1,1)), 
           substr(species,2,nchar(species)),sep=""),
        "amounts with units otherwise unspecified by compartment.units are 
-        returned in umol by default, and similarly concentrations default to
-        units of uM.\n")
+returned in umol by default, and similarly concentrations default to
+units of uM.\n")
     
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
