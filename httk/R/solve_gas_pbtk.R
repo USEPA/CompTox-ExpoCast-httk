@@ -316,8 +316,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
       dosing.matrix=dosing.matrix,
       daily.dose=daily.dose,
       doses.per.day=doses.per.day,
-      forcings
-    ),
+      forcings),
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,
