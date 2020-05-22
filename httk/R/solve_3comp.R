@@ -47,8 +47,8 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' @param input.units Input units of interest assigned to dosing,
+#' defaults to mg/kg BW
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -103,7 +103,7 @@ solve_3comp <- function(chem.name = NULL,
                     parameters=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
-                    daily.dose = NULL, # Assume dose is in mg/kg BW/day
+                    daily.dose = NULL, 
                     dose = NULL,
                     doses.per.day=NULL,
                     initial.values=NULL,
@@ -111,7 +111,7 @@ solve_3comp <- function(chem.name = NULL,
                     suppress.messages=F,
                     species="Human",
                     iv.dose=F,
-                    output.units='uM',
+                    input.units="mg/kg",
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=F,
                     recalc.blood2plasma=F,
@@ -145,7 +145,7 @@ solve_3comp <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    output.units=output.units,
+    input.units=input.units,
     method=method,rtol=rtol,atol=atol,
     default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
