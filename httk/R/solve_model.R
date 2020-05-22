@@ -494,7 +494,7 @@ solve_model <- function(chem.name = NULL,
     as.numeric(dosing.matrix[,"dose"]) * dose_units_conversion_factor
   if (!is.null(daily.dose)) daily.dose <- 
     as.numeric(daily.dose) * dose_units_conversion_factor
-  if (!is.null(forcings)) forcings <- 
+  if (!is.null(forcings)) forcings[,"forcing_values"] <- 
     as.numeric(forcings[,"forcing_values"]) * dose_units_conversion_factor
   
 
