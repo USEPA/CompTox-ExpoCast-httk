@@ -181,20 +181,19 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   )
 
 # Allowable units assigned to dosing input:
-model.list[["pbtk"]]$allowed.units.input <- 
-  list("oral" = c('umol','mg','mg/kg'),
+model.list[["pbtk"]]$allowed.units.input <- list(
+       "oral" = c('umol','mg','mg/kg'),
        "iv" = c('umol','mg','mg/kg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
-model.list[["pbtk"]]$allowed.units.output <- 
-  list("oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
+model.list[["pbtk"]]$allowed.units.output <- list(
+       "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
        "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored.
 # AUC values should also be included.
-model.list[["pbtk"]]$compartment.units <-
-  c(
+model.list[["pbtk"]]$compartment.units <- c(
     "Cgut"="uM",
     "Cliver"="uM",
     "Cven"="uM",
