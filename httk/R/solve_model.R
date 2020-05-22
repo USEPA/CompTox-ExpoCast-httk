@@ -605,7 +605,7 @@ with two columns (time, dose).")
   
 # Now that the system has been run in umol-based units, convert back
 # to compartment_units for specified quantities of interest
-for (this.compartment in names(compartment.units)){
+for (this.compartment in names(compartment_units)){
   if (firstchar(this.compartment) == "C"){
     output_conversion_factor = convert_units(
                           input.units = 'uM',
