@@ -262,7 +262,7 @@ solve_model <- function(chem.name = NULL,
     stop("The names of the compartments in compartment_units must comprise
           some subset of the named entries in derivative_output_names and 
           state.vars for model ", model)
-  } else if (!all(derivative_output_names %in% compartment_units)){
+  } else if (!all(derivative_output_names %in% names(compartment_units))){
     stop("Each entry in derivative_output_names should have a corresponding
           units specification in compartment_units for model ", model)
   }
@@ -367,7 +367,7 @@ solve_model <- function(chem.name = NULL,
       
       #Make a basic check for whether the names of tissues/compartments in the
       #initial.values vector correspond to the state.vars names
-      if !(any(grepl(tissue, state.vars))) {
+      if (!any(grepl(tissue, state.vars))) {
         stop("Initital values must begin with \"C\" or \"A\"to denote 
               concentrations or amounts, respectively, and correspond
               to the names of the state.vars thereafter for model, ", model)
@@ -378,7 +378,7 @@ solve_model <- function(chem.name = NULL,
       #a simple "tissue" volume scaling away from the units specified for
       #the amount in compartment_units.
       if (any(firstchar(names(compartment_units)[grepl(tissue,
-                         names(compartment_units)) = TRUE]) == "C"))
+                         names(compartment_units)) == TRUE]) == "C"))
           {#Use the units for this compartment from compartment_units to
            #get a units conversion factor, even if trivially 1
             this.compartment.units = compartment_units[paste("C",tissue,sep='')]
@@ -388,7 +388,7 @@ solve_model <- function(chem.name = NULL,
                             MW = MW)
             
        } else if (any(firstchar(names(compartment_units)[grepl(tissue,
-                                  names(compartment_units)) = TRUE]) == "A")){
+                                  names(compartment_units)) == TRUE]) == "A")){
        #Again it is assumed the units of this.compartment in initial.values is
        #a simple "tissue" volume scaling away from the units specified for
        #the amount in compartment_units
