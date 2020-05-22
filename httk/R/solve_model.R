@@ -452,7 +452,7 @@ solve_model <- function(chem.name = NULL,
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (all(lapply(dosing, is.null))) dosing$initial.dose <- 1 #mg/kg BW
+  if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
   
   #Assign input.units to new key units variable, intended as post-scaling
   #units that are ready for any necessary conversion
