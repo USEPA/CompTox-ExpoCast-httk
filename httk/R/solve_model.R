@@ -247,11 +247,11 @@ solve_model <- function(chem.name = NULL,
   #Make basic checks for variable name convention observance in objects of
   #interest:
   if (any(!firstchar(names(compartment_units)) %in% c("A","C"))) {
-    stop("The names of compartment_units for model, " model, " must begin with
+    stop("The names of compartment_units for model, ", model, " must begin with
           \"A\" for amounts or areas under the curve (AUC), or \"C\" for
           concentrations.")
   } else if (any(!firstchar(names(state.vars)) %in% c("A","C"))) {
-    stop("The names of state.vars for model, " model, " must begin with
+    stop("The names of state.vars for model, ", model, " must begin with
           \"A\" for amounts or areas under the curve (AUC), or \"C\" for
           concentrations.")
   } 
@@ -356,8 +356,8 @@ solve_model <- function(chem.name = NULL,
     
     #they should also observe this naming convention
     if (any(!firstchar(names(initial.values)) %in% c("A","C"))) {
-      stop("The names of initial.values for model, " model, " should begin with
-            \"A\" for amounts, or \"C\" for concentrations.")
+      stop("The names of initial.values for model, ", model, " should begin 
+            with \"A\" for amounts, or \"C\" for concentrations.")
     } 
     
     for (this.compartment in names(initial.values))
@@ -370,7 +370,7 @@ solve_model <- function(chem.name = NULL,
       if !(any(grepl(tissue, state.vars))) {
         stop("Initital values must begin with \"C\" or \"A\"to denote 
               concentrations or amounts, respectively, and correspond
-              to the names of the state.vars thereafter.")
+              to the names of the state.vars thereafter for model, ", model)
       }
       
       #Determine whether units scaling factor to umol-based system needed.
