@@ -248,25 +248,33 @@ solve_model <- function(chem.name = NULL,
   #interest:
   if (any(!firstchar(names(compartment_units)) %in% c("A","C"))) {
     stop("The names of compartment_units for model, " model, " must begin with
-          \"A\" for amounts, or \"C\" for concentration.")
+          \"A\" for amounts or areas under the curve (AUC), or \"C\" for
+          concentrations.")
   } else if (any(!firstchar(names(state.vars)) %in% c("A","C"))) {
-    stop("The names of state.vars for model, " model, " must begin with \"A\"
-          for amounts, or \"C\" for concentration.")
+    stop("The names of state.vars for model, " model, " must begin with
+          \"A\" for amounts or areas under the curve (AUC), or \"C\" for
+          concentrations.")
   } 
-  #These names should match
-  if (any(!names(compartment_units) %in% derivative_output_names)) {
-    stop("The names of the compartments in compartment_units must correspond 
-          to the names of the derivative_output_names in model ",model)
+  #The compartment_units entries should correspond to the names of some entry in
+  #the derivative_output_names and/or state.vars
+  if (any(!names(compartment_units) %in% c(derivative_output_names,
+                                           state.vars))) {
+    stop("The names of the compartments in compartment_units must comprise
+          some subset of the named entries in derivative_output_names and 
+          state.vars for model ", model)
+  } else if (!all(derivative_output_names %in% compartment_units)){
+    stop("Each entry in derivative_output_names should have a corresponding
+          units specification in compartment_units for model ", model)
   }
   
   # Check the units-related objects that we want the solver to use:   
-  if (!(tolower(input.units) %in% allowed_units_input)) {
+  if (!(tolower(input.units) %in% tolower(allowed_units_input))) {
     stop(paste("Units",input.units,"unavailable for model",model))
-  } else if (any(!compartment_units %in% allowed_units_output)) {
+  } else if (any(!tolower(compartment_units)
+                 %in% tolower(allowed_units_output))) {
     stop("The compartment.units list specified for the model outputs contains
           units not allowed per allowed.units.output for model ", model)
   }
-  
   
   
 ### MODEL PARAMETERS FOR R
@@ -334,7 +342,7 @@ solve_model <- function(chem.name = NULL,
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
 
-# Molecular weight:
+# Molecular weight for general use:
   MW <- parameters[["MW"]]
 
 ### STATE VECTOR
@@ -345,6 +353,13 @@ solve_model <- function(chem.name = NULL,
   
 # Address case where initial conditions provided using argument initial.values:
   if (!is.null(initial.values)){
+    
+    #they should also observe this naming convention
+    if (any(!firstchar(names(initial.values)) %in% c("A","C"))) {
+      stop("The names of initial.values for model, " model, " should begin with
+            \"A\" for amounts, or \"C\" for concentrations.")
+    } 
+    
     for (this.compartment in names(initial.values))
     {
       #Capture tissue signifier first
@@ -366,28 +381,22 @@ solve_model <- function(chem.name = NULL,
                          names(compartment_units)) = TRUE]) == "C"))
           {#Use the units for this compartment from compartment_units to
            #get a units conversion factor, even if trivially 1
-            this.compartment.units = compartment_units[this.compartment]
+            this.compartment.units = compartment_units[paste("C",tissue,sep='')]
             units_conversion_factor = 
               convert_units(input.units=this.compartment.units,
                             output.units='uM',
-                            chem.cas = chem.cas,
-                            chem.name = chem.name,
-                            dtxsid = dtxsid,
-                            parameters = parameters)
+                            MW = MW)
             
        } else if (any(firstchar(names(compartment_units)[grepl(tissue,
                                   names(compartment_units)) = TRUE]) == "A")){
        #Again it is assumed the units of this.compartment in initial.values is
        #a simple "tissue" volume scaling away from the units specified for
        #the amount in compartment_units
-            this.state.units = compartment_units[paste("A",tissue,sep="")]
+            this.state.units = compartment_units[paste("A",tissue,sep='')]
             units_conversion_factor = 
               convert_units(input.units=this.state.units,
                             output.units='umol',
-                            chem.cas = chem.cas,
-                            chem.name = chem.name,
-                            dtxsid = dtxsid,
-                            parameters = parameters)
+                            MW = MW)
             
         } else {
               #If units for this initial.values entry aren't specified,
@@ -449,7 +458,7 @@ solve_model <- function(chem.name = NULL,
   dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
   }
   
-  #Apply a units conversion scaling factor to make sure all dosing metrics are
+  #Apply a units conversion factor to make sure all dosing metrics are
   #based in micromoles
   intrinsic.units <- c('mg/l','um','ppmv')
   extrinsic.units <- c('mg','umol')
@@ -457,18 +466,12 @@ solve_model <- function(chem.name = NULL,
       dose_units_conversion_factor <- 
                  convert_units(input.units=dosing.units,
                                output.units='um',
-                               chem.cas = chem.cas,
-                               chem.name = chem.name,
-                               dtxsid = dtxsid,
-                               parameters = parameters)
+                               MW = MW)
   } else if (dosing.units %in% extrinsic.units) {
       dose_units_conversion_factor <- 
                  convert_units(input.units=dosing.units,
                                output.units='umol',
-                               chem.cas = chem.cas,
-                               chem.name = chem.name,
-                               dtxsid = dtxsid,
-                               parameters = parameters)
+                               MW = MW)
   }
   
   #Extract our dosing parameters for use
@@ -593,6 +596,31 @@ with two columns (time, dose).")
   
 ### MODEL OUTPUT
   
+# Now that the system has been run in umol-based units, convert back
+# to compartment_units for specified quantities of interest
+for (this.compartment in names(compartment.units)){
+  if (firstchar(this.compartment) == "C"){
+    output_conversion_factor = convert_units(
+                          input.units = 'uM',
+                          output.units = compartment_units[this.compartment],
+                          MW = MW)
+  } else if (firstchar(this.compartment) == "A"){
+      if (substr(this.compartment, start=1, stop=3) == "AUC"){
+        output_conversion_factor = convert_units(
+            input.units = "uM",
+            output.units = sub("*days","",compartment_units[this.compartment]),
+            MW = MW)
+      } else{ #then this.compartment should correspond to an amount
+         output_conversion_factor = convert_units(
+                          input.units = 'umol',
+                          output.units = compartment_units[this.compartment],
+                          MW = MW)
+    }
+  }
+  #Now apply conversion factor to each relevant entry
+  out[,this.compartment] <- out[,this.compartment] * output_conversion_factor
+}
+  
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
   {
@@ -601,83 +629,60 @@ with two columns (time, dose).")
 # However, we always include whatever compartment received the dose:  
   monitor.vars <- unique(c(dose.var,monitor.vars))
   if (any(!(monitor.vars%in%colnames(out))))
-    stop("Some of the requested variables to monitor (monitor.vars) are not in the 
-         columns of the deSolve output object. These variables should belong to
-         either the states or outputs of the model.")
- 
-#Initialize string variable, 'out.amount', to represent units of amount in
-#accordance with the concentration units stored in 'output.units'. This is useful
-#for plotting and other warning messages sent to the user. 
-  if (tolower(output.units) == 'um')
-  {
-    out.amount <- 'umol'
-  } else out.amount <- 'mg'
+    stop("Some of the requested variables to monitor (monitor.vars) are not in
+          the columns of the deSolve output object. These variables should
+          belong to either the states or outputs of the model.")
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==T)
   {
-    
     #assemble a y-axis units vector to correspond to each entry in monitor.vars
-    vars_monitored = length(monitor.vars)
-    plot_units_vector = rep(NA, vars_monitored)
+    n_monitor_vars = length(monitor.vars)
+    plot_units_vector = rep(NA, n_monitor_vars) 
     
-    for (var in 1:vars_monitored) {
-      if (firstchar(monitor.vars[var]) == 'A') {
-        if (substr(monitor.vars[var], start=1, stop=3) == 'AUC') {
-          plot_units_vector[var] = paste(output.units,'* days')
-        } else plot_units_vector[var] = out.amount
+    for (var in 1:N_monitor_vars) {
+      if (monitor.vars[var] %in% names(compartment_units)) {
+        plot_units_vector[var] = compartment_units[[monitor.vars[var]]]
+      } else if (firstchar(monitor.vars[var]) == 'A') {
+        #other variables that start with 'A' should all be amounts
+        plot_units_vector[var] = "umol"
       } else if (firstchar(monitor.vars[var]) == 'C') {
-        plot_units_vector[var] = output.units
-      } else stop("State and output variables to be monitored must begin with
-                  \"C\", \"A\", or \"AUC\" to denote concentrations, amounts,
-                  or areas under the curve, respectively.")
+        plot_units_vector[var] = "uM"
+      }
     }
     
-   
-    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),ylab = plot_units_vector, xlab = 'time (days)')
+    graphics::plot(out, select=unique(c(monitor.vars,names(initial.values))),
+                   ylab = plot_units_vector, xlab = 'time (days)')
   } 
                
 # Down-select to only the desired parameters:
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
-  class(out) <- c('matrix','deSolve')
-
-# Convert from uM to mg/l if requested
-  if (tolower(output.units)=='mg/l')
-  { 
-    time.index <- which(colnames(out)=="time")
-    out[,-time.index] <- out[,-time.index] * 1e3 * MW / 1e6 # uM -> mg/L
-  }
   
+  class(out) <- c('matrix','deSolve')
+  
+
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
-    if (is.null(chem.cas) & is.null(chem.name))
+    cat(paste(toupper(substr(species,1,1)), 
+          substr(species,2,nchar(species)),sep=""),
+       "amounts with units otherwise unspecified by compartment.units are 
+        returned in umol by default, and similarly concentrations default to
+        units of uM.\n")
+    
+    if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
-      
-      cat("Amounts returned in",out.amount," and concentration returned in",output.units,"units.\n")
 # If only a parameter vector is given it's good to warn people that they
 # need to make sure that these values have been appropriately recalculated:
       if (!recalc.blood2plasma) warning("Rblood2plasma not recalculated. \
 Set recalc.blood2plasma to TRUE if desired.") 
       if (!recalc.clearance) warning("Clearance not recalculated. \
 Set recalc.clearance to TRUE if desired.") 
-    } else {
-      cat(paste(toupper(substr(species,1,1)),
-        substr(species,2,nchar(species)),sep=""),
-        "amounts returned in", out.amount,
-        "and concentration returned in", output.units,
-        "units.\n")
     }
-    if (tolower(output.units) == 'mg/l')
-    {
-      cat("AUC is area under plasma concentration in mg/L * days units with \
-Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
-    } else if(tolower(output.units) == 'um')
-    {
-      cat("AUC is area under plasma concentration in uM * days units with \
-Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
-    } else cat("AUC is area under plasma concentration curve in ",output.units,
-      " * days units with Rblood2plasma = ",signif(Rblood2plasma,3),".\n",sep="")
+    
+    cat("AUC is area under plasma concentration curve in ",
+        compartment_units[["AUC"]], " units with Rblood2plasma = ",
+        signif(Rblood2plasma,3),".\n",sep="")
   }
     
   return(set_httk_precision(out)) 
