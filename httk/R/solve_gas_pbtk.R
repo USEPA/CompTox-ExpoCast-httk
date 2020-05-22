@@ -61,17 +61,16 @@
 #' @param doses.per.day Number of doses per day.
 #' @param dose Amount of a single dose
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
-#' columns or rows named "dose" and "time" containing the time and amount, in
-#' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
-#' specify forcing concentrations to the integrator, either in combination 
-#' with eventdata or on its own. 
+#' columns or rows named "dose" and "time" containing the time and amount of 
+#' each dose. 
 #' @param forcings Manual input of 'forcings' data series argument for ode
-#' integrator, defaults to NULL
+#' integrator. In default case, it begins NULL, but is then constructed using
+#' other input parameters. 
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
-#' uM, in line with output.units
+#' uM
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
@@ -80,13 +79,13 @@
 #' in conjunction with existing ode integrator methods
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
-#' output.units.  Defaults are zero.
+#' those specified for the model outputs. Default values are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param output.units Desired units (either "mg/L", "mg" as abbreviation for
-#' "mg/L", "ppmv", "umol", or default "uM").
+#' @param input.units Input units of interest assigned to dosing, including 
+#' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -165,8 +164,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            tsteps = 4, #tsteps is number of steps per hour
                            daily.dose = NULL,
                            doses.per.day = NULL,
-                           dose = NULL, #Assume single dose is in mg/kg BW/day
+                           dose = NULL, 
                            dosing.matrix = NULL,
+                           forcings = NULL,
                            exp.start.time = 0, #default starting time in specifying forcing exposure
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
@@ -176,6 +176,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=F,
                            suppress.messages=F,
                            species="Human",
+                           input.units = "uM", 
                            method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=F,
                            recalc.blood2plasma=F,
@@ -201,13 +202,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
-  #Screen against case in which forcing function is specified, but output.units
-  #are specified as other than 'uM'. Units of forcing function exposure 
-  #concentration are only supported as 'uM' for now.
-  #if ((!is.null(dosing.matrix) | exp.conc > 0) & tolower(output.units) != 'um') {
-    #stop('Forcings exposure data series not yet supported 
-      #   in units other than uM.')
-  #}
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
@@ -263,7 +257,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
 #    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
 #  }
   
-  if(is.null(dosing.matrix))
+  #Only generate the forcings if other dosing metrics are null, they're not
+  #designed to work together in a very meaningful way
+  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
   {
     if (exp.duration > period){
       stop('If not specifying \'dose.matrix\' data series explicitly, 
@@ -324,6 +320,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
+    input.units = input.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,

@@ -8,7 +8,7 @@
 #' species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 #' 
 #' Dosing values with certain acceptable associated input.units (like mg/kg BW)
-#' are configured to undergo a unit conversion, as all model simulations are 
+#' are configured to undergo a unit conversion. All model simulations are 
 #' intended to run with chemical amounts in umol, and concentrations in uM. 
 #' Model outputs are configured to be presented in certain alternative units as 
 #' well. 
@@ -57,11 +57,11 @@
 #' of most httk models, these should include "initial.dose", "doses.per.day", 
 #' "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
 #' precise dose regimen specification, and is a matrix consisting of two
-#' columns or rows named "time" and "dose" containing the time and amount,
-#' in mg/kg BW, of each dose. If none of the namesake entries of the dosing 
-#' list is set to a non-NULL value, solve_model uses a default dose of 
-#' 1 mg/kg BW along with the dose type (add/multiply) specified for 
-#' a given route (e.g. add the dose to gut lumen for oral route)
+#' columns or rows named "time" and "dose" containing the time and amount of 
+#' each dose. If none of the namesake entries of the dosing list is set to a
+#' non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
+#' dose type (add/multiply) specified for a given route (e.g. add the dose to gut
+#' lumen for oral route)
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
 #' @param initial.values Vector containing the initial concentrations or
@@ -72,7 +72,9 @@
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
-#' @param input.units Input units of interest assigned to dosing
+#' @param input.units Input units of interest assigned to dosing. Defaults
+#' to mg/kg BW, in line with the default dosing scheme of a one-time dose of
+#' 1 mg/kg in which no other dosing parameters are specified.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -129,7 +131,7 @@ solve_model <- function(chem.name = NULL,
                     monitor.vars=NULL,
                     suppress.messages=F,
                     species="Human",
-                    input.units=NULL,
+                    input.units="mg/kg",
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
