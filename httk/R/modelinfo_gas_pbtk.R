@@ -277,9 +277,13 @@ model.list[["gas_pbtk"]]$required.params <- c(
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["gas_pbtk"]]$exclude.fup.zero <- T
   
-#Name of forcing function as it appears in .c model code for specification to ode solver
-model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
-
+#Key forcings objects and names: name of forcing function as it appears in 
+#.c model code for specification to ode solver (initforc), fcontrol list
+#of arguments for fine-tuning inhalation forcing function in conjunction
+#with existing ode integrator methods. Forcings series handled in model 
+#solver itself
+model.list[["gas_pbtk"]]$forcings.materials <- list(initforc="initforc_gas_pbtk",
+  fcontrol = list(method='constant',rule=2,f=0))
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")

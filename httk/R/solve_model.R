@@ -214,7 +214,9 @@ solve_model <- function(chem.name = NULL,
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
 # If using forcing function for dosing, specify name of this function as 
 # it appears in model's associated .c file for passing to integrator
-    initforc <- model.list[[model]]$initforc
+    initforc <- model.list[[model]]$forcings.materials[["initforc"]]
+# Using a forcings series also requires specifying fcontrol argument
+    fcontrol <- model.list[[model]]$forcings.materials[["fcontrol"]]
   }
   
 
@@ -596,6 +598,7 @@ with two columns (time, dose).")
     events=list(data=eventdata),
     initforc = initforc,
     forcings = forcings,
+    fcontrol = fcontrol,
     ...)
 
 # Cannot guarantee arbitrary precision for deSolve:
