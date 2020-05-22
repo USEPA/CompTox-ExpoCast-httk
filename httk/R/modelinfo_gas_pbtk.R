@@ -224,7 +224,7 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Calv"="ppmv",
                                           "Cendexh"="ppmv",
                                           "Cmixexh"="ppmv",
-                                          "Cmuc"="umol",
+                                          "Cmuc"="uM",
                                           "AUC"="uM*days")
 
 # These parameters specify the exposure scenario simulated by the model:
