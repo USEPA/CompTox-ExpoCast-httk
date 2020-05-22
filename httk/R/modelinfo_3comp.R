@@ -146,7 +146,7 @@ model.list[["3compartment"]]$allowed.units.output <- list(
 model.list[["3compartment"]]$compartment.units <-c(
     "Cportven"="uM",
     "Cliver"="uM",
-    "Csyscomp"="uM"
+    "Csyscomp"="uM",
     "AUC"="uM"
   )
 
