@@ -192,7 +192,10 @@ solve_model <- function(chem.name = NULL,
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
- # name of function that initializes the compiled model code:
+# The names of the supported dosing parameters, the names of which must be 
+# specified to solve_model, even if corresponding to NULL values
+    dosing_params <- model.list[[model]]$dosing.params
+# name of function that initializes the compiled model code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
     Rtosolvermap <- model.list[[model]]$Rtosolvermap
@@ -442,9 +445,10 @@ solve_model <- function(chem.name = NULL,
   #Sanitize the input.units
   input.units <- tolower(input.units)
   
-  # Parse the dosing parameter into recognized values:
-  if (!all(unique(model.list[[model]]$dosing.params) %in% 
-    names(dosing))) stop("Dosing descriptor(s) missing")
+  # Make sure we have all specified dosing parameters for the model
+  # accounted for
+  if (!all(unique(dosing_params) %in% names(dosing)))
+    stop("Dosing descriptor(s) missing")
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
@@ -460,7 +464,7 @@ solve_model <- function(chem.name = NULL,
   dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
   }
   
-  #Apply a units conversion factor to make sure all dosing metrics are
+  #Get a units conversion factor to make sure all dosing metrics are
   #based in micromoles
   intrinsic.units <- c('mg/l','um','ppmv')
   extrinsic.units <- c('mg','umol')
@@ -483,6 +487,7 @@ solve_model <- function(chem.name = NULL,
   doses.per.day <- dosing$doses.per.day
   forcings <- dosing$forcings #Not intended to be changed by scale_dosing
   
+  #Apply units conversion factor
   if (!is.null(initial.dose)) initial.dose <- 
     as.numeric(initial.dose) * dose_units_conversion_factor               
   if (!is.null(dosing.matrix)) dosing.matrix[,"dose"] <- 

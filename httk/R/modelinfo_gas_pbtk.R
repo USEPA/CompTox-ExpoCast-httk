@@ -228,8 +228,9 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "AUC"="uM*days")
 
 # These parameters specify the exposure scenario simulated by the model:
-model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",
+model.list[["gas_pbtk"]]$dosing.params <- c(
   "initial.dose",
+  "daily.dose",
   "doses.per.day",
   "dosing.matrix",
   "forcings")
