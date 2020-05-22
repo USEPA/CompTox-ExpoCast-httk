@@ -58,13 +58,13 @@ if (is.null(MW)) {
       is.null(parameters))
     {
     stop('User must specify either MW (molecular weight), or give chemical
-         identifying information like chem.cas, chem.name, or dtxsid
-         so that httk can retrieve a molecular weight value in determining
-         the unit conversion factor.')
+identifying information like chem.cas, chem.name, or dtxsid
+so that httk can retrieve a molecular weight value in determining
+the unit conversion factor.')
   } else if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)) {
       if (is.null(parameters['MW'])) {
         stop("If describing chemical exclusively with a set of parameters,
-             the parameters must include an entry 'MW' (molecular weight).")
+the parameters must include an entry 'MW' (molecular weight).")
       } else {
         #Support parameters objects of the different classes currently employed
         #by httk, namely compound data.table/data.frame objects and lists.
@@ -74,7 +74,7 @@ if (is.null(MW)) {
           } else if (class(parameters) == 'list'){
             MW <- parameters['MW']
           } else stop('httk only supports parameters objects of class
-                      compound data.table/data.frame or list.')
+compound data.table/data.frame or list.')
         } 
   } else {
     MW <- get_physchem_param(param = 'MW', chem.cas=chem.cas,
@@ -113,28 +113,27 @@ if (is.null(MW)) {
 if (!(input.units %in% httk_dose_units_list) |
     !(output.units %in% httk_dose_units_list)) {
   stop("Requested units not supported for unit conversion. Extrinsic amounts
-        are supported in units of 'mg' and 'umol', and intrinsic concentrations
-        are supported in 'mg/L', 'uM', and, in the case of gas models where 
-        the gas is assumed ideal, 'ppmv'.")
+are supported in units of 'mg' and 'umol', and intrinsic concentrations
+are supported in 'mg/L', 'uM', and, in the case of gas models where 
+the gas is assumed ideal, 'ppmv'.")
 } else {
   if (input.units %in% names(amounts_units_conversion_frame)){
     if (output.units %in% names(amounts_units_conversion_frame)) {
        conversion_factor <- 
          amounts_units_conversion_frame[input.units, output.units]
-    } else stop('Conversion from ', input.units, ' to ', output.units, 'is not
-                 supported. Supported extrinsic amount units include mg and
-                 umol, and supported intrinsic concentration units include
-                 mg/L, uM, and in the case of gas models where the gas is
-                 assumed ideal, ppmv.')
+    } else stop('Conversion from ', input.units, ' to ', output.units, ' is not
+supported. Supported extrinsic amount units include mg and umol, and supported 
+intrinsic concentration units include mg/L, uM, and in the case of gas models 
+where the gas is assumed ideal, ppmv.')
   } else if (input.units %in% names(conc_units_conversion_frame)) {
     if (output.units %in% names(conc_units_conversion_frame)) {
       conversion_factor <- 
         conc_units_conversion_frame[input.units, output.units]
     } else stop('Conversion from ', input.units, ' to ', output.units, 'is not
-                 supported. Supported extrinsic amount units include mg and
-                 umol, and supported intrinsic concentration units include
-                 mg/L, uM, and in the case of gas models where the gas is
-                 assumed ideal, ppmv.')
+supported. Supported extrinsic amount units include mg and
+umol, and supported intrinsic concentration units include
+mg/L, uM, and in the case of gas models where the gas is
+assumed ideal, ppmv.')
   }
 }
   
