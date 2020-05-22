@@ -75,8 +75,6 @@
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
-#' @param fcontrol List of arguments for finetuning inhalation forcing function
-#' in conjunction with existing ode integrator methods
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' those specified for the model outputs. Default values are zero.
@@ -171,7 +169,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
                            exp.duration = 12,
-                           fcontrol = list(method='constant',rule=2,f=0), 
                            initial.values=NULL,
                            plots=F,
                            suppress.messages=F,
@@ -336,7 +333,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
       VT = VT,
       VD = VD),
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    fcontrol = fcontrol,
     ...)
   
   return(out)
