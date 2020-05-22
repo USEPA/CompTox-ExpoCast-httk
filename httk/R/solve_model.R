@@ -615,7 +615,7 @@ for (this.compartment in names(compartment_units)){
       if (substr(this.compartment, start=1, stop=3) == "AUC"){
         output_conversion_factor = convert_units(
             input.units = "uM",
-            output.units = sub("*days","",compartment_units[this.compartment]),
+            output.units = sub("\\*days","",compartment_units[this.compartment]),
             MW = MW)
       } else{ #then this.compartment should correspond to an amount
          output_conversion_factor = convert_units(
