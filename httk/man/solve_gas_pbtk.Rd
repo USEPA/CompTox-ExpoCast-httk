@@ -105,7 +105,7 @@ those specified for the model outputs. Default values are zero.}
 default "Human").}
 
 \item{input.units}{Input units of interest assigned to dosing, including 
-forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
+forcings. Defaults to "uM" as applied to the default forcings scheme.}
 
 \item{method}{Method used by integrator (deSolve).}
 
