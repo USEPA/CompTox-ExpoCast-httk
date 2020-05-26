@@ -126,7 +126,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #'
-#' @author Matt Linakis, John Wambaugh, and Mark Sfeir
+#' @author Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 #'
 #' @references 
 #' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
@@ -139,10 +139,7 @@
 #'
 #' @examples
 #' 
-#' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
-#' 
-#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 #' exp.duration = 6, exercise = TRUE)

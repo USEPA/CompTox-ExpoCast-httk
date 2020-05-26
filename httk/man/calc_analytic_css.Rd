@@ -11,6 +11,10 @@ calc_analytic_css(
   parameters = NULL,
   species = "human",
   daily.dose = 1,
+  route = "oral",
+  exp.conc = 1,
+  period = 24,
+  exp.duration = 24,
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
@@ -44,11 +48,24 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
+default "oral").}
+
+\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
+'forcings' data series argument for integrator. Defaults to uM/L}
+
+\item{period}{For use in assembling forcing function data series 'forcings'
+argument, specified in hours}
+
+\item{exp.duration}{For use in assembling forcing function data 
+series 'forcings' argument, specified in hours}
+
 \item{output.units}{Units for returned concentrations, defaults to uM 
 (specify units = "uM") but can also be mg/L.}
 
-\item{model}{Model used in calculation, 'pbtk' for the multiple compartment 
-model,'3compartment' for the three compartment model, '3compartmentss' for 
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
 the three compartment steady state model, and '1compartment' for one 
 compartment model.}
 
@@ -127,6 +144,10 @@ calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 
 calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 
+calc_analytic_css(chem.name="pyrene",route="inhalation",model="gas_pbtk")
+
+calc_analytic_css(chem.cas="129-00-0",route="inhalation",model="gas_pbtk")
+
 params <- parameterize_pbtk(chem.cas="80-05-7") 
 
 calc_analytic_css(parameters=params,model="pbtk")
@@ -137,6 +158,6 @@ Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 }
 \author{
-Robert Pearce, John Wambaugh, and Greg Honda
+Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 }
 \keyword{Solve}

@@ -173,6 +173,6 @@ Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
-John Wambaugh, Robert Pearce, and Mark Sfeir
+John Wambaugh, Robert Pearce, Miyuki Breen, and Mark Sfeir
 }
 \keyword{Solve}
