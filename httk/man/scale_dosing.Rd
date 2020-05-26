@@ -4,33 +4,31 @@
 \alias{scale_dosing}
 \title{Scale mg/kg body weight doses according to body weight and units}
 \usage{
-scale_dosing(dosing, parameters, route, output.units = "uM")
+scale_dosing(dosing, parameters, route)
 }
 \arguments{
-\item{dosing}{List of dosing metrics used in simulation, which must include
-the general entries with names "initial.dose", "doses.per.day", 
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. In the case
+of most httk models, these should include "initial.dose", "doses.per.day", 
 "daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
 precise dose regimen specification, and is a matrix consisting of two
 columns or rows named "time" and "dose" containing the time and amount,
 in mg/kg BW, of each dose.}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters, either from parameterization 
+function, or otherwise specified. Must contain a BW entry.}
 
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
-
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
 }
 \description{
-This function transforms the dose (in mg/kg) into the appropriate units. It
-handles single doses, matrices of doses, or daily repeated doses at varying
-intervals. Gut absorption is also factored in through the parameter Fgutabs,
+This function scales doses (in mg/kg) by body weight. It handles single 
+doses, matrices of doses, or daily repeated doses at varying intervals. 
+Gut absorption is also factored in through the parameter Fgutabs,
 and scaling is currently avoided in the inhalation exposure case with a 
 scale factor of 1
 }
 \author{
-John Wambaugh
+John Wambaugh, Matt Linakis, and Mark Sfeir
 }
 \keyword{Dynamic}

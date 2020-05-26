@@ -15,7 +15,7 @@ convert_units(
 )
 }
 \arguments{
-\item{input.units}{Queried input units of interest}
+\item{input.units}{Assigned input units of interest}
 
 \item{output.units}{Desired output units}
 
@@ -47,9 +47,12 @@ it gives a corresponding error message. It gives a warning message about the
 handling of 'ppmv,' as the function is only set up to convert between ppmv 
 and mass-based units (like mg/m^3 or umol/L) in the context of ideal gases.
 
+convert_units is not directly configured to accept and convert units based
+on BW, like mg/kg. For this purpose, see \code{\link{scale_dosing}}.
+
 The function supports a limited set of most relevant units across
-toxicological models, currently include umol, uM, mg, mg/L, mg/m^3, and, 
-in the context of ideal gases, ppmv.
+toxicological models, currently including umol, uM, mg, mg/L, mg/m^3, and
+in the context of gases assumed to be ideal, ppmv.
 }
 \examples{
 
