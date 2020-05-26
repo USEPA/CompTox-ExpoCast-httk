@@ -201,18 +201,21 @@ calc_css <- function(chem.name=NULL,
   }
 
 # set exposure dose    
-  dosing <- NULL
+  dosing <- list(
+    initial.dose=NULL,
+    dosing.matrix=NULL,
+    daily.dose=NULL,
+    doses.per.day=NULL)
+  
   if (route %in% c("oral","iv"))
   {
-    if (is.null(dosing))
-    {
       dosing <- list(
         initial.dose=NULL,
         dosing.matrix=NULL,
         daily.dose=daily.dose,
         doses.per.day=doses.per.day
       )
-    }
+    
   } else if (route == "inhalation")
   {
     input.units = "ppmv"
