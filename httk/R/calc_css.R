@@ -33,6 +33,8 @@
 #' each iteration.
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
+#' @param input.units Input units of interest assigned to dosing. Defaults
+#' to mg/kg BW
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue concentration (defaults to whole body 
 #' concentration.)
