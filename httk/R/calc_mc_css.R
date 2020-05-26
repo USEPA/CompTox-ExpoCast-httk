@@ -45,10 +45,11 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model.
 #' @param suppress.messages Whether or not to suppress output message.
-#' @param model Model used in calculation: 'pbtk' for the multiple compartment
-#' model,'3compartment' for the three compartment model, '3compartmentss' for
-#' the three compartment steady state model, and '1compartment' for one
-#' compartment model.  This only applies when httkpop=TRUE and species="Human",
+#' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#' 'pbtk' for the multiple compartment model,
+#' '3compartment' for the three compartment model, '3compartmentss' for 
+#' the three compartment steady state model, and '1compartment' for one 
+#' compartment model. This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
 #' @param httkpop Whether or not to use population generator and sampler from
 #' httkpop.  This is overwrites censored.params and vary.params and is only for
@@ -87,7 +88,7 @@
 #' parameterize_* function for the model.
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #' \code{\link{calc_analytic_css}}.  
-#' @author Caroline Ring, Robert Pearce, and John Wambaugh
+#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 #'
 #' @references 
 #' Wambaugh, John F., et al. "Toxicokinetic triage for 
@@ -111,7 +112,10 @@
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
 #'              samples=100,return.samples=TRUE)
-#'              
+#' 
+#'  set.seed(1234)
+#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+#'                           
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 #' 
