@@ -20,7 +20,7 @@ solve_pbtk(
   suppress.messages = F,
   species = "Human",
   iv.dose = F,
-  output.units = "uM",
+  input.units = "mg/kg",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -56,9 +56,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number of time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -75,8 +75,8 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW}
 
 \item{method}{Method used by integrator (deSolve).}
 
