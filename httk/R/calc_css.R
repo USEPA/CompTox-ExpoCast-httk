@@ -218,7 +218,7 @@ calc_css <- function(chem.name=NULL,
     
   } else if (route == "inhalation")
   {
-    input.units = "ppmv"
+    input.units = "uM"
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
     Nrep <- ceiling(days/period) 
