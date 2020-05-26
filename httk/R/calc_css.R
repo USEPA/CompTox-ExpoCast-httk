@@ -200,23 +200,21 @@ calc_css <- function(chem.name=NULL,
     if (is.null(dosing))
     {
       dosing <- list(
-        initial.dose=0,
+        initial.dose=NULL,
         dosing.matrix=NULL,
         daily.dose=daily.dose,
         doses.per.day=doses.per.day
       )
     }
-    forcings <- NULL
-    fcontrol <-NULL
   } else if (route == "inhalation")
   {
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
     Nrep <- ceiling(days/period) 
     times <- rep(c(0, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-    y  <- rep(c(exp.conc,0), Nrep)
-    forcings <- cbind(times,y)
-    fcontrol <- list(method='constant',rule=2,f=0)
+    forcing_values  <- rep(c(exp.conc,0), Nrep)
+    forcings <- cbind(times,forcing_values)
+    dosing$forcings <- forcings
   }
   
   # We need to find out what concentrations (roughly) we should reach before
@@ -241,8 +239,6 @@ calc_css <- function(chem.name=NULL,
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
-    forcings=forcings,
-    fcontrol=fcontrol,
     suppress.messages=T,
     days=days,
     output.units = output.units,
