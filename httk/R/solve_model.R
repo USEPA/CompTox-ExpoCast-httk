@@ -104,7 +104,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh, Robert Pearce, and Mark Sfeir
+#' @author John Wambaugh, Robert Pearce, Miyuki Breen, and Mark Sfeir
 #' 
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -443,8 +443,8 @@ solve_model <- function(chem.name = NULL,
   times <- sort(unique(c(times,start.time+SMALL.TIME)))
 
 ### DOSING
-  
-  #Sanitize the input.units
+
+    #Sanitize the input.units
   input.units <- tolower(input.units)
   
   # Make sure we have all specified dosing parameters for the model
