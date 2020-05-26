@@ -140,6 +140,7 @@ calc_css <- function(chem.name=NULL,
                     exp.duration = 8,
                     days = 21,
                     output.units = "uM",
+                    input.units = "mg/kg",
                     suppress.messages=F,
                     tissue="plasma",
                     model='pbtk',
@@ -212,6 +213,7 @@ calc_css <- function(chem.name=NULL,
     }
   } else if (route == "inhalation")
   {
+    input.units = "ppmv"
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
     Nrep <- ceiling(days/period) 
@@ -243,9 +245,9 @@ calc_css <- function(chem.name=NULL,
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
+    input.units=input.units,
     suppress.messages=T,
     days=days,
-    output.units = output.units,
     route = route,
     restrictive.clearance=restrictive.clearance,
     ...)
@@ -278,6 +280,7 @@ calc_css <- function(chem.name=NULL,
       initial.values = Final_Conc,  
       dosing=dosing,
       days = additional.days,
+      input.units=input.units,
       suppress.messages=T,
       restrictive.clearance=restrictive.clearance,
       ...)
