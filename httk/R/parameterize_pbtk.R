@@ -223,7 +223,7 @@ Set default.to.human to true to substitute human value.")
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
-# Check the species argument for capitilization problems and whether or not 
+# Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {

@@ -33,6 +33,8 @@
 #' each iteration.
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
+#' @param input.units Input units of interest assigned to dosing. Defaults
+#' to mg/kg BW
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue concentration (defaults to whole body 
 #' concentration.)
@@ -140,6 +142,7 @@ calc_css <- function(chem.name=NULL,
                     exp.duration = 8,
                     days = 21,
                     output.units = "uM",
+                    input.units = "mg/kg",
                     suppress.messages=F,
                     tissue="plasma",
                     model='pbtk',
@@ -198,29 +201,31 @@ calc_css <- function(chem.name=NULL,
   }
 
 # set exposure dose    
-  dosing <- NULL
+  dosing <- list(
+    initial.dose=NULL,
+    dosing.matrix=NULL,
+    daily.dose=NULL,
+    doses.per.day=NULL)
+  
   if (route %in% c("oral","iv"))
   {
-    if (is.null(dosing))
-    {
       dosing <- list(
-        initial.dose=0,
+        initial.dose=NULL,
         dosing.matrix=NULL,
         daily.dose=daily.dose,
         doses.per.day=doses.per.day
       )
-    }
-    forcings <- NULL
-    fcontrol <-NULL
+    
   } else if (route == "inhalation")
   {
+    input.units = "ppmv"
     period <- period/24 #convert time period in hours to days
     exp.duration <- exp.duration/24 #convert exposure duration in hours to days
     Nrep <- ceiling(days/period) 
     times <- rep(c(0, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-    y  <- rep(c(exp.conc,0), Nrep)
-    forcings <- cbind(times,y)
-    fcontrol <- list(method='constant',rule=2,f=0)
+    forcing_values  <- rep(c(exp.conc,0), Nrep)
+    forcings <- cbind(times,forcing_values)
+    dosing$forcings <- forcings
   }
   
   # We need to find out what concentrations (roughly) we should reach before
@@ -245,11 +250,9 @@ calc_css <- function(chem.name=NULL,
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
-    forcings=forcings,
-    fcontrol=fcontrol,
+    input.units=input.units,
     suppress.messages=T,
     days=days,
-    output.units = output.units,
     route = route,
     restrictive.clearance=restrictive.clearance,
     ...)
@@ -282,6 +285,7 @@ calc_css <- function(chem.name=NULL,
       initial.values = Final_Conc,  
       dosing=dosing,
       days = additional.days,
+      input.units=input.units,
       suppress.messages=T,
       restrictive.clearance=restrictive.clearance,
       ...)

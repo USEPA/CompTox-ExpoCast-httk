@@ -176,6 +176,8 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cmuc"
   )
 
+#list of variables to be monitored (plotted). This list should be able to be
+#constructed from states and outputs. 
 model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
@@ -194,14 +196,44 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["gas_pbtk"]]$allowed.units <- c('um', 'mg/l', 'ppm')
+# Allowable units assigned to dosing input:
+model.list[["gas_pbtk"]]$allowed.units.input <- list(
+    "oral" = c('umol','mg','mg/kg'),
+    "iv" = c('umol','mg','mg/kg'),
+    "inhalation" = c('ppmv','mg/L','uM','umol','mg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["gas_pbtk"]]$allowed.units.output <- list(
+       "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'),
+       "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'),
+       "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored
+# AUC values should also be included.
+model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Cgut"="uM",
+                                          "Cliver"="uM",
+                                          "Cven"="uM",
+                                          "Clung"="uM",
+                                          "Cart"="uM",
+                                          "Crest"="uM",
+                                          "Ckidney"="uM",
+                                          "Cplasma"="uM",
+                                          "Aplasma"="umol",
+                                          "Calv"="ppmv",
+                                          "Cendexh"="ppmv",
+                                          "Cmixexh"="ppmv",
+                                          "Cmuc"="uM",
+                                          "AUC"="uM*days")
 
 # These parameters specify the exposure scenario simulated by the model:
-model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",
+model.list[["gas_pbtk"]]$dosing.params <- c(
   "initial.dose",
+  "daily.dose",
   "doses.per.day",
-  "dosing.matrix")
+  "dosing.matrix",
+  "forcings")
 
 model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
 
@@ -245,9 +277,13 @@ model.list[["gas_pbtk"]]$required.params <- c(
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["gas_pbtk"]]$exclude.fup.zero <- T
   
-#Name of forcing function as it appears in .c model code for specification to ode solver
-model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
-
+#Key forcings objects and names: name of forcing function as it appears in 
+#.c model code for specification to ode solver (initforc), fcontrol list
+#of arguments for fine-tuning inhalation forcing function in conjunction
+#with existing ode integrator methods. Forcings series handled in model 
+#solver itself
+model.list[["gas_pbtk"]]$forcings.materials <- list(initforc="initforc_gas_pbtk",
+  fcontrol = list(method='constant',rule=2,f=0))
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")
