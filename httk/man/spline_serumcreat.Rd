@@ -5,8 +5,7 @@
 \alias{spline_serumcreat}
 \title{Smoothing splines for log serum creatinine vs. age in months, along with KDE
 residuals, by race and gender.}
-\format{
-A data.table with 6 variables: \describe{
+\format{A data.table with 6 variables: \describe{
 \item{\code{gender}}{Gender:
  Male or Female}
  \item{\code{reth}}{Race/ethnicity: Mexican American, Other
@@ -16,8 +15,7 @@ A data.table with 6 variables: \describe{
  \item{\code{sc_kde}}{A list of kde
  objects; each is a KDE of the distribution of residuals about the smoothing
  spline.}
-  }
-}
+  }}
 \usage{
 spline_serumcreat
 }

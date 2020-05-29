@@ -4,9 +4,7 @@
 \name{onlyp}
 \alias{onlyp}
 \title{NHANES Exposure Data}
-\format{
-A data.table containing 1060 rows and 5 columns.
-}
+\format{A data.table containing 1060 rows and 5 columns.}
 \usage{
 onlyp
 }

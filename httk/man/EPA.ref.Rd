@@ -4,9 +4,7 @@
 \name{EPA.ref}
 \alias{EPA.ref}
 \title{Reference for EPA Physico-Chemical Data}
-\format{
-An object of class \code{character} of length 1.
-}
+\format{An object of class \code{character} of length 1.}
 \source{
 \url{https://comptox.epa.gov/dashboard}
 }

@@ -5,8 +5,7 @@
 \alias{spline_heightweight}
 \title{Smoothing splines for log height vs. age and log body weight vs. age, along
 with 2-D KDE residuals, by race and gender.}
-\format{
-A data.table with 6 variables: \describe{ \item{\code{g}}{Gender: Male
+\format{A data.table with 6 variables: \describe{ \item{\code{g}}{Gender: Male
  or Female} \item{\code{r}}{Race/ethnicity: Mexican American, Other Hispanic,
  Non-Hispanic White, Non-Hispanic Black, Other} \item{\code{height_spline}}{A
  list of smooth.spline objects, each giving a smoothed relationship between
@@ -14,8 +13,7 @@ A data.table with 6 variables: \describe{ \item{\code{g}}{Gender: Male
  smooth.spline objects, each giving a smoothed relationship between log body
  weight in kg and age in months} \item{\code{hw_kde}}{A list of kde objects;
  each is a 2-D KDE of the distribution of log height and log body weight
- residuals about the smoothing splines.} }
-}
+ residuals about the smoothing splines.} }}
 \usage{
 spline_heightweight
 }

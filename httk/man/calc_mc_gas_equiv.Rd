@@ -109,7 +109,7 @@ used by this function.
 
 \dontrun{
 calc_mc_gas_equiv(0.1,chem.cas="129-00-0",which.quantile=c(0.05,0.5,0.95),
-                   method='vi',samples=100,tissue='brain')
+                   samples=100,tissue='brain')
 }
 
 }

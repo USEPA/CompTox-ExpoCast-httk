@@ -4,9 +4,7 @@
 \name{johnson}
 \alias{johnson}
 \title{Johnson 2006}
-\format{
-A data.table containing 60 rows and 11 columns.
-}
+\format{A data.table containing 60 rows and 11 columns.}
 \usage{
 johnson
 }

@@ -178,18 +178,24 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
    
   if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param("Clint",species,
+                                      chem.cas=chem.cas),silent=T)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=T)
-  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,
+                                          chem.cas=chem.cas),silent=T)
+  if ((class(Clint.db) == "try-error" & default.to.human) ||
+                                                    force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",
+                                        chem.cas=chem.cas),silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",
+                                            chem.cas=chem.cas),silent=T)
     if (!suppress.messages)
       warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") 
-    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
+    stop("Missing metabolic clearance data for given species.
+Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
@@ -206,17 +212,17 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   
 # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
-                                         species=species,
-                                         default.to.human=default.to.human,
-                                         force.human.fup=force.human.clint.fup,
-                                         suppress.messages=T,
-                                         minimum.Funbound.plasma=minimum.Funbound.plasma)
+                              species=species,
+                              default.to.human=default.to.human,
+                              force.human.fup=force.human.clint.fup,
+                              suppress.messages=T,
+                              minimum.Funbound.plasma=minimum.Funbound.plasma)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
-                                      species=species,
-                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                      regression=regression,
-                                      suppress.messages=suppress.messages,
-                                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+                              species=species,
+                              adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                              regression=regression,
+                              suppress.messages=suppress.messages,
+                              minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
@@ -225,7 +231,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   {
     fup <- schmitt.params$Funbound.plasma
     if (!suppress.messages) warning(
-'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
+'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set
+adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
@@ -234,12 +241,14 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
- # Check the species argument for capitilization problems and whether or not it is in the table:  
+ # Check the species argument for capitilization problems and whether or not
+ # it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+      phys.species <- colnames(physiology.data)[
+        toupper(colnames(physiology.data))==toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
 
@@ -248,9 +257,13 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
+  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",
+                          chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",
+                          chem.cas=chem.cas)) # basic association cosntants
+  # Octanol:water partition coefficient vv
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) 
+   
 
   outlist <- list()
    # Begin flows:
@@ -305,7 +318,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   if (vmax==0)
   {
     if (!suppress.messages) 
-      warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.")
+      warning("Cannot calculate saturable metabolism with Vmax = 0. Defaulting to 
+first-order metabolic clearance.")
     outlist <- c(outlist, list(
       vmax=0,
       km=1, #km value of 1 is a dummy value here
