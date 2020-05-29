@@ -10,7 +10,7 @@
 #' Default value of NULL for doses.per.day solves for a single dose.
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data(volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' AUC is area under plasma concentration curve.
@@ -34,14 +34,14 @@
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
 #' @param tsteps The number time steps per hour.
-#' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW. 
+#' @param daily.dose Total daily dose, default is mg/kg BW.
+#' @param dose Amount of a single dose, default is mg/kg BW. 
 #' @param doses.per.day Number of doses per day.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
 #' "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' @param input.units Input units of interest assigned to dosing, defaults to
+#' mg/kg BW. 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.
@@ -54,7 +54,7 @@
 #' true.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
-#' mg/kg BW, of each dose.
+#' mg/kg BW by default, of each dose.
 #' @param recalc.clearance Whether or not to recalculate the elimination
 #' rate.
 #' @param recalc.blood2plasma Whether or not to recalculate the blood:plasma
@@ -105,8 +105,8 @@ solve_1comp <- function(chem.name = NULL,
                     plots=F,
                     suppress.messages=F,
                     species="Human",
+                    input.units = "mg/kg",
                     iv.dose=F,
-                    output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=F,
                     recalc.blood2plasma=F,
@@ -140,7 +140,7 @@ solve_1comp <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    output.units=output.units,
+    input.units=input.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,

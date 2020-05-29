@@ -19,6 +19,7 @@ calc_css(
   exp.duration = 8,
   days = 21,
   output.units = "uM",
+  input.units = "mg/kg",
   suppress.messages = F,
   tissue = "plasma",
   model = "pbtk",
@@ -71,6 +72,9 @@ each iteration.}
 
 \item{output.units}{Units for returned concentrations, defaults to uM
 (specify units = "uM") but can also be mg/L.}
+
+\item{input.units}{Input units of interest assigned to dosing. Defaults
+to mg/kg BW}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
 

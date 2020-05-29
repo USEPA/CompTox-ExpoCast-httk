@@ -4,8 +4,7 @@
 \name{well_param}
 \alias{well_param}
 \title{Microtiter Plate Well Descriptions for Armitage et al. (2014) Model}
-\format{
-A data frame with 53940 rows and 10 variables:
+\format{A data frame with 53940 rows and 10 variables:
 \describe{
   \item{area_bottom}{}
   \item{cell_yield}{}
@@ -15,8 +14,7 @@ A data frame with 53940 rows and 10 variables:
   \item{v_working}{}
   \item{well_desc}{}
   \item{well_number}{}
-}
-}
+}}
 \source{
 \url{http://www.diamondse.info/}
 }

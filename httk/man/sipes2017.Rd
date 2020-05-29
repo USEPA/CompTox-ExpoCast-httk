@@ -5,9 +5,7 @@
 \alias{sipes2017}
 \alias{Sipes2017}
 \title{Sipes et al. 2017 data}
-\format{
-data.frame
-}
+\format{data.frame}
 \source{
 ADMET, Simulations Plus
 }
