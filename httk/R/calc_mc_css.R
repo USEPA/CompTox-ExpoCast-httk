@@ -229,7 +229,13 @@ calc_mc_css <- function(chem.cas=NULL,
                           IVIVE = NULL,
                           tissue=tissue,
                           restrictive.clearance = T,
-                          bioactive.free.invivo = FALSE)) 
+                          bioactive.free.invivo = FALSE),
+                        parameterize.args = list(
+                          default.to.human=F,
+                          adjusted.Funbound.plasma=T,
+                          regression=T,
+                          minimum.Funbound.plasma=1e-4)
+                        ) 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -335,6 +341,60 @@ calc_mc_css <- function(chem.cas=NULL,
         output.units,
         "units.\n") 
     }
+  }
+  
+  # We need to know model-specific information (from modelinfo_[MODEL].R]) 
+  # to set up the solver:
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+               paste(names(model.list),collapse=", ")))
+  } 
+  parameterize_function <- model.list[[model]]$parameterize.func
+  
+  ### MODEL PARAMETERS FOR R
+  
+  # Make sure we have all the parameters necessary to describe the chemical (we don't
+  # necessarily need all parameters associated with a given model to do this:)
+  if (is.null(parameters))
+  {
+    # Look up the chemical name/CAS/dtxsid, depending on what was provided:
+    out.chem <- get_chem_id(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid=dtxsid)
+    chem.cas <- out.chem$chem.cas
+    chem.name <- out.chem$chem.name                                
+    dtxsid <- out.chem$dtxsid  
+    
+    
+    parameterize.args <- c(parameterize.args,list(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages))
+    # Make sure all the arguments are used by the function:
+    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+                                             methods::formalArgs(parameterize_function)]
+    parameters <- do.call(parameterize_function, parameterize.args) 
+  } else {
+    model_param_names <- model.list[[model]]$param.names 
+    if (!all(model_param_names %in% names(parameters)))
+    {
+      stop(paste("Missing parameters:",
+                 paste(model_param_names[which(!model_param_names %in% 
+                                                 names(parameters))],collapse=', '),
+                 ". Use parameters from",parameterize_function,".",sep="")) 
+    }
+  }
+  
+  # Retrieve the molecular weight:
+  MW <- parameters[['MW']]
+  
+  if (tolower(output.units)=='um')
+  { 
+    out <- out * 1e3 * MW / 1e6 
   }
 
 # Cannot guarantee arbitrary precision:
