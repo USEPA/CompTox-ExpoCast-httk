@@ -1,0 +1,196 @@
+States = {
+Agutlumen;
+Agut;
+Aliver;
+Aven;
+Alung;
+Aart;
+Arest;
+Akidney;
+Atubules;
+Ametabolized;
+AUC;
+fAUC;
+Athyroid;
+Aplacenta;
+Afgut;
+Aflung;
+Afliver;
+Afven;
+Afart;
+Afrest;
+Afthyroid;
+Afkidney;
+Afbrain;
+};
+
+Inputs = {
+};
+
+Outputs = {
+Cgut;
+Cliver;
+Cven;
+Clung;
+Cart;
+Crest;
+Ckidney;
+Cserum;
+Aserum;
+Cthyroid;
+Cplacenta;
+Cfliver;
+Cfven;
+Cfart;
+Cfgut;
+Cflung;
+Cfrest;
+Cfthyroid;
+Cfkidney;
+Cfbrain;
+Afserum;
+Cfserum;
+};
+
+pre_pregnant_BW = 0;
+CLmetabolismc = 0.0;
+hematocrit = 0;
+kgutabs = 1;
+Kkidney2plasma = 0;
+Kliver2plasma = 0;
+Krbc2plasma = 0;
+Krest2plasma = 0;
+Klung2plasma=0;
+Kgut2plasma=0;
+Kthyroid2plasma = 0;
+Kplacenta2plasma = 0;
+Kfplacenta2plasma=0;
+Kfkidney2plasma=0;
+Kfrest2plasma=0;
+Kfthyroid2plasma=0;
+Kfliver2plasma=0;
+Kflung2plasma=0;
+Kfgut2plasma=0;
+Kfbrain2plasma=0;
+Vartc = 0;
+Vvenc = 0;
+Vgutc = 0;
+Vkidneyc = 0;
+Vliverc = 0;
+Vlungc = 0;
+Vart = 0;
+Vven = 0;
+Vgut = 0;
+Vkidney = 0;
+Vliver = 0;
+Vlung = 0;
+Vthyroidc=0;
+Vthyroid=0;
+Vfgutc = 0;
+Fraction_unbound_plasma = 0;
+Ratioblood2plasma = 0.0;
+CLmetabolism = 0.0;
+Qgfrc = 0;
+Qgfr = 0.0;
+
+
+
+
+
+
+
+Initialize{
+kgutabs = kgutabs * 24;
+CLmetabolism = CLmetabolismc * 24 * pre_pregnant_BW;
+Vart = Vartc * pre_pregnant_BW;
+Vgut = Vgutc * pre_pregnant_BW;  
+Vkidney = Vkidneyc * pre_pregnant_BW;
+Vliver = Vliverc * pre_pregnant_BW;
+Vlung = Vlungc * pre_pregnant_BW;
+Vven = Vvenc * pre_pregnant_BW;
+Qgfr = Qgfrc * pow(pre_pregnant_BW,0.75) * 24;
+Vthyroid= Vthyroidc * pre_pregnant_BW;
+}
+
+Dynamics{
+BW = pre_pregnant_BW + 0.006514 * exp(0.6797/0.08698 * (1 - exp(-0.08698 * t/7)));
+Qcardiac = 24*60*7.514/(1+exp(-.103*(t/7+7.458)));
+Qgut=(17 - .1125 * t/7) / 100 * Qcardiac;
+Qkidney = (17 - .01 * t/7) / 100 * Qcardiac;
+Qliver = (6.5 - .0425 * t/7) / 100 * Qcardiac;
+Qthyroid = (1.5 - .01 * t/7) / 100 * Qcardiac;
+Qplacenta = 0.8 * (.4 + .29 * t/7) / 100 * Qcardiac;
+Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qplacenta + Qthyroid);
+Qfplacenta = 24 * 60 * exp(-10.85 + 4.97 * log(t/7) - 0.00125 * pow(t/7,2))/1000;
+Qfcardiac = 24 * 60 / 1000 * (exp(-4.3056 + .65052 * t/7 - 0.01387 * pow(t/7,2) + 0.00010637 * pow(t/7,3)) + exp(-2.2256 + .45676 * t/7 - 0.0082968 * pow(t/7,2) + 0.000059783*pow(t/7,3)));
+Qflung = 24 * 60 / 1000 * (exp(-3.2374 + 0.59467 * t/7 - 0.012764 * pow(t/7,2) + 0.00010515 * pow(t/7,3)) - exp(-2.2256 + .45676 * t/7 - 0.0082968 * pow(t/7,2) + 0.000059783*pow(t/7,3)));
+Qfbypass = Qfcardiac - Qflung;
+Qfgut = 6.8/75 * (Qfcardiac - Qfplacenta);
+Qfkidney = 5.4 / 75 * (Qfcardiac - Qfplacenta);
+Qfbrain = 14.3 / 75 * (Qfcardiac - Qfplacenta);
+Qfliver = (6.5/54) * (1-26.5/75) * (Qfcardiac - Qfplacenta);
+Qfthyroid = ( 1.5/54) * ( 1-26.5/75) * (Qfcardiac - Qfplacenta);
+Qfrest = Qfcardiac - (Qfgut + Qfkidney + Qfliver + Qfplacenta + Qfthyroid + Qfbrain);
+Qfdv = 24*60*exp(-1.8 + 0.91 * sqrt(t/7))/1000;
+fBW = 0.00003107 * exp(0.8137/0.06458 * (1- exp(-0.06458 * t / 7)));
+Vplacenta = 0.317 * pow(fBW,0.582);
+Vrest = BW - (fBW + Vplacenta) - (Vthyroid + Vkidney + Vgut + Vliver + Vlung + Vart + Vven);
+Vfart= 0.16 * 80/1000 * fBW;
+Vfven= 0.595 * 80/1000 *  fBW;
+Vfkidney= 0.01082 * exp(0.4673/0.052 * (1 - exp(-0.052 * t/7)))/1000;
+Vfthyroid= 0.002091 * exp(0.3137/0.0367 * (1 - exp(-0.0367 * t/7)))/1000;
+Vfliver= 0.1528 * exp(0.3478/0.04058 * (1 - exp(-0.04058 * t/7)))/1000;
+Vfbrain = 0.2912 * exp(0.4244/0.05078 * (1 - exp(-0.05078 * t/7)))/1000;
+Vfgut = Vfgutc *  fBW;
+Vflung = 0.02611 * exp(0.5898/0.07125 * (1 - exp(-0.07125 * t/7)))/1000; 
+Vfrest= fBW - (Vfart + Vfven + Vfkidney + Vfthyroid + Vfliver + Vfbrain + Vfgut + Vflung);
+Cgut = Agut / Vgut;
+Cliver = Aliver / Vliver;
+Cven = Aven / Vven;
+Clung = Alung / Vlung;
+Cart = Aart / Vart;
+Crest = Arest / Vrest;
+Ckidney = Akidney / Vkidney;
+Cserum = Aven / Vven / Ratioblood2plasma;
+Aserum = Aven / Ratioblood2plasma * (1 - hematocrit);
+Cthyroid = Athyroid / Vthyroid;
+Cplacenta = Aplacenta / Vplacenta;
+Cfart = Afart / Vfart;
+Cfven = Afven / Vfven;
+Cfkidney = Afkidney / Vfkidney;
+Cfrest = Afrest / Vfrest;
+Cfthyroid = Afthyroid / Vfthyroid;
+Cfliver = Afliver / Vfliver;
+Cfbrain = Afbrain / Vfbrain;
+Cflung = Aflung / Vflung;
+Cfgut = Afgut / Vfgut;
+Cfserum = Afven / Vfven / Ratioblood2plasma;
+Afserum = Afven / Ratioblood2plasma * (1 - hematocrit);
+
+ 
+
+dt (Agutlumen) = - kgutabs * Agutlumen;
+dt (Agut) = kgutabs * Agutlumen + Qgut * (Aart / Vart - Agut / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma);
+dt (Aliver) = Qliver * Aart / Vart + Qgut * Agut / Vgut * Ratioblood2plasma / Kgut2plasma / Fraction_unbound_plasma - (Qliver + Qgut) * Aliver / Vliver / Kliver2plasma/ Fraction_unbound_plasma * Ratioblood2plasma - CLmetabolism * Aliver / Vliver / Kliver2plasma;
+dt (Aven) = ((Qliver + Qgut) * Aliver / Vliver / Kliver2plasma + Qkidney * Akidney / Vkidney / Kkidney2plasma + Qrest * Arest / Vrest / Krest2plasma + Qthyroid * Athyroid / Vthyroid / Kthyroid2plasma + Qplacenta * Aplacenta / Vplacenta / Kplacenta2plasma) * Ratioblood2plasma / Fraction_unbound_plasma - Qcardiac * Aven / Vven ;
+dt (Alung) = Qcardiac * (Aven / Vven - Alung / Vlung * Ratioblood2plasma / Klung2plasma / Fraction_unbound_plasma);
+dt (Aart) = Qcardiac * (Alung / Vlung * Ratioblood2plasma / Klung2plasma / Fraction_unbound_plasma - Aart / Vart);
+dt (Arest) = Qrest * (Aart/Vart - Arest/Vrest * Ratioblood2plasma / Krest2plasma / Fraction_unbound_plasma);
+dt (Akidney) = Qkidney * Aart / Vart - Qkidney * Akidney / Vkidney / Kkidney2plasma * Ratioblood2plasma / Fraction_unbound_plasma - Qgfr * Akidney / Vkidney / Kkidney2plasma;
+dt (Atubules) = Qgfr * Akidney / Vkidney / Kkidney2plasma;
+dt (Ametabolized) = CLmetabolism * Aliver / Vliver / Kliver2plasma;
+dt (AUC) = Aven / Vven / Ratioblood2plasma;
+dt (Athyroid) = Qthyroid * (Aart / Vart - Athyroid / Vthyroid / Kthyroid2plasma / Fraction_unbound_plasma * Ratioblood2plasma);
+dt (Aplacenta) = Qplacenta * Aart / Vart - Qplacenta  * (Aplacenta / Vplacenta / Kplacenta2plasma / Fraction_unbound_plasma * Ratioblood2plasma) - Qfplacenta  * (Aplacenta / Vplacenta / Kfplacenta2plasma / Fraction_unbound_plasma * Ratioblood2plasma)  + Qfplacenta * Afart / Vfart; 
+dt (Afart) =  Qflung * Aflung / Vflung * Ratioblood2plasma / Kflung2plasma / Fraction_unbound_plasma + Qfbypass * Afven / Vfven -  Qfcardiac * Afart/Vfart;
+dt (Afven) =   ((Qfliver + Qfgut + Qfplacenta - Qfdv) * Afliver / Vfliver / Kfliver2plasma  + Qfdv  * Aplacenta / Vplacenta / Kfplacenta2plasma + Qfthyroid * Afthyroid / Vfthyroid / Kfthyroid2plasma + Qfrest * Afrest / Vfrest / Kfrest2plasma + Qfkidney * Afkidney / Vfkidney / Kfkidney2plasma + Qfbrain * Afbrain / Vfbrain / Kfbrain2plasma) * Ratioblood2plasma / Fraction_unbound_plasma - Qfcardiac * Afven / Vfven;
+dt (Afkidney) = Qfkidney * (Afart/Vfart - Afkidney / Vfkidney / Kfkidney2plasma * Ratioblood2plasma / Fraction_unbound_plasma);
+dt (Afrest) = Qfrest * (Afart/Vfart - Afrest / Vfrest / Kfrest2plasma * Ratioblood2plasma / Fraction_unbound_plasma);
+dt (Afthyroid) = Qfthyroid * (Afart/Vfart - Afthyroid / Vfthyroid / Kfthyroid2plasma * Ratioblood2plasma / Fraction_unbound_plasma);
+dt (Afliver) = Qfliver * Afart/Vfart + Qfgut * Afgut / Vfgut * Ratioblood2plasma / Kfgut2plasma / Fraction_unbound_plasma + (Qfplacenta - Qfdv) * Aplacenta / Vplacenta / Kfplacenta2plasma / Fraction_unbound_plasma * Ratioblood2plasma - (Qfliver + Qfgut + Qfplacenta - Qfdv) * Afliver / Vfliver / Kfliver2plasma * Ratioblood2plasma / Fraction_unbound_plasma;
+dt (Aflung) = Qflung * (Afven / Vfven - Aflung / Vflung * Ratioblood2plasma / Kflung2plasma / Fraction_unbound_plasma);
+dt (Afgut) =  Qfgut * (Afart / Vfart - Afgut / Vfgut * Ratioblood2plasma / Kfgut2plasma / Fraction_unbound_plasma);
+dt (Afbrain) =  Qfbrain * (Afart / Vfart - Afbrain / Vfbrain * Ratioblood2plasma / Kfbrain2plasma / Fraction_unbound_plasma);
+dt (fAUC) = Afven / Vfven / Ratioblood2plasma;
+}
+
