@@ -38,7 +38,7 @@ model.list <- list()
 #'compartment model.
 #'@param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
-#'@param tissue Desired tissue conentration (defaults to whole body 
+#'@param tissue Desired tissue concentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
@@ -230,8 +230,10 @@ calc_analytic_css <- function(chem.name=NULL,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
-# Check that the output units are ones we can work with:
   good.units <- c("uM","mg/L")
+# Check that the output units are ones we can work with:
+  #good.units <- model.list[[model]]$compartment.units?
+    #good.units <- c("uM","mg/L")
   if (!(tolower(output.units) %in% tolower(good.units))) 
   {
     stop(paste("Do not know how to calculate units",output.units,
