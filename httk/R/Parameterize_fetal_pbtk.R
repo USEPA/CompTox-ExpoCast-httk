@@ -34,13 +34,11 @@
 #' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
 #' filtered from kidney and excreted.} \item{Rblood2plasma}{The ratio of the
 #' concentration of the chemical in the blood to the concentration in the
-#' plasma from available_rblood2plasma.} \item{Vartc}{Volume of the arteries
-#' per kg body weight, L/kg BW.} \item{Vgutc}{Volume of the gut per kg body
+#' plasma from available_rblood2plasma.} \item{Vgutc}{Volume of the gut per kg body
 #' weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
 #' BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
-#' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 #' \item{Kfgut2pu}{Ratio of concentration of chemical in fetal gut tissue to
 #' unbound concentration in plasma.} \item{Kfkidney2pu}{Ratio of concentration
 #' of chemical in fetal kidney tissue to unbound concentration in plasma.}
@@ -113,19 +111,28 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- Kbrain2pu
-  #Weighted average no longer needed  vvv
-  #parms$Krest2pu <- (parms$Krest2pu * parms$Vrestc + Kbrain2pu * parms$Vbrainc) / ( parms$Vrestc  + parms$Vbrainc)
-  parms$pre_pregnant_BW <- 61.103 #kg
+  
+  #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
+  ICRP_2002_female_tissue_mass_fractions_data <- 10^-2 * c(
+                                                   Vthyroidc <- 0.0283,
+                                                   Vkidneyc <- 0.458,
+                                                   Vgutc <- 1.90,
+                                                   Vliverc <- 2.33,
+                                                   Vlungc <- 1.58,
+                                                   Vbrainc <- 2.17 
+                                                   #^^though brain not in model
+                                                   )
+  
+  
+ parms$pre_pregnant_BW <- 61.103 #kg
   #Override parameterize_pbtk's body weight listing with average prepregnant
   #case, as scale dosing requires an entry named 'BW'
   parms$BW <- parms$pre_pregnant_BW 
- parms$Vthyroidc <- 0.017/parms$pre_pregnant_BW
- parms$Vkidneyc <- 0.275/parms$pre_pregnant_BW
- parms$Vgutc <- 1.14/parms$pre_pregnant_BW
- parms$Vliverc <- 1.4/parms$pre_pregnant_BW
- parms$Vlungc <- 0.95/parms$pre_pregnant_BW
- parms$Vartc <- 0.624/parms$pre_pregnant_BW         
- parms$Vvenc <- 2.32/parms$pre_pregnant_BW
+ parms$Vthyroidc <- ICRP_2002_female_tissue_mass_fractions_data[['Vthyroidc']]
+ parms$Vkidneyc <- ICRP_2002_female_tissue_mass_fractions_data[['Vkidneyc']]
+ parms$Vgutc <- ICRP_2002_female_tissue_mass_fractions_data[['Vgutc']]
+ parms$Vliverc <- ICRP_2002_female_tissue_mass_fractions_data[['Vliverc']]
+ parms$Vlungc <- ICRP_2002_female_tissue_mass_fractions_data[['Vlungc']]
  
  #Remove parameters from parameterize_pbtk that aren't used in the gestational model
  parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
