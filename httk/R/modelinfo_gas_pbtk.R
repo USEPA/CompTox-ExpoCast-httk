@@ -200,7 +200,7 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
 model.list[["gas_pbtk"]]$allowed.units.input <- list(
     "oral" = c('umol','mg','mg/kg'),
     "iv" = c('umol','mg','mg/kg'),
-    "inhalation" = c('ppmv','mg/L','uM','umol','mg'))
+    "inhalation" = c('ppmv','mg/L','uM','umol','mg','mg/m^3'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["gas_pbtk"]]$allowed.units.output <- list(
