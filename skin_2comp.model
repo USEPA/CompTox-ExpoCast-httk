@@ -122,9 +122,9 @@ Vcomposite_dermal = Vskin * Fskin_depth_cd;
 Vcomposite_dermal_exposed = Vcomposite_dermal * Fskin_exposed;
 Vcomposite_dermal_unexposed = Vcomposite_dermal * (1 - Fskin_exposed);
 Qcomposite_dermal = Qcardiac * Qcomposite_dermalc;
-Qcomposite_dermal_unexposed = Qcardiac * Qcomposite_dermalc * (1 - Vskin_exposed / Vskin);
-Qcomposite_dermal_exposed = Qcardiac * Qcomposite_dermalc * Vskin_exposed / Vskin;
-Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qskin_unexposed + Qskin_exposed);
+Qcomposite_dermal_unexposed = Qcomposite_dermal * (1 - Vskin_exposed / Vskin);
+Qcomposite_dermal_exposed = Qcomposite_dermal * Vskin_exposed / Vskin;
+Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qcomposite_dermal);
 Vart = Vartc * BW;
 Vgut = Vgutc * BW;
 Vkidney = Vkidneyc * BW;
@@ -170,3 +170,5 @@ dt (Astratum_corneum_unexposed) = Psc2cd * (totalSA - SA_exposed) * 24 * 0.001 *
 dt (Acomposite_dermal_exposed) = Qcomposite_dermal_exposed * (Cart - Ccomposite_dermal_exposed * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma) + Psc2cd * SA_exposed * 24 * 0.001 * (Cstratum_corneum_exposed / Ksc2cd - Ccomposite_dermal_exposed);
 dt (Acomposite_dermal_unexposed) = Qcomposite_dermal_unexposed * (Cart - Ccomposite_dermal_unexposed * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma) + Psc2cd * (totalSA - SA_exposed) * 24 * 0.001 * (Cstratum_corneum_unexposed / Ksc2cd - Ccomposite_dermal_unexposed);
 }
+
+End.
