@@ -227,20 +227,20 @@ static double forc[2];
 #define switch forc[1]
 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmod_skin_2subcomp (void (* odeparms)(int *, double *))
 {
   int N=63;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforc_skin_2subcomp (void (* odeforcs)(int *, double *))
 {
   int N=2;
   odeforcs(&N, forc);
 }
 
 
-void getParms (double *inParms, double *out, int *nout) {
+void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   /* local */ double Vskin_exposed;
@@ -285,7 +285,7 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_skin_2subcomp (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double Vmedia;
 
@@ -355,20 +355,20 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_skin_2subcomp (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_skin_2subcomp (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_skin_2subcomp (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
