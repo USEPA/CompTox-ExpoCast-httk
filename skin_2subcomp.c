@@ -1,9 +1,9 @@
 /* model.c for R deSolve package
    ___________________________________________________
 
-   Model File:  skin_2comp.model
+   Model File:  skin_2subcomp.model
 
-   Date:  Sat Jun 20 00:29:59 2020
+   Date:  Mon Jun 22 16:17:08 2020
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -51,17 +51,16 @@
      forcing (forcing function)
      switch (forcing function)
 
-   64 Parameters:
+   63 Parameters:
      skin_depth = 0,
      Fskin_depth_sc = 0,
      Fskin_depth_cd = 0,
-     Psurface2sc = 0,
+     Pmedia2sc = 0,
      Psc2cd = 0,
      V0 = 0,
      Fskin_exposed = 0,
      totalSA = 0,
      SA_exposed = 0,
-     Kp = 0,
      BW = 70,
      Clmetabolismc = 0.203,
      hematocrit = 0.44,
@@ -155,72 +154,71 @@
 #define ID_Cmedia 0x0000d
 
 /* Parameters */
-static double parms[64];
+static double parms[63];
 
 #define skin_depth parms[0]
 #define Fskin_depth_sc parms[1]
 #define Fskin_depth_cd parms[2]
-#define Psurface2sc parms[3]
+#define Pmedia2sc parms[3]
 #define Psc2cd parms[4]
 #define V0 parms[5]
 #define Fskin_exposed parms[6]
 #define totalSA parms[7]
 #define SA_exposed parms[8]
-#define Kp parms[9]
-#define BW parms[10]
-#define Clmetabolismc parms[11]
-#define hematocrit parms[12]
-#define kgutabs parms[13]
-#define Ksc2media parms[14]
-#define Ksc2cd parms[15]
-#define Kcd2pu parms[16]
-#define Kkidney2pu parms[17]
-#define Kliver2pu parms[18]
-#define Krest2pu parms[19]
-#define Kgut2pu parms[20]
-#define Klung2pu parms[21]
-#define Qcardiacc parms[22]
-#define Qgfrc parms[23]
-#define Qcomposite_dermalc parms[24]
-#define Qgutc parms[25]
-#define Qkidneyc parms[26]
-#define Qliverc parms[27]
-#define Vartc parms[28]
-#define Vgutc parms[29]
-#define Vkidneyc parms[30]
-#define Vliverc parms[31]
-#define Vlungc parms[32]
-#define Vrestc parms[33]
-#define Vvenc parms[34]
-#define Vskinc parms[35]
-#define Vstratum_corneumc parms[36]
-#define Vcomposite_dermalc parms[37]
-#define Fraction_unbound_plasma parms[38]
-#define Rblood2plasma parms[39]
-#define Clmetabolism parms[40]
-#define Qcardiac parms[41]
-#define Qcomposite_dermal parms[42]
-#define Qcomposite_dermal_exposed parms[43]
-#define Qcomposite_dermal_unexposed parms[44]
-#define Qgfr parms[45]
-#define Qgut parms[46]
-#define Qkidney parms[47]
-#define Qliver parms[48]
-#define Qrest parms[49]
-#define Vart parms[50]
-#define Vgut parms[51]
-#define Vkidney parms[52]
-#define Vliver parms[53]
-#define Vlung parms[54]
-#define Vrest parms[55]
-#define Vven parms[56]
-#define Vskin parms[57]
-#define Vstratum_corneum parms[58]
-#define Vstratum_corneum_exposed parms[59]
-#define Vstratum_corneum_unexposed parms[60]
-#define Vcomposite_dermal parms[61]
-#define Vcomposite_dermal_exposed parms[62]
-#define Vcomposite_dermal_unexposed parms[63]
+#define BW parms[9]
+#define Clmetabolismc parms[10]
+#define hematocrit parms[11]
+#define kgutabs parms[12]
+#define Ksc2media parms[13]
+#define Ksc2cd parms[14]
+#define Kcd2pu parms[15]
+#define Kkidney2pu parms[16]
+#define Kliver2pu parms[17]
+#define Krest2pu parms[18]
+#define Kgut2pu parms[19]
+#define Klung2pu parms[20]
+#define Qcardiacc parms[21]
+#define Qgfrc parms[22]
+#define Qcomposite_dermalc parms[23]
+#define Qgutc parms[24]
+#define Qkidneyc parms[25]
+#define Qliverc parms[26]
+#define Vartc parms[27]
+#define Vgutc parms[28]
+#define Vkidneyc parms[29]
+#define Vliverc parms[30]
+#define Vlungc parms[31]
+#define Vrestc parms[32]
+#define Vvenc parms[33]
+#define Vskinc parms[34]
+#define Vstratum_corneumc parms[35]
+#define Vcomposite_dermalc parms[36]
+#define Fraction_unbound_plasma parms[37]
+#define Rblood2plasma parms[38]
+#define Clmetabolism parms[39]
+#define Qcardiac parms[40]
+#define Qcomposite_dermal parms[41]
+#define Qcomposite_dermal_exposed parms[42]
+#define Qcomposite_dermal_unexposed parms[43]
+#define Qgfr parms[44]
+#define Qgut parms[45]
+#define Qkidney parms[46]
+#define Qliver parms[47]
+#define Qrest parms[48]
+#define Vart parms[49]
+#define Vgut parms[50]
+#define Vkidney parms[51]
+#define Vliver parms[52]
+#define Vlung parms[53]
+#define Vrest parms[54]
+#define Vven parms[55]
+#define Vskin parms[56]
+#define Vstratum_corneum parms[57]
+#define Vstratum_corneum_exposed parms[58]
+#define Vstratum_corneum_unexposed parms[59]
+#define Vcomposite_dermal parms[60]
+#define Vcomposite_dermal_exposed parms[61]
+#define Vcomposite_dermal_unexposed parms[62]
 
 /* Forcing (Input) functions */
 static double forc[2];
@@ -231,7 +229,7 @@ static double forc[2];
 /*----- Initializers */
 void initmod (void (* odeparms)(int *, double *))
 {
-  int N=64;
+  int N=63;
   odeparms(&N, parms);
 }
 
@@ -323,7 +321,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Amedia] = - Kp * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch ;
+  ydot[ID_Amedia] = - Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch ;
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
@@ -345,7 +343,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_AUC] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  ydot[ID_Astratum_corneum_exposed] = Psurface2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch + Psc2cd * SA_exposed * 24 * 0.001 * ( yout[ID_Ccomposite_dermal_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2cd ) ;
+  ydot[ID_Astratum_corneum_exposed] = Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch + Psc2cd * SA_exposed * 24 * 0.001 * ( yout[ID_Ccomposite_dermal_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2cd ) ;
 
   ydot[ID_Astratum_corneum_unexposed] = Psc2cd * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Ccomposite_dermal_unexposed] - yout[ID_Cstratum_corneum_unexposed] / Ksc2cd ) ;
 

@@ -39,13 +39,12 @@ Cmedia;
 skin_depth = 0;
 Fskin_depth_sc = 0;
 Fskin_depth_cd = 0;
-Psurface2sc = 0;
+Pmedia2sc = 0;
 Psc2cd = 0;
 V0 = 0;
 Fskin_exposed = 0;
 totalSA = 0;
 SA_exposed = 0;
-Kp = 0;
 BW = 70;
 Clmetabolismc = 0.203;
 hematocrit = 0.44;
@@ -154,7 +153,7 @@ Cmedia = Amedia / Vmedia;
  
 
 dt (Agutlumen) = - kgutabs * Agutlumen;
-dt (Amedia) = - Kp * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) * switch;
+dt (Amedia) = - Pmedia2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) * switch;
 dt (Agut) = kgutabs * Agutlumen + Qgut * (Aart / Vart - Agut / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma);
 dt (Aliver) = Qliver * Aart / Vart + Qgut * Agut / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - (Qliver + Qgut) * Aliver / Vliver / Kliver2pu/ Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * Aliver / Vliver / Kliver2pu;
 dt (Aven) = ((Qliver + Qgut) * Aliver / Vliver / Kliver2pu + Qkidney * Akidney / Vkidney / Kkidney2pu + Qrest * Arest / Vrest / Krest2pu + Qcomposite_dermal_unexposed * Ccomposite_dermal_unexposed / Kcd2pu + Qcomposite_dermal_exposed * Ccomposite_dermal_exposed / Kcd2pu) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * Aven / Vven;
@@ -165,7 +164,7 @@ dt (Akidney) = Qkidney * Aart / Vart - Qkidney * Akidney / Vkidney / Kkidney2pu 
 dt (Atubules) = Qgfr * Akidney / Vkidney / Kkidney2pu;
 dt (Ametabolized) = Clmetabolism * Aliver / Vliver / Kliver2pu ;
 dt (AUC) = Aven / Vven / Rblood2plasma;
-dt (Astratum_corneum_exposed) = Psurface2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) * switch + Psc2cd * SA_exposed * 24 * 0.001 * (Ccomposite_dermal_exposed - Cstratum_corneum_exposed / Ksc2cd)  ;
+dt (Astratum_corneum_exposed) = Pmedia2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) * switch + Psc2cd * SA_exposed * 24 * 0.001 * (Ccomposite_dermal_exposed - Cstratum_corneum_exposed / Ksc2cd)  ;
 dt (Astratum_corneum_unexposed) = Psc2cd * (totalSA - SA_exposed) * 24 * 0.001 * (Ccomposite_dermal_unexposed - Cstratum_corneum_unexposed / Ksc2cd);
 dt (Acomposite_dermal_exposed) = Qcomposite_dermal_exposed * (Cart - Ccomposite_dermal_exposed * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma) + Psc2cd * SA_exposed * 24 * 0.001 * (Cstratum_corneum_exposed / Ksc2cd - Ccomposite_dermal_exposed);
 dt (Acomposite_dermal_unexposed) = Qcomposite_dermal_unexposed * (Cart - Ccomposite_dermal_unexposed * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma) + Psc2cd * (totalSA - SA_exposed) * 24 * 0.001 * (Cstratum_corneum_unexposed / Ksc2cd - Ccomposite_dermal_unexposed);
