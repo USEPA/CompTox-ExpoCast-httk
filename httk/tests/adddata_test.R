@@ -12,14 +12,14 @@ fake <- data.frame(Compound="Tester",
                    logP=3.5,
                    Fup=0.1,
                    Clint=0.1,
-                   Clint.pValue=0.001)
+                   Clint.pValue=0.001,stringsAsFactors=F)
 
 chem.physical_and_invitro.data <- add_chemtable(
   fake,
   current.table=chem.physical_and_invitro.data,
   data.list=list(
-    Compound="Compound",
-    CAS="CASRN",
+#    Compound="Compound",
+ #   CAS="CASRN",
     DTXSID="DTXSID",
     MW="MW",
     logP="logP",
