@@ -78,6 +78,9 @@ NULL
 #' \href{https://doi.org/10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
 #' Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
 #' 
+#' \href{https://doi.org/10.1038/s41370-020-0238-y}{Linakis et al. (2020):
+#' Development and evaluation of a high throughput inhalation model for organic chemicals}
+#' 
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
 #' ExpoCast (Exposure Forecasting) Project}
 #' @keywords package
