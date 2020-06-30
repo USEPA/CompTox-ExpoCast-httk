@@ -158,7 +158,7 @@ scientific_10_skip <- function(x) {
 cssfun_u <- function(chemcas, 
                       MW, 
                       hepatic.bioavailability, 
-                      Fabsgut=1,
+                      Fgutabs=1,
                       probs=0.95,
                       minimum.Funbound.plasma=0.0001)
 {
