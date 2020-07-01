@@ -12,6 +12,11 @@ head(solve_3comp(chem.name="bisphenol a"))
 head(solve_3comp(chem.cas="80-05-7"))
 head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 
+#Test that the input daily.dose and doses.per.day are all that goes through, 
+#excluding any default dosing. We want any specified dosing to take the place
+#of the default, not add to it.
+
+
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 
 {
@@ -55,5 +60,7 @@ if (length(script.args) > 0)
     #print(test.fig)
   }
 }
+
+
 
 quit("no")
