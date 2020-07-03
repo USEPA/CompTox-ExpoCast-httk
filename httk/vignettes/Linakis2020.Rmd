@@ -1,10 +1,10 @@
 ---
-title: "Linakis et al. (Submitted): Analysis and Figure Generation"
+title: "Linakis et al. (2020): Analysis and Figure Generation"
 author: "Matt Linakis"
 date: "January 30, 2020"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{Linakis et al. (Submitted): Analysis and Figure Generation}
+ %\VignetteIndexEntry{Linakis et al. (2020): Analysis and Figure Generation}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
