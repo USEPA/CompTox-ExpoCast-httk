@@ -18,8 +18,8 @@ chem.physical_and_invitro.data <- add_chemtable(
   fake,
   current.table=chem.physical_and_invitro.data,
   data.list=list(
-#    Compound="Compound",
- #   CAS="CASRN",
+    Compound="Compound",
+    CAS="CASRN",
     DTXSID="DTXSID",
     MW="MW",
     logP="logP",
