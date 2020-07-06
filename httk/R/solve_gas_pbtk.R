@@ -167,6 +167,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            doses.per.day = NULL,
                            dose = NULL, #Assume single dose is in mg/kg BW/day
                            dosing.matrix = NULL,
+                           forcings = NULL,
                            exp.start.time = 0, #default starting time in specifying forcing exposure
                            exp.conc = 1, #default exposure concentration for forcing data series
                            period = 24, 
@@ -244,7 +245,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #Screen for compatible input that goes on to specify forcing function data series. 
   if(is.null(forcings)) {
   
-  {
+  
     if (exp.duration > period){
       stop('If not specifying \'dose.matrix\' data series explicitly, additional arguments are needed
       to generate a \'dose.matrix\' argument with a cyclic exposure pattern across the simulation:
@@ -280,7 +281,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #dose  <- rep(c(exp.conc,0), Nrep)
     #dosing.matrix = cbind(dose,time)
       ###
-  }
+  
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
