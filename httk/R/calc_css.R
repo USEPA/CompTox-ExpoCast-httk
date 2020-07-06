@@ -37,6 +37,8 @@
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", "inhalation", ...
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param f.change Fractional change of daily steady state concentration
@@ -51,8 +53,6 @@
 #' instead of plasma, but converted to use with plasma concentration.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param dosing The dosing object for more complicated scenarios. Defaults to
-#' repeated \code{daily.dose} spread out over \code{doses.per.day}
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
 #'

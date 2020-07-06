@@ -8,9 +8,9 @@
 #' of exposure, the concentration of gas inhaled, the period of a given 
 #' assumed cycle of exposure, and the duration of the exposure during that 
 #' period. Together, these arguments determine the forcings passed to the 
-#' ODE integrator. Forcings can also be specified manually, or effectively 
-#' turned off by setting exposure concentration to zero, if the user prefers
-#' to simulate dosing by other means. 
+#' ODE integrator. The "forcings" can also be specified manually, or 
+#' effectively turned off by setting exposure concentration to zero, if the
+#' user prefers to simulate dosing by other means. 
 #' 
 #' 
 #' This function solves for the amounts or concentrations in uM of a chemical
@@ -65,14 +65,14 @@
 #' mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
 #' specify forcing concentrations to the integrator, either in combination 
 #' with eventdata or on its own. 
-#' @param forcings Manual input of 'forcings' data series argument for ode
+#' @param forcings Manual input of "forcings" data series argument for ode
 #' integrator, defaults to NULL
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
 #' uM, in line with output.units
-#' @param period For use in assembling forcing function data series 'forcings'
+#' @param period For use in assembling forcing function data series "forcings"
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
@@ -242,29 +242,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
   }
   
     #Screen for compatible input that goes on to specify forcing function data series. 
-#  if(is.null(forcings)) {
-#    if (exp.duration > period){
-#      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
-#      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-#      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
-#    }
-#    period <- period/24 #convert time period in hours to days
-#    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-#    
-#    #Assemble function for initializing 'forcings' argument data series with
-#    #certain periodicity and exposure concentration in default case, used if 
-#    #the 'forcings' argument is not otherwise specified.
-#    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-#      Nrep <- ceiling((days - exp.start.time)/period) 
-#      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-#      y  <- rep(c(exp.conc,0), Nrep)
-#      conc.matrix = cbind(times,y)
-#      return(conc.matrix)
-#    }
-#    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
-#  }
+  if(is.null(forcings)) {
   
-  if(is.null(dosing.matrix))
   {
     if (exp.duration > period){
       stop('If not specifying \'dose.matrix\' data series explicitly, additional arguments are needed
@@ -290,6 +269,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
       return(conc.matrix)
     }
     forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
+  }
       
       #Comment out tentative alternate scheme to forcings for now
       ###

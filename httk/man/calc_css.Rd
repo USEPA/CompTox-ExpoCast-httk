@@ -50,6 +50,9 @@ default "Human").}
 \item{f}{Fractional distance from the final steady state concentration that
 the average concentration must come within to be considered at steady state.}
 
+\item{route}{String specification of route of exposure for simulation:
+"oral", "iv", "inhalation", ...}
+
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
@@ -100,9 +103,6 @@ instead of plasma, but converted to use with plasma concentration.}
 
 \item{...}{Additional arguments passed to model solver (default of
 \code{\link{solve_pbtk}}).}
-
-\item{dosing}{The dosing object for more complicated scenarios. Defaults to
-repeated \code{daily.dose} spread out over \code{doses.per.day}}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state
