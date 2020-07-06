@@ -85,7 +85,7 @@ default 0.}
 assembling "forcings" data series argument for integrator. Defaults to
 uM, in line with output.units}
 
-\item{period}{For use in assembling forcing function data series 'forcings'
+\item{period}{For use in assembling forcing function data series "forcings"
 argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 
@@ -163,7 +163,7 @@ simulating the state of exercise}
 
 \item{...}{Additional arguments passed to the integrator.}
 
-\item{forcings}{Manual input of 'forcings' data series argument for ode
+\item{forcings}{Manual input of "forcings" data series argument for ode
 integrator, defaults to NULL}
 }
 \value{
@@ -181,9 +181,9 @@ The default dosing scheme involves specifying the start time
 of exposure, the concentration of gas inhaled, the period of a given 
 assumed cycle of exposure, and the duration of the exposure during that 
 period. Together, these arguments determine the forcings passed to the 
-ODE integrator. Forcings can also be specified manually, or effectively 
-turned off by setting exposure concentration to zero, if the user prefers
-to simulate dosing by other means. 
+ODE integrator. The "forcings" can also be specified manually, or 
+effectively turned off by setting exposure concentration to zero, if the
+user prefers to simulate dosing by other means. 
 
 
 This function solves for the amounts or concentrations in uM of a chemical
