@@ -16,6 +16,7 @@ solve_gas_pbtk(
   doses.per.day = NULL,
   dose = NULL,
   dosing.matrix = NULL,
+  forcings = NULL,
   exp.start.time = 0,
   exp.conc = 1,
   period = 24,
@@ -91,6 +92,9 @@ argument, specified in hours}
 \item{exp.duration}{For use in assembling forcing function data 
 series 'forcings' argument, specified in hours}
 
+\item{forcings}{Manual input of "forcings" data series argument for ode
+integrator, defaults to NULL}
+
 \item{fcontrol}{List of arguments for finetuning inhalation forcing function
 in conjunction with existing ode integrator methods}
 
@@ -163,8 +167,6 @@ simulating the state of exercise}
 
 \item{...}{Additional arguments passed to the integrator.}
 
-\item{forcings}{Manual input of "forcings" data series argument for ode
-integrator, defaults to NULL}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
