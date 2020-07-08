@@ -11,12 +11,8 @@ calc_css(
   parameters = NULL,
   species = "Human",
   f = 0.01,
-  route = "oral",
   daily.dose = 1,
   doses.per.day = 3,
-  exp.conc = 1,
-  period = 24,
-  exp.duration = 8,
   days = 21,
   output.units = "uM",
   suppress.messages = F,
@@ -28,6 +24,7 @@ calc_css(
   regression = T,
   well.stirred.correction = T,
   restrictive.clearance = T,
+  dosing = NULL,
   ...
 )
 }
@@ -50,21 +47,9 @@ default "Human").}
 \item{f}{Fractional distance from the final steady state concentration that
 the average concentration must come within to be considered at steady state.}
 
-\item{route}{String specification of route of exposure for simulation:
-"oral", "iv", "inhalation", ...}
-
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
-
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
-
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
-
-\item{exp.duration}{For use in assembling forcing function data 
-series 'forcings' argument, specified in hours}
 
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}
@@ -101,6 +86,9 @@ instead of plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
+\item{dosing}{The dosing object for more complicated scenarios. Defaults to
+repeated \code{daily.dose} spread out over \code{doses.per.day}}
+
 \item{...}{Additional arguments passed to model solver (default of
 \code{\link{solve_pbtk}}).}
 }
@@ -123,8 +111,6 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-
-calc_css(chem.name="pyrene",route="inhalation",exp.duration =24,model="gas_pbtk")
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
@@ -176,6 +162,6 @@ print(avg.vs.max)
 
 }
 \author{
-Robert Pearce, John Wambaugh, Miyuki Breen
+Robert Pearce, John Wambaugh
 }
 \keyword{Steady-State}
