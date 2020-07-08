@@ -38,7 +38,7 @@
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
 #' @param route String specification of route of exposure for simulation:
-#' "oral", "iv", "inhalation", ...
+#' "oral", "iv", ...
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param f.change Fractional change of daily steady state concentration
@@ -70,8 +70,6 @@
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-#' 
-#' calc_css(chem.name="pyrene",route="inhalation",exp.duration =24,model="gas_pbtk")
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
