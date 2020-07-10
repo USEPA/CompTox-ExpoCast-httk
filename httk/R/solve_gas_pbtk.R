@@ -322,6 +322,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
       VD = VD),
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     fcontrol = fcontrol,
+    forcings = forcings,
     ...)
   
   return(out)
