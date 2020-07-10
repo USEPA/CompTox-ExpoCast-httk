@@ -1,0 +1,146 @@
+
+R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_analytic_css(chem.name="bisphenol a",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+Plasma concentration returned in uM units.
+[1] 1.485
+> calc_analytic_css(chem.cas="80-05-7",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+Plasma concentration returned in uM units.
+[1] 1.485
+> calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+Plasma concentration returned in uM units.
+[1] 1.485
+> calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
+Human volume of distribution returned in units of L/kg BW.
+Tissue concentration for liver returned in uM units.
+[1] 26.95
+> calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
+Human volume of distribution returned in units of L/kg BW.
+Tissue concentration for brain returned in uM units.
+[1] 8.559
+> 
+> head(solve_1comp(chem.name="bisphenol a"))
+Human volume of distribution returned in units of L/kg BW.
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Agutlumen Ccompartment Ametabolized       AUC
+[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+> head(solve_1comp(chem.cas="80-05-7"))
+Human volume of distribution returned in units of L/kg BW.
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Agutlumen Ccompartment Ametabolized       AUC
+[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+> head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
+Human volume of distribution returned in units of L/kg BW.
+Amounts returned in umol  and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Agutlumen Ccompartment Ametabolized       AUC
+[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
+[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
+[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
+[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
+[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+> 
+> calc_vdist(chem.name="triclosan")
+Human volume of distribution returned in units of L/kg BW.
+[1] 2.454
+> calc_vdist(chem.cas="80-05-7")
+Human volume of distribution returned in units of L/kg BW.
+[1] 5.009
+> params <- parameterize_schmitt(chem.name="triclosan")
+> params <- c(params, predict_partitioning_schmitt(parameters = params))
+> calc_vdist(parameters=params)
+Volume of distribution returned in units of L/kg BW.
+[1] 2.454
+> params <- parameterize_3comp(chem.name="triclosan")
+> calc_vdist(parameters=params)
+Volume of distribution returned in units of L/kg BW.
+[1] 2.455
+> params <- parameterize_pbtk(chem.name="triclosan")
+> calc_vdist(parameters=params)
+Volume of distribution returned in units of L/kg BW.
+[1] 2.454
+> 
+> script.args <- commandArgs(TRUE)
+> if (length(script.args) > 0) 
++ {
++   if (any(script.args=="mctest"))
++   {
++     set.seed(12345)
++     calc_mc_css(chem.name="bisphenol a",model="1compartment")
++     set.seed(12345)
++     calc_mc_css(chem.cas="80-05-7",model="1compartment")
++     set.seed(12345)
++     calc_mc_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
++   }
++   if (any(script.args=="wetmoretest"))
++   {
++     wetmore.chems <- subset(chem.physical_and_invitro.data,
++       regexpr("Wetmore",Human.Clint.Reference)!=-1 &
++       regexpr("Wetmore",Human.Funbound.plasma.Reference)!=-1)
++     Css.table <- data.frame()
++     for (this.cas in sort(get_lit_cheminfo()))
++       if (this.cas %in% get_cheminfo(model="pbtk") &
++         this.cas %in% wetmore.chems$CAS)
++       {
++         Css.table[this.cas,"Css.lit"] <- get_lit_css(chem.cas=this.cas,
++           output.units="uM",
++           which.quantile=0.5)
++         Css.table[this.cas,"Css.calc"] <- calc_analytic_css(chem.cas=this.cas,
++           model="1compartment")
++       }                                                                          
++     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
++    
++     #library(ggplot2)
++     #test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
++     #         geom_point(size=3)+
++     #   scale_y_log10()+
++     #   scale_x_log10()+
++     #  ylab(expression(paste(C[aa]," Literature (uM)"))) +
++     #  xlab(expression(paste(C[aa]," 1compartment model (uM)"))) +
++     #  geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
++     #
++     #dev.new()
++     #print(test.fig)
++   }
++ }
+> 
+> quit("no")
