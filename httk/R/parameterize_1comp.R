@@ -92,11 +92,7 @@ parameterize_1comp <- function(
                         suppress.messages=F,
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001,
-                        Caco2.options = list(Caco2.Pab.default = "1.6",
-                          Caco2.Fgut = TRUE,
-                          Caco2.Fabs = TRUE,
-                          overwrite.invivo = FALSE
-                           )
+                        Caco2.options = list()
                         )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for

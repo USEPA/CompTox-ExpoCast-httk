@@ -321,60 +321,21 @@ Set default.to.human to true to substitute human value.")
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
   
-  if(Caco2.options$keepit100 == TRUE){
-    Params[["Fabs"]] <- 1
-    Params[["Fgut"]] <- 1
-    Params[["Fabsgut"]] <- 1
-    Params[["Caco2.Pab"]] <- 10
-    Params[["Caco2.Pab.dist"]] <- NA
-  }else{
-    # Caco-2 Pab:
-    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.cas = chem.cas), silent = T)
-    if (class(Caco2.Pab.db) == "try-error"){  
-      Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
-      warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
-    }
-    # Check if Caco2 a point value or a distribution, if a distribution, use the median:
-    if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
-    {
-      Caco2.Pab.dist <- Caco2.Pab.db
-      Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
-      if (!suppress.messages) warning("Clint is provided as a distribution.")
-    } else {
-      Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
-      Caco2.Pab.dist <- NA
-    }
-    
-    Params[["Caco2.Pab"]] <- Caco2.Pab.point
-    Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
-    
-    # Select Fabs, optionally overwrite based on Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
-    if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
-        Params[["Fabs"]] <- 1
-        Fabs <- calc_fabs.oral(Params = Params, species = "Human") # only calculable for human, assume the same across species
-      }else{
-        Fabs <- 1
-      }
-    }
-    
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
-    if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
-        Params[["Fgut"]] <- 1
-        Fgut <- calc_fgut.oral(Params = Params, species = species) 
-      }else{
-        Fgut <- 1
-      }
-    }
-    Params[['Fabsgut']] <- Fabs*Fgut
-    Params[['Fabs']] <- Fabs
-    Params[['Fgut']] <- Fgut
-  }
+  out <- do.call(get_fgutabs, c(
+    list(
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=spcies,
+      ),
+    Caco2.options)
+    )
+  Params <- c(Params,out)
   
-  Rb2p <- available_rblood2plasma(chem.name=chem.name,
+  Rb2p <- available_rblood2plasma(
+            chem.name=chem.name,
             chem.cas=chem.cas,
+            dtxsid=dtxsid,
             species=species,
             adjusted.Funbound.plasma=fup.adjusted,
             suppress.messages=T)
