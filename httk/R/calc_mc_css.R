@@ -192,51 +192,11 @@ calc_mc_css <- function(chem.cas=NULL,
                           Caco2.Fabs = TRUE,
                           overwrite.invivo = FALSE,
                           keepit100 = FALSE),
-                        invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=T,
-                          poormetab=T,
-                          fup.censored.dist=FALSE,
-                          fup.lod=0.01,
-                          caco2.meas.sd = 0.3,
-                          fup.meas.cv=0.4,
-                          clint.meas.cv=0.3,
-                          caco2.pop.sd = 0.3,
-                          fup.pop.cv=0.3,
-                          clint.pop.cv=0.3),
-                        httkpop.generate.arg.list=list(
-                          method='direct resampling',
-                          gendernum=NULL,
-                          agelim_years=NULL,
-                          agelim_months=NULL,
-                          weight_category =  c(
-                            "Underweight", 
-                            "Normal", 
-                            "Overweight", 
-                            "Obese"),
-                          gfr_category = c(
-                            "Normal", 
-                            "Kidney Disease", 
-                            "Kidney Failure"),
-                          reths = c(
-                            "Mexican American", 
-                            "Other Hispanic", 
-                            "Non-Hispanic White",
-                            "Non-Hispanic Black", 
-                            "Other")),
+                        invitro.mc.arg.list=list(),
+                        httkpop.generate.arg.list=list(),
                         convert.httkpop.arg.list=list(),
-                        parameterize.arg.list=list(
-                          default.to.human=F,
-                          clint.pvalue.threshold=0.05,
-                          restrictive.clearance = T,
-                          regression=T),
-                        calc.analytic.css.arg.list=list(
-                          well.stirred.correction=T,
-                          adjusted.Funbound.plasma=T,
-                          regression=T,
-                          IVIVE = NULL,
-                          tissue=tissue,
-                          restrictive.clearance = T,
-                          bioactive.free.invivo = FALSE)) 
+                        parameterize.arg.list=list(),
+                        calc.analytic.css.arg.list=list() 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -272,26 +232,27 @@ calc_mc_css <- function(chem.cas=NULL,
 # VALUES FOR WHICH Css SHOULD BE CALCULATED
 #
 #
-  parameter.dt <- create_mc_samples(
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid = dtxsid,
-                        parameters=parameters,
-                        samples=samples,
-                        species=species,
-                        suppress.messages=suppress.messages,
-                        model=model,
-                        httkpop=httkpop,
-                        invitrouv=invitrouv,
-                        calcrb2p=calcrb2p,
-                        censored.params=censored.params,
-                        vary.params=vary.params,
-                        oral.pathway.options = oral.pathway.options,
-                        return.samples=F,
-                        invitro.mc.arg.list=invitro.mc.arg.list,
-                        httkpop.generate.arg.list=httkpop.generate.arg.list,
-                        convert.httkpop.arg.list=convert.httkpop.arg.list,
-                        parameterize.arg.list=parameterize.arg.list)
+  parameter.dt <- do.call(create_mc_samples,
+    list(
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid = dtxsid,
+      parameters=parameters,
+      samples=samples,
+      species=species,
+      suppress.messages=suppress.messages,
+      model=model,
+      httkpop=httkpop,
+      invitrouv=invitrouv,
+      calcrb2p=calcrb2p,
+      censored.params=censored.params,
+      vary.params=vary.params,
+      oral.pathway.options = oral.pathway.options,
+      return.samples=F,
+      invitro.mc.arg.list=invitro.mc.arg.list,
+      httkpop.generate.arg.list=httkpop.generate.arg.list,
+      convert.httkpop.arg.list=convert.httkpop.arg.list,
+      parameterize.arg.list=parameterize.arg.list))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
