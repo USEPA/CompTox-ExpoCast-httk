@@ -99,48 +99,13 @@ create_mc_samples <- function(chem.cas=NULL,
                         return.samples=F,
                         tissue=NULL,
                         httkpop.dt=NULL,
-                        invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=T,
-                          poormetab=T,
-                          fup.censored.dist=FALSE,
-                          fup.lod=0.01,
-                          fup.meas.cv=0.4,
-                          clint.meas.cv=0.3,
-                          fup.pop.cv=0.3,
-                          clint.pop.cv=0.3),
-                        oral.pathway.options=list(
-                          Caco2.Pab.default = "1.6",
-                          Caco2.Fgut = TRUE,
-                          Caco2.Fabs = TRUE,
-                          overwrite.invivo = FALSE,
-                          keepit100 = FALSE),
-                        httkpop.generate.arg.list=list(
-                          method='direct resampling',
-                          gendernum=NULL,
-                          agelim_years=NULL,
-                          agelim_months=NULL,
-                          weight_category =  c(
-                            "Underweight", 
-                            "Normal", 
-                            "Overweight", 
-                            "Obese"),
-                          gfr_category = c(
-                            "Normal", 
-                            "Kidney Disease", 
-                            "Kidney Failure"),
-                          reths = c(
-                            "Mexican American", 
-                            "Other Hispanic", 
-                            "Non-Hispanic White",
-                            "Non-Hispanic Black", 
-                            "Other")),
+                        invitro.mc.arg.list=list(),
+                        oral.pathway.options=list(),
+                        httkpop.generate.arg.list=list(),
                         convert.httkpop.arg.list=list(),
                         propagate.invitrouv.arg.list=list(),
-                        parameterize.arg.list=list(
-                          restrictive.clearance = T,
-                          default.to.human=F,
-                          clint.pvalue.threshold=0.05,
-                          regression=T))
+                        parameterize.arg.list=list()
+                        )
 {
 
 #
@@ -247,7 +212,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        model=model,
                        samples=samples,
                        httkpop.dt=httkpop.dt,
-                                             httkpop.generate.arg.list)
+                       httkpop.generate.arg.list)
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
@@ -334,15 +299,20 @@ Set species=\"Human\" to run httkpop model.')
 #tissue-to-plasma partitioning coefficient, and one element of each vector
 #for each individual. The list element names specify which partition
 #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- predict_partitioning_schmitt(
-             parameters=parameters.dt,
-             chem.name=chem.name,
-             chem.cas=this.chem,
-             dtxsid=dtxsid,
-             species=species,
-             adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
-             regression=parameterize.arg.list$regression,
-             suppress.messages=T)
+    schmitt.args <- list(
+      parameters=parameters.dt,
+      chem.name=chem.name,
+      chem.cas=this.chem,
+      dtxsid=dtxsid,
+      species=species,
+      suppress.messages=T)
+    if (!is.null(invitro.mc.arg.list$adjusted.Funbound.plasma)) schmitt.args <-
+      c(schmitt.args, list(
+        adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma))
+    if (!is.null(parameterize.arg.list$regression)) schmitt.args <-
+      c(schmitt.args, list(
+        regression=parameterize.arg.list$regression))
+    PCs <- do.call(predict_partitioning_schmitt, schmitt.args)
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -394,6 +364,9 @@ Set species=\"Human\" to run httkpop model.')
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
 
+  if (!is.null(parameterize.arg.list$restrictive.clearance))
+    calc.hep.bio.rest.clear <- parameterize.arg.list$restrictive.clearance
+  else calc.hep.bio.rest.clear <- NULL 
   parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
     parameters=list(
       Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
@@ -401,7 +374,7 @@ Set species=\"Human\" to run httkpop model.')
       Clmetabolismc=cl, # L/h/kg
       Rblood2plasma=parameters.dt$Rblood2plasma,
       BW=parameters.dt$BW),
-    restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
+    restrictive.clearance=calc.hep.bio.rest.clear)] 
   }
   
 #
