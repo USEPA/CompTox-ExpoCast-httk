@@ -196,7 +196,8 @@ calc_mc_css <- function(chem.cas=NULL,
                         httkpop.generate.arg.list=list(),
                         convert.httkpop.arg.list=list(),
                         parameterize.arg.list=list(),
-                        calc.analytic.css.arg.list=list() 
+                        calc.analytic.css.arg.list=list()
+                        ) 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
