@@ -38,7 +38,7 @@ specified.}
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
-simulation (calc_mc_css) is requested. Can be a vector. Note that 95th
+simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
 concentration quantile is the same population as the 5th dose quantile.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -70,16 +70,9 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
-See Details below for more information.
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+See Details below for more information.}
 
-\item{...}{Additional parameters passed to calc_mc_css for httkpop and
+\item{...}{Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 variance of parameters.}
 }
 \value{
@@ -87,14 +80,14 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
 This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from calc_mc_css.
+dose using a concentration obtained from \code{\link{calc_mc_css}}.
 }
 \details{
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 Tissue concentrations are calculated for the pbtk model with oral infusion
@@ -102,7 +95,7 @@ dosing.  All tissues other than gut, liver, and lung are the product of the
 steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -120,7 +113,7 @@ used by this function.
 
 \dontrun{
 calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
-                   method='vi',samples=100,tissue='brain')
+       tissue='brain')
 }
 
 }

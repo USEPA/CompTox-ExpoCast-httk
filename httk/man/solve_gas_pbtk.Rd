@@ -57,8 +57,8 @@ be specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
-overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters from parameterize_gas_pbtk (or other
+bespoke) function, overrides chem.name and chem.cas.}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -71,7 +71,7 @@ sequence begins at the beginning of times.}
 
 \item{doses.per.day}{Number of doses per day.}
 
-\item{dose}{Amount of a single dose, mg/kg BW. Overwrites daily.dose.}
+\item{dose}{Amount of a single dose, mg/kg BW.}
 
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
@@ -79,16 +79,17 @@ mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to
 specify forcing concentrations to the integrator, either in combination 
 with eventdata or on its own.}
 
-\item{forcings}{Manual input of 'forcings' data series argument for ode
+\item{forcings}{Manual input of "forcings" data series argument for ode
 integrator, defaults to NULL}
 
 \item{exp.start.time}{Start time in specifying forcing exposure series,
 default 0.}
 
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
+\item{exp.conc}{Specified inhalation exposure concentration for use in 
+assembling "forcings" data series argument for integrator. Defaults to
+uM, in line with output.units}
 
-\item{period}{For use in assembling forcing function data series 'forcings'
+\item{period}{For use in assembling forcing function data series "forcings"
 argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 
@@ -124,7 +125,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
 
-\item{recalc.clearance}{Recalculates the the hepatic clearance
+\item{recalc.clearance}{Recalculates the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
@@ -181,9 +182,9 @@ The default dosing scheme involves specifying the start time
 of exposure, the concentration of gas inhaled, the period of a given 
 assumed cycle of exposure, and the duration of the exposure during that 
 period. Together, these arguments determine the forcings passed to the 
-ODE integrator. Forcings can also be specified manually, or effectively 
-turned off by setting exposure concentration to zero, if the user prefers
-to simulate dosing by other means. 
+ODE integrator. The "forcings" can also be specified manually, or 
+effectively turned off by setting exposure concentration to zero, if the
+user prefers to simulate dosing by other means. 
 
 
 This function solves for the amounts or concentrations in uM of a chemical

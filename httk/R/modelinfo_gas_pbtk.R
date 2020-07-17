@@ -1,7 +1,5 @@
-# Add this model to the list of models:
-
 #Analytic expression for steady-state plasma concentration.
-#model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas"  <<<not yet implemented
+#model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
 
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
@@ -209,13 +207,13 @@ model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
 
 # We need to know which compartment gets the dose 
 model.list[["gas_pbtk"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven", inhalation = "Cinh")
+  iv="Aven", inhalation = "Amuc")
 
 # Can take the values "add" to add dose C1 <- C1 + dose,
 #"replace" to change the value C1 <- dose
 #or "multiply" to change the value to C1 <- C1*dose
 model.list[["gas_pbtk"]]$dose.type <- list(oral="add",
-  iv="add", inhalation = "replace")
+  iv="add", inhalation = "add")
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
@@ -249,34 +247,3 @@ model.list[["gas_pbtk"]]$exclude.fup.zero <- T
   
 #Name of forcing function as it appears in .c model code for specification to ode solver
 model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
-
-# The default dosing scheme involves specifying the start time
-# of exposure, the concentration of gas inhaled, the period of a given 
-# assumed cycle of exposure, and the duration of the exposure during that 
-# period. Together, these arguments determine the forcings passed to the 
-# ODE integrator. Forcings can also be specified manually, or effectively 
-# turned off by setting exposure concentration to zero, if the user prefers
-# to simulate dosing by other means. 
-#
-# exp.start.time Start time in specifying forcing exposure series,
-#' default 0. 
-#' @param exp.conc Specified inhalation exposure concentration for use in assembling
-#' 'forcings' data series argument for integrator. Defaults to uM/L 
-#' @param period For use in assembling forcing function data series 'forcings'
-#' argument, specified in hours
-#' @param exp.duration For use in assembling forcing function data 
-
-model.list[["gas_pbtk"]]$forcing_fun <- function(
-  exp.conc, 
-  period, # exposure period in fraction of a day
-  exp.start.time, 
-  exp.duration, # exposure duration in days
-  days) 
-  {
-    Nrep <- ceiling((days - exp.start.time)/period) 
-    times <- rep(c(exp.start.time, exp.duration), Nrep) + 
-      rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-    y  <- rep(c(exp.conc,0), Nrep)
-    conc.matrix = cbind(times,y)
-    return(conc.matrix)
-  }

@@ -7,7 +7,7 @@
 #' to "Human".
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data (volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' Tissue concentrations are calculated for the pbtk model with a default oral
@@ -15,7 +15,7 @@
 #' of the steady state plasma concentration and the tissue to plasma partition
 #' coefficient.
 #' 
-#' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
+#' The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
 #' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -59,8 +59,8 @@
 #' chemical ratio of blood to plasma
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each paramter). This argument should
-#' be a list of sub-lists. Each sublist is named for a parameter in
+#' of detection (specified separately for each parameter). This argument should
+#' be a list of sublists. Each sublist is named for a parameter in
 #' "parameters" and contains two elements: "CV" (coefficient of variation) and
 #' "LOD" (limit of detection, below which parameter values are censored. New
 #' values are sampled with mean equal to the value in "parameters" and standard
@@ -75,91 +75,7 @@
 #' equal to the mean times the CV. Not used with httkpop model.
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
-#' @param tissue Desired steady state tissue conentration.
-#' @param well.stirred.correction If TRUE (default) then the well-stirred
-#' correction (Rowland et al., 1973) is used in the calculation of hepatic
-#' clearance for the models that do not include flows for first-pass metabolism
-#' (currently, 1compartment and 3compartmentss). This assumes clearance
-#' relative to amount unbound in whole blood instead of plasma, but converted
-#' for use with plasma concentration.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
-#' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
-#' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
-#' @param IVIVE Honda et al. (2019) identified six plausible sets of
-#' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
-#' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
-#' See Details below for more information.
-#' @param httkpop Whether or not to use population generator and sampler from
-#' httkpop.  This is overwrites censored.params and vary.params and is only for
-#' human physiology.  Species must also be set to 'Human'.
-#' @param poormetab TRUE (include poor metabolizers) or FALSE (exclude poor
-#' metabolizers)
-#' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
-#' censored distribution or not.
-#' @param fup.lod The average limit of detection for Funbound.plasma. if
-#' \code{fup.censor == TRUE}, the \code{Funbound.plasma} distribution will be
-#' censored below \code{lod/2}. Default value is 0.01.
-#' @param method The population-generation method to use. Either "virtual
-#' individuals" or "direct resampling" (default). Short names may be used: "d"
-#' or "dr" for "direct resampling", and "v" or "vi" for "virtual individuals".
-#' @param gendernum Optional: A named list giving the numbers of male and
-#' female individuals to include in the population, e.g. \code{list(Male=100,
-#' Female=100)}. Default is NULL, meaning both males and females are included,
-#' in their proportions in the NHANES data. If both \code{nsamp} and
-#' \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
-#' the sum of \code{gendernum}).
-#' @param agelim_years Optional: A two-element numeric vector giving the
-#' minimum and maximum ages (in years) to include in the population. Default is
-#' c(0,79). If only a single value is provided, both minimum and maximum ages
-#' will be set to that value; e.g. \code{agelim_years=3} is equivalent to
-#' \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
-#' \code{agelim_months} is not, \code{agelim_years} will override the default
-#' value of \code{agelim_months}.
-#' @param agelim_months Optional: A two-element numeric vector giving the
-#' minimum and maximum ages (in months) to include in the population. Default
-#' is c(0, 959), equivalent to the default \code{agelim_years}. If only a
-#' single value is provided, both minimum and maximum ages will be set to that
-#' value; e.g. \code{agelim_months=36} is equivalent to
-#' \code{agelim_months=c(36,36)}. If \code{agelim_months} is provided and
-#' \code{agelim_years} is not, \code{agelim_months} will override the default
-#' values of \code{agelim_years}.
-#' @param weight_category Optional: The weight categories to include in the
-#' population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-#' 'Obese')}. User-supplied vector must contain one or more of these strings.
-#' @param gfr_category The kidney function categories to include in the
-#' population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
-#' to include all kidney function levels.
-#' @param reths Optional: a character vector giving the races/ethnicities to
-#' include in the population. Default is \code{c('Mexican American','Other
-#' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-#' all races and ethnicities in their proportions in the NHANES data.
-#' User-supplied vector must contain one or more of these strings.
-#' @param physiology.matrix A data table generated by
-#' \code{httkpop_generate()}.
-#' @param parameter.matrix A data table generated by \code{get_httk_params()}.
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' @param physiology.matrix A data table generated by 
-#' \code{\link{httkpop_generate}}.
-#' @param parameter.dt A data table generated by 
-#' \code{\link{get_httk_params}}.
-#' @param httkpop_generate.arg.list Additional parameters passed to 
+#' @param tissue Desired steady state tissue concentration.
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param invitro.mc.arg.list List of additional parameters passed to 
 #' \code{\link{invitro_mc}}
@@ -194,30 +110,30 @@
 #' 
 #' \dontrun{
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',method='vi',
+#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
 #'              samples=100,return.samples=TRUE)
+#'              
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 #' 
 #'  set.seed(1234)
 #'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
-#'              censored.params = list(Funbound.plasma = list(cv = 0.1, 
-#'                                                           lod = 0.005)),
-#'              vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-#'                                Qtotal.liverc = 0.15, 
-#'                                million.cells.per.gliver = 0.15, Clint = 0.15),
-#'              output.units = "uM", samples = 2000)
+#'              output.units = "uM", samples = 2000,
+#'              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
+#'              agelim_years=NULL, agelim_months=NULL, weight_category = 
+#'              c("Underweight", "Normal", "Overweight", "Obese")))
 #' 
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  set.seed(1234)
 #'  calc_mc_css(parameters=params,model="pbtk")
 #'
-#'set.seed(1234)
-#'# Standard HTTK Monte Carlo:
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
-#'set.seed(1234)
-# HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
-#'calc_mc_css(chem.cas="90-43-7",
+#'  set.seed(1234)
+#'  # Standard HTTK Monte Carlo:
+#'  NSAMP = 500
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+#'  set.seed(1234)
+#   HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
+#'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
 #'  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
@@ -228,20 +144,20 @@
 #'    clint.meas.cv = 0.0, 
 #'    fup.pop.cv = 0.3, 
 #'    clint.pop.cv = 0.3))
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no HTTK-Pop physiological variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no in vitro uncertainty and variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
-#'set.seed(1234)
-#'# HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-#'calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
-#'# Should be the same as the mean result:
-#'calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-#'set.seed(1234)
-#'# HTTK Monte Carlo using basic Monte Carlo sampler:
-#'calc_mc_css(chem.cas="90-43-7",
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no in vitro uncertainty and variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+#'  # Should be the same as the mean result:
+#'  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
+#'  set.seed(1234)
+#'  # HTTK Monte Carlo using basic Monte Carlo sampler:
+#'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
 #'  httkpop=F,

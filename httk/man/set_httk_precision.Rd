@@ -7,8 +7,8 @@
 set_httk_precision(in.num, sig.fig = 4, num.prec = 9)
 }
 \arguments{
-\item{in.num}{The numeric variabile (or assembly of numerics) to be
-processd.}
+\item{in.num}{The numeric variable (or assembly of numerics) to be
+processed.}
 
 \item{sig.fig}{The number of significant figures reported. Defaults to 4.}
 

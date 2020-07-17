@@ -156,6 +156,10 @@ parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 
 parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
+parameterize_gas_pbtk(chem.cas = '56-23-5')
+
+parameters <- parameterize_gas_pbtk(chem.name='Carbon tetrachloride',species='Rat')
+
 # Change the tissue lumping:
 compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
