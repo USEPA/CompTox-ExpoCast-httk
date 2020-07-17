@@ -100,11 +100,11 @@ model.list <- list()
 #'
 #'@keywords Solve
 #'
-#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
+#'In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 #'
-#' @export calc_analytic_css
-#' @import methods
+#'@export calc_analytic_css
+#'@import methods
 calc_analytic_css <- function(chem.name=NULL,
                               chem.cas = NULL,
                               dtxsid = NULL,
@@ -155,7 +155,7 @@ calc_analytic_css <- function(chem.name=NULL,
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-# Look up the chemical name/CAS, depending on what was provide:
+# Look up the chemical name/CAS/dtxsid, depending on what was provided:
     out <- get_chem_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
@@ -196,7 +196,7 @@ calc_analytic_css <- function(chem.name=NULL,
     concentration <- out[["concentration"]]
   }
     
-# If the hepatic metabolism is now slowed by plasma protein binding (non-
+# If the hepatic metabolism is not slowed by plasma protein binding (non-
 # restrictive clearance)  
   if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
@@ -240,6 +240,8 @@ calc_analytic_css <- function(chem.name=NULL,
   {
     Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
       chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
       parameters=parameters,
       hourly.dose=hourly.dose,
       concentration=concentration,

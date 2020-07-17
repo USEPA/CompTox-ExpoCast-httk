@@ -13,7 +13,7 @@ solve_3comp(
   days = 10,
   tsteps = 4,
   daily.dose = NULL,
-  dose = 1,
+  dose = NULL,
   doses.per.day = NULL,
   initial.values = NULL,
   plots = F,
@@ -60,7 +60,7 @@ overrides chem.name and chem.cas.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.  Overwrites daily.dose.}
+\item{dose}{Amount of a single dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -136,7 +136,6 @@ each time point.
 This function solves for the amounts or concentrations of a chemical in
 different tissues as functions of time based on the dose and dosing
 frequency.  It uses a three compartment model with partition coefficients.
- function does. ~~
 }
 \details{
 Note that the model parameters have units of hours while the model output is

@@ -1,7 +1,7 @@
 
 #' Get physico-chemical parameters from chem.physical_and_invitro.data
 #'
-#' This function retrives physico-chemical properties ("param") for the chemical specified 
+#' This function retrieves physico-chemical properties ("param") for the chemical specified 
 #' by chem.name or chem.cas from the vLiver tables.
 #' 
 #' @param param The desired parameters, a vector or single value.
@@ -10,7 +10,7 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
-#' @return The paramters, either a single value, a named list for a single chemical, or a list of lists
+#' @return The parameters, either a single value, a named list for a single chemical, or a list of lists
 #' 
 #' @author John Wambaugh and Robert Pearce
 #'
@@ -32,13 +32,14 @@ get_physchem_param <- function(
   
   chem.cas0 <- chem.cas
   chem.name0 <- chem.name
+  dtxsid0 <- dtxsid
   
   
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid) ) 
-    stop('Cchem.name, chem.cas, or dtxsid must be specified.')
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
     
   # Look up the chemical name/CAS, depending on what was provide:
   if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
@@ -58,6 +59,9 @@ get_physchem_param <- function(
   if(!is.null(chem.name0) & any(is.na(chem.cas))){
     stop(paste("Compound name not matched in chem.physical_and_invitro.data for input Compounds:", paste(chem.name0[is.na(chem.cas)], collapse = ",")))
   }
+  if(!is.null(dtxsid0) & any(is.na(chem.cas))){
+    stop(paste("DTXSID not matched in chem.physical_and_invitro.data for input DTXSID:", paste(dtxsid0[is.na(chem.cas)], collapse = ",")))
+  }
   
   
   if(!all(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP"))){
@@ -71,7 +75,7 @@ get_physchem_param <- function(
   else this.index <- 
     match(chem.name, chem.physical_and_invitro.data[,"Compound"])
   if(!any(is.na(suppressWarnings(chem.physical_and_invitro.data[this.index,
-                                                                param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
+                                  param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
   {
     values <- chem.physical_and_invitro.data[this.index,param]

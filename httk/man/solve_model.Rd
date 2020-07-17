@@ -55,13 +55,15 @@ parameterize_pbtk function. Overrides chem.name and chem.cas.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 
-\item{dosing}{List of dosing metrics used in simulation, which must include
-the general entries with names "initial.dose", "doses.per.day", 
-"daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
-precise dose regimen specification, and is either a vector of dosing times
-or a matrix consisting of two columns or rows named "time" and "dose"
-containing the time and amount, in mg/kg BW, of each dose. 
-Minimal usage case of all entries but "initial.dose" set to NULL in value.}
+\item{dosing}{List of dosing metrics passed to solver for a given model,
+which must at least include entries with names "initial.dose", 
+"doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
+be used for more precise dose regimen specification, and is a matrix
+consisting of two columns or rows named "time" and "dose" which contain the
+time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
+of the dosing list is set to a non-NULL value, solve_model uses a default
+dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
+a given route (e.g. add the dose to gut lumen for oral route)}
 
 \item{days}{Simulated period. Default 10 days.}
 
@@ -78,8 +80,9 @@ Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
+\item{species}{Species desired (models have been designed to be
+parameterized for some subset of the following species: "Rat", "Rabbit", 
+"Dog", "Mouse", or default "Human").}
 
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
@@ -130,20 +133,18 @@ bodily compartments of a given available species (either "Rat", "Rabbit",
 "Dog", "Mouse", or default "Human").
 }
 \details{
-At a minimum, a chemical identifier (whether name, CAS number, or other
-chemical parameterization), model system of interest ("pbtk",
-"3compartment", "3compartmentss", "1compartment", "schmitt", ...), and
-dosing regimen must be provided for solve_model to run its toxicokinetic
-simulations. See 'dosing' argument listing below for breakdown of how to
-specify dose (in terms of route of administration, frequency, and quantity)
+The minimal usage case requires input that includes a chemical identifier
+(whether name, CAS number, or other chemical parameterization) and a model
+system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
+"schmitt", ...).
 
-Note that the model parameters have units of hours while the model output is
-in days.
-
-The compartments used in the "pbtk" model are the gutlumen, gut, liver, 
-kidneys, veins, arteries, lungs, and the rest of the body. The extra
-compartments include the amounts or concentrations metabolized by
-the liver and excreted by the kidneys through the tubules.
+The 'dosing' argument includes all parameters needed to describe exposure
+in terms of route of administration, frequency, and quantity short of 
+scenarios that require use of a more precise forcing function. If the dosing
+argument's namesake entries are left NULL, solve_model defaults to a
+single-time dose of 1 mg/kg BW according to the given dosing route and 
+associated type (either add/multiply, e.g. typically adds dose to gut lumen 
+when oral route is specified).
 
 AUC is the area under the curve of the plasma concentration.
 
