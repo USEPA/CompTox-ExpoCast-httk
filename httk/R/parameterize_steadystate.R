@@ -325,7 +325,7 @@ Set default.to.human to true to substitute human value.")
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
   
-  out <- do.call(get_fabsgut, c(
+  Params <- do.call(get_fabsgut, c(
     list(
       Params=Params,
       dtxsid=dtxsid,
@@ -335,7 +335,6 @@ Set default.to.human to true to substitute human value.")
       ),
     Caco2.options)
     )
-  Params <- c(Params,out)
 
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:

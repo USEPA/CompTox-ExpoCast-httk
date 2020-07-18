@@ -123,11 +123,8 @@ parameterize_pbtk <- function(
                        suppress.messages=F,
                        restrictive.clearance=T,
                        minimum.Funbound.plasma=0.0001,
-                       Caco2.options = list(Caco2.Pab.default = 1.6,
-                         Caco2.Fgut = TRUE,
-                         Caco2.Fabs = TRUE,
-                         overwrite.invivo = FALSE,
-                         keepit100 = FALSE))
+                       Caco2.options = list()
+                       )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -341,61 +338,16 @@ Set default.to.human to true to substitute human value.")
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma))
         
-  if(Caco2.options$keepit100 == TRUE){
-    outlist[["Fabs"]] <- 1
-    outlist[["Fgut"]] <- 1
-    outlist[["Fabsgut"]] <- 1
-    outlist[["Caco2.Pab"]] <- 10
-    outlist[["Caco2.Pab.dist"]] <- NA
-  }else{
-    # Calculate Fabsgut
-    # Caco-2 Pab:
-    Caco2.Pab.db <- try(get_invitroPK_param("Caco2.Pab", species = "Human", chem.cas = chem.cas), silent = T)
-    if (class(Caco2.Pab.db) == "try-error"){  
-      Caco2.Pab.db <- Caco2.options$Caco2.Pab.default
-      warning(paste0("Default value of ", Caco2.options$Caco2.Pab.default, " used for Caco2 permeability."))
-    }
-    # Check if Caco2 a point value or a distribution, if a distribution, use the median:
-    if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
-    {
-      Caco2.Pab.dist <- Caco2.Pab.db
-      Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
-      if (!suppress.messages) warning("Clint is provided as a distribution.")
-    } else {
-      Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
-      Caco2.Pab.dist <- NA
-    }
-    gut.params <- list("cl_us" = outlist$Clmetabolismc, "BW" = BW, "Caco2.Pab" = Caco2.Pab.point,
-                       "Funbound.plasma" = outlist$Funbound.plasma, "Rblood2plasma" = outlist$Rblood2plasma)
-    # Select Fabs, optionally overwrite based on Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
-    if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error")){
-        gut.params[["Fabs"]] <- 1
-        Fabs <- calc_fabs.oral(Params = gut.params, species = "Human") # only calculable for human, assume the same across species
-      }else{
-        Fabs <- 1
-      }
-    }
-    
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
-    if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error")){
-        gut.params[["Fgut"]] <- 1
-        Fgut <- calc_fgut.oral(Params = gut.params, species = species) # only calculable for human, assume the same across species
-      }else{
-        Fgut <- 1
-      }
-    }
-    
-    outlist[['Fabsgut']] <- Fabs*Fgut
-    outlist[['Fabs']] <- Fabs
-    outlist[['Fgut']] <- Fgut
-    outlist[['Caco2.Pab']] <- Caco2.Pab.point
-    outlist[['Caco2.Pab.dist']] <- Caco2.Pab.dist
-  }
-
-        
+  outlist <- do.call(get_fabsgut, c(
+    list(
+      Params=outlist,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species
+      ),
+    Caco2.options)
+    )
 
   return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }
