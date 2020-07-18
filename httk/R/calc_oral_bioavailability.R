@@ -59,23 +59,20 @@
 #' @export calc_fgut.oral
 #' 
 calc_fbio.oral <- function(Params = NULL,
-                           chem.cas = NULL,
-                           chem.name = NULL,
-                           species = "Human",
-                           clint.pvalue.threshold = 0.05,
-                           default.to.human = F,
-                           human.clint.fup = F,
-                           adjusted.Funbound.plasma = T,
-                           restrictive.clearance = T,
-                           fup.lod.default = 0.005,
-                           suppress.messages = F,
-                           minimum.Funbound.plasma = 0.0001,
-                           Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE,
-                                                keepit100 = FALSE)
-){
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  suppress.messages = F,
+  Caco2.Pab.default = "1.6",
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  overwrite.invivo = FALSE,
+  keepit100 = FALSE,
+  ...
+  )
+{
   
   # Ammend list options
   if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(unlist(Caco2.options)))){
@@ -84,40 +81,56 @@ calc_fbio.oral <- function(Params = NULL,
   
   # Initialize parameters if null
   if(is.null(Params)){
-    out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name
-    Params <- parameterize_steadystate(chem.cas = chem.cas,
-                                       chem.name = chem.name,
-                                       species = species,
-                                       clint.pvalue.threshold = clint.pvalue.threshold,
-                                       default.to.human = default.to.human,
-                                       human.clint.fup = human.clint.fup,
-                                       adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                       restrictive.clearance = restrictive.clearance,
-                                       fup.lod.default = fup.lod.default,
-                                       suppress.messages = suppress.messages,
-                                       minimum.Funbound.plasma = minimum.Funbound.plasma,
-                                       Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
-                                                            Caco2.Fgut = FALSE,
-                                                            Caco2.Fabs = FALSE,
-                                                            overwrite.invivo = FALSE,
-                                                            keepit100 = Caco2.options$keepit100))
+  # We need to describe the chemical to be simulated one way or another:
+    if (is.null(chem.cas) & 
+        is.null(chem.name) & 
+        is.null(dtxsid)) 
+      stop('chem.name, chem.cas, or dtxsid must be specified.')
+  
+  # Look up the chemical name/CAS, depending on what was provide:
+      out <- get_chem_id(
+              chem.cas=chem.cas,
+              chem.name=chem.name,
+              dtxsid=dtxsid)
+      chem.cas <- out$chem.cas
+      chem.name <- out$chem.name                                
+      dtxsid <- out$dtxsid
+    
+    Params <- do.call(parameterize_steadystate, c(list(
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
+      species = species,
+      default.to.human = default.to.human,
+      suppress.messages = suppress.messages,
+      Caco2.options = list(
+        Caco2.Pab.default = Caco2.Pab.default,
+        Caco2.Fgut = Caco2.Fgut,
+        Caco2.Fabs = Caco2.Fabs,
+        overwrite.invivo = overwrite.invivo,
+        keepit100 = keepit100)),
+      ...))
   }
 
-  if(Caco2.options$keepit100 == TRUE){
+  if(keepit100 == TRUE){
     fabs.oral <- 1
     fgut.oral <- 1
   }else{
-    if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fabs == TRUE & class(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)) == "try-error")){
+    if (overwrite.invivo == TRUE | 
+      (Caco2.Fabs == TRUE & 
+        class(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)) == "try-error"))
+    {
       fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
-    }else{
+    } else {
       fabs.oral <- Params$Fabs
     }
     
-    if(Caco2.options$overwrite.invivo == TRUE | (Caco2.options$Caco2.Fgut == TRUE & class(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)) == "try-error")){
+    if (overwrite.invivo == TRUE | 
+      (Caco2.Fgut == TRUE & 
+        class(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)) == "try-error"))
+    {
       fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
-    }else{
+    } else {
       fgut.oral <- Params$Fgut
     }
   }
@@ -135,51 +148,58 @@ calc_fbio.oral <- function(Params = NULL,
 
 # Calculate the fraction absorbed in the gut
 calc_fabs.oral <- function(Params = NULL,
-                           chem.cas = NULL,
-                           chem.name = NULL,
-                           species = "Human",
-                           clint.pvalue.threshold=0.05,
-                           default.to.human=F,
-                           human.clint.fup=F,
-                           adjusted.Funbound.plasma=T,
-                           restrictive.clearance=T,
-                           fup.lod.default=0.005,
-                           suppress.messages=F,
-                           minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE,
-                                                keepit100 = FALSE)
-){
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  suppress.messages = F,
+  Caco2.Pab.default = "1.6",
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  overwrite.invivo = FALSE,
+  keepit100 = FALSE,
+  ...
+  )
+{
   # Required parameters
   req.param <- c("Caco2.Pab", "Fabs")
   
   # Header initialization  
   if(is.null(Params) | !all(req.param %in% names(Params))){
-    out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name
-    Params <- parameterize_steadystate(chem.cas = chem.cas,
-                                chem.name = chem.name,
-                                species = species,
-                                clint.pvalue.threshold = clint.pvalue.threshold,
-                                default.to.human = default.to.human,
-                                human.clint.fup = human.clint.fup,
-                                adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                restrictive.clearance = restrictive.clearance,
-                                fup.lod.default = fup.lod.default,
-                                suppress.messages = suppress.messages,
-                                minimum.Funbound.plasma = minimum.Funbound.plasma,
-                                Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
-                                                     Caco2.Fgut = FALSE,
-                                                     Caco2.Fabs = FALSE,
-                                                     overwrite.invivo = FALSE,
-                                                     keepit100 = Caco2.options$keepit100))
+  # We need to describe the chemical to be simulated one way or another:
+      if (is.null(chem.cas) & 
+          is.null(chem.name) & 
+          is.null(dtxsid)) 
+        stop('chem.name, chem.cas, or dtxsid must be specified.')
+    
+    # Look up the chemical name/CAS, depending on what was provide:
+        out <- get_chem_id(
+                chem.cas=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid)
+        chem.cas <- out$chem.cas
+        chem.name <- out$chem.name                                
+        dtxsid <- out$dtxsid
+      
+    Params <- do.call(parameterize_steadystate, c(list(
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
+      species = species,
+      default.to.human = default.to.human,
+      suppress.messages = suppress.messages,
+      Caco2.options = list(
+        Caco2.Pab.default = Caco2.Pab.default,
+        Caco2.Fgut = Caco2.Fgut,
+        Caco2.Fabs = Caco2.Fabs,
+        overwrite.invivo = overwrite.invivo,
+        keepit100 = keepit100)),
+      ...))
   }
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
-  if(Caco2.options$Caco2.Fabs == TRUE){
+  if(Caco2.Fabs == TRUE){
     peffh <- 10^(0.4926 * Params$Caco2.Pab - 0.1454) # Yang 2007 for Caco2 pH7.4
     permh <- 0.66 * peffh * 3.6
     fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
@@ -192,51 +212,57 @@ calc_fabs.oral <- function(Params = NULL,
 
 # Calculate the fraction of chemical surviving first pass metabolism in the gut
 calc_fgut.oral <- function(Params = NULL,
-                           chem.cas = NULL,
-                           chem.name = NULL,
-                           species = "Human",
-                           clint.pvalue.threshold=0.05,
-                           default.to.human=F,
-                           human.clint.fup=F,
-                           adjusted.Funbound.plasma=T,
-                           restrictive.clearance=T,
-                           fup.lod.default=0.005,
-                           suppress.messages=F,
-                           minimum.Funbound.plasma=0.0001,
-                           Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE,
-                                                keepit100 = FALSE)
-){
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  suppress.messages = F,
+  Caco2.Pab.default = "1.6",
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  overwrite.invivo = FALSE,
+  keepit100 = FALSE,
+  ...
+  )
+{
   
-  if(Caco2.options$Caco2.Fgut == TRUE){
+  if(Caco2.Fgut == TRUE){
     # Required parameters
     req.param <- c("BW", "cl_us", "Caco2.Pab", "Fgut", "Funbound.plasma", "Rblood2plasma")
     
     # Header initialization  
     if(is.null(Params) | !all(req.param %in% names(Params))){
-      out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
-      chem.cas <- out$chem.cas
-      chem.name <- out$chem.name
-      Params <- parameterize_steadystate(chem.cas = chem.cas,
-                                         chem.name = chem.name,
-                                         species = species,
-                                         clint.pvalue.threshold = clint.pvalue.threshold,
-                                         default.to.human = default.to.human,
-                                         human.clint.fup = human.clint.fup,
-                                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                         restrictive.clearance = restrictive.clearance,
-                                         fup.lod.default = fup.lod.default,
-                                         suppress.messages = suppress.messages,
-                                         minimum.Funbound.plasma = minimum.Funbound.plasma,
-                                         Caco2.options = list(Caco2.Pab.default = Caco2.options$Caco2.Pab.default,
-                                                              Caco2.Fgut = FALSE,
-                                                              Caco2.Fabs = FALSE,
-                                                              overwrite.invivo = FALSE,
-                                                              keepit100 = Caco2.options$keepit100))
-    }
+# We need to describe the chemical to be simulated one way or another:
+      if (is.null(chem.cas) & 
+          is.null(chem.name) & 
+          is.null(dtxsid)) 
+        stop('chem.name, chem.cas, or dtxsid must be specified.')
     
+    # Look up the chemical name/CAS, depending on what was provide:
+        out <- get_chem_id(
+                chem.cas=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid)
+        chem.cas <- out$chem.cas
+        chem.name <- out$chem.name                                
+        dtxsid <- out$dtxsid
+
+    Params <- do.call(parameterize_steadystate, c(list(
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid,
+      species = species,
+      default.to.human = default.to.human,
+      suppress.messages = suppress.messages,
+      Caco2.options = list(
+        Caco2.Pab.default = Caco2.Pab.default,
+        Caco2.Fgut = Caco2.Fgut,
+        Caco2.Fabs = Caco2.Fabs,
+        overwrite.invivo = overwrite.invivo,
+        keepit100 = keepit100)),
+      ...))
+    }
     
     clu_hep <- Params$cl_us*Params$BW # L/h for 70 kg human
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
@@ -266,7 +292,7 @@ calc_fgut.oral <- function(Params = NULL,
     fgut.oral <- Params$Fgut
   }
   return(as.numeric(fgut.oral))
-  
+ 
 }
 
 
