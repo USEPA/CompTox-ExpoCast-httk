@@ -9,6 +9,8 @@ model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk"
 # how other parameters were calculated:
 model.list[["gas_pbtk"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
