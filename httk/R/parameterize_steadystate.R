@@ -286,13 +286,13 @@ Set default.to.human to true to substitute human value.")
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
   
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",
                    species,
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
                silent=T)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  if (class(Fabsgut) == "try-error") Fabsgut <- 1
 
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
@@ -325,7 +325,7 @@ Set default.to.human to true to substitute human value.")
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
   
-  out <- do.call(get_fgutabs, c(
+  out <- do.call(get_Fabsgut, c(
     list(
       Params=Params,
       dtxsid=dtxsid,

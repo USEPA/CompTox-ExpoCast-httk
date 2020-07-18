@@ -2,7 +2,7 @@
 #' 
 #' This function transforms the dose (in mg/kg) into the appropriate units. It
 #' handles single doses, matrices of doses, or daily repeated doses at varying
-#' intervals. Gut absorption is also factored in through the parameter Fgutabs,
+#' intervals. Gut absorption is also factored in through the parameter Fabsgut,
 #' and scaling is currently avoided in the inhalation exposure case with a 
 #' scale factor of 1
 #' 
@@ -47,7 +47,7 @@ scale_dosing <- function(dosing,parameters,route,output.units="uM")
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
   {
-    scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
+    scale.factor <- scale.factor*as.numeric(parameters[['Fabsgut']])
   } else if (route == "inhalation"){ #Added 9-25-19 MWL, obviously needs touching up, but for now, takes uM inputs and returns uM outputs
     scale.factor <- 1
   }
