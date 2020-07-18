@@ -101,41 +101,11 @@ calc_mc_oral_equiv <- function(conc,
                                suppress.messages=F,
                                return.samples=F,
                                concentration = "plasma",
-                               restrictive.clearance=T,
-                               bioactive.free.invivo = F,
-                               tissue=NULL,
-                               IVIVE=NULL,
-                               Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                    Caco2.Fgut = TRUE,
-                                                    Caco2.Fabs = TRUE,
-                                                    overwrite.invivo = FALSE,
-                                                    keepit100 = FALSE),
+                               Caco2.options = list(),
+                               calc.analytic.css.arg.list = list(),
                                ...)
 {
   if(!(tolower(input.units) %in% c('um','mg/l'))) stop("Input units can only be uM or mg/L.")
-  
-  if (!is.null(IVIVE)) 
-  {
-    out <- honda.ivive(method=IVIVE,tissue=tissue)
-    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
-    restrictive.clearance <- out[["restrictive.clearance"]]
-    tissue <- out[["tissue"]]
-    concentration <- out[["concentration"]]
-  }
-  
-  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
-     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
-  ){
-    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
-         Ctissue * Funbound.plasma is not a relevant concentration.\n
-         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
-  }
-  
-  if(!is.null(tissue) & tolower(concentration) != "tissue"){
-    concentration <- "tissue"
-    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
-  }
-  
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -152,13 +122,10 @@ calc_mc_oral_equiv <- function(conc,
                          species=species,
                          output.units=input.units,
                          suppress.messages=T, 
-                         calc.analytic.css.arg.list=
+                         calc.analytic.css.arg.list=c(
+                           calc.analytic.css.arg.list,
                            list(concentration = concentration,
-                           restrictive.clearance=restrictive.clearance,
-                           bioactive.free.invivo = bioactive.free.invivo,
-                           tissue = tissue,IVIVE=IVIVE,
-                           well.stirred.correction=well.stirred.correction,
-                           adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+                           adjusted.Funbound.plasma=adjusted.Funbound.plasma)),
                          return.samples=return.samples,
                          Caco2.options = Caco2.options,
                          ...))
