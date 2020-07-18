@@ -70,7 +70,9 @@ get_fgutabs <- function(
     Caco2.Pab.db <- try(get_invitroPK_param(
         "Caco2.Pab", 
         species = "Human", 
-        chem.cas = chem.cas), 
+        chem.cas=chem.cas,
+        chem.name=chem.name,
+        dtxsid=dtxsid), 
       silent = T)
     if (class(Caco2.Pab.db) == "try-error"){  
       Caco2.Pab.db <- as.character(Caco2.Pab.default)

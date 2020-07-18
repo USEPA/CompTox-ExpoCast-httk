@@ -6,7 +6,7 @@
 #' parameterization and other functions. Options are set in the list Caco2.options.
 #' 
 #' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
-#' cl_us, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
+#' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 #' or calculated in parameterize_steady_state.
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified.
@@ -229,7 +229,7 @@ calc_fgut.oral <- function(Params = NULL,
   
   if(Caco2.Fgut == TRUE){
     # Required parameters
-    req.param <- c("BW", "cl_us", "Caco2.Pab", "Fgut", "Funbound.plasma", "Rblood2plasma")
+    req.param <- c("BW", "Clint", "Caco2.Pab", "Fgut", "Funbound.plasma", "Rblood2plasma")
     
     # Header initialization  
     if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -264,7 +264,7 @@ calc_fgut.oral <- function(Params = NULL,
       ...))
     }
     
-    clu_hep <- Params$cl_us*Params$BW # L/h for 70 kg human
+    clu_hep <- Params$Clint*Params$BW # L/h for 70 kg human
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
     
     if(tolower(species) == "rat"){

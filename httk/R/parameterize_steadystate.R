@@ -316,6 +316,15 @@ Set default.to.human to true to substitute human value.")
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
   
+  Rb2p <- available_rblood2plasma(
+            chem.name=chem.name,
+            chem.cas=chem.cas,
+            dtxsid=dtxsid,
+            species=species,
+            adjusted.Funbound.plasma=fup.adjusted,
+            suppress.messages=T)
+  Params[["Rblood2plasma"]] <- Rb2p
+  
   out <- do.call(get_fgutabs, c(
     list(
       Params=Params,
@@ -327,15 +336,6 @@ Set default.to.human to true to substitute human value.")
     Caco2.options)
     )
   Params <- c(Params,out)
-  
-  Rb2p <- available_rblood2plasma(
-            chem.name=chem.name,
-            chem.cas=chem.cas,
-            dtxsid=dtxsid,
-            species=species,
-            adjusted.Funbound.plasma=fup.adjusted,
-            suppress.messages=T)
-  Params[["Rblood2plasma"]] <- Rb2p
 
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
