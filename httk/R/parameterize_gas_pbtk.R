@@ -49,7 +49,7 @@
 #' \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 #' (median, lower 95th, upper 95th, p value)} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gut lumen.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 #' assay using the method of Kilford et al. (2008)} 
@@ -229,8 +229,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",species,chem.cas=chem.cas),silent=T)
+  if (class(Fabsgut) == "try-error") Fabsgut <- 1
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
@@ -324,7 +324,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
         suppress.messages=T)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
-      Fgutabs=Fgutabs)) #L/h/kg BW
+      Fabsgut=Fabsgut)) #L/h/kg BW
   } else {
     outlist <- c(outlist,list(
       vmax=vmax,km=km,
@@ -333,7 +333,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Clmetabolismc=0,                       
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
-      Fgutabs=Fgutabs))#ML added Km = km 9-19-19
+      Fabsgut=Fabsgut))#ML added Km = km 9-19-19
   }
  
  
