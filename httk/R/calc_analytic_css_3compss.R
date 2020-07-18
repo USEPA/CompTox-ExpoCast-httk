@@ -66,23 +66,19 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-# Expand on any provided chemical identifiers if possible (if any but not
-# all chemical descriptors are NULL):
-  chem_id_list  = list(chem.cas, chem.name, dtxsid)
-  if (any(lapply(chem_id_list, is.null)) &
-      !all(lapply(chem_id_list, is.null))){
-  out <- get_chem_id(
-    chem.cas=chem.cas,
-    chem.name=chem.name,
-    dtxsid=dtxsid)
-  chem.cas <- out$chem.cas
-  chem.name <- out$chem.name                                
-  dtxsid <- out$dtxsid  
-  }
   
 # Fetch some parameters using parameterize_steadstate, if needed:
   if (is.null(parameters))
   {
+  # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
