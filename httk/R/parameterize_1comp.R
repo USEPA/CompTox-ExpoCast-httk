@@ -206,6 +206,8 @@ parameterize_1comp <- function(
   params[['Fabsgut']] <- ss.params[['Fabsgut']]
   params[['Fabs']] <- ss.params[['Fabs']]
   params[['Fgut']] <- ss.params[['Fgut']]
+  params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
+  params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
    
   params[['hepatic.bioavailability']] <- 
     ss.params[['hepatic.bioavailability']]  

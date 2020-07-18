@@ -21,6 +21,8 @@ model.list[['1compartment']]$tissuelist <- NULL
 # how other parameters were calculated:
 model.list[["1compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Fabsgut",
