@@ -154,11 +154,7 @@ solve_pbtk <- function(chem.name = NULL,
                     regression=T,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
-                    Caco2.options = list(Caco2.Pab.default = 1.6,
-                      Caco2.Fgut = TRUE,
-                      Caco2.Fabs = TRUE,
-                      overwrite.invivo = FALSE,
-                      keepit100 = FALSE),
+                    Caco2.options = list(),
                     monitor.vars=NULL,
                     ...)
 {
@@ -189,12 +185,12 @@ solve_pbtk <- function(chem.name = NULL,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    Caco2.options=Caco2.options,
     parameterize.arg.list=list(
                       default.to.human=default.to.human,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = restrictive.clearance,
-                      regression=regression),
+                      regression=regression,
+                      Caco2.options=Caco2.options),
     ...)
   
   return(out) 
