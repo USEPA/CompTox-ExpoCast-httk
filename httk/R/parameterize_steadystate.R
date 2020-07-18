@@ -325,7 +325,7 @@ Set default.to.human to true to substitute human value.")
             suppress.messages=T)
   Params[["Rblood2plasma"]] <- Rb2p
   
-  out <- do.call(get_Fabsgut, c(
+  out <- do.call(get_fabsgut, c(
     list(
       Params=Params,
       dtxsid=dtxsid,

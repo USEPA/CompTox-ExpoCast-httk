@@ -1,6 +1,6 @@
-#' Parameterize_1comp
+#' get_fabsgut
 #' 
-#' This function initializes the parameters needed in the function solve_1comp.
+#' This function uses Caco2 permeability to estimate oral absorption fraction.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -27,8 +27,8 @@
 #'
 #' @keywords Parameter oral_bioavailability 
 #'
-#' @export get_fgutabs
-get_fgutabs <- function(
+#' @export get_fabsgut
+get_fabsgut <- function(
   Params=NULL,
   chem.cas=NULL,
   chem.name=NULL,
