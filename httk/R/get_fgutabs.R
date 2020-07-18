@@ -29,16 +29,17 @@
 #'
 #' @export get_fgutabs
 get_fgutabs <- function(
-              chem.cas=NULL,
-              chem.name=NULL,
-              dtxsid = NULL,
-              species = "Human",
-              default.to.human = F,
-              Caco2.Pab.default = "1.6",
-              Caco2.Fgut = TRUE,
-              Caco2.Fabs = TRUE,
-              overwrite.invivo = FALSE,
-              keepit100 = FALSE)
+  Params=NULL,
+  chem.cas=NULL,
+  chem.name=NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = F,
+  Caco2.Pab.default = "1.6",
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  overwrite.invivo = FALSE,
+  keepit100 = FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -54,8 +55,8 @@ get_fgutabs <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
-    
-  Params <- list()
+  
+  if (is.null(Params)) Params <- list()
   
   if(keepit100 == TRUE)
   {
@@ -72,7 +73,7 @@ get_fgutabs <- function(
         chem.cas = chem.cas), 
       silent = T)
     if (class(Caco2.Pab.db) == "try-error"){  
-      Caco2.Pab.db <- as.character(Caco2.options$Caco2.Pab.default)
+      Caco2.Pab.db <- as.character(Caco2.Pab.default)
       warning(paste0(
         "Default value of ", 
         Caco2.Pab.default, 
@@ -94,27 +95,37 @@ get_fgutabs <- function(
     
     # Select Fabs, optionally overwrite based on Caco2.Pab
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
-    if (class(Fabs) == "try-error" | Caco2.options$overwrite.invivo == TRUE){
-      if (Caco2.options$overwrite.invivo == TRUE | 
-        (Caco2.options$Caco2.Fabs == TRUE & class(Fabs) == "try-error"))
+    if (class(Fabs) == "try-error" | overwrite.invivo == TRUE){
+      if (overwrite.invivo == TRUE | 
+        (Caco2.Fabs == TRUE & class(Fabs) == "try-error"))
       {
         Params[["Fabs"]] <- 1
         # Caco2 is a human cell line
         # only calculable for human, assume the same across species
-        Fabs <- calc_fabs.oral(Params = Params, species = "Human") 
+        Fabs <- calc_fabs.oral(
+          Params = Params, 
+          chem.cas = chem.cas,
+          chem.name = chem.name,
+          dtxsid = dtxsid,
+          species = "Human") 
       } else {
         Fabs <- 1
       }
     }
     
     Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
-    if (class(Fgut) == "try-error" | Caco2.options$overwrite.invivo == TRUE)
+    if (class(Fgut) == "try-error" | overwrite.invivo == TRUE)
     {
-      if (Caco2.options$overwrite.invivo == TRUE | 
-        (Caco2.options$Caco2.Fgut == TRUE & class(Fgut) == "try-error"))
+      if (overwrite.invivo == TRUE | 
+        (Caco2.Fgut == TRUE & class(Fgut) == "try-error"))
       {
         Params[["Fgut"]] <- 1
-        Fgut <- calc_fgut.oral(Params = Params, species = species) 
+        Fgut <- calc_fgut.oral(
+          Params = Params, 
+          chem.cas = chem.cas,
+          chem.name = chem.name,
+          dtxsid = dtxsid,
+          species = species) 
       }else{
         Fgut <- 1
       }

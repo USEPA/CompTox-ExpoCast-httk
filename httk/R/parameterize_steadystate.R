@@ -87,12 +87,7 @@ parameterize_steadystate <- function(
                               fup.lod.default=0.005,
                               suppress.messages=F,
                               minimum.Funbound.plasma=0.0001,
-                              Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                          Caco2.Fgut = TRUE,
-                                                          Caco2.Fabs = TRUE,
-                                                          overwrite.invivo = FALSE,
-                                                          keepit100 = FALSE
-                                                          ),
+                              Caco2.options=list(),
                               ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -323,10 +318,11 @@ Set default.to.human to true to substitute human value.")
   
   out <- do.call(get_fgutabs, c(
     list(
+      Params=Params,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
-      species=spcies,
+      species=species
       ),
     Caco2.options)
     )
