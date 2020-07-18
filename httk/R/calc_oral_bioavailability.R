@@ -74,11 +74,6 @@ calc_fbio.oral <- function(Params = NULL,
   )
 {
   
-  # Ammend list options
-  if(!all(c("Caco2.Pab.default", "Caco2.Fgut", "Caco2.Fabs", "overwrite.invivo", "keepit100")%in% names(unlist(Caco2.options)))){
-    Caco2.options <- ammend.httk.option.list(httk.option.list = Caco2.options)
-  }
-  
   # Initialize parameters if null
   if(is.null(Params)){
   # We need to describe the chemical to be simulated one way or another:

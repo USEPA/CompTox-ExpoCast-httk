@@ -180,20 +180,14 @@ calc_mc_css <- function(chem.cas=NULL,
                         invitrouv=T,
                         calcrb2p=T,
                         censored.params=list(),
-                        vary.params=list(
-                          Caco2.Pab = 0.3),
+                        vary.params=list(),
                         return.samples=F,
                         tissue=NULL,
                         output.units="mg/L",
                         oral.pathway=T,
-                        oral.pathway.options=list(
-                          Caco2.Pab.default = "1.6",
-                          Caco2.Fgut = TRUE,
-                          Caco2.Fabs = TRUE,
-                          overwrite.invivo = FALSE,
-                          keepit100 = FALSE),
+                        Caco2.options=list(),
                         invitro.mc.arg.list=list(),
-                        httkpop.generate.arg.list=list(),
+                        httkpop.generate.arg.list=list(method='direct resampling'),
                         convert.httkpop.arg.list=list(),
                         parameterize.arg.list=list(),
                         calc.analytic.css.arg.list=list()
@@ -205,12 +199,6 @@ calc_mc_css <- function(chem.cas=NULL,
       is.null(dtxsid) &
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
-
-  if(!all(httk.option.listoflists[["Caco2.options"]] %in% 
-  names(unlist(oral.pathway.options))))
-  {
-    oral.pathway.options <- ammend.httk.option.list(httk.option.list = oral.pathway.options)
-  }
 
   if (is.null(model)) stop("Model must be specified.")
   
@@ -248,7 +236,7 @@ calc_mc_css <- function(chem.cas=NULL,
       calcrb2p=calcrb2p,
       censored.params=censored.params,
       vary.params=vary.params,
-      oral.pathway.options = oral.pathway.options,
+      Caco2.options = Caco2.options,
       return.samples=F,
       invitro.mc.arg.list=invitro.mc.arg.list,
       httkpop.generate.arg.list=httkpop.generate.arg.list,
