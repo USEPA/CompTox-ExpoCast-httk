@@ -100,8 +100,8 @@ create_mc_samples <- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=list(),
-                        oral.pathway.options=list(),
-                        httkpop.generate.arg.list=list(),
+                        Caco2.options=list(),
+                        httkpop.generate.arg.list=list(method='direct resampling'),
                         convert.httkpop.arg.list=list(),
                         propagate.invitrouv.arg.list=list(),
                         parameterize.arg.list=list()
@@ -208,11 +208,13 @@ create_mc_samples <- function(chem.cas=NULL,
 
   if (httkpop==T & tolower(species)=="human")
   {
-    physiology.dt <- httkpop_mc(
-                       model=model,
-                       samples=samples,
-                       httkpop.dt=httkpop.dt,
-                       httkpop.generate.arg.list)
+    physiology.dt <- do.call(httkpop_mc,c(
+      list(
+        model=model,
+        samples=samples,
+        httkpop.dt=httkpop.dt),
+      httkpop.generate.arg.list)
+      )
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
@@ -259,8 +261,8 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt <- do.call(invitro_mc,
                        args=c(list(
                          parameters.dt=parameters.dt,
-                         samples=samples,
-                         oral.pathway.options=oral.pathway.options),
+                         samples=samples),
+                         Caco2.options,
                          invitro.mc.arg.list))
   }
 
@@ -364,17 +366,18 @@ Set species=\"Human\" to run httkpop model.')
           hepatic.model='unscaled',
           suppress.messages=T)#L/h/kg body weight
 
+  hep.bioavail.args <- list(parameters=list(
+        Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
+        Funbound.plasma=parameters.dt$Funbound.plasma,
+        Clmetabolismc=cl, # L/h/kg
+        Rblood2plasma=parameters.dt$Rblood2plasma,
+        BW=parameters.dt$BW))
   if (!is.null(parameterize.arg.list$restrictive.clearance))
-    calc.hep.bio.rest.clear <- parameterize.arg.list$restrictive.clearance
-  else calc.hep.bio.rest.clear <- NULL 
-  parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-    parameters=list(
-      Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
-      Funbound.plasma=parameters.dt$Funbound.plasma,
-      Clmetabolismc=cl, # L/h/kg
-      Rblood2plasma=parameters.dt$Rblood2plasma,
-      BW=parameters.dt$BW),
-    restrictive.clearance=calc.hep.bio.rest.clear)] 
+    hep.bioavail.args <- c(hep.bioavail.args, list(
+      restrictive.clearance=parameterize.arg.list$restrictive.clearance))
+ 
+  parameters.dt[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
+    hep.bioavail.args)] 
   }
   
 #

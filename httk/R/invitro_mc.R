@@ -31,13 +31,11 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. 
+#' @param keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -56,24 +54,22 @@
 #' @export invitro_mc
 
 invitro_mc <- function(parameters.dt=NULL,
-                           samples,
-                           fup.meas.cv=0.4,
-                           clint.meas.cv=0.3,
-                           caco2.meas.sd = 0.3,
-                           fup.pop.cv=0.3,
-                           clint.pop.cv=0.3,
-                           caco2.pop.sd = 0.3,
-                           poormetab=TRUE,
-                           fup.lod=0.01,
-                           fup.censored.dist=FALSE,
-                           adjusted.Funbound.plasma=T,
-                           clint.pvalue.threshold=0.05,
-                           minimum.Funbound.plasma=0.0001,
-                           oral.pathway.options = list(Caco2.Pab.default = "1.6",
-                                                Caco2.Fgut = TRUE,
-                                                Caco2.Fabs = TRUE,
-                                                overwrite.invivo = FALSE,
-                                                keepit100 = FALSE))
+                          samples,
+                          fup.meas.cv=0.4,
+                          clint.meas.cv=0.3,
+                          caco2.meas.sd = 0.3,
+                          fup.pop.cv=0.3,
+                          clint.pop.cv=0.3,
+                          caco2.pop.sd = 0.3,
+                          poormetab=TRUE,
+                          fup.lod=0.01,
+                          fup.censored.dist=FALSE,
+                          adjusted.Funbound.plasma=T,
+                          clint.pvalue.threshold=0.05,
+                          minimum.Funbound.plasma=0.0001,
+                          Caco2.Fgut = TRUE,
+                          Caco2.Fabs = TRUE,
+                          keepit100 = FALSE)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -127,12 +123,12 @@ invitro_mc <- function(parameters.dt=NULL,
     Clint.pvalue <- NULL
   }
   # We need to determine what sort of information we have been provided about
-  # measurment uncertainty. We first check for a comma separated list with a
+  # measurement uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
   else if (all(!is.na(parameters.dt$Clint.dist)))
   {
-    if (nchar(parameters.dt$Clint.dist[1]) -
-      nchar(gsub(",","",parameters.dt$Clint.dist[1]))!=3) 
+    if (any(nchar(parameters.dt$Clint.dist) -
+      nchar(gsub(",","",parameters.dt$Clint.dist))!=3)) 
     {
       stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
     }
@@ -150,7 +146,7 @@ invitro_mc <- function(parameters.dt=NULL,
     Clint.pvalue <- 0
   }
   
-# Shrink it down if we don't have unique values:
+# Shrink it down if all the values are the same
   if (all(c(length(unique(Clint))==1,
     length(unique(Clint.l95))==1,
     length(unique(Clint.u95))==1,
@@ -214,12 +210,12 @@ invitro_mc <- function(parameters.dt=NULL,
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
   # We need to determine what sort of information we have been provided about
-  # measurment uncertainty. We first check for a comma separated list with a
+  # measurement uncertainty. We first check for a comma separated list with a
   # median, lower, and upper 95th credible interval limits:
-  } else if(!is.na(parameters.dt$Funbound.plasma.dist[1]))
+  } else if(any(!is.na(parameters.dt$Funbound.plasma.dist)))
   {
-    if (nchar(parameters.dt$Funbound.plasma.dist[1]) - 
-      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist[1]))!=2)
+    if (any(nchar(parameters.dt$Funbound.plasma.dist) - 
+      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist))!=2))
     {
       stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
     }
@@ -237,7 +233,7 @@ invitro_mc <- function(parameters.dt=NULL,
       function(x) min(x,1))
   }
 
-# Shrink it down if we don't have unique values:
+# Shrink it down if all the values are the same
   if (all(c(length(unique(Funbound.plasma))==1,
     length(unique(Funbound.plasma.l95))==1,
     length(unique(Funbound.plasma.u95))==1)))
@@ -321,48 +317,65 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   # If the default CV is set to NULL, we just use the point estimate with no
   # uncertainty:
-  if(Caco2.options$keepit100 == FALSE & 
-     (Caco2.options$Caco2.Fgut == TRUE | Caco2.options$Caco2.Fabs == TRUE))
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
   {
     if (is.null(caco2.meas.sd))
     {
-      Caco2.Pab <- parameters$Caco2.Pab
+      Caco2.Pab <- parameters.dt$Caco2.Pab
       Caco2.Pab.l95 <- NULL
       Caco2.Pab.u95 <- NULL
-      indiv_tmp[, Caco2.Pab := Caco2.Pab]
+      parameters.dt[, Caco2.Pab := Caco2.Pab]
       # We need to determine what sort of information we have been provided about
       # measurment uncertainty. We first check for a comma separated list with a
       # median, lower, and upper 95th credible interval limits:
-    } else if(!is.na(parameters$Caco2.Pab.dist))
+    } else if(all(!is.na(parameters.dt$Caco2.Pab.dist)))
     {
-      if (nchar(parameters$Caco2.Pab.dist) - 
-          nchar(gsub(",","",parameters$Caco2.Pab.dist))!=2)
+      if (any(nchar(parameters.dt$Caco2.Pab.dist) - 
+          nchar(gsub(",","",parameters.dt$Caco2.Pab.dist[1]))!=2))
       {
         stop("Caco2.Pab distribution should be three values (median,low95th,high95th) separated by commas.")
       }
-      temp <- strsplit(parameters$Caco2.Pab.dist,",")
+      temp <- strsplit(parameters.dt$Caco2.Pab.dist,",")
       Caco2.Pab <- as.numeric(temp[[1]][1])
       Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
       Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
+      
+    # Shrink it down if all the values are the same
+      if (all(c(length(unique(Caco2.Pab))==1,
+        length(unique(Caco2.Pab.l95))==1,
+        length(unique(Caco2.Pab.u95))==1)))
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+        Caco2.Pab.l95 <- Caco2.Pab.l95[1]
+        Caco2.Pab.u95 <- Caco2.Pab.u95[1]
+      }      
       
       caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), 
                      function(x) (0.95 -
                        pnorm(Caco2.Pab.u95, x[1], x[2]) +
                        pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
                        (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
-      parameters.dt[, Caco2.Pab := rnorm(n = nsamp, 
+      parameters.dt[, Caco2.Pab := rnorm(n = samples, 
                                      caco2.fit$par[1], 
                                      caco2.fit$par[2])]
       
       # If we don't have that, we use the default coefficient of variation to
       # generate confidence limits:
       
-    } else if(!is.null(caco2.meas.sd)){
-      Caco2.Pab <- parameters$Caco2.Pab
+    } else if(!is.null(caco2.meas.sd)) {
+      Caco2.Pab <- parameters.dt$Caco2.Pab
+      
+      # Shrink it down if all the values are the same
+      if (length(unique(Caco2.Pab))==1)
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+      }   
+      
       caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
                                           function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
       caco2.fit$par[2] <- abs(caco2.meas.sd)
-      parameters.dt[, Caco2.Pab := rnorm(n = nsamp, caco2.fit$par[1], caco2.fit$par[2])]
+      parameters.dt[, Caco2.Pab := rnorm(n = samples, caco2.fit$par[1], caco2.fit$par[2])]
       
     } 
     
@@ -447,19 +460,19 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   #do not sample if user said not to vary Caco2.Pab.
-  if(Caco2.options$keepit100 == FALSE & 
-     (Caco2.options$Caco2.Fgut == TRUE | Caco2.options$Caco2.Fabs == TRUE))
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
   {
     if (!is.null(caco2.pop.sd))
     {
       #Draw Clint from a normal distribution if poor metabolizers excluded, or
       #Gaussian mixture distribution if poor metabolizers included.
       #Set the mean of the regular metabolizer distribution:
-      indiv_tmp[, Caco2.Pab.mu := Caco2.Pab]
+      parameters.dt[, Caco2.Pab.mu := Caco2.Pab]
       
       #Draw Clint from a normal distribution with mean = measured Clint, and
       #coefficient of variation given by clint.pop.cv.
-      indiv_tmp[, Caco2.Pab := truncnorm::rtruncnorm(n = 1, 
+      parameters.dt[, Caco2.Pab := truncnorm::rtruncnorm(n = 1, 
                                                      a = -3,
                                                      b = 3,
                                                      mean = Caco2.Pab.mu,
