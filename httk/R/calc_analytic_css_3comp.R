@@ -46,10 +46,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=T,
                                    bioactive.free.invivo = F,
-                                   Caco2.options = list(Caco2.Pab.default = 2,
-                                                        Caco2.Fgut = TRUE,
-                                                        Caco2.Fabs = TRUE,
-                                                        keepit100 = FALSE),
+                                   Caco2.options = list(),
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for

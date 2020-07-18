@@ -132,11 +132,7 @@ solve_model <- function(chem.name = NULL,
                     recalc.clearance=F,
                     adjusted.Funbound.plasma=T,
                     minimum.Funbound.plasma=0.0001,
-                    parameterize.arg.list=list(
-                      default.to.human=F,
-                      clint.pvalue.threshold=0.05,
-                      restrictive.clearance = T,
-                      regression=T),
+                    parameterize.arg.list=list(),
                     ...)
 {
 # Handy string manipulation functions for processing variable names that adhere

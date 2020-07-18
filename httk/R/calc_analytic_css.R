@@ -119,16 +119,8 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance=T,
                               bioactive.free.invivo = F,
                               IVIVE=NULL,
-                              Caco2.options = list(Caco2.Pab.default = "1.6",
-                                                   Caco2.Fgut = TRUE,
-                                                   Caco2.Fabs = TRUE,
-                                                   overwrite.invivo = FALSE,
-                                                   keepit100 = FALSE),
-                              parameterize.args = list(
-                                default.to.human=F,
-                                adjusted.Funbound.plasma=T,
-                                regression=T,
-                                minimum.Funbound.plasma=1e-4),
+                              Caco2.options = list(),
+                              parameterize.args = list(),
                               ...)
 {  
   if (is.null(model)) stop("Model must be specified.")
@@ -169,7 +161,8 @@ calc_analytic_css <- function(chem.name=NULL,
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
-      suppress.messages=suppress.messages))
+      suppress.messages=suppress.messages,
+      Caco2.options=Caco2.options))
 # Make sure all the arguments are used by the function:
     parameterize.args <- parameterize.args[names(parameterize.args) %in% 
       methods::formalArgs(parameterize_function)]
