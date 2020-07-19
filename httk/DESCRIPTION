@@ -7,7 +7,7 @@ Description: Functions and data tables for simulation and statistical analysis
              <doi:10.18637/jss.v079.i04>. Chemical-specific in vitro 
              data have been obtained from relatively high throughput 
              experiments. Both physiologically-based ("PBTK") and empirical 
-             (e.g., one compartment) "TK" models can be parameterized for 
+             (for example, one compartment) "TK" models can be parameterized for 
              several hundred chemicals and multiple species. These models are 
              solved efficiently, often using compiled (C-based) code. A Monte 
              Carlo sampler is included for simulating biological variability 
@@ -18,7 +18,7 @@ Description: Functions and data tables for simulation and statistical analysis
              (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>). 
              These functions and data provide a set of tools for 
              in vitro-in vivo extrapolation ("IVIVE") of high throughput 
-             screening data (e.g., Tox21, ToxCast) to real-world exposures via 
+             screening data (for example, Tox21, ToxCast) to real-world exposures via 
              reverse dosimetry (also known as "RTK") 
              (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
 Authors@R: c(

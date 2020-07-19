@@ -1,9 +1,9 @@
 News for R package httk
 
-Changes in version 2.0.2 (June 26, 2020)
-  Update default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
-  Fix errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. 
-  Adjust 3compss model to effectively make use of any passed chemical identifer information, especially as it is needed in using get_physchem_param to look up any missing parameter needed in predicting partitioning coefficients using predict_partitioning_schmitt.
+Changes in version 2.0.2 (July 18, 2020)
+  Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
+  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. 
+  Adjusted 3compss model to effectively make use of any passed chemical identifer information, especially as it is needed in using get_physchem_param to look up any missing parameter needed in predicting partitioning coefficients using predict_partitioning_schmitt.
 
 Changes in version 2.0.1 (February 28, 2020)
   New function set_httk_precision is now used throughout code to enforce a standard set of significant figures (4) and precision (nothing less than 1e-9).
@@ -87,7 +87,7 @@ Changes in version 1.9 (February 4, 2019)
   This version is consistent with the submitted version of Honda et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions"
   New rat-specific in vitro TK data provided for 65 chemicals. 
   New functions for calculating in vitro disposition armitage_eval, armitage_estimate_sarea (thank you James Armitage)
-  Added arguments to IVIVE functions (e.g., calc_mc_css) to use sets of assumptions identified by Honda et al. (e.g., IVIVE="Honda1")(thank you Katie Paul-Friedman)
+  Added arguments to IVIVE functions (for example, calc_mc_css) to use sets of assumptions identified by Honda et al. (e.g., IVIVE="Honda1")(thank you Katie Paul-Friedman)
   Changed all model parameter sets to include physico-chemical properties to better facilitate Monte Carlo analysis
   Updated load_sipes2017 to be much faster by loading an image by default
   Updated help files for Sipes2017 and load_sipes2017.
