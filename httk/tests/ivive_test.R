@@ -33,26 +33,29 @@ calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   samples=NSAMP)
 params <- parameterize_steadystate(chem.name="bisphenol a")
 # This should be the same as calc_mc_oral_equiv:
-3/Css
+signif(3/Css,4)
 
 # Honda2:
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
-  calc.analytic.css.arg.list=list(IVIVE="Honda2"),
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = T),
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
 calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(IVIVE="Honda2"),
   samples=NSAMP)
-params <- parameterize_steadystate(chem.name="bisphenol a")
 # This should be the same as calc_mc_oral_equiv:
-3/Css/params[["Funbound.plasma"]]
+signif(3/Css,4)
 
 # Honda 3 (should be the same as degault HTTK):
 set.seed(12345)
-calc_mc_css(chem.name="bisphenol a",
-  calc.analytic.css.arg.list=list(IVIVE="Honda3"),
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = F),
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
@@ -60,12 +63,15 @@ calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(IVIVE="Honda3"),
   samples=NSAMP)
 # This should be the same as calc_mc_oral_equiv:
-3/Css
+signif(3/Css,4)
 
 # Honda4:
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
-  calc.analytic.css.arg.list=list(IVIVE="Honda4"),
+  calc.analytic.css.arg.list=list(
+    tissue="liver",
+    restrictive.clearance=F,
+    bioactive.free.invivo = F),
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
@@ -73,7 +79,7 @@ calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
   samples=NSAMP)
 # This should be the same as calc_mc_oral_equiv:
-3/Css
+signif(3/Css,4)
 
 
 quit("no")

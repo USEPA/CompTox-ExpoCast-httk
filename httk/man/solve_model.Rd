@@ -28,8 +28,7 @@ solve_model(
   recalc.clearance = F,
   adjusted.Funbound.plasma = T,
   minimum.Funbound.plasma = 1e-04,
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
+  parameterize.arg.list = list(),
   ...
 )
 }

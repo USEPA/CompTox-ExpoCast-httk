@@ -24,6 +24,7 @@ solve_3comp(
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
+  clint.pvalue.threshold = 0.05,
   default.to.human = F,
   recalc.blood2plasma = F,
   recalc.clearance = F,
@@ -32,8 +33,7 @@ solve_3comp(
   regression = T,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE, keepit100 = FALSE),
+  Caco2.options = list(),
   monitor.vars = NULL,
   ...
 )

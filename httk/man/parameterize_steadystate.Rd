@@ -17,8 +17,7 @@ parameterize_steadystate(
   fup.lod.default = 0.005,
   suppress.messages = F,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE, keepit100 = FALSE),
+  Caco2.options = list(),
   ...
 )
 }
@@ -69,7 +68,22 @@ fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
-
+\item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
+\item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, 
+that is, the fraction of the dose that enters the gutlumen.}  
+\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+\item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
+\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
+BW^3/4, volume of fluid filtered from kidney and excreted.} 
+\item{BW}{Body Weight, kg} 
+\item{MW}{Molecular Weight, g/mol}
+\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
+\item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
+\item{liver.density}{Liver tissue density, kg/L.}
+\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
+assay using the method of Kilford et al. (2008)}
+\item{hepatic.bioavailability}{Fraction of dose remaining after first pass
+clearance, calculated from the corrected well-stirred model.}
 }
 \description{
 This function initializes the parameters needed in the functions

@@ -39,9 +39,8 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' 
 #' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-#' fraction of the dose that enters the gutlumen.}  \item{Funbound.plasma}{Fraction of plasma
-
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, 
+#' that is, the fraction of the dose that enters the gutlumen.}  
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
 #' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg

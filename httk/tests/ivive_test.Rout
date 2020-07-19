@@ -54,9 +54,9 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 0.5591 
 > params <- parameterize_steadystate(chem.name="bisphenol a")
 > # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-   95% 
-0.5591 
+> 3/Css
+      95% 
+0.5590757 
 > 
 > # Honda2:
 > set.seed(12345)
@@ -75,9 +75,9 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
 48.69 
 > # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-  95% 
-48.69 
+> 3/Css
+     95% 
+48.69339 
 > 
 > # Honda 3 (should be the same as degault HTTK):
 > set.seed(12345)
@@ -96,9 +96,9 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
 0.5591 
 > # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-   95% 
-0.5591 
+> 3/Css
+      95% 
+0.5590757 
 > 
 > # Honda4:
 > set.seed(12345)
@@ -118,9 +118,9 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
      95% 
 0.001854 
 > # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-     95% 
-0.001854 
+> 3/Css
+        95% 
+0.001854141 
 > 
 > 
 > quit("no")

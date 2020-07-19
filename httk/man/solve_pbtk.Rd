@@ -32,8 +32,7 @@ solve_pbtk(
   regression = T,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = 1.6, Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE, keepit100 = FALSE),
+  Caco2.options = list(),
   monitor.vars = NULL,
   ...
 )
