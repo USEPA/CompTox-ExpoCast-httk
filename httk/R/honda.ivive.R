@@ -14,12 +14,12 @@
 #'
 #' Only four sets of IVIVE assumptions that performed well in Honda et al. 
 #' (2019) are currently included:
-#' \"Honda1\" through \"Honda4\". The use of max (peak)  
-#' concentration can not be currently be calculated with calc_analytic_css. The 
-#' httk default settings correspond to "Honda3":
+#' "Honda1" through "Honda4". The use of max (peak)  
+#' concentration can not be currently be calculated with \code{\link{calc_analytic_css}}. 
+#' The httk default settings correspond to "Honda3":
 #' 
 #'\tabular{lrrrrr}{
-#' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. In Vivo \tab TK Statistic Used* \tab Bioactive Chemical Conc. In Vitro \cr
+#' \tab \emph{In Vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \emph{In Vivo} \tab TK Statistic Used* \tab Bioactive Chemical Conc. \emph{In Vitro} \cr
 #'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
 #'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 #'Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
@@ -31,9 +31,6 @@
 #' concentration in vitro should be converted to cfree.invitro using 
 #' \code{\link{armitage_eval}}, otherwise performance will be the same as 
 #' "Honda2". 
-#'
-#' Use \code{\link{show_honda.ivive()}} to print summary of Honda et al. (2019)
-#' results.
 #'
 #' @examples
 #' honda.ivive(method = "Honda1", tissue = NULL)

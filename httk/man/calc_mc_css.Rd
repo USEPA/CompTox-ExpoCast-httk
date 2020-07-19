@@ -130,18 +130,25 @@ infusion dosing. All tissues other than gut, liver, and lung are the product
 of the steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
-assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
-\tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
-Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
-Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
-Restrictive \tab Free \tab Max Conc. \cr Honda3 \tab Veinous \tab
-Non-restrictive \tab Total \tab Mean Conc. \cr Honda4 \tab Veinous \tab
-Non-restrictive \tab Total \tab Max Conc. \cr Honda5 \tab Target Tissue \tab
-Non-restrictive \tab Total \tab Mean Conc. \cr Honda6 \tab Target Tissue
-\tab Non-restrictive \tab Total \tab Max Conc. \cr } *Assumption is
-currently ignored because analytical steady-state solutions are currently
-used by this function.
+Only four sets of IVIVE assumptions that performed well in Honda et al. 
+(2019) are currently included in \code{\link{honda.ivive}}:
+"Honda1" through "Honda4". The use of max (peak) 
+concentration can not be currently be calculated with \code{\link{calc_analytic_css}}. 
+The httk default settings correspond to "Honda3":
+
+\tabular{lrrrrr}{
+\tab \emph{In Vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \emph{In Vivo} \tab TK Statistic Used* \tab Bioactive Chemical Conc. \emph{In Vitro} \cr
+Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
+Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+}
+
+"Honda1" uses plasma concentration, restrictive clearance, and treats the 
+unbound invivo concentration as bioactive. For IVIVE, any input nominal 
+concentration in vitro should be converted to cfree.invitro using 
+\code{\link{armitage_eval}}, otherwise performance will be the same as 
+"Honda2".
 }
 \examples{
 

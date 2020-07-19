@@ -35,6 +35,27 @@ params <- parameterize_steadystate(chem.name="bisphenol a")
 # This should be the same as calc_mc_oral_equiv:
 signif(3/Css,4)
 
+# Honda1:
+set.seed(12345)
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = T),
+  output.units="uM",
+  samples=NSAMP)
+temp <- armitage_eval(
+  casrn.vector = c("80-05-7"), 
+  this.FBSf = 0.1,
+  this.well_number = 384, 
+  nomconc = 3)
+cfree <- temp$cfree.invitro
+set.seed(12345)
+calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(IVIVE="Honda1"),
+  samples=NSAMP)
+# This should be the same as calc_mc_oral_equiv:
+signif(cfree/Css,4)
+
 # Honda2:
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
