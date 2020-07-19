@@ -17,8 +17,7 @@ parameterize_1comp(
   suppress.messages = F,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE)
+  Caco2.options = list()
 )
 }
 \arguments{
@@ -75,7 +74,7 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut wit
 \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 assay using the method of Kilford et al. (2008)} 

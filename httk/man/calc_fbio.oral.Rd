@@ -8,22 +8,21 @@ calc_fbio.oral(
   Params = NULL,
   chem.cas = NULL,
   chem.name = NULL,
+  dtxsid = NULL,
   species = "Human",
-  clint.pvalue.threshold = 0.05,
   default.to.human = F,
-  human.clint.fup = F,
-  adjusted.Funbound.plasma = T,
-  restrictive.clearance = T,
-  fup.lod.default = 0.005,
   suppress.messages = F,
-  minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE, keepit100 = FALSE)
+  Caco2.Pab.default = "1.6",
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  overwrite.invivo = FALSE,
+  keepit100 = FALSE,
+  ...
 )
 }
 \arguments{
 \item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
-cl_us, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
+Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 or calculated in parameterize_steady_state.}
 
 \item{chem.cas}{Either the chemical name or the CAS number must be
@@ -35,11 +34,11 @@ specified.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
-having p-values greater than the threshold are set to zero.}
-
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
+
+\item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
+having p-values greater than the threshold are set to zero.}
 
 \item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}

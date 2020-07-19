@@ -24,19 +24,11 @@ calc_mc_tk(
   output.units = "mg/L",
   solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
   oral.pathway = T,
-  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs
-    = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
-    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  Caco2.options = list(),
+  invitro.mc.arg.list = list(),
+  httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
+  parameterize.arg.list = list(),
   return.all.sims = FALSE
 )
 }

@@ -18,27 +18,17 @@ calc_mc_css(
   invitrouv = T,
   calcrb2p = T,
   censored.params = list(),
-  vary.params = list(Caco2.Pab = 0.3),
+  vary.params = list(),
   return.samples = F,
   tissue = NULL,
   output.units = "mg/L",
   oral.pathway = T,
-  oral.pathway.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs
-    = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE),
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
-    fup.censored.dist = FALSE, fup.lod = 0.01, caco2.meas.sd = 0.3, fup.meas.cv = 0.4,
-    clint.meas.cv = 0.3, caco2.pop.sd = 0.3, fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  Caco2.options = list(),
+  invitro.mc.arg.list = list(),
+  httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
-  calc.analytic.css.arg.list = list(well.stirred.correction = T,
-    adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE)
+  parameterize.arg.list = list(),
+  calc.analytic.css.arg.list = list()
 )
 }
 \arguments{

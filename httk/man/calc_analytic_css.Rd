@@ -19,10 +19,8 @@ calc_analytic_css(
   restrictive.clearance = T,
   bioactive.free.invivo = F,
   IVIVE = NULL,
-  Caco2.options = list(Caco2.Pab.default = "1.6", Caco2.Fgut = TRUE, Caco2.Fabs = TRUE,
-    overwrite.invivo = FALSE, keepit100 = FALSE),
-  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
-    regression = T, minimum.Funbound.plasma = 1e-04),
+  Caco2.options = list(),
+  parameterize.args = list(),
   ...
 )
 }
@@ -111,6 +109,13 @@ Concentrations are calculated for the specifed model with constant
 oral infusion dosing.  All tissues other than gut, liver, and lung are the 
 product of the steady state plasma concentration and the tissue to plasma 
 partition coefficient. 
+
+Only four sets of IVIVE assumptions that performed well in Honda et al. 
+(2019) are currently included in \code{\link{honda.ivive}}:
+\"Honda1\" through \"Honda4\". The use of max (peak) 
+concentration can not be currently be calculated with calc_analytic_css. The 
+httk default settings correspond to "Honda3":
+
 \tabular{lrrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. In Vivo \tab TK Statistic Used* \tab Bioactive Chemical Conc. In Vitro \cr
 Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
@@ -118,6 +123,15 @@ Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nomi
 Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 }
+
+"Honda1" uses plasma concentration, restrictive clearance, and treats the 
+unbound invivo concentration as bioactive. For IVIVE, any input nominal 
+concentration in vitro should be converted to cfree.invitro using 
+\code{\link{armitage_eval}}, otherwise performance will be the same as 
+"Honda2". 
+
+Use \code{\link{show_honda.ivive()}} to print summary of Honda et al. (2019)
+results.
 }
 \examples{
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
