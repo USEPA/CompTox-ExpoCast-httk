@@ -3,6 +3,9 @@ src-i386/
 src-x64/
 build/
 
+#R stuff:
+*.Rhistory
+
 # Compiled source #
 ###################
 *.com
@@ -11,3 +14,4 @@ build/
 *.exe
 *.o
 *.so
+
