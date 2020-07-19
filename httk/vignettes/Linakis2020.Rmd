@@ -760,7 +760,12 @@ fig2 #Display plot in R
 ```{r calculations}
 # Create data and run calculations for populating plots
 cmaxfull <- subset(simobsfull, !duplicated(simobsfull$AUCobs) & simobsfull$Cmaxobs != 0)
-cmaxlm <- lm(log10(cmaxfull$Cmaxobs)~log10(cmaxfull$Cmaxsim), na.action = na.exclude)
+cmaxobs <- cmaxfull$Cmaxobs
+cmaxsim <- cmaxfull$Cmaxsim
+cmaxobs <- cmaxobs[!is.nan(cmaxsim)]
+cmaxsim <- cmaxsim[!is.nan(cmaxsim)]
+cmaxsim[!is.finite(log10(cmaxsim))] <- NA
+cmaxlm <- lm(log10(cmaxobs)~log10(cmaxsim), na.action = na.exclude)
 cmaxvcbkg <- subset(cmaxfull, 
   paste(
     cmaxfull$chem, 
@@ -779,7 +784,12 @@ cmaxvcbkg$adjustedCmaxsim <- cmaxvcbkg$Cmaxsim - cmaxvcbkg$obsconc
 aucfull <-subset(simobsfull, 
   !duplicated(simobsfull$AUCobs) & 
   simobsfull$AUCobs != 0)
-auclm <- lm(log10(aucfull$AUCobs)~log10(aucfull$AUCsim), na.action = na.exclude)
+aucobs <- aucfull$AUCobs
+aucsim <- aucfull$AUCsim
+aucobs <- aucobs[!is.nan(aucsim)]
+aucsim <- aucsim[!is.nan(aucsim)]
+aucsim[!is.finite(log10(aucsim))] <- NA
+auclm <- lm(log10(aucobs)~log10(aucsim), na.action = na.exclude)
 cmaxslope <- summary(cmaxlm)$coef[2,1]
 cmaxrsq <- summary(cmaxlm)$r.squared
 totalrmsecmax <- sqrt(mean((log10(cmaxfull$Cmaxsim) - 
