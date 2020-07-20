@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -92,6 +92,57 @@ Rblood2plasma = 0.79.
 [5,] 3.449e+00
 [6,] 3.986e+00
 > 
+> #Test that the input daily.dose and doses.per.day are all that goes through, 
+> #excluding any default dosing. We want any specified dosing to take the place
+> #of the default, not add to it.
+> 
+> #first get BW param for 3 comp model:
+> BW = parameterize_3comp(chem.name = 'bisphenol a')[['BW']]
+> #and get MW of bisphenol a for checking units
+> MW = get_physchem_param(param = "MW",chem.name = "bisphenol a")
+> #record intended default dosing in solve_model when no other dosing specified:
+> default_initial_dose_target_unscaled = 1 #mg/kg BW
+> initial_default_dose_target = default_initial_dose_target_unscaled*
++   BW/(MW*10^-3) #factor of 10^-3 to convert 
+> #from g/mol to mg/umol, yielding a dose target in umol
+> head(initial_default_dose_target)
+[1] 306.6262
+> 
+> out_default_dosing = solve_3comp(chem.name = "bisphenol a")
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+> #The following two initial dose metrics should be the same, and the same as
+> #the initial_default_dose_target in turn.
+> initial_default_dose = sum(out_default_dosing[1,])
+> head(initial_default_dose)
+[1] 306.6
+> initial_default_dose_intestine = out_default_dosing[1,"Aintestine"]
+> head(initial_default_dose_intestine)
+Aintestine 
+     306.6 
+> 
+> out_nondefault_dosing = solve_3comp(chem.name = "bisphenol a", 
++                                     daily.dose =3,doses.per.day = 5)
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+> #so, the dose target of what should appear at time zero in the intestine is:
+> initial_nondefault_dose_target = 3/5*BW/(MW*10^-3)
+> head(initial_nondefault_dose_target)
+[1] 183.9757
+> 
+> #the following two dose metrics should also be the same:
+> initial_nondefault_dose = sum(out_nondefault_dosing[2,]) #Use second row because
+> #it looks like eventdata only gets registered in the output after time zero.
+> head(initial_nondefault_dose)
+[1] 183.9012
+> initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
+> head(initial_nondefault_dose_intestine)
+Aintestine 
+     183.9 
+> 
+> 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
 + {
@@ -135,5 +186,7 @@ Rblood2plasma = 0.79.
 +     #print(test.fig)
 +   }
 + }
+> 
+> 
 > 
 > quit("no")

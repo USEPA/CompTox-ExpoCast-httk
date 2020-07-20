@@ -87,7 +87,7 @@ default 0.}
 assembling "forcings" data series argument for integrator. Defaults to
 uM}
 
-\item{period}{For use in assembling forcing function data series 'forcings'
+\item{period}{For use in assembling forcing function data series "forcings"
 argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 

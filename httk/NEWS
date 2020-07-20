@@ -1,5 +1,10 @@
 News for R package httk
 
+Changes in version 2.0.2 (July 18, 2020)
+  Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
+  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. 
+  Adjusted 3compss model to effectively make use of any passed chemical identifer information, especially as it is needed in using get_physchem_param to look up any missing parameter needed in predicting partitioning coefficients using predict_partitioning_schmitt.
+
 Changes in version 2.0.1 (February 28, 2020)
   New function set_httk_precision is now used throughout code to enforce a standard set of significant figures (4) and precision (nothing less than 1e-9).
   Added calc_hepatic_clearance wrapper function for calc_hep_clearance to allow backwards compatibility
