@@ -4,7 +4,8 @@
 \name{wambaugh2019.nhanes}
 \alias{wambaugh2019.nhanes}
 \title{NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)}
-\format{A data frame with 20 rows and 4 variables:
+\format{
+A data frame with 20 rows and 4 variables:
 \describe{
   \item{lP}{The median of the Bayesian credible interval for median population
 intake rate (mg/kg bodyweight/day)}
@@ -13,7 +14,8 @@ intake rate (mg/kg bodyweight/day)}
   \item{lP.max}{The upper 95th percentile of the Bayesian credible interval for median population
 intake rate (mg/kg bodyweight/day)}
   \item{CASRN}{The Chemical Abstracts Service Registry Number}
-}}
+}
+}
 \source{
 Wambaugh et al. (2019)
 }

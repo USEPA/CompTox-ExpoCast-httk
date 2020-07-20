@@ -4,7 +4,9 @@
 \name{physiology.data}
 \alias{physiology.data}
 \title{Species-specific physiology parameters}
-\format{A data.frame containing 11 rows and 7 columns.}
+\format{
+A data.frame containing 11 rows and 7 columns.
+}
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
