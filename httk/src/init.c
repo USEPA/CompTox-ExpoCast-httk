@@ -8,11 +8,10 @@
 */
 
 /* .C calls */
-extern void getParmspbtk(double *, double *, void *);
-extern void getParms1comp(double *, double *, void *);
-extern void getParms3comp(double *, double *, void *);
+extern void getParmspbtk(double *, double *, int *);
+extern void getParms1comp(double *, double *, int *);
+extern void getParms3comp(double *, double *, int *);
 extern void getParms_gas_pbtk(double *, double *, int *);
-//extern void getParms(void *(double *, double *, int *),double *, double *, int *);
 extern void initmodpbtk(void *);
 extern void initmod1comp(void *);
 extern void initmod3comp(void *);
