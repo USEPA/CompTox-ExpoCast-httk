@@ -4,7 +4,9 @@
 \name{chem.lists}
 \alias{chem.lists}
 \title{Chemical membership in different research projects}
-\format{A list containing ten lists.}
+\format{
+A list containing ten lists.
+}
 \usage{
 chem.lists
 }

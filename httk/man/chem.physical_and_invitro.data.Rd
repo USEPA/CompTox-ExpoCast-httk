@@ -4,7 +4,9 @@
 \name{chem.physical_and_invitro.data}
 \alias{chem.physical_and_invitro.data}
 \title{Physico-chemical properties and in vitro measurements for toxicokinetics}
-\format{A data.frame containing 565 rows and 33 columns.}
+\format{
+A data.frame containing 565 rows and 33 columns.
+}
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 chemicals." Toxicological Sciences (2015): 228-237.
