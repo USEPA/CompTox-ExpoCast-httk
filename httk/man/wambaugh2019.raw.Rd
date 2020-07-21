@@ -4,7 +4,8 @@
 \name{wambaugh2019.raw}
 \alias{wambaugh2019.raw}
 \title{Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)}
-\format{A data frame with 530 rows and 28 variables:
+\format{
+A data frame with 530 rows and 28 variables:
 \describe{
   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}
   \item{Name}{The name of the chemical}
@@ -70,7 +71,8 @@ concentration(uL/min/million hepatocytes)}
   \item{Fit}{Classification of clearance observed}
   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure
 description}
-}}
+}
+}
 \source{
 Wambaugh et al. (2019)
 }

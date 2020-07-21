@@ -70,8 +70,8 @@
 #' default 0. 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
-#' uM
-#' @param period For use in assembling forcing function data series 'forcings'
+#' uM, in line with output.units
+#' @param period For use in assembling forcing function data series "forcings"
 #' argument, specified in hours
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
@@ -229,32 +229,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
   }
   
     #Screen for compatible input that goes on to specify forcing function data series. 
-#  if(is.null(forcings)) {
-#    if (exp.duration > period){
-#      stop('If not specifying \'forcings\' data series explicitly, additional arguments are needed
-#      to generate a \'forcings\' argument with a cyclic exposure pattern across the simulation:
-#      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
-#    }
-#    period <- period/24 #convert time period in hours to days
-#    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-#    
-#    #Assemble function for initializing 'forcings' argument data series with
-#    #certain periodicity and exposure concentration in default case, used if 
-#    #the 'forcings' argument is not otherwise specified.
-#    forcing <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-#      Nrep <- ceiling((days - exp.start.time)/period) 
-#      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-#      y  <- rep(c(exp.conc,0), Nrep)
-#      conc.matrix = cbind(times,y)
-#      return(conc.matrix)
-#    }
-#    forcings = forcing(exp.conc, period, exp.start.time = 0, exp.duration, days) 
-#  }
+  if(is.null(forcings)) {
   
-  #Only generate the forcings if other dosing metrics are null, they're not
-  #designed to work together in a very meaningful way
-  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
-  {
     if (exp.duration > period){
       stop('If not specifying \'dose.matrix\' data series explicitly, 
       additional arguments are needed to generate a \'dose.matrix\' argument
@@ -280,7 +256,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
       return(conc.matrix)
     }
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
-      
       #Comment out tentative alternate scheme to forcings for now
       ###
     #Nrep <- ceiling((days - exp.start.time)/period)
@@ -290,7 +265,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #dose  <- rep(c(exp.conc,0), Nrep)
     #dosing.matrix = cbind(dose,time)
       ###
-  }
+  
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
