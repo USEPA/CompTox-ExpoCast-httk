@@ -4,7 +4,9 @@
 \name{supptab2_Linakis2020}
 \alias{supptab2_Linakis2020}
 \title{More supplementary output from Linakis 2020 vignette analysis.}
-\format{A data.frame containing x rows and y columns.}
+\format{
+A data.frame containing x rows and y columns.
+}
 \source{
 Matt Linakis
 }

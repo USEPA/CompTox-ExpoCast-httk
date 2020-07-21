@@ -4,7 +4,9 @@
 \name{Obach2008}
 \alias{Obach2008}
 \title{Published Pharmacokinetic Parameters from Obach et al. 2008}
-\format{A data.frame containing 670 rows and 8 columns.}
+\format{
+A data.frame containing 670 rows and 8 columns.
+}
 \usage{
 Obach2008
 }

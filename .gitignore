@@ -1,13 +1,23 @@
-# Don't track content of these folders
-src-i386/
-src-x64/
-build/
-
-# Compiled source #
 ###################
+# Don't track content of these folders
+###################
+httk/src-i386/
+httk/src-x64/
+httk/build/
+httk.Rcheck/
+
+###################
+# Or these R files
+###################
+.Rbuildignore
+*.Rhistory
+*.Rproj
+.Rproj.user/
+
 *.com
 *.class
 *.dll
 *.exe
 *.o
 *.so
+
