@@ -256,6 +256,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
       return(conc.matrix)
     }
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
+  }
       #Comment out tentative alternate scheme to forcings for now
       ###
     #Nrep <- ceiling((days - exp.start.time)/period)
