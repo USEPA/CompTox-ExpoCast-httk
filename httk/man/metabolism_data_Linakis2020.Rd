@@ -4,7 +4,9 @@
 \name{metabolism_data_Linakis2020}
 \alias{metabolism_data_Linakis2020}
 \title{Metabolism data involved in Linakis 2020 vignette analysis.}
-\format{A data.frame containing x rows and y columns.}
+\format{
+A data.frame containing x rows and y columns.
+}
 \source{
 Matt Linakis
 }

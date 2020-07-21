@@ -4,7 +4,9 @@
 \name{tissue.data}
 \alias{tissue.data}
 \title{Tissue composition and species-specific physiology parameters}
-\format{A data.frame containing 13 rows and 20 columns.}
+\format{
+A data.frame containing 13 rows and 20 columns.
+}
 \source{
 Pearce et al. (2017), in preparation,
 

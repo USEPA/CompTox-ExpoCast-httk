@@ -122,8 +122,6 @@
 #' 
 #' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
-#' Carbon tetrachloride
-#' 
 #' parameterize_gas_pbtk(chem.cas = '56-23-5')
 #' 
 #' parameters <- parameterize_gas_pbtk(chem.name='Carbon tetrachloride',species='Rat')

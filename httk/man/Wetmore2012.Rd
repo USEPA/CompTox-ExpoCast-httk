@@ -5,7 +5,9 @@
 \alias{Wetmore2012}
 \title{Published toxicokinetic predictions based on in vitro data from Wetmore et
 al. 2012.}
-\format{A data.frame containing 13 rows and 15 columns.}
+\format{
+A data.frame containing 13 rows and 15 columns.
+}
 \usage{
 Wetmore2012
 }

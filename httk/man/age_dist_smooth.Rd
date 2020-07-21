@@ -4,11 +4,13 @@
 \name{age_dist_smooth}
 \alias{age_dist_smooth}
 \title{Smoothed age distributions by race and gender.}
-\format{A data.table object with three variables: \describe{
+\format{
+A data.table object with three variables: \describe{
  \item{\code{gender}}{Gender: Male or Female}
  \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of
  \code{svysmooth} objects, each encoding a weighted smoothed distribution of
- ages.}}}
+ ages.}}
+}
 \usage{
 age_dist_smooth
 }
