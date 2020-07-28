@@ -1,24 +1,12 @@
-Actisomide
-Amp579
-Antofloxacin
-Astragaloside iv
-Asunaprevir
-Avibactam
-Basimglurant
-Batanopride
-Beclabuvir
 Bromotetrandrine
 Carnitine_l
-Cefozopran
 Ceftolozane
 Ciclesonide
 Clentiazem
 Combretastatin a4 phosphate
 Daclatasvir
 Danoprevir
-Dasabuvir
 Degarelix
-Dexfenfluramine
 Diflomotecan
 Eravacycline
 Evacetrapib
@@ -26,20 +14,13 @@ Gadobutrol
 Gadofosveset
 Gadoxetate
 Ganirelix
-Gavestinel
 Glufosfamide
 Hydroxysafflor yellow a
-Imidafenacin
-Iopentol
-Ixazomib
 Ladirubicin
 Lefamulin
-Lesinurad
 Mirtazapine
 Nafarelin
 Nebivolol
-Nintedanib
-Olodaterol
 Ombitasvir
 Or-1896
 Palonosetron
@@ -55,16 +36,13 @@ Ro25-6833
 S 12363
 Salvianolic acid b
 Scutellarin
-Semaxanib
 Sk-896
 Tilidine
 Tirilazad
 Vaborbactam
 Valbenazine
 Verlukast
-Vilazodone
 Xk469r
-Norcisapride
 R-(+)-bisoprolol
 Bisoprolol-s
 S-etodolac
@@ -88,4 +66,7 @@ Midodrine hydrochloride
 Tocainide hydrochloride
 Norepinephrine bitartrate
 Ssr161421
+Ssr126768
 Ave3247
+Pd 0200347
+Ym218
