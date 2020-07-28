@@ -1,8 +1,15 @@
 News for R package httk
 
+Changes in version 2.0.3 (July 27, 2020)
+  Updated literature chemical-specific human and rat in vitro data:
+    Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
+    Replaced "Obach" human pharmaceutical data from Obach et al. (2008) with data from Lombardo et al. (2018)
+    Added new human data from EU JRC (Paini et al., 2020)
+    Steady-state model now works for 1016 chemicals in human and 212 in rat
+
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
-  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. 
+  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. (thank you, Nisha Sipes)
   Adjusted 3compss model to effectively make use of any passed chemical identifer information, especially as it is needed in using get_physchem_param to look up any missing parameter needed in predicting partitioning coefficients using predict_partitioning_schmitt.
 
 Changes in version 2.0.1 (February 28, 2020)
