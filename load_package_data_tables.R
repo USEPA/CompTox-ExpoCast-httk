@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "May2020-1"
+SCRIPT.VERSION <- "GHJuly2020"
 
 library(reshape)
 library(gdata)
@@ -878,7 +878,62 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 
 # ADD NEW DATA HERE:
-volatile.data.raw <- read.csv('gas_model_CLint_updates_4-22-20.csv',stringsAsFactors = F)
+JRC.data.clint <- read.xls(
+  "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
+  sheet=2,
+  stringsAsFactors=F)
+colnames(JRC.data.clint)[5] <- "Conc"
+colnames(JRC.data.clint)[8] <- "Clint"
+JRC.data.clint <- subset(JRC.data.clint,!is.na(Clint)) 
+JRC.data.clint2 <- NULL
+for (this.id in unique(JRC.data.clint$DTXSID))
+{
+  this.subset <- subset(JRC.data.clint,DTXSID==this.id)
+  this.row <- subset(this.subset,Conc==
+    min(this.subset$Conc))
+  JRC.data.clint2 <- rbind(JRC.data.clint2,this.row)
+} 
+chem.physical_and_invitro.data <- add_chemtable(JRC.data.clint2,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Compound.Name',
+                                    CAS = 'CASRN',
+                                    DTXSID='DTXSID',
+                                    Clint="Clint"),
+                                  overwrite=T,
+                                  reference = 'Paini 2020',
+                                  species="Human")
+
+JRC.data.fup <- read.xls(
+  "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
+  sheet=3,
+  stringsAsFactors=F)
+JRC.data.fup <- subset(JRC.data.fup,!is.na(X..Unbound.in.Plasma..))
+JRC.data.fup$fup <- JRC.data.fup$X..Unbound.in.Plasma../100
+JRC.data.fup[,"fup.up"] <- JRC.data.fup$fup + 1.96*JRC.data.fup$SD/100
+JRC.data.fup[,"fup.low"] <- JRC.data.fup$fup - 1.96*JRC.data.fup$SD/100
+JRC.data.fup[JRC.data.fup$fup>1,"fup"] <- 1
+JRC.data.fup[JRC.data.fup$fup<0,"fup"] <- 0
+JRC.data.fup[JRC.data.fup$fup.up>1,"fup.up"] <- 1
+JRC.data.fup[JRC.data.fup$fup.low>1,"fup.low"] <- 1
+JRC.data.fup[JRC.data.fup$fup.low<0,"fup.low"] <- 0
+JRC.data.fup[JRC.data.fup$fup.up<0,"fup.up"] <- 0
+JRC.data.fup$fup <- paste(signif(JRC.data.fup$fup,4),
+  signif(JRC.data.fup$fup.low,4),
+  signif(JRC.data.fup$fup.up,4),
+  sep=",")
+chem.physical_and_invitro.data <- add_chemtable(JRC.data.fup,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Compound_ID',
+                                    CAS = 'CASRN',
+                                    DTXSID='DTXSID',
+                                    Funbound.plasma='fup'),
+                                  overwrite=T,
+                                  reference = 'Paini 2020',
+                                  species="Human")
+                                  
+volatile.data.raw <- read.csv('Linakis2020.csv',stringsAsFactors = F)
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                 current.table = chem.physical_and_invitro.data, 
@@ -977,7 +1032,7 @@ write.table(subset(chem.physical_and_invitro.data,
   quote=F)
 cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
-cat("Save Dashboard output to HTTK-NoNameMatch-DSSTox-output.xls.\n")
+cat("Save Dashboard output to HTTK-NoCASMatch-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
 dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
