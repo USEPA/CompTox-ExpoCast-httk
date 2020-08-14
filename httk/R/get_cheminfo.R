@@ -94,6 +94,8 @@ get_cheminfo <- function(info="CAS",
     paste(valid.info,collapse=" ")))
   if (any(toupper(info)=="ALL")) info <- valid.info
 
+  #Create a local copy so we can edit it:
+  chem.physical_and_invitro.data <- httk::chem.physical_and_invitro.data
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -139,51 +141,116 @@ get_cheminfo <- function(info="CAS",
   # Flag in case we can't find a column for every parameter:
   incomplete.data <- F
 
-  # Identify the appropriate column for Funbound (if needed):
-  species.fup <- NULL
+# Check to see if we need fup (don't we always?)
   if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
   {
-    if (paste0(species,'.Funbound.plasma') %in% 
-      colnames(chem.physical_and_invitro.data)) 
-      species.fup <- paste0(species,'.Funbound.plasma')
-    else if (default.to.human)
+    # Identify the appropriate column for Funbound (if needed):
+    species.fup <- paste0(species,'.Funbound.plasma') 
+    # Check to see if we will use human data where species data is missing:
+    if (default.to.human)
     {
-      species.fup <- 'Human.Funbound.plasma'
-      warning('Human values substituted for Funbound.plasma.')
-    } else incomplete.data <- T
+      # Check to see if this is a column that already has data:
+      if (species.fup %in% colnames(chem.physical_and_invitro.data))
+      {
+        # Identify values to replace with human:
+        if (exclude.fup.zero) 
+        {
+          # Replace all the zeros if that will impact the model:
+          replace.index <- (chem.physical_and_invitro.data[,species.fup]==0)
+          # Comparisons with NA's will produce NA's
+          is.na(replace.index) <- T
+        } else {
+          # Otherwise just replace NA's
+          replace.index <- is.na(chem.physical_and_invitro.data[,species.fup])
+        }
+        if (any(replace.index))
+        {
+          chem.physical_and_invitro.data[replace.index,species.fup] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Funbound.plasma']
+          warning('Human values substituted for Funbound.plasma.')
+        }
+      } else {
+        chem.physical_and_invitro.data[,species.fup] <-
+          chem.physical_and_invitro.data[,'Human.Funbound.plasma']
+        warning('Human values substituted for Funbound.plasma.')
+      }
+    }
+    # Check to see if we have a column for this species in the table:
+    if (!(species.fup %in% 
+      colnames(chem.physical_and_invitro.data))) 
+    {
+      incomplete.data <- T
+    }
     if (!is.null(species.fup)) necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
   }
-      
-  # Identify the appropriate column for Clint (if needed):
-  species.clint <- NULL
-  species.clint.pvalue <- NULL
+
+  # Check to see if we need clint:
   if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
   {
-    if (paste0(species,'.Clint') %in% 
-      colnames(chem.physical_and_invitro.data))
+    # Identify the appropriate column for Clint (if needed):
+    species.clint <- paste0(species,'.Clint')
+    species.clint.pvalue <- paste0(species,'.Clint.pValue')
+    # Check to see if we will use human data where species data is missing:
+    if (default.to.human)
     {
-      species.clint <- paste0(species,'.Clint')
-      species.clint.pvalue <- paste0(species,'.Clint.pValue')
-    } else if (default.to.human) {
-      species.clint <- 'Human.Clint'
-      species.clint.pvalue <- 'Human.Clint.pValue'
-      warning('Human values substituted for Clint and Clint.pValue.')
-    } else incomplete.data <- T
+      # Check to see if this is a column that already has data:
+      if (species.clint %in% colnames(chem.physical_and_invitro.data))
+      {
+        # Replace chemicals with NA's only:
+        replace.index <- is.na(chem.physical_and_invitro.data[,species.clint])
+        if (any(replace.index))
+        {
+          chem.physical_and_invitro.data[replace.index,species.clint] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Clint']
+          chem.physical_and_invitro.data[replace.index,species.clint.pvalue] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Clint.pValue']
+          warning('Human values substituted for Clint and Clint.pValue.')
+        }
+      } else {
+        chem.physical_and_invitro.data[,species.clint] <-
+          chem.physical_and_invitro.data[,'Human.Clint']
+        chem.physical_and_invitro.data[,species.clint] <-
+          chem.physical_and_invitro.data[,'Human.Clint.pValue']
+        warning('Human values substituted for Clint and Clint.pValue.')
+      }    
+    }
+    # Check to see if we have a column for this species in the table:
+    if (!(species.clint %in% colnames(chem.physical_and_invitro.data)))  
+    {
+      incomplete.data <- T
+    }
     if (!is.null(species.clint)) necessary.params[necessary.params=="Clint"]<-species.clint
   } 
 
-  # Identify the appropriate column for Rblood2plasma (if needed):
-  species.rblood2plasma <- NULL
+  # Check to see if we need Rblood2plasma:
   if (tolower("Rblood2plasma") %in% unique(tolower(c(necessary.params,info))))   
   {
-    if (paste0(species,'.Rblood2plasma') %in% 
-      colnames(chem.physical_and_invitro.data))
+    # Identify the appropriate column for Rblood2plasma (if needed):
+    species.rblood2plasma <- paste0(species,'.Rblood2plasma')
+    if (default.to.human)
     {
-      species.rblood2plasma <- paste0(species,'.Rblood2plasma')
-    } else if (default.to.human) {
-      species.rblood2plasma <- 'Human.Rblood2plasma'
-      warning('Human values substituted for Rblood2plasma.')
-    } else incomplete.data <- T
+      # Check to see if this is a column that already has data:
+      if (species.rblood2plasma %in% colnames(chem.physical_and_invitro.data))
+      {
+        # Replace chemicals with NA's only:
+        replace.index <- is.na(chem.physical_and_invitro.data[,species.rblood2plasma])
+        if (any(replace.index))
+        {
+          chem.physical_and_invitro.data[replace.index,species.rblood2plasma] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Rblood2plasma']
+          warning('Human values substituted for Rblood2plasma.')
+        }
+      } else {
+        chem.physical_and_invitro.data[,species.rblood2plasma] <-
+          chem.physical_and_invitro.data[,'Human.Rblood2plasma']
+        warning('Human values substituted for Rblood2plasma.')
+      }    
+    }
+    if (!(species.rblood2plasma %in% 
+      colnames(chem.physical_and_invitro.data)))
+    {
+      incomplete.data <- T
+    }
     if (!is.null(species.rblood2plasma)) necessary.params[necessary.params=="Rblood2plasma"]<-species.rblood2plasma
   } 
 
