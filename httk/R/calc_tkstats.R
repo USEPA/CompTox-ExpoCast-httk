@@ -371,5 +371,5 @@ calc_stats <-function(
                regression=regression,
                restrictive.clearance = restrictive.clearance,
                suppress.messages=suppress.messages,
-               ...)
+               ...))
 }
