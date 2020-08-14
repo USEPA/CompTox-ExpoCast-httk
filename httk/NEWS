@@ -6,6 +6,7 @@ Changes in version 2.0.3 (July 27, 2020)
     Replaced "Obach" human pharmaceutical data from Obach et al. (2008) with data from Lombardo et al. (2018)
     Added new human data from EU JRC (Paini et al., 2020)
     Steady-state model now works for 1016 chemicals in human and 212 in rat
+  Renamed calc_stats to calc_tkstats -- calc_stats remains temporarily but calls calc_tkstats
 
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
