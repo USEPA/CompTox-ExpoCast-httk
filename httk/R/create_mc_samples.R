@@ -183,7 +183,6 @@ create_mc_samples <- function(chem.cas=NULL,
       methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=parameterize.args)
-    parameter.names <- names(parameters.mean)
     pschmitt <- parameterize_schmitt(
                   chem.cas=chem.cas,
                   chem.name,
@@ -198,7 +197,8 @@ create_mc_samples <- function(chem.cas=NULL,
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
     parameters.mean <- parameters 
   }
-
+  parameter.names <- names(parameters.mean)
+    
 # Make sure that parameters that monte_carlo samples won't be overwritten later:
   if (httkpop & any(c(names(censored.params),names(vary.params)) %in%
     model.list[[model]]$httkpop.params)) stop(paste("Parameters",
