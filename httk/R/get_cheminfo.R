@@ -89,11 +89,14 @@ get_cheminfo <- function(info="CAS",
                   "pKa_Accept",
                   "pKa_Donor"
                   )
-  if (any(!(toupper(info) %in% toupper(valid.info))) & any(tolower(info)!="all")) stop(paste("Data on",
+  if (any(!(toupper(info) %in% toupper(valid.info))) & 
+    any(tolower(info)!="all")) stop(paste("Data on",
     info[!(info %in% valid.info)],"not available. Valid options are:",
     paste(valid.info,collapse=" ")))
   if (any(toupper(info)=="ALL")) info <- valid.info
-
+  # ignore captilization:
+  info <- toupper(info)
+  
   #Create a local copy so we can edit it:
   chem.physical_and_invitro.data <- httk::chem.physical_and_invitro.data
   
@@ -158,7 +161,7 @@ get_cheminfo <- function(info="CAS",
           # Replace all the zeros if that will impact the model:
           replace.index <- (chem.physical_and_invitro.data[,species.fup]==0)
           # Comparisons with NA's will produce NA's
-          is.na(replace.index) <- T
+          replace.index[is.na(replace.index)] <- T
         } else {
           # Otherwise just replace NA's
           replace.index <- is.na(chem.physical_and_invitro.data[,species.fup])
@@ -343,7 +346,7 @@ get_cheminfo <- function(info="CAS",
       this.subset[fup.zero.chems, species.fup] <- fup.lod.default
     }
                                 
-    return.info <- this.subset[,info]
+    return.info <- this.subset[,colnames(this.subset)%in%info]
   } else return.info <- NULL 
     
   return(return.info)
