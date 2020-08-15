@@ -79,6 +79,9 @@ mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to
 specify forcing concentrations to the integrator, either in combination 
 with eventdata or on its own.}
 
+\item{forcings}{Manual input of "forcings" data series argument for ode
+integrator, defaults to NULL}
+
 \item{exp.start.time}{Start time in specifying forcing exposure series,
 default 0.}
 
@@ -91,9 +94,6 @@ argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 
 series 'forcings' argument, specified in hours}
-
-\item{forcings}{Manual input of "forcings" data series argument for ode
-integrator, defaults to NULL}
 
 \item{fcontrol}{List of arguments for finetuning inhalation forcing function
 in conjunction with existing ode integrator methods}
@@ -166,7 +166,6 @@ the state of exercise}
 simulating the state of exercise}
 
 \item{...}{Additional arguments passed to the integrator.}
-
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
