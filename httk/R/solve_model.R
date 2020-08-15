@@ -359,7 +359,7 @@ solve_model <- function(chem.name = NULL,
   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
-  if (all(lapply(dosing, is.null)) & is.null(forcings)) 
+  if (all(unlist(lapply(dosing, is.null))) & is.null(forcings)) 
     dosing$initial.dose <- 1 #mg/kg BW
 
   #Scale dose into intended units
