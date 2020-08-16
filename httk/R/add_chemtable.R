@@ -14,6 +14,36 @@ CAS.checksum <- function(CAS.string)
 }
 
 
+#' Add a paramter value to the chem.physical_and_invitro.data table
+#' 
+#' This internal function is used by \code{\link{add_chemtable}} to add a single 
+#' new parameter to the table of chemical parameters. It should not be typically
+#' used from the command line.
+#' 
+#' @param this.table Object of class data.frame containing one row per chemical,
+#' with each chemical minimally described by a CAS number.
+#' @param data.list This list identifies which properties are to be read from
+#' the table. Each item in the list should point to a column in the table
+#' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
+#' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
+#' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
+#' 'Fgutabs', 'Rblood2plasma'.
+#' @param current.table This is the table to which data are being added.
+#' @param reference This is the reference for the data in the new table. This
+#' may be omitted if a column in data.list gives the reference value for each
+#' chemical.
+#' @param species This is the species for the data in the new table. This may
+#' be omitted if a column in data.list gives the species value for each
+#' chemical or if the data are not species-specific (e.g., MW).
+#' @param overwrite If overwrite=TRUE then data in current.table will be
+#' replaced by any data in new.table that is for the same chemical and
+#' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
+#' and property are ignored.  Funbound.plasma values of 0 (below limit of
+#' detection) are overwritten either way.
+#' 
+#' @return \item{data.frame}{A new data.frame containing the data in
+#' current.table augmented by new.table} 
+#' @author John Wambaugh
 augment.table <- function(
   this.table,
   this.CAS,
