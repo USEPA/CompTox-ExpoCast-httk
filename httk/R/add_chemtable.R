@@ -14,29 +14,91 @@ CAS.checksum <- function(CAS.string)
 }
 
 
-augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,value,species=NULL,reference,overwrite=F)
+augment.table <- function(
+  this.table,
+  this.CAS,
+  compound.name=NULL,
+  this.property,
+  value,
+  species=NULL,
+  reference,
+  overwrite=F,
+  sig.fig = 4,
+  clint.pvalue.overwrite=T)
 {
   # Columns stored in chem.phys_and_invitro.table:
-  CHEM.ID.COLS<-c("Compound","CAS","CAS.Checksum","DTXSID","Formula","SMILES.desalt")
-  CHEM.PHYS.COLS<-c("MW","logP","logPwa","logHenry","logVP","logWSol","MP","pKa_Donor","pKa_Accept","logMA")
-  # The colmuns have "[SPECIES]." prepended to their name:
-  CHEM.INVITRO.COLS <- c("Clint","Clint.pValue","Funbound.plasma","Fgutabs","Rblood2plasma","Caco2.Pab")
+  CHEM.ID.COLS<-c(
+    "Compound",
+    "CAS",
+    "CAS.Checksum",
+    "DTXSID",
+    "Formula",
+    "SMILES.desalt")
+  CHEM.PHYS.COLS<-c(
+    "MW",
+    "logP",
+    "logPwa",
+    "logHenry",
+    "logVP",
+    "logWSol",
+    "MP",
+    "pKa_Donor",
+    "pKa_Accept",
+    "logMA")
+  # These colmuns have "[SPECIES]." prepended to their name:
+  CHEM.INVITRO.COLS <- c(
+    "Clint",
+    "Clint.pValue",
+    "Funbound.plasma",
+    "Fgutabs",
+    "Rblood2plasma"
+    ,"Caco2.Pab")
   # In the table we create, each word in most column names is capitalized:
-  COLUMN.CAPITALIZATION.EXCEPTIONS <- c("Clint.pValue","logP","logMA","logPwa","logHenry","logWSol","MP",
-                                        "MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept",
-                                        "SMILES.desalt","DTXSID","Formula","Caco2.Pab")
+  COLUMN.CAPITALIZATION.EXCEPTIONS <- c(
+    "Clint.pValue",
+    "logP",
+    "logMA",
+    "logPwa",
+    "logHenry",
+    "logWSol",
+    "MP",
+    "MW",
+    "CAS",
+    "CAS.Checksum",
+    "pKa_Donor",
+    "pKa_Accept",
+    "SMILES.desalt",
+    "DTXSID",
+    "Formula",
+    "Caco2.Pab")
   # Many data are converted to numeric,but sometimes we want to preserve strings:
-  AS.NUMERIC.EXCEPTIONS <- c("pKa_Donor","pKa_Accept","SMILES.desalt","Funbound.plasma","Clint","DTXSID","SMILES.desalt","Formula", "Caco2.Pab")
+  AS.NUMERIC.EXCEPTIONS <- c(
+    "pKa_Donor",
+    "pKa_Accept",
+    "SMILES.desalt",
+    "Funbound.plasma",
+    "Clint",
+    "DTXSID",
+    "SMILES.desalt",
+    "Formula",
+    "Caco2.Pab")
   if (!is.na(value))
   {
-    if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)) this.property <- COLUMN.CAPITALIZATION.EXCEPTIONS[tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)==tolower(this.property)]
-    else {
+    if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS))
+    {
+      this.property <- COLUMN.CAPITALIZATION.EXCEPTIONS[
+        tolower(COLUMN.CAPITALIZATION.EXCEPTIONS)==tolower(this.property)]
+    } else {
       this.property <- tolower(this.property)
       substring(this.property,1,1) <- toupper(substring(this.property,1,1))
     }
   
-                                       
-    data.cols <- c("Reference","Species",CHEM.ID.COLS,CHEM.PHYS.COLS,CHEM.INVITRO.COLS)
+    data.cols <- c(
+      "Reference",
+      "Species",
+      CHEM.ID.COLS,
+      CHEM.PHYS.COLS,
+      CHEM.INVITRO.COLS)
     if (!(tolower(this.property) %in% tolower(data.cols)))
       stop(paste("Parameter", this.property,
         "not matched by columns in our data table."))
@@ -54,7 +116,7 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
       substring(compound.name,1,1) <- toupper(substring(compound.name,1,1))
       compound.name <- iconv(compound.name, from="UTF-8", to='ASCII//TRANSLIT')
     } else {
-  
+      compound.name <- this.CAS
     }
   
     this.property.nospecies <- this.property
@@ -97,19 +159,27 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
     index <- which(this.table[,"CAS"]==this.CAS)
     if (!is.null(compound.name))
     {
-      if (!(compound.name %in% strsplit(this.table[index,"All.Compound.Names"],"[|]")[[1]]))
+      if (!(compound.name %in% 
+        strsplit(this.table[index,"All.Compound.Names"],"[|]")[[1]]))
       {
-        this.table[index,"All.Compound.Names"] <- paste(this.table[index,"All.Compound.Names"],compound.name,sep="|")
+        this.table[index,"All.Compound.Names"] <- 
+          paste(this.table[index,"All.Compound.Names"],compound.name,sep="|")
       }
     }
     if (!is.null(species))
     {
       if (this.property %in% paste(species,CHEM.INVITRO.COLS,sep="."))
       {
-        if (!(species %in% strsplit(this.table[index,"All.Species"],"[|]")[[1]]))
+        if (!(species %in% 
+          strsplit(this.table[index,"All.Species"],"[|]")[[1]]))
         {
-          if (this.table[index,"All.Species"]=="None") this.table[index,"All.Species"] <- species
-          else this.table[index,"All.Species"] <- paste(this.table[index,"All.Species"],species,sep="|")
+          if (this.table[index,"All.Species"]=="None") 
+          {
+            this.table[index,"All.Species"] <- species
+          } else {
+            this.table[index,"All.Species"] <- 
+              paste(this.table[index,"All.Species"],species,sep="|")
+          }
         }
       }
     }
@@ -119,24 +189,47 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[,ref.name] <- NA
     }
-    if (is.na(this.table[index,this.property]) | overwrite | (this.property == paste(species,'Funbound.plasma',sep=".") & this.table[index,this.property] == 0))
+    if (is.na(this.table[index,this.property]) | 
+      overwrite | 
+      (this.property == paste(species,'Funbound.plasma',sep=".") & 
+        this.table[index,this.property] == 0))
     {
-      if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS)) this.table[index,this.property] <- as.numeric(value)
-      else {
+      if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
+      {
+        this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
+      } else {
         if (class(this.table[,this.property])!='character')
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
         this.table[index,this.property] <- as.character(value)
       }
+# If Clint is changed, the Clint.pvalue should usually be eliminated:
+      if (this.property.nospecies == "Clint" & clint.pvalue.overwrite)
+      {
+        this.table[index,paste(this.property,".pValue",sep="")] <- NA
+      }
 # There is a difference between no pKa prediction available, a prediciton of no pKa:
-      if(!is.na(this.table[index,this.property]) & this.table[index,this.property] == "" & this.property %in% c("pKa_Donor","pKa_Accept")) this.table[index,this.property] <- NA
+      if(!is.na(this.table[index,this.property]) & 
+        this.table[index,this.property] == "" & 
+        this.property %in% c("pKa_Donor","pKa_Accept"))
+      {
+        this.table[index,this.property] <- NA
+      }
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[index,ref.name] <- reference
     }
-    CHEM.PHYS.COLS <- sort(c(CHEM.PHYS.COLS,paste(CHEM.PHYS.COLS,"Reference",sep=".")))
-    col.order <- c(CHEM.ID.COLS[CHEM.ID.COLS %in% colnames(this.table)],"All.Compound.Names",CHEM.PHYS.COLS[CHEM.PHYS.COLS %in% colnames(this.table)],"All.Species")
-    col.order <- c(col.order,sort(colnames(this.table)[!(colnames(this.table) %in% col.order)]))
+    CHEM.PHYS.COLS <- sort(c(
+      CHEM.PHYS.COLS,
+      paste(CHEM.PHYS.COLS,"Reference",sep=".")))
+    col.order <- c(
+      CHEM.ID.COLS[CHEM.ID.COLS %in% colnames(this.table)],
+      "All.Compound.Names",
+      CHEM.PHYS.COLS[CHEM.PHYS.COLS %in% colnames(this.table)],
+      "All.Species")
+    col.order <- c(
+      col.order,
+      sort(colnames(this.table)[!(colnames(this.table) %in% col.order)]))
     
     if (any(is.na(this.table[,"All.Species"]))) browser()
     return(this.table[,col.order])
@@ -207,8 +300,15 @@ augment.table <- function(this.table,this.CAS,compound.name=NULL,this.property,v
 #' calc_css(chem.name="B")                                
 #' 
 #' @export add_chemtable
-add_chemtable <- function(new.table, data.list, current.table=NULL, reference=NULL,
-                          species=NULL, overwrite=F)
+add_chemtable <- function(
+  new.table, 
+  data.list, 
+  current.table=NULL, 
+  reference=NULL,
+  species=NULL, 
+  overwrite=F,
+  sig.fig = 4,
+  clint.pvalue.overwrite=T)
 {
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
@@ -270,7 +370,9 @@ columns in \"data.list\".")
                                      value=new.table[this.row, data.list[[this.data]]],
                                      reference=this.reference,
                                      species=this.species,
-                                     overwrite=overwrite)
+                                     overwrite=overwrite,
+                                     sig.figs=ig.fig,
+                                     clint.pvalue.overwrite=clint.pvalue.overwrite)
     }
   }
 
