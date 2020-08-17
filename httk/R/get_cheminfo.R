@@ -220,7 +220,7 @@ get_cheminfo <- function(info="CAS",
       } else {
         chem.physical_and_invitro.data[,species.clint] <-
           chem.physical_and_invitro.data[,'Human.Clint']
-        chem.physical_and_invitro.data[,species.clint] <-
+        chem.physical_and_invitro.data[,species.clint.pvalue] <-
           chem.physical_and_invitro.data[,'Human.Clint.pValue']
         warning('Human values substituted for Clint and Clint.pValue.')
       }    
