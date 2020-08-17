@@ -12,6 +12,8 @@ Changes in version 2.0.3 (July 27, 2020)
   Argument "info" for get_cheminfo() is now case insensitive
   Fixed logic statement in solve_model to eliminate warning
   Problem with create_mc_samples not setting parameter.names variable when parameters are passed to it was fixed by Tom Moxon -- thank you!
+  add_chemtable changed so that pValue and pValue.Reference set to NA when clint is vhanged (thanks Nisha Sipes!)
+  add_chemtable (really internal function augment.table) changed to enforce significant figures (default 4)
 
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 

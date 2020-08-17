@@ -238,6 +238,7 @@ augment.table <- function(
       if (this.property.nospecies == "Clint" & clint.pvalue.overwrite)
       {
         this.table[index,paste(this.property,".pValue",sep="")] <- NA
+        this.table[index,paste(this.property,".pValue.Reference",sep="")] <- NA
       }
 # There is a difference between no pKa prediction available, a prediciton of no pKa:
       if(!is.na(this.table[index,this.property]) & 
@@ -401,7 +402,7 @@ columns in \"data.list\".")
                                      reference=this.reference,
                                      species=this.species,
                                      overwrite=overwrite,
-                                     sig.figs=ig.fig,
+                                     sig.fig=sig.fig,
                                      clint.pvalue.overwrite=clint.pvalue.overwrite)
     }
   }
