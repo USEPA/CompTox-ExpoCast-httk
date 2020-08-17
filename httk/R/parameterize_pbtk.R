@@ -198,7 +198,8 @@ Set default.to.human to true to substitute human value.")
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
            regression=regression,
-           minimum.Funbound.plasma=minimum.Funbound.plasma)
+           minimum.Funbound.plasma=minimum.Funbound.plasma,
+           suppress.messages=suppress.messages)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
