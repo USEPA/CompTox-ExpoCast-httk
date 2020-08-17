@@ -277,8 +277,8 @@ get_cheminfo <- function(info="CAS",
       1,function(x) all(!is.na(x)))
       
   # If we need fup:
-    if (!is.null(species.fup))
-    {  
+    if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
+    { 
   # Make sure that we have a usable fup:
       fup.values <- chem.physical_and_invitro.data[,species.fup]
       fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
@@ -299,7 +299,7 @@ get_cheminfo <- function(info="CAS",
     }
     
 # If we need Clint:
-    if (!is.null(species.clint))
+    if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))
     {
       clint.values <- chem.physical_and_invitro.data[,species.clint]
       clint.values.numeric <- suppressWarnings(!is.na(as.numeric(clint.values)))

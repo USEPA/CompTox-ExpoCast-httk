@@ -1,6 +1,6 @@
 News for R package httk
 
-Changes in version 2.0.3 (July 27, 2020)
+Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
     Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
     Replaced "Obach" human pharmaceutical data from Obach et al. (2008) with data from Lombardo et al. (2018)
@@ -12,7 +12,7 @@ Changes in version 2.0.3 (July 27, 2020)
   Argument "info" for get_cheminfo() is now case insensitive
   Fixed logic statement in solve_model to eliminate warning
   Problem with create_mc_samples not setting parameter.names variable when parameters are passed to it was fixed by Tom Moxon -- thank you!
-  add_chemtable changed so that pValue and pValue.Reference set to NA when clint is vhanged (thanks Nisha Sipes!)
+  add_chemtable changed so that pValue and pValue.Reference set to NA when clint is vhanged (thanks Nisha Sipes)
   add_chemtable (really internal function augment.table) changed to enforce significant figures (default 4)
   Output for calc_tkstats corrected to display Rblood2plasma
   Very minor fix with suppress.messages in parameterize_pbtk
