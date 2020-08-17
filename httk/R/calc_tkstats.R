@@ -214,6 +214,17 @@ calc_tkstats <-function(
       }
     }
   
+    # So we have the blood:plasma ratio:
+    if (is.null(parameters[['Rblood2plasma']]))
+    {
+      temp <- parameterize_pbtk(
+        chem.name=chem.name,
+        chem.cas=chem.cas,
+        dtxsid=dtxsid,
+        suppress.messages=T)
+      parameters[['Rblood2plasma']] <- temp[['Rblood2plasma']]
+    }
+  
     # Blood or plasma concentration:
     if (tolower(concentration)=='blood')
     {

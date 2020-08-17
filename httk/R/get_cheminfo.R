@@ -98,7 +98,7 @@ get_cheminfo <- function(info="CAS",
   info <- toupper(info)
   
   #Create a local copy so we can edit it:
-  chem.physical_and_invitro.data <- httk::chem.physical_and_invitro.data
+  chem.physical_and_invitro.data <- chem.physical_and_invitro.data
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -195,12 +195,12 @@ get_cheminfo <- function(info="CAS",
     if (!is.null(species.fup)) necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
   }
 
+  # Identify the appropriate column for Clint (if needed):
+  species.clint <- paste0(species,'.Clint')
+  species.clint.pvalue <- paste0(species,'.Clint.pValue')
   # Check to see if we need clint:
   if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
   {
-    # Identify the appropriate column for Clint (if needed):
-    species.clint <- paste0(species,'.Clint')
-    species.clint.pvalue <- paste0(species,'.Clint.pValue')
     # Check to see if we will use human data where species data is missing:
     if (default.to.human)
     {
