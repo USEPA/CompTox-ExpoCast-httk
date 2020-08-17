@@ -216,7 +216,10 @@ Set default.to.human to true to substitute human value.")
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    if (!suppress.messages) 
+    {
+      warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    }
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
