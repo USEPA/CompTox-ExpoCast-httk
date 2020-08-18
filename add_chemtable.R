@@ -232,6 +232,14 @@ augment.table <- function(
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
+# Check to see if this is actually a number and we can use sig figs:        
+        if (!is.na(as.numeric(value)))
+        {
+          if (as.character(as.numeric(value)) == as.character(value))
+          {
+            value <- signif(as.numeric(value), sig.fig)
+          }
+        }
         this.table[index,this.property] <- as.character(value)
       }
 # If Clint is changed, the Clint.pvalue should usually be eliminated:
