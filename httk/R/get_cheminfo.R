@@ -145,7 +145,8 @@ get_cheminfo <- function(info="CAS",
   incomplete.data <- F
 
 # Check to see if we need fup (don't we always?)
-  if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
+  if (tolower("Funbound.plasma") %in% 
+    unique(tolower(c(necessary.params,info))))
   {
     # Identify the appropriate column for Funbound (if needed):
     species.fup <- paste0(species,'.Funbound.plasma')
@@ -192,14 +193,19 @@ get_cheminfo <- function(info="CAS",
     {
       incomplete.data <- T
     }
-    if (!is.null(species.fup)) necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
+    # Change the necessary parameters to the chem.physical_and_invitro.data col:
+    if (!is.null(species.fup)) 
+    {
+      necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
+    }
   }
 
   # Identify the appropriate column for Clint (if needed):
   species.clint <- paste0(species,'.Clint')
   species.clint.pvalue <- paste0(species,'.Clint.pValue')
   # Check to see if we need clint:
-  if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))   
+  if (tolower("Clint") %in% 
+    unique(tolower(c(necessary.params,info))))   
   {
     # Check to see if we will use human data where species data is missing:
     if (default.to.human)
@@ -230,11 +236,16 @@ get_cheminfo <- function(info="CAS",
     {
       incomplete.data <- T
     }
-    if (!is.null(species.clint)) necessary.params[necessary.params=="Clint"]<-species.clint
+    # Change the necessary parameters to the chem.physical_and_invitro.data col:
+    if (!is.null(species.clint)) 
+    {
+      necessary.params[necessary.params=="Clint"]<-species.clint
+    }
   } 
 
   # Check to see if we need Rblood2plasma:
-  if (tolower("Rblood2plasma") %in% unique(tolower(c(necessary.params,info))))   
+  if (tolower("Rblood2plasma") %in% 
+    unique(tolower(c(necessary.params,info))))   
   {
     # Identify the appropriate column for Rblood2plasma (if needed):
     species.rblood2plasma <- paste0(species,'.Rblood2plasma')
@@ -262,7 +273,11 @@ get_cheminfo <- function(info="CAS",
     {
       incomplete.data <- T
     }
-    if (!is.null(species.rblood2plasma)) necessary.params[necessary.params=="Rblood2plasma"]<-species.rblood2plasma
+    # Change the necessary parameters to the chem.physical_and_invitro.data col:
+    if (!is.null(species.rblood2plasma)) 
+    {
+      necessary.params[necessary.params=="Rblood2plasma"]<-species.rblood2plasma
+    }
   } 
 
   if (!incomplete.data)
@@ -277,29 +292,30 @@ get_cheminfo <- function(info="CAS",
       1,function(x) all(!is.na(x)))
       
   # If we need fup:
-    if (tolower("Funbound.plasma") %in% unique(tolower(c(necessary.params,info))))
+    if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
+      unique(tolower(c(necessary.params,info))))
     { 
-  # Make sure that we have a usable fup:
-      fup.values <- chem.physical_and_invitro.data[,species.fup]
-      fup.values.numeric <- suppressWarnings(!is.na(as.numeric(fup.values)))
+     # Make sure that we have a usable fup:
+      fup.values <- strsplit(chem.physical_and_invitro.data[,species.fup],",")
+      if (any(unlist(lapply(fup.values,length))>1)) 
+      {
+      # Go with the upper 95th credible interval before throwing anything out:
+        fup.values[lapply(fup.values,length)>1] <- 
+          lapply(fup.values[lapply(fup.values,length)>1], function(x) x[[3]])
+      } 
+      fup.values <-  suppressWarnings(as.numeric(unlist(fup.values)))
+      fup.values.numeric <- !is.na(fup.values)
   # If we are exclude the fups with a zero, then get rid of those:
       if (exclude.fup.zero) 
       {
-        suppressWarnings(fup.values.numeric[as.numeric(fup.values)==0] <- F)
-        fup.values.numeric[is.na(fup.values.numeric)] <- F 
+        suppressWarnings(fup.values.numeric[fup.values==0] <- F)
       }
-  # However, we want to include the fups that are distributions:
-      fup.values.dist <- suppressWarnings(nchar(fup.values) - nchar(gsub(",","",fup.values))==2) 
-      fup.values.dist[is.na(fup.values.dist)] <- F
-      good.chemicals.index <- good.chemicals.index & 
-  # Either a numeric value:
-        (fup.values.numeric |
-  # or three values separated by two commas:
-        fup.values.dist)
+      good.chemicals.index <- good.chemicals.index & fup.values.numeric
     }
     
 # If we need Clint:
-    if (tolower("Clint") %in% unique(tolower(c(necessary.params,info))))
+    if (tolower(paste(species,"Clint",sep=".")) %in% 
+      unique(tolower(c(necessary.params,info))))
     {
       clint.values <- chem.physical_and_invitro.data[,species.clint]
       clint.values.numeric <- suppressWarnings(!is.na(as.numeric(clint.values)))
