@@ -325,6 +325,7 @@ calc_hepatic_clearance <- function(chem.name=NULL,
                                adjusted.Funbound.plasma=T,
                                ...)
 {
+  warning("Function \"calc_hepatic_clearance\" has been renamed to \"calc_hep_clearance\".")
   return(calc_hep_clearance(chem.name=chem.name,
                                chem.cas=chem.cas,
                                dtxsid = dtxsid,
