@@ -4,7 +4,8 @@
 \name{nhanes_mec_svy}
 \alias{nhanes_mec_svy}
 \title{Pre-processed NHANES data.}
-\format{A survey.design2 object, including masked cluster and strata.
+\format{
+A survey.design2 object, including masked cluster and strata.
  Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
  Variables are as described in NHANES Demographics and Examination
  documentation, with the exception of: \describe{
@@ -15,7 +16,8 @@
  measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.}
  \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.}
  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
- Assigned using methods in \code{get_weight_class}.} }}
+ Assigned using methods in \code{get_weight_class}.} }
+}
 \source{
 \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 }

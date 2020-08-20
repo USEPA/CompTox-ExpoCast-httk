@@ -4,7 +4,8 @@
 \name{armitage_input}
 \alias{armitage_input}
 \title{Armitage et al. (2014) Model Inputs from Honda et al. (2019)}
-\format{A data frame with 53940 rows and 10 variables:
+\format{
+A data frame with 53940 rows and 10 variables:
 \describe{
   \item{MP}{}
   \item{MW}{}
@@ -13,7 +14,8 @@
   \item{gkaw}{}
   \item{gkow}{}
   \item{gswat}{}
-}}
+}
+}
 \source{
 \url{http://www.diamondse.info/}
 }
