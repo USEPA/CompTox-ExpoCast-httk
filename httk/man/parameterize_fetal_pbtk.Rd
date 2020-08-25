@@ -49,13 +49,11 @@ cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
 \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
 filtered from kidney and excreted.} \item{Rblood2plasma}{The ratio of the
 concentration of the chemical in the blood to the concentration in the
-plasma from available_rblood2plasma.} \item{Vartc}{Volume of the arteries
-per kg body weight, L/kg BW.} \item{Vgutc}{Volume of the gut per kg body
+plasma from available_rblood2plasma.} \item{Vgutc}{Volume of the gut per kg body
 weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
 BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 \item{Kfgut2pu}{Ratio of concentration of chemical in fetal gut tissue to
 unbound concentration in plasma.} \item{Kfkidney2pu}{Ratio of concentration
 of chemical in fetal kidney tissue to unbound concentration in plasma.}
