@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_analytic_css.R
 \name{calc_analytic_css}
 \alias{calc_analytic_css}
-\title{Calculate the analytic steady state concentration.}
+\title{Calculate the analytic steady state plasma concentration.}
 \usage{
 calc_analytic_css(
   chem.name = NULL,
@@ -89,7 +89,7 @@ the lowest measured Fup in our dataset).}
 parameters is NULL.}
 }
 \value{
-Steady state concentration
+Steady state plasma concentration in specified units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 
