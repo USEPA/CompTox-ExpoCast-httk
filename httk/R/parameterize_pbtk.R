@@ -198,18 +198,28 @@ Set default.to.human to true to substitute human value.")
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
            regression=regression,
-           minimum.Funbound.plasma=minimum.Funbound.plasma)
+           minimum.Funbound.plasma=minimum.Funbound.plasma,
+           suppress.messages=suppress.messages)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
   
-  if (schmitt.params$unadjusted.Funbound.plasma == 0) 
-    stop("Fraction unbound = 0, can't predict partitioning.")
-    
+# We need a non-zero fup to make predictions:
+  if (schmitt.params$unadjusted.Funbound.plasma == 0)
+  {
+    if (tolower(species)!="human" & !default.to.human) 
+    {
+      stop("Fraction unbound = 0, cannot predict tissue partitioning (try default.to.human=TRUE?).")
+    } else stop("Fraction unbound = 0, cannot predict tissue partitioning.")
+  }
+      
 # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    if (!suppress.messages) 
+    {
+      warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    }
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
 # Restrict the value of fup:
