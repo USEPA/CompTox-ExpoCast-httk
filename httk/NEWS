@@ -1,8 +1,25 @@
 News for R package httk
 
+Changes in version 2.0.3 (August 16, 2020)
+  Updated literature chemical-specific human and rat in vitro data:
+    Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
+    Replaced "Obach" human pharmaceutical data from Obach et al. (2008) with data from Lombardo et al. (2018)
+    Added new human data from EU JRC (Paini et al., 2020)
+    Steady-state model now works for 1016 chemicals in human and 212 in rat
+  Renamed calc_stats to calc_tkstats -- calc_stats remains temporarily but calls calc_tkstats
+  Added warnings to deprecated function names calc_stats and calc_hepatocyte_clearance
+  Revised how default.to.human works, so that get_cheminfo and parameterize_schmitt now handle odd cases (like species is zero but human is not) better
+  Argument "info" for get_cheminfo() is now case insensitive
+  Fixed logic statement in solve_model to eliminate warning
+  Problem with create_mc_samples not setting parameter.names variable when parameters are passed to it was fixed by Tom Moxon -- thank you!
+  add_chemtable changed so that pValue and pValue.Reference set to NA when clint is vhanged (thanks Nisha Sipes)
+  add_chemtable (really internal function augment.table) changed to enforce significant figures (default 4)
+  Output for calc_tkstats corrected to display Rblood2plasma
+  Very minor fix with suppress.messages in parameterize_pbtk
+
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
-  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. 
+  Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. (thank you, Nisha Sipes)
   Adjusted 3compss model to effectively make use of any passed chemical identifer information, especially as it is needed in using get_physchem_param to look up any missing parameter needed in predicting partitioning coefficients using predict_partitioning_schmitt.
 
 Changes in version 2.0.1 (February 28, 2020)
