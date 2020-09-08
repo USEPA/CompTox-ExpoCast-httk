@@ -1,5 +1,5 @@
 #Analytic expression for steady-state plasma concentration.
-model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
+#model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
 
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
@@ -200,13 +200,16 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
 model.list[["gas_pbtk"]]$allowed.units.input <- list(
     "oral" = c('umol','mg','mg/kg'),
     "iv" = c('umol','mg','mg/kg'),
-    "inhalation" = c('ppmv','mg/L','uM','umol','mg','mg/m^3'))
+    "inhalation" = c('ppmv','mg/L','mg/m^3','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["gas_pbtk"]]$allowed.units.output <- list(
-       "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'),
-       "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'),
-       "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days'))
+       "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days',
+                  'mg/L*days','mg/m^3','mg/m^3*days'),
+       "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                'mg/m^3','mg/m^3*days'),
+       "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                        'mg/m^3','mg/m^3*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored
