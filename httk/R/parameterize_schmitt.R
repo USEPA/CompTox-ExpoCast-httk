@@ -212,9 +212,42 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.point <- fup.db
     fup.dist <- NA 
   }
-  
-  if (fup.point == 0) warning("Fraction unbound = 0, can't predict tissue partitioning.")
 
+# If species-specific fup is 0 try the human value:  
+  if (fup.point == 0 & tolower(species)!="human" & default.to.human) 
+  {
+    if (!suppress.messages) 
+      warning(paste("Fraction unbound of zero for ",species,"replaced with human value."))
+     fup.db <- try(
+                get_invitroPK_param(
+                  "Funbound.plasma",
+                  "Human",
+                  chem.cas=chem.cas,
+                  chem.name=chem.name,
+                  dtxsid=dtxsid),
+                silent=T)
+  # Check if fup is a point value or a distribution, if a distribution, use the median:
+    if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
+    {
+      fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
+      fup.dist <- fup.db
+      if (!suppress.messages) 
+        warning("Fraction unbound is provided as a distribution.")
+    } else {
+      fup.point <- fup.db
+      fup.dist <- NA 
+    }
+  }
+
+# We need a non-zero fup to make predictions:
+  if (fup.point == 0 & !suppress.messages)
+  {
+    if (tolower(species)!="human" & !default.to.human) 
+    {
+      warning("Fraction unbound = 0, cannot predict tissue partitioning (try default.to.human=TRUE?).")
+    } else warning("Fraction unbound = 0, cannot predict tissue partitioning.")
+  }
+  
 # Calculate Pearce (2017) in vitro plasma binding correction:
   if (force.human.fup) 
     Flipid <- subset(

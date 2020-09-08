@@ -55,19 +55,19 @@
 #' @keywords Solve Statistics
 #' @examples
 #' 
-#' calc_stats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
 #' 
-#' calc_stats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
 #' 
 #' \dontrun{
-#' # If you do not specify a chemical, calc_stats runs for all chemicals:
-#' all.peak.conc.stats <- calc_stats(days=10, doses.per.day = 3, stats = "peak")
+#' # If you do not specify a chemical, calc_tkstats runs for all chemicals:
+#' all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
 #' }
 #' 
-#' triclosan.stats <- calc_stats(days=10, chem.name = "triclosan")
+#' triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
 #' 
-#' @export calc_stats
-calc_stats <-function(
+#' @export calc_tkstats
+calc_tkstats <-function(
                chem.name=NULL,
                chem.cas=NULL,
                dtxsid=NULL,
@@ -100,7 +100,7 @@ calc_stats <-function(
 # Currently we only calculate three stats:  
   valid.stats <- c("AUC","mean","peak")
   if (any(!(tolower(stats) %in% tolower(valid.stats))))
-     stop(paste("calc_stats cannot calculate",
+     stop(paste("calc_tkstats cannot calculate",
      stats[!(stats %in% valid.stats)],
      ". Valid stats are:",
      paste(valid.stats,collapse=" "),"."))
@@ -119,7 +119,7 @@ calc_stats <-function(
                       model=model)))
     {
       cat(paste(this.CAS,"\n"))
-      stat <- calc_stats(chem.cas=this.CAS,
+      stat <- calc_tkstats(chem.cas=this.CAS,
                 days=days,
                 stats=stats,
                 species=species,
@@ -214,6 +214,18 @@ calc_stats <-function(
       }
     }
   
+    # We need to have the blood:plasma ratio:
+    if (is.null(parameters[['Rblood2plasma']]))
+    {
+      parameters[['Rblood2plasma']] <- available_rblood2plasma(
+        chem.name=chem.name,
+        chem.cas=chem.cas,
+        dtxsid=dtxsid,
+        species=species,
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+        suppress.messages=T)
+    }
+  
     # Blood or plasma concentration:
     if (tolower(concentration)=='blood')
     {
@@ -253,4 +265,123 @@ calc_stats <-function(
   if (length(out) == 1) out <- out[[1]]
   
   return(out)
+}
+
+#' Calculate toxicokinetic summary statistics (deprecated).
+#' 
+#' #' This function is included for backward compatibility. It calls
+#' \code{\link{calc_tkstats}} which 
+#' calculates the area under the curve, the mean, and the peak values
+#' for the venous blood or plasma concentration of a specified chemical or all
+#' chemicals if none is specified for the multiple compartment model with a
+#' given number of days, dose, and number of doses per day.
+#' 
+#' Default value of 0 for doses.per.day solves for a single dose.
+#' 
+#' When species is specified as rabbit, dog, or mouse, the function uses the
+#' appropriate physiological data(volumes and flows) but substitues human
+#' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' 
+#' 
+#' @param days Length of the simulation.
+#' @param chem.name Name of desired chemical.
+#' @param chem.cas CAS number of desired chemical.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param parameters Chemical parameters from parameterize_pbtk function,
+#' overrides chem.name and chem.cas.
+#' @param route String specification of route of exposure for simulation:
+#' "oral", "iv", "inhalation", ...
+#' @param stats Desired values (either 'AUC', 'mean', 'peak', or a vector
+#' containing any combination).
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param dose Amount of a single dose at time zero, mg/kg BW. 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param doses.per.day Number of doses per day.
+#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
+#' "uM").
+#' @param model Model used in calculation, 'pbtk' for the multiple compartment
+#' model,'3compartment' for the three compartment model, '3compartmentss' for
+#' the three compartment steady state model, and '1compartment' for one
+#' compartment model.
+#' @param concentration Desired concentration type, 'blood' or default
+#' 'plasma'.
+#' @param tissue Desired steady state tissue conentration.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
+#' TRUE along with partition coefficients calculated with this value.
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE.
+#' @param ... Additional arguments passed to the integrator.
+#' @param suppress.messages Whether to suppress output message.
+#' @param ... Arguments passed to solve function.
+#' @return \item{AUC}{Area under the plasma concentration curve.}
+#' \item{mean.conc}{The area under the curve divided by the number of days.}
+#' \item{peak.conc}{The highest concentration.}
+#' @author Robert Pearce and John Wambaugh 
+#' @keywords Solve Statistics
+#' @examples
+#' 
+#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
+#' 
+#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
+#' 
+#' \dontrun{
+#' # If you do not specify a chemical, calc_tkstats runs for all chemicals:
+#' all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
+#' }
+#' 
+#' triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
+#' 
+#' @export calc_stats
+calc_stats <-function(
+               chem.name=NULL,
+               chem.cas=NULL,
+               dtxsid=NULL,
+               parameters=NULL,
+               route="oral",
+               stats=c("AUC","peak","mean"),
+               species='Human',
+               days=28,
+               daily.dose=1,
+               dose=NULL,
+               doses.per.day=1,
+               output.units='uM',
+               concentration='plasma',
+               tissue='plasma',
+               model='pbtk',
+               default.to.human=F,
+               adjusted.Funbound.plasma=T,
+               regression=T,
+               restrictive.clearance = T,
+               suppress.messages=F,
+               ...)
+{
+  warning("Function \"calc_stats\" has been renamed to \"calc_tkstats\".")
+  return(calc_tkstats(
+               chem.name=chem.name,
+               chem.cas=chem.cas,
+               dtxsid=dtxsid,
+               parameters=parameters,
+               route=route,
+               stats=stats,
+               species=species,
+               days=days,
+               daily.dose=daily.dose,
+               dose=dose,
+               doses.per.day=doses.per.day,
+               output.units=output.units,
+               concentration=concentration,
+               tissue=tissue,
+               model=model,
+               default.to.human=default.to.humanF,
+               adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+               regression=regression,
+               restrictive.clearance = restrictive.clearance,
+               suppress.messages=suppress.messages,
+               ...))
 }
