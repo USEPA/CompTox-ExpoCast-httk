@@ -73,7 +73,7 @@ compartment model.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{tissue}{Desired tissue conentration (defaults to whole body 
+\item{tissue}{Desired tissue concentration (defaults to whole body 
 concentration.)}
 
 \item{restrictive.clearance}{If TRUE (default), then only the fraction of

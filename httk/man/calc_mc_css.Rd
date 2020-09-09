@@ -35,7 +35,9 @@ calc_mc_css(
     restrictive.clearance = T, regression = T),
   calc.analytic.css.arg.list = list(well.stirred.correction = T,
     adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE)
+    restrictive.clearance = T, bioactive.free.invivo = FALSE),
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
+    regression = T, minimum.Funbound.plasma = 1e-04)
 )
 }
 \arguments{
