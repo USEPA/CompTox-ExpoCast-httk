@@ -77,17 +77,18 @@ columns or rows named "dose" and "time" containing the time and amount of
 each dose.}
 
 \item{forcings}{Manual input of 'forcings' data series argument for ode
-integrator. In default case, it begins NULL, but is then constructed using
-other input parameters.}
+integrator. If left unspecified, 'forcings' defaults to NULL, and then other 
+input parameters (see exp.start.time, exp.conc, exp.duration, and period)
+provide the necessary information to assemble a forcings data series.}
 
 \item{exp.start.time}{Start time in specifying forcing exposure series,
 default 0.}
 
 \item{exp.conc}{Specified inhalation exposure concentration for use in 
 assembling "forcings" data series argument for integrator. Defaults to
-uM}
+units of uM}
 
-\item{period}{For use in assembling forcing function data series "forcings"
+\item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 
