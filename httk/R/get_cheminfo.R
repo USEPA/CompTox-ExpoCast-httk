@@ -300,8 +300,8 @@ get_cheminfo <- function(info="CAS",
       if (any(unlist(lapply(fup.values,length))>1)) 
       {
       # Go with the upper 95th credible interval before throwing anything out:
-        fup.values[lapply(fup.values,length)>1] <- 
-          lapply(fup.values[lapply(fup.values,length)>1], function(x) x[[3]])
+        fup.values[lapply(fup.values,length)==3] <- 
+          lapply(fup.values[lapply(fup.values,length)==3], function(x) x[[3]])
       } 
       fup.values <-  suppressWarnings(as.numeric(unlist(fup.values)))
       fup.values.numeric <- !is.na(fup.values)
