@@ -41,6 +41,12 @@ replaced by any data in new.table that is for the same chemical and
 property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored.  Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
+
+\item{sig.fig}{Sets the number of significant figures stored (defaults to 4)}
+
+\item{clint.pvalue.overwrite}{If TRUE then the Cl_int p-value is set to NA 
+when the Cl_int value is changed unless a new p-value is provided. (defaults
+to TRUE)}
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in
