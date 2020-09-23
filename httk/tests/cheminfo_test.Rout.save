@@ -1,13 +1,11 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -26,9 +24,9 @@ Type 'q()' to quit R.
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 987
+[1] 1016
 > length(pbpk.list)
-[1] 917
+[1] 940
 > length(rat.list)
 [1] 212
 >                                                  
@@ -43,23 +41,48 @@ Type 'q()' to quit R.
 >   
 > # Check if the requirements for diffrent models has changed:
 > length(get_cheminfo())
-[1] 987
+[1] 1016
 > length(get_cheminfo(species="rat"))
 [1] 212
 > length(get_cheminfo(model="pbtk"))
-[1] 917
+[1] 940
 > length(get_cheminfo(model="pbtk",species="rat"))
 [1] 181
 > length(get_cheminfo(info="all"))
-[1] 13
+[1] 11
 > length(get_cheminfo(model="schmitt"))
-[1] 1384
+[1] 1676
 > length(get_cheminfo(model="schmitt",species="rat"))
 [1] 296
 > length(get_cheminfo(model="1compartment"))
-[1] 917
+[1] 940
 > length(get_cheminfo(model="1compartment",species="rat"))
 [1] 181
 >   
->   
+> # Check to see if the paramerer values have changed:
+> subset(get_cheminfo(info="all"), CAS %in% c(
++   "80-05-7",
++   "335-67-1",
++   "1912-24-9",
++   "2921-88-2",	
++   "117-81-7"))  
+                         Compound       CAS        DTXSID  logP    MW
+16                       Atrazine 1912-24-9 DTXSID9020112 2.611 215.7
+27                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3
+68  Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6
+173        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1
+316                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6
+    pKa_Accept  pKa_Donor      Human.Clint Human.Clint.pValue
+16        1.22       None             6.21             0.0537
+27        None 9.78,10.39 19.9,10.2,29.8,0             0.0000
+68        None       None             2.65             0.1940
+173       None       -4.2             1.64             0.0636
+316      -2.86       None              2.6                 NA
+    Human.Funbound.plasma Human.Rblood2plasma
+16                  0.124                  NA
+27   0.0385,0.0334,0.0456                0.79
+68                  0.005                  NA
+173                 0.005                0.64
+316              0.007932                0.73
+> 
 > quit("no")
