@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "GHJuly2020"
+SCRIPT.VERSION <- "GHAug2020"
 
 library(reshape)
 library(gdata)
