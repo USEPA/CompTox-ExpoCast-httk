@@ -51,6 +51,9 @@ CAS.checksum <- function(CAS.string)
 #' when the Cl_int value is changed unless a new p-value is provided. (defaults
 #' to TRUE) 
 #' 
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -64,7 +67,8 @@ augment.table <- function(
   reference,
   overwrite=F,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=T,
+  allow.na=F)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -124,7 +128,7 @@ augment.table <- function(
     "Caco2.Pab")
   
   if (!is.na(value)) if (value == "") value <- NA
-  if (!is.na(value))
+  if (!is.na(value) | allow.na)
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS))
     {
@@ -331,6 +335,9 @@ augment.table <- function(
 #' when the Cl_int value is changed unless a new p-value is provided. (defaults
 #' to TRUE) 
 #'
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -371,7 +378,8 @@ add_chemtable <- function(
   species=NULL, 
   overwrite=F,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=T,
+  allow.na=F)
 {
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
@@ -426,16 +434,18 @@ columns in \"data.list\".")
     {
       if (!(data.list[[this.data]] %in% colnames(new.table))) stop(paste(data.list[[this.data]],
         "is not a column in the new table."))
-      current.table <- augment.table(current.table,
-                                     this.CAS,
-                                     this.compound,
-                                     this.property=this.data,
-                                     value=new.table[this.row, data.list[[this.data]]],
-                                     reference=this.reference,
-                                     species=this.species,
-                                     overwrite=overwrite,
-                                     sig.fig=sig.fig,
-                                     clint.pvalue.overwrite=clint.pvalue.overwrite)
+      current.table <- augment.table(
+        current.table,
+        this.CAS,
+        this.compound,
+        this.property=this.data,
+        value=new.table[this.row, data.list[[this.data]]],
+        reference=this.reference,
+        species=this.species,
+        overwrite=overwrite,
+        sig.fig=sig.fig,
+        clint.pvalue.overwrite=clint.pvalue.overwrite,
+        allow.na=allow.na)
     }
   }
 
