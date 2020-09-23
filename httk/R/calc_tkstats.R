@@ -378,7 +378,7 @@ calc_stats <-function(
                concentration=concentration,
                tissue=tissue,
                model=model,
-               default.to.human=default.to.humanF,
+               default.to.human=default.to.human,
                adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                regression=regression,
                restrictive.clearance = restrictive.clearance,
