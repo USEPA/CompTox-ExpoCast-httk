@@ -15,7 +15,8 @@ Changes in version 2.0.3 (August 16, 2020)
   add_chemtable changed so that pValue and pValue.Reference set to NA when clint is vhanged (thanks Nisha Sipes)
   add_chemtable (really internal function augment.table) changed to enforce significant figures (default 4)
   Output for calc_tkstats corrected to display Rblood2plasma
-  Very minor fix with suppress.messages in parameterize_pbtk
+  Minor fix with suppress.messages in parameterize_pbtk
+  OPERA phys-chem properites provided by CompTox Chemicals Dashboard have been slightly revised
 
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 

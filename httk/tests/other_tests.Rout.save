@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name='nicotine')
 $avg
-[1] 0.67
+[1] 0.68
 
 $frac
 [1] 1.136
@@ -35,26 +35,26 @@ $the.day
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 3000
+[1] 1000
 
 $frac
-[1] 0.9895
+[1] 0.9898
 
 $max
-[1] 1704
+[1] 1076
 
 $the.day
-[1] 2582
+[1] 1214
 
 > 
 > calc_stats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.82 .
 $AUC
 [1] 6.728
 
 $peak
-[1] 3.915
+[1] 3.916
 
 $mean
 [1] 0.6728
@@ -62,41 +62,41 @@ $mean
 > 
 > calc_stats(dtxsid="DTXSID0020442",days=1)
 Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 3.895
+[1] 3.727
 
 $peak
-[1] 4.074
+[1] 3.891
 
 $mean
-[1] 3.895
+[1] 3.727
 
 > 
 > calc_stats(dtxsid="DTXSID0020442",days=10)
 Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 173.8
+[1] 168.5
 
 $peak
-[1] 29.27
+[1] 28.49
 
 $mean
-[1] 17.38
+[1] 16.85
 
 > 
 > calc_stats(dtxsid="DTXSID0020442",days=100)
 Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = .
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 4523
+[1] 4563
 
 $peak
-[1] 53.16
+[1] 54.01
 
 $mean
-[1] 45.23
+[1] 45.63
 
 > 
 > calc_analytic_css(
@@ -110,7 +110,7 @@ $mean
 +     minimum.Funbound.plasma=1e-4),
 +   daily.dose=2)
 Tissue concentration for liver returned in uM units.
-[1] 23.57
+[1] 23.62
 > 
 > 
 > 
