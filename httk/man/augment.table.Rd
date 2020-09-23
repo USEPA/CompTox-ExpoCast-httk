@@ -14,7 +14,8 @@ augment.table(
   reference,
   overwrite = F,
   sig.fig = 4,
-  clint.pvalue.overwrite = T
+  clint.pvalue.overwrite = T,
+  allow.na = F
 )
 }
 \arguments{
@@ -48,6 +49,9 @@ detection) are overwritten either way.}
 \item{clint.pvalue.overwrite}{If TRUE then the Cl_int p-value is set to NA 
 when the Cl_int value is changed unless a new p-value is provided. (defaults
 to TRUE)}
+
+\item{allow.na}{If TRUE (default is FALSE) then NA values are written to the
+table, otherwise they are ignored.}
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in
