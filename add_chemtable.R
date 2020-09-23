@@ -112,6 +112,8 @@ augment.table <- function(
     "SMILES.desalt",
     "Formula",
     "Caco2.Pab")
+                                
+  if (!is.na(value)) if (value == "") value <- NA
   if (!is.na(value))
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS))
