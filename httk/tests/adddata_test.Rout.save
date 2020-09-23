@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -71,13 +69,13 @@ Please wait...
 > # this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
 $avg
-[1] 0.0248
+[1] 0.0265
 
 $frac
-[1] 0.1846
+[1] 0.195
 
 $max
-[1] 0.0387
+[1] 0.04098
 
 $the.day
 [1] 21
@@ -85,7 +83,7 @@ $the.day
 > 
 > #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
 > length(get_cheminfo())
-[1] 8798
+[1] 8800
 > 
 > #Now let's reset
 > reset_httk()
