@@ -1,0 +1,98 @@
+
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save solve_gas_crude_test.R solve_gas_crude_test.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> signif(head(solve_gas_pbtk(chem.name="pyrene")),3)
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.75.
+        time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
+[1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
+[2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
+[3,] 0.01040  63.9000 7.24e+00 1.47e+00 1.65e-01 2.24e+00 0.7380 4.61e-01
+[4,] 0.02080 123.0000 1.28e+01 2.72e+00 2.59e-01 4.43e+00 0.8620 1.01e+00
+[5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
+[6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
+      Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+         AUC
+[1,] 0.00000
+[2,] 0.00000
+[3,] 0.00122
+[4,] 0.00420
+[5,] 0.00830
+[6,] 0.01330
+> signif(head(solve_gas_pbtk(chem.cas="129-00-0")),3)
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.75.
+        time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
+[1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
+[2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
+[3,] 0.01040  63.9000 7.24e+00 1.47e+00 1.65e-01 2.24e+00 0.7380 4.61e-01
+[4,] 0.02080 123.0000 1.28e+01 2.72e+00 2.59e-01 4.43e+00 0.8620 1.01e+00
+[5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
+[6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
+      Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+         AUC
+[1,] 0.00000
+[2,] 0.00000
+[3,] 0.00122
+[4,] 0.00420
+[5,] 0.00830
+[6,] 0.01330
+> signif(head(solve_gas_pbtk(parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
+Amounts returned in umol  and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.75.
+        time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
+[1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
+[2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
+[3,] 0.01040  63.9000 7.24e+00 1.47e+00 1.65e-01 2.24e+00 0.7380 4.61e-01
+[4,] 0.02080 123.0000 1.28e+01 2.72e+00 2.59e-01 4.43e+00 0.8620 1.01e+00
+[5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
+[6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
+      Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+         AUC
+[1,] 0.00000
+[2,] 0.00000
+[3,] 0.00122
+[4,] 0.00420
+[5,] 0.00830
+[6,] 0.01330
+> 
+> quit("no")

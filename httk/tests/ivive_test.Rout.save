@@ -51,12 +51,12 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 +   samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.6453 
+0.6454 
 > params <- parameterize_steadystate(chem.name="bisphenol a")
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.6453 
+0.6454 
 > 
 > ## Honda1:
 > #set.seed(12345)
