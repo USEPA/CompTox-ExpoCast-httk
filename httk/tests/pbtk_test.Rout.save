@@ -1,13 +1,11 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -23,19 +21,19 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 1.156
 > calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 1.156
 > calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 1.156
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 21.96
+[1] 21.88
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 6.759
+[1] 6.751
 > 
 > head(solve_pbtk(chem.name="bisphenol a"))
 Human amounts returned in umol and concentration returned in uM units.
@@ -43,54 +41,54 @@ AUC is area under plasma concentration in uM * days units with
 Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[3,] 3.595e-01 0.001953    1.099e+00 0.001388
+[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[5,] 1.156e+00 0.058500    1.191e+01 0.018610
+[6,] 1.250e+00 0.110100    1.883e+01 0.031270
 > head(solve_pbtk(chem.cas="80-05-7"))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[3,] 3.595e-01 0.001953    1.099e+00 0.001388
+[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[5,] 1.156e+00 0.058500    1.191e+01 0.018610
+[6,] 1.250e+00 0.110100    1.883e+01 0.031270
 > head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[3,] 3.595e-01 0.001953    1.099e+00 0.001388
+[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[5,] 1.156e+00 0.058500    1.191e+01 0.018610
+[6,] 1.250e+00 0.110100    1.883e+01 0.031270
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

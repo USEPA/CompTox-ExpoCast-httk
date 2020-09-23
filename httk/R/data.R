@@ -244,25 +244,27 @@
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
 #' Honda et al. (2019)
 #'
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A data frame / data table with 11 rows and 8 variables:
 #' \describe{
-#'   \item{area_bottom}{}
-#'   \item{cell_yield}{}
-#'   \item{diam}{}
-#'   \item{sysID}{}
-#'   \item{v_total}{}
-#'   \item{v_working}{}
-#'   \item{well_desc}{}
-#'   \item{well_number}{}
+#'   \item{sysID}{Identifier for each multi-well plate system}
+#'   \item{well_desc}{Well description}
+#'   \item{well_number}{Number of wells on plate}
+#'   \item{area_bottom}{Area of well bottom in mm^2}
+#'   \item{cell_yield}{Number of cells}
+#'   \item{diam}{Diameter of well in mm}
+#'   \item{v_total}{Total volume of well in uL or mm^3)}
+#'   \item{v_working}{Working volume of well in uL or mm^3}
 #' }
-#' @source \url{http://www.diamondse.info/}
-#'@keywords data
-#'@keywords httk-pop
 #'
-#'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+#' @source \url{http://csmedia2.corning.com/LifeSciences/Media/pdf/cc_surface_areas.pdf}
+#'
+#' @keywords data
+#'
+#' @author Greg Honda
+#'
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
+#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 #'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "well_param"
 
