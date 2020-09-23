@@ -1303,7 +1303,9 @@ save(chem.physical_and_invitro.data,
      tissue.data,
      Tables.Rdata.stamp,
      EPA.ref,
-     file="Tables.RData",compress="gzip",version=2)
+     file="Tables.RData",
+     compress="xz",
+     version=2)
 
 cat("Move the Tables.RData to the httk/data directory.\n")
 cat("Move the sysdata.rdaa to the httk/R directory.\n")
@@ -1318,7 +1320,9 @@ save(Wetmore.data,
      sipes2017,
      chem.lists,
      sysdata.rda.stamp,                 
-     file="sysdata.rda",compress="gzip",version=2)
+     file="sysdata.rda",
+     compress="xz",
+     version=2)
      
 
 
