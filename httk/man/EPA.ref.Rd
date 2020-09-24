@@ -8,7 +8,7 @@
 An object of class \code{character} of length 1.
 }
 \source{
-\url{httpss://comptox.epa.gov/dashboard}
+\url{https://comptox.epa.gov/dashboard}
 }
 \usage{
 EPA.ref
