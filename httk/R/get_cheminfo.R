@@ -151,14 +151,13 @@ get_cheminfo <- function(info="CAS",
     # Identify the appropriate column for Funbound (if needed):
     species.fup <- paste0(species,'.Funbound.plasma')
     # Turn triples with confidence intervals into single values: 
-    temp.fup <- strsplit(chem.physical_and_invitro.data[,species.fup],",")
+    temp.fup <- strsplit(as.character(chem.physical_and_invitro.data[,species.fup]),",")
     if (any(unlist(lapply(temp.fup,length))>1)) 
     {
       temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(temp.fup, function(x) x[[1]]))))
     } else {
       temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
-    }
-    # Check to see if we will use human data where species data is missing:
+    }    # Check to see if we will use human data where species data is missing:
     if (default.to.human)
     {
       # Check to see if this is a column that already has data:
@@ -295,8 +294,9 @@ get_cheminfo <- function(info="CAS",
     if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
       unique(tolower(c(necessary.params,info))))
     { 
-     # Make sure that we have a usable fup:
-      fup.values <- strsplit(chem.physical_and_invitro.data[,species.fup],",")
+     # Make sure that we have a usable fup:     
+      fup.values <- strsplit(as.character(
+        chem.physical_and_invitro.data[,species.fup]),",")
       if (any(unlist(lapply(fup.values,length))>1)) 
       {
       # Go with the upper 95th credible interval before throwing anything out:
