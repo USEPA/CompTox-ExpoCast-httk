@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 954 rows and 14 columns.
 }
 \source{
-\url{httpss://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
+\url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 }
 \usage{
 pharma

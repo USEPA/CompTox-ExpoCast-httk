@@ -17,7 +17,7 @@ A data frame with 53940 rows and 10 variables:
 }
 }
 \source{
-\url{https://www.diamondse.info/}
+\url{http://www.diamondse.info/}
 }
 \usage{
 armitage_input

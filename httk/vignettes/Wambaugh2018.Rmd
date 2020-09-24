@@ -22,7 +22,7 @@ Joost Westerhout, R Woodrow Setzer, Robert G Pearce, Jane Ellen Simmons, Russell
 
 Toxicological Sciences, Volume 163, Issue 1, May 2018, Pages 152-169,
 
-httpss://doi.org/10.1093/toxsci/kfy020
+https://doi.org/10.1093/toxsci/kfy020
 
 ## Abstract
 Prioritizing the risk posed by thousands of chemicals potentially present in the 
@@ -70,7 +70,7 @@ library(gplots)
 
 ```
 
-The data we analyze were originally generated with the R package invivoPKfit (httpss://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
+The data we analyze were originally generated with the R package invivoPKfit (https://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
 of that analysis are provided with httk >v1.8.
 
 # Plot functions

@@ -23,7 +23,7 @@ Chris Strock, R Woodrow Setzer, Russell S Thomas
 
 Toxicological Sciences, Volume 172, Issue 2, December 2019, Pages 235-251
 
-httpss://doi.org/10.1093/toxsci/kfz205
+https://doi.org/10.1093/toxsci/kfz205
 
 ## Abstract
 High(er) throughput toxicokinetics (HTTK) encompasses in vitro measures of 
@@ -80,7 +80,7 @@ lm_R2 <- function(m,prefix=NULL){
 ```
 
 ### Multiple plot function
-From https://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+From http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
  ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
  - cols:   Number of columns in layout
  - layout: A matrix specifying the layout. If present, 'cols' is ignored.
@@ -130,7 +130,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, heights=NUL
 ```
 
 ### Function to format scientific notation 
-From httpss://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
+From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
 ```{R scientific.notation}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
@@ -669,7 +669,7 @@ Fig1.table$Class <- as.factor(Fig1.table$Class)
 
 #Figure 4:
 Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point Estimates. Clint estimate for 1 uM chemical concentration displayed, though 1 and 10 uM were fit jointly. The size of the credible interval varies significantly from chemical to chemical, especially for the lower clearance rates. Plots of individual fits are provided as supplemental material 
-<!-- (httpss://doi.org/10.5061/dryad.nf40jb4) -->.
+<!-- (https://doi.org/10.5061/dryad.nf40jb4) -->.
 ```{R Wambaugh2019.Fig4}
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
     
