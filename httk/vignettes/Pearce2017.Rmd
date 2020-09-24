@@ -16,7 +16,7 @@ Robert G. Pearce, R. Woodrow Setzer, Jimena L. Davis & John F. Wambaugh
 
 Journal of Pharmacokinetics and Pharmacodynamics volume 44, pages549-565 (2017)
 
-httpss://dx.doi.org/10.1007%2Fs10928-017-9548-7
+https://dx.doi.org/10.1007%2Fs10928-017-9548-7
 
 ## Abstract
 Toxicokinetics (TK) provides critical information for integrating chemical 
