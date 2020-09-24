@@ -53,7 +53,7 @@ Changes in version 2.0.0 (February 10, 2020)
     analytic_css_*: Model-specific analytic steady-state solution
     convert_httkpop_*: Model-specific functions for converting HTTK-pop 
       biometrics to model parameters
-  EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see https://comptox.epa.gov/dashboard/) now work as chemical identifiers in addition to name and CAS.
+  EPA's DSSTox Chmeical Structure ID's (DTXSIDs, see http://comptox.epa.gov/dashboard/) now work as chemical identifiers in addition to name and CAS.
   Results now truncated to appropriate significant figures (4) and precision (1e-12).
   Beta testing and bug reports provided by Xiaoqing Chang.
   New physiological parameters have been added for monkeys
