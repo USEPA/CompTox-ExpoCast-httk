@@ -15,7 +15,7 @@ Christopher L. Frank, Jasmine P. Brown, Kathleen Wallace, John F. Wambaugh, Imra
 
 Toxicology and Applied Pharmacology 354 (2018) 81-93
 
-https://doi.org/10.1016/j.taap.2018.01.017
+httpss://doi.org/10.1016/j.taap.2018.01.017
 
 ## Abstract
 Measuring electrical activity of neural networks by microelectrode array (MEA) has recently 
@@ -55,7 +55,7 @@ library(scales)
 options(warn = -1)
 ```
 ### Function to format scientific notation 
-From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
+From httpss://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
 ```{R scientific.notation}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              

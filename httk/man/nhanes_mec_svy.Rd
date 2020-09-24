@@ -19,7 +19,7 @@ A survey.design2 object, including masked cluster and strata.
  Assigned using methods in \code{get_weight_class}.} }
 }
 \source{
-\url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+\url{https://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
 }
 \usage{
 nhanes_mec_svy

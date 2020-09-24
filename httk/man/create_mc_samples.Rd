@@ -44,7 +44,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 

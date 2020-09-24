@@ -35,7 +35,7 @@ specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk function,

@@ -38,7 +38,7 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from a parameterize_MODEL function,
 #' overrides chem.name and chem.cas.
