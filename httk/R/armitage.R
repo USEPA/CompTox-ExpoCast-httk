@@ -114,8 +114,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.f_oc 1, everything assumed to be like proteins
 #' @return tcdata
 #' @author Greg Honda
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
-#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. httpss://doi.org/10.1021/es501955g
+#' Honda et al. PloS one 14.5 (2019): e0217564. httpss://doi.org/10.1371/journal.pone.0217564
 #' @import magrittr
 #' @examples 
 #' temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
