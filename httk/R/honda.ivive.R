@@ -1,7 +1,7 @@
 #' Return the assumptions used in Honda et al. 2019
 #' 
 #' This function returns four of the better performing sets of assumptions evaluated in Honda et al. 2019 
-#' (https://doi.org/10.1371/journal.pone.0217564).These include four different combinations of hepatic clearance assumption, in vivo bioactivity assumption, 
+#' (httpss://doi.org/10.1371/journal.pone.0217564).These include four different combinations of hepatic clearance assumption, in vivo bioactivity assumption, 
 #' and relevant tissue assumption. Generally, this function is not called directly by the user, but instead
 #' called by setting the IVIVE option in calc_mc_oral_equiv, calc_mc_css, and calc_analytic functions. Currently, these IVIVE option 
 #' is not implemented the solve_1comp etc. functions.

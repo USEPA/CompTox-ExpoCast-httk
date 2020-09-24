@@ -7,7 +7,7 @@
 #' @param param The desired parameters, a vector or single value.
 #' @param chem.name The chemical names that you want parameters for, a vector or single value
 #' @param chem.cas The chemical CAS numbers that you want parameters for, a vector or single value
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @return The parameters, either a single value, a named list for a single chemical, or a list of lists

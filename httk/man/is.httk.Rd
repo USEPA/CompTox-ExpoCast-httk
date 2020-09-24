@@ -94,7 +94,7 @@ Human Exposure to Environmental Chemicals. Environmental Science &
 Technology, 10.1021/es503583j.
 
 CDC (2014). National Health and Nutrition Examination Survey. Available at:
-http://www.cdc.gov/nchs/nhanes.htm.
+https://www.cdc.gov/nchs/nhanes.htm.
 }
 \seealso{
 \code{\link{in.list}} for determining chemical membership in 

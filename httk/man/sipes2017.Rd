@@ -18,7 +18,7 @@ sipes2017
 This table includes in silico predicted chemical-specifc plasma protein 
 unbound fraction (fup) and intrinsic hepatic clearance values for the entire
 Tox21 library 
-(see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
+(see \url{httpss://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
 Predictions were made with Simulations Plus ADMET predictor,
 as reported in Sipes et al. (2017).
 }
