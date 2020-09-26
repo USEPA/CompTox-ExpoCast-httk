@@ -309,7 +309,7 @@ m.mat <- reshape2::acast(m.tmp[,
                          Compound.factor~ExpoCast.group,
                          value.var='logAER.diff')
 ```
-To visualize differences above and below some mean value, it's usually best to use a diverging colormap, like those in [ColorBrewer 2](http://colorbrewer2.org). Unfortunately, `heatmap.2` --- the function we'll use to create the heatmap plots --- doesn't have a built-in way to properly interpolate the diverging color palettes provided by, e.g., `RColorBrewer`. So we have to set up a function to do the interpolation. This function is a minor adaptation of some code provided in [a Stack Overflow answer by Josh O'Brien](http://stackoverflow.com/a/10986203).
+To visualize differences above and below some mean value, it's usually best to use a diverging colormap, like those in [ColorBrewer 2](https://colorbrewer2.org). Unfortunately, `heatmap.2` --- the function we'll use to create the heatmap plots --- doesn't have a built-in way to properly interpolate the diverging color palettes provided by, e.g., `RColorBrewer`. So we have to set up a function to do the interpolation. This function is a minor adaptation of some code provided in [a Stack Overflow answer by Josh O'Brien](https://stackoverflow.com/a/10986203).
 ```{r diverge_color, eval=FALSE}
 #Use a diverging color palette
 #Based on http://stackoverflow.com/a/10986203 by Josh O'Brien

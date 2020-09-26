@@ -2,26 +2,26 @@ Package: httk
 Version: 2.0.3
 Date: 2020-09-23
 Title: High-Throughput Toxicokinetics
-Description: Generic models and chemical-specific data for simulation and 
-             statistical analysis of chemical toxicokinetics ("TK") as 
+Description: Generic models and chemical-specific data for simulation and
+             statistical analysis of chemical toxicokinetics ("TK") as
              described by Pearce et al. (2017) <doi:10.18637/jss.v079.i04>.
-             Chemical-specific in vitro data have been obtained from relatively 
-             high throughput experiments. Both physiologically-based ("PBTK") 
-             and empirical (for example, one compartment) "TK" models can be 
+             Chemical-specific in vitro data have been obtained from relatively
+             high throughput experiments. Both physiologically-based ("PBTK")
+             and empirical (for example, one compartment) "TK" models can be
              parameterized with the data provided for thousands of chemicals,
-             multiple exposure routes, and varioues species. The models consist
+             multiple exposure routes, and various species. The models consist
              of systems of ordinary differential equations which are solved
-             using compiled (C-based) code for speed. A Monte Carlo sampler is 
-             included, which allows for simulating human biological variability 
-             (Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>) 
-             and propagating parameter uncertainty. Calibrated methods are 
-             included for predicting tissue:plasma partition coefficients and 
-             volume of distribution 
-             (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>). 
-             These functions and data provide a set of tools for 
-             in vitro-in vivo extrapolation ("IVIVE") of high throughput 
-             screening data (for example, Tox21, ToxCast) to real-world 
-             exposures via reverse dosimetry (also known as "RTK") 
+             using compiled (C-based) code for speed. A Monte Carlo sampler is
+             included, which allows for simulating human biological variability
+             (Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>)
+             and propagating parameter uncertainty. Calibrated methods are
+             included for predicting tissue:plasma partition coefficients and
+             volume of distribution
+             (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>).
+             These functions and data provide a set of tools for
+             in vitro-in vivo extrapolation ("IVIVE") of high throughput
+             screening data (for example, Tox21, ToxCast) to real-world
+             exposures via reverse dosimetry (also known as "RTK")
              (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
 Authors@R: c(
            person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
@@ -37,13 +37,15 @@ Authors@R: c(
              role = c("aut")), 
            person("Matt", "Linakis", email = "matthew.linakis.1@us.af.mil", 
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
+           person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
+             role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")), 
            person("Jimena", "Davis", role = c("ctb")), 
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
            person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
-             role = c("ctb")), 
+             role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")), 
            person("Woodrow", "Setzer", role = c("ctb"),
              comment = c(ORCID = "0000-0002-6709-9186"))
            )
@@ -70,8 +72,10 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>), 
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
   Mark Sfeir [aut], Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
-  Jimena Davis [ctb], James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
+  Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
+  Jimena Davis [ctb], 
+  James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
-  Barbara Wetmore [ctb], 
+  Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
