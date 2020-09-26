@@ -18,7 +18,7 @@ A data frame / data table with 11 rows and 8 variables:
 }
 }
 \source{
-\url{http://csmedia2.corning.com/LifeSciences/Media/pdf/cc_surface_areas.pdf}
+\url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
 }
 \usage{
 well_param

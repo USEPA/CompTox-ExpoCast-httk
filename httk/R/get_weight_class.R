@@ -94,7 +94,7 @@ get_weight_class <- function(age_years,
 
     #BMI is effectively meaningless for infants under 2 years old.
     #Instead, use WHO weight-for-length charts.
-    #Ogden et al. 2010 (http://jama.jamanetwork.com/article.aspx?articleid=185233)
+    #Ogden et al. 2010 (https://jama.jamanetwork.com/article.aspx?articleid=185233)
     #use 95th percentile as their only cut point for infants.
     #so lump 'Overweight' and 'Obese' together and just use 97.7th percentile.
   
