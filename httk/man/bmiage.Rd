@@ -16,7 +16,7 @@ A data.table object with variables \describe{
  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
 }
 \source{
-\url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+\url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}
 }
 \usage{
 bmiage

@@ -15,7 +15,7 @@
 #' specified. 
 #' @param chem.name Either the chemical name or the cas number must be
 #' specified. 
-#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.

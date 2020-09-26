@@ -17,7 +17,7 @@
 #' specified.
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from \code{\link{parameterize_schmitt}}
 #' @param hematocrit Overwrites default hematocrit value in calculating

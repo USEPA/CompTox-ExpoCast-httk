@@ -143,7 +143,7 @@
 #'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
 #'  Assigned using methods in \code{get_weight_class}.} }
 #'
-#'@source \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@source \url{https://wwwn.cdc.gov/nchs/nhanes/Default.aspx}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -198,7 +198,7 @@
 #'  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
 #'
 #'
-#'@source \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'@source \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -221,14 +221,14 @@
 #'@format A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
 #'  or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
 #'  \code{S}}{LMS parameters; see
-#'  \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
+#'  \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
 #'  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
 #'  \code{P95}, and \code{P97.7}}{weight percentiles} }
 #'
 #'@source
-#'  \url{http://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+#'  \url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
 #'  and
-#'  \url{http://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+#'  \url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
 #'@keywords data
 #'
 #'@author Caroline Ring
@@ -256,7 +256,7 @@
 #'   \item{v_working}{Working volume of well in uL or mm^3}
 #' }
 #'
-#' @source \url{http://csmedia2.corning.com/LifeSciences/Media/pdf/cc_surface_areas.pdf}
+#' @source \url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
 #'
 #' @keywords data
 #'
@@ -280,7 +280,7 @@
 #'   \item{gkow}{}
 #'   \item{gswat}{}
 #' }
-#' @source \url{http://www.diamondse.info/}
+#' @source \url{https://www.diamondse.info/}
 #'
 #'@keywords data
 #'
@@ -796,7 +796,7 @@
 #' Technology, 10.1021/es503583j.
 #'
 #' CDC (2014). National Health and Nutrition Examination Survey. Available at:
-#' http://www.cdc.gov/nchs/nhanes.htm.
+#' https://www.cdc.gov/nchs/nhanes.htm.
 #' @keywords data
 "chem.lists"
 
@@ -958,9 +958,9 @@
 #' @docType data
 #' @format A data.frame containing 565 rows and 33 columns.
 #' @author John Wambaugh
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
-#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+#' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
 #' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 #' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
@@ -1012,7 +1012,7 @@
 #' Pierre; Macko, Peter; Palosaari, Taina; Sund, Jukka; Worth, Andrew; Whelan, 
 #' Maurice (2020):  EURL ECVAM in vitro hepatocyte clearance and blood plasma 
 #' protein binding dataset for 77 chemicals. European Commission, Joint Research 
-#' Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
+#' Centre (JRC) [Dataset] PID: https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
 #' 
 #' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
 #' oral bioavailability by using in vitro and in silico drug related parameters
@@ -1393,7 +1393,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1405,7 +1405,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1417,7 +1417,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1429,7 +1429,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
