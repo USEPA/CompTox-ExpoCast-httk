@@ -17,6 +17,8 @@ Changes in version 2.0.3 (August 16, 2020)
   Output for calc_tkstats corrected to display Rblood2plasma
   Minor fix with suppress.messages in parameterize_pbtk
   OPERA phys-chem properites provided by CompTox Chemicals Dashboard have been slightly revised
+  Updated documentation to well parameters for Armitage et al. (2014) model (thank you Katie Paul-Friedman and Greg Honda)
+  added allow.na argument to add_chemtable so that values can be deleted (thanks Nisha Sipes)
 
 Changes in version 2.0.2 (July 18, 2020)
   Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 

@@ -23,9 +23,9 @@ compiled from multiple sources, and can be used to parameterize a variety of
 toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 }
 \references{
-DSStox database (http:// www.epa.gov/ncct/dsstox
+DSStox database (https:// www.epa.gov/ncct/dsstox
 
-EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 
 Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 SPARC's chemical reactivity models: Estimation of more than 4300 ionization
@@ -77,7 +77,7 @@ Paini, Alicia; Cole, Thomas; Meinero, Maria; Carpi, Donatella; Deceuninck,
 Pierre; Macko, Peter; Palosaari, Taina; Sund, Jukka; Worth, Andrew; Whelan, 
 Maurice (2020):  EURL ECVAM in vitro hepatocyte clearance and blood plasma 
 protein binding dataset for 77 chemicals. European Commission, Joint Research 
-Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
+Centre (JRC) [Dataset] PID: https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
 
 Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
 oral bioavailability by using in vitro and in silico drug related parameters
