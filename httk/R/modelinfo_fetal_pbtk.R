@@ -6,6 +6,39 @@
 # The is the R function for generating model parameters:
 model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 
+# Function used for generating model parameters:
+model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
+
+# Function called for running the model:
+model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
+
+# Here are the tissues from tissue.table that are considered (for example,
+# do we include placenta or not?):
+model.list[["fetal_pbtk"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle",  
+  "placenta",       
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  )
+
+# How the tissues from tissue.table are lumped together to form the model:
+# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
+# lumped.
+model.list[["fetal_pbtk"]]$tissuelist=list(
+  liver=c("liver"),
+  kidney=c("kidney"),
+  lung=c("lung"),
+  gut=c("gut"))
+  
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:

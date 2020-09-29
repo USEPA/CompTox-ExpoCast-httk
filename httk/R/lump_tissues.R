@@ -25,6 +25,8 @@
 #' default "Human").
 #' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
 #' @param tissue.flows A list of flows for tissues in \code{tissuelist}
+#' @param model Specify which model (and therefore which tissues) are being 
+#' considered
 #'
 #' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
 #' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration
@@ -57,7 +59,8 @@ lump_tissues <- function(Ktissue2pu.in,
                          tissuelist=NULL,
                          species="Human",
                          tissue.vols=NULL,
-                         tissue.flows=NULL)
+                         tissue.flows=NULL,
+                         model=NULL)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -91,9 +94,7 @@ lump_tissues <- function(Ktissue2pu.in,
 
 # List all tissues for which HTTK has human tissue information. 
 # This will be used in lumping.  
-  tissuenames <- sort(unique(subset(
-                               httk::tissue.data,
-                               tolower(Species)==tolower(species))$Tissue))
+  tissuenames <- sort(unique(model.list[[model]]$alltissues))
  
 # The vector all.tissues indicates whether each tissue in tissue.data has been 
 # lumped yet (TRUE/FALSE)	
