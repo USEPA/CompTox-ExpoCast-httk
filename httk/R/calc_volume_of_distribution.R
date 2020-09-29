@@ -170,7 +170,11 @@ calc_vdist<- function(chem.cas=NULL,
       PCs <- subset(parameters,names(parameters) %in% PC.names)
     }
    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-    lumped_params <- lump_tissues(PCs,tissuelist=NULL,species=species)
+    lumped_params <- lump_tissues(
+      PCs,
+      tissuelist=NULL,
+      species=species,
+      model="1compartment")
  
    vol.dist <- plasma.vol +
       RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+

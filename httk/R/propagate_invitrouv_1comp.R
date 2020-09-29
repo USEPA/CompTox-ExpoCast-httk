@@ -48,7 +48,8 @@ propagate_invitrouv_1comp <- function(
         PCs,
         parameters=parameters.dt,
         tissuelist=NULL,
-        species="Human")
+        species="Human",
+        model="1compartment")
       parameters.dt[, names(lumped_params):= lumped_params]
       
       #To compute volume of distribution, need to get volume of red blood cells.
