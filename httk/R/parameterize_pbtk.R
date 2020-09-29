@@ -184,29 +184,33 @@ parameterize_pbtk <- function(chem.cas=NULL,
     suppress.messages=T,
     minimum.Funbound.plasma=minimum.Funbound.plasma)
   
-  if(placenta){
-    schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
-    PCs <- predict_partitioning_schmitt(
-      parameters=schmitt.params,
-      regression=regression,
-      species=species,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)
-    p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
-    PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
-    lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
-  }else{  
-    PCs <- predict_partitioning_schmitt(
-      parameters=schmitt.params,
-      species=species,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      regression=regression,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)
-    
-    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-    lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
-  }
-  
+# If we are including the placenta then we want the tissue list from fetal_pbtk
+  if (placenta) model <= "fetal_pbtk"
+  else model <- "pbtk"
+#    schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
+#    PCs <- predict_partitioning_schmitt(
+#      parameters=schmitt.params,
+#      regression=regression,
+#      species=species,
+#      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+#      minimum.Funbound.plasma=minimum.Funbound.plasma)
+#    p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
+#    PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
+#
+#  }else{  
+  PCs <- predict_partitioning_schmitt(
+    parameters=schmitt.params,
+    species=species,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    minimum.Funbound.plasma=minimum.Funbound.plasma)
+  # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
+  lumped_params <- lump_tissues(
+    PCs,
+    tissuelist=tissuelist,
+    species=species,
+    model=model)
+       
   if (schmitt.params$unadjusted.Funbound.plasma == 0)
     stop("Fraction unbound = 0, can't predict partitioning.")
   

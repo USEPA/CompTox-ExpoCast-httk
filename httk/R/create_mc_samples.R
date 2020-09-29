@@ -346,7 +346,8 @@ Set species=\"Human\" to run httkpop model.')
                       PCs,
                       parameters=parameters.dt,
                       tissuelist=model.list[[model]]$tissue.list,
-                      species=species
+                      species=species,
+                      model=model
                       ) 
                       
      parameters.dt[, names(lumptissues):= lumptissues]

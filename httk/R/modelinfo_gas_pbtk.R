@@ -4,6 +4,35 @@
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
 
+# Function called for running the model:
+model.list[["gas_pbtk"]]$solve.func <- "solve_gas_pbtk"
+
+# Here are the tissues from tissue.table that are considered (for example,
+# do we include placenta or not?):
+model.list[["gas_pbtk"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle",         
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  )
+
+# How the tissues from tissue.table are lumped together to form the model:
+# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
+# lumped.
+model.list[["gas_pbtk"]]$tissuelist=list(
+  liver=c("liver"),
+  kidney=c("kidney"),
+  lung=c("lung"),
+  gut=c("gut"))
+
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
