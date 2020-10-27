@@ -1,4 +1,4 @@
-# alpha: Ratio of Distribution coefficient D of totally charged species and that of the neurtral form
+# alpha: Ratio of Distribution coefficient D of totally charged species and that of the neutral form
 calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,alpha=0.001) 
 {
   # Octonol:water distribution coefficient,
