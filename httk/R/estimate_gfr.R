@@ -32,7 +32,7 @@ estimate_gfr <- function(gfrtmp.dt){
   gfrtmp.dt <- data.table::copy(gfrtmp.dt) #to avoid altering the original item
   #Take a list of sample individuals with gender, race, age_years, height, BSA in cm^2
   #Draw their serum creatinine levels from the appropriate KDE distribution
-  #Then estimate their GFR in mL/min/1.73m^2 using either the MDRD equation (for adults)
+  #Then estimate their GFR in mL/min/1.73m^2 using either the CKD-EPI equation (for adults)
   #or the bedside Schwartz equation (for children).
   gfrtmp.dt[, id:=1:nrow(gfrtmp.dt)]
   
