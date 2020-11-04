@@ -45,8 +45,8 @@
 #' @export httkpop_direct_resample
 httkpop_direct_resample <- function(nsamp=NULL,
                                     gendernum=NULL,
-                                    agelim_years=NULL, 
-                                    agelim_months=NULL,
+                                    agelim_years=c(0,79), 
+                                    agelim_months=c(0,959),
                                     weight_category=c('Underweight',
                                                       'Normal',
                                                       'Overweight',
