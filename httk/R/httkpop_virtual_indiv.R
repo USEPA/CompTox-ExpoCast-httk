@@ -78,7 +78,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   #Generate tissue masses and flows.
   indiv_dt <- tissue_masses_flows(tmf_dt=indiv_dt)
   
-  #Estimate GFR (including draw individual values of serum creatinine)
+  #Generate serum creatinine levels
+  indiv_dt <- gen_serum_creatinine(serumcreat.dt = indiv_dt)
+  #Estimate GFR
   indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt)
   
   #Compute BMI using adjusted individual weights
