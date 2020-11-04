@@ -42,4 +42,19 @@ test_that("agelim_months arguments work in httkpop_generate()", {
   expect_lte(foo_d[, max(age_months)], max_agemos)
 })
 
-test_that("")
+test_that("gender_num argument works in httkpop",
+          {
+            nmale <- 5
+            nfemale <- 10
+            foo_d <- httkpop_generate(method = "d",
+                                      gendernum = list("Male" = nmale,
+                                                        "Female" = nfemale))
+            foo_v <- httkpop_generate(method = "v",
+                                      gendernum = list("Male" = nmale,
+                                                        "Female" = nfemale))
+            expect_equal(foo_d[, sum(gender=="Male")], nmale)
+            expect_equal(foo_v[, sum(gender=="Male")], nmale)
+            expect_equal(foo_d[, sum(gender=="Female")], nfemale)
+            expect_equal(foo_v[, sum(gender=="Female")], nfemale)
+          })
+
