@@ -15,8 +15,10 @@ The same data.table with a \code{gfr_est} column added, containing
  estimated GFR values.
 }
 \description{
-First predict serum creatinine using smoothing spline, then predict GFR using
-CKD-EPI equation.
+Predict GFR using CKD-EPI equation (for adults) or BSA-based equation (for children).
+}
+\details{
+Add residual variability based on reported residuals for each equation.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to 
