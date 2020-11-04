@@ -68,7 +68,7 @@ estimate_gfr <- function(gfrtmp.dt){
     #arith mean = exp(meanlog + sdlog^2/2)
     #so, log(arith mean) - sdlog^2/2 = meanlog
     gfrtmp.dt[age_years<18, 
-              gfr_est:=rlnorm(.N,
+              gfr_est:=rlnorm(n=.N,
                               meanlog = log(gfr_est) - log(0.3^2+1)/2,
                               sdlog = sqrt(log(0.3^2+1)))]
   }
