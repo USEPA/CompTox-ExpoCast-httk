@@ -56,7 +56,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                          'Other Hispanic',
                                          'Non-Hispanic White',
                                          'Non-Hispanic Black',
-                                         'Other')) {
+                                         'Other'),
+                                 gfr_resid_var = TRUE,
+                                 ckd_epi_race_coeff = FALSE) {
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -81,7 +83,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   #Generate serum creatinine levels
   indiv_dt <- gen_serum_creatinine(serumcreat.dt = indiv_dt)
   #Estimate GFR
-  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt)
+  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
+                         use_resid_var = gfr_resid_var,
+                         ckd_epi_race_coeff = ckd_epi_race_coeff)
   
   #Compute BMI using adjusted individual weights
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
