@@ -107,7 +107,9 @@ httkpop_generate <- function(method,
                                      'Other Hispanic',
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
-                                     'Other')){
+                                     'Other'),
+                             gfr_resid_var = TRUE,
+                             ckd_epi_race_coeff = FALSE){
 
 # Error checking:
   if (is.null(method)) stop(
@@ -289,7 +291,9 @@ resampling\" (\"dr\" or \"d\").")
                                       agelim_months=agelim_months,
                                       weight_category=weight_category, 
                                       gfr_category=gfr_category,
-                                      reths=reths)
+                                      reths=reths,
+                                      gfr_resid_var = gfr_resid_var,
+                                      ckd_epi_race_coeff = ckd_epi_race_coeff)
   } else if (method == 'direct resampling'){
     indiv_dt <- httkpop_direct_resample(nsamp=nsamp,
                                         gendernum=gendernum,
@@ -297,7 +301,9 @@ resampling\" (\"dr\" or \"d\").")
                                         agelim_months=agelim_months,
                                         weight_category=weight_category, 
                                         gfr_category=gfr_category,
-                                        reths=reths)
+                                        reths=reths,
+                                        gfr_resid_var = gfr_resid_var,
+                                        ckd_epi_race_coeff = ckd_epi_race_coeff)
   }
   return(indiv_dt)
 }
