@@ -79,7 +79,9 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             agelim_months=agelim_months,
                                             agelim_years=agelim_years,
                                             reths=reths,
-                                            weight_category=weight_category)
+                                            weight_category=weight_category,
+                                            gfr_resid_var = gfr_resid_var,
+                                            ckd_epi_race_coeff = ckd_epi_race_coeff)
   #Compute BMI
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
   #Assign weight class
@@ -123,7 +125,8 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                                agelim_years=agelim_years,
                                                reths=reths,
                                                weight_category=weight_category,
-                                               gfr_resid_var = gfr_resid_var)
+                                               gfr_resid_var = gfr_resid_var,
+                                               ckd_epi_race_coeff = ckd_epi_race_coeff)
     #Recalculate BMI for the newly redrawn individuals
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Check on weight class
