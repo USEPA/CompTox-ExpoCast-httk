@@ -12,7 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(data.table)
 library(ggplot2)
-library(httk)
+devtools::load_all()
+```
+Set a seed for reproducbility
+
+```{r}
+set.seed(42)
 ```
 
 # GFR distributions
@@ -54,27 +59,57 @@ ggplot(DT) +geom_density(aes(x=gfr_est,
 How much does the change in GFR change equivalent dose results?
 
 ```{r}
-aed_bpa <- par[, .(css=calc_mc_css(chem.name = "bisphenol A",
+css_bpa <- par[, .(css=calc_mc_css(chem.name = "bisphenol A",
                                  samples = 1000,
                                  return.samples = TRUE,
+                                 output.units = "uM",
                                  httkpop.generate.arg.list = list("gfr_resid_var" = gfr_resid_var, "ckd_epi_race_coeff" = ckd_epi_race_coeff))),
     by = .(gfr_resid_var, ckd_epi_race_coeff)]
 
 ```
 
 ```{r}
-aed_bpa[, label:=paste("resid",
+css_bpa[, label:=paste("resid",
                                            gfr_resid_var,
                                                  "coeff",
                                            ckd_epi_race_coeff,
                                            sep = "_")]
-ggplot(aed_bpa,
+ggplot(css_bpa,
        aes(x=css, color = label, fill = label)) +
   geom_density(size=1,
                alpha=0.2) +
   scale_color_brewer(palette="Set2") +
   scale_fill_brewer(palette="Set2") +
-  scale_x_log10()
+  scale_x_log10() +
+  xlab("Css, uM") +
+  ylab("Density") +
+  ggtitle("Css density for Bisphenol A")
 ```
 
+```{r}
+ggplot(css_bpa,
+       aes(x=css, color = label, fill = label)) +
+  stat_ecdf() +
+  scale_color_brewer(palette="Set2") +
+  scale_fill_brewer(palette="Set2") +
+  scale_x_log10() +
+  xlab("Css, uM") +
+  ylab("Cumulative density") +
+  ggtitle("Css CDF for Bisphenol A")
+```
 
+How much does equivalent dose shift?
+
+```{r}
+aed_bpa <- par[, as.list(calc_mc_oral_equiv(chem.name = "bisphenol A",
+                                            conc = 1,
+                                 samples = 1000,
+                                 which.quantile = c(0.05,0.5,0.95),
+                                 httkpop.generate.arg.list = list("gfr_resid_var" = gfr_resid_var, "ckd_epi_race_coeff" = ckd_epi_race_coeff))),
+    by = .(gfr_resid_var, ckd_epi_race_coeff)]
+
+knitr::kable(aed_bpa)
+```
+So the equivalent dose for the most sensitive 5% of the population is slightly lower for resid_var = TRUE and ckd_epi_race_coeff = FALSE, compared to the previous default, resid_var = FALSE and ckd_epi_race_coeff = TRUE.
+
+This is obviously just one chemical. We should repeat this analysis across chemicals in the httk chemical list.
