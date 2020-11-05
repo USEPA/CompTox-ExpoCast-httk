@@ -21,7 +21,7 @@
 #' @import EnvStats
 #' @export estimate_gfr
 estimate_gfr <- function(gfrtmp.dt,
-                         use_resid_var = TRUE,
+                         gfr_resid_var = TRUE,
                          ckd_epi_race_coeff = FALSE){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -45,7 +45,7 @@ estimate_gfr <- function(gfrtmp.dt,
                                   reth=reth, #note that this is actually no longer used
                                   age_years=age_years,
                                   ckd_epi_race_coeff = ckd_epi_race_coeff)]
-    if(use_resid_var %in% TRUE){
+    if(isTRUE(gfr_resid_var)){
     #Add residual variability
     #see data-raw/ckd_epi_resid_var.R for calculations
     #estimating sdlog of residual distribution that is zero-mean and constant-variance on the log scale
@@ -65,7 +65,7 @@ estimate_gfr <- function(gfrtmp.dt,
            gfr_est:=estimate_gfr_ped(BSA=BSA_adj/(100^2))] #convert BSA to m^2
   #gfr_est in units of mL/min/1.73m^2 BSA
     
-    if(use_resid_var %in% TRUE){
+    if(isTRUE(gfr_resid_var)){
     #Add residual variability -- constant CV of 30%, per Johnson et al. 2006
     #and *log-normal* data also per Johnson et al. 2006
     #30% CV = sqrt(exp(sdlog^2)-1)

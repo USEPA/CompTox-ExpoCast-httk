@@ -47,7 +47,8 @@ httkpop_direct_resample_inner <- function(nsamp,
                                           agelim_years,
                                           reths,
                                           weight_category,
-                                          gfr_resid_var = TRUE){
+                                          gfr_resid_var,
+                                          ckd_epi_race_coeff){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -227,7 +228,7 @@ httkpop_direct_resample_inner <- function(nsamp,
   #for people over 18,
   #Estimate GFR from serum creatinine using CKD-EPI equation
   inner_dt <- estimate_gfr(inner_dt,
-                           use_resid_var = gfr_resid_var,
+                           gfr_resid_var = gfr_resid_var,
                            ckd_epi_race_coeff = ckd_epi_race_coeff)
   #Hematocrit: was not measured for infants < 1 year old;
   #instead, sample hematocrit from log-normal distributions
