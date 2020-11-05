@@ -22,7 +22,7 @@
 #'International 106 (2017): 105-118
 #'@export ckd_epi_eq
 
-ckd_epi_eq <- function(scr, gender, reth, age_years){
+ckd_epi_eq <- function(scr, gender, reth, age_years, ckd_epi_race_coeff = FALSE){
   kappa <- rep(NA, length(scr))
   kappa[gender=='Female'] <- 0.7
   kappa[gender=='Male'] <- 0.9
@@ -34,7 +34,10 @@ ckd_epi_eq <- function(scr, gender, reth, age_years){
   rethfact <- rep(1,length(scr))
   #setting the "race" factor to 1 per Eneanya et al. 2019;
   #Anker et al. 2016; Peralta et al. 2010; Grubb et al. 2020
-  #rethfact[reth=='Non-Hispanic Black'] <- 1.159
+  if(ckd_epi_race_coeff %in% TRUE){
+    rethfact[reth=='Non-Hispanic Black'] <- 1.159
+  }
+ 
   
   gfr.est <- 141 * 
     pmin(scr/kappa, 1)^alph * 
