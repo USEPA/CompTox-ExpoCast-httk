@@ -1,0 +1,80 @@
+---
+title: "Differences from GFR changes"
+author: "Caroline Ring"
+date: "11/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(httk)
+```
+
+# GFR distributions
+
+```{r}
+par <- as.data.table(expand.grid(gfr_resid_var = c(FALSE, TRUE),
+                                 ckd_epi_race_coeff = c(TRUE, FALSE)))
+
+DT <- par[,
+          .(gfr_est=httkpop_generate(method = "d",
+                                     nsamp = 1000,
+                                     agelim_years = c(18,65),
+                                     reths = "Non-Hispanic Black",
+                                     gfr_resid_var = gfr_resid_var,
+                                     ckd_epi_race_coeff = ckd_epi_race_coeff)$gfr_est),
+          by = .(gfr_resid_var,
+                 ckd_epi_race_coeff)]
+
+DT[, label:=paste("resid",
+                                           gfr_resid_var,
+                                                 "coeff",
+                                           ckd_epi_race_coeff,
+                                           sep = "_")]
+```
+
+```{r}
+
+ggplot(DT) +geom_density(aes(x=gfr_est,
+                             color = label,
+                             fill = label),
+                             alpha = 0.2,
+                         size=1) +
+  scale_color_brewer(palette = "Set2") +
+  scale_fill_brewer(palette = "Set2")
+
+```
+
+
+How much does the change in GFR change equivalent dose results?
+
+```{r}
+aed_bpa <- par[, .(css=calc_mc_css(chem.name = "bisphenol A",
+                                 samples = 1000,
+                                 return.samples = TRUE,
+                                 httkpop.generate.arg.list = list("gfr_resid_var" = gfr_resid_var, "ckd_epi_race_coeff" = ckd_epi_race_coeff))),
+    by = .(gfr_resid_var, ckd_epi_race_coeff)]
+
+```
+
+```{r}
+aed_bpa[, label:=paste("resid",
+                                           gfr_resid_var,
+                                                 "coeff",
+                                           ckd_epi_race_coeff,
+                                           sep = "_")]
+ggplot(aed_bpa,
+       aes(x=css, color = label, fill = label)) +
+  geom_density(size=1,
+               alpha=0.2) +
+  scale_color_brewer(palette="Set2") +
+  scale_fill_brewer(palette="Set2") +
+  scale_x_log10()
+```
+
+
