@@ -58,7 +58,9 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             'Other Hispanic',
                                             'Non-Hispanic White',
                                             'Non-Hispanic Black',
-                                            'Other')){
+                                            'Other'),
+                                    gfr_resid_var = TRUE,
+                                    ckd_epi_race_coeff = FALSE){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -120,7 +122,8 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                                agelim_months=agelim_months,
                                                agelim_years=agelim_years,
                                                reths=reths,
-                                               weight_category=weight_category)
+                                               weight_category=weight_category,
+                                               gfr_resid_var = gfr_resid_var)
     #Recalculate BMI for the newly redrawn individuals
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Check on weight class
