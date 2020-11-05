@@ -4,7 +4,7 @@
 \alias{ckd_epi_eq}
 \title{CKD-EPI equation for GFR.}
 \usage{
-ckd_epi_eq(scr, gender, reth, age_years)
+ckd_epi_eq(scr, gender, reth, age_years, ckd_epi_race_coeff = FALSE)
 }
 \arguments{
 \item{scr}{Vector of serum creatinine values in mg/dL.}

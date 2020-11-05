@@ -4,7 +4,7 @@
 \alias{estimate_gfr}
 \title{Predict GFR.}
 \usage{
-estimate_gfr(gfrtmp.dt)
+estimate_gfr(gfrtmp.dt, gfr_resid_var = TRUE, ckd_epi_race_coeff = FALSE)
 }
 \arguments{
 \item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth}, 
