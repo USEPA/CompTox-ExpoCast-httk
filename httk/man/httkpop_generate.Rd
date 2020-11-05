@@ -5,7 +5,7 @@
 \title{Generate a virtual population}
 \usage{
 httkpop_generate(
-  method,
+  method = "direct resampling",
   nsamp = NULL,
   gendernum = NULL,
   agelim_years = NULL,
@@ -13,7 +13,9 @@ httkpop_generate(
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other")
+    "Non-Hispanic Black", "Other"),
+  gfr_resid_var = TRUE,
+  ckd_epi_race_coeff = FALSE
 )
 }
 \arguments{
@@ -61,6 +63,10 @@ include in the population. Default is \code{c('Mexican American','Other
 Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
+
+\item{gfr_resid_var}{TRUE to add residual variability to GFR predicted from serum creatinine; FALSE to not add residual variability}
+
+\item{ckd_epi_race_coeff}{TRUE to use the CKD-EPI equation as originally published (with a coefficient changing predicted GFR for individuals identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
 }
 \value{
 A data.table where each row represents an individual, and each
