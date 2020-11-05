@@ -34,7 +34,7 @@ ckd_epi_eq <- function(scr, gender, reth, age_years, ckd_epi_race_coeff = FALSE)
   rethfact <- rep(1,length(scr))
   #setting the "race" factor to 1 per Eneanya et al. 2019;
   #Anker et al. 2016; Peralta et al. 2010; Grubb et al. 2020
-  if(ckd_epi_race_coeff %in% TRUE){
+  if(isTRUE(ckd_epi_race_coeff)){
     rethfact[reth=='Non-Hispanic Black'] <- 1.159
   }
  
