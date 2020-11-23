@@ -274,7 +274,8 @@ model.list[["gas_pbtk"]]$required.params <- c(
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
-  "MW"
+  "MW",
+  "logHenry"
    )
 
 # Do we ignore the Fups where the value was below the limit of detection?
