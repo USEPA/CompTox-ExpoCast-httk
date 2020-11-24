@@ -12,7 +12,23 @@ model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 # Function called for running the model:
 model.list[["1compartment"]]$solve.func <- "solve_1comp"
 
-# How the tissues from tissue.table are lumped together to form the model:
+# Here are the tissues from tissue.table that are considered (for example,
+# do we include placenta or not?):
+model.list[["1compartment"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle",         
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  )
+  
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
 

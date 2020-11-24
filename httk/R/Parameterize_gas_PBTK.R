@@ -216,7 +216,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                       suppress.messages=suppress.messages,
                                       minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-  lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
+  lumped_params <- lump_tissues(
+    PCs,
+    tissuelist=tissuelist,
+    species=species,
+    model="gas_pbtk")
   
 # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
