@@ -43,8 +43,8 @@
 #' @export httkpop_virtual_indiv
 httkpop_virtual_indiv<- function(nsamp=NULL,
                                  gendernum=NULL,
-                                 agelim_years=NULL, 
-                                 agelim_months=NULL,
+                                 agelim_years=c(0,79), 
+                                 agelim_months=c(0,959),
                                  weight_category=c('Underweight', 
                                                    'Normal',
                                                    'Overweight',
@@ -56,7 +56,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                          'Other Hispanic',
                                          'Non-Hispanic White',
                                          'Non-Hispanic Black',
-                                         'Other')) {
+                                         'Other'),
+                                 gfr_resid_var = TRUE,
+                                 ckd_epi_race_coeff = FALSE) {
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -78,8 +80,12 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   #Generate tissue masses and flows.
   indiv_dt <- tissue_masses_flows(tmf_dt=indiv_dt)
   
-  #Estimate GFR (including draw individual values of serum creatinine)
-  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt)
+  #Generate serum creatinine levels
+  indiv_dt <- gen_serum_creatinine(serumcreat.dt = indiv_dt)
+  #Estimate GFR
+  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
+                         gfr_resid_var = gfr_resid_var,
+                         ckd_epi_race_coeff = ckd_epi_race_coeff)
   
   #Compute BMI using adjusted individual weights
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
@@ -132,7 +138,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
     #Recompute tissue masses and flows using the new age, height, and weight
     #values
     indiv_tmp<-tissue_masses_flows(tmf_dt=indiv_tmp)
-    #Recompute GFR using the new age values
+    #Recompute serum creatinine levels
+    indiv_tmp <- gen_serum_creatinine(serumcreat.dt = indiv_tmp)
+    #Recompute GFR using the new serum creatinine values
     indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp)
     #Recompute BMI using the new height, adjusted weight values
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
