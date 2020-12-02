@@ -102,7 +102,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     dtxsid <- out$dtxsid
   }
 
-# Check the species argument for capitilization problems and whether or not it 
+# Check the species argument for capitalization problems and whether or not it 
 # is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
