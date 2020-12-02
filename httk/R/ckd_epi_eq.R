@@ -1,6 +1,6 @@
 #'CKD-EPI equation for GFR.
 #'
-#'Predict GFR from serum creatinine, gender, race, and age.
+#'Predict GFR from serum creatinine, gender, and age.
 #'
 #'From Levey AS, Stevens LA, Schmid CH, Zhang YL, Castro AF, Feldman HI, et al. A new
 #'equation to estimate glomerular filtration rate. Ann Intern Med 2009;
@@ -8,8 +8,9 @@
 #'
 #'@param scr Vector of serum creatinine values in mg/dL.
 #'@param gender Vector of genders (either 'Male' or 'Female').
-#'@param reth Vector of races/ethnicities.
 #'@param age_years Vector of ages in years.
+#'@param reth Vector of races/ethnicities. Not used unless ckd_epi_race_coeff is TRUE.
+#'@param ckd_epi_race_coeff Whether to use the "race coefficient" in the CKD-EPI equation. Default is FALSE.
 #'  
 #'@return Vector of GFR values in mL/min/1.73m^2.
 #'
