@@ -272,7 +272,7 @@ Cadipose = Aadipose / Vadipose;
 Crest = Arest / Vrest;
 Ckidney = Akidney / Vkidney;
 Cplasma = Aven / Vven / Rblood2plasma;
-Aplasma = Aven / Rblood2plasma * (1 - hematocrit);
+Aplasma = Aven / Rblood2plasma * (100 - hematocrit)/100;
 Cthyroid = Athyroid / Vthyroid;
 Cplacenta = Aplacenta / Vplacenta;
 Cfart = Afart / Vfart;
@@ -285,7 +285,7 @@ Cfbrain = Afbrain / Vfbrain;
 Cflung = Aflung / Vflung;
 Cfgut = Afgut / Vfgut;
 Cfplasma = Afven / Vfven / Rblood2plasma;
-Afplasma = Afven / Rblood2plasma * (100 - fhematocrit);
+Afplasma = Afven / Rblood2plasma * (100 - fhematocrit)/100;
 
  
 
