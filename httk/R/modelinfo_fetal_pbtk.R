@@ -84,6 +84,9 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Kfgut2pu",
   "Kflung2pu",
   "Kfbrain2pu",
+  
+  "Fraction_unbound_plasma_fetus",
+  
   "pre_pregnant_BW",
   "gut_density",
   "kidney_density",
@@ -196,23 +199,6 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   pre_pregnant_BW = "pre_pregnant_BW",
   Clmetabolismc = "Clmetabolismc",
   kgutabs = "kgutabs",
-  Kkidney2pu = "Kkidney2pu",
-  Kliver2pu = "Kliver2pu",
-  Krbc2pu = "Krbc2pu",
-  Kadipose2pu = "Kadipose2pu",
-  Krest2pu = "Krest2pu",
-  Klung2pu = "Klung2pu",
-  Kgut2pu = "Kgut2pu",
-  Kthyroid2pu = "Kthyroid2pu",
-  Kplacenta2pu = "Kplacenta2pu",
-  Kfplacenta2pu = "Kfplacenta2pu",
-  Kfkidney2pu = "Kfkidney2pu",
-  Kfrest2pu = "Kfrest2pu",
-  Kfthyroid2pu = "Kfthyroid2pu",
-  Kfliver2pu = "Kfliver2pu",
-  Kflung2pu = "Kflung2pu",
-  Kfgut2pu = "Kfgut2pu",
-  Kfbrain2pu = "Kfbrain2pu",
   Vgutc = "Vgutc",
   Vkidneyc = "Vkidneyc",
   Vliverc = "Vliverc",
@@ -232,7 +218,9 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
 model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetalpbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
-# calculate the derivative of the system of equations describing the model 
+# calculate the derivative of the system of equations describing the model.
+# The order agrees with the order present in the associated .model / .C 
+# file's listing of parameters. 
 model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "pre_pregnant_BW",
   "Clmetabolismc",
@@ -266,6 +254,9 @@ model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "Vthyroidc",
   "Vthyroid",
   "Fraction_unbound_plasma",
+  
+  "Fraction_unbound_plasma_fetus",
+  
   "Rblood2plasma",
   "gut_density",
   "kidney_density",

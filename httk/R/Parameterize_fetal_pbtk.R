@@ -104,13 +104,59 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                                              gut=c("gut"),adipose = c("adipose")),
                              placenta=TRUE,
                              ...)
-  parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1
+  parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1 #dummy parameter still in use
   parms$Kfliver2pu <- parms$Kliver2pu
   parms$Kfkidney2pu <- parms$Kkidney2pu
   parms$Kfrest2pu <- parms$Krest2pu
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- Kbrain2pu
+  
+  
+  #After calling parameterize_pbtk to get certain maternal parameters for 
+  #our model, make adjustment to the fetal fraction of chemical unbound to
+  #protein parameter (also goes by fup or Funbound.plasma):
+  
+  #McNamara and Alcorn's "Protein Binding Predictions in Infants" from 2002
+  #provides the infant:maternal plasma protein concentration parameters set 
+  #here for use in implementing an adjusted Funbound.plasma scheme. We make
+  #different estimates for fetal and maternal Funbound.plasma depending
+  #on which plasma protein is assumed to predominate in binding the chemical.
+  Pinfant2Pmaternal_hsa = 1.163 #human serum albumin
+  Pinfant2Pmaternal_aag = 0.38 #Alpha 1-acid glycoprotein
+  
+  #Our assumption of which plasma protein predominates in binding the chemical
+  #is based on a general observation of how acids and neutral chemicals 
+  #preferentially bind to hsa, while basic chemicals tend to bind to aag. 
+  #At the plasma pH of 7.4, if the fraction of a chemical that is in positive
+  #ionic form according to the calc_ionization function is greater than 50%,
+  #we treat the chemical as a base (which is in its conjugate acid form)
+  #and use only the Pinfant2Pmaternal_aag value. Otherwise, we assume the 
+  #chemical is an acid and use Pinfant2Pmaternal_hsa. 
+  
+  #To run the calc_ionization function, though, we need the following values:
+  plasma.pH <- 7.4
+  pKa_Donor <- parms$pKa_Donor
+  pKa_Accept <- parms$pKa_Accept
+ 
+  #Now let's use calc_ionization to estimate the chemical's charge profile:
+  ion <- calc_ionization(
+    pH=plasma.pH,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept)
+  
+  fraction_positive <- ion$fraction_positive
+  
+  if (fraction_positive > 0.5) {
+    Pinfant2Pmaternal <- Pinfant2Pmaternal_aag
+  } else Pinfant2Pmaternal <- Pinfant2Pmaternal_hsa
+  
+  Funbound.plasma <- parms$Funbound.plasma #value of Funbound.plasma for mother
+  Fraction_unbound_plasma_fetus <- 
+    1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma
+        
+  parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
+                     
   
   #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
   ICRP_2002_female_tissue_mass_fractions_data <- 10^-2 * c(
