@@ -3,7 +3,7 @@
 
    Model File:  fetalpbtk.model
 
-   Date:  Wed Sep 09 17:01:43 2020
+   Date:  Fri Dec 04 16:58:47 2020
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -67,7 +67,7 @@
 
    0 Inputs:
 
-   133 Parameters:
+   134 Parameters:
      pre_pregnant_BW = 0,
      Clmetabolismc = 0,
      Clmetabolism = 0,
@@ -100,6 +100,7 @@
      Vthyroidc = 0,
      Vthyroid = 0,
      Fraction_unbound_plasma = 0,
+     Fraction_unbound_plasma_fetus = 0,
      Rblood2plasma = 0,
      gut_density = 0,
      kidney_density = 0,
@@ -258,7 +259,7 @@
 #define ID_Cfplasma 0x00017
 
 /* Parameters */
-static double parms[133];
+static double parms[134];
 
 #define pre_pregnant_BW parms[0]
 #define Clmetabolismc parms[1]
@@ -292,107 +293,108 @@ static double parms[133];
 #define Vthyroidc parms[29]
 #define Vthyroid parms[30]
 #define Fraction_unbound_plasma parms[31]
-#define Rblood2plasma parms[32]
-#define gut_density parms[33]
-#define kidney_density parms[34]
-#define liver_density parms[35]
-#define lung_density parms[36]
-#define thyroid_density parms[37]
-#define adipose_density parms[38]
-#define ffmx_density parms[39]
-#define placenta_density parms[40]
-#define amnf_density parms[41]
-#define brain_density parms[42]
-#define BW_cubic_theta1 parms[43]
-#define BW_cubic_theta2 parms[44]
-#define BW_cubic_theta3 parms[45]
-#define Wadipose_linear_theta0 parms[46]
-#define Wadipose_linear_theta1 parms[47]
-#define Wfkidney_gompertz_theta0 parms[48]
-#define Wfkidney_gompertz_theta1 parms[49]
-#define Wfkidney_gompertz_theta2 parms[50]
-#define Wfthyroid_gompertz_theta0 parms[51]
-#define Wfthyroid_gompertz_theta1 parms[52]
-#define Wfthyroid_gompertz_theta2 parms[53]
-#define Wfliver_gompertz_theta0 parms[54]
-#define Wfliver_gompertz_theta1 parms[55]
-#define Wfliver_gompertz_theta2 parms[56]
-#define Wfbrain_gompertz_theta0 parms[57]
-#define Wfbrain_gompertz_theta1 parms[58]
-#define Wfbrain_gompertz_theta2 parms[59]
-#define Wfgut_gompertz_theta0 parms[60]
-#define Wfgut_gompertz_theta1 parms[61]
-#define Wfgut_gompertz_theta2 parms[62]
-#define Wflung_gompertz_theta0 parms[63]
-#define Wflung_gompertz_theta1 parms[64]
-#define Wflung_gompertz_theta2 parms[65]
-#define hematocrit_quadratic_theta0 parms[66]
-#define hematocrit_quadratic_theta1 parms[67]
-#define hematocrit_quadratic_theta2 parms[68]
-#define fhematocrit_cubic_theta1 parms[69]
-#define fhematocrit_cubic_theta2 parms[70]
-#define fhematocrit_cubic_theta3 parms[71]
-#define fBW_gompertz_theta0 parms[72]
-#define fBW_gompertz_theta1 parms[73]
-#define fBW_gompertz_theta2 parms[74]
-#define Vplacenta_cubic_theta1 parms[75]
-#define Vplacenta_cubic_theta2 parms[76]
-#define Vplacenta_cubic_theta3 parms[77]
-#define Vamnf_logistic_theta0 parms[78]
-#define Vamnf_logistic_theta1 parms[79]
-#define Vamnf_logistic_theta2 parms[80]
-#define Vplasma_mod_logistic_theta0 parms[81]
-#define Vplasma_mod_logistic_theta1 parms[82]
-#define Vplasma_mod_logistic_theta2 parms[83]
-#define Vplasma_mod_logistic_theta3 parms[84]
-#define venous_blood_fraction parms[85]
-#define arterial_blood_fraction parms[86]
-#define fblood_weight_ratio parms[87]
-#define Qcardiac_cubic_theta0 parms[88]
-#define Qcardiac_cubic_theta1 parms[89]
-#define Qcardiac_cubic_theta2 parms[90]
-#define Qcardiac_cubic_theta3 parms[91]
-#define term parms[92]
-#define Qgut_percent_initial parms[93]
-#define Qgut_percent_terminal parms[94]
-#define Qkidney_cubic_theta0 parms[95]
-#define Qkidney_cubic_theta1 parms[96]
-#define Qkidney_cubic_theta2 parms[97]
-#define Qkidney_cubic_theta3 parms[98]
-#define Qliver_percent_initial parms[99]
-#define Qliver_percent_terminal parms[100]
-#define Qthyroid_percent_initial parms[101]
-#define Qthyroid_percent_terminal parms[102]
-#define Qplacenta_linear_theta1 parms[103]
-#define Qadipose_percent_initial parms[104]
-#define Qadipose_percent_terminal parms[105]
-#define Qgfr_quadratic_theta0 parms[106]
-#define Qgfr_quadratic_theta1 parms[107]
-#define Qgfr_quadratic_theta2 parms[108]
-#define Qfrvtl_logistic_theta0 parms[109]
-#define Qfrvtl_logistic_theta1 parms[110]
-#define Qfrvtl_logistic_theta2 parms[111]
-#define Qflvtl_logistic_theta0 parms[112]
-#define Qflvtl_logistic_theta1 parms[113]
-#define Qflvtl_logistic_theta2 parms[114]
-#define Qfda_logistic_theta0 parms[115]
-#define Qfda_logistic_theta1 parms[116]
-#define Qfda_logistic_theta2 parms[117]
-#define Qfplacenta_logistic_theta0 parms[118]
-#define Qfplacenta_logistic_theta1 parms[119]
-#define Qfplacenta_logistic_theta2 parms[120]
-#define Qfdv_gompertz_theta0 parms[121]
-#define Qfdv_gompertz_theta1 parms[122]
-#define Qfdv_gompertz_theta2 parms[123]
-#define Qfnonplacental_percent parms[124]
-#define Qfgut_percent parms[125]
-#define Qfkidney_percent parms[126]
-#define Qfbrain_percent parms[127]
-#define Qbrain_percent parms[128]
-#define Qkidney_percent parms[129]
-#define Qgut_percent parms[130]
-#define Qfliver_percent parms[131]
-#define Qfthyroid_percent parms[132]
+#define Fraction_unbound_plasma_fetus parms[32]
+#define Rblood2plasma parms[33]
+#define gut_density parms[34]
+#define kidney_density parms[35]
+#define liver_density parms[36]
+#define lung_density parms[37]
+#define thyroid_density parms[38]
+#define adipose_density parms[39]
+#define ffmx_density parms[40]
+#define placenta_density parms[41]
+#define amnf_density parms[42]
+#define brain_density parms[43]
+#define BW_cubic_theta1 parms[44]
+#define BW_cubic_theta2 parms[45]
+#define BW_cubic_theta3 parms[46]
+#define Wadipose_linear_theta0 parms[47]
+#define Wadipose_linear_theta1 parms[48]
+#define Wfkidney_gompertz_theta0 parms[49]
+#define Wfkidney_gompertz_theta1 parms[50]
+#define Wfkidney_gompertz_theta2 parms[51]
+#define Wfthyroid_gompertz_theta0 parms[52]
+#define Wfthyroid_gompertz_theta1 parms[53]
+#define Wfthyroid_gompertz_theta2 parms[54]
+#define Wfliver_gompertz_theta0 parms[55]
+#define Wfliver_gompertz_theta1 parms[56]
+#define Wfliver_gompertz_theta2 parms[57]
+#define Wfbrain_gompertz_theta0 parms[58]
+#define Wfbrain_gompertz_theta1 parms[59]
+#define Wfbrain_gompertz_theta2 parms[60]
+#define Wfgut_gompertz_theta0 parms[61]
+#define Wfgut_gompertz_theta1 parms[62]
+#define Wfgut_gompertz_theta2 parms[63]
+#define Wflung_gompertz_theta0 parms[64]
+#define Wflung_gompertz_theta1 parms[65]
+#define Wflung_gompertz_theta2 parms[66]
+#define hematocrit_quadratic_theta0 parms[67]
+#define hematocrit_quadratic_theta1 parms[68]
+#define hematocrit_quadratic_theta2 parms[69]
+#define fhematocrit_cubic_theta1 parms[70]
+#define fhematocrit_cubic_theta2 parms[71]
+#define fhematocrit_cubic_theta3 parms[72]
+#define fBW_gompertz_theta0 parms[73]
+#define fBW_gompertz_theta1 parms[74]
+#define fBW_gompertz_theta2 parms[75]
+#define Vplacenta_cubic_theta1 parms[76]
+#define Vplacenta_cubic_theta2 parms[77]
+#define Vplacenta_cubic_theta3 parms[78]
+#define Vamnf_logistic_theta0 parms[79]
+#define Vamnf_logistic_theta1 parms[80]
+#define Vamnf_logistic_theta2 parms[81]
+#define Vplasma_mod_logistic_theta0 parms[82]
+#define Vplasma_mod_logistic_theta1 parms[83]
+#define Vplasma_mod_logistic_theta2 parms[84]
+#define Vplasma_mod_logistic_theta3 parms[85]
+#define venous_blood_fraction parms[86]
+#define arterial_blood_fraction parms[87]
+#define fblood_weight_ratio parms[88]
+#define Qcardiac_cubic_theta0 parms[89]
+#define Qcardiac_cubic_theta1 parms[90]
+#define Qcardiac_cubic_theta2 parms[91]
+#define Qcardiac_cubic_theta3 parms[92]
+#define term parms[93]
+#define Qgut_percent_initial parms[94]
+#define Qgut_percent_terminal parms[95]
+#define Qkidney_cubic_theta0 parms[96]
+#define Qkidney_cubic_theta1 parms[97]
+#define Qkidney_cubic_theta2 parms[98]
+#define Qkidney_cubic_theta3 parms[99]
+#define Qliver_percent_initial parms[100]
+#define Qliver_percent_terminal parms[101]
+#define Qthyroid_percent_initial parms[102]
+#define Qthyroid_percent_terminal parms[103]
+#define Qplacenta_linear_theta1 parms[104]
+#define Qadipose_percent_initial parms[105]
+#define Qadipose_percent_terminal parms[106]
+#define Qgfr_quadratic_theta0 parms[107]
+#define Qgfr_quadratic_theta1 parms[108]
+#define Qgfr_quadratic_theta2 parms[109]
+#define Qfrvtl_logistic_theta0 parms[110]
+#define Qfrvtl_logistic_theta1 parms[111]
+#define Qfrvtl_logistic_theta2 parms[112]
+#define Qflvtl_logistic_theta0 parms[113]
+#define Qflvtl_logistic_theta1 parms[114]
+#define Qflvtl_logistic_theta2 parms[115]
+#define Qfda_logistic_theta0 parms[116]
+#define Qfda_logistic_theta1 parms[117]
+#define Qfda_logistic_theta2 parms[118]
+#define Qfplacenta_logistic_theta0 parms[119]
+#define Qfplacenta_logistic_theta1 parms[120]
+#define Qfplacenta_logistic_theta2 parms[121]
+#define Qfdv_gompertz_theta0 parms[122]
+#define Qfdv_gompertz_theta1 parms[123]
+#define Qfdv_gompertz_theta2 parms[124]
+#define Qfnonplacental_percent parms[125]
+#define Qfgut_percent parms[126]
+#define Qfkidney_percent parms[127]
+#define Qfbrain_percent parms[128]
+#define Qbrain_percent parms[129]
+#define Qkidney_percent parms[130]
+#define Qgut_percent parms[131]
+#define Qfliver_percent parms[132]
+#define Qfthyroid_percent parms[133]
 
 /* Forcing (Input) functions */
 static double forc[0];
@@ -401,7 +403,7 @@ static double forc[0];
 /*----- Initializers */
 void initmodfetalpbtk (void (* odeparms)(int *, double *))
 {
-  int N=133;
+  int N=134;
   odeparms(&N, parms);
 }
 
@@ -675,25 +677,25 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Athyroid] = Qthyroid * ( y[ID_Aart] / Vart - y[ID_Athyroid] / Vthyroid / Kthyroid2pu / Fraction_unbound_plasma * Rblood2plasma ) ;
 
-  ydot[ID_Aplacenta] = Qplacenta * y[ID_Aart] / Vart - Qplacenta * ( y[ID_Aplacenta] / Vplacenta / Kplacenta2pu / Fraction_unbound_plasma * Rblood2plasma ) - Qfplacenta * ( y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu / Fraction_unbound_plasma * Rblood2plasma ) + Qfplacenta * y[ID_Afart] / Vfart ;
+  ydot[ID_Aplacenta] = Qplacenta * y[ID_Aart] / Vart - Qplacenta * ( y[ID_Aplacenta] / Vplacenta / Kplacenta2pu / Fraction_unbound_plasma * Rblood2plasma ) - Qfplacenta * ( y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu / Fraction_unbound_plasma_fetus * Rblood2plasma ) + Qfplacenta * y[ID_Afart] / Vfart ;
 
-  ydot[ID_Afart] = Qflung * y[ID_Aflung] / Vflung * Rblood2plasma / Kflung2pu / Fraction_unbound_plasma + Qfbypass * y[ID_Afven] / Vfven - Qfcardiac * y[ID_Afart] / Vfart ;
+  ydot[ID_Afart] = Qflung * y[ID_Aflung] / Vflung * Rblood2plasma / Kflung2pu / Fraction_unbound_plasma_fetus + Qfbypass * y[ID_Afven] / Vfven - Qfcardiac * y[ID_Afart] / Vfart ;
 
-  ydot[ID_Afven] = ( ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu + Qfdv * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu + Qfthyroid * y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu + Qfrest * y[ID_Afrest] / Vfrest / Kfrest2pu + Qfkidney * y[ID_Afkidney] / Vfkidney / Kfkidney2pu + Qfbrain * y[ID_Afbrain] / Vfbrain / Kfbrain2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qfcardiac * y[ID_Afven] / Vfven ;
+  ydot[ID_Afven] = ( ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu + Qfdv * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu + Qfthyroid * y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu + Qfrest * y[ID_Afrest] / Vfrest / Kfrest2pu + Qfkidney * y[ID_Afkidney] / Vfkidney / Kfkidney2pu + Qfbrain * y[ID_Afbrain] / Vfbrain / Kfbrain2pu ) * Rblood2plasma / Fraction_unbound_plasma_fetus - Qfcardiac * y[ID_Afven] / Vfven ;
 
-  ydot[ID_Afkidney] = Qfkidney * ( y[ID_Afart] / Vfart - y[ID_Afkidney] / Vfkidney / Kfkidney2pu * Rblood2plasma / Fraction_unbound_plasma ) ;
+  ydot[ID_Afkidney] = Qfkidney * ( y[ID_Afart] / Vfart - y[ID_Afkidney] / Vfkidney / Kfkidney2pu * Rblood2plasma / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afrest] = Qfrest * ( y[ID_Afart] / Vfart - y[ID_Afrest] / Vfrest / Kfrest2pu * Rblood2plasma / Fraction_unbound_plasma ) ;
+  ydot[ID_Afrest] = Qfrest * ( y[ID_Afart] / Vfart - y[ID_Afrest] / Vfrest / Kfrest2pu * Rblood2plasma / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afthyroid] = Qfthyroid * ( y[ID_Afart] / Vfart - y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu * Rblood2plasma / Fraction_unbound_plasma ) ;
+  ydot[ID_Afthyroid] = Qfthyroid * ( y[ID_Afart] / Vfart - y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu * Rblood2plasma / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afliver] = Qfliver * y[ID_Afart] / Vfart + Qfgut * y[ID_Afgut] / Vfgut * Rblood2plasma / Kfgut2pu / Fraction_unbound_plasma + ( Qfplacenta - Qfdv ) * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu / Fraction_unbound_plasma * Rblood2plasma - ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu * Rblood2plasma / Fraction_unbound_plasma ;
+  ydot[ID_Afliver] = Qfliver * y[ID_Afart] / Vfart + ( Qfgut * y[ID_Afgut] / Vfgut * Rblood2plasma / Kfgut2pu + ( Qfplacenta - Qfdv ) * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu * Rblood2plasma - ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu * Rblood2plasma ) / Fraction_unbound_plasma_fetus ;
 
-  ydot[ID_Aflung] = Qflung * ( y[ID_Afven] / Vfven - y[ID_Aflung] / Vflung * Rblood2plasma / Kflung2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Aflung] = Qflung * ( y[ID_Afven] / Vfven - y[ID_Aflung] / Vflung * Rblood2plasma / Kflung2pu / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afgut] = Qfgut * ( y[ID_Afart] / Vfart - y[ID_Afgut] / Vfgut * Rblood2plasma / Kfgut2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Afgut] = Qfgut * ( y[ID_Afart] / Vfart - y[ID_Afgut] / Vfgut * Rblood2plasma / Kfgut2pu / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afbrain] = Qfbrain * ( y[ID_Afart] / Vfart - y[ID_Afbrain] / Vfbrain * Rblood2plasma / Kfbrain2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Afbrain] = Qfbrain * ( y[ID_Afart] / Vfart - y[ID_Afbrain] / Vfbrain * Rblood2plasma / Kfbrain2pu / Fraction_unbound_plasma_fetus ) ;
 
   ydot[ID_fAUC] = y[ID_Afven] / Vfven / Rblood2plasma ;
 
