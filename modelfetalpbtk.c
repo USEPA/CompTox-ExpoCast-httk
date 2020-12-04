@@ -3,7 +3,7 @@
 
    Model File:  fetalpbtk.model
 
-   Date:  Tue Aug 18 14:20:31 2020
+   Date:  Wed Sep 09 17:01:43 2020
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -621,7 +621,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Cplasma] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
+  yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 100 - hematocrit ) / 100 ;
 
   yout[ID_Cthyroid] = y[ID_Athyroid] / Vthyroid ;
 
@@ -647,7 +647,7 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Cfplasma] = y[ID_Afven] / Vfven / Rblood2plasma ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / Rblood2plasma * ( 100 - fhematocrit ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / Rblood2plasma * ( 100 - fhematocrit ) / 100 ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
