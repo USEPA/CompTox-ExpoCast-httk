@@ -375,8 +375,12 @@ matched to a \"new.table\" column in argument \"data.list\".")
  cannot be specifed by both \"species=\" and \"data.list\".")
   if (!is.null(species)) this.species <- species
 
-  if (!any(c("CAS") %in% names(data.list))) stop("\"CAS\" must be one of the \
+  if (!any(c("DTXSID") %in% names(data.list))) stop("\"DTXSID\" must be one of the \
 columns in \"data.list\".")
+
+  if (!any(c("CAS") %in% names(data.list))) data.list[["CAS"]] <- data.list[["DTXSID"]]
+
+  if (!any(c("Compound") %in% names(data.list))) data.list[["Compound"]] <- data.list[["DTXSID"]]
 
 # Identify which entries in data.list are being added to the table:
   new.data <- names(data.list)[!(names(data.list) %in% c("CAS","Compound","Reference","Species"))]

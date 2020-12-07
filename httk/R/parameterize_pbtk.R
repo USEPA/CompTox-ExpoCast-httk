@@ -230,7 +230,6 @@ parameterize_pbtk <- function(chem.cas=NULL,
                  silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
-
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
 
