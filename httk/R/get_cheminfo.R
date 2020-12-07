@@ -2,7 +2,7 @@
 #' 
 #' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
-#' paramterized for a given species.
+#' parameterized for a given species.
 #' 
 #' When default.to.human is set to TRUE, and the species-specific data,
 #' Funbound.plasma and Clint, are missing from chem.physical_and_invitro.data,
@@ -130,7 +130,7 @@ get_cheminfo <- function(info="CAS",
   if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
     model,"have not been defined."))
   
-  # For now let's not require these because it's still hard to distringuish
+  # For now let's not require these because it's still hard to distinguish
   # between compounds that don't ionize and those for which we don't have
   # good predictions
   necessary.params <- necessary.params[!(tolower(necessary.params)%in%

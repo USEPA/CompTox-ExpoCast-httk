@@ -180,8 +180,31 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["pbtk"]]$allowed.units <- c('um', 'mg/l')
+# Allowable units assigned to dosing input:
+model.list[["pbtk"]]$allowed.units.input <- list(
+       "oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["pbtk"]]$allowed.units.output <- list(
+       "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
+       "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored.
+# AUC values should also be included.
+model.list[["pbtk"]]$compartment.units <- c(
+    "Cgut"="uM",
+    "Cliver"="uM",
+    "Cven"="uM",
+    "Clung"="uM",
+    "Cart"="uM",
+    "Crest"="uM",
+    "Ckidney"="uM",
+    "Cplasma"="uM",
+    "Aplasma"="umol",
+    "AUC"="uM*days"
+  )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["pbtk"]]$dosing.params <- c("daily.dose",
@@ -270,3 +293,6 @@ model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["pbtk"]]$exclude.fup.zero <- T
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["pbtk"]]$css.dosing.params <- c("hourly.dose")

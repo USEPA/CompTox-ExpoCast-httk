@@ -19,18 +19,30 @@
 #' default "Human").
 #' @param f Fractional distance from the final steady state concentration that
 #' the average concentration must come within to be considered at steady state.
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param doses.per.day Number of doses per day.
+#' @param exp.conc Specified inhalation exposure concentration for use in assembling
+#' 'forcings' data series argument for integrator. Defaults to uM/L 
+#' @param period For use in assembling forcing function data series 'forcings'
+#' argument, specified in hours
+#' @param exp.duration For use in assembling forcing function data 
+#' series 'forcings' argument, specified in hours
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
+#' @param input.units Input units of interest assigned to dosing. Defaults
+#' to mg/kg BW
 #' @param suppress.messages Whether or not to suppress messages.
 #' @param tissue Desired tissue concentration (defaults to whole body 
 #' concentration.)
-#' @param model Model used in calculation, 'pbtk' for the multiple compartment
-#' model,'3compartment' for the three compartment model, and '1compartment' for
-#' the one compartment model.
+#' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#' 'pbtk' for the multiple compartment model,
+#' '3compartment' for the three compartment model, '3compartmentss' for 
+#' the three compartment steady state model, and '1compartment' for one 
+#' compartment model.
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param f.change Fractional change of daily steady state concentration
@@ -57,13 +69,15 @@
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
 #'
-#' @author Robert Pearce, John Wambaugh
+#' @author Robert Pearce, John Wambaugh, Miyuki Breen
 #'
 #' @keywords Steady-State
 #'
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
+#' 
+#' calc_css(chem.name="pyrene",route="inhalation",exp.duration =24,model="gas_pbtk")
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
@@ -120,10 +134,15 @@ calc_css <- function(chem.name=NULL,
                     parameters=NULL,
                     species='Human',
                     f = .01,
+                    route="oral",
                     daily.dose=1,
                     doses.per.day=3,
+                    exp.conc = 1, #default exposure concentration for forcing data series
+                    period = 24, 
+                    exp.duration = 8,
                     days = 21,
                     output.units = "uM",
+                    input.units = "mg/kg",
                     suppress.messages=F,
                     tissue="plasma",
                     model='pbtk',
@@ -133,7 +152,6 @@ calc_css <- function(chem.name=NULL,
                     regression=T,
                     well.stirred.correction=T,
                     restrictive.clearance=T,
-                    dosing=NULL,
                     ...)
 {
   # We need to describe the chemical to be simulated one way or another:
@@ -182,14 +200,32 @@ calc_css <- function(chem.name=NULL,
       regression=regression)) 
   }
 
-  if (is.null(dosing))
+# set exposure dose    
+  dosing <- list(
+    initial.dose=NULL,
+    dosing.matrix=NULL,
+    daily.dose=NULL,
+    doses.per.day=NULL)
+  
+  if (route %in% c("oral","iv"))
   {
-    dosing <- list(
-      initial.dose=0,
-      dosing.matrix=NULL,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day
-    )
+      dosing <- list(
+        initial.dose=NULL,
+        dosing.matrix=NULL,
+        daily.dose=daily.dose,
+        doses.per.day=doses.per.day
+      )
+    
+  } else if (route == "inhalation")
+  {
+    input.units = "uM"
+    period <- period/24 #convert time period in hours to days
+    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
+    Nrep <- ceiling(days/period) 
+    times <- rep(c(0, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+    forcing_values  <- rep(c(exp.conc,0), Nrep)
+    forcings <- cbind(times,forcing_values)
+    dosing$forcings <- forcings
   }
   
   # We need to find out what concentrations (roughly) we should reach before
@@ -197,6 +233,9 @@ calc_css <- function(chem.name=NULL,
   css <- calc_analytic_css(
     parameters=parameters,
     daily.dose=daily.dose,
+    exp.conc = exp.conc, 
+    period = period,
+    exp.duration = exp.duration,
     concentration='plasma',
     model=model,
     output.units = output.units,
@@ -211,9 +250,10 @@ calc_css <- function(chem.name=NULL,
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
+    input.units=input.units,
     suppress.messages=T,
     days=days,
-    output.units = output.units,
+    route = route,
     restrictive.clearance=restrictive.clearance,
     ...)
   Final_Conc <- out[dim(out)[1],state.vars]
@@ -245,6 +285,7 @@ calc_css <- function(chem.name=NULL,
       initial.values = Final_Conc,  
       dosing=dosing,
       days = additional.days,
+      input.units=input.units,
       suppress.messages=T,
       restrictive.clearance=restrictive.clearance,
       ...)

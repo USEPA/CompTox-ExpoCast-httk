@@ -35,7 +35,9 @@ calc_mc_css(
     restrictive.clearance = T, regression = T),
   calc.analytic.css.arg.list = list(well.stirred.correction = T,
     adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE)
+    restrictive.clearance = T, bioactive.free.invivo = FALSE),
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
+    regression = T, minimum.Funbound.plasma = 1e-04)
 )
 }
 \arguments{
@@ -64,10 +66,11 @@ default "Human").  Species must be set to "Human" to run httkpop model.}
 
 \item{suppress.messages}{Whether or not to suppress output message.}
 
-\item{model}{Model used in calculation: 'pbtk' for the multiple compartment
-model,'3compartment' for the three compartment model, '3compartmentss' for
-the three compartment steady state model, and '1compartment' for one
-compartment model.  This only applies when httkpop=TRUE and species="Human",
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model. This only applies when httkpop=TRUE and species="Human",
 otherwise '3compartmentss' is used.}
 
 \item{httkpop}{Whether or not to use population generator and sampler from
@@ -156,7 +159,10 @@ used by this function.
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)
-             
+
+ set.seed(1234)
+ calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+                          
  set.seed(1234)
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
@@ -224,7 +230,7 @@ Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
-Caroline Ring, Robert Pearce, and John Wambaugh
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}
