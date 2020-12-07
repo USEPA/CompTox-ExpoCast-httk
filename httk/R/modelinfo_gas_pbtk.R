@@ -241,7 +241,7 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
                         'mg/m^3','mg/m^3*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored
+# the model system, and possibly to other state variables to be monitored.
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Cgut"="uM",
