@@ -12,6 +12,10 @@
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param fetal_fup_adjustment Logical indicator of whether to use an adjusted
+#' estimate for fetal fup based on the fetal:maternal plasma protein binding
+#' ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
+#' Predictions in Infants." Defaults to TRUE. 
 #' @param ... Arguments passed to parameterize_pbtk.
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fgutabs}{Fraction
@@ -60,6 +64,9 @@
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' 
+#' McNamara PJ, Alcorn J. Protein binding predictions in infants. 
+#' AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 #' @keywords Parameter
 #' @examples
 #' 
@@ -75,6 +82,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid = NULL,
                               species="Human",
+                              fetal_fup_adjustment=TRUE,
                               ...)
 {
   #Call parameterize_pbtk function with brain compartment specified to obtain
@@ -112,7 +120,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Kflung2pu <- parms$Klung2pu
   parms$Kfbrain2pu <- Kbrain2pu
   
-  
+  if (fetal_fup_adjustment == TRUE){
   #After calling parameterize_pbtk to get certain maternal parameters for 
   #our model, make adjustment to the fetal fraction of chemical unbound to
   #protein parameter (also goes by fup or Funbound.plasma):
@@ -156,6 +164,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
     1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma
         
   parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
+  } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
                      
   
   #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
