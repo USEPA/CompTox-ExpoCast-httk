@@ -432,8 +432,49 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfplasma"
 )
 
-# Allowable units:
-model.list[["fetal_pbtk"]]$allowed.units <- c('um', 'mg/l')
+
+# Allowable units assigned to dosing input:
+model.list[["fetal_pbtk"]]$allowed.units.input <- list(
+  "oral" = c('umol','mg','mg/kg'),
+  "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["fetal_pbtk"]]$allowed.units.output <- list(
+  "oral" = c('uM','mg/L','umol','mg','uM*days',
+             'mg/L*days','mg/m^3','mg/m^3*days'),
+  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days',
+           'mg/m^3','mg/m^3*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored.
+# AUC values should also be included.
+model.list[["fetal_pbtk"]]$compartment.units <- c(
+  "Cgut" = "uM",
+  "Cliver" = "uM",
+  "Cven" = "uM",
+  "Clung" = "uM",
+  "Cart" = "uM",
+  "Cadipose" = "uM",
+  "Crest" = "uM",
+  "Ckidney" = "uM",
+  "Cplasma" = "uM",
+  "Aplasma" = "umol",
+  "Cthyroid" = "uM",
+  "Cplacenta" = "uM",
+  "Cfliver" = "uM",
+  "Cfven" = "uM",
+  "Cfart" = "uM",
+  "Cfgut" = "uM",
+  "Cflung" = "uM",
+  "Cfrest" = "uM",
+  "Cfthyroid" = "uM",
+  "Cfkidney" = "uM",
+  "Cfbrain" = "uM",
+  "Afplasma" = "umol",
+  "Cfplasma" = "uM",
+  "AUC" = "uM*days",
+  "AUC_fetus" = "uM*days")
+
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["fetal_pbtk"]]$dosing.params <- c("daily.dose",
