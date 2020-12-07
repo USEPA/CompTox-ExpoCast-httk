@@ -20,7 +20,7 @@ solve_model(
   monitor.vars = NULL,
   suppress.messages = F,
   species = "Human",
-  output.units = "uM",
+  input.units = "mg/kg",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -55,15 +55,16 @@ parameterize_pbtk function. Overrides chem.name and chem.cas.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 
-\item{dosing}{List of dosing metrics passed to solver for a given model,
-which must at least include entries with names "initial.dose", 
-"doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
-be used for more precise dose regimen specification, and is a matrix
-consisting of two columns or rows named "time" and "dose" which contain the
-time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
-of the dosing list is set to a non-NULL value, solve_model uses a default
-dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
-a given route (e.g. add the dose to gut lumen for oral route)}
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. In the case
+of most httk models, these should include "initial.dose", "doses.per.day", 
+"daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+precise dose regimen specification, and is a matrix consisting of two
+columns or rows named "time" and "dose" containing the time and amount of 
+each dose. If none of the namesake entries of the dosing list is set to a
+non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
+dose type (add/multiply) specified for a given route (e.g. add the dose to gut
+lumen for oral route)}
 
 \item{days}{Simulated period. Default 10 days.}
 
@@ -71,7 +72,7 @@ a given route (e.g. add the dose to gut lumen for oral route)}
 
 \item{initial.values}{Vector containing the initial concentrations or
 amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
+those specified for the model outputs. Default values are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
@@ -84,8 +85,9 @@ Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 parameterized for some subset of the following species: "Rat", "Rabbit", 
 "Dog", "Mouse", or default "Human").}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing. Defaults
+to mg/kg BW, in line with the default dosing scheme of a one-time dose of
+1 mg/kg in which no other dosing parameters are specified.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -127,16 +129,19 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-solve_model's arguments prepare an ode system for numerical solution over
-time of the amounts or concentrations (uM) of chemical in the different
-bodily compartments of a given available species (either "Rat", "Rabbit",
-"Dog", "Mouse", or default "Human").
+solve_model is designed to accept systematized metadata for a given 
+toxicokinetic model, including names of variables, parameterization
+functions, and key units, and use it along with chemical information
+to prepare an ode system for numerical solution over time of the amounts
+or concentrations of chemical in different bodily compartments of a given
+species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 }
 \details{
-The minimal usage case requires input that includes a chemical identifier
-(whether name, CAS number, or other chemical parameterization) and a model
-system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
-"schmitt", ...).
+Dosing values with certain acceptable associated input.units (like mg/kg BW)
+are configured to undergo a unit conversion. All model simulations are 
+intended to run with chemical amounts in umol, and concentrations in uM. 
+Model outputs are configured to be presented in certain alternative units as 
+well. 
 
 The 'dosing' argument includes all parameters needed to describe exposure
 in terms of route of administration, frequency, and quantity short of 
@@ -168,6 +173,6 @@ Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Robert Pearce, Miyuki Breen, and Mark Sfeir
 }
 \keyword{Solve}

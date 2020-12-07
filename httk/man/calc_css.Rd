@@ -11,10 +11,15 @@ calc_css(
   parameters = NULL,
   species = "Human",
   f = 0.01,
+  route = "oral",
   daily.dose = 1,
   doses.per.day = 3,
+  exp.conc = 1,
+  period = 24,
+  exp.duration = 8,
   days = 21,
   output.units = "uM",
+  input.units = "mg/kg",
   suppress.messages = F,
   tissue = "plasma",
   model = "pbtk",
@@ -24,7 +29,6 @@ calc_css(
   regression = T,
   well.stirred.correction = T,
   restrictive.clearance = T,
-  dosing = NULL,
   ...
 )
 }
@@ -47,9 +51,21 @@ default "Human").}
 \item{f}{Fractional distance from the final steady state concentration that
 the average concentration must come within to be considered at steady state.}
 
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
+default "oral").}
+
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
+
+\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
+'forcings' data series argument for integrator. Defaults to uM/L}
+
+\item{period}{For use in assembling forcing function data series 'forcings'
+argument, specified in hours}
+
+\item{exp.duration}{For use in assembling forcing function data 
+series 'forcings' argument, specified in hours}
 
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}
@@ -57,14 +73,19 @@ each iteration.}
 \item{output.units}{Units for returned concentrations, defaults to uM
 (specify units = "uM") but can also be mg/L.}
 
+\item{input.units}{Input units of interest assigned to dosing. Defaults
+to mg/kg BW}
+
 \item{suppress.messages}{Whether or not to suppress messages.}
 
 \item{tissue}{Desired tissue concentration (defaults to whole body 
 concentration.)}
 
-\item{model}{Model used in calculation, 'pbtk' for the multiple compartment
-model,'3compartment' for the three compartment model, and '1compartment' for
-the one compartment model.}
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model.}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
@@ -86,11 +107,11 @@ instead of plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{dosing}{The dosing object for more complicated scenarios. Defaults to
-repeated \code{daily.dose} spread out over \code{doses.per.day}}
-
 \item{...}{Additional arguments passed to model solver (default of
 \code{\link{solve_pbtk}}).}
+
+\item{dosing}{The dosing object for more complicated scenarios. Defaults to
+repeated \code{daily.dose} spread out over \code{doses.per.day}}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state
@@ -111,6 +132,8 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
+
+calc_css(chem.name="pyrene",route="inhalation",exp.duration =24,model="gas_pbtk")
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
@@ -162,6 +185,6 @@ print(avg.vs.max)
 
 }
 \author{
-Robert Pearce, John Wambaugh
+Robert Pearce, John Wambaugh, Miyuki Breen
 }
 \keyword{Steady-State}

@@ -1,6 +1,7 @@
-#' Calculate the total clearance.
+#' Calculate the total plasma clearance.
 #' 
 #' This function calculates the total clearance rate for a one compartment model
+#' for plasma
 #' where clearance is entirely due to metablism by the liver and glomerular
 #' filtration in the kidneys, identical to clearance of three compartment
 #' steady state model.
