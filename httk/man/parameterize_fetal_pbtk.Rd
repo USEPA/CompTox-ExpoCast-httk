@@ -9,6 +9,7 @@ parameterize_fetal_pbtk(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
+  fetal_fup_adjustment = TRUE,
   ...
 )
 }
@@ -24,6 +25,11 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{fetal_fup_adjustment}{Logical indicator of whether to use an adjusted
+estimate for fetal fup based on the fetal:maternal plasma protein binding
+ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
+Predictions in Infants." Defaults to TRUE.}
 
 \item{...}{Arguments passed to parameterize_pbtk.}
 }
@@ -90,6 +96,9 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+
+McNamara PJ, Alcorn J. Protein binding predictions in infants. 
+AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 }
 \author{
 John Wambaugh, Robert Pearce, and Mark Sfeir

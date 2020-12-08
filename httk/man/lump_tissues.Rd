@@ -10,7 +10,8 @@ lump_tissues(
   tissuelist = NULL,
   species = "Human",
   tissue.vols = NULL,
-  tissue.flows = NULL
+  tissue.flows = NULL,
+  model = NULL
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ default "Human").}
 \item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}}
 
 \item{tissue.flows}{A list of flows for tissues in \code{tissuelist}}
+
+\item{model}{Specify which model (and therefore which tissues) are being 
+considered}
 }
 \value{
 \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
