@@ -41,7 +41,7 @@ valid chemicals.}
 \description{
 This function provides the information specified in "info=" (can be single entry
 or vector) for all chemicals for which a toxicokinetic model can be
-paramterized for a given species.
+parameterized for a given species.
 }
 \details{
 When default.to.human is set to TRUE, and the species-specific data,
