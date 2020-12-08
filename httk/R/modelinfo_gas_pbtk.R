@@ -9,20 +9,21 @@ model.list[["gas_pbtk"]]$solve.func <- "solve_gas_pbtk"
 
 # Here are the tissues from tissue.table that are considered (for example,
 # do we include placenta or not?):
-model.list[["gas_pbtk"]]$alltissues=c(
-  "adipose",
-  "bone",            
-  "brain",           
-  "gut",            
-  "heart",           
-  "kidney",          
-  "liver",           
-  "lung",           
-  "muscle",         
-  "skin",            
-  "spleen",          
-  "red blood cells",
-  )
+#model.list[["fetal_pbtk"]]$alltissues=c(
+#  "adipose",
+#  "bone",            
+#  "brain",           
+#  "gut",            
+#  "heart",           
+#  "kidney",          
+#  "liver",           
+#  "lung",           
+#  "muscle",  
+#  "placenta",       
+# "skin",            
+#  "spleen",          
+#  "red blood cells",
+#  )
 
 # How the tissues from tissue.table are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
