@@ -11,6 +11,8 @@ muscle	Human	Schmitt 2008	Fcell	0.85
 skin	Human	Schmitt 2008	Fcell	0.4
 spleen	Human	Schmitt 2008	Fcell	0.745
 red blood cells	Human	Schmitt 2008	Fcell	1
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fcell	0.86
+placenta	??	??	Fcell	0.724
 adipose	Rat	Ruark 2014	Fcell	0.86
 bone	Rat	Ruark 2014	Fcell	0.9
 brain	Rat	Ruark 2014	Fcell	0.838
@@ -35,6 +37,8 @@ muscle	Human	Schmitt 2008	Fint	0.15
 skin	Human	Schmitt 2008	Fint	0.6
 spleen	Human	Schmitt 2008	Fint	0.255
 red blood cells	Human	Schmitt 2008	Fint	0
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fint	0.14
+placenta	??	??	Fint	0.276
 adipose	Rat	Ruark 2014	Fint	0.14
 bone	Rat	Ruark 2014	Fint	0.1
 brain	Rat	Ruark 2014	Fint	0.162
@@ -59,6 +63,8 @@ muscle	Human	Schmitt 2008	FWc	0.799143257334958
 skin	Human	Schmitt 2008	FWc	0.427028411538259
 spleen	Human	Schmitt 2008	FWc	0.769882797508953
 red blood cells	Human	Schmitt 2008	FWc	0.664328657314629
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FWc	0.69
+placenta	??	??	FWc	0.793
 adipose	Rat	Ruark 2014	FWc	0.0288818990331598
 bone	Rat	Ruark 2014	FWc	0.26
 brain	Rat	Ruark 2014	FWc	0.802920512327267
@@ -83,6 +89,8 @@ muscle	Human	Schmitt 2008	FLc	0.0238685970917999
 skin	Human	Schmitt 2008	FLc	0.28312570781427
 spleen	Human	Schmitt 2008	FLc	0.0394560837934488
 red blood cells	Human	Schmitt 2008	FLc	0.00501002004008016
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FLc	0.05
+placenta	??	??	FLc	0.0083
 adipose	Rat	Ruark 2014	FLc	0.919180886197881
 bone	Rat	Ruark 2014	FLc	0.02
 brain	Rat	Ruark 2014	FLc	0.115353333926677
@@ -107,6 +115,8 @@ muscle	Human	Schmitt 2008	FPc	0.176988145573243
 skin	Human	Schmitt 2008	FPc	0.289845880647472
 spleen	Human	Schmitt 2008	FPc	0.190661118697598
 red blood cells	Human	Schmitt 2008	FPc	0.330661322645291
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FPc	0.16
+placenta	??	??	FPc	0.1535
 adipose	Rat	Ruark 2014	FPc	0.0519372147689593
 bone	Rat	Ruark 2014	FPc	0.21
 brain	Rat	Ruark 2014	FPc	0.0817261537460569
@@ -131,6 +141,8 @@ muscle	Human	Schmitt 2008	Fn_Lc	0.539419087136929
 skin	Human	Schmitt 2008	Fn_Lc	0.359928014397121
 spleen	Human	Schmitt 2008	Fn_Lc	0.534147272033575
 red blood cells	Human	Schmitt 2008	Fn_Lc	0.4
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_Lc	0.92
+placenta	??	??	Fn_Lc	0.627299720789219
 adipose	Rat	Ruark 2014	Fn_Lc	0.99766081871345
 bone	Rat	Ruark 2014	Fn_Lc	0.85
 brain	Rat	Ruark 2014	Fn_Lc	0.953545232273839
@@ -155,6 +167,8 @@ muscle	Human	Schmitt 2008	Fn_PLc	0.381742738589212
 skin	Human	Schmitt 2008	Fn_PLc	0.501899620075985
 spleen	Human	Schmitt 2008	Fn_PLc	0.392979778710416
 red blood cells	Human	Schmitt 2008	Fn_PLc	0.5
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_PLc	0.064
+placenta	??	??	Fn_PLc	0.29874183536495
 adipose	Rat	Ruark 2014	Fn_PLc	0.00187134502923977
 bone	Rat	Ruark 2014	Fn_PLc	0.11
 brain	Rat	Ruark 2014	Fn_PLc	0.0366748166259169
@@ -179,6 +193,8 @@ muscle	Human	Schmitt 2008	Fa_PLc	0.0788381742738589
 skin	Human	Schmitt 2008	Fa_PLc	0.138172365526895
 spleen	Human	Schmitt 2008	Fa_PLc	0.0728729492560092
 red blood cells	Human	Schmitt 2008	Fa_PLc	0.1
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fa_PLc	0.014
+placenta	??	??	Fa_PLc	0.0738045976919855
 adipose	Rat	Ruark 2014	Fa_PLc	0.000467836257309942
 bone	Rat	Ruark 2014	Fa_PLc	0.04
 brain	Rat	Ruark 2014	Fa_PLc	0.0097799511002445
@@ -203,6 +219,8 @@ muscle	Human	Schmitt 2008	pH	6.81
 skin	Human	Schmitt 2008	pH	7
 spleen	Human	Schmitt 2008	pH	7
 red blood cells	Human	Schmitt 2008	pH	7.2
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	pH	7.3
+placenta	??	??	pH	7.24
 adipose	Rat	Ruark 2014	pH	7.1
 bone	Rat	Ruark 2014	pH	7
 brain	Rat	Ruark 2014	pH	7.1
