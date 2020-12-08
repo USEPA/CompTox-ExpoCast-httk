@@ -14,20 +14,21 @@ model.list[["1compartment"]]$solve.func <- "solve_1comp"
 
 # Here are the tissues from tissue.table that are considered (for example,
 # do we include placenta or not?):
-model.list[["1compartment"]]$alltissues=c(
-  "adipose",
-  "bone",            
-  "brain",           
-  "gut",            
-  "heart",           
-  "kidney",          
-  "liver",           
-  "lung",           
-  "muscle",         
-  "skin",            
-  "spleen",          
-  "red blood cells",
-  )
+#model.list[["fetal_pbtk"]]$alltissues=c(
+#  "adipose",
+#  "bone",            
+#  "brain",           
+#  "gut",            
+#  "heart",           
+#  "kidney",          
+#  "liver",           
+#  "lung",           
+#  "muscle",  
+#  "placenta",       
+# "skin",            
+#  "spleen",          
+#  "red blood cells",
+#  )
   
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
