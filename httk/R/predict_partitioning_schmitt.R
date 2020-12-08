@@ -1,7 +1,7 @@
 # This predicts the coefficient of tissue to FREE plasma fraction via Schmitt's method (2008):  
 # fupl: unbound fraction in plasma
-# Pow: octonol:water partition coefficient (not log transformed)
-# pKa_Donor: compound H dissociation equilibirum constant(s)
+# Pow: octanol:water partition coefficient (not log transformed)
+# pKa_Donor: compound H dissociation equilibrium constant(s)
 # pKa_Accept: compound H association equilibrium constant(s)   
 # MA: phospholipid:water distribution coefficient
 # KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
@@ -224,7 +224,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 	for (this.tissue in tissues)
 	{
 		this.subset <- subset(tissue.data,Tissue == this.tissue & tolower(Species) == tolower(species))
-# Tissue-specific cellular/interstial volume fractions:
+# Tissue-specific cellular/interstitial volume fractions:
     Ftotal <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) + as.numeric(subset(this.subset,variable=='Fint')[,'value'])
     # Normalized Cellular fraction of total volume:
 		Fcell <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) / Ftotal
@@ -252,7 +252,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 		# tissue pH
 		pH <- as.numeric(subset(this.subset,variable=='pH')[,'value'])
 
-		# neutral phospholipid:water parition coefficient:
+		# neutral phospholipid:water partition coefficient:
 	  Kn_PL <- parameters$MA
     
     # Need to calculate the amount of un-ionized parent:
