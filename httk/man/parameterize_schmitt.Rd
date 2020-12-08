@@ -52,9 +52,9 @@ dataset).}
 \value{
 \item{Funbound.plasma}{corrected unbound fraction in plasma}
 \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
-if below limit of detection)} \item{Pow}{octonol:water partition coefficient
-(not log transformed)} \item{pKa_Donor}{compound H dissociation equilibirum
-constant(s)} \item{pKa_Accept}{compound H association equilibirum
+if below limit of detection)} \item{Pow}{octanol:water partition coefficient
+(not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
+constant(s)} \item{pKa_Accept}{compound H association equilibrium
 constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
 affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 \item{plasma.pH}{pH of the plasma}
