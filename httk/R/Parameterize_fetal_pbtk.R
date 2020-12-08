@@ -161,7 +161,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   
   Funbound.plasma <- parms$Funbound.plasma #value of Funbound.plasma for mother
   Fraction_unbound_plasma_fetus <- 
-    1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma
+    1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma)
         
   parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
