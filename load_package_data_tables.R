@@ -1030,7 +1030,7 @@ write.table(subset(chem.physical_and_invitro.data,
   sep="\t",
   col.names=F,
   quote=F)
-cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search baed on CAS. \n")
+cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search based on chemical name. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
 cat("Save Dashboard output to HTTK-NoCASMatch-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n")
