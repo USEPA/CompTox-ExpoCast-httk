@@ -12,23 +12,21 @@ model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 # Function called for running the model:
 model.list[["1compartment"]]$solve.func <- "solve_1comp"
 
-# Here are the tissues from tissue.table that are considered (for example,
-# do we include placenta or not?):
-#model.list[["fetal_pbtk"]]$alltissues=c(
-#  "adipose",
-#  "bone",            
-#  "brain",           
-#  "gut",            
-#  "heart",           
-#  "kidney",          
-#  "liver",           
-#  "lung",           
-#  "muscle",  
-#  "placenta",       
-# "skin",            
-#  "spleen",          
-#  "red blood cells",
-#  )
+# Here are the tissues from tissue.data that are considered:
+model.list[["1compartment"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  "thyroid")
   
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
