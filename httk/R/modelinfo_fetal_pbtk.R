@@ -25,7 +25,7 @@ model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
 #  "lung",           
 #  "muscle",  
 #  "placenta",       
-# "skin",            
+#  "skin",            
 #  "spleen",          
 #  "red blood cells",
 #  )
