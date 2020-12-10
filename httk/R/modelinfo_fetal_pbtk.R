@@ -12,25 +12,25 @@ model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 # Function called for running the model:
 model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
 
-# Here are the tissues from tissue.table that are considered (for example,
+# Here are the tissues from tissue.data that are considered (for example,
 # do we include placenta or not?):
-#model.list[["fetal_pbtk"]]$alltissues=c(
-#  "adipose",
-#  "bone",            
-#  "brain",           
-#  "gut",            
-#  "heart",           
-#  "kidney",          
-#  "liver",           
-#  "lung",           
-#  "muscle",  
-#  "placenta",       
-#  "skin",            
-#  "spleen",          
-#  "red blood cells",
-#  )
+model.list[["fetal_pbtk"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  "thyroid",
+  "placenta")
 
-# How the tissues from tissue.table are lumped together to form the model:
+# How the tissues from tissue.data are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.
 model.list[["fetal_pbtk"]]$tissuelist=list(

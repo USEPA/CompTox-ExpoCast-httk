@@ -13,7 +13,23 @@ model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 # Function called for running the model:
 model.list[["pbtk"]]$solve.func <- "solve_pbtk"
 
-# How the tissues from tissue.table are lumped together to form the model:
+# Here are the tissues from tissue.data that are considered:
+model.list[["pbtk"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  "thyroid")
+
+# How the tissues from tissue.data are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments; everything else is 
 # lumped.
 model.list[["pbtk"]]$tissuelist=list(
