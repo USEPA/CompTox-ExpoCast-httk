@@ -103,11 +103,7 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               dtxsid = NULL,
                               species="Human",
                               default.to.human=F,
-                              tissuelist=list(
-                                liver=c("liver"),
-                                kidney=c("kidney"),
-                                lung=c("lung"),
-                                gut=c("gut")),
+                              tissuelist=NULL,
                               force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
@@ -134,7 +130,6 @@ parameterize_pbtk <- function(chem.cas=NULL,
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
   
-  if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",
                                       species,
