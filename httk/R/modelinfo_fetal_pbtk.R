@@ -13,7 +13,7 @@ model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
-# do we include placenta or not?):
+# do we include placenta or not? Here, yes we do):
 model.list[["fetal_pbtk"]]$alltissues=c(
   "adipose",
   "bone",            
@@ -30,14 +30,21 @@ model.list[["fetal_pbtk"]]$alltissues=c(
   "thyroid",
   "placenta")
 
-# How the tissues from tissue.data are lumped together to form the model:
-# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
+# Which tissues from tissue.data are not lumped together when forming
+# the model: The fetal_pbtk model has liver, kidney, gut, and lung compartments
+# that draw info from tissue.data; everything else from alltissues should be 
 # lumped.
 model.list[["fetal_pbtk"]]$tissuelist=list(
+  adipose = c("adipose"),
+  brain = c("brain"),
+  gut = c("gut"),
   liver=c("liver"),
   kidney=c("kidney"),
   lung=c("lung"),
-  gut=c("gut"))
+  gut=c("gut"),
+  thyroid = c("thyroid"),
+  placenta = c("placenta")
+  )
   
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe

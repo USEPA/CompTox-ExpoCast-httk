@@ -30,8 +30,8 @@ model.list[["pbtk"]]$alltissues=c(
   "thyroid")
 
 # How the tissues from tissue.data are lumped together to form the model:
-# PBTK model has liver, kidney, gut, and lung compartments; everything else is 
-# lumped.
+# PBTK model has liver, kidney, gut, and lung compartments that draw info
+# from tissue.data; everything else from alltissues should be lumped.
 model.list[["pbtk"]]$tissuelist=list(
                          liver=c("liver"),
                          kidney=c("kidney"),
