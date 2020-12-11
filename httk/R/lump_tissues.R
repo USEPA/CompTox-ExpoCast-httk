@@ -122,6 +122,9 @@ lump_tissues <- function(Ktissue2pu.in,
     tissuelist <- model.list[[model]]$tissuelist
   }
   
+  #Check to make sure the tissuelist is a list of character vectors.
+  if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+  
 # This loop adds up the volumes and flows for the tissues within each lumped 
 # tissue as well as Red blood cells
 	for (this.lumped.tissue in c(names(tissuelist),"cleanup"))
