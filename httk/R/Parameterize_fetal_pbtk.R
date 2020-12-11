@@ -11,7 +11,7 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").
+#' default "Human"). Currently only a narrow human model is supported. 
 #' @param fetal_fup_adjustment Logical indicator of whether to use an adjusted
 #' estimate for fetal fup based on the fetal:maternal plasma protein binding
 #' ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
@@ -112,7 +112,8 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                                              gut=c("gut"),adipose = c("adipose")),
                              placenta=TRUE,
                              ...)
-  parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1 #dummy parameter still in use
+  #parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1 #dummy parameter in prior use
+  parms$Kfthyroid2pu <- parms$Kthyroid2pu #thyroid should be supported now
   parms$Kfliver2pu <- parms$Kliver2pu
   parms$Kfkidney2pu <- parms$Kkidney2pu
   parms$Kfrest2pu <- parms$Krest2pu
