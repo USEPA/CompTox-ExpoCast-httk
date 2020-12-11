@@ -94,14 +94,32 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                             tissuelist=list(liver=c("liver"),
                             kidney=c("kidney"),lung=c("lung"),
                             gut=c("gut"),adipose = c("adipose"),
-                            brain = c("brain")),
-                            placenta=TRUE,
+                            brain = c("brain"),placenta = c("placenta")), #shouldn't placenta 
+                            #not be included here because of alltissues entry for model pbtk?
                             ...)
 # parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
+  
+  #Capture Schmitt parameters for maternal case
+  maternal_schmitt_parms <- parameterize_schmitt(
+      chem.cas=chem.cas,
+      species=species,
+      default.to.human=default.to.human,
+      force.human.fup=force.human.clint.fup,
+      suppress.messages=T,
+      minimum.Funbound.plasma=minimum.Funbound.plasma)
+  
+  #set fetal plasma.pH
+  fetal.plasma.pH <- 7.207
+  
+  #Fetal Schmitt parms are treated the same except for the plasma pH
+  fetal_schmitt_parms <- maternal_schmitt_parms
+  fetal_schmitt_parms$plasma.pH <- fetal.plasma.pH
+  
   
   #Store Kbrain2pu and Vbrainc values in intermediate variables
   Kbrain2pu <- parms$Kbrain2pu
   
+  #now gather Schmitt params for the fetal partition coefficient calculations
   schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
   #    PCs <- predict_partitioning_schmitt(
   #      parameters=schmitt.params,
