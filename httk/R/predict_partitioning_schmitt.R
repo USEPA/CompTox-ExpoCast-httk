@@ -276,18 +276,17 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
     fraction_charged_plasma <- plasma[['fraction_charged']] 
     KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + parameters$alpha * fraction_charged_plasma)/(fraction_neutral + fraction_zwitter + parameters$alpha * fraction_charged)
     
-    if('fetal.plasma.pH' %in% names(parameters) & this.tissue == 'placenta'){
-      fetal.plasma <- calc_ionization(pH=parameters$fetal.plasma.pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)    
-      fraction_neutral_fetal_plasma <- fetal.plasma[['fraction_neutral']]
-      fraction_zwitter_fetal_plasma <- fetal.plasma[['fraction_zwitter']]    
-      fraction_charged_fetal_plasma <- fetal.plasma[['fraction_charged']]  
-      KAPPAcell2puFetus <- (fraction_neutral_fetal_plasma + parameters$alpha * fraction_charged_fetal_plasma + fraction_zwitter_fetal_plasma) /(fraction_neutral + parameters$alpha * fraction_charged + fraction_zwitter)
-      Ktissue2pu[['Kplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2pu*Fcell * Kcell)
-      Ktissue2pu[['Kfplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2puFetus*Fcell * Kcell)
-    }else{
-      if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell" ,sep='')))
- 	    else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
-    }    
+    
+    if(this.tissue == 'red blood cells') {
+      eval(parse(text=
+          paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",
+                sep=''))) 
+ 	  } else {
+ 	    eval(parse(text=
+ 	                 paste("Ktissue2pu[[\"K",this.tissue,
+ 	                       "2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",
+ 	                       sep='')))
+ 	  }
    
     if(regression & this.tissue %in% regression.list){
       #if(parameters$Pow > 4){
