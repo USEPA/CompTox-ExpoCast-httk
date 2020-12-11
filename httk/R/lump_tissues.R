@@ -10,10 +10,12 @@
 #' lumped tissues specified in tissue list Ktissue2plasma -- tissue to free
 #' plasma concentration partition coefficients for every tissue specified by 
 #' Schmitt (2008) (the tissue.data table) tissuelist -- a list of character 
-#' vectors, the name of each entry in the list is a lumped tissue, the words in
-#' the vector are the Schmitt (2008) tissues that are to be lumped, for
-#' example: tissuelist<-list(Rapid=c("Brain","Kidney")) species specifies the
-#' flow.col and vol.col in the tissuedata.table
+#' vectors, the name of each entry in the list is its own compartment.
+#' The tissues in the alltissues vector are the Schmitt (2008) tissues that are
+#' to be considered in the lumping process. The tissuelist can also be manually
+#' specified for alternate lumping schemes: for example,
+#' tissuelist<-list(Rapid=c("Brain","Kidney")) specifies the flow.col and
+#' vol.col in the tissuedata.table. 
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
 #' predict_partitioning_schmitt.
@@ -108,7 +110,7 @@ lump_tissues <- function(Ktissue2pu.in,
                             2,
                             nchar(names(Ktissue2pu.in))-3)
   names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'rbc'] <- 'red blood cells'
-# Blood cells only need a partioncoefficient:
+# Blood cells only need a partition coefficient:
   Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
   all.tissues["red blood cells"] <- T
  
