@@ -28,9 +28,9 @@ model.list[["3compartment"]]$alltissues=c(
   "red blood cells",
   "thyroid")
 
-# How the tissues from tissue.data are lumped together to form the model:
-# 3 compartment model has only liver and gut compartments; everything else is
-# lumped.
+# Which tissues from tissue.data are not lumped together when forming
+# the model: 3 compartment model has only liver and gut compartments; 
+# everything else is lumped.
 model.list[['3compartment']]$tissuelist = list(
                liver=c("liver"),
                gut=c("gut"))

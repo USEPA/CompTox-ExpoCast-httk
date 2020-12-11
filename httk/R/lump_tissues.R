@@ -19,8 +19,10 @@
 #' predict_partitioning_schmitt.
 #' @param parameters A list of physiological parameters including flows and
 #' volumes for tissues in \code{tissuelist}
-#' @param tissuelist Specifies compartment names and tissues groupings.
-#' Remaining tissues in tissue.data are lumped in the rest of the body.
+#' @param tissuelist Manually specifies compartment names and tissues, which
+#' override the standard compartment names and tissues that should be specified
+#' in a model's associated modelinfo file. Remaining tissues in the model's 
+#' associated \code{alltissues} listing are lumped in the rest of the body.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
@@ -110,6 +112,14 @@ lump_tissues <- function(Ktissue2pu.in,
   Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
   all.tissues["red blood cells"] <- T
  
+  
+#Before using tissuelist, make sure it is initialized with the tissuelist entry
+#from the modelinfo file of interest. If tissuelist is already manually
+#specified, it takes priority.
+  if (is.null(tissuelist)){
+    tissuelist <- model.list[[model]]$tissuelist
+  }
+  
 # This loop adds up the volumes and flows for the tissues within each lumped 
 # tissue as well as Red blood cells
 	for (this.lumped.tissue in c(names(tissuelist),"cleanup"))
