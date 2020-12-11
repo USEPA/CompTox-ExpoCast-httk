@@ -102,6 +102,17 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #Store Kbrain2pu and Vbrainc values in intermediate variables
   Kbrain2pu <- parms$Kbrain2pu
   
+  schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
+  #    PCs <- predict_partitioning_schmitt(
+  #      parameters=schmitt.params,
+  #      regression=regression,
+  #      species=species,
+  #      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+  #      minimum.Funbound.plasma=minimum.Funbound.plasma)
+  #    p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
+  #    PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
+  
+  
   #Run parameterize pbtk function again, this time with brain tacitly lumped
   parms <- parameterize_pbtk(chem.cas=chem.cas,
                              chem.name=chem.name,
