@@ -142,7 +142,7 @@ lump_tissues <- function(Ktissue2pu.in,
 			}
 # Every tissue not already lumped gets added to "Rest"
 			these.lumped.tissues <- unique(tissue.data[, "Tissue"])[!all.tissues
-        [unique(tissue.data[, "Tissue"])]]
+			                                       [unique(tissue.data[, "Tissue"])]]
 		}	else{
 			vol[[this.lumped.tissue]] <- 0
 			flow[[this.lumped.tissue]] <- 0
@@ -203,7 +203,7 @@ lump_tissues <- function(Ktissue2pu.in,
 # Add the flow for this tissue to the lumped tissue:                             
   		flow[[this.lumped.tissue]] <- flow[[this.lumped.tissue]] + this.flow 
 		}
-#Calculate the average parition coefficient by dividing by the total volume of
+#Calculate the average partition coefficient by dividing by the total volume of
 #the lumped tissue:
 		Ktissue2pu.out[[this.lumped.tissue]] <- 
       Ktissue2pu.out[[this.lumped.tissue]] / vol[[this.lumped.tissue]]
