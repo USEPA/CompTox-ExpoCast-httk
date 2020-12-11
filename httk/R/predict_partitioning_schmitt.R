@@ -165,12 +165,6 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
   tissue.data <- rbind(tissue.data,this.row) %>%
   as.data.frame()
 }
-  if('fetal.plasma.pH' %in% names(parameters)){
-    placenta.tissue.data <- cbind(rep('placenta',9),rep(species,9),rep(NA,9),c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH'),c(.724,.276,.793,.0083,.1535,as.numeric(subset(tissue.data,Tissue=='rest' & Species==species & variable %in% c('Fn_Lc','Fn_PLc','Fa_PLc'))[,'value']),7.24))
-    colnames(placenta.tissue.data) <- colnames(tissue.data)
-    tissue.data <- rbind(tissue.data,placenta.tissue.data) %>%
-    as.data.frame()
-  }
 
 	Ktissue2pu <- list()
 	
