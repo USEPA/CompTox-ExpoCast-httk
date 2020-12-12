@@ -41,7 +41,6 @@ model.list[["fetal_pbtk"]]$tissuelist=list(
   liver=c("liver"),
   kidney=c("kidney"),
   lung=c("lung"),
-  gut=c("gut"),
   thyroid = c("thyroid"),
   placenta = c("placenta")
   )
