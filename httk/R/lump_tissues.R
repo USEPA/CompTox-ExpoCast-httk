@@ -162,20 +162,18 @@ lump_tissues <- function(Ktissue2pu.in,
       if (all.tissues[[this.tissue]] & this.tissue !="rest")
         stop(paste(this.tissue,"assigned to multiple lumped tissues"))
       
-      if (!is.null(parameters)) {
-        if (!(this.flow.param %in% names(parameters)) & is.null(tissue.flows))
+      if (!is.null(parameters)) { #parameters should be complete
+        if (!(this.flow.param %in% names(parameters)))
           stop(paste(
-            "Parameters != NULL but", this.flow.param, "not in parameters or tissue.flows."))
+            "Parameters != NULL but", this.flow.param, "not in parameters."))
         #if this.flow.param is in parameters  vv
-        else if (is.null(tissue.flows)) this.flow <- parameters[[this.flow.param]]
-        else this.flow <- tissue.flows[[this.lumped.tissue]]
+        else this.flow <- parameters[[this.flow.param]]
         
-        if (!(this.vol.param %in% names(parameters)) & is.null(tissue.vols))
+        if (!(this.vol.param %in% names(parameters)))
           stop(paste(
-            "Parameters != NULL but", this.flow.param, "not in parameters or tissue.vols."))
+            "Parameters != NULL but", this.flow.param, "not in parameters."))
         #if this.vol.param is in parameters  vv
-        else if (is.null(tissue.vols)) this.vol <- parameters[[this.vol.param]]
-        else this.vol <- tissue.vols[[this.lumped.tissue]]
+        else this.vol <- parameters[[this.vol.param]]
         
       } else if (!(this.tissue %in% unique(tissue.data[,'Tissue'])) & 
                  (is.null(tissue.vols) | is.null(tissue.flows)) )
@@ -185,29 +183,40 @@ lump_tissues <- function(Ktissue2pu.in,
                paste(unique(tissue.data[,'Tissue']),collapse=', ')))
       else {
         #give tissue.vols and tissue.flows priority
-        if (!(is.null(tissue.vols))) this.vol <- 
-                                    tissue.vols[[this.lumped.tissue]]
-            
-        if (!(is.null(tissue.flows))) this.flow <- 
-                                    tissue.flows[[this.lumped.tissue]]
-            
         if ((is.null(tissue.vols)) | is.null(tissue.flows)) {
-      		this.subset <- subset(
+          this.subset <- subset(
             tissue.data,
             Tissue == this.tissue & tolower(Species) == tolower(species))
-      		if (is.null(tissue.vols)) {
-          this.vol <- as.numeric(subset(
-                                   this.subset,
-                                   variable == 'Vol (L/kg)')[,'value'])
-      		} 
-      		if (is.null(tissue.flows)){
-      		  this.flow <- as.numeric(subset(
-      		    this.subset,
-      		    variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
-      		    as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
-      		} 
+          
+          if ((is.null(tissue.vols)) | (!(this.lumped.tissue %in% names(tissue.vols)))) {
+            this.vol <- as.numeric(subset(
+              this.subset,
+              variable == 'Vol (L/kg)')[,'value'])
+          }
+          if ((is.null(tissue.flows)) | (!(this.lumped.tissue %in% names(tissue.flows)))){
+            this.flow <- as.numeric(subset(
+              this.subset,
+              variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
+              as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
+          }
         }
-      }
+        
+        if ((!(is.null(tissue.vols))) & (this.lumped.tissue %in% names(tissue.vols))){
+          this.vol <- tissue.vols[[this.lumped.tissue]]
+        }
+            
+        if ((!(is.null(tissue.flows))) & (this.lumped.tissue %in% names(tissue.flows))){
+          this.flow <- tissue.flows[[this.lumped.tissue]]
+        }
+      	
+      		#if this.flow or this.vol still NULL after checking all sources
+      	if ((length(this.flow) == 0) | (length(this.vol)==0)){
+      	  warning('A flow or volume associated with the ',this.tissue,' and 
+      	passed to lump_tissues is undefined. You may need to check to make
+      	sure the input tissue information, if no tissue volume or flow is
+      	intended to be left out.')
+      		}
+        }
 # Mark that this tissue has been lumped:
 			all.tissues[[this.tissue]] <- TRUE
 # Add the volume for this tissue to the lumped tissue:
@@ -223,11 +232,11 @@ lump_tissues <- function(Ktissue2pu.in,
 		Ktissue2pu.out[[this.lumped.tissue]] <- 
       Ktissue2pu.out[[this.lumped.tissue]] + 
       this.vol*Ktissue2pu.in[[this.tissue]]
-  		} else {
-  		  warning('At least the volume associated with ',this.tissue,' and passed to
-  		  lump_tissues is undefined. You may need to check to make sure the 
-  		  input tissue information, if no tissue volume is intended to be 
-  		  left out.')
+  		} else { #in case that this.vol is undefined due, which could be
+  		  #the case for a tissue that has Schmitt params but no fixed
+  		  #volumes or flows in an associated model (like the placenta
+  		  #in model fetal_pbtk). Otherwise, there may be an error
+  		  #with the tissue volume inputs.
   		  Ktissue2pu.out[[this.lumped.tissue]] <- Ktissue2pu.in[[this.tissue]]
   		}
 # Add the flow for this tissue to the lumped tissue:                             
