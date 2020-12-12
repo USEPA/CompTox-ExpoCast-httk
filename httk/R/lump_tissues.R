@@ -188,8 +188,8 @@ lump_tissues <- function(Ktissue2pu.in,
                          variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
             as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
   			} else {
-          this.vol <- tissue.vols[this.lumped.tissue]
-          this.flow <- tissue.flows[this.lumped.tissue] / 
+          this.vol <- tissue.vols[[this.lumped.tissue]]
+          this.flow <- tissue.flows[[this.lumped.tissue]] / 
             as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
         }
       }
