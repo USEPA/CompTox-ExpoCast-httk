@@ -58,7 +58,6 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Funbound.plasma",
   "Funbound.plasma.adjustment",
   "Funbound.plasma.dist",
-  "hematocrit",
   "Kadipose2pu",
   "Kfplacenta2pu",
   "Kgut2pu",
