@@ -144,14 +144,16 @@ lump_tissues <- function(Ktissue2pu.in,
 			these.lumped.tissues <- unique(tissue.data[, "Tissue"])[!all.tissues
 			                                       [unique(tissue.data[, "Tissue"])]]
 			these.lumped.tissues <- these.lumped.tissues[!is.na(these.lumped.tissues)] 
-			#need to trim away NA values that could result here ^^^
+			#need to trim away NA values that could result here from the all.tissues
+			#logical vector operations^^^
 		}	else{
 			vol[[this.lumped.tissue]] <- 0
 			flow[[this.lumped.tissue]] <- 0
 			Ktissue2pu.out[[this.lumped.tissue]] <- 0
 			these.lumped.tissues <- tissuelist[[this.lumped.tissue]]
 		}
-# Loop over every tissue that is lumped into the tissue:   
+# Loop over every tissue that is lumped into the tissue, drawing tissue volume
+	  #and flow information from wherever it is available:   
 		for (this.tissue in these.lumped.tissues)
 		{
       this.vol.param <- paste("V",this.tissue,"c",sep="")
