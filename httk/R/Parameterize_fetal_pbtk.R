@@ -108,7 +108,8 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
       minimum.Funbound.plasma=minimum.Funbound.plasma)
   
   #set fetal plasma.pH
-  fetal.plasma.pH <- 7.207
+  fetal.plasma.pH <- 7.26 #average fetal value measured by and reported in 
+  #K.H. Lee 1972 for over 80 fetuses studied within 30 min of delivery.
   
   #Fetal Schmitt parms are treated the same except for the plasma pH
   fetal_schmitt_parms <- maternal_schmitt_parms
@@ -119,7 +120,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   Kbrain2pu <- parms$Kbrain2pu
   
   #now gather Schmitt params for the fetal partition coefficient calculations
-  schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.207)
+  schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.26)
   #    PCs <- predict_partitioning_schmitt(
   #      parameters=schmitt.params,
   #      regression=regression,
@@ -172,13 +173,12 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #chemical is an acid and use Pinfant2Pmaternal_hsa. 
   
   #To run the calc_ionization function, though, we need the following values:
-  plasma.pH <- 7.4
   pKa_Donor <- parms$pKa_Donor
   pKa_Accept <- parms$pKa_Accept
  
   #Now let's use calc_ionization to estimate the chemical's charge profile:
   ion <- calc_ionization(
-    pH=plasma.pH,
+    pH=fetal.plasma.pH,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept)
   
