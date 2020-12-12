@@ -10,13 +10,11 @@ parameterize_pbtk(
   dtxsid = NULL,
   species = "Human",
   default.to.human = F,
-  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
-    c("gut")),
+  tissuelist = NULL,
   force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T,
   regression = T,
-  placenta = F,
   suppress.messages = F,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04
@@ -54,9 +52,6 @@ TRUE along with parition coefficients calculated with this value.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
-
-\item{placenta}{Whether to involve calculation of placenta partitioning
-coefficients, Kplacenta2pu and Kfplacenta2pu.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
