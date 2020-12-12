@@ -127,11 +127,10 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #Capture Schmitt parameters for maternal case
   maternal_schmitt_parms <- parameterize_schmitt(
       chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid=dtxsid,
       species=species,
-      default.to.human=default.to.human,
-      force.human.fup=force.human.clint.fup,
-      suppress.messages=T,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)
+      suppress.messages=T)
   
   maternal.blood.pH <- 7.38 #average maternal blood pH value measured by and 
   #reported in K.H. Lee 1972 for over 80 mothers.
