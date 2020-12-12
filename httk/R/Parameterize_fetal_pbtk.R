@@ -97,7 +97,6 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                             brain = c("brain"),placenta = c("placenta")), #shouldn't placenta 
                             #not be included here because of alltissues entry for model pbtk?
                             ...)
-# parms[['Vrestc']] <- parms[['Vrestc']] + parms[['Vvenc']] + parms[['Vartc']]
   
   #Capture Schmitt parameters for maternal case
   maternal_schmitt_parms <- parameterize_schmitt(
