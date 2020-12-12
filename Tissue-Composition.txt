@@ -10,6 +10,7 @@
 "Muscle"	"Human"	0.384	"ILSI-RSI 1994"	30.99	"Davies and Morris 1993"
 "Skin"	"Human"	0.0332	"ILSI-RSI 1994"	12.4	"Davies and Morris 1993"
 "Spleen"	"Human"	0.00247	"ILSI-RSI 1994"	3.18	"Davies and Morris 1993"
+"Thyroid"	"Human"	3e-04	"ILSI-RSI 1994"	3.7	"ILSI-RSI 1994"
 "Rest"	"Human"	0.0518	"ILSI-RSI 1994"	4.19	"Davies and Morris 1993"
 "Adipose"	"Rat"	0.0726	"ILSI-RSI 1994"	1.13	"Davies and Morris 1993"
 "Bone"	"Rat"	0.0369	"ILSI-RSI 1994"	25.54	"Davies and Morris 1993"
