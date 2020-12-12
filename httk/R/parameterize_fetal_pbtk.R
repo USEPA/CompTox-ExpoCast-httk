@@ -85,18 +85,44 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               fetal_fup_adjustment=TRUE,
                               ...)
 {
-  #Call parameterize_pbtk function with brain compartment specified to obtain
-  #maternal brain partitioning coefficient, to be equated to fetal Kfbrain2pu.
-  parms <- parameterize_pbtk(chem.cas=chem.cas,
-                            chem.name=chem.name,
-                            dtxsid=dtxsid,
-                            species=species,
-                            tissuelist=list(liver=c("liver"),
-                            kidney=c("kidney"),lung=c("lung"),
-                            gut=c("gut"),adipose = c("adipose"),
-                            brain = c("brain"),placenta = c("placenta")), #shouldn't placenta 
-                            #not be included here because of alltissues entry for model pbtk?
-                            ...)
+  #initialize a parms list for fetal model parameters to output
+  parms <- list()
+  
+  #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
+  ICRP_2002_female_tissue_mass_fractions_data <- 10^-2 * c(
+    Vthyroidc = 0.0283,
+    Vkidneyc = 0.458,
+    Vgutc = 1.90,
+    Vliverc = 2.33,
+    Vlungc = 1.58,
+    Vbrainc = 2.17 
+    #^^though brain not in model
+  )
+  
+  parms$pre_pregnant_BW <- 61.103 #kg
+  #Override parameterize_pbtk's body weight listing with average prepregnant
+  #case, as scale dosing requires an entry named 'BW'
+  parms$Vthyroidc <- ICRP_2002_female_tissue_mass_fractions_data[['Vthyroidc']]
+  parms$Vkidneyc <- ICRP_2002_female_tissue_mass_fractions_data[['Vkidneyc']]
+  parms$Vgutc <- ICRP_2002_female_tissue_mass_fractions_data[['Vgutc']]
+  parms$Vliverc <- ICRP_2002_female_tissue_mass_fractions_data[['Vliverc']]
+  parms$Vlungc <- ICRP_2002_female_tissue_mass_fractions_data[['Vlungc']]
+  Vbrainc_capture <- ICRP_2002_female_tissue_mass_fractions_data[['Vbrainc']]
+  #brain volume fraction value not added to parms output
+  
+  #set density values as they are generally useful in converting between
+  #weights and volumes here
+  parms$gut_density <- 1.04
+  parms$kidney_density <- 1.05
+  parms$liver_density <- 1.05
+  parms$lung_density <- 1.05
+  parms$thyroid_density <- 1.05
+  parms$adipose_density <- 0.950
+  parms$ffmx_density <- 1.1
+  parms$placenta_density <- 1.02
+  parms$amnf_density <- 1.01
+  parms$brain_density <- 1.04
+
   
   #Capture Schmitt parameters for maternal case
   maternal_schmitt_parms <- parameterize_schmitt(
@@ -107,48 +133,110 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
       suppress.messages=T,
       minimum.Funbound.plasma=minimum.Funbound.plasma)
   
+  maternal.blood.pH <- 7.38 #average maternal blood pH value measured by and 
+  #reported in K.H. Lee 1972 for over 80 mothers.
+  maternal_schmitt_parms$plasma.pH <- maternal.blood.pH
+  
+  #capture maternal partition coefficients
+  maternal_pcs <- predict_partitioning_schmitt(parameters =
+                                                 maternal_schmitt_parms)
+  
+  #preset our tissue.vols object to pass exact tissue volume information
+  #for this model to lump_tissues.R, which may not exactly match
+  #values present in tissue.data (from pkdata.xlsx)
+  #Values for thyroid, liver, gut, kidney, lung, and brain.
+  tissue.vols.list <- list(
+    thyroid = parms$Vthyroidc*parms$pre_pregnant_BW/parms$thyroid_density,
+    liver = parms$Vliverc*parms$pre_pregnant_BW/parms$liver_density,
+    gut = parms$Vgutc*parms$pre_pregnant_BW/parms$gut_density,
+    kidney = parms$Vkidneyc*parms$pre_pregnant_BW/parms$kidney_density,
+    lung = parms$Vlungc*parms$pre_pregnant_BW/parms$lung_density,
+    brain = Vbrainc_capture*parms$pre_pregnant_BW/parms$brain_density)
+  
+  #Run lump_tissues twice, once to get the mother's Kbrain2pu value--which we
+  #will apply only in the fetus, as we are not modeling a brain compartment
+  #in the mother--and the second time to get the mother's partition 
+  #coefficients with a lumping scheme in place that corresponds exactly
+  #to the maternal compartment scheme in this model.
+  lumped_tissue_values_brain_separate <-
+          lump_tissues(Ktissue2pu.in = maternal_pcs, species="Human",
+                       model = "fetal_pbtk",
+                       tissue.vols = tissue.vols.list)
+  Kbrain2pu <- lumped_tissue_values_brain_separate$Kbrain2pu
+  parms$Kfbrain2pu <- Kbrain2pu #Fetal value is taken from maternal estimate
+  
+  #now with the brain tacitly lumped
+  lumped_tissue_values_brain_lumped <- 
+          lump_tissues(Ktissue2pu.in = maternal_pcs, species="Human",
+                model = "fetal_pbtk", tissuelist=list(
+                  adipose = c("adipose"), gut = c("gut"), liver=c("liver"),
+                  kidney=c("kidney"), lung=c("lung"), thyroid = c("thyroid"),
+                  placenta = c("placenta")), tissue.vols = tissue.vols.list)
+  
+  #Will adjust some of the names of the output from lump_tissues to adhere
+  #to usual name conventions from parameterize_pbtk for use in comparison.
+  #We also only are interested in the partition coefficients currently.
+  lumped_tissue_values_brain_lumped_pcs <- 
+    lumped_tissue_values_brain_lumped[substr(names(
+      lumped_tissue_values_brain_lumped),1,1) == 'K']
+  
+  
+  #Call parameterize_pbtk function to obtain useful parameters that these
+  #models exactly share. 
+  pbtk_parms <- parameterize_pbtk(chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid,
+                                  species=species,
+                                  ...)
+  pbtk_parms$BW <- parms$pre_pregnant_BW #reset BW value to maternal
+  #                                prepregnant value
+  
+  
+  #Commit the parameters from parameterize_pbtk that aren't redundant with
+  #parameters in this lump_tissues run to the output, after trimming away
+  #what we don't need (trim the volume fractions V, partition coefficients K,
+  #and flows Q):
+  pbtk_parms_desired <- 
+    pbtk_parms[!( substr(names(pbtk_parms),1,1) %in% c('K','V','Q') )]
+  pbtk_parms_desired <- 
+    pbtk_parms_desired[!(names(pbtk_parms_desired) %in% c("hematocrit",
+            "liver.density"))] #we don't use a hematocrit value from 
+  #parameterize_pbtk, and we've already captured our liver density value. 
+  
+  
+  #capture our desired parameters in the output list "parms"
+  parms <- c(parms, lumped_tissue_values_brain_lumped_pcs, pbtk_parms_desired)
+  
+  
+  #Now let's set some fetal Schmitt param values so we can calculate the fetal
+  #Kfplacenta2pu, as well as potentially adjust the fraction unbound to plasma
+  #estimate in the fetus.
+  
   #set fetal plasma.pH
-  fetal.plasma.pH <- 7.26 #average fetal value measured by and reported in 
+  fetal.blood.pH <- 7.26 #average fetal value measured by and reported in 
   #K.H. Lee 1972 for over 80 fetuses studied within 30 min of delivery.
   
   #Fetal Schmitt parms are treated the same except for the plasma pH
   fetal_schmitt_parms <- maternal_schmitt_parms
-  fetal_schmitt_parms$plasma.pH <- fetal.plasma.pH
+  fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
   
+  fetal_pcs <- predict_partitioning_schmitt(parameters = 
+                                              fetal_schmitt_parms)
+  Kfplacenta2pu <- fetal_pcs$Kplacenta2pu #this one was calculated with the
+  #fetal plasma pH. This is the only partition coefficient we need from this
+  #run, as we are defining the other fetal partition coefficients using
+  #those determined from the mother's lump_tissues runs. 
+  parms$Kfplacenta2pu <- Kfplacenta2pu
   
-  #Store Kbrain2pu and Vbrainc values in intermediate variables
-  Kbrain2pu <- parms$Kbrain2pu
-  
-  #now gather Schmitt params for the fetal partition coefficient calculations
-  schmitt.params <- c(schmitt.params,fetal.plasma.pH=7.26)
-  #    PCs <- predict_partitioning_schmitt(
-  #      parameters=schmitt.params,
-  #      regression=regression,
-  #      species=species,
-  #      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-  #      minimum.Funbound.plasma=minimum.Funbound.plasma)
-  #    p.list <- PCs[c('Kplacenta2pu','Kfplacenta2pu')]
-  #    PCs[c('Kplacenta2pu','Kfplacenta2pu')] <- NULL
-  
-  
-  #Run parameterize pbtk function again, this time with brain tacitly lumped
-  parms <- parameterize_pbtk(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid,
-                             species=species,
-                             tissuelist=list(liver=c("liver"),
-                                             kidney=c("kidney"),lung=c("lung"),
-                                             gut=c("gut"),adipose = c("adipose")),
-                             placenta=TRUE,
-                             ...)
-  #parms$Kthyroid2pu <-  parms$Kfthyroid2pu <- 1 #dummy parameter in prior use
+  #Tie fetal partition coefficient values to the maternal values where 
+  #still intended
   parms$Kfthyroid2pu <- parms$Kthyroid2pu #thyroid should be supported now
   parms$Kfliver2pu <- parms$Kliver2pu
   parms$Kfkidney2pu <- parms$Kkidney2pu
   parms$Kfrest2pu <- parms$Krest2pu
   parms$Kfgut2pu <- parms$Kgut2pu
   parms$Kflung2pu <- parms$Klung2pu
-  parms$Kfbrain2pu <- Kbrain2pu
+  
   
   if (fetal_fup_adjustment == TRUE){
   #After calling parameterize_pbtk to get certain maternal parameters for 
@@ -178,7 +266,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
  
   #Now let's use calc_ionization to estimate the chemical's charge profile:
   ion <- calc_ionization(
-    pH=fetal.plasma.pH,
+    pH=fetal.blood.pH,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept)
   
@@ -196,43 +284,15 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
                      
   
-  #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
-  ICRP_2002_female_tissue_mass_fractions_data <- 10^-2 * c(
-                                                   Vthyroidc = 0.0283,
-                                                   Vkidneyc = 0.458,
-                                                   Vgutc = 1.90,
-                                                   Vliverc = 2.33,
-                                                   Vlungc = 1.58,
-                                                   Vbrainc = 2.17 
-                                                   #^^though brain not in model
-                                                   )
   
-  
- parms$pre_pregnant_BW <- 61.103 #kg
-  #Override parameterize_pbtk's body weight listing with average prepregnant
-  #case, as scale dosing requires an entry named 'BW'
-  parms$BW <- parms$pre_pregnant_BW 
- parms$Vthyroidc <- ICRP_2002_female_tissue_mass_fractions_data[['Vthyroidc']]
- parms$Vkidneyc <- ICRP_2002_female_tissue_mass_fractions_data[['Vkidneyc']]
- parms$Vgutc <- ICRP_2002_female_tissue_mass_fractions_data[['Vgutc']]
- parms$Vliverc <- ICRP_2002_female_tissue_mass_fractions_data[['Vliverc']]
- parms$Vlungc <- ICRP_2002_female_tissue_mass_fractions_data[['Vlungc']]
- 
  #Remove parameters from parameterize_pbtk that aren't used in the gestational model
- parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
- parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
- parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
-parms$Qrestf <- NULL
-parms$gut_density <- 1.04
-parms$kidney_density <- 1.05
-parms$liver_density <- 1.05
-parms$lung_density <- 1.05
-parms$thyroid_density <- 1.05
-parms$adipose_density <- 0.950
-parms$ffmx_density <- 1.1
-parms$placenta_density <- 1.02
-parms$amnf_density <- 1.01
-parms$brain_density <- 1.04
+ #parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
+ #parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
+ #parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
+ #parms$Qrestf <- NULL
+
+
+
 parms$BW_cubic_theta1 <- -0.010614
 parms$BW_cubic_theta2 <- 0.029161
 parms$BW_cubic_theta3 <- -5.0203e-4
