@@ -204,23 +204,23 @@ lump_tissues <- function(Ktissue2pu.in,
 # of the placenta, where a partition coefficient can be calculated, but
 # it doesn't make sense to have one value for placenta volume on file to
 # to work with:
-  		if (this.vol > 0){
+  		if (length(this.vol) > 0){
 		Ktissue2pu.out[[this.lumped.tissue]] <- 
       Ktissue2pu.out[[this.lumped.tissue]] + 
       this.vol*Ktissue2pu.in[[this.tissue]]
   		} else {
-  		  warning('At least the volume associated with',this.tissue,' and passed to
-  		          lump_tissues is either undefined, zero, or set to a
-  		          non-physiological value. You may need to check to make sure the 
-  		          input tissue information, if no tissue volume is intended to be 
-  		          left out.')
+  		  warning('At least the volume associated with ',this.tissue,' and passed to
+  		  lump_tissues is undefined. You may need to check to make sure the 
+  		  input tissue information, if no tissue volume is intended to be 
+  		  left out.')
+  		  Ktissue2pu.out[[this.lumped.tissue]] <- Ktissue2pu.in[[this.tissue]]
   		}
 # Add the flow for this tissue to the lumped tissue:                             
   		flow[[this.lumped.tissue]] <- flow[[this.lumped.tissue]] + this.flow 
 		}
 #Calculate the average partition coefficient by dividing by the total volume of
 #the lumped tissue
-	  if (vol[[this.lumped.tissue]] > 0){
+	  if (length(vol[[this.lumped.tissue]]) > 0){
 	    Ktissue2pu.out[[this.lumped.tissue]] <- 
 	      Ktissue2pu.out[[this.lumped.tissue]] / vol[[this.lumped.tissue]]
 	  }
