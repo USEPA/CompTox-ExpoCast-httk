@@ -96,7 +96,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
     Vliverc = 2.33,
     Vlungc = 1.58,
     Vbrainc = 2.17 
-    #^^though brain not in model
+    #^^though brain not in maternal side of model
   )
   
   parms$pre_pregnant_BW <- 61.103 #kg
