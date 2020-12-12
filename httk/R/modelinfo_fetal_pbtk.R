@@ -25,7 +25,7 @@ model.list[["fetal_pbtk"]]$alltissues=c(
   "lung",           
   "muscle", 
   "skin",            
-  "spleen",          
+  "spleen",
   "red blood cells",
   "thyroid",
   "placenta")
