@@ -156,41 +156,54 @@ lump_tissues <- function(Ktissue2pu.in,
 		{
       this.vol.param <- paste("V",this.tissue,"c",sep="")
       this.flow.param <- paste("Q",this.tissue,"f",sep="")
-      if (!is.null(parameters) & !(this.flow.param %in% names(parameters)))
-        stop(paste(
-               "Parameters != NULL but", this.flow.param, "not in parameters."))
-      if (!is.null(parameters) & !(this.vol.param %in% names(parameters)))
-        stop(paste(
-               "Parameters != NULL but", this.flow.param, "not in parameters."))
-      else if (!is.null(parameters))
-      {
-        this.vol <- parameters[[this.vol.param]]
-        this.flow <- parameters[[this.flow.param]]
-      }   
-			else if (!(this.tissue %in% unique(tissue.data[,'Tissue'])))
+      
+      if (all.tissues[[this.tissue]] & this.tissue !="rest")
+        stop(paste(this.tissue,"assigned to multiple lumped tissues"))
+      
+      if (!is.null(parameters)) {
+        if (!(this.flow.param %in% names(parameters)) & is.null(tissue.flows))
+          stop(paste(
+            "Parameters != NULL but", this.flow.param, "not in parameters or tissue.flows."))
+        #if this.flow.param is in parameters  vv
+        else if (is.null(tissue.flows)) this.flow <- parameters[[this.flow.param]]
+        else this.flow <- tissue.flows[[this.lumped.tissue]]
+        
+        if (!(this.vol.param %in% names(parameters)) & is.null(tissue.vols))
+          stop(paste(
+            "Parameters != NULL but", this.flow.param, "not in parameters or tissue.vols."))
+        #if this.vol.param is in parameters  vv
+        else if (is.null(tissue.vols)) this.vol <- parameters[[this.vol.param]]
+        else this.vol <- tissue.vols[[this.lumped.tissue]]
+        
+      } else if (!(this.tissue %in% unique(tissue.data[,'Tissue'])) & 
+                 (is.null(tissue.vols) | is.null(tissue.flows)) )
 				stop(paste(
                this.tissue,
-               "not in list:",
+               "Not provided in tissue.vols/tissue.flow, and is not in list:",
                paste(unique(tissue.data[,'Tissue']),collapse=', ')))
-			else if (all.tissues[[this.tissue]] & this.tissue !="rest")
-				stop(paste(this.tissue,"assigned to multiple lumped tissues"))
       else {
-        if (is.null(tissue.vols))
-        {
+        #give tissue.vols and tissue.flows priority
+        if (!(is.null(tissue.vols))) this.vol <- 
+                                    tissue.vols[[this.lumped.tissue]]
+            
+        if (!(is.null(tissue.flows))) this.flow <- 
+                                    tissue.flows[[this.lumped.tissue]]
+            
+        if ((is.null(tissue.vols)) | is.null(tissue.flows)) {
       		this.subset <- subset(
             tissue.data,
             Tissue == this.tissue & tolower(Species) == tolower(species))
+      		if (is.null(tissue.vols)) {
           this.vol <- as.numeric(subset(
                                    this.subset,
                                    variable == 'Vol (L/kg)')[,'value'])
-          this.flow <- as.numeric(subset(
-                         this.subset,
-                         variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
-            as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
-  			} else {
-          this.vol <- tissue.vols[[this.lumped.tissue]]
-          this.flow <- tissue.flows[[this.lumped.tissue]] / 
-            as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
+      		} 
+      		if (is.null(tissue.flows)){
+      		  this.flow <- as.numeric(subset(
+      		    this.subset,
+      		    variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
+      		    as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
+      		} 
         }
       }
 # Mark that this tissue has been lumped:
