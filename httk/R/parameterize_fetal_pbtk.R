@@ -282,16 +282,9 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
                      
-  
-  
- #Remove parameters from parameterize_pbtk that aren't used in the gestational model
- #parms$Vrestc <- parms$Qadiposef <- parms$Qcardiacc <- parms$Qkidneyf <- NULL 
- #parms$Qbrainf <- parms$Qlungf <- parms$Qliverf <- parms$Qgutf <- NULL
- #parms$Vbrainc <- parms$Kbrain2pu <- parms$Qgfrc <- parms$Vadiposec <- NULL
- #parms$Qrestf <- NULL
 
-
-
+#Now for the many parameters associated with the dynamic physiologic equations
+#for pregnancy assembled by Dustin Kapraun and others in 2019.
 parms$BW_cubic_theta1 <- -0.010614
 parms$BW_cubic_theta2 <- 0.029161
 parms$BW_cubic_theta3 <- -5.0203e-4
