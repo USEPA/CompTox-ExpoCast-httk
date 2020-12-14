@@ -404,7 +404,6 @@ model.list[["fetal_pbtk"]]$state.vars <- c(
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
 model.list[["fetal_pbtk"]]$derivative.output.names <- c(
-  "tw", #time in weeks
   "Cgut",
   "Cliver",
   "Cven",
