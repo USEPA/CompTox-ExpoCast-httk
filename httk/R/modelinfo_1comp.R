@@ -171,9 +171,6 @@ model.list[["1compartment"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vdist")
 
-#Governs how tissues are lumped:
-model.list[["1compartment"]]$tissue.list <- NULL
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["1compartment"]]$calcpc <- TRUE
 
