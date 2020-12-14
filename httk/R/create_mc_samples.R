@@ -345,7 +345,7 @@ Set species=\"Human\" to run httkpop model.')
      lumptissues <- lump_tissues(
                       PCs,
                       parameters=parameters.dt,
-                      tissuelist=model.list[[model]]$tissue.list,
+                      tissuelist=model.list[[model]]$tissuelist,
                       species=species,
                       model=model
                       ) 

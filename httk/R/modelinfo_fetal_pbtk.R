@@ -373,6 +373,34 @@ model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetalpbtk"
 # of time, state, and parameters:
 model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetalpbtk"
 
+# This ORDERED LIST of variables are always calculated in amounts (must match
+# Model variables: States in C code): 
+model.list[["fetal_pbtk"]]$state.vars <- c(
+  "Agutlumen",
+  "Agut",
+  "Aliver",
+  "Aven",
+  "Alung",
+  "Aart",
+  "Aadipose",
+  "Arest",
+  "Akidney", 
+  "Atubules",
+  "Ametabolized",
+  "AUC",
+  "AUC_fetus",
+  "Athyroid",
+  "Aplacenta",
+  "Afgut",
+  "Aflung",
+  "Afliver",
+  "Afven",
+  "Afart",
+  "Afrest",
+  "Afthyroid",
+  "Afkidney",
+  "Afbrain") 
+
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
 model.list[["fetal_pbtk"]]$derivative.output.names <- c(
@@ -399,8 +427,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfkidney",
   "Cfbrain",
   "Afplasma",
-  "Cfplasma"
-)
+  "Cfplasma")
+
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
@@ -431,7 +459,6 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfbrain",
   "Cfplasma"
 )
-
 
 # Allowable units assigned to dosing input:
 model.list[["fetal_pbtk"]]$allowed.units.input <- list(
@@ -490,35 +517,6 @@ model.list[["fetal_pbtk"]]$dose.variable <- list(oral="Agutlumen",
 #or "multiply" to change the value to C1 <- C1*dose
 model.list[["fetal_pbtk"]]$dose.type <- list(oral="add",
                                        iv="add")
-
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
-model.list[["fetal_pbtk"]]$state.vars <- c(
-  "Agutlumen",
-  "Agut",
-  "Aliver",
-  "Aven",
-  "Alung",
-  "Aart",
-  "Aadipose",
-  "Arest",
-  "Akidney", 
-  "Atubules",
-  "Ametabolized",
-  "AUC",
-  "AUC_fetus",
-  "Athyroid",
-  "Aplacenta",
-  "Afgut",
-  "Aflung",
-  "Afliver",
-  "Afven",
-  "Afart",
-  "Afrest",
-  "Afthyroid",
-  "Afkidney",
-  "Afbrain"
-) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["fetal_pbtk"]]$required.params <- c(

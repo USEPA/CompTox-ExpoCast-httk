@@ -29,6 +29,7 @@ model.list[["pbtk"]]$alltissues=c(
   "red blood cells",
   "thyroid")
 
+
 # How the tissues from tissue.data are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments that draw info
 # from tissue.data; everything else from alltissues should be lumped.
@@ -79,7 +80,7 @@ model.list[["pbtk"]]$param.names <- c(
   "Vrestc",
   "Vvenc")
                     
-# This subset of R parameters are needed to initially parametrize the compiled
+# This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code, even if 
 # some items are omitted)
 model.list[["pbtk"]]$Rtosolvermap <- list(
@@ -293,12 +294,6 @@ model.list[["pbtk"]]$httkpop.params <- c(
   "Vrestc",
   "Vvenc")
 
-#Governs how tissues are lumped:
-model.list[["pbtk"]]$tissue.list <- list(
-                         liver=c("liver"),
-                         kidney=c("kidney"),
-                         lung=c("lung"),
-                         gut=c("gut"))
                          
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["pbtk"]]$calcpc <- TRUE
