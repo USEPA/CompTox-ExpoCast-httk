@@ -234,11 +234,6 @@ model.list[["3compartment"]]$httkpop.params <- c(
   "Qliver",
   "Ratioblood2plasma")
 
-#Governs how tissues are lumped:
-model.list[["pbtk"]]$tissue.list <- list(
-               liver=c("liver"),
-               gut=c("gut"))
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["3compartment"]]$calcpc <- TRUE
 

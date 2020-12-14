@@ -263,14 +263,14 @@ solve_model <- function(chem.name = NULL,
           concentrations.")
   } 
   #The compartment_units entries should correspond to the names of some entry in
-  #the derivative_output_names and/or state.vars
+  #the derivative.output.names and/or state.vars
   if (any(!names(compartment_units) %in% c(derivative_output_names,
                                            state.vars))) {
     stop("The names of the compartments in compartment_units must comprise
-          some subset of the named entries in derivative_output_names and 
+          some subset of the named entries in derivative.output.names and 
           state.vars for model ", model)
   } else if (!all(derivative_output_names %in% names(compartment_units))){
-    stop("Each entry in derivative_output_names should have a corresponding
+    stop("Each entry in derivative.output.names should have a corresponding
           units specification in compartment_units for model ", model)
   }
   

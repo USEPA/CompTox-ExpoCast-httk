@@ -350,13 +350,6 @@ model.list[["gas_pbtk"]]$httkpop.params <- c(
   "Vrestc",
   "Vvenc")
 
-#Governs how tissues are lumped:
-model.list[["gas_pbtk"]]$tissue.list <- list(
-  liver=c("liver"),
-  kidney=c("kidney"),
-  lung=c("lung"),
-  gut=c("gut"))
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["gas_pbtk"]]$calcpc <- TRUE
 
