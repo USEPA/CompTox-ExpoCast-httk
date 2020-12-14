@@ -3,7 +3,7 @@
 
    Model File:  fetalpbtk.model
 
-   Date:  Fri Dec 04 16:58:47 2020
+   Date:  Mon Dec 14 16:44:19 2020
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -39,8 +39,7 @@
      Afkidney = 0.0,
      Afbrain = 0.0,
 
-   24 Outputs:
-    "tw",
+   23 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -233,30 +232,29 @@
 #define ID_Afbrain 0x00017
 
 /* Model variables: Outputs */
-#define ID_tw 0x00000
-#define ID_Cgut 0x00001
-#define ID_Cliver 0x00002
-#define ID_Cven 0x00003
-#define ID_Clung 0x00004
-#define ID_Cart 0x00005
-#define ID_Cadipose 0x00006
-#define ID_Crest 0x00007
-#define ID_Ckidney 0x00008
-#define ID_Cplasma 0x00009
-#define ID_Aplasma 0x0000a
-#define ID_Cthyroid 0x0000b
-#define ID_Cplacenta 0x0000c
-#define ID_Cfliver 0x0000d
-#define ID_Cfven 0x0000e
-#define ID_Cfart 0x0000f
-#define ID_Cfgut 0x00010
-#define ID_Cflung 0x00011
-#define ID_Cfrest 0x00012
-#define ID_Cfthyroid 0x00013
-#define ID_Cfkidney 0x00014
-#define ID_Cfbrain 0x00015
-#define ID_Afplasma 0x00016
-#define ID_Cfplasma 0x00017
+#define ID_Cgut 0x00000
+#define ID_Cliver 0x00001
+#define ID_Cven 0x00002
+#define ID_Clung 0x00003
+#define ID_Cart 0x00004
+#define ID_Cadipose 0x00005
+#define ID_Crest 0x00006
+#define ID_Ckidney 0x00007
+#define ID_Cplasma 0x00008
+#define ID_Aplasma 0x00009
+#define ID_Cthyroid 0x0000a
+#define ID_Cplacenta 0x0000b
+#define ID_Cfliver 0x0000c
+#define ID_Cfven 0x0000d
+#define ID_Cfart 0x0000e
+#define ID_Cfgut 0x0000f
+#define ID_Cflung 0x00010
+#define ID_Cfrest 0x00011
+#define ID_Cfthyroid 0x00012
+#define ID_Cfkidney 0x00013
+#define ID_Cfbrain 0x00014
+#define ID_Afplasma 0x00015
+#define ID_Cfplasma 0x00016
 
 /* Parameters */
 static double parms[134];
@@ -401,20 +399,20 @@ static double forc[0];
 
 
 /*----- Initializers */
-void initmodfetalpbtk (void (* odeparms)(int *, double *))
+void initmod (void (* odeparms)(int *, double *))
 {
   int N=134;
   odeparms(&N, parms);
 }
 
-void initforcfetalpbtk (void (* odeforcs)(int *, double *))
+void initforc (void (* odeforcs)(int *, double *))
 {
   int N=0;
   odeforcs(&N, forc);
 }
 
 
-void getParmsfetalpbtk (double *inParms, double *out, int *nout) {
+void getParms (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -438,8 +436,9 @@ void getParmsfetalpbtk (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
+  /* local */ double tw;
   /* local */ double BW;
   /* local */ double Wadipose;
   /* local */ double Wfkidney;
@@ -495,35 +494,35 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   /* local */ double Qfrest;
   /* local */ double Qfbypass;
 
-  yout[ID_tw] = (*pdTime) / 7.0 ;
+  tw = (*pdTime) / 7.0 ;
 
-  BW = pre_pregnant_BW + BW_cubic_theta1 * yout[ID_tw] + BW_cubic_theta2 * pow ( yout[ID_tw] , 2 ) + BW_cubic_theta3 * pow ( yout[ID_tw] , 3 ) ;
+  BW = pre_pregnant_BW + BW_cubic_theta1 * tw + BW_cubic_theta2 * pow ( tw , 2 ) + BW_cubic_theta3 * pow ( tw , 3 ) ;
 
-  Wadipose = Wadipose_linear_theta0 + Wadipose_linear_theta1 * yout[ID_tw] ;
+  Wadipose = Wadipose_linear_theta0 + Wadipose_linear_theta1 * tw ;
 
-  Wfkidney = 0.001 * Wfkidney_gompertz_theta0 * exp ( Wfkidney_gompertz_theta1 / Wfkidney_gompertz_theta1 * ( 1 - exp ( - Wfkidney_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wfkidney = 0.001 * Wfkidney_gompertz_theta0 * exp ( Wfkidney_gompertz_theta1 / Wfkidney_gompertz_theta1 * ( 1 - exp ( - Wfkidney_gompertz_theta2 * tw ) ) ) ;
 
-  Wfthyroid = 0.001 * Wfthyroid_gompertz_theta0 * exp ( Wfthyroid_gompertz_theta1 / Wfthyroid_gompertz_theta2 * ( 1 - exp ( - Wfthyroid_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wfthyroid = 0.001 * Wfthyroid_gompertz_theta0 * exp ( Wfthyroid_gompertz_theta1 / Wfthyroid_gompertz_theta2 * ( 1 - exp ( - Wfthyroid_gompertz_theta2 * tw ) ) ) ;
 
-  Wfliver = 0.001 * Wfliver_gompertz_theta0 * exp ( Wfliver_gompertz_theta1 / Wfliver_gompertz_theta2 * ( 1 - exp ( - Wfliver_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wfliver = 0.001 * Wfliver_gompertz_theta0 * exp ( Wfliver_gompertz_theta1 / Wfliver_gompertz_theta2 * ( 1 - exp ( - Wfliver_gompertz_theta2 * tw ) ) ) ;
 
-  Wfbrain = 0.001 * Wfbrain_gompertz_theta0 * exp ( Wfbrain_gompertz_theta1 / Wfbrain_gompertz_theta2 * ( 1 - exp ( - Wfbrain_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wfbrain = 0.001 * Wfbrain_gompertz_theta0 * exp ( Wfbrain_gompertz_theta1 / Wfbrain_gompertz_theta2 * ( 1 - exp ( - Wfbrain_gompertz_theta2 * tw ) ) ) ;
 
-  Wfgut = 0.001 * Wfgut_gompertz_theta0 * exp ( Wfgut_gompertz_theta1 / Wfgut_gompertz_theta2 * ( 1 - exp ( - Wfgut_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wfgut = 0.001 * Wfgut_gompertz_theta0 * exp ( Wfgut_gompertz_theta1 / Wfgut_gompertz_theta2 * ( 1 - exp ( - Wfgut_gompertz_theta2 * tw ) ) ) ;
 
-  Wflung = 0.001 * Wflung_gompertz_theta0 * exp ( Wflung_gompertz_theta1 / Wflung_gompertz_theta2 * ( 1 - exp ( - Wflung_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Wflung = 0.001 * Wflung_gompertz_theta0 * exp ( Wflung_gompertz_theta1 / Wflung_gompertz_theta2 * ( 1 - exp ( - Wflung_gompertz_theta2 * tw ) ) ) ;
 
-  hematocrit = hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * yout[ID_tw] + hematocrit_quadratic_theta2 * pow ( yout[ID_tw] , 2 ) ;
+  hematocrit = hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ) ;
 
-  fhematocrit = fhematocrit_cubic_theta1 * yout[ID_tw] + fhematocrit_cubic_theta2 * pow ( yout[ID_tw] , 2 ) + fhematocrit_cubic_theta3 * pow ( yout[ID_tw] , 3 ) ;
+  fhematocrit = fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ;
 
-  fBW = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( - fBW_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  fBW = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( - fBW_gompertz_theta2 * tw ) ) ) ;
 
-  Vplacenta = 0.001 * ( Vplacenta_cubic_theta1 * yout[ID_tw] + Vplacenta_cubic_theta2 * pow ( yout[ID_tw] , 2 ) + Vplacenta_cubic_theta3 * pow ( yout[ID_tw] , 3 ) ) ;
+  Vplacenta = 0.001 * ( Vplacenta_cubic_theta1 * tw + Vplacenta_cubic_theta2 * pow ( tw , 2 ) + Vplacenta_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Vamnf = 0.001 * Vamnf_logistic_theta0 / ( 1 + exp ( - Vamnf_logistic_theta1 * ( yout[ID_tw] - Vamnf_logistic_theta2 ) ) ) ;
+  Vamnf = 0.001 * Vamnf_logistic_theta0 / ( 1 + exp ( - Vamnf_logistic_theta1 * ( tw - Vamnf_logistic_theta2 ) ) ) ;
 
-  Vplasma = Vplasma_mod_logistic_theta0 / ( 1 + exp ( - Vplasma_mod_logistic_theta1 * ( yout[ID_tw] - Vplasma_mod_logistic_theta2 ) ) ) + Vplasma_mod_logistic_theta3 ;
+  Vplasma = Vplasma_mod_logistic_theta0 / ( 1 + exp ( - Vplasma_mod_logistic_theta1 * ( tw - Vplasma_mod_logistic_theta2 ) ) ) + Vplasma_mod_logistic_theta3 ;
 
   Vrbcs = hematocrit / ( 100 - hematocrit ) * Vplasma ;
 
@@ -557,29 +556,29 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung ) ;
 
-  Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * yout[ID_tw] + Qcardiac_cubic_theta2 * pow ( yout[ID_tw] , 2 ) + Qcardiac_cubic_theta3 * pow ( yout[ID_tw] , 3 ) ) ;
+  Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_cubic_theta2 * pow ( tw , 2 ) + Qcardiac_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Qgut = 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * yout[ID_tw] ) * Qcardiac ;
+  Qgut = 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qkidney = 24 * ( Qkidney_cubic_theta0 + Qkidney_cubic_theta1 * yout[ID_tw] + Qkidney_cubic_theta2 * pow ( yout[ID_tw] , 2 ) + Qkidney_cubic_theta3 * pow ( yout[ID_tw] , 3 ) ) ;
+  Qkidney = 24 * ( Qkidney_cubic_theta0 + Qkidney_cubic_theta1 * tw + Qkidney_cubic_theta2 * pow ( tw , 2 ) + Qkidney_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * yout[ID_tw] ) * Qcardiac ;
+  Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_terminal ) / term * yout[ID_tw] ) * Qcardiac ;
+  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_terminal ) / term * tw ) * Qcardiac ;
 
   Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ;
 
-  Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * yout[ID_tw] ) * Qcardiac ;
+  Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * Qcardiac ;
 
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
-  Qgfr = 60 * 24 * 0.001 * ( Qgfr_quadratic_theta0 + Qgfr_quadratic_theta1 * yout[ID_tw] + Qgfr_quadratic_theta2 * pow ( yout[ID_tw] , 2 ) ) ;
+  Qgfr = 60 * 24 * 0.001 * ( Qgfr_quadratic_theta0 + Qgfr_quadratic_theta1 * tw + Qgfr_quadratic_theta2 * pow ( tw , 2 ) ) ;
 
-  Qfrvtl = 60 * 24 * 0.001 * Qfrvtl_logistic_theta0 / ( 1 + exp ( - Qfrvtl_logistic_theta1 * ( yout[ID_tw] - Qfrvtl_logistic_theta2 ) ) ) ;
+  Qfrvtl = 60 * 24 * 0.001 * Qfrvtl_logistic_theta0 / ( 1 + exp ( - Qfrvtl_logistic_theta1 * ( tw - Qfrvtl_logistic_theta2 ) ) ) ;
 
-  Qflvtl = 60 * 24 * 0.001 * Qflvtl_logistic_theta0 / ( 1 + exp ( - Qflvtl_logistic_theta1 * ( yout[ID_tw] - Qflvtl_logistic_theta2 ) ) ) ;
+  Qflvtl = 60 * 24 * 0.001 * Qflvtl_logistic_theta0 / ( 1 + exp ( - Qflvtl_logistic_theta1 * ( tw - Qflvtl_logistic_theta2 ) ) ) ;
 
-  Qfda = 60 * 24 * 0.001 * Qfda_logistic_theta0 / ( 1 + exp ( - Qfda_logistic_theta1 * ( yout[ID_tw] - Qfda_logistic_theta2 ) ) ) ;
+  Qfda = 60 * 24 * 0.001 * Qfda_logistic_theta0 / ( 1 + exp ( - Qfda_logistic_theta1 * ( tw - Qfda_logistic_theta2 ) ) ) ;
 
   Qfartb = Qflvtl + Qfda ;
 
@@ -587,9 +586,9 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   Qflung = Qfrvtl - Qfda ;
 
-  Qfplacenta = 60 * 24 * 0.001 * Qfplacenta_logistic_theta0 / ( 1 + exp ( - Qfplacenta_logistic_theta1 * ( yout[ID_tw] - Qfplacenta_logistic_theta2 ) ) ) ;
+  Qfplacenta = 60 * 24 * 0.001 * Qfplacenta_logistic_theta0 / ( 1 + exp ( - Qfplacenta_logistic_theta1 * ( tw - Qfplacenta_logistic_theta2 ) ) ) ;
 
-  Qfdv = 60 * 24 * 0.001 * Qfdv_gompertz_theta0 * exp ( Qfdv_gompertz_theta1 / Qfdv_gompertz_theta2 * ( 1 - exp ( - Qfdv_gompertz_theta2 * yout[ID_tw] ) ) ) ;
+  Qfdv = 60 * 24 * 0.001 * Qfdv_gompertz_theta0 * exp ( Qfdv_gompertz_theta1 / Qfdv_gompertz_theta2 * ( 1 - exp ( - Qfdv_gompertz_theta2 * tw ) ) ) ;
 
   Qfgut = Qfgut_percent / Qfnonplacental_percent * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 
@@ -703,20 +702,20 @@ void derivsfetalpbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
 
 /*----- Jacobian calculations: */
-void jacfetalpbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void eventfetalpbtk (int *n, double *t, double *y)
+void event (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void rootfetalpbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
