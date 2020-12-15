@@ -217,7 +217,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetalpbtk"
+model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetal_pbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model.
@@ -367,11 +367,11 @@ model.list[["fetal_pbtk"]]$compiled.param.names <- c(
 )
 
 # This function initializes the state vector for the compiled model:
-model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetalpbtk"
+model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetal_pbtk"
 
 # This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
-model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetalpbtk"
+model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetal_pbtk"
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
