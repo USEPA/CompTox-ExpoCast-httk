@@ -388,7 +388,7 @@ solve_model <- function(chem.name = NULL,
                          names(compartment_units)) == TRUE]) == "C"))
           {#Use the units for this compartment from compartment_units to
            #get a units conversion factor, even if trivially 1
-            this.compartment.units = compartment_units[paste("C",tissue,sep='')]
+            this.compartment.units = compartment_units[[paste("C",tissue,sep='')]]
             units_conversion_factor = 
               convert_units(input.units=this.compartment.units,
                             output.units='uM',
@@ -399,7 +399,7 @@ solve_model <- function(chem.name = NULL,
        #Again it is assumed the units of this.compartment in initial.values is
        #a simple "tissue" volume scaling away from the units specified for
        #the amount in compartment_units
-            this.state.units = compartment_units[paste("A",tissue,sep='')]
+            this.state.units = compartment_units[[paste("A",tissue,sep='')]]
             units_conversion_factor = 
               convert_units(input.units=this.state.units,
                             output.units='umol',
@@ -468,9 +468,9 @@ solve_model <- function(chem.name = NULL,
   
   #Get a units conversion factor to make sure all dosing metrics are
   #based in micromoles
-  intrinsic.units <- c('mg/l','um','ppmv')
+  intrinsic.units <- c('mg/l','uM','ppmv')
   extrinsic.units <- c('mg','umol')
-  if (dosing.units %in% intrinsic.units) {
+  if (dosing.units %in% tolower(intrinsic.units)) {
       dose_units_conversion_factor <- 
                  convert_units(input.units=dosing.units,
                                output.units='um',
@@ -612,18 +612,18 @@ for (this.compartment in names(compartment_units)){
   if (firstchar(this.compartment) == "C"){
     output_conversion_factor = convert_units(
                           input.units = 'uM',
-                          output.units = compartment_units[this.compartment],
+                          output.units = compartment_units[[this.compartment]],
                           MW = MW)
   } else if (firstchar(this.compartment) == "A"){
       if (substr(this.compartment, start=1, stop=3) == "AUC"){
         output_conversion_factor = convert_units(
             input.units = "uM",
-            output.units = sub("\\*days","",compartment_units[this.compartment]),
+            output.units = sub("\\*days","",compartment_units[[this.compartment]]),
             MW = MW)
       } else{ #then this.compartment should correspond to an amount
          output_conversion_factor = convert_units(
                           input.units = 'umol',
-                          output.units = compartment_units[this.compartment],
+                          output.units = compartment_units[[this.compartment]],
                           MW = MW)
     }
   }
@@ -670,14 +670,6 @@ for (this.compartment in names(compartment_units)){
   
   class(out) <- c('matrix','deSolve')
   
-
-
-# Convert from uM to mg/l if requested
-  if (tolower(output.units)=='mg/l')
-  { 
-    time.index <- which(colnames(out)=="time")
-    out[,-time.index] <- out[,-time.index] * 1e3 * MW / 1e6 # uM -> mg/L
-  }
   
 # Document the values produced by the simulation:  
   if(!suppress.messages)
