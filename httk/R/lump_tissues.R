@@ -22,9 +22,9 @@
 #' @param parameters A list of physiological parameters including flows and
 #' volumes for tissues in \code{tissuelist}
 #' @param tissuelist Manually specifies compartment names and tissues, which
-#' override the standard compartment names and tissues that should be specified
-#' in a model's associated modelinfo file. Remaining tissues in the model's 
-#' associated \code{alltissues} listing are lumped in the rest of the body.
+#' override the standard compartment names and tissues that are usually
+#' specified in a model's associated modelinfo file. Remaining tissues in the
+#' model's associated \code{alltissues} listing are lumped in the rest of the body.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
@@ -123,7 +123,10 @@ lump_tissues <- function(Ktissue2pu.in,
   }
   
   #Check to make sure the tissuelist is a list of character vectors.
-  if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+  if (!(is.null(tissuelist))){
+    if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
+NULL if the model is a 1 compartment model where no lumping is necessary.") 
+  }
   
 # This loop adds up the volumes and flows for the tissues within each lumped 
 # tissue as well as Red blood cells
