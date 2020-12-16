@@ -174,7 +174,7 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
         
         if (!(this.vol.param %in% names(parameters)))
           stop(paste(
-            "Parameters != NULL but", this.flow.param, "not in parameters."))
+            "Parameters != NULL but", this.vol.param, "not in parameters."))
         #if this.vol.param is in parameters  vv
         else this.vol <- parameters[[this.vol.param]]
         
