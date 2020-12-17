@@ -74,6 +74,10 @@ lump_tissues <- function(Ktissue2pu.in,
   Tissue <- Species <- varable <- Parameter <- variable <- NULL
 #End R CMD CHECK appeasement.
 
+  if ((is.null(model)) & is.null(parameters))
+    stop('The "model" variable must be specified if a complete set of
+          "parameters" is not otherwise provided.')
+  
   if (length(Ktissue2pu.in) != length(unique(tissue.data[,'Tissue'])) | 
       !all(unique(tissue.data[,'Tissue']) %in% 
         c(substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3)
