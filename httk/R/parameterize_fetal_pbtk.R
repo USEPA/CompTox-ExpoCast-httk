@@ -190,7 +190,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                 model = "fetal_pbtk", tissue.vols = tissue.vols.list,
                 tissuelist=list(
                   gut = c("gut"), liver=c("liver"), kidney=c("kidney"), 
-                  lung=c("lung"), thyroid = c("thyroid"),
+                  lung=c("lung"), thyroid = c("thyroid"), brain = c("brain"),
                   placenta = c("placenta")))
   lumped_fetal_pcs <- lumped_tissue_values_fetus[substr(names(
     lumped_tissue_values_fetus),1,1) == 'K']
