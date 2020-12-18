@@ -74,17 +74,46 @@ lump_tissues <- function(Ktissue2pu.in,
   Tissue <- Species <- varable <- Parameter <- variable <- NULL
 #End R CMD CHECK appeasement.
 
+  #run some basic checks for naming consistency and completeness on input: 
   if ((is.null(model)) & is.null(parameters))
     stop('The "model" variable must be specified if a complete set of
           "parameters" is not otherwise provided.')
   
-  if (length(Ktissue2pu.in) != length(unique(tissue.data[,'Tissue'])) | 
-      !all(unique(tissue.data[,'Tissue']) %in% 
-        c(substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3)
-        [!substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3) %in% 
-          'rbc'],'red blood cells'))) 
-    stop(paste('Ktissue2pu.in must contain the tissues from tissue.data:',
-      paste(unique(tissue.data[,'Tissue']),collapse=', ')))
+  #Before using tissuelist, make sure it is initialized with the tissuelist entry
+  #from the modelinfo file of interest. If tissuelist is already manually
+  #specified, it takes priority.
+  if (is.null(tissuelist)){
+    tissuelist <- model.list[[model]]$tissuelist
+  }
+  
+  if (!all(tissuelist %in% tissuenames)){
+    stop("Not all of the tissues/compartments specified in \"tissuelist\" 
+are present in the entries of the associated modelinfo file's \"alltissues.\"")
+  }
+  
+  #Check to make sure the tissuelist is a list of character vectors.
+  if (!(is.null(tissuelist))){
+    if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
+NULL if the model is a 1 compartment model where no lumping is necessary.") 
+  }
+  
+  # Now list all tissues/compartments for which a model needs partitioning
+  # information, regardless of whether the tissue/compartment is to be lumped 
+  # or not.  
+  tissuenames <- sort(unique(model.list[[model]]$alltissues))
+  
+  if (is.null(parameters)){ #if full set of "parameters" not provided directly,
+    #then we need to have partition coefficients from Ktissue2pu.in with the
+    #right names.
+    tissue_name_verification_vec <- 
+        substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3)
+    if (!all(tissuenames %in% tissue_name_verification_vec)){
+      stop(paste('These names listed in the associated modelinfo file\'s
+\"alltissues\" list must have correspondingly named entries in Ktissue2pu.in
+if a complete \"parameters\" object is otherwise unspecified:',
+                 paste(tissuenames, collapse=', ')))
+    }
+  }
       
   if (!(species %in% colnames(physiology.data)))
   {
@@ -100,37 +129,26 @@ lump_tissues <- function(Ktissue2pu.in,
 	flow <- list()
 	Ktissue2pu.out <- list()
 
-# List all tissues for which HTTK has human tissue information. 
-# This will be used in lumping.  
-  tissuenames <- sort(unique(model.list[[model]]$alltissues))
  
 # The vector all.tissues indicates whether each tissue in tissue.data has been 
 # lumped yet (TRUE/FALSE)	
-  all.tissues <- rep(FALSE,length(unique(tissuenames)))
-	names(all.tissues) <- unique(tissuenames)
+  all.tissues <- rep(FALSE,length(tissuenames))
+	names(all.tissues) <- tissuenames
   #Renames pcs to match tissue names
   names(Ktissue2pu.in) <- substr(
                             names(Ktissue2pu.in),
                             2,
                             nchar(names(Ktissue2pu.in))-3)
+  
+  #Red blood cells are not involved in this lumping scheme, and are
+  #kept separate if they are indicated in the tissuenames list
+  if ("red blood cells" %in% tissuenames){
   names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'rbc'] <- 'red blood cells'
 # Blood cells only need a partition coefficient:
   Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
   all.tissues["red blood cells"] <- T
- 
-  
-#Before using tissuelist, make sure it is initialized with the tissuelist entry
-#from the modelinfo file of interest. If tissuelist is already manually
-#specified, it takes priority.
-  if (is.null(tissuelist)){
-    tissuelist <- model.list[[model]]$tissuelist
   }
-  
-  #Check to make sure the tissuelist is a list of character vectors.
-  if (!(is.null(tissuelist))){
-    if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
-NULL if the model is a 1 compartment model where no lumping is necessary.") 
-  }
+
   
 # This loop adds up the volumes and flows for the tissues within each lumped 
 # tissue as well as Red blood cells
@@ -310,8 +328,13 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
       vol[[this.tissue]] <- this.vol
     }
   }
-
+  
+  #handle red blood cells separately due to its variable naming conventions
+  if ("red blood cells" %in% tissuenames){
   names(Ktissue2pu.out)[names(Ktissue2pu.out) == 'red blood cells'] <- 'rbc'
+  }
+  
+  #Now assign the general values to the output variables. 
   names(Ktissue2pu.out) <- paste("K",names(Ktissue2pu.out),"2pu",sep='')
   names(vol) <- paste('V',names(vol),'c',sep='')
   names(flow)[names(flow) == 'liver'] <- 'total.liver'
