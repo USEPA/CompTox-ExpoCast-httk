@@ -13,7 +13,10 @@ model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
-# do we include placenta or not? Here, yes we do):
+# do we include placenta or not? Here, yes we do). They should correspond
+# in name to the names present in the tissue.data object, if the parameters
+# necessary for describing the tissue/compartment aren't going to be provided
+# otherwise.
 model.list[["fetal_pbtk"]]$alltissues=c(
   "adipose",
   "bone",            
@@ -26,7 +29,6 @@ model.list[["fetal_pbtk"]]$alltissues=c(
   "muscle", 
   "skin",            
   "spleen",
-  "red blood cells",
   "thyroid",
   "placenta")
 
@@ -65,8 +67,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "placenta_density",
   "amnf_density",                 
   "brain_density",
-  "Kfbrain2pu",
-  "Krbc2pu",                      
+  "Kfbrain2pu",                    
   "Kadipose2pu",
   "Kgut2pu",
   "Kliver2pu",                    
@@ -230,7 +231,6 @@ model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "kgutabs",
   "Kkidney2pu",
   "Kliver2pu",
-  "Krbc2pu",
   "Kadipose2pu",
   "Krest2pu",
   "Klung2pu",
