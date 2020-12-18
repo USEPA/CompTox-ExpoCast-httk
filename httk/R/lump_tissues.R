@@ -79,6 +79,12 @@ lump_tissues <- function(Ktissue2pu.in,
     stop('The "model" variable must be specified if a complete set of
           "parameters" is not otherwise provided.')
   
+  # List all tissues/compartments for which a model needs partitioning
+  # information, regardless of whether the tissue/compartment is to be lumped 
+  # or not.  
+  tissuenames <- sort(unique(model.list[[model]]$alltissues))
+  
+  
   #Before using tissuelist, make sure it is initialized with the tissuelist entry
   #from the modelinfo file of interest. If tissuelist is already manually
   #specified, it takes priority.
@@ -96,24 +102,34 @@ are present in the entries of the associated modelinfo file's \"alltissues.\"")
     if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
 NULL if the model is a 1 compartment model where no lumping is necessary.") 
   }
-  
-  # Now list all tissues/compartments for which a model needs partitioning
-  # information, regardless of whether the tissue/compartment is to be lumped 
-  # or not.  
-  tissuenames <- sort(unique(model.list[[model]]$alltissues))
-  
-  if (is.null(parameters)){ #if full set of "parameters" not provided directly,
-    #then we need to have partition coefficients from Ktissue2pu.in with the
-    #right names.
-    tissue_name_verification_vec <- 
+    
+    #Because red blood cells are not involved in this lumping scheme, and
+    #because they also undergo a name change between the associated partition
+    #coefficient and the "red blood cells" name from tissue.data, they are
+    #kept separate if they are indicated in the tissuenames list. 
+    if ("red blood cells" %in% tissuenames){
+      names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'Krbc2pu'] <- 'red blood cells'
+      pcs_names_standard_treatment <- 
+        names(Ktissue2pu.in)[names(Ktissue2pu.in) != "red blood cells"]
+      tissue_name_verification_vec <- c("red blood cells",
+        substr(pcs_names_standard_treatment,2, 
+               nchar(pcs_names_standard_treatment)-3))
+    } else {
+      tissue_name_verification_vec <- 
         substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3)
+    }
+    #Exclude "rest" from list of tissues called for among alltissues entries
+    tissue_name_verification_vec <- 
+      tissue_name_verification_vec[tissue_name_verification_vec != "rest"] 
+    
+    #Now use this verification vector to check if the requested tissuenames 
+    #are among those for which partitioning info has been passed. 
     if (!all(tissuenames %in% tissue_name_verification_vec)){
       stop(paste('These names listed in the associated modelinfo file\'s
-\"alltissues\" list must have correspondingly named entries in Ktissue2pu.in
-if a complete \"parameters\" object is otherwise unspecified:',
+\"alltissues\" list must have correspondingly named entries in Ktissue2pu.in:',
                  paste(tissuenames, collapse=', ')))
     }
-  }
+  
       
   if (!(species %in% colnames(physiology.data)))
   {
@@ -140,11 +156,9 @@ if a complete \"parameters\" object is otherwise unspecified:',
                             2,
                             nchar(names(Ktissue2pu.in))-3)
   
-  #Red blood cells are not involved in this lumping scheme, and are
-  #kept separate if they are indicated in the tissuenames list
-  if ("red blood cells" %in% tissuenames){
-  names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'rbc'] <- 'red blood cells'
+  
 # Blood cells only need a partition coefficient:
+  if ("red blood cells" %in% tissuenames){
   Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
   all.tissues["red blood cells"] <- T
   }
