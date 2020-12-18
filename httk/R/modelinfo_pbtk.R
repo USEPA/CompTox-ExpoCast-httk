@@ -13,7 +13,11 @@ model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 # Function called for running the model:
 model.list[["pbtk"]]$solve.func <- "solve_pbtk"
 
-# Here are the tissues from tissue.data that are considered:
+# Here are the tissues from tissue.data that are considered (for example,
+# do we include placenta or not? Here, yes we do). They should correspond
+# in name to the names present in the tissue.data object, if the parameters
+# necessary for describing the tissue/compartment aren't going to be provided
+# otherwise.
 model.list[["pbtk"]]$alltissues=c(
   "adipose",
   "bone",            
