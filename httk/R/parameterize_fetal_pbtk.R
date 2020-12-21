@@ -100,8 +100,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   )
   
   parms$pre_pregnant_BW <- 61.103 #kg
-  #Override parameterize_pbtk's body weight listing with average prepregnant
-  #case, as scale dosing requires an entry named 'BW'
+  
   parms$Vthyroidc <- ICRP_2002_female_tissue_mass_fractions_data[['Vthyroidc']]
   parms$Vkidneyc <- ICRP_2002_female_tissue_mass_fractions_data[['Vkidneyc']]
   parms$Vgutc <- ICRP_2002_female_tissue_mass_fractions_data[['Vgutc']]
@@ -217,8 +216,9 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
                                   dtxsid=dtxsid,
                                   species=species,
                                   ...)
-  pbtk_parms$BW <- parms$pre_pregnant_BW #reset BW value to maternal
-  #                                prepregnant value
+  pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
+    #body weight listing with average prepregnant case, as scale dosing 
+    #requires an entry named 'BW'
   
   
   #Commit the parameters from parameterize_pbtk that aren't redundant with
