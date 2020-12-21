@@ -79,18 +79,17 @@ lump_tissues <- function(Ktissue2pu.in,
     stop('The "model" variable must be specified if a complete set of
           "parameters" is not otherwise provided.')
   
-  # List all tissues/compartments for which a model needs partitioning
-  # information, regardless of whether the tissue/compartment is to be lumped 
-  # or not.  
-  tissuenames <- sort(unique(model.list[[model]]$alltissues))
-  
-  
-  #Before using tissuelist, make sure it is initialized with the tissuelist entry
-  #from the modelinfo file of interest. If tissuelist is already manually
+  #Before using tissuelist, make sure it is initialized with the tissuelist
+  #entry from the modelinfo file of interest. If tissuelist is already manually
   #specified, it takes priority.
   if (is.null(tissuelist)){
     tissuelist <- model.list[[model]]$tissuelist
   }
+  
+  # List all tissues/compartments for which a model needs partitioning
+  # information, regardless of whether the tissue/compartment is to be lumped 
+  # or not.  
+  tissuenames <- sort(unique(model.list[[model]]$alltissues))
   
   if (!all(tissuelist %in% tissuenames)){
     stop("Not all of the tissues/compartments specified in \"tissuelist\" 
@@ -150,17 +149,19 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
 # lumped yet (TRUE/FALSE)	
   all.tissues <- rep(FALSE,length(tissuenames))
 	names(all.tissues) <- tissuenames
-  #Renames pcs to match tissue names
-  names(Ktissue2pu.in) <- substr(
-                            names(Ktissue2pu.in),
-                            2,
-                            nchar(names(Ktissue2pu.in))-3)
-  
+	
   
 # Blood cells only need a partition coefficient:
   if ("red blood cells" %in% tissuenames){
-  Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
-  all.tissues["red blood cells"] <- T
+    Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
+    all.tissues["red blood cells"] <- T
+    names(Ktissue2pu.in)[names(Ktissue2pu.in) != "red blood cells"] <- 
+      substr(names(Ktissue2pu.in),2,
+             nchar(names(Ktissue2pu.in))-3)
+  } else{
+    #Renames pcs to match tissue names
+    names(Ktissue2pu.in) <- substr(names(Ktissue2pu.in),2,
+                                   nchar(names(Ktissue2pu.in))-3)
   }
 
   
