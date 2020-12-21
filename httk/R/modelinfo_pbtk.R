@@ -166,7 +166,7 @@ model.list[["pbtk"]]$compiled.param.names <- c(
 # This function initializes the state vector for the compiled model:
 model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
 
-# This is the function that calculates the derviative of the model as a function
+# This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
 model.list[["pbtk"]]$derivative.func <- "derivspbtk"
 
