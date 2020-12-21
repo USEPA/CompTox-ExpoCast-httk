@@ -302,7 +302,7 @@ solve_model <- function(chem.name = NULL,
     if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!param_names %in% 
+        paste(param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
