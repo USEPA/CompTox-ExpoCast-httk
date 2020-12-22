@@ -1,0 +1,28 @@
+
+R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save gas_pbtk_test.R gas_pbtk_test.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_analytic_css(chem.name="pyrene",route="inhalation",model="gas_pbtk")
+Error in do.call(model.list[[model]]$analytic.css.func, c(list(chem.cas = chem.cas,  : 
+  'what' must be a function or character string
+Calls: calc_analytic_css -> do.call
+Execution halted

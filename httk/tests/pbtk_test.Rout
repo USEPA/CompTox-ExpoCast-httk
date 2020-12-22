@@ -1,0 +1,142 @@
+
+R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save pbtk_test.R pbtk_test.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk")
+Plasma concentration returned in uM units.
+[1] 1.156
+> calc_analytic_css(chem.cas="80-05-7",model="pbtk")
+Plasma concentration returned in uM units.
+[1] 1.156
+> calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
+Plasma concentration returned in uM units.
+[1] 1.156
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
+Tissue concentration for liver returned in uM units.
+[1] 21.88
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
+Tissue concentration for brain returned in uM units.
+[1] 6.751
+> 
+> head(solve_pbtk(chem.name="bisphenol a"))
+Human amounts with units otherwise unspecified by compartment.units are 
+returned in umol by default, and similarly concentrations default to
+units of uM.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+        time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.846e-01 2.354 0.2476 0.06924   3.118
+[4,] 0.02083    103.10 73.6400 4.915e+01 6.869e-01 6.023 0.6573 0.43290  12.480
+[5,] 0.03125     59.78 60.0100 5.929e+01 9.248e-01 8.257 0.9109 1.02000  20.180
+[6,] 0.04167     34.66 46.3400 5.846e+01 1.008e+00 9.065 1.0050 1.66400  23.910
+       Cplasma Atubules Ametabolized      AUC
+[1,] 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 6.000e-09 0.000000    2.000e-09 0.000000
+[3,] 3.603e-01 0.004801    1.099e+00 0.001389
+[4,] 8.695e-01 0.031310    5.474e+00 0.007917
+[5,] 1.171e+00 0.077400    1.192e+01 0.018740
+[6,] 1.275e+00 0.133200    1.884e+01 0.031620
+> head(solve_pbtk(chem.cas="80-05-7"))
+Human amounts with units otherwise unspecified by compartment.units are 
+returned in umol by default, and similarly concentrations default to
+units of uM.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+        time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.846e-01 2.354 0.2476 0.06924   3.118
+[4,] 0.02083    103.10 73.6400 4.915e+01 6.869e-01 6.023 0.6573 0.43290  12.480
+[5,] 0.03125     59.78 60.0100 5.929e+01 9.248e-01 8.257 0.9109 1.02000  20.180
+[6,] 0.04167     34.66 46.3400 5.846e+01 1.008e+00 9.065 1.0050 1.66400  23.910
+       Cplasma Atubules Ametabolized      AUC
+[1,] 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 6.000e-09 0.000000    2.000e-09 0.000000
+[3,] 3.603e-01 0.004801    1.099e+00 0.001389
+[4,] 8.695e-01 0.031310    5.474e+00 0.007917
+[5,] 1.171e+00 0.077400    1.192e+01 0.018740
+[6,] 1.275e+00 0.133200    1.884e+01 0.031620
+> head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
+Human amounts with units otherwise unspecified by compartment.units are 
+returned in umol by default, and similarly concentrations default to
+units of uM.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+        time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
+[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.371e+01 2.846e-01 2.354 0.2476 0.06924   3.118
+[4,] 0.02083    103.10 73.6400 4.915e+01 6.869e-01 6.023 0.6573 0.43290  12.480
+[5,] 0.03125     59.78 60.0100 5.929e+01 9.248e-01 8.257 0.9109 1.02000  20.180
+[6,] 0.04167     34.66 46.3400 5.846e+01 1.008e+00 9.065 1.0050 1.66400  23.910
+       Cplasma Atubules Ametabolized      AUC
+[1,] 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 6.000e-09 0.000000    2.000e-09 0.000000
+[3,] 3.603e-01 0.004801    1.099e+00 0.001389
+[4,] 8.695e-01 0.031310    5.474e+00 0.007917
+[5,] 1.171e+00 0.077400    1.192e+01 0.018740
+[6,] 1.275e+00 0.133200    1.884e+01 0.031620
+> 
+> script.args <- commandArgs(TRUE)
+> if (length(script.args) > 0) 
++ {
++   if (any(script.args=="mctest"))
++   {
++     set.seed(12345)
++     calc_mc_css(chem.name="bisphenol a",model="pbtk")
++     set.seed(12345)
++     calc_mc_css(chem.cas="80-05-7",model="pbtk")
++     set.seed(12345)
++     calc_mc_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
++   }
++   if (any(script.args=="wetmoretest"))
++   {
++     wetmore.chems <- subset(chem.physical_and_invitro.data,
++       regexpr("Wetmore",Human.Clint.Reference)!=-1 &
++       regexpr("Wetmore",Human.Funbound.plasma.Reference)!=-1)
++     Css.table <- data.frame()
++     for (this.cas in sort(get_lit_cheminfo()))
++       if (this.cas %in% get_cheminfo(model="pbtk") &
++         this.cas %in% wetmore.chems$CAS)
++       {
++         Css.table[this.cas,"Css.lit"] <- get_lit_css(chem.cas=this.cas,
++           output.units="uM",
++           which.quantile=0.5)
++         Css.table[this.cas,"Css.calc"] <- calc_analytic_css(chem.cas=this.cas,
++           model="pbtk")
++       }                                                                          
++     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
++     
++     library(ggplot2)
++     test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
++              geom_point(size=3)+
++        scale_y_log10()+
++        scale_x_log10()+
++       ylab(expression(paste(C[ss]," Literature (uM)"))) +
++       xlab(expression(paste(C[ss]," pbtk model (uM)"))) +
++       geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
++     
++     dev.new()
++     print(test.fig)
++   }
++ }
+> 
+> quit("no")
