@@ -151,13 +151,15 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
 	names(all.tissues) <- tissuenames
 	
   
-# Blood cells only need a partition coefficient:
+# Blood cells only need a partition coefficient, so the input value is ready
+# for output. Still have some special naming treatment for rbc's to go here:
   if ("red blood cells" %in% tissuenames){
     Ktissue2pu.out[["red blood cells"]] <- Ktissue2pu.in[["red blood cells"]]	
     all.tissues["red blood cells"] <- T
     names(Ktissue2pu.in)[names(Ktissue2pu.in) != "red blood cells"] <- 
-      substr(names(Ktissue2pu.in),2,
-             nchar(names(Ktissue2pu.in))-3)
+      substr(names(Ktissue2pu.in)[names(Ktissue2pu.in) != "red blood cells"],
+             2, nchar(names(Ktissue2pu.in)[names(Ktissue2pu.in) !=
+                                             "red blood cells"])-3)
   } else{
     #Renames pcs to match tissue names
     names(Ktissue2pu.in) <- substr(names(Ktissue2pu.in),2,
