@@ -1,0 +1,85 @@
+
+R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+> library(httk)
+> options(warn=-1)
+> NSAMP <- 10
+> 
+> 
+> 
+> #
+> #
+> # Test that the underlying PK models give the same answers:
+> calc_analytic_css(chem.cas="15972-60-8")
+Plasma concentration returned in uM units.
+[1] 0.2364
+> calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+Plasma concentration returned in uM units.
+[1] 0.2782
+> calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
+Plasma concentration returned in uM units.
+[1] 0.2364
+> calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
+Plasma concentration returned in uM units.
+[1] 0.279
+> 
+> 
+> 
+> #
+> #
+> # Now test Monte Carlo for a variety of chemicals:
+> # Clint and Fup are distributions, clint is zero:
+> set.seed(1234)
+> calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+94.86 
+> # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
+> set.seed(1234)
+> calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+3.898 
+> # Human.Funbound.plasma is below LOD (0.005), can't do PBPK, can't predict
+> # Rblood2plasma
+> set.seed(1234)
+> calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+95% 
+ 45 
+> # well-behaved chemical with a measured Rblood2plasma:
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+1.178 
+> 
+> 
+> 
+> #
+> #
+> # Now test that MC works across different models:
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+Error in lump_tissues(PCs, parameters = parameters.dt, tissuelist = model.list[[model]]$tissuelist,  : 
+  Parameters != NULL but Qthyroidf not in parameters.
+Calls: calc_mc_css -> create_mc_samples -> lump_tissues
+Execution halted
