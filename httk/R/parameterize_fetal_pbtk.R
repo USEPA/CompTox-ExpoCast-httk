@@ -229,8 +229,10 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
     pbtk_parms[!( substr(names(pbtk_parms),1,1) %in% c('K','V','Q') )]
   pbtk_parms_desired <- 
     pbtk_parms_desired[!(names(pbtk_parms_desired) %in% c("hematocrit",
-            "liver.density"))] #we don't use a hematocrit value from 
-  #parameterize_pbtk, and we've already captured our liver density value. 
+            "liver.density", "Rblood2plasma"))] #we don't use a hematocrit value 
+  #from parameterize_pbtk, we've already captured our liver density value, and
+  #Rblood2plasma and Rfblood2plasma are calculated in the dynamics of the 
+  #corresponding .c file using other parameters. 
   
   #capture our desired parameters from parameterize_pbtk in "parms," too
   parms <- c(parms, pbtk_parms_desired)
