@@ -291,7 +291,7 @@ static double parms[134];
 #define Vlung parms[29]
 #define Vthyroidc parms[30]
 #define Vthyroid parms[31]
-#define Fraction_unbound_plasma parms[32]
+#define Fraction_unbound_plasma parms[32]   
 #define Fraction_unbound_plasma_fetus parms[33]
 #define gut_density parms[34]
 #define kidney_density parms[35]
@@ -514,11 +514,11 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   Wflung = 0.001 * Wflung_gompertz_theta0 * exp ( Wflung_gompertz_theta1 / Wflung_gompertz_theta2 * ( 1 - exp ( - Wflung_gompertz_theta2 * tw ) ) ) ;
 
-  hematocrit = hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ) ;
+  hematocrit = (hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ))/100 ;
 
   Rblood2plasma = 1 - hematocrit + hematocrit * Krbc2pu * Fraction_unbound_plasma ;
 
-  fhematocrit = fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ;
+  fhematocrit = (fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ))/100 ;
 
   Rfblood2plasma = 1 - fhematocrit + fhematocrit * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
 
