@@ -3,7 +3,7 @@
 
    Model File:  fetalpbtk.model
 
-   Date:  Tue Dec 22 16:59:40 2020
+   Date:  Mon Dec 28 12:11:59 2020
 
    Created by:  "mod v5.6.5"
     -- a model preprocessor by Don Maszle
@@ -514,11 +514,11 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   Wflung = 0.001 * Wflung_gompertz_theta0 * exp ( Wflung_gompertz_theta1 / Wflung_gompertz_theta2 * ( 1 - exp ( - Wflung_gompertz_theta2 * tw ) ) ) ;
 
-  hematocrit = (hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ))/100 ;
+  hematocrit = ( hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ) ) / 100 ;
 
   Rblood2plasma = 1 - hematocrit + hematocrit * Krbc2pu * Fraction_unbound_plasma ;
 
-  fhematocrit = (fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ))/100 ;
+  fhematocrit = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
 
   Rfblood2plasma = 1 - fhematocrit + fhematocrit * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
 
@@ -530,7 +530,7 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   Vplasma = Vplasma_mod_logistic_theta0 / ( 1 + exp ( - Vplasma_mod_logistic_theta1 * ( tw - Vplasma_mod_logistic_theta2 ) ) ) + Vplasma_mod_logistic_theta3 ;
 
-  Vrbcs = hematocrit / ( 100 - hematocrit ) * Vplasma ;
+  Vrbcs = hematocrit / ( 1 - hematocrit ) * Vplasma ;
 
   Vven = venous_blood_fraction * ( Vrbcs + Vplasma ) ;
 
@@ -628,7 +628,7 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Cplasma] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 100 - hematocrit ) / 100 ;
+  yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
   yout[ID_Cthyroid] = y[ID_Athyroid] / Vthyroid ;
 
@@ -654,7 +654,7 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Cfplasma] = y[ID_Afven] / Vfven / Rblood2plasma ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / Rblood2plasma * ( 100 - fhematocrit ) / 100 ;
+  yout[ID_Afplasma] = y[ID_Afven] / Rblood2plasma * ( 1 - fhematocrit ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
