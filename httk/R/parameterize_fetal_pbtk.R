@@ -241,14 +241,15 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
   #Now enter the scheme for adjusting fetal fraction of chemical unbound
   #in plasma according to plasma concentration ratios described in McNamara
   #and Alcorn 2002 if desired. "fup" also goes by "Funbound.plasma"...
-  if (fetal_fup_adjustment == TRUE){
+  if (fetal_fup_adjustment == TRUE)
+  {
   #McNamara and Alcorn's "Protein Binding Predictions in Infants" from 2002
   #provides the infant:maternal plasma protein concentration parameters set 
   #here for use in implementing an adjusted Funbound.plasma scheme. We make
   #different estimates for fetal and maternal Funbound.plasma depending
   #on which plasma protein is assumed to predominate in binding the chemical.
-  Pinfant2Pmaternal_hsa = 1.163 #human serum albumin
-  Pinfant2Pmaternal_aag = 0.38 #Alpha 1-acid glycoprotein
+    Pinfant2Pmaternal_hsa = 1.163 #human serum albumin
+    Pinfant2Pmaternal_aag = 0.38 #Alpha 1-acid glycoprotein
   
   #Our assumption of which plasma protein predominates in binding the chemical
   #is based on a general observation of how acids and neutral chemicals 
@@ -260,26 +261,27 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
   #chemical is an acid and use Pinfant2Pmaternal_hsa. 
   
   #To run the calc_ionization function, though, we need the following values:
-  pKa_Donor <- parms$pKa_Donor
-  pKa_Accept <- parms$pKa_Accept
+    pKa_Donor <- parms$pKa_Donor
+    pKa_Accept <- parms$pKa_Accept
  
   #Now let's use calc_ionization to estimate the chemical's charge profile:
-  ion <- calc_ionization(
-    pH=fetal.blood.pH,
-    pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept)
+    ion <- calc_ionization(
+      pH=fetal.blood.pH,
+      pKa_Donor=pKa_Donor,
+      pKa_Accept=pKa_Accept)
+    
+      fraction_positive <- ion$fraction_positive
+    
+    if (fraction_positive > 0.5) 
+    {
+      Pinfant2Pmaternal <- Pinfant2Pmaternal_aag
+    } else Pinfant2Pmaternal <- Pinfant2Pmaternal_hsa
   
-  fraction_positive <- ion$fraction_positive
-  
-  if (fraction_positive > 0.5) {
-    Pinfant2Pmaternal <- Pinfant2Pmaternal_aag
-  } else Pinfant2Pmaternal <- Pinfant2Pmaternal_hsa
-  
-  Funbound.plasma <- parms$Funbound.plasma #value of Funbound.plasma for mother
-  Fraction_unbound_plasma_fetus <- 
-    1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma)
+    Funbound.plasma <- parms$Funbound.plasma #value of Funbound.plasma for mother
+    Fraction_unbound_plasma_fetus <- 
+      1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma)
         
-  parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
+    parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
                      
 
