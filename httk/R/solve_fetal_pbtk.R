@@ -46,12 +46,10 @@
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
-#' output.units.  Defaults are zero.
+#' compartment.units.  Defaults are zero.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param iv.dose Simulates a single i.v. dose if true.
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -105,7 +103,6 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              plots=F,
                              suppress.messages=F,
                              iv.dose=F,
-                             output.units='uM',
                              method="lsoda",rtol=1e-8,atol=1e-12, #begin.css = F,
                              default.to.human=F,
                              recalc.blood2plasma=F,
@@ -143,8 +140,7 @@ recommended to set \"times\" to begin at or after day 91.')
     plots=plots,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
-    species='Human', #optionality of species not supported by solve_fetal_pbtk
-    output.units=output.units,
+    species='Human', #other species not (yet) supported by solve_fetal_pbtk
     method=method,rtol=rtol,atol=atol,
     default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
