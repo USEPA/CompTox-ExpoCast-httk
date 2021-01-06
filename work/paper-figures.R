@@ -16,18 +16,32 @@ MFdata.httk[MFdata.httk$Chemical.Category=="organochlorine Pesticides",
   
 for (this.id in unique(MFdata.httk$DTXSID))
 {
+  p <- parameterize_fetal_pbtk(dtxsid=this.id,
+    fetal_fup_adjustment =TRUE)
   out <- solve_fetal_pbtk(
-    dtxsid=this.id,
+    parameters=p,
     dose=0,
     daily.dose=1,
-    doses.per.day=3,
-    fetal_fup_adjustment =FALSE)
-  last.row <- dim(out)[1]
+    doses.per.day=3)
+  last.row <- which(out[,"time"]>279) # The whole final day
 # The compartments below will have to be changed when using the maternal-fetal model:
-  MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- out[last.row,"Cplasma"]
-  MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred"] <- out[last.row,"Cfplasma"]
+  MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- mean(out[last.row,"Cplasma"])
+  MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred"] <- mean(out[last.row,"Cfplasma"])
   MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred"] <- 
-    out[last.row,"Cplasma"]/out[last.row,"Cfplasma"]
+    mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+  p <- parameterize_fetal_pbtk(dtxsid=this.id,
+    fetal_fup_adjustment =FALSE)
+  out <- solve_fetal_pbtk(
+    parameters=p,
+    dose=0,
+    daily.dose=1,
+    doses.per.day=3)
+  last.row <- which(out[,"time"]>279) # The whole final day
+# The compartments below will have to be changed when using the maternal-fetal model:
+  MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred.nofup"] <- mean(out[last.row,"Cplasma"])
+  MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred.nofup"] <- mean(out[last.row,"Cfplasma"])
+  MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred.nofup"] <- 
+    mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
 }
 
 
@@ -42,8 +56,6 @@ colnames(MFdata.httk)[colnames(MFdata.httk) ==
   "details.on.matrix.comparison...e.g...cord.blood.lipid..maternal.serum.lipid..or.cord.blood.wet.weight..maternal.whole.blood.wet.weight"] <-
   "Matrix"
 MFdata.httk$MFratio <- as.numeric(MFdata.httk$MFratio)
-MFdata.httk$Lower.bound <- as.numeric(MFdata.httk$Lower.bound)
-MFdata.httk$Upper.bound <- as.numeric(MFdata.httk$Upper.bound)
 MFdata.httk$Chemical <- as.factor(MFdata.httk$Chemical)  
 MFdata.httk$Matrix <- as.factor(MFdata.httk$Chemical)  
 MFdata.httk$Chemical.Category <- as.factor(MFdata.httk$Chemical.Category)  
@@ -83,14 +95,13 @@ Fig1  <- ggplot(data=MFdata.main) +
     shape=Chemical.Category,
     color=Chemical.Category),
     size=3)   +
-    scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   geom_point(data=MFdata.outliers,aes(
     x=MFratio.pred,
     y=MFratio,
     shape=Chemical.Category,
     color=Chemical.Category),
     size=1)   +
-    scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlim(0,2) +
   ylim(0,3) +
 #   geom_text(aes(x=AUC,y=Critical.concentration,label=Compound.abbrev,color=Chemical)) +
@@ -113,6 +124,190 @@ Fig1  <- ggplot(data=MFdata.main) +
   guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
     
 print(Fig1)
+
+fit1 <- lm(data=MFdata.main,MFratio~MFratio.pred)
+summary(fit1)
+
+
+
+
+TKstats <- read.xls("Dallmann-2018.xlsx",stringsAsFactors=F,skip=1)
+TKstats <- subset(TKstats,DTXSID!="")
+
+for (this.id in unique(TKstats$DTXSID))
+{
+  if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"X.unit."])!=-1))
+  {
+    TKstats[TKstats$DTXSID==this.id,"Observed"] <- 1e-6 *
+      TKstats[TKstats$DTXSID==this.id,"Observed"]
+    TKstats[TKstats$DTXSID==this.id,"Predicted"] <- 1e-6 *
+      TKstats[TKstats$DTXSID==this.id,"Predicted"]
+    TKstats[TKstats$DTXSID==this.id,"Observed.1"] <- 1e-6 *
+      TKstats[TKstats$DTXSID==this.id,"Observed.1"]
+    TKstats[TKstats$DTXSID==this.id,"Predicted.1"] <- 1e-6 *
+      TKstats[TKstats$DTXSID==this.id,"Predicted.1"]  
+    TKstats[TKstats$DTXSID==this.id,"X.unit."] <- 
+      gsub("ng","mg",TKstats[TKstats$DTXSID==this.id,"X.unit."])  
+  }  
+  if (this.id %in% get_cheminfo(info="DTXSID",model="pbtk"))
+  {
+    this.subset <- subset(TKstats,DTXSID==this.id)
+    out.nonpreg <- solve_pbtk(
+      dtxsid=this.id,
+      times = seq(0, 1*7, 0.5),
+      dose=1,
+      daily.dose=NULL)
+    out.preg2 <- solve_fetal_pbtk(
+      dtxsid=this.id,
+      times = seq(13 * 7, 14 * 7, 0.5),
+      dose=1,
+      daily.dose=NULL)
+    if (any(regexpr("AUC",this.subset$Parameter)!=-1))
+    {
+      TKstats[TKstats$DTXSID==this.id &
+        regexpr("AUC",TKstats$Parameter)!=-1, 
+        "Predicted.httk"] <- max(out.nonpreg[,"AUC"])                       
+      TKstats[TKstats$DTXSID==this.id &
+        regexpr("AUC",TKstats$Parameter)!=-1, 
+        "Predicted.1.httk"] <- max(out.preg[,"AUC_fetus"])        
+    }
+    if (any(regexpr("Cmax",this.subset$Parameter)!=-1))
+    {
+      TKstats[TKstats$DTXSID==this.id &
+        regexpr("Cmax",TKstats$Parameter)!=-1, 
+        "Predicted.httk"] <- max(out.nonpreg[,"Cplasma"])
+      TKstats[TKstats$DTXSID==this.id &
+        regexpr("Cmax",TKstats$Parameter)!=-1, 
+        "Predicted.1.httk"] <- max(out.preg[,"Cplasma"])        
+    }
+  }
+}
+
+TKstats$Ratio.obs <- TKstats$Observed / TKstats$Observed.1
+TKstats$Ratio.httk <- TKstats$Predicted.httk / TKstats$Predicted.1.httk
+
+
+
+Fig2a  <- ggplot(data=TKstats) +
+  geom_point(aes(
+    y=Observed,
+    x=Predicted.httk,
+    shape=Parameter,
+    color=Parameter),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  xlab("httk Predicted (mg/L or mg/L*h)") + 
+  ylab("Non-Pregnant Observed (Dallmann, 2018)") +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig2a)
+
+Fig2b  <- ggplot(data=TKstats) +
+  geom_point(aes(
+    y=Observed.1,
+    x=Predicted.1.httk,
+    shape=Parameter,
+    color=Parameter),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  xlab("httk Predicted (mg/L or mg/L*h)") + 
+  ylab("Pregnant Observed (Dallmann, 2018)") +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig2b)
+
+Fig2c  <- ggplot(data=TKstats) +
+  geom_point(aes(
+    y=Ratio.obs,
+    x=Ratio.httk,
+    shape=Parameter,
+    color=Parameter),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  xlab("Non-Pregnant:Pregnant Ratio httk Predicted") + 
+  ylab("Non-Pregnant:Pregnant Observed (Dallmann, 2018)") +
+#  scale_x_log10() +
+#  scale_y_log10() +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig2c)
+
+
+
+TKstats.obs <-TKstats[,c(1:8,11)]
+TKstats.obs$Type <- "Observed"
+colnames(TKstats.obs) <- c(
+  "Drug", "DTXSID", "PREFERRED_NAME", "CASRN", "Parameter", "X.unit.", "Note",
+  "Maternal", "Fetal", "Type")
+TKstats.Dallmann <-TKstats[,c(1:7,9,12)]
+TKstats.Dallmann$Type <- "Dallmann (2018)"
+colnames(TKstats.Dallmann) <- c(
+  "Drug", "DTXSID", "PREFERRED_NAME", "CASRN", "Parameter", "X.unit.", "Note",
+  "Maternal", "Fetal", "Type")
+TKstats.httk <-TKstats[,c(1:7,14:15)]
+TKstats.httk$Type <- "httk-fetal"
+colnames(TKstats.httk) <- c(
+  "Drug", "DTXSID", "PREFERRED_NAME", "CASRN", "Parameter", "X.unit.", "Note",
+  "Maternal", "Fetal", "Type")
+TKstats2 <- rbind(TKstats.obs,TKstats.Dallmann,TKstats.httk)
+
+
+
+
+Fig3  <- ggplot(data=TKstats2) +
+  geom_point(aes(
+    x=Maternal,
+    y=Fetal,
+    shape=Parameter,
+    color=Type),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  ylab("Fetal") + 
+  xlab("Maternal") +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 MFdata.noreps <- NULL
 for (this.id in unique(MFdata.httk$DTXSID))
