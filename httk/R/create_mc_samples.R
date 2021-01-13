@@ -385,8 +385,7 @@ Set species=\"Human\" to run httkpop model.')
 # (Rowland, 1973):      
   cl <- calc_hep_clearance(parameters=parameters.dt,
           hepatic.model='unscaled',
-          suppress.messages=T,
-          adjusted.Funbound.plasma=adjusted.Funbound.plasma)#L/h/kg body weight
+          suppress.messages=T)#L/h/kg body weight
 
   parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
     parameters=list(
