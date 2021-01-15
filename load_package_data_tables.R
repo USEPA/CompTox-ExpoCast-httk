@@ -325,7 +325,8 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
 Ito.table <- read.xls("Ito2004.xlsx",stringsAsFactors=F)
-Ito.table[Ito.table$Clint..hepatocyte.=="ND","Clint..hepatocyte."]<-0
+# Let's interpret "not determined" as no measurment instead of 0
+Ito.table[Ito.table$Clint..hepatocyte.=="ND","Clint..hepatocyte."]<-NA
 chem.prop <- add_chemtable(Ito.table,
                current.table=chem.prop,
                reference="Ito 2004", species="Human",
@@ -400,48 +401,168 @@ for (this.row in 1:dim(TNO.table)[1])
   this.reference <- TNO.table[this.row,"Source"]
   if (this.reference != "EPA/Hamner")
   {
-    if (!is.na(as.numeric(TNO.table[this.row,"CLint.h"]))) chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"Clint",TNO.table[this.row,"CLint.h"],species="Human",reference=this.reference)
-    if (!is.na(as.numeric(TNO.table[this.row,"fup"]))) chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"Funbound.plasma",TNO.table[this.row,"fup"],species="Human",reference=this.reference)
+    if (!is.na(as.numeric(TNO.table[this.row,"CLint.h"]))) chem.prop <- 
+      augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "Clint",
+        TNO.table[this.row,"CLint.h"],
+        species="Human",
+        reference=this.reference)
+    if (!is.na(as.numeric(TNO.table[this.row,"fup"]))) chem.prop <- 
+      augment.table(
+      chem.prop,
+      this.CAS,
+      this.compound,
+      "Funbound.plasma",
+      TNO.table[this.row,"fup"],
+      species="Human",
+      reference=this.reference)
   }
   this.reference <- "TNO"
-  chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"logP",log10(TNO.table[this.row,"logP"]),reference=this.reference)
-  chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"MW",TNO.table[this.row,"MW"],reference=this.reference)
-  chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"Rblood2plasma",TNO.table[this.row,"Rbp"],species="Human",reference=this.reference)
+  chem.prop <- augment.table(
+    chem.prop,
+    this.CAS,
+    this.compound,
+    "logP",
+    log10(TNO.table[this.row,"logP"]),
+    reference=this.reference)
+  chem.prop <- augment.table(
+    chem.prop,
+    this.CAS,
+    this.compound,
+    "MW",
+    TNO.table[this.row,"MW"],
+    reference=this.reference)
+  chem.prop <- augment.table(
+    chem.prop,
+    this.CAS,
+    this.compound,
+    "Rblood2plasma",
+    TNO.table[this.row,"Rbp"],
+    species="Human",
+    reference=this.reference)
   if (!is.na(TNO.table[this.row,"ion"]))
   {
     if (TNO.table[this.row,"ion"] == "mpa")
     {
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",as.numeric(TNO.table[this.row,"pKa1"]),reference=this.reference)
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",NA,reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Donor",
+        as.numeric(TNO.table[this.row,"pKa1"]),
+        reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Accept",
+        NA,
+        reference=this.reference)
     }
     else if (TNO.table[this.row,"ion"] == "dpa")
     {
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",paste(as.numeric(TNO.table[this.row,"pKa1"]),as.numeric(TNO.table[this.row,"pKa2"]),sep=","),reference=this.reference)
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",NA,reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Donor",
+        paste(as.numeric(TNO.table[this.row,"pKa1"]),
+        as.numeric(TNO.table[this.row,"pKa2"]),sep=","),
+        reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Accept",
+        NA,
+        reference=this.reference)
     }
     else if (TNO.table[this.row,"ion"] == "mpb")
     {
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",as.numeric(TNO.table[this.row,"pKa1"]),reference=this.reference)
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",NA,reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Accept",
+        as.numeric(TNO.table[this.row,"pKa1"]),
+        reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Donor",
+        NA,
+        reference=this.reference)
     }
     else if (TNO.table[this.row,"ion"] == "dpb")
     {
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",paste(as.numeric(TNO.table[this.row,"pKa1"]),as.numeric(TNO.table[this.row,"pKa2"]),sep=","),reference=this.reference)
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",NA,reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Accept",
+        paste(as.numeric(TNO.table[this.row,"pKa1"]),
+        as.numeric(TNO.table[this.row,"pKa2"]),sep=","),
+        reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,"pKa_Donor",
+        NA,
+        reference=this.reference)
     }
     else if (TNO.table[this.row,"ion"] == "zwi")
     {
       if (regexpr("acid",TNO.table[this.row,"pKa1"])!=-1)
       {
-        chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),reference=this.reference)
-        chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),reference=this.reference)
+        chem.prop <- augment.table(
+          chem.prop,
+          this.CAS,
+          this.compound,
+          "pKa_Donor",
+          as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),
+          reference=this.reference)
+        chem.prop <- augment.table(
+          chem.prop,
+          this.CAS,
+          this.compound,
+          "pKa_Accept",
+          as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),
+          reference=this.reference)
       } else {
-        chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),reference=this.reference)
-        chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),reference=this.reference)
+        chem.prop <- augment.table(
+          chem.prop,
+          this.CAS,
+          this.compound,
+          "pKa_Accept",
+          as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),
+          reference=this.reference)
+        chem.prop <- augment.table(
+          chem.prop,
+          this.CAS,
+          this.compound,
+          "pKa_Donor",
+          as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),
+          reference=this.reference)
       }
     } else {
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",NA,reference=this.reference)
-      chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Accept",NA,reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Donor",
+        NA,
+        reference=this.reference)
+      chem.prop <- augment.table(
+        chem.prop,
+        this.CAS,
+        this.compound,
+        "pKa_Accept",
+        NA,
+        reference=this.reference)
     }
   }
 }
