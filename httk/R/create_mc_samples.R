@@ -320,22 +320,47 @@ Set species=\"Human\" to run httkpop model.')
                                      dtxsid=dtxsid)
   } else Rb2p.invivo <- NA
 
-  if (model.list[[model]]$calcpc | (calcrb2p & is.na(Rb2p.invivo)) | firstpass)
-  { 
-#Now, predict the partitioning coefficients using Schmitt's method. The
-#result will be a list of numerical vectors, one vector for each
-#tissue-to-plasma partitioning coefficient, and one element of each vector
-#for each individual. The list element names specify which partition
-#coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-    PCs <- predict_partitioning_schmitt(
-             parameters=parameters.dt,
-             chem.name=chem.name,
-             chem.cas=this.chem,
-             dtxsid=dtxsid,
-             species=species,
-             adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
-             regression=parameterize.arg.list$regression,
-             suppress.messages=T)
+# We need all of these parameters to recalculate values with the 
+# Schmitt (2008) method:
+  if (all(c("Pow","pKa_Donor","pKa_Accept") %in% colnames(parameters.dt)))
+  {
+  # Then check to see if we need to calculate PC's, either because we have 
+  # tissue compartments:
+    if (model.list[[model]]$calcpc | 
+  # Or if we use the blood to plasma ratio:
+      (calcrb2p & is.na(Rb2p.invivo)) | 
+  # Or if we include first pass metabolism (which requires Rb2p)
+      firstpass)
+    { 
+  #Now, predict the partitioning coefficients using Schmitt's method. The
+  #result will be a list of numerical vectors, one vector for each
+  #tissue-to-plasma partitioning coefficient, and one element of each vector
+  #for each individual. The list element names specify which partition
+  #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
+      PCs <- predict_partitioning_schmitt(
+               parameters=parameters.dt,
+               chem.name=chem.name,
+               chem.cas=this.chem,
+               dtxsid=dtxsid,
+               species=species,
+               adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
+               regression=parameterize.arg.list$regression,
+               suppress.messages=T)
+# Store the red blood cell to unbound plasma partition coefficient if we need
+# it later:
+      if (calcrb2p | firstpass) parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
+    }
+# If we can't calculate partition coefficients now (no phys-chem) but need the
+# Krbc2pu partition coefficient we can back-calculate it:
+  } else if ("Rblood2plasma" %in% colnames(parameters.dt) &
+    (calcrb2p & is.na(Rb2p.invivo))) 
+  {
+# Calculate Krbc2plasma from blood:plasma ratio (if available). We use the average
+# value because we want this to PC to be the same for all individuals since we 
+# don't have the phys-chem to recalculate:
+    parameters.dt[,Krbc2pu:=calc_krbc2pu(
+      Rb2p = parameters$Rblood2plasma,
+      Funbound.plasma = parameters$Funbound.plasma)]
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -354,18 +379,17 @@ Set species=\"Human\" to run httkpop model.')
   
   if (calcrb2p | firstpass)
   {
-# If we have an in vivo value, then back-calculate the partition coefficient:
+# If we have an in vivo value, then back-calculate the partition coefficient
+# from the measured value:
     if (!is.na(Rb2p.invivo))
     {
 # From Pearce et al. (2017):
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
                                             parameters.mean$Funbound.plasma,
                                             parameters.mean$hematocrit)]
-    } else { 
-      parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
+    } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
-    }  
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=parameters.dt$hematocrit,
                                       Krbc2pu=parameters.dt$Krbc2pu,
