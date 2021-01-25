@@ -7,6 +7,10 @@
 #Analytic expression for steady-state plasma concentration.
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
+# When calculating steady-state, which compartment do we test? 
+# ("C" is preprended):
+model.list[["pbtk"]]$steady.state.compartment <- "plasma"
+
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 

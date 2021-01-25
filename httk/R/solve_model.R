@@ -127,7 +127,9 @@ solve_model <- function(chem.name = NULL,
                     suppress.messages=F,
                     species="Human",
                     output.units='uM',
-                    method="lsoda",rtol=1e-8,atol=1e-12,
+                    method="lsoda",
+                    rtol=1e-8,
+                    atol=1e-12,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
                     adjusted.Funbound.plasma=T,
@@ -312,8 +314,13 @@ solve_model <- function(chem.name = NULL,
   if (!is.null(initial.values)){
     for (this.compartment in names(initial.values))
     {
+      # Is this time-integrated "area undet the curve" or "AUC"?
+      if (this.compartment=="AUC")
+      {
+        state["AUC"] <- initial.values[[this.compartment]] 
+      }
       # Are we doing concentrations?
-      if (firstchar(this.compartment)=="C")
+      else if (firstchar(this.compartment)=="C")
       {
         tissue <- substring(this.compartment, 2)
         state[paste("A",tissue,sep="")] <-

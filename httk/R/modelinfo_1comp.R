@@ -6,6 +6,10 @@
 # Analytic expression for steady-state plasma concentration.
 model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 
+# When calculating steady-state, which compartment do we test? 
+# ("C" is preprended):
+model.list[["1compartment"]]$steady.state.compartment <- "compartment"
+
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
