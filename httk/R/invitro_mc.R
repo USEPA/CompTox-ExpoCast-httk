@@ -151,7 +151,9 @@ invitro_mc <- function(parameters.dt=NULL,
 
   # Determine the value for fraction unbound in hepatocyte assay (depends on
   # phys-chem but does not vary biologically):
-  parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+  # First check that this model has phys-chem parameters:
+  if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
+    parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
   
   # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
   # "true" values for Clint that are consistent with the measurment .
