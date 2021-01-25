@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.0.3
-Date: 2020-09-23
+Version: 2.0.4
+Date: 2021-01-24
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
@@ -38,7 +38,9 @@ Authors@R: c(
            person("Matt", "Linakis", email = "matthew.linakis.1@us.af.mil", 
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
-             role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")), 
+             role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
+           person("Xiaoqing", "Chang", email="xchang@ils-inc.com",
+             role = c("ctb"), comment = c(ORCID = "0000-0003-0752-1848")), 
            person("Jimena", "Davis", role = c("ctb")), 
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
