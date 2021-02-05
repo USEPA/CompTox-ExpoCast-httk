@@ -258,7 +258,6 @@ chem.physical_and_invitro.data <- add_chemtable(
   species="Human",
   overwrite=T)
 
-  browser()
 #predict steady-state serum concentration using the supplied in vitro values:
 for (this.chem in human.httk.data.complete$CAS) {
   set.seed(RNUMSEED)
@@ -275,6 +274,32 @@ b=lm(log10(human.httk.data.complete$CSS.InVitro)~log10(human.httk.data.complete$
 c=lm(log10(human.httk.data.complete$CSS.InVitro)~log10(human.httk.data.complete$CSS.CL3BinsMD_FubYrand))
 d=lm(log10(human.httk.data.complete$CSS.InVitro)~log10(human.httk.data.complete$CSS.FubPred_CLYrand))
 e=lm(log10(human.httk.data.complete$CSS.InVitro)~log10(human.httk.data.complete$CSS.ClYrand_FubYrand))
+
+packageVersion("httk")
+summary(b)
+save.image(file="v1101.RData")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 plot(log10(human.httk.data.complete$CSS.InVitro), log10(human.httk.data.complete$CSS.InVitro_CL3BinsMD))
 plot(log10(human.httk.data.complete$CSS.InVitro), log10(human.httk.data.complete$CSS.QSAR_CL3BinsMD))
