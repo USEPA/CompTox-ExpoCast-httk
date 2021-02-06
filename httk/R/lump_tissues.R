@@ -105,7 +105,7 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
     #Because red blood cells are not involved in this lumping scheme, and
     #because they also undergo a name change between the associated partition
     #coefficient and the "red blood cells" name from tissue.data, they are
-    #kept separate if they are indicated in the tissuenames list. 
+    #kept separate (assuming they are indicated in the tissuenames list). 
     if ("red blood cells" %in% tissuenames){
       names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'Krbc2pu'] <- 'red blood cells'
       pcs_names_standard_treatment <- 
