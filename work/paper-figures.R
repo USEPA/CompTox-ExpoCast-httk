@@ -13,6 +13,58 @@ MFdata.httk[MFdata.httk$Chemical.Category=="organochlorine Pesticides",
   "Chemical.Category"] <- "Organochlorine Pesticides"  
   MFdata.httk[MFdata.httk$Chemical.Category=="polyaromatic hydrocarbons",
   "Chemical.Category"] <- "Polyaromatic Hydrocarbons"  
+
+colnames(MFdata.httk)[colnames(MFdata.httk) == 
+  "infant.maternal.conc...Central.tendency..calculate.j.k..or.report.paired.result."] <-
+  "MFratio"
+colnames(MFdata.httk)[colnames(MFdata.httk) == 
+  "PREFERRED_NAME"] <-
+  "Chemical"
+colnames(MFdata.httk)[colnames(MFdata.httk) == 
+  "details.on.matrix.comparison...e.g...cord.blood.lipid..maternal.serum.lipid..or.cord.blood.wet.weight..maternal.whole.blood.wet.weight"] <-
+  "Matrix"
+
+# Format the columns:
+MFdata.httk$MFratio <- as.numeric(MFdata.httk$MFratio)
+MFdata.httk$Chemical <- as.factor(MFdata.httk$Chemical)  
+MFdata.httk$Matrix <- as.factor(MFdata.httk$Chemical)  
+MFdata.httk$Chemical.Category <- as.factor(MFdata.httk$Chemical.Category)  
+
+colnames(MFdata.httk)[15] <- "infant"
+colnames(MFdata.httk)[16] <- "maternal"
+colnames(MFdata.httk)[17] <- "obs.units"
+
+MFdata.httk$infant <- as.numeric(MFdata.httk$infant)
+MFdata.httk$maternal <- as.numeric(MFdata.httk$maternal)
+MFdata.httk$AVERAGE_MASS <- as.numeric(MFdata.httk$AVERAGE_MASS)
+
+
+
+# Convert the units:
+convert1.units <- c("ng/ml","ng/mL","ug/L","ug/l","ng/mL serum","ng/g",
+  "ng/g wet wt.","ppb")
+
+MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"infant"] <- 
+  MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"infant"] / # ng/ml = ug/L
+  MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"AVERAGE_MASS"]  # ug/L -> uM
+MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"maternal"] <- 
+  MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"maternal"] / # ng/ml = ug/L
+  MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"AVERAGE_MASS"]  # ug/L -> uM
+MFdata.httk[MFdata.httk$obs.units%in%convert1.units,"obs.units"] <- "uM" 
+  
+convert2.units <- c("mg/L","ppm")
+
+MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"infant"] <- 
+  MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"infant"] * 1000 / # mg/L = ug/L
+  MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"AVERAGE_MASS"]  # ug/L -> uM
+MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"maternal"] <- 
+  MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"maternal"]* 1000 / # mg/L = ug/L
+  MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"AVERAGE_MASS"]  # ug/L -> uM
+MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"obs.units"] <- "uM" 
+  
+
+
+# Make the HTTK Predictions:
   
 for (this.id in unique(MFdata.httk$DTXSID))
 {
@@ -22,7 +74,8 @@ for (this.id in unique(MFdata.httk$DTXSID))
     parameters=p,
     dose=0,
     daily.dose=1,
-    doses.per.day=3)
+    doses.per.day=3,
+    output.units = "uM")
   last.row <- which(out[,"time"]>279) # The whole final day
 # The compartments below will have to be changed when using the maternal-fetal model:
   MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- mean(out[last.row,"Cplasma"])
@@ -46,19 +99,58 @@ for (this.id in unique(MFdata.httk$DTXSID))
 
 
 
-colnames(MFdata.httk)[colnames(MFdata.httk) == 
-  "infant.maternal.conc...Central.tendency..calculate.j.k..or.report.paired.result."] <-
-  "MFratio"
-colnames(MFdata.httk)[colnames(MFdata.httk) == 
-  "PREFERRED_NAME"] <-
-  "Chemical"
-colnames(MFdata.httk)[colnames(MFdata.httk) == 
-  "details.on.matrix.comparison...e.g...cord.blood.lipid..maternal.serum.lipid..or.cord.blood.wet.weight..maternal.whole.blood.wet.weight"] <-
-  "Matrix"
-MFdata.httk$MFratio <- as.numeric(MFdata.httk$MFratio)
-MFdata.httk$Chemical <- as.factor(MFdata.httk$Chemical)  
-MFdata.httk$Matrix <- as.factor(MFdata.httk$Chemical)  
-MFdata.httk$Chemical.Category <- as.factor(MFdata.httk$Chemical.Category)  
+
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+
+# Something is wrong with cotinine:
+MFdata.httk <- subset(MFdata.httk,Chemical!="Cotinine")
+
+Fig0a  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
+  geom_point(aes(
+    x=Fet.pred,
+    y=infant,
+    shape=Chemical.Category,
+    color=Chemical.Category),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  geom_abline(slope=1, intercept=0) + 
+  ylab(expression(paste(italic("In vivo")," Infant Plasma Conc. (uM))"))) + 
+  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig0a)  
+
+Fig0b  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
+  geom_point(aes(
+    x=Mat.pred,
+    y=maternal,
+    shape=Chemical.Category,
+    color=Chemical.Category),
+    size=3)   +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  geom_abline(slope=1, intercept=0) + 
+  ylab(expression(paste(italic("In vivo")," Maternal Plasma Conc. (uM))"))) + 
+  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))+ 
+  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+    
+print(Fig0b)  
+
+# Hmm, not sure this really makes sense because we don't know when the exposures occured, lets see how we do for ratio:
   
 MFdata.main <- NULL
 MFdata.outliers <- NULL
@@ -76,14 +168,10 @@ for (this.id in unique(MFdata.httk$DTXSID))
   MFdata.outliers <- rbind(MFdata.outliers,this.subset) 
 }
   
-scientific_10 <- function(x) {                                  
-  out <- gsub("1e", "10^", scientific_format()(x))              
-  out <- gsub("\\+","",out)                                     
-  out <- gsub("10\\^01","10",out)                               
-  out <- parse(text=gsub("10\\^00","1",out))                    
-}  
   
-Fig1  <- ggplot(data=MFdata.main) +
+  
+  
+Fig1b  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred,
     y=MFratio.Q25,
@@ -123,7 +211,7 @@ Fig1  <- ggplot(data=MFdata.main) +
   guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
   guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
     
-print(Fig1)
+print(Fig1b)
 
 fit1 <- lm(data=MFdata.main,MFratio~MFratio.pred)
 summary(fit1)
