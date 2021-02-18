@@ -76,6 +76,7 @@
 #'  parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
 #' 
 #'  
+#' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
 #' @export parameterize_fetal_pbtk
 parameterize_fetal_pbtk<- function(chem.cas=NULL,
@@ -83,6 +84,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               dtxsid = NULL,
                               species="Human",
                               fetal_fup_adjustment=TRUE,
+                              return.kapraun2019=FALSE,
                               ...)
 {
   #initialize a parms list for fetal model parameters to output
@@ -283,101 +285,14 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
         
     parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
-                     
+          
+# Set appropriate precision:
+  parms <- lapply(parms[sort(names(parms))],set_httk_precision)
+           
 
 #Now for the many parameters associated with the dynamic physiologic equations
-#for pregnancy assembled by Dustin Kapraun and others in 2019.
-parms$BW_cubic_theta1 <- -0.010614
-parms$BW_cubic_theta2 <- 0.029161
-parms$BW_cubic_theta3 <- -5.0203e-4
-parms$Wadipose_linear_theta0 <- 17.067
-parms$Wadipose_linear_theta1 <- 0.14937
-parms$Wfkidney_gompertz_theta0 <- 6.3327e-5
-parms$Wfkidney_gompertz_theta1 <- 1.0409
-parms$Wfkidney_gompertz_theta2 <- 0.076435
-parms$Wfthyroid_gompertz_theta0 <- 0.0038483
-parms$Wfthyroid_gompertz_theta1 <- 0.30799
-parms$Wfthyroid_gompertz_theta2 <- 0.039800
-parms$Wfliver_gompertz_theta0 <- 0.0074774
-parms$Wfliver_gompertz_theta1 <- 0.65856
-parms$Wfliver_gompertz_theta2 <- 0.061662
-parms$Wfbrain_gompertz_theta0 <- 0.01574
-parms$Wfbrain_gompertz_theta1 <- 0.70707
-parms$Wfbrain_gompertz_theta2 <- 0.064827
-parms$Wfgut_gompertz_theta0 <- 8.1828e-4
-parms$Wfgut_gompertz_theta1 <- 0.65028
-parms$Wfgut_gompertz_theta2 <- 0.047724
-parms$Wflung_gompertz_theta0 <- 3.0454e-4
-parms$Wflung_gompertz_theta1 <- 1.0667
-parms$Wflung_gompertz_theta2 <- 0.084604
-parms$hematocrit_quadratic_theta0 <- 39.192 
-parms$hematocrit_quadratic_theta1 <- -0.10562
-parms$hematocrit_quadratic_theta2 <- -7.1045e-4
-parms$fhematocrit_cubic_theta1 <- 4.5061
-parms$fhematocrit_cubic_theta2 <- -0.18487
-parms$fhematocrit_cubic_theta3 <- 0.0026766
-parms$fBW_gompertz_theta0 <- 0.0018282
-parms$fBW_gompertz_theta1 <- 1.1735
-parms$fBW_gompertz_theta2 <- 0.077577
-parms$Vplacenta_cubic_theta1 <- -1.7646
-parms$Vplacenta_cubic_theta2 <- 0.91775
-parms$Vplacenta_cubic_theta3 <- -0.011543
-parms$Vamnf_logistic_theta0 <- 822.34
-parms$Vamnf_logistic_theta1 <- 0.26988
-parms$Vamnf_logistic_theta2 <- 20.150
-parms$Vplasma_mod_logistic_theta0 <- 1.2406
-parms$Vplasma_mod_logistic_theta1 <- 0.31338
-parms$Vplasma_mod_logistic_theta2 <- 17.813
-parms$Vplasma_mod_logistic_theta3 <- 2.4958
-parms$venous_blood_fraction <- 0.595
-parms$arterial_blood_fraction <- 0.16
-parms$fblood_weight_ratio <- 80 #in ml/kg
-parms$Qcardiac_cubic_theta0 <- 301.78
-parms$Qcardiac_cubic_theta1 <- 3.2512
-parms$Qcardiac_cubic_theta2 <- 0.15947
-parms$Qcardiac_cubic_theta3 <- -0.0047059
-parms$term <- 40.0 #weeks at delivery
-parms$Qgut_percent_initial <- 17.0
-parms$Qgut_percent_terminal <- 12.5
-parms$Qkidney_cubic_theta0 <- 53.248
-parms$Qkidney_cubic_theta1 <- 3.6447
-parms$Qkidney_cubic_theta2 <- -0.15357
-parms$Qkidney_cubic_theta3 <- 0.0016968
-parms$Qliver_percent_initial <- 27.0
-parms$Qliver_percent_terminal <- 20.0
-parms$Qthyroid_percent_initial <- 1.5
-parms$Qthyroid_percent_terminal <- 1.1
-parms$Qplacenta_linear_theta1 <- 0.059176
-parms$Qadipose_percent_initial <- 8.5
-parms$Qadipose_percent_terminal <- 7.8
-parms$Qgfr_quadratic_theta0 <- 113.73
-parms$Qgfr_quadratic_theta1 <- 3.5784
-parms$Qgfr_quadratic_theta2 <- -0.067272
-parms$Qfrvtl_logistic_theta0 <- 2466.5
-parms$Qfrvtl_logistic_theta1 <- 0.14837
-parms$Qfrvtl_logistic_theta2 <- 43.108
-parms$Qflvtl_logistic_theta0 <- 506.30
-parms$Qflvtl_logistic_theta1 <- 0.21916
-parms$Qflvtl_logistic_theta2 <- 30.231
-parms$Qfda_logistic_theta0 <- 1125.3
-parms$Qfda_logistic_theta1 <- 0.18031
-parms$Qfda_logistic_theta2 <- 35.939
-parms$Qfplacenta_logistic_theta0 <- 262.20
-parms$Qfplacenta_logistic_theta1 <- 0.22183
-parms$Qfplacenta_logistic_theta2 <- 28.784
-parms$Qfdv_gompertz_theta0 <- 1.892
-parms$Qfdv_gompertz_theta1 <- 0.098249
-parms$Qfdv_gompertz_theta2 <- 0.0064374
-parms$Qfnonplacental_percent <- 75.0
-parms$Qfgut_percent <- 6.8
-parms$Qfkidney_percent <- 5.4
-parms$Qfbrain_percent <- 14.3
-parms$Qbrain_percent <- 12 #average of male/female ICRP 2002
-parms$Qkidney_percent <- 18 #average of male/female ICRP 2002
-parms$Qgut_percent <- 16 #average of male/female ICRP 2002
-parms$Qfliver_percent <- 6.5
-parms$Qfthyroid_percent <- 1.5
- 
+#for pregnancy from Kapraun et al. (2019):
+  if (return.kapraun2019) parms <- c(parms,kapraun2019)
  
  return(parms)                             
 }

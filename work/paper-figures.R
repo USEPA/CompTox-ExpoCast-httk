@@ -5,6 +5,46 @@ library(scales)
 
 setwd("c:/users/jwambaug/git/httk-dev/work")
 
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+
+
+fup.table <- NULL
+all.chems <-get_cheminfo(model="fetal_pbtk",info="all") 
+for (this.chem in all.chems[,"CAS"])
+{
+  temp <- parameterize_fetal_pbtk(chem.cas=this.chem)
+  this.row <- data.frame(DTXSID=all.chems[all.chems[,"CAS"]==this.chem,"DTXSID"],
+    Compound=all.chems[all.chems[,"CAS"]==this.chem,"Compound"],
+    CAS=this.chem,
+    Fup.Mat.Pred = temp$Funbound.plasma,
+    Fup.Neo.Pred = temp$Fraction_unbound_plasma_fetus
+    )
+  fup.table <- rbind(fup.table,this.row)
+}
+
+
+FigA  <- ggplot(data=fup.table) +
+  geom_point(aes(
+    x=Fup.Mat.Pred,
+    y=Fup.Neo.Pred),
+    size=3)   +
+  geom_abline(slope=1, intercept=0) + 
+  ylab(expression(paste("Predicted Neonate ",f[up]))) + 
+  xlab(expression(paste(italic("In vitro")," Measured ",f[up]))) +
+   scale_x_log10(label=scientific_10) +
+   scale_y_log10(label=scientific_10) +
+  theme_bw()  +
+  theme( text  = element_text(size=14)) 
+    
+print(FigA) 
+
+
+
 MFdata <- read.xls("Aylward-MatFet.xlsx",stringsAsFactors=F)
 MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(info="DTXSID",model="pbtk"))
 MFdata.httk[MFdata.httk$Chemical.Category=="bromodiphenylethers",
@@ -100,12 +140,7 @@ for (this.id in unique(MFdata.httk$DTXSID))
 
 
 
-scientific_10 <- function(x) {                                  
-  out <- gsub("1e", "10^", scientific_format()(x))              
-  out <- gsub("\\+","",out)                                     
-  out <- gsub("10\\^01","10",out)                               
-  out <- parse(text=gsub("10\\^00","1",out))                    
-}  
+
 
 # Something is wrong with cotinine:
 MFdata.httk <- subset(MFdata.httk,Chemical!="Cotinine")
