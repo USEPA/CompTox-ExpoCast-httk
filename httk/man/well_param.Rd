@@ -5,20 +5,20 @@
 \alias{well_param}
 \title{Microtiter Plate Well Descriptions for Armitage et al. (2014) Model}
 \format{
-A data frame with 53940 rows and 10 variables:
+A data frame / data table with 11 rows and 8 variables:
 \describe{
-  \item{area_bottom}{}
-  \item{cell_yield}{}
-  \item{diam}{}
-  \item{sysID}{}
-  \item{v_total}{}
-  \item{v_working}{}
-  \item{well_desc}{}
-  \item{well_number}{}
+  \item{sysID}{Identifier for each multi-well plate system}
+  \item{well_desc}{Well description}
+  \item{well_number}{Number of wells on plate}
+  \item{area_bottom}{Area of well bottom in mm^2}
+  \item{cell_yield}{Number of cells}
+  \item{diam}{Diameter of well in mm}
+  \item{v_total}{Total volume of well in uL or mm^3)}
+  \item{v_working}{Working volume of well in uL or mm^3}
 }
 }
 \source{
-\url{http://www.diamondse.info/}
+\url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
 }
 \usage{
 well_param
@@ -38,4 +38,3 @@ In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217
 Greg Honda
 }
 \keyword{data}
-\keyword{httk-pop}

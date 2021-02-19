@@ -32,7 +32,7 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state

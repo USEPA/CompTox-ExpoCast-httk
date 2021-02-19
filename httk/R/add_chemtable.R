@@ -20,27 +20,40 @@ CAS.checksum <- function(CAS.string)
 #' new parameter to the table of chemical parameters. It should not be typically
 #' used from the command line.
 #' 
-#' @param this.table Object of class data.frame containing one row per chemical,
-#' with each chemical minimally described by a CAS number.
-#' @param data.list This list identifies which properties are to be read from
-#' the table. Each item in the list should point to a column in the table
-#' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
-#' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
-#' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-#' 'Fgutabs', 'Rblood2plasma'.
-#' @param current.table This is the table to which data are being added.
+#' @param this.table Object of class data.frame containing one row per chemical.
+#' 
+#' @param this.CAS The Chemical Abstracts Service registry number (CAS-RN)
+#' correponding to the parameter value
+#'
+#' @param compound.name A name associated with the chemical (defaults to NULL)
+#'
+#' @param this.property The property being added/modified.
+#'
+#' @param value The value being assigned to this.property.
+#'
 #' @param reference This is the reference for the data in the new table. This
 #' may be omitted if a column in data.list gives the reference value for each
 #' chemical.
+#'
 #' @param species This is the species for the data in the new table. This may
 #' be omitted if a column in data.list gives the species value for each
 #' chemical or if the data are not species-specific (e.g., MW).
+#'
 #' @param overwrite If overwrite=TRUE then data in current.table will be
 #' replaced by any data in new.table that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
 #' 
+#' @param sig.fig Sets the number of significant figures stored (defaults to 4)
+#' 
+#' @param clint.pvalue.overwrite If TRUE then the Cl_int p-value is set to NA 
+#' when the Cl_int value is changed unless a new p-value is provided. (defaults
+#' to TRUE) 
+#' 
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -54,7 +67,8 @@ augment.table <- function(
   reference,
   overwrite=F,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=T,
+  allow.na=F)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -114,7 +128,7 @@ augment.table <- function(
     "Caco2.Pab")
   
   if (!is.na(value)) if (value == "") value <- NA
-  if (!is.na(value))
+  if (!is.na(value) | allow.na)
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS))
     {
@@ -291,24 +305,39 @@ augment.table <- function(
 #' 
 #' @param new.table Object of class data.frame containing one row per chemical,
 #' with each chemical minimally described by a CAS number.
+#' 
 #' @param data.list This list identifies which properties are to be read from
 #' the table. Each item in the list should point to a column in the table
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 #' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 #' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
 #' 'Fgutabs', 'Rblood2plasma'.
+#' 
 #' @param current.table This is the table to which data are being added.
+#' 
 #' @param reference This is the reference for the data in the new table. This
 #' may be omitted if a column in data.list gives the reference value for each
 #' chemical.
+#' 
 #' @param species This is the species for the data in the new table. This may
 #' be omitted if a column in data.list gives the species value for each
 #' chemical or if the data are not species-specific (e.g., MW).
+#' 
 #' @param overwrite If overwrite=TRUE then data in current.table will be
 #' replaced by any data in new.table that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
+#' 
+#' @param sig.fig Sets the number of significant figures stored (defaults to 4)
+#' 
+#' @param clint.pvalue.overwrite If TRUE then the Cl_int p-value is set to NA 
+#' when the Cl_int value is changed unless a new p-value is provided. (defaults
+#' to TRUE) 
+#'
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -349,7 +378,8 @@ add_chemtable <- function(
   species=NULL, 
   overwrite=F,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=T,
+  allow.na=F)
 {
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
@@ -408,16 +438,18 @@ columns in \"data.list\".")
     {
       if (!(data.list[[this.data]] %in% colnames(new.table))) stop(paste(data.list[[this.data]],
         "is not a column in the new table."))
-      current.table <- augment.table(current.table,
-                                     this.CAS,
-                                     this.compound,
-                                     this.property=this.data,
-                                     value=new.table[this.row, data.list[[this.data]]],
-                                     reference=this.reference,
-                                     species=this.species,
-                                     overwrite=overwrite,
-                                     sig.fig=sig.fig,
-                                     clint.pvalue.overwrite=clint.pvalue.overwrite)
+      current.table <- augment.table(
+        current.table,
+        this.CAS,
+        this.compound,
+        this.property=this.data,
+        value=new.table[this.row, data.list[[this.data]]],
+        reference=this.reference,
+        species=this.species,
+        overwrite=overwrite,
+        sig.fig=sig.fig,
+        clint.pvalue.overwrite=clint.pvalue.overwrite,
+        allow.na=allow.na)
     }
   }
 

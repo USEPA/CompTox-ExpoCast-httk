@@ -32,7 +32,7 @@
 #' be specified. 
 #' @param chem.name Either the chemical parameters, name, or the CAS number
 #' must be specified. 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.

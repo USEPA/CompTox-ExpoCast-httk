@@ -19,7 +19,7 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or

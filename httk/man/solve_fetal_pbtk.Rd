@@ -20,7 +20,6 @@ solve_fetal_pbtk(
   plots = F,
   suppress.messages = F,
   iv.dose = F,
-  output.units = "uM",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -68,16 +67,13 @@ dosing times or with two columns (or rows) correspondingly named "dose" and
 
 \item{initial.values}{Vector containing the initial concentrations or
 amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
+compartment.units.  Defaults are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
-
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
 
 \item{method}{Method used by integrator (deSolve).}
 
