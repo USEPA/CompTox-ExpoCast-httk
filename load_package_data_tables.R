@@ -1414,31 +1414,6 @@ write.table(chem.invivo.PK.summary.data,file="HTTK-Chem-InVivo-Summary-Data.txt"
 write.table(physiology.data,file="HTTK-Physiology-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t")
 
-Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
-#Write the tables.Rdata file:                                  
-save(chem.physical_and_invitro.data,
-     chem.invivo.PK.data,
-     chem.invivo.PK.aggregate.data,
-     chem.invivo.PK.summary.data,
-     physiology.data,
-     tissue.data,
-     Tables.Rdata.stamp,
-     EPA.ref,
-     file="Tables.RData",
-     compress="xz",
-     version=2)
-
-cat("Move the Tables.RData to the httk/data directory.\n")
-cat("Move the sysdata.rdaa to the httk/R directory.\n")
-
-sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
-
-sipes2017 <- sipes2017[,c(
-               'CAS',
-               'Human.Funbound.plasma',
-               'Human.Clint')]
-
-
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
   kapraun2019 <- list(
@@ -1533,11 +1508,35 @@ sipes2017 <- sipes2017[,c(
   Qfliver_percent = 6.5,
   Qfthyroid_percent = 1.5
   )
-  
+
+Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
+#Write the tables.Rdata file:                                  
+save(chem.physical_and_invitro.data,
+     chem.invivo.PK.data,
+     chem.invivo.PK.aggregate.data,
+     chem.invivo.PK.summary.data,
+     physiology.data,
+     tissue.data,
+     Tables.Rdata.stamp,
+     kapraun2019,
+     EPA.ref,
+     file="Tables.RData",
+     compress="xz",
+     version=2)
+
+cat("Move the Tables.RData to the httk/data directory.\n")
+cat("Move the sysdata.rdaa to the httk/R directory.\n")
+
+sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
+
+sipes2017 <- sipes2017[,c(
+               'CAS',
+               'Human.Funbound.plasma',
+               'Human.Clint')]
+ 
 save(Wetmore.data,
      sipes2017,
      chem.lists,
-     kapraun2019,
      sysdata.rda.stamp,                 
      file="sysdata.rda",
      compress="xz",
