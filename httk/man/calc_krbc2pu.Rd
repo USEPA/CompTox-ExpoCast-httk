@@ -33,7 +33,7 @@ default "Human").}
 feedback.}
 }
 \description{
-Given and observed ratio of chemial concentration in blood to plasma, this
+Given an observed ratio of chemical concentration in blood to plasma, this
 function calculates a Red Blood Cell to unbound plasma (Krbc2pu) partition
 coefficient that would be consistent with that observation.
 }

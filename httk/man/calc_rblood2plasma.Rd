@@ -26,7 +26,7 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Parameters from \code{\link{parameterize_schmitt}}}
@@ -63,7 +63,7 @@ equation: 1 - hematocrit + hematocrit * Krbc2pu * Funbound.plasma, summing
 the red blood cell to plasma and plasma:plasma (equal to 1) partition
 coefficients multiplied by their respective fractional volumes. When
 species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data (hematocrit and temperature), but substitues
+appropriate physiological data (hematocrit and temperature), but substitutes
 human fraction unbound and tissue volumes.
 }
 \examples{

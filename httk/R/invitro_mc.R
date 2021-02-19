@@ -151,7 +151,9 @@ invitro_mc <- function(parameters.dt=NULL,
 
   # Determine the value for fraction unbound in hepatocyte assay (depends on
   # phys-chem but does not vary biologically):
-  parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+  # First check that this model has phys-chem parameters:
+  if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
+    parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
   
   # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
   # "true" values for Clint that are consistent with the measurment .
@@ -247,8 +249,14 @@ invitro_mc <- function(parameters.dt=NULL,
   # Otherwise, check to see if fup credible interval was provided:
   } else if (!is.null(Funbound.plasma.u95)) 
   {
-    if (Funbound.plasma>minimum.Funbound.plasma)
+    if (Funbound.plasma.l95 == 1)
     {
+      parameters.dt[, unadjusted.Funbound.plasma:=1]  
+    }
+    else if (Funbound.plasma>minimum.Funbound.plasma)
+    {
+      # If the median is one we have a special case:
+      Funbound.med.is.one <- Funbound.plasma == 1
       # Use optim to estimate parameters for a beta distribution (alpha and beta)
       # such that the median and 95% credible interval approximate the given values:
       if (Funbound.plasma < 0.99)
@@ -260,8 +268,11 @@ invitro_mc <- function(parameters.dt=NULL,
           pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
           (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
           method="BFGS"))
-      } else { 
-        ppb.fit <- suppressWarnings(optim(c(2,1), function(x) (0.95-
+      } else {
+        # temporarily reduce median to just less than 1:
+        if (Funbound.med.is.one) Funbound.plasma <- 1 - 10^-3 
+        ppb.fit <- suppressWarnings(optim(c(2,1), 
+          function(x) (0.95-
           pbeta(Funbound.plasma.u95,x[1],x[2])+
           pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
           (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
@@ -271,6 +282,16 @@ invitro_mc <- function(parameters.dt=NULL,
       parameters.dt[, unadjusted.Funbound.plasma:=rbeta(n=samples,
         ppb.fit$par[1],
         ppb.fit$par[2])]
+      # Check to see if we need to adjust for median = 1:
+      if (Funbound.med.is.one)
+      {
+        # Assign median its old value
+        Funbound.plasma <- 1
+        # Set the highest 50% to 1:
+        med.val <- median(parameters.dt[, unadjusted.Funbound.plasma, with=T])
+        parameters.dt[unadjusted.Funbound.plasma > med.val, 
+          unadjusted.Funbound.plasma := 1]
+      }
     } else if (Funbound.plasma.u95 > minimum.Funbound.plasma)
     {
       # Assume that since the median is zero but the u95 is not, that there is 

@@ -10,6 +10,7 @@ parameterize_fetal_pbtk(
   dtxsid = NULL,
   species = "Human",
   fetal_fup_adjustment = TRUE,
+  return.kapraun2019 = FALSE,
   ...
 )
 }
@@ -89,7 +90,6 @@ solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
  parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
 
  
-
 }
 \references{
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
@@ -102,5 +102,7 @@ AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 }
 \author{
 John Wambaugh, Robert Pearce, and Mark Sfeir
+
+Mark Sfeir, Dustin Kapraun, John Wambaugh
 }
 \keyword{Parameter}

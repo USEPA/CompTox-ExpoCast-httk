@@ -4,15 +4,19 @@ options(warn=-1)
 
 calc_css(chem.name='nicotine')
 
+calc_css(chem.name='nicotine', model="1compartment")
+
+calc_css(chem.name='nicotine', model="3compartment")
+
 calc_css(chem.name="endrin")
 
-calc_stats(chem.name='nicotine',days=10)
+calc_tkstats(chem.name='nicotine',days=10)
 
-calc_stats(dtxsid="DTXSID0020442",days=1)
+calc_tkstats(dtxsid="DTXSID0020442",days=1)
 
-calc_stats(dtxsid="DTXSID0020442",days=10)
+calc_tkstats(dtxsid="DTXSID0020442",days=10)
 
-calc_stats(dtxsid="DTXSID0020442",days=100)
+calc_tkstats(dtxsid="DTXSID0020442",days=100)
 
 calc_analytic_css(
   chem.name='Bisphenol-A',
