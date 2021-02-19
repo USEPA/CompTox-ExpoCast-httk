@@ -15,7 +15,7 @@
 #' @param days Length of the simulation.
 #' @param chem.name Name of desired chemical.
 #' @param chem.cas CAS number of desired chemical.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
@@ -286,7 +286,7 @@ calc_tkstats <-function(
 #' @param days Length of the simulation.
 #' @param chem.name Name of desired chemical.
 #' @param chem.cas CAS number of desired chemical.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
@@ -378,7 +378,7 @@ calc_stats <-function(
                concentration=concentration,
                tissue=tissue,
                model=model,
-               default.to.human=default.to.humanF,
+               default.to.human=default.to.human,
                adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                regression=regression,
                restrictive.clearance = restrictive.clearance,

@@ -3,13 +3,12 @@
 #' This function initializes the parameters needed in the functions solve_pbtk,
 #' calc_css, and others using the multiple compartment model.
 #' 
-#' 
-#' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. 
-#' @param chem.name Either the chemical name or the CAS number must be
-#' specified. 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values

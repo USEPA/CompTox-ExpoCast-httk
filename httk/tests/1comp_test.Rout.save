@@ -1,13 +1,11 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -24,23 +22,23 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485
+[1] 1.463
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485
+[1] 1.463
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.485
+[1] 1.463
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
-[1] 26.95
+[1] 26.82
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.559
+[1] 8.543
 > 
 > head(solve_1comp(chem.name="bisphenol a"))
 Human volume of distribution returned in units of L/kg BW.
@@ -48,56 +46,56 @@ Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
-[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
-[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
-[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
-[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
+[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
+[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
+[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
+[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
 > head(solve_1comp(chem.cas="80-05-7"))
 Human volume of distribution returned in units of L/kg BW.
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
-[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
-[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
-[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
-[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
+[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
+[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
+[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
+[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
 Human volume of distribution returned in units of L/kg BW.
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.20    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    273.10    0.0004075    3.750e-07 2.000e-09
-[3,] 0.01042    158.40    0.3264000    3.413e-01 1.856e-03
-[4,] 0.02083     91.85    0.5139000    1.163e+00 6.322e-03
-[5,] 0.03125     53.26    0.6208000    2.260e+00 1.228e-02
-[6,] 0.04167     30.88    0.6811000    3.513e+00 1.910e-02
+[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
+[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
+[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
+[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
+[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
 > 
 > calc_vdist(chem.name="triclosan")
 Human volume of distribution returned in units of L/kg BW.
-[1] 2.454
+[1] 2.187
 > calc_vdist(chem.cas="80-05-7")
 Human volume of distribution returned in units of L/kg BW.
-[1] 5.009
+[1] 5.056
 > params <- parameterize_schmitt(chem.name="triclosan")
 > params <- c(params, predict_partitioning_schmitt(parameters = params))
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.454
+[1] 2.187
 > params <- parameterize_3comp(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.455
+[1] 2.187
 > params <- parameterize_pbtk(chem.name="triclosan")
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.454
+[1] 2.187
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

@@ -62,7 +62,7 @@ model.list[["3compartmentss"]]$httkpop.params <- c(
   "Vliverc")
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[["3compartmentss"]]$calcpc <- TRUE
+model.list[["3compartmentss"]]$calcpc <- FALSE
 
 
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
