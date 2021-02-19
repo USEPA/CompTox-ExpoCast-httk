@@ -250,8 +250,8 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
   #here for use in implementing an adjusted Funbound.plasma scheme. We make
   #different estimates for fetal and maternal Funbound.plasma depending
   #on which plasma protein is assumed to predominate in binding the chemical.
-    Pinfant2Pmaternal_hsa = 1.163 #human serum albumin
-    Pinfant2Pmaternal_aag = 0.38 #Alpha 1-acid glycoprotein
+    Pinfant2Pmaternal_hsa = 0.777 # S_HSA McNamara (2019)
+    Pinfant2Pmaternal_aag = 0.456 # S_AAG McNamara (2019)
   
   #Our assumption of which plasma protein predominates in binding the chemical
   #is based on a general observation of how acids and neutral chemicals 
