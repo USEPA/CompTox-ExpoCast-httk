@@ -2,7 +2,7 @@
 #' 
 #' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
-#' parameterized for a given species.
+#' paramterized for a given species.
 #' 
 #' When default.to.human is set to TRUE, and the species-specific data,
 #' Funbound.plasma and Clint, are missing from chem.physical_and_invitro.data,
@@ -130,7 +130,7 @@ get_cheminfo <- function(info="CAS",
   if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
     model,"have not been defined."))
   
-  # For now let's not require these because it's still hard to distinguish
+  # For now let's not require these because it's still hard to distringuish
   # between compounds that don't ionize and those for which we don't have
   # good predictions
   necessary.params <- necessary.params[!(tolower(necessary.params)%in%
@@ -151,14 +151,13 @@ get_cheminfo <- function(info="CAS",
     # Identify the appropriate column for Funbound (if needed):
     species.fup <- paste0(species,'.Funbound.plasma')
     # Turn triples with confidence intervals into single values: 
-    temp.fup <- strsplit(chem.physical_and_invitro.data[,species.fup],",")
+    temp.fup <- strsplit(as.character(chem.physical_and_invitro.data[,species.fup]),",")
     if (any(unlist(lapply(temp.fup,length))>1)) 
     {
       temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(temp.fup, function(x) x[[1]]))))
     } else {
       temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
-    }
-    # Check to see if we will use human data where species data is missing:
+    }    # Check to see if we will use human data where species data is missing:
     if (default.to.human)
     {
       # Check to see if this is a column that already has data:
@@ -295,13 +294,14 @@ get_cheminfo <- function(info="CAS",
     if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
       unique(tolower(c(necessary.params,info))))
     { 
-     # Make sure that we have a usable fup:
-      fup.values <- strsplit(chem.physical_and_invitro.data[,species.fup],",")
+     # Make sure that we have a usable fup:     
+      fup.values <- strsplit(as.character(
+        chem.physical_and_invitro.data[,species.fup]),",")
       if (any(unlist(lapply(fup.values,length))>1)) 
       {
       # Go with the upper 95th credible interval before throwing anything out:
-        fup.values[lapply(fup.values,length)>1] <- 
-          lapply(fup.values[lapply(fup.values,length)>1], function(x) x[[3]])
+        fup.values[lapply(fup.values,length)==3] <- 
+          lapply(fup.values[lapply(fup.values,length)==3], function(x) x[[3]])
       } 
       fup.values <-  suppressWarnings(as.numeric(unlist(fup.values)))
       fup.values.numeric <- !is.na(fup.values)
