@@ -22,9 +22,9 @@ predict_partitioning_schmitt.}
 volumes for tissues in \code{tissuelist}}
 
 \item{tissuelist}{Manually specifies compartment names and tissues, which
-override the standard compartment names and tissues that should be specified
-in a model's associated modelinfo file. Remaining tissues in the model's 
-associated \code{alltissues} listing are lumped in the rest of the body.}
+override the standard compartment names and tissues that are usually
+specified in a model's associated modelinfo file. Remaining tissues in the
+model's associated \code{alltissues} listing are lumped in the rest of the body.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}

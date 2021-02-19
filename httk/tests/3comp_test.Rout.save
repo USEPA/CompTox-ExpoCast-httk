@@ -1,13 +1,11 @@
 
-R Under development (unstable) (2020-06-29 r78751) -- "Unsuffered Consequences"
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -23,19 +21,19 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.488
+[1] 1.467
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.488
+[1] 1.467
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.488
+[1] 1.467
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 27.06
+[1] 26.96
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 8.577
+[1] 8.568
 > 
 > head(solve_3comp(chem.name="bisphenol a"))
 Human amounts returned in umol and concentration returned in uM units.
@@ -43,54 +41,54 @@ AUC is area under plasma concentration in uM * days units with
 Rblood2plasma = 0.79.
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.50  0.001995 3.200e-08  0.00000    7.400e-08 0.000000
-[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
-[4,] 0.02083     103.10 32.210000 2.532e+00  0.05723    6.849e+00 0.024090
-[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
-[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+[2,] 0.00001     306.50  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004577
+[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
+[5,] 0.03125      59.78 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
+[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
        Cplasma
 [1,] 0.000e+00
-[2,] 3.200e-08
-[3,] 1.135e+00
-[4,] 2.532e+00
-[5,] 3.449e+00
-[6,] 3.986e+00
+[2,] 3.100e-08
+[3,] 1.129e+00
+[4,] 2.524e+00
+[5,] 3.442e+00
+[6,] 3.980e+00
 > head(solve_3comp(chem.cas="80-05-7"))
 Human amounts returned in umol and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.50  0.001995 3.200e-08  0.00000    7.400e-08 0.000000
-[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
-[4,] 0.02083     103.10 32.210000 2.532e+00  0.05723    6.849e+00 0.024090
-[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
-[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+[2,] 0.00001     306.50  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004577
+[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
+[5,] 0.03125      59.78 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
+[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
        Cplasma
 [1,] 0.000e+00
-[2,] 3.200e-08
-[3,] 1.135e+00
-[4,] 2.532e+00
-[5,] 3.449e+00
-[6,] 3.986e+00
+[2,] 3.100e-08
+[3,] 1.129e+00
+[4,] 2.524e+00
+[5,] 3.442e+00
+[6,] 3.980e+00
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 Amounts returned in umol  and concentration returned in uM units.
 AUC is area under plasma concentration in uM * days units with 
 Rblood2plasma = 0.79.
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.50  0.001995 3.200e-08  0.00000    7.400e-08 0.000000
-[3,] 0.01042     177.80 35.570000 1.135e+00  0.01095    2.829e+00 0.004608
-[4,] 0.02083     103.10 32.210000 2.532e+00  0.05723    6.849e+00 0.024090
-[5,] 0.03125      59.78 26.200000 3.449e+00  0.13220    1.022e+01 0.055640
-[6,] 0.04167      34.66 22.030000 3.986e+00  0.22480    1.299e+01 0.094620
+[2,] 0.00001     306.50  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004577
+[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
+[5,] 0.03125      59.78 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
+[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
        Cplasma
 [1,] 0.000e+00
-[2,] 3.200e-08
-[3,] 1.135e+00
-[4,] 2.532e+00
-[5,] 3.449e+00
-[6,] 3.986e+00
+[2,] 3.100e-08
+[3,] 1.129e+00
+[4,] 2.524e+00
+[5,] 3.442e+00
+[6,] 3.980e+00
 > 
 > #Test that the input daily.dose and doses.per.day are all that goes through, 
 > #excluding any default dosing. We want any specified dosing to take the place
@@ -106,7 +104,7 @@ Rblood2plasma = 0.79.
 +   BW/(MW*10^-3) #factor of 10^-3 to convert 
 > #from g/mol to mg/umol, yielding a dose target in umol
 > head(initial_default_dose_target)
-[1] 306.6262
+[1] 306.6141
 > 
 > out_default_dosing = solve_3comp(chem.name = "bisphenol a")
 Human amounts returned in umol and concentration returned in uM units.
@@ -130,7 +128,7 @@ Rblood2plasma = 0.79.
 > #so, the dose target of what should appear at time zero in the intestine is:
 > initial_nondefault_dose_target = 3/5*BW/(MW*10^-3)
 > head(initial_nondefault_dose_target)
-[1] 183.9757
+[1] 183.9685
 > 
 > #the following two dose metrics should also be the same:
 > initial_nondefault_dose = sum(out_nondefault_dosing[2,]) #Use second row because

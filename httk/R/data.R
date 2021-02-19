@@ -143,7 +143,7 @@
 #'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
 #'  Assigned using methods in \code{get_weight_class}.} }
 #'
-#'@source \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@source \url{https://wwwn.cdc.gov/nchs/nhanes/Default.aspx}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -198,7 +198,7 @@
 #'  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
 #'
 #'
-#'@source \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#'@source \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -221,14 +221,14 @@
 #'@format A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
 #'  or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
 #'  \code{S}}{LMS parameters; see
-#'  \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
+#'  \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
 #'  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
 #'  \code{P95}, and \code{P97.7}}{weight percentiles} }
 #'
 #'@source
-#'  \url{http://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+#'  \url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
 #'  and
-#'  \url{http://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+#'  \url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
 #'@keywords data
 #'
 #'@author Caroline Ring
@@ -244,25 +244,27 @@
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
 #' Honda et al. (2019)
 #'
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A data frame / data table with 11 rows and 8 variables:
 #' \describe{
-#'   \item{area_bottom}{}
-#'   \item{cell_yield}{}
-#'   \item{diam}{}
-#'   \item{sysID}{}
-#'   \item{v_total}{}
-#'   \item{v_working}{}
-#'   \item{well_desc}{}
-#'   \item{well_number}{}
+#'   \item{sysID}{Identifier for each multi-well plate system}
+#'   \item{well_desc}{Well description}
+#'   \item{well_number}{Number of wells on plate}
+#'   \item{area_bottom}{Area of well bottom in mm^2}
+#'   \item{cell_yield}{Number of cells}
+#'   \item{diam}{Diameter of well in mm}
+#'   \item{v_total}{Total volume of well in uL or mm^3)}
+#'   \item{v_working}{Working volume of well in uL or mm^3}
 #' }
-#' @source \url{http://www.diamondse.info/}
-#'@keywords data
-#'@keywords httk-pop
 #'
-#'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+#' @source \url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
+#'
+#' @keywords data
+#'
+#' @author Greg Honda
+#'
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
+#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 #'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "well_param"
 
@@ -278,7 +280,7 @@
 #'   \item{gkow}{}
 #'   \item{gswat}{}
 #' }
-#' @source \url{http://www.diamondse.info/}
+#' @source \url{https://www.diamondse.info/}
 #'
 #'@keywords data
 #'
@@ -794,7 +796,7 @@
 #' Technology, 10.1021/es503583j.
 #'
 #' CDC (2014). National Health and Nutrition Examination Survey. Available at:
-#' http://www.cdc.gov/nchs/nhanes.htm.
+#' https://www.cdc.gov/nchs/nhanes.htm.
 #' @keywords data
 "chem.lists"
 
@@ -956,9 +958,9 @@
 #' @docType data
 #' @format A data.frame containing 565 rows and 33 columns.
 #' @author John Wambaugh
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
-#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+#' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
 #' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 #' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
@@ -1010,7 +1012,7 @@
 #' Pierre; Macko, Peter; Palosaari, Taina; Sund, Jukka; Worth, Andrew; Whelan, 
 #' Maurice (2020):  EURL ECVAM in vitro hepatocyte clearance and blood plasma 
 #' protein binding dataset for 77 chemicals. European Commission, Joint Research 
-#' Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
+#' Centre (JRC) [Dataset] PID: https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
 #' 
 #' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
 #' oral bioavailability by using in vitro and in silico drug related parameters
@@ -1391,7 +1393,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1403,7 +1405,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1415,7 +1417,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1427,7 +1429,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data

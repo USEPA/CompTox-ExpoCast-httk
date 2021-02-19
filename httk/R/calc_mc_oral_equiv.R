@@ -34,7 +34,7 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
-#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param suppress.messages Suppress text messages. 
 #' @param input.units Units of given concentration, default of uM but can also
@@ -157,8 +157,17 @@ calc_mc_oral_equiv <- function(conc,
                          return.samples=return.samples,
                          ...))
                          
-  dose <- conc/Css  
+  if (class(Css) == "try-error")
+  {
+    return(NA)
+  }
   
+  #
+  # The super-impressive, and complimacated reverse dosimetry IVIVE calculation: 
+  #
+  # uM to mg/kg/day:
+  #
+  dose <- conc/Css  
 
   if(tolower(output.units) == 'umolpkgpday'){
     if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
@@ -168,10 +177,6 @@ calc_mc_oral_equiv <- function(conc,
   if(!suppress.messages & !return.samples){
     cat(input.units,"concentration converted to",output.units,"dose for",which.quantile,"quantile.\n")
   }
-	if (class(Css) == "try-error"){
-    return(NA)
-  }else{
-    return(set_httk_precision(dose))
-  }
-  
+
+  return(set_httk_precision(dose))
 }

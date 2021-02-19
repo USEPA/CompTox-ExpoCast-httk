@@ -14,12 +14,21 @@ augment.table(
   reference,
   overwrite = F,
   sig.fig = 4,
-  clint.pvalue.overwrite = T
+  clint.pvalue.overwrite = T,
+  allow.na = F
 )
 }
 \arguments{
-\item{this.table}{Object of class data.frame containing one row per chemical,
-with each chemical minimally described by a CAS number.}
+\item{this.table}{Object of class data.frame containing one row per chemical.}
+
+\item{this.CAS}{The Chemical Abstracts Service registry number (CAS-RN)
+correponding to the parameter value}
+
+\item{compound.name}{A name associated with the chemical (defaults to NULL)}
+
+\item{this.property}{The property being added/modified.}
+
+\item{value}{The value being assigned to this.property.}
 
 \item{species}{This is the species for the data in the new table. This may
 be omitted if a column in data.list gives the species value for each
@@ -35,14 +44,14 @@ property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored.  Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
 
-\item{data.list}{This list identifies which properties are to be read from
-the table. Each item in the list should point to a column in the table
-new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
-'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
-'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-'Fgutabs', 'Rblood2plasma'.}
+\item{sig.fig}{Sets the number of significant figures stored (defaults to 4)}
 
-\item{current.table}{This is the table to which data are being added.}
+\item{clint.pvalue.overwrite}{If TRUE then the Cl_int p-value is set to NA 
+when the Cl_int value is changed unless a new p-value is provided. (defaults
+to TRUE)}
+
+\item{allow.na}{If TRUE (default is FALSE) then NA values are written to the
+table, otherwise they are ignored.}
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in

@@ -10,7 +10,8 @@ parameterize_gas_pbtk(
   dtxsid = NULL,
   species = "Human",
   default.to.human = F,
-  tissuelist = NULL,
+  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
+    c("gut")),
   force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T,
@@ -33,7 +34,7 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
