@@ -89,7 +89,11 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
 {
   #initialize a parms list for fetal model parameters to output
   parms <- list()
-  
+
+  #
+  # MATERNAL PARAMETERS:
+  #
+    
   #Key ICRP 2002 data for females, corresponding to reference BW of 60 kg:
   ICRP_2002_female_tissue_mass_fractions_data <- 10^-2 * c(
     Vthyroidc = 0.0283,
@@ -166,51 +170,12 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                   placenta = c("placenta")))
   parms <- c(parms, lumped_tissue_values_maternal[substr(names(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
-  
-  
-  #We'll need some fetal Schmitt params so we can calculate the fetal
-  #Kfplacenta2pu, as well as potentially adjust the fraction unbound to plasma
-  #estimate in the fetus.
-  
-  #set fetal plasma.pH
-  fetal.blood.pH <- 7.26 #average fetal value measured by and reported in 
-  #K.H. Lee 1972 for over 80 fetuses studied within 30 min of delivery.
-  #Before estimating the fetal partition coefficients, we need fetal Schmitt
-  #parameters based on the fetal plasma pH
-  
-  fetal_schmitt_parms <- maternal_schmitt_parms
-  fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
-  
-  fetal_pcs <- predict_partitioning_schmitt(parameters = fetal_schmitt_parms)
-  
-  #now for the fetus, with the brain included as a compartment. These
-  #partition coefficients are based on the same Schmitt parameters except
-  #for the plasma pH
-  lumped_tissue_values_fetus <- 
-          lump_tissues(Ktissue2pu.in = fetal_pcs, species="Human",
-                model = "fetal_pbtk", tissue.vols = tissue.vols.list,
-                tissuelist=list(
-                  gut = c("gut"), liver=c("liver"), kidney=c("kidney"), 
-                  lung=c("lung"), thyroid = c("thyroid"), brain = c("brain"),
-                  placenta = c("placenta")))
-  lumped_fetal_pcs <- lumped_tissue_values_fetus[substr(names(
-    lumped_tissue_values_fetus),1,1) == 'K']
-  
-  #Now we need to rename the fetal pcs to distinguish them from the mother's
-  num_lumped_fetal_pcs <- length(lumped_fetal_pcs)
-  names_fetal_pcs_vec <- c() #initialize empty names vec
-  
-  for (entry in 1:num_lumped_fetal_pcs){
-    names_fetal_pcs_vec[entry] <- paste(substr(names(lumped_fetal_pcs)[entry],1,1),"f",
-substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
-                              sep = "")
-  }
-  
-  names(lumped_fetal_pcs) <- names_fetal_pcs_vec
-  
-  parms <- c(parms, lumped_fetal_pcs) #Keep expanding our parms list
-  
-  
+  parms$pH_Plasma_mat <- maternal.blood.pH
+
+  #
+  # JOINT PARAMETERS:
+  #
+
   #Call parameterize_pbtk function to obtain useful parameters that these
   #models exactly share. 
   pbtk_parms <- parameterize_pbtk(chem.cas=chem.cas,
@@ -240,6 +205,19 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
   parms <- c(parms, pbtk_parms_desired)
   
   
+  #
+  # FETAL PARAMETERS:
+  # 
+
+
+
+  #set fetal plasma.pH
+  fetal.blood.pH <- 7.26 #average fetal value measured by and reported in 
+  #K.H. Lee 1972 for over 80 fetuses studied within 30 min of delivery.
+  #Before estimating the fetal partition coefficients, we need fetal Schmitt
+  #parameters based on the fetal plasma pH
+  
+
   #Now enter the scheme for adjusting fetal fraction of chemical unbound
   #in plasma according to plasma concentration ratios described in McNamara
   #and Alcorn 2002 if desired. "fup" also goes by "Funbound.plasma"...
@@ -272,7 +250,7 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
       pKa_Donor=pKa_Donor,
       pKa_Accept=pKa_Accept)
     
-      fraction_positive <- ion$fraction_positive
+    fraction_positive <- ion$fraction_positive
     
     if (fraction_positive > 0.5) 
     {
@@ -285,6 +263,52 @@ substr(names(lumped_fetal_pcs)[entry],2,nchar(names(lumped_fetal_pcs)[entry])),
         
     parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
   } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
+
+ #We'll need some fetal Schmitt params so we can calculate the fetal
+  #Kfplacenta2pu, as well as potentially adjust the fraction unbound to plasma
+  #estimate in the fetus.
+  
+  fetal_schmitt_parms <- maternal_schmitt_parms
+  fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
+  fetal_schmitt_parms$Funbound.plasma <- Fraction_unbound_plasma_fetus
+  
+  fetal_pcs <- predict_partitioning_schmitt(parameters = fetal_schmitt_parms)
+  
+  #now for the fetus, with the brain included as a compartment. These
+  #partition coefficients are based on the same Schmitt parameters except
+  #for the plasma pH
+  lumped_tissue_values_fetus <- 
+          lump_tissues(Ktissue2pu.in = fetal_pcs, species="Human",
+                model = "fetal_pbtk", tissue.vols = tissue.vols.list,
+                tissuelist=list(
+                  gut = c("gut"), liver=c("liver"), kidney=c("kidney"), 
+                  lung=c("lung"), thyroid = c("thyroid"), brain = c("brain"),
+                  placenta = c("placenta")))
+  lumped_fetal_pcs <- lumped_tissue_values_fetus[substr(names(
+    lumped_tissue_values_fetus),1,1) == 'K']
+  
+  #Now we need to rename the fetal pcs to distinguish them from the mother's
+  num_lumped_fetal_pcs <- length(lumped_fetal_pcs)
+  names_fetal_pcs_vec <- c() #initialize empty names vec
+  
+  for (entry in 1:num_lumped_fetal_pcs)
+  {
+    names_fetal_pcs_vec[entry] <- paste(
+      substr(names(lumped_fetal_pcs)[entry],1,1),
+      "f",
+      substr(names(lumped_fetal_pcs)[entry],
+        2,
+        nchar(names(lumped_fetal_pcs)[entry])),
+      sep = "")
+  }
+  
+  names(lumped_fetal_pcs) <- names_fetal_pcs_vec
+  
+  parms <- c(parms, lumped_fetal_pcs) #Keep expanding our parms list
+  parms$pH_Plasma_fet <- fetal.blood.pH
+
+  
+
           
 # Set appropriate precision:
   parms <- lapply(parms[sort(names(parms))],set_httk_precision)
