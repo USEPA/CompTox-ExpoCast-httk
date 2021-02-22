@@ -101,6 +101,8 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "MW",                           
   "pKa_Accept",
   "pKa_Donor",
+  "pH_Plasma_mat",
+  "pH_Plasma_fet",
   "Pow",            
   "Fraction_unbound_plasma_fetus",
   "BW_cubic_theta1",

@@ -72,7 +72,8 @@ get_cheminfo <- function(info="CAS",
                          species="Human",
                          fup.lod.default=0.005,
                          model='3compartmentss',
-                         default.to.human=F)
+                         default.to.human=F,
+                         fup.oom.threshold=2)
 {
 # Parameters in this list can be retreive with the info argument:
   valid.info <- c("Compound",
