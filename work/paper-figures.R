@@ -18,24 +18,44 @@ all.chems <-get_cheminfo(model="fetal_pbtk",info="all")
 for (this.chem in all.chems[,"CAS"])
 {
   temp <- parameterize_fetal_pbtk(chem.cas=this.chem)
+  state <- calc_ionization(
+      pH=7.26,
+      pKa_Donor=temp$pKa_Donor,
+      pKa_Accept=temp$pKa_Accept)
+  if (state$fraction_positive > 0.5) this.charge <- "Positive"
+  else if (state$fraction_negative > 0.5) this.charge <- "Negative"
+  else this.charge <- "Neutral"
   this.row <- data.frame(DTXSID=all.chems[all.chems[,"CAS"]==this.chem,"DTXSID"],
     Compound=all.chems[all.chems[,"CAS"]==this.chem,"Compound"],
     CAS=this.chem,
     Fup.Mat.Pred = temp$Funbound.plasma,
-    Fup.Neo.Pred = temp$Fraction_unbound_plasma_fetus
+    Fup.Neo.Pred = temp$Fraction_unbound_plasma_fetus,
+    Charge = this.charge
     )
   fup.table <- rbind(fup.table,this.row)
 }
 
+fup.table[fup.table$Charge=="Positive","Charge"] <- paste("Positive (n=",
+  sum(fup.table$Charge=="Positive"),
+  ")",sep="")
+fup.table[fup.table$Charge=="Negative","Charge"] <- paste("Negative (n=",
+  sum(fup.table$Charge=="Negative"),
+  ")",sep="")
+fup.table[fup.table$Charge=="Neutral","Charge"] <- paste("Neutral (n=",
+  sum(fup.table$Charge=="Neutral"),
+  ")",sep="")
+  
 
 FigA  <- ggplot(data=fup.table) +
   geom_point(aes(
     x=Fup.Mat.Pred,
-    y=Fup.Neo.Pred),
+    y=Fup.Neo.Pred,
+    shape=Charge,
+    color=Charge),
     size=3)   +
   geom_abline(slope=1, intercept=0) + 
   ylab(expression(paste("Predicted Neonate ",f[up]))) + 
-  xlab(expression(paste(italic("In vitro")," Measured ",f[up]))) +
+  xlab(expression(paste(italic("In vitro")," Measured Adult ",f[up]))) +
    scale_x_log10(label=scientific_10) +
    scale_y_log10(label=scientific_10) +
   theme_bw()  +
