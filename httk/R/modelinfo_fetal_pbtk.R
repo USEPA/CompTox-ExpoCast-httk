@@ -3,8 +3,9 @@
 #Analytic expression for steady-state plasma concentration.
 #model.list[["fetal_pbtk"]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
 
-# The is the R function for generating model parameters:
-model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
+# When calculating steady-state, which compartment do we test? 
+# ("C" is preprended):
+model.list[["fetal_pbtk"]]$steady.state.compartment <- "plasma"
 
 # Function used for generating model parameters:
 model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
@@ -53,11 +54,51 @@ model.list[["fetal_pbtk"]]$tissuelist=list(
 # how other parameters were calculated:
 model.list[["fetal_pbtk"]]$param.names <- c(
   "pre_pregnant_BW",
+  "BW",                           
+  "Clint",
+  "Clint.dist",
+  "Clmetabolismc",                
+  "Fgutabs",      
+  "Fhep.assay.correction",
+  "Fraction_unbound_plasma_fetus",
+  "Funbound.plasma",              
+  "Funbound.plasma.adjustment",
+  "Funbound.plasma.dist",
+  "kgutabs",                      
+# Maternal tissue partition coefficients:
+  "Kadipose2pu",
+  "Kgut2pu",
+  "Kkidney2pu",
+  "Kliver2pu",                    
+  "Klung2pu",
+  "Krbc2pu",
+  "Krest2pu",
+  "Kplacenta2pu",
+  "Kthyroid2pu",                  
+# Maternal tissue partition coefficients:
+  "Kfbrain2pu",                  
+  "Kfgut2pu",
+  "Kfkidney2pu",                  
+  "Kfliver2pu",
+  "Kflung2pu",
+  "Kfrbc2pu",
+  "Kfrest2pu",
+  "Kfplacenta2pu",
+  "Kfthyroid2pu",
+  "MA",
+  "million.cells.per.gliver",
+  "MW",                           
+  "pKa_Accept",
+  "pKa_Donor",
+  "pH_Plasma_mat",
+  "pH_Plasma_fet",
+  "Pow",            
   "Vthyroidc",    
   "Vkidneyc",                     
   "Vgutc",                       
   "Vliverc",
   "Vlungc",                       
+# Tissue Densities:
   "gut_density",  
   "kidney_density",
   "liver_density",                
@@ -68,43 +109,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "placenta_density",
   "amnf_density",                 
   "brain_density",
-  "Krbc2pu",
-  "Kadipose2pu",
-  "Kgut2pu",
-  "Kliver2pu",                    
-  "Kkidney2pu",
-  "Klung2pu",
-  "Kthyroid2pu",                  
-  "Kplacenta2pu",
-  "Krest2pu",
-  "Kfrbc2pu",
-  "Kfgut2pu",
-  "Kfliver2pu",
-  "Kfkidney2pu",                  
-  "Kflung2pu",
-  "Kfthyroid2pu",
-  "Kfbrain2pu",                  
-  "Kfplacenta2pu",
-  "Kfrest2pu",
-  "BW",                           
-  "Clint",
-  "Clint.dist",
-  "Clmetabolismc",                
-  "Fgutabs",      
-  "Fhep.assay.correction",
-  "Funbound.plasma",              
-  "Funbound.plasma.adjustment",
-  "Funbound.plasma.dist",
-  "kgutabs",                      
-  "MA",
-  "million.cells.per.gliver",
-  "MW",                           
-  "pKa_Accept",
-  "pKa_Donor",
-  "pH_Plasma_mat",
-  "pH_Plasma_fet",
-  "Pow",            
-  "Fraction_unbound_plasma_fetus",
+# Kapraun 2019 growth parameters:
   "BW_cubic_theta1",
   "BW_cubic_theta2",
   "BW_cubic_theta3",
@@ -419,6 +424,7 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cplasma",
   "Aplasma",
   "Cthyroid",
+  "Rblood2plasma",
   "Cplacenta",
   "Cfliver",
   "Cfven",
@@ -430,7 +436,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfkidney",
   "Cfbrain",
   "Afplasma",
-  "Cfplasma")
+  "Cfplasma",
+  "Rfblood2plasma")
 
 
 #Which variables to track by default (should be able to build this from
@@ -447,6 +454,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cplasma",
   "Atubules",
   "Ametabolized",
+  "Rblood2plasma",
   "AUC",
   "AUC_fetus",
   "Aplacenta",
@@ -460,8 +468,8 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfthyroid",
   "Cfkidney",
   "Cfbrain",
-  "Cfplasma"
-)
+  "Cfplasma",
+  "Rfblood2plasma")
 
 # Allowable units assigned to dosing input:
 model.list[["fetal_pbtk"]]$allowed.units.input <- list(
@@ -471,9 +479,9 @@ model.list[["fetal_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days','mg/m^3','mg/m^3*days'),
-  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days',
-           'mg/m^3','mg/m^3*days'))
+             'mg/L*days',"unitless"),
+  "iv" = c('uM','mg/L','umol','mg','uM*days',
+             'mg/L*days',"unitless"))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored.
@@ -503,7 +511,9 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Afplasma" = "umol",
   "Cfplasma" = "uM",
   "AUC" = "uM*days",
-  "AUC_fetus" = "uM*days")
+  "AUC_fetus" = "uM*days",
+  "Rblood2plasma" = "unitless",
+  "Rfblood2plasma" = "unitless")
 
 
 # These parameters specify the exposure scenario simulated by the model:
@@ -521,6 +531,37 @@ model.list[["fetal_pbtk"]]$dose.variable <- list(oral="Agutlumen",
 model.list[["fetal_pbtk"]]$dose.type <- list(oral="add",
                                        iv="add")
 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
+model.list[["pbtk"]]$state.vars <- c(
+  "Agutlumen",
+  "Agut",
+  "Aliver",
+  "Aven",
+  "Alung",
+  "Aart",
+  "Aadipose",
+  "Arest",
+  "Akidney",
+  "Atubules",
+  "Ametabolized",
+  "AUC",
+  "fAUC",
+  "Athyroid",
+  "Aplacenta",
+  "Afgut",
+  "Aflung",
+  "Afliver",
+  "Afven",
+  "Afart",
+  "Afrest",
+  "Afthyroid",
+  "Afkidney",
+  "Afbrain"
+  ) 
+       
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["fetal_pbtk"]]$required.params <- c(
   "Clint",
@@ -530,6 +571,13 @@ model.list[["fetal_pbtk"]]$required.params <- c(
   "pKa_Accept",
   "MW"
 )
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["pbtk"]]$calcpc <- TRUE
+  
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
