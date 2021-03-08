@@ -84,7 +84,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
                               dtxsid = NULL,
                               species="Human",
                               fetal_fup_adjustment=TRUE,
-                              return.kapraun2019=FALSE,
+                              return.kapraun2019=TRUE,
                               ...)
 {
   #initialize a parms list for fetal model parameters to output
@@ -260,10 +260,9 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
     Funbound.plasma <- parms$Funbound.plasma #value of Funbound.plasma for mother
     Fraction_unbound_plasma_fetus <- 
       1 / (1 + Pinfant2Pmaternal*(1 - Funbound.plasma)/Funbound.plasma)
-        
-    parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
-  } else parms$Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
-
+  } else Fraction_unbound_plasma_fetus <- parms$Funbound.plasma
+  parms$Fraction_unbound_plasma_fetus <- Fraction_unbound_plasma_fetus
+  
  #We'll need some fetal Schmitt params so we can calculate the fetal
   #Kfplacenta2pu, as well as potentially adjust the fraction unbound to plasma
   #estimate in the fetus.
