@@ -405,60 +405,21 @@ static double parms[134];
 static double forc[0];
 
 
-/* Function definitions for delay differential equations */
-
-int Nout=1;
-int nr[1]={0};
-double ytau[1] = {0.0};
-
-static double yini[24] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
-
-void lagvalue(double T, int *nr, int N, double *ytau) {
-  static void(*fun)(double, int*, int, double*) = NULL;
-  if (fun == NULL)
-    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-  return fun(T, nr, N, ytau);
-}
-
-double CalcDelay(int hvar, double dTime, double delay) {
-  double T = dTime-delay;
-  if (dTime > delay){
-    nr[0] = hvar;
-    lagvalue( T, nr, Nout, ytau );
-}
-  else{
-    ytau[0] = yini[hvar];
-}
-  return(ytau[0]);
-}
-
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmodfetal_pbtk (void (* odeparms)(int *, double *))
 {
   int N=134;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=0;
   odeforcs(&N, forc);
 }
 
 
-/* Calling R code will ensure that input y has same
-   dimension as yini */
-void initState (double *y)
-{
-  int i;
-
-  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
-  {
-    yini[i] = y[i];
-  }
-}
-
-void getParms (double *inParms, double *out, int *nout) {
+void getParmsfetal_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -482,7 +443,7 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double tw;
   /* local */ double BW;
@@ -752,20 +713,20 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jacfetal_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void eventfetal_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void rootfetal_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
