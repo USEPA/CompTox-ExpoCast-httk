@@ -17,6 +17,12 @@ scientific_10 <- function(x) {
   out <- parse(text=gsub("10\\^00","1",out))                    
 }  
 
+RMSE <- function(x)
+{
+  mean(x$residuals^2)^(1/2)
+}
+
+
 #
 #
 # PRotein Binding FIgures
@@ -119,6 +125,7 @@ MFdata.httk$AVERAGE_MASS <- as.numeric(MFdata.httk$AVERAGE_MASS)
 
 
 
+
 # Convert the units:
 convert1.units <- c("ng/ml","ng/mL","ug/L","ug/l","ng/mL serum","ng/g",
   "ng/g wet wt.","ppb")
@@ -141,7 +148,6 @@ MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"maternal"] <-
   MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"AVERAGE_MASS"]  # ug/L -> uM
 MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"obs.units"] <- "uM" 
   
-
 
 # Make the HTTK Predictions:
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
@@ -205,50 +211,48 @@ MFdata.httk <- subset(MFdata.httk,Chemical!="Cotinine")
 
 
 # Aylward absolute comparison:
+# Can't do an absolute scale prediction because we don't know the dose rate:
+#
+#FigBa  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
+#  geom_point(aes(
+#    x=Fet.pred,
+#    y=infant,
+#    shape=Chemical.Category,
+#    color=Chemical.Category),
+#    size=3)   +
+#  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+#  geom_abline(slope=1, intercept=0) + 
+#  ylab(expression(paste(italic("In vivo")," Infant Plasma Conc. (uM))"))) + 
+#  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
+#  theme_bw()  +
+#  theme(legend.position="bottom")+
+#  theme( text  = element_text(size=14))+ 
+#  theme(legend.text=element_text(size=10))+ 
+#  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+#  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+#    
+#print(FigBa)  
+#
+#FigBb  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
+#  geom_point(aes(
+#    x=Mat.pred,
+#    y=maternal,
+#    shape=Chemical.Category,
+#    color=Chemical.Category),
+#    size=3)   +
+#  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+#  geom_abline(slope=1, intercept=0) + 
+#  ylab(expression(paste(italic("In vivo")," Maternal Plasma Conc. (uM))"))) + 
+#  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
+#  theme_bw()  +
+#  theme(legend.position="bottom")+
+#  theme( text  = element_text(size=14))+ 
+#  theme(legend.text=element_text(size=10))+ 
+#  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
+#  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+#    
+#print(FigBb)  
 
-FigBa  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
-  geom_point(aes(
-    x=Fet.pred,
-    y=infant,
-    shape=Chemical.Category,
-    color=Chemical.Category),
-    size=3)   +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  geom_abline(slope=1, intercept=0) + 
-  ylab(expression(paste(italic("In vivo")," Infant Plasma Conc. (uM))"))) + 
-  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
-  theme_bw()  +
-  theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))+ 
-  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
-    
-print(FigBa)  
-
-FigBb  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
-  geom_point(aes(
-    x=Mat.pred,
-    y=maternal,
-    shape=Chemical.Category,
-    color=Chemical.Category),
-    size=3)   +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  geom_abline(slope=1, intercept=0) + 
-  ylab(expression(paste(italic("In vivo")," Maternal Plasma Conc. (uM))"))) + 
-  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
-  theme_bw()  +
-  theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))+ 
-  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
-    
-print(FigBb)  
-
-# Hmm, not sure this really makes sense because we don't know when the exposures occured, lets see how we do for ratio:
-  
-  
   
 # Aylward Ratio figures:
 
@@ -315,7 +319,7 @@ print(FigCa)
 
 fit1 <- lm(data=MFdata.main,MFratio~MFratio.pred.nofup)
 summary(fit1)
-RMSE
+RMSE(fit1)
 
 fit1sub <- lm(data=subset(MFdata.main,
   !(Chemical.Category %in% c(
@@ -323,7 +327,8 @@ fit1sub <- lm(data=subset(MFdata.main,
     "Polyaromatic Hydrocarbons"))),
   MFratio~MFratio.pred.nofup)
 summary(fit1sub)
-RMSE
+RMSE(fit1sub)
+
   
 # Mean logHenry's law constant for PAH's:
 mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical.Category=="Polyaromatic Hydrocarbons")$DTXSID)$logHenry)
@@ -377,7 +382,7 @@ print(FigCb)
 
 fit2 <- lm(data=MFdata.main,MFratio~MFratio.pred)
 summary(fit2)
-RMSE
+RMSE(fit2)
 
 fit2sub <- lm(data=subset(MFdata.main,
   !(Chemical.Category %in% c(
@@ -386,7 +391,8 @@ fit2sub <- lm(data=subset(MFdata.main,
   MFratio~MFratio.pred)
 summary(fit2sub)
 
-RMSE
+RMSE(fit2sub)
+
 
 
 #
@@ -436,16 +442,22 @@ for (this.id in get_cheminfo(model="fetal_pbtk", info="DTXSID"))
 }
 
 FigD <- ggplot(data=MFratio.pred)+
-   geom_histogram(binwidth = 0.25,fill="Red",aes(MFratio.pred))+ 
+   geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
   xlab("Maternal:Fetal Plasma Ratio") +
   ylab("Number of chemicals")+
     theme_bw()+
-    theme( text  = element_text(size=14))+
+    theme( text  = element_text(size=14))
     
 
 print(FigD)
 
+# Check out phys-chem > 1.6, < 1:
+highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred>1.6)$DTXSID)
+# all highly bound
+highratio$Compound
 
+lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
+# No obvious pattern
 
 
 
@@ -460,20 +472,76 @@ print(FigD)
 TKstats <- read.xls("Dallmann-2018.xlsx",stringsAsFactors=F,skip=1)
 TKstats <- subset(TKstats,DTXSID!="")
 
+TKstats[TKstats$Drug=="Caffeine","Gestational.Age.Weeks"] <- 36
+TKstats[TKstats$Drug=="Midazolam","Gestational.Age.Weeks"] <- 30
+TKstats[TKstats$Drug=="Nifedipine","Gestational.Age.Weeks"] <- 32
+TKstats[TKstats$Drug=="Metoprolol","Gestational.Age.Weeks"] <- 37
+TKstats[TKstats$Drug=="Ondansetron","Gestational.Age.Weeks"] <- 39  # Prior to C-section
+TKstats[TKstats$Drug=="Granisetron","Gestational.Age.Weeks"] <- 15
+TKstats[TKstats$Drug=="Diazepam","Gestational.Age.Weeks"] <- 30 # Paper doesn't say
+TKstats[TKstats$Drug=="Metronidazole","Gestational.Age.Weeks"] <- 39 # Prior to C-section
+
+TKstats[TKstats$Drug=="Caffeine","NonPreg.Duration.Days"] <- 12/24
+TKstats[TKstats$Drug=="Midazolam","NonPreg.Duration.Days"] <- 6/24
+TKstats[TKstats$Drug=="Nifedipine","NonPreg.Duration.Days"] <- 24/24
+TKstats[TKstats$Drug=="Metoprolol","NonPreg.Duration.Days"] <- 12/24
+TKstats[TKstats$Drug=="Ondansetron","NonPreg.Duration.Days"] <- 8/24
+TKstats[TKstats$Drug=="Granisetron","NonPreg.Duration.Days"] <- 24/24
+TKstats[TKstats$Drug=="Diazepam","NonPreg.Duration.Days"] <- 24/24
+TKstats[TKstats$Drug=="Metronidazole","NonPreg.Duration.Days"] <- 48/24
+
+TKstats[TKstats$Drug=="Caffeine","Preg.Duration.Days"] <- 24/24
+TKstats[TKstats$Drug=="Midazolam","Preg.Duration.Days"] <- 6/24
+TKstats[TKstats$Drug=="Nifedipine","Preg.Duration.Days"] <- 8/24
+TKstats[TKstats$Drug=="Metoprolol","Preg.Duration.Days"] <- 12/24
+TKstats[TKstats$Drug=="Ondansetron","Preg.Duration.Days"] <- 8/24
+TKstats[TKstats$Drug=="Granisetron","Preg.Duration.Days"] <- 24/24
+TKstats[TKstats$Drug=="Diazepam","Preg.Duration.Days"] <- 9/24
+TKstats[TKstats$Drug=="Metronidazole","Preg.Duration.Days"] <- 48/24
+
+
+# do unit conversions:
+ng.rows <- regexpr("ng",TKstats[,"X.unit."])!=-1
+
+# Get the molecular weights:
+TKstats$MW <- merge(
+  TKstats[,c("Drug","DTXSID")],
+  chem.physical_and_invitro.data[,c("DTXSID","MW")],by="DTXSID")$MW
+
+# Assumed body weight (kg):
+BW <- 61.103
+
+TKstats
+for (this.col in c("Observed","Predicted","Observed.1","Predicted.1"))
+{
+  TKstats[ng.rows,this.col] <- 1e-3 * # Is the paper wrong about units?
+#  TKstats[ng.rows,this.col] <- 1e-6 *
+    TKstats[ng.rows,this.col] # ng -> mg
+# Normalize to 1 mg/kg dose:
+  TKstats[TKstats$Note=="a",this.col] <- 
+    TKstats[TKstats$Note=="a",this.col]/150*BW
+  TKstats[TKstats$Note=="b",this.col] <- 
+    TKstats[TKstats$Note=="b",this.col]/20*BW
+  TKstats[TKstats$Note=="d",this.col] <- 
+    TKstats[TKstats$Note=="d",this.col]/10*BW
+# Covert mg/L -> uM:
+  TKstats[,this.col] <- TKstats[,this.col]/TKstats$MW*1000
+}  
+TKstats
+ 
+
+TKstats[,"X.unit."] <- 
+  gsub("ng","mg",TKstats[,"X.unit."])  
+TKstats[,"X.unit."] <- 
+  gsub("mg/L","uM",TKstats[,"X.unit."])  
+
+
+
+
 for (this.id in unique(TKstats$DTXSID))
 {
   if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"X.unit."])!=-1))
   {
-    TKstats[TKstats$DTXSID==this.id,"Observed"] <- 1e-6 *
-      TKstats[TKstats$DTXSID==this.id,"Observed"]
-    TKstats[TKstats$DTXSID==this.id,"Predicted"] <- 1e-6 *
-      TKstats[TKstats$DTXSID==this.id,"Predicted"]
-    TKstats[TKstats$DTXSID==this.id,"Observed.1"] <- 1e-6 *
-      TKstats[TKstats$DTXSID==this.id,"Observed.1"]
-    TKstats[TKstats$DTXSID==this.id,"Predicted.1"] <- 1e-6 *
-      TKstats[TKstats$DTXSID==this.id,"Predicted.1"]  
-    TKstats[TKstats$DTXSID==this.id,"X.unit."] <- 
-      gsub("ng","mg",TKstats[TKstats$DTXSID==this.id,"X.unit."])  
   }  
   if (this.id %in% get_cheminfo(info="DTXSID",model="pbtk"))
   {
@@ -485,12 +553,16 @@ for (this.id in unique(TKstats$DTXSID))
     p$Qcardiacc <- 301.78 / p$BW^(3/4) # Kapraun 2019 (L/h/kg^3/4)
     out.nonpreg <- solve_pbtk(
       parameters=p,
-      times = seq(0, 1*7, 0.5),
+      times = seq(0, this.subset[1,"NonPreg.Duration.Days"], 0.1),
       dose=1,
       daily.dose=NULL)
     out.preg <- solve_fetal_pbtk(
       dtxsid=this.id,
-      times = seq(13 * 7, 14 * 7, 0.5),
+      times = seq(
+        this.subset[1,"Gestational.Age.Weeks"]*7, 
+        this.subset[1,"Gestational.Age.Weeks"]*7 + 
+          this.subset[1,"Preg.Duration.Days"], 
+        0.1),
       dose=1,
       daily.dose=NULL)
     if (any(regexpr("AUC",this.subset$Parameter)!=-1))
@@ -500,7 +572,7 @@ for (this.id in unique(TKstats$DTXSID))
         "Predicted.httk"] <- max(out.nonpreg[,"AUC"])                       
       TKstats[TKstats$DTXSID==this.id &
         regexpr("AUC",TKstats$Parameter)!=-1, 
-        "Predicted.1.httk"] <- max(out.preg[,"AUC_fetus"])        
+        "Predicted.1.httk"] <- max(out.preg[,"AUC"])        
     }
     if (any(regexpr("Cmax",this.subset$Parameter)!=-1))
     {
@@ -509,7 +581,7 @@ for (this.id in unique(TKstats$DTXSID))
         "Predicted.httk"] <- max(out.nonpreg[,"Cplasma"])
       TKstats[TKstats$DTXSID==this.id &
         regexpr("Cmax",TKstats$Parameter)!=-1, 
-        "Predicted.1.httk"] <- max(out.preg[,"Cplasma"])        
+        "Predicted.1.httk"] <- max(out.preg[,"Cfplasma"])        
     }
   }
 }
@@ -530,10 +602,10 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) + 
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  xlab("httk Predicted (mg/L or mg/L*h)") + 
+  xlab("httk Predicted (uM*h)") + 
   ylab("Non-Pregnant Observed (Dallmann, 2018)") +
-  scale_x_log10(limits=c(10^-4,10^2),label=scientific_10) +
-  scale_y_log10(limits=c(10^-4,10^2),label=scientific_10) +
+  scale_x_log10(limits=c(10^-2,10^2),label=scientific_10) +
+  scale_y_log10(limits=c(10^-2,10^2),label=scientific_10) +
   theme_bw()  +
   theme(legend.position="bottom")+
   theme( text  = element_text(size=14))+ 
@@ -541,45 +613,48 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
     
 print(FigEa)
 
-FigEb  <- ggplot(data=TKstats) +
+FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_point(aes(
     y=Observed.1,
     x=Predicted.1.httk,
-    shape=Parameter,
-    color=Parameter),
+    shape=Drug,
+    color=Drug),
     size=3)   +
+      geom_abline(slope=1, intercept=0) +
+  geom_abline(slope=1, intercept=1, linetype=3) + 
+  geom_abline(slope=1, intercept=-1, linetype=3) +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  xlab("httk Predicted (mg/L or mg/L*h)") + 
+  xlab("httk Predicted (uM*h)") + 
   ylab("Pregnant Observed (Dallmann, 2018)") +
-  scale_x_log10() +
-  scale_y_log10() +
+  scale_x_log10(limits=c(10^-5,10^3),label=scientific_10) +
+  scale_y_log10(limits=c(10^-5,10^3),label=scientific_10) +
   theme_bw()  +
   theme(legend.position="bottom")+
   theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))+ 
-  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+  theme(legend.text=element_text(size=10))
     
 print(FigEb)
 
-FigEc  <- ggplot(data=TKstats) +
+FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
+  !is.na(Ratio.httk))) +
   geom_point(aes(
     y=Ratio.obs,
     x=Ratio.httk,
-    shape=Parameter,
-    color=Parameter),
+    shape=Drug,
+    color=Drug),
     size=3)   +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("Non-Pregnant:Pregnant Ratio httk Predicted") + 
   ylab("Non-Pregnant:Pregnant Observed (Dallmann, 2018)") +
-#  scale_x_log10() +
-#  scale_y_log10() +
+  scale_x_continuous(limits=c(0.25,2.5)) +
+  scale_y_continuous(limits=c(0.25,2.5)) +
+  geom_abline(slope=1, intercept=0) +
+  geom_abline(slope=1, intercept=1.15, linetype=3) + 
+  geom_abline(slope=1, intercept=-1.15, linetype=3) + 
   theme_bw()  +
   theme(legend.position="bottom")+
   theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))+ 
-  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
+  theme(legend.text=element_text(size=10))
     
 print(FigEc)
 
