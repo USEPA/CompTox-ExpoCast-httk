@@ -818,6 +818,8 @@ pred.table$Uncertainty <- factor(pred.table$Uncertainty,
     pred.table4[1,"Uncertainty"],
     pred.table5[1,"Uncertainty"]))
 
+
+
 FigF  <- ggplot(data=pred.table) +
   geom_point(aes(
     x=MFratio.pred,
@@ -826,7 +828,7 @@ FigF  <- ggplot(data=pred.table) +
     shape = Uncertainty),
     size=3)   +
     scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  scale_x_log10(limits=c(0.5,10^3))+
+  scale_x_log10(limits=c(0.1,5*10^1),label=scientific_10)+
   ylab(expression(paste(
     "Chemicals Found in Maternal Plasma by Wang   ",italic("et al.")," (2018)"))) + 
   xlab("Predicted Ratio to Maternal Plasma") +
@@ -840,5 +842,8 @@ FigF  <- ggplot(data=pred.table) +
  # theme(legend.justification = c(0, 0), legend.position = c(0, 0))
     
 print(FigF)
+
+# Need to elaborate on difference between 2-tert-butylphenol and 2,4di-tert-butylphenol
+
 
 
