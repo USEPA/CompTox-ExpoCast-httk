@@ -669,73 +669,130 @@ print(FigEc)
 
 
 Wangchems <- read.xls("Wang2018.xlsx",stringsAsFactors=F,sheet=3,skip=2)
-maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="pbtk")]
-
-pred.table1 <- subset(get_cheminfo(info=c("Compound","CAS","DTXSID")),
-  CAS %in% maternal.list)
+maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
+nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
+nonfluoros <- chem.physical_and_invitro.data$CAS[
+  regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))==-1]
+maternal.list <- maternal.list[maternal.list %in% intersect(nonvols,nonfluoros)]
   
+
+pred.table1 <- subset(get_cheminfo(
+  info=c("Compound","CAS","DTXSID"),
+  model="fetal_pbtk"),
+  CAS %in% maternal.list)
+pred.table1$Compound <- gsub("\"","",pred.table1$Compound)    
+
 for (this.cas in maternal.list)
 {
-  out <- solve_fetal_pbtk(chem.cas=this.cas,dose=0,daily.dose=1,doses.per.day=3)
-  last.row <- dim(out)[1]
-  pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"] <- 
-    out[last.row,"Cplasma"]/out[last.row,"Cfplasma"] 
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas)
+  if (!is.na(p$Funbound.plasma.dist))
+  {
+    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
+      as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.1)
+    {
+      skip <- TRUE
+    } else skip <- FALSE
+  } else skip <- FALSE
+  
+  if (!skip)
+  {
+    out <- solve_fetal_pbtk(
+      chem.cas=this.cas,
+      dose=0,
+      daily.dose=1,
+      doses.per.day=3,
+      fetal_fup_adjustenment=FALSE)
+    last.row <- which(out[,"time"]>279)
+    last.row <- last.row[!duplicated(out[last.row,"time"])]
+    pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"] <- 
+      mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"]) 
+  }
 }
+pred.table1$Uncertainty <- "Predicted M:F Plasma Ratio"
 
-pred.table1$Uncertainty <- "Fetal Plasma"
-
-pred.table2 <- pred.table1
-pred.table2$Uncertainty <- "In Vitro Measurement"
-for (this.cas in maternal.list)
-{
-  out <- calc_mc_css(chem.cas=this.cas,
-    which.quantile = c(0.5,0.975),
-    invitro.mc.arg.list = list(
-      adjusted.Funbound.plasma = T, 
-      poormetab = T,
-      fup.censored.dist = FALSE, 
-      fup.lod = 0.01, 
-      fup.meas.cv = 0.4, 
-      clint.meas.cv = 0.3,
-      fup.pop.cv = 0.0, 
-      clint.pop.cv = 0.0))
-  pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"] <- 
-    pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"]*out[2]/out[1] 
-}
+# In vitro error is included in Aylward eval:
+#pred.table2 <- pred.table1
+#pred.table2$Uncertainty <- "In Vitro Meas. Error"
+#for (this.cas in maternal.list)
+#{
+#  p <- parameterize_fetal_pbtk(chem.cas=this.cas)
+#  if (!is.na(p$Funbound.plasma.dist))
+#  {
+#    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
+#      as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.1)
+#    {
+#      skip <- TRUE
+#    } else skip <- FALSE
+#  } else skip <- FALSE
+#  
+#  if (!skip)
+#  {
+#    out <- calc_mc_css(chem.cas=this.cas,
+#      which.quantile = c(0.5,0.975),
+#      httkpop=F,
+##      invitro.mc.arg.list = list(
+##        adjusted.Funbound.plasma = T, 
+##        poormetab = T,
+##        fup.censored.dist = FALSE, 
+##        fup.lod = 0.01, 
+##        fup.meas.cv = 0.4, 
+##        clint.meas.cv = 0.3,
+##        fup.pop.cv = 0.0, 
+##        clint.pop.cv = 0.0)
+#      )
+#    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"] <- 
+#      pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"]*out[2]/out[1] 
+#  }
+#}
 
 pred.table3 <- pred.table1
-pred.table3$Uncertainty <- "Plasma Error (Fig. 1)"
-empirical.error <- 10^(sigma^2-Unc.invitro^2)^(1/2)
+pred.table3$Uncertainty <- "Plasma Error (Fig. 2b)"
+empirical.error <- RMSE(fit2sub)
 for (this.cas in maternal.list)
 {
 
   pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"] <- 
-    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"]*empirical.error 
+#    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+empirical.error) 
+    pred.table1[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+1.96*empirical.error) 
 }
 
 pred.table4 <- pred.table1
-pred.table4$Uncertainty <- "Fetal Brain"
+pred.table4$Uncertainty <- "Fetal Brain Partioning"
 for (this.cas in maternal.list)
 {
-  Kbrain2pu <- predict_partitioning_schmitt(chem.cas=this.cas)$Kbrain2pu
-  out <- parameterize_pbtk(chem.cas=this.cas) 
-  Rb2p <- out$Rblood2plasma
-  fup <- out$Funbound.plasma
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=FALSE)
+  Kbrain2pu <- p$Kfbrain2pu
+  fup <- p$Fraction_unbound_plasma_fetus
+  out <- solve_fetal_pbtk(
+    chem.cas=this.cas,
+    dose=0,
+    daily.dose=1,
+    doses.per.day=3,
+    fetal_fup_adjustenment=FALSE)
+  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
   pred.table4[pred.table4$CAS==this.cas,"MFratio.pred"] <- 
     pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"]*
     Kbrain2pu * fup / Rb2p
 }
 
 pred.table5 <- pred.table1
-pred.table5$Uncertainty <- "Brain Error"
+pred.table5$Uncertainty <- "Brain Partitioning Error"
 for (this.cas in maternal.list)
 {                                             
-  Kbrain2pu <- predict_partitioning_schmitt(chem.cas=this.cas)$Kbrain2pu
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=FALSE)
+  Kbrain2pu <- p$Kfbrain2pu
+  fup <- p$Fraction_unbound_plasma_fetus  
+  out <- solve_fetal_pbtk(
+    chem.cas=this.cas,
+    dose=0,
+    daily.dose=1,
+    doses.per.day=3,
+    fetal_fup_adjustenment=FALSE)
+  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
 # From Pearce et al. (2017) PC paper:
   Kbrain2pu <- 10^(log10(Kbrain2pu)+0.647)
-  out <- parameterize_pbtk(chem.cas=this.cas) 
-  Rb2p <- out$Rblood2plasma
-  fup <- out$Funbound.plasma
   pred.table5[pred.table5$CAS==this.cas,"MFratio.pred"] <- 
     pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"]*
     Kbrain2pu * fup / Rb2p
@@ -745,10 +802,21 @@ for (this.cas in maternal.list)
 
 pred.levels <- pred.table5$Compound[order(pred.table5$MFratio.pred)]
 
-pred.table <- rbind(pred.table1,pred.table2,pred.table3,pred.table4,pred.table5)
+pred.table <- rbind(
+  pred.table1,
+#  pred.table2,
+  pred.table3,
+  pred.table4,
+  pred.table5)
 pred.table$Compound <- factor(pred.table$Compound,
   levels = pred.levels)
-
+  
+pred.table$Uncertainty <- factor(pred.table$Uncertainty, 
+  levels = c(pred.table1[1,"Uncertainty"],
+#    pred.table2[1,"Uncertainty"],
+    pred.table3[1,"Uncertainty"],
+    pred.table4[1,"Uncertainty"],
+    pred.table5[1,"Uncertainty"]))
 
 FigF  <- ggplot(data=pred.table) +
   geom_point(aes(
@@ -758,15 +826,19 @@ FigF  <- ggplot(data=pred.table) +
     shape = Uncertainty),
     size=3)   +
     scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  scale_x_log10(limits=c(0.8,10^3))+
+  scale_x_log10(limits=c(0.5,10^3))+
   ylab(expression(paste(
     "Chemicals Found in Maternal Plasma by Wang   ",italic("et al.")," (2018)"))) + 
   xlab("Predicted Ratio to Maternal Plasma") +
   theme_bw()  +
-  theme(legend.position="bottom")+
+#  theme(legend.position="bottom")+
   theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))+ 
-  guides(color=guide_legend(nrow=3,byrow=TRUE))+ 
-  guides(shape=guide_legend(nrow=3,byrow=TRUE))
+  theme(legend.text=element_text(size=10))#+ 
+ # guides(color=guide_legend(nrow=4,byrow=TRUE))+ 
+  #guides(shape=guide_legend(nrow=4,byrow=TRUE))
+  #+
+ # theme(legend.justification = c(0, 0), legend.position = c(0, 0))
     
 print(FigF)
+
+
