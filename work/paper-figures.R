@@ -660,6 +660,104 @@ print(FigEc)
 
 
 
+#
+#
+# Curley 1969
+#
+#
+Curley <- read.xls("Curley1969.xlsx",stringsAsFactors=F)
+dim(Curley)
+Curley.compounds <- Curley[1,4:13]
+Curley <- Curley[4:47,]
+colnames(Curley)[1] <- "Tissue"
+colnames(Curley)[2] <- "N"
+colnames(Curley)[3] <- "Stat"
+
+Curley.pcs <- NULL
+cord.blood <- subset(Curley, Tissue == "Cord Blood") 
+for (this.tissue in unique(Curley$Tissue))
+  if (this.tissue != "Cord Blood")
+  {
+    this.subset <- subset(Curley, Tissue == this.tissue)
+    for (this.chemical in colnames(Curley)[4:13])
+    {
+      if (!is.na((as.numeric(subset(this.subset,Stat=="Mean")[,this.chemical]))) &
+        !is.na((as.numeric(subset(cord.blood,Stat=="Mean")[,this.chemical]))))
+      {
+        this.row <- data.frame(
+          Compound = Curley.compounds[,this.chemical],
+          DTXSID = this.chemical,
+          Tissue = this.tissue,
+          PC = as.numeric(subset(this.subset,Stat=="Mean")[,this.chemical]) /
+            as.numeric(subset(cord.blood,Stat=="Mean")[,this.chemical])
+          )
+        Curley.pcs <- rbind(Curley.pcs,this.row)
+      } else if (!is.na((as.numeric(subset(this.subset,Stat=="Range")[,this.chemical]))) &
+        !is.na((as.numeric(subset(cord.blood,Stat=="Mean")[,this.chemical]))))
+      {
+        this.row <- data.frame(
+          Compound = Curley.compounds[,this.chemical],
+          DTXSID = this.chemical,
+          Tissue = this.tissue,
+          PC = as.numeric(subset(this.subset,Stat=="Range")[,this.chemical]) /
+            as.numeric(subset(cord.blood,Stat=="Mean")[,this.chemical])
+          )
+        Curley.pcs <- rbind(Curley.pcs,this.row)
+      }
+    }
+  }
+Curley.pcs[Curley.pcs$Tissue=="Lungs","Tissue"] <- "Lung"
+
+for (this.chemical in unique(Curley.pcs$DTXSID))
+  if (this.chemical %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
+  {
+    this.subset <- subset(Curley.pcs,DTXSID==this.chemical)
+    p <- parameterize_fetal_pbtk(dtxsid=this.chemical,
+      fetal_fup_adjustment = FALSE)
+    fetal.blood.pH <- 7.26   
+    Fup <- p$Fraction_unbound_plasma_fetus
+    fetal_schmitt_parms <- parameterize_schmitt(dtxsid=this.chemical)
+    fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
+    fetal_schmitt_parms$Funbound.plasma <- Fup
+    fetal_pcs <- predict_partitioning_schmitt(parameters = fetal_schmitt_parms)
+
+    out <- solve_fetal_pbtk(
+      dtxsid = this.chemical,
+      fetal_fup_adjustment =FALSE)
+    Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
+    for (this.tissue in this.subset$Tissue)
+      if (tolower(this.tissue) %in% 
+        unique(subset(tissue.data,Species=="Human")$Tissue))
+      {
+        Curley.pcs[Curley.pcs$DTXSID==this.chemical &
+          Curley.pcs$Tissue == this.tissue, "HTTK.pred"] <-
+          fetal_pcs[[paste("K",tolower(this.tissue),"2pu",sep="")]]*fup/Rb2p
+      } else {
+       print(this.tissue)
+      }  
+  } else print(this.chemical)
+
+FigF  <- ggplot(data=Curley.PCs) +
+  geom_point(aes(
+    y=PC,
+    x=HTTK.pred,
+    shape=Chemical,
+    color=Tissue),
+    size=3)   +
+  geom_abline(slope=1, intercept=0) +
+  geom_abline(slope=1, intercept=1, linetype=3) + 
+  geom_abline(slope=1, intercept=-1, linetype=3) +
+  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  ylab("Observed (Curley, 1969)") +
+  scale_x_log10(label=scientific_10) +
+  scale_y_log10(label=scientific_10) +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=14))+ 
+  theme(legend.text=element_text(size=10))
+
+print(FigF)
+
 
 #
 #
