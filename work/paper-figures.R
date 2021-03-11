@@ -67,7 +67,7 @@ fup.table[fup.table$Charge=="Neutral","Charge"] <- paste("Neutral (n=",
   
 
 FigA  <- ggplot(data=fup.table) +
-  geom_point(aes(
+  geom_point(alpha=0.25, aes(
     x=Fup.Mat.Pred,
     y=Fup.Neo.Pred,
     shape=Charge,
@@ -412,7 +412,8 @@ for (this.id in get_cheminfo(model="fetal_pbtk", info="DTXSID"))
     fetal_fup_adjustment =TRUE)
   if (!is.na(p$Funbound.plasma.dist))
   {
-    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
+    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][1])>0 &
+      as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
       as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.11)
     {
       skip <- TRUE
@@ -658,7 +659,10 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
     
 print(FigEc)
 
-
+write.csv(subset(TKstats,Parameter=="AUCinf" &
+  !is.na(Ratio.httk)),
+  file="DallmanTable.txt")
+  
 
 #
 #
@@ -720,7 +724,9 @@ for (this.chemical in unique(Curley.pcs$DTXSID))
     fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
     fetal_schmitt_parms$Funbound.plasma <- Fup
     fetal_pcs <- predict_partitioning_schmitt(parameters = fetal_schmitt_parms)
-
+    fetal_pcs.nocal <- predict_partitioning_schmitt(
+      parameters = fetal_schmitt_parms,
+      regression=FALSE)
     out <- solve_fetal_pbtk(
       dtxsid = this.chemical,
       fetal_fup_adjustment =FALSE)
@@ -732,31 +738,62 @@ for (this.chemical in unique(Curley.pcs$DTXSID))
         Curley.pcs[Curley.pcs$DTXSID==this.chemical &
           Curley.pcs$Tissue == this.tissue, "HTTK.pred"] <-
           fetal_pcs[[paste("K",tolower(this.tissue),"2pu",sep="")]]*fup/Rb2p
+        Curley.pcs[Curley.pcs$DTXSID==this.chemical &
+          Curley.pcs$Tissue == this.tissue, "HTTK.pred.nocal"] <-
+          fetal_pcs.nocal[[paste("K",tolower(this.tissue),"2pu",sep="")]]*fup/Rb2p
       } else {
        print(this.tissue)
       }  
   } else print(this.chemical)
 
-FigF  <- ggplot(data=Curley.PCs) +
-  geom_point(aes(
+FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
+  geom_point(size=3,aes(
     y=PC,
     x=HTTK.pred,
-    shape=Chemical,
-    color=Tissue),
-    size=3)   +
+    shape=Compound,
+    color=Compound))   +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+
   xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
   ylab("Observed (Curley, 1969)") +
   scale_x_log10(label=scientific_10) +
   scale_y_log10(label=scientific_10) +
   theme_bw()  +
   theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))
+  theme( text  = element_text(size=18))+ 
+  theme(legend.text=element_text(size=14))+  
+  guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
-print(FigF)
+print(FigFa)
+
+fitFa <- lm(data=Curley.pcs,log10(PC)~log10(HTTK.pred))
+RMSE(fitFa)
+fitFb <- lm(data=Curley.pcs,log10(PC)~log10(HTTK.pred.nocal))
+RMSE(fitFb)
+
+FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
+  geom_point(size=3, aes(
+    y=PC,
+    x=HTTK.pred,
+    shape=Tissue,
+    color=Tissue))   +
+  geom_abline(slope=1, intercept=0) +
+  geom_abline(slope=1, intercept=1, linetype=3) + 
+  geom_abline(slope=1, intercept=-1, linetype=3) +
+    scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6, 19))+
+  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  ylab("Observed (Curley, 1969)") +
+  scale_x_log10(label=scientific_10) +
+  scale_y_log10(label=scientific_10) +
+  theme_bw()  +
+  theme(legend.position="bottom")+
+  theme( text  = element_text(size=18))+ 
+  theme(legend.text=element_text(size=14)) +  
+  guides(shape=guide_legend(nrow=3,byrow=TRUE))
+
+print(FigFb)
 
 
 #
@@ -775,7 +812,7 @@ maternal.list <- maternal.list[maternal.list %in% intersect(nonvols,nonfluoros)]
   
 
 pred.table1 <- subset(get_cheminfo(
-  info=c("Compound","CAS","DTXSID"),
+  info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
   model="fetal_pbtk"),
   CAS %in% maternal.list)
 pred.table1$Compound <- gsub("\"","",pred.table1$Compound)    
@@ -802,11 +839,14 @@ for (this.cas in maternal.list)
       fetal_fup_adjustenment=FALSE)
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
-    pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"] <- 
-      mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"]) 
+    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"] <- 
+      mean(out[last.row,"Cfplasma"])/mean(out[last.row,"Cplasma"]) 
   }
 }
-pred.table1$Uncertainty <- "Predicted M:F Plasma Ratio"
+# Create final table holding all predicitons for paper:
+PC.table <- pred.table1
+colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
+pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 
 # In vitro error is included in Aylward eval:
 #pred.table2 <- pred.table1
@@ -844,15 +884,18 @@ pred.table1$Uncertainty <- "Predicted M:F Plasma Ratio"
 #}
 
 pred.table3 <- pred.table1
-pred.table3$Uncertainty <- "Plasma Error (Fig. 2b)"
+pred.table3$Uncertainty <- "Plasma Error (Fig. 4b)"
 empirical.error <- RMSE(fit2sub)
 for (this.cas in maternal.list)
 {
 
-  pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"] <- 
+  pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"] <- 
 #    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+empirical.error) 
-    pred.table1[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+1.96*empirical.error) 
+    1/((1/pred.table1[pred.table2$CAS==this.cas,"Ratio.pred"])*(1-1.96*empirical.error)) 
 }
+# Update final table for paper:
+PC.table$RMSE <- RMSE(fit2sub)
+PC.table$R.plasma.FtoM.upper <- pred.table3$Ratio.pred
 
 pred.table4 <- pred.table1
 pred.table4$Uncertainty <- "Fetal Brain Partioning"
@@ -862,16 +905,21 @@ for (this.cas in maternal.list)
       fetal_fup_adjustment=FALSE)
   Kbrain2pu <- p$Kfbrain2pu
   fup <- p$Fraction_unbound_plasma_fetus
-  out <- solve_fetal_pbtk(
-    chem.cas=this.cas,
-    dose=0,
-    daily.dose=1,
-    doses.per.day=3,
-    fetal_fup_adjustenment=FALSE)
-  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
-  pred.table4[pred.table4$CAS==this.cas,"MFratio.pred"] <- 
-    pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"]*
-    Kbrain2pu * fup / Rb2p
+#  out <- solve_fetal_pbtk(
+#    chem.cas=this.cas,
+#    dose=0,
+#    daily.dose=1,
+#    doses.per.day=3,
+#    fetal_fup_adjustenment=FALSE)
+#  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
+  pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"] <- 
+    pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"]*
+    Kbrain2pu * fup
+  PC.table[PC.table$CAS==this.cas,"Kbrain2pu"] <- Kbrain2pu
+  PC.table[PC.table$CAS==this.cas,"fup"] <- fup
+#  PC.table[PC.table$CAS==this.cas,"Rb2p"] <- Kbrain2pu
+  PC.table[PC.table$CAS==this.cas,"R.brain.FtoM"] <- 
+    pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"]
 }
 
 pred.table5 <- pred.table1
@@ -882,23 +930,29 @@ for (this.cas in maternal.list)
       fetal_fup_adjustment=FALSE)
   Kbrain2pu <- p$Kfbrain2pu
   fup <- p$Fraction_unbound_plasma_fetus  
-  out <- solve_fetal_pbtk(
-    chem.cas=this.cas,
-    dose=0,
-    daily.dose=1,
-    doses.per.day=3,
-    fetal_fup_adjustenment=FALSE)
-  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
+#  out <- solve_fetal_pbtk(
+#    chem.cas=this.cas,
+#    dose=0,
+#    daily.dose=1,
+#    doses.per.day=3,
+#    fetal_fup_adjustenment=FALSE)
+#  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
 # From Pearce et al. (2017) PC paper:
-  Kbrain2pu <- 10^(log10(Kbrain2pu)+0.647)
-  pred.table5[pred.table5$CAS==this.cas,"MFratio.pred"] <- 
-    pred.table3[pred.table3$CAS==this.cas,"MFratio.pred"]*
-    Kbrain2pu * fup / Rb2p
+  Kbrain2pu.upper <- 10^(log10(Kbrain2pu)+0.647)
+  quad.error <- ((RMSE(fit2sub) /
+    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"])^2 +
+    (Kbrain2pu.upper/Kbrain2pu)^2)^(1/2)
+  pred.table5[pred.table5$CAS==this.cas,"Ratio.pred"] <- 
+    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"]*Kbrain2pu
+    (1+1.96*quad.error)* fup 
+  PC.table[PC.table$CAS==this.cas,"Kbrain2pu.upper"] <- Kbrain2pu.upper
+  PC.table[PC.table$CAS==this.cas,"R.brain.FtoM.upper"] <- 
+    pred.table5[pred.table4$CAS==this.cas,"Ratio.pred"]
 }
 
 
 
-pred.levels <- pred.table5$Compound[order(pred.table5$MFratio.pred)]
+pred.levels <- pred.table5$Compound[order(pred.table5$Ratio.pred)]
 
 pred.table <- rbind(
   pred.table1,
@@ -918,15 +972,15 @@ pred.table$Uncertainty <- factor(pred.table$Uncertainty,
 
 
 
-FigF  <- ggplot(data=pred.table) +
+FigG  <- ggplot(data=pred.table) +
   geom_point(aes(
-    x=MFratio.pred,
+    x=Ratio.pred,
     y=Compound,
     color = Uncertainty,
     shape = Uncertainty),
     size=3)   +
     scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  scale_x_log10(limits=c(0.1,5*10^1),label=scientific_10)+
+  scale_x_log10(limits=c(10^-2,10^2),label=scientific_10)+
   ylab(expression(paste(
     "Chemicals Found in Maternal Plasma by Wang   ",italic("et al.")," (2018)"))) + 
   xlab("Predicted Ratio to Maternal Plasma") +
@@ -939,9 +993,50 @@ FigF  <- ggplot(data=pred.table) +
   #+
  # theme(legend.justification = c(0, 0), legend.position = c(0, 0))
     
-print(FigF)
+print(FigG)
 
 # Need to elaborate on difference between 2-tert-butylphenol and 2,4di-tert-butylphenol
 
 
+for (this.col in 7:14)
+  PC.table[,this.col] <- signif(PC.table[,this.col],3)
 
+PC.table <- PC.table[order(PC.table$R.brain.FtoM.upper,decreasing=T),]
+
+for (this.row in 1:dim(PC.table)[1])
+{
+  out <- calc_ionization(
+    pH=7.26,
+    pKa_Donor=PC.table[this.row,"pKa_Donor"],
+    pKa_Accept=PC.table[this.row,"pKa_Accept"])
+  if (out$fraction_neutral>0.9) PC.table[this.row,"Charge_726"] <- "Neutral"
+  else if (out$fraction_positive>0.1) PC.table[this.row,"Charge_726"] <- 
+    paste(signif(out$fraction_positive*100,2),"% Positive",sep="")
+  else if (out$fraction_negative>0.1) PC.table[this.row,"Charge_726"] <- 
+    paste(signif(out$fraction_negative*100,2),"% Negative",sep="")
+  else if (out$fraction_zwitter>0.1) PC.table[this.row,"Charge_726"] <- 
+    paste(signif(out$fraction_zwitter*100,2),"% Zwitterion",sep="")
+}
+
+PC.table <- PC.table[,c(
+  "Compound",
+  "CAS",
+  "DTXSID",
+  "logP",
+  "Charge_726",
+  "R.plasma.FtoM",
+  "RMSE",
+  "R.plasma.FtoM.upper",
+  "Kbrain2pu",
+  "fup",
+  "R.brain.FtoM",
+  "Kbrain2pu.upper",
+  "R.brain.FtoM.upper")]
+  
+write.csv(PC.table,
+  file="WangTable.txt",
+  row.names=F)   
+
+  
+  
+  
