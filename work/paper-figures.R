@@ -444,7 +444,7 @@ for (this.id in get_cheminfo(model="fetal_pbtk", info="DTXSID"))
 
 FigD <- ggplot(data=MFratio.pred)+
    geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
-  xlab("Maternal:Fetal Plasma Ratio") +
+  xlab("Maternal:Fetal Plasma Concentration Ratio") +
   ylab("Number of chemicals")+
     theme_bw()+
     theme( text  = element_text(size=14))
@@ -938,16 +938,17 @@ for (this.cas in maternal.list)
 #    fetal_fup_adjustenment=FALSE)
 #  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
 # From Pearce et al. (2017) PC paper:
-  Kbrain2pu.upper <- 10^(log10(Kbrain2pu)+0.647)
+  Kbrain2pu.upper <- Kbrain2pu*10^(1.96*0.647)
   quad.error <- ((RMSE(fit2sub) /
     pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"])^2 +
-    (Kbrain2pu.upper/Kbrain2pu)^2)^(1/2)
+    (log(10)*10^0.647)^2)^(1/2)
   pred.table5[pred.table5$CAS==this.cas,"Ratio.pred"] <- 
-    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"]*Kbrain2pu
+    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"]*Kbrain2pu*
     (1+1.96*quad.error)* fup 
   PC.table[PC.table$CAS==this.cas,"Kbrain2pu.upper"] <- Kbrain2pu.upper
+  PC.table[PC.table$CAS==this.cas,"Quad.error"] <- quad.error
   PC.table[PC.table$CAS==this.cas,"R.brain.FtoM.upper"] <- 
-    pred.table5[pred.table4$CAS==this.cas,"Ratio.pred"]
+    pred.table5[pred.table5$CAS==this.cas,"Ratio.pred"]
 }
 
 
@@ -971,6 +972,23 @@ pred.table$Uncertainty <- factor(pred.table$Uncertainty,
     pred.table5[1,"Uncertainty"]))
 
 
+#Wang 2018 confirmed 6 chemical identities:
+confirmed.chemicals <- c(
+  "2,4-Di-tert-butylphenol",
+  "2,4-Dinitrophenol",
+  "Pyrocatechol",
+  "2'-Hydroxyacetophenone",
+  "3,5-Di-tert-butylsalicylic acid",
+  "4-Hydroxycoumarin"
+  )
+confirmed.chemicals <- c(
+  "96-76-4",
+  "19715-19-6",
+  "51-28-5",
+  "120-80-9",
+  "118-93-4",
+  "1076-38-6")
+
 
 FigG  <- ggplot(data=pred.table) +
   geom_point(aes(
@@ -980,7 +998,7 @@ FigG  <- ggplot(data=pred.table) +
     shape = Uncertainty),
     size=3)   +
     scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  scale_x_log10(limits=c(10^-2,10^2),label=scientific_10)+
+  scale_x_log10(limits=c(10^-2,10^3),label=scientific_10)+
   ylab(expression(paste(
     "Chemicals Found in Maternal Plasma by Wang   ",italic("et al.")," (2018)"))) + 
   xlab("Predicted Ratio to Maternal Plasma") +
