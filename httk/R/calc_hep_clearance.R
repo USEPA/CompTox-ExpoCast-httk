@@ -1,8 +1,10 @@
 #' Calculate the hepatic clearance.
 #' 
-#' This function calculates the hepatic clearance in plasma for a well-stirred model
-#' or other type if specified. Based on  Ito and Houston (2004)
-#' 
+#' This function calculates the hepatic clearance in plasma for using the
+#  "well-stirred" model by default. Other scaling options from Ito and 
+#' Houston (2004) are also available. In vitro measured hepatic clearace is 
+#' corrected for the free fraction in the assay using the model of Kilford et 
+#' al. (2008).
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -40,6 +42,11 @@
 #' Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
 #' predicting drug clearance using in vitro kinetic data from hepatic microsomes 
 #' and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
+#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
+#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
 #' @examples
 #' 
@@ -175,7 +182,8 @@ calc_hep_clearance <- function(chem.name=NULL,
               parameters,
               "calc_hep_clearance") 
               
-# Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+# Correct for fraction of chemical unbound in in vitro hepatocyte assay ad in
+# Kilford et al. (2008) (and used by Wetmore et al. (2015):
   Clint <- Clint / fu_hep
 
   fup <- get_param(
