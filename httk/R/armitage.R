@@ -216,7 +216,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' xplastic \tab Fraction bound to plastic \tab fraction \cr     
 #' xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 #' eta_free \tab effective availability ratio \tab fraction \cr      
-#' cfree.invitro \tab free invitro concentration \tab micromolar \cr
+#' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab micromolar \cr
 #' }
 #'
 #' @author Greg Honda
