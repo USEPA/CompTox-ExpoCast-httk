@@ -1228,7 +1228,17 @@ cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrit
 cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
 chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
 chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
+   
+#Annotate important chemicals classes as concatonated list:
+chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
 
+#PFAS:
+PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
+  "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
+    chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
+    "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
 #
 # END TABLE chem.physical_and_invitro.data 
 #
@@ -1497,8 +1507,8 @@ sipes2017 <- sipes2017[,c(
   Qkidney_cubic_theta0 = 53.248,
   Qkidney_cubic_theta1 = 3.6447,
   Qkidney_cubic_theta2 = -0.15357,
-  Qkidney_cubic_theta3 <- 0.0016968,
-  Qliver_percent_initial <- 27.0,
+  Qkidney_cubic_theta3 = 0.0016968,
+  Qliver_percent_initial = 27.0,
   Qliver_percent_terminal = 20.0,
   Qthyroid_percent_initial = 1.5,
   Qthyroid_percent_terminal = 1.1,
