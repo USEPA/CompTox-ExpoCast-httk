@@ -91,6 +91,12 @@ print(FigA)
 #
 
 MFdata <- read.xls("Aylward-MatFet.xlsx",stringsAsFactors=F)
+
+cat(paste("summarized data from over 100 studies covering ",
+  length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
+  " unique chemicals structures\n",sep=""))
+  
+
 MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(info="DTXSID",model="pbtk"))
 MFdata.httk[MFdata.httk$Chemical.Category=="bromodiphenylethers",
   "Chemical.Category"] <- "Bromodiphenylethers"  
@@ -254,6 +260,19 @@ MFdata.httk <- subset(MFdata.httk,Chemical!="Cotinine")
 #print(FigBb)  
 
   
+max.chem <- MFdata.httk[which(MFdata.httk$MFratio==max(MFdata.httk$MFratio)),]
+min.chem <- MFdata.httk[which(MFdata.httk$MFratio==min(MFdata.httk$MFratio)),]
+cat(paste("The minimum observed ratio was ",
+  signif(min.chem[,"MFratio"],2),
+  " for ",
+  min.chem[,"Chemical"],
+  " and the maximum was ",
+  signif(max.chem[,"MFratio"],2),
+  " for ",
+  max.chem[,"Chemical"],
+  ".\n",sep=""))
+
+
 # Aylward Ratio figures:
 
 # Clean up repeated observations:
@@ -263,6 +282,7 @@ for (this.id in unique(MFdata.httk$DTXSID))
 {
   this.subset <- subset(MFdata.httk,DTXSID==this.id)
   this.row <- this.subset[1,]
+  this.row$N.obs <- dim(this.subset)[1]
   this.row$MFratio <- median(this.subset$MFratio)
   this.row$MFratio.Q25 <- quantile(this.subset$MFratio,0.25)
   this.row$MFratio.Q75 <- quantile(this.subset$MFratio,0.75)
@@ -315,7 +335,48 @@ FigCa  <- ggplot(data=MFdata.main) +
     
 print(FigCa)
 
+cat(paste("In Figure 4 we compare predictions made with our high throughput \
+human gestational PBTK model with experimental observations on a per chemical \
+basis wherever we had both in vitro HTTK data and in vivo observations (",
+length(unique(MFdata.main$DTXSID)),
+" chemicals).\n",sep=""))
 
+
+repeats <- subset(MFdata.main,N.obs>1)
+
+cat(paste("Multiple observations were available for ",
+  dim(repeats)[1],
+  " of the chemicals,\n",sep=""))
+
+
+max.chem <- repeats[which(repeats$MFratio==max(repeats$MFratio)),]
+min.chem <- repeats[which(repeats$MFratio==min(repeats$MFratio)),]
+
+cat(paste("However, among the chemicals with repeated observations, the median \
+observations only ranged from ",
+  signif(min.chem[,"MFratio"],2),
+  " for ",
+  min.chem[,"Chemical"],
+  " to ",
+  signif(max.chem[,"MFratio"],2),
+  " for ",
+  max.chem[,"Chemical"],
+  ".\n",sep=""))
+  
+max.chem <- MFdata.main[which(MFdata.main$MFratio.pred==max(MFdata.main$MFratio.pred,na.rm=T)),]
+min.chem <- MFdata.main[which(MFdata.main$MFratio.pred==min(MFdata.main$MFratio.pred,na.rm=T)),]
+
+cat(paste("The predictions for all chemicals ranged from ",
+  signif(min.chem[,"MFratio.pred"],2),
+  " for ",
+  min.chem[,"Chemical"],
+  " to ",
+  signif(max.chem[,"MFratio.pred"],2),
+  " for ",
+  max.chem[,"Chemical"],
+  ".\n",sep=""))
+  
+    
 
 fit1 <- lm(data=MFdata.main,MFratio~MFratio.pred.nofup)
 summary(fit1)
@@ -335,6 +396,15 @@ mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical
 
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$DTXSID
 fluoros <- chem.physical_and_invitro.data$DTXSID[regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))!=-1]
+
+cat(paste("When volatile and fluorinated chemicals are omitted only ",
+  dim(subset(MFdata.main,
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons"))))[1],
+  " evaluation chemicals remain\n",
+  sep=""))
+  
   
   
 FigCb  <- ggplot(data=MFdata.main) +
@@ -393,7 +463,61 @@ summary(fit2sub)
 
 RMSE(fit2sub)
 
+cat(paste("We compare the RMSE for our predictions to the standard deviation \
+of the observations ",
+  signif(sd(MFdata.main$MFratio)[1],2),
+  " (",
+  signif(sd(subset(MFdata.main,
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons")))$MFratio),2),
+  " for non PAH or fluorinated compounds).\n",sep=""))
 
+cat(paste("The average standard deviation for chemicals with repeated observations was ",
+  signif(sd(subset(MFdata.main,N.obs>1)$MFratio)[1],2),
+  " (",
+  signif(sd(subset(MFdata.main,
+  N.obs > 1 &
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons")))$MFratio),2),
+  " for non PAH or fluorinated compounds).\n",sep=""))
+
+fit3 <- lm(data=repeats,MFratio~MFratio.pred.nofup)
+summary(fit3)
+RMSE(fit3)
+
+fit3sub <- lm(data=subset(MFdata.main, N.obs > 1 &
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons"))),
+  MFratio~MFratio.pred.nofup)
+summary(fit3sub)
+
+
+fit4 <- lm(data=subset(MFdata.main,N.obs > 1),MFratio~MFratio.pred)
+summary(fit4)
+RMSE(fit4)
+
+fit4sub <- lm(data=subset(MFdata.main, N.obs > 1 &
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons"))),
+  MFratio~MFratio.pred)
+summary(fit4sub)
+
+repeats <-subset(MFdata.main,N.obs > 1)
+cat(paste("The RMSE of the predictions for the ",
+  dim(subset(repeats,!(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons"))))[1],
+  " non-PAH and non-fluorinated compounds with repeated observations is ",
+  signif(RMSE(fit4sub),2),
+  " with the fup correction and ",
+  signif(RMSE(fit3sub),2),
+  " without.\n",sep=""))
+  
+  
 
 #
 #
@@ -404,7 +528,8 @@ RMSE(fit2sub)
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
   
 MFratio.pred <- NULL
-for (this.id in get_cheminfo(model="fetal_pbtk", info="DTXSID"))
+all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Chemical","DTXSID"))
+for (this.id in all.chems$DTXSID)
   if ((this.id %in% nonvols) & 
     !(this.id %in% fluoros))
 {
@@ -433,6 +558,7 @@ for (this.id in get_cheminfo(model="fetal_pbtk", info="DTXSID"))
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
     new.row <- data.frame(
+      Chemical = all.chems[DTXSID==this.id,"Compound"],
       DTXSID = this.id,
       Mat.pred = mean(out[last.row,"Cplasma"]),
       Fet.pred = mean(out[last.row,"Cfplasma"]),
@@ -452,10 +578,32 @@ FigD <- ggplot(data=MFratio.pred)+
 
 print(FigD)
 
+max.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=T)),]
+min.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==min(MFratio.pred$MFratio.pred,na.rm=T)),]
+cat(paste("In Figure X we examine the ratios predicted for the ",
+  dim(MFratio.pred)[1],
+  " appropriate (non-volatile or PFAS) chemicals with measured HTTK data.\n",
+  sep=""))
+
+
+cat(paste("We observe a median value of ",
+  signif(median(MFratio.pred$MFratio.pred,na.rm=T),3),
+  " ranging from ",
+  signif(min.chem[,"MFratio.pred"],3),
+  " for ",
+  min.chem[,"DTXSID"],
+  " to ",
+  signif(max.chem[,"MFratio.pred"],3),
+  " for ",
+  max.chem[,"DTXSID"],
+  ".\n",sep=""))
+  
 # Check out phys-chem > 1.6, < 1:
 highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred>1.6)$DTXSID)
 # all highly bound
 highratio$Compound
+apply(highratio,2,function(x) mean(as.numeric(x),na.rm=2))
+
 
 lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
 # No obvious pattern
