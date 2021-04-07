@@ -212,7 +212,7 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
 
 
   #set fetal plasma.pH
-  fetal.blood.pH <- 7.26 #average fetal value measured by and reported in 
+  fetal.blood.pH <- 7.28 #average fetal value measured by and reported in 
   #K.H. Lee 1972 for over 80 fetuses studied within 30 min of delivery.
   #Before estimating the fetal partition coefficients, we need fetal Schmitt
   #parameters based on the fetal plasma pH

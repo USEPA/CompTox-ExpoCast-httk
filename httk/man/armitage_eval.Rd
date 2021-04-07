@@ -33,7 +33,8 @@ armitage_eval(
 \arguments{
 \item{casrn.vector}{For vector or single value, CAS number}
 
-\item{nomconc.vector}{For vector or single value, micromolar nominal concentration (e.g. AC50 value)}
+\item{nomconc.vector}{For vector or single value, micromolar nominal 
+concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==T}
@@ -81,7 +82,7 @@ model}
 \item{this.f_oc}{1, everything assumed to be like proteins}
 }
 \value{
-tcdata
+
 }
 \description{
 Evaluate the Armitage model for chemical distributon in vitro. Takes input
@@ -90,13 +91,62 @@ the model published in Armitage et al. 2014 include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{
+
+library(httk)
+
+# Check to see if we have info on the chemical:
+"80-05-7" \%in\% get_cheminfo()
+
+#We do:
 temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
 this.well_number = 384, nomconc = 10)
 print(temp$cfree.invitro)
 
+# Check to see if we have info on the chemical:
+"793-24-8" \%in\% get_cheminfo()
+
+# Since we don't look up phys-chem from dashboard:
+cheminfo <- data.frame(
+  Compound="6-PPD",
+  CASRN="793-24-8",
+  DTXSID="DTXSID9025114",
+  logP=4.27, 
+  logHenry=log10(7.69e-8),
+  logWSol=log10(1.58e-4),
+  MP=	99.4,
+  MW=268.404
+  )
+  
+# Add the information to HTTK's database:
+chem.physical_and_invitro.data <- add_chemtable(
+ cheminfo,
+ current.table=chem.physical_and_invitro.data,
+ data.list=list(
+ Compound="Compound",
+ CAS="CASRN",
+  DTXSID="DTXSID",
+  MW="MW",
+  logP="logP",
+  logHenry="logHenry",
+  logWSol="logWSol",
+  MP="MP"),
+  species="Human",
+  reference="CompTox Dashboard 31921")
+
+# Run the Armitage et al. (2014) model:
+out <- armitage_eval(
+  casrn.vector = "793-24-8", 
+  this.FBSf = 0.1,
+  this.well_number = 384, 
+  nomconc = 10)
+  
+print(out)
+
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+
 Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
 }
 \author{
