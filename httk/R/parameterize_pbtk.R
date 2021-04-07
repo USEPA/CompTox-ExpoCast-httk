@@ -175,13 +175,15 @@ parameterize_pbtk <- function(chem.cas=NULL,
     suppress.messages=T,
     minimum.Funbound.plasma=minimum.Funbound.plasma)
   
-
+  if (is.null(tissuelist)) tissuelist <- model.list[["pbtk"]]$alltissues
+  
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
-    minimum.Funbound.plasma=minimum.Funbound.plasma)
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    tissues=tissuelist)
   # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(
     PCs,

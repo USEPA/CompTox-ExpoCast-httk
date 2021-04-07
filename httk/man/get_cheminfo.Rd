@@ -9,7 +9,8 @@ get_cheminfo(
   species = "Human",
   fup.lod.default = 0.005,
   model = "3compartmentss",
-  default.to.human = F
+  default.to.human = F,
+  fup.oom.threshold = 2
 )
 }
 \arguments{
