@@ -811,6 +811,10 @@ write.csv(subset(TKstats,Parameter=="AUCinf" &
   !is.na(Ratio.httk)),
   file="DallmanTable.txt")
   
+a <- c(0.3/1.1,1.9/1.2,1.2/1.5,2.1/1.1,1.4/1.1,1.1/1.1)
+mean(a)
+10^(abs(log10(a)))
+10^mean(abs(log10(a)))
 
 #
 #

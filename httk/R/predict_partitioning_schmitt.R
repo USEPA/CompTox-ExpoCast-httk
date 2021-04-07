@@ -159,14 +159,14 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 # Values for PBPK Models" (1994) that are not described by Schmitt (2008)
 
 # we use the average values for the Schmitt (2008) tissues
-for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
-  this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,
-                      Tissue != 'red blood cells' & tolower(Species) == tolower(species) 
-                      & variable == this.comp)[,'value'])))
-  colnames(this.row) <- colnames(tissue.data)
-  tissue.data <- rbind(tissue.data,this.row) %>%
-  as.data.frame()
-}
+  for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
+    this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,
+                        Tissue != 'red blood cells' & tolower(Species) == tolower(species) 
+                        & variable == this.comp)[,'value'])))
+    colnames(this.row) <- colnames(tissue.data)
+    tissue.data <- rbind(tissue.data,this.row) %>%
+    as.data.frame()
+  }
 
 	Ktissue2pu <- list()
 	

@@ -10,7 +10,7 @@ parameterize_fetal_pbtk(
   dtxsid = NULL,
   species = "Human",
   fetal_fup_adjustment = TRUE,
-  return.kapraun2019 = FALSE,
+  return.kapraun2019 = TRUE,
   ...
 )
 }
