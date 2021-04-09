@@ -15,8 +15,10 @@
 #' @param fetal_fup_adjustment Logical indicator of whether to use an adjusted
 #' estimate for fetal fup based on the fetal:maternal plasma protein binding
 #' ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
-#' Predictions in Infants." Defaults to TRUE. 
+#' Predictions in Infants." Defaults to TRUE.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #' @param ... Arguments passed to parameterize_pbtk.
+#'
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fgutabs}{Fraction
 #' of the oral dose absorbed, i.e. the fraction of the dose that enters the
@@ -59,7 +61,9 @@
 #' concentration of chemical in placental tissue to unbound concentration in
 #' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
 #' placental tissue to unbound concentration in fetal plasma.} 
+#'
 #' @author John Wambaugh, Robert Pearce, and Mark Sfeir
+#'
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
@@ -67,7 +71,9 @@
 #' 
 #' McNamara PJ, Alcorn J. Protein binding predictions in infants. 
 #' AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
+#'
 #' @keywords Parameter
+#'
 #' @examples
 #' 
 #' 
@@ -79,13 +85,15 @@
 #' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
 #' @export parameterize_fetal_pbtk
-parameterize_fetal_pbtk<- function(chem.cas=NULL,
-                              chem.name=NULL,
-                              dtxsid = NULL,
-                              species="Human",
-                              fetal_fup_adjustment=TRUE,
-                              return.kapraun2019=TRUE,
-                              ...)
+parameterize_fetal_pbtk<- function(
+  chem.cas=NULL,
+  chem.name=NULL,
+  dtxsid = NULL,
+  species="Human",
+  fetal_fup_adjustment=TRUE,
+  return.kapraun2019=TRUE,
+  suppress.messages=F,
+  ...)
 {
   #initialize a parms list for fetal model parameters to output
   parms <- list()
@@ -131,19 +139,20 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   
   #Capture Schmitt parameters for maternal case
   maternal_schmitt_parms <- parameterize_schmitt(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid,
-      species=species,
-      suppress.messages=T)
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid,
+    species=species,
+    suppress.messages=T)
   
   maternal.blood.pH <- 7.38 #average maternal blood pH value measured by and 
   #reported in K.H. Lee 1972 for over 80 mothers.
   maternal_schmitt_parms$plasma.pH <- maternal.blood.pH
   
   #capture maternal partition coefficients
-  maternal_pcs <- predict_partitioning_schmitt(parameters =
-                                                 maternal_schmitt_parms)
+  maternal_pcs <- predict_partitioning_schmitt(
+    parameters = maternal_schmitt_parms,
+    model = "fetal_pbtk")
   
   #preset our tissue.vols object to pass exact tissue volume information
   #for this model to lump_tissues.R, which may not exactly match
@@ -161,13 +170,20 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   #once for the fetal partition coefficients. There is a slightly different
   #lumping scheme in each case, since we are not modeling the maternal brain.
   lumped_tissue_values_maternal <-
-          lump_tissues(Ktissue2pu.in = maternal_pcs, species="Human",
-                  model = "fetal_pbtk",
-                  tissue.vols = tissue.vols.list,
-                  tissuelist=list(
-                  adipose = c("adipose"), gut = c("gut"), liver=c("liver"),
-                  kidney=c("kidney"), lung=c("lung"), thyroid = c("thyroid"),
-                  placenta = c("placenta")))
+    lump_tissues(
+      Ktissue2pu.in = maternal_pcs, 
+      species="Human",
+      model = "fetal_pbtk",
+      tissue.vols = tissue.vols.list,
+      tissuelist=list(
+        adipose = c("adipose"), 
+        gut = c("gut"), 
+        liver=c("liver"),
+        kidney=c("kidney"), 
+        lung=c("lung"), 
+        thyroid = c("thyroid"),
+        placenta = c("placenta")),
+      suppress.messages=T)
   parms <- c(parms, lumped_tissue_values_maternal[substr(names(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
   parms$pH_Plasma_mat <- maternal.blood.pH
@@ -178,11 +194,13 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
 
   #Call parameterize_pbtk function to obtain useful parameters that these
   #models exactly share. 
-  pbtk_parms <- parameterize_pbtk(chem.cas=chem.cas,
-                                  chem.name=chem.name,
-                                  dtxsid=dtxsid,
-                                  species=species,
-                                  ...)
+  pbtk_parms <- parameterize_pbtk(
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid,
+    species=species,
+    suppress.messages=T,
+    ...)
   pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
     #body weight listing with average prepregnant case, as scale dosing 
     #requires an entry named 'BW'
@@ -271,18 +289,29 @@ parameterize_fetal_pbtk<- function(chem.cas=NULL,
   fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
   fetal_schmitt_parms$Funbound.plasma <- Fraction_unbound_plasma_fetus
   
-  fetal_pcs <- predict_partitioning_schmitt(parameters = fetal_schmitt_parms)
+  fetal_pcs <- predict_partitioning_schmitt(
+    parameters = fetal_schmitt_parms,
+    model = "fetal_pbtk",
+    suppress.messages=T)
   
   #now for the fetus, with the brain included as a compartment. These
   #partition coefficients are based on the same Schmitt parameters except
   #for the plasma pH
   lumped_tissue_values_fetus <- 
-          lump_tissues(Ktissue2pu.in = fetal_pcs, species="Human",
-                model = "fetal_pbtk", tissue.vols = tissue.vols.list,
-                tissuelist=list(
-                  gut = c("gut"), liver=c("liver"), kidney=c("kidney"), 
-                  lung=c("lung"), thyroid = c("thyroid"), brain = c("brain"),
-                  placenta = c("placenta")))
+    lump_tissues(
+      Ktissue2pu.in = fetal_pcs, 
+      species="Human",
+      model = "fetal_pbtk", 
+      tissue.vols = tissue.vols.list,
+      tissuelist=list(
+        gut = c("gut"), 
+        liver=c("liver"), 
+        kidney=c("kidney"), 
+        lung=c("lung"), 
+        thyroid = c("thyroid"), 
+        brain = c("brain"),
+        placenta = c("placenta")),
+      suppress.messages=T)
   lumped_fetal_pcs <- lumped_tissue_values_fetus[substr(names(
     lumped_tissue_values_fetus),1,1) == 'K']
   
