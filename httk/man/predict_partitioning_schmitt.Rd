@@ -9,6 +9,7 @@ predict_partitioning_schmitt(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
+  model = "pbtk",
   default.to.human = F,
   parameters = NULL,
   alpha = 0.001,

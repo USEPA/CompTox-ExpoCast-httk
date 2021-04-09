@@ -11,6 +11,7 @@ parameterize_fetal_pbtk(
   species = "Human",
   fetal_fup_adjustment = TRUE,
   return.kapraun2019 = TRUE,
+  suppress.messages = F,
   ...
 )
 }
@@ -31,6 +32,8 @@ default "Human"). Currently only a narrow human model is supported.}
 estimate for fetal fup based on the fetal:maternal plasma protein binding
 ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
 Predictions in Infants." Defaults to TRUE.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{...}{Arguments passed to parameterize_pbtk.}
 }
