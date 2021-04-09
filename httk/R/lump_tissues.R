@@ -79,19 +79,27 @@ lump_tissues <- function(Ktissue2pu.in,
     stop('The "model" variable must be specified if a complete set of
           "parameters" is not otherwise provided.')
   
-  #Before using tissuelist, make sure it is initialized with the tissuelist
-  #entry from the modelinfo file of interest. If tissuelist is already manually
-  #specified, it takes priority.
-  if (is.null(tissuelist)){
-    tissuelist <- model.list[[model]]$tissuelist
+  if (is.null(model)) stop("Model must be specified.")
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
+    #Before using tissuelist, make sure it is initialized with the tissuelist
+    #entry from the modelinfo file of interest. If tissuelist is already manually
+    #specified, it takes priority.
+    if (is.null(tissuelist)){
+      tissuelist <- model.list[[model]]$tissuelist
+    }
+    
+    # List all tissues/compartments for which a model needs partitioning
+    # information, regardless of whether the tissue/compartment is to be lumped 
+    # or not.  
+    tissuenames <- sort(unique(model.list[[model]]$alltissues))
   }
-  
-  # List all tissues/compartments for which a model needs partitioning
-  # information, regardless of whether the tissue/compartment is to be lumped 
-  # or not.  
-  tissuenames <- sort(unique(model.list[[model]]$alltissues))
-  
-  if (!all(tissuelist %in% tissuenames)){
+
+  if (!all(unlist(tissuelist) %in% tissuenames)){
     stop("Not all of the tissues/compartments specified in \"tissuelist\" 
 are present in the entries of the associated modelinfo file's \"alltissues.\"")
   }
