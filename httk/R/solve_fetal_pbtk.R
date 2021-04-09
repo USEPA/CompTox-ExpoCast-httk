@@ -40,6 +40,8 @@
 #' @param parameters Chemical parameters from parameterize_fetal_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
+#' @param species Included for compatibility with other functions, but the model
+#' will not run for non-human species (default "Human").
 #' @param tsteps The number time steps per hour. Default of 4. 
 #' @param daily.dose Total daily dose, mg.
 #' @param dose Amount of a single dose, mg/kg BW.  
@@ -94,6 +96,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              times= seq(13*7,40*7,1), #from 13th week to 40th
                              parameters=NULL,
                              days=NULL,
+                             species="human",
                              tsteps = 4, # tsteps is number of steps per hour
                              dose = NULL, 
                              dosing.matrix=NULL,
@@ -119,6 +122,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
 with current parameterization scheme prior to the 13th week of pregnancy. It is
 recommended to set \"times\" to begin at or after day 91.')
     
+  if (species!="human") stop("The time-varying parameters for this model only 
+describe human gestation.")
   
   out <- solve_model(
     chem.name = chem.name,

@@ -95,23 +95,24 @@
 #'  
 #' 
 #' @export parameterize_pbtk
-parameterize_pbtk <- function(chem.cas=NULL,
-                              chem.name=NULL,
-                              dtxsid = NULL,
-                              species="Human",
-                              default.to.human=F,
-                              tissuelist=list(
-                                liver=c("liver"),
-                                kidney=c("kidney"),
-                                lung=c("lung"),
-                                gut=c("gut")),
-                              force.human.clint.fup = F,
-                              clint.pvalue.threshold=0.05,
-                              adjusted.Funbound.plasma=T,
-                              regression=T,
-                              suppress.messages=F,
-                              restrictive.clearance = T,
-                              minimum.Funbound.plasma=0.0001)
+parameterize_pbtk <- function(
+  chem.cas=NULL,
+  chem.name=NULL,
+  dtxsid = NULL,
+  species="Human",
+  default.to.human=F,
+  tissuelist=list(
+    liver=c("liver"),
+    kidney=c("kidney"),
+    lung=c("lung"),
+    gut=c("gut")),
+  force.human.clint.fup = F,
+  clint.pvalue.threshold=0.05,
+  adjusted.Funbound.plasma=T,
+  regression=T,
+  suppress.messages=F,
+  restrictive.clearance = T,
+  minimum.Funbound.plasma=0.0001)
 {
   #Give a binding to the physiology.data
   physiology.data <- physiology.data
@@ -185,14 +186,16 @@ parameterize_pbtk <- function(chem.cas=NULL,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    model="pbtk")
+    model="pbtk",
+    suppress.messages=suppress.messages)
 
   # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(
     PCs,
     tissuelist=tissuelist,
     species=species,
-    model="pbtk")
+    model="pbtk",
+    suppress.messages=suppress.messages)
        
   if (schmitt.params$unadjusted.Funbound.plasma == 0)
     stop("Fraction unbound = 0, can't predict partitioning.")

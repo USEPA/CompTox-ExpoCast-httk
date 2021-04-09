@@ -140,7 +140,8 @@ predict_partitioning_schmitt <- function(
       dtxsid=dtxsid,
       species=species,
       default.to.human=default.to.human,
-      minimum.Funbound.plasma=minimum.Funbound.plasma)
+      minimum.Funbound.plasma=minimum.Funbound.plasma,
+      suppress.messages=suppress.messages)
     user.params <- F
   } else {
     user.params <- T
@@ -248,21 +249,45 @@ predict_partitioning_schmitt <- function(
 
 	for (this.tissue in tissues)
 	{
-		this.subset <- subset(tissue.data,Tissue == this.tissue & 
-      tolower(Species) == tolower(species))
-   if (dim(this.subset)==0) 
-   {
-     this.subset <- subset(tissue.data,
-       Tissue == this.tissue & 
-       tolower(Species) == "human")
-     if (dim(this.subset)>0)
-     {
-       if (!suppress.messages) warning(paste(
-         "Human fractional tissue volumes for",
-         this.tissue,
-         "used in calculating partition coefficients.")
-     } else stop(paste("Missing data in tissue.data on",this.tissue))
-   }
+# Load Schmitt (2008) descriptors for this tissue:
+		this.subset <- subset(tissue.data,
+      Tissue == this.tissue & 
+      tolower(Species) == tolower(species) &
+      variable %in% c(
+         "Fcell",
+         "Fint",
+         "FWc",
+         "FPc",
+         "FLc",
+         "Fn_Lc",
+         "Fn_PLc",
+         "Fa_PLc",
+         "pH"))
+ # If there are no descriptors in the tissue.data table for this species, try
+ # the human ones: 
+    if (dim(this.subset)[1]==0) 
+    {
+      this.subset <- subset(tissue.data,
+        Tissue == this.tissue & 
+        tolower(Species) == "human" &
+       variable %in% c(
+         "Fcell",
+         "Fint",
+         "FWc",
+         "FPc",
+         "FLc",
+         "Fn_Lc",
+         "Fn_PLc",
+         "Fa_PLc",
+         "pH"))
+      if (dim(this.subset)[1]>0)
+      {
+        if (!suppress.messages) warning(paste(
+          "Human tissue composition values for",
+          this.tissue,
+          "used in calculating partition coefficients."))
+      } else stop(paste("Missing data in tissue.data on",this.tissue))
+    }
 
 # Tissue-specific cellular/interstitial volume fractions:
     Ftotal <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) + 
