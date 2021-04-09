@@ -11,6 +11,7 @@ solve_fetal_pbtk(
   times = seq(13 * 7, 40 * 7, 1),
   parameters = NULL,
   days = NULL,
+  species = "human",
   tsteps = 4,
   dose = NULL,
   dosing.matrix = NULL,
@@ -52,6 +53,9 @@ data constraints.}
 overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
+
+\item{species}{Included for compatibility with other functions, but the model
+will not run for non-human species (default "Human").}
 
 \item{tsteps}{The number time steps per hour. Default of 4.}
 

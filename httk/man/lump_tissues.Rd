@@ -11,7 +11,8 @@ lump_tissues(
   species = "Human",
   tissue.vols = NULL,
   tissue.flows = NULL,
-  model = NULL
+  model = "pbtk",
+  suppress.messages = F
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ default "Human").}
 
 \item{model}{Specify which model (and therefore which tissues) are being 
 considered}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
