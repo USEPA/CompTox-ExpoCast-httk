@@ -100,7 +100,11 @@ parameterize_pbtk <- function(chem.cas=NULL,
                               dtxsid = NULL,
                               species="Human",
                               default.to.human=F,
-                              tissuelist=NULL,
+                              tissuelist=list(
+                                liver=c("liver"),
+                                kidney=c("kidney"),
+                                lung=c("lung"),
+                                gut=c("gut")),
                               force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
@@ -174,16 +178,15 @@ parameterize_pbtk <- function(chem.cas=NULL,
     force.human.fup=force.human.clint.fup,
     suppress.messages=T,
     minimum.Funbound.plasma=minimum.Funbound.plasma)
-  
-  if (is.null(tissuelist)) tissuelist <- model.list[["pbtk"]]$alltissues
-  
+    
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    tissues=tissuelist)
+    model="pbtk")
+
   # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(
     PCs,
