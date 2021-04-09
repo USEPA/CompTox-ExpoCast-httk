@@ -31,6 +31,7 @@
 #' @param tissue.flows A list of flows for tissues in \code{tissuelist}
 #' @param model Specify which model (and therefore which tissues) are being 
 #' considered
+#' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
 #' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration
@@ -64,7 +65,8 @@ lump_tissues <- function(Ktissue2pu.in,
                          species="Human",
                          tissue.vols=NULL,
                          tissue.flows=NULL,
-                         model=NULL)
+                         model="pbtk",
+                         suppress.messages=F)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -99,13 +101,15 @@ lump_tissues <- function(Ktissue2pu.in,
     tissuenames <- sort(unique(model.list[[model]]$alltissues))
   }
 
-  if (!all(unlist(tissuelist) %in% tissuenames)){
+  if (!all(unlist(tissuelist) %in% tissuenames))
+  {
     stop("Not all of the tissues/compartments specified in \"tissuelist\" 
 are present in the entries of the associated modelinfo file's \"alltissues.\"")
   }
   
   #Check to make sure the tissuelist is a list of character vectors.
-  if (!(is.null(tissuelist))){
+  if (!(is.null(tissuelist)))
+  {
     if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
 NULL if the model is a 1 compartment model where no lumping is necessary.") 
   }
@@ -114,8 +118,10 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
     #because they also undergo a name change between the associated partition
     #coefficient and the "red blood cells" name from tissue.data, they are
     #kept separate (assuming they are indicated in the tissuenames list). 
-    if ("red blood cells" %in% tissuenames){
-      names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'Krbc2pu'] <- 'red blood cells'
+    if ("red blood cells" %in% tissuenames)
+    {
+      names(Ktissue2pu.in)[names(Ktissue2pu.in) == 'Krbc2pu'] <- 
+        'red blood cells'
       pcs_names_standard_treatment <- 
         names(Ktissue2pu.in)[names(Ktissue2pu.in) != "red blood cells"]
       tissue_name_verification_vec <- c("red blood cells",
@@ -132,8 +138,8 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
     #Now use this verification vector to check if the requested tissuenames 
     #are among those for which partitioning info has been passed. 
     if (!all(tissuenames %in% tissue_name_verification_vec)){
-      stop(paste('These names listed in the associated modelinfo file\'s
-\"alltissues\" list must have correspondingly named entries in Ktissue2pu.in:',
+      stop(paste("These names listed in the associated modelinfo file\'s
+\"alltissues\" list must have correspondingly named entries in Ktissue2pu.in:",
                  paste(tissuenames, collapse=', ')))
     }
   
@@ -233,40 +239,68 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
                paste(unique(tissue.data[,'Tissue']),collapse=', ')))
       else {
         #give tissue.vols and tissue.flows priority
-        if ((is.null(tissue.vols)) | is.null(tissue.flows)) {
+        if ((is.null(tissue.vols)) | is.null(tissue.flows)) 
+        {
           this.subset <- subset(
             tissue.data,
-            Tissue == this.tissue & tolower(Species) == tolower(species))
+            Tissue == this.tissue & 
+            tolower(Species) == tolower(species) &
+            variable %in% c("Flow (mL/min/kg^(3/4))","Vol (L/kg)"))
+          if (dim(this.subset)[1]==0) 
+          {
+            this.subset <- subset(tissue.data,
+              Tissue == this.tissue & 
+              tolower(Species) == "human" &
+              variable %in% c("Flow (mL/min/kg^(3/4))","Vol (L/kg)"))
+            if (dim(this.subset)[1]>0)
+            {
+              if (!suppress.messages) warning(paste(
+                "Human tissue flow and volume values for",
+                this.tissue,
+                "used in tissue lumping."))
+            }
+          }
           
-          if ((is.null(tissue.vols)) | (!(this.lumped.tissue %in% names(tissue.vols)))) {
+          if ((is.null(tissue.vols)) | 
+            (!(this.lumped.tissue %in% names(tissue.vols)))) 
+          {
             this.vol <- as.numeric(subset(
               this.subset,
               variable == 'Vol (L/kg)')[,'value'])
           }
-          if ((is.null(tissue.flows)) | (!(this.lumped.tissue %in% names(tissue.flows)))){
+          if ((is.null(tissue.flows)) | 
+            (!(this.lumped.tissue %in% names(tissue.flows))))
+          {
             this.flow <- as.numeric(subset(
               this.subset,
               variable == 'Flow (mL/min/kg^(3/4))')[,'value']) / 
-              as.numeric(subset(physiology.data,Parameter=='Cardiac Output')[[species]])
+              as.numeric(subset(physiology.data,
+                Parameter=='Cardiac Output')[[species]])
           }
         }
         
-        if ((!(is.null(tissue.vols))) & (this.lumped.tissue %in% names(tissue.vols))){
+        if ((!(is.null(tissue.vols))) & 
+          (this.lumped.tissue %in% names(tissue.vols)))
+        {
           this.vol <- tissue.vols[[this.lumped.tissue]]
         }
             
-        if ((!(is.null(tissue.flows))) & (this.lumped.tissue %in% names(tissue.flows))){
+        if ((!(is.null(tissue.flows))) & 
+          (this.lumped.tissue %in% names(tissue.flows)))
+        {
           this.flow <- tissue.flows[[this.lumped.tissue]]
         }
       	
       		#if this.flow or this.vol still NULL after checking all sources
-      	if ((length(this.flow) == 0) | (length(this.vol)==0)){
-      	  warning('A flow or volume associated with the ',this.tissue,' and 
+      	if (!suppress.messages & 
+          ((length(this.flow) == 0) | (length(this.vol)==0)))
+        {
+      	  warning("A flow or volume associated with the ",this.tissue," and 
       	passed to lump_tissues is undefined. You may need to check to make
       	sure the input tissue information, if no tissue volume or flow is
-      	intended to be left out.')
-      		}
-        }
+      	intended to be left out.")
+     		}
+      }
 # Mark that this tissue has been lumped:
 			all.tissues[[this.tissue]] <- TRUE
 # Add the volume for this tissue to the lumped tissue:
