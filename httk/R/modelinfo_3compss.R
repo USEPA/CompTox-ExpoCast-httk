@@ -84,3 +84,5 @@ model.list[["3compartmentss"]]$invitro.params <- c("BW",
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[["3compartmentss"]]$exclude.fup.zero <- F
 
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["3compartmentss"]]$css.dosing.params <- c("hourly.dose")

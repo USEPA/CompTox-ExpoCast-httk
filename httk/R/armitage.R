@@ -21,7 +21,7 @@
 #'
 #' @author Greg Honda
 #'
-#' @reference
+#' @references
 #' Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
 #' and evaluation of a mechanistic bioconcentration model for ionogenic organic 
 #' chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
@@ -107,8 +107,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.v_total Total volume per well (m^3)
 #' @param this.v_working Working volume per well (m^3)
 #' @param this.cell_yield Number of cells per well
-#' @param this.Tsys System temperature (oC)
-#' @param this.Tref Reference temperature (K)
+#' @param this.Tsys System temperature (degrees C)
+#' @param this.Tref Reference temperature (degrees K)
 #' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
 #' model
 #' @param this.option.swat2 Use alternative water solubility correction
@@ -116,7 +116,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.memblip Membrane lipid content of cells
 #' @param this.nlom Structural protein conent of cells
 #' @param this.P_nlom Proportionality constant to octanol structural protein
-#' @param this.P_dom Proportionality constant to octnaol dom
+#' @param this.P_dom Proportionality constant to dissolve organic material
 #' @param this.P_cells Proportionality constant to octanol storage lipid
 #' @param this.csalt Ionic strength of buffer, mol/L
 #' @param this.celldensity Cell density kg/L, g/mL
@@ -124,7 +124,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.f_oc 1, everything assumed to be like proteins
 #'
 #' @return
-#' \tabular{lll{
+#' \tabular{lll}{
 #' \strong{Column} \strong{Description} \tab \strong{units} \cr
 #' casrn \tab Chemical Abstracts Service Registry Number \tab \cr
 #' nomconc \tab Nominal Concentration \tab mol/L \cr       
@@ -135,7 +135,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' cell_yield \tab Number of cells \tab cells \cr    
 #' gkow \tab log10 octanol-water partition coefficient \tab log10 \cr          
 #' logHenry \tab log10 Henry's law constant '\tab log10 atm-m3/mol \cr      
-#' gswat \tab log10 Water solubility \tab lof10 mol/L \cr         
+#' gswat \tab log10 Water solubility \tab log10 mol/L \cr         
 #' MP \tab Melting Point \tab degrees Celsius \cr           
 #' MW \tab Molecular Weight \tab g/mol \cr            
 #' gkaw \tab air-water partition coefficient \tab (mol/m3)/(mol/m3) \cr          
