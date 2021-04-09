@@ -16,9 +16,24 @@ model.list[["3compartment"]]$parameterize.func <- "parameterize_3comp"
 # Function called for running the model:
 model.list[["3compartment"]]$solve.func <- "solve_3comp"
 
-# How the tissues from tissue.table are lumped together to form the model:
-# 3 compartment model has only liver and gut compartments; everything else is
-# lumped.
+# Here are the tissues from tissue.data that are considered:
+model.list[["3compartment"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells")
+
+# Which tissues from tissue.data are not lumped together when forming
+# the model: 3 compartment model has only liver and gut compartments; 
+# everything else is lumped.
 model.list[['3compartment']]$tissuelist = list(
                liver=c("liver"),
                gut=c("gut"))
@@ -133,8 +148,26 @@ model.list[["3compartment"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["3compartment"]]$allowed.units <- c('um', 'mg/l')
+
+# Allowable units assigned to dosing input:
+model.list[["3compartment"]]$allowed.units.input <- list(
+       "oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+       
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["3compartment"]]$allowed.units.output <- list(
+              "oral" = c('uM','mg/L','uM*days','mg/L*days'),
+              "iv" = c('uM','mg/L','uM*days','mg/L*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored.
+# AUC values should also be included.
+model.list[["3compartment"]]$compartment.units <-c(
+    "Cportven"="uM",
+    "Cliver"="uM",
+    "Csyscomp"="uM",
+    "AUC"="uM"
+  )
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["3compartment"]]$dosing.params <- c(
@@ -204,11 +237,6 @@ model.list[["3compartment"]]$httkpop.params <- c(
   "Qliver",
   "Ratioblood2plasma")
 
-#Governs how tissues are lumped:
-model.list[["pbtk"]]$tissue.list <- list(
-               liver=c("liver"),
-               gut=c("gut"))
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["3compartment"]]$calcpc <- TRUE
 
@@ -217,3 +245,6 @@ model.list[["3compartment"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["3compartment"]]$exclude.fup.zero <- T
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["3compartment"]]$css.dosing.params <- c("hourly.dose")

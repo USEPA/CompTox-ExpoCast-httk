@@ -16,7 +16,21 @@ model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 # Function called for running the model:
 model.list[["1compartment"]]$solve.func <- "solve_1comp"
 
-# How the tissues from tissue.table are lumped together to form the model:
+# Here are the tissues from tissue.data that are considered:
+model.list[["1compartment"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells")
+  
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
 
@@ -88,8 +102,23 @@ model.list[["1compartment"]]$default.monitor.vars <- c(
   "Ametabolized",
   "AUC")
 
-# Allowable units:
-model.list[["1compartment"]]$allowed.units <- c('um', 'mg/l')
+
+# Allowable units assigned to dosing input:
+model.list[["1compartment"]]$allowed.units.input <- list(
+      "oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["1compartment"]]$allowed.units.output <- list(
+       "oral" = c('uM','mg/L','uM*days','mg/L*days'),
+       "iv" = c('uM','mg/L','uM*days','mg/L*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored.
+# AUC values should also be included.
+model.list[["1compartment"]]$compartment.units <- c(
+    "Ccompartment"="uM",
+    "AUC" = "uM*days")
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["1compartment"]]$dosing.params <- c("daily.dose",
@@ -145,9 +174,6 @@ model.list[["1compartment"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vdist")
 
-#Governs how tissues are lumped:
-model.list[["1compartment"]]$tissue.list <- NULL
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["1compartment"]]$calcpc <- TRUE
 
@@ -157,3 +183,6 @@ model.list[["1compartment"]]$firstpass <- TRUE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["1compartment"]]$exclude.fup.zero <- T
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")

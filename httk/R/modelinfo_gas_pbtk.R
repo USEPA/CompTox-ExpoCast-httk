@@ -8,6 +8,35 @@ model.list[["gas_pbtk"]]$steady.state.compartment <- "plasma"
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
 
+# Function called for running the model:
+model.list[["gas_pbtk"]]$solve.func <- "solve_gas_pbtk"
+
+# Here are the tissues from tissue.data that are considered (for example,
+# do we include placenta or not?):
+model.list[["gas_pbtk"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells")  
+
+# Which tissues from tissue.data are not lumped together when forming
+# the model: The gas PBTK model has liver, kidney, gut, and lung compartments 
+# that draw info from tissue.data; everything else from alltissues should be 
+# lumped.
+model.list[["gas_pbtk"]]$tissuelist=list(
+  liver=c("liver"),
+  kidney=c("kidney"),
+  lung=c("lung"),
+  gut=c("gut"))
+
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
@@ -180,6 +209,8 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cmuc"
   )
 
+#list of variables to be monitored (plotted). This list should be able to be
+#constructed from states and outputs. 
 model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
@@ -198,14 +229,47 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "AUC"
   )
 
-# Allowable units:
-model.list[["gas_pbtk"]]$allowed.units <- c('um', 'mg/l', 'ppm')
+# Allowable units assigned to dosing input:
+model.list[["gas_pbtk"]]$allowed.units.input <- list(
+    "oral" = c('umol','mg','mg/kg'),
+    "iv" = c('umol','mg','mg/kg'),
+    "inhalation" = c('ppmv','mg/L','mg/m^3','uM','umol','mg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["gas_pbtk"]]$allowed.units.output <- list(
+       "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days',
+                  'mg/L*days','mg/m^3','mg/m^3*days'),
+       "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                'mg/m^3','mg/m^3*days'),
+       "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                        'mg/m^3','mg/m^3*days'))
+
+# Default set of units assigned to correspond to each of the "outputs" of 
+# the model system, and possibly to other state variables to be monitored.
+# AUC values should also be included.
+model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Cgut"="uM",
+                                          "Cliver"="uM",
+                                          "Cven"="uM",
+                                          "Clung"="uM",
+                                          "Cart"="uM",
+                                          "Crest"="uM",
+                                          "Ckidney"="uM",
+                                          "Cplasma"="uM",
+                                          "Aplasma"="umol",
+                                          "Calv"="ppmv",
+                                          "Cendexh"="ppmv",
+                                          "Cmixexh"="ppmv",
+                                          "Cmuc"="uM",
+                                          "AUC"="uM*days")
 
 # These parameters specify the exposure scenario simulated by the model:
-model.list[["gas_pbtk"]]$dosing.params <- c("daily.dose",
+model.list[["gas_pbtk"]]$dosing.params <- c(
   "initial.dose",
+  "daily.dose",
   "doses.per.day",
-  "dosing.matrix")
+  "dosing.matrix",
+  "forcings")
 
 model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
 
@@ -243,11 +307,58 @@ model.list[["gas_pbtk"]]$required.params <- c(
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
-  "MW"
+  "MW",
+  "logHenry"
    )
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["gas_pbtk"]]$exclude.fup.zero <- T
   
-#Name of forcing function as it appears in .c model code for specification to ode solver
-model.list[["gas_pbtk"]]$initforc <- "initforc_gas_pbtk"
+#Key forcings objects and names: name of forcing function as it appears in 
+#.c model code for specification to ode solver (initforc), fcontrol list
+#of arguments for fine-tuning inhalation forcing function in conjunction
+#with existing ode integrator methods. Forcings series handled in model 
+#solver itself
+model.list[["gas_pbtk"]]$forcings.materials <- list(initforc="initforc_gas_pbtk",
+  fcontrol = list(method='constant',rule=2,f=0))
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")
+
+# Function for calculating Clmetabolismc after Clint is varied:
+model.list[["gas_pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+# If httk-pop is enabled:
+# Function for converting httk-pop physiology to model parameters:
+model.list[["gas_pbtk"]]$convert.httkpop.func <- NULL
+# We want all the standard physiological calculations performed:
+model.list[["gas_pbtk"]]$calc.standard.httkpop2httk <- TRUE
+# These are the model parameters that are impacted by httk-pop:
+model.list[["gas_pbtk"]]$httkpop.params <- c(
+  "BW",
+  "Fgutabs",
+  "hematocrit",
+  "liver.density",
+  "million.cells.per.gliver",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc")
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[["gas_pbtk"]]$calcpc <- TRUE
+
+
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[["gas_pbtk"]]$firstpass <- FALSE
+
+# Do we ignore the Fups where the value was below the limit of detection?
+model.list[["gas_pbtk"]]$exclude.fup.zero <- T

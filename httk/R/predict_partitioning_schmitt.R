@@ -1,7 +1,7 @@
 # This predicts the coefficient of tissue to FREE plasma fraction via Schmitt's method (2008):  
 # fupl: unbound fraction in plasma
-# Pow: octonol:water partition coefficient (not log transformed)
-# pKa_Donor: compound H dissociation equilibirum constant(s)
+# Pow: octanol:water partition coefficient (not log transformed)
+# pKa_Donor: compound H dissociation equilibrium constant(s)
 # pKa_Accept: compound H association equilibrium constant(s)   
 # MA: phospholipid:water distribution coefficient
 # KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
@@ -85,29 +85,32 @@
 #'
 #' @export predict_partitioning_schmitt
 #'
-predict_partitioning_schmitt <- function(chem.name=NULL,
-                                         chem.cas=NULL,
-                                         dtxsid=NULL,
-                                         species='Human',
-                                         default.to.human=F,
-                                         parameters=NULL,
-                                         alpha=0.001,
-                                         adjusted.Funbound.plasma=T,
-                                         regression=T,
-                                         regression.list=c('brain',
-                                                           'adipose',
-                                                           'gut',
-                                                           'heart',
-                                                           'kidney',
-                                                           'liver',
-                                                           'lung',
-                                                           'muscle',
-                                                           'skin',
-                                                           'spleen',
-                                                           'bone'),
-                                         tissues=NULL,
-                                         minimum.Funbound.plasma=0.0001,
-                                         suppress.messages=F) 
+predict_partitioning_schmitt <- function(
+  chem.name=NULL,
+  chem.cas=NULL,
+  dtxsid=NULL,
+  species='Human',
+  model="pbtk",
+  default.to.human=F,
+  parameters=NULL,
+  alpha=0.001,
+  adjusted.Funbound.plasma=T,
+  regression=T,
+  regression.list=c(
+    'brain',
+    'adipose',
+    'gut',
+    'heart',
+    'kidney',
+    'liver',
+    'lung',
+    'muscle',
+    'skin',
+    'spleen',
+    'bone'),
+  tissues=NULL,
+  minimum.Funbound.plasma=0.0001,
+  suppress.messages=F) 
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -117,23 +120,36 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
   Tissue <- Species <- variable <- Reference <- value <- physiology.data <- NULL
   #End R CMD CHECK appeasement.
   
+  if (is.null(model)) stop("Model must be specified.")
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } else {
+  # We need to know which tissues to include in the model 
+  #(for example, placenta, gills)
+    if(is.null(tissues)) tissues <- model.list[[model]]$alltissues
+  }
   
   if (is.null(parameters))
   {
     parameters <- parameterize_schmitt(
-                    chem.name=chem.name,
-                    chem.cas=chem.cas,
-                    dtxsid=dtxsid,
-                    species=species,
-                    default.to.human=default.to.human,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma)
+      chem.name=chem.name,
+      chem.cas=chem.cas,
+      dtxsid=dtxsid,
+      species=species,
+      default.to.human=default.to.human,
+      minimum.Funbound.plasma=minimum.Funbound.plasma,
+      suppress.messages=suppress.messages)
     user.params <- F
   } else {
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
       parameters$Fprotein.plasma <-  httk::physiology.data[
-      which(httk::physiology.data[,'Parameter'] == 'Plasma Protein Volume Fraction'),
+      which(httk::physiology.data[,'Parameter'] == 
+        'Plasma Protein Volume Fraction'),
       which(tolower(colnames(httk::physiology.data)) == tolower(species))]
   }
   
@@ -155,20 +171,29 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
 'Human fractional tissue volumes used in calculating partition coefficients.')
   }
   if (!("alpha" %in% names(parameters))) parameters$alpha <- alpha
-# For the "rest" tissue containing those tissues in "Physiological Parameter
-# Values for PBPK Models" (1994) that are not described by Schmitt (2008)
 
-# we use the average values for the Schmitt (2008) tissues
-for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH')){
-  this.row <- cbind('rest',species,NA,this.comp,mean(as.numeric(subset(tissue.data,Tissue != 'red blood cells' & tolower(Species) == tolower(species) & variable == this.comp)[,'value'])))
-  colnames(this.row) <- colnames(tissue.data)
-  tissue.data <- rbind(tissue.data,this.row) %>%
-  as.data.frame()
-}
-  if('fetal.plasma.pH' %in% names(parameters)){
-    placenta.tissue.data <- cbind(rep('placenta',9),rep(species,9),rep(NA,9),c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','pH'),c(.724,.276,.793,.0083,.1535,as.numeric(subset(tissue.data,Tissue=='rest' & Species==species & variable %in% c('Fn_Lc','Fn_PLc','Fa_PLc'))[,'value']),7.24))
-    colnames(placenta.tissue.data) <- colnames(tissue.data)
-    tissue.data <- rbind(tissue.data,placenta.tissue.data) %>%
+# Create tissue composition descriptors (following Schmitt 2008) for the 
+# lumped compartment "rest" containing those tissues in "Physiological Parameter
+# Values for PBPK Models" (1994) that are not described by tissue.data by using
+# the mean value for the tissues that are described:
+  for (this.comp in c(
+    'Fcell',  # Cells Fraction of Total Volume
+    'Fint',   # Interstitiom Fraction of Total Volume
+    'FWc',    # Water Fraction of Cell Volume
+    'FLc',    # Lipid Fraction of Cell Volume
+    'FPc',    # Protein Fraction of Cell Volume
+    'Fn_Lc',  # Neutral Lipid Fraction of Total Lipid
+    'Fn_PLc', # Neutral Phospholipid Fraction of Total Lipid
+    'Fa_PLc', # Acidic Phospholipid Fraction of Total Lipid
+    'pH'))    # Tissue pH
+  {
+    this.row <- cbind('rest',species,NA,this.comp,
+      mean(as.numeric(subset(tissue.data,
+        Tissue != 'red blood cells' & 
+        tolower(Species) == tolower(species) & 
+        variable == this.comp)[,'value'])))
+    colnames(this.row) <- colnames(tissue.data)
+    tissue.data <- rbind(tissue.data,this.row) %>%
     as.data.frame()
   }
 
@@ -185,6 +210,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
   if (regression)
   {
    #  regression coefficients (intercept and slope) add to table 
+   # These parameters should be in a table in the /data director!
     if (adjusted.Funbound.plasma)
     {
       reg <- matrix(c(-0.167,0.543, # brain
@@ -220,14 +246,55 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
                        'kidney','liver','lung','muscle','skin','spleen','bone')
     colnames(reg) <- c('intercept','slope')      
   }
-  if(is.null(tissues)) tissues <- unique(tissue.data[,'Tissue'])
+
 	for (this.tissue in tissues)
 	{
-		this.subset <- subset(tissue.data,Tissue == this.tissue & tolower(Species) == tolower(species))
-# Tissue-specific cellular/interstial volume fractions:
-    Ftotal <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) + as.numeric(subset(this.subset,variable=='Fint')[,'value'])
+# Load Schmitt (2008) descriptors for this tissue:
+		this.subset <- subset(tissue.data,
+      Tissue == this.tissue & 
+      tolower(Species) == tolower(species) &
+      variable %in% c(
+         "Fcell",
+         "Fint",
+         "FWc",
+         "FPc",
+         "FLc",
+         "Fn_Lc",
+         "Fn_PLc",
+         "Fa_PLc",
+         "pH"))
+ # If there are no descriptors in the tissue.data table for this species, try
+ # the human ones: 
+    if (dim(this.subset)[1]==0) 
+    {
+      this.subset <- subset(tissue.data,
+        Tissue == this.tissue & 
+        tolower(Species) == "human" &
+       variable %in% c(
+         "Fcell",
+         "Fint",
+         "FWc",
+         "FPc",
+         "FLc",
+         "Fn_Lc",
+         "Fn_PLc",
+         "Fa_PLc",
+         "pH"))
+      if (dim(this.subset)[1]>0)
+      {
+        if (!suppress.messages) warning(paste(
+          "Human tissue composition values for",
+          this.tissue,
+          "used in calculating partition coefficients."))
+      } else stop(paste("Missing data in tissue.data on",this.tissue))
+    }
+
+# Tissue-specific cellular/interstitial volume fractions:
+    Ftotal <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) + 
+      as.numeric(subset(this.subset,variable=='Fint')[,'value'])
     # Normalized Cellular fraction of total volume:
-		Fcell <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) / Ftotal
+		Fcell <- as.numeric(subset(this.subset,variable=='Fcell')[,'value']) / 
+      Ftotal
 		# Normalized interstitial fraction of total volume:
 		Fint <- as.numeric(subset(this.subset,variable=='Fint')[,'value']) / Ftotal
 		if (is.na(Fint)) Fint <- 0
@@ -240,19 +307,22 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
 
 # Tissue-specific cellular lipid sub-sub-fractions:        
 		# neutral lipid volume fraction:
-		Fn_L <-  as.numeric(subset(this.subset,variable=='FLc')[,'value']) * as.numeric(subset(this.subset,variable=='Fn_Lc')[,'value'])
+		Fn_L <-  as.numeric(subset(this.subset,variable=='FLc')[,'value']) * 
+      as.numeric(subset(this.subset,variable=='Fn_Lc')[,'value'])
 		if (is.na(Fn_L)) Fn_L <- 0
 		# neutral phospholipid volume fraction:
-		Fn_PL <- as.numeric(subset(this.subset,variable=='FLc')[,'value']) * as.numeric(subset(this.subset,variable=='Fn_PLc')[,'value'])
+		Fn_PL <- as.numeric(subset(this.subset,variable=='FLc')[,'value']) * 
+      as.numeric(subset(this.subset,variable=='Fn_PLc')[,'value'])
 		if (is.na(Fn_PL)) Fn_PL <- 0
 		# acidic phospholipid volume fraction:
-		Fa_PL <-  as.numeric(subset(this.subset,variable=='FLc')[,'value']) * as.numeric(subset(this.subset,variable=='Fa_PLc')[,'value'])
+		Fa_PL <-  as.numeric(subset(this.subset,variable=='FLc')[,'value']) * 
+      as.numeric(subset(this.subset,variable=='Fa_PLc')[,'value'])
 		if (is.na(Fa_PL)) Fa_PL <- 0
 		
 		# tissue pH
 		pH <- as.numeric(subset(this.subset,variable=='pH')[,'value'])
 
-		# neutral phospholipid:water parition coefficient:
+		# neutral phospholipid:water partition coefficient:
 	  Kn_PL <- parameters$MA
     
     # Need to calculate the amount of un-ionized parent:
@@ -264,45 +334,58 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
     fraction_zwitter <- ionization[["fraction_zwitter"]]
 
 		# neutral lipid:water partition coefficient
-		Kn_L <- parameters$Pow * (fraction_neutral + fraction_zwitter + parameters$alpha * fraction_charged)
+		Kn_L <- parameters$Pow * (fraction_neutral + 
+      fraction_zwitter + parameters$alpha * fraction_charged)
 
 		# protein:water partition coefficient:
 		KP <- 0.163 + 0.0221*Kn_PL
 		
 		# acidic phospholipid:water partition coefficient:
-		Ka_PL <- Kn_PL * (fraction_neutral + fraction_zwitter + 20*fraction_positive + 0.05*fraction_negative)
+		Ka_PL <- Kn_PL * (fraction_neutral + fraction_zwitter + 
+      20*fraction_positive + 0.05*fraction_negative)
 
-  	Kint <- (FWint +   FPint/parameters$Fprotein.plasma*(1/parameters$Funbound.plasma - FWpl))
+  	Kint <- (FWint + FPint/parameters$Fprotein.plasma*
+      (1/parameters$Funbound.plasma - FWpl))
 		
-		Kcell <- (FW  + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
+		Kcell <- (FW + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
 		
     plasma <- calc_ionization(pH=parameters$plasma.pH,parameters=parameters)
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
-    KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + parameters$alpha * fraction_charged_plasma)/(fraction_neutral + fraction_zwitter + parameters$alpha * fraction_charged)
+    KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + 
+      parameters$alpha * fraction_charged_plasma)/(fraction_neutral + 
+      fraction_zwitter + parameters$alpha * fraction_charged)
     
-    if('fetal.plasma.pH' %in% names(parameters) & this.tissue == 'placenta'){
-      fetal.plasma <- calc_ionization(pH=parameters$fetal.plasma.pH,pKa_Donor=parameters$pKa_Donor,pKa_Accept=parameters$pKa_Accept)    
-      fraction_neutral_fetal_plasma <- fetal.plasma[['fraction_neutral']]
-      fraction_zwitter_fetal_plasma <- fetal.plasma[['fraction_zwitter']]    
-      fraction_charged_fetal_plasma <- fetal.plasma[['fraction_charged']]  
-      KAPPAcell2puFetus <- (fraction_neutral_fetal_plasma + parameters$alpha * fraction_charged_fetal_plasma + fraction_zwitter_fetal_plasma) /(fraction_neutral + parameters$alpha * fraction_charged + fraction_zwitter)
-      Ktissue2pu[['Kplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2pu*Fcell * Kcell)
-      Ktissue2pu[['Kfplacenta2pu']] <- as.numeric(Fint * Kint + KAPPAcell2puFetus*Fcell * Kcell)
-    }else{
-      if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell" ,sep='')))
- 	    else eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",sep='')))
-    }    
+    
+    if (this.tissue == 'red blood cells') 
+    {
+      eval(parse(text=paste(
+        "Ktissue2pu[[\"Krbc2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",
+        sep=''))) 
+ 	  } else {
+ 	    eval(parse(text=paste(
+        "Ktissue2pu[[\"K",
+        this.tissue,
+        "2pu\"]] <- Fint * Kint + KAPPAcell2pu*Fcell * Kcell",
+        sep='')))
+ 	  }
    
-    if(regression & this.tissue %in% regression.list){
-      #if(parameters$Pow > 4){
-        if(this.tissue == 'red blood cells') eval(parse(text=paste("Ktissue2pu[[\"Krbc2pu\"]] <- 10^(reg[[this.tissue,\'intercept\']] + reg[[this.tissue,\'slope\']] * log10(Ktissue2pu[[\"Krbc2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
-        else if(this.tissue != 'rest') eval(parse(text=paste("Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- 10^(reg[this.tissue,\'intercept\'] + reg[this.tissue,\'slope\'] * log10(Ktissue2pu[[\"K",this.tissue,"2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",sep='')))
+    if (regression & this.tissue %in% regression.list)
+    {
+      if (this.tissue == 'red blood cells') eval(parse(text=paste(
+        "Ktissue2pu[[\"Krbc2pu\"]] <- 10^(reg[[this.tissue,\'intercept\']] + reg[[this.tissue,\'slope\']] * log10(Ktissue2pu[[\"Krbc2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",
+        sep='')))
+      else if (this.tissue != 'rest') eval(parse(text=paste(
+        "Ktissue2pu[[\"K",this.tissue,"2pu\"]] <- 10^(reg[this.tissue,\'intercept\'] + reg[this.tissue,\'slope\'] * log10(Ktissue2pu[[\"K",
+        this.tissue,
+        "2pu\"]] * parameters$Funbound.plasma)) / parameters$Funbound.plasma",
+        sep='')))
     }
 	}
-  if(regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% c('Krbc2pu','Krest2pu')])) 
- # if(user.params) warning(paste(species,' fractional tissue volumes used in calculation.  Parameters should match species argument used (',species,').',sep="")) 
+  if (regression & all(unique(tissue.data[,'Tissue']) %in% tissues)) 
+    Ktissue2pu[['Krest2pu']] <- mean(unlist(Ktissue2pu[!names(Ktissue2pu) %in% 
+      c('Krbc2pu','Krest2pu')])) 
 
  	return(lapply(Ktissue2pu,set_httk_precision))
 }
