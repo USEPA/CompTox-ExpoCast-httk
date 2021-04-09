@@ -10,7 +10,8 @@ parameterize_pbtk(
   dtxsid = NULL,
   species = "Human",
   default.to.human = F,
-  tissuelist = NULL,
+  tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
+    c("gut")),
   force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = T,
