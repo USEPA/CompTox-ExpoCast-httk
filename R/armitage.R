@@ -224,7 +224,9 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     }else{
       temp <- armitage_estimate_sarea(tcdata[missing.rows,])
       tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-      tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      if(any(is.na(tcdata[missing.rows,"v_total"]))){
+        tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      }
       tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
       tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
     }
