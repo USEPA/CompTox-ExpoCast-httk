@@ -43,11 +43,11 @@
 #' @keywords Parameter  1compartment
 #' @examples
 #' 
-#' calc_elimination_rate(chem.name="Bisphenol A")
-#' calc_elimination_rate(chem.name="Bisphenol A",species="Rat")
-#' calc_elimination_rate(chem.cas="80-05-7")
+#' calc_half_life(chem.name="Bisphenol A")
+#' calc_half_life(chem.name="Bisphenol A",species="Rat")
+#' calc_half_life(chem.cas="80-05-7")
 #' 
-#' @export calc_elimination_rate
+#' @export calc_half_life
 calc_half_life <- function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
                             parameters = NULL, species = "Human",
                             suppress.messages = F,
