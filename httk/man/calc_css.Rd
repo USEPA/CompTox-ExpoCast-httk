@@ -16,7 +16,7 @@ calc_css(
   days = 21,
   output.units = "uM",
   suppress.messages = F,
-  tissue = "plasma",
+  tissue = NULL,
   model = "pbtk",
   default.to.human = F,
   f.change = 1e-05,
