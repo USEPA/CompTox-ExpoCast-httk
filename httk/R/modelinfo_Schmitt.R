@@ -91,3 +91,6 @@ schmitt.specific.names <- c("Kadipose2pu",
                               
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["schmitt"]]$exclude.fup.zero <- T                   
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["schmitt"]]$log.henry.threshold <- c(-4.5)
