@@ -25,6 +25,8 @@
 #' @param default.to.human Substitutes missing values with human values if
 #' true.
 #' @param median.only Use median values only for fup and clint.  Default is FALSE.
+#' @param fup.ci.cutoff Cutoff for the level of uncertainty in fup estimates.
+#' This value should be between (0,1). Default is `NULL` specifying no filtering.
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
 #' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
@@ -74,7 +76,8 @@ get_cheminfo <- function(info="CAS",
                          fup.lod.default=0.005,
                          model='3compartmentss',
                          default.to.human=F,
-                         median.only=F)
+                         median.only=F,
+                         fup.ci.cutoff=NULL)
 {
 # Parameters in this list can be retreive with the info argument:
   valid.info <- c("Compound",
@@ -313,6 +316,25 @@ get_cheminfo <- function(info="CAS",
         suppressWarnings(fup.values.numeric[fup.values==0] <- F)
       }
       good.chemicals.index <- good.chemicals.index & fup.values.numeric
+      
+      # If we are excluding fups with uncertain ci intervals, then get rid of those:
+      if(!is.null(fup.ci.cutoff)){
+        # separate concatenated values
+        fup.ci.diff <- strsplit(as.character(
+          chem.physical_and_invitro.data[,species.fup]),",")
+        # if only one element assume TRUE
+        fup.ci.diff[lapply(fup.ci.diff,length)!=3] <- T
+        # if 3 elements, then calculate interval length and check if it passes the cutoff 
+        fup.ci.diff[lapply(fup.ci.diff,length)==3] <- 
+          lapply(fup.ci.diff[lapply(fup.ci.diff,length)==3],function(x){
+            t.ci <- as.numeric(x)
+            out  <- ifelse((t.ci[3]-t.ci[2])<=fup.ci.cutoff,yes = T,no = F)
+            return(out)
+          })
+        fup.ci.cert <- unlist(fup.ci.diff)
+        
+        good.chemicals.index <- good.chemicals.index & fup.ci.cert
+      }
     }
     
 # If we need Clint:
