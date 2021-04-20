@@ -30,6 +30,7 @@
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' 
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
 #' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
@@ -135,6 +136,7 @@ get_cheminfo <- function(info="CAS",
   } else {
     necessary.params <- model.list[[model]]$required.params
     exclude.fup.zero <- model.list[[model]]$exclude.fup.zero
+    log.henry.threshold <- model.list[[model]]$log.henry.threshold
   }
   if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
     model,"have not been defined."))
@@ -378,6 +380,15 @@ get_cheminfo <- function(info="CAS",
 # or four values separated by three commas:
         clint.values.dist)
     }
+    
+    # If we need to remove volatile compounds:
+    if(!is.null(log.henry.threshold)){
+      # keep compounds with logHenry constant less than threshold & 'NA'
+      log.henry.pass   <- chem.physical_and_invitro.data[,"logHenry"] < log.henry.threshold|is.na(chem.physical_and_invitro.data[,"logHenry"])
+      # obtain the the chemical indexes to keep
+      good.chemicals.index <- good.chemicals.index & log.henry.pass
+    }
+    
 # Kep just the chemicals we want:    
     good.chemical.data <- chem.physical_and_invitro.data[good.chemicals.index,] 
     
