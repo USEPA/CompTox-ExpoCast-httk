@@ -24,9 +24,10 @@
 #' fraction unbound (used in predict_partitioning_schmitt).
 #' @param default.to.human Substitutes missing values with human values if
 #' true.
+#' @param median.only Use median values only for fup and clint.  Default is FALSE.
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
 #' @keywords Retrieval
 #' @examples
 #' 
@@ -72,7 +73,8 @@ get_cheminfo <- function(info="CAS",
                          species="Human",
                          fup.lod.default=0.005,
                          model='3compartmentss',
-                         default.to.human=F)
+                         default.to.human=F,
+                         median.only=F)
 {
 # Parameters in this list can be retreive with the info argument:
   valid.info <- c("Compound",
@@ -368,6 +370,16 @@ get_cheminfo <- function(info="CAS",
       fup.zero.chems <- suppressWarnings(as.numeric(this.subset[,species.fup]) == 0)
       fup.zero.chems[is.na(fup.zero.chems)] <- FALSE
       this.subset[fup.zero.chems, species.fup] <- fup.lod.default
+    }
+    # If we want the median values only for fup and clint
+    if(median.only){
+      fup.values      <- strsplit(as.character(this.subset[,species.fup]),",")
+      fup.median.only <- lapply(fup.values, function(x) x[[1]])
+      this.subset[,species.fup] <- as.numeric(unlist(fup.median.only))
+      
+      clint.values      <- strsplit(as.character(this.subset[,species.clint]),",")
+      clint.median.only <- lapply(clint.values,function(x)x[[1]])
+      this.subset[,species.clint] <- as.numeric(unlist(clint.median.only))
     }
                                 
     return.info <- this.subset[,colnames(this.subset)%in%info]
