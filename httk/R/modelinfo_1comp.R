@@ -186,3 +186,6 @@ model.list[["1compartment"]]$exclude.fup.zero <- T
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
