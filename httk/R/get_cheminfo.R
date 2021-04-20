@@ -27,6 +27,9 @@
 #' @param median.only Use median values only for fup and clint.  Default is FALSE.
 #' @param fup.ci.cutoff Cutoff for the level of uncertainty in fup estimates.
 #' This value should be between (0,1). Default is `NULL` specifying no filtering.
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
 #' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
@@ -77,7 +80,8 @@ get_cheminfo <- function(info="CAS",
                          model='3compartmentss',
                          default.to.human=F,
                          median.only=F,
-                         fup.ci.cutoff=NULL)
+                         fup.ci.cutoff=NULL,
+                         clint.pvalue.threshold=0.05)
 {
 # Parameters in this list can be retreive with the info argument:
   valid.info <- c("Compound",
@@ -190,6 +194,29 @@ get_cheminfo <- function(info="CAS",
           chem.physical_and_invitro.data[,'Human.Funbound.plasma']
         warning('Human values substituted for Funbound.plasma.')
       }
+    }
+    # Set observed clint values to 0 if clint.pvalue > threshold
+    if(!is.null(clint.pvalue.threshold)){
+      clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],split = ",")
+      clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
+      # Replace the clint.value with 0 when clint.pvalue > threshold
+      clint.values[lapply(clint.values,length)!=4] <- 
+        ifelse(
+          clint.pvalues[lapply(clint.values,length)!=4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
+          yes = "0",
+          no = clint.values[lapply(clint.values,length)!=4]
+        )
+      # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
+      clint.values[lapply(clint.values,length)==4]<-
+        ifelse(
+          clint.pvalues[lapply(clint.values,length)==4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)==4]),
+          yes = lapply(clint.values[lapply(clint.values,length)==4],function(x){x<-c(rep("0",3),x[[4]])}),
+          no = clint.values[lapply(clint.values,length)==4]
+        )
+      
+      clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
+      chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
+      warning(paste('Clint values with a pvalue >',clint.pvalue.threshold,'were set to 0.'))
     }
     # Check to see if we have a column for this species in the table:
     if (!(species.fup %in% 
