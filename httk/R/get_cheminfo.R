@@ -137,6 +137,7 @@ get_cheminfo <- function(info="CAS",
     necessary.params <- model.list[[model]]$required.params
     exclude.fup.zero <- model.list[[model]]$exclude.fup.zero
     log.henry.threshold <- model.list[[model]]$log.henry.threshold
+    chem.class.filt     <- model.list[[model]]$chem.class.filt
   }
   if (is.null(necessary.params)) stop(paste("Necessary parameters for model",
     model,"have not been defined."))
@@ -387,6 +388,15 @@ get_cheminfo <- function(info="CAS",
       log.henry.pass   <- chem.physical_and_invitro.data[,"logHenry"] < log.henry.threshold|is.na(chem.physical_and_invitro.data[,"logHenry"])
       # obtain the the chemical indexes to keep
       good.chemicals.index <- good.chemicals.index & log.henry.pass
+    }
+    # If we need to remove compounds belonging to a given chemical class:
+    if(!is.null(chem.class.filt)){
+      # obtain the chemical classifications
+      chem.class <- strsplit(chem.physical_and_invitro.data[,"Chemical.Class"],split = ",")
+      # check if the chemical class is in the filter-out object
+      no.chem.class.index <- lapply(chem.class,function(x)!(any(x%in%chem.class.filt)))
+      # obtain the chemical indexes to keep
+      good.chemicals.index <- good.chemicals.index & unlist(no.chem.class.index)
     }
     
 # Kep just the chemicals we want:    
