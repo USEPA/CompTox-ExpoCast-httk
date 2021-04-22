@@ -1584,3 +1584,6 @@ save(Wetmore.data,
 
 
      
+## Session Information ##
+Sys.time() # capture date and time of generating data
+sessionInfo() # capture package information for generating data
