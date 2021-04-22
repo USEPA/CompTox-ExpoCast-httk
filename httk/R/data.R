@@ -1460,3 +1460,24 @@
 #'
 #' @keywords data
 "Frank2018invivo"
+
+#' Pearce et al. 2017 data
+#'
+#' This table includes the adjusted and unadjusted regression parameter
+#' estimates for the chemical-specifc plasma
+#' protein unbound fraction (fup) in 12 different tissue types.
+#'
+#' Predictions were made with regression models, 
+#' as reported in Pearce et al. (2017). 
+#'
+#' @name pearce2017regression
+#' @aliases Pearce2017Regression
+#' @docType data
+#' @format data.frame
+#' @author Robert G. Pearce
+#' @references Pearce, Robert G., et al. "Evaluation and calibration of 
+#' high-throughput predictions of chemical distribution to tissues."
+#' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @source Pearce et al. 2017 Regression Models
+#' @keywords data
+"pearce2017regression"
