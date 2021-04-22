@@ -211,39 +211,13 @@ predict_partitioning_schmitt <- function(
   {
    #  regression coefficients (intercept and slope) add to table 
    # These parameters should be in a table in the /data director!
+    # Fup Parameter estimates are now added to `pearce2017regression`.
     if (adjusted.Funbound.plasma)
     {
-      reg <- matrix(c(-0.167,0.543, # brain
-                      -0.325,0.574, # adipose
-                      -0.006,0.267, # red blood cells
-                      0.143, 0.764, # gut
-                      0.116, 0.683, # heart
-                      0.452, 0.673, # kidney
-                      0.475, 0.621, # liver
-                      0.087, 0.866, # lung
-                      -0.022, 0.658, # muscle
-                      -0.09, 0.566, # skin
-                      0.034, 0.765, # spleen
-                      0.036, 0.781), # bone
-                      12,2,byrow=T)
+      reg <- pearce2017regression[,grep(colnames(pearce2017regression),pattern = "adj")]
     } else {
-      reg <- matrix(c(-0.117,0.377, # brain
-                      -0.324,0.544, # adipose
-                      -0.022,0.196, # red blood cells
-                      0.14, 0.735, # gut
-                      0.12, 0.534, # heart 
-                      0.443, 0.631, # kidney 
-                      0.487, 0.513, # liver 
-                      0.113, 0.75, # lung
-                      -0.025, 0.537, # muscle 
-                      -0.086, 0.498, # skin
-                      0.011, 0.675, # spleen
-                      0.025, 0.758), # bone
-                      12,2,byrow=T)
-
+      reg <- pearce2017regression[,-grep(colnames(pearce2017regression),pattern = "adj")]
     }
-    rownames(reg) <- c('brain','adipose','red blood cells','gut','heart',
-                       'kidney','liver','lung','muscle','skin','spleen','bone')
     colnames(reg) <- c('intercept','slope')      
   }
 
