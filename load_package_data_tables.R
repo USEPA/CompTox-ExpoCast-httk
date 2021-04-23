@@ -1409,9 +1409,36 @@ if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0)
     !duplicated(Compound))
 }
 
+#
+# Create Matrix pearce2017regression:
+#
+pearce2017regression <- # regression parameter estimates from Pearce et al. (2017)
+  matrix(data = c(-0.167,0.543,-0.117,0.377,   # brain
+                  -0.325,0.574,-0.324,0.544,   # adipose
+                  -0.006,0.267,-0.022,0.196,   # red blood cells
+                  0.143, 0.764,0.14, 0.735,    # gut
+                  0.116, 0.683,0.12, 0.534,    # heart
+                  0.452, 0.673,0.443, 0.631,   # kidney
+                  0.475, 0.621,0.487, 0.513,   # liver
+                  0.087, 0.866,0.113, 0.75,    # lung
+                  -0.022, 0.658,-0.025, 0.537, # muscle
+                  -0.09, 0.566,-0.086, 0.498,  # skin
+                  0.034, 0.765,0.011, 0.675,   # spleen
+                  0.036, 0.781,0.025, 0.758),  # bone
+         nrow = 12, ncol = 4,byrow = T,
+         dimnames = list(c("brain","adipose","red blood cells",
+                           "gut","heart","kidney",
+                           "liver","lung","muscle",
+                           "skin","spleen","bone"),
+                         c("adj.fup.intercept","adj.fup.slope",
+                           "fup.intercept","fup.slope"))
+  )
+# Write to text so Git can track changes:
+write.table(pearce2017regression,file = "Pearce_2017_Regression.txt",quote = F,sep = "\t")
 
-
-
+#
+# END pearce2017regression Creation
+#
 
 #
 # WRITE OUT DATA
@@ -1431,6 +1458,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
      physiology.data,
+     pearce2017regression,
      tissue.data,
      Tables.Rdata.stamp,
      EPA.ref,
@@ -1556,3 +1584,6 @@ save(Wetmore.data,
 
 
      
+## Session Information ##
+Sys.time() # capture date and time of generating data
+sessionInfo() # capture package information for generating data
