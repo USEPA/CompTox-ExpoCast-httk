@@ -156,84 +156,6 @@ get_cheminfo <- function(info="CAS",
   # Flag in case we can't find a column for every parameter:
   incomplete.data <- F
 
-# Check to see if we need fup (don't we always?)
-  if (tolower("Funbound.plasma") %in% 
-    unique(tolower(c(necessary.params,info))))
-  {
-    # Identify the appropriate column for Funbound (if needed):
-    species.fup <- paste0(species,'.Funbound.plasma')
-    # Turn triples with confidence intervals into single values: 
-    temp.fup <- strsplit(as.character(chem.physical_and_invitro.data[,species.fup]),",")
-    if (any(unlist(lapply(temp.fup,length))>1)) 
-    {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(temp.fup, function(x) x[[1]]))))
-    } else {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
-    }    # Check to see if we will use human data where species data is missing:
-    if (default.to.human)
-    {
-      # Check to see if this is a column that already has data:
-      if (species.fup %in% colnames(chem.physical_and_invitro.data))
-      {
-        # Identify values to replace with human:
-        if (exclude.fup.zero) 
-        {
-          # Replace all the zeros if that will impact the model:
-          replace.index <- (temp.fup==0)
-          # Comparisons with NA's will produce NA's
-          replace.index[is.na(replace.index)] <- T
-        } else {
-          # Otherwise just replace NA's
-          replace.index <- is.na(chem.physical_and_invitro.data[,species.fup])
-        }
-        if (any(replace.index))
-        {
-          chem.physical_and_invitro.data[replace.index,species.fup] <-
-            chem.physical_and_invitro.data[replace.index,'Human.Funbound.plasma']
-          warning('Human values substituted for Funbound.plasma.')
-        }
-      } else {
-        chem.physical_and_invitro.data[,species.fup] <-
-          chem.physical_and_invitro.data[,'Human.Funbound.plasma']
-        warning('Human values substituted for Funbound.plasma.')
-      }
-    }
-    # Set observed clint values to 0 if clint.pvalue > threshold
-    if(!is.null(clint.pvalue.threshold)){
-      clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],split = ",")
-      clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
-      # Replace the clint.value with 0 when clint.pvalue > threshold
-      clint.values[lapply(clint.values,length)!=4] <- 
-        ifelse(
-          clint.pvalues[lapply(clint.values,length)!=4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
-          yes = "0",
-          no = clint.values[lapply(clint.values,length)!=4]
-        )
-      # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
-      clint.values[lapply(clint.values,length)==4]<-
-        ifelse(
-          clint.pvalues[lapply(clint.values,length)==4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)==4]),
-          yes = lapply(clint.values[lapply(clint.values,length)==4],function(x){x<-c(rep("0",3),x[[4]])}),
-          no = clint.values[lapply(clint.values,length)==4]
-        )
-      
-      clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
-      chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
-      warning(paste('Clint values with a pvalue >',clint.pvalue.threshold,'were set to 0.'))
-    }
-    # Check to see if we have a column for this species in the table:
-    if (!(species.fup %in% 
-      colnames(chem.physical_and_invitro.data))) 
-    {
-      incomplete.data <- T
-    }
-    # Change the necessary parameters to the chem.physical_and_invitro.data col:
-    if (!is.null(species.fup)) 
-    {
-      necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
-    }
-  }
-
   # Identify the appropriate column for Clint (if needed):
   species.clint <- paste0(species,'.Clint')
   species.clint.pvalue <- paste0(species,'.Clint.pValue')
@@ -276,6 +198,84 @@ get_cheminfo <- function(info="CAS",
       necessary.params[necessary.params=="Clint"]<-species.clint
     }
   } 
+  # Set observed clint values to 0 if clint.pvalue > threshold
+  if(!is.null(clint.pvalue.threshold)){
+    clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],split = ",")
+    clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
+    # Replace the clint.value with 0 when clint.pvalue > threshold
+    clint.values[lapply(clint.values,length)!=4] <- 
+      ifelse(
+        clint.pvalues[lapply(clint.values,length)!=4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
+        yes = "0",
+        no = clint.values[lapply(clint.values,length)!=4]
+      )
+    # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
+    clint.values[lapply(clint.values,length)==4]<-
+      ifelse(
+        clint.pvalues[lapply(clint.values,length)==4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)==4]),
+        yes = lapply(clint.values[lapply(clint.values,length)==4],function(x){x<-c(rep("0",3),x[[4]])}),
+        no = clint.values[lapply(clint.values,length)==4]
+      )
+    
+    clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
+    chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
+    warning(paste('Clint values with a pvalue >',clint.pvalue.threshold,'were set to 0.'))
+  }
+
+# Check to see if we need fup (don't we always?)
+  if (tolower("Funbound.plasma") %in% 
+    unique(tolower(c(necessary.params,info))))
+  {
+    # Identify the appropriate column for Funbound (if needed):
+    species.fup <- paste0(species,'.Funbound.plasma')
+    # Turn triples with confidence intervals into single values: 
+    temp.fup <- strsplit(as.character(chem.physical_and_invitro.data[,species.fup]),",")
+    if (any(unlist(lapply(temp.fup,length))>1)) 
+    {
+      temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(temp.fup, function(x) x[[1]]))))
+    } else {
+      temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
+    }    # Check to see if we will use human data where species data is missing:
+    if (default.to.human)
+    {
+      # Check to see if this is a column that already has data:
+      if (species.fup %in% colnames(chem.physical_and_invitro.data))
+      {
+        # Identify values to replace with human:
+        if (exclude.fup.zero) 
+        {
+          # Replace all the zeros if that will impact the model:
+          replace.index <- (temp.fup==0)
+          # Comparisons with NA's will produce NA's
+          replace.index[is.na(replace.index)] <- T
+        } else {
+          # Otherwise just replace NA's
+          replace.index <- is.na(chem.physical_and_invitro.data[,species.fup])
+        }
+        if (any(replace.index))
+        {
+          chem.physical_and_invitro.data[replace.index,species.fup] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Funbound.plasma']
+          warning('Human values substituted for Funbound.plasma.')
+        }
+      } else {
+        chem.physical_and_invitro.data[,species.fup] <-
+          chem.physical_and_invitro.data[,'Human.Funbound.plasma']
+        warning('Human values substituted for Funbound.plasma.')
+      }
+    }
+    # Check to see if we have a column for this species in the table:
+    if (!(species.fup %in% 
+      colnames(chem.physical_and_invitro.data))) 
+    {
+      incomplete.data <- T
+    }
+    # Change the necessary parameters to the chem.physical_and_invitro.data col:
+    if (!is.null(species.fup)) 
+    {
+      necessary.params[necessary.params=="Funbound.plasma"]<-species.fup
+    }
+  }
 
   # Check to see if we need Rblood2plasma:
   if (tolower("Rblood2plasma") %in% 
