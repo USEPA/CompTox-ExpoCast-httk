@@ -362,3 +362,6 @@ model.list[["gas_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["gas_pbtk"]]$exclude.fup.zero <- T
+
+# Filter out compounds belonging to select chemical classes
+model.list[["gas_pbtk"]]$chem.class.filt <- c("PFAS")
