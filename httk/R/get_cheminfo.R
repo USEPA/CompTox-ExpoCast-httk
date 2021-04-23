@@ -81,7 +81,7 @@ get_cheminfo <- function(info="CAS",
                          model='3compartmentss',
                          default.to.human=F,
                          median.only=F,
-                         fup.ci.cutoff=NULL,
+                         fup.ci.cutoff=T,
                          clint.pvalue.threshold=0.05)
 {
 # Parameters in this list can be retreive with the info argument:
@@ -348,7 +348,7 @@ get_cheminfo <- function(info="CAS",
       good.chemicals.index <- good.chemicals.index & fup.values.numeric
       
       # If we are excluding fups with uncertain ci intervals, then get rid of those:
-      if(!is.null(fup.ci.cutoff)){
+      if(fup.ci.cutoff){
         # separate concatenated values
         fup.ci.diff <- strsplit(as.character(
           chem.physical_and_invitro.data[,species.fup]),",")
@@ -358,7 +358,8 @@ get_cheminfo <- function(info="CAS",
         fup.ci.diff[lapply(fup.ci.diff,length)==3] <- 
           lapply(fup.ci.diff[lapply(fup.ci.diff,length)==3],function(x){
             t.ci <- as.numeric(x)
-            out  <- ifelse((t.ci[3]-t.ci[2])<=fup.ci.cutoff,yes = T,no = F)
+            # Fup's where confidence interval spands nearly all possible values:
+            out  <- ifelse((t.ci[3]>0.9 & t.ci[2]<0.1),yes = F,no = T)
             return(out)
           })
         fup.ci.cert <- unlist(fup.ci.diff)
