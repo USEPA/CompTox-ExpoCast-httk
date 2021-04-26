@@ -52,11 +52,18 @@ ToxCastPh12.untested <- ToxCastPh12.test[!(ToxCastPh12.test %in%
    
 TSCA.430 <- read_excel("TSCA_430_Wetmore_plating_5Dec2018.xlsx")$DTXSID
 
+#The ToxCast list:
+ToxCast <- read.csv("Dashboard-ToxCast.tsv",stringsAsFactors=F,sep="\t")$DTXSID
+Tox21 <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")$DTXSID
+Pesticides <- read.csv("Dashboard-PestActives.tsv",stringsAsFactors=F,sep="\t")$DTXSID
+Avail.Pesticides <- ToxCast[ToxCast %in% Pesticides]
+
+
 all.chems <- sort(unique(c(
   ToxCastPh12.test,
-  Cyprotex.new,
+  HTTK2.TO1.data,
   Cyprotex.failed,
-  Cyprotex.Caco2,
+  HTTK1.Caco2,
   Health.Canada,
   EFSA.interest,
   ACC.rathep,
@@ -65,19 +72,18 @@ all.chems <- sort(unique(c(
   ACC.rabbithep,
   httk.human,
   httk.rat,
-  TSCA.430)))
+  TSCA.430,
+  Avail.Pesticides)))
 
-#The ToxCast list:
-ToxCast <- read.csv("Dashboard-ToxCast.tsv",stringsAsFactors=F,sep="\t")$DTXSID
-Tox21 <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")$DTXSID
 
 out.table <- NULL
 for (this.id in all.chems)
 {
       this.row <- as.data.frame(this.id)
-      this.row <- cbind(this.row,t(as.data.frame(rep(0,times=17))))
+      this.row <- cbind(this.row,t(as.data.frame(rep(0,times=19))))
       colnames(this.row) <- c(
         "DTXSID",
+        "Pesticide",
         "Tox21",
         "ToxCast",
         "ToxCastPh12",
@@ -96,6 +102,7 @@ for (this.id in all.chems)
         "ACC.Mouse.Hep",
         "ACC.Dog.Hep",
         "ACC.Rabbit.Hep")
+      if (this.id %in% Pesticides) this.row["Pesticide"] <- 1
       if (this.id %in% TSCA.430) this.row["EPA.Internal"] <- 1
       if (this.id %in% Health.Canada) this.row["Health.Canada"] <- 1
       if (this.id %in% EFSA.interest) this.row["EFSA.Interest"] <- 1
