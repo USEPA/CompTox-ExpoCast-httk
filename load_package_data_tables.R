@@ -1389,9 +1389,21 @@ chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES
 #
 
 
-
-
-
+#
+# Create dawson2021 Data
+#
+## R Package ##
+library(readxl)
+library(dplyr)
+library(magrittr)
+## Load in Data ##
+dawson2021_full <- readxl::read_xlsx(
+  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  sheet = 14)
+dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+#
+# END dawson2021 Creation
+#
 
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
@@ -1430,6 +1442,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
+     dawson2021,
      physiology.data,
      tissue.data,
      Tables.Rdata.stamp,
