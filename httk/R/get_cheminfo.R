@@ -159,6 +159,18 @@ get_cheminfo <- function(info="CAS",
   # Identify the appropriate column for Clint (if needed):
   species.clint <- paste0(species,'.Clint')
   species.clint.pvalue <- paste0(species,'.Clint.pValue')
+  # Make sure capitalization matches a table column:
+  if (tolower(species.clint) %in% 
+    tolower(colnames(chem.physical_and_invitro.data)))
+  {
+    species.clint <- colnames(chem.physical_and_invitro.data)[
+      tolower(colnames(chem.physical_and_invitro.data)) ==
+      tolower(species.clint)]
+    species.clint.pvalue <- colnames(chem.physical_and_invitro.data)[
+      tolower(colnames(chem.physical_and_invitro.data)) ==
+      tolower(species.clint.pvalue)]
+  }
+  
   # Check to see if we need clint:
   if (tolower("Clint") %in% 
     unique(tolower(c(necessary.params,info))))   
@@ -191,35 +203,40 @@ get_cheminfo <- function(info="CAS",
     if (!(species.clint %in% colnames(chem.physical_and_invitro.data)))  
     {
       incomplete.data <- T
+    } else {
+      # Set observed clint values to 0 if clint.pvalue > threshold
+      if (!is.null(clint.pvalue.threshold)){
+        clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],
+          split = ",")
+        clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
+        # Replace the clint.value with 0 when clint.pvalue > threshold
+        clint.values[lapply(clint.values,length)!=4] <- 
+          ifelse(
+            clint.pvalues[lapply(clint.values,length)!=4]>clint.pvalue.threshold & 
+            !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
+            yes = "0",
+            no = clint.values[lapply(clint.values,length)!=4]
+          )
+        # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
+        clint.values[lapply(clint.values,length)==4]<-
+          ifelse(
+            clint.pvalues[lapply(clint.values,length)==4]>clint.pvalue.threshold & 
+            !is.na(clint.pvalues[lapply(clint.values,length)==4]),
+            yes = lapply(clint.values[lapply(clint.values,length)==4],
+            function(x){x<-c(rep("0",3),x[[4]])}),
+            no = clint.values[lapply(clint.values,length)==4]
+          )
+        
+        clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
+        chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
+        warning(paste('Clint values with a pvalue >',clint.pvalue.threshold,'were set to 0.'))
+      }    
     }
     # Change the necessary parameters to the chem.physical_and_invitro.data col:
     if (!is.null(species.clint)) 
     {
       necessary.params[necessary.params=="Clint"]<-species.clint
     }
-  } 
-  # Set observed clint values to 0 if clint.pvalue > threshold
-  if(!is.null(clint.pvalue.threshold)){
-    clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],split = ",")
-    clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
-    # Replace the clint.value with 0 when clint.pvalue > threshold
-    clint.values[lapply(clint.values,length)!=4] <- 
-      ifelse(
-        clint.pvalues[lapply(clint.values,length)!=4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
-        yes = "0",
-        no = clint.values[lapply(clint.values,length)!=4]
-      )
-    # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
-    clint.values[lapply(clint.values,length)==4]<-
-      ifelse(
-        clint.pvalues[lapply(clint.values,length)==4]>clint.pvalue.threshold & !is.na(clint.pvalues[lapply(clint.values,length)==4]),
-        yes = lapply(clint.values[lapply(clint.values,length)==4],function(x){x<-c(rep("0",3),x[[4]])}),
-        no = clint.values[lapply(clint.values,length)==4]
-      )
-    
-    clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
-    chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
-    warning(paste('Clint values with a pvalue >',clint.pvalue.threshold,'were set to 0.'))
   }
 
 # Check to see if we need fup (don't we always?)
