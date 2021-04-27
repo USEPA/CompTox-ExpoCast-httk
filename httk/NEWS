@@ -1,13 +1,17 @@
 News for R package httk
 
 Changes in version 2.0.4 (April 27, 2021)
+  QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
+  Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) and created stand-alone data matrix 'pearce2017regression' read in by the function.
   Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
   Revised get_cheminfo behavior to change chemical hepatic clearance values where p-value is not consistent with decrease (p-value > ) to zero.
-  Revised get_cheminfo behavior to remove fraction unbound in plasma values if credible interval spans from < 0.1 to > 0.9 (turn off with )
+  Revised get_cheminfo behavior to remove fraction unbound in plasma values if credible interval spans from < 0.1 to > 0.9 (turn off with FALSE).
+  Revised get_cheminfo to include "median.only" argument allowing confidence intervals to be removed for chemical intrinsic hepatic clearance values and fraction unbound in plasma values where they exist (turn on with TRUE).
+  Revised get_cheminfo to filter volatile compounds using Henry's law constant for all models, excluding the "gas_pbtk" model.
+  Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss".
   Added function calc_halflife (thank you Imran Shah for idea)
   Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoging Chang)
   Fixed problems with clearance from source "Ito/Riley" -- "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoging Chang)
-  
 
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
