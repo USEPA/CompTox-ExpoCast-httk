@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.6.25)  27 APR 2021 13:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7000 64-bit) (preloaded format=pdflatex 2019.6.25)  27 APR 2021 13:58
 entering extended mode
-**C:/Users/jwambaug/git/httk/httk/man/.Rd2pdf20492/Rd2.tex
-(C:/Users/jwambaug/git/httk/httk/man/.Rd2pdf20492/Rd2.tex
+**C:/Users/jwambaug/git/httk/httk/man/.Rd2pdf20652/Rd2.tex
+(C:/Users/jwambaug/git/httk/httk/man/.Rd2pdf20652/Rd2.tex
 LaTeX2e <2018-12-01>
 ("C:\Program Files\MiKTeX 2.9\tex/latex/base\book.cls"
 Document Class: book 2018/09/03 v1.4i Standard LaTeX document class
@@ -425,13 +425,112 @@ LaTeX Font Info:    Try loading font information for T1+ptm on input line 7.
 ("C:\Program Files\MiKTeX 2.9\tex/latex/psnfss\t1ptm.fd"
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
-! Interruption.
-\IfFileExists ... \@undefined \def \reserved@a {#3
-                                                  }\else \def \reserved@a {\...
-l.7 \begin{document}
-                    
-? 
-
 (C:\Users\jwambaug\AppData\Roaming\MiKTeX\2.9\tex/context/base/mkii\supp-pdf.mk
 ii
-[Loading MPS to PDF converter
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count106
+\scratchdimen=\dimen108
+\scratchbox=\box31
+\nofMPsegments=\count107
+\nofMParguments=\count108
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count109
+\MPscratchDim=\dimen109
+\MPnumerator=\count110
+\makeMPintoPDFobject=\count111
+\everyMPtoPDFconversion=\toks22
+)
+\AtBeginShipoutBox=\box32
+Package hyperref Info: Link coloring ON on input line 7.
+ ("C:\Program Files\MiKTeX 2.9\tex/latex/hyperref\nameref.sty"
+Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+
+("C:\Program Files\MiKTeX 2.9\tex/generic/oberdiek\gettitlestring.sty"
+Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+)
+\c@section@level=\count112
+)
+LaTeX Info: Redefining \ref on input line 7.
+LaTeX Info: Redefining \pageref on input line 7.
+LaTeX Info: Redefining \nameref on input line 7.
+
+(Rd2.out) (Rd2.out)
+\@outlinefile=\write4
+\openout4 = `Rd2.out'.
+
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 8.
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 10.
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <20.74> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 10.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 10.
+ ("C:\Program Files\MiKTeX 2.9\tex/latex/psnfss\t1phv.fd"
+File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
+)
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 10.
+
+(C:\Users\jwambaug\AppData\Roaming\MiKTeX\2.9\tex/latex/inconsolata\t1zi4.fd
+File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
+)
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 14.4pt on input line 10.
+
+("C:\Program Files\MiKTeX 2.9\tex/latex/base\utf8.def"
+File: utf8.def 2018/10/05 v1.2f UTF-8 support for inputenc
+)
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 10.0pt on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 14.
+ [1
+
+
+{C:/Users/jwambaug/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+Overfull \hbox (17.84802pt too wide) in paragraph at lines 65--67
+[]\T1/ptm/m/n/10 A data.table with casrn, nom-conc, MP, gkow, gkaw, gswat, sare
+a, v_total, v_working.
+ []
+
+
+! Package inputenc Error: Unicode character  (U+0008)
+(inputenc)                not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.143 }
+       
+? 
+
+! Package inputenc Error: Unicode character  (U+0012)
+(inputenc)                not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.143 }
+       
+? 
+! Emergency stop.
+ ...                                              
+                                                  
+l.143 }
+       
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+ 
+Here is how much of TeX's memory you used:
+ 6249 strings out of 492895
+ 90703 string characters out of 3133470
+ 182134 words of memory out of 3000000
+ 10079 multiletter control sequences out of 15000+200000
+ 32270 words of font info for 43 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 38i,5n,36p,258b,504s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!
