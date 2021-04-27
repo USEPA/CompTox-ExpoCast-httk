@@ -1,0 +1,213 @@
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8,latin1]{inputenc}
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge \R{} documentation}} \par\bigskip{{\Large of \file{armitage\_eval2.Rd}}}
+\par\bigskip{\large \today}
+\end{center}
+\inputencoding{utf8}
+\HeaderA{armitage\_eval}{Evaluate the updated Armitage model}{armitage.Rul.eval}
+%
+\begin{Description}\relax
+Evaluate the Armitage model for chemical distributon in vitro. Takes input
+as data table or vectors of values. Outputs a data table. Updates over
+the model published in Armitage et al. 2014 include binding to plastic walls
+and lipid and protein compartments in cells.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+armitage_eval(
+  casrn.vector = NA_character_,
+  nomconc.vector = 1,
+  this.well_number = 384,
+  this.FBSf = NA_real_,
+  tcdata = NA,
+  this.sarea = NA_real_,
+  this.v_total = NA_real_,
+  this.v_working = NA_real_,
+  this.cell_yield = NA_real_,
+  this.Tsys = 37,
+  this.Tref = 298.15,
+  this.option.kbsa2 = F,
+  this.option.swat2 = F,
+  this.pseudooct = 0.01,
+  this.memblip = 0.04,
+  this.nlom = 0.2,
+  this.P_nlom = 0.035,
+  this.P_dom = 0.05,
+  this.P_cells = 1,
+  this.csalt = 0.15,
+  this.celldensity = 1,
+  this.cellmass = 3,
+  this.f_oc = 1
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{casrn.vector}] For vector or single value, CAS number
+
+\item[\code{nomconc.vector}] For vector or single value, micromolar nominal 
+concentration (e.g. AC50 value)
+
+\item[\code{this.well\_number}] For single value, plate format default is 384, used
+if is.na(tcdata)==T
+
+\item[\code{this.FBSf}] Fraction fetal bovine serum, must be entered by user.
+
+\item[\code{tcdata}] A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+v\_total, v\_working. Otherwise supply single values to this.params.
+
+\item[\code{this.sarea}] Surface area per well (m\textasciicircum{}2)
+
+\item[\code{this.v\_total}] Total volume per well (m\textasciicircum{}3)
+
+\item[\code{this.v\_working}] Working volume per well (m\textasciicircum{}3)
+
+\item[\code{this.cell\_yield}] Number of cells per well
+
+\item[\code{this.Tsys}] System temperature (degrees C)
+
+\item[\code{this.Tref}] Reference temperature (degrees K)
+
+\item[\code{this.option.kbsa2}] Use alternative bovine-serum-albumin partitioning
+model
+
+\item[\code{this.option.swat2}] Use alternative water solubility correction
+
+\item[\code{this.pseudooct}] Pseudo-octanol cell storage lipid content
+
+\item[\code{this.memblip}] Membrane lipid content of cells
+
+\item[\code{this.nlom}] Structural protein conent of cells
+
+\item[\code{this.P\_nlom}] Proportionality constant to octanol structural protein
+
+\item[\code{this.P\_dom}] Proportionality constant to dissolve organic material
+
+\item[\code{this.P\_cells}] Proportionality constant to octanol storage lipid
+
+\item[\code{this.csalt}] Ionic strength of buffer, mol/L
+
+\item[\code{this.celldensity}] Cell density kg/L, g/mL
+
+\item[\code{this.cellmass}] Mass per cell, ng/cell
+
+\item[\code{this.f\_oc}] 1, everything assumed to be like proteins
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+
+\Tabular{lll}{
+\strong{Column} & \strong{Description} & \strong{units} \\{}
+casrn & Chemical Abstracts Service Registry Number & \\{}
+nomconc & Nominal Concentration & mol/L \\{}       
+well\_number & Number of wells in plate & unitless \\{}   
+sarea & Surface area of well & m\textasciicircum{}2 \\{}         
+v\_total & Total volume of well & m\textasciicircum{}3 \\{}       
+v\_working & Filled volume of well & m\textasciicircum{}3 \\{}     
+cell\_yield & Number of cells & cells \\{}    
+gkow & log10 octanol-water partition coefficient & log10 \\{}          
+logHenry & log10 Henry's law constant '& log10 atm-m3/mol \\{}      
+gswat & log10 Water solubility & log10 mol/L \\{}         
+MP & Melting Point & degrees Celsius \\{}           
+MW & Molecular Weight & g/mol \\{}            
+gkaw & air-water partition coefficient & (mol/m3)/(mol/m3) \\{}  
+dsm & & \\{}           
+duow & & \\{}          
+duaw & & \\{}          
+dumw & & \\{}          
+gkmw & & \\{}          
+gkcw & & \\{}          
+gkbsa & & \\{}         
+gkpl & & \\{}          
+ksalt & & \\{}        
+Tsys & & \\{}          
+Tref & & \\{}          
+option.kbsa2 & & \\{}  
+option.swat2 & & \\{}  
+FBSf & & \\{}          
+pseudooct & & \\{}     
+memblip & & \\{}       
+nlom & & \\{}          
+P\_nlom & & \\{}   
+P\_dom & dissolved organic matter b water partition coefficient & Dimensionless \\{}         
+}
+\end{Value}
+%
+\begin{Author}\relax
+Greg Honda
+\end{Author}
+%
+\begin{References}\relax
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+
+Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+library(httk)
+
+# Check to see if we have info on the chemical:
+"80-05-7" %in% get_cheminfo()
+
+#We do:
+temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
+this.well_number = 384, nomconc = 10)
+print(temp$cfree.invitro)
+
+# Check to see if we have info on the chemical:
+"793-24-8" %in% get_cheminfo()
+
+# Since we don't look up phys-chem from dashboard:
+cheminfo <- data.frame(
+  Compound="6-PPD",
+  CASRN="793-24-8",
+  DTXSID="DTXSID9025114",
+  logP=4.27, 
+  logHenry=log10(7.69e-8),
+  logWSol=log10(1.58e-4),
+  MP=	99.4,
+  MW=268.404
+  )
+  
+# Add the information to HTTK's database:
+chem.physical_and_invitro.data <- add_chemtable(
+ cheminfo,
+ current.table=chem.physical_and_invitro.data,
+ data.list=list(
+ Compound="Compound",
+ CAS="CASRN",
+  DTXSID="DTXSID",
+  MW="MW",
+  logP="logP",
+  logHenry="logHenry",
+  logWSol="logWSol",
+  MP="MP"),
+  species="Human",
+  reference="CompTox Dashboard 31921")
+
+# Run the Armitage et al. (2014) model:
+out <- armitage_eval(
+  casrn.vector = "793-24-8", 
+  this.FBSf = 0.1,
+  this.well_number = 384, 
+  nomconc = 10)
+  
+print(out)
+
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}
