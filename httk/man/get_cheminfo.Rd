@@ -9,7 +9,10 @@ get_cheminfo(
   species = "Human",
   fup.lod.default = 0.005,
   model = "3compartmentss",
-  default.to.human = F
+  default.to.human = F,
+  median.only = F,
+  fup.ci.cutoff = T,
+  clint.pvalue.threshold = 0.05
 )
 }
 \arguments{
@@ -33,6 +36,15 @@ fraction unbound (used in predict_partitioning_schmitt).}
 
 \item{default.to.human}{Substitutes missing values with human values if
 true.}
+
+\item{median.only}{Use median values only for fup and clint.  Default is FALSE.}
+
+\item{fup.ci.cutoff}{Cutoff for the level of uncertainty in fup estimates.
+This value should be between (0,1). Default is `NULL` specifying no filtering.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for
@@ -89,6 +101,6 @@ httk.TPO.human.table <- subset(get_cheminfo(info="all",species="human"),
 
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Robert Pearce, and Sarah E. Davidson
 }
 \keyword{Retrieval}
