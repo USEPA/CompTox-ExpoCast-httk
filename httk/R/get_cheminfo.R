@@ -79,12 +79,12 @@ get_cheminfo <- function(info="CAS",
                          species="Human",
                          fup.lod.default=0.005,
                          model='3compartmentss',
-                         default.to.human=F,
-                         median.only=F,
-                         fup.ci.cutoff=T,
+                         default.to.human=FALSE,
+                         median.only=FALSE,
+                         fup.ci.cutoff=TRUE,
                          clint.pvalue.threshold=0.05)
 {
-# Parameters in this list can be retreive with the info argument:
+# Parameters in this list can be retrieve with the info argument:
   valid.info <- c("Compound",
                   "CAS",
                   "Clint",
@@ -375,7 +375,7 @@ get_cheminfo <- function(info="CAS",
         fup.ci.diff[lapply(fup.ci.diff,length)==3] <- 
           lapply(fup.ci.diff[lapply(fup.ci.diff,length)==3],function(x){
             t.ci <- as.numeric(x)
-            # Fup's where confidence interval spands nearly all possible values:
+            # Fup's where confidence interval spans nearly all possible values:
             out  <- ifelse((t.ci[3]>0.9 & t.ci[2]<0.1),yes = F,no = T)
             return(out)
           })
