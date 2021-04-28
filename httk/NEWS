@@ -16,7 +16,8 @@ Changes in version 2.0.4 (April 27, 2021)
   Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
   Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
   Internal function convert_units() added to ensure consistency in unit conversions
-
+  Cleaned up code for predict_partitioning_schmitt()
+  
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
     Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
