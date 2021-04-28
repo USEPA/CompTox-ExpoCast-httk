@@ -9,10 +9,11 @@ get_cheminfo(
   species = "Human",
   fup.lod.default = 0.005,
   model = "3compartmentss",
-  default.to.human = F,
-  median.only = F,
-  fup.ci.cutoff = T,
-  clint.pvalue.threshold = 0.05
+  default.to.human = FALSE,
+  median.only = FALSE,
+  fup.ci.cutoff = TRUE,
+  clint.pvalue.threshold = 0.05,
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ This value should be between (0,1). Default is `NULL` specifying no filtering.}
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
+
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for
