@@ -466,7 +466,7 @@ solve_model <- function(chem.name = NULL,
   
   #Scale dose if input.units is measured in (mg/kg) 
   if (input.units == "mg/kg") {
-  dosing <- scale_dosing(dosing,parameters,route)
+  dosing <- scale_dosing(dosing,parameters,route,output.units = "mg")
   dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
   }
   
