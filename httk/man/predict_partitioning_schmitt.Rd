@@ -35,6 +35,9 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
+\item{model}{Model for which partition coefficients are neeeded (for example,
+"pbtk", "3compartment")}
+
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
