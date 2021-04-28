@@ -53,6 +53,8 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' @param model Model for which partition coefficients are neeeded (for example,
+#' "pbtk", "3compartment")
 #'
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
