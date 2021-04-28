@@ -359,7 +359,8 @@ solve_model <- function(chem.name = NULL,
   names(state) <- state.vars
   
 # Address case where initial conditions provided using argument initial.values:
-  if (!is.null(initial.values)){
+  if (!is.null(initial.values))
+  {
     
     #they should also observe this naming convention
     if (any(!firstchar(names(initial.values)) %in% c("A","C"))) {
@@ -386,36 +387,39 @@ solve_model <- function(chem.name = NULL,
       #the amount in compartment_units.
       if (any(firstchar(names(compartment_units)[grepl(tissue,
                          names(compartment_units)) == TRUE]) == "C"))
-          {#Use the units for this compartment from compartment_units to
-           #get a units conversion factor, even if trivially 1
-            this.compartment.units = compartment_units[paste("C",tissue,sep='')]
-            units_conversion_factor = 
-              convert_units(input.units=this.compartment.units,
-                            output.units='uM',
-                            MW = MW)
-            
-       } else if (any(firstchar(names(compartment_units)[grepl(tissue,
-                                  names(compartment_units)) == TRUE]) == "A")){
+      {
+      #Use the units for this compartment from compartment_units to
+      #get a units conversion factor, even if trivially 1
+        this.compartment.units = compartment_units[paste("C",tissue,sep='')]
+        units_conversion_factor = convert_units(
+          input.units=this.compartment.units,
+          output.units='uM',
+          MW = MW)
+      } else if (any(firstchar(names(compartment_units)[grepl(tissue,
+        names(compartment_units)) == TRUE]) == "A") &
+ # AUC is different, but need to handle this better in the future
+         this.compartment!="AUC")
+      {
        #Again it is assumed the units of this.compartment in initial.values is
        #a simple "tissue" volume scaling away from the units specified for
        #the amount in compartment_units
-            this.state.units = compartment_units[paste("A",tissue,sep='')]
-            units_conversion_factor = 
-              convert_units(input.units=this.state.units,
-                            output.units='umol',
-                            MW = MW)
-            
-        } else {
-              #If units for this initial.values entry aren't specified,
-              #they are assumed to be in the desired uM or umol units.
-                units_conversion_factor = 1 #no conversion should be needed
-            }
+        this.state.units = compartment_units[paste("A",tissue,sep='')]
+        units_conversion_factor = convert_units(
+          input.units=this.state.units,
+          output.units='umol',
+          MW = MW)
+      } else {
+      #If units for this initial.values entry aren't specified,
+      #they are assumed to be in the desired uM or umol units.
+        units_conversion_factor = 1 #no conversion should be needed
+      }
           
       #Now scale by tissue volume if necessary...
-      if (firstchar(this.compartment) == "C") {
+      if (firstchar(this.compartment) == "C") 
+      {
         units_conversion_factor = units_conversion_factor * 
-                       parameters[[paste("V",tissue,"c",sep="")]] *
-                                 parameters[["BW"]]
+          parameters[[paste("V",tissue,"c",sep="")]] *
+          parameters[["BW"]]
       }
       
       #...and apply units conversion factor to get the state value in 
@@ -423,8 +427,8 @@ solve_model <- function(chem.name = NULL,
           state[paste("A",tissue,sep="")] <-
                             initial.values[[this.compartment]] *
                               units_conversion_factor
-      }
     }
+  }
   
 ### SIMULATION TIME
 
@@ -503,13 +507,13 @@ solve_model <- function(chem.name = NULL,
 # Add the first dose:
   if (!is.null(initial.dose))
   {
-     if (!dose.type %in% c("add","replace","multiply"))
-       stop("Dose type must be \"add\", \"replace\", or \"multiply\".")
-       
-     if (dose.type=="add") state[dose.var] <- state[dose.var] + initial.dose
-     else if (dose.type=="multiply") state[dose.var] <- state[dose.var] *
-       initial.dose
-     else state[dose.var] <- initial.dose
+    if (!dose.type %in% c("add","replace","multiply"))
+     stop("Dose type must be \"add\", \"replace\", or \"multiply\".")
+     
+    if (dose.type=="add") state[dose.var] <- state[dose.var] + initial.dose
+    else if (dose.type=="multiply") state[dose.var] <- state[dose.var] *
+     initial.dose
+    else state[dose.var] <- initial.dose
   }
 
 # eventdata is the deSolve object specifying "events" where the simulation 
@@ -535,22 +539,24 @@ solve_model <- function(chem.name = NULL,
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
 # Or a matrix of doses (first col time, second col dose) has been specified:
     } else { #Do some screening on the dosing.matrix's contents first.
-      if (any(is.na(dosing.matrix))) stop("Dosing matrix cannot contain NA values")
-      if (dim(dosing.matrix)[2]!=2) stop("Dosing matrix should be a matrix 
-with two columns (time, dose).")
+      if (any(is.na(dosing.matrix))) stop(
+"Dosing matrix cannot contain NA values")
+      if (dim(dosing.matrix)[2]!=2) stop(
+"Dosing matrix should be a matrix with two columns (time, dose).")
       dose.times <- dosing.matrix[,"time"]
       dose.vec <- dosing.matrix[,"dose"]
     }
     num.doses <- length(dose.times)
-    eventdata <- data.frame(var=rep(dose.var,num.doses),
-                            time = round(dose.times,8),
-                            value = dose.vec, 
-                            method = rep(dose.type,num.doses))
+    eventdata <- data.frame(
+      var=rep(dose.var,num.doses),
+      time = round(dose.times,8),
+      value = dose.vec, 
+      method = rep(dose.type,num.doses))
     #Update our times vector to include times of provided dosing events, as well as
     #the times of dosing events incremented by SMALL.TIME for visualization.
     times <- sort(unique(c(times,
-    eventdata$time,
-    eventdata$time+SMALL.TIME)))
+      eventdata$time,
+      eventdata$time+SMALL.TIME)))
   }  
   
 ### MODEL PARAMETERS FOR DESOLVE
@@ -584,7 +590,8 @@ with two columns (time, dose).")
 ### RUNNING DESOLVE
   
 # We use the events argument with deSolve to do multiple doses:
-  out <- ode(y = state, 
+  out <- ode(
+    y = state, 
     times = times, 
     func=derivative_function,
     parms = parameters,
@@ -606,30 +613,34 @@ with two columns (time, dose).")
   
 ### MODEL OUTPUT
   
-# Now that the system has been run in umol-based units, convert back
-# to compartment_units for specified quantities of interest
-for (this.compartment in names(compartment_units)){
-  if (firstchar(this.compartment) == "C"){
-    output_conversion_factor = convert_units(
-                          input.units = 'uM',
-                          output.units = compartment_units[this.compartment],
-                          MW = MW)
-  } else if (firstchar(this.compartment) == "A"){
-      if (substr(this.compartment, start=1, stop=3) == "AUC"){
+  # Now that the system has been run in umol-based units, convert back
+  # to compartment_units for specified quantities of interest
+  for (this.compartment in names(compartment_units))
+  {
+    if (firstchar(this.compartment) == "C")
+    {
+      output_conversion_factor = convert_units(
+        input.units = 'uM',
+        output.units = compartment_units[this.compartment],
+        MW = MW)
+    } else if (firstchar(this.compartment) == "A")
+    {
+      if (substr(this.compartment, start=1, stop=3) == "AUC")
+      {
         output_conversion_factor = convert_units(
-            input.units = "uM",
-            output.units = sub("\\*days","",compartment_units[this.compartment]),
-            MW = MW)
-      } else{ #then this.compartment should correspond to an amount
-         output_conversion_factor = convert_units(
-                          input.units = 'umol',
-                          output.units = compartment_units[this.compartment],
-                          MW = MW)
+          input.units = "uM",
+          output.units = sub("\\*days","",compartment_units[this.compartment]),
+          MW = MW)
+      } else { #then this.compartment should correspond to an amount
+        output_conversion_factor = convert_units(
+          input.units = 'umol',
+          output.units = compartment_units[this.compartment],
+          MW = MW)
+      }
     }
+    #Now apply conversion factor to each relevant entry
+    out[,this.compartment] <- out[,this.compartment] * output_conversion_factor
   }
-  #Now apply conversion factor to each relevant entry
-  out[,this.compartment] <- out[,this.compartment] * output_conversion_factor
-}
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
@@ -674,11 +685,11 @@ for (this.compartment in names(compartment_units)){
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
-    cat(paste(toupper(substr(species,1,1)), 
-          substr(species,2,nchar(species)),sep=""),
-       "amounts with units otherwise unspecified by compartment.units are 
-returned in umol by default, and similarly concentrations default to
-units of uM.\n")
+#    cat(paste(toupper(substr(species,1,1)), 
+#          substr(species,2,nchar(species)),sep=""),
+#       "amounts with units otherwise unspecified by compartment.units are 
+#returned in umol by default, and similarly concentrations default to
+#units of uM.\n")
     
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
