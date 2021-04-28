@@ -68,7 +68,7 @@
 #' amounts of the chemical in specified tissues with units corresponding to
 #' those specified for the model outputs. Default values are zero.
 #' @param plots Plots all outputs if true.
-#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param suppress.messages Whether or not the output messages are suppressed.
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
