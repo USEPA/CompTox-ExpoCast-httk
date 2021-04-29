@@ -2370,7 +2370,7 @@ Move the sysdata.rdaa to the httk/R directory.
 >      
 > ## Session Information ##
 > Sys.time() # capture date and time of generating data
-[1] "2021-04-26 10:48:38 EDT"
+[1] "2021-04-29 09:17:39 EDT"
 > sessionInfo() # capture package information for generating data
 R version 4.0.3 (2020-10-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -2402,4 +2402,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 478.18    6.85  727.04 
+ 289.18    2.78  385.06 
