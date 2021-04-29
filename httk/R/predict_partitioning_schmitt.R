@@ -218,10 +218,12 @@ predict_partitioning_schmitt <- function(
     if (adjusted.Funbound.plasma)
     {
       reg <- httk::pearce2017regression[,
-        grep(colnames(pearce2017regression),pattern = "adj")]
+        grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     } else {
       reg <- httk::pearce2017regression[,
-        -grep(colnames(pearce2017regression),pattern = "adj")]
+        -grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     }
     colnames(reg) <- c('intercept','slope')      
   }
