@@ -132,7 +132,7 @@ AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.
 Aintestine 
      183.9 
 > 
-> parameterize_3comp(chem.name="Aminopterin")
+> parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 $BW
 [1] 70
 
