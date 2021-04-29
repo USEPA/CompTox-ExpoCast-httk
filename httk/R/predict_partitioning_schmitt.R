@@ -53,6 +53,8 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' @param model Model for which partition coefficients are neeeded (for example,
+#' "pbtk", "3compartment")
 #'
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
@@ -117,7 +119,8 @@ predict_partitioning_schmitt <- function(
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Tissue <- Species <- variable <- Reference <- value <- physiology.data <- NULL
+  Tissue <- Species <- variable <- Reference <- value <- 
+    pearce2017regression <-physiology.data <- NULL
   #End R CMD CHECK appeasement.
   
   if (is.null(model)) stop("Model must be specified.")
@@ -214,9 +217,13 @@ predict_partitioning_schmitt <- function(
     # Fup Parameter estimates are now added to `pearce2017regression`.
     if (adjusted.Funbound.plasma)
     {
-      reg <- pearce2017regression[,grep(colnames(pearce2017regression),pattern = "adj")]
+      reg <- httk::pearce2017regression[,
+        grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     } else {
-      reg <- pearce2017regression[,-grep(colnames(pearce2017regression),pattern = "adj")]
+      reg <- httk::pearce2017regression[,
+        -grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     }
     colnames(reg) <- c('intercept','slope')      
   }

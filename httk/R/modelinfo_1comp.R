@@ -29,7 +29,8 @@ model.list[["1compartment"]]$alltissues=c(
   "muscle", 
   "skin",            
   "spleen",          
-  "red blood cells")
+  "red blood cells",
+  "rest")
   
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
