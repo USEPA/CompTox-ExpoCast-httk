@@ -1481,3 +1481,25 @@
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
 "pearce2017regression"
+
+#' Dawson et al. 2021 data
+#'
+#' This table includes QSAR (Random Forest) model predicted values for unbound
+#' fraction plasma protein (fup) and intrinsic hepatic clearance (clint) for a
+#' subset of chemicals in the Tox21 library
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}).
+#'
+#' Predictions were made with a set of Random Forest QSAR models,
+#' as reported in Dawson et al. (2021). 
+#'
+#' @name dawson2021
+#' @aliases Dawson2021
+#' @docType data
+#' @format data.frame
+#' @author Daniel E. Dawson
+#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
+#' of high-throughput toxicokinetic models using open-source descriptors."
+#' Environmental Science & Technology____. (2021):______.
+#' @source Dawson et al. 2021 Random Forest QSAR Model
+#' @keywords data
+"dawson2021"
