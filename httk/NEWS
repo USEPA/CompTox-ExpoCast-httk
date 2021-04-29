@@ -1,5 +1,10 @@
 News for R package httk
 
+Changes in version 2.0.4 (April 27, 2021)
+  Changed DESCRIPTION to indicate LazyDataCompression is xz
+  Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
+  Added Xiaoqing Chang and Shannon Bell as contributors thanks to substantial efforts improving the package
+  
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
     Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
@@ -105,6 +110,7 @@ Changes in version 1.9.1 (April 15, 2019)
 Changes in version 1.9 (February 4, 2019)
 
   This version is consistent with the submitted version of Honda et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions"
+  Mark Sfeir is new lead HTTK software engineer (thank you Robert Pearce!)
   New rat-specific in vitro TK data provided for 65 chemicals. 
   New functions for calculating in vitro disposition armitage_eval, armitage_estimate_sarea (thank you James Armitage)
   Added arguments to IVIVE functions (e.g., calc_mc_css) to use sets of assumptions identified by Honda et al. (e.g., IVIVE="Honda1")(thank you Katie Paul-Friedman)
