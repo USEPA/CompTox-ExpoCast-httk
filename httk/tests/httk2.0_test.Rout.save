@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -20,9 +22,7 @@ Type 'q()' to quit R.
 > options(warn=-1)
 > 
 > head(solve_pbtk(chem.name="Terbufos"))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Agutlumen    Cgut    Cliver      Cven     Clung  Cart  Crest
 [1,] 0.00000    242.70  0.0000 0.000e+00 0.000e+00 0.000e+00 0.000 0.0000
 [2,] 0.00001    242.60  0.1147 7.533e-05 1.400e-08 1.000e-09 0.000 0.0000
@@ -42,9 +42,7 @@ Rblood2plasma = 0.674.
 +                     doses.per.day=NULL,
 +                     dosing.matrix = NULL,
 +                     daily.dose = NULL)))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Agutlumen    Cgut    Cliver      Cven     Clung  Cart  Crest
 [1,] 0.00000    242.70  0.0000 0.000e+00 0.000e+00 0.000e+00 0.000 0.0000
 [2,] 0.00001    242.60  0.1147 7.533e-05 1.400e-08 1.000e-09 0.000 0.0000
@@ -63,9 +61,7 @@ Rblood2plasma = 0.674.
 > dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 > colnames(dm) <- c("time","dose")
 > solve_pbtk(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.703.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.703.
        time Agutlumen  Cgut Cliver  Cven Clung  Cart  Crest Ckidney Cplasma
  [1,] 1.948       0.0 14.89  35.65 12.66 11.96 12.67  9.636   30.46   18.01
  [2,] 1.958       0.0 14.65  35.07 12.45 11.76 12.46  9.478   29.96   17.72
@@ -97,9 +93,7 @@ Rblood2plasma = 0.703.
 +   doses.per.day=NULL,
 +   daily.dose=NULL,
 +   dosing.matrix=dm))[190:201,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.703.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.703.
        time Agutlumen  Cgut Cliver  Cven Clung  Cart  Crest Ckidney Cplasma
  [1,] 1.948       0.0 14.89  35.65 12.66 11.96 12.67  9.636   30.46   18.01
  [2,] 1.958       0.0 14.65  35.07 12.45 11.76 12.46  9.478   29.96   17.72
@@ -128,9 +122,7 @@ Rblood2plasma = 0.703.
 [12,]     4559            0 75.76
 >   
 > head(solve_pbtk(chem.name="Terbufos",iv.dose=T))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time    Aven      Cgut    Cliver    Cven   Clung   Cart     Crest
 [1,] 0.00000 242.700  0.000000 0.000e+00 90.6000  0.0000 0.0000 0.000e+00
 [2,] 0.00001 235.500  0.001081 1.823e-04 87.9200 13.0800 0.2127 5.567e-05
@@ -151,9 +143,7 @@ Rblood2plasma = 0.674.
 +   doses.per.day=4,
 +   daily.dose=1,
 +   dosing.matrix=NULL))[190:205,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
        time Agutlumen   Cgut Cliver  Cven Clung  Cart Crest Ckidney Cplasma
  [1,] 1.885 3.642e-02  7.824  14.59 1.096 1.024 1.096 4.579   11.71   1.627
  [2,] 1.896 2.112e-02  7.801  14.53 1.094 1.021 1.094 4.573   11.68   1.623
@@ -189,9 +179,7 @@ Rblood2plasma = 0.674.
 [15,]    2.325        59.49 1.976
 [16,]    2.348        60.18 1.996
 > solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
        time Agutlumen   Cgut Cliver  Cven Clung  Cart Crest Ckidney Cplasma
  [1,] 1.885 3.642e-02  7.824  14.59 1.096 1.024 1.096 4.579   11.71   1.627
  [2,] 1.896 2.112e-02  7.801  14.53 1.094 1.021 1.094 4.573   11.68   1.623
@@ -230,7 +218,7 @@ Rblood2plasma = 0.674.
 > 
 > calc_analytic_css(chem.name="Betaxolol")
 Plasma concentration returned in uM units.
-[1] 2.063
+[1] 1.71
 > calc_analytic_css(chem.name="Tacrine",model="pbtk")
 Plasma concentration returned in uM units.
 [1] 0.007453
@@ -247,9 +235,7 @@ Plasma concentration returned in uM units.
 > 
 > head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
 Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000    221.90    0.0000000    0.000e+00 0.000e+00
 [2,] 0.00001    221.80    0.0006317    3.840e-07 3.000e-09
@@ -259,9 +245,7 @@ Rblood2plasma = 0.674.
 [6,] 0.04167     25.09    1.0520000    3.587e+00 2.953e-02
 > head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
 Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Acompartment Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000        242.7         0        1.321     0.000000 0.000e+00
 [2,] 0.00001        242.7         0        1.321     0.001604 1.321e-05
@@ -271,9 +255,7 @@ Rblood2plasma = 0.674.
 [6,] 0.04167        236.1         0        1.285     6.593000 5.429e-02
 > solve_1comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.703.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.703.
        time Agutlumen Ccompartment Ametabolized   AUC
  [1,] 1.948       0.0        16.49         4374 69.15
  [2,] 1.958       0.0        16.20         4385 69.32
@@ -289,9 +271,7 @@ Rblood2plasma = 0.703.
 [12,] 2.052     163.6        72.28         4613 72.92
 > solve_1comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
        time Agutlumen Ccompartment Ametabolized   AUC
  [1,] 1.885 3.572e-02        1.638        48.06 1.708
  [2,] 1.896 2.071e-02        1.635        48.54 1.725
@@ -311,9 +291,7 @@ Rblood2plasma = 0.674.
 [16,] 2.031 8.313e+00        1.792        54.81 1.948
 > 
 > head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.674.
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     242.70  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 0.00001     242.60  0.001579 4.200e-08 0.000000    7.500e-08 0.000000
@@ -329,9 +307,7 @@ Rblood2plasma = 0.674.
 [5,] 2.905e+00
 [6,] 3.273e+00
 > head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.674.
         time Asyscomp    Cliver Csyscomp  Atubules Ametabolized      AUC
 [1,] 0.00000    242.7  0.000000    4.400 0.000e+00    0.000e+00 0.000000
 [2,] 0.00001    242.7  0.008125    4.399 3.159e-05    5.610e-07 0.000044
@@ -347,9 +323,7 @@ Rblood2plasma = 0.674.
 [5,]   3.909
 [6,]   3.879
 > solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.703.
+AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.703.
        time Aintestine   Cliver Csyscomp Atubules Ametabolized   AUC Cplasma
  [1,] 1.948        0.0   0.9564   0.2582     4977            0 14.54  0.2582
  [2,] 1.958        0.0   0.9037   0.2440     4978            0 14.54  0.2440
@@ -364,9 +338,7 @@ Rblood2plasma = 0.703.
 [11,] 2.042      282.2 118.7000  30.3600     5281            0 15.43 30.3600
 [12,] 2.052      163.6 117.0000  30.6000     5390            0 15.75 30.6000
 > solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.674.
+AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.674.
        time Aintestine Cliver Csyscomp Atubules Ametabolized   AUC Cplasma
  [1,] 1.885  3.642e-02  15.39    4.772    6.084        50.82 4.991   4.772
  [2,] 1.896  2.112e-02  15.36    4.763    6.144        51.31 5.041   4.763

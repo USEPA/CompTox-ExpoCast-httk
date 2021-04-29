@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -15,14 +17,12 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save solve_gas_crude_test.R solve_gas_crude_test.Rout
+> #R CMD BATCH --no-timing --no-restore --no-save solve_gas_test.R solve_gas_test.Rout
 > library(httk)
 > options(warn=-1)
 > 
 > signif(head(solve_gas_pbtk(chem.name="pyrene")),3)
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.75.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.75.
         time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
 [1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
 [2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
@@ -31,12 +31,12 @@ Rblood2plasma = 0.75.
 [5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
 [6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
       Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
-[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
-[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
-[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
-[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
-[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
-[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.000000    7.34     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 4.16e-07 0.000728    7.34     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 1.87e-05 0.592000    7.75  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 2.19e-05 1.110000    8.11 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 2.44e-05 1.580000    8.44 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 2.66e-05 2.040000    8.76 32400.00  0.01180     3.65e+01
          AUC
 [1,] 0.00000
 [2,] 0.00000
@@ -45,9 +45,7 @@ Rblood2plasma = 0.75.
 [5,] 0.00830
 [6,] 0.01330
 > signif(head(solve_gas_pbtk(chem.cas="129-00-0")),3)
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.75.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.75.
         time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
 [1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
 [2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
@@ -56,12 +54,12 @@ Rblood2plasma = 0.75.
 [5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
 [6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
       Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
-[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
-[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
-[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
-[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
-[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
-[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.000000    7.34     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 4.16e-07 0.000728    7.34     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 1.87e-05 0.592000    7.75  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 2.19e-05 1.110000    8.11 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 2.44e-05 1.580000    8.44 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 2.66e-05 2.040000    8.76 32400.00  0.01180     3.65e+01
          AUC
 [1,] 0.00000
 [2,] 0.00000
@@ -70,9 +68,7 @@ Rblood2plasma = 0.75.
 [5,] 0.00830
 [6,] 0.01330
 > signif(head(solve_gas_pbtk(parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
-Amounts returned in umol  and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.75.
+AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.75.
         time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
 [1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
 [2,] 0.00001   0.0639 1.22e-04 2.05e-05 3.90e-08 3.25e-05 0.0162 5.98e-06
@@ -81,12 +77,12 @@ Rblood2plasma = 0.75.
 [5,] 0.03120 177.0000 1.67e+01 3.64e+00 3.30e-01 6.37e+00 0.9600 1.60e+00
 [6,] 0.04170 227.0000 1.97e+01 4.33e+00 3.94e-01 8.07e+00 1.0500 2.20e+00
       Ckidney  Cplasma     Calv  Cendexh Cmixexh     Cmuc Atubules Ametabolized
-[1,] 0.00e+00 0.00e+00 0.00e+00 0.00e+00   0.300     0.00  0.00000     0.00e+00
-[2,] 4.95e-04 5.20e-08 1.70e-08 2.98e-05   0.300     9.13  0.00000     2.40e-08
-[3,] 1.88e+01 2.20e-01 7.67e-07 2.42e-02   0.317  9130.00  0.00138     2.60e+00
-[4,] 2.59e+01 3.45e-01 8.96e-07 4.54e-02   0.332 17500.00  0.00426     1.04e+01
-[5,] 2.99e+01 4.40e-01 9.98e-07 6.46e-02   0.345 25300.00  0.00780     2.20e+01
-[6,] 3.30e+01 5.25e-01 1.09e-06 8.34e-02   0.358 32400.00  0.01180     3.65e+01
+[1,] 0.00e+00 0.00e+00 0.00e+00 0.000000    7.34     0.00  0.00000     0.00e+00
+[2,] 4.95e-04 5.20e-08 4.16e-07 0.000728    7.34     9.13  0.00000     2.40e-08
+[3,] 1.88e+01 2.20e-01 1.87e-05 0.592000    7.75  9130.00  0.00138     2.60e+00
+[4,] 2.59e+01 3.45e-01 2.19e-05 1.110000    8.11 17500.00  0.00426     1.04e+01
+[5,] 2.99e+01 4.40e-01 2.44e-05 1.580000    8.44 25300.00  0.00780     2.20e+01
+[6,] 3.30e+01 5.25e-01 2.66e-05 2.040000    8.76 32400.00  0.01180     3.65e+01
          AUC
 [1,] 0.00000
 [2,] 0.00000
@@ -94,5 +90,147 @@ Rblood2plasma = 0.75.
 [4,] 0.00420
 [5,] 0.00830
 [6,] 0.01330
+> 
+> parameterize_gas_pbtk(chem.name="styrene")
+$BW
+[1] 70
+
+$Clint
+[1] 42.99
+
+$Clint.dist
+[1] NA
+
+$Clmetabolismc
+[1] 9.576
+
+$Fgutabs
+[1] 1
+
+$Fhep.assay.correction
+[1] 0.7622
+
+$Funbound.plasma
+[1] 0.08293
+
+$Funbound.plasma.adjustment
+[1] 0.4605
+
+$Funbound.plasma.dist
+[1] NA
+
+$hematocrit
+[1] 0.44
+
+$Kblood2air
+[1] 79.27
+
+$Kgut2pu
+[1] 44.76
+
+$kgutabs
+[1] 2.18
+
+$Kkidney2pu
+[1] 70.47
+
+$Kliver2pu
+[1] 88.32
+
+$Klung2pu
+[1] 8.208
+
+$km
+[1] 1
+
+$Kmuc2air
+[1] 97.38
+
+$Krbc2pu
+[1] 4.105
+
+$Krest2pu
+[1] 27.33
+
+$kUrtc
+[1] 11
+
+$liver.density
+[1] 1.05
+
+$MA
+[1] NA
+
+$million.cells.per.gliver
+[1] 110
+
+$MW
+[1] 104.2
+
+$pKa_Accept
+pKa_Accept 
+    "None" 
+
+$pKa_Donor
+pKa_Donor 
+   "None" 
+
+$Pow
+[1] 891.3
+
+$Qalvc
+[1] 18.59
+
+$Qcardiacc
+[1] 13.88
+
+$Qgfrc
+[1] 0.3099
+
+$Qgutf
+[1] 0.2054
+
+$Qkidneyf
+[1] 0.2214
+
+$Qliverf
+[1] 0.05359
+
+$Qlungf
+[1] 0.02502
+
+$Qrestf
+[1] 0.4757
+
+$Rblood2plasma
+[1] 0.7098
+
+$Vartc
+[1] 0.03827
+
+$Vgutc
+[1] 0.0158
+
+$Vkidneyc
+[1] 0.00419
+
+$Vliverc
+[1] 0.0245
+
+$Vlungc
+[1] 0.00723
+
+$vmax
+[1] 0
+
+$Vmucc
+[1] 1e-04
+
+$Vrestc
+[1] 0.7766
+
+$Vvenc
+[1] 0.03827
+
 > 
 > quit("no")
