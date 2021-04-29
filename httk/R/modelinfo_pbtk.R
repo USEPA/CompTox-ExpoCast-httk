@@ -34,7 +34,8 @@ model.list[["pbtk"]]$alltissues=c(
   "muscle", 
   "skin",            
   "spleen",          
-  "red blood cells")
+  "red blood cells",
+  "thyroid")
 
 
 # How the tissues from tissue.data are lumped together to form the model:
@@ -314,9 +315,3 @@ model.list[["pbtk"]]$exclude.fup.zero <- T
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["pbtk"]]$css.dosing.params <- c("hourly.dose")
-
-# Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[["pbtk"]]$log.henry.threshold <- c(-4.5)
-
-# Filter out compounds belonging to select chemical classes
-model.list[["pbtk"]]$chem.class.filt <- c("PFAS")
