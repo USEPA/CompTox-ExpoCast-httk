@@ -67,7 +67,8 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [4,] 0.00420
 [5,] 0.00830
 [6,] 0.01330
-> signif(head(solve_gas_pbtk(parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
+> signif(head(solve_gas_pbtk(
++   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.75.
         time     Amuc     Cgut   Cliver     Cven    Clung   Cart    Crest
 [1,] 0.00000   0.0000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.0000 0.00e+00
@@ -91,7 +92,8 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [5,] 0.00830
 [6,] 0.01330
 > 
-> parameterize_gas_pbtk(chem.name="styrene")
+> parameterize_gas_pbtk(chem.name="styrene")[
++   sort(names(parameterize_gas_pbtk(chem.name="styrene")))]
 $BW
 [1] 70
 
