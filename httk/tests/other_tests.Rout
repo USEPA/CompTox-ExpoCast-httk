@@ -1,0 +1,187 @@
+
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_css(chem.name='nicotine')
+$avg
+[1] 0.6581
+
+$frac
+[1] 1.136
+
+$max
+[1] 1.453
+
+$the.day
+[1] 0
+
+> 
+> calc_css(chem.name='nicotine', model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+$avg
+[1] 0.6557
+
+$frac
+[1] 0.9384
+
+$max
+[1] 1.354
+
+$the.day
+[1] 0
+
+> 
+> calc_css(chem.name='nicotine', model="3compartment")
+$avg
+[1] 0.5195
+
+$frac
+[1] 0.7324
+
+$max
+[1] 1.413
+
+$the.day
+[1] 0
+
+> 
+> calc_css(chem.name="endrin")
+$avg
+[1] 1075
+
+$frac
+[1] 0.9898
+
+$max
+[1] 1076
+
+$the.day
+[1] 1214
+
+> 
+> calc_tkstats(chem.name='nicotine',days=10)
+Human plasma concentrations returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.82 .
+$AUC
+[1] 6.728
+
+$peak
+[1] 3.916
+
+$mean
+[1] 0.6728
+
+> 
+> calc_tkstats(dtxsid="DTXSID0020442",days=1)
+Plasma values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
+$AUC
+[1] 3.727
+
+$peak
+[1] 3.891
+
+$mean
+[1] 3.727
+
+> 
+> calc_tkstats(dtxsid="DTXSID0020442",days=10)
+Plasma values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
+$AUC
+[1] 168.5
+
+$peak
+[1] 28.49
+
+$mean
+[1] 16.85
+
+> 
+> calc_tkstats(dtxsid="DTXSID0020442",days=100)
+Plasma values returned in uM units.
+AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
+$AUC
+[1] 4563
+
+$peak
+[1] 54.01
+
+$mean
+[1] 45.63
+
+> 
+> calc_analytic_css(
++   chem.name='Bisphenol-A',
++   tissue='liver',
++   species='rabbit',
++   parameterize.args = list(
++     default.to.human=T,
++     adjusted.Funbound.plasma=T,
++     regression=T,
++     minimum.Funbound.plasma=1e-4),
++   daily.dose=2)
+Tissue concentration for liver returned in uM units.
+[1] 23.62
+> 
+> predict_partitioning_schmitt(chem.name='nicotine')
+$Kadipose2pu
+[1] 1.112
+
+$Kbone2pu
+[1] 1.349
+
+$Kbrain2pu
+[1] 2.626
+
+$Kgut2pu
+[1] 3.831
+
+$Kheart2pu
+[1] 2.943
+
+$Kkidney2pu
+[1] 5.885
+
+$Kliver2pu
+[1] 6.172
+
+$Klung2pu
+[1] 5.451
+
+$Kmuscle2pu
+[1] 2.926
+
+$Kskin2pu
+[1] 3.23
+
+$Kspleen2pu
+[1] 2.673
+
+$Krbc2pu
+[1] 1.259
+
+$Krest2pu
+[1] 3.472
+
+> 
+> quit("no")
