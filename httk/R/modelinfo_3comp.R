@@ -29,7 +29,8 @@ model.list[["3compartment"]]$alltissues=c(
   "muscle", 
   "skin",            
   "spleen",          
-  "red blood cells")
+  "red blood cells",
+  "rest")
 
 # Which tissues from tissue.data are not lumped together when forming
 # the model: 3 compartment model has only liver and gut compartments; 
