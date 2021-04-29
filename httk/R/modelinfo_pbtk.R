@@ -35,7 +35,7 @@ model.list[["pbtk"]]$alltissues=c(
   "skin",            
   "spleen",          
   "red blood cells",
-  "thyroid")
+  "rest")
 
 
 # How the tissues from tissue.data are lumped together to form the model:
