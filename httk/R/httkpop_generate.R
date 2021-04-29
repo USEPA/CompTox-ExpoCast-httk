@@ -53,6 +53,8 @@ if (getRversion() >= "2.15.1") {
 #' Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 #' all races and ethnicities in their proportions in the NHANES data.
 #' User-supplied vector must contain one or more of these strings.
+#' @param gfr_resid_var TRUE to add residual variability to GFR predicted from serum creatinine; FALSE to not add residual variability
+#' @param ckd_epi_race_coeff TRUE to use the CKD-EPI equation as originally published (with a coefficient changing predicted GFR for individuals identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.
 #' @return A data.table where each row represents an individual, and each
 #' column represents a demographic, anthropometric, or physiological parameter.
 #'
@@ -91,7 +93,7 @@ if (getRversion() >= "2.15.1") {
 #' 
 #' 
 #' @export httkpop_generate
-httkpop_generate <- function(method,
+httkpop_generate <- function(method="direct resampling",
                              nsamp=NULL,
                              gendernum=NULL,
                              agelim_years=NULL, 
@@ -107,7 +109,9 @@ httkpop_generate <- function(method,
                                      'Other Hispanic',
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
-                                     'Other')){
+                                     'Other'),
+                             gfr_resid_var = TRUE,
+                             ckd_epi_race_coeff = FALSE){
 
 # Error checking:
   if (is.null(method)) stop(
@@ -289,7 +293,9 @@ resampling\" (\"dr\" or \"d\").")
                                       agelim_months=agelim_months,
                                       weight_category=weight_category, 
                                       gfr_category=gfr_category,
-                                      reths=reths)
+                                      reths=reths,
+                                      gfr_resid_var = gfr_resid_var,
+                                      ckd_epi_race_coeff = ckd_epi_race_coeff)
   } else if (method == 'direct resampling'){
     indiv_dt <- httkpop_direct_resample(nsamp=nsamp,
                                         gendernum=gendernum,
@@ -297,7 +303,9 @@ resampling\" (\"dr\" or \"d\").")
                                         agelim_months=agelim_months,
                                         weight_category=weight_category, 
                                         gfr_category=gfr_category,
-                                        reths=reths)
+                                        reths=reths,
+                                        gfr_resid_var = gfr_resid_var,
+                                        ckd_epi_race_coeff = ckd_epi_race_coeff)
   }
   return(indiv_dt)
 }
