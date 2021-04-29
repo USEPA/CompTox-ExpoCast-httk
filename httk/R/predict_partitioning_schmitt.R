@@ -217,9 +217,11 @@ predict_partitioning_schmitt <- function(
     # Fup Parameter estimates are now added to `pearce2017regression`.
     if (adjusted.Funbound.plasma)
     {
-      reg <- pearce2017regression[,grep(colnames(pearce2017regression),pattern = "adj")]
+      reg <- httk::pearce2017regression[,
+        grep(colnames(pearce2017regression),pattern = "adj")]
     } else {
-      reg <- pearce2017regression[,-grep(colnames(pearce2017regression),pattern = "adj")]
+      reg <- httk::pearce2017regression[,
+        -grep(colnames(pearce2017regression),pattern = "adj")]
     }
     colnames(reg) <- c('intercept','slope')      
   }
