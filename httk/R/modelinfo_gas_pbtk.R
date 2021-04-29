@@ -25,7 +25,8 @@ model.list[["gas_pbtk"]]$alltissues=c(
   "muscle", 
   "skin",            
   "spleen",          
-  "red blood cells")  
+  "red blood cells",
+  "rest")  
 
 # Which tissues from tissue.data are not lumped together when forming
 # the model: The gas PBTK model has liver, kidney, gut, and lung compartments 
@@ -257,9 +258,9 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Ckidney"="uM",
                                           "Cplasma"="uM",
                                           "Aplasma"="umol",
-                                          "Calv"="ppmv",
-                                          "Cendexh"="ppmv",
-                                          "Cmixexh"="ppmv",
+                                          "Calv"="uM",
+                                          "Cendexh"="uM",
+                                          "Cmixexh"="uM",
                                           "Cmuc"="uM",
                                           "AUC"="uM*days")
 
