@@ -86,7 +86,7 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [5,] 1.156e+00 0.058500    1.191e+01 0.018610
 [6,] 1.250e+00 0.110100    1.883e+01 0.031270
 > 
-> parameterize_pbtk(chem.name="Aminopterin")
+> parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
 $BW
 [1] 70
 
