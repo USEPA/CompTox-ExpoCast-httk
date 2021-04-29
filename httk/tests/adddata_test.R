@@ -31,14 +31,14 @@ chem.physical_and_invitro.data <- add_chemtable(
 
 calc_css(chem.name="Tester")
 
-load_sipes2017()
+#load_sipes2017()
 
 # We should have the ADMet Predicted chemicals from Sipes et al. (2017),
-# this one is a good test since the logP is nearly 10!
+## this one is a good test since the logP is nearly 10!
 calc_css(chem.cas="26040-51-7")
 
 #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
-length(get_cheminfo())
+#length(get_cheminfo())
 
 #Now let's reset
 reset_httk()
