@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -60,36 +62,14 @@ $the.day
 [1] 26
 
 > 
-> load_sipes2017()
-Loading predictions from Sipes et al. (2017) for 8758 chemicals.
-Existing data are not being overwritten.
-Please wait...
+> #load_sipes2017()
 > 
 > # We should have the ADMet Predicted chemicals from Sipes et al. (2017),
-> # this one is a good test since the logP is nearly 10!
+> ## this one is a good test since the logP is nearly 10!
 > calc_css(chem.cas="26040-51-7")
-$avg
-[1] 0.0265
+Error in parameterize_pbtk(chem.cas = "26040-51-7", chem.name = NULL,  : 
+  Missing metabolic clearance data for given species.
 
-$frac
-[1] 0.195
-
-$max
-[1] 0.04098
-
-$the.day
-[1] 21
-
-> 
-> #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
-> length(get_cheminfo())
-[1] 8800
-> 
-> #Now let's reset
-> reset_httk()
-> 
-> # We should be back to our original number:
-> num.chems == length(get_cheminfo())
-[1] TRUE
-> 
-> quit("no")
+Set default.to.human to true to substitute human value.
+Calls: calc_css -> do.call -> parameterize_pbtk
+Execution halted
