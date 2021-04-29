@@ -15,7 +15,7 @@ Changes in version 2.0.4 (April 27, 2021)
   Added function calc_halflife (thank you Imran Shah for idea)
   Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
   Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
-  Internal function convert_units() added to ensure consistency in unit conversions
+  Internal function convert_units() added to ensure consistency in unit conversions -- units corrected for gas_pbtk model
   Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
   
 Changes in version 2.0.3 (August 16, 2020)
