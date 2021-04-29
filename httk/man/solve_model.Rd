@@ -79,7 +79,7 @@ those specified for the model outputs. Default values are zero.}
 \item{monitor.vars}{Which variables are returned as a function of time. 
 Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 
 \item{species}{Species desired (models have been designed to be
 parameterized for some subset of the following species: "Rat", "Rabbit", 
