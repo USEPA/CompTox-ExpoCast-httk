@@ -84,11 +84,13 @@ This function initializes the parameters needed in the function solve_1comp.
 \examples{
 
  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
+\dontrun{
  parameters <- parameterize_1comp(chem.cas='80-05-7',
                                   restrictive.clearance=FALSE,
                                   species='rabbit',
                                   default.to.human=TRUE)
  out <- solve_1comp(parameters=parameters)
+} 
 
 }
 \references{

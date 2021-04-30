@@ -77,6 +77,7 @@ model.list <- list()
 #'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
 #'                  model='3compartment',concentration='blood')
 #' 
+#' \dontrun{
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
 #'                  parameterize.args = list(
 #'                                 default.to.human=TRUE,
@@ -91,6 +92,7 @@ model.list <- list()
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
+#' }
 #'
 #'@author Robert Pearce, John Wambaugh, and Greg Honda
 #'
