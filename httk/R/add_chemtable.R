@@ -343,6 +343,7 @@ augment.table <- function(
 #' @author John Wambaugh
 #' @examples
 #' 
+#' \dontrun{
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
@@ -368,6 +369,7 @@ augment.table <- function(
 #'                                   reference="MyPaper 2015")
 #' parameterize_steadystate(chem.name="C")  
 #' calc_css(chem.name="B")                                
+#' }
 #' 
 #' @export add_chemtable
 add_chemtable <- function(

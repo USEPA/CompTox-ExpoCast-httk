@@ -37,12 +37,12 @@ calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 #
 #
 # Now test that MC works across different models:
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+#set.seed(1234)
+#calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+#set.seed(1234)
+#calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
+#set.seed(1234)
+#calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 
 #
 #
