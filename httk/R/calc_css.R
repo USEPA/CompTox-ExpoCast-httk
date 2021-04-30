@@ -64,6 +64,7 @@
 #' @examples
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
+#' \dontrun{
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
@@ -74,8 +75,8 @@
 #'   daily.dose=1,
 #'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
+#' 
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
-#' \dontrun{
 #' library("ggplot2")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
 #' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
