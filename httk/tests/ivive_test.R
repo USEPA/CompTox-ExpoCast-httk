@@ -1,6 +1,6 @@
 #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 library(httk)
-#options(warn=-1)
+
 NSAMP <- 10
 
 # From Honda et al. (2019) (currently only use mean conc's because steady-state 

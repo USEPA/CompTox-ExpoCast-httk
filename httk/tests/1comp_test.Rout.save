@@ -19,7 +19,6 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 > library(httk)
-> #options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
