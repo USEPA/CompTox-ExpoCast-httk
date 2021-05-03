@@ -18,55 +18,12 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
-> library(httk)
+> #library(httk)
 > options(warn=-1)
 > 
 > #calc_css(chem.name='nicotine')
 > 
 > calc_css(chem.name="endrin")
-$avg
-[1] 1000
-
-$frac
-[1] 0.9898
-
-$max
-[1] 1076
-
-$the.day
-[1] 1214
-
-> 
-> #calc_stats(chem.name='nicotine',days=10)
-> 
-> #calc_stats(chem.name='nicotine',days=1)
-> 
-> calc_stats(dtxsid="DTXSID0020442",days=10)
-Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
-$AUC
-[1] 168.5
-
-$peak
-[1] 28.49
-
-$mean
-[1] 16.85
-
-> 
-> #calc_stats(dtxsid="DTXSID0020442",days=100)
-> 
-> #calc_analytic_css(
-> #  chem.name='Bisphenol-A',
-> #  tissue='liver',
-> #  species='rabbit',
-> #  parameterize.args = list(
-> #    default.to.human=T,
-> #    adjusted.Funbound.plasma=T,
-> #    regression=T,
-> #    minimum.Funbound.plasma=1e-4),
-> #  daily.dose=2)
-> 
-> 
-> 
-> quit("no")
+Error in calc_css(chem.name = "endrin") : 
+  could not find function "calc_css"
+Execution halted
