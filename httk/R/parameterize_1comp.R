@@ -63,13 +63,11 @@
 #' @examples
 #' 
 #'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
-#' \donttest{
 #'  parameters <- parameterize_1comp(chem.cas='80-05-7',
 #'                                   restrictive.clearance=FALSE,
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
 #'  out <- solve_1comp(parameters=parameters)
-#' } 
 #'
 #' @export parameterize_1comp
 parameterize_1comp <- function(

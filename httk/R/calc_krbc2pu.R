@@ -17,6 +17,9 @@
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'
+#' @return
+#' The red blood cell to unbound chemical in plasma partition coefficient.
+#'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 

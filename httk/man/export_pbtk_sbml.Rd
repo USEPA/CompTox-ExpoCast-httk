@@ -27,6 +27,9 @@ export_pbtk_sbml(
 
 \item{digits}{Desired number of decimal places to round the parameters.}
 }
+\value{
+Text describing the PBTK model in SBML.
+}
 \description{
 This function exports the multiple compartment PBTK model to an sbml file.
 }

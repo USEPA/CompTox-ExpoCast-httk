@@ -91,6 +91,18 @@
 #'
 #' @keywords Monte-Carlo dynamic simulation
 #'
+#' @return
+#' If return.all.sims == FALSE (default) a list with:
+#' \item{means}{The mean concentration for each model compartment as a function
+#' of time across the Monte Carlo simulation}
+#' \item{sds}{The standard deviation for each model compartment as a function
+#' of time across the Monte Carlo simulation}
+#'
+#' If return.all.sums == TRUE then a list is returned with:
+#' \item{stats}{The list of means and sds from return.all.sums=FALSE}
+#' \item{sims}{The concentration vs. time results for each compartment for 
+#' every (samples) set of parameters in the Monte Carlo simulation}
+#'
 #' @examples
 #' 
 #' \donttest{

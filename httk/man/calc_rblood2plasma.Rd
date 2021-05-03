@@ -52,6 +52,9 @@ adjustment.}
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
 }
+\value{
+The blood to plasma chemical concentration ratio
+}
 \description{
 This function calculates the constant ratio of the blood concentration to
 the plasma concentration.

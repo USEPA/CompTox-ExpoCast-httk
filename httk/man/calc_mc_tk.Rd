@@ -119,6 +119,18 @@ parameterize_* function for the model.}
 \item{return.all.sims}{Logical indicating whether to return the results
 of all simulations, in addition to the default toxicokinetic statistics}
 }
+\value{
+If return.all.sims == FALSE (default) a list with:
+\item{means}{The mean concentration for each model compartment as a function
+of time across the Monte Carlo simulation}
+\item{sds}{The standard deviation for each model compartment as a function
+of time across the Monte Carlo simulation}
+
+If return.all.sums == TRUE then a list is returned with:
+\item{stats}{The list of means and sds from return.all.sums=FALSE}
+\item{sims}{The concentration vs. time results for each compartment for 
+every (samples) set of parameters in the Monte Carlo simulation}
+}
 \description{
 This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).

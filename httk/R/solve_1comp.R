@@ -21,8 +21,6 @@
 #' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 #' Compartment Model Schematic"}}
 #' 
-#' 
-#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -86,10 +84,8 @@
 #' @examples
 #' 
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
-#' \donttest{
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
-#' }
 #'
 #' @export solve_1comp
 #' @useDynLib httk
