@@ -94,28 +94,51 @@
 #'
 #' @examples
 #' 
-#' solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
-#'
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
-#'                   initial.values=c(Agut=200))
-#'
-#' params <- parameterize_pbtk(chem.cas="80-05-7")
-#' solve_pbtk(parameters=params)
-#'                   
-#' \donttest{
-#' parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-#' parameters["Funbound.plasma"] <- 0.1
-#' out <- solve_pbtk(parameters=parameters)
+#' # Multiple doses per day:
+#' head(solve_pbtk(
+#'   chem.name='Bisphenol-A',
+#'   daily.dose=.5,
+#'   days=5,
+#'   doses.per.day=2,
+#'   tsteps=2))
 #' 
-#' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' # Starting with an initial concentration:
+#' out <- solve_pbtk(
+#'   chem.name='bisphenola',
+#'   dose=0,
+#'   output.units="mg/L", 
+#'   initial.values=c(Agut=200))
+#'
+#' # Working with parameters (rather than having solve_pbtk retrieve them):
+#' params <- parameterize_pbtk(chem.cas="80-05-7")
+#' head(solve_pbtk(parameters=params))
+#'                   
+#' # We can change the parameters given to us by parameterize_pbtk:
+#' params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
+#' params["Funbound.plasma"] <- 0.1
+#' out <- solve_pbtk(parameters=params)
+#' 
+#' \dontrun{
+#' # A fifty day simulation:
+#' out <- solve_pbtk(
+#'   chem.name = "Bisphenol A", 
+#'   days = 50, 
+#'   daily.dose=1,
+#'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
-#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-#' element_text(size = 16), plot.title = element_text(size = 17)) +
-#' ggtitle("Bisphenol A")
+#' 
+#' library("ggplot2")
+#' c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) + 
+#'   geom_line() +
+#'   geom_hline(yintercept = css) + 
+#'   ylab("Plasma Concentration (uM)") +
+#'   xlab("Day") + 
+#'   theme(
+#'     axis.text = element_text(size = 16), 
+#'     axis.title = element_text(size = 16), 
+#'     plot.title = element_text(size = 17)) +
+#'   ggtitle("Bisphenol A")
 #' print(c.vs.t)
 #' }
 #' 
