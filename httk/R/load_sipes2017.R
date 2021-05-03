@@ -21,7 +21,7 @@
 #' Science & Technology 51.18 (2017): 10786-10796.
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' chem.physical_and_invitro.data <- load_sipes2017()
 #' chem.physical_and_invitro.data <- load_sipes2017(overwrite=T) 
 #' }                        

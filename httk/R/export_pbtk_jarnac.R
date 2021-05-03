@@ -25,7 +25,7 @@
 #' @keywords Export
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' export_pbtk_jarnac(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.jan')
 #' }
 #' 

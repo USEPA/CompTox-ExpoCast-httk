@@ -66,7 +66,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' #Simply generate a virtual population of 100 individuals,
 #'  #using the direct-resampling method
 #'  set.seed(42)

@@ -86,7 +86,7 @@
 #' @examples
 #' 
 #' solve_1comp(chem.name='Bisphenol-A',days=1)
-#' \dontrun{
+#' \donttest{
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
 #' }

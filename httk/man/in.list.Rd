@@ -62,7 +62,7 @@ individuals. (CDC, 2014)
 }
 \examples{
 
-\dontrun{
+\donttest{
 httk.table <- get_cheminfo(info=c("CAS","Compound"))
 httk.table[,"Rat"] <- ""
 httk.table[,"NHANES"] <- ""

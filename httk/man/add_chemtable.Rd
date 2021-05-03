@@ -65,7 +65,7 @@ modeled.
 }
 \examples{
 
-\dontrun{
+\donttest{
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
                      stringsAsFactors=FALSE))
