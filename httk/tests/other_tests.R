@@ -1,5 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
-library(httk)
+#library(httk)
 options(warn=-1)
 
 #calc_css(chem.name='nicotine')
