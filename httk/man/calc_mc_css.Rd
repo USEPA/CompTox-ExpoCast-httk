@@ -152,7 +152,7 @@ used by this function.
 }
 \examples{
 
-\dontrun{
+\donttest{
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)

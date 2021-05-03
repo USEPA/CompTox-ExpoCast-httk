@@ -42,7 +42,7 @@ toxicokinetic models.
 \examples{
 
 #Example from Pearce et al. (2017):
-\dontrun{
+\donttest{
 library(ggplot2)
 library(scales)
 vary.params <- NULL

@@ -59,7 +59,7 @@
 #' https://www.cdc.gov/nchs/nhanes.htm.
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' httk.table <- get_cheminfo(info=c("CAS","Compound"))
 #' httk.table[,"Rat"] <- ""
 #' httk.table[,"NHANES"] <- ""
@@ -189,7 +189,7 @@ is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list 
 #' https://www.cdc.gov/nchs/nhanes.htm.
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' httk.table <- get_cheminfo(info=c("CAS","Compound"))
 #' httk.table[,"Rat"] <- ""
 #' httk.table[,"NHANES"] <- ""
