@@ -120,6 +120,10 @@ parameterize_* function for the model.}
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
 }
+\value{
+Quantiles (specified by which.quantile) of the distribution of plasma
+steady-stae concentration (Css) from the Monte Carlo simulation
+}
 \description{
 This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).

@@ -30,6 +30,10 @@
 #' @param suppress.messages Whether or not to display relevant warning messages
 #' to user.
 #' 
+#' @return
+#' The blood to plasma chemical concentration ratio -- measured if available,
+#' calculated if not.
+#'
 #' @author Robert Pearce
 #' 
 #' @keywords Parameter

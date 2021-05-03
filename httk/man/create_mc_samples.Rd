@@ -116,6 +116,11 @@ associated in vitro uncertainty and variability propagation function}
 \item{parameterize.arg.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
 }
+\value{
+A data table where each column corresponds to parameters needed for the 
+specified model and each row represents a different Monte Carlo sample of
+parameter values.
+}
 \description{
 This function creates a data table of draws of parameter values for use with 
 Monte Carlo methods
