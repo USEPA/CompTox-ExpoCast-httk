@@ -32,6 +32,9 @@ default "Human").}
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
 }
+\value{
+The red blood cell to unbound chemical in plasma partition coefficient.
+}
 \description{
 Given and observed ratio of chemial concentration in blood to plasma, this
 function calculates a Red Blood Cell to unbound plasma (Krbc2pu) partition

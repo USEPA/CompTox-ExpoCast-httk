@@ -32,6 +32,10 @@ adjustment if calculating Rblood2plasma.}
 \item{suppress.messages}{Whether or not to display relevant warning messages
 to user.}
 }
+\value{
+The blood to plasma chemical concentration ratio -- measured if available,
+calculated if not.
+}
 \description{
 This function finds the best available constant ratio of the blood
 concentration to the plasma concentration, using get_rblood2plasma and

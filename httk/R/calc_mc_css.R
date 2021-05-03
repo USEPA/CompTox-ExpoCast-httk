@@ -105,6 +105,10 @@
 #'
 #' @keywords Monte-Carlo Steady-State
 #'
+#' @return
+#' Quantiles (specified by which.quantile) of the distribution of plasma
+#' steady-stae concentration (Css) from the Monte Carlo simulation
+#'
 #' @examples
 #' 
 #' \donttest{

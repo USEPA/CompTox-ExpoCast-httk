@@ -62,6 +62,12 @@
 #' associated in vitro uncertainty and variability propagation function
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
+#'
+#' @return
+#' A data table where each column corresponds to parameters needed for the 
+#' specified model and each row represents a different Monte Carlo sample of
+#' parameter values.
+#'
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
 #'
 #' @references 

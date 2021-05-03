@@ -27,6 +27,9 @@ export_pbtk_jarnac(
 
 \item{digits}{Desired number of decimal places to round the parameters.}
 }
+\value{
+Text containing a Jarnac language version of the PBTK model.
+}
 \description{
 This function exports the multiple compartment PBTK model to a jarnac file.
 }

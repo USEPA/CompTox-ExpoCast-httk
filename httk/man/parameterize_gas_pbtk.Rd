@@ -154,7 +154,6 @@ This function initializes the parameters needed in the function solve_gas_pbtk
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 
-\donttest{
 parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
 parameterize_gas_pbtk(chem.cas = '56-23-5')
@@ -166,7 +165,7 @@ compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
-}
+
 }
 \references{
 Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
