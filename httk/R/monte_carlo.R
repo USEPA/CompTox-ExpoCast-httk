@@ -86,9 +86,9 @@
 #'                                        censored.params=censored.params,
 #'                                        output.units="mg/L",
 #'                                        model='3compartmentss',
-#'                                        suppress.messages=T,
-#'                                        well.stirred.correction=F,
-#'                                        Funbound.plasma.correction=F)
+#'                                        suppress.messages=TRUE,
+#'                                        well.stirred.correction=FALSE,
+#'                                        Funbound.plasma.correction=FALSE)
 #'     percentiles <- c("5","50","95")
 #'     for (this.index in 1:3)
 #'     {
@@ -101,7 +101,7 @@
 #'                                                 "Human.Clint.pValue"]<0.05))
 #'       colnames(this.row) <- c("Wetmore", "Predicted", "Percentile", "Species",
 #'                               "CAS", "Systematic")
-#'       if (is.na(this.row["Systematic"])) this.row["Systematic"] <- F
+#'       if (is.na(this.row["Systematic"])) this.row["Systematic"] <- FALSE
 #'       Wetmore.table <- Wetmore.table <- rbind(Wetmore.table,this.row)
 #'     }
 #'   }
@@ -122,10 +122,12 @@
 #'   geom_point(aes(colour=factor(Percentile),shape=factor(Percentile))) +
 #'   scale_colour_discrete(name="Percentile") +
 #'   scale_shape_manual(name="Percentile", values=c("5"=21, "50"=22,"95"=24)) +
-#'   scale_x_log10(expression(paste(C[ss]," Predicted (mg/L) with Refined Assumptions")),
-#'                 label=scientific_10) + 
-#'   scale_y_log10(expression(paste(C[ss]," Wetmore ",italic("et al.")," (2012) (mg/L)")),
-#'                 label=scientific_10) +
+#'   scale_x_log10(
+#'     expression(paste(C[ss]," Predicted (mg/L) with Refined Assumptions")),
+#'     label=scientific_10) + 
+#'   scale_y_log10(
+#'     expression(paste(C[ss]," Wetmore ",italic("et al.")," (2012) (mg/L)")),
+#'     label=scientific_10) +
 #'   geom_abline(intercept = 0, slope = 1,linetype="dashed")+
 #'   theme_bw()+
 #'   theme(legend.position="bottom", text  = element_text(size=18))
