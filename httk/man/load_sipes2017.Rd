@@ -26,14 +26,6 @@ This function returns an updated version of chem.physical_and_invitro.data
 that includes data predicted with Simulations Plus' ADMET predictor that was
 used in Sipes et al. 2017, included in admet.data.
 }
-\examples{
-
-\donttest{
-chem.physical_and_invitro.data <- load_sipes2017()
-chem.physical_and_invitro.data <- load_sipes2017(overwrite=T) 
-}                        
-
-}
 \references{
 Sipes, Nisha S., et al. "An intuitive approach for predicting
 potential human health risk with the Tox21 10k library." Environmental
