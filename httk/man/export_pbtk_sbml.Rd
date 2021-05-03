@@ -40,7 +40,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-\dontrun{
+\donttest{
 export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
 }
 

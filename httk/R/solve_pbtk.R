@@ -102,7 +102,7 @@
 #' params <- parameterize_pbtk(chem.cas="80-05-7")
 #' solve_pbtk(parameters=params)
 #'                   
-#' \dontrun{
+#' \donttest{
 #' parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
 #' parameters["Funbound.plasma"] <- 0.1
 #' out <- solve_pbtk(parameters=parameters)

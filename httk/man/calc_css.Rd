@@ -111,7 +111,7 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-\dontrun{
+\donttest{
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
@@ -135,7 +135,7 @@ print(c.vs.t)
 }
 
 # Make a plot for all chemicals (takes a while):
-\dontrun{
+\donttest{
 days <- NULL
 avg <- NULL
 max <- NULL

@@ -120,7 +120,7 @@
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 #' 
-#' \dontrun{
+#' \donttest{
 #' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
 #' parameterize_gas_pbtk(chem.cas = '56-23-5')
