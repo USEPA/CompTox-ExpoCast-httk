@@ -108,10 +108,12 @@
 #' }
 #' 
 #' scientific_10 <- function(x) {
+#'\dontrun{
 #'   out <- gsub("1e", "10^", scientific_format()(x))
 #'   out <- gsub("\+","",out)
 #'   out <- gsub("10\^01","10",out)
 #'   out <- parse(text=gsub("10\^00","1",out))
+#'}
 #' }
 #' 
 #' 
@@ -131,10 +133,10 @@
 #' print(Fig1)
 #' 
 #' Fig1a.fit <- lm(log(Wetmore) ~ log(Predicted)*Percentile, Wetmore.table)
-#' ## End(**Not run**)
 #' }
 #' 
 #' @import stats data.table
+#' 
 #' @export monte_carlo
 monte_carlo <- function(
                  parameters,
