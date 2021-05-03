@@ -111,18 +111,18 @@ end of the simulation.
 \examples{
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
-\donttest{
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
 calc_css(parameters=parms,model='3compartment')
 
 out <- solve_pbtk(chem.name = "Bisphenol A",
-  days = 50, 
+  days = 50,                                   
   daily.dose=1,
   doses.per.day = 3)
 plot.data <- as.data.frame(out)
 
+\dontrun{
 css <- calc_analytic_css(chem.name = "Bisphenol A")
 library("ggplot2")
 c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
@@ -132,15 +132,17 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
-}
 
 # Make a plot for all chemicals (takes a while):
-\donttest{
 days <- NULL
 avg <- NULL
 max <- NULL
-for(this.cas in get_cheminfo(model="pbtk")){
-  css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+for(this.cas in get_cheminfo(model="pbtk"))
+{
+  css.info <- calc_css(
+    chem.cas = this.cas, 
+    doses.per.day = 1,
+    suppress.messages=TRUE)
   days[[this.cas]] <- css.info[["the.day"]]
   avg[[this.cas]] <- css.info[["avg"]]
   max[[this.cas]] <- css.info[["max"]]
