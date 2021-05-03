@@ -4,7 +4,9 @@ Changes in version 2.0.4 (April 27, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
   Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
   Added Xiaoqing Chang and Shannon Bell as contributors thanks to substantial efforts improving the package
-  
+  Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
+  Revised documentation to several functions missing value description (thank you Julia Haider)
+
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
     Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
