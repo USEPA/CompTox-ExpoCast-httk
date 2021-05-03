@@ -26,6 +26,27 @@ This function returns an updated version of chem.physical_and_invitro.data
 that includes data predicted with Simulations Plus' ADMET predictor that was
 used in Sipes et al. 2017, included in admet.data.
 }
+\examples{
+
+\dontrun{
+num.chems <- length(get_cheminfo())
+load_sipes2017()
+
+#We should have the ADMet Predicted chemicals from Sipes et al. (2017),
+#this one is a good test since the logP is nearly 10
+calc_css(chem.cas="26040-51-7")
+
+#Let's see how many chemicals we have now with the Sipes (2017) data loaded:
+length(get_cheminfo())
+
+Now let us reset
+reset_httk()
+
+# We should be back to our original number:
+num.chems == length(get_cheminfo())
+}                        
+
+}
 \references{
 Sipes, Nisha S., et al. "An intuitive approach for predicting
 potential human health risk with the Tox21 10k library." Environmental
