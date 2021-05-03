@@ -63,7 +63,7 @@
 #' @examples
 #' 
 #'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
-#' \dontrun{
+#' \donttest{
 #'  parameters <- parameterize_1comp(chem.cas='80-05-7',
 #'                                   restrictive.clearance=FALSE,
 #'                                   species='rabbit',

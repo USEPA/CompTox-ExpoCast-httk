@@ -144,7 +144,7 @@
 #' 
 #' solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
 #' 
-#' \dontrun{
+#' \donttest{
 #' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
 #' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
 #' 

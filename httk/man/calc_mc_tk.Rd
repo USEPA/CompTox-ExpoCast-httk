@@ -151,7 +151,7 @@ used by this function.
 }
 \examples{
 
-\dontrun{
+\donttest{
 chemname="Abamectin"
 times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
 age.ranges <- seq(6,80,by=10)

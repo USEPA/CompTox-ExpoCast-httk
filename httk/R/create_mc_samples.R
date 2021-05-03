@@ -76,7 +76,7 @@
 #' 
 #' @examples 
 #' 
-#' \dontrun{
+#' \donttest{
 #' sample_set = create_mc_samples(chem.name = 'bisphenol a')
 #' }
 #'

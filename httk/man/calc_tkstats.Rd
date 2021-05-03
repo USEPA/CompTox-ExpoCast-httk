@@ -107,7 +107,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
 
-\dontrun{
+\donttest{
 calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
 
 # If you do not specify a chemical, calc_tkstats runs for all chemicals:

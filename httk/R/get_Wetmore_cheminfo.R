@@ -38,7 +38,7 @@
 #' @examples
 #' 
 #' 
-#' \dontrun{
+#' \donttest{
 #' get_lit_cheminfo()
 #' get_lit_cheminfo(info=c('CAS','MW'))
 #' }
