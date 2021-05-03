@@ -1,6 +1,6 @@
 #R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
 library(httk)
-options(warn=-1)
+#options(warn=-1)
 
 # Number of chemicals distributed with the package:
 num.chems <- length(get_cheminfo())
