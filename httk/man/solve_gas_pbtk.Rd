@@ -200,6 +200,12 @@ the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
+Model Figure 
+\if{html}{\figure{gas_pbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
+Model Schematic"}}
+\if{latex}{\figure{gas_pbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
+Model Schematic"}}
+
 Model parameters are named according to the following convention:\tabular{lrrrr}{
 prefix \tab suffic \tab Meaning \tab units \cr
 K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
