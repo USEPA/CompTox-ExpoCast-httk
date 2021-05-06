@@ -200,7 +200,7 @@ the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
-Model Figure 
+Model Figure from \insertCite{linakis2020development}{httk}:
 \if{html}{\figure{gas_pbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
 Model Schematic"}}
 \if{latex}{\figure{gas_pbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
@@ -232,11 +232,9 @@ solve_gas_pbtk(parameters=params)
 
 }
 \references{
-Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-Inhalation Model for Organic Chemicals", submitted
+\insertRef{linakis2020development}{httk}
 
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \author{
 Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
