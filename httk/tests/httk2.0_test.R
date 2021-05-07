@@ -17,7 +17,7 @@ solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
   daily.dose=NULL,
   dosing.matrix=dm))[190:201,]
   
-#head(solve_pbtk(chem.name="Terbufos",iv.dose=T))
+#head(solve_pbtk(chem.name="Terbufos",iv.dose=TRUE))
 #
 #solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
 #  initial.dose =NULL,
@@ -34,12 +34,12 @@ solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
 #calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
 
 #head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
-#head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
+#head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 solve_1comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 solve_1comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 #
 #head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
-#head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
+#head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 #solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 #solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 
