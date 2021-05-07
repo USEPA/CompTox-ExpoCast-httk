@@ -916,7 +916,7 @@ High throughput risk-based prioritization can be conducted by using doses predic
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
 # 
 # # Load the ACC table into an object Tox21.acc:
-# Tox21.acc <- read.csv("INVITRODB_V2_LEVEL5/EXPORT_LVL5&6_ASID7_TOX21_151020.csv",stringsAsFactors=F)
+# Tox21.acc <- read.csv("INVITRODB_V2_LEVEL5/EXPORT_LVL5&6_ASID7_TOX21_151020.csv",stringsAsFactors=FALSE)
 # # Subset to the chemicals of interest:
 # Tox21.acc <- subset(Tox21.acc,casn%in%Fig1.table$CAS)
 # # We only need hits:
@@ -1075,7 +1075,7 @@ Fig7c <- ggplot() +
 #dev.new(width=10,height=6)
 multiplot(Fig7a,Fig7c,cols=1,heights=c(0.5,0.5))
 
-write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("SupTable5-",Sys.Date(),".txt",sep=""),row.names=F)
+write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("SupTable5-",Sys.Date(),".txt",sep=""),row.names=FALSE)
 ```
 
 #Final statistics:

@@ -89,11 +89,11 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                          chem.cas=NULL,
                                          dtxsid=NULL,
                                          species='Human',
-                                         default.to.human=F,
+                                         default.to.human=FALSE,
                                          parameters=NULL,
                                          alpha=0.001,
-                                         adjusted.Funbound.plasma=T,
-                                         regression=T,
+                                         adjusted.Funbound.plasma=TRUE,
+                                         regression=TRUE,
                                          regression.list=c('brain',
                                                            'adipose',
                                                            'gut',
@@ -107,7 +107,7 @@ predict_partitioning_schmitt <- function(chem.name=NULL,
                                                            'bone'),
                                          tissues=NULL,
                                          minimum.Funbound.plasma=0.0001,
-                                         suppress.messages=F) 
+                                         suppress.messages=FALSE) 
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -199,7 +199,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
                       -0.09, 0.566, # skin
                       0.034, 0.765, # spleen
                       0.036, 0.781), # bone
-                      12,2,byrow=T)
+                      12,2,byrow=TRUE)
     } else {
       reg <- matrix(c(-0.117,0.377, # brain
                       -0.324,0.544, # adipose
@@ -213,7 +213,7 @@ for(this.comp in c('Fcell','Fint','FWc','FLc','FPc','Fn_Lc','Fn_PLc','Fa_PLc','p
                       -0.086, 0.498, # skin
                       0.011, 0.675, # spleen
                       0.025, 0.758), # bone
-                      12,2,byrow=T)
+                      12,2,byrow=TRUE)
 
     }
     rownames(reg) <- c('brain','adipose','red blood cells','gut','heart',
