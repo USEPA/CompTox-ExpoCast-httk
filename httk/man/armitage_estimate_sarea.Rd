@@ -16,7 +16,7 @@ armitage_estimate_sarea(
 optionally include v_working, sarea, option.bottom, and option.plastic}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==T}
+if is.na(tcdata)==TRUE}
 
 \item{this.cell_yield}{For single value, optionally supply cell_yield,
 otherwise estimated based on well number}
