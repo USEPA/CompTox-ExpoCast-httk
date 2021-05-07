@@ -24,6 +24,14 @@ overrides chem.name and chem.cas.}
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
 }
+\value{
+A list of numeric values for doses converted to output.units, potentially
+(depending on argument dosing) including:
+\item{initial.dose}{The first dose given}
+\item{dosing.matrix}{A 2xN matrix where the first column is dose time and
+the second is dose amount for N doses}
+\item{daily.dose}{The total cumulative daily dose}
+}
 \description{
 This function transforms the dose (in mg/kg) into the appropriate units. It
 handles single doses, matrices of doses, or daily repeated doses at varying

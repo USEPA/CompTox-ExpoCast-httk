@@ -13,10 +13,10 @@ calc_rblood2plasma(
   hematocrit = NULL,
   Krbc2pu = NULL,
   Funbound.plasma = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  adjusted.Funbound.plasma = T,
-  suppress.messages = T
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = TRUE
 )
 }
 \arguments{

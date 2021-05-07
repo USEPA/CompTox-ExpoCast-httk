@@ -4,7 +4,7 @@
 \alias{load_sipes2017}
 \title{Load data from Sipes et al 2017.}
 \usage{
-load_sipes2017(overwrite = F, target.env = .GlobalEnv)
+load_sipes2017(overwrite = FALSE, target.env = .GlobalEnv)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
