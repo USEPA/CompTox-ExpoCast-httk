@@ -75,7 +75,6 @@
 #'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' 
-#' \donttest{
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
 #' library("ggplot2")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
@@ -85,36 +84,6 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
-#' 
-#' # Make a plot for all chemicals (takes a while):
-#' days <- NULL
-#' avg <- NULL
-#' max <- NULL
-#' for(this.cas in get_cheminfo(model="pbtk"))
-#' {
-#'   css.info <- suppressWarnings(calc_css(
-#'     chem.cas = this.cas, 
-#'     doses.per.day = 1,
-#'     suppress.messages=TRUE))
-#'   days[[this.cas]] <- css.info[["the.day"]]
-#'   avg[[this.cas]] <- css.info[["avg"]]
-#'   max[[this.cas]] <- css.info[["max"]]
-#' }
-#' days.data <- as.data.frame(days)
-#' hist <- ggplot(days.data, aes(days)) +
-#' geom_histogram(fill = "blue", binwidth = 1/6) + scale_x_log10() +
-#' ylab("Number of Chemicals") + xlab("Days") + theme(axis.text =
-#' element_text(size = 16), axis.title = element_text(size = 16))
-#' print(hist)
-#' avg.max.data <- as.data.frame(cbind(avg, max))
-#' avg.vs.max <- ggplot(avg.max.data, aes(avg, max)) + geom_point() +
-#' geom_abline() + scale_x_log10() + scale_y_log10() +
-#' xlab("Average Concentration at Steady State (uM)") +
-#' ylab("Max Concentration at Steady State (uM)") +
-#' theme(axis.text = element_text(size = 16),
-#' axis.title = element_text(size = 16))
-#' print(avg.vs.max)
-#' }
 #' 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,
