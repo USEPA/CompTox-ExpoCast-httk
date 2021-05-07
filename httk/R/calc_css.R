@@ -75,7 +75,7 @@
 #'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' 
-#' \dontrun{
+#' \donttest{
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
 #' library("ggplot2")
 #' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +

@@ -118,7 +118,7 @@
 #' params["Funbound.plasma"] <- 0.1
 #' out <- solve_pbtk(parameters=params)
 #' 
-#' \dontrun{
+#' \donttest{
 #' # A fifty day simulation:
 #' out <- solve_pbtk(
 #'   chem.name = "Bisphenol A", 
