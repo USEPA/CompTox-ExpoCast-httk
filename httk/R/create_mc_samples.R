@@ -241,7 +241,7 @@ create_mc_samples <- function(chem.cas=NULL,
 #
 #
 
-  if (httkpop==T & tolower(species)=="human")
+  if (httkpop==TRUE & tolower(species)=="human")
   {
     physiology.dt <- httkpop_mc(
                        model=model,
@@ -414,5 +414,5 @@ Set species=\"Human\" to run httkpop model.')
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[,model.list[[model]]$param.names,with=F])
+  return(parameters.dt[,model.list[[model]]$param.names,with=FALSE])
 }

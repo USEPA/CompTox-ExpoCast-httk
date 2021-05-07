@@ -68,13 +68,13 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   tcdata[,radius:=diam/2] %>%  # mm
     .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
     .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
-    .[is.na(option.bottom),option.bottom:=T] %>%
-    .[option.bottom==T & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
-    .[option.bottom==F & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
+    .[is.na(option.bottom),option.bottom:=TRUE] %>%
+    .[option.bottom==TRUE & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
+    .[option.bottom==FALSE & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
     .[!(sysID %in% c(7,9)),height:=v_working/(pi*radius^2)] %>% # for cylindrical wells
-    .[option.bottom==T & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
-    .[option.bottom==F & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
-    .[is.na(option.plastic),option.plastic:=T] %>%
+    .[option.bottom==TRUE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
+    .[option.bottom==FALSE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
+    .[is.na(option.plastic),option.plastic:=TRUE] %>%
     .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
     .[option.plastic==FALSE, sarea_c:=0] %>%
     .[is.na(sarea),sarea:=sarea_c] %>%
@@ -459,10 +459,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[!(is.na(gkbsa)),gkbsa:=gkbsa-duow*Tcor] %>%
     .[!(is.na(gkbsa)),kbsa:=10^gkbsa]
 
-  tcdata[option.kbsa2==T & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
-    .[option.kbsa2==T & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
+  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
+    .[option.kbsa2==TRUE & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
 
-  tcdata[option.kbsa2==F & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
+  tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
@@ -474,10 +474,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[,kcw:=kcw/(10^(-1*ksalt*csalt))] %>%
     .[,kbsa:=kbsa/(10^(-1*ksalt*csalt))]
 
-  tcdata[option.swat2==T & MP>298.15,swat:=ss.GSE] %>%
-    .[option.swat2==T & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
-    .[option.swat2==T & MP<=298.15,swat:=s1.GSE] %>%
-    .[option.swat2==T & MP<=298.15,swat_L:=s1.GSE]
+  tcdata[option.swat2==TRUE & MP>298.15,swat:=ss.GSE] %>%
+    .[option.swat2==TRUE & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
+    .[option.swat2==TRUE & MP<=298.15,swat:=s1.GSE] %>%
+    .[option.swat2==TRUE & MP<=298.15,swat_L:=s1.GSE]
 
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
