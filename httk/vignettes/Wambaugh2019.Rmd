@@ -760,7 +760,7 @@ ceetox[CAS%in%schmitt_cas,
                           probs=0.025),
        by=.(CAS)]
 
-ceetox[,hlpointEstimated:=T]
+ceetox[,hlpointEstimated:=TRUE]
 ceetox[is.na(hlpoint),hlpointEstimated:=FALSE]
 ceetox[is.na(hlpoint),hlpoint:=hl_med]
 
