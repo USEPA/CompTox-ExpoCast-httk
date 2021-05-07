@@ -20,11 +20,11 @@ calc_stats(
   concentration = "plasma",
   tissue = "plasma",
   model = "pbtk",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  default.to.human = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   restrictive.clearance = T,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   ...
 )
 }
