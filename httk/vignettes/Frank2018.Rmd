@@ -85,7 +85,7 @@ for (this.row in 1:dim(chem.table)[1])
     this.species <- "mouse"
   }
   else browser()
-  if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =T
+  if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =TRUE
   else if (chem.table[this.row,"Route"]=="oral") iv.dose = F
   else browser()
   this.dose <- chem.table[this.row,"Dose"]
