@@ -24,7 +24,7 @@
 #'
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' num.chems <- length(get_cheminfo())
 #' load_sipes2017()
 #'

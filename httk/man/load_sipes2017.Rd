@@ -28,7 +28,7 @@ used in Sipes et al. 2017, included in admet.data.
 }
 \examples{
 
-\dontrun{
+\donttest{
 num.chems <- length(get_cheminfo())
 load_sipes2017()
 
