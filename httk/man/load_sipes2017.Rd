@@ -39,7 +39,7 @@ calc_css(chem.cas="26040-51-7")
 #Let's see how many chemicals we have now with the Sipes (2017) data loaded:
 length(get_cheminfo())
 
-Now let us reset
+#Now let us reset
 reset_httk()
 
 # We should be back to our original number:
