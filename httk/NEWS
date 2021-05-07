@@ -1,12 +1,20 @@
 News for R package httk
 
-Changes in version 2.0.4 (May 3, 2021)
+Changes in version 2.0.4 (May 7, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
   Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
   Added Xiaoqing Chang and Shannon Bell as contributors thanks to substantial efforts improving the package
   Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
-  Revised documentation to several functions missing value description (thank you Julia Haider)
+  Revised documentation to several functions missing value description (thank you Julia Haider and Gregor Seyer)
   Revised examples where arguments had changed (thank you Julia Haider)
+  Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
+  Revised get_cheminfo behavior to change chemical hepatic clearance values where p-value is not consistent with decrease (p-value > clint.pvalue.threshold, default 0.05) to zero.
+  Revised get_cheminfo behavior to remove fraction unbound in plasma values if credible interval spans from < 0.1 to > 0.9 (turn off with fup.ci.cutoff=FALSE).
+  Revised get_cheminfo to include "median.only" argument allowing confidence intervals to be removed for chemical intrinsic hepatic clearance values and fraction unbound in plasma values where they exist (turn on with median.only=TRUE).
+  Revised get_cheminfo to filter volatile compounds using Henry's law constant for all models, excluding the "gas_pbtk" model.
+  Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss", based on Wambaugh et al. (2015) (https://doi.org/10.1093/toxsci/kfv118).
+  Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
+  Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
 
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
