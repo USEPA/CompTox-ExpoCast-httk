@@ -131,7 +131,7 @@
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
 #'
-#' \dontrun{
+#' \donttest{
 #'  set.seed(1234)
 #'  # Standard HTTK Monte Carlo:
 #'  NSAMP = 500

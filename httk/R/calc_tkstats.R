@@ -63,7 +63,7 @@
 #' triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
 #' }
 #' 
-#' \dontrun{
+#' \donttest{
 #' # If you do not specify a chemical, calc_tkstats runs for all chemicals:
 #' all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
 #' }
