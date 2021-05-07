@@ -10,7 +10,7 @@
 #' @param tcdata A data table with well_number corresponding to plate format,
 #' optionally include v_working, sarea, option.bottom, and option.plastic
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
 #' @param this.cell_yield For single value, optionally supply cell_yield,
 #' otherwise estimated based on well number
 #' @param this.v_working For single value, optionally supply working volume,
@@ -99,7 +99,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param nomconc.vector For vector or single value, micromolar nominal 
 #' concentration (e.g. AC50 value)
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
 #' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params.
