@@ -9,8 +9,8 @@ available_rblood2plasma(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  adjusted.Funbound.plasma = T,
-  suppress.messages = F
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = FALSE
 )
 }
 \arguments{

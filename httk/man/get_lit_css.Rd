@@ -12,7 +12,7 @@ get_lit_css(
   species = "Human",
   clearance.assay.conc = NULL,
   output.units = "mg/L",
-  suppress.messages = F
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -38,21 +38,21 @@ also be uM (specify units = "uM").}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 }
+\value{
+A numeric vector with the literature steady-state plasma 
+concentration (1 mg/kg/day) for the requested quantiles
+}
 \description{
 This function retrives a steady-state plasma concentration as a result of
 infusion dosing from the Wetmore et al. (2012) and (2013) publications and
 other literature.
 }
 \examples{
-
-
 get_lit_css(chem.cas="34256-82-1")
-
 
 get_lit_css(chem.cas="34256-82-1",species="Rat",which.quantile=0.5)
 
 get_lit_css(chem.cas="80-05-7", daily.dose = 1,which.quantile = 0.5, output.units = "uM")
-
 
 }
 \references{

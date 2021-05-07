@@ -9,7 +9,7 @@ get_rblood2plasma(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F
+  default.to.human = FALSE
 )
 }
 \arguments{
@@ -27,6 +27,10 @@ default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+}
+\value{
+A numeric value for the steady-state ratio of chemical concentration in blood
+to plasma
 }
 \description{
 This function attempts to retrieve a measured species- and chemical-specific 

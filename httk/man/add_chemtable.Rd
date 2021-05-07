@@ -10,10 +10,10 @@ add_chemtable(
   current.table = NULL,
   reference = NULL,
   species = NULL,
-  overwrite = F,
+  overwrite = FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite = T,
-  allow.na = F
+  clint.pvalue.overwrite = TRUE,
+  allow.na = FALSE
 )
 }
 \arguments{

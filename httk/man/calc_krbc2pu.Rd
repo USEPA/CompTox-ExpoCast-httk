@@ -8,9 +8,9 @@ calc_krbc2pu(
   Rb2p,
   Funbound.plasma,
   hematocrit = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  suppress.messages = T
+  suppress.messages = TRUE
 )
 }
 \arguments{
