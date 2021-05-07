@@ -25,6 +25,10 @@
 #'
 #' @author John Wambaugh
 #'
+#' @return 
+#' A data.table with a row for each individual in the sample and a column for
+#' each parater in the model.
+#' 
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
