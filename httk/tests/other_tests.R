@@ -20,9 +20,9 @@ calc_stats(dtxsid="DTXSID0020442",days=3)
 #  tissue='liver',
 #  species='rabbit',
 #  parameterize.args = list(
-#    default.to.human=T,
-#    adjusted.Funbound.plasma=T,
-#    regression=T,
+#    default.to.human=TRUE,
+#    adjusted.Funbound.plasma=TRUE,
+#    regression=TRUE,
 #    minimum.Funbound.plasma=1e-4),
 #  daily.dose=2)
 
