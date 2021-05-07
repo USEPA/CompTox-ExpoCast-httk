@@ -180,7 +180,7 @@ chem.physical_and_invitro.data
   New tissue.data table with Ruark 2014 that contains different formatting with human and rat specific data
   parameterize_schmitt: added force.human.fub argument
   added plasma protein and neutral lipid volume fractions to physiology.data for use in package
-  calc_mc_css: defaults to direct resampling. no longer coerces species to human when httkpop=T. When another species is entered, a warning is thrown and the function behaves as if httkpop=F.
+  calc_mc_css: defaults to direct resampling. no longer coerces species to human when httkpop=TRUE. When another species is entered, a warning is thrown and the function behaves as if httkpop=F.
   updated help file references and examples
   corrected parameterize_3comp default.to.human bug: always set to false
   removed temperature from schmitt parameters
