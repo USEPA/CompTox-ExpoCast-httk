@@ -184,7 +184,7 @@ chem.physical_and_invitro.data
   updated help file references and examples
   corrected parameterize_3comp default.to.human bug: always set to false
   removed temperature from schmitt parameters
-  overwrite 0 values for Fubound.plasma when overwrite=F in add_chemtable
+  overwrite 0 values for Fubound.plasma when overwrite=FALSE in add_chemtable
   added vignette for generating partition coefficient plots
   added dsstox info: new columns: "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type".  overwrote: MW and SMILES
   added pc.data and obach2008 tables

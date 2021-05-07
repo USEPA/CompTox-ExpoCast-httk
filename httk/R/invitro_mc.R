@@ -286,7 +286,7 @@ invitro_mc <- function(parameters.dt=NULL,
         # Assign median its old value
         Funbound.plasma <- 1
         # Set the highest 50% to 1:
-        med.val <- median(parameters.dt[, unadjusted.Funbound.plasma, with=T])
+        med.val <- median(parameters.dt[, unadjusted.Funbound.plasma, with=TRUE])
         parameters.dt[unadjusted.Funbound.plasma > med.val, 
           unadjusted.Funbound.plasma := 1]
       }
