@@ -38,7 +38,7 @@
 #' @keywords Retrieval
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' # List all CAS numbers for which the 3compartmentss model can be run in humans: 
 #' get_cheminfo()
 #' 
