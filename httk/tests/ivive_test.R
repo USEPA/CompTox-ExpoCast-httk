@@ -39,7 +39,7 @@ signif(3/Css,4)
 #set.seed(12345)
 #Css <- calc_mc_css(chem.name="bisphenol a",
 #  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=T,
+#    restrictive.clearance=TRUE,
 #    bioactive.free.invivo = T),
 #  output.units="uM",
 #  samples=NSAMP)
@@ -60,7 +60,7 @@ signif(3/Css,4)
 #set.seed(12345)
 #Css <- calc_mc_css(chem.name="bisphenol a",
 #  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=T,
+#    restrictive.clearance=TRUE,
 #    bioactive.free.invivo = T),
 #  output.units="uM",
 #  samples=NSAMP)
@@ -75,7 +75,7 @@ signif(3/Css,4)
 #set.seed(12345)
 #Css <- calc_mc_css(chem.name="bisphenol a",
 #  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=T,
+#    restrictive.clearance=TRUE,
 #    bioactive.free.invivo = F),
 #  output.units="uM",
 #  samples=NSAMP)
@@ -91,7 +91,7 @@ signif(3/Css,4)
 #Css <- calc_mc_css(chem.name="bisphenol a",
 #  calc.analytic.css.arg.list=list(
 #    tissue="liver",
-#    restrictive.clearance=F,
+#    restrictive.clearance=FALSE,
 #    bioactive.free.invivo = F),
 #  output.units="uM",
 #  samples=NSAMP)

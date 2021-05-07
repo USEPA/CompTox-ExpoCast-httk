@@ -97,7 +97,7 @@ Warning messages:
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = T),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -118,7 +118,7 @@ Warning messages:
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = T),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -133,7 +133,7 @@ Warning messages:
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = F),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -149,7 +149,7 @@ Warning messages:
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
 > #    tissue="liver",
-> #    restrictive.clearance=F,
+> #    restrictive.clearance=FALSE,
 > #    bioactive.free.invivo = F),
 > #  output.units="uM",
 > #  samples=NSAMP)

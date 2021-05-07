@@ -43,7 +43,7 @@
 #' }                        
 #' 
 #' @export load_sipes2017
-load_sipes2017 <- function(overwrite=F,target.env=.GlobalEnv)
+load_sipes2017 <- function(overwrite=FALSE,target.env=.GlobalEnv)
 {
   cat(paste("Loading predictions from Sipes et al. (2017) for",
     dim(sipes2017)[1],"chemicals.\n"))
