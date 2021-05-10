@@ -102,7 +102,7 @@ parameterize_pbtk <- function(
                        chem.name=NULL,
                        dtxsid=NULL,
                        species="Human",
-                       default.to.human=F,
+                       default.to.human=FALSE,
                        tissuelist=list(
                          liver=c("liver"),
                          kidney=c("kidney"),
@@ -110,10 +110,10 @@ parameterize_pbtk <- function(
                          gut=c("gut")),
                        force.human.clint.fup = F,
                        clint.pvalue.threshold=0.05,
-                       adjusted.Funbound.plasma=T,
-                       regression=T,
-                       suppress.messages=F,
-                       restrictive.clearance=T,
+                       adjusted.Funbound.plasma=TRUE,
+                       regression=TRUE,
+                       suppress.messages=FALSE,
+                       restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -145,13 +145,13 @@ parameterize_pbtk <- function(
                     "Clint",
                     species,
                     chem.cas=chem.cas),
-                silent=T)
+                silent=TRUE)
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param(
                         "Clint.pValue",
                         species,
                         chem.cas=chem.cas),
-                    silent=T)
+                    silent=TRUE)
   if ((class(Clint.db) == "try-error" & default.to.human) || 
       force.human.clint.fup) 
   {
@@ -159,12 +159,12 @@ parameterize_pbtk <- function(
                       "Clint",
                       "Human",
                       chem.cas=chem.cas),
-                  silent=T)
+                  silent=TRUE)
     Clint.pValue <- try(get_invitroPK_param(
                           "Clint.pValue",
                           "Human",
                           chem.cas=chem.cas),
-                      silent=T)
+                      silent=TRUE)
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") 
@@ -191,7 +191,7 @@ Set default.to.human to true to substitute human value.")
                       species=species,
                       default.to.human=default.to.human,
                       force.human.fup=force.human.clint.fup,
-                      suppress.messages=T,
+                      suppress.messages=TRUE,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
   PCs <- predict_partitioning_schmitt(
            parameters=schmitt.params,
@@ -229,7 +229,7 @@ Set default.to.human to true to substitute human value.")
                    "Fgutabs",
                    species,
                    chem.cas=chem.cas),
-               silent=T)
+               silent=TRUE)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
@@ -328,7 +328,7 @@ Set default.to.human to true to substitute human value.")
              Vliverc=lumped_params$Vliverc, #L/kg
              Qtotal.liverc=
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
-           suppress.messages=T,
+           suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL

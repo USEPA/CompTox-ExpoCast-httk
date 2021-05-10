@@ -84,7 +84,7 @@
 #' @examples
 #' 
 #' 
-#' \dontrun{
+#' \donttest{
 #' calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
 #'        tissue='brain')
 #' }
@@ -98,10 +98,10 @@ calc_mc_oral_equiv <- function(conc,
                                species="Human",
                                input.units='uM',
                                output.units='mgpkgpday',
-                               suppress.messages=F,
-                               return.samples=F,
+                               suppress.messages=FALSE,
+                               return.samples=FALSE,
                                concentration = "plasma",
-                               restrictive.clearance=T,
+                               restrictive.clearance=TRUE,
                                bioactive.free.invivo = F,
                                tissue=NULL,
                                IVIVE=NULL,
@@ -146,7 +146,7 @@ calc_mc_oral_equiv <- function(conc,
                          which.quantile=which.quantile,
                          species=species,
                          output.units=input.units,
-                         suppress.messages=T, 
+                         suppress.messages=TRUE, 
                          calc.analytic.css.arg.list=
                            list(concentration = concentration,
                            restrictive.clearance=restrictive.clearance,

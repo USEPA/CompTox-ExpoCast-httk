@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
 library(httk)
-options(warn=-1)
 
 # Check if the number of chemicals has changed:
 Css.list <- get_cheminfo()

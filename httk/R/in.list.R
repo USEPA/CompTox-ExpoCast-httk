@@ -59,6 +59,7 @@
 #' https://www.cdc.gov/nchs/nhanes.htm.
 #' @examples
 #' 
+#' \donttest{
 #' httk.table <- get_cheminfo(info=c("CAS","Compound"))
 #' httk.table[,"Rat"] <- ""
 #' httk.table[,"NHANES"] <- ""
@@ -78,6 +79,7 @@
 #'   if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
 #'   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
 #'   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+#' }
 #' }
 #' 
 #' @export in.list
@@ -187,6 +189,7 @@ is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list 
 #' https://www.cdc.gov/nchs/nhanes.htm.
 #' @examples
 #' 
+#' \donttest{
 #' httk.table <- get_cheminfo(info=c("CAS","Compound"))
 #' httk.table[,"Rat"] <- ""
 #' httk.table[,"NHANES"] <- ""
@@ -207,5 +210,7 @@ is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list 
 #'   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
 #'   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 #' }
+#' }
+#'
 #' @export is.httk
 is.httk <- function(chem.cas,species="Human", model = "3compartmentss") return(chem.cas %in% get_cheminfo(species=species,model = model))
