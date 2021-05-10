@@ -9,11 +9,11 @@ calc_vdist(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  suppress.messages = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  suppress.messages = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }

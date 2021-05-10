@@ -53,11 +53,11 @@ calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       dtxsid=NULL,
                       parameters=NULL,
-                      default.to.human=F,
+                      default.to.human=FALSE,
                       species="Human",
-                      suppress.messages=F,
-                      adjusted.Funbound.plasma=T,
-                      regression=T,
+                      suppress.messages=FALSE,
+                      adjusted.Funbound.plasma=TRUE,
+                      regression=TRUE,
                       minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
@@ -114,10 +114,10 @@ calc_vdist<- function(chem.cas=NULL,
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=TRUE)
     if (class(fup) == "try-error" & default.to.human) 
     {
-      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=TRUE)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
     if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
@@ -165,7 +165,7 @@ calc_vdist<- function(chem.cas=NULL,
     #partition coefficients to lump_tissues()
     if (is.data.table(parameters))
     {
-      PCs <- parameters[,PC.names,with=F]
+      PCs <- parameters[,PC.names,with=FALSE]
     } else {
       PCs <- subset(parameters,names(parameters) %in% PC.names)
     }

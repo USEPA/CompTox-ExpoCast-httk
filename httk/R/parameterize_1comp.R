@@ -68,19 +68,19 @@
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
 #'  out <- solve_1comp(parameters=parameters)
-#' 
+#'
 #' @export parameterize_1comp
 parameterize_1comp <- function(
                         chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         species='Human',
-                        default.to.human=F,
-                        adjusted.Funbound.plasma=T,
-                        regression=T,
-                        restrictive.clearance=T,
-                        well.stirred.correction=T,
-                        suppress.messages=F,
+                        default.to.human=FALSE,
+                        adjusted.Funbound.plasma=TRUE,
+                        regression=TRUE,
+                        restrictive.clearance=TRUE,
+                        well.stirred.correction=TRUE,
+                        suppress.messages=FALSE,
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001)
 {
@@ -116,7 +116,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=F)
+                         suppress.messages=FALSE)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -137,7 +137,7 @@ parameterize_1comp <- function(
                          chem.name=chem.name,
                          dtxsid=dtxsid,
                          species=species,
-                         suppress.messages=T,
+                         suppress.messages=TRUE,
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
@@ -196,7 +196,7 @@ parameterize_1comp <- function(
                    "Fgutabs",
                    species,
                    chem.cas=chem.cas),
-                 silent=T)
+                 silent=TRUE)
 
     if (class(Fgutabs) == "try-error") Fgutabs <- 1
     

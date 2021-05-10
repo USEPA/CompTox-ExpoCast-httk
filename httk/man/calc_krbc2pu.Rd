@@ -8,9 +8,9 @@ calc_krbc2pu(
   Rb2p,
   Funbound.plasma,
   hematocrit = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  suppress.messages = T
+  suppress.messages = TRUE
 )
 }
 \arguments{
@@ -31,6 +31,9 @@ default "Human").}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
+}
+\value{
+The red blood cell to unbound chemical in plasma partition coefficient.
 }
 \description{
 Given and observed ratio of chemial concentration in blood to plasma, this

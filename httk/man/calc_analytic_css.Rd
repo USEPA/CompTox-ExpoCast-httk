@@ -14,13 +14,13 @@ calc_analytic_css(
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   tissue = NULL,
   restrictive.clearance = T,
   bioactive.free.invivo = F,
   IVIVE = NULL,
-  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
-    regression = T, minimum.Funbound.plasma = 1e-04),
+  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
+    regression = TRUE, minimum.Funbound.plasma = 1e-04),
   ...
 )
 }
