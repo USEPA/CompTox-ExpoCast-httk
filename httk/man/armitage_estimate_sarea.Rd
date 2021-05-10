@@ -16,7 +16,7 @@ armitage_estimate_sarea(
 optionally include v_working, sarea, option.bottom, and option.plastic}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==T}
+if is.na(tcdata)==TRUE}
 
 \item{this.cell_yield}{For single value, optionally supply cell_yield,
 otherwise estimated based on well number}
@@ -34,6 +34,11 @@ format suggested values from Corning.  option.plastic == T (default) give
 nonzero surface area (sarea, m^2) option.bottom == T (default) includes
 surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
+}
+\references{
+Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
+and evaluation of a mechanistic bioconcentration model for ionogenic organic 
+chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
 }
 \author{
 Greg Honda

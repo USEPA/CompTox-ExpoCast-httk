@@ -57,6 +57,7 @@ individuals. (CDC, 2014)
 }
 \examples{
 
+\donttest{
 httk.table <- get_cheminfo(info=c("CAS","Compound"))
 httk.table[,"Rat"] <- ""
 httk.table[,"NHANES"] <- ""
@@ -77,6 +78,8 @@ for (this.cas in httk.table$CAS[1:10])
   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 }
+}
+
 }
 \references{
 Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New

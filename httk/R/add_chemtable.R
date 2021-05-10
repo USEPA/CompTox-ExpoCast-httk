@@ -65,10 +65,10 @@ augment.table <- function(
   value,
   species=NULL,
   reference,
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T,
-  allow.na=F)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -184,7 +184,7 @@ augment.table <- function(
         this.row <- this.table[1,]
         this.row[] <- NA
       } else {
-        this.row <- as.data.frame(compound.name,stringsAsFactors=F)
+        this.row <- as.data.frame(compound.name,stringsAsFactors=FALSE)
         colnames(this.row) <- "Compound"
       }
       this.row[,"Compound"] <- compound.name
@@ -343,6 +343,7 @@ augment.table <- function(
 #' @author John Wambaugh
 #' @examples
 #' 
+#' \donttest{
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
@@ -368,6 +369,7 @@ augment.table <- function(
 #'                                   reference="MyPaper 2015")
 #' parameterize_steadystate(chem.name="C")  
 #' calc_css(chem.name="B")                                
+#' }
 #' 
 #' @export add_chemtable
 add_chemtable <- function(
@@ -376,10 +378,10 @@ add_chemtable <- function(
   current.table=NULL, 
   reference=NULL,
   species=NULL, 
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T,
-  allow.na=F)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE)
 {
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")

@@ -7,13 +7,21 @@
 #' 
 #' @param info A single character vector (or collection of character vectors)
 #' from
-#' "Compound","CAS","MW","Raw.Experimental.Percentage.Unbound","Entered.Experimental.Percentage.Unbound","Fub","source_PPB","Renal_Clearance","Met_Stab","Met_Stab_entered"
-#' ,"r2","p.val","Concentration..uM.","Css_lower_5th_perc.mg.L.","Css_median_perc.mg.L.","Css_upper_95th_perc.mg.L.","Css_lower_5th_perc.uM.","Css_median_perc.uM.","Css_upper_95th_perc.uM.",
+#' "Compound", "CAS", "MW", "Raw.Experimental.Percentage.Unbound",
+#' "Entered.Experimental.Percentage.Unbound", "Fub", "source_PPB",
+#' "Renal_Clearance", "Met_Stab", "Met_Stab_entered",
+#' "r2", "p.val", "Concentration..uM.", "Css_lower_5th_perc.mg.L.", 
+#' "Css_median_perc.mg.L.", "Css_upper_95th_perc.mg.L.",
+#' "Css_lower_5th_perc.uM.","Css_median_perc.uM.","Css_upper_95th_perc.uM.",
 #' and "Species".
+#' 
 #' @param species Species desired (either "Rat" or default "Human").
+#' 
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
+#' 
 #' @author John Wambaugh
+#' 
 #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
 #' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
 #' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
@@ -34,15 +42,13 @@
 #' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 #' Sciences, kfv171.
+#' 
 #' @keywords Literature Retrieval
+#' 
 #' @examples
 #' 
-#' 
-#' \dontrun{
 #' get_lit_cheminfo()
 #' get_lit_cheminfo(info=c('CAS','MW'))
-#' }
-#' 
 #' 
 #' @export get_lit_cheminfo
 get_lit_cheminfo <- function(info="CAS",species="Human")

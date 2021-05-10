@@ -9,15 +9,15 @@ parameterize_pbtk(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
     c("gut")),
   force.human.clint.fup = F,
   clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  suppress.messages = F,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  suppress.messages = FALSE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }

@@ -27,6 +27,9 @@ export_pbtk_jarnac(
 
 \item{digits}{Desired number of decimal places to round the parameters.}
 }
+\value{
+Text containing a Jarnac language version of the PBTK model.
+}
 \description{
 This function exports the multiple compartment PBTK model to a jarnac file.
 }
@@ -40,7 +43,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-\dontrun{
+\donttest{
 export_pbtk_jarnac(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.jan')
 }
 

@@ -10,12 +10,12 @@ calc_elimination_rate(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  suppress.messages = F,
-  default.to.human = F,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  well.stirred.correction = T,
+  suppress.messages = FALSE,
+  default.to.human = FALSE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  well.stirred.correction = TRUE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04
 )
