@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -17,18 +19,17 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
 > library(httk)
-> options(warn=-1)
 > 
 > # Check if the number of chemicals has changed:
 > Css.list <- get_cheminfo()
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 1016
+[1] 998
 > length(pbpk.list)
-[1] 940
+[1] 923
 > length(rat.list)
-[1] 212
+[1] 226
 >                                                  
 > # check for duplicate entries (all of the following should be TRUE):
 > length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
@@ -41,23 +42,26 @@ Type 'q()' to quit R.
 >   
 > # Check if the requirements for diffrent models has changed:
 > length(get_cheminfo())
-[1] 1016
+[1] 998
 > length(get_cheminfo(species="rat"))
-[1] 212
+[1] 226
 > length(get_cheminfo(model="pbtk"))
-[1] 940
+[1] 923
 > length(get_cheminfo(model="pbtk",species="rat"))
-[1] 181
+[1] 195
 > length(get_cheminfo(info="all"))
 [1] 11
+Warning message:
+In get_cheminfo(info = "all") :
+  Clint values with a pvalue > 0.05 were set to 0.
 > length(get_cheminfo(model="schmitt"))
-[1] 1676
+[1] 1648
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 296
+[1] 297
 > length(get_cheminfo(model="1compartment"))
-[1] 940
+[1] 923
 > length(get_cheminfo(model="1compartment",species="rat"))
-[1] 181
+[1] 195
 >   
 > # Check to see if the paramerer values have changed:
 > subset(get_cheminfo(info="all"), CAS %in% c(
@@ -68,21 +72,24 @@ Type 'q()' to quit R.
 +   "117-81-7"))  
                          Compound       CAS        DTXSID  logP    MW
 16                       Atrazine 1912-24-9 DTXSID9020112 2.611 215.7
-27                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3
-68  Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6
-173        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1
-316                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6
+26                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3
+66  Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6
+170        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1
+313                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6
     pKa_Accept  pKa_Donor      Human.Clint Human.Clint.pValue
-16        1.22       None             6.21             0.0537
-27        None 9.78,10.39 19.9,10.2,29.8,0             0.0000
-68        None       None             2.65             0.1940
-173       None       -4.2             1.64             0.0636
-316      -2.86       None              2.6                 NA
+16        1.22       None                0             0.0537
+26        None 9.78,10.39 19.9,10.2,29.8,0             0.0000
+66        None       None                0             0.1940
+170       None       -4.2                0             0.0636
+313      -2.86       None              2.6                 NA
     Human.Funbound.plasma Human.Rblood2plasma
 16                  0.124                  NA
-27   0.0385,0.0334,0.0456                0.79
-68                  0.005                  NA
-173                 0.005                0.64
-316              0.007932                0.73
+26   0.0385,0.0334,0.0456                0.79
+66                  0.005                  NA
+170                 0.005                0.64
+313              0.007932                0.73
+Warning message:
+In get_cheminfo(info = "all") :
+  Clint values with a pvalue > 0.05 were set to 0.
 > 
 > quit("no")

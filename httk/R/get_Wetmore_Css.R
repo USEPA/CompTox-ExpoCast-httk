@@ -3,7 +3,6 @@
 #' This function retrives a steady-state plasma concentration as a result of
 #' infusion dosing from the Wetmore et al. (2012) and (2013) publications and
 #' other literature. 
-#'
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
@@ -19,7 +18,12 @@
 #' @param output.units Returned units for function, defaults to mg/L but can
 #' also be uM (specify units = "uM"). 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#'
+#' @return A numeric vector with the literature steady-state plasma 
+#' concentration (1 mg/kg/day) for the requested quantiles
+#'
 #' @author John Wambaugh
+#'
 #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
 #' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
 #' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
@@ -40,20 +44,18 @@
 #' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 #' Sciences, kfv171.
+#'
 #' @keywords Literature Monte-Carlo
+#'
 #' @examples
-#' 
-#' 
 #' get_lit_css(chem.cas="34256-82-1")
-#' 
 #' 
 #' get_lit_css(chem.cas="34256-82-1",species="Rat",which.quantile=0.5)
 #' 
 #' get_lit_css(chem.cas="80-05-7", daily.dose = 1,which.quantile = 0.5, output.units = "uM")
 #' 
-#' 
 #' @export get_lit_css
-get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=F)
+get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=FALSE)
 {
   Wetmore.data <- Wetmore.data
   if (species == "Human") available.quantiles <- c(0.05,0.5, 0.95)

@@ -23,18 +23,18 @@ solve_gas_pbtk(
   exp.duration = 12,
   fcontrol = list(method = "constant", rule = 2, f = 0),
   initial.values = NULL,
-  plots = F,
-  suppress.messages = F,
+  plots = FALSE,
+  suppress.messages = FALSE,
   species = "Human",
   output.units = "uM",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  default.to.human = FALSE,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
@@ -222,6 +222,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
 
+\donttest{
 out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
 daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
 
@@ -230,6 +231,7 @@ exp.duration = 6, exercise = TRUE)
                   
 params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
+}
 
 }
 \references{
