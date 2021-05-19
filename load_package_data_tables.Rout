@@ -2135,9 +2135,42 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > #
 > 
 > 
-> 
-> 
-> 
+> #
+> # Create dawson2021 Data
+> #
+> ## R Package ##
+> library(readxl)
+Warning message:
+package 'readxl' was built under R version 4.0.5 
+> library(dplyr)
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:gdata':
+
+    combine, first, last
+
+The following object is masked from 'package:reshape':
+
+    rename
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> library(magrittr)
+> ## Load in Data ##
+> dawson2021_full <- readxl::read_xlsx(
++   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
++   sheet = 14)
+> dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+> #
+> # END dawson2021 Creation
+> #
 > 
 > #Add in vivo data from Wambaugh (2018):
 > load('NewInVivoTablesForHTTK.RData')
@@ -2205,6 +2238,7 @@ Browse[1]>
 +      chem.invivo.PK.data,
 +      chem.invivo.PK.aggregate.data,
 +      chem.invivo.PK.summary.data,
++      dawson2021,
 +      physiology.data,
 +      pearce2017regression,
 +      tissue.data,
@@ -2336,7 +2370,7 @@ Move the sysdata.rdaa to the httk/R directory.
 >      
 > ## Session Information ##
 > Sys.time() # capture date and time of generating data
-[1] "2021-04-22 13:25:59 EDT"
+[1] "2021-04-29 09:17:39 EDT"
 > sessionInfo() # capture package information for generating data
 R version 4.0.3 (2020-10-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -2355,12 +2389,17 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] stringr_1.4.0 xlsx_0.6.5    gdata_2.18.0  reshape_0.8.8
+[1] magrittr_2.0.1 dplyr_1.0.4    readxl_1.3.1   stringr_1.4.0  xlsx_0.6.5    
+[6] gdata_2.18.0   reshape_0.8.8 
 
 loaded via a namespace (and not attached):
-[1] compiler_4.0.3 magrittr_2.0.1 plyr_1.8.6     tools_4.0.3    Rcpp_1.0.6    
-[6] stringi_1.5.3  xlsxjars_0.6.1 rJava_0.9-13   gtools_3.8.2  
+ [1] Rcpp_1.0.6       tidyselect_1.1.0 R6_2.5.0         rlang_0.4.10    
+ [5] fansi_0.4.2      plyr_1.8.6       tools_4.0.3      utf8_1.1.4      
+ [9] ellipsis_0.3.1   gtools_3.8.2     tibble_3.1.0     lifecycle_1.0.0 
+[13] crayon_1.4.1     rJava_0.9-13     purrr_0.3.4      vctrs_0.3.6     
+[17] xlsxjars_0.6.1   glue_1.4.2       stringi_1.5.3    compiler_4.0.3  
+[21] pillar_1.5.0     cellranger_1.1.0 generics_0.1.0   pkgconfig_2.0.3 
 > 
 > proc.time()
    user  system elapsed 
- 494.79    6.09  763.14 
+ 289.18    2.78  385.06 
