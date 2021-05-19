@@ -30,6 +30,12 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
+#' Model Figure from \insertCite{linakis2020development}{httk}:
+#' \if{html}{\figure{gas_pbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
+#' Model Schematic"}}
+#' \if{latex}{\figure{gas_pbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
+#' Model Schematic"}}
+#' 
 #' Model parameters are named according to the following convention:\tabular{lrrrr}{
 #' prefix \tab suffic \tab Meaning \tab units \cr
 #' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
@@ -130,11 +136,9 @@
 #' @author Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 #'
 #' @references 
-#' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-#' Inhalation Model for Organic Chemicals", submitted
+#' \insertRef{linakis2020development}{httk}
 #' 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve
 #'
@@ -151,6 +155,7 @@
 #' @export solve_gas_pbtk
 #' @useDynLib httk
 #' @import deSolve
+#' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
                            dtxsid = NULL,

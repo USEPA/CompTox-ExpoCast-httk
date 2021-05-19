@@ -57,7 +57,8 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods
+        graphics, utils, magrittr, purrr, methods, Rdpack
+RdMacros: Rdpack
 Suggests: 
     ggplot2,
     knitr,
