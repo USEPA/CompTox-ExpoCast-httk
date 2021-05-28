@@ -127,7 +127,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' \tabular{lll}{
 #' \strong{Column} \tab \strong{Description} \tab \strong{units} \cr
 #' casrn \tab Chemical Abstracts Service Registry Number \tab \cr
-#' nomconc \tab Nominal Concentration \tab mol/L \cr       
+#' nomconc \tab Nominal Concentration \tab micromol/L \cr       
 #' well_number \tab Number of wells in plate \tab unitless \cr   
 #' sarea \tab Surface area of well \tab m^2 \cr         
 #' v_total \tab Total volume of well \tab m^3 \cr       
