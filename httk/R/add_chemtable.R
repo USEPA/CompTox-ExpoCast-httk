@@ -4,13 +4,16 @@ CAS.checksum <- function(CAS.string)
   multiplier <- 1
   if(is.factor(CAS.string)) CAS.string <- as.character(CAS.string)
   for (i in (nchar(CAS.string)-2):1)
-    if (!is.na(as.numeric(substr(CAS.string,i,i))))
+    if (!is.na(suppressWarnings(as.numeric(substr(CAS.string,i,i)))))
     {
-      test.num <- test.num + as.numeric(substr(CAS.string,i,i))*multiplier
+      test.num <- test.num + 
+        suppressWarnings(as.numeric(substr(CAS.string,i,i)))*multiplier
       multiplier <- multiplier + 1
     }
-  if (is.na(test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))) return(F)
-  return (test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))
+  if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))) return(F)
+  return (test.num%%10 == suppessWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))
 }
 
 
