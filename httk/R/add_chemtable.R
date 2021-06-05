@@ -245,18 +245,21 @@ augment.table <- function(
     {
       if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
       {
+    # If it's numeric we want to control sig figs:
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
+    # Otherwise force it to be a character:
         if (class(this.table[,this.property])!='character')
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
 # Check to see if this is actually a number and we can use sig figs:        
-        if (!is.na(as.numeric(value)))
+        if (!is.na(suppressWarnings(as.numeric(value))))
         {
-          if (as.character(as.numeric(value)) == as.character(value))
+          if (as.character(suppressWarnings(as.numeric(value))) == 
+            as.character(value))
           {
-            value <- signif(as.numeric(value), sig.fig)
+            value <- signif(suppressWarnings(as.numeric(value)), sig.fig)
           }
         }
         this.table[index,this.property] <- as.character(value)
