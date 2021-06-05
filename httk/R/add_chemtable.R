@@ -12,7 +12,7 @@ CAS.checksum <- function(CAS.string)
     }
   if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
     nchar(CAS.string),nchar(CAS.string)))))) return(F)
-  return (test.num%%10 == suppessWarnings(as.numeric(substr(CAS.string,
+  return (test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
     nchar(CAS.string),nchar(CAS.string)))))
 }
 
