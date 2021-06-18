@@ -30,7 +30,7 @@ used in Sipes et al. 2017, included in admet.data.
 
 \dontrun{
 chem.physical_and_invitro.data <- load_sipes2017()
-chem.physical_and_invitro.data <- load_sipes2017(overwrite=T) 
+chem.physical_and_invitro.data <- load_sipes2017(overwrite=TRUE) 
 }                        
 
 }

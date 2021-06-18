@@ -19,7 +19,7 @@ get_chem_id <- function(chem.cas=NULL,
     stop("Must specify compound name, CAS, or DTXSID.\n")
   } 
   
-  num.chems <- max(length(chem.cas),length(chem.name),length(dtxsid),na.rm=T)
+  num.chems <- max(length(chem.cas),length(chem.name),length(dtxsid),na.rm=TRUE)
   
   chem.cas.out <- NULL
   chem.name.out <- NULL
