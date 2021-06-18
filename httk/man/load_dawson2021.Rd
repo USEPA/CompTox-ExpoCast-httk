@@ -4,7 +4,7 @@
 \alias{load_dawson2021}
 \title{Load data from Dawson et al. 2021.}
 \usage{
-load_dawson2021(overwrite = F, exclude_oad = T, target.env = .GlobalEnv)
+load_dawson2021(overwrite = FALSE, exclude_oad = TRUE, target.env = .GlobalEnv)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then

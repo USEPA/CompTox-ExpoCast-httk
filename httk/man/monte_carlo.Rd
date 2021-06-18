@@ -52,71 +52,6 @@ params <- parameterize_pbtk(chem.name="zoxamide")
 # Nothing changes:
 monte_carlo(params)
 
-<<<<<<< HEAD
-pValues <- get_cheminfo(c("Compound","CAS","Clint.pValue"))
-pValues.rat <- get_cheminfo(c("Compound","CAS","Clint.pValue"),species="Rat")
-
-
- 
-Wetmore.table <- NULL
-for (this.CAS in get_cheminfo(model="3compartmentss")){
-  if (this.CAS \%in\% get_wetmore_cheminfo()){
-    print(this.CAS)
-    these.params <- parameterize_steadystate(chem.cas=this.CAS)
-    if (these.parameters[["Funbound.plasma"]] == 0.0) 
-    {
-      these.parameters[["Funbound.plasma"]] <- 0.005
-    }
-    these.parameters[["Fhep.assay.correction"]] <- 1
-    vLiver.human.values <- monte_carlo(these.params,
-                                       cv.params=vary.params,
-                                       censored.params=censored.params,
-                                       output.units="mg/L",
-                                       model='3compartmentss',
-                                       suppress.messages=TRUE,
-                                       well.stirred.correction=FALSE,
-                                       Funbound.plasma.correction=FALSE)
-    percentiles <- c("5","50","95")
-    for (this.index in 1:3)
-    {
-      this.row <- as.data.frame(get_wetmore_css(chem.cas=this.CAS)) 
-      this.row <- cbind(this.row, as.data.frame(vLiver.human.values[this.index]))
-      this.row <- cbind(this.row, as.data.frame(percentiles[this.index]))
-      this.row <- cbind(this.row, as.data.frame("Human"))
-      this.row <- cbind(this.row, as.data.frame(this.CAS))
-      this.row <- cbind(this.row, as.data.frame(pValues[pValues$CAS==this.CAS,
-                                                "Human.Clint.pValue"]<0.05))
-      colnames(this.row) <- c("Wetmore", "Predicted", "Percentile", "Species",
-                              "CAS", "Systematic")
-      if (is.na(this.row["Systematic"])) this.row["Systematic"] <- F
-      Wetmore.table <- Wetmore.table <- rbind(Wetmore.table,this.row)
-    }
-  }
-}
-
-scientific_10 <- function(x) {
-  out <- gsub("1e", "10^", scientific_format()(x))
-  out <- gsub("\+","",out)
-  out <- gsub("10\^01","10",out)
-  out <- parse(text=gsub("10\^00","1",out))
-}
-
-
-Fig1 <- ggplot(Wetmore.table, aes(Predicted,Wetmore,group = CAS)) +
-  geom_line() +
-  geom_point(aes(colour=factor(Percentile),shape=factor(Percentile))) +
-  scale_colour_discrete(name="Percentile") +
-  scale_shape_manual(name="Percentile", values=c("5"=21, "50"=22,"95"=24)) +
-  scale_x_log10(expression(paste(C[ss]," Predicted (mg/L) with Refined Assumptions")),
-                label=scientific_10) + 
-  scale_y_log10(expression(paste(C[ss]," Wetmore ",italic("et al.")," (2012) (mg/L)")),
-                label=scientific_10) +
-  geom_abline(intercept = 0, slope = 1,linetype="dashed")+
-  theme_bw()+
-  theme(legend.position="bottom", text  = element_text(size=18))
-
-print(Fig1)
-=======
 vary.params <- NULL
 for (this.param in names(params)[!(names(params) \%in\%
   c("Funbound.plasma", "pKa_Donor", "pKa_Accept" )) &
@@ -125,7 +60,6 @@ for (this.param in names(params)[!(names(params) \%in\%
 monte_carlo(
   parameters=params, 
   cv.params = vary.params)
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 # Fup is censored below 0.01:
