@@ -94,8 +94,8 @@ for(this.cas in cas.list){
   if(!this.cas %in% ma.data.list){
     init.parameters$MA <- 10^(0.999831 - 0.016578*38.7 + 0.881721 * log10(parameters$Pow))
   }
-  pcs <- predict_partitioning_schmitt(parameters=parameters,species='rat',regression=F)
-  init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,species='rat',regression=F)
+  pcs <- predict_partitioning_schmitt(parameters=parameters,species='rat',regression=FALSE)
+  init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,species='rat',regression=FALSE)
   for(this.tissue in subset(pc.data,CAS==this.cas)[,'Tissue']){
     if(this.tissue == 'Blood Cells') this.pc <- 'rbc'
     else this.pc <- this.tissue
@@ -149,7 +149,7 @@ final.plot <- ggplot() + geom_point(data=pc.table,aes(10^(Predicted),10^(Experim
 print(final.plot)
 
 fup.change.plot <-  ggplot() +
-    geom_point(data=pc.table[order(pc.table[,'fup.improvement'],decreasing=F),],
+    geom_point(data=pc.table[order(pc.table[,'fup.improvement'],decreasing=FALSE),],
     aes(10^(fup.adjustment),10^(Experimental),color=fup.improvement)) + geom_abline() +
     labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p])),color='Improvement') +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16)) +
@@ -160,7 +160,7 @@ print(fup.change.plot)
 
 ma.subset <- subset(pc.table,!CAS %in% ma.data.list)
 ma.change.plot <- ggplot() +
-    geom_point(data=ma.subset[order(ma.subset[,'ma.improvement'],decreasing=F),]
+    geom_point(data=ma.subset[order(ma.subset[,'ma.improvement'],decreasing=FALSE),]
     ,aes(10^(ma.adjustment),10^(Experimental),color=ma.improvement)) + geom_abline() +
     labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p])),color='Improvement') +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16)) +
@@ -241,9 +241,9 @@ for(this.cas in obach[,'CAS']){
   if(!this.cas %in% ma.data.list){
     init.parameters$MA <- 10^(0.999831 - 0.016578*37 + 0.881721 * log10(parameters$Pow))
   }
-  pcs <- predict_partitioning_schmitt(parameters=parameters,regression=F)
-  init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,regression=F)
-  reg.pcs <- predict_partitioning_schmitt(parameters=parameters,regression=T)
+  pcs <- predict_partitioning_schmitt(parameters=parameters,regression=FALSE)
+  init.pcs <- predict_partitioning_schmitt(parameters=init.parameters,regression=FALSE)
+  reg.pcs <- predict_partitioning_schmitt(parameters=parameters,regression=TRUE)
   vdist <- calc_vdist(parameters=c(pcs,
     Funbound.plasma=parameters$Funbound.plasma),
     suppress.messages = TRUE)
@@ -297,7 +297,7 @@ init.vd.plot <- ggplot(vd.table,aes(10^(init.vdist),10^(Experimental))) + geom_p
 print(init.vd.plot)
 
 adjustment.plot <- ggplot() +
-    geom_point(data=vd.table[order(vd.table[,'adjustment.improvement'],decreasing=F),],
+    geom_point(data=vd.table[order(vd.table[,'adjustment.improvement'],decreasing=FALSE),],
     aes(10^(adjusted.vdist),10^(Experimental),color=adjustment.improvement)) +
     geom_abline(intercept = adjustment.reg[['Intercept']],slope = adjustment.reg[["Slope"]]) +
     geom_abline(linetype = "dashed") + xlab("Predicted Volume of Distribution") +
@@ -310,7 +310,7 @@ adjustment.plot <- ggplot() +
 print(adjustment.plot)
 
 calibration.plot <- ggplot() +
-    geom_point(data=vd.table[order(vd.table[,'calibration.improvement'],decreasing=F),],
+    geom_point(data=vd.table[order(vd.table[,'calibration.improvement'],decreasing=FALSE),],
     aes(10^(calibrated.vdist),10^(Experimental),color=calibration.improvement)) +
     geom_abline(intercept = calibrated.reg[['Intercept']],slope = calibrated.reg[["Slope"]]) +
     geom_abline(linetype = "dashed") + xlab("Predicted Volume of Distribution") +

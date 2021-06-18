@@ -137,7 +137,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               species="Human",
-                              default.to.human=F,
+                              default.to.human=FALSE,
                               tissuelist=list(
                                 liver=c("liver"),
                                 kidney=c("kidney"),
@@ -145,15 +145,15 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                 gut=c("gut")),
                               force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
-                              adjusted.Funbound.plasma=T,
-                              regression=T,
+                              adjusted.Funbound.plasma=TRUE,
+                              regression=TRUE,
                               vmax = 0,
                               km = 1,
                               exercise = F,
                               fR = 12,
                               VT = 0.75,
                               VD = 0.15,
-                              suppress.messages=F,
+                              suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
                               ...)
 {
@@ -176,13 +176,13 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
    
   if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=TRUE)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=T)
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=TRUE)
   if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=T)
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=TRUE)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=TRUE)
     if (!suppress.messages)
       warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
@@ -207,7 +207,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                          species=species,
                                          default.to.human=default.to.human,
                                          force.human.fup=force.human.clint.fup,
-                                         suppress.messages=T,
+                                         suppress.messages=TRUE,
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                       species=species,
@@ -229,7 +229,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=TRUE)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
@@ -321,7 +321,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Dn=0.17,BW=BW,
           Vliverc=lumped_params$Vliverc, #L/kg
           Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
-        suppress.messages=T)), #L/h/kg BW
+        suppress.messages=TRUE)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
       Fgutabs=Fgutabs)) #L/h/kg BW
@@ -346,7 +346,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        suppress.messages=T))
+        suppress.messages=TRUE))
     
     #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa

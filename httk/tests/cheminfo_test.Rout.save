@@ -68,7 +68,7 @@ Type 'q()' to quit R.
 +   "1912-24-9",
 +   "2921-88-2",	
 +   "117-81-7")),
-+   row.names=F)
++   row.names=FALSE)
                       Compound       CAS        DTXSID  logP    MW pKa_Accept
                       Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       1.22
                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3       None

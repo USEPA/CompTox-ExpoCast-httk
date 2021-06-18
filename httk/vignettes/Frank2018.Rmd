@@ -108,10 +108,10 @@ for (this.row in 1:dim(chem.table))
            dose=this.dose,
            species=this.species,
 # This was used in 2017 but I don't agree with it anymore:
-#           restrictive.clearance=F,
+#           restrictive.clearance=FALSE,
            days=this.days,
            iv.dose=iv.dose,
-           default.to.human=T)
+           default.to.human=TRUE)
 # Record the Cmax and the AUC:
   chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
   chem.table[this.row,"AUC"] <- max(out[,"AUC"])

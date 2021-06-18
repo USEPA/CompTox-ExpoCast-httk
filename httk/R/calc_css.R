@@ -92,7 +92,7 @@
 #' avg <- NULL
 #' max <- NULL
 #' for(this.cas in get_cheminfo(model="pbtk")){
-#'   css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+#'   css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=TRUE)
 #'   days[[this.cas]] <- css.info[["the.day"]]
 #'   avg[[this.cas]] <- css.info[["avg"]]
 #'   max[[this.cas]] <- css.info[["max"]]
@@ -124,15 +124,15 @@ calc_css <- function(chem.name=NULL,
                     doses.per.day=3,
                     days = 21,
                     output.units = "uM",
-                    suppress.messages=F,
+                    suppress.messages=FALSE,
                     tissue=NULL,
                     model='pbtk',
-                    default.to.human=F,
+                    default.to.human=FALSE,
                     f.change = 0.00001,
-                    adjusted.Funbound.plasma=T,
-                    regression=T,
-                    well.stirred.correction=T,
-                    restrictive.clearance=T,
+                    adjusted.Funbound.plasma=TRUE,
+                    regression=TRUE,
+                    well.stirred.correction=TRUE,
+                    restrictive.clearance=TRUE,
                     dosing=NULL,
                     ...)
 {
@@ -213,7 +213,7 @@ calc_css <- function(chem.name=NULL,
     concentration='plasma',
     model=model,
     output.units = output.units,
-    suppress.messages=T,
+    suppress.messages=TRUE,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     well.stirred.correction=well.stirred.correction,
@@ -232,7 +232,7 @@ calc_css <- function(chem.name=NULL,
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
-    suppress.messages=T,
+    suppress.messages=TRUE,
     days=days,
     output.units = output.units,
     restrictive.clearance=restrictive.clearance,
@@ -273,7 +273,7 @@ calc_css <- function(chem.name=NULL,
       output.units = output.units,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,    
-      suppress.messages=T,
+      suppress.messages=TRUE,
       restrictive.clearance=restrictive.clearance,
       ...)
     Final_Conc <- out[dim(out)[1],monitor.vars]

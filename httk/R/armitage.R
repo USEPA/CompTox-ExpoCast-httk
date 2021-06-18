@@ -76,7 +76,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     .[option.bottom==F & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
     .[is.na(option.plastic),option.plastic:=T] %>%
     .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
-    .[option.plastic==F, sarea_c:=0] %>%
+    .[option.plastic==FALSE, sarea_c:=0] %>%
     .[is.na(sarea),sarea:=sarea_c] %>%
     .[is.na(cell_yield),cell_yield:=as.double(cell_yield_est)]
 
