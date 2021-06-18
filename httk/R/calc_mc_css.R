@@ -105,9 +105,13 @@
 #'
 #' @keywords Monte-Carlo Steady-State
 #'
+#' @return
+#' Quantiles (specified by which.quantile) of the distribution of plasma
+#' steady-stae concentration (Css) from the Monte Carlo simulation
+#'
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
 #'              samples=100,return.samples=TRUE)
@@ -125,7 +129,9 @@
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  set.seed(1234)
 #'  calc_mc_css(parameters=params,model="pbtk")
+#' }
 #'
+#' \donttest{
 #'  set.seed(1234)
 #'  # Standard HTTK Monte Carlo:
 #'  NSAMP = 500
@@ -135,8 +141,9 @@
 #'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
-#'  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
-#'    poormetab = T, 
+#'  invitro.mc.arg.list = list(
+#'    adjusted.Funbound.plasma = TRUE,
+#'    poormetab = TRUE, 
 #'    fup.censored.dist = FALSE, 
 #'    fup.lod = 0.01, 
 #'    fup.meas.cv = 0.0, 

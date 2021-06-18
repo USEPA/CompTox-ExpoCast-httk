@@ -146,11 +146,16 @@
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
+#' \donttest{
+#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
+#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 #' exp.duration = 6, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 #' solve_gas_pbtk(parameters=params)
+#' }
 #' 
 #' @export solve_gas_pbtk
 #' @useDynLib httk

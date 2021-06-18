@@ -10,9 +10,9 @@ parameterize_schmitt(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  default.to.human = F,
-  force.human.fup = F,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  force.human.fup = FALSE,
+  suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04
 )
 }

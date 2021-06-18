@@ -10,12 +10,12 @@ parameterize_steadystate(
   dtxsid = NULL,
   species = "Human",
   clint.pvalue.threshold = 0.05,
-  default.to.human = F,
-  human.clint.fup = F,
-  adjusted.Funbound.plasma = T,
-  restrictive.clearance = T,
+  default.to.human = FALSE,
+  human.clint.fup = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  restrictive.clearance = TRUE,
   fup.lod.default = 0.005,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04
 )
 }

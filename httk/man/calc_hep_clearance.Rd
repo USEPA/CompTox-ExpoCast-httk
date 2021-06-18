@@ -10,12 +10,12 @@ calc_hep_clearance(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   hepatic.model = "well-stirred",
-  suppress.messages = F,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
+  suppress.messages = FALSE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }

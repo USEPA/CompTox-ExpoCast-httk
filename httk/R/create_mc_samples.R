@@ -62,6 +62,12 @@
 #' associated in vitro uncertainty and variability propagation function
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
+#'
+#' @return
+#' A data table where each column corresponds to parameters needed for the 
+#' specified model and each row represents a different Monte Carlo sample of
+#' parameter values.
+#'
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
 #'
 #' @references 
@@ -76,7 +82,7 @@
 #' 
 #' @examples 
 #' 
-#' \dontrun{
+#' \donttest{
 #' sample_set = create_mc_samples(chem.name = 'bisphenol a')
 #' }
 #'
@@ -235,7 +241,7 @@ create_mc_samples <- function(chem.cas=NULL,
 #
 #
 
-  if (httkpop==T & tolower(species)=="human")
+  if (httkpop==TRUE & tolower(species)=="human")
   {
     physiology.dt <- httkpop_mc(
                        model=model,
@@ -432,5 +438,5 @@ Set species=\"Human\" to run httkpop model.')
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
-  return(parameters.dt[,model.list[[model]]$param.names,with=F])
+  return(parameters.dt[,model.list[[model]]$param.names,with=FALSE])
 }
