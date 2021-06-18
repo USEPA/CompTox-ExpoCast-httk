@@ -19,13 +19,9 @@ solve_pbtk(
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
-<<<<<<< HEAD
-  iv.dose = F,
-  input.units = "mg/kg",
-=======
   iv.dose = FALSE,
+  input.units = "mg/kg",
   output.units = "uM",
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
