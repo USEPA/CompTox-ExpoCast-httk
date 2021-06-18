@@ -145,13 +145,13 @@
 #'    clint.pop.cv = 0.3))
 #'  set.seed(1234)
 #'  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 #'  set.seed(1234)
 #'  # HTTK Monte Carlo with no in vitro uncertainty and variability):
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 #'  set.seed(1234)
 #'  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
 #'  # Should be the same as the mean result:
 #'  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 #'  set.seed(1234)
@@ -159,8 +159,8 @@
 #'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
-#'  httkpop=F,
-#'  invitrouv=F,
+#'  httkpop=FALSE,
+#'  invitrouv=FALSE,
 #'  vary.params=list(Pow=0.3))
 #' }
 #'
@@ -173,19 +173,19 @@ calc_mc_css <- function(chem.cas=NULL,
                         samples=1000,
                         which.quantile=0.95,
                         species="Human",
-                        suppress.messages=F,
+                        suppress.messages=FALSE,
                         model='3compartmentss',
-                        httkpop=T,
-                        invitrouv=T,
-                        calcrb2p=T,
+                        httkpop=TRUE,
+                        invitrouv=TRUE,
+                        calcrb2p=TRUE,
                         censored.params=list(),
                         vary.params=list(),
-                        return.samples=F,
+                        return.samples=FALSE,
                         tissue=NULL,
                         output.units="mg/L",
                         invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=T,
-                          poormetab=T,
+                          adjusted.Funbound.plasma=TRUE,
+                          poormetab=TRUE,
                           fup.censored.dist=FALSE,
                           fup.lod=0.01,
                           fup.meas.cv=0.4,
@@ -214,14 +214,14 @@ calc_mc_css <- function(chem.cas=NULL,
                             "Other")),
                         convert.httkpop.arg.list=list(),
                         parameterize.arg.list=list(
-                          default.to.human=F,
+                          default.to.human=FALSE,
                           clint.pvalue.threshold=0.05,
                           restrictive.clearance = T,
-                          regression=T),
+                          regression=TRUE),
                         calc.analytic.css.arg.list=list(
-                          well.stirred.correction=T,
-                          adjusted.Funbound.plasma=T,
-                          regression=T,
+                          well.stirred.correction=TRUE,
+                          adjusted.Funbound.plasma=TRUE,
+                          regression=TRUE,
                           IVIVE = NULL,
                           tissue=tissue,
                           restrictive.clearance = T,
@@ -269,7 +269,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         calcrb2p=calcrb2p,
                         censored.params=censored.params,
                         vary.params=vary.params,
-                        return.samples=F,
+                        return.samples=FALSE,
                         invitro.mc.arg.list=invitro.mc.arg.list,
                         httkpop.generate.arg.list=httkpop.generate.arg.list,
                         convert.httkpop.arg.list=convert.httkpop.arg.list,
@@ -285,7 +285,7 @@ calc_mc_css <- function(chem.cas=NULL,
   parameter.dt[,Css:= do.call(calc_analytic_css,
                             args=c(list(parameters=.SD,
                               model=model,
-                              suppress.messages=T,
+                              suppress.messages=TRUE,
                               chem.cas=chem.cas,
                               chem.name=chem.name,
                               dtxsid=dtxsid,
@@ -296,7 +296,7 @@ calc_mc_css <- function(chem.cas=NULL,
 
   css.list <- parameter.dt$Css 
   
-  if (!return.samples) out <- quantile(css.list,which.quantile,na.rm=T)  
+  if (!return.samples) out <- quantile(css.list,which.quantile,na.rm=TRUE)  
   else out <- css.list  
 
   if (!suppress.messages)

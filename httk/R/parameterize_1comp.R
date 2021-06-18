@@ -137,7 +137,7 @@ parameterize_1comp <- function(
                          chem.name=chem.name,
                          dtxsid=dtxsid,
                          species=species,
-                         suppress.messages=T,
+                         suppress.messages=TRUE,
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,

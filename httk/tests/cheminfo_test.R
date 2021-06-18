@@ -34,6 +34,6 @@ print(subset(get_cheminfo(info="all"), CAS %in% c(
   "1912-24-9",
   "2921-88-2",	
   "117-81-7")),
-  row.names=F)
+  row.names=FALSE)
 
 quit("no")

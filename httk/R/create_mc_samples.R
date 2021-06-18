@@ -89,19 +89,19 @@ create_mc_samples <- function(chem.cas=NULL,
                         parameters=NULL,
                         samples=1000,
                         species="Human",
-                        suppress.messages=F,
+                        suppress.messages=FALSE,
                         model='3compartmentss',
-                        httkpop=T,
-                        invitrouv=T,
-                        calcrb2p=T,
+                        httkpop=TRUE,
+                        invitrouv=TRUE,
+                        calcrb2p=TRUE,
                         censored.params=list(),
                         vary.params=list(),
-                        return.samples=F,
+                        return.samples=FALSE,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=T,
-                          poormetab=T,
+                          adjusted.Funbound.plasma=TRUE,
+                          poormetab=TRUE,
                           fup.censored.dist=FALSE,
                           fup.lod=0.01,
                           fup.meas.cv=0.4,
@@ -132,9 +132,9 @@ create_mc_samples <- function(chem.cas=NULL,
                         propagate.invitrouv.arg.list=list(),
                         parameterize.arg.list=list(
                           restrictive.clearance = T,
-                          default.to.human=F,
+                          default.to.human=FALSE,
                           clint.pvalue.threshold=0.05,
-                          regression=T))
+                          regression=TRUE))
 {
 
 #
@@ -188,7 +188,7 @@ create_mc_samples <- function(chem.cas=NULL,
                   chem.name,
                   dtxsid=dtxsid,
                   species=species,
-                  suppress.messages=T)
+                  suppress.messages=TRUE)
 # The Schmitt parameters are useful if we need to redo partitioning later:
     pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
     parameters.mean <- c(parameters.mean, pschmitt)
@@ -253,7 +253,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        httkpop.dt=httkpop.dt),
                        convert.httkpop.arg.list))
    } else {
-    if(httkpop==T) 
+    if(httkpop==TRUE) 
       warning('httkpop model only available for human and thus not used.\n\
 Set species=\"Human\" to run httkpop model.')   
      this.tissuedata <- subset(tissue.data, tolower(Species)==tolower(species))
@@ -345,7 +345,7 @@ Set species=\"Human\" to run httkpop model.')
                species=species,
                adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
                regression=parameterize.arg.list$regression,
-               suppress.messages=T)
+               suppress.messages=TRUE)
 # Store the red blood cell to unbound plasma partition coefficient if we need
 # it later:
       if (calcrb2p | firstpass) parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
@@ -409,7 +409,7 @@ Set species=\"Human\" to run httkpop model.')
 # (Rowland, 1973):      
   cl <- calc_hep_clearance(parameters=parameters.dt,
           hepatic.model='unscaled',
-          suppress.messages=T)#L/h/kg body weight
+          suppress.messages=TRUE)#L/h/kg body weight
 
   parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
     parameters=list(

@@ -121,7 +121,7 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [11,]     4512            0 74.99
 [12,]     4559            0 75.76
 >   
-> head(solve_pbtk(chem.name="Terbufos",iv.dose=T))
+> head(solve_pbtk(chem.name="Terbufos",iv.dose=TRUE))
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time    Aven      Cgut    Cliver    Cven   Clung   Cart     Crest
 [1,] 0.00000 242.700  0.000000 0.000e+00 90.6000  0.0000 0.0000 0.000e+00
@@ -243,7 +243,7 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [4,] 0.02083     74.61    0.7952000    1.189e+00 9.790e-03
 [5,] 0.03125     43.26    0.9597000    2.309e+00 1.901e-02
 [6,] 0.04167     25.09    1.0520000    3.587e+00 2.953e-02
-> head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
+> head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 Human volume of distribution returned in units of L/kg BW.
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Acompartment Agutlumen Ccompartment Ametabolized       AUC
@@ -306,7 +306,7 @@ AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.
 [4,] 2.251e+00
 [5,] 2.905e+00
 [6,] 3.273e+00
-> head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=T))
+> head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.674.
         time Asyscomp    Cliver Csyscomp  Atubules Ametabolized      AUC
 [1,] 0.00000    242.7  0.000000    4.400 0.000e+00    0.000e+00 0.000000

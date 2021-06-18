@@ -57,7 +57,7 @@ invitro_mc <- function(parameters.dt=NULL,
                            poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
-                           adjusted.Funbound.plasma=T,
+                           adjusted.Funbound.plasma=TRUE,
                            clint.pvalue.threshold=0.05,
                            minimum.Funbound.plasma=0.0001)
 {

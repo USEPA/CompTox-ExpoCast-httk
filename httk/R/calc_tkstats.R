@@ -83,11 +83,11 @@ calc_tkstats <-function(
                concentration='plasma',
                tissue='plasma',
                model='pbtk',
-               default.to.human=F,
-               adjusted.Funbound.plasma=T,
-               regression=T,
+               default.to.human=FALSE,
+               adjusted.Funbound.plasma=TRUE,
+               regression=TRUE,
                restrictive.clearance = T,
-               suppress.messages=F,
+               suppress.messages=FALSE,
                ...)
 {
 ### ERROR CHECKING
@@ -130,7 +130,7 @@ calc_tkstats <-function(
                 output.units=output.units,
                 model=model,
                 default.to.human=default.to.human,
-                suppress.messages=T,
+                suppress.messages=TRUE,
                 ...)
 
       if (length(stat)==1)
@@ -176,7 +176,7 @@ calc_tkstats <-function(
                       days = days,
                       species=species,
                       dosing=dosing,
-                      suppress.messages=T,
+                      suppress.messages=TRUE,
                       output.units=output.units,
                       ...)
     
@@ -223,7 +223,7 @@ calc_tkstats <-function(
         dtxsid=dtxsid,
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        suppress.messages=T)
+        suppress.messages=TRUE)
     }
   
     # Blood or plasma concentration:
@@ -354,11 +354,11 @@ calc_stats <-function(
                concentration='plasma',
                tissue='plasma',
                model='pbtk',
-               default.to.human=F,
-               adjusted.Funbound.plasma=T,
-               regression=T,
+               default.to.human=FALSE,
+               adjusted.Funbound.plasma=TRUE,
+               regression=TRUE,
                restrictive.clearance = T,
-               suppress.messages=F,
+               suppress.messages=FALSE,
                ...)
 {
   warning("Function \"calc_stats\" has been renamed to \"calc_tkstats\".")

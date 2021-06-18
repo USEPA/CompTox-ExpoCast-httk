@@ -139,7 +139,7 @@ days <- NULL
 avg <- NULL
 max <- NULL
 for(this.cas in get_cheminfo(model="pbtk")){
-  css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=T)
+  css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=TRUE)
   days[[this.cas]] <- css.info[["the.day"]]
   avg[[this.cas]] <- css.info[["avg"]]
   max[[this.cas]] <- css.info[["max"]]

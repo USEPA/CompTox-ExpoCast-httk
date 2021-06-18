@@ -34,9 +34,9 @@
 calc_krbc2pu <- function(Rb2p,
                          Funbound.plasma,
                          hematocrit=NULL,
-                         default.to.human=F,
+                         default.to.human=FALSE,
                          species="Human",
-                         suppress.messages=T)
+                         suppress.messages=TRUE)
 {
   physiology.data <- physiology.data
 

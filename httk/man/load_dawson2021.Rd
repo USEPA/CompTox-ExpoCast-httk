@@ -34,7 +34,7 @@ presented in Dawson et al. 2021, included in dawson2021.
 
 \dontrun{
 chem.physical_and_invitro.data <- load_dawson2021()
-chem.physical_and_invitro.data <- load_dawson2021(overwrite=T) 
+chem.physical_and_invitro.data <- load_dawson2021(overwrite=TRUE) 
 }                        
 
 }
