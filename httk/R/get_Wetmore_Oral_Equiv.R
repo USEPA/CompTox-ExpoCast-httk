@@ -61,7 +61,7 @@
 #' get_lit_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95))
 #' 
 #' @export get_lit_oral_equiv
-get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messages=F,which.quantile=0.95,species="Human",input.units='uM',output.units='mg',clearance.assay.conc=NULL,...)
+get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messages=FALSE,which.quantile=0.95,species="Human",input.units='uM',output.units='mg',clearance.assay.conc=NULL,...)
 {
   Wetmore.data <- Wetmore.data
   if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
@@ -77,7 +77,7 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   }else{
     this.conc <- clearance.assay.conc
   }
-  Css <- try(get_lit_css(daily.dose=1,chem.cas=chem.cas,which.quantile=which.quantile,species=species,clearance.assay.conc=this.conc,suppress.messages=T,output.units='uM',...))
+  Css <- try(get_lit_css(daily.dose=1,chem.cas=chem.cas,which.quantile=which.quantile,species=species,clearance.assay.conc=this.conc,suppress.messages=TRUE,output.units='uM',...))
   dose <- conc / Css
   if(tolower(output.units) == 'mol'){
     dose <- dose /1000 / MW * 1000000 

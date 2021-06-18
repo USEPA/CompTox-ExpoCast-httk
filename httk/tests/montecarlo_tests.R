@@ -65,13 +65,13 @@ calc_mc_css(chem.cas="90-43-7",
     clint.pop.cv = 0.3))
 set.seed(1234)
 # HTTK Monte Carlo with no HTTK-Pop physiological variability):
-calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 set.seed(1234)
 # HTTK Monte Carlo with no in vitro uncertainty and variability):
-calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 set.seed(1234)
 # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
 # Should be the same as the mean result:
 calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 set.seed(1234)
@@ -79,8 +79,8 @@ set.seed(1234)
 calc_mc_css(chem.cas="90-43-7",
   model="pbtk",
   samples=NSAMP,
-  httkpop=F,
-  invitrouv=F,
+  httkpop=FALSE,
+  invitrouv=FALSE,
   vary.params=list(Pow=0.3))
 
 

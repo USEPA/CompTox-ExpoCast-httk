@@ -91,9 +91,9 @@ for (this.CAS in get_cheminfo(model="3compartmentss")){
                                        censored.params=censored.params,
                                        output.units="mg/L",
                                        model='3compartmentss',
-                                       suppress.messages=T,
-                                       well.stirred.correction=F,
-                                       Funbound.plasma.correction=F)
+                                       suppress.messages=TRUE,
+                                       well.stirred.correction=FALSE,
+                                       Funbound.plasma.correction=FALSE)
     percentiles <- c("5","50","95")
     for (this.index in 1:3)
     {

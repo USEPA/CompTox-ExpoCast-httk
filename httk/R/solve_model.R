@@ -127,21 +127,21 @@ solve_model <- function(chem.name = NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL,
-                    plots=F,
+                    plots=FALSE,
                     monitor.vars=NULL,
-                    suppress.messages=F,
+                    suppress.messages=FALSE,
                     species="Human",
                     input.units="mg/kg",
                     method="lsoda",rtol=1e-8,atol=1e-12,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
-                    adjusted.Funbound.plasma=T,
+                    recalc.blood2plasma=FALSE,
+                    recalc.clearance=FALSE,
+                    adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(
-                      default.to.human=F,
+                      default.to.human=FALSE,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = T,
-                      regression=T),
+                      regression=TRUE),
                     ...)
 {
 # Handy string manipulation functions for processing variable names that adhere
@@ -333,7 +333,7 @@ solve_model <- function(chem.name = NULL,
       parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
-      suppress.messages=T)
+      suppress.messages=TRUE)
   }
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
@@ -655,7 +655,7 @@ solve_model <- function(chem.name = NULL,
           belong to either the states or outputs of the model.")
   
 # Make a plot if asked for it (not the default behavior):
-  if (plots==T)
+  if (plots==TRUE)
   {
     #assemble a y-axis units vector to correspond to each entry in monitor.vars
     n_monitor_vars = length(monitor.vars)

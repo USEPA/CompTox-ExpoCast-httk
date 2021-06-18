@@ -53,7 +53,7 @@
 #' 
 #' 
 #' @export get_lit_css
-get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=F)
+get_lit_css <- function(chem.cas=NULL,chem.name=NULL,daily.dose=1,which.quantile=0.95,species="Human",clearance.assay.conc=NULL,output.units="mg/L",suppress.messages=FALSE)
 {
   Wetmore.data <- Wetmore.data
   if (species == "Human") available.quantiles <- c(0.05,0.5, 0.95)

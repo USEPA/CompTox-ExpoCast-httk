@@ -12,7 +12,7 @@ fake <- data.frame(Compound="Tester",
                    logP=3.5,
                    Fup=0.1,
                    Clint=0.1,
-                   Clint.pValue=0.001,stringsAsFactors=F)
+                   Clint.pValue=0.001,stringsAsFactors=FALSE)
 
 chem.physical_and_invitro.data <- add_chemtable(
   fake,
