@@ -97,11 +97,7 @@ calc_css <- function(chem.name=NULL,
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
-<<<<<<< HEAD
-                    tissue=NULL,
-=======
                     tissue="plasma",
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
                     model='pbtk',
                     default.to.human=FALSE,
                     f.change = 0.00001,
@@ -246,12 +242,9 @@ calc_css <- function(chem.name=NULL,
       initial.values = Final_Conc[state.vars],  
       dosing=dosing,
       days = additional.days,
-<<<<<<< HEAD
       output.units = output.units,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,    
-=======
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
       suppress.messages=TRUE,
       restrictive.clearance=restrictive.clearance,
       ...)
