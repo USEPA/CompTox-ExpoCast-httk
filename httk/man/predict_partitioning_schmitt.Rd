@@ -9,12 +9,8 @@ predict_partitioning_schmitt(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
-<<<<<<< HEAD
   model = "pbtk",
-  default.to.human = F,
-=======
   default.to.human = FALSE,
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
   parameters = NULL,
   alpha = 0.001,
   adjusted.Funbound.plasma = TRUE,

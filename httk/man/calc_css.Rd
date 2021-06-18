@@ -15,13 +15,8 @@ calc_css(
   doses.per.day = 3,
   days = 21,
   output.units = "uM",
-<<<<<<< HEAD
-  suppress.messages = F,
-  tissue = NULL,
-=======
   suppress.messages = FALSE,
   tissue = "plasma",
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
   model = "pbtk",
   default.to.human = FALSE,
   f.change = 1e-05,
@@ -136,37 +131,6 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
-<<<<<<< HEAD
-}
-
-# Make a plot for all chemicals (takes a while):
-\dontrun{
-days <- NULL
-avg <- NULL
-max <- NULL
-for(this.cas in get_cheminfo(model="pbtk")){
-  css.info <- calc_css(chem.cas = this.cas, doses.per.day = 1,suppress.messages=TRUE)
-  days[[this.cas]] <- css.info[["the.day"]]
-  avg[[this.cas]] <- css.info[["avg"]]
-  max[[this.cas]] <- css.info[["max"]]
-}
-days.data <- as.data.frame(days)
-hist <- ggplot(days.data, aes(days)) +
-geom_histogram(fill = "blue", binwidth = 1/6) + scale_x_log10() +
-ylab("Number of Chemicals") + xlab("Days") + theme(axis.text =
-element_text(size = 16), axis.title = element_text(size = 16))
-print(hist)
-avg.max.data <- as.data.frame(cbind(avg, max))
-avg.vs.max <- ggplot(avg.max.data, aes(avg, max)) + geom_point() +
-geom_abline() + scale_x_log10() + scale_y_log10() +
-xlab("Average Concentration at Steady State (uM)") +
-ylab("Max Concentration at Steady State (uM)") +
-theme(axis.text = element_text(size = 16),
-axis.title = element_text(size = 16))
-print(avg.vs.max)
-}
-=======
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
 }
 \author{
