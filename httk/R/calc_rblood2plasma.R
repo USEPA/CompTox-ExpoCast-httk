@@ -35,6 +35,9 @@
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'
+#' @return
+#' The blood to plasma chemical concentration ratio
+#'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 

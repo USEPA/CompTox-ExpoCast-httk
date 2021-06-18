@@ -19,8 +19,8 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 > library(httk)
-> options(warn=-1)
 > 
+<<<<<<< HEAD
 > calc_css(chem.name='nicotine')
 $avg
 [1] 0.6581
@@ -34,6 +34,9 @@ $max
 $the.day
 [1] 0
 
+=======
+> #calc_css(chem.name='nicotine')
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
@@ -77,7 +80,17 @@ $max
 $the.day
 [1] 1214
 
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+2: In parameterize_pbtk(chem.cas = NULL, chem.name = "endrin", dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
+<<<<<<< HEAD
 > calc_tkstats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.82 .
@@ -105,18 +118,31 @@ $mean
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=10)
+=======
+> #calc_stats(chem.name='nicotine',days=10)
+> 
+> #calc_stats(chem.name='nicotine',days=1)
+> 
+> calc_stats(dtxsid="DTXSID0020442",days=3)
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 168.5
+[1] 21.47
 
 $peak
-[1] 28.49
+[1] 10.87
 
 $mean
-[1] 16.85
+[1] 7.157
 
+Warning messages:
+1: In calc_stats(dtxsid = "DTXSID0020442", days = 3) :
+  Function "calc_stats" has been renamed to "calc_tkstats".
+2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > 
+<<<<<<< HEAD
 > calc_tkstats(dtxsid="DTXSID0020442",days=100)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
@@ -142,6 +168,22 @@ $mean
 +   daily.dose=2)
 Tissue concentration for liver returned in uM units.
 [1] 23.62
+=======
+> #calc_stats(dtxsid="DTXSID0020442",days=10)
+> 
+> #calc_stats(dtxsid="DTXSID0020442",days=100)
+> 
+> #calc_analytic_css(
+> #  chem.name='Bisphenol-A',
+> #  tissue='liver',
+> #  species='rabbit',
+> #  parameterize.args = list(
+> #    default.to.human=TRUE,
+> #    adjusted.Funbound.plasma=TRUE,
+> #    regression=TRUE,
+> #    minimum.Funbound.plasma=1e-4),
+> #  daily.dose=2)
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > predict_partitioning_schmitt(chem.name='nicotine')
 $Kadipose2pu

@@ -21,8 +21,6 @@
 #' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 #' Compartment Model Schematic"}}
 #' 
-#' 
-#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must

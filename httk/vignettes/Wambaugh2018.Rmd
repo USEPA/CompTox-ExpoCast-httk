@@ -54,10 +54,6 @@ on human health risks.
 
 To use the code in this vignette, you'll first need to load a few packages.
 ```{r load_packages}
-# We love to give warning messages whenever assumptions are used by HTTK,
-# but they will overwhelm the output of this vignette so we turn them
-# off:
-options(warn = -1)
 library(scales)
 library(ggplot2)
 library(data.table)
@@ -67,7 +63,6 @@ library(httk)
 library(RColorBrewer)
 library(grid)
 library(gplots)
-
 ```
 
 The data we analyze were originally generated with the R package invivoPKfit (https://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
@@ -404,7 +399,7 @@ heatmap.3 <- function(x,
                 image(rbind(1:nr), col = RowSideColors[rowInd], axes = FALSE)
         } else {
             par(mar = c(margins[1], 0, 0, 0.5))
-            rsc = t(RowSideColors[,rowInd, drop=F])
+            rsc = t(RowSideColors[,rowInd, drop=FALSE])
             rsc.colors = matrix()
             rsc.names = names(table(rsc))
             rsc.i = 1
@@ -428,7 +423,7 @@ heatmap.3 <- function(x,
             image(cbind(1:nc), col = ColSideColors[colInd], axes = FALSE)
         } else {
             par(mar = c(0.5, 0, 0, margins[2]))
-            csc = ColSideColors[colInd, , drop=F]
+            csc = ColSideColors[colInd, , drop=FALSE]
             csc.colors = matrix()
             csc.names = names(table(csc))
             csc.i = 1
@@ -628,7 +623,11 @@ apply(physprop.matrix,2,function(x) mean(x,na.rm=TRUE))
 for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log10(10^-6+physprop.matrix[,this.col])
 
 
+<<<<<<< HEAD
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE))
+=======
+physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(TRUE))
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 ```
 ```{r PlotFigure3, eval = FALSE}
 main_title="in vivo Toxicokinetic Parameters"
@@ -673,8 +672,9 @@ FitData.Fup$SelectedVdist.sd <- FitData.Fup$Vdist.sd
 
 #Predict volume of Distribution
 FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,
-  function(x) calc_vdist(chem.cas=x,
+  function(x) suppressWarnings(calc_vdist(chem.cas=x,
   species="Rat",
+<<<<<<< HEAD
   default.to.human = T,
   suppress.messages=TRUE))
 FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
@@ -683,6 +683,16 @@ FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
   species="Rat",
   default.to.human = T,
   suppress.messages=TRUE))
+=======
+  default.to.human = TRUE,
+  suppress.messages=TRUE)))
+FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
+  function(x) suppressWarnings(calc_vdist(chem.cas=x,
+  regression=FALSE,
+  species="Rat",
+  default.to.human = TRUE,
+  suppress.messages=TRUE)))
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))

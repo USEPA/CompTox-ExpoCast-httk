@@ -174,7 +174,7 @@ calc_vdist<- function(chem.cas=NULL,
     #partition coefficients to lump_tissues()
     if (is.data.table(parameters))
     {
-      PCs <- parameters[,PC.names,with=F]
+      PCs <- parameters[,PC.names,with=FALSE]
     } else {
       PCs <- subset(parameters,names(parameters) %in% PC.names)
     }
