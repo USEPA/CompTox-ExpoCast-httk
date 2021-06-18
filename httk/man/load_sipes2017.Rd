@@ -4,7 +4,7 @@
 \alias{load_sipes2017}
 \title{Load data from Sipes et al 2017.}
 \usage{
-load_sipes2017(overwrite = F, target.env = .GlobalEnv)
+load_sipes2017(overwrite = FALSE, target.env = .GlobalEnv)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
@@ -28,9 +28,28 @@ used in Sipes et al. 2017, included in admet.data.
 }
 \examples{
 
+<<<<<<< HEAD
 \dontrun{
 chem.physical_and_invitro.data <- load_sipes2017()
 chem.physical_and_invitro.data <- load_sipes2017(overwrite=TRUE) 
+=======
+\donttest{
+num.chems <- length(get_cheminfo())
+load_sipes2017()
+
+#We should have the ADMet Predicted chemicals from Sipes et al. (2017),
+#this one is a good test since the logP is nearly 10
+calc_css(chem.cas="26040-51-7")
+
+#Let's see how many chemicals we have now with the Sipes (2017) data loaded:
+length(get_cheminfo())
+
+#Now let us reset
+reset_httk()
+
+# We should be back to our original number:
+num.chems == length(get_cheminfo())
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 }                        
 
 }

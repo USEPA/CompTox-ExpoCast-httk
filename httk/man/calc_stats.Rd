@@ -20,11 +20,11 @@ calc_stats(
   concentration = "plasma",
   tissue = "plasma",
   model = "pbtk",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  default.to.human = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   restrictive.clearance = T,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   ...
 )
 }
@@ -104,20 +104,6 @@ Default value of 0 for doses.per.day solves for a single dose.
 When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-}
-\examples{
-
-calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
-
-calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
-
-\dontrun{
-# If you do not specify a chemical, calc_tkstats runs for all chemicals:
-all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
-}
-
-triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
-
 }
 \author{
 Robert Pearce and John Wambaugh

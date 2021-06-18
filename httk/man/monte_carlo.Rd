@@ -35,42 +35,24 @@ distribution between 0 and the limit of detection.}
 \item{samples}{This argument is the number of samples to be generated for
 calculating quantiles.}
 }
+\value{
+A data.table with a row for each individual in the sample and a column for
+each parater in the model.
+}
 \description{
 This function performs Monte Carlo to assess uncertainty and variability for
 toxicokinetic models.
 }
 \examples{
 
-#Example from Pearce et al. (2017):
-\dontrun{
-library(ggplot2)
-library(scales)
-vary.params <- NULL
-parameters <- parameterize_pbtk(chem.name = "Zoxamide")
-for(this.param in names(subset(parameters,
-names(parameters) != "Funbound.plasma"))) vary.parameters[this.param] <- .2
-censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
-set.seed(1)
-out <- monte_carlo(parameters, cv.params = vary.params,
-censored.params = censored.params, model = "pbtk", suppress.messages = T)
-zoxamide <- ggplot(as.data.frame(out), aes(out)) +
-geom_histogram(fill="blue", binwidth=1/6) + scale_x_log10() +
-ylab("Number of Samples") + xlab("Steady State Concentration (uM)") +
-theme(axis.text = element_text(size = 16),
-axis.title = element_text(size = 16))
-print(zoxamide)
+#Example based on Pearce et al. (2017):
 
+# Set up means:
+params <- parameterize_pbtk(chem.name="zoxamide")
+# Nothing changes:
+monte_carlo(params)
 
-# Fig 1 in Wambaugh et al. (2015) SimCYP vs. our predictions:
-
-vary.params <- list(BW=0.3)
-vary.parameters[["Vliverc"]]<-0.3
-vary.parameters[["Qgfrc"]]<-0.3
-vary.parameters[["Qtotal.liverc"]]<-0.3
-vary.parameters[["million.cells.per.gliver"]]<-0.3
-vary.parameters[["Clint"]]<-0.3
-censored.params<-list(Funbound.plasma=list(cv=0.3,lod=0.01))
-
+<<<<<<< HEAD
 pValues <- get_cheminfo(c("Compound","CAS","Clint.pValue"))
 pValues.rat <- get_cheminfo(c("Compound","CAS","Clint.pValue"),species="Rat")
 
@@ -134,16 +116,26 @@ Fig1 <- ggplot(Wetmore.table, aes(Predicted,Wetmore,group = CAS)) +
   theme(legend.position="bottom", text  = element_text(size=18))
 
 print(Fig1)
+=======
+vary.params <- NULL
+for (this.param in names(params)[!(names(params) \%in\%
+  c("Funbound.plasma", "pKa_Donor", "pKa_Accept" )) &
+  !is.na(as.numeric(params))]) vary.params[this.param] <- 0.2
+# Most everything varies with CV of 0.2:
+monte_carlo(
+  parameters=params, 
+  cv.params = vary.params)
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
-Fig1a.fit <- lm(log(Wetmore) ~ log(Predicted)*Percentile, Wetmore.table)
-## End(**Not run**)
-}
+censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
+# Fup is censored below 0.01:
+monte_carlo(
+  parameters=params, 
+  cv.params = vary.params,
+  censored.params = censored.params)
 
 }
 \references{
-Wambaugh, John F., et al. "Toxicokinetic triage for 
-environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
-
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }

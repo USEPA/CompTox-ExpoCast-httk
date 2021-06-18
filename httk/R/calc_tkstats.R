@@ -57,14 +57,11 @@
 #' 
 #' calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
 #' 
+#' \donttest{
 #' calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
 #' 
-#' \dontrun{
-#' # If you do not specify a chemical, calc_tkstats runs for all chemicals:
-#' all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
-#' }
-#' 
 #' triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
+#' }
 #' 
 #' @export calc_tkstats
 calc_tkstats <-function(
@@ -322,20 +319,10 @@ calc_tkstats <-function(
 #' @return \item{AUC}{Area under the plasma concentration curve.}
 #' \item{mean.conc}{The area under the curve divided by the number of days.}
 #' \item{peak.conc}{The highest concentration.}
+#'
 #' @author Robert Pearce and John Wambaugh 
+#'
 #' @keywords Solve Statistics
-#' @examples
-#' 
-#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
-#' 
-#' calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
-#' 
-#' \dontrun{
-#' # If you do not specify a chemical, calc_tkstats runs for all chemicals:
-#' all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
-#' }
-#' 
-#' triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
 #' 
 #' @export calc_stats
 calc_stats <-function(

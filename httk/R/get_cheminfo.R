@@ -38,7 +38,7 @@
 #' @keywords Retrieval
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' # List all CAS numbers for which the 3compartmentss model can be run in humans: 
 #' get_cheminfo()
 #' 
@@ -157,7 +157,99 @@ get_cheminfo <- function(info="CAS",
     "logP"
   
   # Flag in case we can't find a column for every parameter:
-  incomplete.data <- F
+  incomplete.data <- FALSE
+
+  # Identify the appropriate column for Clint (if needed):
+  species.clint <- paste0(species,'.Clint')
+  species.clint.pvalue <- paste0(species,'.Clint.pValue')
+  # Make sure capitalization matches a table column:
+  if (tolower(species.clint) %in% 
+    tolower(colnames(chem.physical_and_invitro.data)))
+  {
+    species.clint <- colnames(chem.physical_and_invitro.data)[
+      tolower(colnames(chem.physical_and_invitro.data)) ==
+      tolower(species.clint)]
+    species.clint.pvalue <- colnames(chem.physical_and_invitro.data)[
+      tolower(colnames(chem.physical_and_invitro.data)) ==
+      tolower(species.clint.pvalue)]
+  }
+  
+  # Check to see if we need clint:
+  if (tolower("Clint") %in% 
+    unique(tolower(c(necessary.params,info))))   
+  {
+    # Check to see if we will use human data where species data is missing:
+    if (default.to.human)
+    {
+      # Check to see if this is a column that already has data:
+      if (species.clint %in% colnames(chem.physical_and_invitro.data))
+      {
+        # Replace chemicals with NA's only:
+        replace.index <- is.na(chem.physical_and_invitro.data[,species.clint])
+        if (any(replace.index))
+        {
+          chem.physical_and_invitro.data[replace.index,species.clint] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Clint']
+          chem.physical_and_invitro.data[replace.index,species.clint.pvalue] <-
+            chem.physical_and_invitro.data[replace.index,'Human.Clint.pValue']
+          if (!suppress.messages) 
+            warning('Human values substituted for Clint and Clint.pValue.')
+        }
+      } else {
+        chem.physical_and_invitro.data[,species.clint] <-
+          chem.physical_and_invitro.data[,'Human.Clint']
+        chem.physical_and_invitro.data[,species.clint.pvalue] <-
+          chem.physical_and_invitro.data[,'Human.Clint.pValue']
+        if (!suppress.messages) 
+          warning('Human values substituted for Clint and Clint.pValue.')
+      }    
+    }
+    # Check to see if we have a column for this species in the table:
+    if (!(species.clint %in% colnames(chem.physical_and_invitro.data)))  
+    {
+      incomplete.data <- TRUE
+    } else {
+      # Set observed clint values to 0 if clint.pvalue > threshold
+      if (!is.null(clint.pvalue.threshold))
+      {
+        clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],
+          split = ",")
+        clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
+        # Replace the clint.value with 0 when clint.pvalue > threshold
+        clint.values[lapply(clint.values,length)!=4] <- 
+          ifelse(
+            clint.pvalues[lapply(clint.values,length)!=4] > 
+            clint.pvalue.threshold & 
+            !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
+            yes = "0",
+            no = clint.values[lapply(clint.values,length)!=4]
+          )
+        # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
+        clint.values[lapply(clint.values,length)==4]<-
+          ifelse(
+            clint.pvalues[lapply(clint.values,length)==4] >
+            clint.pvalue.threshold & 
+            !is.na(clint.pvalues[lapply(clint.values,length)==4]),
+            yes = lapply(clint.values[lapply(clint.values,length)==4],
+            function(x){x<-c(rep("0",3),x[[4]])}),
+            no = clint.values[lapply(clint.values,length)==4]
+          )
+        
+        clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
+        chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
+        if (!suppress.messages & "CLINT" %in% info)
+          warning(paste(
+            'Clint values with a pvalue >',
+            clint.pvalue.threshold,
+            'were set to 0.'))
+      }    
+    }
+    # Change the necessary parameters to the chem.physical_and_invitro.data col:
+    if (!is.null(species.clint)) 
+    {
+      necessary.params[necessary.params=="Clint"]<-species.clint
+    }
+  }
 
   # Identify the appropriate column for Clint (if needed):
   species.clint <- paste0(species,'.Clint')
@@ -279,7 +371,7 @@ get_cheminfo <- function(info="CAS",
           # Replace all the zeros if that will impact the model:
           replace.index <- (temp.fup==0)
           # Comparisons with NA's will produce NA's
-          replace.index[is.na(replace.index)] <- T
+          replace.index[is.na(replace.index)] <- TRUE
         } else {
           # Otherwise just replace NA's
           replace.index <- is.na(chem.physical_and_invitro.data[,species.fup])
@@ -303,7 +395,7 @@ get_cheminfo <- function(info="CAS",
     if (!(species.fup %in% 
       colnames(chem.physical_and_invitro.data))) 
     {
-      incomplete.data <- T
+      incomplete.data <- TRUE
     }
     # Change the necessary parameters to the chem.physical_and_invitro.data col:
     if (!is.null(species.fup)) 
@@ -343,7 +435,7 @@ get_cheminfo <- function(info="CAS",
     if (!(species.rblood2plasma %in% 
       colnames(chem.physical_and_invitro.data)))
     {
-      incomplete.data <- T
+      incomplete.data <- TRUE
     }
     # Change the necessary parameters to the chem.physical_and_invitro.data col:
     if (!is.null(species.rblood2plasma)) 
@@ -383,7 +475,7 @@ get_cheminfo <- function(info="CAS",
   # If we are exclude the fups with a zero, then get rid of those:
       if (exclude.fup.zero) 
       {
-        suppressWarnings(fup.values.numeric[fup.values==0] <- F)
+        suppressWarnings(fup.values.numeric[fup.values==0] <- FALSE)
       }
       good.chemicals.index <- good.chemicals.index & fup.values.numeric
       
@@ -393,13 +485,13 @@ get_cheminfo <- function(info="CAS",
         fup.ci.diff <- strsplit(as.character(
           chem.physical_and_invitro.data[,species.fup]),",")
         # if only one element assume TRUE
-        fup.ci.diff[lapply(fup.ci.diff,length)!=3] <- T
+        fup.ci.diff[lapply(fup.ci.diff,length)!=3] <- TRUE
         # if 3 elements, then calculate interval length and check if it passes the cutoff 
         fup.ci.diff[lapply(fup.ci.diff,length)==3] <- 
           lapply(fup.ci.diff[lapply(fup.ci.diff,length)==3],function(x){
             t.ci <- as.numeric(x)
             # Fup's where confidence interval spans nearly all possible values:
-            out  <- ifelse((t.ci[3]>0.9 & t.ci[2]<0.1),yes = F,no = T)
+            out  <- ifelse((t.ci[3]>0.9 & t.ci[2]<0.1),yes = FALSE, no = TRUE)
             return(out)
           })
         fup.ci.cert <- unlist(fup.ci.diff)
@@ -417,7 +509,7 @@ get_cheminfo <- function(info="CAS",
       clint.values.dist <- 
         suppressWarnings(nchar(clint.values) - 
         nchar(gsub(",","",clint.values))==3)
-      clint.values.dist[is.na(clint.values.dist)] <- F
+      clint.values.dist[is.na(clint.values.dist)] <- FALSE
       good.chemicals.index <- good.chemicals.index &
 # Either a numeric value:
         (clint.values.numeric |

@@ -20,11 +20,11 @@ calc_tkstats(
   concentration = "plasma",
   tissue = "plasma",
   model = "pbtk",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  default.to.human = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   restrictive.clearance = T,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   ...
 )
 }
@@ -107,14 +107,11 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
 
+\donttest{
 calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
 
-\dontrun{
-# If you do not specify a chemical, calc_tkstats runs for all chemicals:
-all.peak.conc.stats <- calc_tkstats(days=10, doses.per.day = 3, stats = "peak")
-}
-
 triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
+}
 
 }
 \author{
