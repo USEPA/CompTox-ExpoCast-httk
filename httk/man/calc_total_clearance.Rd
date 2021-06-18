@@ -10,11 +10,11 @@ calc_total_clearance(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  suppress.messages = F,
-  default.to.human = F,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
+  suppress.messages = FALSE,
+  default.to.human = FALSE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }

@@ -15,15 +15,20 @@ calc_css(
   doses.per.day = 3,
   days = 21,
   output.units = "uM",
+<<<<<<< HEAD
   suppress.messages = F,
   tissue = NULL,
+=======
+  suppress.messages = FALSE,
+  tissue = "plasma",
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
   model = "pbtk",
-  default.to.human = F,
+  default.to.human = FALSE,
   f.change = 1e-05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
   dosing = NULL,
   ...
 )
@@ -117,12 +122,12 @@ parms$Funbound.plasma <- .07
 calc_css(parameters=parms,model='3compartment')
 
 out <- solve_pbtk(chem.name = "Bisphenol A",
-  days = 50, 
+  days = 50,                                   
   daily.dose=1,
   doses.per.day = 3)
 plot.data <- as.data.frame(out)
+
 css <- calc_analytic_css(chem.name = "Bisphenol A")
-\dontrun{
 library("ggplot2")
 c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
 geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
@@ -131,6 +136,7 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
+<<<<<<< HEAD
 }
 
 # Make a plot for all chemicals (takes a while):
@@ -159,6 +165,8 @@ theme(axis.text = element_text(size = 16),
 axis.title = element_text(size = 16))
 print(avg.vs.max)
 }
+=======
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
 }
 \author{

@@ -9,17 +9,21 @@ predict_partitioning_schmitt(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
+<<<<<<< HEAD
   model = "pbtk",
   default.to.human = F,
+=======
+  default.to.human = FALSE,
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
   parameters = NULL,
   alpha = 0.001,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   regression.list = c("brain", "adipose", "gut", "heart", "kidney", "liver", "lung",
     "muscle", "skin", "spleen", "bone"),
   tissues = NULL,
   minimum.Funbound.plasma = 1e-04,
-  suppress.messages = F
+  suppress.messages = FALSE
 )
 }
 \arguments{

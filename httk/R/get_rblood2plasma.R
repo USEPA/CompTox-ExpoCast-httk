@@ -22,6 +22,10 @@
 #'
 #' @keywords Parameter
 #'
+#' @return
+#' A numeric value for the steady-state ratio of chemical concentration in blood
+#' to plasma
+#'
 #' @examples
 #' 
 #' get_rblood2plasma(chem.name="Bisphenol A")

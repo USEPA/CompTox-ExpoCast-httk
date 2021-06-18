@@ -77,7 +77,7 @@ Generate a virtual population
 }
 \examples{
 
-\dontrun{
+\donttest{
 #Simply generate a virtual population of 100 individuals,
  #using the direct-resampling method
  set.seed(42)

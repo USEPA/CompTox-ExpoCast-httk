@@ -68,7 +68,7 @@
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
 #'  out <- solve_1comp(parameters=parameters)
-#' 
+#'
 #' @export parameterize_1comp
 parameterize_1comp <- function(
                         chem.cas=NULL,
@@ -116,7 +116,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=suppress.messages)
+                         suppress.messages=FALSE)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,

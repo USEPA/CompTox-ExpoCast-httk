@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save 3comp_test.R 3comp_test.Rout
 library(httk)
-options(warn=-1)
 
 calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 calc_analytic_css(chem.cas="80-05-7",model="3compartment")

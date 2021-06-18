@@ -8,7 +8,7 @@ get_lit_oral_equiv(
   conc,
   chem.name = NULL,
   chem.cas = NULL,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   which.quantile = 0.95,
   species = "Human",
   input.units = "uM",

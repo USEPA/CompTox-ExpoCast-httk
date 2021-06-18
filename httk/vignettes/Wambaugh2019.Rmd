@@ -54,10 +54,6 @@ and exposures.
 
 ##Prepate for session
 ```{r setup}
-# We love to give warning messages whenever assumptions are used by HTTK,
-# but they will overwhelm the output of this vignette so we turn them
-# off:
-options(warn = -1)
 library(data.table)
 library(httk)
 library(ggplot2)
@@ -420,7 +416,7 @@ hlfun_u <- function(chemcas,
   pop_u_httk<-cbind(pop_u_httk,as.data.table(predict_partitioning_schmitt(parameters=pop_u_httk)))
   pop_u_httk[,hl:=calc_elimination_rate(parameters=pop_u_httk)]
   
-  return(log(2)/quantile(unlist(pop_u_httk[,"hl",with=F]),probs=probs))
+  return(log(2)/quantile(unlist(pop_u_httk[,"hl",with=FALSE]),probs=probs))
 }
 ```
 
@@ -764,8 +760,8 @@ ceetox[CAS%in%schmitt_cas,
                           probs=0.025),
        by=.(CAS)]
 
-ceetox[,hlpointEstimated:=T]
-ceetox[is.na(hlpoint),hlpointEstimated:=F]
+ceetox[,hlpointEstimated:=TRUE]
+ceetox[is.na(hlpoint),hlpointEstimated:=FALSE]
 ceetox[is.na(hlpoint),hlpoint:=hl_med]
 
 hlfit <- lm(data=subset(ceetox,hlpointEstimated),log10(hlpoint)~log10(hl_med))
