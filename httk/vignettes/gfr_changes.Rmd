@@ -3,6 +3,10 @@ title: "Differences from GFR changes"
 author: "Caroline Ring"
 date: "11/5/2020"
 output: html_document
+vignette: >
+ %\VignetteIndexEntry{Differences from GFR changes}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
