@@ -81,9 +81,9 @@ Outputs <- c(
     "Ckidney",
     "Cplasma",
     "Aplasma",
-    "Calv",
-    "Cendexh",
-    "Cmixexh",
+    "Calvppmv",
+    "Cendexhppmv",
+    "Cmixexhppmv",
     "Cmuc"
 )
 
