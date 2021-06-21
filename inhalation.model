@@ -1,43 +1,47 @@
 States = {
-Agutlumen,
-Agut,
-Aliver,
-Aven,
-Alung,
-Aart,
-Arest,
-Akidney,
-Atubules,
-Ametabolized,
-AUC,
-Ainh,
-Aexh,
-Amuc
+Agutlumen,  # Amount of the compound in gut lumen (umol)
+Agut,       # ... gut (umol)
+Aliver,     # ... liver (umol)
+Aven,       # ... veins (umol)
+Alung,      # ... lung (umol)
+Aart,       # ... arterioles (umol)
+Arest,      # ... rest of the body (umol)
+Akidney,    # ... kidney (umol)
+Atubules,   # ... tubules (umol)
+Ametabolized, # ... metabolized (umol)
+AUC,        # Area under the curve (umol)
+Ainh,       # Amount of the compound inhaled (umol)
+Aexh,       # Amount of the compound exhaled (umol)
+Amuc        # Amount of the compound in the mucus (umol)
 };
 
-Inputs = {Cinh
+Inputs = {Cinhppmv # Concentration Inhaled (ppmv)
+#Cinh    # ... (uM) -- Linakis original input 
 };
 
 Outputs = {
-Cgut,
-Cliver,
-Cven,
-Clung,
-Cart,
-Crest,
-Ckidney,
-Cplasma,
+Cgut,      # Concentration in the gut (uM)
+Cliver,    # ... liver (uM)
+Cven,      # ... veins (uM)
+Clung,     # ... lung (uM)
+Cart,      # ... arterioles (uM)
+Crest,     # ... rest of the body (uM)
+Ckidney,   # ... kidney (uM)
+Cplasma,   # ... plasma (uM)
 Aplasma,
-Calv,
-Cendexh,
-Cmixexh,
-Cmuc
+Calvppmv,    # Concentration in alveoli (ppmv)
+#Calv,       # ... (uM) -- Linakis original output
+Cendexhppmv, # Concentration exhaled (ppmv)
+#Cendexh,    # ... (uM) -- Linakis original output
+Cmixexhppmv, # Concentration exhaled mixed (ppmv)
+#Cmixexh,    # ... (uM) -- Linakis original output
+Cmuc         # Concentration exhaled mucus (uM)
 };
 
-BW = 70;
-Clmetabolismc = 0.203;
-vmax = 0;
-km = 1;
+BW = 70;   # Body weight
+Clmetabolismc = 0.203; # Concentration metabolism
+vmax = 0;  # Maximal rate of reaction (pmol/min/10^6cells)
+km = 1;    # Michaelis-Menten constant (uM)
 hematocrit = 0.44;
 kgutabs = 1;
 Kkidney2pu = 0;
@@ -80,12 +84,12 @@ Kblood2air = 0;
 InhMag = 0;
 Period = 0;
 Exposure = 0;
-kUrtc = 11.0;
+kUrtc = 11.0; # clearance to the URT (L/h/kg^0.75)
 kUrt = 0;
 Kmuc2air = 0;
 Vmucc = 0.0001;
 Vmuc = 0.0;
-Vmax = 0;
+Vmax = 0;     # Maximal rate of reaction (pmol/min/10^6cells)
 Km = 1;
 
 
@@ -117,20 +121,24 @@ Km = km;
 }
 
 Dynamics{
-Cgut = Agut / Vgut;
-Cliver = Aliver / Vliver;
-Cven = Aven / Vven;
-Clung = Alung / Vlung;
-Cart = Aart / Vart;
-Crest = Arest / Vrest;
-Ckidney = Akidney / Vkidney;
-#Clungart = (Qcardiac * Cven + Qalv * Cinh) / (Qcardiac + Qalv / Kblood2air);
-Cplasma = Aven / Vven / Rblood2plasma;
-Aplasma = Aven / Rblood2plasma * (1 - hematocrit);
-Calv = Cart/Kblood2air;
-Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; 
-Cmixexh = 0.7 * Cendexh + 0.3 * Cinh;
-Cmuc = Amuc/Vmuc;
+Cinh = Cinhppmv/24.45;     # Concentration inhaled (uM) - default input is ppmv
+Cgut = Agut / Vgut;       # Concentration in the gut
+Cliver = Aliver / Vliver; # ... liver 
+Cven = Aven / Vven;       # ... veins (uM)
+Clung = Alung / Vlung;    # ... lung
+Cart = Aart / Vart;       # ... arterioles
+Crest = Arest / Vrest;    # ... <>
+Ckidney = Akidney / Vkidney; # ... kidney
+#Clungart = (Qcardiac * Cven + Qalv * Cinh) / (Qcardiac + Qalv / Kblood2air); # ... lung arterioles
+Cplasma = Aven / Vven / Rblood2plasma; # ... plasma (uM)
+Aplasma = Aven / Rblood2plasma * (1 - hematocrit); # (umols)
+Calv = Cart/Kblood2air; # Concentration in the alveoli (uM)
+Calvppmv = Calv*24.45;   # ... (ppmv)
+Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; # Concentration exhaled (uM)
+Cendexhppmv = Cendexh*24.45;          # ... (ppmv)
+Cmixexh = 0.7 * Cendexh + 0.3 * Cinh; # Concentration exhaled mix (uM)
+Cmixexhppmv = Cmixexh*24.45;          # ... (ppmv)
+Cmuc = Amuc/Vmuc;            # Concentration in mucus
 
  
 
