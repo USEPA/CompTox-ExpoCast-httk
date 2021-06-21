@@ -3,7 +3,7 @@
 
    Model File:  inhalation.model
 
-   Date:  Thu May 27 15:42:28 2021
+   Date:  Fri Jun 04 11:13:50 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -39,13 +39,13 @@
     "Ckidney",
     "Cplasma",
     "Aplasma",
-    "Calv",
-    "Cendexh",
-    "Cmixexh",
+    "Calvppmv",
+    "Cendexhppmv",
+    "Cmixexhppmv",
     "Cmuc",
 
    1 Input:
-     Cinh (forcing function)
+     Cinhppmv (forcing function)
 
    53 Parameters:
      BW = 70,
@@ -134,9 +134,9 @@
 #define ID_Ckidney 0x00006
 #define ID_Cplasma 0x00007
 #define ID_Aplasma 0x00008
-#define ID_Calv 0x00009
-#define ID_Cendexh 0x0000a
-#define ID_Cmixexh 0x0000b
+#define ID_Calvppmv 0x00009
+#define ID_Cendexhppmv 0x0000a
+#define ID_Cmixexhppmv 0x0000b
 #define ID_Cmuc 0x0000c
 
 /* Parameters */
@@ -199,17 +199,17 @@ static double parms[53];
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cinh forc[0]
+#define Cinhppmv forc[0]
 
 /* Function definitions for delay differential equations */
 
-int Nout=1;
+/*int Nout=1;
 int nr[1]={0};
 double ytau[1] = {0.0};
 
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};*/ /*Array of initial state variables*/
 
-void lagvalue(double T, int *nr, int N, double *ytau) {
+/*void lagvalue(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
   if (fun == NULL)
     fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
@@ -226,16 +226,16 @@ double CalcDelay(int hvar, double dTime, double delay) {
     ytau[0] = yini[hvar];
 }
   return(ytau[0]);
-}
+} */
 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
   int N=53;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
@@ -244,7 +244,7 @@ void initforc (void (* odeforcs)(int *, double *))
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
-void initState (double *y)
+/*void initState (double *y)
 {
   int i;
 
@@ -252,9 +252,9 @@ void initState (double *y)
   {
     yini[i] = y[i];
   }
-}
+}*/
 
-void getParms (double *inParms, double *out, int *nout) {
+void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -292,8 +292,14 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
+  /* local */ double Cinh;
+  /* local */ double Calv;
+  /* local */ double Cendexh;
+  /* local */ double Cmixexh;
+
+  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -313,11 +319,17 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
-  yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
+  Calv = yout[ID_Cart] / Kblood2air ;
 
-  yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
+  yout[ID_Calvppmv] = Calv * 24.45 ;
 
-  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+  Cendexh = ( ( Qalv * Calv ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ) / Qalv ;
+
+  yout[ID_Cendexhppmv] = Cendexh * 24.45 ;
+
+  Cmixexh = 0.7 * Cendexh + 0.3 * Cinh ;
+
+  yout[ID_Cmixexhppmv] = Cmixexh * 24.45 ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
@@ -331,7 +343,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - Calv ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -343,30 +355,30 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Ainh] = ( Qalv * ( Calv - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ;
 
-  ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Aexh] = ( Qalv * Calv ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ;
 
-  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
+  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ) ;
 
 } /* derivs */
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_gas_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
