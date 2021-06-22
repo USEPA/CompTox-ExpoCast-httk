@@ -552,105 +552,6 @@ cat(paste("The RMSE of the predictions for the ",
   " without.\n",sep=""))
 ```
 
-#
-#
-# Maternal-Fetal Predictions across HTTK:
-#
-#
-```{r MFratio_allhttk_preds, eval = TRUE}
-times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
-  
-MFratio.pred <- NULL
-all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Compound","DTXSID"))
-for (this.id in all.chems$DTXSID)
-  if ((this.id %in% nonvols) & 
-    !(this.id %in% fluoros))
-{
-
-  Fup <- subset(get_cheminfo(info="all"),DTXSID==this.id)$Human.Funbound.plasma 
-  if (regexpr(",",Fup)!=-1)
-  {
-    if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
-      (as.numeric(strsplit(Fup,",")[[1]][3])>0.9 & 
-      as.numeric(strsplit(Fup,",")[[1]][2])<0.11))
-    {
-      skip <- TRUE
-    } else skip <- FALSE
-  } else if (Fup== 0) 
-  {
-    skip <- TRUE
-  } else skip <- FALSE
-  
-  if (!skip)
-  {  
-    p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
-    fetal_fup_adjustment =TRUE,
-    suppress.messages=TRUE))
-    out <- suppressWarnings(solve_fetal_pbtk(
-      parameters=p,
-      fetal_fup_adjustment =FALSE,
-      dose=0,
-      times=times,
-      daily.dose=1,
-      doses.per.day=3,
-      output.units = "uM",
-      suppress.messages=TRUE))
-    last.row <- which(out[,"time"]>279)
-    last.row <- last.row[!duplicated(out[last.row,"time"])]
-    new.row <- data.frame(
-      Chemical = all.chems[all.chems$DTXSID==this.id,"Compound"],
-      DTXSID = this.id,
-      Mat.pred = mean(out[last.row,"Cplasma"]),
-      Fet.pred = mean(out[last.row,"Cfplasma"]),
-      MFratio.pred = mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
-      )
-    MFratio.pred <- rbind(MFratio.pred,new.row)
-  }
-  }
-```
-```{r MFratio_allhttk_figure, eval = TRUE}
-FigD <- ggplot(data=MFratio.pred)+
-   geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
-  xlab("Maternal:Fetal Plasma Concentration Ratio") +
-  ylab("Number of chemicals")+
-    theme_bw()+
-    theme( text  = element_text(size=14))
-    
-
-print(FigD)
-```
-```{r MFratio_allhttk_stats, eval = TRUE}
-max.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=T)),]
-min.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==min(MFratio.pred$MFratio.pred,na.rm=T)),]
-cat(paste("In Figure X we examine the ratios predicted for the ",
-  dim(MFratio.pred)[1],
-  " appropriate (non-volatile or PFAS) chemicals with measured HTTK data.\n",
-  sep=""))
-
-
-cat(paste("We observe a median value of ",
-  signif(median(MFratio.pred$MFratio.pred,na.rm=T),3),
-  " ranging from ",
-  signif(min.chem[,"MFratio.pred"],3),
-  " for ",
-  min.chem[,"DTXSID"],
-  " to ",
-  signif(max.chem[,"MFratio.pred"],3),
-  " for ",
-  max.chem[,"DTXSID"],
-  ".\n",sep=""))
-  
-# Check out phys-chem > 1.6, < 1:
-highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred>1.6)$DTXSID)
-# all highly bound
-highratio$Compound
-suppressWarnings(apply(highratio,2,function(x) mean(as.numeric(x),na.rm=2)))
-
-
-lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
-# No obvious pattern
-```
-
 
 
 #
@@ -1061,7 +962,7 @@ for (this.cas in maternal.list)
 
   pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"] <- 
 #    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+empirical.error) 
-    1/((1/pred.table1[pred.table2$CAS==this.cas,"Ratio.pred"])*(1-1.96*empirical.error)) 
+    1/((1/pred.table1[pred.table3$CAS==this.cas,"Ratio.pred"])*(1-1.96*empirical.error)) 
 }
 # Update final table for paper:
 PC.table$RMSE <- RMSE(fit2sub)
@@ -1230,3 +1131,102 @@ write.csv(PC.table,
   
   
   
+
+#
+#
+# Maternal-Fetal Predictions across HTTK:
+#
+#
+```{r MFratio_allhttk_preds, eval = TRUE}
+times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
+  
+MFratio.pred <- NULL
+all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Compound","DTXSID"))
+for (this.id in all.chems$DTXSID)
+  if ((this.id %in% nonvols) & 
+    !(this.id %in% fluoros))
+{
+
+  Fup <- subset(get_cheminfo(info="all"),DTXSID==this.id)$Human.Funbound.plasma 
+  if (regexpr(",",Fup)!=-1)
+  {
+    if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
+      (as.numeric(strsplit(Fup,",")[[1]][3])>0.9 & 
+      as.numeric(strsplit(Fup,",")[[1]][2])<0.11))
+    {
+      skip <- TRUE
+    } else skip <- FALSE
+  } else if (Fup== 0) 
+  {
+    skip <- TRUE
+  } else skip <- FALSE
+  
+  if (!skip)
+  {  
+    p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
+    fetal_fup_adjustment =TRUE,
+    suppress.messages=TRUE))
+    out <- suppressWarnings(solve_fetal_pbtk(
+      parameters=p,
+      fetal_fup_adjustment =FALSE,
+      dose=0,
+      times=times,
+      daily.dose=1,
+      doses.per.day=3,
+      output.units = "uM",
+      suppress.messages=TRUE))
+    last.row <- which(out[,"time"]>279)
+    last.row <- last.row[!duplicated(out[last.row,"time"])]
+    new.row <- data.frame(
+      Chemical = all.chems[all.chems$DTXSID==this.id,"Compound"],
+      DTXSID = this.id,
+      Mat.pred = mean(out[last.row,"Cplasma"]),
+      Fet.pred = mean(out[last.row,"Cfplasma"]),
+      MFratio.pred = mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+      )
+    MFratio.pred <- rbind(MFratio.pred,new.row)
+  }
+  }
+```
+```{r MFratio_allhttk_figure, eval = TRUE}
+FigD <- ggplot(data=MFratio.pred)+
+   geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
+  xlab("Maternal:Fetal Plasma Concentration Ratio") +
+  ylab("Number of chemicals")+
+    theme_bw()+
+    theme( text  = element_text(size=14))
+    
+
+print(FigD)
+```
+```{r MFratio_allhttk_stats, eval = TRUE}
+max.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=T)),]
+min.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==min(MFratio.pred$MFratio.pred,na.rm=T)),]
+cat(paste("In Figure X we examine the ratios predicted for the ",
+  dim(MFratio.pred)[1],
+  " appropriate (non-volatile or PFAS) chemicals with measured HTTK data.\n",
+  sep=""))
+
+
+cat(paste("We observe a median value of ",
+  signif(median(MFratio.pred$MFratio.pred,na.rm=T),3),
+  " ranging from ",
+  signif(min.chem[,"MFratio.pred"],3),
+  " for ",
+  min.chem[,"DTXSID"],
+  " to ",
+  signif(max.chem[,"MFratio.pred"],3),
+  " for ",
+  max.chem[,"DTXSID"],
+  ".\n",sep=""))
+  
+# Check out phys-chem > 1.6, < 1:
+highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred>1.6)$DTXSID)
+# all highly bound
+highratio$Compound
+suppressWarnings(apply(highratio,2,function(x) mean(as.numeric(x),na.rm=2)))
+
+
+lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
+# No obvious pattern
+```
