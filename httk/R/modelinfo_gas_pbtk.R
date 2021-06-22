@@ -70,7 +70,8 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "pKa_Accept",
   "pKa_Donor",
   "Pow",
-  "Qalvc", #MWL 8-1-19
+  # "Qalvc", #MWL 8-1-19
+  "Qalv", # SED 06-21-2021
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
@@ -118,11 +119,35 @@ model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  Qalvc = "Qalvc",
+  # Clmetabolism="Clmetabolism",
+  # Qcardiac="Qcardiac",
+  # Qgfr="Qfr",
+  # Qcardiac="Qcardiac",
+  # Qgfr="Qgfr",
+  # Qgut="Qgut",
+  # Qkidney="Qkidney",
+  # Qliver="Qliver",
+  # Qlung="Qlung",
+  # Qrest="Qrest",
+  # Vart="Vart",
+  # Vgut="Vgut",
+  # Vkidney="Vkidney",
+  # Vliver="Vliver",
+  # Vlung="Vlung",
+  # Vrest="Vrest",
+  # Vven="Vven",
+  Qalv="Qalvc", # Qalvc = "Qalvc",
   Kblood2air = "Kblood2air",
+  # InhMag="InhMag",
+  # Period="Period",
+  # Exposure="Exposure",
   kUrtc = "kUrtc",
+  # kUrt="kUrt",
   Kmuc2air = "Kmuc2air",
   Vmucc = "Vmucc"
+  # Vmuc="Vmuc",
+  # Vmax="Vmax",
+  # Km="Km"
 )
 
 # This function translates the R model parameters into the compiled model
@@ -173,9 +198,12 @@ model.list[["gas_pbtk"]]$compiled.param.names <- c(
   "Vlung",
   "Vrest",
   "Vven",
-  "Qalvc",
+  # "Qalvc", # SED 06-15-2021
   "Qalv",
   "Kblood2air",
+  "InhMag",
+  "Period",
+  "Exposure",
   "kUrtc",
   "kUrt",
   "Kmuc2air",
@@ -204,9 +232,12 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Ckidney",
   "Cplasma",
   "Aplasma",
-  "Calv",
-  "Cendexh",
-  "Cmixexh",
+  # "Calv",
+  "Calvppmv", # SED 06-12-2021
+  # "Cendexh",
+  "Cendexhppmv", # SED 06-12-2021
+  # "Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc"
   )
 
@@ -221,9 +252,12 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
-  "Calv",
-  "Cendexh",
-  "Cmixexh",
+  # "Calv",
+  "Calvppmv", # SED 06-12-2021
+  # "Cendexh",
+  "Cendexhppmv", # SED 06-12-2021
+  # "Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc",
   "Atubules",
   "Ametabolized",
@@ -258,9 +292,12 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Ckidney"="uM",
                                           "Cplasma"="uM",
                                           "Aplasma"="umol",
-                                          "Calv"="ppmv",
-                                          "Cendexh"="ppmv",
-                                          "Cmixexh"="ppmv",
+                                          # "Calv"="ppmv", # "uM",
+                                          # "Cendexh"="ppmv", # "uM",
+                                          # "Cmixexh"="ppmv", # "uM",
+                                          "Calvppmv"="ppmv",
+                                          "Cendexhppmv"="ppmv",
+                                          "Cmixexhppmv"="ppmv",
                                           "Cmuc"="uM",
                                           "AUC"="uM*days")
 
@@ -298,6 +335,8 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "Atubules",
     "Ametabolized",
     "AUC",
+    "Ainh", # SED 06-12-2021
+    "Aexh", # SED 06-12-2021
     "Amuc"
     ) 
        
