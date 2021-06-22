@@ -110,7 +110,8 @@ for(i in 1:nrow(unique_scenarios)){
 # Make sure we get conc's at the observed times:
         times=signif(obslist[[i]]$TIME,4), 
         tsteps = 500, 
-        exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
+        exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
+        # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20,
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
         species = as.character(unique_scenarios$CONC_SPECIES[i]), 
@@ -127,7 +128,8 @@ for(i in 1:nrow(unique_scenarios)){
 # Make sure we get conc's at the observed times:
         times=signif(obslist[[i]]$TIME,4),
         tsteps = 500, 
-        exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
+        exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-21-2021) think this should input ppmv 
+        # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
         species = as.character(unique_scenarios$CONC_SPECIES[i]), 
@@ -154,11 +156,11 @@ for(i in 1:nrow(unique_scenarios)){
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
-      solve$simconc <- solve$Cendexh * 24.45
-      solve$unit <- "ppm"
+      solve$simconc <- solve$Cendexhppmv # * 24.45
+      solve$unit <- "ppmv" #"ppm"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-      solve$simconc <- solve$Cmixexh * 24.45
-      solve$unit <- "ppm"
+      solve$simconc <- solve$Cmixexhppmv # * 24.45
+      solve$unit <- "ppmv" #"ppm"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -315,9 +317,9 @@ for(i in 1:length(simobslist))
         } else if (simobscomb$matrix[j] == "EB" | 
                    simobscomb$matrix[j] == "EEB" | 
                    simobscomb$matrix[j] == "EB (+W)") {
-          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] # * 24.45
         } else if (simobscomb$matrix[j] == "MEB") {
-          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] # * 24.45
         } else if (simobscomb$matrix[j] == "PL") {
           simobscomb$simconc[j] <- simobscomb$Cplasma[j]
         } else {
