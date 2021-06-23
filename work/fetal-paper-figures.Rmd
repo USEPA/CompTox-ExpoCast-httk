@@ -566,7 +566,7 @@ TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 # Assumed body weight (kg):
 BW <- 61.103
 
-#TKstats$Dose <- TKstats$Dose/BW
+TKstats$Dose <- TKstats$Dose/BW
 TKstats$Dose.Units <- "mg/kg"
 
 ```
@@ -618,10 +618,10 @@ for (this.id in unique(TKstats$DTXSID))
     {
       TKstats[TKstats$DTXSID==this.id &
         regexpr("AUC",TKstats$Parameter)!=-1, 
-        "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"AUC"])                       
+        "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"AUC"])*24 #uMdays->uMh                        
       TKstats[TKstats$DTXSID==this.id &
         regexpr("AUC",TKstats$Parameter)!=-1, 
-        "Predicted.Pregnant.httk"] <- max(out.preg[,"AUC"])        
+        "Predicted.Pregnant.httk"] <- max(out.preg[,"AUC"])*24 # uM days -> uM h 
     }
     if (any(regexpr("Cmax",this.subset$Parameter)!=-1))
     {
@@ -730,7 +730,7 @@ colnames(Curley)[1] <- "Tissue"
 colnames(Curley)[2] <- "N"
 colnames(Curley)[3] <- "Stat"
 ```
-```{r curley1969_preds, eval = TRUE}
+```{r curley1969_calcpcs, eval = TRUE}
 Curley.pcs <- NULL
 cord.blood <- subset(Curley, Tissue == "Cord Blood") 
 suppressWarnings(
@@ -767,39 +767,54 @@ for (this.tissue in unique(Curley$Tissue))
   }
 )
 Curley.pcs[Curley.pcs$Tissue=="Lungs","Tissue"] <- "Lung"
-
+```
+```{r curley1969_makepreds, eval = TRUE}
+suppressWarnings(load_sipes2017())
 for (this.chemical in unique(Curley.pcs$DTXSID))
   if (this.chemical %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
   {
     this.subset <- subset(Curley.pcs,DTXSID==this.chemical)
     p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.chemical,
       fetal_fup_adjustment = FALSE,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16))
     fetal.blood.pH <- 7.26   
     Fup <- p$Fraction_unbound_plasma_fetus
     fetal_schmitt_parms <- suppressWarnings(
       parameterize_schmitt(dtxsid=this.chemical,
-        suppress.messages=TRUE))
+        suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16))
     fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
     fetal_schmitt_parms$Funbound.plasma <- Fup
+    Curley.pcs[Curley.pcs$DTXSID==this.chemical,"Fup"] <- Fup
     # httk gives tissue:fup (unbound chemical in plasma) PC's:
     fetal_pcs <- suppressWarnings(
       predict_partitioning_schmitt(parameters = fetal_schmitt_parms,
-        suppress.messages=TRUE))
+        suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16))
     fetal_pcs.nocal <- suppressWarnings(predict_partitioning_schmitt(
       parameters = fetal_schmitt_parms,
       regression=FALSE,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16))
     out <- suppressWarnings(solve_fetal_pbtk(
       dtxsid = this.chemical,
       fetal_fup_adjustment =FALSE,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16))
     Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
+    Curley.pcs[Curley.pcs$DTXSID==this.chemical,"Rb2p"] <- Rb2p
     # Convert to tissue:blood PC's:
     for (this.tissue in this.subset$Tissue)
       if (tolower(this.tissue) %in% 
         unique(subset(tissue.data,Species=="Human")$Tissue))
       {
+        Curley.pcs[Curley.pcs$DTXSID==this.chemical &
+          Curley.pcs$Tissue == this.tissue, "HTTK.pred.t2up"] <-
+          fetal_pcs[[paste("K",tolower(this.tissue),"2pu",sep="")]]
+        Curley.pcs[Curley.pcs$DTXSID==this.chemical &
+          Curley.pcs$Tissue == this.tissue, "HTTK.pred.nocal.t2up"] <-
+          fetal_pcs.nocal[[paste("K",tolower(this.tissue),"2pu",sep="")]]
         Curley.pcs[Curley.pcs$DTXSID==this.chemical &
           Curley.pcs$Tissue == this.tissue, "HTTK.pred"] <-
           fetal_pcs[[paste("K",tolower(this.tissue),"2pu",sep="")]]*Fup/Rb2p
@@ -810,6 +825,7 @@ for (this.chemical in unique(Curley.pcs$DTXSID))
        print(this.tissue)
       }  
   } else print(this.chemical)
+reset_httk()
 ```
 ```{r curley1969_figure, eval = TRUE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
