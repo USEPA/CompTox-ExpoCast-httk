@@ -25,6 +25,7 @@ library(gdata)
 library(ggplot2)
 library(httk)
 library(scales)
+library(gridExtra)
 
 setwd("c:/users/jwambaug/git/httk/work")
 ```
@@ -563,11 +564,11 @@ cat(paste("The RMSE of the predictions for the ",
 TKstats <- read.xls("Dallmann2018Table5.xlsx",stringsAsFactors=F)
 TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 
-# Assumed body weight (kg):
-BW <- 61.103
+# Assumed body weight (kg) from Kapraun 2019
+BW.nonpreg <- 61.103
 
-TKstats$Dose <- TKstats$Dose/BW
-TKstats$Dose.Units <- "mg/kg"
+#TKstats$Dose <- TKstats$Dose/BW
+#TKstats$Dose.Units <- "mg/kg"
 
 ```
 
@@ -590,18 +591,20 @@ for (this.id in unique(TKstats$DTXSID))
     p$Rblood2plasma <- suppressWarnings(calc_rblood2plasma(
       parameters=p,
       suppress.messages=TRUE))
-    p$BW <- 61.103 # Kapraun 2019 (kg) 
+    p$BW <- BW.nonpreg 
     p$Qcardiacc <- 301.78 / p$BW^(3/4) # Kapraun 2019 (L/h/kg^3/4)
 # Non-pregnant PBPK:
     out.nonpreg <- suppressWarnings(solve_pbtk(
       parameters=p,
       times = seq(0, this.subset[1,"NonPreg.Duration.Days"], 0.1),
-      dose=this.dose,
+      dose=this.dose/BW.nonpreg, # mg/kg
       daily.dose=NULL,
       iv.dose=(this.route=="iv"),
       output.units="uM",
       suppress.messages=TRUE))
 # Pregnant PBPK:
+    BW.preg <- suppressWarnings(calc_maternal_bw(
+      week=this.subset[1,"Gestational.Age.Weeks"]))
     out.preg <- suppressWarnings(solve_fetal_pbtk(
       dtxsid=this.id,
       times = seq(
@@ -609,7 +612,7 @@ for (this.id in unique(TKstats$DTXSID))
         this.subset[1,"Gestational.Age.Weeks"]*7 + 
           this.subset[1,"Preg.Duration.Days"], 
         0.1),
-      dose=this.dose,
+      dose=this.dose/BW.preg, # mg/kg
       iv.dose=(this.route=="iv"),
       daily.dose=NULL,
       output.units="uM",
@@ -652,15 +655,16 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_abline(slope=1, intercept=-1, linetype=3) + 
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("httk Predicted (uM*h)") + 
-  ylab("Non-Pregnant Observed (Dallmann, 2018)") +
+  ylab("Observed") +
   scale_x_log10(limits=c(10^-3,10^3),label=scientific_10) +
   scale_y_log10(limits=c(10^-3,10^3),label=scientific_10) +
+  ggtitle("Non-Pregnant") +
   theme_bw()  +
-  theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))
+  theme(legend.position="none")+
+  theme( text  = element_text(size=10))+ 
+  theme(legend.text=element_text(size=8))
     
-print(FigEa)
+#print(FigEa)
 
 FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_point(aes(
@@ -674,17 +678,41 @@ FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_abline(slope=1, intercept=-1, linetype=3) +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("httk Predicted (uM*h)") + 
-  ylab("Pregnant Observed (Dallmann, 2018)") +
+  ylab("Observed") +
   scale_x_log10(limits=c(10^-5,10^3),label=scientific_10) +
   scale_y_log10(limits=c(10^-5,10^3),label=scientific_10) +
+  ggtitle("Pregnant")+
   theme_bw()  +
-  theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))
+  theme(legend.position="none")+
+  theme( text  = element_text(size=10))+ 
+  theme(legend.text=element_text(size=8))
     
-print(FigEb)
+#print(FigEb)
 
-FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
+
+FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+  geom_point(aes(
+    x=Predicted.Non.Pregnant.httk,
+    y=Predicted.Pregnant.httk,
+    shape=Dose.Route,
+    color=Drug),
+    size=3)   +
+      geom_abline(slope=1, intercept=0) +
+  geom_abline(slope=1, intercept=1, linetype=3) + 
+  geom_abline(slope=1, intercept=-1, linetype=3) +
+  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6),name="Route")+ 
+  ylab("httk Pregnant (uM*h)") + 
+  xlab("httk Non-Pregnant (uM*h)") + 
+  scale_x_log10(limits=c(10^-1,10^2),label=scientific_10) +
+  scale_y_log10(limits=c(10^-1,10^2),label=scientific_10) +
+  theme_bw()  +
+  theme(legend.position="left")+
+  theme( text  = element_text(size=10))+ 
+  theme(legend.text=element_text(size=8))
+    
+#print(FigEc)
+
+FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
   !is.na(Ratio.httk))) +
   geom_point(aes(
     y=Ratio.obs,
@@ -693,19 +721,21 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
     color=Drug),
     size=3)   +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-  xlab("Non-Pregnant:Pregnant Ratio httk Predicted") + 
-  ylab("Non-Pregnant:Pregnant Observed (Dallmann, 2018)") +
-  scale_x_continuous(limits=c(0.25,2.5)) +
-  scale_y_continuous(limits=c(0.25,2.5)) +
+  xlab("httk Predicted") + 
+  ylab("Observed") +
+  scale_x_continuous(limits=c(0.25,3)) +
+  scale_y_continuous(limits=c(0.25,3)) +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1.15, linetype=3) + 
   geom_abline(slope=1, intercept=-1.15, linetype=3) + 
+  ggtitle("Ratio") +
   theme_bw()  +
-  theme(legend.position="bottom")+
-  theme( text  = element_text(size=14))+ 
-  theme(legend.text=element_text(size=10))
+  theme(legend.position="none")+
+  theme( text  = element_text(size=10))+ 
+  theme(legend.text=element_text(size=8))
     
-print(FigEc)
+dev.new()
+grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
 
 write.csv(subset(TKstats,Parameter=="AUCinf" &
   !is.na(Ratio.httk)),
@@ -715,6 +745,8 @@ a <- c(0.3/1.1,1.9/1.2,1.2/1.5,2.1/1.1,1.4/1.1,1.1/1.1)
 mean(a)
 10^(abs(log10(a)))
 10^mean(abs(log10(a)))
+
+
 ```
 #
 #

@@ -104,7 +104,7 @@ McNamara PJ, Alcorn J. Protein binding predictions in infants.
 AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 }
 \author{
-John Wambaugh, Robert Pearce, and Mark Sfeir
+Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 
 Mark Sfeir, Dustin Kapraun, John Wambaugh
 }
