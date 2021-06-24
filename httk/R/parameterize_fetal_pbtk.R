@@ -62,7 +62,7 @@
 #' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
 #' placental tissue to unbound concentration in fetal plasma.} 
 #'
-#' @author John Wambaugh, Robert Pearce, and Mark Sfeir
+#' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 #'
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
