@@ -12,11 +12,7 @@ lump_tissues(
   tissue.vols = NULL,
   tissue.flows = NULL,
   model = "pbtk",
-<<<<<<< HEAD
-  suppress.messages = F
-=======
   suppress.messages = FALSE
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 )
 }
 \arguments{
