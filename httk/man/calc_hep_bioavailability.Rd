@@ -9,8 +9,8 @@ calc_hep_bioavailability(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  restrictive.clearance = T,
-  flow.34 = T
+  restrictive.clearance = TRUE,
+  flow.34 = TRUE
 )
 }
 \arguments{

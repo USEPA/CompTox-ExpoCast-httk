@@ -122,7 +122,7 @@ print(paste(dim(subset(human.httk.data,Charge.Ph7.4=="Neutral"))[1],
 human.httk.data$Human.Clint.Bin3=as.character(human.httk.data$Human.Clint.Bin3)
 
 #write file with inputs for httk
-write.csv(human.httk.data,file=paste("Human.Clint.data_",writesuff,".txt",sep=""),row.names=F)
+write.csv(human.httk.data,file=paste("Human.Clint.data_",writesuff,".txt",sep=""),row.names=FALSE)
 #prune down to those chemicals with all required data (cut 18 chemicals)  
 
 #Is this important?
@@ -158,7 +158,7 @@ human.httk.data.complete$Human.Clint.Yrand <- sample(human.httk.data.complete$Hu
 
 
 # Add the model predicted Fup values:
-human.httk.data.complete <- merge(human.httk.data.complete,PaDEL.RF.Fup[,c("CAS","Fup.RF.pred")],by.x="CAS",by.y="CAS",all.x=T)
+human.httk.data.complete <- merge(human.httk.data.complete,PaDEL.RF.Fup[,c("CAS","Fup.RF.pred")],by.x="CAS",by.y="CAS",all.x=TRUE)
 #show <- (cor(human.httk.data.complete$Fub.PaDEL.RF.pred, human.httk.data.complete$Human.Funbound.plasma))^2
 
 #Fix label: Fup to Fub
@@ -175,11 +175,11 @@ for(i in 1:length(human.httk.data.complete$Human.Funbound.plasma)){
   }}  
 human.httk.data.complete$Human.Funbound.plasma=hfp
 set.seed(1255)
-human.httk.data.complete$Human.Funbound.plasma.Yrand <- sample(human.httk.data.complete$Human.Funbound.plasma, length(human.httk.data.complete$Human.Funbound.plasma), replace=F)
+human.httk.data.complete$Human.Funbound.plasma.Yrand <- sample(human.httk.data.complete$Human.Funbound.plasma, length(human.httk.data.complete$Human.Funbound.plasma), replace=FALSE)
 
 
 set.seed(1255)
-human.httk.data.complete$Human.Clint.Yrand <- sample(human.httk.data.complete$Human.Clint.Correct, length(human.httk.data.complete$Human.Clint.Correct), replace=F)
+human.httk.data.complete$Human.Clint.Yrand <- sample(human.httk.data.complete$Human.Clint.Correct, length(human.httk.data.complete$Human.Clint.Correct), replace=FALSE)
 
 #show the spread of clearance values directed to each bin now
 #issue in number order for figure 2
@@ -258,7 +258,7 @@ chem.physical_and_invitro.data <- add_chemtable(
     Funbound.plasma=paramtab[i,names(paramtab)=="Funbound_types"]),
   reference=paramtab[i,names(paramtab)=="Clint_types"],
   species="Human",
-  overwrite=T)
+  overwrite=TRUE)
 
 #predict steady-state serum concentration using the supplied in vitro values:
 for (this.chem in human.httk.data.complete$CAS) {
@@ -388,9 +388,9 @@ print(Fig9)
 
 #head to https://www3.epa.gov/research/COMPTOX/toxcast_summary.html to get the ToxCast/Tox21 data:
 #added to my Documents
-#Tox21.ids <- read.csv("L:/Lab/NCCT_ExpoCast/ExpoCast2019/IngleHTTKQSPR/Summary_for_Mike (Brandall Ingle)/Clearance/4-httk/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=F)
-#Tox21.ids <- read.csv("/home/rtorne02/Desktop/4-httk_with_Fup/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=F)
-#Tox21.ids <- read.csv("/home/rtorne02/Desktop/4-httk_with_Fup/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=F)
+#Tox21.ids <- read.csv("L:/Lab/NCCT_ExpoCast/ExpoCast2019/IngleHTTKQSPR/Summary_for_Mike (Brandall Ingle)/Clearance/4-httk/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=FALSE)
+#Tox21.ids <- read.csv("/home/rtorne02/Desktop/4-httk_with_Fup/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=FALSE)
+#Tox21.ids <- read.csv("/home/rtorne02/Desktop/4-httk_with_Fup/httk_inputs/Chemical_Summary_151020.csv",stringsAsFactors=FALSE)
 Tox21.ids <- read.csv("AER/Exposure_Tox_Data/Chemical_Summary_190708.csv")
 
 # These are the concentrations that caused activity in excess of the background (Activity Concentration Cutoff=acc); that is,  "hits":
@@ -399,7 +399,7 @@ Tox21.acc <- read.csv("AER/Exposure_Tox_Data/Tox21_acc_Matrix_190708.csv")
 unique(Tox21.acc$chnm)
 dim(Tox21.acc)
 #merge datasets
-Tox21.acc <- merge(Tox21.ids,Tox21.acc,by.x="code",by.y="X",stringsAsFactors=F)
+Tox21.acc <- merge(Tox21.ids,Tox21.acc,by.x="code",by.y="X",stringsAsFactors=FALSE)
 
 # Subset this to just the chemicals we have numbers for (this won't help if you predict everything): #Note, this results in a dataframe with 91 chemicals 
 Tox21.acc <- subset(Tox21.acc,casn %in% human.httk.data.complete$CAS)
@@ -501,7 +501,7 @@ chem.physical_and_invitro.data <- add_chemtable(human.hits,
                  Funbound.plasma=paramtab1[i, names(paramtab1)=="Funbound_types"]), #remember, the Human.Funbound.plasma is part of the dataset.
   reference="HTTK2.0.3",
   species="Human",
-  overwrite=T)
+  overwrite=TRUE)
 
 ###In this section, we are taking toxicological endpoints from Tox21, and finding the min, max, Q10 and median values that we've got. 
 #Then, we're calculating the oral equivalent doses in mgkgday of those doses for each chemical

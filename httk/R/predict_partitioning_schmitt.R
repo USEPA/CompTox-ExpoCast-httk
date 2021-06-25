@@ -53,6 +53,8 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' @param model Model for which partition coefficients are neeeded (for example,
+#' "pbtk", "3compartment")
 #'
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
@@ -91,11 +93,11 @@ predict_partitioning_schmitt <- function(
   dtxsid=NULL,
   species='Human',
   model="pbtk",
-  default.to.human=F,
+  default.to.human=FALSE,
   parameters=NULL,
   alpha=0.001,
-  adjusted.Funbound.plasma=T,
-  regression=T,
+  adjusted.Funbound.plasma=TRUE,
+  regression=TRUE,
   regression.list=c(
     'brain',
     'adipose',
@@ -110,14 +112,15 @@ predict_partitioning_schmitt <- function(
     'bone'),
   tissues=NULL,
   minimum.Funbound.plasma=0.0001,
-  suppress.messages=F) 
+  suppress.messages=FALSE) 
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Tissue <- Species <- variable <- Reference <- value <- physiology.data <- NULL
+  Tissue <- Species <- variable <- Reference <- value <- 
+    pearce2017regression <-physiology.data <- NULL
   #End R CMD CHECK appeasement.
   
   if (is.null(model)) stop("Model must be specified.")
@@ -211,39 +214,17 @@ predict_partitioning_schmitt <- function(
   {
    #  regression coefficients (intercept and slope) add to table 
    # These parameters should be in a table in the /data director!
+    # Fup Parameter estimates are now added to `pearce2017regression`.
     if (adjusted.Funbound.plasma)
     {
-      reg <- matrix(c(-0.167,0.543, # brain
-                      -0.325,0.574, # adipose
-                      -0.006,0.267, # red blood cells
-                      0.143, 0.764, # gut
-                      0.116, 0.683, # heart
-                      0.452, 0.673, # kidney
-                      0.475, 0.621, # liver
-                      0.087, 0.866, # lung
-                      -0.022, 0.658, # muscle
-                      -0.09, 0.566, # skin
-                      0.034, 0.765, # spleen
-                      0.036, 0.781), # bone
-                      12,2,byrow=T)
+      reg <- httk::pearce2017regression[,
+        grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     } else {
-      reg <- matrix(c(-0.117,0.377, # brain
-                      -0.324,0.544, # adipose
-                      -0.022,0.196, # red blood cells
-                      0.14, 0.735, # gut
-                      0.12, 0.534, # heart 
-                      0.443, 0.631, # kidney 
-                      0.487, 0.513, # liver 
-                      0.113, 0.75, # lung
-                      -0.025, 0.537, # muscle 
-                      -0.086, 0.498, # skin
-                      0.011, 0.675, # spleen
-                      0.025, 0.758), # bone
-                      12,2,byrow=T)
-
+      reg <- httk::pearce2017regression[,
+        -grep(colnames(httk::pearce2017regression),
+        pattern = "adj")]
     }
-    rownames(reg) <- c('brain','adipose','red blood cells','gut','heart',
-                       'kidney','liver','lung','muscle','skin','spleen','bone')
     colnames(reg) <- c('intercept','slope')      
   }
 

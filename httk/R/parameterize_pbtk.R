@@ -96,23 +96,23 @@
 #' 
 #' @export parameterize_pbtk
 parameterize_pbtk <- function(
-  chem.cas=NULL,
-  chem.name=NULL,
-  dtxsid = NULL,
-  species="Human",
-  default.to.human=F,
-  tissuelist=list(
-    liver=c("liver"),
-    kidney=c("kidney"),
-    lung=c("lung"),
-    gut=c("gut")),
-  force.human.clint.fup = F,
-  clint.pvalue.threshold=0.05,
-  adjusted.Funbound.plasma=T,
-  regression=T,
-  suppress.messages=F,
-  restrictive.clearance = T,
-  minimum.Funbound.plasma=0.0001)
+                       chem.cas=NULL,
+                       chem.name=NULL,
+                       dtxsid=NULL,
+                       species="Human",
+                       default.to.human=FALSE,
+                       tissuelist=list(
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut")),
+                       force.human.clint.fup = FALSE,
+                       clint.pvalue.threshold=0.05,
+                       adjusted.Funbound.plasma=TRUE,
+                       regression=TRUE,
+                       suppress.messages=FALSE,
+                       restrictive.clearance=TRUE,
+                       minimum.Funbound.plasma=0.0001)
 {
   #Give a binding to the physiology.data
   physiology.data <- physiology.data
@@ -132,26 +132,31 @@ parameterize_pbtk <- function(
   dtxsid <- out$dtxsid
   
   # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",
-                                      species,
-                                      chem.cas=chem.cas),
-                  silent=T)
+  Clint.db <- try(get_invitroPK_param(
+                    "Clint",
+                    species,
+                    chem.cas=chem.cas),
+                silent=TRUE)
   # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",
-                                          species,
-                                          chem.cas=chem.cas),
-                      silent=T)
-  if ((class(Clint.db) == "try-error" & default.to.human) ||
+  Clint.pValue <- try(get_invitroPK_param(
+                        "Clint.pValue",
+                        species,
+                        chem.cas=chem.cas),
+                    silent=TRUE)
+  if ((class(Clint.db) == "try-error" & default.to.human) || 
       force.human.clint.fup) 
   {
-    Clint.db <- try(get_invitroPK_param("Clint",
-                                        "Human",
-                                        chem.cas=chem.cas),
-                    silent=T)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue",
-                                            "Human",
-                                            chem.cas=chem.cas),
-                        silent=T)
+    Clint.db <- try(get_invitroPK_param(
+                      "Clint",
+                      "Human",
+                      chem.cas=chem.cas),
+                  silent=TRUE)
+    Clint.pValue <- try(get_invitroPK_param(
+                          "Clint.pValue",
+                          "Human",
+                          chem.cas=chem.cas),
+                      silent=TRUE)
+
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") 
@@ -173,6 +178,7 @@ parameterize_pbtk <- function(
   
   # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
+<<<<<<< HEAD
     chem.cas=chem.cas,
     species=species,
     default.to.human=default.to.human,
@@ -180,6 +186,14 @@ parameterize_pbtk <- function(
     suppress.messages=T,
     minimum.Funbound.plasma=minimum.Funbound.plasma)
     
+=======
+                      chem.cas=chem.cas,
+                      species=species,
+                      default.to.human=default.to.human,
+                      force.human.fup=force.human.clint.fup,
+                      suppress.messages=TRUE,
+                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
@@ -209,11 +223,20 @@ parameterize_pbtk <- function(
   
   # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
+<<<<<<< HEAD
   
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                                      species,
                                      chem.cas=chem.cas),
                  silent=T)
+=======
+
+  Fgutabs <- try(get_invitroPK_param(
+                   "Fgutabs",
+                   species,
+                   chem.cas=chem.cas),
+               silent=TRUE)
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
 # Check the species argument for capitalization problems and whether or not 
@@ -311,7 +334,7 @@ parameterize_pbtk <- function(
              Vliverc=lumped_params$Vliverc, #L/kg
              Qtotal.liverc=
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
-           suppress.messages=T,
+           suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
          million.cells.per.gliver=110, # 10^6 cells/g-liver
          liver.density=1.05, # g/mL

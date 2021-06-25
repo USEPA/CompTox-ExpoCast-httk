@@ -21,6 +21,14 @@ function, or otherwise specified. Must contain a BW entry.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 }
+\value{
+A list of numeric values for doses converted to output.units, potentially
+(depending on argument dosing) including:
+\item{initial.dose}{The first dose given}
+\item{dosing.matrix}{A 2xN matrix where the first column is dose time and
+the second is dose amount for N doses}
+\item{daily.dose}{The total cumulative daily dose}
+}
 \description{
 This function scales doses (in mg/kg) by body weight. It handles single 
 doses, matrices of doses, or daily repeated doses at varying intervals. 
