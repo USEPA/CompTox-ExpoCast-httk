@@ -178,22 +178,13 @@ parameterize_pbtk <- function(
   
   # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
-<<<<<<< HEAD
-    chem.cas=chem.cas,
-    species=species,
-    default.to.human=default.to.human,
-    force.human.fup=force.human.clint.fup,
-    suppress.messages=T,
-    minimum.Funbound.plasma=minimum.Funbound.plasma)
-    
-=======
                       chem.cas=chem.cas,
                       species=species,
                       default.to.human=default.to.human,
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=TRUE,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
+
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
@@ -223,20 +214,13 @@ parameterize_pbtk <- function(
   
   # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
-<<<<<<< HEAD
-  
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
-                                     species,
-                                     chem.cas=chem.cas),
-                 silent=T)
-=======
 
   Fgutabs <- try(get_invitroPK_param(
                    "Fgutabs",
                    species,
                    chem.cas=chem.cas),
                silent=TRUE)
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
+
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
   
 # Check the species argument for capitalization problems and whether or not 
