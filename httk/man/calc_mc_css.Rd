@@ -31,21 +31,13 @@ calc_mc_css(
     "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
-<<<<<<< HEAD
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
-  calc.analytic.css.arg.list = list(well.stirred.correction = T,
-    adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE),
-  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
-    regression = T, minimum.Funbound.plasma = 1e-04)
-=======
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
     restrictive.clearance = T, regression = TRUE),
   calc.analytic.css.arg.list = list(well.stirred.correction = TRUE,
     adjusted.Funbound.plasma = TRUE, regression = TRUE, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE)
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
+    restrictive.clearance = T, bioactive.free.invivo = FALSE),
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
+    regression = T, minimum.Funbound.plasma = 1e-04)
 )
 }
 \arguments{

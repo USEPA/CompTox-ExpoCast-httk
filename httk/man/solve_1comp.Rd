@@ -19,13 +19,8 @@ solve_1comp(
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
-<<<<<<< HEAD
-  input.units = "mg/kg",
-  iv.dose = F,
-=======
   iv.dose = FALSE,
   output.units = "uM",
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -77,9 +72,6 @@ output.units.  Defaults are zero.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", or default
 "Human").}
 
-\item{input.units}{Input units of interest assigned to dosing, defaults to
-mg/kg BW.}
-
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
 \item{method}{Method used by integrator (deSolve).}
@@ -119,6 +111,9 @@ Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW.}
 }
 \value{
 A matrix with a column for time(in days) and a column for the

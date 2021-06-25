@@ -29,7 +29,7 @@ solve_model(
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   ...
 )
 }
