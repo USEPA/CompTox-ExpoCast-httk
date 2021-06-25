@@ -863,7 +863,7 @@ chem.physical_and_invitro.data <- add_chemtable(pc.data.table,
                                                 overwrite=T)
 
 pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A.B.N','LogP','Exp_PC')]
-
+write.csv(pc.data,"Pearce2017-PC-data.txt",row.names=FALSE)
 
 chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),'All.Compound.Names'] <- 'Acebutolol'
 chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'All.Compound.Names'] <- 's-bioallethrin'
@@ -1228,7 +1228,17 @@ cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrit
 cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
 chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
 chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
+   
+#Annotate important chemicals classes as concatonated list:
+chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
 
+#PFAS:
+PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
+  "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
+    chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
+    "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
 #
 # END TABLE chem.physical_and_invitro.data 
 #
@@ -1379,9 +1389,21 @@ chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES
 #
 
 
-
-
-
+#
+# Create dawson2021 Data
+#
+## R Package ##
+library(readxl)
+library(dplyr)
+library(magrittr)
+## Load in Data ##
+dawson2021_full <- readxl::read_xlsx(
+  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  sheet = 14)
+dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+#
+# END dawson2021 Creation
+#
 
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
@@ -1399,9 +1421,36 @@ if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0)
     !duplicated(Compound))
 }
 
+#
+# Create Matrix pearce2017regression:
+#
+pearce2017regression <- # regression parameter estimates from Pearce et al. (2017)
+  matrix(data = c(-0.167,0.543,-0.117,0.377,   # brain
+                  -0.325,0.574,-0.324,0.544,   # adipose
+                  -0.006,0.267,-0.022,0.196,   # red blood cells
+                  0.143, 0.764,0.14, 0.735,    # gut
+                  0.116, 0.683,0.12, 0.534,    # heart
+                  0.452, 0.673,0.443, 0.631,   # kidney
+                  0.475, 0.621,0.487, 0.513,   # liver
+                  0.087, 0.866,0.113, 0.75,    # lung
+                  -0.022, 0.658,-0.025, 0.537, # muscle
+                  -0.09, 0.566,-0.086, 0.498,  # skin
+                  0.034, 0.765,0.011, 0.675,   # spleen
+                  0.036, 0.781,0.025, 0.758),  # bone
+         nrow = 12, ncol = 4,byrow = T,
+         dimnames = list(c("brain","adipose","red blood cells",
+                           "gut","heart","kidney",
+                           "liver","lung","muscle",
+                           "skin","spleen","bone"),
+                         c("adj.fup.intercept","adj.fup.slope",
+                           "fup.intercept","fup.slope"))
+  )
+# Write to text so Git can track changes:
+write.table(pearce2017regression,file = "Pearce_2017_Regression.txt",quote = F,sep = "\t")
 
-
-
+#
+# END pearce2017regression Creation
+#
 
 #
 # WRITE OUT DATA
@@ -1413,6 +1462,33 @@ write.table(chem.invivo.PK.aggregate.data,file="HTTK-Chem-InVivo-Aggregate-Data.
 write.table(chem.invivo.PK.summary.data,file="HTTK-Chem-InVivo-Summary-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(physiology.data,file="HTTK-Physiology-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t")
+
+Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
+#Write the tables.Rdata file:                                  
+save(chem.physical_and_invitro.data,
+     chem.invivo.PK.data,
+     chem.invivo.PK.aggregate.data,
+     chem.invivo.PK.summary.data,
+     dawson2021,
+     physiology.data,
+     pearce2017regression,
+     tissue.data,
+     Tables.Rdata.stamp,
+     EPA.ref,
+     file="Tables.RData",
+     compress="xz",
+     version=2)
+
+cat("Move the Tables.RData to the httk/data directory.\n")
+cat("Move the sysdata.rdaa to the httk/R directory.\n")
+
+sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
+
+sipes2017 <- sipes2017[,c(
+               'CAS',
+               'Human.Funbound.plasma',
+               'Human.Clint')]
+
 
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
@@ -1472,8 +1548,8 @@ write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t"
   Qkidney_cubic_theta0 = 53.248,
   Qkidney_cubic_theta1 = 3.6447,
   Qkidney_cubic_theta2 = -0.15357,
-  Qkidney_cubic_theta3 <- 0.0016968,
-  Qliver_percent_initial <- 27.0,
+  Qkidney_cubic_theta3 = 0.0016968,
+  Qliver_percent_initial = 27.0,
   Qliver_percent_terminal = 20.0,
   Qthyroid_percent_initial = 1.5,
   Qthyroid_percent_terminal = 1.1,
@@ -1545,3 +1621,6 @@ save(Wetmore.data,
 
 
      
+## Session Information ##
+Sys.time() # capture date and time of generating data
+sessionInfo() # capture package information for generating data
