@@ -10,10 +10,10 @@ add_chemtable(
   current.table = NULL,
   reference = NULL,
   species = NULL,
-  overwrite = F,
+  overwrite = FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite = T,
-  allow.na = F
+  clint.pvalue.overwrite = TRUE,
+  allow.na = FALSE
 )
 }
 \arguments{
@@ -65,6 +65,7 @@ modeled.
 }
 \examples{
 
+\donttest{
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
                      stringsAsFactors=FALSE))
@@ -90,6 +91,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                   reference="MyPaper 2015")
 parameterize_steadystate(chem.name="C")  
 calc_css(chem.name="B")                                
+}
 
 }
 \author{

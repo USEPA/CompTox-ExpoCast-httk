@@ -9,8 +9,8 @@ available_rblood2plasma(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  adjusted.Funbound.plasma = T,
-  suppress.messages = F
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -31,6 +31,10 @@ adjustment if calculating Rblood2plasma.}
 
 \item{suppress.messages}{Whether or not to display relevant warning messages
 to user.}
+}
+\value{
+The blood to plasma chemical concentration ratio -- measured if available,
+calculated if not.
 }
 \description{
 This function finds the best available constant ratio of the blood

@@ -35,6 +35,9 @@
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'
+#' @return
+#' The blood to plasma chemical concentration ratio
+#'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
@@ -65,10 +68,10 @@ calc_rblood2plasma <- function(
                         hematocrit=NULL,
                         Krbc2pu=NULL,
                         Funbound.plasma=NULL,
-                        default.to.human=F,
+                        default.to.human=FALSE,
                         species="Human",
-                        adjusted.Funbound.plasma=T,
-                        suppress.messages=T)
+                        adjusted.Funbound.plasma=TRUE,
+                        suppress.messages=TRUE)
 {
   physiology.data <- physiology.data
 
@@ -138,7 +141,7 @@ calc_rblood2plasma <- function(
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
            tissues='red blood cells',
-           suppress.messages=T)  
+           suppress.messages=TRUE)  
     parameters$Krbc2pu <- PCs$Krbc2pu
   } else if (!is.null(Krbc2pu))
   {

@@ -22,18 +22,18 @@ solve_gas_pbtk(
   period = 24,
   exp.duration = 12,
   initial.values = NULL,
-  plots = F,
-  suppress.messages = F,
+  plots = FALSE,
+  suppress.messages = FALSE,
   species = "Human",
   input.units = "uM",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  default.to.human = FALSE,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
@@ -200,6 +200,12 @@ the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
 
+Model Figure from \insertCite{linakis2020development}{httk}:
+\if{html}{\figure{gaspbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
+Model Schematic"}}
+\if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
+Model Schematic"}}
+
 Model parameters are named according to the following convention:\tabular{lrrrr}{
 prefix \tab suffic \tab Meaning \tab units \cr
 K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
@@ -217,20 +223,26 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \examples{
 
 solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
+<<<<<<< HEAD
+=======
+
+\donttest{
+out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
+daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 
 out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 exp.duration = 6, exercise = TRUE)
                   
 params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
+}
 
 }
 \references{
-Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-Inhalation Model for Organic Chemicals", submitted
+\insertRef{linakis2020development}{httk}
 
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \author{
 Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen

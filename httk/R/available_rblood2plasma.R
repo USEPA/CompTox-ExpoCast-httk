@@ -30,6 +30,10 @@
 #' @param suppress.messages Whether or not to display relevant warning messages
 #' to user.
 #' 
+#' @return
+#' The blood to plasma chemical concentration ratio -- measured if available,
+#' calculated if not.
+#'
 #' @author Robert Pearce
 #' 
 #' @keywords Parameter
@@ -44,8 +48,8 @@ available_rblood2plasma <- function(chem.cas=NULL,
                                     chem.name=NULL,
                                     dtxsid=NULL,
                                     species='Human',
-                                    adjusted.Funbound.plasma=T,
-                                    suppress.messages=F)
+                                    adjusted.Funbound.plasma=TRUE,
+                                    suppress.messages=FALSE)
 
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
@@ -101,7 +105,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
       {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
           species="Human",
-          default.to.human=T,
+          default.to.human=TRUE,
           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
           suppress.messages=suppress.messages)
         if (!suppress.messages) 

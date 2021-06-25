@@ -61,10 +61,6 @@ library(data.table)
 library(magrittr)
 library(ggplot2)
 library(httk)
-# We love to give warning messages whenever assumptions are used by HTTK,
-# but they will overwhelm the output of this vignette so we turn them
-# off:
-options(warn = -1)
 ```
 ```{r MakeTable}
 armitage.dt <- copy(armitage_input)

@@ -41,10 +41,10 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
-                                   suppress.messages=F,
-                                   recalc.blood2plasma=F,
+                                   suppress.messages=FALSE,
+                                   recalc.blood2plasma=FALSE,
                                    tissue=NULL,
-                                   restrictive.clearance=T,
+                                   restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
                                    ...)
 {

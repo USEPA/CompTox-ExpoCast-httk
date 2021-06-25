@@ -40,7 +40,7 @@ propagate_invitrouv_1comp <- function(
       PC.names <- names(PC.table)[regexpr("K",names(PC.table))!=-1]
       if (is.data.table(PC.table))
       {
-        PCs <- PC.table[,PC.names,with=F]
+        PCs <- PC.table[,PC.names,with=FALSE]
       } else {
         PCs <- subset(PC.table,names(PC.table) %in% PC.names)
       }

@@ -22,6 +22,10 @@
 #'
 #' @keywords Parameter
 #'
+#' @return
+#' A numeric value for the steady-state ratio of chemical concentration in blood
+#' to plasma
+#'
 #' @examples
 #' 
 #' get_rblood2plasma(chem.name="Bisphenol A")
@@ -35,7 +39,7 @@ get_rblood2plasma <- function(
                        chem.cas=NULL,
                        dtxsid=NULL,
                        species='Human',
-                       default.to.human=F)
+                       default.to.human=FALSE)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD

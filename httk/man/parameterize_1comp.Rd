@@ -9,12 +9,12 @@ parameterize_1comp(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
-  well.stirred.correction = T,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  restrictive.clearance = TRUE,
+  well.stirred.correction = TRUE,
+  suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04
 )

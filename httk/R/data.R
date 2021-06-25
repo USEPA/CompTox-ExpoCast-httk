@@ -1460,3 +1460,46 @@
 #'
 #' @keywords data
 "Frank2018invivo"
+
+#' Pearce et al. 2017 data
+#'
+#' This table includes the adjusted and unadjusted regression parameter
+#' estimates for the chemical-specifc plasma
+#' protein unbound fraction (fup) in 12 different tissue types.
+#'
+#' Predictions were made with regression models, 
+#' as reported in Pearce et al. (2017). 
+#'
+#' @name pearce2017regression
+#' @aliases Pearce2017Regression
+#' @docType data
+#' @format data.frame
+#' @author Robert G. Pearce
+#' @references Pearce, Robert G., et al. "Evaluation and calibration of 
+#' high-throughput predictions of chemical distribution to tissues."
+#' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @source Pearce et al. 2017 Regression Models
+#' @keywords data
+"pearce2017regression"
+
+#' Dawson et al. 2021 data
+#'
+#' This table includes QSAR (Random Forest) model predicted values for unbound
+#' fraction plasma protein (fup) and intrinsic hepatic clearance (clint) for a
+#' subset of chemicals in the Tox21 library
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}).
+#'
+#' Predictions were made with a set of Random Forest QSAR models,
+#' as reported in Dawson et al. (2021). 
+#'
+#' @name dawson2021
+#' @aliases Dawson2021
+#' @docType data
+#' @format data.frame
+#' @author Daniel E. Dawson
+#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
+#' of high-throughput toxicokinetic models using open-source descriptors."
+#' Environmental Science & Technology____. (2021):______.
+#' @source Dawson et al. 2021 Random Forest QSAR Model
+#' @keywords data
+"dawson2021"
