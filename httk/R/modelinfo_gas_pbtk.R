@@ -259,15 +259,9 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Ckidney"="uM",
                                           "Cplasma"="uM",
                                           "Aplasma"="umol",
-<<<<<<< HEAD
                                           "Calv"="ppmv",
                                           "Cendexh"="ppmv",
                                           "Cmixexh"="ppmv",
-=======
-                                          "Calv"="uM",
-                                          "Cendexh"="uM",
-                                          "Cmixexh"="uM",
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
                                           "Cmuc"="uM",
                                           "AUC"="uM*days")
 
