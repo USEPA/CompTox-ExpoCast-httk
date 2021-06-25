@@ -223,13 +223,10 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \examples{
 
 solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
-<<<<<<< HEAD
-=======
 
 \donttest{
 out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
 daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 
 out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 exp.duration = 6, exercise = TRUE)

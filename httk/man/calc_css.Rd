@@ -15,13 +15,8 @@ calc_css(
   doses.per.day = 3,
   days = 21,
   output.units = "uM",
-<<<<<<< HEAD
-  suppress.messages = F,
-  tissue = NULL,
-=======
   suppress.messages = FALSE,
   tissue = "plasma",
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
   model = "pbtk",
   default.to.human = FALSE,
   f.change = 1e-05,

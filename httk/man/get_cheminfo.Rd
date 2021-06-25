@@ -9,16 +9,11 @@ get_cheminfo(
   species = "Human",
   fup.lod.default = 0.005,
   model = "3compartmentss",
-<<<<<<< HEAD
-  default.to.human = F,
-  fup.oom.threshold = 2
-=======
   default.to.human = FALSE,
   median.only = FALSE,
   fup.ci.cutoff = TRUE,
   clint.pvalue.threshold = 0.05,
   suppress.messages = FALSE
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 )
 }
 \arguments{
