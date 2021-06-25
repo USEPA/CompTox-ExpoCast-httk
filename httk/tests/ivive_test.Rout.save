@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -17,7 +19,7 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 > library(httk)
-> options(warn=-1)
+> 
 > NSAMP <- 10
 > 
 > # From Honda et al. (2019) (currently only use mean conc's because steady-state 
@@ -46,13 +48,46 @@ Type 'q()' to quit R.
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint is provided as a distribution.
+2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
+  Rblood2plasma has been recalculated.
+5: In any(lapply(chem_id_list, is.null)) :
+  coercing argument of type 'list' to logical
+6: In all(lapply(chem_id_list, is.null)) :
+  coercing argument of type 'list' to logical
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
 0.6454 
+Warning messages:
+1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint is provided as a distribution.
+2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
+  Rblood2plasma has been recalculated.
+5: In any(lapply(chem_id_list, is.null)) :
+  coercing argument of type 'list' to logical
+6: In all(lapply(chem_id_list, is.null)) :
+  coercing argument of type 'list' to logical
 > params <- parameterize_steadystate(chem.name="bisphenol a")
+Warning messages:
+1: In parameterize_steadystate(chem.name = "bisphenol a") :
+  Clint is provided as a distribution.
+2: In parameterize_steadystate(chem.name = "bisphenol a") :
+  Fraction unbound is provided as a distribution.
+3: In parameterize_steadystate(chem.name = "bisphenol a") :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
@@ -62,7 +97,7 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = T),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -83,7 +118,7 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = T),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -98,7 +133,7 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 > #set.seed(12345)
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=T,
+> #    restrictive.clearance=TRUE,
 > #    bioactive.free.invivo = F),
 > #  output.units="uM",
 > #  samples=NSAMP)
@@ -114,7 +149,7 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 > #Css <- calc_mc_css(chem.name="bisphenol a",
 > #  calc.analytic.css.arg.list=list(
 > #    tissue="liver",
-> #    restrictive.clearance=F,
+> #    restrictive.clearance=FALSE,
 > #    bioactive.free.invivo = F),
 > #  output.units="uM",
 > #  samples=NSAMP)

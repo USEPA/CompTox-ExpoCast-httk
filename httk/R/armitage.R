@@ -10,7 +10,7 @@
 #' @param tcdata A data table with well_number corresponding to plate format,
 #' optionally include v_working, sarea, option.bottom, and option.plastic
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
 #' @param this.cell_yield For single value, optionally supply cell_yield,
 #' otherwise estimated based on well number
 #' @param this.v_working For single value, optionally supply working volume,
@@ -68,15 +68,15 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   tcdata[,radius:=diam/2] %>%  # mm
     .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
     .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
-    .[is.na(option.bottom),option.bottom:=T] %>%
-    .[option.bottom==T & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
-    .[option.bottom==F & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
+    .[is.na(option.bottom),option.bottom:=TRUE] %>%
+    .[option.bottom==TRUE & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
+    .[option.bottom==FALSE & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
     .[!(sysID %in% c(7,9)),height:=v_working/(pi*radius^2)] %>% # for cylindrical wells
-    .[option.bottom==T & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
-    .[option.bottom==F & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
-    .[is.na(option.plastic),option.plastic:=T] %>%
+    .[option.bottom==TRUE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
+    .[option.bottom==FALSE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
+    .[is.na(option.plastic),option.plastic:=TRUE] %>%
     .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
-    .[option.plastic==F, sarea_c:=0] %>%
+    .[option.plastic==FALSE, sarea_c:=0] %>%
     .[is.na(sarea),sarea:=sarea_c] %>%
     .[is.na(cell_yield),cell_yield:=as.double(cell_yield_est)]
 
@@ -99,7 +99,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param nomconc.vector For vector or single value, micromolar nominal 
 #' concentration (e.g. AC50 value)
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
 #' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params.
@@ -125,7 +125,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #'
 #' @return
 #' \tabular{lll}{
-#' \strong{Column} \strong{Description} \tab \strong{units} \cr
+#' \strong{Column} \tab \strong{Description} \tab \strong{units} \cr
 #' casrn \tab Chemical Abstracts Service Registry Number \tab \cr
 #' nomconc \tab Nominal Concentration \tab mol/L \cr       
 #' well_number \tab Number of wells in plate \tab unitless \cr   
@@ -133,7 +133,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' v_total \tab Total volume of well \tab m^3 \cr       
 #' v_working \tab Filled volume of well \tab m^3 \cr     
 #' cell_yield \tab Number of cells \tab cells \cr    
-#' gkow \tab log10 octanol-water partition coefficient \tab log10 \cr          
+#' gkow \tab log10 octanol to water partition coefficient (PC)\tab log10 \cr          
 #' logHenry \tab log10 Henry's law constant '\tab log10 atm-m3/mol \cr      
 #' gswat \tab log10 Water solubility \tab log10 mol/L \cr         
 #' MP \tab Melting Point \tab degrees Celsius \cr           
@@ -156,8 +156,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' pseudooct \tab \tab \cr     
 #' memblip \tab \tab \cr       
 #' nlom \tab \tab \cr          
-#' P_nlom \tab \tab \cr        
-#' P_dom \tab dissolved organic matter − water partition coefficient \tab Dimesnsionless\cr         
+#' P_nlom \tab \tab \cr   
+#' P_dom \tab dissolved organic matter to water PC \tab Dimensionless \cr         
 #' P_cells \tab \tab \cr      
 #' csalt \tab \tab \cr         
 #' celldensity \tab \tab \cr   
@@ -178,11 +178,11 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' gss.GSE \tab \tab \cr       
 #' ss.GSE \tab \tab \cr        
 #' kmw \tab \tab \cr           
-#' kow \tab octanol-water partition coefficient\tab \cr           
-#' kaw \tab the air−water partition coefficient \tab dimensionless \cr           
+#' kow \tab octanol to water PC \tab \cr           
+#' kaw \tab the air towater PC \tab dimensionless \cr           
 #' swat \tab \tab \cr         
 #' kpl \tab \tab \cr           
-#' kcw \tab cell/tissue-water partition coefficient \tab dimensionless \cr           
+#' kcw \tab cell/tissue to water PC \tab dimensionless \cr           
 #' kbsa \tab \tab \cr          
 #' swat_L \tab \tab \cr        
 #' oct_L \tab \tab \cr        
@@ -459,10 +459,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[!(is.na(gkbsa)),gkbsa:=gkbsa-duow*Tcor] %>%
     .[!(is.na(gkbsa)),kbsa:=10^gkbsa]
 
-  tcdata[option.kbsa2==T & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
-    .[option.kbsa2==T & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
+  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
+    .[option.kbsa2==TRUE & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
 
-  tcdata[option.kbsa2==F & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
+  tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
@@ -474,10 +474,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[,kcw:=kcw/(10^(-1*ksalt*csalt))] %>%
     .[,kbsa:=kbsa/(10^(-1*ksalt*csalt))]
 
-  tcdata[option.swat2==T & MP>298.15,swat:=ss.GSE] %>%
-    .[option.swat2==T & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
-    .[option.swat2==T & MP<=298.15,swat:=s1.GSE] %>%
-    .[option.swat2==T & MP<=298.15,swat_L:=s1.GSE]
+  tcdata[option.swat2==TRUE & MP>298.15,swat:=ss.GSE] %>%
+    .[option.swat2==TRUE & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
+    .[option.swat2==TRUE & MP<=298.15,swat:=s1.GSE] %>%
+    .[option.swat2==TRUE & MP<=298.15,swat_L:=s1.GSE]
 
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]

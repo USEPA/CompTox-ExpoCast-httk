@@ -70,7 +70,7 @@ bmi_category <- c(rep(list(c('Underweight',
 
 ## Generate populations
 First, define the loop body as a function; then use `parallel::clusterMap` to parallelize it. Warning: This might take a couple of minutes to run.
-```{r generate_parallel, eval = FALSE}
+```{r generate_parallel, eval = TRUE}
 tmpfun <- function(gendernum, agelim, bmi_category, ExpoCast_grp,
                    nsamp, method){
   result <- tryCatch({
@@ -89,7 +89,7 @@ saveRDS(object=pops,
                       filepart, ExpoCast_grp, 
                       sep='_'),
                       '.Rdata'))
-return(0)
+return(getwd())
 }, error = function(err){
   print(paste('Error occurred:', err))
   return(1)

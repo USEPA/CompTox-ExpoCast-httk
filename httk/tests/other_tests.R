@@ -1,8 +1,7 @@
 #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
 library(httk)
-options(warn=-1)
 
-calc_css(chem.name='nicotine')
+#calc_css(chem.name='nicotine')
 
 calc_css(chem.name='nicotine', model="1compartment")
 
@@ -23,12 +22,12 @@ calc_analytic_css(
   tissue='liver',
   species='rabbit',
   parameterize.args = list(
-    default.to.human=T,
-    adjusted.Funbound.plasma=T,
-    regression=T,
+    default.to.human=TRUE,
+    adjusted.Funbound.plasma=TRUE,
+    regression=TRUE,
     minimum.Funbound.plasma=1e-4),
   daily.dose=2)
 
-
+predict_partitioning_schmitt(chem.name='nicotine')
 
 quit("no")

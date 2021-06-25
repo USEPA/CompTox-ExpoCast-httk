@@ -73,12 +73,12 @@ parameterize_steadystate <- function(
                               dtxsid=NULL,
                               species="Human",
                               clint.pvalue.threshold=0.05,
-                              default.to.human=F,
-                              human.clint.fup=F,
-                              adjusted.Funbound.plasma=T,
-                              restrictive.clearance=T,
+                              default.to.human=FALSE,
+                              human.clint.fup=FALSE,
+                              adjusted.Funbound.plasma=TRUE,
+                              restrictive.clearance=TRUE,
                               fup.lod.default=0.005,
-                              suppress.messages=F,
+                              suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -143,7 +143,7 @@ parameterize_steadystate <- function(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid),
-                silent=T)
+                silent=TRUE)
                 
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param(
@@ -152,7 +152,7 @@ parameterize_steadystate <- function(
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-                     silent=T)
+                     silent=TRUE)
                     
   if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
   {
@@ -162,14 +162,14 @@ parameterize_steadystate <- function(
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-                  silent=T)
+                  silent=TRUE)
     Clint.pValue <- try(get_invitroPK_param(
                           "Clint.pValue",
                           "Human",
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-                      silent=T)
+                      silent=TRUE)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
   if (class(Clint.db) == "try-error") 
@@ -198,7 +198,7 @@ Set default.to.human to true to substitute human value.")
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-              silent=T)
+              silent=TRUE)
   if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
   {
     fup.db<- try(get_invitroPK_param(
@@ -207,7 +207,7 @@ Set default.to.human to true to substitute human value.")
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-               silent=T)
+               silent=TRUE)
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
   }
@@ -282,7 +282,7 @@ Set default.to.human to true to substitute human value.")
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
-               silent=T)
+               silent=TRUE)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
 
   Params <- list()
@@ -312,7 +312,7 @@ Set default.to.human to true to substitute human value.")
             chem.cas=chem.cas,
             species=species,
             adjusted.Funbound.plasma=fup.adjusted,
-            suppress.messages=T)
+            suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
 
 # Need to have a parameter with this name to calculate clearance, but need 
@@ -320,7 +320,7 @@ Set default.to.human to true to substitute human value.")
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
-          suppress.messages=T)#L/h/kg body weight
+          suppress.messages=TRUE)#L/h/kg body weight
 
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4

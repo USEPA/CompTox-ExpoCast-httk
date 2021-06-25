@@ -1,5 +1,29 @@
 News for R package httk
 
+Changes in version 2.0.5 (Summer, 2021)
+  Changed DESCRIPTION to indicate LazyDataCompression is xz
+  QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
+  Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
+  Added function calc_halflife (thank you Imran Shah for idea)
+  Internal function convert_units() added to ensure consistency in unit conversions -- units corrected for gas_pbtk model
+  Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
+
+Changes in version 2.0.4 (May 7, 2021)
+  Changed DESCRIPTION to indicate LazyDataCompression is xz
+  Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
+  Added Xiaoqing Chang and Shannon Bell as contributors thanks to substantial efforts improving the package
+  Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
+  Revised documentation to several functions missing value description (thank you Julia Haider and Gregor Seyer)
+  Revised examples where arguments had changed (thank you Julia Haider)
+  Revised and expanded documentation for functions related to Armitage et al. 2014 (https://doi.org/10.1021/es501955g) in vitro distribution model -- armitage_eval() and armitage_estimate_sarea()
+  Revised get_cheminfo behavior to change chemical hepatic clearance values where p-value is not consistent with decrease (p-value > clint.pvalue.threshold, default 0.05) to zero.
+  Revised get_cheminfo behavior to remove fraction unbound in plasma values if credible interval spans from < 0.1 to > 0.9 (turn off with fup.ci.cutoff=FALSE).
+  Revised get_cheminfo to include "median.only" argument allowing confidence intervals to be removed for chemical intrinsic hepatic clearance values and fraction unbound in plasma values where they exist (turn on with median.only=TRUE).
+  Revised get_cheminfo to filter volatile compounds using Henry's law constant for all models, excluding the "gas_pbtk" model.
+  Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss", based on Wambaugh et al. (2015) (https://doi.org/10.1093/toxsci/kfv118).
+  Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
+  Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
+
 Changes in version 2.0.3 (August 16, 2020)
   Updated literature chemical-specific human and rat in vitro data:
     Revised human and rat VOC chemical numbers to match Linakis et al. (2020)
@@ -105,6 +129,7 @@ Changes in version 1.9.1 (April 15, 2019)
 Changes in version 1.9 (February 4, 2019)
 
   This version is consistent with the submitted version of Honda et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions"
+  Mark Sfeir is new lead HTTK software engineer (thank you Robert Pearce!)
   New rat-specific in vitro TK data provided for 65 chemicals. 
   New functions for calculating in vitro disposition armitage_eval, armitage_estimate_sarea (thank you James Armitage)
   Added arguments to IVIVE functions (e.g., calc_mc_css) to use sets of assumptions identified by Honda et al. (e.g., IVIVE="Honda1")(thank you Katie Paul-Friedman)
@@ -171,11 +196,11 @@ chem.physical_and_invitro.data
   New tissue.data table with Ruark 2014 that contains different formatting with human and rat specific data
   parameterize_schmitt: added force.human.fub argument
   added plasma protein and neutral lipid volume fractions to physiology.data for use in package
-  calc_mc_css: defaults to direct resampling. no longer coerces species to human when httkpop=T. When another species is entered, a warning is thrown and the function behaves as if httkpop=F.
+  calc_mc_css: defaults to direct resampling. no longer coerces species to human when httkpop=TRUE. When another species is entered, a warning is thrown and the function behaves as if httkpop=FALSE.
   updated help file references and examples
   corrected parameterize_3comp default.to.human bug: always set to false
   removed temperature from schmitt parameters
-  overwrite 0 values for Fubound.plasma when overwrite=F in add_chemtable
+  overwrite 0 values for Fubound.plasma when overwrite=FALSE in add_chemtable
   added vignette for generating partition coefficient plots
   added dsstox info: new columns: "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type".  overwrote: MW and SMILES
   added pc.data and obach2008 tables

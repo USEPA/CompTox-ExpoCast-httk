@@ -11,17 +11,17 @@ create_mc_samples(
   parameters = NULL,
   samples = 1000,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "3compartmentss",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
   httkpop.dt = NULL,
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
     fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
     fup.pop.cv = 0.3, clint.pop.cv = 0.3),
   httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
@@ -31,8 +31,8 @@ create_mc_samples(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   propagate.invitrouv.arg.list = list(),
-  parameterize.arg.list = list(restrictive.clearance = T, default.to.human = F,
-    clint.pvalue.threshold = 0.05, regression = T)
+  parameterize.arg.list = list(restrictive.clearance = T, default.to.human = FALSE,
+    clint.pvalue.threshold = 0.05, regression = TRUE)
 )
 }
 \arguments{
@@ -116,13 +116,18 @@ associated in vitro uncertainty and variability propagation function}
 \item{parameterize.arg.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
 }
+\value{
+A data table where each column corresponds to parameters needed for the 
+specified model and each row represents a different Monte Carlo sample of
+parameter values.
+}
 \description{
 This function creates a data table of draws of parameter values for use with 
 Monte Carlo methods
 }
 \examples{
 
-\dontrun{
+\donttest{
 sample_set = create_mc_samples(chem.name = 'bisphenol a')
 }
 
