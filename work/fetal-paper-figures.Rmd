@@ -44,76 +44,13 @@ RMSE <- function(x)
   mean(x$residuals^2)^(1/2)
 }
 ```
-
-#
-#
-# PRotein Binding FIgures
-#
-#
-```{r fup_table, eval = TRUE}
-fup.table <- NULL
-all.chems <-get_cheminfo(model="fetal_pbtk",info="all") 
-# Get rid of median fup 0:
-all.chems <- subset(all.chems,
-  as.numeric(unlist(lapply(strsplit(
-    all.chems$Human.Funbound.plasma,","),function(x) x[[1]])))!=0)
-for (this.chem in all.chems[,"CAS"])
-{
-  temp <- suppressWarnings(
-    parameterize_fetal_pbtk(chem.cas=this.chem,suppress.messages = TRUE))
-  state <- calc_ionization(
-      pH=7.26,
-      pKa_Donor=temp$pKa_Donor,
-      pKa_Accept=temp$pKa_Accept)
-  if (state$fraction_positive > 0.5) this.charge <- "Positive"
-  else if (state$fraction_negative > 0.5) this.charge <- "Negative"
-  else this.charge <- "Neutral"
-  this.row <- data.frame(DTXSID=all.chems[all.chems[,"CAS"]==this.chem,"DTXSID"],
-    Compound=all.chems[all.chems[,"CAS"]==this.chem,"Compound"],
-    CAS=this.chem,
-    Fup.Mat.Pred = temp$Funbound.plasma,
-    Fup.Neo.Pred = temp$Fraction_unbound_plasma_fetus,
-    Charge = this.charge
-    )
-  fup.table <- rbind(fup.table,this.row)
-}
-
-fup.table[fup.table$Charge=="Positive","Charge"] <- paste("Positive (n=",
-  sum(fup.table$Charge=="Positive"),
-  ")",sep="")
-fup.table[fup.table$Charge=="Negative","Charge"] <- paste("Negative (n=",
-  sum(fup.table$Charge=="Negative"),
-  ")",sep="")
-fup.table[fup.table$Charge=="Neutral","Charge"] <- paste("Neutral (n=",
-  sum(fup.table$Charge=="Neutral"),
-  ")",sep="")
-```  
-Plot the fetal protein binding changes predicted:
-```{r fup_figure, eval = TRUE}
-FigA  <- ggplot(data=fup.table) +
-  geom_point(alpha=0.25, aes(
-    x=Fup.Mat.Pred,
-    y=Fup.Neo.Pred,
-    shape=Charge,
-    color=Charge),
-    size=3)   +
-  geom_abline(slope=1, intercept=0) + 
-  ylab(expression(paste("Predicted Neonate ",f[up]))) + 
-  xlab(expression(paste(italic("In vitro")," Measured Adult ",f[up]))) +
-   scale_x_log10(label=scientific_10) +
-   scale_y_log10(label=scientific_10) +
-  theme_bw()  +
-  theme( text  = element_text(size=14)) 
-    
-print(FigA) 
-```  
 #
 #
 # Aylward cord-blood data 
 #
 #
 ```{r process_aylward_data, eval = TRUE}
-MFdata <- read.xls("Aylward-MatFet.xlsx",stringsAsFactors=F)
+MFdata <- read.xls("Aylward-MatFet.xlsx",stringsAsFactors=FALSE)
 
 cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
@@ -397,8 +334,8 @@ observations only ranged from ",
   max.chem[,"Chemical"],
   ".\n",sep=""))
   
-max.chem <- MFdata.main[which(MFdata.main$MFratio.pred==max(MFdata.main$MFratio.pred,na.rm=T)),]
-min.chem <- MFdata.main[which(MFdata.main$MFratio.pred==min(MFdata.main$MFratio.pred,na.rm=T)),]
+max.chem <- MFdata.main[which(MFdata.main$MFratio.pred==max(MFdata.main$MFratio.pred,na.rm=TRUE)),]
+min.chem <- MFdata.main[which(MFdata.main$MFratio.pred==min(MFdata.main$MFratio.pred,na.rm=TRUE)),]
 
 cat(paste("The predictions for all chemicals ranged from ",
   signif(min.chem[,"MFratio.pred"],2),
@@ -561,7 +498,8 @@ cat(paste("The RMSE of the predictions for the ",
 #
 #
 ```{r dallmann2018_data, eval = TRUE}
-TKstats <- read.xls("Dallmann2018Table5.xlsx",stringsAsFactors=F)
+TKstats <- read.xls("Dallmann2018Table5.xlsx",stringsAsFactors=FALSE)
+TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
 TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 
 # Assumed body weight (kg) from Kapraun 2019
@@ -705,6 +643,7 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   xlab("httk Non-Pregnant (uM*h)") + 
   scale_x_log10(limits=c(10^-1,10^2),label=scientific_10) +
   scale_y_log10(limits=c(10^-1,10^2),label=scientific_10) +
+  ggtitle("Model Comparison") +
   theme_bw()  +
   theme(legend.position="left")+
   theme( text  = element_text(size=10))+ 
@@ -754,13 +693,18 @@ mean(a)
 #
 #
 ```{r curley1969_data, eval = TRUE}
-Curley <- read.xls("Curley1969.xlsx",stringsAsFactors=F)
+Curley <- read.xls("Curley1969.xlsx",stringsAsFactors=FALSE)
 dim(Curley)
 Curley.compounds <- Curley[1,4:13]
 Curley <- Curley[4:47,]
 colnames(Curley)[1] <- "Tissue"
 colnames(Curley)[2] <- "N"
 colnames(Curley)[3] <- "Stat"
+
+pearce2017 <- read.xls("PC_Data.xlsx",stringsAsFactors=FALSE)
+pearce2017 <- subset(pearce2017,DTXSID%in%Curley.pcs$DTXSID)
+any(pearce2017$DTXSID%in%Curley.pcs$DTXSID)
+print("None of the Curley chems were in the Pearce 2017 PC predictor evaluation."")
 ```
 ```{r curley1969_calcpcs, eval = TRUE}
 Curley.pcs <- NULL
@@ -916,7 +860,7 @@ print(FigFb)
 #
 #
 ```{r wang2018_loaddata, eval = TRUE}
-Wangchems <- read.xls("Wang2018.xlsx",stringsAsFactors=F,sheet=3,skip=2)
+Wangchems <- read.xls("Wang2018.xlsx",stringsAsFactors=FALSE,sheet=3,skip=2)
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
@@ -986,7 +930,7 @@ pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 #  {
 #    out <- calc_mc_css(chem.cas=this.cas,
 #      which.quantile = c(0.5,0.975),
-#      httkpop=F,
+#      httkpop=FALSE,
 ##      invitro.mc.arg.list = list(
 ##        adjusted.Funbound.plasma = T, 
 ##        poormetab = T,
@@ -1140,7 +1084,7 @@ print(FigG)
 for (this.col in 7:14)
   PC.table[,this.col] <- signif(PC.table[,this.col],3)
 
-PC.table <- PC.table[order(PC.table$R.brain.FtoM.upper,decreasing=T),]
+PC.table <- PC.table[order(PC.table$R.brain.FtoM.upper,decreasing=TRUE),]
 
 for (this.row in 1:dim(PC.table)[1])
 {
@@ -1174,11 +1118,74 @@ PC.table <- PC.table[,c(
   
 write.csv(PC.table,
   file="WangTable.txt",
-  row.names=F)   
+  row.names=FALSE)   
 ```
   
-  
-  
+Really slow figures below:
+
+
+#
+#
+# PRotein Binding FIgures
+#
+#
+```{r fup_table, eval = TRUE}
+fup.table <- NULL
+all.chems <-get_cheminfo(model="fetal_pbtk",info="all") 
+# Get rid of median fup 0:
+all.chems <- subset(all.chems,
+  as.numeric(unlist(lapply(strsplit(
+    all.chems$Human.Funbound.plasma,","),function(x) x[[1]])))!=0)
+for (this.chem in all.chems[,"CAS"])
+{
+  temp <- suppressWarnings(
+    parameterize_fetal_pbtk(chem.cas=this.chem,suppress.messages = TRUE))
+  state <- calc_ionization(
+      pH=7.26,
+      pKa_Donor=temp$pKa_Donor,
+      pKa_Accept=temp$pKa_Accept)
+  if (state$fraction_positive > 0.5) this.charge <- "Positive"
+  else if (state$fraction_negative > 0.5) this.charge <- "Negative"
+  else this.charge <- "Neutral"
+  this.row <- data.frame(DTXSID=all.chems[all.chems[,"CAS"]==this.chem,"DTXSID"],
+    Compound=all.chems[all.chems[,"CAS"]==this.chem,"Compound"],
+    CAS=this.chem,
+    Fup.Mat.Pred = temp$Funbound.plasma,
+    Fup.Neo.Pred = temp$Fraction_unbound_plasma_fetus,
+    Charge = this.charge
+    )
+  fup.table <- rbind(fup.table,this.row)
+}
+
+fup.table[fup.table$Charge=="Positive","Charge"] <- paste("Positive (n=",
+  sum(fup.table$Charge=="Positive"),
+  ")",sep="")
+fup.table[fup.table$Charge=="Negative","Charge"] <- paste("Negative (n=",
+  sum(fup.table$Charge=="Negative"),
+  ")",sep="")
+fup.table[fup.table$Charge=="Neutral","Charge"] <- paste("Neutral (n=",
+  sum(fup.table$Charge=="Neutral"),
+  ")",sep="")
+```  
+Plot the fetal protein binding changes predicted:
+```{r fup_figure, eval = TRUE}
+FigA  <- ggplot(data=fup.table) +
+  geom_point(alpha=0.25, aes(
+    x=Fup.Mat.Pred,
+    y=Fup.Neo.Pred,
+    shape=Charge,
+    color=Charge),
+    size=3)   +
+  geom_abline(slope=1, intercept=0) + 
+  ylab(expression(paste("Predicted Neonate ",f[up]))) + 
+  xlab(expression(paste(italic("In vitro")," Measured Adult ",f[up]))) +
+   scale_x_log10(label=scientific_10) +
+   scale_y_log10(label=scientific_10) +
+  theme_bw()  +
+  theme( text  = element_text(size=14)) 
+    
+print(FigA) 
+```  
 
 #
 #
@@ -1248,8 +1255,10 @@ FigD <- ggplot(data=MFratio.pred)+
 print(FigD)
 ```
 ```{r MFratio_allhttk_stats, eval = TRUE}
-max.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=T)),]
-min.chem <- MFratio.pred[which(MFratio.pred$MFratio.pred==min(MFratio.pred$MFratio.pred,na.rm=T)),]
+max.chem <- MFratio.pred[which(
+  MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=TRUE)),]
+min.chem <- MFratio.pred[which(
+  MFratio.pred$MFratio.pred==min(MFratio.pred$MFratio.pred,na.rm=TRUE)),]
 cat(paste("In Figure X we examine the ratios predicted for the ",
   dim(MFratio.pred)[1],
   " appropriate (non-volatile or PFAS) chemicals with measured HTTK data.\n",
@@ -1257,7 +1266,7 @@ cat(paste("In Figure X we examine the ratios predicted for the ",
 
 
 cat(paste("We observe a median value of ",
-  signif(median(MFratio.pred$MFratio.pred,na.rm=T),3),
+  signif(median(MFratio.pred$MFratio.pred,na.rm=TRUE),3),
   " ranging from ",
   signif(min.chem[,"MFratio.pred"],3),
   " for ",
