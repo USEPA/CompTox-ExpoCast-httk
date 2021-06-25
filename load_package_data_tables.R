@@ -863,7 +863,7 @@ chem.physical_and_invitro.data <- add_chemtable(pc.data.table,
                                                 overwrite=T)
 
 pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A.B.N','LogP','Exp_PC')]
-
+write.csv(pc.data,"Pearce2017-PC-data.txt",row.names=FALSE)
 
 chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),'All.Compound.Names'] <- 'Acebutolol'
 chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'All.Compound.Names'] <- 's-bioallethrin'
