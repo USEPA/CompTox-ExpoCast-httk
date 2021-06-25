@@ -25,19 +25,7 @@
 #' 
 #' @export calc_maternal_bw
 calc_maternal_bw <- function(
-  week = 12,
-  ...)
+  week = 12)
 {
-  params <- do.call("parameterize_fetal_pbtk", c(list(
-    chem.cas="80-05-7"),
-    ...))
-  
-  tw <- week
-  
-  BW <- params$pre_pregnant_BW + 
-    params$BW_cubic_theta1 * tw + 
-    params$BW_cubic_theta2 * tw^2 + 
-    params$BW_cubic_theta3 * tw^3
-
-  return(set_httk_precision(BW))
+  return(calc_fetal_phys(week)$BW)
 }
