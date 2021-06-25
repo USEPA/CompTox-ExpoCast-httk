@@ -69,9 +69,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
                           dtxsid = NULL,
                           parameters=NULL,
                           species="Human",
-                          default.to.human=F,
-                          force.human.fup=F,
-                          suppress.messages=F,
+                          default.to.human=FALSE,
+                          force.human.fup=FALSE,
+                          suppress.messages=FALSE,
                           minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -132,7 +132,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 chem.cas=chem.cas,
                 chem.name=chem.name,
                 dtxsid=dtxsid),
-              silent=T)
+              silent=TRUE)
   if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
   {
     fup.db <- try(
@@ -142,7 +142,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   chem.cas=chem.cas,
                   chem.name=chem.name,
                   dtxsid=dtxsid),
-                silent=T)
+                silent=TRUE)
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
   }
@@ -225,7 +225,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   chem.cas=chem.cas,
                   chem.name=chem.name,
                   dtxsid=dtxsid),
-                silent=T)
+                silent=TRUE)
   # Check if fup is a point value or a distribution, if a distribution, use the median:
     if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
     {

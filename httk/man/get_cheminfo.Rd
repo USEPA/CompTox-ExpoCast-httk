@@ -9,8 +9,16 @@ get_cheminfo(
   species = "Human",
   fup.lod.default = 0.005,
   model = "3compartmentss",
+<<<<<<< HEAD
   default.to.human = F,
   fup.oom.threshold = 2
+=======
+  default.to.human = FALSE,
+  median.only = FALSE,
+  fup.ci.cutoff = TRUE,
+  clint.pvalue.threshold = 0.05,
+  suppress.messages = FALSE
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 )
 }
 \arguments{
@@ -34,6 +42,17 @@ fraction unbound (used in predict_partitioning_schmitt).}
 
 \item{default.to.human}{Substitutes missing values with human values if
 true.}
+
+\item{median.only}{Use median values only for fup and clint.  Default is FALSE.}
+
+\item{fup.ci.cutoff}{Cutoff for the level of uncertainty in fup estimates.
+This value should be between (0,1). Default is `NULL` specifying no filtering.}
+
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
+
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for
@@ -51,7 +70,7 @@ human values are given instead.
 }
 \examples{
 
-\dontrun{
+\donttest{
 # List all CAS numbers for which the 3compartmentss model can be run in humans: 
 get_cheminfo()
 
@@ -90,6 +109,6 @@ httk.TPO.human.table <- subset(get_cheminfo(info="all",species="human"),
 
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Robert Pearce, and Sarah E. Davidson
 }
 \keyword{Retrieval}

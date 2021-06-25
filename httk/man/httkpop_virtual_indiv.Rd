@@ -7,12 +7,14 @@
 httkpop_virtual_indiv(
   nsamp = NULL,
   gendernum = NULL,
-  agelim_years = NULL,
-  agelim_months = NULL,
+  agelim_years = c(0, 79),
+  agelim_months = c(0, 959),
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other")
+    "Non-Hispanic Black", "Other"),
+  gfr_resid_var = TRUE,
+  ckd_epi_race_coeff = FALSE
 )
 }
 \arguments{

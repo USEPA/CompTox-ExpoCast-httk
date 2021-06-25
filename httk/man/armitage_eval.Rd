@@ -37,7 +37,7 @@ armitage_eval(
 concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==T}
+if is.na(tcdata)==TRUE}
 
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
@@ -83,7 +83,11 @@ model}
 }
 \value{
 \tabular{lll}{
+<<<<<<< HEAD
 \strong{Column} \strong{Description} \tab \strong{units} \cr
+=======
+\strong{Column} \tab \strong{Description} \tab \strong{units} \cr
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 casrn \tab Chemical Abstracts Service Registry Number \tab \cr
 nomconc \tab Nominal Concentration \tab mol/L \cr       
 well_number \tab Number of wells in plate \tab unitless \cr   
@@ -91,12 +95,20 @@ sarea \tab Surface area of well \tab m^2 \cr
 v_total \tab Total volume of well \tab m^3 \cr       
 v_working \tab Filled volume of well \tab m^3 \cr     
 cell_yield \tab Number of cells \tab cells \cr    
+<<<<<<< HEAD
 gkow \tab log10 octanol-water partition coefficient \tab log10 \cr          
+=======
+gkow \tab log10 octanol to water partition coefficient (PC)\tab log10 \cr          
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 logHenry \tab log10 Henry's law constant '\tab log10 atm-m3/mol \cr      
 gswat \tab log10 Water solubility \tab log10 mol/L \cr         
 MP \tab Melting Point \tab degrees Celsius \cr           
 MW \tab Molecular Weight \tab g/mol \cr            
+<<<<<<< HEAD
 gkaw \tab air-water partition coefficient \tab (mol/m3)/(mol/m3) \cr          
+=======
+gkaw \tab air to water PC \tab (mol/m3)/(mol/m3) \cr
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 dsm \tab \tab \cr           
 duow \tab \tab \cr          
 duaw \tab \tab \cr          
@@ -114,8 +126,13 @@ FBSf \tab \tab \cr
 pseudooct \tab \tab \cr     
 memblip \tab \tab \cr       
 nlom \tab \tab \cr          
+<<<<<<< HEAD
 P_nlom \tab \tab \cr        
 P_dom \tab dissolved organic matter − water partition coefficient \tab Dimesnsionless\cr         
+=======
+P_nlom \tab \tab \cr   
+P_dom \tab dissolved organic matter to water PC \tab Dimensionless \cr         
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 P_cells \tab \tab \cr      
 csalt \tab \tab \cr         
 celldensity \tab \tab \cr   
@@ -136,11 +153,19 @@ s1.GSE \tab \tab \cr
 gss.GSE \tab \tab \cr       
 ss.GSE \tab \tab \cr        
 kmw \tab \tab \cr           
+<<<<<<< HEAD
 kow \tab octanol-water partition coefficient\tab \cr           
 kaw \tab the air−water partition coefficient \tab dimensionless \cr           
 swat \tab \tab \cr         
 kpl \tab \tab \cr           
 kcw \tab cell/tissue-water partition coefficient \tab dimensionless \cr           
+=======
+kow \tab octanol to water PC \tab \cr           
+kaw \tab the air towater PC \tab dimensionless \cr           
+swat \tab \tab \cr         
+kpl \tab \tab \cr           
+kcw \tab cell/tissue to water PC \tab dimensionless \cr           
+>>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 kbsa \tab \tab \cr          
 swat_L \tab \tab \cr        
 oct_L \tab \tab \cr        

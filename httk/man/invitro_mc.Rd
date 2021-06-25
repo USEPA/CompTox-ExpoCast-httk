@@ -14,7 +14,7 @@ invitro_mc(
   poormetab = TRUE,
   fup.lod = 0.01,
   fup.censored.dist = FALSE,
-  adjusted.Funbound.plasma = T,
+  adjusted.Funbound.plasma = TRUE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04
 )

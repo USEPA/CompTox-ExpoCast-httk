@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 library(httk)
-options(warn=-1)
 
 calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 calc_analytic_css(chem.cas="80-05-7",model="1compartment")
@@ -21,6 +20,8 @@ params <- parameterize_3comp(chem.name="triclosan")
 calc_vdist(parameters=params)
 params <- parameterize_pbtk(chem.name="triclosan")
 calc_vdist(parameters=params)
+
+parameterize_1comp(chem.name="Aminopterin")
 
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 

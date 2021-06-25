@@ -49,28 +49,19 @@ doforeachchem <- function(this.chemcas,
                           fup.censored.dist,
                           ExpoCast.group,
                           nsamp,
-                          Clint.vary){
-  
-  indiv.model.bio <- data.table::copy(indiv.model.bio)
+                          Clint.vary)
+  {
+    indiv.model.bio <- data.table::copy(indiv.model.bio)
   #Convert to HTTK model params
-  if (ExpoCast.group=="indepMC"){
-    indiv.model.tmp <- cbind(indiv.model.bio,
-                         httk::draw_fup_clint(this.chem=this.chemcas,
-                                                 nsamp=nrow(indiv.model.bio),
-                                                 poormetab=poormetab,
-                                                 fup.censored.dist=fup.censored.dist))
-    indiv.model <- httk::convert_httk(indiv.model.bio=indiv.model.tmp,
-                                         model=model,
-                                         this.chem=this.chemcas)
-  }else{
-  indiv.model <- httk::get_httk_params(indiv_dt=indiv.model.bio,
+    indiv.model <- httk::create_mc_samples(httkpop.dt=indiv.model.bio,
                                        model=model,
-                                       chemcas=this.chemcas,
-                                       poormetab=poormetab,
-                                       fup.censored.dist=fup.censored.dist,
-                                       Clint.vary=Clint.vary)
-  }
-  
+                                       httkpop=(ExpoCast.group!="indepMC"),
+                                       chem.cas=this.chemcas,
+                                       invitro.mc.arg.list=list(
+                                         poormetab=poormetab,
+                                         fup.censored.dist=fup.censored.dist))
+
+
   #If model is 3compartmentss, convert Funbound.plasma to Funbound.blood
   if (model=="3compartmentss"){
   #First, get the default parameters used for the Schmitt method of estimating
@@ -167,7 +158,7 @@ We also need to choose a couple of settings -- like whether poor metabolizers sh
 
 Also note: This code was written for a machine where 10 processors were available. If you want to run on your own machine, you'll need to change `numcluster` to a reasonable number of processors for your machine!
 
-```{r eval_parallel, eval = FALSE}
+```{r eval_parallel, eval = TRUE}
 numcluster <- 2 # Reduced from 40, the number of processors to use in parallel
 #Note: This will depend on how many your machine has available!
 cluster <- parallel::makeCluster(numcluster, outfile='subpoprun_parallel_out.txt')
@@ -319,7 +310,7 @@ indep_gen <- function(nsamp=1000, sigma.factor=0.3){
 ```
 
 Next, we just call `doforeachchem()` on this independent-MC virtual population.
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 model <- '3compartmentss'
 popmethod <- 'indepMC'
 TeachingDemos::char2seed("Caroline Ring")

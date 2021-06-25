@@ -17,6 +17,9 @@
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'
+#' @return
+#' The red blood cell to unbound chemical in plasma partition coefficient.
+#'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
@@ -34,9 +37,9 @@
 calc_krbc2pu <- function(Rb2p,
                          Funbound.plasma,
                          hematocrit=NULL,
-                         default.to.human=F,
+                         default.to.human=FALSE,
                          species="Human",
-                         suppress.messages=T)
+                         suppress.messages=TRUE)
 {
   physiology.data <- physiology.data
 

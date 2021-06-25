@@ -16,20 +16,20 @@ solve_model(
   days = 10,
   tsteps = 4,
   initial.values = NULL,
-  plots = F,
+  plots = FALSE,
   monitor.vars = NULL,
-  suppress.messages = F,
+  suppress.messages = FALSE,
   species = "Human",
   input.units = "mg/kg",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
-  adjusted.Funbound.plasma = T,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
+  adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
+  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = T, regression = TRUE),
   ...
 )
 }
@@ -79,7 +79,7 @@ those specified for the model outputs. Default values are zero.}
 \item{monitor.vars}{Which variables are returned as a function of time. 
 Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 
 \item{species}{Species desired (models have been designed to be
 parameterized for some subset of the following species: "Rat", "Rabbit", 
