@@ -4,28 +4,10 @@
 \alias{calc_maternal_bw}
 \title{Calculate maternal body weight}
 \usage{
-calc_maternal_bw(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
-  week = 12,
-  ...
-)
+calc_maternal_bw(week = 12)
 }
 \arguments{
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
-
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
-
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
-
-\item{...}{Arguments passed to parameterize_pbtk.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). Currently only a narrow human model is supported.}
+\item{week}{Gestational week}
 }
 \value{
 \item{BW}{Maternal Body Weight, kg.}
