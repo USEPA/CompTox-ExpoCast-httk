@@ -700,11 +700,6 @@ Curley <- Curley[4:47,]
 colnames(Curley)[1] <- "Tissue"
 colnames(Curley)[2] <- "N"
 colnames(Curley)[3] <- "Stat"
-
-pearce2017 <- read.xls("PC_Data.xlsx",stringsAsFactors=FALSE)
-pearce2017 <- subset(pearce2017,DTXSID%in%Curley.pcs$DTXSID)
-any(pearce2017$DTXSID%in%Curley.pcs$DTXSID)
-print("None of the Curley chems were in the Pearce 2017 PC predictor evaluation."")
 ```
 ```{r curley1969_calcpcs, eval = TRUE}
 Curley.pcs <- NULL
@@ -743,6 +738,11 @@ for (this.tissue in unique(Curley$Tissue))
   }
 )
 Curley.pcs[Curley.pcs$Tissue=="Lungs","Tissue"] <- "Lung"
+
+pearce2017 <- read.xls("PC_Data.xlsx",stringsAsFactors=FALSE)
+pearce2017 <- subset(pearce2017,DTXSID%in%Curley.pcs$DTXSID)
+any(pearce2017$DTXSID%in%Curley.pcs$DTXSID)
+print("None of the Curley chems were in the Pearce 2017 PC predictor evaluation.")
 ```
 ```{r curley1969_makepreds, eval = TRUE}
 suppressWarnings(load_sipes2017())
@@ -869,15 +869,15 @@ maternal.list <- maternal.list[maternal.list %in% intersect(nonvols,nonfluoros)]
 ```
 ```{r wang2018_makepreds, eval = TRUE}
 
-pred.table1 <- subset(get_cheminfo(
+pred.table1 <- subset(suppressWarnings(get_cheminfo(
   info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
-  model="fetal_pbtk"),
+  model="fetal_pbtk")),
   CAS %in% maternal.list)
 pred.table1$Compound <- gsub("\"","",pred.table1$Compound)    
 
 for (this.cas in maternal.list)
 {
-  Fup <- subset(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma 
+  Fup <- subset(suppressWarnings(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma 
   if (regexpr(",",Fup)!=-1)
   {
     if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
@@ -1131,7 +1131,7 @@ Really slow figures below:
 #
 ```{r fup_table, eval = TRUE}
 fup.table <- NULL
-all.chems <-get_cheminfo(model="fetal_pbtk",info="all") 
+all.chems <- suppressWarnings(get_cheminfo(model="fetal_pbtk",info="all")) 
 # Get rid of median fup 0:
 all.chems <- subset(all.chems,
   as.numeric(unlist(lapply(strsplit(
@@ -1196,18 +1196,18 @@ print(FigA)
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
   
 MFratio.pred <- NULL
-all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Compound","DTXSID"))
-for (this.id in all.chems$DTXSID)
-  if ((this.id %in% nonvols) & 
-    !(this.id %in% fluoros))
+all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Compound","DTXSID","CAS","Funbound.plasma"))
+for (this.cas in all.chems$CAS)
+  if ((this.cas %in% nonvols) & 
+    !(this.cas %in% fluoros))
 {
-
-  Fup <- subset(get_cheminfo(info="all"),DTXSID==this.id)$Human.Funbound.plasma 
+  this.id <- all.chems[all.chems$CAS==this.cas,"DTXSID"]
+  Fup <- subset(all.chems,DTXSID==this.id)$Human.Funbound.plasma 
   if (regexpr(",",Fup)!=-1)
   {
     if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
       (as.numeric(strsplit(Fup,",")[[1]][3])>0.9 & 
-      as.numeric(strsplit(Fup,",")[[1]][2])<0.11))
+      as.numeric(strsplit(Fup,",")[[1]][2])<0.1))
     {
       skip <- TRUE
     } else skip <- FALSE
