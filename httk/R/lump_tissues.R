@@ -133,8 +133,8 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
     }
 
     #Exclude "rest" from list of tissues called for among alltissues entries
-    tissue_name_verification_vec <- 
-      tissue_name_verification_vec[tissue_name_verification_vec != "rest"] 
+#    tissue_name_verification_vec <- 
+#      tissue_name_verification_vec[tissue_name_verification_vec != "rest"] 
     
     #Now use this verification vector to check if the requested tissuenames 
     #are among those for which partitioning info has been passed. 
