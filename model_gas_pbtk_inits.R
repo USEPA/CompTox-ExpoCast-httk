@@ -41,6 +41,7 @@ initParms <- function(newParms = NULL) {
     Vlung = 0.0,
     Vrest = 0.0,
     Vven = 0.0,
+    Qalvc = 0.0,
     Qalv = 0,
     Kblood2air = 0,
     InhMag = 0,
