@@ -3,7 +3,7 @@
 
    Model File:  inhalation.model
 
-   Date:  Fri Jun 04 11:13:50 2021
+   Date:  Thu Jul 01 15:16:18 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -47,7 +47,7 @@
    1 Input:
      Cinhppmv (forcing function)
 
-   53 Parameters:
+   54 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
      vmax = 0,
@@ -89,6 +89,7 @@
      Vlung = 0.0,
      Vrest = 0.0,
      Vven = 0.0,
+     Qalvc = 0.0,
      Qalv = 0,
      Kblood2air = 0,
      InhMag = 0,
@@ -140,7 +141,7 @@
 #define ID_Cmuc 0x0000c
 
 /* Parameters */
-static double parms[53];
+static double parms[54];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -183,18 +184,19 @@ static double parms[53];
 #define Vlung parms[38]
 #define Vrest parms[39]
 #define Vven parms[40]
-#define Qalv parms[41]
-#define Kblood2air parms[42]
-#define InhMag parms[43]
-#define Period parms[44]
-#define Exposure parms[45]
-#define kUrtc parms[46]
-#define kUrt parms[47]
-#define Kmuc2air parms[48]
-#define Vmucc parms[49]
-#define Vmuc parms[50]
-#define Vmax parms[51]
-#define Km parms[52]
+#define Qalvc parms[41]
+#define Qalv parms[42]
+#define Kblood2air parms[43]
+#define InhMag parms[44]
+#define Period parms[45]
+#define Exposure parms[46]
+#define kUrtc parms[47]
+#define kUrt parms[48]
+#define Kmuc2air parms[49]
+#define Vmucc parms[50]
+#define Vmuc parms[51]
+#define Vmax parms[52]
+#define Km parms[53]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -203,13 +205,13 @@ static double forc[1];
 
 /* Function definitions for delay differential equations */
 
-/*int Nout=1;
+int Nout=1;
 int nr[1]={0};
 double ytau[1] = {0.0};
 
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};*/ /*Array of initial state variables*/
+static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
-/*void lagvalue(double T, int *nr, int N, double *ytau) {
+void lagvalue(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
   if (fun == NULL)
     fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
@@ -226,12 +228,12 @@ double CalcDelay(int hvar, double dTime, double delay) {
     ytau[0] = yini[hvar];
 }
   return(ytau[0]);
-} */
+}
 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
-  int N=53;
+  int N=54;
   odeparms(&N, parms);
 }
 
@@ -244,7 +246,7 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
-/*void initState (double *y)
+void initState (double *y)
 {
   int i;
 
@@ -252,7 +254,7 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
   {
     yini[i] = y[i];
   }
-}*/
+}
 
 void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -280,7 +282,7 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
   Vlung = Vlungc * BW ;
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
-  Qalv = Qalv * 24 * pow ( BW , 0.75 ) ;
+  Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
   kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
@@ -365,20 +367,20 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
 
 /*----- Jacobian calculations: */
-void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event_gas_pbtk (int *n, double *t, double *y)
+void event (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
