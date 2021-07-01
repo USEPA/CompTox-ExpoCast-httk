@@ -231,13 +231,13 @@ double CalcDelay(int hvar, double dTime, double delay) {
 }
 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
   int N=54;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
@@ -256,7 +256,7 @@ void initState (double *y)
   }
 }
 
-void getParms (double *inParms, double *out, int *nout) {
+void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -294,7 +294,7 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double Cinh;
   /* local */ double Calv;
