@@ -70,8 +70,8 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "pKa_Accept",
   "pKa_Donor",
   "Pow",
-  # "Qalvc", #MWL 8-1-19
-  "Qalv", # SED 06-21-2021
+  "Qalvc", #MWL 8-1-19
+  # "Qalv", # SED 06-21-2021
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
@@ -119,35 +119,11 @@ model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  # Clmetabolism="Clmetabolism",
-  # Qcardiac="Qcardiac",
-  # Qgfr="Qfr",
-  # Qcardiac="Qcardiac",
-  # Qgfr="Qgfr",
-  # Qgut="Qgut",
-  # Qkidney="Qkidney",
-  # Qliver="Qliver",
-  # Qlung="Qlung",
-  # Qrest="Qrest",
-  # Vart="Vart",
-  # Vgut="Vgut",
-  # Vkidney="Vkidney",
-  # Vliver="Vliver",
-  # Vlung="Vlung",
-  # Vrest="Vrest",
-  # Vven="Vven",
-  Qalv="Qalvc", # Qalvc = "Qalvc",
+  Qalvc="Qalvc", # Qalv = "Qalv" # (back up test)
   Kblood2air = "Kblood2air",
-  # InhMag="InhMag",
-  # Period="Period",
-  # Exposure="Exposure",
   kUrtc = "kUrtc",
-  # kUrt="kUrt",
   Kmuc2air = "Kmuc2air",
   Vmucc = "Vmucc"
-  # Vmuc="Vmuc",
-  # Vmax="Vmax",
-  # Km="Km"
 )
 
 # This function translates the R model parameters into the compiled model
@@ -198,7 +174,6 @@ model.list[["gas_pbtk"]]$compiled.param.names <- c(
   "Vlung",
   "Vrest",
   "Vven",
-  # "Qalvc", # SED 06-15-2021
   "Qalv",
   "Kblood2air",
   "InhMag",
