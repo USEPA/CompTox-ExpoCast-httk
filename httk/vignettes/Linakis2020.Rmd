@@ -55,6 +55,8 @@ options(warn = -1)
 ```{r data}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
+conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
+conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
 ```
 
 ## ANALYSIS
