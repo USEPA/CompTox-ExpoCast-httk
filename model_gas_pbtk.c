@@ -252,7 +252,7 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
-void initState (double *y)
+void initState_gas_pbtk (double *y)
 {
   int i;
 
@@ -373,20 +373,20 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_gas_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
