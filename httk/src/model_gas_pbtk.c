@@ -198,8 +198,11 @@ static double parms[54];
 #define Vmax parms[52]
 #define Km parms[53]
 
+
 /* Forcing (Input) functions */
-static double forc[1];
+/*
+ *static double forc[1]; 
+ */
 
 #define Cinhppmv forc[0]
 
@@ -211,6 +214,7 @@ double ytau[1] = {0.0};
 
 static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
+/*
 void lagvalue(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
   if (fun == NULL)
@@ -229,6 +233,7 @@ double CalcDelay(int hvar, double dTime, double delay) {
 }
   return(ytau[0]);
 }
+*/
 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
@@ -237,16 +242,17 @@ void initmod_gas_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
+/*
 void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
 }
-
+*/
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
-void initState (double *y)
+void initState_gas_pbtk (double *y)
 {
   int i;
 
@@ -367,20 +373,20 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_gas_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
