@@ -206,11 +206,11 @@ static double forc[1];
 
 /* Function definitions for delay differential equations */
 
-int Nout=1;
-int nr[1]={0};
-double ytau[1] = {0.0};
+int Noutgas_pbtk=1;
+int nrgas_pbtk[1]={0};
+double ytaugas_pbtk[1] = {0.0};
 
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+static double yinigas_pbtk[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
 /*
 void lagvalue(double T, int *nr, int N, double *ytau) {
