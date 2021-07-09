@@ -200,9 +200,7 @@ static double parms[54];
 
 
 /* Forcing (Input) functions */
-/*
- *static double forc[1]; 
- */
+static double forc[1]; 
 
 #define Cinhppmv forc[0]
 
@@ -242,13 +240,11 @@ void initmod_gas_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-/*
 void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
 }
-*/
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
