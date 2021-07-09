@@ -247,14 +247,14 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 }
 
 /* Calling R code will ensure that input y has same
-   dimension as yini */
+   dimension as yinigas_pbtk */
 void initState_gas_pbtk (double *y)
 {
   int i;
 
-  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+  for (i = 0; i < sizeof(yinigas_pbtk) / sizeof(yinigas_pbtk[0]); i++)
   {
-    yini[i] = y[i];
+    yinigas_pbtk[i] = y[i];
   }
 }
 
