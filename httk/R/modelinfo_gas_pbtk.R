@@ -174,6 +174,7 @@ model.list[["gas_pbtk"]]$compiled.param.names <- c(
   "Vlung",
   "Vrest",
   "Vven",
+  "Qalvc",
   "Qalv",
   "Kblood2air",
   "InhMag",
