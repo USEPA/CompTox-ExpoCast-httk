@@ -2,6 +2,8 @@ How to build a new pbtk model from .model files:
 
 by Robert Pearce and John Wambaugh
 
+Organization
+
 Files relevant to each model are kept in their own sub-directory. For example,
 the base HT-PBTK model resides in httk-models/ptbk. In that directory there are four
 key files:
@@ -15,8 +17,12 @@ modelinfo_pbtk.R - This R code populates the entries for PBTK in the model.list.
   core functions are agnostic as to how many models there are, they just interact with
   whatever is in model list. This code, if placed in httk/R makes the package aware of
   the model.
+solve_pbtk.R - This R function calls HTTK function solve_model with arguments better
+  tailored to running the specific HT-PBTK model. solve_model.R (provided for 
+  reference in the main directory) is a "Swiss Army knife" function with more options
+  than most models needs.
 
-Procedure:
+Model Integration Procedure:
 
 First, create .model file and type in command prompt (with MCSIM/mod in path): 
 
