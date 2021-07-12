@@ -1,33 +1,30 @@
 States = {
-Agutlumen;
-Agut;
-Aliver;
-Aven;
-Alung;
-Aart;
-Arest;
-Akidney;
-Atubules;
-Ametabolized;
-AUC;
+Agutlumen,
+Agut,
+Aliver,
+Aven,
+Alung,
+Aart,
+Arest,
+Akidney,
+Atubules,
+Ametabolized,
+AUC,
 };
 
 Inputs = {
 };
 
 Outputs = {
-Cgut;
-Cliver;
-Cven;
-Clung;
-Cart;
-Crest;
-Ckidney;
-Cplasma;
-Aplasma;
-
-
-
+Cgut,
+Cliver,
+Cven,
+Clung,
+Cart,
+Crest,
+Ckidney,
+Cplasma,
+Aplasma,
 };
 
 BW = 70;
@@ -114,4 +111,4 @@ dt (Ametabolized) = Clmetabolism * Aliver / Vliver / Kliver2pu ;
 dt (AUC) = Aven / Vven / Rblood2plasma;
 
 }
-
+End.
