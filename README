@@ -5,9 +5,11 @@ by Robert Pearce and John Wambaugh
 
 First, create .model file and type in command prompt (with MCSIM/mod in path): 
 
-     mod -R <name>.model <name>.c
+     mod -R <name>.model <name>-raw.c
 
 This generates the <name>.c and <name>_inits.R files.
+
+Delete the *ints.R file -- we do not need it.
 
 In order to avoid duplicate names, function names in these newly created files 
 must be changed.
