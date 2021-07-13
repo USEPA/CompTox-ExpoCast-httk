@@ -13,8 +13,8 @@ A data frame / data table with 11 rows and 8 variables:
   \item{area_bottom}{Area of well bottom in mm^2}
   \item{cell_yield}{Number of cells}
   \item{diam}{Diameter of well in mm}
-  \item{v_total}{Total volume of well in uL or mm^3)}
-  \item{v_working}{Working volume of well in uL or mm^3}
+  \item{v_total}{Total volume of well in uL)}
+  \item{v_working}{Working volume of well in uL}
 }
 }
 \source{
