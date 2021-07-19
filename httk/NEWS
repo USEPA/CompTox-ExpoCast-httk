@@ -1,13 +1,15 @@
 News for R package httk
 
 Changes in version 2.0.5 (Summer, 2021)
-  Changed DESCRIPTION to indicate LazyDataCompression is xz
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
   Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
   Added function calc_halflife (thank you Imran Shah for idea)
-  Internal function convert_units() added to ensure consistency in unit conversions -- units corrected for gas_pbtk model
+  Internal reusable function convert_units() added to ensure consistency in unit conversions acrpss functions
+  Units corrected for gas_pbtk model to more antuarlly handle ppmv (parts per million by volume) and uM
   Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
-  Corrected swapped "area_bottom" values in table well_param for the Armitage model. (thank you t-anton)
+  Further revised documentation to Armitage functions (thank you Madison Feshuk)
+  Corrected swapped "area_bottom" values in table well_param for the Armitage model. (thank you t-anton) 
+  Corrected major bug introduced in 2.0.0 (vectorization of calc_ionization) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
 
 Changes in version 2.0.4 (May 7, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
