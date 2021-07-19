@@ -15,8 +15,8 @@ Aexh,       # Amount of the compound exhaled (umol)
 Amuc        # Amount of the compound in the mucus (umol)
 };
 
-Inputs = {Cinhppmv # Concentration Inhaled (ppmv)
-#Cinh    # ... (uM) -- Linakis original input 
+Inputs = {Cinh # Concentration Inhaled (uM) -- Linakis original input 
+# Cinhppmv # ... (ppmv)
 };
 
 Outputs = {
@@ -122,7 +122,7 @@ Km = km;
 }
 
 Dynamics{
-Cinh = Cinhppmv/24.45;     # Concentration inhaled (uM) - default input is ppmv
+#Cinh = Cinhppmv/24.45;     # Concentration inhaled (uM) - default input is ppmv
 Cgut = Agut / Vgut;       # Concentration in the gut
 Cliver = Aliver / Vliver; # ... liver 
 Cven = Aven / Vven;       # ... veins (uM)
