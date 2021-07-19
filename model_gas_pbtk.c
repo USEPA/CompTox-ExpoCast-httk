@@ -3,7 +3,7 @@
 
    Model File:  inhalation.model
 
-   Date:  Thu Jul 01 15:16:18 2021
+   Date:  Mon Jul 19 13:04:45 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -45,7 +45,7 @@
     "Cmuc",
 
    1 Input:
-     Cinhppmv (forcing function)
+     Cinh (forcing function)
 
    54 Parameters:
      BW = 70,
@@ -198,21 +198,19 @@ static double parms[54];
 #define Vmax parms[52]
 #define Km parms[53]
 
-
 /* Forcing (Input) functions */
-static double forc[1]; 
+static double forc[1];
 
-#define Cinhppmv forc[0]
+#define Cinh forc[0]
 
 /* Function definitions for delay differential equations */
 
-int Noutgas_pbtk=1;
-int nrgas_pbtk[1]={0};
-double ytaugas_pbtk[1] = {0.0};
+int Nout=1;
+int nr[1]={0};
+double ytau[1] = {0.0};
 
-static double yinigas_pbtk[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
-/*
 void lagvalue(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
   if (fun == NULL)
@@ -231,34 +229,34 @@ double CalcDelay(int hvar, double dTime, double delay) {
 }
   return(ytau[0]);
 }
-*/
 
 /*----- Initializers */
-void initmod_gas_pbtk (void (* odeparms)(int *, double *))
+void initmod (void (* odeparms)(int *, double *))
 {
   int N=54;
   odeparms(&N, parms);
 }
 
-void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
+void initforc (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
 }
 
+
 /* Calling R code will ensure that input y has same
-   dimension as yinigas_pbtk */
-void initState_gas_pbtk (double *y)
+   dimension as yini */
+void initState (double *y)
 {
   int i;
 
-  for (i = 0; i < sizeof(yinigas_pbtk) / sizeof(yinigas_pbtk[0]); i++)
+  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
   {
-    yinigas_pbtk[i] = y[i];
+    yini[i] = y[i];
   }
 }
 
-void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
+void getParms (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -296,14 +294,11 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Cinh;
   /* local */ double Calv;
   /* local */ double Cendexh;
   /* local */ double Cmixexh;
-
-  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -369,20 +364,20 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
 
 /*----- Jacobian calculations: */
-void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event_gas_pbtk (int *n, double *t, double *y)
+void event (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
