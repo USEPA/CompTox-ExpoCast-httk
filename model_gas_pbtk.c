@@ -205,12 +205,13 @@ static double forc[1];
 
 /* Function definitions for delay differential equations */
 
-int Nout=1;
-int nr[1]={0};
-double ytau[1] = {0.0};
+int Noutgas_pbtk=1;
+int nrgas_pbtk[1]={0};
+double ytaugas_pbtk[1] = {0.0};
 
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+static double yinigas_pbtk[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
+/*
 void lagvalue(double T, int *nr, int N, double *ytau) {
   static void(*fun)(double, int*, int, double*) = NULL;
   if (fun == NULL)
@@ -229,15 +230,16 @@ double CalcDelay(int hvar, double dTime, double delay) {
 }
   return(ytau[0]);
 }
-
+*/
+ 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
   int N=54;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
@@ -245,18 +247,18 @@ void initforc (void (* odeforcs)(int *, double *))
 
 
 /* Calling R code will ensure that input y has same
-   dimension as yini */
-void initState (double *y)
+   dimension as yinigas_pbtk */
+void initState_gas_pbtk (double *y)
 {
   int i;
 
-  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+  for (i = 0; i < sizeof(yinigas_pbtk) / sizeof(yinigas_pbtk[0]); i++)
   {
-    yini[i] = y[i];
+    yinigas_pbtk[i] = y[i];
   }
 }
 
-void getParms (double *inParms, double *out, int *nout) {
+void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -294,7 +296,7 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double Calv;
   /* local */ double Cendexh;
@@ -364,20 +366,20 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_gas_pbtk (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_gas_pbtk (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_gas_pbtk (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */
