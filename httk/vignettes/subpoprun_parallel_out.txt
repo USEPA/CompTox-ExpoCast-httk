@@ -61,3 +61,11 @@ In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
 In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 Execution halted
+starting worker pid=15924 on localhost:11187 at 17:31:08.341
+starting worker pid=15688 on localhost:11187 at 17:31:08.378
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+Execution halted
+Execution halted
