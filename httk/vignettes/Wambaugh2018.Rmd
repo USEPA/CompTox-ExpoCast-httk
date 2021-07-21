@@ -622,13 +622,9 @@ row.side.cols[sapply(chem.invivo.PK.aggregate.data$CAS,is.pharma)] <- "Grey"
 apply(physprop.matrix,2,function(x) mean(x,na.rm=TRUE))
 for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log10(10^-6+physprop.matrix[,this.col])
 
-
-<<<<<<< HEAD
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE))
-=======
-physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(TRUE))
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 ```
+
 ```{r PlotFigure3, eval = FALSE}
 main_title="in vivo Toxicokinetic Parameters"
 heatmap.2(physprop.matrix, 
@@ -674,16 +670,6 @@ FitData.Fup$SelectedVdist.sd <- FitData.Fup$Vdist.sd
 FitData.Fup$Vdist.1comp.pred <- sapply(FitData.Fup$CAS,
   function(x) suppressWarnings(calc_vdist(chem.cas=x,
   species="Rat",
-<<<<<<< HEAD
-  default.to.human = T,
-  suppress.messages=TRUE))
-FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
-  function(x) calc_vdist(chem.cas=x,
-  regression=FALSE,
-  species="Rat",
-  default.to.human = T,
-  suppress.messages=TRUE))
-=======
   default.to.human = TRUE,
   suppress.messages=TRUE)))
 FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
@@ -692,8 +678,6 @@ FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
   species="Rat",
   default.to.human = TRUE,
   suppress.messages=TRUE)))
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
-
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
 summary(FigVdista.fit)
