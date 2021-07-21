@@ -25,13 +25,21 @@ otherwise estimated based on well number}
 otherwise estimated based on well number (m^3)}
 }
 \value{
-tcdata, A data table with well_number, sarea (surface area, m^2),
-cell_yield (# cells), v_working (m^3), v_total (m^3) per well
+A data table composed of any input data.table \emph{tcdata}
+with only the following columns either created or altered by this function:  
+\tabular{ccc}{
+\strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+well_number \tab number of wells on plate \tab \cr
+sarea \tab surface area \tab m^2 \cr
+cell_yield \tab number of cells \tab cells \cr 
+v_working \tab working (filled) volume of each well \tab uL \cr
+v_total \tab total volume of each well \tab uL \cr
+}
 }
 \description{
 Estimate geometry surface area of plastic in well plate based on well plate
-format suggested values from Corning.  option.plastic == T (default) give
-nonzero surface area (sarea, m^2) option.bottom == T (default) includes
+format suggested values from Corning.  option.plastic == TRUE (default) give
+nonzero surface area (sarea, m^2) option.bottom == TRUE (default) includes
 surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
 }
