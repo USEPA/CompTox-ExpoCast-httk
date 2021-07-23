@@ -294,7 +294,7 @@ FigCa  <- ggplot(data=MFdata.main) +
   geom_abline(slope=1, intercept=0) + 
 #    geom_abline(slope=1, intercept=1,linetype="dashed") + 
 #    geom_abline(slope=1, intercept=-1,linetype="dashed") + 
-  ylab(expression(paste(italic("In vivo")," Maternal:Fetal Plasma Ratio"))) + 
+  ylab(expression(paste(italic("In vivo")," Mat:Fet Plasma Ratio"))) + 
   xlab(expression(paste(italic("In vitro")," Predicted Ratio"))) +
 #    scale_color_brewer(palette="Set2") + 
   theme_bw()  +
@@ -368,16 +368,7 @@ mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$DTXSID
 fluoros <- chem.physical_and_invitro.data$DTXSID[regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))!=-1]
 
-cat(paste("When volatile and fluorinated chemicals are omitted only ",
-  dim(subset(MFdata.main,
-  !(Chemical.Category %in% c(
-    "Fluorinated compounds",
-    "Polyaromatic Hydrocarbons"))))[1],
-  " evaluation chemicals remain\n",
-  sep=""))
-  
-  
-  
+
 FigCb  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred,
@@ -408,7 +399,7 @@ FigCb  <- ggplot(data=MFdata.main) +
   geom_abline(slope=1, intercept=0) + 
 #    geom_abline(slope=1, intercept=1,linetype="dashed") + 
 #    geom_abline(slope=1, intercept=-1,linetype="dashed") + 
-  ylab(expression(paste(italic("In vivo")," Maternal:Fetal Plasma Ratio"))) + 
+  ylab(expression(paste(italic("In vivo")," Mat:Fet Plasma Ratio"))) + 
   xlab(expression(paste(italic("In vitro")," Predicted Ratio"))) +
 #    scale_color_brewer(palette="Set2") + 
   theme_bw()  +
@@ -434,6 +425,24 @@ fit2sub <- lm(data=subset(MFdata.main,
 summary(fit2sub)
 
 RMSE(fit2sub)
+
+cat(paste("When volatile and fluorinated chemicals are omitted only ",
+  dim(subset(MFdata.main,
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons"))))[1],
+  " evaluation chemicals remain, but the R2 is ",
+  signif(summary(fit1sub)$adj.r.squared,2),
+  " and the RMSE is ",
+  signif(RMSE(fit1sub),2),
+  " without the correction. When the fetal plasma fraction unbound correction is used, the predictivity decreases, slightly: R2 is ",
+  signif(summary(fit2sub)$adj.r.squared,2),
+  " and the RMSE is ",
+  signif(RMSE(fit2sub),2),
+  " for the non-volatile, non-fluorinated chemicals.\n",
+  sep=""))
+  
+  
 
 cat(paste("We compare the RMSE for our predictions to the standard deviation \
 of the observations ",
@@ -478,6 +487,16 @@ fit4sub <- lm(data=subset(MFdata.main, N.obs > 1 &
   MFratio~MFratio.pred)
 summary(fit4sub)
 
+cat(paste("Overall, we observed relatively poor correlation (R2 = ",
+  signif(summary(fit1)$adj.r.squared,2),
+  ", RMSE = ",
+  signif(RMSE(fit1),2),
+  ") without our fetal fup correction that was unchanged with that assumption (R2 = ",
+  signif(summary(fit2)$adj.r.squared,2),
+  ", RMSE = ",
+  signif(RMSE(fit2),2),
+  ").\n",sep=""))
+
 repeats <-subset(MFdata.main,N.obs > 1)
 cat(paste("The RMSE of the predictions for the ",
   dim(subset(repeats,!(Chemical.Category %in% c(
@@ -488,6 +507,18 @@ cat(paste("The RMSE of the predictions for the ",
   " with the fup correction and ",
   signif(RMSE(fit3sub),2),
   " without.\n",sep=""))
+
+cat(paste("These values are close to the standard deviation of the mean but the p-value for the chemicals with repeated observations is ",
+  signif(pf(
+    summary(fit4sub)$fstatistic[1],
+    summary(fit4sub)$fstatistic[2],
+    summary(fit4sub)$fstatistic[3]),2),    
+" indicating some value for the predictive model, albeit for only ",
+dim(subset(repeats,!(Chemical.Category %in% c(
+  "Fluorinated compounds",
+  "Polyaromatic Hydrocarbons"))))[1],
+ " chemicals",sep=""))
+   
 ```
 
 
@@ -821,7 +852,7 @@ FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
   theme_bw()  +
   theme(legend.position="bottom")+
   theme( text  = element_text(size=18))+ 
-  theme(legend.text=element_text(size=14))+  
+  theme(legend.text=element_text(size=10))+  
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
 print(FigFa)
@@ -877,7 +908,7 @@ pred.table1$Compound <- gsub("\"","",pred.table1$Compound)
 
 for (this.cas in maternal.list)
 {
-  Fup <- subset(suppressWarnings(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma 
+  Fup <- suppressWarnings(subset(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma)
   if (regexpr(",",Fup)!=-1)
   {
     if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
