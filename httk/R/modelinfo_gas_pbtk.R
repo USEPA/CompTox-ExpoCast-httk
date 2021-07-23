@@ -377,4 +377,4 @@ model.list[["gas_pbtk"]]$calcpc <- TRUE
 model.list[["gas_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["gas_pbtk"]]$exclude.fup.zero <- T
+# model.list[["gas_pbtk"]]$exclude.fup.zero <- T
