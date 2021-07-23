@@ -3,7 +3,7 @@
 
    Model File:  inhalation.model
 
-   Date:  Thu Jul 01 15:16:18 2021
+   Date:  Mon Jul 19 13:04:45 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -45,7 +45,7 @@
     "Cmuc",
 
    1 Input:
-     Cinhppmv (forcing function)
+     Cinh (forcing function)
 
    54 Parameters:
      BW = 70,
@@ -198,11 +198,10 @@ static double parms[54];
 #define Vmax parms[52]
 #define Km parms[53]
 
-
 /* Forcing (Input) functions */
-static double forc[1]; 
+static double forc[1];
 
-#define Cinhppmv forc[0]
+#define Cinh forc[0]
 
 /* Function definitions for delay differential equations */
 
@@ -232,7 +231,7 @@ double CalcDelay(int hvar, double dTime, double delay) {
   return(ytau[0]);
 }
 */
-
+ 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
@@ -245,6 +244,7 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
   int N=1;
   odeforcs(&N, forc);
 }
+
 
 /* Calling R code will ensure that input y has same
    dimension as yinigas_pbtk */
@@ -298,12 +298,9 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 
 void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Cinh;
   /* local */ double Calv;
   /* local */ double Cendexh;
   /* local */ double Cmixexh;
-
-  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
