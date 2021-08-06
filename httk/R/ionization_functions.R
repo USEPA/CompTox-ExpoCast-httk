@@ -137,33 +137,42 @@ calc_ionization <- function(
       suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
   }
   
-  if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
+  # Check if any of these arguments are vectors:
+  if (length(pKa_Donor) < 2 & length(pKa_Accept) < 2 & length(pH) < 2)
   {
-    pKa_Donor <- parameters$pKa_Donor
-    pKa_Accept <- parameters$pKa_Accept
-  } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
-  {
-# A null value means no argument provided, while NA means no equlibria:
-    if (is.null(pKa_Donor)) pKa_Donor <- NA
-    if (is.null(pKa_Accept)) pKa_Accept <- NA
-  } else {
-    stop(
-"Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
-  }
-  
-  # Number of ionizations to calculate:
-  if (is.null(parameters))
-  {
-    calculations <- 1
-# If pKa's aren't actually varying let's not waste computing time:    
-  } else if (all(c(length(unique(parameters$pKa_Donor)==1),
-      length(unique(parameters$pKa_Accept)==1),
-      length(unique(parameters$pH)==1))))
-  {
-    calculations <- 1
-  } else {
-    calculations <- length(unique(parameters$pKa_Donor))
-  }
+    if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
+    {
+      pKa_Donor <- parameters$pKa_Donor
+      pKa_Accept <- parameters$pKa_Accept
+    } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
+    {
+  # A null value means no argument provided, while NA means no equlibria:
+      if (is.null(pKa_Donor)) pKa_Donor <- NA
+      if (is.null(pKa_Accept)) pKa_Accept <- NA
+    } else {
+      stop(
+  "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
+    }
+    # Number of ionizations to calculate:
+    if (is.null(parameters))
+    {
+      calculations <- 1
+  # If pKa's aren't actually varying let's not waste computing time:    
+    } else if (all(c(length(unique(parameters$pKa_Donor)==1),
+        length(unique(parameters$pKa_Accept)==1),
+        length(unique(parameters$pH)==1))))
+    {
+      calculations <- 1
+    } else {
+      calculations <- max(c(
+      length(unique(parameters$pKa_Donor)),
+      length(unique(parameters$pKa_Accept)),
+      length(unique(parameters$pKa_pH))))
+    }
+  } else calculations <- max(c(
+    length(unique(pKa_Donor)),
+    length(unique(pKa_Accept)),
+    length(unique(pH))))
   
   fraction_neutral <- NULL
   fraction_charged <- NULL
@@ -179,16 +188,18 @@ calc_ionization <- function(
       this.pKa_Accept <- pKa_Accept[[index]]
       this.pH <- pH[[index]]
     } else {
-      this.pKa_Donor <- pKa_Donor
-      this.pKa_Accept <- pKa_Accept
-      this.pH <- pH
+      this.pKa_Donor <- pKa_Donor[[1]]
+      this.pKa_Accept <- pKa_Accept[[1]]
+      this.pH <- pH[[1]]
     }
+    if (is.null(this.pKa_Donor)) this.pKa_Donor <- NA
+    if (is.null(this.pKa_Accept)) this.pKa_Accept <- NA
     if (!is.na(this.pKa_Donor))
     {
       if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
       {
         if (regexpr(",",this.pKa_Donor)!=-1)
-          as.numeric(unlist(strsplit(this.pKa_Donor, ",")))
+          sort(as.numeric(unlist(strsplit(this.pKa_Donor, ","))))
         else this.pKa_Donor <- suppressWarnings(as.numeric(this.pKa_Donor))
       }
     }
@@ -198,7 +209,7 @@ calc_ionization <- function(
       if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
       {
         if (regexpr(",",this.pKa_Accept)!=-1)
-          as.numeric(unlist(strsplit(this.pKa_Accept, ",")))
+          sort(as.numeric(unlist(strsplit(this.pKa_Accept, ","))))
         else this.pKa_Accept <- suppressWarnings(as.numeric(this.pKa_Accept))
       }
     }
