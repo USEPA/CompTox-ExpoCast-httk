@@ -63,8 +63,8 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Expand on any provided chemical identifiers if possible (if any but not
 # all chemical descriptors are NULL):
   chem_id_list  = list(chem.cas, chem.name, dtxsid)
-  if (any(lapply(chem_id_list, is.null)) &
-      !all(lapply(chem_id_list, is.null))){
+  if (any(unlist(lapply(chem_id_list, is.null))) &
+      !all(unlist(lapply(chem_id_list, is.null)))){
   out <- get_chem_id(
     chem.cas=chem.cas,
     chem.name=chem.name,
