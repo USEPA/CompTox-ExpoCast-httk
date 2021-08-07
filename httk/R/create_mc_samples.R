@@ -301,10 +301,10 @@ Set species=\"Human\" to run httkpop model.')
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
-  {
-    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
-  }
+#  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
+#  {
+#    suppressWarnings(parameters.dt[c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+#  }
 
 #
 #
