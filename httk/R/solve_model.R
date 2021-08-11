@@ -180,9 +180,6 @@ solve_model <- function(chem.name = NULL,
     model_routes <- names(model.list[[model]]$routes)
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# allowable names of input units for the model for a given route that are based
-# on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
-    allowed_units_input <- lapply(model.list[[model]]$routes,function(x) x$dose.units)
 # allowable names of output units for the model for a given route that are
 # based on or derived from amounts (e.g., umol, mg, ppmv)
     allowed_units_output <- model.list[[model]]$allowed.units.output[[route]]
@@ -234,19 +231,29 @@ solve_model <- function(chem.name = NULL,
   {
     stop(paste("Model",model,"dose not have route",route))
   } else {
-    dose.var <- model.list[["pbtk"]]$routes[[route]][["entry.compartment"]]
-    # We need to know which compartment gets the dose and how it receives it
-    # (deSolve allows add, replace, or multiply:
-    if (is.null(dose.var))
+  # allowable names of input units for the model for a given route that are based
+# on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
+# allowed_units_input
+    dose.units <- model.list[[model]]$routes[[route]][["dose.units"]]
+    if (is.null(dose.units))
     {
-      stop(paste("Must specify variable to receive dose for model",model,"and route",
+      stop(paste("Must specify target dose units for model",model,"and route",
         route))
     } else {
-      dose.type <- model.list[[model]]$dose.type[[route]]
-      if (is.null(dose.type))
+      dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
+      # We need to know which compartment gets the dose and how it receives it
+      # (deSolve allows add, replace, or multiply:
+      if (is.null(dose.var))
       {
-        stop(paste("Must specify how the variable is changed for model",model,"and route",
+        stop(paste("Must specify variable to receive dose for model",model,"and route",
           route))
+      } else {
+        dose.type <- model.list[[model]]$routes[[route]][["dose.type"]]
+        if (is.null(dose.type))
+        {
+          stop(paste("Must specify how the variable is changed for model",model,"and route",
+            route))
+        }
       }
     }
   }
@@ -274,16 +281,6 @@ solve_model <- function(chem.name = NULL,
           units specification in compartment_units for model ", model)
   }
   
-  # Check the units-related objects that we want the solver to use:   
-  if (!(tolower(input.units) %in% tolower(allowed_units_input))) {
-    stop(paste("Units",input.units,"unavailable for model",model))
-  } else if (any(!tolower(compartment_units)
-                 %in% tolower(allowed_units_output))) {
-    stop("The compartment.units list specified for the model outputs contains
-          units not allowed per allowed.units.output for model ", model)
-  }
-  
-  
 ### MODEL PARAMETERS FOR R
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
@@ -306,6 +303,15 @@ solve_model <- function(chem.name = NULL,
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
+  }
+
+  # Molecular weight for general use:
+  MW <- parameters[["MW"]]
+
+  if (any(!tolower(compartment_units)
+                 %in% tolower(allowed_units_output))) {
+    stop("The compartment.units list specified for the model outputs contains
+          units not allowed per allowed.units.output for model ", model)
   }
   
   # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
@@ -348,9 +354,6 @@ solve_model <- function(chem.name = NULL,
   {
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
-
-# Molecular weight for general use:
-  MW <- parameters[["MW"]]
 
 ### STATE VECTOR
 
@@ -465,10 +468,14 @@ solve_model <- function(chem.name = NULL,
   dosing.units <- input.units
   
   #Scale dose if input.units is measured in (mg/kg) 
-  if (input.units == "mg/kg") {
-  dosing <- scale_dosing(dosing,parameters,route,output.units = "mg")
-  dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
-  }
+  dosing <- scale_dosing(
+    dosing,
+    parameters,
+    route,
+    input.units = input.units,
+    output.units = dose.units)
+  dosing.units <- dose.units  #redefine the dosing units if scaling occurs
+
   
   #Get a units conversion factor to make sure all dosing metrics are
   #based in micromoles
