@@ -966,7 +966,7 @@
 #' models. 
 #'
 #' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
-#' \string{intrinsic clearance} are
+#' \strong{intrinsic clearance} are
 #' \emph{provided as a series of numbers separated by commas}. These values are the 
 #' result of Bayesian analysis and characterize a distribution: the first value
 #' is the median of the distribution, while the second and third values are the 
@@ -988,58 +988,60 @@
 #'
 #' @docType data
 #' @format A data.frame containing 9411 rows and 54 columns.
-#' \tabular{ccc}{
+#' \tabular{lll}{
 #' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
-#'  "Compound"   \tab The preferred name of the chemical compound \tab none \cr                      
-#'  "CAS"        \tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr                     
-#'  "CAS.Checksum"  \tab A logical (TRUE/FALSE) indicating whether the CAS number is valid \tab none \cr                   
-#'  "DTXSID"        \tab EPA's DSSTox Structure ID 
+#'  Compound \tab The preferred name of the chemical compound \tab none \cr                      
+#'  CAS\tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr                     
+#'  CAS.Checksum \tab A logical (TRUE/FALSE) indicating whether the CAS number is valid \tab none \cr                   
+#'  DTXSID \tab EPA's DSSTox Structure ID 
 #' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
-#'  "Formula"       \tab The proportions of atoms that constitute the 
+#'  Formula \tab The proportions of atoms that constitute the 
 #' particular chemical compound  \tab none \cr                   
-#'  "SMILES.desalt"  \tab The simplified molecular-input line-entry system
-#' description of the chemical structure with any salt ions removed
-#' \tab none \cr                 
-#'  "All.Compound.Names" \tab All names of the chemical as they occured in the
-#' data set used to construct the table, concatonated with "|" \tab none \cr              
-#'  "logHenry"       \tab The log10 Henry's law constant \tab 
+#'  SMILES.desalt \tab The simplified molecular-input line-entry system
+#' structure \tab none \cr                 
+#'  All.Compound.Names \tab All names of the chemical as they occured in the
+#' data \tab none \cr              
+#'  logHenry \tab The log10 Henry's law constant \tab 
 #' log10(atmosphers*m^3/mole) \cr                 
-#'  "logHenry.Reference"    \tab Reference for Henry's law constant \tab \cr           
-#'  "logMA" \tab The log10 phospholipid:water partition coefficient or
+#'  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
+#'  logMA \tab The log10 phospholipid:water partition coefficient or
 #' "Membrane affinity" \tab unitless ratio \cr                
-#'  "logMA.Reference" \tab Reference for membrane affinity \tab \cr               
-#'  "logP"           \tab he log10 Henry's law constant\tab uL \cr                 
-#'  "logP.Reference"    \tab Reference for logPow \tab \cr               
-#'  "logPwa"         \tab he log10 Henry's law constant \tab uL \cr                 
-#'  "logPwa.Reference"    \tab Reference for logPwa \tab \cr             
-#'  "logWSol"       \tab he log10 Henry's law constant \tab log10(mole/L) \cr                  
-#'  "logWSol.Reference"  \tab Reference for logWsol \tab \cr              
-#'  "MP"            \tab The chemical compound melting point \tab degrees Celsius \cr                  
-#'  "MP.Reference"  \tab Reference for melting point \tab \cr                   
-#'  "MW"             \tab The chemical compound molecular weight \tab g/mol \cr                
-#'  "MW.Reference"    \tab Reference for molecular weight \tab \cr                 
-#'  "pKa_Accept" \tab The hydrogen acceptor equilibria contatrations 
-#' (log scale)total volume of each well \tab logarithm \cr              
-#'  "pKa_Accept.Reference"  \tab Reference for pKa_Accept \tab \cr           
-#'  "pKa_Donor"        \tab The hydrogen acceptor equilibria contatrations 
-#' (log scale) \tab logarithm \cr               
-#'  "pKa_Donor.Reference" \tab Reference for pKa_Donor \tab \cr             
-#'  "All.Species"     \tab All species for which chemical-speicifc measured 
-#' data were available, concatonated with "|" \tab none \cr                
-#'  "DTXSID.Reference"  \tab Reference for DTXSID \tab \cr               
-#'  "Formula.Reference"  \tab Reference for chemical formulat \tab \cr             
-#'  "[SPECIES].Clint"   \tab total volume of each well \tab uL/min/10^6 hepatocytes \cr                   
-#'  "[SPECIES].Clint.pValue"   \tab total volume of each well \tab none \cr           
-#'  "[SPECIES].Clint.pValue.Reference"  \tab Reference for Clint pValue \tab  \cr   
-#'  "[SPECIES].Clint.Reference"  \tab Reference for Clint \tab  \cr         
-#'  "[SPECIES].Fgutabs"         \tab total volume of each well \tab none \cr           
-#'  "[SPECIES].Fgutabs.Reference" \tab Reference for Fgutabs \tab \cr        
-#'  "[SPECIES].Funbound.plasma"   \tab total volume of each well \tab none \cr         
-#'  "[SPECIES].Funbound.plasma.Reference"\tab Reference for Funbound.plasma \tab \cr 
-#'  "[SPECIES].Rblood2plasma"     \tab total volume of each well \tab unitless ratio \cr         
-#'  "[SPECIES].Rblood2plasma.Reference" \tab Reference for Rblood2plasma \tab  \cr  
-#'  "SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
-#'  "Chemical.Class"   \tab total volume of each well \tab uL \cr
+#'  logMA.Reference \tab Reference for membrane affinity \tab \cr               
+#'  logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr                 
+#'  logP.Reference \tab Reference for logPow \tab \cr               
+#'  logPwa \tab The log10 water:air partition coefficient \tab log10 unitless ratio \cr                 
+#'  logPwa.Reference \tab Reference for logPwa \tab \cr             
+#'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+#'  logWSol.Reference \tab Reference for logWsol \tab \cr              
+#'  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
+#'  MP.Reference \tab Reference for melting point \tab \cr                   
+#'  MW \tab The chemical compound molecular weight \tab g/mol \cr                
+#'  MW.Reference \tab Reference for molecular weight \tab \cr                 
+#'  pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
+#'  \tab logarithm \cr              
+#'  pKa_Accept.Reference \tab Reference for pKa_Accept \tab \cr           
+#'  pKa_Donor \tab The hydrogen acceptor equilibria concentrations 
+#' \tab logarithm \cr               
+#'  pKa_Donor.Reference \tab Reference for pKa_Donor \tab \cr             
+#'  All.Species \tab All species for which chemical-speicifc measured 
+#' data were available \tab none \cr                
+#'  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
+#'  Formula.Reference \tab Reference for chemical formulat \tab \cr             
+#'  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
+#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
+#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+#'  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
+#'  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
+#'  [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
+#' gut \tab unitless fraction \cr           
+#'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+#'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
+#' plasma proteins \tab unitless fraction \cr         
+#'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
+#'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
+#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
+#'  SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+#'  Chemical.Class \tab All classes to which the chemical has been assigned \tab uL \cr
 #' }
 #' @author John Wambaugh
 #'
