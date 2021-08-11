@@ -991,12 +991,11 @@
 #' \tabular{lll}{
 #' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
 #'  Compound \tab The preferred name of the chemical compound \tab none \cr                      
-#'  CAS\tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr                     
-#'  CAS.Checksum \tab A logical (TRUE/FALSE) indicating whether the CAS number is valid \tab none \cr                   
-#'  DTXSID \tab EPA's DSSTox Structure ID 
+#'  CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
+#'  CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
+#'  DTXSID \tab DSSTox Structure ID 
 #' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
-#'  Formula \tab The proportions of atoms that constitute the 
-#' particular chemical compound  \tab none \cr                   
+#'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
 #'  SMILES.desalt \tab The simplified molecular-input line-entry system
 #' structure \tab none \cr                 
 #'  All.Compound.Names \tab All names of the chemical as they occured in the
@@ -1004,14 +1003,13 @@
 #'  logHenry \tab The log10 Henry's law constant \tab 
 #' log10(atmosphers*m^3/mole) \cr                 
 #'  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
-#'  logMA \tab The log10 phospholipid:water partition coefficient or
-#' "Membrane affinity" \tab unitless ratio \cr                
-#'  logMA.Reference \tab Reference for membrane affinity \tab \cr               
-#'  logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr                 
+#'  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
 #'  logP.Reference \tab Reference for logPow \tab \cr               
-#'  logPwa \tab The log10 water:air partition coefficient \tab log10 unitless ratio \cr                 
+#'  logPwa \tab The log10 water:air PC \tab log10 unitless ratio \cr                 
 #'  logPwa.Reference \tab Reference for logPwa \tab \cr             
-#'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+#'  logMA \tab The log10 phospholipid:water PC or
+#' "Membrane affinity" \tab unitless ratio \cr                
+#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
 #'  logWSol.Reference \tab Reference for logWsol \tab \cr              
 #'  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
 #'  MP.Reference \tab Reference for melting point \tab \cr                   
