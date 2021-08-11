@@ -231,20 +231,36 @@ model.list[["pbtk"]]$compartment.units <- c(
     "AUC"="uM*days"
   )
 
-# These parameters specify the exposure scenario simulated by the model:
-model.list[["pbtk"]]$dosing.params <- c("daily.dose",
-  "initial.dose",
-  "doses.per.day",
-  "dosing.matrix")
-model.list[["pbtk"]]$routes <- c("oral","iv")
+## These parameters specify the exposure scenario simulated by the model:
+#model.list[["pbtk"]]$dosing.params <- c("daily.dose",
+#  "initial.dose",
+#  "doses.per.day",
+#  "dosing.matrix")
+#model.list[["pbtk"]]$routes <- c("oral","iv")
+## We need to know which compartment gets the dose 
+#model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
+#  iv="Aven")
+## Can take the values "add" to add dose C1 <- C1 + dose,
+##"replace" to change the value C1 <- dose
+##or "multiply" to change the value to C1 <- C1*dose
+#model.list[["pbtk"]]$dose.type <- list(oral="add",
+#  iv="add")
+  
+model.list[["pbtk"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["pbtk"]]$dose.type <- list(oral="add",
-  iv="add")
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add",
+# We need this in case the user specifies weird units:
+    "dose.units" = "mg/kg"),
+  "iv" = list(
+    "entry.compartment" = "Aven",
+    "dose.type" = "add",
+    "dose.units" = "mg/kg")
+  )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),

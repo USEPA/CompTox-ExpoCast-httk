@@ -7,35 +7,84 @@
 #' When default.to.human is set to TRUE, and the species-specific data,
 #' Funbound.plasma and Clint, are missing from chem.physical_and_invitro.data,
 #' human values are given instead.
+#'
+#' In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+#' fails to yield detectable concentrations for the free fraction of chemical. 
+#' In those cases we assume the compound is highly bound (that is, Fup approaches
+#' zero). For some calculations (for example, steady-state plasma concentration)
+#' there is precendent (Rotroff et al., 2010) for using half the average limit 
+#' of detection, that is, 0.005 (this value is configurable via the argument
+#' fup.lod.default). We do not recomend using other models where 
+#' quantities like partition coefficients must be predicted using Fup. We also
+#' do not recomend including the value 0.005 in training sets for Fup predictive
+#' models.
+#'
+#' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
+#' \string{intrinsic clearance} are
+#' \emph{provided as a series of numbers separated by commas}. These values are the 
+#' result of Bayesian analysis and characterize a distribution: the first value
+#' is the median of the distribution, while the second and third values are the 
+#' lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+#' For intrinsic clearance a fourth value indicating a p-value for a decrease is
+#' provided. Typically 4000 samples were used for the Bayesian analusis, such
+#' that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
+#' for more details. If argument meadian.only == TRUE then only the median is
+#' reported for parameters with Bayesian analysis distributions. If the 95% 
+#' credible interval is larger than fup.ci.cutoff (defaults
+#' to NULL) then the Fup is treated as too uncertain and the value NA is given.
 #' 
 #' @param info A single character vector (or collection of character vectors)
 #' from "Compound", "CAS", "DTXSID, "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
 #' "Clint.pValue", "Funbound.plasma","Structure_Formula", or "Substance_Type". info="all"
 #' gives all information for the model and species.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param fup.lod.default Default value used for fraction of unbound plasma for
 #' chemicals where measured value was below the limit of detection. Default
 #' value is 0.0005.
+#' 
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model, '1compartment' for the one compartment model, '3compartment' for
 #' three compartment model, '3compartmentss' for the three compartment model
 #' without partition coefficients, or 'schmitt' for chemicals with logP and
 #' fraction unbound (used in predict_partitioning_schmitt).
+#' 
 #' @param default.to.human Substitutes missing values with human values if
 #' true.
+#' 
 #' @param median.only Use median values only for fup and clint.  Default is FALSE.
+#' 
 #' @param fup.ci.cutoff Cutoff for the level of uncertainty in fup estimates.
 #' This value should be between (0,1). Default is `NULL` specifying no filtering.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' 
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #' 
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
+#' 
 #' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
+#' 
 #' @keywords Retrieval
+#' 
+#'@references 
+#' Rotroff, Daniel M., et al. "Incorporating human dosimetry and exposure into 
+#' high-throughput in vitro toxicity screening." Toxicological Sciences 117.2 
+#' (2010): 348-358.
+#' 
+#' Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis approach 
+#' for the measurement of plasma protein binding." Journal of pharmaceutical 
+#' sciences 97.10 (2008): 4586-4595.
+#'
+#' Wambaugh, John F., et al. "Assessing toxicokinetic uncertainty and 
+#' variability in risk prioritization." Toxicological Sciences 172.2 (2019): 
+#' 235-251.
+#'
 #' @examples
 #' 
 #' \donttest{
