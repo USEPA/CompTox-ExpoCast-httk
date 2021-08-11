@@ -39,8 +39,7 @@ log10(atmosphers*m^3/mole) \cr
  pKa_Donor \tab The hydrogen acceptor equilibria concentrations 
 \tab logarithm \cr               
  pKa_Donor.Reference \tab Reference for pKa_Donor \tab \cr             
- All.Species \tab All species for which chemical-speicifc measured 
-data were available \tab none \cr                
+ All.Species \tab All species for which data were available \tab none \cr                
  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
  Formula.Reference \tab Reference for chemical formulat \tab \cr             
  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
