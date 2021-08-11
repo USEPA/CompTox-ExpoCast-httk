@@ -215,22 +215,6 @@ model.list[["pbtk"]]$allowed.units.output <- list(
        "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
        "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
-# AUC values should also be included.
-model.list[["pbtk"]]$compartment.units <- c(
-    "Cgut"="uM",
-    "Cliver"="uM",
-    "Cven"="uM",
-    "Clung"="uM",
-    "Cart"="uM",
-    "Crest"="uM",
-    "Ckidney"="uM",
-    "Cplasma"="uM",
-    "Aplasma"="umol",
-    "AUC"="uM*days"
-  )
-
 ## These parameters specify the exposure scenario simulated by the model:
 #model.list[["pbtk"]]$dosing.params <- c("daily.dose",
 #  "initial.dose",
@@ -253,13 +237,10 @@ model.list[["pbtk"]]$routes <- list(
 # desolve events can take the values "add" to add dose C1 <- C1 + dose,
 # "replace" to change the value C1 <- dose
 # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add",
-# We need this in case the user specifies weird units:
-    "dose.units" = "mg/kg"),
+    "dose.type" = "add"),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add",
-    "dose.units" = "mg/kg")
+    "dose.type" = "add")
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
@@ -279,6 +260,33 @@ model.list[["pbtk"]]$state.vars <- c(
     "Ametabolized",
     "AUC"
     ) 
+
+# Default set of units assigned to correspond to each of the state variables to 
+# as well as any additional model outputs that might be monitored.
+# AUC values should also be included.
+model.list[["pbtk"]]$compartment.units <- c(
+    "Agutlumen"="umol",
+    "Agut"="umol",
+    "Aliver"="umol",
+    "Aven"="umol",
+    "Alung"="umol",
+    "Aart"="umol",
+    "Arest"="umol",
+    "Akidney"="umol", 
+    "Atubules"="umol",
+    "Ametabolized"="umol",
+    "Cgut"="uM",
+    "Cliver"="uM",
+    "Cven"="uM",
+    "Clung"="uM",
+    "Cart"="uM",
+    "Crest"="uM",
+    "Ckidney"="uM",
+    "Cplasma"="uM",
+    "Aplasma"="umol",
+    "AUC"="uM*days"
+  )
+
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
