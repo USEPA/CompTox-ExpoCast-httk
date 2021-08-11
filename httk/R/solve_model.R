@@ -231,29 +231,26 @@ solve_model <- function(chem.name = NULL,
   {
     stop(paste("Model",model,"dose not have route",route))
   } else {
-  # allowable names of input units for the model for a given route that are based
-# on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
-# allowed_units_input
-    dose.units <- model.list[[model]]$routes[[route]][["dose.units"]]
-    if (is.null(dose.units))
+    # We need to know which compartment gets the dose and 
+    dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
+    # The dose should be in whatever units the model actually uses:
+    dose.units <- compartment_units[dose.var]
+    if (is.null(dose.var))
     {
-      stop(paste("Must specify target dose units for model",model,"and route",
+      stop(paste("Must specify variable to receive dose for model",model,"and route",
         route))
+    } else if (is.null(dose.units))
+    {
+      stop(paste("Must specify target dose units for model",model,"compartment",
+        dose.var))
     } else {
-      dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
-      # We need to know which compartment gets the dose and how it receives it
+      # We need to know how the compartment dose.var receives the dose
       # (deSolve allows add, replace, or multiply:
-      if (is.null(dose.var))
+      dose.type <- model.list[[model]]$routes[[route]][["dose.type"]]
+      if (is.null(dose.type))
       {
-        stop(paste("Must specify variable to receive dose for model",model,"and route",
+        stop(paste("Must specify how the variable is changed for model",model,"and route",
           route))
-      } else {
-        dose.type <- model.list[[model]]$routes[[route]][["dose.type"]]
-        if (is.null(dose.type))
-        {
-          stop(paste("Must specify how the variable is changed for model",model,"and route",
-            route))
-        }
       }
     }
   }
