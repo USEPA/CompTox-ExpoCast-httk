@@ -2,11 +2,13 @@
 #' 
 #' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
-#' paramterized for a given species.
+#' paramterized for a given species. Since different models have different 
+#' requirements and not all chemicals have complete data, this function will 
+#' return different number of chemicals depending on the model specififed.
 #' 
 #' When default.to.human is set to TRUE, and the species-specific data,
-#' Funbound.plasma and Clint, are missing from chem.physical_and_invitro.data,
-#' human values are given instead.
+#' Funbound.plasma and Clint, are missing from 
+#' \code{\link{chem.physical_and_invitro.data}}, human values are given instead.
 #'
 #' In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
 #' fails to yield detectable concentrations for the free fraction of chemical. 
@@ -20,7 +22,7 @@
 #' models.
 #'
 #' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
-#' \string{intrinsic clearance} are
+#' \strong{intrinsic clearance} are
 #' \emph{provided as a series of numbers separated by commas}. These values are the 
 #' result of Bayesian analysis and characterize a distribution: the first value
 #' is the median of the distribution, while the second and third values are the 
@@ -65,8 +67,30 @@
 #' 
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #' 
-#' @return \item{info}{Table/vector containing values specified in "info" for
-#' valid chemicals.}
+#' @return \item{vector/data.table}{Table (if info has multiple entries) or 
+#' vector containing a column for each valid entry 
+#' specified in the argument "info" and a row for each chemical with sufficient
+#' data for the model specified by argument "model":
+#' \tabular{lll}{
+#' \strong{Column} \tab \strong{Description} \tab \strong{units} \cr
+#' Compound \tab The preferred name of the chemical compound \tab none \cr 
+#' CAS \tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr  
+#' DTXSID \tab EPA's DSSTox Structure ID 
+#' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr 
+#' logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr 
+#' MW \tab The chemical compound molecular weight \tab g/mol \cr 
+#' pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
+#' \tab logarithm \cr   
+#' pKa_Donor \tab The hydrogen donor equilibria concentrations 
+#'  \tab logarithm \cr   
+#' [SPECIES].Clint \tab (Primary hepatocyte suspension) 
+#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr    
+#' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
+#' [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
+#' plasma proteins \tab unitless fraction \cr 
+#' [SPECIES].Rblood2plasma" \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
+#' }
+#' }
 #' 
 #' @author John Wambaugh, Robert Pearce, and Sarah E. Davidson
 #' 
