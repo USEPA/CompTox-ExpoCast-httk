@@ -955,10 +955,95 @@
 #' compiled from multiple sources, and can be used to parameterize a variety of
 #' toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 #'
+#' In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+#' fails to yield detectable concentrations for the free fraction of chemical. 
+#' In those cases we assume the compound is highly bound (that is, Fup approaches
+#' zero). For some calculations (for example, steady-state plasma concentration)
+#' there is precendent (Rotroff et al., 2010) for using half the average limit 
+#' of detection, that is 0.005. We do not recomend using other models where 
+#' quantities like partition coefficients must be predicted using Fup. We also
+#' do not recomend including the value 0.005 in training sets for Fup predictive
+#' models. 
+#'
+#' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
+#' \string{intrinsic clearance} are
+#' \emph{provided as a series of numbers separated by commas}. These values are the 
+#' result of Bayesian analysis and characterize a distribution: the first value
+#' is the median of the distribution, while the second and third values are the 
+#' lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+#' For intrinsic clearance a fourth value indicating a p-value for a decrease is
+#' provided. Typically 4000 samples were used for the Bayesian analusis, such
+#' that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
+#' for more details.
+#'
+#' Any one chemical compound \emph{may have multiple ionization equilibria} 
+#' (see Strope et al., 2018) may both for donating or accepting a proton (and
+#' therefore changing charge state). If there are multiple equlibria of the same
+#' type (donor/accept])the are concatonated by commas.
+#'
+#' All species-specific information is initially from experimental measurements.
+#' The functions \code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}}, 
+#' and \code{\link{load_dawson2021}} may be used to add in silico, structure-based
+#' predictions for many thousands of additional compounds to this table.
+#'
 #' @docType data
-#' @format A data.frame containing 565 rows and 33 columns.
+#' @format A data.frame containing 9411 rows and 54 columns.
+#' \tabular{ccc}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#'  "Compound"   \tab The preferred name of the chemical compound \tab none \cr                      
+#'  "CAS"        \tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr                     
+#'  "CAS.Checksum"  \tab A logical (TRUE/FALSE) indicating whether the CAS number is valid \tab none \cr                   
+#'  "DTXSID"        \tab EPA's DSSTox Structure ID 
+#' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+#'  "Formula"       \tab The proportions of atoms that constitute the 
+#' particular chemical compound  \tab none \cr                   
+#'  "SMILES.desalt"  \tab The simplified molecular-input line-entry system
+#' description of the chemical structure with any salt ions removed
+#' \tab none \cr                 
+#'  "All.Compound.Names" \tab All names of the chemical as they occured in the
+#' data set used to construct the table, concatonated with "|" \tab none \cr              
+#'  "logHenry"       \tab The log10 Henry's law constant \tab 
+#' log10(atmosphers*m^3/mole) \cr                 
+#'  "logHenry.Reference"    \tab Reference for Henry's law constant \tab \cr           
+#'  "logMA" \tab The log10 phospholipid:water partition coefficient or
+#' "Membrane affinity" \tab unitless ratio \cr                
+#'  "logMA.Reference" \tab Reference for membrane affinity \tab \cr               
+#'  "logP"           \tab he log10 Henry's law constant\tab uL \cr                 
+#'  "logP.Reference"    \tab Reference for logPow \tab \cr               
+#'  "logPwa"         \tab he log10 Henry's law constant \tab uL \cr                 
+#'  "logPwa.Reference"    \tab Reference for logPwa \tab \cr             
+#'  "logWSol"       \tab he log10 Henry's law constant \tab log10(mole/L) \cr                  
+#'  "logWSol.Reference"  \tab Reference for logWsol \tab \cr              
+#'  "MP"            \tab The chemical compound melting point \tab degrees Celsius \cr                  
+#'  "MP.Reference"  \tab Reference for melting point \tab \cr                   
+#'  "MW"             \tab The chemical compound molecular weight \tab g/mol \cr                
+#'  "MW.Reference"    \tab Reference for molecular weight \tab \cr                 
+#'  "pKa_Accept" \tab The hydrogen acceptor equilibria contatrations 
+#' (log scale)total volume of each well \tab logarithm \cr              
+#'  "pKa_Accept.Reference"  \tab Reference for pKa_Accept \tab \cr           
+#'  "pKa_Donor"        \tab The hydrogen acceptor equilibria contatrations 
+#' (log scale) \tab logarithm \cr               
+#'  "pKa_Donor.Reference" \tab Reference for pKa_Donor \tab \cr             
+#'  "All.Species"     \tab All species for which chemical-speicifc measured 
+#' data were available, concatonated with "|" \tab none \cr                
+#'  "DTXSID.Reference"  \tab Reference for DTXSID \tab \cr               
+#'  "Formula.Reference"  \tab Reference for chemical formulat \tab \cr             
+#'  "[SPECIES].Clint"   \tab total volume of each well \tab uL/min/10^6 hepatocytes \cr                   
+#'  "[SPECIES].Clint.pValue"   \tab total volume of each well \tab none \cr           
+#'  "[SPECIES].Clint.pValue.Reference"  \tab Reference for Clint pValue \tab  \cr   
+#'  "[SPECIES].Clint.Reference"  \tab Reference for Clint \tab  \cr         
+#'  "[SPECIES].Fgutabs"         \tab total volume of each well \tab none \cr           
+#'  "[SPECIES].Fgutabs.Reference" \tab Reference for Fgutabs \tab \cr        
+#'  "[SPECIES].Funbound.plasma"   \tab total volume of each well \tab none \cr         
+#'  "[SPECIES].Funbound.plasma.Reference"\tab Reference for Funbound.plasma \tab \cr 
+#'  "[SPECIES].Rblood2plasma"     \tab total volume of each well \tab unitless ratio \cr         
+#'  "[SPECIES].Rblood2plasma.Reference" \tab Reference for Rblood2plasma \tab  \cr  
+#'  "SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+#'  "Chemical.Class"   \tab total volume of each well \tab uL \cr
+#' }
 #' @author John Wambaugh
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
+#'
+#' @references CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
 #'
 #' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
