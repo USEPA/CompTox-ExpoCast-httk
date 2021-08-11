@@ -33,7 +33,7 @@
 #' @keywords Dynamic
 scale_dosing <- function(
   dosing,
-  parameters,
+  parameters,                   
   route,
   input.units=NULL,
   output.units="uM")
@@ -41,15 +41,15 @@ scale_dosing <- function(
   if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
     stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
 
-  BW <- as.numeric(parameters[["BW"]]) # g
+  BW <- as.numeric(parameters[["BW"]]) # kg
   MW <- as.numeric(parameters[["MW"]]) # mol/g
 
   if (is.null(input.units)) stop("Input dose units must be specified.")
 
-  # Remove bodyweight scaling:
-  if regexpr("/kg",input.units) 
+  # Convert_units doesn't do bodyweight scaling so we handle that here:
+  if (regexpr("/kg",input.units)!=-1) 
   {
-    scale.factor <- BW/1e3
+    scale.factor <- BW
     input.units <- gsub("/kg","",input.units)
   }
   else scale.factor <- 1
