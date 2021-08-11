@@ -234,7 +234,7 @@ solve_model <- function(chem.name = NULL,
   {
     stop(paste("Model",model,"dose not have route",route))
   } else {
-    dose.var <- model.list[[model]]$dose.variable[[route]]
+    dose.var <- model.list[["pbtk"]]$routes[[route]][["entry.compartment"]]
     # We need to know which compartment gets the dose and how it receives it
     # (deSolve allows add, replace, or multiply:
     if (is.null(dose.var))
