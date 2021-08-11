@@ -7,7 +7,7 @@
 #' or concentrations of chemical in different bodily compartments of a given
 #' species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 #' 
-#' Dosing values with certain acceptable associated input.units (like mg/kg BW)
+#' Dosing values with certain acceptable associated dose.units (like mg/kg BW)
 #' are configured to undergo a unit conversion. All model simulations are 
 #' intended to run with chemical amounts in umol, and concentrations in uM. 
 #' Model outputs are configured to be presented in certain alternative units as 
@@ -72,7 +72,7 @@
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
-#' @param input.units Input units of interest assigned to dosing. Defaults
+#' @param dose.units Input units of interest assigned to dosing. Defaults
 #' to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 #' 1 mg/kg in which no other dosing parameters are specified.
 #' @param method Method used by integrator (deSolve).
@@ -126,12 +126,14 @@ solve_model <- function(chem.name = NULL,
                     dosing=NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
-                    initial.values=NULL,
+                    initial.values=NULL, #vector of initial values (numeric)
+                    initial.value.units=NULL, # vector of units for initial values (character)
                     plots=F,
                     monitor.vars=NULL,
                     suppress.messages=F,
                     species="Human",
-                    input.units="mg/kg",
+                    dose.units="mg/kg", # units for 'dosing'
+                    output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     recalc.blood2plasma=F,
                     recalc.clearance=F,
@@ -275,8 +277,8 @@ solve_model <- function(chem.name = NULL,
   }
   
   # Check the units-related objects that we want the solver to use:   
-  if (!(tolower(input.units) %in% tolower(allowed_units_input))) {
-    stop(paste("Units",input.units,"unavailable for model",model))
+  if (!(tolower(dose.units) %in% tolower(allowed_units_input))) {
+    stop(paste("Units",dose.units,"unavailable for model",model))
   } else if (any(!tolower(compartment_units)
                  %in% tolower(allowed_units_output))) {
     stop("The compartment.units list specified for the model outputs contains
@@ -351,6 +353,7 @@ solve_model <- function(chem.name = NULL,
 
 # Molecular weight for general use:
   MW <- parameters[["MW"]]
+
 
 ### STATE VECTOR
 
@@ -448,8 +451,8 @@ solve_model <- function(chem.name = NULL,
 
 ### DOSING
 
-    #Sanitize the input.units
-  input.units <- tolower(input.units)
+    #Sanitize the dose.units
+  dose.units <- tolower(dose.units)
   
   # Make sure we have all specified dosing parameters for the model
   # accounted for
@@ -459,13 +462,14 @@ solve_model <- function(chem.name = NULL,
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
   if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
+
   
-  #Assign input.units to new key units variable, intended as post-scaling
+  #Assign dose.units to new key units variable, intended as post-scaling
   #units that are ready for any necessary conversion
-  dosing.units <- input.units
-  
-  #Scale dose if input.units is measured in (mg/kg) 
-  if (input.units == "mg/kg") {
+  dosing.units <- dose.units
+
+  #Scale dose if dose.units is measured in (mg/kg)
+  if (dose.units == "mg/kg") {
   dosing <- scale_dosing(dosing,parameters,route,output.units = "mg")
   dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
   }
