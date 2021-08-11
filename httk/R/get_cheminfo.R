@@ -74,8 +74,8 @@
 #' \tabular{lll}{
 #' \strong{Column} \tab \strong{Description} \tab \strong{units} \cr
 #' Compound \tab The preferred name of the chemical compound \tab none \cr 
-#' CAS \tab The preferred Chemical Abstracts Service Registry Number (CAS-RN) \tab none \cr  
-#' DTXSID \tab EPA's DSSTox Structure ID 
+#' CAS \tab The preferred Chemical Abstracts Service Registry Number \tab none \cr  
+#' DTXSID \tab DSSTox Structure ID 
 #' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr 
 #' logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr 
 #' MW \tab The chemical compound molecular weight \tab g/mol \cr 
@@ -88,7 +88,7 @@
 #' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
 #' [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
 #' plasma proteins \tab unitless fraction \cr 
-#' [SPECIES].Rblood2plasma" \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
+#' [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
 #' }
 #' }
 #' 
