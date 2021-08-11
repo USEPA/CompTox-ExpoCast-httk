@@ -177,12 +177,12 @@ solve_model <- function(chem.name = NULL,
 # Model parameter names:
     param_names <- model.list[[model]]$param.names
 # Available exposure routes:
-    model_routes <- model.list[[model]]$routes
+    model_routes <- names(model.list[[model]]$routes)
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
 # allowable names of input units for the model for a given route that are based
 # on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
-    allowed_units_input <- model.list[[model]]$allowed.units.input[[route]]
+    allowed_units_input <- lapply(model.list[[model]]$routes,function(x) x$dose.units)
 # allowable names of output units for the model for a given route that are
 # based on or derived from amounts (e.g., umol, mg, ppmv)
     allowed_units_output <- model.list[[model]]$allowed.units.output[[route]]
