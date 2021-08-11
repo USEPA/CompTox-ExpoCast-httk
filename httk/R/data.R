@@ -1038,7 +1038,7 @@
 #'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
 #'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
 #'  SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
-#'  Chemical.Class \tab All classes to which the chemical has been assigned \tab uL \cr
+#'  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
 #' }
 #' @author John Wambaugh
 #'
