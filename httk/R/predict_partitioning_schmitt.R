@@ -93,11 +93,11 @@ predict_partitioning_schmitt <- function(
   dtxsid=NULL,
   species='Human',
   model="pbtk",
-  default.to.human=F,
+  default.to.human=FALSE,
   parameters=NULL,
   alpha=0.001,
-  adjusted.Funbound.plasma=T,
-  regression=T,
+  adjusted.Funbound.plasma=TRUE,
+  regression=TRUE,
   regression.list=c(
     'brain',
     'adipose',
@@ -112,7 +112,7 @@ predict_partitioning_schmitt <- function(
     'bone'),
   tissues=NULL,
   minimum.Funbound.plasma=0.0001,
-  suppress.messages=F) 
+  suppress.messages=FALSE) 
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD

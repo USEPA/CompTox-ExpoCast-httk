@@ -7,7 +7,7 @@
 #' or concentrations of chemical in different bodily compartments of a given
 #' species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 #' 
-#' Dosing values with certain acceptable associated dose.units (like mg/kg BW)
+#' Dosing values with certain acceptable associated input.units (like mg/kg BW)
 #' are configured to undergo a unit conversion. All model simulations are 
 #' intended to run with chemical amounts in umol, and concentrations in uM. 
 #' Model outputs are configured to be presented in certain alternative units as 
@@ -72,7 +72,7 @@
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
-#' @param dose.units Input units of interest assigned to dosing. Defaults
+#' @param input.units Input units of interest assigned to dosing. Defaults
 #' to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 #' 1 mg/kg in which no other dosing parameters are specified.
 #' @param method Method used by integrator (deSolve).
@@ -128,22 +128,22 @@ solve_model <- function(chem.name = NULL,
                     tsteps = 4, # tsteps is number of steps per hour
                     initial.values=NULL, #vector of initial values (numeric)
                     initial.value.units=NULL, # vector of units for initial values (character)
-                    plots=F,
+                    plots=FALSE,
                     monitor.vars=NULL,
-                    suppress.messages=F,
+                    suppress.messages=FALSE,
                     species="Human",
-                    dose.units="mg/kg", # units for 'dosing'
+                    input.units="mg/kg", # units for 'dosing'
                     output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
                     method="lsoda",rtol=1e-8,atol=1e-12,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
-                    adjusted.Funbound.plasma=T,
+                    recalc.blood2plasma=FALSE,
+                    recalc.clearance=FALSE,
+                    adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(
-                      default.to.human=F,
+                      default.to.human=FALSE,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = T,
-                      regression=T),
+                      regression=TRUE),
                     ...)
 {
 # Handy string manipulation functions for processing variable names that adhere
@@ -179,12 +179,9 @@ solve_model <- function(chem.name = NULL,
 # Model parameter names:
     param_names <- model.list[[model]]$param.names
 # Available exposure routes:
-    model_routes <- model.list[[model]]$routes
+    model_routes <- names(model.list[[model]]$routes)
 # name of function that generates the model parameters:
     parameterize_function <- model.list[[model]]$parameterize.func
-# allowable names of input units for the model for a given route that are based
-# on or derived from amounts (e.g., umol, mg, mg/kg, ppmv)
-    allowed_units_input <- model.list[[model]]$allowed.units.input[[route]]
 # allowable names of output units for the model for a given route that are
 # based on or derived from amounts (e.g., umol, mg, ppmv)
     allowed_units_output <- model.list[[model]]$allowed.units.output[[route]]
@@ -236,15 +233,22 @@ solve_model <- function(chem.name = NULL,
   {
     stop(paste("Model",model,"dose not have route",route))
   } else {
-    dose.var <- model.list[[model]]$dose.variable[[route]]
-    # We need to know which compartment gets the dose and how it receives it
-    # (deSolve allows add, replace, or multiply:
+    # We need to know which compartment gets the dose and 
+    dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
+    # The dose should be in whatever units the model actually uses:
+    dose.units <- compartment_units[dose.var]
     if (is.null(dose.var))
     {
       stop(paste("Must specify variable to receive dose for model",model,"and route",
         route))
+    } else if (is.null(dose.units))
+    {
+      stop(paste("Must specify target dose units for model",model,"compartment",
+        dose.var))
     } else {
-      dose.type <- model.list[[model]]$dose.type[[route]]
+      # We need to know how the compartment dose.var receives the dose
+      # (deSolve allows add, replace, or multiply:
+      dose.type <- model.list[[model]]$routes[[route]][["dose.type"]]
       if (is.null(dose.type))
       {
         stop(paste("Must specify how the variable is changed for model",model,"and route",
@@ -276,16 +280,6 @@ solve_model <- function(chem.name = NULL,
           units specification in compartment_units for model ", model)
   }
   
-  # Check the units-related objects that we want the solver to use:   
-  if (!(tolower(dose.units) %in% tolower(allowed_units_input))) {
-    stop(paste("Units",dose.units,"unavailable for model",model))
-  } else if (any(!tolower(compartment_units)
-                 %in% tolower(allowed_units_output))) {
-    stop("The compartment.units list specified for the model outputs contains
-          units not allowed per allowed.units.output for model ", model)
-  }
-  
-  
 ### MODEL PARAMETERS FOR R
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
@@ -308,6 +302,15 @@ solve_model <- function(chem.name = NULL,
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
+  }
+
+  # Molecular weight for general use:
+  MW <- parameters[["MW"]]
+
+  if (any(!tolower(compartment_units)
+                 %in% tolower(allowed_units_output))) {
+    stop("The compartment.units list specified for the model outputs contains
+          units not allowed per allowed.units.output for model ", model)
   }
   
   # Rblood2plasma depends on hematocrit, Krbc2pu, and Funbound.plasma. If those
@@ -335,7 +338,7 @@ solve_model <- function(chem.name = NULL,
       parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
-      suppress.messages=T)
+      suppress.messages=TRUE)
   }
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
@@ -350,10 +353,6 @@ solve_model <- function(chem.name = NULL,
   {
     parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
   }
-
-# Molecular weight for general use:
-  MW <- parameters[["MW"]]
-
 
 ### STATE VECTOR
 
@@ -451,8 +450,8 @@ solve_model <- function(chem.name = NULL,
 
 ### DOSING
 
-    #Sanitize the dose.units
-  dose.units <- tolower(dose.units)
+  #Sanitize the input.units
+  input.units <- tolower(input.units)
   
   # Make sure we have all specified dosing parameters for the model
   # accounted for
@@ -464,15 +463,18 @@ solve_model <- function(chem.name = NULL,
   if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
 
   
-  #Assign dose.units to new key units variable, intended as post-scaling
+  #Assign input.units to new key units variable, intended as post-scaling
   #units that are ready for any necessary conversion
-  dosing.units <- dose.units
-
-  #Scale dose if dose.units is measured in (mg/kg)
-  if (dose.units == "mg/kg") {
-  dosing <- scale_dosing(dosing,parameters,route,output.units = "mg")
-  dosing.units <- 'mg'  #redefine the dosing units if scaling occurs
-  }
+  dosing.units <- input.units
+  
+  #Scale dose if input.units is measured in (mg/kg) 
+  dosing <- scale_dosing(
+    dosing,
+    parameters,
+    route,
+    input.units = input.units,
+    output.units = dose.units)
+  dosing.units <- dose.units  #redefine the dosing units if scaling occurs
   
   #Get a units conversion factor to make sure all dosing metrics are
   #based in micromoles
@@ -659,7 +661,7 @@ solve_model <- function(chem.name = NULL,
           belong to either the states or outputs of the model.")
   
 # Make a plot if asked for it (not the default behavior):
-  if (plots==T)
+  if (plots==TRUE)
   {
     #assemble a y-axis units vector to correspond to each entry in monitor.vars
     n_monitor_vars = length(monitor.vars)

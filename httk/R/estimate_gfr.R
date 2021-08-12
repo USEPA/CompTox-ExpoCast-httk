@@ -18,7 +18,6 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 #' @import stats
-#' @import EnvStats
 #' @export estimate_gfr
 estimate_gfr <- function(gfrtmp.dt,
                          gfr_resid_var = TRUE,
@@ -51,11 +50,11 @@ estimate_gfr <- function(gfrtmp.dt,
     #estimating sdlog of residual distribution that is zero-mean and constant-variance on the log scale
     #based on CKD-EPI paper info on residual median, IQR on the natural scale,
     #percentage of eGFR within 30% of mGFR, and RMSE of residuals on the log scale
-    gfrtmp.dt[age_years>=18,
-              gfr_est:= gfr_est + EnvStats::rlnorm3(n=.N,
-                                meanlog = log(gfr_est),
-                                sdlog = 0.206336,
-                                threshold = -gfr_est)]
+    #this rlnorm is equivalent to gfr_est + rlnorm3(meanlog = log(gfr_est), sdlog = 0.2061534, threshold = -gfr_est)
+      gfrtmp.dt[age_years>=18,
+                gfr_est:= rlnorm(n=.N,
+                         meanlog = log(gfr_est),
+                         sdlog = 0.2061534)]
     }
   }
 

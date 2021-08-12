@@ -13,10 +13,10 @@ calc_mc_oral_equiv(
   species = "Human",
   input.units = "uM",
   output.units = "mgpkgpday",
-  suppress.messages = F,
-  return.samples = F,
+  suppress.messages = FALSE,
+  return.samples = FALSE,
   concentration = "plasma",
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   bioactive.free.invivo = F,
   tissue = NULL,
   IVIVE = NULL,
@@ -109,7 +109,7 @@ used by this function.
 \examples{
 
 
-\dontrun{
+\donttest{
 calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
        tissue='brain')
 }

@@ -20,36 +20,53 @@
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
 #' 
+#' @return
+#' A list of numeric values for doses converted to output.units, potentially
+#' (depending on argument dosing) including:
+#' \item{initial.dose}{The first dose given}
+#' \item{dosing.matrix}{A 2xN matrix where the first column is dose time and
+#' the second is dose amount for N doses}
+#' \item{daily.dose}{The total cumulative daily dose}
+#'
 #' @author John Wambaugh
 #'
 #' @keywords Dynamic
-scale_dosing <- function(dosing,parameters,route,output.units="uM")
+scale_dosing <- function(
+  dosing,
+  parameters,                   
+  route,
+  input.units=NULL,
+  output.units="uM")
 {
   if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
     stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
 
-    BW <- as.numeric(parameters[["BW"]])
-    MW <- as.numeric(parameters[["MW"]])
+  BW <- as.numeric(parameters[["BW"]]) # kg
+  MW <- as.numeric(parameters[["MW"]]) # mol/g
 
-# If we are working in molar units then we need to convert parameters:
-  if (tolower(output.units)=='um' | tolower(output.units) == 'umol')
-  {
-    scale.factor <- 
-      BW /  # mg/kg BW -> mg
-      1e3 / # mg -> g
-      MW *  # g -> mol
-      1e6   # mol -> umol
-  } else if (tolower(output.units) == 'mg/l' | tolower(output.units) == 'mg')
+  if (is.null(input.units)) stop("Input dose units must be specified.")
+
+  # Convert_units doesn't do bodyweight scaling so we handle that here:
+  if (regexpr("/kg",input.units)!=-1) 
   {
     scale.factor <- BW
-  } else stop('Output.units can only be uM, umol, mg, or mg/L.')
+    input.units <- gsub("/kg","",input.units)
+  }
+  else scale.factor <- 1
+ 
+  scale.factor <- scale.factor * 
+    convert_units(
+      input.units = input.units, 
+      output.units = output.units, 
+      MW =MW)
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
   {
+    if (!("Fgutabs"%in%names(parameters))) 
+      stop(
+"Argument \"parameters\" to scale_dosing must specify Fgutabs for oral route.")
     scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
-  } else if (route == "inhalation"){ #Added 9-25-19 MWL, obviously needs touching up, but for now, takes uM inputs and returns uM outputs
-    scale.factor <- 1
   }
   
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 

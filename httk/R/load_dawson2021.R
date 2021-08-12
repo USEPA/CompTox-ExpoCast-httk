@@ -26,11 +26,11 @@
 #' 
 #' \dontrun{
 #' chem.physical_and_invitro.data <- load_dawson2021()
-#' chem.physical_and_invitro.data <- load_dawson2021(overwrite=T) 
+#' chem.physical_and_invitro.data <- load_dawson2021(overwrite=TRUE) 
 #' }                        
 #' 
 #' @export load_dawson2021
-load_dawson2021 <- function(overwrite=F,exclude_oad=T,target.env=.GlobalEnv)
+load_dawson2021 <- function(overwrite=FALSE,exclude_oad=TRUE,target.env=.GlobalEnv)
 {
   cat(paste("Chemicals outside the applicabilty domain are",
             ifelse(exclude_oad,""," not"),
