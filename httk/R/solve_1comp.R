@@ -21,8 +21,6 @@
 #' \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 #' Compartment Model Schematic"}}
 #' 
-#' 
-#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -102,18 +100,18 @@ solve_1comp <- function(chem.name = NULL,
                     dose = NULL,  
                     doses.per.day=NULL,
                     initial.values=NULL,
-                    plots=F,
-                    suppress.messages=F,
+                    plots=FALSE,
+                    suppress.messages=FALSE,
                     species="Human",
-                    iv.dose=F,
+                    iv.dose=FALSE,
                     output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
-                    default.to.human=F,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
+                    default.to.human=FALSE,
+                    recalc.blood2plasma=FALSE,
+                    recalc.clearance=FALSE,
                     dosing.matrix=NULL,
-                    adjusted.Funbound.plasma=T,
-                    regression=T,
+                    adjusted.Funbound.plasma=TRUE,
+                    regression=TRUE,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,

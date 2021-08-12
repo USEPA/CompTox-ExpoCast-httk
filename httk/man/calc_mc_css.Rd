@@ -12,17 +12,17 @@ calc_mc_css(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "3compartmentss",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
   output.units = "mg/L",
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
     fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
     fup.pop.cv = 0.3, clint.pop.cv = 0.3),
   httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
@@ -31,10 +31,10 @@ calc_mc_css(
     "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
-  calc.analytic.css.arg.list = list(well.stirred.correction = T,
-    adjusted.Funbound.plasma = T, regression = T, IVIVE = NULL, tissue = tissue,
+  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = T, regression = TRUE),
+  calc.analytic.css.arg.list = list(well.stirred.correction = TRUE,
+    adjusted.Funbound.plasma = TRUE, regression = TRUE, IVIVE = NULL, tissue = tissue,
     restrictive.clearance = T, bioactive.free.invivo = FALSE)
 )
 }
@@ -120,6 +120,10 @@ parameterize_* function for the model.}
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
 }
+\value{
+Quantiles (specified by which.quantile) of the distribution of plasma
+steady-stae concentration (Css) from the Monte Carlo simulation
+}
 \description{
 This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).
@@ -152,7 +156,7 @@ used by this function.
 }
 \examples{
 
-\dontrun{
+\donttest{
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)
@@ -170,7 +174,9 @@ used by this function.
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)
  calc_mc_css(parameters=params,model="pbtk")
+}
 
+\donttest{
  set.seed(1234)
  # Standard HTTK Monte Carlo:
  NSAMP = 500
@@ -179,8 +185,9 @@ used by this function.
  calc_mc_css(chem.cas="90-43-7",
  model="pbtk",
  samples=NSAMP,
- invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
-   poormetab = T, 
+ invitro.mc.arg.list = list(
+   adjusted.Funbound.plasma = TRUE,
+   poormetab = TRUE, 
    fup.censored.dist = FALSE, 
    fup.lod = 0.01, 
    fup.meas.cv = 0.0, 
@@ -189,13 +196,13 @@ used by this function.
    clint.pop.cv = 0.3))
  set.seed(1234)
  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
  set.seed(1234)
  # HTTK Monte Carlo with no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
  set.seed(1234)
  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
  # Should be the same as the mean result:
  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
  set.seed(1234)
@@ -203,8 +210,8 @@ used by this function.
  calc_mc_css(chem.cas="90-43-7",
  model="pbtk",
  samples=NSAMP,
- httkpop=F,
- invitrouv=F,
+ httkpop=FALSE,
+ invitrouv=FALSE,
  vary.params=list(Pow=0.3))
 }
 

@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
 library(httk)
-options(warn=-1)
 
 # Check if the number of chemicals has changed:
 Css.list <- get_cheminfo()
@@ -34,6 +33,6 @@ print(subset(get_cheminfo(info="all"), CAS %in% c(
   "1912-24-9",
   "2921-88-2",	
   "117-81-7")),
-  row.names=F)
+  row.names=FALSE)
 
 quit("no")

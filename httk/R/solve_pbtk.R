@@ -57,7 +57,7 @@
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
+#' @param 3man Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -94,28 +94,51 @@
 #'
 #' @examples
 #' 
-#' solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
-#'
-#' out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
-#'                   initial.values=c(Agut=200))
-#'
-#' params <- parameterize_pbtk(chem.cas="80-05-7")
-#' solve_pbtk(parameters=params)
-#'                   
-#' \dontrun{
-#' parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-#' parameters["Funbound.plasma"] <- 0.1
-#' out <- solve_pbtk(parameters=parameters)
+#' # Multiple doses per day:
+#' head(solve_pbtk(
+#'   chem.name='Bisphenol-A',
+#'   daily.dose=.5,
+#'   days=5,
+#'   doses.per.day=2,
+#'   tsteps=2))
 #' 
-#' library("ggplot2")
-#' out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+#' # Starting with an initial concentration:
+#' out <- solve_pbtk(
+#'   chem.name='bisphenola',
+#'   dose=0,
+#'   output.units="mg/L", 
+#'   initial.values=c(Agut=200))
+#'
+#' # Working with parameters (rather than having solve_pbtk retrieve them):
+#' params <- parameterize_pbtk(chem.cas="80-05-7")
+#' head(solve_pbtk(parameters=params))
+#'                   
+#' # We can change the parameters given to us by parameterize_pbtk:
+#' params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
+#' params["Funbound.plasma"] <- 0.1
+#' out <- solve_pbtk(parameters=params)
+#' 
+#' \donttest{
+#' # A fifty day simulation:
+#' out <- solve_pbtk(
+#'   chem.name = "Bisphenol A", 
+#'   days = 50, 
+#'   daily.dose=1,
+#'   doses.per.day = 3)
 #' plot.data <- as.data.frame(out)
 #' css <- calc_analytic_css(chem.name = "Bisphenol A")
-#' c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-#' geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-#' xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-#' element_text(size = 16), plot.title = element_text(size = 17)) +
-#' ggtitle("Bisphenol A")
+#' 
+#' library("ggplot2")
+#' c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) + 
+#'   geom_line() +
+#'   geom_hline(yintercept = css) + 
+#'   ylab("Plasma Concentration (uM)") +
+#'   xlab("Day") + 
+#'   theme(
+#'     axis.text = element_text(size = 16), 
+#'     axis.title = element_text(size = 16), 
+#'     plot.title = element_text(size = 17)) +
+#'   ggtitle("Bisphenol A")
 #' print(c.vs.t)
 #' }
 #' 
@@ -133,18 +156,19 @@ solve_pbtk <- function(chem.name = NULL,
                     dose = NULL,  
                     doses.per.day=NULL,
                     initial.values=NULL,
-                    plots=F,
-                    suppress.messages=F,
+                    plots=FALSE,
+                    suppress.messages=FALSE,
                     species="Human",
-                    iv.dose=F,
+                    iv.dose=FALSE,
                     input.units="mg/kg",
+                    output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
-                    default.to.human=F,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
+                    default.to.human=FALSE,
+                    recalc.blood2plasma=FALSE,
+                    recalc.clearance=FALSE,
                     dosing.matrix=NULL,
-                    adjusted.Funbound.plasma=T,
-                    regression=T,
+                    adjusted.Funbound.plasma=TRUE,
+                    regression=TRUE,
                     restrictive.clearance = T,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,
