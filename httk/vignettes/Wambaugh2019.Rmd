@@ -54,10 +54,6 @@ and exposures.
 
 ##Prepate for session
 ```{r setup}
-# We love to give warning messages whenever assumptions are used by HTTK,
-# but they will overwhelm the output of this vignette so we turn them
-# off:
-options(warn = -1)
 library(data.table)
 library(httk)
 library(ggplot2)
@@ -274,7 +270,7 @@ cssfun_u <- function(chemcas,
   pop_u_httk[as.logical(rbinom(1000,1,Clint.pvalue)),Clint:=0] # the Bayesian "p-value" here reflects how often there is no clearance
 
   pop_u_httk[, CLh:=calc_hepatic_clearance(chem.cas=chemcas,
-    parameters=pop_u_httk,hepatic.model='unscaled',suppress.messages=T,clint.pvalue.threshold=1)]
+    parameters=pop_u_httk,hepatic.model='unscaled',suppress.messages=TRUE,clint.pvalue.threshold=1)]
   pop_u_httk[, Qliver:=Qtotal.liverc*BW^0.75]
   pop_u_httk[, hepatic.bioavailability:= Qliver / (Qliver + 
     Funbound.plasma * Clint / Rblood2plasma)]
@@ -412,7 +408,7 @@ hlfun_u <- function(chemcas,
   } else pop_u_httk[,Clint:=0]
   pop_u_httk[as.logical(rbinom(1000,1,Clint.pvalue)),Clint:=0] # the Bayesian "p-value" here reflects how often there is no clearance
 
-  pop_u_httk[, CLh:=calc_hepatic_clearance(chem.cas=chemcas,parameters=pop_u_httk,hepatic.model='unscaled',suppress.messages=T,clint.pvalue.threshold=1)]
+  pop_u_httk[, CLh:=calc_hepatic_clearance(chem.cas=chemcas,parameters=pop_u_httk,hepatic.model='unscaled',suppress.messages=TRUE,clint.pvalue.threshold=1)]
   pop_u_httk[, Qliver:=Qtotal.liverc*BW^0.75]
   pop_u_httk[, hepatic.bioavailability:= Qliver / (Qliver + Funbound.plasma * Clint / Rblood2plasma)]
 
@@ -420,7 +416,7 @@ hlfun_u <- function(chemcas,
   pop_u_httk<-cbind(pop_u_httk,as.data.table(predict_partitioning_schmitt(parameters=pop_u_httk)))
   pop_u_httk[,hl:=calc_elimination_rate(parameters=pop_u_httk)]
   
-  return(log(2)/quantile(unlist(pop_u_httk[,"hl",with=F]),probs=probs))
+  return(log(2)/quantile(unlist(pop_u_httk[,"hl",with=FALSE]),probs=probs))
 }
 ```
 
@@ -468,8 +464,8 @@ Fig1a <- ggplot(Fig1.table)+
     theme( text  = element_text(size=10)) +
     annotate("text", x=10^-6,y=80,size=8,label="a")
     
-print(paste("Median 100%:",signif(median(Fig1.table$Base.Fup.Med,na.rm=T),2)))
-print(paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=T),2)))
+print(paste("Median 100%:",signif(median(Fig1.table$Base.Fup.Med,na.rm=TRUE),2)))
+print(paste("Median Titration:",signif(median(Fig1.table$Affinity.Fup.Med,na.rm=TRUE),2)))
    
     
 
@@ -483,8 +479,8 @@ Fig1b <- ggplot(Fig1.table)+
     theme( text  = element_text(size=10)) +
     annotate("text", x=2*10^-1,y=80,size=8,label="b")
     
-print(paste(sum(Fig1.table$CLint.1uM.Median==0,na.rm=T),"Zero Measurments"))
-print(paste("Median Non-Zero:",signif(median(Fig1.table$CLint.1uM.Median,na.rm=T),3)))
+print(paste(sum(Fig1.table$CLint.1uM.Median==0,na.rm=TRUE),"Zero Measurments"))
+print(paste("Median Non-Zero:",signif(median(Fig1.table$CLint.1uM.Median,na.rm=TRUE),3)))
 
 
 
@@ -494,13 +490,13 @@ Fig1c <- ggplot(Fig1.table)+
   xlab("Width of Credible Interval") +
   ylab("Number of chemicals")+
    scale_x_log10(label=scientific_10,limits=c(5*10^-4,1.05))+
-   labs(title=paste("CI:",signif(median(Fig1.table$Error1,na.rm=T),2),"CV:",signif(median(Fig1.table$CV1,na.rm=T),1),"/ CI:",signif(median(Fig1.table$Error2,na.rm=T),1),"CV:",signif(median(Fig1.table$CV2,na.rm=T),1)))+
+   labs(title=paste("CI:",signif(median(Fig1.table$Error1,na.rm=TRUE),2),"CV:",signif(median(Fig1.table$CV1,na.rm=TRUE),1),"/ CI:",signif(median(Fig1.table$Error2,na.rm=TRUE),1),"CV:",signif(median(Fig1.table$CV2,na.rm=TRUE),1)))+
     theme_bw()+
     theme( text  = element_text(size=10))+
     annotate("text", x=5*10^-4,y=42,size=8,label="c")
         
-print(paste("Median 100% CI:",signif(median(Fig1.table$Error1,na.rm=T),2),"CV:",signif(median(Fig1.table$CV1,na.rm=T),2)))    
-print(paste("Median Titr. CI:",signif(median(Fig1.table$Error2,na.rm=T),2),"CV:",signif(median(Fig1.table$CV2,na.rm=T),2)))
+print(paste("Median 100% CI:",signif(median(Fig1.table$Error1,na.rm=TRUE),2),"CV:",signif(median(Fig1.table$CV1,na.rm=TRUE),2)))    
+print(paste("Median Titr. CI:",signif(median(Fig1.table$Error2,na.rm=TRUE),2),"CV:",signif(median(Fig1.table$CV2,na.rm=TRUE),2)))
 
 
 Fig1d <- ggplot(Fig1.table)+
@@ -508,12 +504,12 @@ Fig1d <- ggplot(Fig1.table)+
   xlab("Width of Credible Interval") +
   ylab("Number of chemicals")+
   scale_x_log10(label=scientific_10,limits=c(10^0,10^3))+
-   labs(title=paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))+
+   labs(title=paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=TRUE),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=TRUE),2)))+
     theme_bw()+
     theme( text  = element_text(size=10))+
     annotate("text", x=1.5,y=25,size=8,label="d")
         
-print(paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=T),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=T),2)))
+print(paste("Median CI:",signif(median(Fig1.table$ErrorClint,na.rm=TRUE),2),"CV:",signif(median(Fig1.table$CVClint,na.rm=TRUE),2)))
 
 multiplot(Fig1a,Fig1c,Fig1b,Fig1d,cols=2,widths=c(1.75,1.75))
 ```
@@ -674,10 +670,10 @@ Comparison of Bayesian Clint and Uncertainty Estimations to Experimental Point E
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
     
 print(paste(sum(clearance.table$CLint.1uM.Median==0),"zero valued median Bayesian posteriors"))
-print(paste(sum(clearance.table$CLint.1uM.Point==0&clearance.table$CLint.1uM.Median>0,na.rm=T),"zero valued point estimates where median posterior>0"))
-print(paste(sum(clearance.table$CLint.1uM.Point>0&clearance.table$CLint.1uM.Median==0,na.rm=T),"zero valued median Bayesian posteriors where point estimate was non-zero"))
-print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median==0,na.rm=T),"zero valued median Bayesian posteriors where point estimate was NA"))
-print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median>0,na.rm=T),"non-zero valued median Bayesian posteriors where point estimate was NA"))
+print(paste(sum(clearance.table$CLint.1uM.Point==0&clearance.table$CLint.1uM.Median>0,na.rm=TRUE),"zero valued point estimates where median posterior>0"))
+print(paste(sum(clearance.table$CLint.1uM.Point>0&clearance.table$CLint.1uM.Median==0,na.rm=TRUE),"zero valued median Bayesian posteriors where point estimate was non-zero"))
+print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median==0,na.rm=TRUE),"zero valued median Bayesian posteriors where point estimate was NA"))
+print(paste(sum(is.na(clearance.table$CLint.1uM.Point)&clearance.table$CLint.1uM.Median>0,na.rm=TRUE),"non-zero valued median Bayesian posteriors where point estimate was NA"))
 
 
 
@@ -716,7 +712,7 @@ Fig4 <- ggplot(clearance.table, aes(x=CLint.1uM.Point,y=CLint.1uM.Median,colour=
   theme_bw() +
   theme(legend.position="bottom", text  = element_text(size=14))+
   guides(colour=guide_legend(nrow=2,byrow=TRUE))+
-  annotate("text",x = 10^2, y = 10^0,size=6, label = lm_R2(clearance.fit,prefix=""),parse=T)
+  annotate("text",x = 10^2, y = 10^0,size=6, label = lm_R2(clearance.fit,prefix=""),parse=TRUE)
 
 #dev.new()
 print(Fig4)  
@@ -735,7 +731,7 @@ httk_cas <- ceetox$CAS[ceetox$CAS %in% get_cheminfo(model="3compartmentss")]
 HTTK.data <- chem.physical_and_invitro.data
 
 # Use the point estimates:
-chem.physical_and_invitro.data <- add_chemtable(httk::wambaugh2019.raw,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Name",CAS="CAS",Clint="CLint.1uM.Point",Funbound.plasma="Fup.point"),reference="Wambaugh 2019",species="Human",overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(httk::wambaugh2019.raw,current.table=chem.physical_and_invitro.data,data.list=list(Compound="Name",CAS="CAS",Clint="CLint.1uM.Point",Funbound.plasma="Fup.point"),reference="Wambaugh 2019",species="Human",overwrite=TRUE)
 
 
 
@@ -764,8 +760,8 @@ ceetox[CAS%in%schmitt_cas,
                           probs=0.025),
        by=.(CAS)]
 
-ceetox[,hlpointEstimated:=T]
-ceetox[is.na(hlpoint),hlpointEstimated:=F]
+ceetox[,hlpointEstimated:=TRUE]
+ceetox[is.na(hlpoint),hlpointEstimated:=FALSE]
 ceetox[is.na(hlpoint),hlpoint:=hl_med]
 
 hlfit <- lm(data=subset(ceetox,hlpointEstimated),log10(hlpoint)~log10(hl_med))
@@ -780,7 +776,7 @@ Fig5a <- ggplot(data=subset(ceetox,hlpointEstimated),aes(x=hlpoint,y=hl_med)) +
   annotate("text", size=8,x = 1, y = 10^6, label = "A")+
   theme_bw() +
   theme(text  = element_text(size=18))+
-  annotate("text",x = 3*10^3, y = 10^0,size=5, label = lm_R2(hlfit,prefix=""),parse=T) 
+  annotate("text",x = 3*10^3, y = 10^0,size=5, label = lm_R2(hlfit,prefix=""),parse=TRUE) 
 
 
 cssfit <- lm(data=ceetox,log10(cssmed)~log10(cssmed_u))
@@ -795,7 +791,7 @@ Fig5b <- ggplot(data=ceetox,aes(x=cssmed,y=cssmed_u)) +
   theme_bw() +
   theme(text  = element_text(size=18)) +
   geom_abline(intercept = 0, slope = 1,linetype="dashed",color="blue")+
-  annotate("text",x = 10^2, y = 10^-3,size=5, label = lm_R2(cssfit,prefix=""),parse=T)  
+  annotate("text",x = 10^2, y = 10^-3,size=5, label = lm_R2(cssfit,prefix=""),parse=TRUE)  
 
 
 #dev.new(width=8,height=5)
@@ -920,7 +916,7 @@ High throughput risk-based prioritization can be conducted by using doses predic
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
 # 
 # # Load the ACC table into an object Tox21.acc:
-# Tox21.acc <- read.csv("INVITRODB_V2_LEVEL5/EXPORT_LVL5&6_ASID7_TOX21_151020.csv",stringsAsFactors=F)
+# Tox21.acc <- read.csv("INVITRODB_V2_LEVEL5/EXPORT_LVL5&6_ASID7_TOX21_151020.csv",stringsAsFactors=FALSE)
 # # Subset to the chemicals of interest:
 # Tox21.acc <- subset(Tox21.acc,casn%in%Fig1.table$CAS)
 # # We only need hits:
@@ -1079,7 +1075,7 @@ Fig7c <- ggplot() +
 #dev.new(width=10,height=6)
 multiplot(Fig7a,Fig7c,cols=1,heights=c(0.5,0.5))
 
-write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("SupTable5-",Sys.Date(),".txt",sep=""),row.names=F)
+write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","DSSTox_Substance_Id","Human.Clint","Human.Funbound.plasma","HTS.Q10.ACC","HTS.Q10.equivdose.v","HTS.Q10.equivdose.uv","Exposure.high")],file=paste("SupTable5-",Sys.Date(),".txt",sep=""),row.names=FALSE)
 ```
 
 #Final statistics:
@@ -1097,7 +1093,7 @@ for (this.cas in Wetmore.chems$CAS)
     chem.cas=this.cas,
     fup.meas.cv=NULL,
     clint.meas.cv=NULL,
-    fup.censored.dist=T,
+    fup.censored.dist=TRUE,
     output.units="uM")
   set.seed(42)
   Wetmore.chems[Wetmore.chems$CAS==this.cas,"Css.v110"] <- calc_mc_css(
@@ -1105,11 +1101,11 @@ for (this.cas in Wetmore.chems$CAS)
     output.units="uM")
 }
 
-median(Wetmore.chems$Css.v110/Wetmore.chems$Css.Lit,na.rm=T)
+median(Wetmore.chems$Css.v110/Wetmore.chems$Css.Lit,na.rm=TRUE)
 
 ceetox$Human.Clint2 <- sapply(ceetox$Human.Clint,function(x) as.numeric(strsplit(x,",")[[1]][1]))
 ceetox$Human.Fup2 <- sapply(ceetox$Human.Funbound.plasma,function(x) as.numeric(strsplit(x,",")[[1]][1]))
-write.csv(ceetox[,c(1,2,8,9,16,17,6,7,12,30,10,11,15,31,13,14,18:28)],row.names=F,file=paste("Supplemental-Table4-",Sys.Date(),".txt",sep=""))
+write.csv(ceetox[,c(1,2,8,9,16,17,6,7,12,30,10,11,15,31,13,14,18:28)],row.names=FALSE,file=paste("Supplemental-Table4-",Sys.Date(),".txt",sep=""))
 
 print(paste("Complete HTTK data on",sum(get_cheminfo()%in%ceetox$CAS),"new chemicals."))
 ```

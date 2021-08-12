@@ -1,23 +1,34 @@
 #' Estimate well surface area
 #' 
 #' Estimate geometry surface area of plastic in well plate based on well plate
-#' format suggested values from Corning.  option.plastic == T (default) give
-#' nonzero surface area (sarea, m^2) option.bottom == T (default) includes
+#' format suggested values from Corning.  option.plastic == TRUE (default) give
+#' nonzero surface area (sarea, m^2) option.bottom == TRUE (default) includes
 #' surface area of the bottom of the well in determining sarea.  Optionally
 #' include user values for working volume (v_working, m^3) and surface area.
 #' 
 #' 
 #' @param tcdata A data table with well_number corresponding to plate format,
 #' optionally include v_working, sarea, option.bottom, and option.plastic
+#' 
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
+#' 
 #' @param this.cell_yield For single value, optionally supply cell_yield,
 #' otherwise estimated based on well number
+#' 
 #' @param this.v_working For single value, optionally supply working volume,
 #' otherwise estimated based on well number (m^3)
-#'
-#' @return tcdata, A data table with well_number, sarea (surface area, m^2),
-#' cell_yield (# cells), v_working (m^3), v_total (m^3) per well
+#' 
+#' @return A data table composed of any input data.table \emph{tcdata}
+#' with only the following columns either created or altered by this function:  
+#' \tabular{ccc}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#' well_number \tab number of wells on plate \tab \cr
+#' sarea \tab surface area \tab m^2 \cr
+#' cell_yield \tab number of cells \tab cells \cr 
+#' v_working \tab working (filled) volume of each well \tab uL \cr
+#' v_total \tab total volume of each well \tab uL \cr
+#' }
 #'
 #' @author Greg Honda
 #'
@@ -68,19 +79,19 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   tcdata[,radius:=diam/2] %>%  # mm
     .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
     .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
-    .[is.na(option.bottom),option.bottom:=T] %>%
-    .[option.bottom==T & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
-    .[option.bottom==F & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
+    .[is.na(option.bottom),option.bottom:=TRUE] %>%
+    .[option.bottom==TRUE & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
+    .[option.bottom==FALSE & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
     .[!(sysID %in% c(7,9)),height:=v_working/(pi*radius^2)] %>% # for cylindrical wells
-    .[option.bottom==T & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
-    .[option.bottom==F & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
-    .[is.na(option.plastic),option.plastic:=T] %>%
+    .[option.bottom==TRUE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
+    .[option.bottom==FALSE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
+    .[is.na(option.plastic),option.plastic:=TRUE] %>%
     .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
-    .[option.plastic==F, sarea_c:=0] %>%
+    .[option.plastic==FALSE, sarea_c:=0] %>%
     .[is.na(sarea),sarea:=sarea_c] %>%
     .[is.na(cell_yield),cell_yield:=as.double(cell_yield_est)]
 
-  return(tcdata)
+   return(tcdata)
 }
 
 
@@ -96,31 +107,53 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' 
 #' @param casrn.vector For vector or single value, CAS number
+#' 
 #' @param nomconc.vector For vector or single value, micromolar nominal 
 #' concentration (e.g. AC50 value)
+#' 
 #' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==T
+#' if is.na(tcdata)==TRUE
+#' 
 #' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
+#' 
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params.
+#' 
 #' @param this.sarea Surface area per well (m^2)
+#' 
 #' @param this.v_total Total volume per well (m^3)
+#' 
 #' @param this.v_working Working volume per well (m^3)
+#' 
 #' @param this.cell_yield Number of cells per well
+#' 
 #' @param this.Tsys System temperature (degrees C)
+#' 
 #' @param this.Tref Reference temperature (degrees K)
+#' 
 #' @param this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
 #' model
+#' 
 #' @param this.option.swat2 Use alternative water solubility correction
+#' 
 #' @param this.pseudooct Pseudo-octanol cell storage lipid content
+#' 
 #' @param this.memblip Membrane lipid content of cells
+#' 
 #' @param this.nlom Structural protein conent of cells
+#' 
 #' @param this.P_nlom Proportionality constant to octanol structural protein
+#' 
 #' @param this.P_dom Proportionality constant to dissolve organic material
+#' 
 #' @param this.P_cells Proportionality constant to octanol storage lipid
+#' 
 #' @param this.csalt Ionic strength of buffer, mol/L
+#' 
 #' @param this.celldensity Cell density kg/L, g/mL
+#' 
 #' @param this.cellmass Mass per cell, ng/cell
+#'
 #' @param this.f_oc 1, everything assumed to be like proteins
 #'
 #' @return
@@ -459,10 +492,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[!(is.na(gkbsa)),gkbsa:=gkbsa-duow*Tcor] %>%
     .[!(is.na(gkbsa)),kbsa:=10^gkbsa]
 
-  tcdata[option.kbsa2==T & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
-    .[option.kbsa2==T & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
+  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
+    .[option.kbsa2==TRUE & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
 
-  tcdata[option.kbsa2==F & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
+  tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
@@ -474,10 +507,10 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[,kcw:=kcw/(10^(-1*ksalt*csalt))] %>%
     .[,kbsa:=kbsa/(10^(-1*ksalt*csalt))]
 
-  tcdata[option.swat2==T & MP>298.15,swat:=ss.GSE] %>%
-    .[option.swat2==T & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
-    .[option.swat2==T & MP<=298.15,swat:=s1.GSE] %>%
-    .[option.swat2==T & MP<=298.15,swat_L:=s1.GSE]
+  tcdata[option.swat2==TRUE & MP>298.15,swat:=ss.GSE] %>%
+    .[option.swat2==TRUE & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
+    .[option.swat2==TRUE & MP<=298.15,swat:=s1.GSE] %>%
+    .[option.swat2==TRUE & MP<=298.15,swat_L:=s1.GSE]
 
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]

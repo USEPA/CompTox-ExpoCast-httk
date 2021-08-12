@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save pbtk_test.R pbtk_test.Rout
 library(httk)
-options(warn=-1)
 
 calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 calc_analytic_css(chem.cas="80-05-7",model="pbtk")

@@ -37,7 +37,7 @@ armitage_eval(
 concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==T}
+if is.na(tcdata)==TRUE}
 
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 

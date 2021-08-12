@@ -12,18 +12,18 @@ calc_mc_tk(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "pbtk",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
   output.units = "mg/L",
   solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T, poormetab = T,
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
     fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
     fup.pop.cv = 0.3, clint.pop.cv = 0.3),
   httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
@@ -32,8 +32,8 @@ calc_mc_tk(
     "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = F, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = T),
+  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = T, regression = TRUE),
   return.all.sims = FALSE
 )
 }
@@ -119,6 +119,18 @@ parameterize_* function for the model.}
 \item{return.all.sims}{Logical indicating whether to return the results
 of all simulations, in addition to the default toxicokinetic statistics}
 }
+\value{
+If return.all.sims == FALSE (default) a list with:
+\item{means}{The mean concentration for each model compartment as a function
+of time across the Monte Carlo simulation}
+\item{sds}{The standard deviation for each model compartment as a function
+of time across the Monte Carlo simulation}
+
+If return.all.sums == TRUE then a list is returned with:
+\item{stats}{The list of means and sds from return.all.sums=FALSE}
+\item{sims}{The concentration vs. time results for each compartment for 
+every (samples) set of parameters in the Monte Carlo simulation}
+}
 \description{
 This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).
@@ -151,7 +163,8 @@ used by this function.
 }
 \examples{
 
-\dontrun{
+\donttest{
+NSAMP <- 50
 chemname="Abamectin"
 times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
 age.ranges <- seq(6,80,by=10)

@@ -42,10 +42,10 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
-                                   suppress.messages=F,
-                                   recalc.blood2plasma=F,
+                                   suppress.messages=FALSE,
+                                   recalc.blood2plasma=FALSE,
                                    tissue=NULL,
-                                   restrictive.clearance=T,
+                                   restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
                                    ...)
 {
@@ -63,8 +63,8 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Expand on any provided chemical identifiers if possible (if any but not
 # all chemical descriptors are NULL):
   chem_id_list  = list(chem.cas, chem.name, dtxsid)
-  if (any(lapply(chem_id_list, is.null)) &
-      !all(lapply(chem_id_list, is.null))){
+  if (any(unlist(lapply(chem_id_list, is.null))) &
+      !all(unlist(lapply(chem_id_list, is.null)))){
   out <- get_chem_id(
     chem.cas=chem.cas,
     chem.name=chem.name,
@@ -120,7 +120,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Scale up from in vitro Clint to a whole liver clearance:
   cl <- calc_hep_clearance(parameters=parameters,
           hepatic.model='unscaled',
-          suppress.messages=T)#L/h/kg body weight
+          suppress.messages=TRUE)#L/h/kg body weight
   if (!restrictive.clearance) cl <- cl*Fup
 
 # Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:

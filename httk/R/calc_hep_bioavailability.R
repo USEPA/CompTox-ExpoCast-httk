@@ -3,7 +3,8 @@
 #' For models that don't described first pass blood flow from the gut, need to
 #' cacluate a hepatic bioavailability, that is, the fraction of chemical 
 #' systemically available after metabolism during the first pass through the 
-#' liver (Rowland, 1973).
+#' liver (Rowland, 1973 Equaation 29, where k21 is blood flow through the liver
+#' and k23 is clearance from the liver in Figure 1).
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -40,8 +41,8 @@ calc_hep_bioavailability <- function(
                          chem.name=NULL,
                          dtxsid = NULL,
                          parameters=NULL,
-                         restrictive.clearance=T,
-                         flow.34=T)
+                         restrictive.clearance=TRUE,
+                         flow.34=TRUE)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 

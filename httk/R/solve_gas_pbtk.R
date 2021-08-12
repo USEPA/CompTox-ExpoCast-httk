@@ -30,6 +30,12 @@
 #' 
 #' AUC is the area under the curve of the plasma concentration.
 #' 
+#' Model Figure from \insertCite{linakis2020development}{httk}:
+#' \if{html}{\figure{gaspbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
+#' Model Schematic"}}
+#' \if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
+#' Model Schematic"}}
+#' 
 #' Model parameters are named according to the following convention:\tabular{lrrrr}{
 #' prefix \tab suffic \tab Meaning \tab units \cr
 #' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
@@ -130,11 +136,9 @@
 #' @author Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 #'
 #' @references 
-#' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-#' Inhalation Model for Organic Chemicals", submitted
+#' \insertRef{linakis2020development}{httk}
 #' 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve
 #'
@@ -142,15 +146,21 @@
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
+#' \donttest{
+#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
+#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 #' exp.duration = 6, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 #' solve_gas_pbtk(parameters=params)
+#' }
 #' 
 #' @export solve_gas_pbtk
 #' @useDynLib httk
 #' @import deSolve
+#' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
                            dtxsid = NULL,
@@ -168,17 +178,17 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            period = 24, 
                            exp.duration = 12,
                            initial.values=NULL,
-                           plots=F,
-                           suppress.messages=F,
+                           plots=FALSE,
+                           suppress.messages=FALSE,
                            species="Human",
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
                            # input.units = "uM", 
                            method="lsoda",rtol=1e-8,atol=1e-12,
-                           default.to.human=F,
-                           recalc.blood2plasma=F,
-                           recalc.clearance=F,
-                           adjusted.Funbound.plasma=T,
-                           regression=T,
+                           default.to.human=FALSE,
+                           recalc.blood2plasma=FALSE,
+                           recalc.clearance=FALSE,
+                           adjusted.Funbound.plasma=TRUE,
+                           regression=TRUE,
                            restrictive.clearance = T,
                            minimum.Funbound.plasma=0.0001,
                            monitor.vars=NULL,
