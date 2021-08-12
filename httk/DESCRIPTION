@@ -1,6 +1,6 @@
 Package: httk
 Version: 2.0.5
-Date: 2021-04-27
+Date: 2021-06-18
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
@@ -52,12 +52,13 @@ Authors@R: c(
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")), 
-           person("Woodrow", "Setzer", role = c("ctb"),
-             comment = c(ORCID = "0000-0002-6709-9186"))
+           person("Woodrow", "Setzer", email = "setzer.woodrow@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-6709-9186"))
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods
+        graphics, utils, magrittr, purrr, methods, Rdpack
+RdMacros: Rdpack
 Suggests: 
     ggplot2,
     knitr,
@@ -114,3 +115,4 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
+Copyright: This package is primarily developed by employees of the U.S. Federal government as part of their official duties and is therefore public domain.

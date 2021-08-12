@@ -4,13 +4,16 @@ CAS.checksum <- function(CAS.string)
   multiplier <- 1
   if(is.factor(CAS.string)) CAS.string <- as.character(CAS.string)
   for (i in (nchar(CAS.string)-2):1)
-    if (!is.na(as.numeric(substr(CAS.string,i,i))))
+    if (!is.na(suppressWarnings(as.numeric(substr(CAS.string,i,i)))))
     {
-      test.num <- test.num + as.numeric(substr(CAS.string,i,i))*multiplier
+      test.num <- test.num + 
+        suppressWarnings(as.numeric(substr(CAS.string,i,i)))*multiplier
       multiplier <- multiplier + 1
     }
-  if (is.na(test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))) return(F)
-  return (test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))
+  if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))) return(F)
+  return (test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))
 }
 
 
@@ -65,10 +68,10 @@ augment.table <- function(
   value,
   species=NULL,
   reference,
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T,
-  allow.na=F)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -184,7 +187,7 @@ augment.table <- function(
         this.row <- this.table[1,]
         this.row[] <- NA
       } else {
-        this.row <- as.data.frame(compound.name,stringsAsFactors=F)
+        this.row <- as.data.frame(compound.name,stringsAsFactors=FALSE)
         colnames(this.row) <- "Compound"
       }
       this.row[,"Compound"] <- compound.name
@@ -242,18 +245,21 @@ augment.table <- function(
     {
       if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
       {
+    # If it's numeric we want to control sig figs:
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
+    # Otherwise force it to be a character:
         if (class(this.table[,this.property])!='character')
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
 # Check to see if this is actually a number and we can use sig figs:        
-        if (!is.na(as.numeric(value)))
+        if (!is.na(suppressWarnings(as.numeric(value))))
         {
-          if (as.character(as.numeric(value)) == as.character(value))
+          if (as.character(suppressWarnings(as.numeric(value))) == 
+            as.character(value))
           {
-            value <- signif(as.numeric(value), sig.fig)
+            value <- signif(suppressWarnings(as.numeric(value)), sig.fig)
           }
         }
         this.table[index,this.property] <- as.character(value)
@@ -343,6 +349,7 @@ augment.table <- function(
 #' @author John Wambaugh
 #' @examples
 #' 
+#' \donttest{
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
@@ -368,6 +375,7 @@ augment.table <- function(
 #'                                   reference="MyPaper 2015")
 #' parameterize_steadystate(chem.name="C")  
 #' calc_css(chem.name="B")                                
+#' }
 #' 
 #' @export add_chemtable
 add_chemtable <- function(
@@ -376,10 +384,10 @@ add_chemtable <- function(
   current.table=NULL, 
   reference=NULL,
   species=NULL, 
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T,
-  allow.na=F)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE)
 {
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")

@@ -15,7 +15,6 @@
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' 
 #' @param chem.cas Either the chemical name or CAS number must be specified.
 #' @param chem.name Either the chemical name or CAS number must be specified.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
@@ -23,11 +22,17 @@
 #' @param initial.amounts Must specify initial amounts in units of choice.
 #' @param filename The name of the jarnac file containing the model.
 #' @param digits Desired number of decimal places to round the parameters.
+#' 
 #' @author Robert Pearce
+#' 
+#' @return
+#' Text describing the PBTK model in SBML. 
+#' 
 #' @keywords Export
+#' 
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
 #' }
 #' 

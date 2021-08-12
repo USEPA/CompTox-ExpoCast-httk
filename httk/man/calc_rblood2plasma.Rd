@@ -13,10 +13,10 @@ calc_rblood2plasma(
   hematocrit = NULL,
   Krbc2pu = NULL,
   Funbound.plasma = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  adjusted.Funbound.plasma = T,
-  suppress.messages = T
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = TRUE
 )
 }
 \arguments{
@@ -51,6 +51,9 @@ adjustment.}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
+}
+\value{
+The blood to plasma chemical concentration ratio
 }
 \description{
 This function calculates the constant ratio of the blood concentration to

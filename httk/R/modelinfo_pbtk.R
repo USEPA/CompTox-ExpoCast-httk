@@ -215,36 +215,33 @@ model.list[["pbtk"]]$allowed.units.output <- list(
        "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
        "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
-# AUC values should also be included.
-model.list[["pbtk"]]$compartment.units <- c(
-    "Cgut"="uM",
-    "Cliver"="uM",
-    "Cven"="uM",
-    "Clung"="uM",
-    "Cart"="uM",
-    "Crest"="uM",
-    "Ckidney"="uM",
-    "Cplasma"="uM",
-    "Aplasma"="umol",
-    "AUC"="uM*days"
-  )
-
-# These parameters specify the exposure scenario simulated by the model:
-model.list[["pbtk"]]$dosing.params <- c("daily.dose",
-  "initial.dose",
-  "doses.per.day",
-  "dosing.matrix")
-model.list[["pbtk"]]$routes <- c("oral","iv")
+## These parameters specify the exposure scenario simulated by the model:
+#model.list[["pbtk"]]$dosing.params <- c("daily.dose",
+#  "initial.dose",
+#  "doses.per.day",
+#  "dosing.matrix")
+#model.list[["pbtk"]]$routes <- c("oral","iv")
+## We need to know which compartment gets the dose 
+#model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
+#  iv="Aven")
+## Can take the values "add" to add dose C1 <- C1 + dose,
+##"replace" to change the value C1 <- dose
+##or "multiply" to change the value to C1 <- C1*dose
+#model.list[["pbtk"]]$dose.type <- list(oral="add",
+#  iv="add")
+  
+model.list[["pbtk"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["pbtk"]]$dose.type <- list(oral="add",
-  iv="add")
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Aven",
+    "dose.type" = "add")
+  )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
@@ -263,6 +260,33 @@ model.list[["pbtk"]]$state.vars <- c(
     "Ametabolized",
     "AUC"
     ) 
+
+# Default set of units assigned to correspond to each of the state variables to 
+# as well as any additional model outputs that might be monitored.
+# AUC values should also be included.
+model.list[["pbtk"]]$compartment.units <- c(
+    "Agutlumen"="umol",
+    "Agut"="umol",
+    "Aliver"="umol",
+    "Aven"="umol",
+    "Alung"="umol",
+    "Aart"="umol",
+    "Arest"="umol",
+    "Akidney"="umol", 
+    "Atubules"="umol",
+    "Ametabolized"="umol",
+    "Cgut"="uM",
+    "Cliver"="uM",
+    "Cven"="uM",
+    "Clung"="uM",
+    "Cart"="uM",
+    "Crest"="uM",
+    "Ckidney"="uM",
+    "Cplasma"="uM",
+    "Aplasma"="umol",
+    "AUC"="uM*days"
+  )
+
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
@@ -276,11 +300,14 @@ model.list[["pbtk"]]$required.params <- c(
 
 # Function for calculating Clmetabolismc after Clint is varied:
 model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:
-model.list[["1compartment"]]$convert.httkpop.func <- NULL
+model.list[["pbtk"]]$convert.httkpop.func <- NULL
+
 # We want all the standard physiological calculations performed:
 model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
+
 # These are the model parameters that are impacted by httk-pop:
 model.list[["pbtk"]]$httkpop.params <- c(
   "BW",
