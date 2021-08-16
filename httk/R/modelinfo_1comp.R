@@ -111,8 +111,8 @@ model.list[["1compartment"]]$allowed.units.input <- list(
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["1compartment"]]$allowed.units.output <- list(
-       "oral" = c('uM','mg/L','uM*days','mg/L*days'),
-       "iv" = c('uM','mg/L','uM*days','mg/L*days'))
+       "oral" = c('umol','uM','mg/L','uM*days','mg/L*days'),
+       "iv" = c('umol','uM','mg/L','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the time dependent
 # variables of the model system including state variables and any transformed
