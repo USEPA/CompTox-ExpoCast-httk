@@ -297,7 +297,7 @@ model.list[["gas_pbtk"]]$routes <- list(
     "dose.type" = "add"),
   "inhalation" = list(
     "entry.compartment" = "Amuc",
-    "dose.type" = "add"),    
+    "dose.type" = "add")   
   )
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
