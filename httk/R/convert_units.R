@@ -21,6 +21,8 @@
 #' @param input.units Assigned input units of interest
 #' @param output.units Desired output units
 #' @param MW Molecular weight of substance of interest in g/mole 
+#' @param vol Volume for the target tissue of interest.
+#' NOTE: Volume should not be in units of per BW, i.e. "kg".
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -31,7 +33,7 @@
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions
 #' 
-#' @author Mark Sfeir and John Wambaugh
+#' @author Mark Sfeir, John Wambaugh, and Sarah E. Davidson
 #' @examples
 #' 
 #' MW_pyrene <- get_physchem_param(param <- 'MW', chem.name <- 'pyrene')
@@ -42,6 +44,7 @@
 convert_units <- function(input.units = NULL, 
                           output.units = NULL, 
                           MW = NULL,
+                          vol = NULL,
                           chem.cas = NULL,
                           chem.name = NULL,
                           dtxsid = NULL,
@@ -82,6 +85,41 @@ compound data.table/data.frame or list.')
           }
   }
   
+  #Check if input.units or output.units contain a time component indicating
+  #AUC value for conversion
+  if(all(grepl(c(input.units,output.units),pattern = "[*].+"))){
+    #obtain vector of split amount/concentration and time scale portions
+    #of unit string
+    split.input.units  <- unlist(stringr::str_split(input.units,pattern = "[*]"))
+    split.output.units <- unlist(stringr::str_split(output.units,pattern = "[*]"))
+    
+    #Check if input and output unit time scales are NOT the same
+    if(split.input.units[2]!=split.output.units[2]){
+      stop(
+        "Input and output units are in different time scales, namely:\n    ",
+        "Input units:", input.units,"\n    ",
+        "Output units:", output.units,"\n    ",
+        "This functionality is currently not supported."
+      )
+    }else{
+      #Update input.units and output.units to only the amount/concentration
+      #and proceed with normal conversions
+      input.units  <- split.input.units[1]
+      output.units <- split.output.units[1]
+    }
+  }else if(sum(grepl(c(input.units,output.units),pattern = "[*].+"))==1){
+    #If one of the units has a time scale and the other does not,
+    #then stop code and notify the user both need to have time scales or no
+    #time scales
+    stop(
+      "If unit conversions are for area under the curve (AUC), then both the
+      input and output units need to specify time scales. Input units are in ",
+      input.units,
+      " and output units are in ",
+      output.units,".  Add or remove time scales where appropriate."
+    )
+  }
+  
   #initialize a data.frame that determines conversion factors between key 
   #units corresponding to extrinsic quantities
   amounts_units_conversion_frame <- data.frame(mg = c(1, MW/10^3), 
@@ -104,6 +142,19 @@ compound data.table/data.frame or list.')
   colnames(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
   row.names(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
   
+  #initialize a data.frame that determines conversion factors between key
+  #amount units and concentration units, set official names manually
+  #Check if volume is provided to complete the conversion table.
+  if(!is.null(vol)){
+    # rows = concentrations; columns = amount (input, output -- respectively)
+    # if amount to concentration is needed use the inverse
+    conc2amount_units_conversion_frame <- data.frame(
+      mg = c((vol),(MW/1000)*(vol),(MW/(1000*24.45))*(vol)),
+      umol = c((1000/MW)*(vol),(vol),((vol)/24.45))
+    )
+    row.names(conc2amount_units_conversion_frame) <- c("mg/l", "um","ppmv")
+  }
+  
   #initialize master list of names of chemical amounts/concentration-based
   #units supported in httk, excluding those scaled to body weight 
   httk_dose_units_list <- c('mg','umol','mg/l','um','ppmv')
@@ -119,21 +170,39 @@ the gas is assumed ideal, 'ppmv'.")
 } else {
   if (input.units %in% names(amounts_units_conversion_frame)){
     if (output.units %in% names(amounts_units_conversion_frame)) {
-       conversion_factor <- 
-         amounts_units_conversion_frame[input.units, output.units]
-    } else stop('Conversion from ', input.units, ' to ', output.units, ' is not
+      conversion_factor <- 
+        amounts_units_conversion_frame[input.units, output.units]
+    }else if((output.units %in% names(conc_units_conversion_frame)) &
+             !is.null(vol)){
+      # if we need to switch between an amount and concentration;
+      # volume must be provided
+      # ** amount to concentration (use inverse from
+      #    'conc2amount_units_conversion_frame') **
+      conversion_factor <- 
+        1/conc2amount_units_conversion_frame[output.units, input.units]
+    }else stop('Conversion from ', input.units, ' to ', output.units, ' is not
 supported. Supported extrinsic amount units include mg and umol, and supported 
 intrinsic concentration units include mg/L, uM, and in the case of gas models 
-where the gas is assumed ideal, ppmv.')
+where the gas is assumed ideal, ppmv.  If converting between amount and
+concentration, user must specify volume.')
   } else if (input.units %in% names(conc_units_conversion_frame)) {
     if (output.units %in% names(conc_units_conversion_frame)) {
       conversion_factor <- 
         conc_units_conversion_frame[input.units, output.units]
-    } else stop('Conversion from ', input.units, ' to ', output.units, 'is not
+    }else if((output.units %in% names(conc_units_conversion_frame)) &
+             !is.null(vol)){
+      # if we need to switch between an amount and concentration;
+      # volume must be provided
+      # ** concentration to amount (use straight from
+      #    'conc2amount_units_conversion_frame') **
+      conversion_factor <- 
+        conc2amount_units_conversion_frame[input.units,output.units]
+    }else stop('Conversion from ', input.units, ' to ', output.units, 'is not
 supported. Supported extrinsic amount units include mg and
 umol, and supported intrinsic concentration units include
 mg/L, uM, and in the case of gas models where the gas is
-assumed ideal, ppmv.')
+assumed ideal, ppmv. If converting between amount and
+concentration, user must specify volume (vol).')
   }
 }
   
