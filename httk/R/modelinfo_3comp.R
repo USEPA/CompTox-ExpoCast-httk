@@ -160,10 +160,17 @@ model.list[["3compartment"]]$allowed.units.output <- list(
               "oral" = c('uM','mg/L','uM*days','mg/L*days'),
               "iv" = c('uM','mg/L','uM*days','mg/L*days'))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
+# Default set of units assigned to correspond to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["3compartment"]]$compartment.units <-c(
+    "Aintestine"="umol",
+    "Aportven"="umol",
+    "Aliver"="umol",
+    "Asyscomp"="umol",
+    "Ametabolized"="umol",
+    "Atubules"="umol",
     "Cportven"="uM",
     "Cliver"="uM",
     "Csyscomp"="uM",
@@ -176,17 +183,21 @@ model.list[["3compartment"]]$dosing.params <- c(
   "initial.dose",
   "doses.per.day",
   "dosing.matrix")
-model.list[["3compartment"]]$routes <- c("oral","iv")
+  
+model.list[["3compartment"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["3compartment"]]$dose.variable <- list(
-  oral="Aintestine",
-  iv="Asyscomp")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["3compartment"]]$dose.type <- list(
-  oral="add",
-  iv="add")
+    "entry.compartment" = "Aintestine",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Asyscomp",
+    "dose.type" = "add")
+  )
+    
+
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),

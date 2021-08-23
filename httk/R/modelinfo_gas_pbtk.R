@@ -255,8 +255,9 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
        "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
                         'mg/m^3','mg/m^3*days'))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
+# Default set of units assigned to correspond to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Cgut"="uM",
@@ -275,6 +276,17 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Cendexhppmv"="ppmv",
                                           "Cmixexhppmv"="ppmv",
                                           "Cmuc"="uM",
+                                          "Agutlumen"="umol",
+                                          "Agut"="umol",
+                                          "Aliver"="umol",
+                                          "Aven"="umol",
+                                          "Alung"="umol",
+                                          "Aart"="umol",
+                                          "Arest"="umol",
+                                          "Akidney"="umol", 
+                                          "Atubules"="umol",
+                                          "Ametabolized"="umol",
+                                          "Amuc"="umol",
                                           "AUC"="uM*days")
 
 # These parameters specify the exposure scenario simulated by the model:
@@ -285,17 +297,21 @@ model.list[["gas_pbtk"]]$dosing.params <- c(
   "dosing.matrix",
   "forcings")
 
-model.list[["gas_pbtk"]]$routes <- c("oral","iv","inhalation")
-
+model.list[["gas_pbtk"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["gas_pbtk"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Aven", inhalation = "Amuc")
-
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["gas_pbtk"]]$dose.type <- list(oral="add",
-  iv="add", inhalation = "add")
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Aven",
+    "dose.type" = "add"),
+  "inhalation" = list(
+    "entry.compartment" = "Amuc",
+    "dose.type" = "add")   
+  )
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
