@@ -261,8 +261,9 @@ model.list[["pbtk"]]$state.vars <- c(
     "AUC"
     ) 
 
-# Default set of units assigned to correspond to each of the state variables to 
-# as well as any additional model outputs that might be monitored.
+# Default set of units assigned to correspond to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["pbtk"]]$compartment.units <- c(
     "Agutlumen"="umol",
