@@ -19,6 +19,8 @@
 #' "oral", "iv", "inhalation", ...
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
+#' @param vol Volume for the target tissue of interest.
+#' NOTE: Volume should not be in units of per BW, i.e. "kg".
 #' 
 #' @return
 #' A list of numeric values for doses converted to output.units, potentially
@@ -28,7 +30,7 @@
 #' the second is dose amount for N doses}
 #' \item{daily.dose}{The total cumulative daily dose}
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Sarah E. Davidson
 #'
 #' @keywords Dynamic
 scale_dosing <- function(
@@ -36,7 +38,9 @@ scale_dosing <- function(
   parameters,                   
   route,
   input.units=NULL,
-  output.units="uM")
+  output.units="uM",
+  vol = NULL)# add volume conversion update for amount to conc (or vice versa)
+             # then update solve_model
 {
   if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
     stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
@@ -58,7 +62,8 @@ scale_dosing <- function(
     convert_units(
       input.units = input.units, 
       output.units = output.units, 
-      MW =MW)
+      MW =MW,
+      vol=vol) # Should NOT be in '/kg' if applicable
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
@@ -74,7 +79,9 @@ scale_dosing <- function(
   if (!is.null(dosing$dosing.matrix)) dosing$dosing.matrix[,"dose"] <- 
     as.numeric(dosing$dosing.matrix[,"dose"]) * scale.factor
   if (!is.null(dosing$daily.dose)) dosing$daily.dose <- 
-    as.numeric(dosing$daily.dose) * scale.factor 
+    as.numeric(dosing$daily.dose) * scale.factor
+  if (!is.null(dosing$forcings)) dosing$forcings[,"forcing_values"] <- 
+    as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor
     
   return(dosing)
 }
