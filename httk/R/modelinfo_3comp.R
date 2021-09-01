@@ -157,8 +157,8 @@ model.list[["3compartment"]]$allowed.units.input <- list(
        
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["3compartment"]]$allowed.units.output <- list(
-              "oral" = c('uM','mg/L','uM*days','mg/L*days'),
-              "iv" = c('uM','mg/L','uM*days','mg/L*days'))
+              "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
+              "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the time dependent
 # variables of the model system including state variables and any transformed
@@ -174,7 +174,7 @@ model.list[["3compartment"]]$compartment.units <-c(
     "Cportven"="uM",
     "Cliver"="uM",
     "Csyscomp"="uM",
-    "AUC"="uM"
+    "AUC"="uM*days"
   )
 
 # These parameters specific the exposure scenario simulated by the model:
