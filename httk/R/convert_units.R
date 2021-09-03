@@ -21,7 +21,7 @@
 #' @param input.units Assigned input units of interest
 #' @param output.units Desired output units
 #' @param MW Molecular weight of substance of interest in g/mole 
-#' @param vol Volume for the target tissue of interest.
+#' @param vol Volume for the target tissue of interest in liters (L).
 #' NOTE: Volume should not be in units of per BW, i.e. "kg".
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -130,11 +130,11 @@ compound data.table/data.frame or list.')
   #initialize a data.frame that determines conversion factors between key
   #units corresponding to intrinsic quantities, set official names manually
   conc_units_conversion_frame <- 
-              data.frame(mg_per_L = c(1, MW/10^3, MW/24.45),
+              data.frame(mg_per_L = c(1, MW/10^3, MW/(24.45*10^3)),
                          #^^ temporarily different column name as variable
                          #name of 'mg/L' not supported for assignment
-                         um = c(10^3/MW, 1, 10^3/24.45),
-                         ppmv = c(24.45/MW, 24.45/10^3, 1))
+                         um = c(10^3/MW, 1, 1/24.45),
+                         ppmv = c((24.45*10^3)/MW, 24.45, 1))
   #Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
   #conditions, according to the Environmental Science and Technology Briefs for 
   #Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
@@ -148,10 +148,10 @@ compound data.table/data.frame or list.')
   if(!is.null(vol)){
     # rows = concentrations; columns = amount (input, output -- respectively)
     # if amount to concentration is needed use the inverse
-    conc2amount_units_conversion_frame <- data.frame(
-      mg = c(vol,(MW/10^3)*vol,(MW/24.45)*vol),
-      umol = c((10^3/MW)*vol,vol,(10^3/24.45)*vol)
-    )
+    conc2amount_units_conversion_frame <- 
+      conc_units_conversion_frame[,1:2]*vol
+    
+    colnames(conc2amount_units_conversion_frame) <- c("mg","umol")
     row.names(conc2amount_units_conversion_frame) <- c("mg/l", "um","ppmv")
   }
   
