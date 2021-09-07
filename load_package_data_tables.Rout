@@ -46,7 +46,7 @@ The following object is masked from 'package:base':
     startsWith
 
 Warning message:
-package 'gdata' was built under R version 4.0.4 
+package 'gdata' was built under R version 4.0.5 
 > library(xlsx)
 Warning message:
 package 'xlsx' was built under R version 4.0.5 
@@ -125,8 +125,8 @@ package 'xlsx' was built under R version 4.0.5
 +   sheet="TissueComp",
 +   stringsAsFactors=FALSE,
 +   skip=1)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > tissuecompdata <- subset(tissuecompdata,Species!="")
 > tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
 > colnames(tissuecompdata) <- c(
@@ -315,7 +315,7 @@ In CAS.checksum(this.CAS) : NAs introduced by coercion
 > 
 > 
 > Obach.table <- read.xls("Obach1999.xlsx",stringsAsFactors=F,skip=1)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > #Wrong CAS for Diazepam:
 > Obach.table[Obach.table$CAS=="53320-84-6","CAS"] <- "439-14-5"
 > 
@@ -420,7 +420,7 @@ Warning messages:
 > 
 > #Table CLint units are uL/min/10^6 cells:
 > Lau2002.table <- read.xls("Lau2002.xlsx",stringsAsFactors=F)[-1,]
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > chem.prop <- add_chemtable(Lau2002.table, current.table=chem.prop, species="Human", reference="Lau2002",
 +                data.list = list(CAS="CAS",
 +                  Compound="Compound",
@@ -661,8 +661,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > #Table CLint units are L/h/10^6 hepatocytes
 > TNO.table <- read.xls("HT-PBPK compounds-122216.xlsx",stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > TNO.table <- subset(TNO.table,TNO.table$Source!="")
 > 
 > for (this.row in 1:dim(TNO.table)[1])
@@ -936,7 +936,7 @@ There were 38 warnings (use warnings() to see them)
 > #Table CLint units are uL/min/10^6 cells:
 > # For Rotroff data they average 1 and 10 uM, but then you get the same numbers
 > Tonnelier.table <- read.xls("Tonnelier-2012.xlsx",stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > # Dashboard prefers different CAS:
 > Tonnelier.table[Tonnelier.table$Name=="Abamectin","CAS"] <- "71751-41-2"
 > Tonnelier.table[Tonnelier.table$CAS=="51630-58-1","CAS"] <- "67614-33-9"
@@ -1031,7 +1031,7 @@ There were 36 warnings (use warnings() to see them)
 > 
 > 
 > Paixao2012.table2 <- read.xls("Paixao-2012.xlsx",stringsAsFactors=F,sheet=1)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > Paixao2012.table2$fup <- 1-Paixao2012.table2$fp
 > chem.prop <- add_chemtable(Paixao2012.table2,                             
 +                species="Human",
@@ -1195,6 +1195,8 @@ Warning messages:
 > 
 > load("CASback.RData")
 > library(stringr)
+Warning message:
+package 'stringr' was built under R version 4.0.5 
 > Cory.newpKa <- ret.df
 > Cory.newpKa[Cory.newpKa$CAS=="3764-87-2","Compound"] <- "Trestolone"
 > # Dashboard prefers a different cas:
@@ -1315,14 +1317,14 @@ Warning messages:
   NAs introduced by coercion
 > 
 > MA.data <- read.xls("Endo-2011.xlsx",stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > this.reference <- "Endo 2011"
 > for (this.row in 1:dim(MA.data)[1])
 + {
@@ -1669,7 +1671,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > # Replace "bad" CAS:
 > sipes.bad.cas <- read.xls("SipesBadCAS.xls",stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > for (this.row in 1:dim(sipes.bad.cas)[1])
 + {
 +   index <- which(sipes2017$Compound==sipes.bad.cas[this.row,"INPUT"])
@@ -1699,8 +1701,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
 +   sheet=2,
 +   stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > colnames(JRC.data.clint)[5] <- "Conc"
 > colnames(JRC.data.clint)[8] <- "Clint"
 > JRC.data.clint <- subset(JRC.data.clint,!is.na(Clint)) 
@@ -1728,9 +1730,9 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
 +   sheet=3,
 +   stringsAsFactors=F)
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
-Wide character in print at C:/Users/SDAVID01/AppData/Local/renv/cache/v5/R-4.0/x86_64-w64-mingw32/gdata/2.18.0/465ccb84427f5fe2c54f8620666db131/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
+Wide character in print at C:/Users/SDAVID01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/R/win-library/4.0/gdata/perl/xls2csv.pl line 327.
 > JRC.data.fup <- subset(JRC.data.fup,!is.na(X..Unbound.in.Plasma..))
 > JRC.data.fup$fup <- JRC.data.fup$X..Unbound.in.Plasma../100
 > JRC.data.fup[,"fup.up"] <- JRC.data.fup$fup + 1.96*JRC.data.fup$SD/100
@@ -2162,12 +2164,18 @@ The following objects are masked from 'package:base':
 
     intersect, setdiff, setequal, union
 
+Warning message:
+package 'dplyr' was built under R version 4.0.5 
 > library(magrittr)
+Warning message:
+package 'magrittr' was built under R version 4.0.5 
 > ## Load in Data ##
 > dawson2021_full <- readxl::read_xlsx(
 +   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
 +   sheet = 14)
-> dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+> dawson2021      <- dawson2021_full[,c("CASRN",
++                                       "QSAR_Clint","Clint QSAR AD Outlier",
++                                       "QSAR_Fup","Fup QSAR AD Outlier")]
 > #
 > # END dawson2021 Creation
 > #
@@ -2370,7 +2378,7 @@ Move the sysdata.rdaa to the httk/R directory.
 >      
 > ## Session Information ##
 > Sys.time() # capture date and time of generating data
-[1] "2021-04-29 09:17:39 EDT"
+[1] "2021-09-07 17:25:53 EDT"
 > sessionInfo() # capture package information for generating data
 R version 4.0.3 (2020-10-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -2389,17 +2397,18 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] magrittr_2.0.1 dplyr_1.0.4    readxl_1.3.1   stringr_1.4.0  xlsx_0.6.5    
+[1] magrittr_2.0.1 dplyr_1.0.5    readxl_1.3.1   stringr_1.4.0  xlsx_0.6.5    
 [6] gdata_2.18.0   reshape_0.8.8 
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.6       tidyselect_1.1.0 R6_2.5.0         rlang_0.4.10    
- [5] fansi_0.4.2      plyr_1.8.6       tools_4.0.3      utf8_1.1.4      
- [9] ellipsis_0.3.1   gtools_3.8.2     tibble_3.1.0     lifecycle_1.0.0 
-[13] crayon_1.4.1     rJava_0.9-13     purrr_0.3.4      vctrs_0.3.6     
-[17] xlsxjars_0.6.1   glue_1.4.2       stringi_1.5.3    compiler_4.0.3  
-[21] pillar_1.5.0     cellranger_1.1.0 generics_0.1.0   pkgconfig_2.0.3 
+ [1] Rcpp_1.0.6       tidyselect_1.1.1 R6_2.5.0         rlang_0.4.11    
+ [5] fansi_0.4.2      plyr_1.8.6       tools_4.0.3      utf8_1.2.1      
+ [9] DBI_1.1.1        ellipsis_0.3.2   gtools_3.8.2     assertthat_0.2.1
+[13] tibble_3.1.1     lifecycle_1.0.0  crayon_1.4.1     rJava_1.0-4     
+[17] purrr_0.3.4      vctrs_0.3.8      xlsxjars_0.6.1   glue_1.4.2      
+[21] stringi_1.5.3    compiler_4.0.3   pillar_1.6.0     cellranger_1.1.0
+[25] generics_0.1.0   pkgconfig_2.0.3 
 > 
 > proc.time()
    user  system elapsed 
- 289.18    2.78  385.06 
+ 521.79    8.17  785.17 
