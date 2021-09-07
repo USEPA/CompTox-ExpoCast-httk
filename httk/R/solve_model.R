@@ -309,7 +309,7 @@ solve_model <- function(chem.name = NULL,
 
   # Molecular weight for general use:
   MW <- parameters[["MW"]]
-
+  
   if (any(!tolower(compartment_units)
                  %in% tolower(allowed_units_output))) {
     stop("The compartment.units list specified for the model outputs contains
@@ -453,30 +453,31 @@ solve_model <- function(chem.name = NULL,
       # required model value units
       model.units <- compartment_units[this.compartment]
       
-      # volume for the tissue
-      # (1) get all tissues with volume from param_names
-      all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
-      # (2) get the potential volume tissue string with string update
-      tissue.string <- paste0(stringr::str_replace(this.compartment,
-                                                   pattern = "^A|^C",
-                                                   replacement = "V"),"c")
-      # (3) Check if the tissue string is in all.tissue.vols,
-      #     yes then get the provided parameter
-      #     no then return null value
-      tissue.vol <- ifelse(
-        test = tissue.string%in%all.tissue.vols,
-        yes = parameters[[tissue.string]]*parameters[["BW"]],
-        no = NULL
-      )
+      # # (1) get all tissues with volume from param_names
+      # all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
+      # # (2) get the potential volume tissue string with string update
+      # tissue.string <- paste0(stringr::str_replace(this.compartment,
+      #                                              pattern = "^A|^C",
+      #                                              replacement = "V"),"c")
+      # # (3) Check if the tissue string is in all.tissue.vols,
+      # #     yes then get the provided parameter
+      # #     no then return null value
+      # #   (a) Check if the length of tissues with a volume in the parameter names is 0.
+      # if(length(all.tissue.vols)==0){
+      #   tissue.vol <- NULL
+      # }else if(tissue.string%in%all.tissue.vols){
+      #   tissue.vol <- parameters[[tissue.string]]*parameters[["BW"]]
+      # }else{
+      #   tissue.vol <- NULL
+      # }
+      
       #Use the units for this compartment from compartment_units to
       #get a units conversion factor, even if trivially 1
       out.unit.conversion <- convert_units(
         input.units=given.units,
         output.units=model.units,
-        MW = MW,
-        vol = tissue.vol)
-      # NOTE: We assume all but "AUC" may have a unit conversion factor & may
-      #       me initialized.
+        MW = MW) # ,
+        # vol = tissue.vol)
       
       return(out.unit.conversion)
     })
@@ -516,6 +517,7 @@ solve_model <- function(chem.name = NULL,
   #1 mg/kg BW for when no dosing is specified by user.
   if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
 
+  #### NEED TO CHECK/POSSIBLY UPDATE!!! ####
   # volume for the entry tissue
   # (1) get all tissues with volume from param_names
   all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
@@ -523,14 +525,18 @@ solve_model <- function(chem.name = NULL,
   entry.tissue.string <- paste0(stringr::str_replace(dose.var,
                                                      pattern = "^A|^C",
                                                      replacement = "V"),"c")
+
   # (3) Check if the tissue string is in all.tissue.vols,
   #     yes then get the provided parameter
   #     no then return null value
-  entry.tissue.vol <- ifelse(
-    test = entry.tissue.string%in%all.tissue.vols,
-    yes = parameters[[entry.tissue.string]]*parameters[["BW"]],
-    no = NULL
-  )
+  #   (a) Check if the length of tissues with a volume in the parameter names is 0.
+  if(length(all.tissue.vols)==0){
+    entry.tissue.vol <- NULL
+  }else if(entry.tissue.string%in%all.tissue.vols){
+    entry.tissue.vol <- parameters[[entry.tissue.string]]*parameters[["BW"]]
+  }else{
+    entry.tissue.vol <- NULL
+  }
   
   #Assign input.units to new key units variable, intended as post-scaling
   #units that are ready for any necessary conversion
@@ -664,72 +670,111 @@ solve_model <- function(chem.name = NULL,
   
   #Check if there are any output.units provided by the user
   if(!is.null(output.units)){
-    #Check if 'output.units' is a named vector linking values with
-    #model components
-    if(is.null(names(output.units))){
-      stop("The output.units for the model, ",
-           model,
-           ", should be named a named vector with corresponding compartments.")
-    }
-    #Check if 'output.units' are specified only for state or output variables
-    if(any(!(names(output.units)%in%colnames(out)))){
-      #Obtain any output units that ARE NOT IN the out matrix to TOSS
-      non.out.vars <- names(output.units)[
-        which(!(colnames(out)%in%names(output.units)))
-      ]
-      #Obtain any output units that ARE IN the out matrix to KEEP
-      keep.out.vars <- names(output.units)[
-        which((colnames(out)%in%names(output.units)))
-      ] 
-      #Subset to only state.vars
-      output.units <- output.units[keep.out.vars]
-      #Check if there are any non.out.vars
-      if(length(non.state.vars)!=0){
-        warning("Additional unnecessary elements were included in the",
-                "output.units -- namely ",
-                paste(non.out.vars,collapse = ", "),".\n    ",
-                "These variables were removed from the output units.")
-      }
-    }
-    #Note that the results from the ODE are obtained, convert output to the
-    #desired units specified by the user
-    for(this.compartment in colnames(out)){
-      #Check if the compartment/variable is in the output.units argument
-      if(this.compartment%in%output.units){
-        #Obtain units for conversion
-        # provided initial value units
-        given.units <- initial.value.units[this.compartment]
-        # required model value units
-        model.units <- compartment_units[this.compartment]
-        
-        # volume for the tissue
-        # (1) get all tissues with volume from param_names
-        all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
-        # (2) get the potential volume tissue string with string update
-        tissue.string <- paste0(stringr::str_replace(this.compartment,
-                                                     pattern = "^A|^C",
-                                                     replacement = "V"),"c")
-        # (3) Check if the tissue string is in all.tissue.vols,
-        #     yes then get the provided parameter
-        #     no then return null value
-        tissue.vol <- ifelse(
-          test = tissue.string%in%all.tissue.vols,
-          yes = parameters[[tissue.string]]*parameters[["BW"]],
-          no = NULL
-        )
-        
-        output_conversion_factor <- convert_units(
-          input.units = model.units,
-          output.units = given.units,
-          MW = MW,
-          vol = tissue.vol)
+    #Check if the output.units is a single value
+    if(length(output.units)==1){
+      if(output.units=='mg/l'){
+        # assume for 'mg/l' the compartments in amounts should be 'mg'
+        output.amounts <- 'mg'
       }else{
-        # If the compartment is not in the output.units assume the user wants
-        # the default model units
-        output_conversion_factor <- 1
+        # assume for 'uM' and 'ppmv' the compartments in amounts
+        # should be 'umol'
+        output.amounts <- 'umol'
       }
-      #Now apply conversion factor to each relevant entry
-      out[,this.compartment] <- out[,this.compartment]*output_conversion_factor
+      out <- sapply(colnames(out),function(x){
+        if(x=="time"){
+          return(out[,x])
+        }else{
+          if(grepl(x,pattern = "^C")){
+            return(
+              out[,x]*convert_units(input.units = compartment_units[x],
+                                    output.units = output.units,
+                                    MW = MW)
+            )
+          }else if(grepl(x,pattern = "^A") & x!="AUC"){
+            return(
+              out[,x]*convert_units(input.units = compartment_units[x],
+                                    output.units = output.amounts,
+                                    MW = MW)
+            )
+          }else{
+            return(out[,x])
+          }
+        }
+      })
+    }else if(length(output.units)>1){
+      #Check if 'output.units' is a named vector linking values with
+      #model components
+      if(is.null(names(output.units))){
+        stop("The output.units for the model, ",
+             model,
+             ", should be named a named vector with corresponding compartments.")
+      }
+      #Check if 'output.units' are specified only for state or output variables
+      if(any(!(names(output.units)%in%colnames(out)))){
+        #Obtain any output units that ARE NOT IN the out matrix to TOSS
+        non.out.vars <- names(output.units)[
+          which(!(colnames(out)%in%names(output.units)))
+        ]
+        #Obtain any output units that ARE IN the out matrix to KEEP
+        keep.out.vars <- names(output.units)[
+          which((colnames(out)%in%names(output.units)))
+        ] 
+        #Subset to only state.vars
+        output.units <- output.units[keep.out.vars]
+        #Check if there are any non.out.vars
+        if(length(non.state.vars)!=0){
+          warning("Additional unnecessary elements were included in the",
+                  "output.units -- namely ",
+                  paste(non.out.vars,collapse = ", "),".\n    ",
+                  "These variables were removed from the output units.")
+        }
+      }
+      #Note that the results from the ODE are obtained, convert output to the
+      #desired units specified by the user
+      for(this.compartment in colnames(out)){
+        #Check if the compartment/variable is in the output.units argument
+        if(this.compartment%in%names(output.units)){
+          #Obtain units for conversion
+          # provided initial value units
+          given.units <- output.units[this.compartment]
+          # required model value units
+          model.units <- compartment_units[this.compartment]
+          
+          # # volume for the tissue
+          # # (1) get all tissues with volume from param_names
+          # all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
+          # # (2) get the potential volume tissue string with string update
+          # tissue.string <- paste0(stringr::str_replace(this.compartment,
+          #                                              pattern = "^A|^C",
+          #                                              replacement = "V"),"c")
+          # 
+          # # (3) Check if the tissue string is in all.tissue.vols,
+          # #     yes then get the provided parameter
+          # #     no then return null value
+          # #   (a) Check if the length of tissues with a volume in the parameter names is 0.
+          # if(length(all.tissue.vols)==0){
+          #   tissue.vol <- NULL
+          # }else if(tissue.string%in%all.tissue.vols){
+          #   tissue.vol <- parameters[[tissue.string]]*parameters[["BW"]]
+          # }else{
+          #   tissue.vol <- NULL
+          # }
+          # print(tissue.string)
+          # print(tissue.vol)
+          
+          output_conversion_factor <- convert_units(
+            input.units = model.units,
+            output.units = given.units,
+            MW = MW) #,
+            # vol = tissue.vol)
+        }else{
+          # If the compartment is not in the output.units assume the user wants
+          # the default model units
+          output_conversion_factor <- 1
+        }
+        #Now apply conversion factor to each relevant entry
+        out[,this.compartment] <- out[,this.compartment]*output_conversion_factor
+      }
     }
   }
   
@@ -738,8 +783,9 @@ solve_model <- function(chem.name = NULL,
   {
     monitor.vars <- default.monitor.vars
   }
-# However, we always include whatever compartment received the dose:  
+# However, we always include whatever compartment received the dose: 
   monitor.vars <- unique(c(dose.var,monitor.vars))
+  
   if (any(!(monitor.vars%in%colnames(out))))
     stop("Some of the requested variables to monitor (monitor.vars) are not in
           the columns of the deSolve output object. These variables should
