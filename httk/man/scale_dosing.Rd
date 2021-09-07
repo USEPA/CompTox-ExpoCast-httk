@@ -4,7 +4,13 @@
 \alias{scale_dosing}
 \title{Scale mg/kg body weight doses according to body weight and units}
 \usage{
-scale_dosing(dosing, parameters, route, output.units = "uM")
+scale_dosing(
+  dosing,
+  parameters,
+  route,
+  input.units = NULL,
+  output.units = "uM"
+)
 }
 \arguments{
 \item{dosing}{List of dosing metrics used in simulation, which must include
