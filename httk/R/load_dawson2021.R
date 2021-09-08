@@ -36,10 +36,14 @@ load_dawson2021 <- function(overwrite=FALSE,exclude_oad=TRUE,target.env=.GlobalE
             ifelse(exclude_oad,""," not"),
             " excluded in the data load.\n",sep=""))
   if(exclude_oad){
-    tmp_dawson2021 <- dawson2021 %>% dplyr::filter(Outlier==0) %>% dplyr::filter(AD_out==0) %>% 
-      dplyr::select(`CASRN`,`QSAR Clint`,`QSAR Fup`) %>% as.data.frame()
+    tmp_dawson2021 <- dawson2021 %>%
+      dplyr::filter(`Clint QSAR AD Outlier`==0) %>%
+      dplyr::filter(`Fup QSAR AD Outlier`==0) %>% 
+      dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>%
+      as.data.frame()
   }else{
-    tmp_dawson2021 <- dawson2021 %>% dplyr::select(`CASRN`,`QSAR Clint`,`QSAR Fup`) %>% 
+    tmp_dawson2021 <- dawson2021 %>%
+      dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>% 
       as.data.frame()
   }
   cat(paste("Loading predictions from Dawson et al. (2021) for",
@@ -52,8 +56,8 @@ load_dawson2021 <- function(overwrite=FALSE,exclude_oad=TRUE,target.env=.GlobalE
                                                          current.table=chem.physical_and_invitro.data,
                                                          data.list=list(
                                                            CAS='CASRN', # 'CAS',
-                                                           Funbound.plasma = 'QSAR Fup', # 'Human.Funbound.plasma',
-                                                           Clint = 'QSAR Clint'), # 'Human.Clint'),
+                                                           Funbound.plasma = 'QSAR_Fup', # 'Human.Funbound.plasma',
+                                                           Clint = 'QSAR_Clint'), # 'Human.Clint'),
                                                          reference = 'Dawson 2021', 
                                                          species= 'Human', 
                                                          overwrite=overwrite),
