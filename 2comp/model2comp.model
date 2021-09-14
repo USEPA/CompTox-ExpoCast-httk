@@ -1,17 +1,17 @@
 States = {
-Agutlumen;
-Acompartment;
-Arest;
-Ametabolized;
-AUC;
+Agutlumen,
+Acompartment,
+Arest,
+Ametabolized,
+AUC,
 };
 
 Inputs = {
 };
 
 Outputs = {
-Ccompartment;
-Crest;
+Ccompartment,
+Crest,
 };
 
 Vdist = 0;
@@ -19,9 +19,6 @@ Cltotal=0;
 kgutabs=1;
 Vrest=0;
 Qrest=0;
-
-
-
 
 Initialize{
 kgutabs = kgutabs * 24;
@@ -38,3 +35,4 @@ dt (Arest) = Qrest * (Ccompartment- Crest);
 dt (Ametabolized) = Cltotal * Ccompartment;
 dt (AUC) = Ccompartment;
 }
+End.
