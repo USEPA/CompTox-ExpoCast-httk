@@ -9,7 +9,7 @@ Arest,      # ... rest of the body (umol)
 Akidney,    # ... kidney (umol)
 Atubules,   # ... tubules (umol)
 Ametabolized, # ... metabolized (umol)
-AUC,        # Area under the curve (umol)
+AUC,        # Area under the curve (umol*days)
 Ainh,       # Amount of the compound inhaled (umol)
 Aexh,       # Amount of the compound exhaled (umol)
 Amuc        # Amount of the compound in the mucus (umol)
@@ -29,17 +29,17 @@ Crest,     # ... rest of the body (uM)
 Ckidney,   # ... kidney (uM)
 Cplasma,   # ... plasma (uM)
 Aplasma,
-Calvppmv,    # Concentration in alveoli (ppmv)
-#Calv,       # ... (uM) -- Linakis original output
-Cendexhppmv, # Concentration exhaled (ppmv)
-#Cendexh,    # ... (uM) -- Linakis original output
-Cmixexhppmv, # Concentration exhaled mixed (ppmv)
-#Cmixexh,    # ... (uM) -- Linakis original output
+#Calvppmv,    # Concentration in alveoli (ppmv)
+Calv,       # ... (uM) -- Linakis original output
+#Cendexhppmv, # Concentration exhaled (ppmv)
+Cendexh,    # ... (uM) -- Linakis original output
+#Cmixexhppmv, # Concentration exhaled mixed (ppmv)
+Cmixexh,    # ... (uM) -- Linakis original output
 Cmuc         # Concentration exhaled mucus (uM)
 };
 
 BW = 70;   # Body weight
-Clmetabolismc = 0.203; # Concentration metabolism
+Clmetabolismc = 0.203; # Clearance metabolism
 vmax = 0;  # Maximal rate of reaction (pmol/min/10^6cells)
 km = 1;    # Michaelis-Menten constant (uM)
 hematocrit = 0.44;
@@ -114,7 +114,8 @@ Vliver = Vliverc * BW;
 Vlung = Vlungc * BW;
 Vrest = Vrestc * BW;
 Vven = Vvenc * BW;
-Qalv = Qalvc * 24 * pow(BW,0.75);
+#Qalv = Qalvc * 24 * pow(BW,0.75);
+Qalv = Qalv * 24 * pow(BW,0.75);
 kUrt = fmin(kUrtc,Qalv/24/pow(BW,0.75)) * pow(BW,0.75) * 24; #note the IPA model uses min(kUrtC, QalvC));
 Vmuc = Vmucc * BW;
 Vmax = vmax * 60 * 24;
@@ -133,12 +134,12 @@ Ckidney = Akidney / Vkidney; # ... kidney
 #Clungart = (Qcardiac * Cven + Qalv * Cinh) / (Qcardiac + Qalv / Kblood2air); # ... lung arterioles
 Cplasma = Aven / Vven / Rblood2plasma; # ... plasma (uM)
 Aplasma = Aven / Rblood2plasma * (1 - hematocrit); # (umols)
-Calv = Cart/Kblood2air; # Concentration in the alveoli (uM)
-Calvppmv = Calv*24.45;   # ... (ppmv)
+Calv = Cart/Kblood2air;   # Concentration in the alveoli (uM)
+Calvppmv = Calv * 24.45;  # ... (ppmv)
 Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; # Concentration exhaled (uM)
-Cendexhppmv = Cendexh*24.45;          # ... (ppmv)
+Cendexhppmv = Cendexh * 24.45;        # ... (ppmv)
 Cmixexh = 0.7 * Cendexh + 0.3 * Cinh; # Concentration exhaled mix (uM)
-Cmixexhppmv = Cmixexh*24.45;          # ... (ppmv)
+Cmixexhppmv = Cmixexh * 24.45;        # ... (ppmv)
 Cmuc = Amuc/Vmuc;            # Concentration in mucus
 
  
