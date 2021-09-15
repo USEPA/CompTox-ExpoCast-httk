@@ -3,7 +3,7 @@
 
    Model File:  model_gas_pbtk.model
 
-   Date:  Sun Jul 11 20:32:45 2021
+   Date:  Wed Sep 15 08:49:18 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -47,7 +47,7 @@
    1 Input:
      Cinh (forcing function)
 
-   53 Parameters:
+   54 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
      vmax = 0,
@@ -89,6 +89,7 @@
      Vlung = 0.0,
      Vrest = 0.0,
      Vven = 0.0,
+     Qalvc = 0.0,
      Qalv = 0,
      Kblood2air = 0,
      InhMag = 0,
@@ -140,7 +141,7 @@
 #define ID_Cmuc 0x0000c
 
 /* Parameters */
-static double parms[53];
+static double parms[54];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -183,18 +184,19 @@ static double parms[53];
 #define Vlung parms[38]
 #define Vrest parms[39]
 #define Vven parms[40]
-#define Qalv parms[41]
-#define Kblood2air parms[42]
-#define InhMag parms[43]
-#define Period parms[44]
-#define Exposure parms[45]
-#define kUrtc parms[46]
-#define kUrt parms[47]
-#define Kmuc2air parms[48]
-#define Vmucc parms[49]
-#define Vmuc parms[50]
-#define Vmax parms[51]
-#define Km parms[52]
+#define Qalvc parms[41]
+#define Qalv parms[42]
+#define Kblood2air parms[43]
+#define InhMag parms[44]
+#define Period parms[45]
+#define Exposure parms[46]
+#define kUrtc parms[47]
+#define kUrt parms[48]
+#define Kmuc2air parms[49]
+#define Vmucc parms[50]
+#define Vmuc parms[51]
+#define Vmax parms[52]
+#define Km parms[53]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -231,7 +233,7 @@ double CalcDelay(int hvar, double dTime, double delay) {
 /*----- Initializers */
 void initmod (void (* odeparms)(int *, double *))
 {
-  int N=53;
+  int N=54;
   odeparms(&N, parms);
 }
 
@@ -280,6 +282,7 @@ void getParms (double *inParms, double *out, int *nout) {
   Vlung = Vlungc * BW ;
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
+
   Qalv = Qalv * 24 * pow ( BW , 0.75 ) ;
   kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
@@ -294,6 +297,9 @@ void getParms (double *inParms, double *out, int *nout) {
 
 void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
+  /* local */ double Calvppmv;
+  /* local */ double Cendexhppmv;
+  /* local */ double Cmixexhppmv;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -315,9 +321,15 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
 
+  Calvppmv = yout[ID_Calv] * 24.45 ;
+
   yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
 
+  Cendexhppmv = yout[ID_Cendexh] * 24.45 ;
+
   yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+
+  Cmixexhppmv = yout[ID_Cmixexh] * 24.45 ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
