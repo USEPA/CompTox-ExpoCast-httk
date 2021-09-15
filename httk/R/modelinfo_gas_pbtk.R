@@ -71,7 +71,7 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "pKa_Donor",
   "Pow",
   "Qalvc", #MWL 8-1-19
-  # "Qalv", # SED 06-21-2021
+  "Qalv", # SED 06-21-2021
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
@@ -119,7 +119,8 @@ model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  Qalvc="Qalvc", # Qalv = "Qalv" # (back up test)
+  Qalvc="Qalvc",
+  Qalv = "Qalv", # (back up test)
   Kblood2air = "Kblood2air",
   kUrtc = "kUrtc",
   Kmuc2air = "Kmuc2air",
