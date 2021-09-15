@@ -218,7 +218,7 @@ void initmod_gas_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
+void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=1;
   odeforcs(&N, forc);
