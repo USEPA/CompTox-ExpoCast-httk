@@ -181,8 +181,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=FALSE,
                            suppress.messages=FALSE,
                            species="Human",
-                           input.units = "ppmv", # assume input units are ppmv with updated inhalation model
-                           # input.units = "uM", 
+                           # input.units = "ppmv", # assume input units are ppmv with updated inhalation model
+                           input.units = "uM",
                            method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
                            recalc.blood2plasma=FALSE,
