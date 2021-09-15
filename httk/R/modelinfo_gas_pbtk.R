@@ -120,7 +120,7 @@ model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
   Qalvc="Qalvc",
-  Qalv = "Qalv", # (back up test)
+  Qalv="Qalv", # (back up test)
   Kblood2air = "Kblood2air",
   kUrtc = "kUrtc",
   Kmuc2air = "Kmuc2air",
