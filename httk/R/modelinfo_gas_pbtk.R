@@ -208,12 +208,12 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Ckidney",
   "Cplasma",
   "Aplasma",
-  # "Calv",
-  "Calvppmv", # SED 06-12-2021
-  # "Cendexh",
-  "Cendexhppmv", # SED 06-12-2021
-  # "Cmixexh",
-  "Cmixexhppmv", # SED 06-12-2021
+  "Calv",
+  # "Calvppmv", # SED 06-12-2021
+  "Cendexh",
+  # "Cendexhppmv", # SED 06-12-2021
+  "Cmixexh",
+  # "Cmixexhppmv", # SED 06-12-2021
   "Cmuc"
   )
 
@@ -228,12 +228,12 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
-  # "Calv",
-  "Calvppmv", # SED 06-12-2021
-  # "Cendexh",
-  "Cendexhppmv", # SED 06-12-2021
-  # "Cmixexh",
-  "Cmixexhppmv", # SED 06-12-2021
+  "Calv",
+  # "Calvppmv", # SED 06-12-2021
+  "Cendexh",
+  # "Cendexhppmv", # SED 06-12-2021
+  "Cmixexh",
+  # "Cmixexhppmv", # SED 06-12-2021
   "Cmuc",
   "Atubules",
   "Ametabolized",
@@ -269,12 +269,12 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Ckidney"="uM",
                                           "Cplasma"="uM",
                                           "Aplasma"="umol",
-                                          # "Calv"="ppmv", # "uM",
-                                          # "Cendexh"="ppmv", # "uM",
-                                          # "Cmixexh"="ppmv", # "uM",
-                                          "Calvppmv"="ppmv",
-                                          "Cendexhppmv"="ppmv",
-                                          "Cmixexhppmv"="ppmv",
+                                          "Calv"="uM",
+                                          "Cendexh"="uM",
+                                          "Cmixexh"="uM",
+                                          # "Calvppmv"="ppmv",
+                                          # "Cendexhppmv"="ppmv",
+                                          # "Cmixexhppmv"="ppmv",
                                           "Cmuc"="uM",
                                           "Agutlumen"="umol",
                                           "Agut"="umol",
