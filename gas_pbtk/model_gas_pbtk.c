@@ -210,12 +210,12 @@ static double forc[1];
 #define Cinhppmv forc[0]
 
 /* Function definitions for delay differential equations */
-
-int Nout=1;
-int nr[1]={0};
-double ytau[1] = {0.0};
-
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+//
+//int Nout=1;
+//int nr[1]={0};
+//double ytau[1] = {0.0};
+//
+//static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
 //void lagvalue(double T, int *nr, int N, double *ytau) {
 //  static void(*fun)(double, int*, int, double*) = NULL;
@@ -250,17 +250,17 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 }
 
 
-/* Calling R code will ensure that input y has same
-   dimension as yini */
-void initState_gas_pbtk (double *y)
-{
-  int i;
-
-  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
-  {
-    yini[i] = y[i];
-  }
-}
+///* Calling R code will ensure that input y has same
+//   dimension as yini */
+//void initState_gas_pbtk (double *y)
+//{
+//  int i;
+//
+//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//  {
+//    yini[i] = y[i];
+//  }
+//}
 
 void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
