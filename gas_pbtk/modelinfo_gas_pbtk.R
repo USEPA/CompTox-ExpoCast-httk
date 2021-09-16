@@ -210,11 +210,11 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cplasma",
   "Aplasma",
   "Calv",
-  # "Calvppmv", # SED 06-12-2021
+  "Calvppmv", # SED 06-12-2021
   "Cendexh",
-  # "Cendexhppmv", # SED 06-12-2021
+  "Cendexhppmv", # SED 06-12-2021
   "Cmixexh",
-  # "Cmixexhppmv", # SED 06-12-2021
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc"
   )
 
@@ -229,12 +229,12 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
-  "Calv",
-  # "Calvppmv", # SED 06-12-2021
-  "Cendexh",
-  # "Cendexhppmv", # SED 06-12-2021
-  "Cmixexh",
-  # "Cmixexhppmv", # SED 06-12-2021
+  #"Calv",
+  "Calvppmv", # SED 06-12-2021
+  #"Cendexh",
+  "Cendexhppmv", # SED 06-12-2021
+  #"Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc",
   "Atubules",
   "Ametabolized",
@@ -261,34 +261,36 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
-                                          "Cgut"="uM",
-                                          "Cliver"="uM",
-                                          "Cven"="uM",
-                                          "Clung"="uM",
-                                          "Cart"="uM",
-                                          "Crest"="uM",
-                                          "Ckidney"="uM",
-                                          "Cplasma"="uM",
-                                          "Aplasma"="umol",
-                                          "Calv"="uM",
-                                          "Cendexh"="uM",
-                                          "Cmixexh"="uM",
-                                          "Calvppmv"="ppmv",
-                                          "Cendexhppmv"="ppmv",
-                                          "Cmixexhppmv"="ppmv",
-                                          "Cmuc"="uM",
-                                          "Agutlumen"="umol",
-                                          "Agut"="umol",
-                                          "Aliver"="umol",
-                                          "Aven"="umol",
-                                          "Alung"="umol",
                                           "Aart"="umol",
-                                          "Arest"="umol",
+                                          "Agut"="umol",
+                                          "Agutlumen"="umol",
                                           "Akidney"="umol", 
-                                          "Atubules"="umol",
+                                          "Aliver"="umol",
+                                          "Alung"="umol",
                                           "Ametabolized"="umol",
                                           "Amuc"="umol",
-                                          "AUC"="uM*days")
+                                          "Aplasma"="umol",
+                                          "Arest"="umol",
+                                          "Atubules"="umol",
+                                          "AUC"="uM*days",
+                                          "Aven"="umol",
+                                          "Calv"="uM",
+                                          "Calvppmv"="ppmv",
+                                          "Cart"="uM",
+                                          "Cendexh"="uM",
+                                          "Cendexhppmv"="ppmv",
+                                          "Cgut"="uM",
+                                          "Cinhppmv"="ppmv",
+                                          "Ckidney"="uM",
+                                          "Cliver"="uM",
+                                          "Clung"="uM",
+                                          "Cmixexh"="uM",
+                                          "Cmixexhppmv"="ppmv",
+                                          "Cmuc"="uM",
+                                          "Cplasma"="uM",
+                                          "Crest"="uM",
+                                          "Cven"="uM"
+                                          )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c(
@@ -310,7 +312,7 @@ model.list[["gas_pbtk"]]$routes <- list(
     "entry.compartment" = "Aven",
     "dose.type" = "add"),
   "inhalation" = list(
-    "entry.compartment" = "Amuc",
+    "entry.compartment" = "Cinhppmv",
     "dose.type" = "add")   
   )
 
