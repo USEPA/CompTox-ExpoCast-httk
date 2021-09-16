@@ -197,6 +197,12 @@ model.list[["gas_pbtk"]]$compiled.init.func <- "initmod_gas_pbtk"
 # of time, state, and parameters:
 model.list[["gas_pbtk"]]$derivative.func <- "derivs_gas_pbtk"
 
+# This is the ORDERED list of input variables given to the C code by the solver
+# (from Forcing (Input) functions -- forc):
+model.list[["gas_pbtk"]]$input.var.names <- c(
+  "Cinhppmv"
+  )
+  
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
 model.list[["gas_pbtk"]]$derivative.output.names <- c(
