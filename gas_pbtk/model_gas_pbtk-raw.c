@@ -1,9 +1,9 @@
-/* model_gas_pbtk_raw.c for R deSolve package
+/* model_gas_pbtk-raw.c for R deSolve package
    ___________________________________________________
 
    Model File:  model_gas_pbtk.model
 
-   Date:  Thu Sep 16 09:47:48 2021
+   Date:  Thu Sep 16 14:59:34 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -289,6 +289,7 @@ void getParms (double *inParms, double *out, int *nout) {
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
   Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
+
   kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
