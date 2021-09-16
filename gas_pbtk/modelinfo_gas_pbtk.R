@@ -256,7 +256,7 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
        "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
                         'mg/m^3','mg/m^3*days'))
 
-# Default set of units assigned to correspond to each of the time dependent
+# Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
@@ -273,9 +273,9 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Calv"="uM",
                                           "Cendexh"="uM",
                                           "Cmixexh"="uM",
-                                          # "Calvppmv"="ppmv",
-                                          # "Cendexhppmv"="ppmv",
-                                          # "Cmixexhppmv"="ppmv",
+                                          "Calvppmv"="ppmv",
+                                          "Cendexhppmv"="ppmv",
+                                          "Cmixexhppmv"="ppmv",
                                           "Cmuc"="uM",
                                           "Agutlumen"="umol",
                                           "Agut"="umol",
@@ -331,7 +331,7 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "Ainh", # SED 06-12-2021
     "Aexh", # SED 06-12-2021
     "Amuc"
-    ) 
+    )        
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["gas_pbtk"]]$required.params <- c(
