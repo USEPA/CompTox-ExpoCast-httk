@@ -57,6 +57,12 @@ conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "pp
 PPMVCONVERT <- 1
 ```
 
+Normalize the units of the concentration data:
+```{r data}
+
+
+```
+
 ## ANALYSIS
 
 Identify chemicals currently in our metabolism data that we don't have good
@@ -89,9 +95,8 @@ unique_scenarios <- conc_data[with(conc_data,
 
 ### Observations and Predictions
 Create a list of dataframes of observed and predicted concentrations
-for each unique external exposure scenario
+for each unique external exposure scenario (corresponding to 142 studies)
 ```{r runmodel}
-plist <- list()
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
@@ -107,17 +112,37 @@ for(i in 1:nrow(unique_scenarios)){
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
 # Make sure we get conc's at the observed times:
-        times=signif(obslist[[i]]$TIME,4), 
-        tsteps = 500, 
+        times=unique(c(0,signif(obslist[[i]]$TIME,4))), 
+        tsteps = 500,
+        input.units = unique_scenarios$DOSE_U[i],
         exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
         # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
         species = as.character(unique_scenarios$CONC_SPECIES[i]), 
+        monitor.vars = c(
+          "Cven", 
+          "Clung", 
+          "Cart", 
+          "Cplasma", 
+          "Calvppmv", 
+          "Cendexhppmv", 
+          "Cmixexhppmv", 
+          "Calv", 
+          "Cendexh", 
+          "Cmixexh", 
+          "Cmuc", 
+          "AUC"),
         vmax.km = FALSE,
         suppress.messages = TRUE)))
     #browser()
     solve <- as.data.frame(solve)
+    # Blood to plasma ratio:
+    this.Rb2p <- suppressWarnings(available_rblood2plasma(
+      chem.cas=unique_scenarios$CASRN[i],
+      species=as.character(unique_scenarios$CONC_SPECIES[i])))
+    solve$Rb2p <- this.Rb2p
+    
     # Sets the output units appropriate for the sampling matrix
     # BL : blood
     # EEB : end-exhaled breath
@@ -131,20 +156,35 @@ for(i in 1:nrow(unique_scenarios)){
       unique_scenarios$SAMPLING_MATRIX[i] == "BL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)")
     {
-      solve$simconc <- solve$Cven
+      solve$simconc <- solve$Cven*this.Rb2p
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
-      solve$simconc <- solve$Cart
+      solve$simconc <- solve$Cart*this.Rb2p
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "EB" |
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
-      solve$simconc <- solve$Cendexhppmv # * PPMVCONVERT
-      solve$unit <- "ppmv" #"ppm"
+      if (unique_scenarios[i,"ORIG_CONC_U"] == "ppmv")
+      {
+        solve$simconc <- solve$Cendexhppmv
+        solve$unit <- "ppmv"
+      } else if (unique_scenarios[i,"ORIG_CONC_U"] == "uM") {
+        solve$simconc <- solve$Cendexh
+        solve$unit <- "uM"
+      } else if (unique_scenarios[i,"ORIG_CONC_U"] == "ug/L") {
+        solve$simconc <- solve$Cendexh
+        solve$unit <- "uM"
+      }
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-      solve$simconc <- solve$Cmixexhppmv # * PPMVCONVERT
-      solve$unit <- "ppmv" #"ppm"
+            if (unique_scenarios[i,"ORIG_CONC_U"] == "ppmv")
+      {
+        solve$simconc <- solve$Cmixexhppmv
+        solve$unit <- "ppmv"
+      } else if (unique_scenarios[i,"ORIG_CONC_U"] == "uM") {
+        solve$simconc <- solve$Cmixexh
+        solve$unit <- "uM"
+      }
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -154,6 +194,16 @@ for(i in 1:nrow(unique_scenarios)){
     }
     simlist[[i]] <- solve
     plot.data <- solve
+}
+```
+
+
+Create a predicted vs. observed plot for each study:
+```{r Makestudyplots}
+plist <- list()
+for(i in 1:nrow(unique_scenarios)){
+    plot.data <- simlist[[i]]
+    relconc <- obslist[[i]]
     name1 <- paste0("c.vs.t",i)
 #Right now this is only calculating real concentrations according to mg/L in blood
     plots <- assign(name1, ggplot(plot.data, aes(time*24, simconc)) + 
@@ -175,7 +225,13 @@ for(i in 1:nrow(unique_scenarios)){
         "h in ", 
         unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
       geom_point(data = relconc, aes(TIME*24,CONCENTRATION)) + 
-      theme(text = element_text(size=10))+
+      theme(plot.title = element_text(face = 'bold', size = 20),
+        axis.title.x = element_text(face = 'bold', size = 20), 
+        axis.text.x = element_text(size=16), 
+        axis.title.y = element_text(face = 'bold', size = 20), 
+        axis.text.y = element_text(size = 16),
+        legend.title = element_text(face = 'bold', size = 16),
+        legend.text = element_text(face = 'bold',size = 14))+
       theme_bw()) 
     plist[[i]] <- plots
   #}, error = function(e){})
@@ -193,7 +249,8 @@ unique_scenarios$AIC <- 0
 simobslist <- list()
 obvpredlist <- list()
 ```
-Merge the simulations and observations on the basis of simualation time:
+
+Merge the simulations and observations on the basis of simulation time:
 ```{r merge_datasets}
 for(i in 1:length(simlist))
 {
@@ -281,39 +338,41 @@ for(i in 1:length(simlist))
   }
 }
 ```
+
 Identify the appropriate matrix (for example, exhaled breath) for each observation:
 ```{r match_matrix}
-for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
-  {
-    simobscomb <- simobslist[[i]]
-  # Match the matrix for each observation:    
-    for (j in 1:nrow(simobscomb))
-      if(!is.na(simobscomb$matrix[j]))
-      {
-        if (simobscomb$matrix[j] == "VBL" | 
-            simobscomb$matrix[j] == "BL" | 
-            simobscomb$matrix[j] == "BL (+W)")
-        {
-          simobscomb$simconc[j] <- simobscomb$Cven[j]
-        } else if (simobscomb$matrix[j] == "ABL") {
-          simobscomb$simconc[j] <- simobscomb$Cart[j]
-        } else if (simobscomb$matrix[j] == "EB" | 
-                   simobscomb$matrix[j] == "EEB" | 
-                   simobscomb$matrix[j] == "EB (+W)") {
-          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] # * PPMVCONVERT
-        } else if (simobscomb$matrix[j] == "MEB") {
-          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] # * PPMVCONVERT
-        } else if (simobscomb$matrix[j] == "PL") {
-          simobscomb$simconc[j] <- simobscomb$Cplasma[j]
-        } else {
-          simobscomb$simconc[j] <- NA
-        }
-      }
-    simobslist[[i]] <- simobscomb
-  }
+#for(i in 1:length(simobslist))
+#  if (nrow(simobslist[[i]])>0)
+#  {
+#    simobscomb <- simobslist[[i]]
+#  # Match the matrix for each observation:    
+#    for (j in 1:nrow(simobscomb))
+#      if(!is.na(simobscomb$matrix[j]))
+#      {
+#        if (simobscomb$matrix[j] == "VBL" | 
+#            simobscomb$matrix[j] == "BL" | 
+#            simobscomb$matrix[j] == "BL (+W)")
+#        {
+#          simobscomb$simconc[j] <- simobscomb$Cven[j]
+#        } else if (simobscomb$matrix[j] == "ABL") {
+#          simobscomb$simconc[j] <- simobscomb$Cart[j]
+#        } else if (simobscomb$matrix[j] == "EB" | 
+#                   simobscomb$matrix[j] == "EEB" | 
+#                   simobscomb$matrix[j] == "EB (+W)") {
+#          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] 
+#        } else if (simobscomb$matrix[j] == "MEB") {
+#          simobscomb$simconc[j] <- simobscomb$Cendexhppmv[j] 
+#        } else if (simobscomb$matrix[j] == "PL") {
+#          simobscomb$simconc[j] <- simobscomb$Cplasma[j]
+#        } else {
+#          simobscomb$simconc[j] <- NA
+#        }
+#      }
+#    simobslist[[i]] <- simobscomb
+#  }
 ```
-Identify which quartile each observation occured in with respect to the latest (maximum)
+
+Identify which quartile each observation occurred in with respect to the latest (maximum)
 observed time
 ```{r time_quartile, eval=F}
 for(i in 1:length(simobslist))
@@ -336,6 +395,7 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 ```
+
 Calculate the area under the curve (AUC)
 ```{r calc_AUC}
 for(i in 1:length(simobslist))
@@ -381,6 +441,7 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 ```
+
 Calculate performance statistics
 ```{r calc_error}
 for(i in 1:length(simobslist))
@@ -402,39 +463,40 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 ```
-Make a plot for each scenario
-```{r make_plots}
-for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
-  {
-    simobscomb <- simobslist[[i]]
-    obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
-      geom_point() + 
-      geom_abline() + 
-      xlab("Simulated Concentrations (uM)") + 
-      ylab("Observed Concentrations (uM)") + 
-      ggtitle(paste0(
-        unique_scenarios$PREFERRED_NAME[i],
-        " (", 
-        unique_scenarios$CONC_SPECIES[i],
-        ", ",
-        round(as.numeric(unique_scenarios$DOSE[i]), digits = 2),
-        unique_scenarios$DOSE_U[i], 
-        " for ",
-        round(unique_scenarios$EXP_LENGTH[i]*24, digits = 2),
-        "h in ", 
-        unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
-      theme_bw() + 
-      theme(plot.title = element_text(face = 'bold', size = 20),
-        axis.title.x = element_text(face = 'bold', size = 20), 
-        axis.text.x = element_text(size=16), 
-        axis.title.y = element_text(face = 'bold', size = 20), 
-        axis.text.y = element_text(size = 16),
-        legend.title = element_text(face = 'bold', size = 16),
-        legend.text = element_text(face = 'bold',size = 14))
-    obvpredlist[[i]] <- obvpredplot
-  }
 
+Combine individual studies into single table
+```{r combine_studies}
+#for(i in 1:length(simobslist))
+#  if (nrow(simobslist[[i]])>0)
+#  {
+#    simobscomb <- simobslist[[i]]
+#    obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+#      geom_point() + 
+#      geom_abline() + 
+#      xlab("Simulated Concentrations (uM)") + 
+#      ylab("Observed Concentrations (uM)") + 
+#      ggtitle(paste0(
+#        unique_scenarios$PREFERRED_NAME[i],
+#        " (", 
+#        unique_scenarios$CONC_SPECIES[i],
+#        ", ",
+#        round(as.numeric(unique_scenarios$DOSE[i]), digits = 2),
+#        unique_scenarios$DOSE_U[i], 
+#        " for ",
+#        round(unique_scenarios$EXP_LENGTH[i]*24, digits = 2),
+#        "h in ", 
+#        unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
+#      theme_bw() + 
+#      theme(plot.title = element_text(face = 'bold', size = 20),
+#        axis.title.x = element_text(face = 'bold', size = 20), 
+#        axis.text.x = element_text(size=16), 
+#        axis.title.y = element_text(face = 'bold', size = 20), 
+#        axis.text.y = element_text(size = 16),
+#        legend.title = element_text(face = 'bold', size = 16),
+#        legend.text = element_text(face = 'bold',size = 14))
+#    obvpredlist[[i]] <- obvpredplot
+#  }
+#
 simobsfull <- do.call("rbind",simobslist)
 simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
 simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
@@ -442,7 +504,7 @@ unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
 ### Creation of simulated concentration/time plots
-```{r simCvtplots}
+```{r annotate_study_stats}
 for (i in 1:length(plist))
 {
   plist[[i]] <- plist[[i]] + 
@@ -467,6 +529,15 @@ for (i in 1:length(plist))
 #      legend.text = element_text(face = 'bold',size = 14))
 }
 ```
+
+
+The observations in simobsfullare in both uM and ppmv -- standardize to uM
+```{r Standardize Units}
+convert_units(input.units="ppmv", output.units="uM")
+
+
+```
+
 
 ### Regressions
 Other analytics including linear regression on overall concentration vs. time observed vs. predicted
