@@ -137,7 +137,7 @@ compound data.table/data.frame or list.')
   # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 °C. 
   # MW has units of g/mol
   # So MW/24.45 has units of g/L
-  # densirt of water is 1 g/mL = 1000 g/L = 10^6 mg/L
+  # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
   conc_units_conversion_frame["mg/l","um"] <- MW/10^3 
   conc_units_conversion_frame["mg/l","ppmv"] <- MW/(24.45*10^3)
@@ -153,8 +153,8 @@ compound data.table/data.frame or list.')
   conc_units_conversion_frame["ug/dl","mg/l"] <- 10/10^3
   conc_units_conversion_frame["ug/dl","um"] <- 10/10^3*MW/10^3
   conc_units_conversion_frame["ug/g","ppmw"] <- 1
-  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45) # ug/g -> uL/L for air not water
-  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45) # ug/g -> uL/L for air not water
+  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
+  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
    
   # Get a master list of all units:
   conc_units <- sort(unique(c(rownames(conc_units_conversion_frame),
