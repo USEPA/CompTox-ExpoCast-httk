@@ -609,24 +609,30 @@ for (i in 1:length(plist))
 ```
 
 
-The observations in simobsfullare in both uM and ppmv -- standardize to uM
+The observations in simobsfull are in both uM and ppmv -- standardize to uM
 ```{r Standardize Units}
-these.chems <- unique(subset(conc_data,ORIG_CONC_U=="ppmv")$DTXSID)
+these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
 for (this.chem in these.chems)
 {
   # Use HTTK unit conversion:
   this.factor <- convert_units(
-    input.units="ppmv", output.units="um", dtxsid=this.chem)
+    input.units="ppmv", output.units="um", chem.name=this.chem)
       
   # Scale the observation    
-  conc_data[conc_data$DTXSID==this.chem & 
-              conc_data$ORIG_CONC_U=="ppmv","CONCENTRATION"] <-
-    this.factor * conc_data[
-      conc_data$DTXSID==this.chem & 
-        conc_data$ORIG_CONC_U=="ppmv","CONCENTRATION"]
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","obsconc"] <-
+    this.factor * simobsfull[
+      simobsfull$chem==this.chem & 
+        simobsfull$unit=="ppmv","obsconc"]
+  # Scale the prediction    
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","simconc"] <-
+    this.factor * simobsfull[
+      simobsfull$chem==this.chem & 
+        simobsfull$unit=="ppmv","simconc"]
   # Change the reported unit
-  conc_data[conc_data$DTXSID==this.chem & 
-              conc_data$ORIG_CONC_U=="ppmv","ORIG_CONC_U"] <-
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","unit"] <-
     "uM"
 }
 ```
