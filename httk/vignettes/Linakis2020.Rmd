@@ -55,42 +55,90 @@ conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_d
 conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
 # Not sure what to do with percent:
 conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
+conc_data$ACTUAL_ORIGINAL_CONC_U <- conc_data$ORIG_CONC_U
 PPMVCONVERT <- 1
 ```
 
-Normalize the units of the concentration data:
-```{r data}
-for (this.unit in unique(conc_data[,"ORIG_CONC_U"]))
-{
-  print(this.unit)
-  these.chems <- unique(subset(conc_data,ORIG_CONC_U==this.unit)$DTXSID)
-  for (this.chem in these.chems)
-  {
-    # convert liquid concentrations to uM
-    if (this.unit %in% c(
-      "ug/mL","mg/L","ug/L","nmol/L","ug/dL", "percent", "umol/L"))
-      target.unit <- "uM"
-    # convert gas concentrations to ppmv
-    else if (this.unit %in% c(
-      "ug/g")) target.units <- "ppmv"
+Sets the units based on the sampling matrix (gas/liquid):
+  BL : blood
+  EEB : end-exhaled breath
+  MEB : mixed exhaled breath
+  VBL : venous blood
+  ABL : arterial blood
+  EB : unspecified exhaled breath sample (assumed to be EEB)
+  PL: plasma
+  +W with work/exercise
     
-    # Use HTTK unit conversion:
-    this.factor <- convert_units(
-      input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+Normalize units for gaseous samples to ppmv:
+```{r convert_to_ppmweight}
+gas.media <- c("EB","MEB","EEB","EB (+W)")
+gas.units <- unique(subset(conc_data,
+  SAMPLING_MATRIX %in% gas.media)$ORIG_CONC_U)
+target.unit <- "ppmv"
+for (this.unit in gas.units)
+  if (this.unit != target.unit)
+  {
+    these.chems <- unique(subset(conc_data,
+      SAMPLING_MATRIX %in% gas.media &
+      ORIG_CONC_U==this.unit)$DTXSID)    
+    for (this.chem in these.chems)  
+    {
+      this.factor <- convert_units(
+        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
+      
+      # Scale the observation    
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% gas.media &
+                  conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"] <-
+        this.factor * conc_data[
+          conc_data$DTXSID==this.chem &
+            conc_data$SAMPLING_MATRIX %in% gas.media &
+            conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"]
+      # Change the reported unit
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% gas.media &
+                  conc_data$ORIG_CONC_U==this.unit,"ORIG_CONC_U"] <-
+        target.unit
 
-    # Scale the observation    
-    conc_data[conc_data$DTXSID==this.chem & 
-      conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"] <-
-      this.factor * conc_data[
-        conc_data$DTXSID==this.chem & 
-        conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"]
-    # Change the reported unit
-    conc_data[conc_data$DTXSID==this.chem & 
-      conc_data$ORIG_CONC_U==this.unit,"ORIG_CONC_U"] <-
-      target.unit
+    }
   }
-}
+```
 
+Normalize the units for tissue samples to uM:
+```{r normalize_other_units}
+tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
+tissue.units <- unique(subset(conc_data,
+  SAMPLING_MATRIX %in% tissue.media)$ORIG_CONC_U)
+target.unit <- "uM"
+for (this.unit in tissue.units)
+  if (this.unit != target.unit)
+  {
+    these.chems <- unique(subset(conc_data,
+      SAMPLING_MATRIX %in% tissue.media &
+      ORIG_CONC_U==this.unit)$DTXSID)    
+    for (this.chem in these.chems)  
+    {
+      this.factor <- convert_units(
+        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
+      
+      # Scale the observation    
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% tissue.media &
+                  conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"] <-
+        this.factor * conc_data[
+          conc_data$DTXSID==this.chem &
+            conc_data$SAMPLING_MATRIX %in% tissue.media &
+            conc_data$ORIG_CONC_U==this.unit,"CONCENTRATION"]
+      # Change the reported unit
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% tissue.media &
+                  conc_data$ORIG_CONC_U==this.unit,"ORIG_CONC_U"] <-
+        target.unit
+
+    }
+  }
 ```
 
 ## ANALYSIS
@@ -173,7 +221,7 @@ for(i in 1:nrow(unique_scenarios)){
       species=as.character(unique_scenarios$CONC_SPECIES[i])))
     solve$Rb2p <- this.Rb2p
     
-    # Sets the output units appropriate for the sampling matrix
+    # Sets the output appropriate for the sampling matrix
     # BL : blood
     # EEB : end-exhaled breath
     # MEB : mixed exhaled breath
@@ -533,7 +581,7 @@ simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
 unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
-### Creation of simulated concentration/time plots
+### Finish simulated concentration/time plots
 ```{r annotate_study_stats}
 for (i in 1:length(plist))
 {
@@ -563,9 +611,24 @@ for (i in 1:length(plist))
 
 The observations in simobsfullare in both uM and ppmv -- standardize to uM
 ```{r Standardize Units}
-convert_units(input.units="ppmv", output.units="uM")
-
-
+these.chems <- unique(subset(conc_data,ORIG_CONC_U=="ppmv")$DTXSID)
+for (this.chem in these.chems)
+{
+  # Use HTTK unit conversion:
+  this.factor <- convert_units(
+    input.units="ppmv", output.units="um", dtxsid=this.chem)
+      
+  # Scale the observation    
+  conc_data[conc_data$DTXSID==this.chem & 
+              conc_data$ORIG_CONC_U=="ppmv","CONCENTRATION"] <-
+    this.factor * conc_data[
+      conc_data$DTXSID==this.chem & 
+        conc_data$ORIG_CONC_U=="ppmv","CONCENTRATION"]
+  # Change the reported unit
+  conc_data[conc_data$DTXSID==this.chem & 
+              conc_data$ORIG_CONC_U=="ppmv","ORIG_CONC_U"] <-
+    "uM"
+}
 ```
 
 
@@ -759,24 +822,6 @@ table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 ```
 ## TABLE AND PLOT GENERATION
 
-### Concentration vs. time
-```{r cvtplots, eval = F}
-# Create pdfs of simulated concentration-time plots against observed c-t values
-pdf("simdataplots.pdf")
-for (i in 1:length(plist)) {
-  print(plist[[i]])
-}
-dev.off()
-```
-```{r obsvspredplots, eval = F}
-# Create pdfs of observed vs. predicted concentration plots
-pdf("obvpredplots.pdf", width = 10, height = 10)
-for (i in 1:length(obvpredlist)) {
-  print(obvpredlist[[i]])
-}
-dev.off()
-```
-
 ### Figure 2: overall observed vs. predicted plot
 ```{r obspredFig2}
 fig2 <- ggplot(
@@ -841,6 +886,24 @@ fig2 #Display plot in R
 #pdf("Figure2.pdf", width = 10, height = 10)
 #print(fig2)
 #dev.off()
+```
+
+### Concentration vs. time
+```{r cvtplots, eval = F}
+# Create pdfs of simulated concentration-time plots against observed c-t values
+pdf("simdataplots.pdf")
+for (i in 1:length(plist)) {
+  print(plist[[i]])
+}
+dev.off()
+```
+```{r obsvspredplots, eval = F}
+# Create pdfs of observed vs. predicted concentration plots
+pdf("obvpredplots.pdf", width = 10, height = 10)
+for (i in 1:length(obvpredlist)) {
+  print(obvpredlist[[i]])
+}
+dev.off()
 ```
 
 ### Create and read out plots of overall cvt, cmax, and auc observed vs. pred
