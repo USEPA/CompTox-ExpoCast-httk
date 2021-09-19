@@ -56,7 +56,6 @@ conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "pp
 # Not sure what to do with percent:
 conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
 conc_data$ACTUAL_ORIGINAL_CONC_U <- conc_data$ORIG_CONC_U
-PPMVCONVERT <- 1
 ```
 
 Sets the units based on the sampling matrix (gas/liquid):
