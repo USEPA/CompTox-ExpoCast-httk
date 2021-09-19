@@ -150,8 +150,8 @@ compound data.table/data.frame or list.')
   conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
   conc_units_conversion_frame["nm","um"] <- 1/10^3
   conc_units_conversion_frame["nmol/l","nm"] <- 1
-  conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10
-  conc_units_conversion_frame["ug/dl","um"] <- 1/10*MW/10^3
+  conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10^2
+  conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*MW/10^3
   conc_units_conversion_frame["ug/g","ppmw"] <- 1
   conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
   conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
