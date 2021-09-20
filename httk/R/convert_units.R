@@ -135,27 +135,32 @@ compound data.table/data.frame or list.')
   # conditions, according to the Environmental Science and Technology Briefs for 
   # Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
   # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 °C. 
-  # MW has units of g/mol
+  # MW has units of g/mol or ug/umol
   # So MW/24.45 has units of g/L
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
-  conc_units_conversion_frame["mg/l","um"] <- MW/10^3 
-  conc_units_conversion_frame["mg/l","ppmv"] <- MW/10^3*24.45
-  conc_units_conversion_frame["ug/ml","ppmv"] <- MW/10^3*24.45
+  conc_units_conversion_frame["mg/l","um"] <- 10^3/MW 
+  conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*24.45  # CALCULATE USING ARGUMENT T AND SET AS VARIABLE
+  conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*24.45
+  conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*24.45
   conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
-  conc_units_conversion_frame["ug/ml","um"] <- MW/10^3 
+  conc_units_conversion_frame["ug/ml","um"] <- 10^3/MW
   conc_units_conversion_frame["ug/l","mg/l"] <- 1/10^3
-  conc_units_conversion_frame["ug/l","um"] <- MW/10^6 
+  conc_units_conversion_frame["ug/l","um"] <- 1/MW 
   conc_units_conversion_frame["umol/l","um"] <- 1
+  conc_units_conversion_frame["umol/l","ppmv"] <- 24.45
   conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
+  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*24.45
   conc_units_conversion_frame["nm","um"] <- 1/10^3
   conc_units_conversion_frame["nmol/l","nm"] <- 1
   conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10^2
-  conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*MW/10^3
-  conc_units_conversion_frame["ug/g","ppmw"] <- 1
-  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
-  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water
+  conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*10^3/MW
+  conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*24.45
+  conc_units_conversion_frame["ug/g","um"] <- 10^3/MW 
+    conc_units_conversion_frame["ug/g","ppmw"] <- 1
+  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK  #NEED ARGUMENT FOR GAS/LIQUID
+  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK   #NEED ARGUMENT FOR GAS/LIQUID
    
   # Get a master list of all units:
   conc_units <- sort(unique(c(rownames(conc_units_conversion_frame),
