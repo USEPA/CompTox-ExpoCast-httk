@@ -126,22 +126,68 @@ compound data.table/data.frame or list.')
                                                umol = c(10^3/MW, 1))
   row.names(amounts_units_conversion_frame) <- c('mg','umol')
   
-  
   #initialize a data.frame that determines conversion factors between key
   #units corresponding to intrinsic quantities, set official names manually
-  conc_units_conversion_frame <- 
-              data.frame(mg_per_L = c(1, MW/10^3, MW/(24.45*10^3)),
-                         #^^ temporarily different column name as variable
-                         #name of 'mg/L' not supported for assignment
-                         um = c(10^3/MW, 1, 1/24.45),
-                         ppmv = c((24.45*10^3)/MW, 24.45, 1))
-  #Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
-  #conditions, according to the Environmental Science and Technology Briefs for 
-  #Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
   
-  colnames(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
-  row.names(conc_units_conversion_frame) <- c('mg/l', 'um', 'ppmv')
+  conc_units_conversion_frame <- data.frame()
+  # First entry (row) is input unit, second entry (column) is output unit:
+  # Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
+  # conditions, according to the Environmental Science and Technology Briefs for 
+  # Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
+  # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 °C. 
+  # MW has units of g/mol or ug/umol
+  # So MW/24.45 has units of g/L
+  # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
+  # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
+  conc_units_conversion_frame["mg/l","um"] <- 10^3/MW 
+  conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*24.45  # CALCULATE USING ARGUMENT T AND SET AS VARIABLE
+  conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*24.45
+  conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*24.45
+  conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
+  conc_units_conversion_frame["ug/ml","mg/l"] <- 1
+  conc_units_conversion_frame["ug/ml","um"] <- 10^3/MW
+  conc_units_conversion_frame["ug/l","mg/l"] <- 1/10^3
+  conc_units_conversion_frame["ug/l","um"] <- 1/MW 
+  conc_units_conversion_frame["umol/l","um"] <- 1
+  conc_units_conversion_frame["umol/l","ppmv"] <- 24.45
+  conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
+  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*24.45
+  conc_units_conversion_frame["nm","um"] <- 1/10^3
+  conc_units_conversion_frame["nmol/l","nm"] <- 1
+  conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10^2
+  conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*10^3/MW
+  conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*24.45
+  conc_units_conversion_frame["ug/g","um"] <- 10^3/MW 
+    conc_units_conversion_frame["ug/g","ppmw"] <- 1
+  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK  #NEED ARGUMENT FOR GAS/LIQUID
+  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK   #NEED ARGUMENT FOR GAS/LIQUID
+   
+  # Get a master list of all units:
+  conc_units <- sort(unique(c(rownames(conc_units_conversion_frame),
+    colnames(conc_units_conversion_frame))))
   
+  # Define undefined relationships as NA and make
+  # symmetric entries inverses:
+  for (i in conc_units)
+    for (j in conc_units)
+    {      
+      # Identity:
+      if (i==j) 
+      {
+        conc_units_conversion_frame[i,j] <- 1
+      } else if (!is.null(conc_units_conversion_frame[i,j]))
+      { 
+        if (!is.na(conc_units_conversion_frame[i,j]))
+        {
+          conc_units_conversion_frame[j,i] <- 1/conc_units_conversion_frame[i,j]
+        } else conc_units_conversion_frame[i,j] <- NA
+      } else conc_units_conversion_frame[i,j] <- NA
+    }
+         
+  # Make sure there is a row and column for each unit and that they are in the same order:
+  conc_units_conversion_frame <- conc_units_conversion_frame[conc_units,   
+    conc_units]
+
   #initialize a data.frame that determines conversion factors between key
   #amount units and concentration units, set official names manually
   #Check if volume is provided to complete the conversion table.
@@ -157,7 +203,8 @@ compound data.table/data.frame or list.')
   
   #initialize master list of names of chemical amounts/concentration-based
   #units supported in httk, excluding those scaled to body weight 
-  httk_dose_units_list <- c('mg','umol','mg/l','um','ppmv')
+  httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_frame,
+    amount_units_conversion_frame))))
   
   #Now check to see if our compiled information can appropriately support
   #the requested units conversion, and if so, provide the conversion factor.
@@ -196,12 +243,12 @@ compound data.table/data.frame or list.')
     conversion_factor <- 
       conc2amount_units_conversion_frame[input.units,output.units]
   }else{
-    stop('Conversion from ', input.units, ' to ', output.units, 'is not
+    stop(paste('Conversion from', input.units, 'to', output.units, 'is not
   supported. Supported extrinsic amount units include mg and
   umol, and supported intrinsic concentration units include
   mg/L, uM, and in the case of gas models where the gas is
   assumed ideal, ppmv. If converting between amount and
-  concentration, user must specify volume (vol).')
+  concentration, user must specify volume (vol).'))
   }
   
 return(conversion_factor)
