@@ -191,6 +191,8 @@ solve_model <- function(chem.name = NULL,
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system  
     compartment_units <- model.list[[model]]$compartment.units
+    if (is.null(compartment_units)) stop(
+"Units must be set for each compartment in the modelinfo__[MODEL].R file")
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
@@ -214,6 +216,8 @@ solve_model <- function(chem.name = NULL,
 # Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
+# Input variables (used with focrings:
+    input.vars <- model.list[[model]]$input.var.names
 # If using forcing function for dosing, specify name of this function as 
 # it appears in model's associated .c file for passing to integrator
     initforc <- model.list[[model]]$forcings.materials[["initforc"]]
@@ -274,7 +278,8 @@ solve_model <- function(chem.name = NULL,
   #The compartment_units entries should correspond to the names of some entry in
   #the derivative_output_names and/or state.vars
   if (any(!names(compartment_units) %in% c(derivative_output_names,
-                                           state.vars))) {
+                                           state.vars,
+                                           input.vars))) {
     stop("The names of the compartments in compartment_units must comprise
           some subset of the named entries in derivative_output_names and 
           state.vars for model ", model)
@@ -784,7 +789,8 @@ solve_model <- function(chem.name = NULL,
     monitor.vars <- default.monitor.vars
   }
 # However, we always include whatever compartment received the dose: 
-  monitor.vars <- unique(c(dose.var,monitor.vars))
+  if (dose.var %in% colnames(out)) monitor.vars <- 
+    unique(c(dose.var,monitor.vars))
   
   if (any(!(monitor.vars%in%colnames(out))))
     stop("Some of the requested variables to monitor (monitor.vars) are not in
