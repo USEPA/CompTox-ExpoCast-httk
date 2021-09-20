@@ -141,6 +141,7 @@ compound data.table/data.frame or list.')
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
   conc_units_conversion_frame["mg/l","um"] <- MW/10^3 
   conc_units_conversion_frame["mg/l","ppmv"] <- MW/10^3*24.45
+  conc_units_conversion_frame["ug/ml","ppmv"] <- MW/10^3*24.45
   conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
   conc_units_conversion_frame["ug/ml","um"] <- MW/10^3 
