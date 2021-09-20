@@ -140,8 +140,8 @@ compound data.table/data.frame or list.')
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
   conc_units_conversion_frame["mg/l","um"] <- MW/10^3 
-  conc_units_conversion_frame["mg/l","ppmv"] <- MW/(24.45*10^3)
-  conc_units_conversion_frame["um","ppmv"] <- 1/24.45
+  conc_units_conversion_frame["mg/l","ppmv"] <- MW/10^3*24.45
+  conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
   conc_units_conversion_frame["ug/ml","um"] <- MW/10^3 
   conc_units_conversion_frame["ug/l","mg/l"] <- 1/10^3
