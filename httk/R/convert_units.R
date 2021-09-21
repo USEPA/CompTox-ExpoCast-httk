@@ -18,6 +18,14 @@
 #' toxicological models, currently including umol, uM, mg, mg/L, mg/m^3, and
 #' in the context of gases assumed to be ideal, ppmv. 
 #' 
+#' \emph{Andersen and Clewell's Rules of PBPK Modeling:
+#' \itemize{
+#'  \item{1}{Check Your Units}
+#'  \item{2}{\strong{Check Your Units}}
+#'  \item{3}{Check Mass Balance}
+#' }
+#' }
+#'
 #' @param input.units Assigned input units of interest
 #' @param output.units Desired output units
 #' @param MW Molecular weight of substance of interest in g/mole 
@@ -32,10 +40,27 @@
 #' either CAS, name, or DTXSIDs
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions
+#' @param temp Temperature for conversions (default = 25 degreees C)
+#' @param state Chemical state (gas or default liquid)
 #' 
 #' @author Mark Sfeir, John Wambaugh, and Sarah E. Davidson
 #' @examples
 #' 
+#' # MW BPA is 228.29 g/mol
+#' # 1 mg/L -> 1/228.29*1000 = 4.38 uM
+#' convert_units("mg/L","uM",chem.cas="80-05-7")
+#' # MW Diclofenac is 296.148 g/mol
+#' # 1 uM -> 296.148/1000 =  0.296
+#' convert_units("uM","mg/L",chem.name="diclofenac")
+#'
+#' convert_units("uM","ppmv",chem.name="styrene")
+#'
+#' # Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
+#' # 1 ug/L Toluene -> 0.263 ppmv
+#' convert_units("ug/L","ppmv",chem.name="toluene")
+#' # 1 pppmv Toluene, 0.0038 mg/L
+#' convert_units("ppmv","mg/L",chem.name="toluene")
+#'
 #' MW_pyrene <- get_physchem_param(param <- 'MW', chem.name <- 'pyrene')
 #' conversion_factor <- convert_units(input.units <- 'mg/L', output.units <- 'uM',
 #' MW <- MW_pyrene)
@@ -48,8 +73,13 @@ convert_units <- function(input.units = NULL,
                           chem.cas = NULL,
                           chem.name = NULL,
                           dtxsid = NULL,
-                          parameters = NULL)
+                          parameters = NULL,
+                          temp = 25, 
+                          state="liquid")
 {
+# The volume of an ideal gas at this temperatre (L/mol)
+  volidealgas <- (273.15 + temp)*0.08205
+
   #Take the lower case form of the units requested
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
@@ -140,9 +170,9 @@ compound data.table/data.frame or list.')
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
   conc_units_conversion_frame["mg/l","um"] <- 10^3/MW 
-  conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*24.45  # CALCULATE USING ARGUMENT T AND SET AS VARIABLE
-  conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*24.45
-  conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*24.45
+  conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*volidealgas  
+  conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*volidealgas
+  conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*volidealgas
   conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
   conc_units_conversion_frame["ug/ml","um"] <- 10^3/MW
@@ -151,17 +181,22 @@ compound data.table/data.frame or list.')
   conc_units_conversion_frame["umol/l","um"] <- 1
   conc_units_conversion_frame["umol/l","ppmv"] <- 24.45
   conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
-  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*24.45
+  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*volidealgas
   conc_units_conversion_frame["nm","um"] <- 1/10^3
   conc_units_conversion_frame["nmol/l","nm"] <- 1
   conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10^2
   conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*10^3/MW
-  conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*24.45
+  conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*volidealgas
   conc_units_conversion_frame["ug/g","um"] <- 10^3/MW 
-    conc_units_conversion_frame["ug/g","ppmw"] <- 1
-  conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK  #NEED ARGUMENT FOR GAS/LIQUID
-  conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/24.45*10^6) # ug/g -> uL/L for air not water    CHECK   #NEED ARGUMENT FOR GAS/LIQUID
-   
+  conc_units_conversion_frame["ug/g","ppmw"] <- 1
+  # Weight conversiond depends on state of matter:
+  if (state == "gas")
+  {
+  # ug/g -> uL/L for air not water    CHECK    
+    conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
+    conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
+  } 
+  
   # Get a master list of all units:
   conc_units <- sort(unique(c(rownames(conc_units_conversion_frame),
     colnames(conc_units_conversion_frame))))
@@ -251,6 +286,6 @@ compound data.table/data.frame or list.')
   concentration, user must specify volume (vol).'))
   }
   
-return(conversion_factor)
+  return(set_httk_precision(conversion_factor))
 }
 
