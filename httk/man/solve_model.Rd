@@ -16,11 +16,13 @@ solve_model(
   days = 10,
   tsteps = 4,
   initial.values = NULL,
+  initial.value.units = NULL,
   plots = FALSE,
   monitor.vars = NULL,
   suppress.messages = FALSE,
   species = "Human",
   input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -88,6 +90,9 @@ parameterized for some subset of the following species: "Rat", "Rabbit",
 \item{input.units}{Input units of interest assigned to dosing. Defaults
 to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 1 mg/kg in which no other dosing parameters are specified.}
+
+\item{output.units}{Output units of interest for the compiled components.
+Defaults to NULL, and will provide values in model units if unspecified.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -173,6 +178,7 @@ Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
-John Wambaugh, Robert Pearce, Miyuki Breen, and Mark Sfeir
+John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and
+Sarah E. Davidson
 }
 \keyword{Solve}
