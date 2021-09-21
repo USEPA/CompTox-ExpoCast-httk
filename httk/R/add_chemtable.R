@@ -17,7 +17,7 @@ CAS.checksum <- function(CAS.string)
 }
 
 
-#' Add a paramter value to the chem.physical_and_invitro.data table
+#' Add a parameter value to the chem.physical_and_invitro.data table
 #' 
 #' This internal function is used by \code{\link{add_chemtable}} to add a single 
 #' new parameter to the table of chemical parameters. It should not be typically
