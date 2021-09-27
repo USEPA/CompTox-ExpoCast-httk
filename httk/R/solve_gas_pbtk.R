@@ -90,7 +90,7 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param input.units Input units of interest assigned to dosing, including 
-#' forcings. Defaults to "uM" as applied to the default forcings scheme.
+#' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
