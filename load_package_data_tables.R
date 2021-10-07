@@ -1405,6 +1405,46 @@ dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup",
 # END dawson2021 Creation
 #
 
+#
+# Create pradeep2020 Data
+#
+## Load in Data ##
+# load clint data
+pradeep.clint <- readxl::read_xlsx(
+  path = here::here("Git","httk-datatables","pradeep-Tox21_httk_predictions.xlsx"),
+  sheet = 3
+)
+# rename column name for chemical identifier - DTXSID
+pradeep.clint <- dplyr::rename(
+  pradeep.clint,    # data
+  "DTXSID" = "...1" # new_name = old_name
+)
+# load fup data
+pradeep.fup <- readxl::read_xlsx(
+  path = here::here("Git","httk-datatables","pradeep-Tox21_httk_predictions.xlsx"),
+  sheet = 2
+)
+# rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
+pradeep.fup <- dplyr::rename(
+  pradeep.fup,             # data
+  "DTXSID" = "dsstox_sid", # new_name = old_name
+  "Fub_Consensus_SVM.RF"="Consensus (SVM,RF)" # new_name = old_name
+)
+# join prediction tables by chemical identifier
+pradeep_full <- dplyr::full_join(
+  pradeep.clint, # clint data
+  pradeep.fup,   # fup data
+  by = 'DTXSID'  # chemical ID
+)
+
+pradeep2020 <- dplyr::select(
+  pradeep_full, # data
+  c('DTXSID','pred_clint_rf','Fub_Consensus_SVM.RF') # vars to keep
+)
+#
+# END pradeep2020 Creation
+#
+
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
 
