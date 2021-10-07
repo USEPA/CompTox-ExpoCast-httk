@@ -1411,7 +1411,7 @@ dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup",
 ## Load in Data ##
 # load clint data
 pradeep.clint <- readxl::read_xlsx(
-  path = here::here("Git","httk-datatables","pradeep-Tox21_httk_predictions.xlsx"),
+  path = "pradeep-Tox21_httk_predictions.xlsx",
   sheet = 3
 )
 # rename column name for chemical identifier - DTXSID
@@ -1421,7 +1421,7 @@ pradeep.clint <- dplyr::rename(
 )
 # load fup data
 pradeep.fup <- readxl::read_xlsx(
-  path = here::here("Git","httk-datatables","pradeep-Tox21_httk_predictions.xlsx"),
+  path = "pradeep-Tox21_httk_predictions.xlsx",
   sheet = 2
 )
 # rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
