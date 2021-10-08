@@ -9,7 +9,8 @@ scale_dosing(
   parameters,
   route,
   input.units = NULL,
-  output.units = "uM"
+  output.units = "uM",
+  vol = NULL
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ overrides chem.name and chem.cas.}
 
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
+
+\item{vol}{Volume for the target tissue of interest.
+NOTE: Volume should not be in units of per BW, i.e. "kg".}
 }
 \value{
 A list of numeric values for doses converted to output.units, potentially
@@ -46,6 +50,6 @@ and scaling is currently avoided in the inhalation exposure case with a
 scale factor of 1
 }
 \author{
-John Wambaugh
+John Wambaugh and Sarah E. Davidson
 }
 \keyword{Dynamic}

@@ -25,7 +25,7 @@ solve_gas_pbtk(
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
-  input.units = "uM",
+  input.units = "ppmv",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -106,7 +106,7 @@ those specified for the model outputs. Default values are zero.}
 default "Human").}
 
 \item{input.units}{Input units of interest assigned to dosing, including 
-forcings. Defaults to "uM" as applied to the default forcings scheme.}
+forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
 
 \item{method}{Method used by integrator (deSolve).}
 
