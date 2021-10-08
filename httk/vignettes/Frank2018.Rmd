@@ -1,5 +1,5 @@
 ---
-title: "Frank et al. (2018): Creating Figure Six (IVIVE)"
+title: "Frank et al. (2018): Creating IVIVE Figure (Fig. 6)"
 author: "John F. Wambaugh"
 date: "September 25, 2019"
 output: rmarkdown::html_vignette
@@ -45,8 +45,8 @@ suggests there is potential for using tipping points for chemical prioritization
 ### Load the relevant libraries
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
-library(gdata)
 library(httk)
+#library(gdata)
 library(ggplot2)
 library(scales)
 ```
@@ -108,6 +108,7 @@ for (this.row in 1:dim(chem.table)[1])
            days=this.days,
            iv.dose=iv.dose,
            default.to.human=TRUE))
+
 # Record the Cmax and the AUC:
   chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
   chem.table[this.row,"AUC"] <- max(out[,"AUC"])

@@ -117,7 +117,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
 
-#    required.params <- model.table[["Schmitt"]]$paramterize_params
+#    required.params <- model.table[["Schmitt"]]$parameterize_params
 #    if (!(all(required.parasms%in%names(parameters)))) 
 #      stop("Missing parameters",
 #        paste(required.params[!(required.params%in%names(parameters))],

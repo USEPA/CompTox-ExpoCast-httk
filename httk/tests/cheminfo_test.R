@@ -27,11 +27,12 @@ length(get_cheminfo(model="1compartment"))
 length(get_cheminfo(model="1compartment",species="rat"))
   
 # Check to see if the paramerer values have changed:
-subset(get_cheminfo(info="all"), CAS %in% c(
+print(subset(get_cheminfo(info="all"), CAS %in% c(
   "80-05-7",
   "335-67-1",
   "1912-24-9",
   "2921-88-2",	
-  "117-81-7"))  
+  "117-81-7")),
+  row.names=FALSE)
 
 quit("no")

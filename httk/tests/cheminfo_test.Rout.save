@@ -64,11 +64,33 @@ In get_cheminfo(info = "all") :
 [1] 195
 >   
 > # Check to see if the paramerer values have changed:
-> subset(get_cheminfo(info="all"), CAS %in% c(
+> print(subset(get_cheminfo(info="all"), CAS %in% c(
 +   "80-05-7",
 +   "335-67-1",
 +   "1912-24-9",
 +   "2921-88-2",	
+<<<<<<< HEAD
++   "117-81-7")),
++   row.names=FALSE)
+                      Compound       CAS        DTXSID  logP    MW pKa_Accept
+                      Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       1.22
+                   Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3       None
+ Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6       None
+        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1       None
+                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6      -2.86
+  pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
+       None                0             0.0537                 0.124
+ 9.78,10.39 19.9,10.2,29.8,0             0.0000  0.0385,0.0334,0.0456
+       None                0             0.1940                 0.005
+       -4.2                0             0.0636                 0.005
+       None              2.6                 NA              0.007932
+ Human.Rblood2plasma
+                  NA
+                0.79
+                  NA
+                0.64
+                0.73
+=======
 +   "117-81-7"))  
                          Compound       CAS        DTXSID  logP    MW
 16                       Atrazine 1912-24-9 DTXSID9020112 2.611 215.7
@@ -91,5 +113,6 @@ In get_cheminfo(info = "all") :
 Warning message:
 In get_cheminfo(info = "all") :
   Clint values with a pvalue > 0.05 were set to 0.
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > quit("no")

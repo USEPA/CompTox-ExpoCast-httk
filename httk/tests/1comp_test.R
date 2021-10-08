@@ -21,6 +21,8 @@ calc_vdist(parameters=params)
 params <- parameterize_pbtk(chem.name="triclosan")
 calc_vdist(parameters=params)
 
+parameterize_1comp(chem.name="Aminopterin")
+
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 
 {

@@ -145,12 +145,31 @@ Warning messages:
 > #
 > #
 > # Now test that MC works across different models:
+<<<<<<< HEAD
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+2.961 
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
+Human volume of distribution returned in units of L/kg BW.
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+2.959 
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+1.879 
+=======
 > #set.seed(1234)
 > #calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 > #set.seed(1234)
 > #calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 > #set.seed(1234)
 > #calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > #
 > #
@@ -173,6 +192,24 @@ Warning messages:
 > #    clint.pop.cv = 0.3))
 > #set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
+<<<<<<< HEAD
+> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+81.64 
+> set.seed(1234)
+> # HTTK Monte Carlo with no in vitro uncertainty and variability):
+> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+ 95% 
+23.8 
+> set.seed(1234)
+> # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
+> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+12.95 
+=======
 > #calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 > #set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
@@ -180,16 +217,29 @@ Warning messages:
 > #set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 > #calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > # Should be the same as the mean result:
 > #calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 > #set.seed(1234)
 > # HTTK Monte Carlo using basic Monte Carlo sampler:
+<<<<<<< HEAD
+> calc_mc_css(chem.cas="90-43-7",
++   model="pbtk",
++   samples=NSAMP,
++   httkpop=FALSE,
++   invitrouv=FALSE,
++   vary.params=list(Pow=0.3))
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+13.05 
+=======
 > #calc_mc_css(chem.cas="90-43-7",
 > #  model="pbtk",
 > #  samples=NSAMP,
 > #  httkpop=FALSE,
 > #  invitrouv=FALSE,
 > #  vary.params=list(Pow=0.3))
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > 
 > #set.seed(1234)    
