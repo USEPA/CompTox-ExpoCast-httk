@@ -53,80 +53,118 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Chemical parameters from parameterize_gas_pbtk (or other
 #' bespoke) function, overrides chem.name and chem.cas.
+#' 
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
+#' 
 #' @param days Length of the simulation.
+#' 
 #' @param tsteps The number of time steps per hour.
+#' 
 #' @param daily.dose Total daily dose
+#' 
 #' @param doses.per.day Number of doses per day.
+#' 
 #' @param dose Amount of a single dose
+#' 
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount of 
 #' each dose. 
+#' 
 #' @param forcings Manual input of 'forcings' data series argument for ode
 #' integrator. If left unspecified, 'forcings' defaults to NULL, and then other 
 #' input parameters (see exp.start.time, exp.conc, exp.duration, and period)
 #' provide the necessary information to assemble a forcings data series. 
+#' 
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
+#' 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
 #' units of uM
+#' 
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
+#' 
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
+#' 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' those specified for the model outputs. Default values are zero.
+#' 
 #' @param plots Plots all outputs if true.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param input.units Input units of interest assigned to dosing, including 
 #' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
+#' 
 #' @param method Method used by integrator (deSolve).
+#' 
 #' @param rtol Argument passed to integrator (deSolve).
+#' 
 #' @param atol Argument passed to integrator (deSolve).
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' 
 #' @param recalc.clearance Recalculates the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 #' "Crest", "Ckidney", "Cplasma", "Calv", "Cendexh", "Cmixexh", "Cmuc", 
 #' "Atubules", "Ametabolized", "AUC"
+#' 
 #' @param vmax Michaelis-Menten vmax value in reactions/min
+#' 
 #' @param km Michaelis-Menten concentration of half-maximal reaction velocity
 #' in desired output concentration units. 
+#' 
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
+#' 
 #' @param fR Respiratory frequency (breaths/minute), used especially to adjust
 #' breathing rate in the case of exercise. This parameter, along with VT and VD
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
+#' 
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
+#' 
 #' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -158,8 +196,11 @@
 #' }
 #' 
 #' @export solve_gas_pbtk
+#' 
 #' @useDynLib httk
+#' 
 #' @import deSolve
+#' 
 #' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
