@@ -1,7 +1,8 @@
 News for R package httk
 
-Changes in version 2.0.5 (Summer, 2021)
+Changes in version 2.0.5 (Fall, 2021)
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
+  QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Pradeep et al. (2020) (https://doi.org/10.1016/j.comtox.2020.100136) is now included as Pradeep2020 and can be added with the new function: load_pradeep2020().
   Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
   Added function calc_halflife (thank you Imran Shah for idea)
   Internal reusable function convert_units() added to ensure consistency in unit conversions acrpss functions
