@@ -57,7 +57,7 @@ and exposures.
 library(data.table)
 library(httk)
 library(ggplot2)
-library(gdata)
+#library(gdata)
 library(stringr)
 library(scales)
 library(grid)

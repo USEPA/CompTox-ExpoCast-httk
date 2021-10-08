@@ -41,8 +41,8 @@
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
-#' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW. 
+#' @param daily.dose Total daily dose, defaults to mg/kg BW.
+#' @param dose Amount of a single dose, defaults to mg/kg BW. 
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -52,12 +52,12 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' @param input.units Input units of interest assigned to dosing, defaults to
+#' mg/kg BW
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
+#' @param 3man Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -153,13 +153,14 @@ solve_pbtk <- function(chem.name = NULL,
                     days=10,
                     tsteps = 4, # tsteps is number of steps per hour
                     daily.dose = NULL,
-                    dose = NULL, # Assume dose is in mg/kg BW/day  
+                    dose = NULL,  
                     doses.per.day=NULL,
                     initial.values=NULL,
                     plots=FALSE,
                     suppress.messages=FALSE,
                     species="Human",
                     iv.dose=FALSE,
+                    input.units="mg/kg",
                     output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=FALSE,
@@ -194,7 +195,7 @@ solve_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    output.units=output.units,
+    input.units=input.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,

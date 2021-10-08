@@ -116,7 +116,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=FALSE)
+                         suppress.messages=suppress.messages)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
