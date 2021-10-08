@@ -261,7 +261,7 @@ model.list[["pbtk"]]$state.vars <- c(
     "AUC"
     ) 
 
-# Default set of units assigned to correspond to each of the time dependent
+# Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
