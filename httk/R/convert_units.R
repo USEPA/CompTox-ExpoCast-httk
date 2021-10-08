@@ -9,46 +9,59 @@
 #' If input or output units not contained in the table are queried,
 #' it gives a corresponding error message. It gives a warning message about the
 #' handling of 'ppmv,' as the function is only set up to convert between ppmv 
-#' and mass-based units (like mg/m^3 or umol/L) in the context of ideal gases.
+#' and mass-based units (like 
+#' mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L) 
+#' in the context of ideal gases.
 #' 
 #' convert_units is not directly configured to accept and convert units based
 #' on BW, like mg/kg. For this purpose, see \code{\link{scale_dosing}}.
 #' 
 #' The function supports a limited set of most relevant units across
-#' toxicological models, currently including umol, uM, mg, mg/L, mg/m^3, and
+#' toxicological models, currently including umol, uM, mg, mg/L, 
+#' mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L), and
 #' in the context of gases assumed to be ideal, ppmv. 
 #' 
-#' \emph{Andersen and Clewell's Rules of PBPK Modeling:
+#' \emph{Andersen and Clewell's Rules of PBPK Modeling:}
 #' \itemize{
 #'  \item{1}{Check Your Units}
 #'  \item{2}{\strong{Check Your Units}}
 #'  \item{3}{Check Mass Balance}
 #' }
-#' }
 #'
 #' @param input.units Assigned input units of interest
+#'
 #' @param output.units Desired output units
+#'
 #' @param MW Molecular weight of substance of interest in g/mole 
+#'
 #' @param vol Volume for the target tissue of interest in liters (L).
 #' NOTE: Volume should not be in units of per BW, i.e. "kg".
+#'
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#'
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#'
 #' @param dtxsid EPA's DSSTox Structure ID 
 #' (\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
 #' either CAS, name, or DTXSIDs
+#'
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions
+#'
 #' @param temp Temperature for conversions (default = 25 degreees C)
+#'
 #' @param state Chemical state (gas or default liquid)
 #' 
 #' @author Mark Sfeir, John Wambaugh, and Sarah E. Davidson
+#'
 #' @examples
 #' 
 #' # MW BPA is 228.29 g/mol
 #' # 1 mg/L -> 1/228.29*1000 = 4.38 uM
 #' convert_units("mg/L","uM",chem.cas="80-05-7")
+#'
 #' # MW Diclofenac is 296.148 g/mol
 #' # 1 uM -> 296.148/1000 =  0.296
 #' convert_units("uM","mg/L",chem.name="diclofenac")
@@ -61,9 +74,9 @@
 #' # 1 pppmv Toluene, 0.0038 mg/L
 #' convert_units("ppmv","mg/L",chem.name="toluene")
 #'
-#' MW_pyrene <- get_physchem_param(param <- 'MW', chem.name <- 'pyrene')
-#' conversion_factor <- convert_units(input.units <- 'mg/L', output.units <- 'uM',
-#' MW <- MW_pyrene)
+#' MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
+#' conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
+#'   MW=MW_pyrene)
 #' 
 #' @export convert_units
 convert_units <- function(input.units = NULL, 
