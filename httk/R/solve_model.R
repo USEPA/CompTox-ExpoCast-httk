@@ -1,6 +1,7 @@
 #' Solve_model
 #' 
-#' solve_model is designed to accept systematized metadata for a given 
+#' solve_model is designed to accept systematized metadata (provided by the
+#' model.list defined in the modelinfo files) for a given 
 #' toxicokinetic model, including names of variables, parameterization
 #' functions, and key units, and use it along with chemical information
 #' to prepare an ode system for numerical solution over time of the amounts
@@ -9,16 +10,16 @@
 #' 
 #' Dosing values with certain acceptable associated input.units (like mg/kg BW)
 #' are configured to undergo a unit conversion. All model simulations are 
-#' intended to run with chemical amounts in umol, and concentrations in uM. 
-#' Model outputs are configured to be presented in certain alternative units as 
-#' well. 
+#' intended to run with units as specifed by "compartment.units" in the 
+#' model.list (as defined by the modelinfo files).
 #' 
 #' The 'dosing' argument includes all parameters needed to describe exposure
 #' in terms of route of administration, frequency, and quantity short of 
 #' scenarios that require use of a more precise forcing function. If the dosing
 #' argument's namesake entries are left NULL, solve_model defaults to a
 #' single-time dose of 1 mg/kg BW according to the given dosing route and 
-#' associated type (either add/multiply, e.g. typically adds dose to gut lumen 
+#' associated type (either add/multiply, for example we typically add a dose to 
+#' gut lumen 
 #' when oral route is specified).
 #' 
 #' AUC is the area under the curve of the plasma concentration.
