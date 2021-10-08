@@ -246,7 +246,8 @@ invitro_mc <- function(parameters.dt=NULL,
   {
   # If so, assign values between zero and the lod:
     parameters.dt[, fup.mean := runif(n=1,0,fup.lod)]
-  # Otherwise, check to see if fup credible interval was provided:
+  # Otherwise, check to see if fup credible interval was determined 
+  # (if not, indicates measurment uncertainty was turned off):
   } else if (!is.null(Funbound.plasma.u95)) 
   {
     if (Funbound.plasma.l95 == 1)
@@ -257,27 +258,25 @@ invitro_mc <- function(parameters.dt=NULL,
     {
       # If the median is one we have a special case:
       Funbound.med.is.one <- Funbound.plasma == 1
-      # Use optim to estimate parameters for a beta distribution (alpha and beta)
-      # such that the median and 95% credible interval approximate the given values:
       if (Funbound.plasma < 0.99)
       {
-        ppb.fit <- suppressWarnings(optim(c(2,
-          (1-Funbound.plasma)/Funbound.plasma*2), 
-          function(x) (0.95-
-          pbeta(Funbound.plasma.u95,x[1],x[2])+
-          pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-          (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-          method="BFGS"))
+        # Decent guess at initial values:
+        initial.values <- c(2,
+          (1-Funbound.plasma)/Funbound.plasma*2)
       } else {
         # temporarily reduce median to just less than 1:
         if (Funbound.med.is.one) Funbound.plasma <- 1 - 10^-3 
-        ppb.fit <- suppressWarnings(optim(c(2,1), 
-          function(x) (0.95-
-          pbeta(Funbound.plasma.u95,x[1],x[2])+
-          pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-          (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-          method="BFGS"))
+        # more likely to convege if we start with a distribution skewed toward 1
+        initial.values <- c(2,1)
       }
+      # Use optim to estimate parameters for a beta distribution (alpha and beta)
+      # such that the median and 95% credible interval approximate the given values:
+      ppb.fit <- suppressWarnings(optim(initial.values, 
+        function(x) (0.95-
+        pbeta(Funbound.plasma.u95,x[1],x[2])+
+        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+        method="BFGS"))
       # We are drawing new values for the unadjusted Fup:
       parameters.dt[, unadjusted.Funbound.plasma:=rbeta(n=samples,
         ppb.fit$par[1],
