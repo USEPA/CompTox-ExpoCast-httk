@@ -2287,6 +2287,7 @@ Browse[1]>
 +      chem.invivo.PK.aggregate.data,
 +      chem.invivo.PK.summary.data,
 +      dawson2021,
++      pradeep2020,
 +      physiology.data,
 +      pearce2017regression,
 +      tissue.data,
@@ -2418,7 +2419,7 @@ Move the sysdata.rdaa to the httk/R directory.
 >      
 > ## Session Information ##
 > Sys.time() # capture date and time of generating data
-[1] "2021-10-07 15:31:33 EDT"
+[1] "2021-10-08 08:18:30 EDT"
 > sessionInfo() # capture package information for generating data
 R version 4.0.3 (2020-10-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -2451,4 +2452,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 498.03    7.51  746.73 
+ 433.75    7.39  648.70 
