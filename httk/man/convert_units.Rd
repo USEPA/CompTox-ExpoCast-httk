@@ -55,21 +55,23 @@ specified molecular weight value to retrieve that value for its own use.
 If input or output units not contained in the table are queried,
 it gives a corresponding error message. It gives a warning message about the
 handling of 'ppmv,' as the function is only set up to convert between ppmv 
-and mass-based units (like mg/m^3 or umol/L) in the context of ideal gases.
+and mass-based units (like 
+mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L) 
+in the context of ideal gases.
 
 convert_units is not directly configured to accept and convert units based
 on BW, like mg/kg. For this purpose, see \code{\link{scale_dosing}}.
 
 The function supports a limited set of most relevant units across
-toxicological models, currently including umol, uM, mg, mg/L, mg/m^3, and
+toxicological models, currently including umol, uM, mg, mg/L, 
+mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L), and
 in the context of gases assumed to be ideal, ppmv. 
 
-\emph{Andersen and Clewell's Rules of PBPK Modeling:
+\emph{Andersen and Clewell's Rules of PBPK Modeling:}
 \itemize{
  \item{1}{Check Your Units}
  \item{2}{\strong{Check Your Units}}
  \item{3}{Check Mass Balance}
-}
 }
 }
 \examples{
@@ -77,6 +79,7 @@ in the context of gases assumed to be ideal, ppmv.
 # MW BPA is 228.29 g/mol
 # 1 mg/L -> 1/228.29*1000 = 4.38 uM
 convert_units("mg/L","uM",chem.cas="80-05-7")
+
 # MW Diclofenac is 296.148 g/mol
 # 1 uM -> 296.148/1000 =  0.296
 convert_units("uM","mg/L",chem.name="diclofenac")
@@ -89,9 +92,9 @@ convert_units("ug/L","ppmv",chem.name="toluene")
 # 1 pppmv Toluene, 0.0038 mg/L
 convert_units("ppmv","mg/L",chem.name="toluene")
 
-MW_pyrene <- get_physchem_param(param <- 'MW', chem.name <- 'pyrene')
-conversion_factor <- convert_units(input.units <- 'mg/L', output.units <- 'uM',
-MW <- MW_pyrene)
+MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
+conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
+  MW=MW_pyrene)
 
 }
 \author{

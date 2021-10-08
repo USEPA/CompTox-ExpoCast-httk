@@ -10,14 +10,19 @@
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
+#' 
 #' @param exclude_oad Include the chemicals only within the applicability domain.
 #' If exlude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 #' have their predicted values loaded.
+#' 
 #' @param target.env The environment where the new
 #' chem.physical_and_invitro.data is loaded. Defaults to global environment.
+#' 
 #' @return \item{data.frame}{An updated version of
 #' chem.physical_and_invitro.data.}
+#' 
 #' @author Sarah E. Davidson
+#' 
 #' @references
 #' \insertRef{dawson2021qsar}{httk}
 #' 
@@ -27,6 +32,8 @@
 #' chem.physical_and_invitro.data <- load_dawson2021()
 #' chem.physical_and_invitro.data <- load_dawson2021(overwrite=TRUE) 
 #' }                        
+#' 
+#' @importFrom Rdpack reprompt
 #' 
 #' @export load_dawson2021
 load_dawson2021 <- function(overwrite=FALSE,exclude_oad=TRUE,target.env=.GlobalEnv)

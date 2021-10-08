@@ -1,0 +1,365 @@
+\indexentry{httk-package@\texttt  {httk-package}|hyperpage}{4}
+\indexentry{httk@\texttt  {httk} \textit  {(\texttt  {httk-package})}|hyperpage}{4}
+\indexentry{$*$ {\textbf  {package}}!httk-package@\texttt  {httk-package}|hyperpage}{4}
+\indexentry{add\_chemtable@\texttt  {add\_chemtable}|hyperpage}{5}
+\indexentry{age\_dist\_smooth@\texttt  {age\_dist\_smooth}|hyperpage}{6}
+\indexentry{$*$ {\textbf  {data}}!age\_dist\_smooth@\texttt  {age\_dist\_smooth}|hyperpage}{6}
+\indexentry{$*$ {\textbf  {httk-pop}}!age\_dist\_smooth@\texttt  {age\_dist\_smooth}|hyperpage}{6}
+\indexentry{age\_draw\_smooth@\texttt  {age\_draw\_smooth}|hyperpage}{7}
+\indexentry{$*$ {\textbf  {httk-pop}}!age\_draw\_smooth@\texttt  {age\_draw\_smooth}|hyperpage}{7}
+\indexentry{armitage\_estimate\_sarea@\texttt  {armitage\_estimate\_sarea}|hyperpage}{8}
+\indexentry{armitage\_eval@\texttt  {armitage\_eval}|hyperpage}{9}
+\indexentry{armitage\_input@\texttt  {armitage\_input}|hyperpage}{13}
+\indexentry{$*$ {\textbf  {data}}!armitage\_input@\texttt  {armitage\_input}|hyperpage}{13}
+\indexentry{augment.table@\texttt  {augment.table}|hyperpage}{14}
+\indexentry{add\_chemtable@\texttt  {add\_chemtable}|hyperindexformat{\textit}}{14}
+\indexentry{available\_rblood2plasma@\texttt  {available\_rblood2plasma}|hyperpage}{15}
+\indexentry{$*$ {\textbf  {Parameter}}!available\_rblood2plasma@\texttt  {available\_rblood2plasma}|hyperpage}{15}
+\indexentry{blood\_mass\_correct@\texttt  {blood\_mass\_correct}|hyperpage}{16}
+\indexentry{$*$ {\textbf  {httk-pop}}!blood\_mass\_correct@\texttt  {blood\_mass\_correct}|hyperpage}{16}
+\indexentry{blood\_weight@\texttt  {blood\_weight}|hyperindexformat{\textit}}{16}
+\indexentry{blood\_weight@\texttt  {blood\_weight}|hyperpage}{17}
+\indexentry{$*$ {\textbf  {httk-pop}}!blood\_weight@\texttt  {blood\_weight}|hyperpage}{17}
+\indexentry{bmiage@\texttt  {bmiage}|hyperpage}{18}
+\indexentry{$*$ {\textbf  {data}}!bmiage@\texttt  {bmiage}|hyperpage}{18}
+\indexentry{$*$ {\textbf  {httk-pop}}!bmiage@\texttt  {bmiage}|hyperpage}{18}
+\indexentry{body\_surface\_area@\texttt  {body\_surface\_area}|hyperpage}{19}
+\indexentry{$*$ {\textbf  {httk-pop}}!body\_surface\_area@\texttt  {body\_surface\_area}|hyperpage}{19}
+\indexentry{bone\_mass\_age@\texttt  {bone\_mass\_age}|hyperpage}{19}
+\indexentry{$*$ {\textbf  {httk-pop}}!bone\_mass\_age@\texttt  {bone\_mass\_age}|hyperpage}{19}
+\indexentry{brain\_mass@\texttt  {brain\_mass}|hyperpage}{20}
+\indexentry{$*$ {\textbf  {httk-pop}}!brain\_mass@\texttt  {brain\_mass}|hyperpage}{20}
+\indexentry{calc\_analytic\_css@\texttt  {calc\_analytic\_css}|hyperpage}{21}
+\indexentry{$*$ {\textbf  {Solve}}!calc\_analytic\_css@\texttt  {calc\_analytic\_css}|hyperpage}{21}
+\indexentry{calc\_analytic\_css\_1comp@\texttt  {calc\_analytic\_css\_1comp}|hyperpage}{23}
+\indexentry{$*$ {\textbf  {1compartment}}!calc\_analytic\_css\_1comp@\texttt  {calc\_analytic\_css\_1comp}|hyperpage}{23}
+\indexentry{calc\_analytic\_css\_3comp@\texttt  {calc\_analytic\_css\_3comp}|hyperpage}{25}
+\indexentry{$*$ {\textbf  {3compartment}}!calc\_analytic\_css\_3comp@\texttt  {calc\_analytic\_css\_3comp}|hyperpage}{25}
+\indexentry{calc\_analytic\_css\_3compss@\texttt  {calc\_analytic\_css\_3compss}|hyperpage}{26}
+\indexentry{$*$ {\textbf  {3compss}}!calc\_analytic\_css\_3compss@\texttt  {calc\_analytic\_css\_3compss}|hyperpage}{26}
+\indexentry{calc\_analytic\_css\_pbtk@\texttt  {calc\_analytic\_css\_pbtk}|hyperpage}{27}
+\indexentry{$*$ {\textbf  {pbtk}}!calc\_analytic\_css\_pbtk@\texttt  {calc\_analytic\_css\_pbtk}|hyperpage}{27}
+\indexentry{calc\_css@\texttt  {calc\_css}|hyperpage}{28}
+\indexentry{$*$ {\textbf  {Steady-State}}!calc\_css@\texttt  {calc\_css}|hyperpage}{28}
+\indexentry{solve\_pbtk@\texttt  {solve\_pbtk}|hyperindexformat{\textit}}{30}
+\indexentry{calc\_elimination\_rate@\texttt  {calc\_elimination\_rate}|hyperpage}{31}
+\indexentry{$*$ {\textbf  {1compartment}}!calc\_elimination\_rate@\texttt  {calc\_elimination\_rate}|hyperpage}{31}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_elimination\_rate@\texttt  {calc\_elimination\_rate}|hyperpage}{31}
+\indexentry{calc\_half\_life@\texttt  {calc\_half\_life}|hyperpage}{32}
+\indexentry{$*$ {\textbf  {1compartment}}!calc\_half\_life@\texttt  {calc\_half\_life}|hyperpage}{32}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_half\_life@\texttt  {calc\_half\_life}|hyperpage}{32}
+\indexentry{calc\_hepatic\_clearance@\texttt  {calc\_hepatic\_clearance}|hyperpage}{34}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_hepatic\_clearance@\texttt  {calc\_hepatic\_clearance}|hyperpage}{34}
+\indexentry{calc\_hep\_clearance@\texttt  {calc\_hep\_clearance}|hyperindexformat{\textit}}{34}
+\indexentry{calc\_hep\_bioavailability@\texttt  {calc\_hep\_bioavailability}|hyperpage}{35}
+\indexentry{$*$ {\textbf  {physiology}}!calc\_hep\_bioavailability@\texttt  {calc\_hep\_bioavailability}|hyperpage}{35}
+\indexentry{calc\_hep\_clearance@\texttt  {calc\_hep\_clearance}|hyperpage}{36}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_hep\_clearance@\texttt  {calc\_hep\_clearance}|hyperpage}{36}
+\indexentry{calc\_hep\_fu@\texttt  {calc\_hep\_fu}|hyperpage}{38}
+\indexentry{$*$ {\textbf  {in-vitro}}!calc\_hep\_fu@\texttt  {calc\_hep\_fu}|hyperpage}{38}
+\indexentry{calc\_ionization@\texttt  {calc\_ionization}|hyperpage}{39}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_ionization@\texttt  {calc\_ionization}|hyperpage}{39}
+\indexentry{calc\_krbc2pu@\texttt  {calc\_krbc2pu}|hyperpage}{41}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_krbc2pu@\texttt  {calc\_krbc2pu}|hyperpage}{41}
+\indexentry{calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperpage}{42}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperpage}{42}
+\indexentry{$*$ {\textbf  {Steady-State}}!calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperpage}{42}
+\indexentry{invitro\_mc@\texttt  {invitro\_mc}|hyperindexformat{\textit}}{44}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{44}
+\indexentry{calc\_analytic\_css@\texttt  {calc\_analytic\_css}|hyperindexformat{\textit}}{44}
+\indexentry{calc\_mc\_oral\_equiv@\texttt  {calc\_mc\_oral\_equiv}|hyperpage}{46}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!calc\_mc\_oral\_equiv@\texttt  {calc\_mc\_oral\_equiv}|hyperpage}{46}
+\indexentry{$*$ {\textbf  {Steady-State}}!calc\_mc\_oral\_equiv@\texttt  {calc\_mc\_oral\_equiv}|hyperpage}{46}
+\indexentry{calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperindexformat{\textit}}{46}
+\indexentry{calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperindexformat{\textit}}{47}
+\indexentry{calc\_mc\_css@\texttt  {calc\_mc\_css}|hyperindexformat{\textit}}{47}
+\indexentry{calc\_mc\_tk@\texttt  {calc\_mc\_tk}|hyperpage}{48}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!calc\_mc\_tk@\texttt  {calc\_mc\_tk}|hyperpage}{48}
+\indexentry{$*$ {\textbf  {dynamic}}!calc\_mc\_tk@\texttt  {calc\_mc\_tk}|hyperpage}{48}
+\indexentry{$*$ {\textbf  {simulation}}!calc\_mc\_tk@\texttt  {calc\_mc\_tk}|hyperpage}{48}
+\indexentry{solve\_model@\texttt  {solve\_model}|hyperindexformat{\textit}}{50}
+\indexentry{invitro\_mc@\texttt  {invitro\_mc}|hyperindexformat{\textit}}{50}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{50}
+\indexentry{calc\_rblood2plasma@\texttt  {calc\_rblood2plasma}|hyperpage}{52}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_rblood2plasma@\texttt  {calc\_rblood2plasma}|hyperpage}{52}
+\indexentry{parameterize\_schmitt@\texttt  {parameterize\_schmitt}|hyperindexformat{\textit}}{52}
+\indexentry{predict\_partitioning\_schmitt@\texttt  {predict\_partitioning\_schmitt}|hyperindexformat{\textit}}{52}
+\indexentry{calc\_stats@\texttt  {calc\_stats}|hyperpage}{53}
+\indexentry{$*$ {\textbf  {Solve}}!calc\_stats@\texttt  {calc\_stats}|hyperpage}{53}
+\indexentry{$*$ {\textbf  {Statistics}}!calc\_stats@\texttt  {calc\_stats}|hyperpage}{53}
+\indexentry{calc\_tkstats@\texttt  {calc\_tkstats}|hyperindexformat{\textit}}{53}
+\indexentry{calc\_tkstats@\texttt  {calc\_tkstats}|hyperpage}{55}
+\indexentry{$*$ {\textbf  {Solve}}!calc\_tkstats@\texttt  {calc\_tkstats}|hyperpage}{55}
+\indexentry{$*$ {\textbf  {Statistics}}!calc\_tkstats@\texttt  {calc\_tkstats}|hyperpage}{55}
+\indexentry{calc\_total\_clearance@\texttt  {calc\_total\_clearance}|hyperpage}{57}
+\indexentry{$*$ {\textbf  {1compartment}}!calc\_total\_clearance@\texttt  {calc\_total\_clearance}|hyperpage}{57}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_total\_clearance@\texttt  {calc\_total\_clearance}|hyperpage}{57}
+\indexentry{calc\_vdist@\texttt  {calc\_vdist}|hyperpage}{58}
+\indexentry{$*$ {\textbf  {1compartment}}!calc\_vdist@\texttt  {calc\_vdist}|hyperpage}{58}
+\indexentry{$*$ {\textbf  {Parameter}}!calc\_vdist@\texttt  {calc\_vdist}|hyperpage}{58}
+\indexentry{chem.invivo.PK.aggregate.data@\texttt  {chem.invivo.PK.aggregate.data}|hyperpage}{60}
+\indexentry{$*$ {\textbf  {data}}!chem.invivo.PK.aggregate.data@\texttt  {chem.invivo.PK.aggregate.data}|hyperpage}{60}
+\indexentry{chem.invivo.PK.data@\texttt  {chem.invivo.PK.data}|hyperpage}{61}
+\indexentry{$*$ {\textbf  {data}}!chem.invivo.PK.data@\texttt  {chem.invivo.PK.data}|hyperpage}{61}
+\indexentry{chem.invivo.PK.summary.data@\texttt  {chem.invivo.PK.summary.data}|hyperpage}{64}
+\indexentry{$*$ {\textbf  {data}}!chem.invivo.PK.summary.data@\texttt  {chem.invivo.PK.summary.data}|hyperpage}{64}
+\indexentry{chem.lists@\texttt  {chem.lists}|hyperpage}{67}
+\indexentry{$*$ {\textbf  {data}}!chem.lists@\texttt  {chem.lists}|hyperpage}{67}
+\indexentry{chem.physical\_and\_invitro.data@\texttt  {chem.physical\_and\_invitro.data}|hyperpage}{67}
+\indexentry{$*$ {\textbf  {data}}!chem.physical\_and\_invitro.data@\texttt  {chem.physical\_and\_invitro.data}|hyperpage}{67}
+\indexentry{load\_sipes2017@\texttt  {load\_sipes2017}|hyperindexformat{\textit}}{69}
+\indexentry{load\_pradeep2020@\texttt  {load\_pradeep2020}|hyperindexformat{\textit}}{69}
+\indexentry{load\_dawson2021@\texttt  {load\_dawson2021}|hyperindexformat{\textit}}{69}
+\indexentry{ckd\_epi\_eq@\texttt  {ckd\_epi\_eq}|hyperpage}{71}
+\indexentry{$*$ {\textbf  {httk-pop}}!ckd\_epi\_eq@\texttt  {ckd\_epi\_eq}|hyperpage}{71}
+\indexentry{concentration\_data\_Linakis2020@\texttt  {concentration\_data\_Linakis2020}|hyperpage}{72}
+\indexentry{$*$ {\textbf  {data}}!concentration\_data\_Linakis2020@\texttt  {concentration\_data\_Linakis2020}|hyperpage}{72}
+\indexentry{convert\_httkpop\_1comp@\texttt  {convert\_httkpop\_1comp}|hyperpage}{72}
+\indexentry{$*$ {\textbf  {1compartment}}!convert\_httkpop\_1comp@\texttt  {convert\_httkpop\_1comp}|hyperpage}{72}
+\indexentry{$*$ {\textbf  {httk-pop}}!convert\_httkpop\_1comp@\texttt  {convert\_httkpop\_1comp}|hyperpage}{72}
+\indexentry{create\_mc\_samples@\texttt  {create\_mc\_samples}|hyperindexformat{\textit}}{72}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{72}
+\indexentry{propagate\_invitrouv\_1comp@\texttt  {propagate\_invitrouv\_1comp}|hyperindexformat{\textit}}{72}
+\indexentry{convert\_units@\texttt  {convert\_units}|hyperpage}{73}
+\indexentry{scale\_dosing@\texttt  {scale\_dosing}|hyperindexformat{\textit}}{74}
+\indexentry{create\_mc\_samples@\texttt  {create\_mc\_samples}|hyperpage}{74}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!create\_mc\_samples@\texttt  {create\_mc\_samples}|hyperpage}{74}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{76}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{76}
+\indexentry{invitro\_mc@\texttt  {invitro\_mc}|hyperindexformat{\textit}}{76}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{76}
+\indexentry{dawson2021@\texttt  {dawson2021}|hyperpage}{77}
+\indexentry{Dawson2021@\texttt  {Dawson2021} \textit  {(\texttt  {dawson2021})}|hyperpage}{77}
+\indexentry{$*$ {\textbf  {data}}!dawson2021@\texttt  {dawson2021}|hyperpage}{77}
+\indexentry{EPA.ref@\texttt  {EPA.ref}|hyperpage}{78}
+\indexentry{$*$ {\textbf  {datasets}}!EPA.ref@\texttt  {EPA.ref}|hyperpage}{78}
+\indexentry{estimate\_gfr@\texttt  {estimate\_gfr}|hyperpage}{78}
+\indexentry{$*$ {\textbf  {httk-pop}}!estimate\_gfr@\texttt  {estimate\_gfr}|hyperpage}{78}
+\indexentry{estimate\_gfr\_ped@\texttt  {estimate\_gfr\_ped}|hyperpage}{79}
+\indexentry{$*$ {\textbf  {httk-pop}}!estimate\_gfr\_ped@\texttt  {estimate\_gfr\_ped}|hyperpage}{79}
+\indexentry{estimate\_hematocrit@\texttt  {estimate\_hematocrit}|hyperpage}{79}
+\indexentry{$*$ {\textbf  {httk-pop}}!estimate\_hematocrit@\texttt  {estimate\_hematocrit}|hyperpage}{79}
+\indexentry{export\_pbtk\_jarnac@\texttt  {export\_pbtk\_jarnac}|hyperpage}{80}
+\indexentry{$*$ {\textbf  {Export}}!export\_pbtk\_jarnac@\texttt  {export\_pbtk\_jarnac}|hyperpage}{80}
+\indexentry{export\_pbtk\_sbml@\texttt  {export\_pbtk\_sbml}|hyperpage}{81}
+\indexentry{$*$ {\textbf  {Export}}!export\_pbtk\_sbml@\texttt  {export\_pbtk\_sbml}|hyperpage}{81}
+\indexentry{Frank2018invivo@\texttt  {Frank2018invivo}|hyperpage}{82}
+\indexentry{$*$ {\textbf  {data}}!Frank2018invivo@\texttt  {Frank2018invivo}|hyperpage}{82}
+\indexentry{gen\_age\_height\_weight@\texttt  {gen\_age\_height\_weight}|hyperpage}{83}
+\indexentry{$*$ {\textbf  {httk-pop}}!gen\_age\_height\_weight@\texttt  {gen\_age\_height\_weight}|hyperpage}{83}
+\indexentry{gen\_height\_weight@\texttt  {gen\_height\_weight}|hyperpage}{84}
+\indexentry{$*$ {\textbf  {httk-pop}}!gen\_height\_weight@\texttt  {gen\_height\_weight}|hyperpage}{84}
+\indexentry{gen\_serum\_creatinine@\texttt  {gen\_serum\_creatinine}|hyperpage}{85}
+\indexentry{$*$ {\textbf  {httk-pop}}!gen\_serum\_creatinine@\texttt  {gen\_serum\_creatinine}|hyperpage}{85}
+\indexentry{get\_cheminfo@\texttt  {get\_cheminfo}|hyperpage}{85}
+\indexentry{$*$ {\textbf  {Retrieval}}!get\_cheminfo@\texttt  {get\_cheminfo}|hyperpage}{85}
+\indexentry{chem.physical\_and\_invitro.data@\texttt  {chem.physical\_and\_invitro.data}|hyperindexformat{\textit}}{86}
+\indexentry{get\_chem\_id@\texttt  {get\_chem\_id}|hyperpage}{88}
+\indexentry{$*$ {\textbf  {cheminformatics}}!get\_chem\_id@\texttt  {get\_chem\_id}|hyperpage}{88}
+\indexentry{get\_gfr\_category@\texttt  {get\_gfr\_category}|hyperpage}{89}
+\indexentry{$*$ {\textbf  {httk-pop}}!get\_gfr\_category@\texttt  {get\_gfr\_category}|hyperpage}{89}
+\indexentry{get\_invitroPK\_param@\texttt  {get\_invitroPK\_param}|hyperpage}{89}
+\indexentry{get\_lit\_cheminfo@\texttt  {get\_lit\_cheminfo}|hyperpage}{90}
+\indexentry{$*$ {\textbf  {Literature}}!get\_lit\_cheminfo@\texttt  {get\_lit\_cheminfo}|hyperpage}{90}
+\indexentry{$*$ {\textbf  {Retrieval}}!get\_lit\_cheminfo@\texttt  {get\_lit\_cheminfo}|hyperpage}{90}
+\indexentry{get\_lit\_css@\texttt  {get\_lit\_css}|hyperpage}{91}
+\indexentry{$*$ {\textbf  {Literature}}!get\_lit\_css@\texttt  {get\_lit\_css}|hyperpage}{91}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!get\_lit\_css@\texttt  {get\_lit\_css}|hyperpage}{91}
+\indexentry{get\_lit\_oral\_equiv@\texttt  {get\_lit\_oral\_equiv}|hyperpage}{93}
+\indexentry{$*$ {\textbf  {Literature}}!get\_lit\_oral\_equiv@\texttt  {get\_lit\_oral\_equiv}|hyperpage}{93}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!get\_lit\_oral\_equiv@\texttt  {get\_lit\_oral\_equiv}|hyperpage}{93}
+\indexentry{get\_physchem\_param@\texttt  {get\_physchem\_param}|hyperpage}{94}
+\indexentry{get\_rblood2plasma@\texttt  {get\_rblood2plasma}|hyperpage}{95}
+\indexentry{$*$ {\textbf  {Parameter}}!get\_rblood2plasma@\texttt  {get\_rblood2plasma}|hyperpage}{95}
+\indexentry{get\_weight\_class@\texttt  {get\_weight\_class}|hyperpage}{96}
+\indexentry{$*$ {\textbf  {httk-pop}}!get\_weight\_class@\texttt  {get\_weight\_class}|hyperpage}{96}
+\indexentry{hematocrit\_infants@\texttt  {hematocrit\_infants}|hyperpage}{97}
+\indexentry{$*$ {\textbf  {httk-pop}}!hematocrit\_infants@\texttt  {hematocrit\_infants}|hyperpage}{97}
+\indexentry{honda.ivive@\texttt  {honda.ivive}|hyperpage}{97}
+\indexentry{$*$ {\textbf  {Solve}}!honda.ivive@\texttt  {honda.ivive}|hyperpage}{97}
+\indexentry{howgate@\texttt  {howgate}|hyperpage}{99}
+\indexentry{$*$ {\textbf  {data}}!howgate@\texttt  {howgate}|hyperpage}{99}
+\indexentry{httkpop@\texttt  {httkpop}|hyperpage}{99}
+\indexentry{httkpop-package@\texttt  {httkpop-package} \textit  {(\texttt  {httkpop})}|hyperpage}{99}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop@\texttt  {httkpop}|hyperpage}{99}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{101}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{101}
+\indexentry{httkpop\_mc@\texttt  {httkpop\_mc}|hyperindexformat{\textit}}{101}
+\indexentry{httkpop\_biotophys\_default@\texttt  {httkpop\_biotophys\_default}|hyperpage}{104}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_biotophys\_default@\texttt  {httkpop\_biotophys\_default}|hyperpage}{104}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_biotophys\_default@\texttt  {httkpop\_biotophys\_default}|hyperpage}{104}
+\indexentry{httkpop\_direct\_resample@\texttt  {httkpop\_direct\_resample}|hyperpage}{104}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_direct\_resample@\texttt  {httkpop\_direct\_resample}|hyperpage}{104}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_direct\_resample@\texttt  {httkpop\_direct\_resample}|hyperpage}{104}
+\indexentry{httkpop\_direct\_resample\_inner@\texttt  {httkpop\_direct\_resample\_inner}|hyperpage}{106}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_direct\_resample\_inner@\texttt  {httkpop\_direct\_resample\_inner}|hyperpage}{106}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_direct\_resample\_inner@\texttt  {httkpop\_direct\_resample\_inner}|hyperpage}{106}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperpage}{107}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_generate@\texttt  {httkpop\_generate}|hyperpage}{107}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_generate@\texttt  {httkpop\_generate}|hyperpage}{107}
+\indexentry{httkpop\_mc@\texttt  {httkpop\_mc}|hyperpage}{109}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_mc@\texttt  {httkpop\_mc}|hyperpage}{109}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_mc@\texttt  {httkpop\_mc}|hyperpage}{109}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{109}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{109}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{109}
+\indexentry{httkpop\_generate@\texttt  {httkpop\_generate}|hyperindexformat{\textit}}{109}
+\indexentry{httkpop\_virtual\_indiv@\texttt  {httkpop\_virtual\_indiv}|hyperpage}{110}
+\indexentry{$*$ {\textbf  {httk-pop}}!httkpop\_virtual\_indiv@\texttt  {httkpop\_virtual\_indiv}|hyperpage}{110}
+\indexentry{$*$ {\textbf  {monte-carlo}}!httkpop\_virtual\_indiv@\texttt  {httkpop\_virtual\_indiv}|hyperpage}{110}
+\indexentry{in.list@\texttt  {in.list}|hyperpage}{111}
+\indexentry{is.expocast@\texttt  {is.expocast} \textit  {(\texttt  {in.list})}|hyperpage}{111}
+\indexentry{is.nhanes@\texttt  {is.nhanes} \textit  {(\texttt  {in.list})}|hyperpage}{111}
+\indexentry{is.pharma@\texttt  {is.pharma} \textit  {(\texttt  {in.list})}|hyperpage}{111}
+\indexentry{is.tox21@\texttt  {is.tox21} \textit  {(\texttt  {in.list})}|hyperpage}{111}
+\indexentry{is.toxcast@\texttt  {is.toxcast} \textit  {(\texttt  {in.list})}|hyperpage}{111}
+\indexentry{is.httk@\texttt  {is.httk}|hyperindexformat{\textit}}{112}
+\indexentry{invitro\_mc@\texttt  {invitro\_mc}|hyperpage}{113}
+\indexentry{$*$ {\textbf  {in-vitro}}!invitro\_mc@\texttt  {invitro\_mc}|hyperpage}{113}
+\indexentry{$*$ {\textbf  {monte-carlo}}!invitro\_mc@\texttt  {invitro\_mc}|hyperpage}{113}
+\indexentry{is.httk@\texttt  {is.httk}|hyperpage}{114}
+\indexentry{in.list@\texttt  {in.list}|hyperindexformat{\textit}}{115}
+\indexentry{is\_in\_inclusive@\texttt  {is\_in\_inclusive}|hyperpage}{116}
+\indexentry{$*$ {\textbf  {httk-pop}}!is\_in\_inclusive@\texttt  {is\_in\_inclusive}|hyperpage}{116}
+\indexentry{johnson@\texttt  {johnson}|hyperpage}{117}
+\indexentry{$*$ {\textbf  {data}}!johnson@\texttt  {johnson}|hyperpage}{117}
+\indexentry{kidney\_mass\_children@\texttt  {kidney\_mass\_children}|hyperpage}{117}
+\indexentry{$*$ {\textbf  {httk-pop}}!kidney\_mass\_children@\texttt  {kidney\_mass\_children}|hyperpage}{117}
+\indexentry{liver\_mass\_children@\texttt  {liver\_mass\_children}|hyperpage}{118}
+\indexentry{$*$ {\textbf  {httk-pop}}!liver\_mass\_children@\texttt  {liver\_mass\_children}|hyperpage}{118}
+\indexentry{load\_dawson2021@\texttt  {load\_dawson2021}|hyperpage}{119}
+\indexentry{load\_sipes2017@\texttt  {load\_sipes2017}|hyperpage}{120}
+\indexentry{lump\_tissues@\texttt  {lump\_tissues}|hyperpage}{121}
+\indexentry{$*$ {\textbf  {Parameter}}!lump\_tissues@\texttt  {lump\_tissues}|hyperpage}{121}
+\indexentry{lung\_mass\_children@\texttt  {lung\_mass\_children}|hyperpage}{122}
+\indexentry{$*$ {\textbf  {httk-pop}}!lung\_mass\_children@\texttt  {lung\_mass\_children}|hyperpage}{122}
+\indexentry{mcnally\_dt@\texttt  {mcnally\_dt}|hyperpage}{123}
+\indexentry{$*$ {\textbf  {data}}!mcnally\_dt@\texttt  {mcnally\_dt}|hyperpage}{123}
+\indexentry{$*$ {\textbf  {httk-pop}}!mcnally\_dt@\texttt  {mcnally\_dt}|hyperpage}{123}
+\indexentry{metabolism\_data\_Linakis2020@\texttt  {metabolism\_data\_Linakis2020}|hyperpage}{124}
+\indexentry{$*$ {\textbf  {data}}!metabolism\_data\_Linakis2020@\texttt  {metabolism\_data\_Linakis2020}|hyperpage}{124}
+\indexentry{monte\_carlo@\texttt  {monte\_carlo}|hyperpage}{125}
+\indexentry{$*$ {\textbf  {Monte-Carlo}}!monte\_carlo@\texttt  {monte\_carlo}|hyperpage}{125}
+\indexentry{nhanes\_mec\_svy@\texttt  {nhanes\_mec\_svy}|hyperpage}{126}
+\indexentry{$*$ {\textbf  {data}}!nhanes\_mec\_svy@\texttt  {nhanes\_mec\_svy}|hyperpage}{126}
+\indexentry{$*$ {\textbf  {httk-pop}}!nhanes\_mec\_svy@\texttt  {nhanes\_mec\_svy}|hyperpage}{126}
+\indexentry{Obach2008@\texttt  {Obach2008}|hyperpage}{127}
+\indexentry{$*$ {\textbf  {data}}!Obach2008@\texttt  {Obach2008}|hyperpage}{127}
+\indexentry{onlyp@\texttt  {onlyp}|hyperpage}{127}
+\indexentry{$*$ {\textbf  {data}}!onlyp@\texttt  {onlyp}|hyperpage}{127}
+\indexentry{pancreas\_mass\_children@\texttt  {pancreas\_mass\_children}|hyperpage}{128}
+\indexentry{$*$ {\textbf  {httk-pop}}!pancreas\_mass\_children@\texttt  {pancreas\_mass\_children}|hyperpage}{128}
+\indexentry{parameterize\_1comp@\texttt  {parameterize\_1comp}|hyperpage}{129}
+\indexentry{$*$ {\textbf  {1compartment}}!parameterize\_1comp@\texttt  {parameterize\_1comp}|hyperpage}{129}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_1comp@\texttt  {parameterize\_1comp}|hyperpage}{129}
+\indexentry{parameterize\_3comp@\texttt  {parameterize\_3comp}|hyperpage}{131}
+\indexentry{$*$ {\textbf  {3compartment}}!parameterize\_3comp@\texttt  {parameterize\_3comp}|hyperpage}{131}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_3comp@\texttt  {parameterize\_3comp}|hyperpage}{131}
+\indexentry{parameterize\_gas\_pbtk@\texttt  {parameterize\_gas\_pbtk}|hyperpage}{133}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_gas\_pbtk@\texttt  {parameterize\_gas\_pbtk}|hyperpage}{133}
+\indexentry{parameterize\_pbtk@\texttt  {parameterize\_pbtk}|hyperpage}{136}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_pbtk@\texttt  {parameterize\_pbtk}|hyperpage}{136}
+\indexentry{$*$ {\textbf  {pbtk}}!parameterize\_pbtk@\texttt  {parameterize\_pbtk}|hyperpage}{136}
+\indexentry{parameterize\_schmitt@\texttt  {parameterize\_schmitt}|hyperpage}{139}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_schmitt@\texttt  {parameterize\_schmitt}|hyperpage}{139}
+\indexentry{$*$ {\textbf  {schmitt}}!parameterize\_schmitt@\texttt  {parameterize\_schmitt}|hyperpage}{139}
+\indexentry{parameterize\_steadystate@\texttt  {parameterize\_steadystate}|hyperpage}{141}
+\indexentry{$*$ {\textbf  {3compss}}!parameterize\_steadystate@\texttt  {parameterize\_steadystate}|hyperpage}{141}
+\indexentry{$*$ {\textbf  {Parameter}}!parameterize\_steadystate@\texttt  {parameterize\_steadystate}|hyperpage}{141}
+\indexentry{pc.data@\texttt  {pc.data}|hyperpage}{143}
+\indexentry{$*$ {\textbf  {data}}!pc.data@\texttt  {pc.data}|hyperpage}{143}
+\indexentry{pearce2017regression@\texttt  {pearce2017regression}|hyperpage}{144}
+\indexentry{Pearce2017Regression@\texttt  {Pearce2017Regression} \textit  {(\texttt  {pearce2017regression})}|hyperpage}{144}
+\indexentry{$*$ {\textbf  {data}}!pearce2017regression@\texttt  {pearce2017regression}|hyperpage}{144}
+\indexentry{pharma@\texttt  {pharma}|hyperpage}{145}
+\indexentry{$*$ {\textbf  {data}}!pharma@\texttt  {pharma}|hyperpage}{145}
+\indexentry{physiology.data@\texttt  {physiology.data}|hyperpage}{145}
+\indexentry{$*$ {\textbf  {data}}!physiology.data@\texttt  {physiology.data}|hyperpage}{145}
+\indexentry{predict\_partitioning\_schmitt@\texttt  {predict\_partitioning\_schmitt}|hyperpage}{146}
+\indexentry{$*$ {\textbf  {Parameter}}!predict\_partitioning\_schmitt@\texttt  {predict\_partitioning\_schmitt}|hyperpage}{146}
+\indexentry{parameterize\_schmitt@\texttt  {parameterize\_schmitt}|hyperindexformat{\textit}}{147}
+\indexentry{propagate\_invitrouv\_1comp@\texttt  {propagate\_invitrouv\_1comp}|hyperpage}{148}
+\indexentry{$*$ {\textbf  {1compartment}}!propagate\_invitrouv\_1comp@\texttt  {propagate\_invitrouv\_1comp}|hyperpage}{148}
+\indexentry{$*$ {\textbf  {monte-carlo}}!propagate\_invitrouv\_1comp@\texttt  {propagate\_invitrouv\_1comp}|hyperpage}{148}
+\indexentry{calc\_elimination\_rate@\texttt  {calc\_elimination\_rate}|hyperindexformat{\textit}}{148}
+\indexentry{propagate\_invitrouv\_3comp@\texttt  {propagate\_invitrouv\_3comp}|hyperpage}{148}
+\indexentry{$*$ {\textbf  {3compartment}}!propagate\_invitrouv\_3comp@\texttt  {propagate\_invitrouv\_3comp}|hyperpage}{148}
+\indexentry{$*$ {\textbf  {monte-carlo}}!propagate\_invitrouv\_3comp@\texttt  {propagate\_invitrouv\_3comp}|hyperpage}{148}
+\indexentry{calc\_hep\_clearance@\texttt  {calc\_hep\_clearance}|hyperindexformat{\textit}}{148}
+\indexentry{propagate\_invitrouv\_pbtk@\texttt  {propagate\_invitrouv\_pbtk}|hyperpage}{149}
+\indexentry{$*$ {\textbf  {monte-carlo}}!propagate\_invitrouv\_pbtk@\texttt  {propagate\_invitrouv\_pbtk}|hyperpage}{149}
+\indexentry{$*$ {\textbf  {pbtk}}!propagate\_invitrouv\_pbtk@\texttt  {propagate\_invitrouv\_pbtk}|hyperpage}{149}
+\indexentry{calc\_hep\_clearance@\texttt  {calc\_hep\_clearance}|hyperindexformat{\textit}}{149}
+\indexentry{reset\_httk@\texttt  {reset\_httk}|hyperpage}{149}
+\indexentry{rfun@\texttt  {rfun}|hyperpage}{150}
+\indexentry{$*$ {\textbf  {httk-pop}}!rfun@\texttt  {rfun}|hyperpage}{150}
+\indexentry{r\_left\_censored\_norm@\texttt  {r\_left\_censored\_norm}|hyperpage}{151}
+\indexentry{scale\_dosing@\texttt  {scale\_dosing}|hyperpage}{151}
+\indexentry{$*$ {\textbf  {Dynamic}}!scale\_dosing@\texttt  {scale\_dosing}|hyperpage}{151}
+\indexentry{set\_httk\_precision@\texttt  {set\_httk\_precision}|hyperpage}{152}
+\indexentry{sipes2017@\texttt  {sipes2017}|hyperpage}{153}
+\indexentry{Sipes2017@\texttt  {Sipes2017} \textit  {(\texttt  {sipes2017})}|hyperpage}{153}
+\indexentry{$*$ {\textbf  {data}}!sipes2017@\texttt  {sipes2017}|hyperpage}{153}
+\indexentry{skeletal\_muscle\_mass@\texttt  {skeletal\_muscle\_mass}|hyperpage}{154}
+\indexentry{$*$ {\textbf  {httk-pop}}!skeletal\_muscle\_mass@\texttt  {skeletal\_muscle\_mass}|hyperpage}{154}
+\indexentry{skeletal\_muscle\_mass\_children@\texttt  {skeletal\_muscle\_mass\_children}|hyperindexformat{\textit}}{154}
+\indexentry{skeletal\_muscle\_mass\_children@\texttt  {skeletal\_muscle\_mass\_children}|hyperindexformat{\textit}}{154}
+\indexentry{skeletal\_muscle\_mass\_children@\texttt  {skeletal\_muscle\_mass\_children}|hyperpage}{155}
+\indexentry{$*$ {\textbf  {httk-pop}}!skeletal\_muscle\_mass\_children@\texttt  {skeletal\_muscle\_mass\_children}|hyperpage}{155}
+\indexentry{skin\_mass\_bosgra@\texttt  {skin\_mass\_bosgra}|hyperpage}{155}
+\indexentry{$*$ {\textbf  {httk-pop}}!skin\_mass\_bosgra@\texttt  {skin\_mass\_bosgra}|hyperpage}{155}
+\indexentry{solve\_1comp@\texttt  {solve\_1comp}|hyperpage}{156}
+\indexentry{$*$ {\textbf  {1compartment}}!solve\_1comp@\texttt  {solve\_1comp}|hyperpage}{156}
+\indexentry{$*$ {\textbf  {Solve}}!solve\_1comp@\texttt  {solve\_1comp}|hyperpage}{156}
+\indexentry{solve\_3comp@\texttt  {solve\_3comp}|hyperpage}{160}
+\indexentry{$*$ {\textbf  {3compartment}}!solve\_3comp@\texttt  {solve\_3comp}|hyperpage}{160}
+\indexentry{$*$ {\textbf  {Solve}}!solve\_3comp@\texttt  {solve\_3comp}|hyperpage}{160}
+\indexentry{solve\_gas\_pbtk@\texttt  {solve\_gas\_pbtk}|hyperpage}{163}
+\indexentry{$*$ {\textbf  {Solve}}!solve\_gas\_pbtk@\texttt  {solve\_gas\_pbtk}|hyperpage}{163}
+\indexentry{solve\_model@\texttt  {solve\_model}|hyperpage}{168}
+\indexentry{$*$ {\textbf  {Solve}}!solve\_model@\texttt  {solve\_model}|hyperpage}{168}
+\indexentry{solve\_pbtk@\texttt  {solve\_pbtk}|hyperpage}{172}
+\indexentry{$*$ {\textbf  {Solve}}!solve\_pbtk@\texttt  {solve\_pbtk}|hyperpage}{172}
+\indexentry{$*$ {\textbf  {pbtk}}!solve\_pbtk@\texttt  {solve\_pbtk}|hyperpage}{172}
+\indexentry{spleen\_mass\_children@\texttt  {spleen\_mass\_children}|hyperpage}{177}
+\indexentry{$*$ {\textbf  {httk-pop}}!spleen\_mass\_children@\texttt  {spleen\_mass\_children}|hyperpage}{177}
+\indexentry{spline\_heightweight@\texttt  {spline\_heightweight}|hyperpage}{178}
+\indexentry{$*$ {\textbf  {data}}!spline\_heightweight@\texttt  {spline\_heightweight}|hyperpage}{178}
+\indexentry{$*$ {\textbf  {httk-pop}}!spline\_heightweight@\texttt  {spline\_heightweight}|hyperpage}{178}
+\indexentry{spline\_hematocrit@\texttt  {spline\_hematocrit}|hyperpage}{178}
+\indexentry{$*$ {\textbf  {data}}!spline\_hematocrit@\texttt  {spline\_hematocrit}|hyperpage}{178}
+\indexentry{$*$ {\textbf  {httk-pop}}!spline\_hematocrit@\texttt  {spline\_hematocrit}|hyperpage}{178}
+\indexentry{spline\_serumcreat@\texttt  {spline\_serumcreat}|hyperpage}{179}
+\indexentry{$*$ {\textbf  {data}}!spline\_serumcreat@\texttt  {spline\_serumcreat}|hyperpage}{179}
+\indexentry{$*$ {\textbf  {httk-pop}}!spline\_serumcreat@\texttt  {spline\_serumcreat}|hyperpage}{179}
+\indexentry{supptab1\_Linakis2020@\texttt  {supptab1\_Linakis2020}|hyperpage}{180}
+\indexentry{$*$ {\textbf  {data}}!supptab1\_Linakis2020@\texttt  {supptab1\_Linakis2020}|hyperpage}{180}
+\indexentry{supptab2\_Linakis2020@\texttt  {supptab2\_Linakis2020}|hyperpage}{180}
+\indexentry{$*$ {\textbf  {data}}!supptab2\_Linakis2020@\texttt  {supptab2\_Linakis2020}|hyperpage}{180}
+\indexentry{Tables.Rdata.stamp@\texttt  {Tables.Rdata.stamp}|hyperpage}{181}
+\indexentry{$*$ {\textbf  {datasets}}!Tables.Rdata.stamp@\texttt  {Tables.Rdata.stamp}|hyperpage}{181}
+\indexentry{tissue.data@\texttt  {tissue.data}|hyperpage}{181}
+\indexentry{$*$ {\textbf  {data}}!tissue.data@\texttt  {tissue.data}|hyperpage}{181}
+\indexentry{tissue\_masses\_flows@\texttt  {tissue\_masses\_flows}|hyperpage}{182}
+\indexentry{$*$ {\textbf  {httk-pop}}!tissue\_masses\_flows@\texttt  {tissue\_masses\_flows}|hyperpage}{182}
+\indexentry{tissue\_scale@\texttt  {tissue\_scale}|hyperpage}{183}
+\indexentry{$*$ {\textbf  {httk-pop}}!tissue\_scale@\texttt  {tissue\_scale}|hyperpage}{183}
+\indexentry{wambaugh2019@\texttt  {wambaugh2019}|hyperpage}{184}
+\indexentry{$*$ {\textbf  {data}}!wambaugh2019@\texttt  {wambaugh2019}|hyperpage}{184}
+\indexentry{wambaugh2019.nhanes@\texttt  {wambaugh2019.nhanes}|hyperpage}{185}
+\indexentry{$*$ {\textbf  {data}}!wambaugh2019.nhanes@\texttt  {wambaugh2019.nhanes}|hyperpage}{185}
+\indexentry{wambaugh2019.raw@\texttt  {wambaugh2019.raw}|hyperpage}{186}
+\indexentry{$*$ {\textbf  {data}}!wambaugh2019.raw@\texttt  {wambaugh2019.raw}|hyperpage}{186}
+\indexentry{wambaugh2019.seem3@\texttt  {wambaugh2019.seem3}|hyperpage}{188}
+\indexentry{$*$ {\textbf  {data}}!wambaugh2019.seem3@\texttt  {wambaugh2019.seem3}|hyperpage}{188}
+\indexentry{wambaugh2019.tox21@\texttt  {wambaugh2019.tox21}|hyperpage}{188}
+\indexentry{$*$ {\textbf  {data}}!wambaugh2019.tox21@\texttt  {wambaugh2019.tox21}|hyperpage}{188}
+\indexentry{well\_param@\texttt  {well\_param}|hyperpage}{189}
+\indexentry{$*$ {\textbf  {data}}!well\_param@\texttt  {well\_param}|hyperpage}{189}
+\indexentry{Wetmore.data@\texttt  {Wetmore.data}|hyperpage}{190}
+\indexentry{$*$ {\textbf  {data}}!Wetmore.data@\texttt  {Wetmore.data}|hyperpage}{190}
+\indexentry{Wetmore2012@\texttt  {Wetmore2012}|hyperpage}{191}
+\indexentry{$*$ {\textbf  {data}}!Wetmore2012@\texttt  {Wetmore2012}|hyperpage}{191}
+\indexentry{wfl@\texttt  {wfl}|hyperpage}{191}
+\indexentry{$*$ {\textbf  {data}}!wfl@\texttt  {wfl}|hyperpage}{191}
+\indexentry{$*$ {\textbf  {httk-pop}}!wfl@\texttt  {wfl}|hyperpage}{191}
