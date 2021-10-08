@@ -45,8 +45,8 @@ suggests there is potential for using tipping points for chemical prioritization
 ### Load the relevant libraries
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
-library(gdata)
 library(httk)
+#library(gdata)
 library(ggplot2)
 library(scales)
 ```

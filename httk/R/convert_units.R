@@ -243,16 +243,15 @@ compound data.table/data.frame or list.')
     # rows = concentrations; columns = amount (input, output -- respectively)
     # if amount to concentration is needed use the inverse
     conc2amount_units_conversion_frame <- 
-      conc_units_conversion_frame[,1:2]*vol
+      conc_units_conversion_frame[,c("mg/l", "um")]*vol
     
     colnames(conc2amount_units_conversion_frame) <- c("mg","umol")
-    row.names(conc2amount_units_conversion_frame) <- c("mg/l", "um","ppmv")
   }
   
   #initialize master list of names of chemical amounts/concentration-based
   #units supported in httk, excluding those scaled to body weight 
-  httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_frame,
-    amount_units_conversion_frame))))
+  httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_frame),
+    rownames(amounts_units_conversion_frame))))
   
   #Now check to see if our compiled information can appropriately support
   #the requested units conversion, and if so, provide the conversion factor.
