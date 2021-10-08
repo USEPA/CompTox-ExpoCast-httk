@@ -4,17 +4,20 @@ CAS.checksum <- function(CAS.string)
   multiplier <- 1
   if(is.factor(CAS.string)) CAS.string <- as.character(CAS.string)
   for (i in (nchar(CAS.string)-2):1)
-    if (!is.na(as.numeric(substr(CAS.string,i,i))))
+    if (!is.na(suppressWarnings(as.numeric(substr(CAS.string,i,i)))))
     {
-      test.num <- test.num + as.numeric(substr(CAS.string,i,i))*multiplier
+      test.num <- test.num + 
+        suppressWarnings(as.numeric(substr(CAS.string,i,i)))*multiplier
       multiplier <- multiplier + 1
     }
-  if (is.na(test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))) return(F)
-  return (test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))
+  if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))) return(F)
+  return (test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))
 }
 
 
-#' Add a paramter value to the chem.physical_and_invitro.data table
+#' Add a parameter value to the chem.physical_and_invitro.data table
 #' 
 #' This internal function is used by \code{\link{add_chemtable}} to add a single 
 #' new parameter to the table of chemical parameters. It should not be typically
@@ -242,18 +245,21 @@ augment.table <- function(
     {
       if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
       {
+    # If it's numeric we want to control sig figs:
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
+    # Otherwise force it to be a character:
         if (class(this.table[,this.property])!='character')
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
 # Check to see if this is actually a number and we can use sig figs:        
-        if (!is.na(as.numeric(value)))
+        if (!is.na(suppressWarnings(as.numeric(value))))
         {
-          if (as.character(as.numeric(value)) == as.character(value))
+          if (as.character(suppressWarnings(as.numeric(value))) == 
+            as.character(value))
           {
-            value <- signif(as.numeric(value), sig.fig)
+            value <- signif(suppressWarnings(as.numeric(value)), sig.fig)
           }
         }
         this.table[index,this.property] <- as.character(value)

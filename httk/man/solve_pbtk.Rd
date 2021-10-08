@@ -20,6 +20,7 @@ solve_pbtk(
   suppress.messages = FALSE,
   species = "Human",
   iv.dose = FALSE,
+  input.units = "mg/kg",
   output.units = "uM",
   method = "lsoda",
   rtol = 1e-08,
@@ -56,9 +57,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number of time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -75,17 +76,14 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW}
 
 \item{method}{Method used by integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
 
 \item{atol}{Argument passed to integrator (deSolve).}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -116,6 +114,9 @@ The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{3man}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

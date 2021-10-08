@@ -53,7 +53,7 @@ Warning messages:
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 54
+[1] 51.07
 
 $frac
 [1] 0.9756
@@ -78,10 +78,30 @@ Warning messages:
 > 
 > # We should have the ADMet Predicted chemicals from Sipes et al. (2017),
 > # this one is a good test since the logP is nearly 10!
+<<<<<<< HEAD
+> calc_css(chem.cas="26040-51-7")
+$avg
+[1] 0.0263
+
+$frac
+[1] 0.195
+
+$max
+[1] 0.04098
+
+$the.day
+[1] 21
+
+> 
+> #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
+> length(get_cheminfo())
+[1] 8767
+=======
 > #calc_css(chem.cas="26040-51-7")
 > 
 > #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
 > #length(get_cheminfo())
+>>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 > 
 > #Now let's reset
 > reset_httk()
