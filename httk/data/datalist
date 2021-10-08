@@ -1,6 +1,8 @@
 armitage_input
+Frank2018: Frank2018invivo
 httkpop: age_dist_smooth bmiage mcnally_dt nhanes_mec_svy spline_heightweight spline_hematocrit spline_serumcreat wfl
-Tables: chem.invivo.PK.aggregate.data chem.invivo.PK.data chem.invivo.PK.summary.data chem.physical_and_invitro.data physiology.data Tables.Rdata.stamp tissue.data
-vignettes: howgate johnson Obach2008 onlyp pc.data ToxCast2015subset Wetmore2012
-wambaugh2019: pharma wambaugh2019 wambaugh2019.nhanes wambaugh2019.raw wambaugh2019.seem3
+Linakis2020: concentration_data_Linakis2020 metabolism_data_Linakis2020 supptab1_Linakis2020 supptab2_Linakis2020
+Tables: chem.invivo.PK.aggregate.data chem.invivo.PK.data chem.invivo.PK.summary.data chem.physical_and_invitro.data dawson2021 EPA.ref pearce2017regression physiology.data Tables.Rdata.stamp tissue.data
+vignettes: howgate johnson Obach2008 onlyp pc.data Wetmore2012
+wambaugh2019: pharma wambaugh2019 wambaugh2019.nhanes wambaugh2019.raw wambaugh2019.seem3 wambaugh2019.tox21
 well_param

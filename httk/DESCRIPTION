@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.0.4
-Date: 2021-05-07
+Version: 2.0.5
+Date: 2021-06-18
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
@@ -57,7 +57,8 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods
+        graphics, utils, magrittr, purrr, methods, Rdpack
+RdMacros: Rdpack
 Suggests: 
     ggplot2,
     knitr,
@@ -75,7 +76,6 @@ Suggests:
     stringr,
     reshape,
     reshape2,
-    gdata,
     viridis,
     CensRegMod,
     gmodels,
@@ -85,7 +85,6 @@ Suggests:
     dplyr,
     forcats,
     smatr,
-    gtools,
     gridExtra,
     testthat
 License: GPL-3
