@@ -18,9 +18,8 @@
 #' @return \item{data.frame}{An updated version of
 #' chem.physical_and_invitro.data.}
 #' @author Sarah E. Davidson
-#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
-#' of high-throughput toxicokinetic models using open-source descriptors."
-#' Environmental Science & Technology____. (2021):______.
+#' @references
+#' \insertRef{dawson2021qsar}{httk}
 #' 
 #' @examples
 #' 
