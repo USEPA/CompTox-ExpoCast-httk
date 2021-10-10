@@ -37,35 +37,34 @@ calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 #
 #
 # Now test that MC works across different models:
-#set.seed(1234)
-#calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
-#set.seed(1234)
-#calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
-#set.seed(1234)
-#calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
+set.seed(1234)
+calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 
 #
 #
 # Now do different MC sampling:
-#set.seed(1234)
+set.seed(1234)
 # Standard HTTK Monte Carlo:
-#calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
-#set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+set.seed(1234)
 # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
-#calc_mc_css(chem.cas="90-43-7",
-#  model="pbtk",
-#  samples=NSAMP,
-#  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
-#    poormetab = T, 
-#    fup.censored.dist = FALSE, 
-#    fup.lod = 0.01, 
-#    fup.meas.cv = 0.0, 
-#    clint.meas.cv = 0.0, 
-#    fup.pop.cv = 0.3, 
-#    clint.pop.cv = 0.3))
-#set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",
+  model="pbtk",
+  samples=NSAMP,
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
+    poormetab = T, 
+    fup.censored.dist = FALSE, 
+    fup.lod = 0.01, 
+    fup.meas.cv = 0.0, 
+    clint.meas.cv = 0.0, 
+    fup.pop.cv = 0.3, 
+    clint.pop.cv = 0.3))
+set.seed(1234)
 # HTTK Monte Carlo with no HTTK-Pop physiological variability):
-<<<<<<< HEAD
 calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 set.seed(1234)
 # HTTK Monte Carlo with no in vitro uncertainty and variability):
@@ -73,34 +72,18 @@ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 set.seed(1234)
 # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
 calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
-=======
-#calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
-#set.seed(1234)
-# HTTK Monte Carlo with no in vitro uncertainty and variability):
-#calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
-#set.seed(1234)
-# HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-#calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
+
 # Should be the same as the mean result:
-#calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-#set.seed(1234)
+calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
+
+set.seed(1234)
 # HTTK Monte Carlo using basic Monte Carlo sampler:
-<<<<<<< HEAD
 calc_mc_css(chem.cas="90-43-7",
   model="pbtk",
   samples=NSAMP,
   httkpop=FALSE,
   invitrouv=FALSE,
   vary.params=list(Pow=0.3))
-=======
-#calc_mc_css(chem.cas="90-43-7",
-#  model="pbtk",
-#  samples=NSAMP,
-#  httkpop=FALSE,
-#  invitrouv=FALSE,
-#  vary.params=list(Pow=0.3))
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
 
 
 #set.seed(1234)    
