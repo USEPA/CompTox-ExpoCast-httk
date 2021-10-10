@@ -27,31 +27,69 @@
 #' N <- 1000
 #'
 #' set.seed(1235)
-#' Fup.vec <- rmed0non0u95(N, Fup.95)
+#' Fup.vec <- rmed0non0u95(n=N, x.u95=Fup.95)
 #' quantile(Fup.vec,c(0.5,0.975))
 #' 
+#' quantile(rmed0non0u95(200,x.u95=0.05,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
+#' hist(rmed0non0u95(1000,x.u95=0.05,x.min=10^-4,x.LOD=0.01))
+#'
+#' quantile(rmed0non0u95(200,x.u95=0.005,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
+#' hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
+#'
 #' @keywords httk-pop
 rmed0non0u95 <- function(
-  N, # Number of samples to draw,
+  n, # Number of samples to draw,
   x.u95, # Non-zero upper 95th percentile
   x.min = 0, # minimum allowed value
   x.LOD = 0.005 # limit of detection
   )
 {
-# Initially draw N values between minimum and LOD: 
-  out <- runif(N, x.min, x.LOD)
+  # Check that x.u95 is non-zero:
+  if (x.u95 == 0) warning("rmed0nonu95 called with x.u95 == 0")
 
-# A set a values above the 95th percentile:
-  temp1 <- runif(N, x.u95, x.LOD + 2*(x.u95 - x.LOD))
-# replace 2.5% of the values with values above the u95:
-  which.temp1 <- rbinom(N, 1, 0.025)==1
-  out[which.temp1] <- temp1[which.temp1]
+  # Check that x.u95 is greater than minimum:
+  if (x.u95 < x.min)
+  {
+    # Otherwise, just replicate the minimum:
+    out <- rep(x.min, times = n)
+  } else {
+    n.half <- floor(n/2)
+    # Check to see if the u95 is higher than the LOD:
+    if ( x.u95 > x.LOD)
+    {
+      # Ensure half are below LOD and half are above:
+      below <- runif(n.half, x.min, x.LOD)
+      above <- exp(runif(n.half, log(x.LOD),log(x.u95)))
+      
+      # Combine the two samples:
+      out <- c(below,above)
+      # Make sure we have n values (if n is odd)
+      if (length(out) < n) out <- c(out,x.LOD)
+      
+      # Generate a set a values above the 95th percentile:
+      temp1 <- runif(n, x.u95, x.u95 + (x.u95 - x.LOD))
+    } else {
+      # Ensure half are x.min and half are between x.min and x.u95:
+      below <- rep(x.min, n.half)
+      above <- exp(runif(n.half, log(x.min),log(x.u95)))
+   
+      # Combine the two samples:
+      out <- c(below,above)
+      # Make sure we have n values (if n is odd)
+      if (length(out) < n) out <- c(out,x.min)
 
-# A set of values between the LOD and the 95th percentile:
-  temp2 <- runif(N, x.LOD, x.u95)
-# Replace 47.5% of the values with values btween LOD and 95th percentile:
-  which.temp2 <- rbinom(N, 1, 0.5 - 0.025)==1
-  out[which.temp2] <- temp2[which.temp2]
+      # Generate a set a values above the 95th percentile:
+      temp1 <- runif(n, x.u95, x.u95 + (x.u95 - x.min))
+    }
+    # Shuffle the values:
+    out <- sample(out,n)
+    # replace 2.5% of the values with values above the u95:
+    which.temp1 <- sample(which(out > median(out)),0.05*n/2)
+    out[which.temp1] <- temp1[which.temp1]
+  }
+
+  # Make sure we respecti x.min:
+  out[out < x.min] <- x.min
 
   return(out)
 }

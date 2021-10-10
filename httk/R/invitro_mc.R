@@ -195,128 +195,162 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   # If the default CV is set to NULL, we just use the point estimate with no
-  # uncertainty:
+  # uncertainty simulation:
   if (is.null(fup.meas.cv))
   {
     Funbound.plasma <- parameters.dt$Funbound.plasma
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
-  # We need to determine what sort of information we have been provided about
-  # measurment uncertainty. We first check for a comma separated list with a
-  # median, lower, and upper 95th credible interval limits:
-  } else if(!is.na(parameters.dt$Funbound.plasma.dist[1]))
-  {
-    if (nchar(parameters.dt$Funbound.plasma.dist[1]) - 
-      nchar(gsub(",","",parameters.dt$Funbound.plasma.dist[1]))!=2)
-    {
-      stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
-    }
-    temp <- strsplit(parameters.dt$Funbound.plasma.dist,",")
-    Funbound.plasma <- as.numeric(temp[[1]][1])
-    Funbound.plasma.l95 <- as.numeric(temp[[1]][2])
-    Funbound.plasma.u95 <- as.numeric(temp[[1]][3])
-  # If we don't have that, we use the default coefficient of variation to
-  # generate confidence limits:
+    parameters.dt[, unadjusted.Funbound.plasma:=Funbound.plasma]
   } else {
-    Funbound.plasma <- parameters.dt$Funbound.plasma
-    Funbound.plasma.l95 <- sapply(Funbound.plasma*(1-fup.meas.cv*1.96),
-      function(x) max(x,0))
-    Funbound.plasma.u95 <- sapply(Funbound.plasma*(1+fup.meas.cv*1.96),
-      function(x) min(x,1))
-  }
+    # We need to determine what sort of information we have been provided about
+    # measurment uncertainty. 
+    #
+    # We first check for a comma separated list with a
+    # median, lower, and upper 95th credible interval limits:
+    if(!is.na(parameters.dt$Funbound.plasma.dist[1]))
+    {
+      # Check formatting:
+      if (nchar(parameters.dt$Funbound.plasma.dist[1]) - 
+        nchar(gsub(",","",parameters.dt$Funbound.plasma.dist[1]))!=2)
+      {
+        stop("Funbound.plasma distribution should be three values (median,low95th,high95th) separated by commas.")
+      }
+      # Split into quantiles:
+      temp <- strsplit(parameters.dt$Funbound.plasma.dist,",")
+      Funbound.plasma <- as.numeric(temp[[1]][1])
+      Funbound.plasma.l95 <- as.numeric(temp[[1]][2])
+      Funbound.plasma.u95 <- as.numeric(temp[[1]][3])
+    # If we don't have actual quantiles, use the coefficient of
+    # variation (fup.meas.cv), to approximate confidence limits:
+    } else {
+      Funbound.plasma <- parameters.dt$Funbound.plasma
+      Funbound.plasma.l95 <- sapply(Funbound.plasma*(1-fup.meas.cv*1.96),
+        function(x) max(x,0))
+      Funbound.plasma.u95 <- sapply(Funbound.plasma*(1+fup.meas.cv*1.96),
+        function(x) min(x,1))
+    }
+  
+   # For computational efficiency, shrink the median and quantiles down to a 
+   # single value if there is only one value for each quantile
+   if (all(c(length(unique(Funbound.plasma))==1,
+      length(unique(Funbound.plasma.l95))==1,
+      length(unique(Funbound.plasma.u95))==1)))
+    {
+      Funbound.plasma <- Funbound.plasma[1]
+      Funbound.plasma.l95 <- Funbound.plasma.l95[1]
+      Funbound.plasma.u95 <- Funbound.plasma.u95[1]
+    }
+    
+    # Check to see if median fup was below lod:
+    if (Funbound.plasma==0)
+    {
+       # Is the upper bound non-zero?
+       if (Funbound.plasma.u95 > minimum.Funbound.plasma)
+       {
+          # If so, make the median LOD and the upper 95th quantile match the measured value:
+          parameters.dt[, unadjusted.Funbound.plasma := rmed0non0u95(
+            n=samples,
+            x.95 = Funbound.plasma.u95,
+            x.min = minimum.Funbound.plasma,
+            x.LOD = fup.lod)]
+       } else {
+         # Otherwise, assign values between the minimum and the lod:
+         parameters.dt[, unadjusted.Funbound.plasma := runif(
+           n=samples, 
+           minimum.Funbound.plasma,
+           fup.lod)]
+       }
+    } else {
+      # Median Fup is non-zero.
+      # Check to see if lower bound of confidence/credible interval is 1:
+      if (Funbound.plasma.l95 == 1)
+      {
+        # If so all values set to 1:
+        parameters.dt[, unadjusted.Funbound.plasma:=1]  
+      } else {
+        # Lower bound is not 1.
+        # Check to see if median fup was below minimum allowed value:
+        if (Funbound.plasma<minimum.Funbound.plasma)
+        {
+          # Is the upper bound non-zero?
+          if (Funbound.plasma.u95 > minimum.Funbound.plasma)
+          {
+            # If so, make the median LOD and the upper 95th quantile match the measured value:
+            parameters.dt[, unadjusted.Funbound.plasma := rmed0non0u95(
+              n=samples,
+              x.95 = Funbound.plasma.u95,
+              x.min = minimum.Funbound.plasma,
+              x.LOD = fup.lod)]
+          } else {
+            # Otherwise, assign the minimum to all samples:
+            parameters.dt[, unadjusted.Funbound.plasma := minimum.Funbound.plasma]
+          }
+        } else {
+          # Median is above minimum allowed value
 
-# Shrink it down if we don't have unique values:
-  if (all(c(length(unique(Funbound.plasma))==1,
-    length(unique(Funbound.plasma.l95))==1,
-    length(unique(Funbound.plasma.u95))==1)))
-  {
-    Funbound.plasma <- Funbound.plasma[1]
-    Funbound.plasma.l95 <- Funbound.plasma.l95[1]
-    Funbound.plasma.u95 <- Funbound.plasma.u95[1]
+          # Initial conditions for optimizer depend on how close median is to 1:
+          # If the median is one we have a special case:
+          Funbound.med.is.one <- Funbound.plasma == 1
+          if (Funbound.plasma < 0.99)
+          {
+            # Decent guess at initial values:
+            initial.values <- c(2,
+              (1-Funbound.plasma)/Funbound.plasma*2)
+          } else {
+            # temporarily reduce median to just less than 1:
+            if (Funbound.med.is.one) Funbound.plasma <- 1 - 10^-3 
+            # more likely to convege if we start with a distribution skewed toward 1
+            initial.values <- c(2,1)
+          }
+          
+          # Use optim to estimate parameters for a beta distribution (alpha and beta)
+          # such that the median and 95% credible interval approximate the given values:
+          ppb.fit <- suppressWarnings(optim(initial.values, 
+            function(x) (0.95-
+            pbeta(Funbound.plasma.u95,x[1],x[2])+
+            pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
+            (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
+            method="BFGS"))
+          # We are drawing new values for the unadjusted Fup:
+          parameters.dt[, unadjusted.Funbound.plasma:=rbeta(n=samples,
+            ppb.fit$par[1],
+            ppb.fit$par[2])]
+            
+          # Check to see if we need to adjust for median = 1:
+          if (Funbound.med.is.one)
+          {
+            # Assign median its old value
+            Funbound.plasma <- 1
+            # Set the highest 50% to 1:
+            med.val <- median(parameters.dt[, unadjusted.Funbound.plasma, with=TRUE])
+            parameters.dt[unadjusted.Funbound.plasma > med.val, 
+              unadjusted.Funbound.plasma := 1]
+          }
+        }
+      } 
+    }
+    #if measured Funbound.plasma > 1, then set it to 1
+    parameters.dt[unadjusted.Funbound.plasma>1, unadjusted.Funbound.plasma := 1]
   }
   
-  # We need the fraction of lipid in plasma to use Robert's(Pearce, 2017)
-  # plasma protein binding assay correction:
-  Flipid <-subset(httk::physiology.data,
-             Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-             which(colnames(httk::physiology.data) == 'Human')]
+  # Check to see if we are adjusting for differences between in vitro and 
+  # physiological lipid partitioning (Pearce, 2017):
+  if (adjusted.Funbound.plasma)
+  {
+    # We need the fraction of lipid in plasma:
+    Flipid <-subset(httk::physiology.data,
+               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+               which(colnames(httk::physiology.data) == 'Human')]
 
-  # Check to see if fup was below lod:
-  if (Funbound.plasma==0)
-  {
-  # If so, assign values between zero and the lod:
-    parameters.dt[, fup.mean := runif(n=1,0,fup.lod)]
-  # Otherwise, check to see if fup credible interval was determined 
-  # (if not, indicates measurment uncertainty was turned off):
-  } else if (!is.null(Funbound.plasma.u95)) 
-  {
-    if (Funbound.plasma.l95 == 1)
-    {
-      parameters.dt[, unadjusted.Funbound.plasma:=1]  
-    }
-    else if (Funbound.plasma>minimum.Funbound.plasma)
-    {
-      # If the median is one we have a special case:
-      Funbound.med.is.one <- Funbound.plasma == 1
-      if (Funbound.plasma < 0.99)
-      {
-        # Decent guess at initial values:
-        initial.values <- c(2,
-          (1-Funbound.plasma)/Funbound.plasma*2)
-      } else {
-        # temporarily reduce median to just less than 1:
-        if (Funbound.med.is.one) Funbound.plasma <- 1 - 10^-3 
-        # more likely to convege if we start with a distribution skewed toward 1
-        initial.values <- c(2,1)
-      }
-      # Use optim to estimate parameters for a beta distribution (alpha and beta)
-      # such that the median and 95% credible interval approximate the given values:
-      ppb.fit <- suppressWarnings(optim(initial.values, 
-        function(x) (0.95-
-        pbeta(Funbound.plasma.u95,x[1],x[2])+
-        pbeta(Funbound.plasma.l95,x[1],x[2]))^2+
-        (Funbound.plasma-qbeta(0.5,x[1],x[2]))^2,
-        method="BFGS"))
-      # We are drawing new values for the unadjusted Fup:
-      parameters.dt[, unadjusted.Funbound.plasma:=rbeta(n=samples,
-        ppb.fit$par[1],
-        ppb.fit$par[2])]
-      # Check to see if we need to adjust for median = 1:
-      if (Funbound.med.is.one)
-      {
-        # Assign median its old value
-        Funbound.plasma <- 1
-        # Set the highest 50% to 1:
-        med.val <- median(parameters.dt[, unadjusted.Funbound.plasma, with=TRUE])
-        parameters.dt[unadjusted.Funbound.plasma > med.val, 
-          unadjusted.Funbound.plasma := 1]
-      }
-    } else if (Funbound.plasma.u95 > minimum.Funbound.plasma)
-    {
-      # Assume that since the median is zero but the u95 is not, that there is 
-      # an uniform distribution:
-      # 97.5% of clearance values will be below Funbound.plasma.u95:
-      parameters.dt[,unadjusted.Funbound.plasma:=runif(n=samples,
-        minimum.Funbound.plasma,
-        min(1,minimum.Funbound.plasma+
-        2*(Funbound.plasma.u95-minimum.Funbound.plasma)))]
-      parameters.dt[as.logical(rbinom(n=samples,1,.95)),
-        unadjusted.Funbound.plasma:=minimum.Funbound.plasma]      
-    } else {
-      parameters.dt[,unadjusted.Funbound.plasma:=minimum.Funbound.plasma]
-    }
-# Adjust for in vitro binding:    
     parameters.dt[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
       1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
-    parameters.dt[, fup.mean:=unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
-  # Otherwise use point estimate:
   } else {
-    parameters.dt[,fup.mean:=Funbound.plasma]
+    parameters.dt[, Funbound.plasma.adjustment:=1]
   }
-  #if measured Funbound.plasma > 1, then set it to 1
-  parameters.dt[fup.mean>1, fup.mean := 1]
-  # Store NA so data.table doesn't convert everything to text:
-  parameters.dt[,Funbound.plasma.dist:=NA]
+  # After uncertainty simulation (if any) values become population means:
+  parameters.dt[, fup.mean:=
+    unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
 
   #
   #
