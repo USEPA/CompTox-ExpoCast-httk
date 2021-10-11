@@ -31,6 +31,9 @@ calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 # well-behaved chemical with a measured Rblood2plasma:
 set.seed(1234)
 calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
+# Chemical where median fup is 0 but upper 95th percentile is non-zero:
+set.seed(1234)
+calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 
 
 

@@ -251,7 +251,7 @@ invitro_mc <- function(parameters.dt=NULL,
           # If so, make the median LOD and the upper 95th quantile match the measured value:
           parameters.dt[, unadjusted.Funbound.plasma := rmed0non0u95(
             n=samples,
-            x.95 = Funbound.plasma.u95,
+            x.u95 = Funbound.plasma.u95,
             x.min = minimum.Funbound.plasma,
             x.LOD = fup.lod)]
        } else {
@@ -279,7 +279,7 @@ invitro_mc <- function(parameters.dt=NULL,
             # If so, make the median LOD and the upper 95th quantile match the measured value:
             parameters.dt[, unadjusted.Funbound.plasma := rmed0non0u95(
               n=samples,
-              x.95 = Funbound.plasma.u95,
+              x.u95 = Funbound.plasma.u95,
               x.min = minimum.Funbound.plasma,
               x.LOD = fup.lod)]
           } else {
