@@ -6,31 +6,56 @@
 #' distributions.
 #' 
 #' @param parameters.dt A data table of physiological parameters
+#' 
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
+#' 
 #' @param samples The number of samples to draw.
+#' 
+#' @param fup.meas.mc Logical -- should we perform measurment (uncertainty)
+#' Monte Carlo for \code{Funbound.plasma} values (Default TRUE)
+#' 
+#' @param fup.pop.mc Logical -- should we perform population (variability)
+#' Monte Carlo for \code{Funbound.plasma} values (Default TRUE)
+#' 
+#' @param clint.meas.mc Logical -- should we perform measurment (uncertainty)
+#' Monte Carlo for \code{Clint} values (Default TRUE)
+#' 
+#' @param clint.pop.mc Logical -- should we perform population (variability)
+#' Monte Carlo for \code{Clint} values (Default TRUE)
+#' 
 #' @param fup.meas.cv Coefficient of variation of distribution of measured
 #' \code{Funbound.plasma} values. 
+#' 
 #' @param clint.meas.cv Coefficient of variation of distribution of measured 
 #' \code{Clint} values.
+#' 
 #' @param fup.pop.cv Coefficient of variation of distribution of population
 #' \code{Funbound.plasma} values.
+#' 
 #' @param clint.pop.cv Coefficient of variation of distribution of population
 #' \code{Clint} values.
+#' 
 #' @param poormetab Logical. Whether to include poor metabolizers in the Clint
 #' distribution or not.
+#' 
 #' @param fup.lod The average limit of detection for \code{Funbound.plasma}, below
 #' which distribution will be censored if fup.censored.dist is TRUE. Default 0.01.
+#' 
 #' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -50,6 +75,10 @@
 
 invitro_mc <- function(parameters.dt=NULL,
                            samples,
+                           fup.meas.mc = TRUE,
+                           fup.pop.mc = TRUE,
+                           clint.meas.mc = TRUE,
+                           clint.pop.mc = TRUE,
                            fup.meas.cv=0.4,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.3,
@@ -70,6 +99,30 @@ invitro_mc <- function(parameters.dt=NULL,
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
   Funbound.plasma.dist<-fup.sd<-Fhep.assay.correction <- NULL
   #End R CMD CHECK appeasement.
+
+  # Are we doing clint measurmement Monte Carlo?
+  if(is.null(clint.meas.cv))
+  {
+    clint.meas.mc <- FALSE
+  }
+  # Are we doing clint population Monte Carlo?
+  if(is.null(clint.pop].cv))
+  {
+    clint.pop.mc <- FALSE
+  }
+  # Are we doing fup measurmement Monte Carlo?
+  if(is.null(clint.meas.cv))
+  {
+    fup.meas.mc <- FALSE
+  }
+  # Are we doing fup population Monte Carlo?
+  if(is.null(fup.pop.cv))
+  {
+    fup.pop.mc <- FALSE
+  }
+  
+  
+
 
   if (!("Funbound.plasma") %in% names(parameters.dt))
     stop("Funbound.plasma needed in invitro_mc.")
@@ -103,9 +156,9 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   #
-  # If the default CV is set to NULL, we just use the point estimate with no
+  # If the clint.meas.mc == FALSE then we just use the point estimate with no
   # uncertainty:
-  if (is.null(clint.meas.cv))
+  if (!clint.meas.mc)
   {         
     Clint <- parameters.dt[["Clint"]]
     Clint.l95 <- NULL
@@ -194,9 +247,9 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   #
-  # If the default CV is set to NULL, we just use the point estimate with no
+  # If the fup.meas.mc == FALSE we just use the point estimate with no
   # uncertainty simulation:
-  if (is.null(fup.meas.cv))
+  if (!fup.meas.mc)
   {
     Funbound.plasma <- parameters.dt$Funbound.plasma
     Funbound.plasma.l95 <- NULL
@@ -365,7 +418,7 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #do not sample Clint if measured value is zero,
   #or if user said not to vary Clint.
-  if (!is.null(clint.pop.cv) & Clint>0)
+  if (clint.pop.mc & Clint>0)
   {
     #Draw Clint from a normal distribution if poor metabolizers excluded, or
     #Gaussian mixture distribution if poor metabolizers included.
@@ -393,8 +446,8 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   # next, draw Funbound.plasma from either a normal or censored distribution, as
-  # long as fup.pop.cv isn't NULL (otherwise, no pop variability for this)
-  if (!is.null(fup.pop.cv))
+  # long as fup.pop.mc isn't FALSE (otherwise, no pop variability for this)
+  if (fup.pop.mc)
   {
     parameters.dt[,fup.sd:=fup.pop.cv*fup.mean]
     parameters.dt[,fup.lod:=fup.lod]
@@ -406,6 +459,8 @@ invitro_mc <- function(parameters.dt=NULL,
                                                           mean=fup.mean,
                                                           sd=fup.sd,
                                                           lod=fup.lod)]
+      # Enforce maximum value:
+      parameters.dt[Funbound.plasma>1, Funbound.plasma:=]                                                   
     } else { #if user specified to use a non-censored distribution
       #Draw Funbound.plasma from a normal distribution, truncated at 0 and 1.
       parameters.dt[, Funbound.plasma:=truncnorm::rtruncnorm(n=1,
@@ -415,10 +470,11 @@ invitro_mc <- function(parameters.dt=NULL,
                                                              sd=fup.sd)] 
     }
   } else {
+  # No population variability simulation:
     parameters.dt[,Funbound.plasma:=fup.mean]
   }
 
-  #Enforce a minimum Funbound.plasma unless set to zero:
+  #Enforce a minimum Funbound.plasma :
   parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
   
