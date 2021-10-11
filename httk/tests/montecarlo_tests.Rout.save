@@ -123,6 +123,23 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 2: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+> # Chemical where median fup is 0 but upper 95th percentile is non-zero:
+> set.seed(1234)
+> calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+121.2 
+Warning messages:
+1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Fraction unbound is provided as a distribution.
+2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Fraction unbound = 0, changed to 0.005.
+3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
+  Rblood2plasma has been recalculated.
 > 
 > 
 > 
