@@ -13,7 +13,9 @@
 #' @param samples The number of samples to draw.
 #' 
 #' @param fup.meas.mc Logical -- should we perform measurment (uncertainty)
-#' Monte Carlo for \code{Funbound.plasma} values (Default TRUE)
+#' Monte Carlo for \code{Funbound.plasma} values (Default TRUE). If FALSE, 
+#' the user may choose to provide columns for "unadjusted.Funbound.plasma" or
+$' "fup.mean" from their own methods. 
 #' 
 #' @param fup.pop.mc Logical -- should we perform population (variability)
 #' Monte Carlo for \code{Funbound.plasma} values (Default TRUE)
@@ -254,7 +256,10 @@ invitro_mc <- function(parameters.dt=NULL,
     Funbound.plasma <- parameters.dt$Funbound.plasma
     Funbound.plasma.l95 <- NULL
     Funbound.plasma.u95 <- NULL
-    parameters.dt[, unadjusted.Funbound.plasma:=Funbound.plasma]
+    if (!"unadjusted.Funbound.plasma" %in% colnames(parameters.dt))
+    {
+      parameters.dt[, unadjusted.Funbound.plasma:=Funbound.plasma]
+    }
   } else {
     # We need to determine what sort of information we have been provided about
     # measurment uncertainty. 
@@ -401,9 +406,14 @@ invitro_mc <- function(parameters.dt=NULL,
   } else {
     parameters.dt[, Funbound.plasma.adjustment:=1]
   }
-  # After uncertainty simulation (if any) values become population means:
-  parameters.dt[, fup.mean:=
-    unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
+  
+  # Check that user didn't provide fup.mean:
+  if (Fup.meas.mc | !("fup.mean" %in% colnames(parameters.dt)))
+  {
+    # After uncertainty simulation (if any) values become population means:
+    parameters.dt[, fup.mean:=
+      unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
+  }
 
   #
   #
