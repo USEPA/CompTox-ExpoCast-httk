@@ -1,5 +1,14 @@
 News for R package httk
 
+Changes in feature/uvupdate (Fall, 2021)
+  Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
+  Added internal function remd0non0u95 to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
+  Added logical arguments to invitro_mc to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
+  If fup measurment Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or
+$' "fup.mean" from their own methods
+
+  
+
 Changes in version 2.0.5 (Fall, 2021)
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Pradeep et al. (2020) (https://doi.org/10.1016/j.comtox.2020.100136) is now included as Pradeep2020 and can be added with the new function: load_pradeep2020().
