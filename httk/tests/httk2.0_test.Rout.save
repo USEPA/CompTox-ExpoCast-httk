@@ -20,7 +20,6 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save httk2.0_test.R httk2.0_test.Rout
 > library(httk)
 > 
-<<<<<<< HEAD
 > head(solve_pbtk(chem.name="Terbufos"))
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Agutlumen    Cgut    Cliver      Cven     Clung  Cart  Crest
@@ -57,14 +56,7 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [4,]  10.910 1.575e+00 0.009847    6.946e+00 0.017070
 [5,]  12.750 1.733e+00 0.022000    1.293e+01 0.034620
 [6,]  12.460 1.661e+00 0.034750    1.826e+01 0.052390
-=======
-> #head(solve_pbtk(chem.name="Terbufos"))
-> #head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
-> #                    initial.dose = 1, # Assume dose is in mg/kg BW/day  
-> #                    doses.per.day=NULL,
-> #                    dosing.matrix = NULL,
-> #                    daily.dose = NULL)))
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
+
 > 
 > dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 > colnames(dm) <- c("time","dose")
@@ -155,7 +147,6 @@ Warning messages:
 6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 >   
-<<<<<<< HEAD
 > head(solve_pbtk(chem.name="Terbufos",iv.dose=TRUE))
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time    Aven      Cgut    Cliver    Cven   Clung   Cart     Crest
@@ -288,26 +279,7 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [4,] 0.02083        239.4         0        1.303     3.319000 2.733e-02
 [5,] 0.03125        237.8         0        1.294     4.962000 4.086e-02
 [6,] 0.04167        236.1         0        1.285     6.593000 5.429e-02
-=======
-> #head(solve_pbtk(chem.name="Terbufos",iv.dose=TRUE))
-> #
-> #solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
-> #  initial.dose =NULL,
-> #  doses.per.day=4,
-> #  daily.dose=1,
-> #  dosing.matrix=NULL))[190:205,]
-> #solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
-> #
-> #
-> #calc_analytic_css(chem.name="Betaxolol")
-> #calc_analytic_css(chem.name="Tacrine",model="pbtk")
-> #calc_analytic_css(chem.name="Dicofol",model="1compartment")
-> #calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
-> #calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
-> 
-> #head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
-> #head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
+
 > solve_1comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 Human volume of distribution returned in units of L/kg BW.
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.703.
@@ -353,7 +325,6 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 [14,] 2.010 2.473e+01        1.706        53.78 1.911
 [15,] 2.021 1.434e+01        1.761        54.29 1.929
 [16,] 2.031 8.313e+00        1.792        54.81 1.948
-<<<<<<< HEAD
 > 
 > head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
 AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.674.
@@ -421,21 +392,6 @@ AUC is area under plasma concentration curve in uM units with Rblood2plasma = 0.
 [14,] 2.010  2.521e+01  18.70    4.876    6.804        56.67 5.582   4.876
 [15,] 2.021  1.462e+01  18.23    5.072    6.867        57.25 5.634   5.072
 [16,] 2.031  8.476e+00  17.81    5.186    6.933        57.82 5.687   5.186
-=======
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-4: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-> #
-> #head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
-> #head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
-> #solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
-> #solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
->>>>>>> 926d350791545c8c68d5ba8b7231bec6be50cf4d
+
 > 
 > quit("no")
