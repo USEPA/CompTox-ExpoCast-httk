@@ -66,7 +66,7 @@ affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 \description{
 This function provides the necessary parameters to run
 \code{\link{predict_partitioning_schmitt}}, excluding the data in table
-\code{\linke{tissue.data}}. The model is based on the Schmitt (2008) method
+\code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
 for predicting tissue:plasma partition coefficients as modified by Pearce 
 et al. (2017). The modifications include approaches adapted from Peyret 
 et al. (2010).
