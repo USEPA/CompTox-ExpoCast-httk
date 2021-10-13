@@ -113,7 +113,7 @@ parameterize_3comp<- function(
                        force.human.clint.fup = FALSE,
                        clint.pvalue.threshold = 0.05,
                        adjusted.Funbound.plasma = TRUE,
-                       adjused.Clint = TRUE,
+                       adjusted.Clint = TRUE,
                        regression = TRUE,
                        suppress.messages = FALSE,
                        restrictive.clearance = TRUE,
