@@ -141,7 +141,7 @@ parameterize_pbtk <- function(
                        force.human.clint.fup = FALSE,
                        clint.pvalue.threshold=0.05,
                        adjusted.Funbound.plasma=TRUE,
-                       adjusted.Clinte=TRUE,
+                       adjusted.Clint=TRUE,
                        regression=TRUE,
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,

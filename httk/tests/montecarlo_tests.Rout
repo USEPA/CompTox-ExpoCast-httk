@@ -1,0 +1,94 @@
+
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+> library(httk)
+> 
+> NSAMP <- 250
+> 
+> 
+> 
+> #
+> #
+> # Test that the underlying PK models give the same answers:
+> calc_analytic_css(chem.cas="15972-60-8")
+Plasma concentration returned in uM units.
+[1] 0.2364
+Warning messages:
+1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+3: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+> calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
+Human volume of distribution returned in units of L/kg BW.
+Plasma concentration returned in uM units.
+[1] 0.2781
+Warning message:
+In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+  Human in vivo measured Rblood2plasma used.
+> calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
+Plasma concentration returned in uM units.
+[1] 0.2364
+Warning messages:
+1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+3: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+> calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
+Plasma concentration returned in uM units.
+[1] 0.279
+Warning messages:
+1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+> 
+> 
+> 
+> #
+> #
+> # Now test Monte Carlo for a variety of chemicals:
+> # Clint and Fup are distributions, clint is zero:
+> set.seed(1234)
+> calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
+Error in (function (parameters.dt = NULL, samples, fup.meas.mc = TRUE,  : 
+  object 'adjusted.clint' not found
+Calls: calc_mc_css -> create_mc_samples -> do.call -> <Anonymous>
+In addition: Warning messages:
+1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint is provided as a distribution.
+2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+Execution halted
