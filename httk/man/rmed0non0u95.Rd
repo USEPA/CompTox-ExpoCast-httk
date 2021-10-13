@@ -8,7 +8,7 @@ rmed0non0u95(n, x.u95, x.min = 0, x.LOD = 0.005)
 }
 \arguments{
 \item{x.u95}{The upper limit on the 95th confidence/credible intervale (this
-is the 97.5% quantile)}
+is the 97.5 percentile)}
 
 \item{x.min}{The minimum allowed value (defaults to 0)}
 
