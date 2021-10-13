@@ -47,6 +47,8 @@ rmed0non0u95 <- function(
   # Check that x.u95 is non-zero:
   if (x.u95 == 0) warning("rmed0nonu95 called with x.u95 == 0")
 
+  if (x.lod == 0) stop("LOD can be small but not zero")
+  
   # Check that x.u95 is greater than minimum:
   if (x.u95 < x.min)
   {

@@ -177,7 +177,8 @@ invitro_mc <- function(parameters.dt=NULL,
     Clint <- parameters.dt[["Clint"]]
     Clint.l95 <- NULL
     Clint.u95 <- NULL
-    Clint.pvalue <- NULL
+    Clint.pvalue <- parameters.dt[["Clint.pValue"]]
+    parameters.dt[,Clint:=Clint]
   } else {
     
     # We need to determine what sort of information we have been provided about
@@ -199,10 +200,10 @@ invitro_mc <- function(parameters.dt=NULL,
     # If we don't have that, we use the default coefficient of variation to
     # generate confidence limits:
     } else {
-      Clint <- parameters.dt$Clint
+      Clint <- parameters.dt[["Clint"]]
       Clint.l95 <- sapply(Clint*(1 - clint.meas.cv*1.96),function(x) max(x,10^-3))
       Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
-      Clint.pvalue <- 0
+      Clint.pvalue <- parameters.dt[["Clint.pValue"]]
     }
     
   # Shrink it down if we don't have unique values:
@@ -219,15 +220,20 @@ invitro_mc <- function(parameters.dt=NULL,
     
     # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
     # "true" values for Clint that are consistent with the measurment .
-    # If a credible interval was specified for Clint, draw from that interval:
-    if (Clint == 0)
+    # If a credible interval was specified for Clint, draw from that interval.
+    # First check if at least the upper limit on the 95 percent interval is non-zero:
+    if (Clint.u95>0)
     {
-      parameters.dt[,Clint:=0]
-    } 
-    else if (!is.null(Clint.u95))
-    {
-      if (Clint.u95>0& Clint>0)
+      # Check if the median is zero:
+      if (Clint == 0)
       {
+        # Use our custom median 0 non-zero upper 95th function:
+        parameters.dt[, Clint := rmed0non0u95(
+            n=samples,
+            x.u95 = Clint.u95,
+            x.min = 0,
+            x.LOD = Clint.u95/1e2)]
+      } else {
         # Optimize to find parameters.dt for a log-normal distribution that have
         # the least squares difference using the three quantiles (median, l95, u95)
         clint.fit <- suppressWarnings(optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
@@ -235,19 +241,21 @@ invitro_mc <- function(parameters.dt=NULL,
                                                 plnorm(Clint.l95,x[1],x[2]))^2+
                                                 (Clint-qlnorm(0.5,x[1],x[2]))^2))
         parameters.dt[,Clint:=rlnorm(n=samples,clint.fit$par[1],clint.fit$par[2])]
-      } else if (Clint.u95>0)
+      }
+      # Check to see if we should enforce some zero entries:
+      N.clint.zero <- dim(parameters.dt[Clint==0,])[1]
+      N.clint.zero.req <- round(Clint.pvalue*samples)
+      if (N.clint.zero < N.clint.zero.req)
       {
-        # Assume that the minimum non-zero Clint is 1
-        # Assume that since the median is zero but the u95 is not, that there is 
-        # an exponential distribution:
-        # 97.5% of clearance values will be below Clint.u95:
-        parameters.dt[,Clint:=exp(runif(n=samples,log(1),(log(Clint.u95)-log(1))/0.975))]
-      } else parameters.dt[,Clint:=Clint]
-    # the Bayesian "p-value" here reflects how often there is no clearance:
-      parameters.dt[as.logical(rbinom(n=samples,1,Clint.pvalue)),Clint:=0] 
-    } else parameters.dt[,Clint:=Clint]
-    # Store NA so data.table doesn't convert everything to text:
-    parameters.dt[,Clint.dist:=NA]
+        # Pick the N.clint.zero.req lowest Clints:
+        thresh <- sort(parameters.dt[,Clint,with=TRUE])[N.clint.zero.req]
+        # Change some non-zero Clints to zero:
+        parameters.dt[Clint <= thresh, Clint:=0] 
+      }
+    } else {
+      # All quantiles are zero:
+      parameters.dt[,Clint:=0]
+    }
   }
 
   # Determine the value for fraction unbound in hepatocyte assay (depends on
