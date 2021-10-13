@@ -15,7 +15,7 @@
 #' @param fup.meas.mc Logical -- should we perform measurment (uncertainty)
 #' Monte Carlo for \code{Funbound.plasma} values (Default TRUE). If FALSE, 
 #' the user may choose to provide columns for "unadjusted.Funbound.plasma" or
-$' "fup.mean" from their own methods. 
+#' "fup.mean" from their own methods. 
 #' 
 #' @param fup.pop.mc Logical -- should we perform population (variability)
 #' Monte Carlo for \code{Funbound.plasma} values (Default TRUE)
@@ -47,8 +47,11 @@ $' "fup.mean" from their own methods.
 #' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
 #' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE.
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma when set to TRUE (Default).
+#' 
+#' @param adjusted.Funbound.plasma Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
@@ -69,6 +72,14 @@ $' "fup.mean" from their own methods.
 #' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
 #' Variability in Risk Prioritization." Toxicological Sciences (2019).
 #'
+#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
+#' unbound fraction in hepatocyte incubations using microsomal binding or drug 
+#' lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
+#' 
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
+#' 
 #' @keywords monte-carlo in-vitro
 #'
 #' @import stats
@@ -89,6 +100,7 @@ invitro_mc <- function(parameters.dt=NULL,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
                            adjusted.Funbound.plasma=TRUE,
+                           adjusted.Clint=TRUE,
                            clint.pvalue.threshold=0.05,
                            minimum.Funbound.plasma=0.0001)
 {
@@ -103,22 +115,22 @@ invitro_mc <- function(parameters.dt=NULL,
   #End R CMD CHECK appeasement.
 
   # Are we doing clint measurmement Monte Carlo?
-  if(is.null(clint.meas.cv))
+  if (is.null(clint.meas.cv))
   {
     clint.meas.mc <- FALSE
   }
   # Are we doing clint population Monte Carlo?
-  if(is.null(clint.pop].cv))
+  if (is.null(clint.pop.cv))
   {
     clint.pop.mc <- FALSE
   }
   # Are we doing fup measurmement Monte Carlo?
-  if(is.null(clint.meas.cv))
+  if (is.null(clint.meas.cv))
   {
     fup.meas.mc <- FALSE
   }
   # Are we doing fup population Monte Carlo?
-  if(is.null(fup.pop.cv))
+  if (is.null(fup.pop.cv))
   {
     fup.pop.mc <- FALSE
   }
@@ -166,81 +178,88 @@ invitro_mc <- function(parameters.dt=NULL,
     Clint.l95 <- NULL
     Clint.u95 <- NULL
     Clint.pvalue <- NULL
-  }
-  # We need to determine what sort of information we have been provided about
-  # measurment uncertainty. We first check for a comma separated list with a
-  # median, lower, and upper 95th credible interval limits:
-  else if (all(!is.na(parameters.dt$Clint.dist)))
-  {
-    if (nchar(parameters.dt$Clint.dist[1]) -
-      nchar(gsub(",","",parameters.dt$Clint.dist[1]))!=3) 
-    {
-      stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
-    }
-    temp <- strsplit(parameters.dt$Clint.dist,",")
-    Clint <- as.numeric(temp[[1]][1])
-    Clint.l95 <- as.numeric(temp[[1]][2])
-    Clint.u95 <- as.numeric(temp[[1]][3])
-    Clint.pvalue <- as.numeric(temp[[1]][4])
-  # If we don't have that, we use the default coefficient of variation to
-  # generate confidence limits:
   } else {
-    Clint <- parameters.dt$Clint
-    Clint.l95 <- sapply(Clint*(1 - clint.meas.cv*1.96),function(x) max(x,10^-3))
-    Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
-    Clint.pvalue <- 0
-  }
-  
-# Shrink it down if we don't have unique values:
-  if (all(c(length(unique(Clint))==1,
-    length(unique(Clint.l95))==1,
-    length(unique(Clint.u95))==1,
-    length(unique(Clint.pvalue))==1)))
-  {
-    Clint <- Clint[1]
-    Clint.l95 <- Clint.l95[1]
-    Clint.u95 <- Clint.u95[1]
-    Clint.pvalue <- Clint.pvalue[1]
-  }
     
+    # We need to determine what sort of information we have been provided about
+    # measurment uncertainty. We first check for a comma separated list with a
+    # median, lower, and upper 95th credible interval limits:
+  
+    if (all(!is.na(parameters.dt$Clint.dist)))
+    {
+      if (nchar(parameters.dt$Clint.dist[1]) -
+        nchar(gsub(",","",parameters.dt$Clint.dist[1]))!=3) 
+      {
+        stop("Clint distribution should be four values (median,low95th,high95th,pValue) separated by commas.")
+      }
+      temp <- strsplit(parameters.dt$Clint.dist,",")
+      Clint <- as.numeric(temp[[1]][1])
+      Clint.l95 <- as.numeric(temp[[1]][2])
+      Clint.u95 <- as.numeric(temp[[1]][3])
+      Clint.pvalue <- as.numeric(temp[[1]][4])
+    # If we don't have that, we use the default coefficient of variation to
+    # generate confidence limits:
+    } else {
+      Clint <- parameters.dt$Clint
+      Clint.l95 <- sapply(Clint*(1 - clint.meas.cv*1.96),function(x) max(x,10^-3))
+      Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
+      Clint.pvalue <- 0
+    }
+    
+  # Shrink it down if we don't have unique values:
+    if (all(c(length(unique(Clint))==1,
+      length(unique(Clint.l95))==1,
+      length(unique(Clint.u95))==1,
+      length(unique(Clint.pvalue))==1)))
+    {
+      Clint <- Clint[1]
+      Clint.l95 <- Clint.l95[1]
+      Clint.u95 <- Clint.u95[1]
+      Clint.pvalue <- Clint.pvalue[1]
+    }
+    
+    # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
+    # "true" values for Clint that are consistent with the measurment .
+    # If a credible interval was specified for Clint, draw from that interval:
+    if (Clint == 0)
+    {
+      parameters.dt[,Clint:=0]
+    } 
+    else if (!is.null(Clint.u95))
+    {
+      if (Clint.u95>0& Clint>0)
+      {
+        # Optimize to find parameters.dt for a log-normal distribution that have
+        # the least squares difference using the three quantiles (median, l95, u95)
+        clint.fit <- suppressWarnings(optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
+                                                plnorm(Clint.u95,x[1],x[2])+
+                                                plnorm(Clint.l95,x[1],x[2]))^2+
+                                                (Clint-qlnorm(0.5,x[1],x[2]))^2))
+        parameters.dt[,Clint:=rlnorm(n=samples,clint.fit$par[1],clint.fit$par[2])]
+      } else if (Clint.u95>0)
+      {
+        # Assume that the minimum non-zero Clint is 1
+        # Assume that since the median is zero but the u95 is not, that there is 
+        # an exponential distribution:
+        # 97.5% of clearance values will be below Clint.u95:
+        parameters.dt[,Clint:=exp(runif(n=samples,log(1),(log(Clint.u95)-log(1))/0.975))]
+      } else parameters.dt[,Clint:=Clint]
+    # the Bayesian "p-value" here reflects how often there is no clearance:
+      parameters.dt[as.logical(rbinom(n=samples,1,Clint.pvalue)),Clint:=0] 
+    } else parameters.dt[,Clint:=Clint]
+    # Store NA so data.table doesn't convert everything to text:
+    parameters.dt[,Clint.dist:=NA]
+  }
 
   # Determine the value for fraction unbound in hepatocyte assay (depends on
   # phys-chem but does not vary biologically):
   # First check that this model has phys-chem parameters:
   if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
     parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
-  
-  # Now do the uncertainty Monte Carlo analysis -- draw a series of plausible 
-  # "true" values for Clint that are consistent with the measurment .
-  # If a credible interval was specified for Clint, draw from that interval:
-  if (Clint == 0)
+  if (adjusted.clint)
   {
-    parameters.dt[,Clint:=0]
-  } 
-  else if (!is.null(Clint.u95))
-  {
-    if (Clint.u95>0& Clint>0)
-    {
-      # Optimize to find parameters.dt for a log-normal distribution that have
-      # the least squares difference using the three quantiles (median, l95, u95)
-      clint.fit <- suppressWarnings(optim(c(log(Clint),clint.meas.cv), function(x) (0.95-
-                                              plnorm(Clint.u95,x[1],x[2])+
-                                              plnorm(Clint.l95,x[1],x[2]))^2+
-                                              (Clint-qlnorm(0.5,x[1],x[2]))^2))
-      parameters.dt[,Clint:=rlnorm(n=samples,clint.fit$par[1],clint.fit$par[2])]
-    } else if (Clint.u95>0)
-    {
-      # Assume that the minimum non-zero Clint is 1
-      # Assume that since the median is zero but the u95 is not, that there is 
-      # an exponential distribution:
-      # 97.5% of clearance values will be below Clint.u95:
-      parameters.dt[,Clint:=exp(runif(n=samples,log(1),(log(Clint.u95)-log(1))/0.975))]
-    } else parameters.dt[,Clint:=Clint]
-  # the Bayesian "p-value" here reflects how often there is no clearance:
-    parameters.dt[as.logical(rbinom(n=samples,1,Clint.pvalue)),Clint:=0] 
-  } else parameters.dt[,Clint:=Clint]
-  # Store NA so data.table doesn't convert everything to text:
-  parameters.dt[,Clint.dist:=NA]
+    # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+    parameters.dt[, Clint := Clint / Fhep.assay.correction]
+  }
 
   #
   #
@@ -470,7 +489,7 @@ invitro_mc <- function(parameters.dt=NULL,
                                                           sd=fup.sd,
                                                           lod=fup.lod)]
       # Enforce maximum value:
-      parameters.dt[Funbound.plasma>1, Funbound.plasma:=]                                                   
+      parameters.dt[Funbound.plasma>1, Funbound.plasma:=1]                                                   
     } else { #if user specified to use a non-censored distribution
       #Draw Funbound.plasma from a normal distribution, truncated at 0 and 1.
       parameters.dt[, Funbound.plasma:=truncnorm::rtruncnorm(n=1,

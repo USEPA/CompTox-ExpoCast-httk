@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_steadystate.R
 \name{parameterize_steadystate}
 \alias{parameterize_steadystate}
-\title{Parameterize_SteadyState}
+\title{Parameters for a three-compartment toxicokinetic model at steady-state}
 \usage{
 parameterize_steadystate(
   chem.cas = NULL,
@@ -13,6 +13,7 @@ parameterize_steadystate(
   default.to.human = FALSE,
   human.clint.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   restrictive.clearance = TRUE,
   fup.lod.default = 0.005,
   suppress.messages = FALSE,
@@ -41,8 +42,11 @@ true.}
 \item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
@@ -77,8 +81,16 @@ clearance, calculated from the corrected well-stirred model.}
 }
 \description{
 This function initializes the parameters needed in the functions
-calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
-compartment steady state model ('3compartmentss').
+\code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
+\code{\link{calc_analytic_css}} for the three
+compartment steady state model ('3compartmentss') as used in 
+Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
+elsewhere. By assuming that enough time has passed to reach steady-state, we
+eliminate the need for tissue-specific parititon coefficients because we 
+assume all tissues have come to equilibrium with the unbound concentration
+in plasma. However, we still use chemical properties to predict the 
+blood:plasma ratio for estimating first-pass hepatic metabolism for oral
+exposures.
 }
 \examples{
 

@@ -169,14 +169,13 @@ calc_hep_clearance <- function(chem.name=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   }
   
-             
-  fu_hep <- get_param(
-              "Fhep.assay.correction",
-              parameters,
-              "calc_hep_clearance") 
-              
-# Correct for fraction of chemical unbound in in vitro hepatocyte assay:
-  Clint <- Clint / fu_hep
+#  fu_hep <- get_param(
+#              "Fhep.assay.correction",
+#              parameters,
+#              "calc_hep_clearance") 
+#              
+## Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+#  Clint <- Clint / fu_hep
 
   fup <- get_param(
            "Funbound.plasma",
