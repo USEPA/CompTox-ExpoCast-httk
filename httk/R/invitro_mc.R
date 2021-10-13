@@ -255,7 +255,7 @@ invitro_mc <- function(parameters.dt=NULL,
   # First check that this model has phys-chem parameters:
   if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
     parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
-  if (adjusted.clint)
+  if (adjusted.Clint)
   {
     # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
     parameters.dt[, Clint := Clint / Fhep.assay.correction]
