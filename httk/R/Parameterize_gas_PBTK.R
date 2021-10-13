@@ -1,7 +1,7 @@
 #' Parameters for a generic gas inhalation physiologically-based toxicokinetic model
 #' 
 #' This function initializes the parameters needed for the model 'gas_pbtk', for
-#' example \code{\linke{solve_gas_pbtk}}. Chemical- and species-specific model 
+#' example \code{\link{solve_gas_pbtk}}. Chemical- and species-specific model 
 #' parameters are generated. These include tissue:plasma partition coefficients 
 #' via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
 #' and flows are retrieved from table \code{\link{physiology.data}}). This model
