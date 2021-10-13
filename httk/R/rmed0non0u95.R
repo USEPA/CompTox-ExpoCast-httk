@@ -9,7 +9,7 @@
 #' @param N Number of samples to draw
 #' 
 #' @param x.u95 The upper limit on the 95th confidence/credible intervale (this
-#'   is the 97.5% quantile)
+#'   is the 97.5 percentile)
 #' 
 #' @param x.min The minimum allowed value (defaults to 0)
 #' 
