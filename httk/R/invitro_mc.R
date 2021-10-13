@@ -427,7 +427,7 @@ invitro_mc <- function(parameters.dt=NULL,
   }
   
   # Check that user didn't provide fup.mean:
-  if (Fup.meas.mc | !("fup.mean" %in% colnames(parameters.dt)))
+  if (fup.meas.mc | !("fup.mean" %in% colnames(parameters.dt)))
   {
     # After uncertainty simulation (if any) values become population means:
     parameters.dt[, fup.mean:=
