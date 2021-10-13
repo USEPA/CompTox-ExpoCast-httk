@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_pbtk.R
 \name{parameterize_pbtk}
 \alias{parameterize_pbtk}
-\title{Parameterize_PBTK}
+\title{Parameters for a generic physiologically-based toxicokinetic model}
 \usage{
 parameterize_pbtk(
   chem.cas = NULL,
@@ -12,7 +12,7 @@ parameterize_pbtk(
   default.to.human = FALSE,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
     c("gut")),
-  force.human.clint.fup = F,
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
@@ -39,7 +39,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{tissuelist}{Specifies compartment names and tissues groupings.
 Remaining tissues in tissue.data are lumped in the rest of the body.
-However, solve_pbtk only works with the default parameters.}
+However, \code{\link{solve_pbtk}} only works with the default parameters.}
 
 \item{force.human.clint.fup}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
@@ -48,8 +48,8 @@ intrinsic clearance and fraction of unbound plasma if true.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -62,6 +62,9 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 }
 \value{
 \item{BW}{Body Weight, kg.} 
@@ -104,8 +107,16 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
-This function initializes the parameters needed in the functions solve_pbtk,
-calc_css, and others using the multiple compartment model.
+Generate a chemical- and species-specific set of model parameters, 
+including tissue:plasma partition coefficients (via Schmitt (2008)'s method
+as modified by Pearce et al. (2017)) and organ volumes and flows 
+(from table \code{\link{physiology.data}}) for an arbitrary tissue lumping 
+scheme (tissues  must be described in table \code{\link{tissue.data}}).
+}
+\details{
+By default, this function initializes the parameters needed in the functions 
+\code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
+default generic PBTK model (for oral and intravenous dosing only).
 }
 \examples{
 
@@ -123,6 +134,13 @@ calc_css, and others using the multiple compartment model.
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
