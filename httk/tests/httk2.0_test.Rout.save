@@ -39,17 +39,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
 +                     initial.dose = 1, # Assume dose is in mg/kg BW/day  
@@ -74,17 +72,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > dm <- matrix(c(0,1,2,5,5,5),nrow=3)
@@ -120,17 +116,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
 +   initial.dose =NULL,
@@ -167,17 +161,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Methenamine",  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 >   
 > head(solve_pbtk(chem.name="Terbufos",iv.dose=TRUE))
@@ -199,17 +191,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Terbufos", dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
@@ -255,17 +245,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.709.
@@ -306,17 +294,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Besonprodil",  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > 
@@ -324,25 +310,21 @@ Warning messages:
 Plasma concentration returned in uM units.
 [1] 0.5923
 Warning messages:
-1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+2: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="Tacrine",model="pbtk")
 Plasma concentration returned in uM units.
 [1] 0.001862
 Warning messages:
-1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+2: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="Dicofol",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
@@ -363,17 +345,15 @@ Plasma concentration returned in uM units.
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
 Plasma concentration returned in uM units.
@@ -385,9 +365,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+4: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 > 
 > head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
@@ -396,10 +374,10 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
         time Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000    221.90    0.0000000    0.000e+00 0.000e+00
 [2,] 0.00001    221.80    0.0006316    3.840e-07 3.000e-09
-[3,] 0.01042    128.70    0.5055000    3.490e-01 2.875e-03
-[4,] 0.02083     74.60    0.7951000    1.188e+00 9.789e-03
-[5,] 0.03125     43.26    0.9596000    2.308e+00 1.901e-02
-[6,] 0.04167     25.08    1.0520000    3.585e+00 2.953e-02
+[3,] 0.01042    128.70    0.5055000    3.491e-01 2.875e-03
+[4,] 0.02083     74.60    0.7951000    1.189e+00 9.789e-03
+[5,] 0.03125     43.26    0.9596000    2.309e+00 1.901e-02
+[6,] 0.04167     25.08    1.0520000    3.587e+00 2.953e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -414,11 +392,11 @@ Human volume of distribution returned in units of L/kg BW.
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
         time Acompartment Agutlumen Ccompartment Ametabolized       AUC
 [1,] 0.00000        242.7         0        1.321     0.000000 0.000e+00
-[2,] 0.00001        242.7         0        1.321     0.001603 1.321e-05
+[2,] 0.00001        242.7         0        1.321     0.001604 1.321e-05
 [3,] 0.01042        241.0         0        1.312     1.665000 1.371e-02
-[4,] 0.02083        239.4         0        1.303     3.318000 2.733e-02
-[5,] 0.03125        237.7         0        1.294     4.960000 4.085e-02
-[6,] 0.04167        236.1         0        1.285     6.590000 5.428e-02
+[4,] 0.02083        239.4         0        1.303     3.319000 2.733e-02
+[5,] 0.03125        237.7         0        1.294     4.961000 4.085e-02
+[6,] 0.04167        236.1         0        1.285     6.592000 5.428e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -502,17 +480,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.674.
@@ -533,17 +509,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.703.
@@ -563,17 +537,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.709.
@@ -597,17 +569,15 @@ AUC is area under plasma concentration curve in uM*days units with Rblood2plasma
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-5: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > quit("no")
