@@ -1,32 +1,53 @@
-#' Parameterize_SteadyState
+#' Parameters for a three-compartment toxicokinetic model at steady-state
 #' 
 #' This function initializes the parameters needed in the functions
-#' calc_mc_css, calc_mc_oral_equiv, and calc_analytic_css for the three
-#' compartment steady state model ('3compartmentss').  
-#' 
+#' \code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
+#' \code{\link{calc_analytic_css}} for the three
+#' compartment steady state model ('3compartmentss') as used in 
+#' Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
+#' elsewhere. By assuming that enough time has passed to reach steady-state, we
+#' eliminate the need for tissue-specific parititon coefficients because we 
+#' assume all tissues have come to equilibrium with the unbound concentration
+#' in plasma. However, we still use chemical properties to predict the 
+#' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
+#' exposures.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
 #' having p-values greater than the threshold are set to zero.
+#' 
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
+#' 
 #' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
-#' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
-#' TRUE.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' 
 #' @param fup.lod.default Default value used for fraction of unbound plasma for
 #' chemicals where measured value was below the limit of detection. Default
 #' value is 0.0005.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
@@ -51,7 +72,8 @@
 #'
 #' @author John Wambaugh
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' @references 
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
@@ -76,6 +98,7 @@ parameterize_steadystate <- function(
                               default.to.human=FALSE,
                               human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
+                              adjusted.Clint=TRUE,
                               restrictive.clearance=TRUE,
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
@@ -276,7 +299,22 @@ Set default.to.human to true to substitute human value.")
 # Restrict values of fup:
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
-  
+    
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=list(
+    Pow=Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    suppress.messages=suppress.messages)) # fraction 
+  if (adjusted.Clint) 
+  {
+    Clint.point <- Clint.point/Fu_hep
+    if (!suppress.messages) 
+    {
+      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
+    }
+  }
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
                         chem.cas=chem.cas,
@@ -297,12 +335,7 @@ Set default.to.human to true to substitute human value.")
   Params[["BW"]] <- BW # kg
   Params[["MW"]] <- 
     get_physchem_param("MW",chem.cas=chem.cas) # molecular weight g/mol
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
-  Params[["Fhep.assay.correction"]] <- calc_hep_fu(parameters=list(Pow=Pow,
-                                         pKa_Donor=pKa_Donor,
-                                         pKa_Accept=pKa_Accept,
-                                         suppress.messages=suppress.messages)) # fraction 
+  Params[["Fhep.assay.correction"]] <- Fu_hep
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL

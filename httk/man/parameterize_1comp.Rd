@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_1comp.R
 \name{parameterize_1comp}
 \alias{parameterize_1comp}
-\title{Parameterize_1comp}
+\title{Parameters for a one compartment (empirical) toxicokinetic model}
 \usage{
 parameterize_1comp(
   chem.cas = NULL,
@@ -11,6 +11,7 @@ parameterize_1comp(
   species = "Human",
   default.to.human = FALSE,
   adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   regression = TRUE,
   restrictive.clearance = TRUE,
   well.stirred.correction = TRUE,
@@ -35,8 +36,11 @@ default "Human").}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with volume of distribution calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients in volume of distribution calculation.}
@@ -80,6 +84,20 @@ first pass clearance, calculated from the corrected well-stirred model.}
 }
 \description{
 This function initializes the parameters needed in the function solve_1comp.
+Volume of distribution is estimated by using a modified Schmitt (2008) method
+to predict tissue particition coefficients (Pearce et al., 2017) and then
+lumping the compartments weighted by tissue volume:
+}
+\details{
+\if{latex}{
+\eqn{V_{d,steady-state} = \Sigma_{i\in tissues}K_{i}V_{i} + V_{plasma}}
+}
+\if{html}{
+V_d,steady-state = Sum over all tissues (K_i * V_i) + V_plasma
+}
+
+where K_i is the tissue:unbound plasma concentration partition coefficient
+for tissue i.
 }
 \examples{
 
@@ -94,6 +112,13 @@ This function initializes the parameters needed in the function solve_1comp.
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in

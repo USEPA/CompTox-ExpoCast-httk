@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_elimination_rate.R
 \name{calc_elimination_rate}
 \alias{calc_elimination_rate}
-\title{Calculate the elimination rate for a one compartment model.}
+\title{Calculate the elimination rate for a one compartment model}
 \usage{
 calc_elimination_rate(
   chem.cas = NULL,
@@ -14,6 +14,7 @@ calc_elimination_rate(
   default.to.human = FALSE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   regression = TRUE,
   well.stirred.correction = TRUE,
   clint.pvalue.threshold = 0.05,
@@ -46,6 +47,9 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -84,6 +88,19 @@ calc_elimination_rate(chem.name="Bisphenol A")
 calc_elimination_rate(chem.name="Bisphenol A",species="Rat")
 calc_elimination_rate(chem.cas="80-05-7")
 
+}
+\references{
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
+
+Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+(2008). Hepatocellular binding of drugs: correction for unbound fraction in
+hepatocyte incubations using microsomal binding or drug lipophilicity data.
+Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
 \author{
 John Wambaugh
