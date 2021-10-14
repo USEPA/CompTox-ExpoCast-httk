@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.0.5
-Date: 2021-06-18
+Version: 99.11.0
+Date: 2021-10-13
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as

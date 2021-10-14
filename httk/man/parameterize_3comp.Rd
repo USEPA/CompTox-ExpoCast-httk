@@ -13,7 +13,7 @@ parameterize_3comp(
   force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = TRUE,
-  adjused.Clint = TRUE,
+  adjusted.Clint = TRUE,
   regression = TRUE,
   suppress.messages = FALSE,
   restrictive.clearance = TRUE,
@@ -45,6 +45,9 @@ having p-values greater than the threshold are set to zero.}
 \item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
 for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
 
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
+
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
@@ -56,9 +59,6 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
-
-\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
-binding adjustment for Clint when set to TRUE (Default).}
 }
 \value{
 \item{BW}{Body Weight, kg.} 

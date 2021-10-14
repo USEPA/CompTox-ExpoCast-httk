@@ -177,7 +177,7 @@ invitro_mc <- function(parameters.dt=NULL,
     Clint <- parameters.dt[["Clint"]]
     Clint.l95 <- NULL
     Clint.u95 <- NULL
-    Clint.pvalue <- parameters.dt[["Clint.pValue"]]
+    Clint.pvalue <- 0
     parameters.dt[,Clint:=Clint]
   } else {
     
@@ -203,7 +203,7 @@ invitro_mc <- function(parameters.dt=NULL,
       Clint <- parameters.dt[["Clint"]]
       Clint.l95 <- sapply(Clint*(1 - clint.meas.cv*1.96),function(x) max(x,10^-3))
       Clint.u95 <- Clint*(1 + clint.meas.cv*1.96)
-      Clint.pvalue <- parameters.dt[["Clint.pValue"]]
+      Clint.pvalue <- 0 # Currently we don't story the pvalue in parameters.dt
     }
     
   # Shrink it down if we don't have unique values:
