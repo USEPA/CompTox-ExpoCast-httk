@@ -16,9 +16,16 @@ ToxCastPh12 <- sort(unique(c(ToxCastPh1,ToxCastPh2)))
 
 ToxCastPh12.test <- ToxCastPh12[!(ToxCastPh12 %in% FailedPharma)]
 
-HTTK2.TO1.data <- read.csv("HTTK2TO1-datastatus.txt")$DTXSID
+HTTK2.TO1 <- read.table("HTTK2TO1-datastatus.txt",header=TRUE)
 HTTK2.TO1.sent <- read_excel("EPA_35957_Cyprotex-MA_215_20200611_key.xlsx")$DTXSID
-HTTK2.TO1.failed <- HTTK2.TO1.sent[!(HTTK2.TO1.sent %in% HTTK2.TO1.data)]
+HTTK2.TO1.Clint <- subset(HTTK2.TO1,Clint==1)$DTXSID
+HTTK2.TO1.Fup <- subset(HTTK2.TO1,PPB==1)$DTXSID
+HTTK2.TO1.CACO2 <- subset(HTTK2.TO1,Caco2==1)$DTXSID
+HTTK2.TO1.RB2P <- subset(HTTK2.TO1,B2P==1)$DTXSID
+HTTK2.TO1 <- intersect(HTTK2.TO1.Clint,HTTK2.TO1.Fup)
+
+HTTK2.TO1.failed <- HTTK2.TO1.sent[!(HTTK2.TO1.sent %in% 
+  HTTK2.TO1)]
 
 HTTK1.failed <- read.csv("Cyprotex-NoAnalyticChem.txt",stringsAsFactors=F)$x
 HTTK1.forgot <- read_excel("TO12-nomethods.xls")$DTXSID
@@ -47,7 +54,7 @@ httk.ratnohuman <- httk.rat[!(httk.rat %in% httk.human)]
 httk.badFup <- get_cheminfo(info="DTXSID",fup.ci.cutoff=F)[
   !(get_cheminfo(info="DTXSID",fup.ci.cutoff=F)%in%httk.human)]
 ToxCastPh12.untested <- ToxCastPh12.test[!(ToxCastPh12.test %in%
-  c(httk.human,Cyprotex.new))]
+  c(httk.human,HTTK2.TO1))]
   
    
 TSCA.430 <- read_excel("TSCA_430_Wetmore_plating_5Dec2018.xlsx")$DTXSID
@@ -61,9 +68,11 @@ Avail.Pesticides <- ToxCast[ToxCast %in% Pesticides]
 
 all.chems <- sort(unique(c(
   ToxCastPh12.test,
-  HTTK2.TO1.data,
+  HTTK2.TO1.sent,
   Cyprotex.failed,
   HTTK1.Caco2,
+  HTTK1.failed,
+  HTTK1.forgot,
   Health.Canada,
   EFSA.interest,
   ACC.rathep,
@@ -80,7 +89,7 @@ out.table <- NULL
 for (this.id in all.chems)
 {
       this.row <- as.data.frame(this.id)
-      this.row <- cbind(this.row,t(as.data.frame(rep(0,times=19))))
+      this.row <- cbind(this.row,t(as.data.frame(rep(0,times=20))))
       colnames(this.row) <- c(
         "DTXSID",
         "Pesticide",
@@ -94,7 +103,8 @@ for (this.id in all.chems)
         "HTTK.Rat",
         "EPA.Contract.New",
         "EPA.Internal",
-        "EPA.Caco2",
+        "EPA.CACO2",
+        "EPA.RB2P",
         "EPA.Analytical.Failed",
         "Health.Canada",
         "EFSA.Interest",
@@ -109,16 +119,17 @@ for (this.id in all.chems)
       if (this.id %in% c(
         httk.human,
         Health.Canada,
-        Cyprotex.new,
+        HTTK2.TO1,
         EFSA.interest,
         TSCA.430)) 
         this.row["HTTK.Human.Any"] <- 1
       if (this.id %in% httk.human) this.row["HTTK.Human.Public"] <- 1
       if (this.id %in% c(httk.NoFup,httk.badFup)) this.row["HTTK.BadFup"] <- 1
       if (this.id %in% httk.rat) this.row["HTTK.Rat"] <- 1
-      if (this.id %in% HTTK2.TO1.fata) this.row["EPA.Contract.New"] <- 1
+      if (this.id %in% HTTK2.TO1) this.row["EPA.Contract.New"] <- 1
       if (this.id %in% Cyprotex.failed) this.row["EPA.Analytical.Failed"] <- 1
-      if (this.id %in% HTTK1.Caco2) this.row["EPA.Caco2"] <- 1
+      if (this.id %in% c(HTTK1.Caco2,HTTK2.TO1.CACO2)) this.row["EPA.CACO2"] <- 1
+      if (this.id %in% HTTK2.TO1.RB2P) this.row["EPA.RB2P"] <- 1
       if (this.id %in% ACC.doghep) this.row["ACC.Dog.Hep"] <- 1
       if (this.id %in% ACC.mousehep) this.row["ACC.Mouse.Hep"] <- 1
       if (this.id %in% ACC.rabbithep) this.row["ACC.Rabbit.Hep"] <- 1
