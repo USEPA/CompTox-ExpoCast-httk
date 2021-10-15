@@ -2173,7 +2173,9 @@ package 'magrittr' was built under R version 4.0.5
 > dawson2021_full <- readxl::read_xlsx(
 +   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
 +   sheet = 14)
-> dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+> dawson2021      <- dawson2021_full[,c("CASRN",
++                                       "QSAR_Clint","Clint QSAR AD Outlier",
++                                       "QSAR_Fup","Fup QSAR AD Outlier")]
 > #
 > # END dawson2021 Creation
 > #
@@ -2428,7 +2430,11 @@ Move the sysdata.rdaa to the httk/R directory.
 >      
 > ## Session Information ##
 > Sys.time() # capture date and time of generating data
+<<<<<<< HEAD
 [1] "2021-10-13 15:45:53 EDT"
+=======
+[1] "2021-09-07 17:25:53 EDT"
+>>>>>>> 255c616b38720e95007ae116ed9fddbd1ee654f7
 > sessionInfo() # capture package information for generating data
 R version 4.0.3 (2020-10-10)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -2461,4 +2467,8 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
  490.62    8.29  755.95 
+=======
+ 521.79    8.17  785.17 
+>>>>>>> 255c616b38720e95007ae116ed9fddbd1ee654f7
