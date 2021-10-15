@@ -5,7 +5,7 @@
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions.
 #' 
-#' @param parameters.dt A data table of physiological parameters
+#' @param parameters.dt A data table of physiological and chemical-specific parameters
 #' 
 #' @param parameters A list of chemical-specific model parameters containing at
 #' least Funbound.plasma, Clint, and Fhep.assay.correction.
@@ -80,6 +80,21 @@
 #' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 #' and pharmacodynamics 44.6 (2017): 549-565.
 #' 
+#' @examples
+#' #Simply generate a virtual population of 100 individuals,
+#' #using the direct-resampling method
+#' set.seed(42)
+#' # Pull mean vchemical=specific values:
+#' chem.props <- parameterize_pbtk(chem.name="bisphenolaf")
+#' # Convert to data.table with one row per sample:
+#' parameters.dt <- monte_carlo(chem.props,samples=100)
+#' # Use httk-pop to generate a population:
+#' pop <- httkpop_generate(method='direct resampling', nsamp=100)
+#' # Overwrite parameters specified by httk-pop:
+#' parameters.dt[,names(pop):=pop]
+#' # Vary in vitro parameters:
+#' parameters.dt <- invitro_mc(parameters.dt,samples=100)
+#'
 #' @keywords monte-carlo in-vitro
 #'
 #' @import stats
@@ -461,10 +476,13 @@ invitro_mc <- function(parameters.dt=NULL,
     #Gaussian mixture distribution if poor metabolizers included.
     #Set the mean of the regular metabolizer distribution:
     parameters.dt[,Clint.mu:=Clint]
+    parameters.dt[,PoorMetabolizer := "N"]
     if (poormetab) #if poor metabolizers are included:
     {
       #Assume that 5% of the population has 10% the metabolism:
-      parameters.dt[rbinom(n=samples,size=1,prob=0.05)==1,Clint.mu:=Clint.mu/10]
+      parameters.dt[rbinom(n=samples,size=1,prob=0.05)==1, 
+        PoorMetabolizer := "Y"]
+      parameters.dt[PoorMetabolizer == "Y", Clint.mu:=Clint.mu/10]
     }
     #Draw Clint from a normal distribution with mean = measured Clint, and
     #coefficient of variation given by clint.pop.cv.
