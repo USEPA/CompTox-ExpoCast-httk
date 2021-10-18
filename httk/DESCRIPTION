@@ -76,7 +76,6 @@ Suggests:
     stringr,
     reshape,
     reshape2,
-    gdata,
     viridis,
     CensRegMod,
     gmodels,
@@ -86,7 +85,6 @@ Suggests:
     dplyr,
     forcats,
     smatr,
-    gtools,
     gridExtra,
     testthat
 License: GPL-3

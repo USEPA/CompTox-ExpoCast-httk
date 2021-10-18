@@ -112,30 +112,39 @@ model.list[["1compartment"]]$allowed.units.input <- list(
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["1compartment"]]$allowed.units.output <- list(
-       "oral" = c('uM','mg/L','uM*days','mg/L*days'),
-       "iv" = c('uM','mg/L','uM*days','mg/L*days'))
+       "oral" = c('umol','uM','mg/L','uM*days','mg/L*days'),
+       "iv" = c('umol','uM','mg/L','uM*days','mg/L*days'))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
+# Default set of units assigned to correspond to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["1compartment"]]$compartment.units <- c(
+    "Agutlumen"="umol",
+    "Acompartment"="umol",
+    "Ametabolized"="umol", 
     "Ccompartment"="uM",
     "AUC" = "uM*days")
 
 # These parameters specific the exposure scenario simulated by the model:
-model.list[["1compartment"]]$dosing.params <- c("daily.dose",
+model.list[["1compartment"]]$dosing.params <- c(
+  "daily.dose",
   "initial.dose",
   "doses.per.day",
   "dosing.matrix")
-model.list[["1compartment"]]$routes <- c("oral","iv")
+
+model.list[["1compartment"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["1compartment"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Acompartment")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["1compartment"]]$dose.type <- list(oral="add",
-  iv="add")
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Acompartment",
+    "dose.type" = "add")
+  )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
