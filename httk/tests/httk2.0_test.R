@@ -1,12 +1,12 @@
 #R CMD BATCH --no-timing --no-restore --no-save httk2.0_test.R httk2.0_test.Rout
 library(httk)
 
-#head(solve_pbtk(chem.name="Terbufos"))
-#head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
-#                    initial.dose = 1, # Assume dose is in mg/kg BW/day  
-#                    doses.per.day=NULL,
-#                    dosing.matrix = NULL,
-#                    daily.dose = NULL)))
+head(solve_pbtk(chem.name="Terbufos"))
+head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+                    initial.dose = 1, # Assume dose is in mg/kg BW/day  
+                    doses.per.day=NULL,
+                    dosing.matrix = NULL,
+                    daily.dose = NULL)))
 
 dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 colnames(dm) <- c("time","dose")

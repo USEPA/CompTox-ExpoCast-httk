@@ -31,7 +31,7 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
-parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
