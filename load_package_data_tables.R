@@ -2,11 +2,10 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "GHAug2020"
+SCRIPT.VERSION <- "Sep2021"
 
 library(reshape)
-library(gdata)
-library(xlsx)
+library(readxl)
 source("add_chemtable.R")
 
 
@@ -15,7 +14,7 @@ source("add_chemtable.R")
 #
 PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
-physiology.data <- read.xls(PKandTISSUEDATAFILE,
+physiology.data <- read_excel(PKandTISSUEDATAFILE,
   sheet="Basic PK",
   stringsAsFactors=FALSE)[1:16,]
 # Make sure that all the values are numerical:
@@ -27,7 +26,7 @@ write.table(physiology.data,
   row.names=F,
   sep="\t")
   
-flowdata <- read.xls(PKandTISSUEDATAFILE,
+flowdata <- read_excel(PKandTISSUEDATAFILE,
   sheet="Flows",
   stringsAsFactors=FALSE,
   skip=1)[1:19,]
@@ -36,7 +35,7 @@ write.table(flowdata,
   row.names=F,
   sep="\t")
 
-densitydata <- read.xls(PKandTISSUEDATAFILE,
+densitydata <- read_excel(PKandTISSUEDATAFILE,
   sheet="Human Density",
   stringsAsFactors=FALSE)[1:27,]
 write.table(flowdata,
@@ -44,7 +43,7 @@ write.table(flowdata,
   row.names=F,
   sep="\t")
   
-percentBWdata <- read.xls(PKandTISSUEDATAFILE,
+percentBWdata <- read_excel(PKandTISSUEDATAFILE,
   sheet="Percent BW",
   stringsAsFactors=FALSE,
   skip=2)[1:20,]
@@ -53,7 +52,7 @@ write.table(percentBWdata,
   row.names=F,
   sep="\t")
   
-tissuevolflowdata <- read.xls(PKandTISSUEDATAFILE,
+tissuevolflowdata <- read_excel(PKandTISSUEDATAFILE,
   sheet="VolumeFlow",
   stringsAsFactors=FALSE)
 tissuevolflowdata <- subset(tissuevolflowdata,Species!="")[,c(
@@ -78,7 +77,7 @@ write.table(tissuevolflowdata,
   row.names=F,
   sep="\t")
   
-tissuecompdata <- read.xls(PKandTISSUEDATAFILE,
+tissuecompdata <- read_excel(PKandTISSUEDATAFILE,
   sheet="TissueComp",
   stringsAsFactors=FALSE,
   skip=1)
@@ -134,7 +133,7 @@ tissue.data$Tissue <- tolower(tissue.data$Tissue)
 #
 
 #Table CLint units are uL/min/10^6 cells:
-Wetmore.tables <- read.xls("PublishedRawDataTables.xlsx",stringsAsFactors=F,skip=2)
+Wetmore.tables <- read_excel("PublishedRawDataTables.xlsx",stringsAsFactors=F,skip=2)
 colnames(Wetmore.tables) <- c("Compound","CAS","Reference","Species","Clint.1","pValue.1","Clint.10","pValue.10","Fub.1","Fub.10")
 Wetmore.tables[Wetmore.tables[,"pValue.1"]=="&lt; 0.0001","pValue.1"] <- "0.00009"
 Wetmore.tables[Wetmore.tables[,"pValue.10"]=="&lt; 0.0001","pValue.10"] <- "0.00009"
@@ -246,7 +245,7 @@ chem.prop <- add_chemtable(WetmorePhaseII.clint.table,
 
 
 
-Obach.table <- read.xls("Obach1999.xlsx",stringsAsFactors=F,skip=1)
+Obach.table <- read_excel("Obach1999.xlsx",stringsAsFactors=F,skip=1)
 #Wrong CAS for Diazepam:
 Obach.table[Obach.table$CAS=="53320-84-6","CAS"] <- "439-14-5"
 
@@ -260,7 +259,7 @@ chem.prop <- add_chemtable(Obach.table, current.table=chem.prop, species="Human"
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
-Jones.table <- read.xls("Jones2002.xlsx",stringsAsFactors=F)
+Jones.table <- read_excel("Jones2002.xlsx",stringsAsFactors=F)
 chem.prop <- add_chemtable(Jones.table, current.table=chem.prop,species="Human",reference="Jones 2002",data.list=list(
                CAS="CAS",
                Compound="Compouund",
@@ -271,7 +270,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 # Table Clint units for pooled hepatocytes (lot 70 and 73) are ml/min/10^9 cells
 # conversion factor is x 1000 ml -> ul and x 1/1000 10^9 to 10^6 cells, so no conversion necessary
-Shibata2002.table <- read.xls("Shibata2002.xlsx",stringsAsFactors=F)[-1,]
+Shibata2002.table <- read_excel("Shibata2002.xlsx",stringsAsFactors=F)[-1,]
 chem.prop <- add_chemtable(Shibata2002.table, current.table=chem.prop,species="Human",reference="Shibata 2002",data.list=list(
                CAS="CASRN",
                Compound="compound",
@@ -285,7 +284,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 
 #Table CLint units are uL/min/10^6 cells:
-Lau2002.table <- read.xls("Lau2002.xlsx",stringsAsFactors=F)[-1,]
+Lau2002.table <- read_excel("Lau2002.xlsx",stringsAsFactors=F)[-1,]
 chem.prop <- add_chemtable(Lau2002.table, current.table=chem.prop, species="Human", reference="Lau2002",
                data.list = list(CAS="CAS",
                  Compound="Compound",
@@ -295,7 +294,7 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
-Naritomi.table <- read.xls("Naritomi2003.xlsx",stringsAsFactors=F,skip=1)[1:18,]
+Naritomi.table <- read_excel("Naritomi2003.xlsx",stringsAsFactors=F,skip=1)[1:18,]
 #Wrong CAS for Diazepam:
 Naritomi.table[Naritomi.table$CAS=="53320-84-6","CAS"] <- "439-14-5"
 chem.prop <- add_chemtable(Naritomi.table, current.table=chem.prop, reference="Naritomi 2003",
@@ -311,7 +310,7 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
-McGinnity.table <- read.xls("McGinnity2004.xlsx",stringsAsFactors=F)[-1,]
+McGinnity.table <- read_excel("McGinnity2004.xlsx",stringsAsFactors=F)[-1,]
 McGinnity.table[McGinnity.table$Human.Hepatic.Clint=="<1.0","Human.Hepatic.Clint"]<-0
 chem.prop <- add_chemtable(McGinnity.table,
                current.table=chem.prop,
@@ -324,7 +323,7 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
-Ito.table <- read.xls("Ito2004.xlsx",stringsAsFactors=F)
+Ito.table <- read_excel("Ito2004.xlsx",stringsAsFactors=F)
 # Let's interpret "not determined" as no measurment instead of 0
 Ito.table[Ito.table$Clint..hepatocyte.=="ND","Clint..hepatocyte."]<-NA
 chem.prop <- add_chemtable(Ito.table,
@@ -338,7 +337,7 @@ chem.prop <- add_chemtable(Ito.table,
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
-Schmitt.table <- read.xls("Schmitt2008-41817.xlsx",stringsAsFactors=F)
+Schmitt.table <- read_excel("Schmitt2008-41817.xlsx",stringsAsFactors=F)
 for (this.row in 1:dim(Schmitt.table)[1])
 {
   this.CAS <- Schmitt.table[this.row,"CAS"]
@@ -391,7 +390,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 
 #Table CLint units are L/h/10^6 hepatocytes
-TNO.table <- read.xls("HT-PBPK compounds-122216.xlsx",stringsAsFactors=F)
+TNO.table <- read_excel("HT-PBPK compounds-122216.xlsx",stringsAsFactors=F)
 TNO.table <- subset(TNO.table,TNO.table$Source!="")
 
 for (this.row in 1:dim(TNO.table)[1])
@@ -577,12 +576,12 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 ##  chemicals, including 6 with Obach 2008 in vivo data
 ## Must convert CLint using fub,  fuinc from Naritomi 2003,
 ##  and RB from Shibata 2002, Naritomi 2003, and Ito and Houston 2004
-#Naritomi.table2 <- read.xls("Naritomi2003.xlsx",,sheet=2,stringsAsFactors=F)[-1,]
+#Naritomi.table2 <- read_excel("Naritomi2003.xlsx",,sheet=2,stringsAsFactors=F)[-1,]
 ## Original CLint units are ml/min/kg BW
 ## Page 1306: 120 * 10^6 cells/g liver
 ## Page 1306: 1500-1800 g liver/70 kg -- 23.6 g liver/kg BW
 ## Conversion factor: *1000/23.6/120/10^6             (ml->uL,1/kgBW->1/g liver,1/g liver->1/10^6 cells)->uL/min/10^6 cells)
-#Riley.table <- read.xls("Riley2005.xlsx",stringsAsFactors=F,sheet=1)
+#Riley.table <- read_excel("Riley2005.xlsx",stringsAsFactors=F,sheet=1)
 #for (this.row in 1:dim(Riley.table)[1])
 #{
 #  this.CAS <- Riley.table[this.row,"CAS"]
@@ -610,7 +609,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 #Table CLint units are uL/min/10^6 cells:
 # For Rotroff data they average 1 and 10 uM, but then you get the same numbers
-Tonnelier.table <- read.xls("Tonnelier-2012.xlsx",stringsAsFactors=F)
+Tonnelier.table <- read_excel("Tonnelier-2012.xlsx",stringsAsFactors=F)
 # Dashboard prefers different CAS:
 Tonnelier.table[Tonnelier.table$Name=="Abamectin","CAS"] <- "71751-41-2"
 Tonnelier.table[Tonnelier.table$CAS=="51630-58-1","CAS"] <- "67614-33-9"
@@ -649,7 +648,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Bensulide",]
 
 
-Paixao2012.table2 <- read.xls("Paixao-2012.xlsx",stringsAsFactors=F,sheet=1)
+Paixao2012.table2 <- read_excel("Paixao-2012.xlsx",stringsAsFactors=F,sheet=1)
 Paixao2012.table2$fup <- 1-Paixao2012.table2$fp
 chem.prop <- add_chemtable(Paixao2012.table2,                             
                species="Human",
@@ -664,7 +663,7 @@ chem.prop <- add_chemtable(Paixao2012.table2,
 # Table clint are units of L/h
 # 107 x 106 cell g-1 liver (Wilson et al., 2003) and it was also assumed that liver weighed
 # 20 g kg-1 of body weight.                 
-Paixao2012.table3 <- read.xls("Paixao-2012.xlsx",stringsAsFactors=F,sheet=2,skip=1)
+Paixao2012.table3 <- read_excel("Paixao-2012.xlsx",stringsAsFactors=F,sheet=2,skip=1)
 Paixao2012.table3$In.Vitro.Clint..uL.min.106hep <- Paixao2012.table3$In.vitro.Clint..L.h./1000/70/20/107*60
 chem.prop <- add_chemtable(Paixao2012.table3,                             
                species="Human",
@@ -675,7 +674,7 @@ chem.prop <- add_chemtable(Paixao2012.table3,
                  Compound="X.1",
                  Clint="In.Vitro.Clint..uL.min.106hep"))
                  
-Paixao2012.table4 <- read.xls("Paixao-2012.xlsx",stringsAsFactors=F,sheet=3,skip=1)
+Paixao2012.table4 <- read_excel("Paixao-2012.xlsx",stringsAsFactors=F,sheet=3,skip=1)
 # Table clint are units of L/h
 # 107 x 106 cell g-1 liver (Wilson et al., 2003) and it was also assumed that liver weighed
 # 20 g kg-1 of body weight.                 
@@ -722,7 +721,7 @@ chem.prop <- add_chemtable(Cory.newpKa,
 
 
 
-CorypKaTable <- read.xls("HTPBPK-chems-pKa_CLS.xlsx",stringsAsFactors=F)
+CorypKaTable <- read_excel("HTPBPK-chems-pKa_CLS.xlsx",stringsAsFactors=F)
 # Old mistake caused abamectin to be double listed in list given to Cory:
 CorypKaTable <- CorypKaTable[CorypKaTable$CAS!="65195-55-3",]
 # Old mistake caused pyrthiobac-sodium to be double listed in list given to Cory:
@@ -778,7 +777,7 @@ chem.prop <- add_chemtable(to.john,
                  Compound="ChemName",
                  pKa_Accept="pKaTools_BPKA"),reference="Strope 2018")
 
-MA.data <- read.xls("Endo-2011.xlsx",stringsAsFactors=F)
+MA.data <- read_excel("Endo-2011.xlsx",stringsAsFactors=F)
 this.reference <- "Endo 2011"
 for (this.row in 1:dim(MA.data)[1])
 {
@@ -807,29 +806,29 @@ if (unique(chem.physical_and_invitro.data$CAS) < dim(chem.physical_and_invitro.d
 if(any(sapply(chem.physical_and_invitro.data$CAS,function(x) !CAS.checksum(x)))) stop("Failed CAS checksum in chem.physical_and_invitro.data")
 
 
-cl <- read.xls('Pirovano-2016.xlsx',stringsAsFactors=F)
+cl <- read_excel('Pirovano-2016.xlsx',stringsAsFactors=F)
 chem.physical_and_invitro.data <- add_chemtable(cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=F)
 caf.cl <- subset(cl,CAS =='58-08-2')
 chem.physical_and_invitro.data <- add_chemtable(caf.cl,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),species='Human',reference='Pirovano 2016',overwrite=T)
-rb <- read.xls('Uchimura 2010 cas.xlsx',stringsAsFactors=F)
+rb <- read_excel('Uchimura 2010 cas.xlsx',stringsAsFactors=F)
 chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Human.Rb2p',Funbound.plasma='Human.fup',CAS='cas'),species='Human',reference='Uchimura 2010',overwrite=F)
 rb <- subset(rb,!is.na(Rat.Rb2p))
 chem.physical_and_invitro.data <- add_chemtable(rb,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',Rblood2plasma='Rat.Rb2p',Funbound.plasma='Rat.fup',CAS='cas'),species='Rat',reference='Uchimura 2010',overwrite=F)
-fub <- read.xls('Gulden 2002.xlsx',stringsAsFactors=F) 
+fub <- read_excel('Gulden 2002.xlsx',stringsAsFactors=F) 
 chem.physical_and_invitro.data <- add_chemtable(fub,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Funbound.plasma='fup',CAS='CAS',MW='MW'),species='Human',reference='Gulden 2002',overwrite=F)
-brown <- read.xls('Brown 2007.xlsx',stringsAsFactors=F)
+brown <- read_excel('Brown 2007.xlsx',stringsAsFactors=F)
 chem.physical_and_invitro.data <- add_chemtable(brown,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',Clint='Clint',CAS='CAS'),species='Human',reference='Brown 2007',overwrite=T)
 
 #Add Clint data
-jones <- read.xlsx('Jones 2017 human in vitro clearance.xlsx',1)
+jones <- read_excel('Jones 2017 human in vitro clearance.xlsx',1)
 jones <- jones[3:12,1:3]
 colnames(jones) <- c('CAS','Compound','Clint')
-wood.rat <- read.xlsx('Wood_2017_Rat_Clint_CLh.xlsx',1)
+wood.rat <- read_excel('Wood_2017_Rat_Clint_CLh.xlsx',1)
 wood.rat <- subset(wood.rat,!is.na(Clint..uL.min.10.6.cells.) & Name != 'FK079') # No CAS for FK079
-wood.human <- read.xlsx('Wood 2017 Human Clint and CLh.xlsx',1)
+wood.human <- read_excel('Wood 2017 Human Clint and CLh.xlsx',1)
 wood.human <- subset(wood.human,!is.na(Clint..uL.min.10.6.cells.))
 
-sternbeck <- read.xlsx('Sternbeck Human Clearance.xlsx',1)
+sternbeck <- read_excel('Sternbeck Human Clearance.xlsx',1)
 chem.physical_and_invitro.data <- add_chemtable(jones,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Compound',CAS='CAS',Clint='Clint'),species='Human',reference='Jones 2017',overwrite=T)
 chem.physical_and_invitro.data <- add_chemtable(wood.human,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CAS',Clint='Clint..uL.min.10.6.cells.'),species='Human',reference='Wood 2017',overwrite=T)
 chem.physical_and_invitro.data <- add_chemtable(wood.rat,current.table=chem.physical_and_invitro.data,data.list=list(Compound='Name',CAS='CASRN',Clint='Clint..uL.min.10.6.cells.'),species='Rat',reference='Wood 2017',overwrite=T)
@@ -845,7 +844,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,!CAS %in% subse
 for(this.cas in subset(chem.physical_and_invitro.data,Human.Clint.pValue.Reference != Human.Clint.Reference)[,'CAS']) chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == this.cas),'Human.Clint.pValue.Reference'] <- NA
 
 # Load partition coefficient data from Pearce 2017:
-pc.data.raw <- read.xls('PC_Data.xlsx',stringsAsFactors=F)
+pc.data.raw <- read_excel('PC_Data.xlsx',stringsAsFactors=F)
 pc.data.table <- subset(pc.data.raw,tolower(Species)=='rat')
 pc.data.table[which(pc.data.table[,'CAS'] %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6','57562-99-9','59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2','60-54-8')),'fu'] <- NA
 #pc.data <- subset(pc.data, Tissue %in% c("Adipose","Bone","Brain","Gut","Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & Species == 'Rat')   
@@ -974,7 +973,7 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 sipes2017 <- readRDS("ADMET.data.table.RData")
 
 # Replace "bad" CAS:
-sipes.bad.cas <- read.xls("SipesBadCAS.xls",stringsAsFactors=F)
+sipes.bad.cas <- read_excel("SipesBadCAS.xls",stringsAsFactors=F)
 for (this.row in 1:dim(sipes.bad.cas)[1])
 {
   index <- which(sipes2017$Compound==sipes.bad.cas[this.row,"INPUT"])
@@ -999,7 +998,7 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 
 # ADD NEW DATA HERE:
-JRC.data.clint <- read.xls(
+JRC.data.clint <- read_excel(
   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
   sheet=2,
   stringsAsFactors=F)
@@ -1025,7 +1024,7 @@ chem.physical_and_invitro.data <- add_chemtable(JRC.data.clint2,
                                   reference = 'Paini 2020',
                                   species="Human")
 
-JRC.data.fup <- read.xls(
+JRC.data.fup <- read_excel(
   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
   sheet=3,
   stringsAsFactors=F)
@@ -1112,7 +1111,7 @@ browser()
 dsstox <- NULL
 for (i in 1:(length(blocks)-1))
 {
-  dsstox <- rbind(dsstox,read.xlsx(paste("HTTK-DSSTox-output-",i,".xls",sep=""),
+  dsstox <- rbind(dsstox,read_excel(paste("HTTK-DSSTox-output-",i,".xls",sep=""),
     stringsAsFactors=F,1))
 }
 
@@ -1156,7 +1155,7 @@ cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPER
 cat("Save Dashboard output to HTTK-NoCASMatch-DSSTox-output.xls.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
-dsstox <- read.xlsx("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
+dsstox <- read_excel("HTTK-NoCASMatch-DSSTox-output.xls",stringsAsFactors=F,1)
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
@@ -1253,7 +1252,7 @@ chem.physical_and_invitro.data[
 # CREATE TABLE Wetmore.data
 #
 
-Wetmore.data <- read.xls("Supp_Table_8_SimCyp_IVIVE_input_output_083011.xls",stringsAsFactors=F,skip=1)
+Wetmore.data <- read_excel("Supp_Table_8_SimCyp_IVIVE_input_output_083011.xls",stringsAsFactors=F,skip=1)
 
 Wetmore.data.1 <- Wetmore.data[Wetmore.data[,"Concentration..uM."]==1,]
 Wetmore.data.10 <- Wetmore.data[Wetmore.data[,"Concentration..uM."]==10,]
@@ -1270,7 +1269,7 @@ Wetmore.data.abridged <- cbind(Wetmore.data.abridged,"Human")
 colnames(Wetmore.data.abridged)[20] <- "Species"
 Wetmore.data.abridged$Reference <- "Wetmore 2012"
 
-Wetmore.rat.data <- read.xls("toxsci_12_0787_File012.xls",skip=2,stringsAsFactors=F)
+Wetmore.rat.data <- read_excel("toxsci_12_0787_File012.xls",skip=2,stringsAsFactors=F)
 Wetmore.rat.data.1 <- Wetmore.rat.data[Wetmore.rat.data[,"Conc.uM."]==1,]
 Wetmore.rat.data.10 <- Wetmore.rat.data[Wetmore.rat.data[,"Conc.uM."]==10,]
 Wetmore.rat.data.abridged <- NULL
@@ -1301,7 +1300,7 @@ colnames(Wetmore.data)[2] <- "CAS"
 #Get rid of mixture milbemectin:
 Wetmore.data <- Wetmore.data[Wetmore.data$CAS!="51596-11-3",]
 
-WetmorePhaseII.css.table <- read.xls("Supp_Table_4_122914.xlsx",sheet=5,skip=0,stringsAsFactors=F)
+WetmorePhaseII.css.table <- read_excel("Supp_Table_4_122914.xlsx",sheet=5,skip=0,stringsAsFactors=F)
 
 for (this.cas in unique(WetmorePhaseII.css.table$CASRN))
 {
@@ -1359,9 +1358,9 @@ Tox21 <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")
 ToxCast <- read.csv("Dashboard-Tox21.tsv",stringsAsFactors=F,sep="\t")
 DrugBank <- read.csv("Dashboard-DrugBank.tsv",stringsAsFactors=F,sep="\t")
 
-NHANES.serum <- read.xls("ACT-p2m-20150330.xlsx",sheet=1,stringsAsFactors=F)
-NHANES.blood <- read.xls("ACT-p2m-20150330.xlsx",sheet=2,stringsAsFactors=F)
-NHANES.urine <- read.xls("ACT-p2m-20150330.xlsx",sheet=3,stringsAsFactors=F)
+NHANES.serum <- read_excel("ACT-p2m-20150330.xlsx",sheet=1,stringsAsFactors=F)
+NHANES.blood <- read_excel("ACT-p2m-20150330.xlsx",sheet=2,stringsAsFactors=F)
+NHANES.urine <- read_excel("ACT-p2m-20150330.xlsx",sheet=3,stringsAsFactors=F)
 
 chem.lists <- list()
 chem.lists[["NHANES.serum.parent"]] <- NHANES.serum[-1,c(1,3)]
@@ -1400,9 +1399,58 @@ library(magrittr)
 dawson2021_full <- readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 14)
-dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+dawson2021      <- dawson2021_full[,c("CASRN",
+                                      "QSAR_Clint","Clint QSAR AD Outlier",
+                                      "QSAR_Fup","Fup QSAR AD Outlier")]
 #
 # END dawson2021 Creation
+#
+
+#
+# Create pradeep2020 Data
+#
+## Load in Data ##
+# load chem data
+pradeep.chem <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 1
+)
+# load clint data
+pradeep.clint <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 3
+)
+# rename column name for chemical identifier - DTXSID
+pradeep.clint <- dplyr::rename(
+  pradeep.clint,    # data
+  "DTXSID" = "...1" # new_name = old_name
+)
+# load fup data
+pradeep.fup <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 2
+)
+# rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
+pradeep.fup <- dplyr::rename(
+  pradeep.fup,             # data
+  "DTXSID" = "dsstox_sid" # new_name = old_name
+)
+# join prediction tables by chemical identifier
+pradeep_full <- dplyr::full_join(
+  pradeep.clint, # clint data
+  pradeep.fup,   # fup data
+  by = 'DTXSID'  # chemical ID
+) %>%
+  dplyr::left_join(.,             # clint and fup data
+                   pradeep.chem,  # chemical information data
+                   by = "DTXSID") # chemical ID
+
+pradeep2020 <- dplyr::select(
+  pradeep_full, # data
+  c('DTXSID',"CASRN",'pred_clint_rf','Consensus (SVM,RF)') # vars to keep
+)
+#
+# END pradeep2020 Creation
 #
 
 #Add in vivo data from Wambaugh (2018):
@@ -1571,6 +1619,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
      dawson2021,
+     pradeep2020,
      physiology.data,
      pearce2017regression,
      kapraun2019,
