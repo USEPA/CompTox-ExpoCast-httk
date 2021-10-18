@@ -12,7 +12,7 @@ parameterize_pbtk(
   default.to.human = FALSE,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
     c("gut")),
-  force.human.clint.fup = F,
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
