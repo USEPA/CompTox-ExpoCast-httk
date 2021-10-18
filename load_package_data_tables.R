@@ -1400,7 +1400,9 @@ library(magrittr)
 dawson2021_full <- readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 14)
-dawson2021      <- dawson2021_full[,c("CASRN","QSAR Clint","Outlier","QSAR Fup","AD_out")]
+dawson2021      <- dawson2021_full[,c("CASRN",
+                                      "QSAR_Clint","Clint QSAR AD Outlier",
+                                      "QSAR_Fup","Fup QSAR AD Outlier")]
 #
 # END dawson2021 Creation
 #
