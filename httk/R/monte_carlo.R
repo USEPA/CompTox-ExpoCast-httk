@@ -73,7 +73,7 @@ monte_carlo <- function(
 # Create a data table with the same parameters in every row:  
   MC.matrix <- as.data.table(parameters)[rep(1,samples)]
 
-# Number of different results to be obtained for the different paramters:
+# Number of different results to be obtained for the different parameters:
   sample.vec <- rep(NA,samples)
 # Any parameter given in cv.params is sampled from a normal distribution 
 # truncated at zero:
