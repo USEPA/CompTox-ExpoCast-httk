@@ -42,7 +42,7 @@ model.list[["schmitt"]]$required.params <- c(
   "MW")
 
 #Parameters needed to run parameterize function without a chemical id:
-model.list[["schmitt"]]$paramterize_params <- c(
+model.list[["schmitt"]]$parameterize_params <- c(
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
