@@ -2,7 +2,7 @@
 #' 
 #' This function provides the information specified in "info=" (can be single entry
 #' or vector) for all chemicals for which a toxicokinetic model can be
-#' paramterized for a given species. Since different models have different 
+#' parameterized for a given species. Since different models have different 
 #' requirements and not all chemicals have complete data, this function will 
 #' return different number of chemicals depending on the model specififed.
 #' 

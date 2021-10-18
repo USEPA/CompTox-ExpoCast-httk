@@ -71,6 +71,7 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "pKa_Donor",
   "Pow",
   "Qalvc", #MWL 8-1-19
+#  "Qalv", # SED 06-21-2021
   "Qcardiacc",
   "Qgfrc",
   "Qgutf",
@@ -118,7 +119,8 @@ model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma",
-  Qalvc = "Qalvc",
+  Qalvc="Qalvc",
+#  Qalv="Qalv", # (back up test)
   Kblood2air = "Kblood2air",
   kUrtc = "kUrtc",
   Kmuc2air = "Kmuc2air",
@@ -176,6 +178,9 @@ model.list[["gas_pbtk"]]$compiled.param.names <- c(
   "Qalvc",
   "Qalv",
   "Kblood2air",
+  "InhMag",
+  "Period",
+  "Exposure",
   "kUrtc",
   "kUrt",
   "Kmuc2air",
@@ -192,6 +197,12 @@ model.list[["gas_pbtk"]]$compiled.init.func <- "initmod_gas_pbtk"
 # of time, state, and parameters:
 model.list[["gas_pbtk"]]$derivative.func <- "derivs_gas_pbtk"
 
+# This is the ORDERED list of input variables given to the C code by the solver
+# (from Forcing (Input) functions -- forc):
+model.list[["gas_pbtk"]]$input.var.names <- c(
+  "Cinhppmv"
+  )
+  
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
 model.list[["gas_pbtk"]]$derivative.output.names <- c(
@@ -205,8 +216,11 @@ model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cplasma",
   "Aplasma",
   "Calv",
+  "Calvppmv", # SED 06-12-2021
   "Cendexh",
+  "Cendexhppmv", # SED 06-12-2021
   "Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc"
   )
 
@@ -221,9 +235,12 @@ model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Crest",
   "Ckidney",
   "Cplasma",
-  "Calv",
-  "Cendexh",
-  "Cmixexh",
+  #"Calv",
+  "Calvppmv", # SED 06-12-2021
+  #"Cendexh",
+  "Cendexhppmv", # SED 06-12-2021
+  #"Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc",
   "Atubules",
   "Ametabolized",
@@ -245,36 +262,41 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
        "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
                         'mg/m^3','mg/m^3*days'))
 
-# Default set of units assigned to correspond to each of the time dependent
+# Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
-                                          "Cgut"="uM",
-                                          "Cliver"="uM",
-                                          "Cven"="uM",
-                                          "Clung"="uM",
-                                          "Cart"="uM",
-                                          "Crest"="uM",
-                                          "Ckidney"="uM",
-                                          "Cplasma"="uM",
-                                          "Aplasma"="umol",
-                                          "Calv"="uM",
-                                          "Cendexh"="uM",
-                                          "Cmixexh"="uM",
-                                          "Cmuc"="uM",
-                                          "Agutlumen"="umol",
-                                          "Agut"="umol",
-                                          "Aliver"="umol",
-                                          "Aven"="umol",
-                                          "Alung"="umol",
                                           "Aart"="umol",
-                                          "Arest"="umol",
+                                          "Agut"="umol",
+                                          "Agutlumen"="umol",
                                           "Akidney"="umol", 
-                                          "Atubules"="umol",
+                                          "Aliver"="umol",
+                                          "Alung"="umol",
                                           "Ametabolized"="umol",
                                           "Amuc"="umol",
-                                          "AUC"="uM*days")
+                                          "Aplasma"="umol",
+                                          "Arest"="umol",
+                                          "Atubules"="umol",
+                                          "AUC"="uM*days",
+                                          "Aven"="umol",
+                                          "Calv"="uM",
+                                          "Calvppmv"="ppmv",
+                                          "Cart"="uM",
+                                          "Cendexh"="uM",
+                                          "Cendexhppmv"="ppmv",
+                                          "Cgut"="uM",
+                                          "Cinhppmv"="ppmv",
+                                          "Ckidney"="uM",
+                                          "Cliver"="uM",
+                                          "Clung"="uM",
+                                          "Cmixexh"="uM",
+                                          "Cmixexhppmv"="ppmv",
+                                          "Cmuc"="uM",
+                                          "Cplasma"="uM",
+                                          "Crest"="uM",
+                                          "Cven"="uM"
+                                          )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c(
@@ -296,7 +318,7 @@ model.list[["gas_pbtk"]]$routes <- list(
     "entry.compartment" = "Aven",
     "dose.type" = "add"),
   "inhalation" = list(
-    "entry.compartment" = "Amuc",
+    "entry.compartment" = "Cinhppmv",
     "dose.type" = "add")   
   )
 
@@ -314,8 +336,10 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "Atubules",
     "Ametabolized",
     "AUC",
+    "Ainh", # SED 06-12-2021
+    "Aexh", # SED 06-12-2021
     "Amuc"
-    ) 
+    )        
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["gas_pbtk"]]$required.params <- c(
@@ -378,4 +402,4 @@ model.list[["gas_pbtk"]]$calcpc <- TRUE
 model.list[["gas_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["gas_pbtk"]]$exclude.fup.zero <- T
+# model.list[["gas_pbtk"]]$exclude.fup.zero <- T
