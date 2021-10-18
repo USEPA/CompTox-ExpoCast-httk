@@ -79,18 +79,18 @@ Warning messages:
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
-[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
-[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[2,] 0.00001    306.40  0.1449 4.360e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.370e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6100 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.77 59.9200 5.924e+01 9.130e-01 8.154 0.8999 0.95900  19.990
 [6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
 [3,] 3.595e-01 0.001953    1.099e+00 0.001388
-[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[4,] 8.636e-01 0.019830    5.473e+00 0.007885
 [5,] 1.156e+00 0.058500    1.191e+01 0.018610
-[6,] 1.250e+00 0.110100    1.883e+01 0.031270
+[6,] 1.250e+00 0.110100    1.882e+01 0.031270
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "bisphenol a",  :
   Clint is provided as a distribution.
@@ -102,18 +102,18 @@ Warning messages:
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
-[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
-[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[2,] 0.00001    306.40  0.1449 4.360e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.370e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6100 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.77 59.9200 5.924e+01 9.130e-01 8.154 0.8999 0.95900  19.990
 [6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
 [3,] 3.595e-01 0.001953    1.099e+00 0.001388
-[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[4,] 8.636e-01 0.019830    5.473e+00 0.007885
 [5,] 1.156e+00 0.058500    1.191e+01 0.018610
-[6,] 1.250e+00 0.110100    1.883e+01 0.031270
+[6,] 1.250e+00 0.110100    1.882e+01 0.031270
 Warning messages:
 1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -125,18 +125,18 @@ Warning messages:
 AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.361e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.3500 2.371e+01 2.840e-01 2.350 0.2472 0.06483   3.119
-[4,] 0.02083    103.10 73.6200 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
-[5,] 0.03125     59.78 59.9200 5.925e+01 9.131e-01 8.155 0.8999 0.95900  19.990
+[2,] 0.00001    306.40  0.1449 4.360e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.3500 2.370e+01 2.840e-01 2.350 0.2472 0.06483   3.119
+[4,] 0.02083    103.10 73.6100 4.914e+01 6.823e-01 5.985 0.6532 0.40620  12.430
+[5,] 0.03125     59.77 59.9200 5.924e+01 9.130e-01 8.154 0.8999 0.95900  19.990
 [6,] 0.04167     34.66 46.1500 5.834e+01 9.873e-01 8.886 0.9852 1.56800  23.520
        Cplasma Atubules Ametabolized      AUC
 [1,] 0.000e+00 0.000000    0.000e+00 0.000000
 [2,] 6.000e-09 0.000000    2.000e-09 0.000000
 [3,] 3.595e-01 0.001953    1.099e+00 0.001388
-[4,] 8.637e-01 0.019830    5.474e+00 0.007886
+[4,] 8.636e-01 0.019830    5.473e+00 0.007885
 [5,] 1.156e+00 0.058500    1.191e+01 0.018610
-[6,] 1.250e+00 0.110100    1.883e+01 0.031270
+[6,] 1.250e+00 0.110100    1.882e+01 0.031270
 Warning messages:
 1: In parameterize_pbtk(chem.cas = "80-05-7") :
   Clint is provided as a distribution.
@@ -268,6 +268,23 @@ $Vrestc
 $Vvenc
 [1] 0.03827
 
+Warning messages:
+1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+2: In parameterize_pbtk(chem.name = "Aminopterin") :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+5: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+6: In parameterize_pbtk(chem.name = "Aminopterin") :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

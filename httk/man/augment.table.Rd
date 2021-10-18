@@ -2,7 +2,7 @@
 % Please edit documentation in R/add_chemtable.R
 \name{augment.table}
 \alias{augment.table}
-\title{Add a paramter value to the chem.physical_and_invitro.data table}
+\title{Add a parameter value to the chem.physical_and_invitro.data table}
 \usage{
 augment.table(
   this.table,
