@@ -1407,6 +1407,53 @@ dawson2021      <- dawson2021_full[,c("CASRN",
 # END dawson2021 Creation
 #
 
+#
+# Create pradeep2020 Data
+#
+## Load in Data ##
+# load chem data
+pradeep.chem <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 1
+)
+# load clint data
+pradeep.clint <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 3
+)
+# rename column name for chemical identifier - DTXSID
+pradeep.clint <- dplyr::rename(
+  pradeep.clint,    # data
+  "DTXSID" = "...1" # new_name = old_name
+)
+# load fup data
+pradeep.fup <- readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 2
+)
+# rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
+pradeep.fup <- dplyr::rename(
+  pradeep.fup,             # data
+  "DTXSID" = "dsstox_sid" # new_name = old_name
+)
+# join prediction tables by chemical identifier
+pradeep_full <- dplyr::full_join(
+  pradeep.clint, # clint data
+  pradeep.fup,   # fup data
+  by = 'DTXSID'  # chemical ID
+) %>%
+  dplyr::left_join(.,             # clint and fup data
+                   pradeep.chem,  # chemical information data
+                   by = "DTXSID") # chemical ID
+
+pradeep2020 <- dplyr::select(
+  pradeep_full, # data
+  c('DTXSID',"CASRN",'pred_clint_rf','Consensus (SVM,RF)') # vars to keep
+)
+#
+# END pradeep2020 Creation
+#
+
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
 
@@ -1472,6 +1519,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
      dawson2021,
+     pradeep2020,
      physiology.data,
      pearce2017regression,
      tissue.data,
