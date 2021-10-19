@@ -397,7 +397,12 @@ Obach2018.table <- as.data.frame(read_excel(
   "Lombardo2018-Supplemental_82966_revised_corrected.xlsx",
   skip=8))
 # Correct deleted CAS:
-Obach2018.table[Obach2018.table[,"CAS #"]=="85650-52-8", "CAS #"] <- "61337-67-5"
+Obach2018.table[Obach2018.table[,"CAS #"]=="85650-52-8", "CAS #"] <- 
+  "61337-67-5"
+Obach2018.table[Obach2018.table[,"CAS #"]=="118457-14-0", "CAS #"] <- 
+  "99200-09-6"
+Obach2018.table[Obach2018.table[,"CAS #"]=="126544-47-6", "CAS #"] <- 
+  "141845-82-1"
 
 
 # Get rid of non-numeric fu values:
@@ -1124,10 +1129,28 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
 sipes2017 <- readRDS("ADMET.data.table.RData")
 
 # Replace "bad" CAS:
-sipes.bad.cas <- as.data.frame(read_excel("SipesBadCAS.xls"))
+sipes.bad.cas <- read.csv("SipesBadCAS.csv")
+sipes.bad.cas <- subset(sipes.bad.cas,TOX21SL=="Y")
+
 for (this.row in 1:dim(sipes.bad.cas)[1])
 {
-  index <- which(sipes2017$Compound==sipes.bad.cas[this.row,"INPUT"])
+  if (sipes.bad.cas[this.row,"INPUT"] %in% sipes2017$Compound)
+  {
+    index <- which(sipes2017$Compound==sipes.bad.cas[this.row,"INPUT"])
+  } else if (sipes.bad.cas[this.row,"INPUT"] %in% sipes2017$CAS)
+  {
+    index <- which(sipes2017$CAS==sipes.bad.cas[this.row,"INPUT"])
+  } else if (sipes.bad.cas[this.row,"INPUT"] == "DTXSID3047051")
+  {
+    index <- which(sipes2017$Compound=="Ocimene")
+  } else if (sipes.bad.cas[this.row,"INPUT"] == "67614-33-9")
+  {
+    index <- which(sipes2017$Compound=="Fenvalerate")
+  } else {
+    print(paste("Can't find",sipes.bad.cas[this.row,"INPUT"]))
+    browser()
+  }
+  
   sipes2017[index,"Compound"] <- sipes.bad.cas[this.row,"PREFERRED_NAME"]
   sipes2017[index,"CAS"] <- sipes.bad.cas[this.row,"CASRN"]
 }
