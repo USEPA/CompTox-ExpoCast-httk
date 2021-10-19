@@ -1332,15 +1332,16 @@ dsstox <- NULL
 for (i in 1:(length(blocks)-1))
 {
   dsstox <- rbind(dsstox,
-    read.csv((paste("HTTK-DSSTox-output-",i,".tsv",sep=""),1),sep="\t"))
+    read.csv(paste("HTTK-DSSTox-output-",i,".tsv",sep=""),sep="\t"))
 }
 
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
-  "HENRYS_LAW_ATM-M3/MOLE_OPERA_PRED"]))
+  "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
-  "WATER_SOLUBILITY_MOL/L_OPERA_PRED"]))
+  "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
+dsstox <- set.precision(dsstox)
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(Compound='PREFERRED_NAME',
@@ -1374,17 +1375,17 @@ write.table(subset(chem.physical_and_invitro.data,
   quote=F)
 cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search based on chemical name. \n")
 cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
-cat("Save Dashboard output to HTTK-NoCASMatch-DSSTox-output.xls.\n")
+cat("Save Dashboard output (tsv) to HTTK-NoCASMatch-DSSTox-output.tsv.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
-dsstox <- as.data.frame(read_excel("HTTK-NoCASMatch-DSSTox-output.xls",1))
+dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv",sep="\t")
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
-  "HENRYS_LAW_ATM-M3/MOLE_OPERA_PRED"]))
+  "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
-  "WATER_SOLUBILITY_MOL/L_OPERA_PRED"]))
-
+  "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
+dsstox <- set.precision(dsstox)
 # Replace any bad CASRN's:
 for (this.row in 1:dim(dsstox)[1])
 {
