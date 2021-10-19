@@ -1,4 +1,4 @@
-"CAS","Drug","Tissue","Species","fu","A.B.N","LogP","Exp_PC"
+"CAS","Drug","Tissue","Species","fu","A/B/N","LogP","Exp_PC"
 "94-75-7","2,4-Dichlorophenoxyacetic acid","Brain","Rat",0.05,"A",2.81,1.42
 "69655-05-6","2',3'-Dideoxyinosine","Brain","Rat",0.97,"A",-1.2,0.445
 "69655-05-6","2',3'-Dideoxyinosine","Gut","Rat",0.97,"A",-1.2,0.51
@@ -58,7 +58,7 @@
 "28981-97-7","Alprazolam","Skin","Rat",0.35,"B",2.12,0.95
 "28981-97-7","Alprazolam","Stomach","Rat",0.35,"B",2.12,1.33
 "28981-97-7","Alprazolam","Testis","Rat",0.35,"B",2.12,2.02
-"1951-25-3","Amiodarone ","Blood Cells","Rat",0.05,"B",7.57,1.22
+"1951-25-3","Amiodarone","Blood Cells","Rat",0.05,"B",7.57,1.22
 "57-44-3","Barbital","Brain","Rabbit",0.93,"A",0.65,0.55
 "57-44-3","Barbital","Heart","Rabbit",0.93,"A",0.65,0.85
 "57-44-3","Barbital","Lung","Rabbit",0.93,"A",0.65,0.85
