@@ -409,8 +409,9 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <-
   "72797-41-2"
 
 # Get rid of non-numeric fu values:
-Obach2018.table$fu <- as.numeric(Obach2018.table$fraction.unbound..in.plasma..fu.)
-Obach2018.table <- subset(Obach2018.table,!is.na(fraction.unbound..in.plasma..fu.))
+Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
+  "fraction unbound \r\nin plasma (fu)"]),4)
+Obach2018.table <- subset(Obach2018.table,!is.na(fu))
 chem.prop <- add_chemtable(Obach2018.table,
                species="Human",
                reference="Lombardo 2018",
@@ -418,7 +419,7 @@ chem.prop <- add_chemtable(Obach2018.table,
                data.list=list(
                  CAS="CAS #",
                  Compound="Name",
-                 Funbound.plasma="fraction.unbound..in.plasma..fu."))
+                 Funbound.plasma="fu"))
 
 
 chem.prop[chem.prop$Compound=="Bensulide",]
@@ -1149,6 +1150,9 @@ for (this.row in 1:dim(sipes.bad.cas)[1])
   } else if (sipes.bad.cas[this.row,"INPUT"] == "67614-33-9")
   {
     index <- which(sipes2017$Compound=="Fenvalerate")
+  } else if (sipes.bad.cas[this.row,"INPUT"] == "Hydrocodone triphosphate")
+  {
+    index <- which(sipes2017$CAS=="Fenvalerate")
   } else {
     print(paste("Can't find",sipes.bad.cas[this.row,"INPUT"]))
     browser()
@@ -1309,7 +1313,7 @@ for (i in 1:(length(blocks)-1))
     quote=F)
   cat(paste("Chemical ID's written to HTTK-ChemIDs-",i,".txt,\n",sep=""))
   cat(" use that file to Batch Search based on CAS.\n")
-  cat(paste("Save Dashboard output to HTTK-DSSTox-output-",i,".xls.\n",sep=""))
+  cat(paste("Save Dashboard output (tab separated values/tsv)to HTTK-DSSTox-output-",i,".tsv.\n",sep=""))
 }
 cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES,\n")
 cat(" formula, DTXSIDs, and OPERA properties.\n")
@@ -1328,7 +1332,7 @@ dsstox <- NULL
 for (i in 1:(length(blocks)-1))
 {
   dsstox <- rbind(dsstox,
-    as.data.frame(read_excel(paste("HTTK-DSSTox-output-",i,".xls",sep=""),1)))
+    read.csv((paste("HTTK-DSSTox-output-",i,".tsv",sep=""),1),sep="\t"))
 }
 
 # Get rid of the ones that weren't found:
