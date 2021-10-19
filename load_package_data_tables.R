@@ -393,9 +393,11 @@ for (this.row in 1:dim(Schmitt.table)[1])
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
-Obach2018.table <- read.csv(
-  "Lombardo2018-Supplemental_82966_revised_corrected.csv",
-  skip=8)
+Obach2018.table <- as.data.frame(read_excel(
+  "Lombardo2018-Supplemental_82966_revised_corrected.xlsx",
+  skip=8))
+# Correct deleted CAS:
+Obach2018.table[Obach2018.table[,"CAS #"]=="85650-52-8", "CAS #"] <- "61337-67-5"
 
 
 # Get rid of non-numeric fu values:
@@ -406,7 +408,7 @@ chem.prop <- add_chemtable(Obach2018.table,
                reference="Lombardo 2018",
                current.table=chem.prop,
                data.list=list(
-                 CAS="CAS..",
+                 CAS="CAS #",
                  Compound="Name",
                  Funbound.plasma="fraction.unbound..in.plasma..fu."))
 
@@ -834,8 +836,12 @@ length(unique(chem.prop$CAS))==dim(chem.prop)[1]
 
 chem.physical_and_invitro.data <- chem.prop
 
-if (unique(chem.physical_and_invitro.data$CAS) < dim(chem.physical_and_invitro.data)[1]) stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
-if(any(sapply(chem.physical_and_invitro.data$CAS,function(x) !CAS.checksum(x)))) stop("Failed CAS checksum in chem.physical_and_invitro.data")
+if (unique(chem.physical_and_invitro.data$CAS) < 
+  dim(chem.physical_and_invitro.data)[1]) 
+  stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
+if (any(sapply(chem.physical_and_invitro.data$CAS,
+  function(x) !CAS.checksum(x)))) 
+  stop("Failed CAS checksum in chem.physical_and_invitro.data")
 
 
 cl <- set.precision(read_excel('Pirovano-2016.xlsx'))
@@ -962,19 +968,57 @@ write.csv(pc.data,"Pearce2017-PC-data.txt",row.names=FALSE)
 #
 # Manual fixes to data:
 #
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),'All.Compound.Names'] <- 'Acebutolol'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),'All.Compound.Names'] <- 's-bioallethrin'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),'All.Compound.Names'] <-  "3,3'-dimethoxybenzidine"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),'All.Compound.Names'] <-  "Amiodarone"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),'All.Compound.Names']  <-  "Galantamine"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '57-41-0'),'Compound'] <-  "Phenytoin"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),'All.Compound.Names']  <-  "Diuron"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'Compound'] <- chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),'All.Compound.Names']  <-  "Timolol hemihydrate"
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '101193-40-2'),'All.Compound.Names'] <- 'Quinotolast'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '77-28-1'),'All.Compound.Names'] <- 'Butylbarbitone|Butethal [nf]|Butethal'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '65216-93-5'),'All.Compound.Names'] <- 'Ethoxycoumarin|3-ethoxychromen-2-one'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '509-86-4'),'All.Compound.Names'] <- 'Heptabarbitone|Heptabarbital'
-chem.physical_and_invitro.data[which(chem.physical_and_invitro.data[,'CAS'] == '58-08-2'),'Compound'] <- 'Caffeine'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '37517-30-9'),
+  'All.Compound.Names'] <- 'Acebutolol'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '28434-00-6'),
+  'All.Compound.Names'] <- 's-bioallethrin'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '119-90-4'),
+  'All.Compound.Names'] <-  "3,3'-dimethoxybenzidine"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '1951-25-3'),
+  'All.Compound.Names'] <-  "Amiodarone"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '357-70-0'),
+  'All.Compound.Names']  <-  "Galantamine"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '57-41-0'),
+  'Compound'] <-  "Phenytoin"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '330-54-1'),
+  'All.Compound.Names']  <-  "Diuron"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),
+  'Compound'] <- chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '91524-16-2'),
+  'All.Compound.Names']  <-  "Timolol hemihydrate"
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '101193-40-2'),
+  'All.Compound.Names'] <- 'Quinotolast'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '77-28-1'),
+  'All.Compound.Names'] <- 'Butylbarbitone|Butethal [nf]  |Butethal'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '65216-93-5'),
+  'All.Compound.Names'] <- 'Ethoxycoumarin|3-ethoxychromen-2-one'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '509-86-4'),
+  'All.Compound.Names'] <- 'Heptabarbitone|Heptabarbital'
+chem.physical_and_invitro.data[
+  which(chem.physical_and_invitro.data[,'CAS'] == '58-08-2'),
+  'Compound'] <- 'Caffeine'
 
 #Honda 2019:
 load("Honda2019/wetmore_fup.RData") #Some where rat fups were inappropriately truncated
