@@ -403,7 +403,10 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="118457-14-0", "CAS #"] <-
   "99200-09-6"
 Obach2018.table[Obach2018.table[,"CAS #"]=="126544-47-6", "CAS #"] <- 
   "141845-82-1"
-
+Obach2018.table[Obach2018.table[,"CAS #"]=="4731-52-6", "CAS #"] <- 
+  "444731-52-6"
+Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <- 
+  "72797-41-2"
 
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- as.numeric(Obach2018.table$fraction.unbound..in.plasma..fu.)
