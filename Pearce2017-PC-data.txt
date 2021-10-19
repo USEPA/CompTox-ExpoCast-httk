@@ -7,21 +7,21 @@
 "69655-05-6","2',3'-Dideoxyinosine","Muscle","Rat",0.97,"A",-1.2,0.69
 "69655-05-6","2',3'-Dideoxyinosine","Pancreas","Rat",0.97,"A",-1.2,0.7178
 "69655-05-6","2',3'-Dideoxyinosine","Spleen","Rat",0.97,"A",-1.2,0.96
-"68107-81-3","(R)-Acebutolol","Adipose","Rat",0.79,"B",1.71,1.0902
-"68107-81-3","(R)-Acebutolol","Blood Cells","Rat",0.79,"B",1.71,1.20416304347826
+"68107-81-3","(R)-Acebutolol","Adipose","Rat",0.79,"B",1.71,1.09
+"68107-81-3","(R)-Acebutolol","Blood Cells","Rat",0.79,"B",1.71,1.204
 "68107-81-3","(R)-Acebutolol","Bone","Rat",0.79,"B",1.71,0.0553
 "68107-81-3","(R)-Acebutolol","Brain","Rat",0.79,"B",1.71,0.4819
 "68107-81-3","(R)-Acebutolol","Gut","Rat",0.79,"B",1.71,88.48
-"68107-81-3","(R)-Acebutolol","Heart","Rat",0.79,"B",1.71,5.7117
-"68107-81-3","(R)-Acebutolol","Kidney","Rat",0.79,"B",1.71,23.463
-"68107-81-3","(R)-Acebutolol","Liver","Rat",0.79,"B",1.71,31.363
-"68107-81-3","(R)-Acebutolol","Lung","Rat",0.79,"B",1.71,10.349
-"68107-81-3","(R)-Acebutolol","Muscle","Rat",0.79,"B",1.71,4.9612
-"68107-81-3","(R)-Acebutolol","Skin","Rat",0.79,"B",1.71,3.0257
+"68107-81-3","(R)-Acebutolol","Heart","Rat",0.79,"B",1.71,5.712
+"68107-81-3","(R)-Acebutolol","Kidney","Rat",0.79,"B",1.71,23.46
+"68107-81-3","(R)-Acebutolol","Liver","Rat",0.79,"B",1.71,31.36
+"68107-81-3","(R)-Acebutolol","Lung","Rat",0.79,"B",1.71,10.35
+"68107-81-3","(R)-Acebutolol","Muscle","Rat",0.79,"B",1.71,4.961
+"68107-81-3","(R)-Acebutolol","Skin","Rat",0.79,"B",1.71,3.026
 "68107-81-3","(R)-Acebutolol","Testis","Rat",0.79,"B",1.71,3.081
-"68107-81-3","(R)-Acebutolol","Thymus","Rat",0.79,"B",1.71,5.4115
+"68107-81-3","(R)-Acebutolol","Thymus","Rat",0.79,"B",1.71,5.412
 "68107-82-4","Acebutolol-S","Adipose","Rat",0.73,"B",1.71,0.803
-"68107-82-4","Acebutolol-S","Blood Cells","Rat",0.73,"B",1.71,1.03580434782609
+"68107-82-4","Acebutolol-S","Blood Cells","Rat",0.73,"B",1.71,1.036
 "68107-82-4","Acebutolol-S","Bone","Rat",0.73,"B",1.71,0.0438
 "68107-82-4","Acebutolol-S","Brain","Rat",0.73,"B",1.71,0.365
 "68107-82-4","Acebutolol-S","Gut","Rat",0.73,"B",1.71,91.25
@@ -47,7 +47,7 @@
 "71195-58-9","Alfentanil","Skin","Rat",0.11,"B",2.2,0.18
 "71195-58-9","Alfentanil","Spleen","Rat",0.11,"B",2.2,0.7315
 "28981-97-7","Alprazolam","Adipose","Rat",0.35,"B",2.12,0.74
-"28981-97-7","Alprazolam","Blood Cells","Rat",0.35,"B",2.12,2.19565217391304
+"28981-97-7","Alprazolam","Blood Cells","Rat",0.35,"B",2.12,2.196
 "28981-97-7","Alprazolam","Brain","Rat",0.35,"B",2.12,1.44
 "28981-97-7","Alprazolam","Gut","Rat",0.35,"B",2.12,1.62
 "28981-97-7","Alprazolam","Heart","Rat",0.35,"B",2.12,1.69
@@ -63,32 +63,32 @@
 "57-44-3","Barbital","Heart","Rabbit",0.93,"A",0.65,0.85
 "57-44-3","Barbital","Lung","Rabbit",0.93,"A",0.65,0.85
 "57-44-3","Barbital","Muscle","Rabbit",0.93,"A",0.65,0.65
-"91878-53-4","(R)-Betaxolol","Adipose","Rat",0.53,"B",2.59,2.9521
-"91878-53-4","(R)-Betaxolol","Blood Cells","Rat",0.53,"B",2.59,3.28296739130435
-"91878-53-4","(R)-Betaxolol","Bone","Rat",0.53,"B",2.59,13.197
-"91878-53-4","(R)-Betaxolol","Brain","Rat",0.53,"B",2.59,12.985
-"91878-53-4","(R)-Betaxolol","Gut","Rat",0.53,"B",2.59,40.227
-"91878-53-4","(R)-Betaxolol","Heart","Rat",0.53,"B",2.59,23.585
+"91878-53-4","(R)-Betaxolol","Adipose","Rat",0.53,"B",2.59,2.952
+"91878-53-4","(R)-Betaxolol","Blood Cells","Rat",0.53,"B",2.59,3.283
+"91878-53-4","(R)-Betaxolol","Bone","Rat",0.53,"B",2.59,13.2
+"91878-53-4","(R)-Betaxolol","Brain","Rat",0.53,"B",2.59,12.98
+"91878-53-4","(R)-Betaxolol","Gut","Rat",0.53,"B",2.59,40.23
+"91878-53-4","(R)-Betaxolol","Heart","Rat",0.53,"B",2.59,23.58
 "91878-53-4","(R)-Betaxolol","Kidney","Rat",0.53,"B",2.59,58.3
-"91878-53-4","(R)-Betaxolol","Liver","Rat",0.53,"B",2.59,130.91
-"91878-53-4","(R)-Betaxolol","Lung","Rat",0.53,"B",2.59,203.52
+"91878-53-4","(R)-Betaxolol","Liver","Rat",0.53,"B",2.59,130.9
+"91878-53-4","(R)-Betaxolol","Lung","Rat",0.53,"B",2.59,203.5
 "91878-53-4","(R)-Betaxolol","Muscle","Rat",0.53,"B",2.59,13.78
 "91878-53-4","(R)-Betaxolol","Skin","Rat",0.53,"B",2.59,6.519
-"91878-53-4","(R)-Betaxolol","Testis","Rat",0.53,"B",2.59,22.366
-"91878-53-4","(R)-Betaxolol","Thymus","Rat",0.53,"B",2.59,34.079
+"91878-53-4","(R)-Betaxolol","Testis","Rat",0.53,"B",2.59,22.37
+"91878-53-4","(R)-Betaxolol","Thymus","Rat",0.53,"B",2.59,34.08
 "93221-48-8","Levobetaxolol","Adipose","Rat",0.54,"B",2.59,2.862
-"93221-48-8","Levobetaxolol","Blood Cells","Rat",0.54,"B",2.59,2.93773913043478
+"93221-48-8","Levobetaxolol","Blood Cells","Rat",0.54,"B",2.59,2.938
 "93221-48-8","Levobetaxolol","Bone","Rat",0.54,"B",2.59,12.96
 "93221-48-8","Levobetaxolol","Brain","Rat",0.54,"B",2.59,12.96
 "93221-48-8","Levobetaxolol","Gut","Rat",0.54,"B",2.59,37.8
 "93221-48-8","Levobetaxolol","Heart","Rat",0.54,"B",2.59,21.6
 "93221-48-8","Levobetaxolol","Kidney","Rat",0.54,"B",2.59,54.54
 "93221-48-8","Levobetaxolol","Liver","Rat",0.54,"B",2.59,108
-"93221-48-8","Levobetaxolol","Lung","Rat",0.54,"B",2.59,182.52
+"93221-48-8","Levobetaxolol","Lung","Rat",0.54,"B",2.59,182.5
 "93221-48-8","Levobetaxolol","Muscle","Rat",0.54,"B",2.59,14.04
 "93221-48-8","Levobetaxolol","Skin","Rat",0.54,"B",2.59,6.642
-"93221-48-8","Levobetaxolol","Testis","Rat",0.54,"B",2.59,22.788
-"93221-48-8","Levobetaxolol","Thymus","Rat",0.54,"B",2.59,34.722
+"93221-48-8","Levobetaxolol","Testis","Rat",0.54,"B",2.59,22.79
+"93221-48-8","Levobetaxolol","Thymus","Rat",0.54,"B",2.59,34.72
 "514-65-8","Biperiden","Adipose","Rat",0.17,"B",4.25,58
 "514-65-8","Biperiden","Adipose","Rabbit",0.17,"B",4.25,120
 "514-65-8","Biperiden","Bone","Rat",0.17,"B",4.25,2
@@ -108,15 +108,15 @@
 "514-65-8","Biperiden","Skin","Rat",0.17,"B",4.25,4
 "514-65-8","Biperiden","Skin","Rabbit",0.17,"B",4.25,9.91
 "66722-44-9","Bisoprolol","Blood Cells","Rat",0.85,"B",1.87,0.087
-"111051-40-2","R-(+)-BISOPROLOL","Adipose","Rat",0.85,"B",1.87,1.0285
+"111051-40-2","R-(+)-BISOPROLOL","Adipose","Rat",0.85,"B",1.87,1.028
 "111051-40-2","R-(+)-BISOPROLOL","Bone","Rat",0.85,"B",1.87,4.879
-"111051-40-2","R-(+)-BISOPROLOL","Brain","Rat",0.85,"B",1.87,1.6405
+"111051-40-2","R-(+)-BISOPROLOL","Brain","Rat",0.85,"B",1.87,1.64
 "111051-40-2","R-(+)-BISOPROLOL","Gut","Rat",0.85,"B",1.87,26.52
-"111051-40-2","R-(+)-BISOPROLOL","Heart","Rat",0.85,"B",1.87,6.4855
-"111051-40-2","R-(+)-BISOPROLOL","Kidney","Rat",0.85,"B",1.87,24.905
+"111051-40-2","R-(+)-BISOPROLOL","Heart","Rat",0.85,"B",1.87,6.486
+"111051-40-2","R-(+)-BISOPROLOL","Kidney","Rat",0.85,"B",1.87,24.9
 "111051-40-2","R-(+)-BISOPROLOL","Liver","Rat",0.85,"B",1.87,22.78
 "111051-40-2","R-(+)-BISOPROLOL","Lung","Rat",0.85,"B",1.87,41.82
-"111051-40-2","R-(+)-BISOPROLOL","Muscle","Rat",0.85,"B",1.87,5.3975
+"111051-40-2","R-(+)-BISOPROLOL","Muscle","Rat",0.85,"B",1.87,5.398
 "111051-40-2","R-(+)-BISOPROLOL","Skin","Rat",0.85,"B",1.87,2.176
 "111051-40-2","R-(+)-BISOPROLOL","Testis","Rat",0.85,"B",1.87,4.59
 "111051-40-2","R-(+)-BISOPROLOL","Thymus","Rat",0.85,"B",1.87,8.585
@@ -165,7 +165,7 @@
 "95094-00-1","(S)-Carvedilol","Kidney","Rat",0.037,"B",4.19,7
 "95094-00-1","(S)-Carvedilol","Liver","Rat",0.037,"B",4.19,12
 "95094-00-1","(S)-Carvedilol","Muscle","Rat",0.037,"B",4.19,1.6
-"95094-00-1","(S)-Carvedilol","Spleen","Rat",0.037,"B",4.19,10.027
+"95094-00-1","(S)-Carvedilol","Spleen","Rat",0.037,"B",4.19,10.03
 "25953-19-9","Cefazolin","Bone","Rat",0.14,"A",-0.58,0.09
 "25953-19-9","Cefazolin","Gut","Rat",0.14,"A",-0.58,0.178
 "25953-19-9","Cefazolin","Heart","Rat",0.14,"A",-0.58,0.12
@@ -254,23 +254,23 @@
 "486-56-6","Cotinine","Heart","Rat",0.97,"B",-0.25,0.675
 "486-56-6","Cotinine","Lung","Rat",0.97,"B",-0.25,0.66
 "486-56-6","Cotinine","Muscle","Rat",0.97,"B",-0.25,0.885
-"59865-13-3","Cyclosporin A","Adipose","Rat",0.083,"N",2.9,7.4534
-"59865-13-3","Cyclosporin A","Brain","Rat",0.083,"N",2.9,0.79265
+"59865-13-3","Cyclosporin A","Adipose","Rat",0.083,"N",2.9,7.453
+"59865-13-3","Cyclosporin A","Brain","Rat",0.083,"N",2.9,0.7926
 "59865-13-3","Cyclosporin A","Blood Cells","Rat",0.083,"N",2.9,1.61
-"59865-13-3","Cyclosporin A","Gut","Rat",0.083,"N",2.9,3.8595
-"59865-13-3","Cyclosporin A","Heart","Rat",0.083,"N",2.9,3.8097
-"59865-13-3","Cyclosporin A","Kidney","Rat",0.083,"N",2.9,6.6815
+"59865-13-3","Cyclosporin A","Gut","Rat",0.083,"N",2.9,3.86
+"59865-13-3","Cyclosporin A","Heart","Rat",0.083,"N",2.9,3.81
+"59865-13-3","Cyclosporin A","Kidney","Rat",0.083,"N",2.9,6.682
 "59865-13-3","Cyclosporin A","Liver","Rat",0.083,"N",2.9,8.549
-"59865-13-3","Cyclosporin A","Lung","Rat",0.083,"N",2.9,4.2081
+"59865-13-3","Cyclosporin A","Lung","Rat",0.083,"N",2.9,4.208
 "59865-13-3","Cyclosporin A","Muscle","Rat",0.083,"N",2.9,1.079
-"59865-13-3","Cyclosporin A","Skin","Rat",0.083,"N",2.9,1.6932
-"59865-13-3","Cyclosporin A","Spleen","Rat",0.083,"N",2.9,5.4531
-"59865-13-3","Cyclosporin A","Thymus","Rat",0.083,"N",2.9,3.3781
+"59865-13-3","Cyclosporin A","Skin","Rat",0.083,"N",2.9,1.693
+"59865-13-3","Cyclosporin A","Spleen","Rat",0.083,"N",2.9,5.453
+"59865-13-3","Cyclosporin A","Thymus","Rat",0.083,"N",2.9,3.378
 "50-02-2","Dexamethasone","Blood Cells","Rat",0.13,"A",1.83,0.565
 "439-14-5","Diazepam","Adipose","Rat",0.15,"B",2.82,20.57
 "439-14-5","Diazepam","Adipose","Rabbit",0.091,"B",2.82,12.2
 "439-14-5","Diazepam","Adipose","Rabbit",0.091,"B",2.82,12
-"439-14-5","Diazepam","Blood Cells","Rat",0.15,"B",2.82,1.41304347826087
+"439-14-5","Diazepam","Blood Cells","Rat",0.15,"B",2.82,1.413
 "439-14-5","Diazepam","Bone","Rabbit",0.09,"B",2.82,1
 "439-14-5","Diazepam","Bone","Rat",0.09,"B",2.82,5.45
 "439-14-5","Diazepam","Brain","Rat",0.15,"B",2.82,1.655
@@ -296,14 +296,14 @@
 "3116-76-5","Dicloxacillin","Kidney","Rat",0.03,"A",2.91,1.3
 "3116-76-5","Dicloxacillin","Muscle","Rat",0.03,"A",2.91,0.051
 "3116-76-5","Dicloxacillin","Spleen","Rat",0.03,"A",2.91,0.09
-"42399-41-7","Diltiazem","Blood Cells","Rat",0.18,"B",2.72999854728342,0.85
+"42399-41-7","Diltiazem","Blood Cells","Rat",0.18,"B",2.73,0.85
 "20830-75-5","Digoxin","Blood Cells","Rat",0.87,"N",1.26,3.46
-"20830-75-5","Digoxin","Gut","Rat",0.87,"N",1.26,5.9109
-"20830-75-5","Digoxin","Heart","Rat",0.87,"N",1.26,2.0191
-"20830-75-5","Digoxin","Kidney","Rat",0.87,"N",1.26,2.0679
-"20830-75-5","Digoxin","Liver","Rat",0.87,"N",1.26,15.189
-"20830-75-5","Digoxin","Lung","Rat",0.87,"N",1.26,2.0923
-"20830-75-5","Digoxin","Muscle","Rat",0.87,"N",1.26,1.3908
+"20830-75-5","Digoxin","Gut","Rat",0.87,"N",1.26,5.911
+"20830-75-5","Digoxin","Heart","Rat",0.87,"N",1.26,2.019
+"20830-75-5","Digoxin","Kidney","Rat",0.87,"N",1.26,2.068
+"20830-75-5","Digoxin","Liver","Rat",0.87,"N",1.26,15.19
+"20830-75-5","Digoxin","Lung","Rat",0.87,"N",1.26,2.092
+"20830-75-5","Digoxin","Muscle","Rat",0.87,"N",1.26,1.391
 "3737-09-5","Disopyramide","Brain","Rat",0.24,"B",2.58,0.94
 "3737-09-5","Disopyramide","Heart","Rat",0.24,"B",2.58,2.03
 "3737-09-5","Disopyramide","Muscle","Rat",0.24,"B",2.58,2.3
@@ -316,14 +316,14 @@
 "57808-66-9","Domperidone","Lung","Rat",0.09,"B",3.96,10.9
 "57808-66-9","Domperidone","Muscle","Rat",0.09,"B",3.96,3.45
 "57808-66-9","Domperidone","Skin","Rat",0.09,"B",3.96,4.35
-"74011-58-8","Enoxacin","Bone","Rat",0.66,"Z",0.1,1.4388
-"74011-58-8","Enoxacin","Heart","Rat",0.66,"Z",0.1,1.0692
-"74011-58-8","Enoxacin","Kidney","Rat",0.66,"Z",0.1,4.6134
-"74011-58-8","Enoxacin","Liver","Rat",0.66,"Z",0.1,3.2142
-"74011-58-8","Enoxacin","Lung","Rat",0.66,"Z",0.1,1.1418
+"74011-58-8","Enoxacin","Bone","Rat",0.66,"Z",0.1,1.439
+"74011-58-8","Enoxacin","Heart","Rat",0.66,"Z",0.1,1.069
+"74011-58-8","Enoxacin","Kidney","Rat",0.66,"Z",0.1,4.613
+"74011-58-8","Enoxacin","Liver","Rat",0.66,"Z",0.1,3.214
+"74011-58-8","Enoxacin","Lung","Rat",0.66,"Z",0.1,1.142
 "74011-58-8","Enoxacin","Muscle","Rat",0.66,"Z",0.1,1.452
-"74011-58-8","Enoxacin","Skin","Rat",0.66,"Z",0.1,1.3596
-"74011-58-8","Enoxacin","Spleen","Rat",0.66,"Z",0.1,1.6302
+"74011-58-8","Enoxacin","Skin","Rat",0.66,"Z",0.1,1.36
+"74011-58-8","Enoxacin","Spleen","Rat",0.66,"Z",0.1,1.63
 "938-73-8","Ethoxybenzamide","Adipose","Rat",0.59,"N",0.8,0.7434
 "938-73-8","Ethoxybenzamide","Brain","Rat",0.59,"N",0.8,0.9322
 "938-73-8","Ethoxybenzamide","Gut","Rat",0.59,"N",0.8,0.5723
@@ -373,7 +373,7 @@
 "79660-72-3","Fleroxacin","Lung","Rat",0.75,"Z",0.24,2.15
 "79660-72-3","Fleroxacin","Muscle","Rat",0.75,"Z",0.24,2
 "1622-62-4","Flunitrazepam","Adipose","Rat",0.25,"B",2.6,21.62
-"1622-62-4","Flunitrazepam","Blood Cells","Rat",0.25,"B",2.6,1.52173913043478
+"1622-62-4","Flunitrazepam","Blood Cells","Rat",0.25,"B",2.6,1.522
 "1622-62-4","Flunitrazepam","Brain","Rat",0.25,"B",2.6,1.25
 "1622-62-4","Flunitrazepam","Gut","Rat",0.25,"B",2.6,1.84
 "1622-62-4","Flunitrazepam","Heart","Rat",0.25,"B",2.6,2.34
@@ -440,7 +440,7 @@
 "52-86-8","Haloperidol","Skin","Rabbit",0.23,"B",4.3,6.2
 "60784-70-5","Heptyl barbituric acid","Adipose","Rat",0.066,"A",3.3,6.33
 "60784-70-5","Heptyl barbituric acid","Brain","Rat",0.066,"A",3.3,1.193
-"60784-70-5","Heptyl barbituric acid","Gut","Rat",0.066,"A",3.3,1.2775
+"60784-70-5","Heptyl barbituric acid","Gut","Rat",0.066,"A",3.3,1.278
 "60784-70-5","Heptyl barbituric acid","Heart","Rat",0.066,"A",3.3,1.394
 "60784-70-5","Heptyl barbituric acid","Kidney","Rat",0.066,"A",3.3,2.139
 "60784-70-5","Heptyl barbituric acid","Liver","Rat",0.066,"A",3.3,2.614
@@ -472,18 +472,18 @@
 "1953-34-0","Hexyl barbituric acid","Spleen","Rat",0.9,"A",2.8,0.836
 "1953-34-0","Hexyl barbituric acid","Thymus","Rat",0.9,"A",2.8,0.494
 "50-49-7","Imipramine","Adipose","Rat",0.24,"B",4.8,10.5
-"50-49-7","Imipramine","Blood Cells","Rat",0.24,"B",4.8,2.41652173913043
-"50-49-7","Imipramine","Brain","Rat",0.24,"B",4.8,22.992
-"50-49-7","Imipramine","Gut","Rat",0.24,"B",4.8,23.496
-"50-49-7","Imipramine","Heart","Rat",0.24,"B",4.8,21.912
+"50-49-7","Imipramine","Blood Cells","Rat",0.24,"B",4.8,2.417
+"50-49-7","Imipramine","Brain","Rat",0.24,"B",4.8,22.99
+"50-49-7","Imipramine","Gut","Rat",0.24,"B",4.8,23.5
+"50-49-7","Imipramine","Heart","Rat",0.24,"B",4.8,21.91
 "50-49-7","Imipramine","Kidney","Rat",0.24,"B",4.8,45.6
 "50-49-7","Imipramine","Liver","Rat",0.24,"B",4.8,51.84
-"50-49-7","Imipramine","Lung","Rat",0.24,"B",4.8,127.44
+"50-49-7","Imipramine","Lung","Rat",0.24,"B",4.8,127.4
 "50-49-7","Imipramine","Muscle","Rat",0.24,"B",4.8,8.808
 "50-49-7","Imipramine","Pancreas","Rat",0.24,"B",4.8,43.68
 "50-49-7","Imipramine","Spleen","Rat",0.24,"B",4.8,57.36
-"99323-21-4","Inaperisone","Adipose","Rat",0.24,"B",3.72,15.504
-"99323-21-4","Inaperisone","Brain","Rat",0.24,"B",3.72,12.312
+"99323-21-4","Inaperisone","Adipose","Rat",0.24,"B",3.72,15.5
+"99323-21-4","Inaperisone","Brain","Rat",0.24,"B",3.72,12.31
 "99323-21-4","Inaperisone","Heart","Rat",0.24,"B",3.72,7.392
 "99323-21-4","Inaperisone","Kidney","Rat",0.24,"B",3.72,58.08
 "99323-21-4","Inaperisone","Liver","Rat",0.24,"B",3.72,33.84
@@ -597,34 +597,34 @@
 "144665-07-6","Lubeluzole","Lung","Rat",0.01,"B",4.88,18.1
 "144665-07-6","Lubeluzole","Muscle","Rat",0.01,"B",4.88,2.04
 "137-58-6","Lidocaine","Adipose","Monkey",NA,"B",2.44,2
-"137-58-6","Lidocaine","Blood Cells","Rat",0.38,"B",2.44,1.57560869565217
+"137-58-6","Lidocaine","Blood Cells","Rat",0.38,"B",2.44,1.576
 "137-58-6","Lidocaine","Bone","Monkey",NA,"B",2.44,0.39
-"137-58-6","Lidocaine","Brain","Rat",0.38,"B",2.44,3.2414
+"137-58-6","Lidocaine","Brain","Rat",0.38,"B",2.44,3.241
 "137-58-6","Lidocaine","Brain","Monkey",NA,"B",2.44,1.2
 "137-58-6","Lidocaine","Gut","Rat",0.38,"B",2.44,3.116
 "137-58-6","Lidocaine","Gut","Monkey",NA,"B",2.44,1.6
-"137-58-6","Lidocaine","Heart","Rat",0.38,"B",2.44,2.7284
+"137-58-6","Lidocaine","Heart","Rat",0.38,"B",2.44,2.728
 "137-58-6","Lidocaine","Heart","Monkey",NA,"B",2.44,0.96
-"137-58-6","Lidocaine","Kidney","Rat",0.38,"B",2.44,17.214
+"137-58-6","Lidocaine","Kidney","Rat",0.38,"B",2.44,17.21
 "137-58-6","Lidocaine","Kidney","Monkey",NA,"B",2.44,2.8
-"137-58-6","Lidocaine","Liver","Rat",0.38,"B",2.44,11.514
+"137-58-6","Lidocaine","Liver","Rat",0.38,"B",2.44,11.51
 "137-58-6","Lidocaine","Liver","Monkey",NA,"B",2.44,0.61
 "137-58-6","Lidocaine","Lung","Rat",0.38,"B",2.44,3.8
 "137-58-6","Lidocaine","Lung","Monkey",NA,"B",2.44,3.1
-"137-58-6","Lidocaine","Muscle","Rat",0.38,"B",2.44,1.6796
+"137-58-6","Lidocaine","Muscle","Rat",0.38,"B",2.44,1.68
 "137-58-6","Lidocaine","Muscle","Monkey",NA,"B",2.44,0.65
-"137-58-6","Lidocaine","Skin","Rat",0.38,"B",2.44,2.5802
+"137-58-6","Lidocaine","Skin","Rat",0.38,"B",2.44,2.58
 "137-58-6","Lidocaine","Skin","Monkey",NA,"B",2.44,0.57
 "137-58-6","Lidocaine","Spleen","Rat",0.38,"B",2.44,4.788
 "98079-51-7","Lomefloxacin","Adipose","Rat",0.72,"Z",-0.3,0.2664
-"98079-51-7","Lomefloxacin","Bone","Rat",0.72,"Z",-0.3,1.5768
+"98079-51-7","Lomefloxacin","Bone","Rat",0.72,"Z",-0.3,1.577
 "98079-51-7","Lomefloxacin","Brain","Rat",0.72,"Z",-0.3,0.216
-"98079-51-7","Lomefloxacin","Gut","Rat",0.72,"Z",-0.3,1.6272
+"98079-51-7","Lomefloxacin","Gut","Rat",0.72,"Z",-0.3,1.627
 "98079-51-7","Lomefloxacin","Heart","Rat",0.72,"Z",-0.3,1.368
-"98079-51-7","Lomefloxacin","Kidney","Rat",0.72,"Z",-0.3,4.8384
-"98079-51-7","Lomefloxacin","Liver","Rat",0.72,"Z",-0.3,2.2968
-"98079-51-7","Lomefloxacin","Lung","Rat",0.72,"Z",-0.3,1.2384
-"98079-51-7","Lomefloxacin","Muscle","Rat",0.72,"Z",-0.3,1.6128
+"98079-51-7","Lomefloxacin","Kidney","Rat",0.72,"Z",-0.3,4.838
+"98079-51-7","Lomefloxacin","Liver","Rat",0.72,"Z",-0.3,2.297
+"98079-51-7","Lomefloxacin","Lung","Rat",0.72,"Z",-0.3,1.238
+"98079-51-7","Lomefloxacin","Muscle","Rat",0.72,"Z",-0.3,1.613
 "98079-51-7","Lomefloxacin","Skin","Rat",0.72,"Z",-0.3,0.936
 "98079-51-7","Lomefloxacin","Spleen","Rat",0.72,"Z",-0.3,1.728
 "59729-31-6","Lorcainide","Adipose","Rat",0.26,"B",4.16,5.27
@@ -665,9 +665,9 @@
 "2565-47-1","1-Methyl barbituric acid","Spleen","Rat",1,"A",0.05,0.7
 "2565-47-1","1-Methyl barbituric acid","Thymus","Rat",1,"A",0.05,0.75
 "57562-99-9","N-Methylpentobarbital","Muscle","Rat",0.5,"N",2.69,1.3
-"51384-51-1","Metoprolol","Blood Cells","Rat",0.94,"B",1.75996985755431,1.52
+"51384-51-1","Metoprolol","Blood Cells","Rat",0.94,"B",1.76,1.52
 "81024-43-3","(R)-Metoprolol","Adipose","Rat",0.8,"B",1.88,1.048
-"81024-43-3","(R)-Metoprolol","Blood Cells","Rat",0.8,"B",1.88,2.06434782608696
+"81024-43-3","(R)-Metoprolol","Blood Cells","Rat",0.8,"B",1.88,2.064
 "81024-43-3","(R)-Metoprolol","Bone","Rat",0.8,"B",1.88,5.168
 "81024-43-3","(R)-Metoprolol","Brain","Rat",0.8,"B",1.88,6.472
 "81024-43-3","(R)-Metoprolol","Gut","Rat",0.8,"B",1.88,13.12
@@ -680,20 +680,20 @@
 "81024-43-3","(R)-Metoprolol","Testis","Rat",0.8,"B",1.88,9.6
 "81024-43-3","(R)-Metoprolol","Thymus","Rat",0.8,"B",1.88,11.6
 "81024-42-2","(S)-Metoprolol","Adipose","Rat",0.81,"B",1.88,0.9963
-"81024-42-2","(S)-Metoprolol","Blood Cells","Rat",0.81,"B",1.88,2.02648913043478
-"81024-42-2","(S)-Metoprolol","Bone","Rat",0.81,"B",1.88,5.3055
+"81024-42-2","(S)-Metoprolol","Blood Cells","Rat",0.81,"B",1.88,2.026
+"81024-42-2","(S)-Metoprolol","Bone","Rat",0.81,"B",1.88,5.306
 "81024-42-2","(S)-Metoprolol","Brain","Rat",0.81,"B",1.88,6.966
-"81024-42-2","(S)-Metoprolol","Gut","Rat",0.81,"B",1.88,11.097
-"81024-42-2","(S)-Metoprolol","Heart","Rat",0.81,"B",1.88,6.2694
-"81024-42-2","(S)-Metoprolol","Kidney","Rat",0.81,"B",1.88,27.054
-"81024-42-2","(S)-Metoprolol","Liver","Rat",0.81,"B",1.88,44.631
-"81024-42-2","(S)-Metoprolol","Lung","Rat",0.81,"B",1.88,26.406
-"81024-42-2","(S)-Metoprolol","Muscle","Rat",0.81,"B",1.88,5.5566
-"81024-42-2","(S)-Metoprolol","Skin","Rat",0.81,"B",1.88,2.9241
+"81024-42-2","(S)-Metoprolol","Gut","Rat",0.81,"B",1.88,11.1
+"81024-42-2","(S)-Metoprolol","Heart","Rat",0.81,"B",1.88,6.269
+"81024-42-2","(S)-Metoprolol","Kidney","Rat",0.81,"B",1.88,27.05
+"81024-42-2","(S)-Metoprolol","Liver","Rat",0.81,"B",1.88,44.63
+"81024-42-2","(S)-Metoprolol","Lung","Rat",0.81,"B",1.88,26.41
+"81024-42-2","(S)-Metoprolol","Muscle","Rat",0.81,"B",1.88,5.557
+"81024-42-2","(S)-Metoprolol","Skin","Rat",0.81,"B",1.88,2.924
 "81024-42-2","(S)-Metoprolol","Testis","Rat",0.81,"B",1.88,9.72
-"81024-42-2","(S)-Metoprolol","Thymus","Rat",0.81,"B",1.88,10.773
+"81024-42-2","(S)-Metoprolol","Thymus","Rat",0.81,"B",1.88,10.77
 "59467-70-8","Midazolam","Adipose","Rat",0.07,"B",2.7,5.375
-"59467-70-8","Midazolam","Blood Cells","Rat",0.07,"B",2.7,1.06521739130435
+"59467-70-8","Midazolam","Blood Cells","Rat",0.07,"B",2.7,1.065
 "59467-70-8","Midazolam","Bone","Rat",0.07,"B",2.7,0.39
 "59467-70-8","Midazolam","Brain","Rat",0.07,"B",2.7,2.405
 "59467-70-8","Midazolam","Gut","Rat",0.07,"B",2.7,3.14
@@ -733,12 +733,12 @@
 "99200-09-6","Nebivolol","Muscle","Rat",0.02,"B",4.03,2.95
 "59-99-4","Neostigmine","Muscle","Rat",0.5,"N",-2.13,0.59
 "54-11-5","Nicotine","Adipose","Rat",0.84,"B",1.17,0.35
-"54-11-5","Nicotine","Blood Cells","Rat",0.84,"B",1.17,0.572304347826087
+"54-11-5","Nicotine","Blood Cells","Rat",0.84,"B",1.17,0.5723
 "54-11-5","Nicotine","Brain","Rat",0.84,"B",1.17,2.1
 "54-11-5","Nicotine","Gut","Rat",0.84,"B",1.17,1.6
 "54-11-5","Nicotine","Heart","Rat",0.84,"B",1.17,1.25
-"54-11-5","Nicotine","Kidney","Rat",0.84,"B",1.17,13.272
-"54-11-5","Nicotine","Liver","Rat",0.84,"B",1.17,3.5028
+"54-11-5","Nicotine","Kidney","Rat",0.84,"B",1.17,13.27
+"54-11-5","Nicotine","Liver","Rat",0.84,"B",1.17,3.503
 "54-11-5","Nicotine","Lung","Rat",0.84,"B",1.17,1.5
 "54-11-5","Nicotine","Muscle","Rat",0.84,"B",1.17,1.55
 "54-11-5","Nicotine","Skin","Rat",0.84,"B",1.17,1.1
@@ -753,22 +753,22 @@
 "39562-70-4","Nitrendipine","Blood Cells","Rat",0.04,"B",2.88,2
 "76963-41-2","Nizatidine","Blood Cells","Rat",0.86,"B",-0.2,0.76
 "14077-86-2","Nonyl barbituric acid","Adipose","Rat",0.0093,"A",4.1,5.927
-"14077-86-2","Nonyl barbituric acid","Brain","Rat",0.0093,"A",4.1,2.5296
+"14077-86-2","Nonyl barbituric acid","Brain","Rat",0.0093,"A",4.1,2.53
 "14077-86-2","Nonyl barbituric acid","Gut","Rat",0.0093,"A",4.1,1.933
 "14077-86-2","Nonyl barbituric acid","Heart","Rat",0.0093,"A",4.1,2.517
-"14077-86-2","Nonyl barbituric acid","Kidney","Rat",0.0093,"A",4.1,5.2265
+"14077-86-2","Nonyl barbituric acid","Kidney","Rat",0.0093,"A",4.1,5.226
 "14077-86-2","Nonyl barbituric acid","Liver","Rat",0.0093,"A",4.1,4.412
 "14077-86-2","Nonyl barbituric acid","Lung","Rat",0.0093,"A",4.1,2.751
 "14077-86-2","Nonyl barbituric acid","Muscle","Rat",0.0093,"A",4.1,1.584
-"14077-86-2","Nonyl barbituric acid","Pancreas","Rat",0.0093,"A",4.1,2.6319
-"14077-86-2","Nonyl barbituric acid","Skin","Rat",0.0093,"A",4.1,2.8635
-"14077-86-2","Nonyl barbituric acid","Spleen","Rat",0.0093,"A",4.1,3.0876
+"14077-86-2","Nonyl barbituric acid","Pancreas","Rat",0.0093,"A",4.1,2.632
+"14077-86-2","Nonyl barbituric acid","Skin","Rat",0.0093,"A",4.1,2.864
+"14077-86-2","Nonyl barbituric acid","Spleen","Rat",0.0093,"A",4.1,3.088
 "14077-86-2","Nonyl barbituric acid","Thymus","Rat",0.0093,"A",4.1,0.8649
 "70458-96-7","Norfloxacin","Lung","Rat",0.58,"Z",-1.03,1.34
 "70458-96-7","Norfloxacin","Muscle","Rat",0.58,"Z",-1.03,0.92
 "14077-85-1","Octyl barbituric acid","Adipose","Rat",0.026,"A",3.8,5.225
 "14077-85-1","Octyl barbituric acid","Brain","Rat",0.026,"A",3.8,1.877
-"14077-85-1","Octyl barbituric acid","Gut","Rat",0.026,"A",3.8,1.2375
+"14077-85-1","Octyl barbituric acid","Gut","Rat",0.026,"A",3.8,1.238
 "14077-85-1","Octyl barbituric acid","Heart","Rat",0.026,"A",3.8,1.476
 "14077-85-1","Octyl barbituric acid","Kidney","Rat",0.026,"A",3.8,2.524
 "14077-85-1","Octyl barbituric acid","Liver","Rat",0.026,"A",3.8,4.57
@@ -780,40 +780,40 @@
 "14077-85-1","Octyl barbituric acid","Thymus","Rat",0.026,"A",3.8,0.884
 "82419-36-1","Ofloxacin","Adipose","Rat",0.77,"Z",-0.4,0.1925
 "82419-36-1","Ofloxacin","Blood Cells","Rat",0.77,"Z",-0.4,0.565
-"82419-36-1","Ofloxacin","Bone","Rat",0.77,"Z",-0.4,1.4168
+"82419-36-1","Ofloxacin","Bone","Rat",0.77,"Z",-0.4,1.417
 "82419-36-1","Ofloxacin","Brain","Rat",0.77,"Z",-0.4,0.2387
-"82419-36-1","Ofloxacin","Heart","Rat",0.77,"Z",-0.4,1.7787
+"82419-36-1","Ofloxacin","Heart","Rat",0.77,"Z",-0.4,1.779
 "82419-36-1","Ofloxacin","Kidney","Rat",0.77,"Z",-0.4,6.391
-"82419-36-1","Ofloxacin","Liver","Rat",0.77,"Z",-0.4,2.0405
-"82419-36-1","Ofloxacin","Lung","Rat",0.77,"Z",-0.4,1.3552
-"82419-36-1","Ofloxacin","Muscle","Rat",0.77,"Z",-0.4,1.7171
-"82419-36-1","Ofloxacin","Skin","Rat",0.77,"Z",-0.4,1.1935
+"82419-36-1","Ofloxacin","Liver","Rat",0.77,"Z",-0.4,2.041
+"82419-36-1","Ofloxacin","Lung","Rat",0.77,"Z",-0.4,1.355
+"82419-36-1","Ofloxacin","Muscle","Rat",0.77,"Z",-0.4,1.717
+"82419-36-1","Ofloxacin","Skin","Rat",0.77,"Z",-0.4,1.194
 "73590-58-6","Omeprazole","Blood Cells","Rat",0.13,"N",2.23,0.26
 "31576-00-8","Oxprenolol-R","Adipose","Rat",0.24,"B",2.18,0.58
-"31576-00-8","Oxprenolol-R","Blood Cells","Rat",0.24,"B",2.18,0.573478260869565
-"31576-00-8","Oxprenolol-R","Bone","Rat",0.24,"B",2.18,1.8648
-"31576-00-8","Oxprenolol-R","Brain","Rat",0.24,"B",2.18,1.2912
-"31576-00-8","Oxprenolol-R","Gut","Rat",0.24,"B",2.18,12.696
+"31576-00-8","Oxprenolol-R","Blood Cells","Rat",0.24,"B",2.18,0.5735
+"31576-00-8","Oxprenolol-R","Bone","Rat",0.24,"B",2.18,1.865
+"31576-00-8","Oxprenolol-R","Brain","Rat",0.24,"B",2.18,1.291
+"31576-00-8","Oxprenolol-R","Gut","Rat",0.24,"B",2.18,12.7
 "31576-00-8","Oxprenolol-R","Heart","Rat",0.24,"B",2.18,3.648
-"31576-00-8","Oxprenolol-R","Kidney","Rat",0.24,"B",2.18,14.184
+"31576-00-8","Oxprenolol-R","Kidney","Rat",0.24,"B",2.18,14.18
 "31576-00-8","Oxprenolol-R","Liver","Rat",0.24,"B",2.18,8.544
-"31576-00-8","Oxprenolol-R","Lung","Rat",0.24,"B",2.18,15.888
+"31576-00-8","Oxprenolol-R","Lung","Rat",0.24,"B",2.18,15.89
 "31576-00-8","Oxprenolol-R","Muscle","Rat",0.24,"B",2.18,3.048
-"31576-00-8","Oxprenolol-R","Skin","Rat",0.24,"B",2.18,1.3728
+"31576-00-8","Oxprenolol-R","Skin","Rat",0.24,"B",2.18,1.373
 "31576-00-8","Oxprenolol-R","Testis","Rat",0.24,"B",2.18,4.08
 "31576-00-8","Oxprenolol-R","Thymus","Rat",0.24,"B",2.18,4.08
 "31576-00-8","Oxprenolol-R","Thymus","Rat",0.24,"B",2.18,4.128
 "22972-96-9","Oxprenolol-S","Adipose","Rat",0.36,"B",2.18,0.6948
-"22972-96-9","Oxprenolol-S","Blood Cells","Rat",0.36,"B",2.18,0.620434782608696
-"22972-96-9","Oxprenolol-S","Bone","Rat",0.36,"B",2.18,2.3256
-"22972-96-9","Oxprenolol-S","Brain","Rat",0.36,"B",2.18,2.4732
-"22972-96-9","Oxprenolol-S","Gut","Rat",0.36,"B",2.18,11.196
+"22972-96-9","Oxprenolol-S","Blood Cells","Rat",0.36,"B",2.18,0.6204
+"22972-96-9","Oxprenolol-S","Bone","Rat",0.36,"B",2.18,2.326
+"22972-96-9","Oxprenolol-S","Brain","Rat",0.36,"B",2.18,2.473
+"22972-96-9","Oxprenolol-S","Gut","Rat",0.36,"B",2.18,11.2
 "22972-96-9","Oxprenolol-S","Heart","Rat",0.36,"B",2.18,4.428
-"22972-96-9","Oxprenolol-S","Kidney","Rat",0.36,"B",2.18,17.604
+"22972-96-9","Oxprenolol-S","Kidney","Rat",0.36,"B",2.18,17.6
 "22972-96-9","Oxprenolol-S","Liver","Rat",0.36,"B",2.18,12.42
 "22972-96-9","Oxprenolol-S","Lung","Rat",0.36,"B",2.18,21.24
 "22972-96-9","Oxprenolol-S","Muscle","Rat",0.36,"B",2.18,3.816
-"22972-96-9","Oxprenolol-S","Skin","Rat",0.36,"B",2.18,1.7064
+"22972-96-9","Oxprenolol-S","Skin","Rat",0.36,"B",2.18,1.706
 "22972-96-9","Oxprenolol-S","Testis","Rat",0.36,"B",2.18,5.76
 "22972-96-9","Oxprenolol-S","Thymus","Rat",0.36,"B",2.18,5.112
 "70458-92-3","Pefloxacin","Brain","Rat",0.8,"N",0.27,0.166
@@ -832,7 +832,7 @@
 "61-33-6","Penicillin G","Muscle","Rat",0.15,"A",-4.62,0.06
 "61-33-6","Penicillin G","Spleen","Rat",0.15,"A",-4.62,0.1
 "359-83-1","dl-Pentazocine","Adipose","Rat",0.46,"B",3.31,2.5
-"359-83-1","dl-Pentazocine","Blood Cells","Rat",0.46,"B",3.31,2.16823913043478
+"359-83-1","dl-Pentazocine","Blood Cells","Rat",0.46,"B",3.31,2.168
 "359-83-1","dl-Pentazocine","Bone","Rabbit",0.47,"B",3.31,4.5
 "359-83-1","dl-Pentazocine","Bone","Rat",0.47,"B",3.31,5.43
 "359-83-1","dl-Pentazocine","Brain","Rat",0.47,"B",3.31,4.3
@@ -861,7 +861,7 @@
 "14077-80-6","Pentyl barbituric acid","Adipose","Rat",0.5,"A",2.2,2.575
 "14077-80-6","Pentyl barbituric acid","Bone","Rat",0.5,"A",2.2,0.49
 "14077-80-6","Pentyl barbituric acid","Brain","Rat",0.5,"A",2.2,1.4
-"14077-80-6","Pentyl barbituric acid","Gut","Rat",0.5,"A",2.2,1.3375
+"14077-80-6","Pentyl barbituric acid","Gut","Rat",0.5,"A",2.2,1.338
 "14077-80-6","Pentyl barbituric acid","Heart","Rat",0.5,"A",2.2,1.65
 "14077-80-6","Pentyl barbituric acid","Kidney","Rat",0.5,"A",2.2,2.575
 "14077-80-6","Pentyl barbituric acid","Liver","Rat",0.5,"A",2.2,2.45
@@ -872,12 +872,12 @@
 "14077-80-6","Pentyl barbituric acid","Spleen","Rat",0.5,"A",2.2,0.33
 "14077-80-6","Pentyl barbituric acid","Thymus","Rat",0.5,"A",2.2,0.55
 "77-10-1","Phencyclidine","Adipose","Rat",0.47,"B",4.96,61.57
-"77-10-1","Phencyclidine","Brain","Rat",0.47,"B",4.96,2.5662
-"77-10-1","Phencyclidine","Heart","Rat",0.47,"B",4.96,2.1902
-"77-10-1","Phencyclidine","Kidney","Rat",0.47,"B",4.96,11.797
+"77-10-1","Phencyclidine","Brain","Rat",0.47,"B",4.96,2.566
+"77-10-1","Phencyclidine","Heart","Rat",0.47,"B",4.96,2.19
+"77-10-1","Phencyclidine","Kidney","Rat",0.47,"B",4.96,11.8
 "77-10-1","Phencyclidine","Liver","Rat",0.47,"B",4.96,8.037
-"77-10-1","Phencyclidine","Lung","Rat",0.47,"B",4.96,40.984
-"77-10-1","Phencyclidine","Muscle","Rat",0.47,"B",4.96,1.5134
+"77-10-1","Phencyclidine","Lung","Rat",0.47,"B",4.96,40.98
+"77-10-1","Phencyclidine","Muscle","Rat",0.47,"B",4.96,1.513
 "50-06-6","Phenobarbital","Adipose","Rat",0.64,"A",1.47,0.3
 "50-06-6","Phenobarbital","Brain","Rabbit",0.78,"A",1.47,0.59
 "50-06-6","Phenobarbital","Blood Cells","Rat",0.64,"A",1.47,2.28
@@ -902,39 +902,39 @@
 "57-41-0","Phenytoin","Skin","Rat",0.06,"A",2.47,1.11
 "57-41-0","Phenytoin","Blood Cells","Rat",0.06,"A",2.47,0.98
 "68374-35-6","(R)-Pindolol","Adipose","Rat",0.51,"B",2.2,0.9
-"68374-35-6","(R)-Pindolol","Blood Cells","Rat",0.51,"B",2.2,1.48854347826087
-"68374-35-6","(R)-Pindolol","Bone","Rat",0.51,"B",2.2,2.7183
+"68374-35-6","(R)-Pindolol","Blood Cells","Rat",0.51,"B",2.2,1.489
+"68374-35-6","(R)-Pindolol","Bone","Rat",0.51,"B",2.2,2.718
 "68374-35-6","(R)-Pindolol","Brain","Rat",0.51,"B",2.2,5.1
 "68374-35-6","(R)-Pindolol","Gut","Rat",0.51,"B",2.2,26.01
-"68374-35-6","(R)-Pindolol","Heart","Rat",0.51,"B",2.2,13.974
-"68374-35-6","(R)-Pindolol","Kidney","Rat",0.51,"B",2.2,47.379
-"68374-35-6","(R)-Pindolol","Liver","Rat",0.51,"B",2.2,14.433
-"68374-35-6","(R)-Pindolol","Lung","Rat",0.51,"B",2.2,33.507
+"68374-35-6","(R)-Pindolol","Heart","Rat",0.51,"B",2.2,13.97
+"68374-35-6","(R)-Pindolol","Kidney","Rat",0.51,"B",2.2,47.38
+"68374-35-6","(R)-Pindolol","Liver","Rat",0.51,"B",2.2,14.43
+"68374-35-6","(R)-Pindolol","Lung","Rat",0.51,"B",2.2,33.51
 "68374-35-6","(R)-Pindolol","Muscle","Rat",0.51,"B",2.2,8.007
-"68374-35-6","(R)-Pindolol","Skin","Rat",0.51,"B",2.2,2.8662
+"68374-35-6","(R)-Pindolol","Skin","Rat",0.51,"B",2.2,2.866
 "68374-35-6","(R)-Pindolol","Testis","Rat",0.51,"B",2.2,9.69
 "68374-35-6","(R)-Pindolol","Thymus","Rat",0.51,"B",2.2,9.18
 "26328-11-0","(S)-(-)-Pindolol","Adipose","Rat",0.76,"B",2.2,0.6384
-"26328-11-0","(S)-(-)-Pindolol","Blood Cells","Rat",0.76,"B",2.2,2.00682608695652
-"26328-11-0","(S)-(-)-Pindolol","Bone","Rat",0.76,"B",2.2,2.2952
+"26328-11-0","(S)-(-)-Pindolol","Blood Cells","Rat",0.76,"B",2.2,2.007
+"26328-11-0","(S)-(-)-Pindolol","Bone","Rat",0.76,"B",2.2,2.295
 "26328-11-0","(S)-(-)-Pindolol","Brain","Rat",0.76,"B",2.2,5.168
-"26328-11-0","(S)-(-)-Pindolol","Gut","Rat",0.76,"B",2.2,18.392
+"26328-11-0","(S)-(-)-Pindolol","Gut","Rat",0.76,"B",2.2,18.39
 "26328-11-0","(S)-(-)-Pindolol","Heart","Rat",0.76,"B",2.2,9.424
-"26328-11-0","(S)-(-)-Pindolol","Kidney","Rat",0.76,"B",2.2,29.944
-"26328-11-0","(S)-(-)-Pindolol","Liver","Rat",0.76,"B",2.2,7.2504
-"26328-11-0","(S)-(-)-Pindolol","Lung","Rat",0.76,"B",2.2,30.248
-"26328-11-0","(S)-(-)-Pindolol","Muscle","Rat",0.76,"B",2.2,7.2732
+"26328-11-0","(S)-(-)-Pindolol","Kidney","Rat",0.76,"B",2.2,29.94
+"26328-11-0","(S)-(-)-Pindolol","Liver","Rat",0.76,"B",2.2,7.25
+"26328-11-0","(S)-(-)-Pindolol","Lung","Rat",0.76,"B",2.2,30.25
+"26328-11-0","(S)-(-)-Pindolol","Muscle","Rat",0.76,"B",2.2,7.273
 "26328-11-0","(S)-(-)-Pindolol","Skin","Rat",0.76,"B",2.2,2.736
 "26328-11-0","(S)-(-)-Pindolol","Testis","Rat",0.76,"B",2.2,9.88
-"26328-11-0","(S)-(-)-Pindolol","Thymus","Rat",0.76,"B",2.2,6.7868
+"26328-11-0","(S)-(-)-Pindolol","Thymus","Rat",0.76,"B",2.2,6.787
 "51940-44-4","Pipemidic acid","Adipose","Rat",0.85,"Z",-2.15,0.3397
-"51940-44-4","Pipemidic acid","Bone","Rat",0.85,"Z",-2.15,2.2524
+"51940-44-4","Pipemidic acid","Bone","Rat",0.85,"Z",-2.15,2.252
 "51940-44-4","Pipemidic acid","Brain","Rat",0.85,"Z",-2.15,0.129
 "51940-44-4","Pipemidic acid","Heart","Rat",0.85,"Z",-2.15,0.943
-"51940-44-4","Pipemidic acid","Kidney","Rat",0.85,"Z",-2.15,7.4102
-"51940-44-4","Pipemidic acid","Liver","Rat",0.85,"Z",-2.15,4.6057
+"51940-44-4","Pipemidic acid","Kidney","Rat",0.85,"Z",-2.15,7.41
+"51940-44-4","Pipemidic acid","Liver","Rat",0.85,"Z",-2.15,4.606
 "51940-44-4","Pipemidic acid","Lung","Rat",0.85,"Z",-2.15,1.1
-"51940-44-4","Pipemidic acid","Muscle","Rat",0.85,"Z",-2.15,1.3186
+"51940-44-4","Pipemidic acid","Muscle","Rat",0.85,"Z",-2.15,1.319
 "51940-44-4","Pipemidic acid","Spleen","Rat",0.85,"Z",-2.15,1.45
 "92-92-2","[1,1'-Biphenyl]-4-carboxylic acid","Adipose","Rat",0.03,"A",2.81,0.059
 "92-92-2","[1,1'-Biphenyl]-4-carboxylic acid","Brain","Rat",0.03,"A",2.81,0.055
@@ -953,7 +953,7 @@
 "50-24-8","Prednisolone","Muscle","Rabbit",0.23,"N",1.62,0.35
 "59-46-1","Procaine","Adipose","Rat",1,"B",2.14,0.45
 "51-06-9","Procainamide","Adipose","Rat",0.92,"B",0.88,0.13
-"51-06-9","Procainamide","Blood Cells","Rat",0.92,"B",0.88,1.00273913043478
+"51-06-9","Procainamide","Blood Cells","Rat",0.92,"B",0.88,1.003
 "51-06-9","Procainamide","Brain","Rat",0.92,"B",0.88,2.47
 "51-06-9","Procainamide","Heart","Rat",0.92,"B",0.88,2.5
 "51-06-9","Procainamide","Kidney","Rat",0.92,"B",0.88,6.4
@@ -982,27 +982,27 @@
 "525-66-6","Propranolol","Spleen","Rat",0.1,"B",3.48,14.2
 "525-66-6","Propranolol","Testis","Rat",0.1,"B",3.48,8.6
 "13071-11-9","(R)-Propranolol","Adipose","Rat",0.017,"B",3.48,0.646
-"13071-11-9","(R)-Propranolol","Blood Cells","Rat",0.017,"B",3.48,0.771771739130435
-"13071-11-9","(R)-Propranolol","Bone","Rat",0.017,"B",3.48,1.3974
+"13071-11-9","(R)-Propranolol","Blood Cells","Rat",0.017,"B",3.48,0.7718
+"13071-11-9","(R)-Propranolol","Bone","Rat",0.017,"B",3.48,1.397
 "13071-11-9","(R)-Propranolol","Brain","Rat",0.017,"B",3.48,6.511
 "13071-11-9","(R)-Propranolol","Gut","Rat",0.017,"B",3.48,6.273
 "13071-11-9","(R)-Propranolol","Heart","Rat",0.017,"B",3.48,3.859
 "13071-11-9","(R)-Propranolol","Kidney","Rat",0.017,"B",3.48,6.188
 "13071-11-9","(R)-Propranolol","Liver","Rat",0.017,"B",3.48,5.559
-"13071-11-9","(R)-Propranolol","Lung","Rat",0.017,"B",3.48,24.242
+"13071-11-9","(R)-Propranolol","Lung","Rat",0.017,"B",3.48,24.24
 "13071-11-9","(R)-Propranolol","Muscle","Rat",0.017,"B",3.48,1.887
-"13071-11-9","(R)-Propranolol","Skin","Rat",0.017,"B",3.48,1.0846
+"13071-11-9","(R)-Propranolol","Skin","Rat",0.017,"B",3.48,1.085
 "13071-11-9","(R)-Propranolol","Testis","Rat",0.017,"B",3.48,3.604
 "13071-11-9","(R)-Propranolol","Thymus","Rat",0.017,"B",3.48,4.93
 "4199-10-4","(S)-Propranolol","Adipose","Rat",0.127,"B",3.48,2.457
-"4199-10-4","(S)-Propranolol","Blood Cells","Rat",0.127,"B",3.48,1.51260869565217
+"4199-10-4","(S)-Propranolol","Blood Cells","Rat",0.127,"B",3.48,1.513
 "4199-10-4","(S)-Propranolol","Bone","Rat",0.127,"B",3.48,6.929
 "4199-10-4","(S)-Propranolol","Brain","Rat",0.127,"B",3.48,36.53
 "4199-10-4","(S)-Propranolol","Gut","Rat",0.127,"B",3.48,23.66
 "4199-10-4","(S)-Propranolol","Heart","Rat",0.127,"B",3.48,16.12
 "4199-10-4","(S)-Propranolol","Kidney","Rat",0.127,"B",3.48,36.14
 "4199-10-4","(S)-Propranolol","Liver","Rat",0.127,"B",3.48,30.03
-"4199-10-4","(S)-Propranolol","Lung","Rat",0.127,"B",3.48,134.81
+"4199-10-4","(S)-Propranolol","Lung","Rat",0.127,"B",3.48,134.8
 "4199-10-4","(S)-Propranolol","Muscle","Rat",0.127,"B",3.48,9.659
 "4199-10-4","(S)-Propranolol","Skin","Rat",0.127,"B",3.48,5.265
 "4199-10-4","(S)-Propranolol","Testis","Rat",0.127,"B",3.48,19.05
@@ -1011,11 +1011,11 @@
 "37120-83-5","(R)-Propyl barbituric acid","Bone","Rat",0.87,"A",0.8,1.3
 "37120-83-5","(R)-Propyl barbituric acid","Brain","Rat",0.87,"A",0.8,0.9393
 "37120-83-5","(R)-Propyl barbituric acid","Gut","Rat",0.87,"A",0.8,0.8306
-"37120-83-5","(R)-Propyl barbituric acid","Heart","Rat",0.87,"A",0.8,1.0285
+"37120-83-5","(R)-Propyl barbituric acid","Heart","Rat",0.87,"A",0.8,1.028
 "37120-83-5","(R)-Propyl barbituric acid","Kidney","Rat",0.87,"A",0.8,2.95
-"37120-83-5","(R)-Propyl barbituric acid","Liver","Rat",0.87,"A",0.8,1.9285
+"37120-83-5","(R)-Propyl barbituric acid","Liver","Rat",0.87,"A",0.8,1.928
 "37120-83-5","(R)-Propyl barbituric acid","Lung","Rat",0.87,"A",0.8,1.159
-"37120-83-5","(R)-Propyl barbituric acid","Muscle","Rat",0.87,"A",0.8,1.1263
+"37120-83-5","(R)-Propyl barbituric acid","Muscle","Rat",0.87,"A",0.8,1.126
 "37120-83-5","(R)-Propyl barbituric acid","Pancreas","Rat",0.87,"A",0.8,0.7917
 "37120-83-5","(R)-Propyl barbituric acid","Skin","Rat",0.87,"A",0.8,1.1
 "37120-83-5","(R)-Propyl barbituric acid","Spleen","Rat",0.87,"A",0.8,0.5307
@@ -1028,7 +1028,7 @@
 "179474-81-8","Prucalopride","Muscle","Rat",0.71,"B",2.26,4.57
 "155-97-5","Pyridostigmine","Heart","Rat",0.5,"B",-3.73,1.1
 "155-97-5","Pyridostigmine","Muscle","Rat",0.5,"B",-3.73,0.52
-"56-54-2","Quinidine","Blood Cells","Rat",0.33,"B",3.44,1.85216304347826
+"56-54-2","Quinidine","Blood Cells","Rat",0.33,"B",3.44,1.852
 "56-54-2","Quinidine","Brain","Rat",0.33,"B",3.44,1.16
 "56-54-2","Quinidine","Gut","Rat",0.33,"B",3.44,14.42
 "56-54-2","Quinidine","Heart","Rat",0.33,"B",3.44,8.92
@@ -1096,16 +1096,16 @@
 "56030-54-7","Sufentanil","Spleen","Rat",0.07,"B",4.02,2.8
 "321-64-2","Tacrine","Blood Cells","Rat",0.44,"B",2.71,2.39
 "59804-37-4","Tenoxicam","Adipose","Rat",0.017,"A",1.9,0.03094
-"59804-37-4","Tenoxicam","Bone","Rat",0.017,"A",1.9,0.10302
+"59804-37-4","Tenoxicam","Bone","Rat",0.017,"A",1.9,0.103
 "59804-37-4","Tenoxicam","Brain","Rat",0.017,"A",1.9,0.01445
 "59804-37-4","Tenoxicam","Gut","Rat",0.017,"A",1.9,0.2006
 "59804-37-4","Tenoxicam","Heart","Rat",0.017,"A",1.9,0.1853
-"59804-37-4","Tenoxicam","Kidney","Rat",0.017,"A",1.9,1.0404
-"59804-37-4","Tenoxicam","Liver","Rat",0.017,"A",1.9,1.1526
+"59804-37-4","Tenoxicam","Kidney","Rat",0.017,"A",1.9,1.04
+"59804-37-4","Tenoxicam","Liver","Rat",0.017,"A",1.9,1.153
 "59804-37-4","Tenoxicam","Lung","Rat",0.017,"A",1.9,0.3196
 "59804-37-4","Tenoxicam","Muscle","Rat",0.017,"A",1.9,0.08245
-"59804-37-4","Tenoxicam","Pancreas","Rat",0.017,"A",1.9,0.12359
-"59804-37-4","Tenoxicam","Skin","Rat",0.017,"A",1.9,0.15453
+"59804-37-4","Tenoxicam","Pancreas","Rat",0.017,"A",1.9,0.1236
+"59804-37-4","Tenoxicam","Skin","Rat",0.017,"A",1.9,0.1545
 "59804-37-4","Tenoxicam","Spleen","Rat",0.017,"A",1.9,0.07208
 "41903-57-5","Tetrachlorodibenzo-p-dioxin","Muscle","Rat",0.5,"N",3.96,4.4
 "60-54-8","Tetracycline","Adipose","Rat",0.5,"Z",0.03,1.1
@@ -1134,21 +1134,21 @@
 "76-75-5","Thiopental","Muscle","Rat",0.25,"A",2.85,1.18
 "76-75-5","Thiopental","Pancreas","Rat",0.25,"A",2.85,0.9919
 "76-75-5","Thiopental","Skin","Rat",0.25,"A",2.85,0.66
-"76-75-5","Thiopental","Spleen","Rat",0.25,"A",2.85,1.1577
+"76-75-5","Thiopental","Spleen","Rat",0.25,"A",2.85,1.158
 "50-52-2","Thioridazine","Brain","Rat",0.01,"B",5.9,1.4
 "26839-75-8","(S)-Timolol","Adipose","Rat",0.63,"B",1.83,0.6489
-"26839-75-8","(S)-Timolol","Blood Cells","Rat",0.63,"B",1.83,1.21120652173913
+"26839-75-8","(S)-Timolol","Blood Cells","Rat",0.63,"B",1.83,1.211
 "26839-75-8","(S)-Timolol","Bone","Rat",0.63,"B",1.83,0.9891
-"26839-75-8","(S)-Timolol","Brain","Rat",0.63,"B",1.83,1.0458
+"26839-75-8","(S)-Timolol","Brain","Rat",0.63,"B",1.83,1.046
 "26839-75-8","(S)-Timolol","Gut","Rat",0.63,"B",1.83,20.16
 "26839-75-8","(S)-Timolol","Heart","Rat",0.63,"B",1.83,5.355
-"26839-75-8","(S)-Timolol","Kidney","Rat",0.63,"B",1.83,13.419
+"26839-75-8","(S)-Timolol","Kidney","Rat",0.63,"B",1.83,13.42
 "26839-75-8","(S)-Timolol","Liver","Rat",0.63,"B",1.83,8.946
-"26839-75-8","(S)-Timolol","Lung","Rat",0.63,"B",1.83,26.838
-"26839-75-8","(S)-Timolol","Muscle","Rat",0.63,"B",1.83,4.1517
-"26839-75-8","(S)-Timolol","Skin","Rat",0.63,"B",1.83,1.5876
+"26839-75-8","(S)-Timolol","Lung","Rat",0.63,"B",1.83,26.84
+"26839-75-8","(S)-Timolol","Muscle","Rat",0.63,"B",1.83,4.152
+"26839-75-8","(S)-Timolol","Skin","Rat",0.63,"B",1.83,1.588
 "26839-75-8","(S)-Timolol","Testis","Rat",0.63,"B",1.83,4.032
-"26839-75-8","(S)-Timolol","Thymus","Rat",0.63,"B",1.83,5.4873
+"26839-75-8","(S)-Timolol","Thymus","Rat",0.63,"B",1.83,5.487
 "64-77-7","Tolbutamide","Adipose","Rat",0.24,"A",2.34,0.13
 "64-77-7","Tolbutamide","Brain","Rat",0.24,"A",2.34,0.097
 "64-77-7","Tolbutamide","Blood Cells","Rat",0.24,"A",2.34,0.457
@@ -1214,7 +1214,7 @@
 "99-66-1","Valproic acid","Skin","Rabbit",0.22,"A",2.75,0.55
 "99-66-1","Valproic acid","Skin","Rat",0.37,"A",2.75,0.47
 "99-66-1","Valproic acid","Spleen","Rabbit",0.22,"A",2.75,0.2
-"52-53-9","Verapamil","Blood Cells","Rat",0.05,"B",3.79,0.682065217391304
+"52-53-9","Verapamil","Blood Cells","Rat",0.05,"B",3.79,0.6821
 "52-53-9","Verapamil","Heart","Rat",0.05,"B",3.79,6
 "52-53-9","Verapamil","Kidney","Rat",0.05,"B",3.79,12.5
 "52-53-9","Verapamil","Lung","Rat",0.05,"B",3.79,50
