@@ -246,7 +246,7 @@ solve_model <- function(chem.name = NULL,
     if (!(dose.var %in% names(compartment_units))) stop(paste("Compartment",
       dose.var, "specified as entry.compartment for route", route, "
 is not among those listed in compartment.units in modelinfo file for model",
-      model.))
+      model))
     # The dose should be in whatever units the model actually uses:
     dose.units <- compartment_units[dose.var]
     if (is.null(dose.var))
