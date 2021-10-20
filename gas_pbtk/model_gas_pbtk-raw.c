@@ -3,7 +3,7 @@
 
    Model File:  model_gas_pbtk.model
 
-   Date:  Sun Jul 11 20:32:45 2021
+   Date:  Thu Sep 16 14:59:34 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -29,7 +29,7 @@
      Aexh = 0.0,
      Amuc = 0.0,
 
-   13 Outputs:
+   16 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -39,15 +39,18 @@
     "Ckidney",
     "Cplasma",
     "Aplasma",
+    "Calvppmv",
     "Calv",
+    "Cendexhppmv",
     "Cendexh",
+    "Cmixexhppmv",
     "Cmixexh",
     "Cmuc",
 
    1 Input:
-     Cinh (forcing function)
+     Cinhppmv (forcing function)
 
-   53 Parameters:
+   54 Parameters:
      BW = 70,
      Clmetabolismc = 0.203,
      vmax = 0,
@@ -89,18 +92,19 @@
      Vlung = 0.0,
      Vrest = 0.0,
      Vven = 0.0,
-     Qalv = 0,
-     Kblood2air = 0,
-     InhMag = 0,
-     Period = 0,
-     Exposure = 0,
+     Qalvc = 0.0,
+     Qalv = 0.0,
+     Kblood2air = 0.0,
+     InhMag = 0.0,
+     Period = 0.0,
+     Exposure = 0.0,
      kUrtc = 11.0,
-     kUrt = 0,
-     Kmuc2air = 0,
+     kUrt = 0.0,
+     Kmuc2air = 0.0,
      Vmucc = 0.0001,
      Vmuc = 0.0,
-     Vmax = 0,
-     Km = 1,
+     Vmax = 0.0,
+     Km = 1.0,
 */
 
 #include <R.h>
@@ -134,13 +138,16 @@
 #define ID_Ckidney 0x00006
 #define ID_Cplasma 0x00007
 #define ID_Aplasma 0x00008
-#define ID_Calv 0x00009
-#define ID_Cendexh 0x0000a
-#define ID_Cmixexh 0x0000b
-#define ID_Cmuc 0x0000c
+#define ID_Calvppmv 0x00009
+#define ID_Calv 0x0000a
+#define ID_Cendexhppmv 0x0000b
+#define ID_Cendexh 0x0000c
+#define ID_Cmixexhppmv 0x0000d
+#define ID_Cmixexh 0x0000e
+#define ID_Cmuc 0x0000f
 
 /* Parameters */
-static double parms[53];
+static double parms[54];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -183,23 +190,24 @@ static double parms[53];
 #define Vlung parms[38]
 #define Vrest parms[39]
 #define Vven parms[40]
-#define Qalv parms[41]
-#define Kblood2air parms[42]
-#define InhMag parms[43]
-#define Period parms[44]
-#define Exposure parms[45]
-#define kUrtc parms[46]
-#define kUrt parms[47]
-#define Kmuc2air parms[48]
-#define Vmucc parms[49]
-#define Vmuc parms[50]
-#define Vmax parms[51]
-#define Km parms[52]
+#define Qalvc parms[41]
+#define Qalv parms[42]
+#define Kblood2air parms[43]
+#define InhMag parms[44]
+#define Period parms[45]
+#define Exposure parms[46]
+#define kUrtc parms[47]
+#define kUrt parms[48]
+#define Kmuc2air parms[49]
+#define Vmucc parms[50]
+#define Vmuc parms[51]
+#define Vmax parms[52]
+#define Km parms[53]
 
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cinh forc[0]
+#define Cinhppmv forc[0]
 
 /* Function definitions for delay differential equations */
 
@@ -231,7 +239,7 @@ double CalcDelay(int hvar, double dTime, double delay) {
 /*----- Initializers */
 void initmod (void (* odeparms)(int *, double *))
 {
-  int N=53;
+  int N=54;
   odeparms(&N, parms);
 }
 
@@ -280,7 +288,8 @@ void getParms (double *inParms, double *out, int *nout) {
   Vlung = Vlungc * BW ;
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
-  Qalv = Qalv * 24 * pow ( BW , 0.75 ) ;
+  Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
+
   kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
@@ -294,6 +303,9 @@ void getParms (double *inParms, double *out, int *nout) {
 
 void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
+  /* local */ double Cinh;
+
+  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -315,9 +327,15 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
 
+  yout[ID_Calvppmv] = yout[ID_Calv] * 24.45 ;
+
   yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
 
+  yout[ID_Cendexhppmv] = yout[ID_Cendexh] * 24.45 ;
+
   yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+
+  yout[ID_Cmixexhppmv] = yout[ID_Cmixexh] * 24.45 ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
