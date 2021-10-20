@@ -362,7 +362,6 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
 # parameters:
 model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetal_pbtk"
 
-
 # This needs to be a global variable so that R CMD check --as-cran can test
 # the code (the HTTK package does not use this):
 compiled_parameters_init <- "getParmsfetal_pbtk"
@@ -521,34 +520,6 @@ model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetal_pbtk"
 # of time, state, and parameters:
 model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetal_pbtk"
 
-# This ORDERED LIST of variables are always calculated in amounts (must match
-# Model variables: States in C code): 
-model.list[["fetal_pbtk"]]$state.vars <- c(
-  "Agutlumen",
-  "Agut",
-  "Aliver",
-  "Aven",
-  "Alung",
-  "Aart",
-  "Aadipose",
-  "Arest",
-  "Akidney", 
-  "Atubules",
-  "Ametabolized",
-  "AUC",
-  "AUC_fetus",
-  "Athyroid",
-  "Aplacenta",
-  "Afgut",
-  "Aflung",
-  "Afliver",
-  "Afven",
-  "Afart",
-  "Afrest",
-  "Afthyroid",
-  "Afkidney",
-  "Afbrain") 
-
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
 model.list[["fetal_pbtk"]]$derivative.output.names <- c(
@@ -622,66 +593,19 @@ model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "iv" = c('uM','mg/L','umol','mg','uM*days',
              'mg/L*days',"unitless"))
 
-# Default set of units assigned to correspond to each of the "outputs" of 
-# the model system, and possibly to other state variables to be monitored.
-# AUC values should also be included.
-model.list[["fetal_pbtk"]]$compartment.units <- c(
-  "Cgut" = "uM",
-  "Cliver" = "uM",
-  "Cven" = "uM",
-  "Clung" = "uM",
-  "Cart" = "uM",
-  "Cadipose" = "uM",
-  "Crest" = "uM",
-  "Ckidney" = "uM",
-  "Cplasma" = "uM",
-  "Aplasma" = "umol",
-  "Cthyroid" = "uM",
-  "Cplacenta" = "uM",
-  "Cfliver" = "uM",
-  "Cfven" = "uM",
-  "Cfart" = "uM",
-  "Cfgut" = "uM",
-  "Cflung" = "uM",
-  "Cfrest" = "uM",
-  "Cfthyroid" = "uM",
-  "Cfkidney" = "uM",
-  "Cfbrain" = "uM",
-  "Afplasma" = "umol",
-  "Cfplasma" = "uM",
-  "AUC" = "uM*days",
-  "AUC_fetus" = "uM*days",
-  "Rblood2plasma" = "unitless",
-  "Rfblood2plasma" = "unitless")
-
-
-# These parameters specify the exposure scenario simulated by the model:
-model.list[["fetal_pbtk"]]$dosing.params <- c("daily.dose",
-                                        "initial.dose",
-                                        "doses.per.day",
-                                        "dosing.matrix")
-model.list[["fetal_pbtk"]]$routes <- c("oral","iv")
-
-
-
-
-
-
-
-
-
-
-
+## These parameters specify the exposure scenario simulated by the model:
+model.list[["fetal_pbtk"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["fetal_pbtk"]]$dose.variable <- list(oral="Agutlumen",
-                                           iv="Aven")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["fetal_pbtk"]]$dose.type <- list(oral="add",
-                                       iv="add")
-
-
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Aven",
+    "dose.type" = "add")
+  )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
@@ -714,19 +638,38 @@ model.list[["pbtk"]]$state.vars <- c(
   "Afbrain"
   ) 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Actual (intrinsic) units assigned to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
+# AUC values should also be included.
+model.list[["fetal_pbtk"]]$compartment.units <- c(
+  "Cgut" = "uM",
+  "Cliver" = "uM",
+  "Cven" = "uM",
+  "Clung" = "uM",
+  "Cart" = "uM",
+  "Cadipose" = "uM",
+  "Crest" = "uM",
+  "Ckidney" = "uM",
+  "Cplasma" = "uM",
+  "Aplasma" = "umol",
+  "Cthyroid" = "uM",
+  "Cplacenta" = "uM",
+  "Cfliver" = "uM",
+  "Cfven" = "uM",
+  "Cfart" = "uM",
+  "Cfgut" = "uM",
+  "Cflung" = "uM",
+  "Cfrest" = "uM",
+  "Cfthyroid" = "uM",
+  "Cfkidney" = "uM",
+  "Cfbrain" = "uM",
+  "Afplasma" = "umol",
+  "Cfplasma" = "uM",
+  "AUC" = "uM*days",
+  "AUC_fetus" = "uM*days",
+  "Rblood2plasma" = "unitless",
+  "Rfblood2plasma" = "unitless")
 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
@@ -739,47 +682,15 @@ model.list[["fetal_pbtk"]]$required.params <- c(
   "MW"
   )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[["pbtk"]]$calcpc <- TRUE
+model.list[["fetal_pbtk"]]$calcpc <- TRUE
   
 
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
-model.list[["pbtk"]]$firstpass <- FALSE
+model.list[["fetal_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
 model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
 
-
-
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
