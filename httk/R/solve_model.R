@@ -243,6 +243,10 @@ solve_model <- function(chem.name = NULL,
   } else {
     # We need to know which compartment gets the dose and 
     dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
+    if (!(dose.var %in% names(compartment_units))) stop(paste("Compartment",
+      dose.var, "specified as entry.compartment for route", route, "
+is not among those listed in compartment.units in modelinfo file for model",
+      model.))
     # The dose should be in whatever units the model actually uses:
     dose.units <- compartment_units[dose.var]
     if (is.null(dose.var))
@@ -283,8 +287,8 @@ solve_model <- function(chem.name = NULL,
                                            input.vars))) 
   {
     print(paste("Compartment(s)",
-      names(compartment_units)[!names(compartment_units) %in% 
-      c(derivative_output_names, state.vars, input.vars)],
+      paste(names(compartment_units)[!names(compartment_units) %in% 
+      c(derivative_output_names, state.vars, input.vars)],collapse=", "),
       "not found."))
     stop("
 The names of the compartments in compartment.units must be among those named
