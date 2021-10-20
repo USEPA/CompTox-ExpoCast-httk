@@ -264,7 +264,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   ffmx_density = "ffmx_density",
   placenta_density = "placenta_density",
   amnf_density = "amnf_density",                 
-  "brain_density = "brain_density",
+  brain_density = "brain_density",
 # Kapraun 2019 growth parameters:
   BW_cubic_theta1 = "BW_cubic_theta1",
   BW_cubic_theta2 = "BW_cubic_theta2",
