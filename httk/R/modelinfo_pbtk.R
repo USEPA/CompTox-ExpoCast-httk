@@ -92,6 +92,9 @@ model.list[["pbtk"]]$param.names <- c(
 # This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code, even if 
 # some items are omitted)
+#
+# String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
 model.list[["pbtk"]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
@@ -298,7 +301,7 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Donor",
   "pKa_Accept",
   "MW"
-   )
+  )
 
 # Function for calculating Clmetabolismc after Clint is varied:
 model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
