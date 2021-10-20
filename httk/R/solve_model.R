@@ -146,7 +146,7 @@ solve_model <- function(chem.name = NULL,
                     parameterize.arg.list=list(
                       default.to.human=FALSE,
                       clint.pvalue.threshold=0.05,
-                      restrictive.clearance = T,
+                      restrictive.clearance = TRUE,
                       regression=TRUE),
                     ...)
 {
@@ -217,7 +217,7 @@ solve_model <- function(chem.name = NULL,
 # Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
-# Input variables (used with focrings:
+# Input variables (used with forcings):
     input.vars <- model.list[[model]]$input.var.names
 # If using forcing function for dosing, specify name of this function as 
 # it appears in model's associated .c file for passing to integrator
@@ -243,6 +243,10 @@ solve_model <- function(chem.name = NULL,
   } else {
     # We need to know which compartment gets the dose and 
     dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
+    if (!(dose.var %in% names(compartment_units))) stop(paste("Compartment",
+      dose.var, "specified as entry.compartment for route", route, "
+is not among those listed in compartment.units in modelinfo file for model",
+      model))
     # The dose should be in whatever units the model actually uses:
     dose.units <- compartment_units[dose.var]
     if (is.null(dose.var))
@@ -280,13 +284,20 @@ solve_model <- function(chem.name = NULL,
   #the derivative_output_names and/or state.vars
   if (any(!names(compartment_units) %in% c(derivative_output_names,
                                            state.vars,
-                                           input.vars))) {
-    stop("The names of the compartments in compartment_units must comprise
-          some subset of the named entries in derivative_output_names and 
-          state.vars for model ", model)
+                                           input.vars))) 
+  {
+    print(paste("Compartment(s)",
+      paste(names(compartment_units)[!names(compartment_units) %in% 
+      c(derivative_output_names, state.vars, input.vars)],collapse=", "),
+      "not found."))
+    stop("
+The names of the compartments in compartment.units must be among those named
+in state.vars, derivative.output.names, and input.var.names in the modelinfo
+file for model ", model)
   } else if (!all(derivative_output_names %in% names(compartment_units))){
-    stop("Each entry in derivative_output_names should have a corresponding
-          units specification in compartment_units for model ", model)
+    stop("
+Each entry in derivative_output_names should have a corresponding units 
+specification in compartment_units for model ", model)
   }
   
 ### MODEL PARAMETERS FOR R
@@ -549,6 +560,7 @@ solve_model <- function(chem.name = NULL,
   dosing.units <- input.units
   
   #Scale dose if input.units is measured in (mg/kg) 
+
   dosing <- scale_dosing(
     dosing,
     parameters,
@@ -829,12 +841,7 @@ solve_model <- function(chem.name = NULL,
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
-#    cat(paste(toupper(substr(species,1,1)), 
-#          substr(species,2,nchar(species)),sep=""),
-#       "amounts with units otherwise unspecified by compartment.units are 
-#returned in umol by default, and similarly concentrations default to
-#units of uM.\n")
-    
+ 
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
 # If only a parameter vector is given it's good to warn people that they

@@ -255,11 +255,16 @@ compound data.table/data.frame or list.')
   
   #Now check to see if our compiled information can appropriately support
   #the requested units conversion, and if so, provide the conversion factor.
-  if(any(!c(input.units,output.units)%in%httk_dose_units_list)){
-    stop("Requested units not supported for unit conversion. Extrinsic amounts
-  are supported in units of 'mg' and 'umol', and intrinsic concentrations
-  are supported in 'mg/L', 'uM', and, in the case of gas models where 
-  the gas is assumed ideal, 'ppmv'.") 
+  if(any(!c(input.units,output.units)%in%httk_dose_units_list))
+  {
+    stop(paste("Requested units",
+      paste(unique(c(input.units,output.units))[!(
+      unique(c(input.units,output.units)) %in% httk_dose_units_list)],
+      collapse=", "), "
+not supported for unit conversion. 
+Extrinsic amounts are supported in units of \'mg\' and \'umol\', and intrinsic 
+concentrations are supported in \'mg/L\', \'uM\', and, in the case of gas models 
+where the gas is assumed ideal, \'ppmv\'.")) 
   }
 
   if(all(c(input.units,output.units)%in%names(amounts_units_conversion_frame))){
