@@ -1,92 +1,97 @@
 States = {
-Agutlumen,
-Agut,
-Aliver,
-Aven,
-Alung,
-Aart,
-Arest,
-Akidney,
-Atubules,
-Ametabolized,
-AUC,
-Ainh,
-Aexh,
-Amuc
+Agutlumen,  # Amount of the compound in gut lumen (umol)
+Agut,       # ... gut (umol)
+Aliver,     # ... liver (umol)
+Aven,       # ... veins (umol)
+Alung,      # ... lung (umol)
+Aart,       # ... arterioles (umol)
+Arest,      # ... rest of the body (umol)
+Akidney,    # ... kidney (umol)
+Atubules,   # ... tubules (umol)
+Ametabolized, # ... metabolized (umol)
+AUC,        # Area under the curve (umol*days)
+Ainh,       # Amount of the compound inhaled (umol)
+Aexh,       # Amount of the compound exhaled (umol)
+Amuc        # Amount of the compound in the mucus (umol)
 };
 
-Inputs = {Cinh
+Inputs = {#Cinh # Concentration Inhaled (uM) -- Linakis original input 
+ Cinhppmv # ... (ppmv)
 };
 
 Outputs = {
-Cgut,
-Cliver,
-Cven,
-Clung,
-Cart,
-Crest,
-Ckidney,
-Cplasma,
+Cgut,      # Concentration in the gut (uM)
+Cliver,    # ... liver (uM)
+Cven,      # ... veins (uM)
+Clung,     # ... lung (uM)
+Cart,      # ... arterioles (uM)
+Crest,     # ... rest of the body (uM)
+Ckidney,   # ... kidney (uM)
+Cplasma,   # ... plasma (uM)
 Aplasma,
-Calv,
-Cendexh,
-Cmixexh,
-Cmuc
+Calvppmv,    # Concentration in alveoli (ppmv)
+Calv,       # ... (uM) -- Linakis original output
+Cendexhppmv, # Concentration exhaled (ppmv)
+Cendexh,    # ... (uM) -- Linakis original output
+Cmixexhppmv, # Concentration exhaled mixed (ppmv)
+Cmixexh,    # ... (uM) -- Linakis original output
+Cmuc         # Concentration exhaled mucus (uM)
 };
 
-BW = 70;
-Clmetabolismc = 0.203;
-vmax = 0;
-km = 1;
-hematocrit = 0.44;
-kgutabs = 1;
-Kkidney2pu = 0;
-Kliver2pu = 0;
-Krest2pu = 0;
-Kgut2pu = 0;
-Klung2pu = 0;
-Qcardiacc = 4.8;
-Qgfrc = 0.108;
-Qgutf = 0.205;
-Qkidneyf = 0.221;
-Qliverf = 0.0536;
-Qlungf = 0;
-Vartc = 0.0487;
-Vgutc = 0.0158;
-Vkidneyc = 0.00119;
-Vliverc = 0.02448;
-Vlungc = 0.00723;
-Vrestc = 0.77654;
-Vvenc = 0.0487;
-Fraction_unbound_plasma = 0.0682;
-Rblood2plasma = 0.0;
-Clmetabolism = 0.0;
-Qcardiac = 0.0;
-Qgfr = 0.0;
-Qgut = 0.0;
-Qkidney = 0.0;
-Qliver = 0.0;
-Qlung = 0.0;
-Qrest = 0.0;
-Vart = 0.0;
-Vgut = 0.0;
-Vkidney = 0.0;
-Vliver = 0.0;
-Vlung = 0.0;
-Vrest = 0.0;
-Vven = 0.0;
-Qalv = 0;
-Kblood2air = 0;
-InhMag = 0;
-Period = 0;
-Exposure = 0;
-kUrtc = 11.0;
-kUrt = 0;
-Kmuc2air = 0;
-Vmucc = 0.0001;
-Vmuc = 0.0;
-Vmax = 0;
-Km = 1;
+BW = 70;   # Body weight (kg)
+Clmetabolismc = 0.203; # Clearance metabolism
+vmax = 0;  # Maximal rate of reaction (pmol/min/10^6cells)
+km = 1;    # Michaelis-Menten constant (uM)
+hematocrit = 0.44; # Hematocritical fraction
+kgutabs = 1; # Rate of absorption from gut (1/h)
+Kkidney2pu = 0; # Kidney to unbound plasma tissue partition coefficient
+Kliver2pu = 0; # Liver to unbound plasma tissue partition coefficient
+Krest2pu = 0; # # Rest of body to unbound plasma tissue partition coefficient
+Kgut2pu = 0; # Gut to unbound plasma tissue partition coefficient
+Klung2pu = 0; # Lung to unbound plasma tissue partition coefficient
+Qcardiacc = 4.8; #Cardiac Output (blood, not just plasma, L/h/kg BW^3/4)
+Qgfrc = 0.108; # Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and excreted.
+Qgutf = 0.205; # Fraction of cardiac output flowing to the gut.
+Qkidneyf = 0.221; #	Fraction of cardiac output flowing to the kidneys.
+Qliverf = 0.0536; # Fraction of cardiac output flowing to the liver.
+Qlungf = 0; #  Fraction of cardiac output flowing to the liver.
+Vartc = 0.0487; # Volume of the arterial blood per kg body weight, L/kg BW.
+Vgutc = 0.0158; # Volume of the gut tissue per kg body weight, L/kg BW.
+Vkidneyc = 0.00119; # Volume of the kidneys per kg body weight, L/kg BW.
+Vliverc = 0.02448; # Volume of the liver per kg body weight, L/kg BW.
+Vlungc = 0.00723; # Volume of the lungs per kg body weight, L/kg BW
+Vrestc = 0.77654; # Volume of the rest of the body per kg body weight, L/kg BW
+Vvenc = 0.0487; # Volume of the veinous blood per kg body weight, L/kg BW
+Fraction_unbound_plasma = 0.0682; # Fraction of chemical in plasma that is not bound.
+Rblood2plasma = 0.0; # The ratio of the concentration of the chemical in the blood to the concentration in the plasma from available_rblood2plasma.
+Clmetabolism = 0.0; # 	    Hepatic Clearance, L/h
+Qcardiac = 0.0; #Cardiac Output (L/d) NOTE change to days from hours
+Qgfr = 0.0; # Glomerular Filtration Rate L/d
+Qgut = 0.0; # Blood (not plasma) flow to gut L/d
+Qkidney = 0.0; # Blood flow to kidney (L/d)
+Qliver = 0.0; # Blood flow to kidney (L/d)
+Qlung = 0.0; # Blood flow to lung (L/d)
+Qrest = 0.0; # Blood flow to rest of body (L/d)
+Vart = 0.0;  # Volume of the arterial blood (L)
+Vgut = 0.0; # Volume of gut tissue (L)
+Vkidney = 0.0; # Volume of kidney tissue (L)
+Vliver = 0.0; # Volume of liver tissue (L)
+Vlung = 0.0; # Volume of lung tissue (L)
+Vrest = 0.0; # Volume of rest of body (L) 
+Vven = 0.0; # Volume of venous blood (L)
+Qalvc = 0.0; # Alveolar ventilation rate (L/h/kg BW^3/4)  
+Qalv = 0.0; # Alveolar ventilation rate (L/d) 
+Kblood2air = 0.0; # blood-to-air partition coefficient 
+InhMag = 0.0; # Unused parameter
+Period = 0.0; # Time between exposure events (h)
+Exposure = 0.0; # External chemical exposure (user input units)
+kUrtc = 11.0; # clearance to the upper respiratory tract (L/h/kg^0.75)
+kUrt = 0.0; # clearance to the upper respiratory tract (L/d)
+Kmuc2air = 0.0; # mucus-to-air partition coefficients
+Vmucc = 0.0001; # Unscaled mucosal volume (L/kg)
+Vmuc = 0.0; # Mucosal volume (L)
+Vmax = 0.0; # Maximum metabolism rate (mg/h)
+Km = 1.0; # Michaelis-Menten Coefficient (mg/L)
 
 
 
@@ -109,7 +114,8 @@ Vliver = Vliverc * BW;
 Vlung = Vlungc * BW;
 Vrest = Vrestc * BW;
 Vven = Vvenc * BW;
-Qalv = Qalv * 24 * pow(BW,0.75);
+Qalv = Qalvc * 24 * pow(BW,0.75);
+#Qalv = Qalv * 24 * pow(BW,0.75); # old version from the paper which is incorrect (Qalv - whole body; Qalvc - scaled per unit kg body weight)
 kUrt = fmin(kUrtc,Qalv/24/pow(BW,0.75)) * pow(BW,0.75) * 24; #note the IPA model uses min(kUrtC, QalvC));
 Vmuc = Vmucc * BW;
 Vmax = vmax * 60 * 24;
@@ -117,20 +123,24 @@ Km = km;
 }
 
 Dynamics{
-Cgut = Agut / Vgut;
-Cliver = Aliver / Vliver;
-Cven = Aven / Vven;
-Clung = Alung / Vlung;
-Cart = Aart / Vart;
-Crest = Arest / Vrest;
-Ckidney = Akidney / Vkidney;
-#Clungart = (Qcardiac * Cven + Qalv * Cinh) / (Qcardiac + Qalv / Kblood2air);
-Cplasma = Aven / Vven / Rblood2plasma;
-Aplasma = Aven / Rblood2plasma * (1 - hematocrit);
-Calv = Cart/Kblood2air;
-Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; 
-Cmixexh = 0.7 * Cendexh + 0.3 * Cinh;
-Cmuc = Amuc/Vmuc;
+Cinh = Cinhppmv/24.45;     # Concentration inhaled (uM) - default input is ppmv
+Cgut = Agut / Vgut;       # Concentration in the gut
+Cliver = Aliver / Vliver; # ... liver 
+Cven = Aven / Vven;       # ... veins (uM)
+Clung = Alung / Vlung;    # ... lung
+Cart = Aart / Vart;       # ... arterioles
+Crest = Arest / Vrest;    # ... <>
+Ckidney = Akidney / Vkidney; # ... kidney
+#Clungart = (Qcardiac * Cven + Qalv * Cinh) / (Qcardiac + Qalv / Kblood2air); # ... lung arterioles
+Cplasma = Aven / Vven / Rblood2plasma; # ... plasma (uM)
+Aplasma = Aven / Rblood2plasma * (1 - hematocrit); # (umols)
+Calv = Cart/Kblood2air;   # Concentration in the alveoli (uM)
+Calvppmv = Calv * 24.45;  # ... (ppmv)
+Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; # Concentration exhaled (uM)
+Cendexhppmv = Cendexh * 24.45;        # ... (ppmv)
+Cmixexh = 0.7 * Cendexh + 0.3 * Cinh; # Concentration exhaled mix (uM)
+Cmixexhppmv = Cmixexh * 24.45;        # ... (ppmv)
+Cmuc = Amuc/Vmuc;            # Concentration in mucus
 
  
 

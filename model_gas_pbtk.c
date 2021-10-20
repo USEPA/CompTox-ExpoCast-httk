@@ -1,9 +1,9 @@
-/* model_gas_pbtk_raw.c for R deSolve package
+/* model_gas_pbtk.c for R deSolve package
    ___________________________________________________
 
-   Model File:  model_gas_pbtk.model
+   Model File:  inhalation.model
 
-   Date:  Thu Sep 16 09:47:48 2021
+   Date:  Mon Jul 19 13:04:45 2021
 
    Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -29,7 +29,7 @@
      Aexh = 0.0,
      Amuc = 0.0,
 
-   16 Outputs:
+   13 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -40,15 +40,12 @@
     "Cplasma",
     "Aplasma",
     "Calvppmv",
-    "Calv",
     "Cendexhppmv",
-    "Cendexh",
     "Cmixexhppmv",
-    "Cmixexh",
     "Cmuc",
 
    1 Input:
-     Cinhppmv (forcing function)
+     Cinh (forcing function)
 
    54 Parameters:
      BW = 70,
@@ -93,18 +90,18 @@
      Vrest = 0.0,
      Vven = 0.0,
      Qalvc = 0.0,
-     Qalv = 0.0,
-     Kblood2air = 0.0,
-     InhMag = 0.0,
-     Period = 0.0,
-     Exposure = 0.0,
+     Qalv = 0,
+     Kblood2air = 0,
+     InhMag = 0,
+     Period = 0,
+     Exposure = 0,
      kUrtc = 11.0,
-     kUrt = 0.0,
-     Kmuc2air = 0.0,
+     kUrt = 0,
+     Kmuc2air = 0,
      Vmucc = 0.0001,
      Vmuc = 0.0,
-     Vmax = 0.0,
-     Km = 1.0,
+     Vmax = 0,
+     Km = 1,
 */
 
 #include <R.h>
@@ -139,12 +136,9 @@
 #define ID_Cplasma 0x00007
 #define ID_Aplasma 0x00008
 #define ID_Calvppmv 0x00009
-#define ID_Calv 0x0000a
-#define ID_Cendexhppmv 0x0000b
-#define ID_Cendexh 0x0000c
-#define ID_Cmixexhppmv 0x0000d
-#define ID_Cmixexh 0x0000e
-#define ID_Cmuc 0x0000f
+#define ID_Cendexhppmv 0x0000a
+#define ID_Cmixexhppmv 0x0000b
+#define ID_Cmuc 0x0000c
 
 /* Parameters */
 static double parms[54];
@@ -207,35 +201,37 @@ static double parms[54];
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cinhppmv forc[0]
+#define Cinh forc[0]
 
 /* Function definitions for delay differential equations */
-//
-//int Nout=1;
-//int nr[1]={0};
-//double ytau[1] = {0.0};
-//
-//static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
-//void lagvalue(double T, int *nr, int N, double *ytau) {
-//  static void(*fun)(double, int*, int, double*) = NULL;
-//  if (fun == NULL)
-//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-//  return fun(T, nr, N, ytau);
-//}
-//
-//double CalcDelay(int hvar, double dTime, double delay) {
-//  double T = dTime-delay;
-//  if (dTime > delay){
-//    nr[0] = hvar;
-//    lagvalue( T, nr, Nout, ytau );
-//}
-//  else{
-//    ytau[0] = yini[hvar];
-//}
-//  return(ytau[0]);
-//}
+int Noutgas_pbtk=1;
+int nrgas_pbtk[1]={0};
+double ytaugas_pbtk[1] = {0.0};
 
+static double yinigas_pbtk[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+
+/*
+void lagvalue(double T, int *nr, int N, double *ytau) {
+  static void(*fun)(double, int*, int, double*) = NULL;
+  if (fun == NULL)
+    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+  return fun(T, nr, N, ytau);
+}
+
+double CalcDelay(int hvar, double dTime, double delay) {
+  double T = dTime-delay;
+  if (dTime > delay){
+    nr[0] = hvar;
+    lagvalue( T, nr, Nout, ytau );
+}
+  else{
+    ytau[0] = yini[hvar];
+}
+  return(ytau[0]);
+}
+*/
+ 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
@@ -250,17 +246,17 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
 }
 
 
-///* Calling R code will ensure that input y has same
-//   dimension as yini */
-//void initState_gas_pbtk (double *y)
-//{
-//  int i;
-//
-//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
-//  {
-//    yini[i] = y[i];
-//  }
-//}
+/* Calling R code will ensure that input y has same
+   dimension as yinigas_pbtk */
+void initState_gas_pbtk (double *y)
+{
+  int i;
+
+  for (i = 0; i < sizeof(yinigas_pbtk) / sizeof(yinigas_pbtk[0]); i++)
+  {
+    yinigas_pbtk[i] = y[i];
+  }
+}
 
 void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -302,9 +298,9 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 
 void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Cinh;
-
-  Cinh = Cinhppmv / 24.45 ;
+  /* local */ double Calv;
+  /* local */ double Cendexh;
+  /* local */ double Cmixexh;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -324,17 +320,17 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
-  yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
+  Calv = yout[ID_Cart] / Kblood2air ;
 
-  yout[ID_Calvppmv] = yout[ID_Calv] * 24.45 ;
+  yout[ID_Calvppmv] = Calv * 24.45 ;
 
-  yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
+  Cendexh = ( ( Qalv * Calv ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ) / Qalv ;
 
-  yout[ID_Cendexhppmv] = yout[ID_Cendexh] * 24.45 ;
+  yout[ID_Cendexhppmv] = Cendexh * 24.45 ;
 
-  yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+  Cmixexh = 0.7 * Cendexh + 0.3 * Cinh ;
 
-  yout[ID_Cmixexhppmv] = yout[ID_Cmixexh] * 24.45 ;
+  yout[ID_Cmixexhppmv] = Cmixexh * 24.45 ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
@@ -348,7 +344,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - Calv ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -360,11 +356,11 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Ainh] = ( Qalv * ( Calv - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ;
 
-  ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Aexh] = ( Qalv * Calv ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ;
 
-  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
+  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Calv ) ) ;
 
 } /* derivs */
 
