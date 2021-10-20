@@ -549,7 +549,6 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfplasma",
   "Rfblood2plasma")
 
-
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
 model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
@@ -566,7 +565,7 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Ametabolized",
   "Rblood2plasma",
   "AUC",
-  "AUC_fetus",
+  "fAUC",
   "Aplacenta",
   "Cplacenta",
   "Cfliver",
@@ -611,7 +610,7 @@ model.list[["fetal_pbtk"]]$routes <- list(
 # States in C code, each of which is associated with a differential equation),
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
-model.list[["pbtk"]]$state.vars <- c(
+model.list[["fetal_pbtk"]]$state.vars <- c(
   "Agutlumen",
   "Agut",
   "Aliver",
@@ -667,7 +666,7 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Afplasma" = "umol",
   "Cfplasma" = "uM",
   "AUC" = "uM*days",
-  "AUC_fetus" = "uM*days",
+  "fAUC" = "uM*days",
   "Rblood2plasma" = "unitless",
   "Rfblood2plasma" = "unitless")
 
