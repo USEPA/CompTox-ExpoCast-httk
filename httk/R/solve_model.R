@@ -217,7 +217,7 @@ solve_model <- function(chem.name = NULL,
 # Which variables to track by default (should be able to build this from
 # state vars and outputs):
     default.monitor.vars <- model.list[[model]]$default.monitor.vars
-# Input variables (used with focrings:
+# Input variables (used with forcings):
     input.vars <- model.list[[model]]$input.var.names
 # If using forcing function for dosing, specify name of this function as 
 # it appears in model's associated .c file for passing to integrator
@@ -280,13 +280,20 @@ solve_model <- function(chem.name = NULL,
   #the derivative_output_names and/or state.vars
   if (any(!names(compartment_units) %in% c(derivative_output_names,
                                            state.vars,
-                                           input.vars))) {
-    stop("The names of the compartments in compartment_units must comprise
-          some subset of the named entries in derivative_output_names and 
-          state.vars for model ", model)
+                                           input.vars))) 
+  {
+    print(paste("Compartment(s)",
+      names(compartment_units)[!names(compartment_units) %in% 
+      c(derivative_output_names, state.vars, input.vars)],
+      "not found."))
+    stop("
+The names of the compartments in compartment.units must be among those named
+in state.vars, derivative.output.names, and input.var.names in the modelinfo
+file for model ", model)
   } else if (!all(derivative_output_names %in% names(compartment_units))){
-    stop("Each entry in derivative_output_names should have a corresponding
-          units specification in compartment_units for model ", model)
+    stop("
+Each entry in derivative_output_names should have a corresponding units 
+specification in compartment_units for model ", model)
   }
   
 ### MODEL PARAMETERS FOR R
