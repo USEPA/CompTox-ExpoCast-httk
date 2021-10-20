@@ -223,7 +223,6 @@ model.list[["fetal_pbtk"]]$param.names <- c(
 model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   pre_pregnant_BW = "pre_pregnant_BW",
   Clmetabolismc = "Clmetabolismc",
-  Clmetabolism = "Clmetabolism",
   kgutabs = "kgutabs",
   Kkidney2pu="Kkidney2pu",
   Kliver2pu="Kliver2pu",
@@ -244,15 +243,10 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Kfrbc2pu="Kfrbc2pu",
   Kfbrain2pu="Kfbrain2pu",
   Vgutc = "Vgutc",
-  Vgut = "Vgut",
   Vkidneyc = "Vkidneyc",
-  Vkidney = "Vkidney",
   Vliverc = "Vliverc",
-  Vliver = "Vliver",
   Vlungc = "Vlungc",
-  Vlung = "Vlung",
   Vthyroidc = "Vthyroidc",
-  Vthyroid = "Vthyroid",
   Fraction_unbound_plasma = "Funbound.plasma",
   Fraction_unbound_plasma_fetus = "Fraction_unbound_plasma_fetus",
   gut_density = "gut_density",
@@ -354,8 +348,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Qbrain_percent = "Qbrain_percent",
   Qkidney_percent = "Qkidney_percent",
   Qgut_percent = "Qgut_percent",
-  Qfthyroid_percen  = "Qfthyroid_percen",
-  Qfthyroid_percen = "Qfthyroid_percent"
+  Qfthyroid_percent  = "Qfthyroid_percent"
 )
 
 # This function translates the R model parameters into the compiled model
@@ -642,6 +635,28 @@ model.list[["fetal_pbtk"]]$state.vars <- c(
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["fetal_pbtk"]]$compartment.units <- c(
+  "Agutlumen" = "umol",
+  "Agut" = "umol",
+  "Aliver" = "umol",
+  "Aven" = "umol",
+  "Alung" = "umol",
+  "Aart" = "umol",
+  "Aadipose" = "umol",
+  "Arest" = "umol",
+  "Akidney" = "umol",
+  "Atubules" = "umol",
+  "Ametabolized" = "umol",
+  "Athyroid" = "umol",
+  "Aplacenta" = "umol",
+  "Afgut" = "umol",
+  "Aflung" = "umol",
+  "Afliver" = "umol",
+  "Afven" = "umol",
+  "Afart" = "umol",
+  "Afrest" = "umol",
+  "Afthyroid" = "umol",
+  "Afkidney" = "umol",
+  "Afbrain" = "umol",
   "Cgut" = "uM",
   "Cliver" = "uM",
   "Cven" = "uM",
