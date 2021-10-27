@@ -8,6 +8,10 @@ dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro
 bioactivity testing data (for example, ToxCast). See Breen et al. 
 (2021, <https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
 
+This repository is for reportig bugs and contributing enhancements. Installable
+files, documentation, and other information can be obtained from
+<https://cran.r-project.org/package=httk>. 
+
 ## Description
 
 Generic models and chemical-specific data for simulation and
