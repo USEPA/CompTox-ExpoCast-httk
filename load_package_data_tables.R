@@ -1629,9 +1629,9 @@ library(readxl)
 library(dplyr)
 library(magrittr)
 ## Load in Data ##
-dawson2021_full <- readxl::read_xlsx(
+dawson2021_full <- as.data.frame(readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
-  sheet = 14)
+  sheet = 14))
 dawson2021      <- dawson2021_full[,c("CASRN",
                                       "QSAR_Clint","Clint QSAR AD Outlier",
                                       "QSAR_Fup","Fup QSAR AD Outlier")]
@@ -1644,36 +1644,36 @@ dawson2021      <- dawson2021_full[,c("CASRN",
 #
 ## Load in Data ##
 # load chem data
-pradeep.chem <- readxl::read_xlsx(
+pradeep.chem <- as.data.frame(readxl::read_xlsx(
   path = "pradeep-Tox21_httk_predictions.xlsx",
   sheet = 1
-)
+  ))
 # load clint data
-pradeep.clint <- readxl::read_xlsx(
+pradeep.clint <- as.data.frame(readxl::read_xlsx(
   path = "pradeep-Tox21_httk_predictions.xlsx",
   sheet = 3
-)
+  ))
 # rename column name for chemical identifier - DTXSID
 pradeep.clint <- dplyr::rename(
   pradeep.clint,    # data
   "DTXSID" = "...1" # new_name = old_name
-)
+  )
 # load fup data
-pradeep.fup <- readxl::read_xlsx(
+pradeep.fup <- as.data.frame(readxl::read_xlsx(
   path = "pradeep-Tox21_httk_predictions.xlsx",
   sheet = 2
-)
+  ))
 # rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
 pradeep.fup <- dplyr::rename(
   pradeep.fup,             # data
   "DTXSID" = "dsstox_sid" # new_name = old_name
-)
+  )
 # join prediction tables by chemical identifier
 pradeep_full <- dplyr::full_join(
   pradeep.clint, # clint data
   pradeep.fup,   # fup data
   by = 'DTXSID'  # chemical ID
-) %>%
+  ) %>%
   dplyr::left_join(.,             # clint and fup data
                    pradeep.chem,  # chemical information data
                    by = "DTXSID") # chemical ID
@@ -1681,7 +1681,7 @@ pradeep_full <- dplyr::full_join(
 pradeep2020 <- dplyr::select(
   pradeep_full, # data
   c('DTXSID',"CASRN",'pred_clint_rf','Consensus (SVM,RF)') # vars to keep
-)
+  )
 #
 # END pradeep2020 Creation
 #
