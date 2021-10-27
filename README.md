@@ -123,4 +123,4 @@ lead software engineer Sarah Davidson
 
 ## License
 
-License: GPL-3
+License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
