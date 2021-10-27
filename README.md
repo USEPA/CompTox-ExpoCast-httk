@@ -115,8 +115,6 @@ vignette(‘Frank2018’)
 
 ## Authors
 
-Contributors names and contact info
-
 principal investigator John Wambaugh
 [@wambaugh.john@epa.gov]
 
