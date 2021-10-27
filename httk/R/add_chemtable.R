@@ -389,6 +389,9 @@ add_chemtable <- function(
   clint.pvalue.overwrite=TRUE,
   allow.na=FALSE)
 {
+# Trouble with tibls:
+  new.table <- as.data.frame(new.table)
+
 # Let's make the capitalization consistent in data.list:
   exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
   for (this.name in names(data.list))
