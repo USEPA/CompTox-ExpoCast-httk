@@ -8,7 +8,7 @@ dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro bioactiv
 
 Generic models and chemical-specific data for simulation and
 statistical analysis of chemical toxicokinetics ("TK") as
-described by Pearce et al. (2017) <doi:10.18637/jss.v079.i04>.
+described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
 Chemical-specific in vitro data have been obtained from relatively
 high throughput experiments. Both physiologically-based ("PBTK")
 and empirical (for example, one compartment) "TK" models can be
@@ -17,16 +17,16 @@ multiple exposure routes, and various species. The models consist
 of systems of ordinary differential equations which are solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
 included, which allows for simulating human biological variability
-(Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>)
+(Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)
 and propagating parameter uncertainty. Calibrated methods are
 included for predicting tissue:plasma partition coefficients and
 volume of distribution
-(Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>).
+(Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
 These functions and data provide a set of tools for
 in vitro-in vivo extrapolation ("IVIVE") of high throughput
 screening data (for example, Tox21, ToxCast) to real-world
 exposures via reverse dosimetry (also known as "RTK")
-(Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
+(Wetmore et al., 2015 <https://doi.org/10.1093/toxsci/kfv171>).
 
 ## Getting Started
 
@@ -72,10 +72,10 @@ subset(get_cheminfo(info = ‘all’),Compound%in%c
 quantile, for a specified CAS number and species
 ```
 calc_mc_oral_equiv(0.1,chem.cas = ‘34,256–82-1’, species = ‘human’)
-Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
+```
+*Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
 default) for a specified CAS number and species
 ```
-
 calc_tkstats(chem.cas = ‘34,256–82-1’, species = ‘rat’)
 ```
 * Using the PBTK solver for a specified chem name 
