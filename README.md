@@ -73,7 +73,7 @@ quantile, for a specified CAS number and species
 ```
 calc_mc_oral_equiv(0.1,chem.cas = ‘34,256–82-1’, species = ‘human’)
 ```
-*Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
+* Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
 default) for a specified CAS number and species
 ```
 calc_tkstats(chem.cas = ‘34,256–82-1’, species = ‘rat’)
