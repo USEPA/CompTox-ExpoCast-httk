@@ -3,7 +3,7 @@
 This R package provides data and models for prediction toxicokinetics (chemical 
 absorption, distribution, metabolism, and excretion by the body). 
 The models are design to be parameterized with chemical-specific in vitro 
-(animal free) measurments. The predictions can be used for traditional
+(animal free) measurements. The predictions can be used for traditional
 dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro 
 bioactivity testing data (for example, ToxCast). See Breen et al. 
 (2021, <https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
