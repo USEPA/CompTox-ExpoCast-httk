@@ -25,8 +25,8 @@ multiple exposure routes, and various species. The models consist
 of systems of ordinary differential equations which are solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
 included, which allows for simulating human biological variability
-(Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)
-and propagating parameter uncertainty. Calibrated methods are
+(<a href="https://doi.org/10.1016/j.envint.2017.06.004">Ring et al., 2017</a>)
+and propagating parameter uncertainty (Wambaugh et al., 2019 <https://doi.org/10.1093/toxsci/kfz205>). Calibrated methods are
 included for predicting tissue:plasma partition coefficients and
 volume of distribution
 (Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
