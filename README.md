@@ -16,7 +16,7 @@ files, documentation, and other information can be obtained from
 
 Generic models and chemical-specific data for simulation and
 statistical analysis of chemical toxicokinetics ("TK") as
-described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
+described by Pearce et al. (2017, <https://doi.org/10.18637/jss.v079.i04>).
 Chemical-specific in vitro data have been obtained from relatively
 high throughput experiments. Both physiologically-based ("PBTK")
 and empirical (for example, one compartment) "TK" models can be
