@@ -35,6 +35,9 @@ in vitro-in vivo extrapolation ("IVIVE") of high throughput
 screening data (for example, Tox21, ToxCast) to real-world
 exposures via reverse dosimetry (also known as "RTK")
 (<a href="https://doi.org/10.1093/toxsci/kfv171">Wetmore et al., 2015</a>).
+Functionality for predicting in vitro disposition using the <a href="https://doi.org/10.1021/es501955g">Armtitage et al. (2014)</a> model
+was added as part of <a href="https://doi.org/10.1371/journal.pone.0217564">Honda et al. (2019)</a>.
+
 
 ## Getting Started
 
