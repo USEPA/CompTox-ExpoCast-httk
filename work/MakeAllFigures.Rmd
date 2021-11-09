@@ -70,11 +70,10 @@ gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
                 axis.text.x = element_text(size = 10,face="bold",color="black"),
                 plot.title = element_text(hjust=0,size=12,face="bold"))
 ```
-###
-```{r something}
 
 ##### histograms #####
 # Raw Data
+```{r something}
 { 
   load(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_processed.RData"))
   caco2.QC <- fread(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_line101_short.csv"))
@@ -851,8 +850,8 @@ caco2.dup <- unique(caco2.dup[,.(mPab,casrn)])[, .(chemrank = rank(mPab),casrn)]
   ggsave(g1, file = paste0(loc.wd, "/r_data/results_for_paper/f1_replicates.tiff"),
          height = 3, width = 3, dpi = 600, compression = "lzw")
   
-    
-    
+   save(caco2.dup,file=paste0(loc.wd, "/r_data/results_for_paper/Table-Caco2Replicates.RData"))
+   write.csv(caco2.dup,row.names=FALSE,file=paste0(loc.wd, "/r_data/results_for_paper/Table-Caco2Replicates.txt"))
 }
 ```
 ###
