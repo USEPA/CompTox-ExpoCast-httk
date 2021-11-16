@@ -1,7 +1,7 @@
 Parameter	Units	Mouse	Rat	Dog	Human	Rabbit	Monkey
-Total Body Water	ml/kg	725	668	603.6	600	40.81	693
-Plasma Volume	ml/kg	50	31.2	51.5	42.86	110	44.8
-Cardiac Output	ml/min/kg^(3/4)	150.4	209.3	213.4	231.4	266.6	324.8
+Total Body Water	ml/kg	725	668	603.6	600	716	693
+Plasma Volume	ml/kg	50	31.2	51.5	42.86	44	44.8
+Cardiac Output	ml/min/kg^(3/4)	150.4	209.3	213.4	231.4	212	324.8
 Average BW	kg	0.02	0.25	10	70	2.5	5
 Total Plasma Protein	g/ml	0.062	0.067	0.09	0.074	0.057	0.088
 Plasma albumin	g/ml	0.0327	0.0316	0.0263	0.0418	0.0387	0.0493
