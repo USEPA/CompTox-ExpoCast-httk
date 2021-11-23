@@ -580,4 +580,4 @@ model.list[["pbtk"]]$calcpc <- TRUE
 model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
+model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
