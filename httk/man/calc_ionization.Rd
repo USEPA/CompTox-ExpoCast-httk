@@ -52,7 +52,8 @@ The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or
 vectors. We support characters because there are many instances with multiple 
 predicted values and all those values can be included by concatenating with 
 commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
-may be lists of characters, to allow for uncertainty analysis.
+may be vectors of characters representing different chemicals or instances of
+chemical parameters to allow for uncertainty analysis.
 
 The fractions are calculated by determining the coefficients for each
 species and dividing the particular species by the sum of all three.  The
