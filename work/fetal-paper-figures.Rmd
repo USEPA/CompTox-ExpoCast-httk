@@ -275,14 +275,14 @@ FigCa  <- ggplot(data=MFdata.main) +
     y=MFratio,
     shape=Chemical.Category,
     color=Chemical.Category),
-    size=3)   +
+    size=4)   +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   geom_point(data=MFdata.outliers,aes(
     x=MFratio.pred.nofup,
     y=MFratio,
     shape=Chemical.Category,
     color=Chemical.Category),
-    size=1)   +
+    size=2)   +
   xlim(0,2) +
   ylim(0,3) +
 #   geom_text(aes(x=AUC,y=Critical.concentration,label=Compound.abbrev,color=Chemical)) +
@@ -295,7 +295,7 @@ FigCa  <- ggplot(data=MFdata.main) +
 #    geom_abline(slope=1, intercept=1,linetype="dashed") + 
 #    geom_abline(slope=1, intercept=-1,linetype="dashed") + 
   ylab(expression(paste(italic("In vivo")," Mat:Fet Plasma Ratio"))) + 
-  xlab(expression(paste(italic("In vitro")," Predicted Ratio"))) +
+  xlab("Generic PBTK Predicted Ratio") +
 #    scale_color_brewer(palette="Set2") + 
   theme_bw()  +
   theme(legend.position="bottom")+
@@ -529,7 +529,7 @@ dim(subset(repeats,!(Chemical.Category %in% c(
 #
 #
 ```{r dallmann2018_data, eval = TRUE}
-TKstats <- read.xls("Dallmann2018Table5.xlsx",stringsAsFactors=FALSE)
+TKstats <- read.xls("MaternalFetalAUCData.xlsx",stringsAsFactors=FALSE)
 TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
 TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 
@@ -548,11 +548,9 @@ for (this.id in unique(TKstats$DTXSID))
   if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"X.unit."])!=-1))
   {
   }  
-  if (this.id %in% get_cheminfo(info="DTXSID",model="pbtk"))
+  if (this.id %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
   {
     this.subset <- subset(TKstats,DTXSID==this.id)
-    this.dose <- this.subset$Dose
-    this.route <- this.subset$Dose.Route
     p <- suppressWarnings(parameterize_pbtk(
       dtxsid=this.id,
       suppress.messages=TRUE))
@@ -562,53 +560,67 @@ for (this.id in unique(TKstats$DTXSID))
       suppress.messages=TRUE))
     p$BW <- BW.nonpreg 
     p$Qcardiacc <- 301.78 / p$BW^(3/4) # Kapraun 2019 (L/h/kg^3/4)
-# Non-pregnant PBPK:
-    out.nonpreg <- suppressWarnings(solve_pbtk(
-      parameters=p,
-      times = seq(0, this.subset[1,"NonPreg.Duration.Days"], 0.1),
-      dose=this.dose/BW.nonpreg, # mg/kg
-      daily.dose=NULL,
-      iv.dose=(this.route=="iv"),
-      output.units="uM",
-      suppress.messages=TRUE))
-# Pregnant PBPK:
-    BW.preg <- suppressWarnings(calc_maternal_bw(
-      week=this.subset[1,"Gestational.Age.Weeks"]))
-    out.preg <- suppressWarnings(solve_fetal_pbtk(
-      dtxsid=this.id,
-      times = seq(
-        this.subset[1,"Gestational.Age.Weeks"]*7, 
-        this.subset[1,"Gestational.Age.Weeks"]*7 + 
-          this.subset[1,"Preg.Duration.Days"], 
-        0.1),
-      dose=this.dose/BW.preg, # mg/kg
-      iv.dose=(this.route=="iv"),
-      daily.dose=NULL,
-      output.units="uM",
-      suppress.messages=TRUE))
-    if (any(regexpr("AUC",this.subset$Parameter)!=-1))
+    for (this.route in unique(this.subset$Dose.Route))
     {
-      TKstats[TKstats$DTXSID==this.id &
-        regexpr("AUC",TKstats$Parameter)!=-1, 
-        "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"AUC"])*24 #uMdays->uMh                        
-      TKstats[TKstats$DTXSID==this.id &
-        regexpr("AUC",TKstats$Parameter)!=-1, 
-        "Predicted.Pregnant.httk"] <- max(out.preg[,"AUC"])*24 # uM days -> uM h 
-    }
-    if (any(regexpr("Cmax",this.subset$Parameter)!=-1))
-    {
-      TKstats[TKstats$DTXSID==this.id &
-        regexpr("Cmax",TKstats$Parameter)!=-1, 
-        "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"Cplasma"])
-      TKstats[TKstats$DTXSID==this.id &
-        regexpr("Cmax",TKstats$Parameter)!=-1, 
-        "Predicted.Pregnant.httk"] <- max(out.preg[,"Cfplasma"])        
+      this.route.subset <- subset(this.subset, Dose.Route==this.route)
+      if (this.route.subset[1,"Gestational.Age.Weeks"] > 12)
+      {
+        this.dose <- this.route.subset$Dose
+        # Non-pregnant PBPK:
+        out.nonpreg <- suppressWarnings(solve_pbtk(
+          parameters=p,
+          times = seq(0, this.route.subset[1,"NonPreg.Duration.Days"],
+                      this.route.subset[1,"NonPreg.Duration.Days"]/100),
+          dose=this.dose/BW.nonpreg, # mg/kg
+          daily.dose=NULL,
+          iv.dose=(this.route=="iv"),
+          output.units="uM",
+          suppress.messages=TRUE))
+        # Pregnant PBPK:
+        BW.preg <- suppressWarnings(calc_maternal_bw(
+          week=this.route.subset[1,"Gestational.Age.Weeks"]))
+        out.preg <- suppressWarnings(solve_fetal_pbtk(
+          dtxsid=this.id,
+          times = seq(
+            this.route.subset[1,"Gestational.Age.Weeks"]*7, 
+            this.route.subset[1,"Gestational.Age.Weeks"]*7 + 
+              this.route.subset[1,"Preg.Duration.Days"], 
+            this.route.subset[1,"Preg.Duration.Days"]/100),
+          dose=this.dose/BW.preg, # mg/kg
+          iv.dose=(this.route=="iv"),
+          daily.dose=NULL,
+          output.units="uM",
+          suppress.messages=TRUE))
+        if (any(regexpr("AUC",this.subset$Parameter)!=-1))
+        {
+          TKstats[TKstats$DTXSID==this.id &
+                    TKstats$Dose.Route == this.route &
+                    regexpr("AUC",TKstats$Parameter)!=-1, 
+                  "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"AUC"])*24 #uMdays->uMh                        
+          TKstats[TKstats$DTXSID==this.id &
+                    TKstats$Dose.Route == this.route &
+                    regexpr("AUC",TKstats$Parameter)!=-1, 
+                  "Predicted.Pregnant.httk"] <- max(out.preg[,"AUC"])*24 # uM days -> uM h 
+        }
+        if (any(regexpr("Cmax",this.subset$Parameter)!=-1))
+        {
+          TKstats[TKstats$DTXSID==this.id &
+                    TKstats$Dose.Route == this.route &
+                    regexpr("Cmax",TKstats$Parameter)!=-1, 
+                  "Predicted.Non.Pregnant.httk"] <- max(out.nonpreg[,"Cplasma"])
+          TKstats[TKstats$DTXSID==this.id &
+                    TKstats$Dose.Route == this.route &
+                    regexpr("Cmax",TKstats$Parameter)!=-1, 
+                  "Predicted.Pregnant.httk"] <- max(out.preg[,"Cfplasma"])        
+        }
+      }
     }
   }
 }
 
 TKstats$Ratio.obs <- TKstats$Observed.Pregnant / TKstats$Observed.Non.Pregnant
 TKstats$Ratio.httk <- TKstats$Predicted.Pregnant.httk / TKstats$Predicted.Non.Pregnant.httk
+TKstats <- subset(TKstats, !is.na(TKstats$Ratio.httk))
 ```
 
 ```{r dallmann2018_figure eval = TRUE}
@@ -625,8 +637,10 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
-  scale_x_log10(limits=c(10^-3,10^3),label=scientific_10) +
-  scale_y_log10(limits=c(10^-3,10^3),label=scientific_10) +
+  scale_x_log10(#limits=c(10^-3,10^3),
+    label=scientific_10) +
+  scale_y_log10(#limits=c(10^-3,10^3),
+    label=scientific_10) +
   ggtitle("Non-Pregnant") +
   theme_bw()  +
   theme(legend.position="none")+
@@ -648,8 +662,10 @@ FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
-  scale_x_log10(limits=c(10^-5,10^3),label=scientific_10) +
-  scale_y_log10(limits=c(10^-5,10^3),label=scientific_10) +
+  scale_x_log10(#limits=c(10^-5,10^3),
+                label=scientific_10) +
+  scale_y_log10(#limits=c(10^-5,10^3),
+                label=scientific_10) +
   ggtitle("Pregnant")+
   theme_bw()  +
   theme(legend.position="none")+
@@ -672,8 +688,10 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6),name="Route")+ 
   ylab("httk Pregnant (uM*h)") + 
   xlab("httk Non-Pregnant (uM*h)") + 
-  scale_x_log10(limits=c(10^-1,10^2),label=scientific_10) +
-  scale_y_log10(limits=c(10^-1,10^2),label=scientific_10) +
+  scale_x_log10(#limits=c(10^-1,10^2),
+                label=scientific_10) +
+  scale_y_log10(#limits=c(10^-1,10^2),
+                label=scientific_10) +
   ggtitle("Model Comparison") +
   theme_bw()  +
   theme(legend.position="left")+
@@ -693,8 +711,8 @@ FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
   scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
   xlab("httk Predicted") + 
   ylab("Observed") +
-  scale_x_continuous(limits=c(0.25,3)) +
-  scale_y_continuous(limits=c(0.25,3)) +
+ # scale_x_continuous(limits=c(0.25,3)) +
+ # scale_y_continuous(limits=c(0.25,3)) +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1.15, linetype=3) + 
   geom_abline(slope=1, intercept=-1.15, linetype=3) + 
@@ -711,10 +729,11 @@ write.csv(subset(TKstats,Parameter=="AUCinf" &
   !is.na(Ratio.httk)),
   file="DallmanTable.txt")
   
-a <- c(0.3/1.1,1.9/1.2,1.2/1.5,2.1/1.1,1.4/1.1,1.1/1.1)
-mean(a)
-10^(abs(log10(a)))
-10^mean(abs(log10(a)))
+# AFE:
+mean(TKstats$Predicted.Pregnant.httk/TKstats$Observed.Pregnant5)
+# RMSLE
+(mean((log10(TKstats$Predicted.Pregnant.httk)-log10(TKstats$Observed.Pregnant5))^2))^(1/2)
+
 
 
 ```

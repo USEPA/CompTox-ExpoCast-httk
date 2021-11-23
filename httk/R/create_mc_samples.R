@@ -32,7 +32,7 @@
 #' chemical ratio of blood to plasma 
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each paramter). This argument should
+#' of detection (specified separately for each parameter). This argument should
 #' be a list of sub-lists. Each sublist is named for a parameter in
 #' "parameters" and contains two elements: "CV" (coefficient of variation) and
 #' "LOD" (limit of detection, below which parameter values are censored. New
@@ -301,10 +301,10 @@ Set species=\"Human\" to run httkpop model.')
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
-  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
-  {
-    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
-  }
+#  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
+#  {
+#    suppressWarnings(parameters.dt[c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+#  }
 
 #
 #

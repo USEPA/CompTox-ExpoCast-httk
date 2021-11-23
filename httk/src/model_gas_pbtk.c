@@ -1,19 +1,19 @@
-/* model_gas_pbtk.c for R deSolve package
+/* model_gas_pbtk_raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  inhalation.model
+   Model File:  model_gas_pbtk.model
 
-   Date:  Mon Oct 22 11:15:43 2018
+   Date:  Thu Sep 16 09:47:48 2021
 
-   Created by:  "C:/Users/mlinakis/Desktop/RLibrary/MCSIMU~1/mod/mod.exe v5.6.5"
+   Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2015 Free Software Foundation, Inc.
+   Copyright (c) 1993-2019 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
-   12 States:
+   14 States:
      Agutlumen = 0.0,
      Agut = 0.0,
      Aliver = 0.0,
@@ -25,9 +25,11 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
+     Ainh = 0.0,
+     Aexh = 0.0,
      Amuc = 0.0,
 
-   13 Outputs:
+   16 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -37,40 +39,43 @@
     "Ckidney",
     "Cplasma",
     "Aplasma",
+    "Calvppmv",
     "Calv",
+    "Cendexhppmv",
     "Cendexh",
+    "Cmixexhppmv",
     "Cmixexh",
     "Cmuc",
 
    1 Input:
-     Cinh (forcing function)
+     Cinhppmv (forcing function)
 
-   51 Parameters:
-     BW = 0.0,
-     Clmetabolismc = 0.0,
-     vmax = 0.0,
-     km = 0.0,
-     hematocrit = 0.0,
-     kgutabs = 0.0,
-     Kkidney2pu = 0.0,
-     Kliver2pu = 0.0,
-     Krest2pu = 0.0,
-     Kgut2pu = 0.0,
-     Klung2pu = 0.0,
-     Qcardiacc = 0.0,
-     Qgfrc = 0.0,
-     Qgutf = 0.0,
-     Qkidneyf = 0.0,
-     Qliverf = 0.0,
-     Qlungf = 0.0,
-     Vartc = 0.0,
-     Vgutc = 0.0,
-     Vkidneyc = 0.0,
-     Vliverc = 0.0,
-     Vlungc = 0.0,
-     Vrestc = 0.0,
-     Vvenc = 0.0,
-     Fraction_unbound_plasma = 0.0,
+   54 Parameters:
+     BW = 70,
+     Clmetabolismc = 0.203,
+     vmax = 0,
+     km = 1,
+     hematocrit = 0.44,
+     kgutabs = 1,
+     Kkidney2pu = 0,
+     Kliver2pu = 0,
+     Krest2pu = 0,
+     Kgut2pu = 0,
+     Klung2pu = 0,
+     Qcardiacc = 4.8,
+     Qgfrc = 0.108,
+     Qgutf = 0.205,
+     Qkidneyf = 0.221,
+     Qliverf = 0.0536,
+     Qlungf = 0,
+     Vartc = 0.0487,
+     Vgutc = 0.0158,
+     Vkidneyc = 0.00119,
+     Vliverc = 0.02448,
+     Vlungc = 0.00723,
+     Vrestc = 0.77654,
+     Vvenc = 0.0487,
+     Fraction_unbound_plasma = 0.0682,
      Rblood2plasma = 0.0,
      Clmetabolism = 0.0,
      Qcardiac = 0.0,
@@ -90,16 +95,22 @@
      Qalvc = 0.0,
      Qalv = 0.0,
      Kblood2air = 0.0,
-     kUrtc = 0.0,
+     InhMag = 0.0,
+     Period = 0.0,
+     Exposure = 0.0,
+     kUrtc = 11.0,
      kUrt = 0.0,
      Kmuc2air = 0.0,
-     Vmucc = 0.0,
+     Vmucc = 0.0001,
      Vmuc = 0.0,
      Vmax = 0.0,
-     Km = 0.0,
+     Km = 1.0,
 */
 
 #include <R.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R_ext/Rdynload.h>
 
 /* Model variables: States */
 #define ID_Agutlumen 0x00000
@@ -113,7 +124,9 @@
 #define ID_Atubules 0x00008
 #define ID_Ametabolized 0x00009
 #define ID_AUC 0x0000a
-#define ID_Amuc 0x0000b
+#define ID_Ainh 0x0000b
+#define ID_Aexh 0x0000c
+#define ID_Amuc 0x0000d
 
 /* Model variables: Outputs */
 #define ID_Cgut 0x00000
@@ -125,13 +138,16 @@
 #define ID_Ckidney 0x00006
 #define ID_Cplasma 0x00007
 #define ID_Aplasma 0x00008
-#define ID_Calv 0x00009
-#define ID_Cendexh 0x0000a
-#define ID_Cmixexh 0x0000b
-#define ID_Cmuc 0x0000c
+#define ID_Calvppmv 0x00009
+#define ID_Calv 0x0000a
+#define ID_Cendexhppmv 0x0000b
+#define ID_Cendexh 0x0000c
+#define ID_Cmixexhppmv 0x0000d
+#define ID_Cmixexh 0x0000e
+#define ID_Cmuc 0x0000f
 
 /* Parameters */
-static double parms[51];
+static double parms[54];
 
 #define BW parms[0]
 #define Clmetabolismc parms[1]
@@ -177,23 +193,53 @@ static double parms[51];
 #define Qalvc parms[41]
 #define Qalv parms[42]
 #define Kblood2air parms[43]
-#define kUrtc parms[44]
-#define kUrt parms[45]
-#define Kmuc2air parms[46]
-#define Vmucc parms[47]
-#define Vmuc parms[48]
-#define Vmax parms[49]
-#define Km parms[50]
+#define InhMag parms[44]
+#define Period parms[45]
+#define Exposure parms[46]
+#define kUrtc parms[47]
+#define kUrt parms[48]
+#define Kmuc2air parms[49]
+#define Vmucc parms[50]
+#define Vmuc parms[51]
+#define Vmax parms[52]
+#define Km parms[53]
 
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Cinh forc[0]
+#define Cinhppmv forc[0]
+
+/* Function definitions for delay differential equations */
+//
+//int Nout=1;
+//int nr[1]={0};
+//double ytau[1] = {0.0};
+//
+//static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+
+//void lagvalue(double T, int *nr, int N, double *ytau) {
+//  static void(*fun)(double, int*, int, double*) = NULL;
+//  if (fun == NULL)
+//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//  return fun(T, nr, N, ytau);
+//}
+//
+//double CalcDelay(int hvar, double dTime, double delay) {
+//  double T = dTime-delay;
+//  if (dTime > delay){
+//    nr[0] = hvar;
+//    lagvalue( T, nr, Nout, ytau );
+//}
+//  else{
+//    ytau[0] = yini[hvar];
+//}
+//  return(ytau[0]);
+//}
 
 /*----- Initializers */
 void initmod_gas_pbtk (void (* odeparms)(int *, double *))
 {
-  int N=51;
+  int N=54;
   odeparms(&N, parms);
 }
 
@@ -203,6 +249,18 @@ void initforc_gas_pbtk (void (* odeforcs)(int *, double *))
   odeforcs(&N, forc);
 }
 
+
+///* Calling R code will ensure that input y has same
+//   dimension as yini */
+//void initState_gas_pbtk (double *y)
+//{
+//  int i;
+//
+//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//  {
+//    yini[i] = y[i];
+//  }
+//}
 
 void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -231,7 +289,7 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
   Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
-  kUrt = kUrtc * pow ( BW , 0.75 ) * 24 ;
+  kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
   Km = km ;
@@ -244,6 +302,9 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 
 void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
+  /* local */ double Cinh;
+
+  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -265,9 +326,15 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
 
+  yout[ID_Calvppmv] = yout[ID_Calv] * 24.45 ;
+
   yout[ID_Cendexh] = ( ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
 
+  yout[ID_Cendexhppmv] = yout[ID_Cendexh] * 24.45 ;
+
   yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+
+  yout[ID_Cmixexhppmv] = yout[ID_Cmixexh] * 24.45 ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
 
@@ -292,6 +359,10 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma + Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
+
+  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+
+  ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
 
