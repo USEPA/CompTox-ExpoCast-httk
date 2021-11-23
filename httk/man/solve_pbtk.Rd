@@ -85,9 +85,6 @@ mg/kg BW}
 
 \item{atol}{Argument passed to integrator (deSolve).}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
@@ -117,6 +114,9 @@ The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{3man}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
