@@ -72,7 +72,6 @@ for (this.row in 1:dim(chem.table)[1])
   this.cas <- chem.table[this.row,"Substance_CASRN"]
   if (this.cas %in% get_cheminfo(model="pbtk"))
   {
-<<<<<<< HEAD
     if (tolower(chem.table[this.row,"Species"])=="rodent") 
     {  
       this.species <- "rat"
@@ -82,14 +81,13 @@ for (this.row in 1:dim(chem.table)[1])
     } else if (tolower(chem.table[this.row,"Species"])=="human")
     {
       this.species <- "human"
-    }
-    else if (tolower(chem.table[this.row,"Species"])=="mouse") 
+    } else if (tolower(chem.table[this.row,"Species"])=="mouse") 
     {
       this.species <- "mouse"
     }
     else browser()
-    if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =T
-    else if (chem.table[this.row,"Route"]=="oral") iv.dose = F
+    if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =TRUE
+    else if (chem.table[this.row,"Route"]=="oral") iv.dose = FALSE
     else browser()
     this.dose <- chem.table[this.row,"Dose"]
     this.days <- chem.table[this.row,"Days"]
@@ -103,57 +101,19 @@ for (this.row in 1:dim(chem.table)[1])
       this.dose <- this.dose/0.25
     }
     # Here we run the HTTK PBPK Model:
-    out <- solve_pbtk(chem.cas=this.cas,
-                      dose=this.dose,
-                      species=this.species,
-                      # This was used in 2017 but I don't agree with it anymore:
-                      #           restrictive.clearance=F,
-                      days=this.days,
-                      iv.dose=iv.dose,
-                      default.to.human=T)
+    out <- suppressWarnings(solve_pbtk(chem.cas=this.cas,
+                                       dose=this.dose,
+                                       species=this.species,
+                                       # This was used in 2017 but I don't agree
+                                       # with it anymore:
+                                       # restrictive.clearance=F,
+                                       days=this.days,
+                                       iv.dose=iv.dose,
+                                       default.to.human=TRUE))
     # Record the Cmax and the AUC:
     chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
     chem.table[this.row,"AUC"] <- max(out[,"AUC"])
   }
-=======
-    this.species <- "rat"
-  } else if (tolower(chem.table[this.row,"Species"])=="human")
-  {
-    this.species <- "human"
-  }
-  else if (tolower(chem.table[this.row,"Species"])=="mouse") 
-  {
-    this.species <- "mouse"
-  }
-  else browser()
-  if (chem.table[this.row,"Route"] %in% c("i.p.","s.c.","i.m.")) iv.dose =TRUE
-  else if (chem.table[this.row,"Route"]=="oral") iv.dose = F
-  else browser()
-  this.dose <- chem.table[this.row,"Dose"]
-  this.days <- chem.table[this.row,"Days"]
-# Make sure the dose units are in mg/kg body weight:
-  if (regexpr("ug",chem.table[this.row,"Dose.Units"])!=-1) 
-  {
-    this.dose <- this.dose/1000
-  }
-  if (regexpr("/kg",chem.table[this.row,"Dose.Units"])==-1) 
-  {
-    this.dose <- this.dose/0.25
-  }
-# Here we run the HTTK PBPK Model:
-  out <- suppressWarnings(solve_pbtk(chem.cas=this.cas,
-           dose=this.dose,
-           species=this.species,
-# This was used in 2017 but I don't agree with it anymore:
-#           restrictive.clearance=FALSE,
-           days=this.days,
-           iv.dose=iv.dose,
-           default.to.human=TRUE))
-
-# Record the Cmax and the AUC:
-  chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
-  chem.table[this.row,"AUC"] <- max(out[,"AUC"])
->>>>>>> 65ba12ef417d16d6cd184a05598d0db3c82d6bdc
 }
 ```
 ## Make the plot
