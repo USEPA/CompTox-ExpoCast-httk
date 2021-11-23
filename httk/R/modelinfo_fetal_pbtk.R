@@ -704,11 +704,7 @@ model.list[["fetal_pbtk"]]$calcpc <- TRUE
 model.list[["fetal_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-<<<<<<< HEAD
 model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
-=======
-model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
->>>>>>> afcaa930c7e8be817642569c513c73b42ba0ace4
