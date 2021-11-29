@@ -1587,3 +1587,22 @@
 #' @source Dawson et al. 2021 Random Forest QSAR Model
 #' @keywords data
 "dawson2021"
+
+#' Kapraun et al. 2019 data
+#' 
+#' A list object containing time-varying parameters for the human maternal-fetal
+#' HTTK model. List elements contain scalar coefficients for the polynomial,
+#' logistic, Gompertz, and other functions of time describing blood flow rates,
+#' tissue volumes, hematocrits, and other anatomical/physiological quantities
+#' that change in the human mother and her fetus during pregnancy and gestation.
+#' 
+#' @name kapraun2019
+#' @aliases Kapraun2019
+#' @docType data
+#' @format list
+#' @author Dustin F. Kapraun
+#' @references
+#' \insertRef{kapraun2019empirical}{httk}
+#' @source Kapraun et al. 2019 Fetal PBTK Model
+#' @keywords data
+"kapraun2019"
