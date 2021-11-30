@@ -215,11 +215,13 @@
 #'  }
 #'
 #' \deqn{
-#'  Qfliver = Qfliver_percent / ( 100 - ( Qbrain_percent + Qkidney_percent + Qgut_percent ) ) * ( 1 - ( Qfbrain_percent +#' Qfkidney_percent + Qfgut_percent ) / Qfnonplacental_percent ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+#'  Qfliver = Qfliver_percent / ( 100 - ( Qbrain_percent + Qkidney_percent + Qgut_percent ) ) * ( 1 - ( Qfbrain_percent +
+#' Qfkidney_percent + Qfgut_percent ) / Qfnonplacental_percent ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 #'  }
 #'
 #' \deqn{
-#'  Qfthyroid = Qfthyroid_percent / ( 100 - ( Qbrain_percent + Qkidney_percent + Qgut_percent ) ) * ( 1 - ( Qfbrain_percent +#' Qfkidney_percent + Qfgut_percent ) / Qfnonplacental_percent ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+#'  Qfthyroid = Qfthyroid_percent / ( 100 - ( Qbrain_percent + Qkidney_percent + Qgut_percent ) ) * ( 1 - ( Qfbrain_percent +
+#' Qfkidney_percent + Qfgut_percent ) / Qfnonplacental_percent ) * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
 #'  }
 #'
 #' \deqn{
