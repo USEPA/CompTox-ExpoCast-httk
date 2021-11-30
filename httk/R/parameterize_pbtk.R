@@ -301,6 +301,17 @@ parameterize_pbtk <- function(
                Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
                  "Pow","pKa_Donor","pKa_Accept")])) #fraction
   
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+ outlist <- c(outlist, 
+              Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
+                "Pow","pKa_Donor","pKa_Accept")]))  # fraction 
+
+  outlist <- c(outlist,
+    Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+      species=species,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+
   outlist <- c(
     outlist,
     list(Clint=Clint,
@@ -310,7 +321,9 @@ parameterize_pbtk <- function(
            parameters=list(
              Clint=Clint, #uL/min/10^6 cells
              Funbound.plasma=fup, # unitless fraction
-             Fhep.assay.correction=outlist$Fhep.assay.correction, 
+             Fhep.assay.correction=
+               outlist$Fhep.assay.correction,
+             Rblood2plasma = outlist$Rblood2plasma, 
              million.cells.per.gliver= 110, # 10^6 cells/g-liver
              liver.density= 1.05, # g/mL
              Dn=0.17,
@@ -330,10 +343,7 @@ parameterize_pbtk <- function(
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+
         
   return(lapply(outlist[sort(names(outlist))],set_httk_precision))
 }
