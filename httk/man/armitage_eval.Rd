@@ -198,7 +198,7 @@ print(temp$cfree.invitro)
 # Check to see if we have info on the chemical:
 "793-24-8" \%in\% get_cheminfo()
 
-# Since we don't look up phys-chem from dashboard:
+# Since we don't have any info, let's look up phys-chem from dashboard:
 cheminfo <- data.frame(
   Compound="6-PPD",
   CASRN="793-24-8",
