@@ -27,7 +27,10 @@ armitage_eval(
   this.csalt = 0.15,
   this.celldensity = 1,
   this.cellmass = 3,
-  this.f_oc = 1
+  this.f_oc = 1,
+  this.conc_ser_alb = 24,
+  this.conc_ser_lip = 1.9,
+  this.Vdom = 0
 )
 }
 \arguments{
