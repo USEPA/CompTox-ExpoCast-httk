@@ -20,6 +20,7 @@ Changes in version 2.0.5 (Fall, 2021)
   Corrected monkey cardiac output (thank you Peter Egeghy)
   Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
   Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Lynne Haber and Mark Bradley)  
+  Expanded example for add_chemtable to address ionization (thank you Johann Fribl)
 
 Changes in version 2.0.4 (May 7, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
