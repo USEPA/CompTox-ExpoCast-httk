@@ -92,7 +92,7 @@ parameterize_fetal_pbtk<- function(
   species="Human",
   fetal_fup_adjustment=TRUE,
   return.kapraun2019=TRUE,
-  suppress.messages=F,
+  suppress.messages=FALSE,
   ...)
 {
   #initialize a parms list for fetal model parameters to output
@@ -143,7 +143,7 @@ parameterize_fetal_pbtk<- function(
     chem.name=chem.name,
     dtxsid=dtxsid,
     species=species,
-    suppress.messages=T)
+    suppress.messages=TRUE)
   
   maternal.blood.pH <- 7.38 #average maternal blood pH value measured by and 
   #reported in K.H. Lee 1972 for over 80 mothers.
@@ -183,7 +183,7 @@ parameterize_fetal_pbtk<- function(
         lung=c("lung"), 
         thyroid = c("thyroid"),
         placenta = c("placenta")),
-      suppress.messages=T)
+      suppress.messages=TRUE)
   parms <- c(parms, lumped_tissue_values_maternal[substr(names(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
   parms$pH_Plasma_mat <- maternal.blood.pH
@@ -199,7 +199,7 @@ parameterize_fetal_pbtk<- function(
     chem.name=chem.name,
     dtxsid=dtxsid,
     species=species,
-    suppress.messages=T,
+    suppress.messages=TRUE,
     ...)
   pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
     #body weight listing with average prepregnant case, as scale dosing 
@@ -292,7 +292,7 @@ parameterize_fetal_pbtk<- function(
   fetal_pcs <- predict_partitioning_schmitt(
     parameters = fetal_schmitt_parms,
     model = "fetal_pbtk",
-    suppress.messages=T)
+    suppress.messages=TRUE)
   
   #now for the fetus, with the brain included as a compartment. These
   #partition coefficients are based on the same Schmitt parameters except
@@ -311,7 +311,7 @@ parameterize_fetal_pbtk<- function(
         thyroid = c("thyroid"), 
         brain = c("brain"),
         placenta = c("placenta")),
-      suppress.messages=T)
+      suppress.messages=TRUE)
   lumped_fetal_pcs <- lumped_tissue_values_fetus[substr(names(
     lumped_tissue_values_fetus),1,1) == 'K']
   
