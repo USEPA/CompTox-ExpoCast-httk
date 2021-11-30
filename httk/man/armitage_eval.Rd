@@ -27,7 +27,10 @@ armitage_eval(
   this.csalt = 0.15,
   this.celldensity = 1,
   this.cellmass = 3,
-  this.f_oc = 1
+  this.f_oc = 1,
+  this.conc_ser_alb = 24,
+  this.conc_ser_lip = 1.9,
+  this.Vdom = 0
 )
 }
 \arguments{
@@ -198,7 +201,7 @@ print(temp$cfree.invitro)
 # Check to see if we have info on the chemical:
 "793-24-8" \%in\% get_cheminfo()
 
-# Since we don't look up phys-chem from dashboard:
+# Since we don't have any info, let's look up phys-chem from dashboard:
 cheminfo <- data.frame(
   Compound="6-PPD",
   CASRN="793-24-8",
