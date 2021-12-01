@@ -54,9 +54,13 @@
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param input.units Input units of interest assigned to dosing, defaults to
 #' mg/kg BW
+#' @param output.units Output units expected for the model results. Default is
+#' "uM".
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param 3man Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
