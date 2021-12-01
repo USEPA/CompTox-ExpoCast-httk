@@ -49,6 +49,8 @@
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param input.units Input units of interest assigned to dosing,
 #' defaults to mg/kg BW
+#' @param output.units Output units expected for the model results. Default is
+#' "uM".
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -111,6 +113,7 @@ solve_3comp <- function(chem.name = NULL,
                     suppress.messages=FALSE,
                     species="Human",
                     iv.dose=FALSE,
+                    input.units='mg/kg',
                     output.units='uM',
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=FALSE,
