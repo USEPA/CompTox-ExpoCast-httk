@@ -122,6 +122,10 @@ parameterize_* function for the model.}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
+
+\item{parameterize.args}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
 }
 \value{
 Quantiles (specified by which.quantile) of the distribution of plasma
