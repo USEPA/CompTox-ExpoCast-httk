@@ -1,0 +1,471 @@
+---
+title: "Differences from GFR changes"
+author: "Caroline Ring"
+date: "11/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(patchwork)
+```
+
+```{r}
+devtools::load_all(path = "../httk")
+```
+
+Path for saving output files (e.g. figures):
+
+```{r}
+out_path <- "C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk/gfr_changes_output/"
+```
+
+
+
+# GFR distributions for Black individuals with and without the race coefficient
+
+We want to get the GFR distributions for four combinations of conditions: including/excluding residual variability, and including/excluding the CKD-EPI "race coefficient." These are parameters for the HTTK-Pop functions, so we can set up a table of the various combinations and use it as input to HTTK-Pop.
+
+Set up the table first.
+
+```{r}
+set.seed(42) #for reproducibility
+par <- as.data.table(expand.grid(gfr_resid_var = c(FALSE, TRUE),
+                                 ckd_epi_race_coeff = c(TRUE, FALSE)))
+knitr::kable(par) #print in table format
+```
+
+To get the HTTK-Pop distributions for GFR under each of these four conditions, we call `httkpop_generate()`. This function returns a `data.table` of simulated individuals. Each row is one individual; each column is one demographic, physiological or other TK-relevant parameter. One of the columns is called `gfr_est`; this is the estimated GFR from the CKD-EPI equation. For the sake of efficiency, we'll keep only this column, discarding the other columns with demographic and physiology information.
+
+To get a good sampling, we'll simulate 5000 individuals for each condition. 
+```{r}
+#use data.table syntax to efficiently loop over rows of par
+DT <- par[,
+          .(gfr_est=httkpop_generate(method = "d", #direct resampling
+                                     nsamp = 5000, #5000 individuals
+                                     agelim_years = c(18,65), #adults 18-65
+                                     reths = "Non-Hispanic Black", #Black individuals
+                                     gfr_resid_var = gfr_resid_var,
+                                     ckd_epi_race_coeff = ckd_epi_race_coeff)$gfr_est),
+          by = .(gfr_resid_var,
+                 ckd_epi_race_coeff)]
+```
+
+Here are the first few rows.
+
+```{r}
+head(DT)
+```
+Each row represents one simulated individual between ages 18-65, with ethnicity reported in NHANES as "Non-Hispanic Black."
+
+For more informative plot labels, let's create labels that clearly explain the meaning of each combination of `gfr_resid_var` and `ckd_epi_race_coeff` values.
+
+```{r}
+
+DT[gfr_resid_var %in% FALSE & ckd_epi_race_coeff %in% FALSE,
+   label:="No race coeff, no resid var"]
+DT[gfr_resid_var %in% FALSE & ckd_epi_race_coeff %in% TRUE,
+   label:="Race coeff, no resid var\n(previous status quo)"]
+DT[gfr_resid_var %in% TRUE & ckd_epi_race_coeff %in% FALSE,
+   label:="No race coeff, resid var\n(new default)"]
+DT[gfr_resid_var %in% TRUE & ckd_epi_race_coeff %in% TRUE,
+   label:="Race coeff, resid var"]
+
+DT[, label:=factor(label,
+                   levels = c("Race coeff, no resid var\n(previous status quo)",
+                             "No race coeff, resid var\n(new default)",
+                             "Race coeff, resid var",
+                             "No race coeff, no resid var"))]
+```
+
+Now here are the first few rows of `DT`:
+
+```{r}
+head(DT)
+```
+Plot the distributions. Color-code them by the four different conditions on residual variability and CKD-EPI race coefficient.
+
+```{r}
+ggplot(DT) +geom_density(aes(x=gfr_est,
+                             color = label,
+                             fill = label),
+                             alpha = 0.2,
+                         size=1) +
+  scale_color_brewer(palette = "Set2") +
+    scale_fill_brewer(palette = "Set2") +
+  theme_bw() +
+  theme(legend.title = element_blank())
+
+```
+
+Let's try a six-panel layout giving pairwise comparisons.
+
+```{r}
+#set up named vector of colors to use for plotting
+#same as in previous plot
+colvect <- RColorBrewer::brewer.pal(n=4, name="Set2")
+names(colvect) <- DT[, levels(label)]
+
+#get pairwise combinations of labels
+combinations <- combn(DT[, levels(label)],
+                       m=2)
+
+#loop over combinations and create one plot for each pair
+#the result will be a list of ggplot2 objects
+figlist <- apply(combinations,
+                 2, 
+                 function(x) {
+                   ggplot(DT[label %in% x]) +
+                     geom_density(aes(x=gfr_est,
+                             color = label,
+                             fill = label),
+                             alpha = 0.2,
+                         size=1) +
+  scale_color_manual(values = colvect,
+                     limits = force) +
+  scale_fill_manual(values = colvect,
+                     limits = force) +
+  scale_x_continuous(limits = c(0,250)) +
+  scale_y_continuous(limits = c(0,0.021)) +
+  xlab("eGFR, mL/min/1.73 m2") +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        legend.position = c(0.77,0.8),
+        legend.background = element_blank())
+                   },
+  simplify = FALSE
+  )
+
+#use `patchwork` R package to lay these out in a grid
+patchwork::wrap_plots(figlist, ncol = 2) +
+plot_annotation(tag_levels = "A",
+title = "eGFR in a simulated Non-Hispanic Black adult population (n = 5000)") &
+guides(fill = guide_legend(byrow = TRUE),
+color = guide_legend(byrow = TRUE)) &
+theme(legend.spacing.y = unit(0.5, "line"),
+axis.text = element_text(size=12))
+
+#save the grid as a PNG
+png(paste0(out_path,
+           "eGFR_dist.png"),
+    height = 8, width = 10, units = "in", res = 300)
+patchwork::wrap_plots(figlist, ncol = 2) +
+plot_annotation(tag_levels = "A",
+title = "eGFR in a simulated Non-Hispanic Black adult population (n = 5000)") &
+guides(fill = guide_legend(byrow = TRUE),
+color = guide_legend(byrow = TRUE)) &
+theme(legend.spacing.y = unit(0.5, "line"),
+axis.text = element_text(size=12))
+dev.off()
+
+#save the grid as a PDF
+pdf(paste0(out_path,
+           "eGFR_dist.pdf"),
+    height = 8, width = 10)
+patchwork::wrap_plots(figlist, ncol = 2) +
+plot_annotation(tag_levels = "A",
+title = "eGFR in a simulated Non-Hispanic Black adult population (n = 5000)") &
+guides(fill = guide_legend(byrow = TRUE),
+color = guide_legend(byrow = TRUE)) &
+theme(legend.spacing.y = unit(0.5, "line"),
+axis.text = element_text(size=12))
+dev.off()
+
+```
+
+From these plots, we can see some key comparisons.
+
+In panel A (comparing the previous status quo to the new defaults for GFR estimation), we see that with the new defaults, the mode of the distribution has shifted lower (orange curve). This reflects the effect of removing the "race coefficient" -- eGFRs generally shift lower. But there is a longer, heavier upper tail; this reflects the effect of properly adding residual variability to the CKD-EPI estimates.
+
+In panel B, we see the effect of residual variability alone, when the race coefficient is used. The purple curve (race coefficient used and residual variability added) has a longer, heavier upper tail. Interestingly, the lower tail is not very different.
+
+In panel C, we see the effect of the change in the race coefficient alone, when no residual variability is added in either case. Without the race coefficient (pink curve), the mode shifts lower. but the overall width and tails of the curve stay the same.
+
+In panel D, we see the effect of the change in race coefficient alone, when residual variability is added in both cases. Without the race coefficient (orange curve), the mode shifts lower. but the overall width and tails of the curve stay the same.
+
+In panel E, we see the effect of the change in residual variability alone, when the race coefficient is not used in either case. Int4restingly, with residual variability added (orange curve), the mode seems to shift a little bit downward, and the upper tail becomes longer and heavier.
+
+In panel F, for completeness, we compare the two conditions that were neither the previous status quo nor the new default: using both the race coefficient and residual variability, vs. not using either. Interestingly, the mode of these two distributions is very similar! Adding the residual variability seems to skew the dsitribution to have a lower mode and a heavier upper tail, even when the race coefficient is used.
+
+This figure (and discussion) is complicated and is probably too much for the main text. It is more of a supplemental figure. 
+
+For the main text, let's present only Panel A -- comparison of the previous status quo to the new default. Save the first panel in isolation.
+
+```{r}
+#save as PNG
+ggsave(filename = paste0(out_path,
+                         "eGFR_dist_main.png"),
+       plot = figlist[[1]] + 
+         #setting byrow = TRUE is the only way legend.spacing.y has any effect
+         guides(fill = guide_legend(byrow = TRUE),
+                color = guide_legend(byrow = TRUE)) + 
+         theme(axis.text = element_text(size=12),
+                           legend.text = element_text(size=12),
+               legend.spacing.y = unit(12, "pt"),
+               legend.key.size = unit(24, "pt")),
+       width = 6,
+       height = 4,
+       units = "in",
+       dpi = 300)
+
+#save as PDF
+ggsave(filename = paste0(out_path,
+                         "eGFR_dist_main.pdf"),
+       plot = figlist[[1]] + 
+         #setting byrow = TRUE is the only way legend.spacing.y has any effect
+         guides(fill = guide_legend(byrow = TRUE),
+                color = guide_legend(byrow = TRUE)) + 
+         theme(axis.text = element_text(size=12),
+                           legend.text = element_text(size=12),
+               legend.key.size = unit(24, "pt"),
+               legend.spacing.y = unit(12, "pt")),
+       width = 6,
+       height = 4,
+       units = "in")
+```
+
+
+# Effect on Css
+
+So we know how GFR changes, particularly for Black individuals.
+
+How much does the change in GFR change Css results?
+
+Let's run the Css calculations for a n = 5000 non-Hispanic Black adult population, for all the chemicals for which the 3-compartment steady state model can be parameterized. Then we can assess how much the changes in race coefficient and residual variability actually affect steady-state plasma concentration results.
+
+Get the list of all chemicals for which the 3-comaprtment steady-state model can be parameterized.
+
+```{r}
+chemlist <- get_cheminfo(info = "CAS", model = "3compartmentss")
+```
+
+Now, loop over this list of chemicals. For each one, call `httk::calc_mc_css()`, using the specified population. Keep the 5th, 50th, and 95th quantiles of Css.
+
+First, do this for the new default: no race coefficient, add residual variability.
+
+Note that this is a big simulation job, and will likely take several minutes to run.
+
+```{r}
+system.time(
+  suppressWarnings(
+    css_list_new <- t(
+      sapply(
+        chemlist,
+                      calc_mc_css,
+                      suppress.messages = TRUE,
+                      samples = 5000,
+                      which.quantile = c(0.05, 0.5, 0.95),
+                      httkpop.generate.arg.list = list("method" = "d",
+                                 "gfr_resid_var" = TRUE,
+                                 "ckd_epi_race_coeff" = FALSE,
+                                 "reths"="Non-Hispanic Black")
+        )
+      )
+    )
+  )
+```
+
+Save these results as an .Rds file.
+```{r}
+saveRDS(css_list_new,
+        paste0(out_path,
+               "css_list_new.Rds")
+)
+```
+
+Now, repeat the simulations for the old status quo (using the race coefficient, not adding residual variability).
+
+```{r}
+system.time(
+  suppressWarnings(
+    css_list_old <- t(
+      sapply(chemlist,
+             calc_mc_css,
+             suppress.messages = TRUE,
+             samples = 5000,
+             which.quantile = c(0.05, 0.5, 0.95),
+             httkpop.generate.arg.list = list("method" = "d",
+                                              "gfr_resid_var" = FALSE,
+                                              "ckd_epi_race_coeff" = TRUE,
+                                              "reths"="Non-Hispanic Black")
+      )
+    )
+  )
+)
+
+#save as Rds file
+saveRDS(css_list_old,
+        paste0(out_path,
+               "css_list_old.Rds")
+)
+```
+
+Combine these two output matrices together into a single `data.table`, identifying which ones are the new default and which ones are the old status quo.
+```{r}
+css_list_new <- as.data.table(css_list_new)
+css_list_old <- as.data.table(css_list_old)
+setnames(css_list_new, names(css_list_new), c("P5", "P50", "P95"))
+setnames(css_list_old, names(css_list_old), c("P5", "P50", "P95"))
+css_list_new[, CASRN:=chemlist]
+css_list_old[, CASRN:=chemlist]
+css_list <- rbindlist(list("new"=css_list_new,
+                           "old"=css_list_old),
+                      idcol = "GFR")
+```
+
+Now, reshape the `data.table` into a longer format. Instead of having separate columns for the different Css percentiles, have one column identifying the percentile (P5, P50, or P95), and another column giving its value.
+
+```{r}
+css_melt <- melt(css_list,
+                 id.vars = c("GFR", "CASRN"),
+                 measure.vars = c("P5", "P50", "P95"),
+                 variable.name = "Percentile")
+```
+
+Now, reshape again, such that we have one column of percentile values for the "new" (ne default) case, and another column of percentile values for the "old" (previous status quo) case. This shape will make it easier to make a plot that contrasts old and new.
+
+```{r} 
+
+css_cast <- dcast(css_melt,
+                  CASRN + Percentile ~ GFR,
+                  value.var = "value")
+```
+
+Sort chemicals by 95th percentile Css. Create a factor-type variable to encode this ordering of the CASRNs. This will allow us to plot the chemicals sorted from lowest to highest Css95 (otherwise, `ggplot2` would by default plot them in alphabetical sort order by CASRN).
+
+```{r}
+css_sort <- setorder(css_list_new, P95)
+chem_sort <- css_sort[, CASRN]
+css_melt[, CASRN_cat:=factor(CASRN,
+                             levels = chem_sort)]
+css_cast[, CASRN_cat:=factor(CASRN,
+                             levels = chem_sort)]
+```
+
+Plot the percentiles for the "new default" case.
+
+```{r}
+ggplot(css_melt[GFR %in% "new"]) +
+  geom_point(aes(x = CASRN_cat,
+                 y = value,
+                 color = Percentile)) +
+  scale_color_brewer(palette="Set2") +
+  scale_y_log10() + annotation_logticks(sides="l")
+```
+
+Plot the percentiles for the "previous status quo" case.
+
+```{r}
+ggplot(css_melt[GFR %in% "old"]) +
+  geom_point(aes(x = CASRN_cat,
+                 y = value,
+                 color = Percentile)) +
+  scale_color_brewer(palette="Set2") +
+  scale_y_log10() + annotation_logticks(sides="l")
+```
+
+
+Now, compare the two cases. make one plot that shows the 5th percentile for the new case vs. the 5th percentile for the old case. Make another plot that shows the 50th percentile for the new case vs. the 50th percentile for the old case. Make a third plot that does the same for the 95th percentile for old and new cases. This is easily done using the `ggplot2::facet_wrap()` function.
+
+```{r}
+ggplot(css_cast) +
+  geom_point(aes(x=old,
+                 y = new,
+                 color = Percentile)
+             ) +
+  geom_abline(aes(slope=1,
+                  intercept=0)
+              ) +
+  scale_x_log10() +
+  scale_y_log10() +
+  annotation_logticks() +
+  facet_wrap(facets = vars(Percentile),
+             nrow = 3,
+             scales = "free") +
+  scale_color_brewer(palette = "Set2") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  geom_blank()
+```
+
+
+
+On a log scale, these look very similar.
+
+Let's zoom in on the 95th perecentile, the most sensitive 5\% of the population:
+
+```{r}
+ggplot(css_cast[Percentile %in% "P95"]) +
+  geom_point(aes(x=old,
+                 y = new),
+             color = "#8DA0CB"
+             ) +
+  geom_abline(aes(slope=1,
+                  intercept=0)
+              ) +
+  scale_x_log10() +
+  scale_y_log10() +
+  annotation_logticks() +
+  scale_color_brewer(palette = "Set2") +
+  theme_bw() +
+  theme(legend.position = "none")
+  geom_blank()
+```
+
+
+What is the difference between new and old?
+
+```{r}
+css_cast[, ratio_new_old:=new/old]
+css_cast[, ratio_old_new:=old/new]
+```
+
+```{r}
+ggplot(css_cast) +
+  geom_density(aes(x=ratio_new_old,
+                   color = Percentile),
+               size = 1) +
+  geom_vline(aes(xintercept = 1)) +
+  scale_color_brewer(palette = "Set2")
+```
+To the right of the vertical line, Css is higher, meaning that equivalent dose (bioactive conentration/Css) is lower, meaning that BER would be lower for the same exposure, meaning that potential risk is higher.
+
+Can simplify that to just "If Css is higher, then potential risk is also higher, assuming the same in vitro bioactive concentration and the same exposure."
+
+Note that for the purple curve -- the most-sensitive 5\% of the population -- most of the area under the curve lies to the right of the vertical line.
+
+In fact, 1.0 is what percentile?
+
+```{r}
+css_cast[Percentile %in% "P95", ecdf(ratio_new_old)(1.0)]
+```
+
+Meaning that how many chemicals have new Css95 higher than old Css95?
+
+```{r}
+1 - css_cast[Percentile %in% "P95", ecdf(ratio_new_old)(1.0)]
+```
+Almost 74\% of chemicals have new Css95 higher than old Css95. 
+
+But how much higher? And what would that mean in terms of change in equivalent dose?
+
+Change in equivalent dose is the multiplicative inverse of change in Css, ebcause equivalent dose is (bioactive concentration)/(Css for 1 mg/kg/day).
+
+So, we can plot it:
+
+```{r}
+ggplot(css_cast) +
+  geom_density(aes(x=1/ratio_new_old,
+                   color = Percentile),
+               size = 1) +
+  geom_vline(aes(xintercept = 1)) +
+  scale_color_brewer(palette = "Set2") +
+  xlab("Factor of change in equiv. dose")
+```
+
+What this is showing me is that, *in vitro* bioactivity and exposure levels being equal, the change in Css is going to reduce BERs by at maximum 30\%. There aren't very many chemicals where that reduction would make the difference between low risk and high risk. But, these results do show that the "race coefficient" in the way we calculate GFR could have resulted in mathematical bias in the way we estimate potential risk.
