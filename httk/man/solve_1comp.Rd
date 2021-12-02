@@ -74,6 +74,9 @@ output.units.  Defaults are zero.}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
+\item{output.units}{Output units expected for the model results. Default is
+"uM".}
+
 \item{method}{Method used by integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
