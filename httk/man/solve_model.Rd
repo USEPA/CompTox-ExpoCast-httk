@@ -72,9 +72,13 @@ lumen for oral route)}
 
 \item{tsteps}{The number of time steps per hour. Default of 4.}
 
-\item{initial.values}{Vector containing the initial concentrations or
-amounts of the chemical in specified tissues with units corresponding to
-those specified for the model outputs. Default values are zero.}
+\item{initial.values}{Vector of numeric values containing the initial
+concentrations or amounts of the chemical in specified tissues with units
+corresponding to those specified for the model outputs. Default values are zero.}
+
+\item{initial.value.units}{Vector of character strings containing the units
+corresponding to 'initial.values' specified for the model outputs.
+Default is assuming the units match expected compartment units for the model.}
 
 \item{plots}{Plots all outputs if true.}
 
