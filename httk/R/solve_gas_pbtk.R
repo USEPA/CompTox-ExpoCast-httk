@@ -112,6 +112,9 @@
 #' @param input.units Input units of interest assigned to dosing, including 
 #' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
 #' 
+#' @param output.units Output units expected for the model results. Default is
+#' "uM".
+#' 
 #' @param method Method used by integrator (deSolve).
 #' 
 #' @param rtol Argument passed to integrator (deSolve).
@@ -223,6 +226,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            suppress.messages=FALSE,
                            species="Human",
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
+                           output.units=NULL,
                            # input.units = "uM",
                            method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
@@ -347,7 +351,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    input.units = input.units,
+    input.units=input.units,
+    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
