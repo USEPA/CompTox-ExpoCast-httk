@@ -13,10 +13,10 @@ calc_analytic_css_gas(
   period = 24,
   exp.duration = 24,
   concentration = "plasma",
-  suppress.messages = F,
-  recalc.blood2plasma = F,
+  suppress.messages = FALSE,
+  recalc.blood2plasma = FALSE,
   tissue = NULL,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   vmax = 0,
   km = 1,
@@ -67,6 +67,11 @@ to rapid off-binding).}
 \item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
+
+\item{vmax}{Michaelis-Menten vmax value in reactions/min. (Default is 0.)}
+
+\item{km}{Michaelis-Menten concentration of half-maximal reaction velocity
+in desired output concentration units. (Default is 1.)}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

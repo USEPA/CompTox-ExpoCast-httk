@@ -33,6 +33,9 @@ estimate for fetal fup based on the fetal:maternal plasma protein binding
 ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
 Predictions in Infants." Defaults to TRUE.}
 
+\item{return.kapraun2019}{If TRUE (default) the empirical parameters for the
+Kapraun et al. (2019) maternal-fetal growth parameters are provided.}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{...}{Arguments passed to parameterize_pbtk.}
