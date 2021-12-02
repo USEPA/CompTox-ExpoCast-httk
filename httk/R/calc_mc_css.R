@@ -87,7 +87,11 @@
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
-#' \code{\link{calc_analytic_css}}.  
+#' \code{\link{calc_analytic_css}}.
+#' @param parameterize.args A list of arguments to be passed to the model
+#' parameterization function (that is, parameterize_MODEL) corresponding to
+#' argument "model". (Defaults to NULL.)  
+#' 
 #' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 #'
 #' @references 
