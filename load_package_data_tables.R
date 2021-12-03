@@ -46,7 +46,7 @@ write.table(flowdata,
 
 densitydata <- set.precision(read_excel(PKandTISSUEDATAFILE,
   sheet="Human Density"))[1:27,]
-write.table(flowdata,
+write.table(densitydata,
   file="Tissue-Density.txt",
   row.names=F,
   sep="\t")
@@ -113,7 +113,7 @@ for (this.col in c(
   "pH")) 
   tissuecompdata[,this.col] <- signif(as.numeric(tissuecompdata[,this.col]),4)
 # Write to text so Git can track changes:
-write.table(tissuevolflowdata,
+write.table(tissuecompdata,
   file="Tissue-Composition.txt",
   row.names=F,
   sep="\t")
