@@ -857,12 +857,30 @@ Set recalc.clearance to TRUE if desired.")
     
     if (!is.null(Rblood2plasma))
     {
-      cat("AUC is area under plasma concentration curve in ",
-        compartment_units[["AUC"]], " units with Rblood2plasma = ",
-        signif(Rblood2plasma,3),".\n",sep="")
+      if(model!="fetal_pbtk"){
+        cat("AUC is area under the plasma concentration curve in ",
+            compartment_units[["AUC"]], " units with Rblood2plasma = ",
+            signif(Rblood2plasma,3),".\n",sep="")
+      }else{
+        cat("AUC is area under the maternal plasma concentration curve in ",
+            compartment_units[["AUC"]], " units with Rblood2plasma = ",
+            signif(Rblood2plasma,3),".\n",
+            "fAUC is area under the fetal plasma concentration curve in ",
+            compartment_units[["fAUC"]], " units with Rfblood2plasma = ",
+            signif(Rfblood2plasma,3),".\n",
+            sep="")
+      }
     } else {
-      cat("AUC is area under plasma concentration curve in ",
-        compartment_units[["AUC"]], " units.\n",sep="")
+      if(model!="fetal_pbtk"){
+        cat("AUC is area under the plasma concentration curve in ",
+            compartment_units[["AUC"]], " units.\n",sep="")
+      }else{
+        cat("AUC is area under the maternal plasma concentration curve in ",
+            compartment_units[["AUC"]], " units.\n",
+            "fAUC is area under the fetal plasma concentration curve in ",
+            compartment_units[["fAUC"]], " units.\n",
+            sep="")
+      }
     }
   }
     
