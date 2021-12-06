@@ -63,7 +63,7 @@ convert_solve_x <- function(model.output.mat,
                             ...){
   # default compartment units; includes case 1, i.e. output.units is NULL
   compartment_units <- model.list[[model]]$compartment.units
-  ou <- compartment_units[which(names(compartment_units)%in%colnames(output.mat))]
+  ou <- compartment_units[which(names(compartment_units)%in%colnames(model.output.mat))]
     
   if(length(output.units)==1 & is.null(names(output.units))){
     # case 2: only one unit is provided with no specified compartment
@@ -116,7 +116,7 @@ convert_solve_x <- function(model.output.mat,
   
   # Set-up the default
   cf <- vector(length = length(ou)) %>% setNames(.,names(ou)) # conversion factor vector
-  out <- output.mat # output matrix to return
+  out <- model.output.mat # output matrix to return
 
   # Convert compartments in the model output matrix
   for(this.compartment in names(ou)){
@@ -142,7 +142,7 @@ convert_solve_x <- function(model.output.mat,
               " was not converted since the specified units are not supported.")
     }
     # re-set the values in the compartment column with converted values
-    out[,this.compartment] <- output.mat[,this.compartment]*cf[this.compartment]
+    out[,this.compartment] <- model.output.mat[,this.compartment]*cf[this.compartment]
   }
   
   # Print a matrix of desired output units and the conversion factors from
