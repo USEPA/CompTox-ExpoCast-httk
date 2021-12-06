@@ -112,8 +112,9 @@
 #' @param input.units Input units of interest assigned to dosing, including 
 #' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
 #' 
-#' @param output.units Output units expected for the model results. Default is
-#' "uM".
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' 
 #' @param method Method used by integrator (deSolve).
 #' 
