@@ -34,10 +34,12 @@
 #' @param ... Other parameters that can be passed to \code{convert_units}, e.g.
 #' temperature and compound state.  See details in \code{\link{convert_units}}.
 #' 
-#' @return A matrix with a column for time (in days), each
+#' @return 'new.ouput.matrix' A matrix with a column for time (in days), each
 #' compartment, and the area under the curve (AUC) and a row
 #' for each time point. The compartment and AUC columns are
 #' converted from model specified units to user specified units.
+#' @return 'output.units.vector' A vector of character strings providing the
+#' model compartments and their corresponding units after \code{convert_solve_x}.
 #' 
 #' @author Sarah E. Davidson
 #' 
@@ -150,6 +152,6 @@ convert_solve_x <- function(model.output.mat,
   if(!suppress.messages){
     print(cbind.data.frame(output.unit = ou,conversion.factor = cf))
   }
-  # Return the new converted output matrix.
-  return(out)
+  # Return the output units vector & new converted output matrix.
+  return(list(new.ouput.matrix = out,output.units.vector = ou))
 }
