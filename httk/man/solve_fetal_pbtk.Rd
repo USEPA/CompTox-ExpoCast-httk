@@ -21,6 +21,8 @@ solve_fetal_pbtk(
   plots = FALSE,
   suppress.messages = FALSE,
   iv.dose = FALSE,
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -78,6 +80,13 @@ compartment.units.  Defaults are zero.}
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
+
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
