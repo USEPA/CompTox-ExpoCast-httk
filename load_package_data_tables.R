@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Sep2021"
+SCRIPT.VERSION <- "Dec2021"
 
 ## R Packages ##
 library(reshape)
@@ -1289,6 +1289,37 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                   Funbound.plasma='CALC_FUP',
                                   Species='SPECIES'),overwrite=F,reference='Linakis 2020')
 
+dawson2021.training <- as.data.frame(readxl::read_xlsx(
+  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  sheet = 3))
+dawson2021.training <- subset(dawson2021.training, DTXSID != "-")
+chem.physical_and_invitro.data <- add_chemtable(dawson2021.training,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Chemical.Name',
+                                    CAS = 'CAS_CHEMBL_ID',
+                                    DTXSID='DTXSID',
+                                    Clint="Hepatic_Clearance"),
+                                  overwrite=FALSE,
+                                  reference = 'Dawson 2021',
+                                  species="Human")
+
+dawson2021.test <- as.data.frame(readxl::read_xlsx(
+  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  sheet = 4))
+dawson2021.test <- subset(dawson2021.test, DTXSID != "-")
+chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Chemical.Name',
+                                    CAS = 'CAS_CHEMBL_ID',
+                                    DTXSID='DTXSID',
+                                    Clint="Hepatic_Clearance"),
+                                  overwrite=FALSE,
+                                  reference = 'Dawson 2021',
+                                  species="Human")
+
+
 
 #
 #
@@ -1339,13 +1370,19 @@ cat("Enter \"c\" to continue when ready.\n")
 browser()
 
 #
+#
 # WAIT UNTIL TABLE IS DOWNLOADED FROM DASHBOARD
 #
+#
 
-
+#
+#
 #
 # READ IN DSSTOX INFORMATION
 #
+#
+#
+
 dsstox <- NULL
 for (i in 1:(length(blocks)-1))
 {
@@ -1483,10 +1520,14 @@ chem.physical_and_invitro.data[
   "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
+
+#
+#
 #
 # END TABLE chem.physical_and_invitro.data 
 #
-
+#
+#
 
 
 
