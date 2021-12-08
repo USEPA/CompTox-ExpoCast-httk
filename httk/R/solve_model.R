@@ -690,15 +690,15 @@ specification in compartment_units for model ", model)
 ### MODEL OUTPUT
   
   # Convert output to desired units
-  out <- convert_solve_x(model.output.mat = out,
-                         model = model,
-                         output.units = output.units,
-                         MW = MW,
-                         chem.cas = chem.cas,
-                         chem.name = chem.name,
-                         dtxsid = dtxsid,
-                         parameters = parameters,
-                         suppress.messages=suppress.messages)
+  # out <- convert_solve_x(model.output.mat = out,
+  #                        model = model,
+  #                        output.units = output.units,
+  #                        MW = MW,
+  #                        chem.cas = chem.cas,
+  #                        chem.name = chem.name,
+  #                        dtxsid = dtxsid,
+  #                        parameters = parameters,
+  #                        suppress.messages=suppress.messages)
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
