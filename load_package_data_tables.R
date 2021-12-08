@@ -45,7 +45,7 @@ write.table(flowdata,
   sep="\t")
 
 densitydata <- set.precision(read_excel(PKandTISSUEDATAFILE,
-  sheet="Human Density"))[1:27,]
+  sheet="Human Density"))[1:29,1:3]
 write.table(densitydata,
   file="Tissue-Density.txt",
   row.names=F,
@@ -112,6 +112,8 @@ for (this.col in c(
   "Fa_PLc",
   "pH")) 
   tissuecompdata[,this.col] <- signif(as.numeric(tissuecompdata[,this.col]),4)
+# Add tissue densities:
+tissuecompdata <- merge(tissuecompdata,densitydata[,1:2],by="Tissue",all.x=TRUE)
 # Write to text so Git can track changes:
 write.table(tissuecompdata,
   file="Tissue-Composition.txt",
@@ -125,6 +127,16 @@ tissuedata3 <- melt(tissuevolflowdata[,c("Tissue","Species","Flow (mL/min/kg^(3/
 colnames(tissuedata3)[3] <- "Reference"
 tissue.data <- rbind(tissuedata1,tissuedata2,tissuedata3)      
 tissue.data$Tissue <- tolower(tissue.data$Tissue)
+for (this.tissue in tolower(unique(densitydata$Tissue)))
+  if (this.tissue %in% tissue.data$Tissue)
+    tissue.data[tissue.data$variable=="Density (g/cm^3)" &
+      tissue.data$Tissue==this.tissue,"Reference"] <-
+      densitydata[tolower(densitydata$Tissue)==this.tissue,"Reference"]
+      
+write.table(tissue.data,
+  file="Tissue-data.txt",
+  row.names=F,
+  sep="\t")
 
 #
 # END TABLES physiology.data and tissue.data
