@@ -4,8 +4,15 @@ rm(list=ls())
 
 SCRIPT.VERSION <- "Sep2021"
 
+## R Packages ##
 library(reshape)
 library(readxl)
+library(dplyr)
+library(magrittr)
+library(stringr)
+
+# Useful function from HTTK (don't want to load the whole package since we're 
+# trying to build the package here)
 source("add_chemtable.R")
 
 set.precision <- function(x, sig.figs=4)
@@ -752,7 +759,6 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
 load("CASback.RData")
-library(stringr)
 Cory.newpKa <- ret.df
 Cory.newpKa[Cory.newpKa$CAS=="3764-87-2","Compound"] <- "Trestolone"
 # Dashboard prefers a different cas:
@@ -1636,10 +1642,7 @@ chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES
 #
 # Create dawson2021 Data
 #
-## R Package ##
-library(readxl)
-library(dplyr)
-library(magrittr)
+
 ## Load in Data ##
 dawson2021_full <- as.data.frame(readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
