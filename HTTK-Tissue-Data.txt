@@ -1,238 +1,264 @@
 Tissue	Species	Reference	variable	value
 adipose	Human	Schmitt 2008	Fcell	0.86
-bone	Human	Schmitt 2008	Fcell	0.9
-brain	Human	Schmitt 2008	Fcell	0.995
-gut	Human	Schmitt 2008	Fcell	0.9
-heart	Human	Schmitt 2008	Fcell	0.75
-kidney	Human	Schmitt 2008	Fcell	0.835
-liver	Human	Schmitt 2008	Fcell	0.77
-lung	Human	Schmitt 2008	Fcell	0.8
-muscle	Human	Schmitt 2008	Fcell	0.85
-skin	Human	Schmitt 2008	Fcell	0.4
-spleen	Human	Schmitt 2008	Fcell	0.745
-red blood cells	Human	Schmitt 2008	Fcell	1
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fcell	0.86
-placenta	Human	Httk estimate, various references needed; Lee 1972	Fcell	0.724
 adipose	Rat	Ruark 2014	Fcell	0.86
+bone	Human	Schmitt 2008	Fcell	0.9
 bone	Rat	Ruark 2014	Fcell	0.9
 brain	Rat	Ruark 2014	Fcell	0.838
+brain	Human	Schmitt 2008	Fcell	0.995
 gut	Rat	Ruark 2014	Fcell	0.9
+gut	Human	Schmitt 2008	Fcell	0.9
+heart	Human	Schmitt 2008	Fcell	0.75
 heart	Rat	Ruark 2014	Fcell	0.86
+kidney	Human	Schmitt 2008	Fcell	0.835
 kidney	Rat	Ruark 2014	Fcell	0.854
 liver	Rat	Ruark 2014	Fcell	0.873
+liver	Human	Schmitt 2008	Fcell	0.77
 lung	Rat	Ruark 2014	Fcell	0.675
+lung	Human	Schmitt 2008	Fcell	0.8
+muscle	Human	Schmitt 2008	Fcell	0.85
 muscle	Rat	Ruark 2014	Fcell	0.876
+placenta	Human	Httk estimate, various references needed; Lee 1972	Fcell	0.724
+red blood cells	Rat	Ruark 2014	Fcell	1
+red blood cells	Human	Schmitt 2008	Fcell	1
+skin	Human	Schmitt 2008	Fcell	0.4
 skin	Rat	Ruark 2014	Fcell	0.681
 spleen	Rat	Ruark 2014	Fcell	0.745
-red blood cells	Rat	Ruark 2014	Fcell	1
+spleen	Human	Schmitt 2008	Fcell	0.745
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fcell	0.86
 adipose	Human	Schmitt 2008	Fint	0.14
-bone	Human	Schmitt 2008	Fint	0.1
-brain	Human	Schmitt 2008	Fint	0.005
-gut	Human	Schmitt 2008	Fint	0.096
-heart	Human	Schmitt 2008	Fint	0.25
-kidney	Human	Schmitt 2008	Fint	0.165
-liver	Human	Schmitt 2008	Fint	0.23
-lung	Human	Schmitt 2008	Fint	0.2
-muscle	Human	Schmitt 2008	Fint	0.15
-skin	Human	Schmitt 2008	Fint	0.6
-spleen	Human	Schmitt 2008	Fint	0.255
-red blood cells	Human	Schmitt 2008	Fint	0
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fint	0.14
-placenta	Human	Httk estimate, various references needed; Lee 1972	Fint	0.276
 adipose	Rat	Ruark 2014	Fint	0.14
+bone	Human	Schmitt 2008	Fint	0.1
 bone	Rat	Ruark 2014	Fint	0.1
 brain	Rat	Ruark 2014	Fint	0.162
+brain	Human	Schmitt 2008	Fint	0.005
 gut	Rat	Ruark 2014	Fint	0.096
+gut	Human	Schmitt 2008	Fint	0.096
+heart	Human	Schmitt 2008	Fint	0.25
 heart	Rat	Ruark 2014	Fint	0.14
+kidney	Human	Schmitt 2008	Fint	0.165
 kidney	Rat	Ruark 2014	Fint	0.146
 liver	Rat	Ruark 2014	Fint	0.127
+liver	Human	Schmitt 2008	Fint	0.23
 lung	Rat	Ruark 2014	Fint	0.325
+lung	Human	Schmitt 2008	Fint	0.2
+muscle	Human	Schmitt 2008	Fint	0.15
 muscle	Rat	Ruark 2014	Fint	0.124
+placenta	Human	Httk estimate, various references needed; Lee 1972	Fint	0.276
+red blood cells	Rat	Ruark 2014	Fint	0
+red blood cells	Human	Schmitt 2008	Fint	0
+skin	Human	Schmitt 2008	Fint	0.6
 skin	Rat	Ruark 2014	Fint	0.319
 spleen	Rat	Ruark 2014	Fint	0.255
-red blood cells	Rat	Ruark 2014	Fint	0
+spleen	Human	Schmitt 2008	Fint	0.255
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fint	0.14
 adipose	Human	Schmitt 2008	FWc	0.02002
-bone	Human	Schmitt 2008	FWc	0.26
-brain	Human	Schmitt 2008	FWc	0.8043
-gut	Human	Schmitt 2008	FWc	0.78
-heart	Human	Schmitt 2008	FWc	0.6957
-kidney	Human	Schmitt 2008	FWc	0.7661
-liver	Human	Schmitt 2008	FWc	0.7244
-lung	Human	Schmitt 2008	FWc	0.8038
-muscle	Human	Schmitt 2008	FWc	0.7991
-skin	Human	Schmitt 2008	FWc	0.427
-spleen	Human	Schmitt 2008	FWc	0.7699
-red blood cells	Human	Schmitt 2008	FWc	0.6643
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FWc	0.69
-placenta	Human	Httk estimate, various references needed; Lee 1972	FWc	0.793
 adipose	Rat	Ruark 2014	FWc	0.02888
+bone	Human	Schmitt 2008	FWc	0.26
 bone	Rat	Ruark 2014	FWc	0.26
 brain	Rat	Ruark 2014	FWc	0.8029
+brain	Human	Schmitt 2008	FWc	0.8043
 gut	Rat	Ruark 2014	FWc	0.78
+gut	Human	Schmitt 2008	FWc	0.78
+heart	Human	Schmitt 2008	FWc	0.6957
 heart	Rat	Ruark 2014	FWc	0.764
+kidney	Human	Schmitt 2008	FWc	0.7661
 kidney	Rat	Ruark 2014	FWc	0.7536
 liver	Rat	Ruark 2014	FWc	0.6818
+liver	Human	Schmitt 2008	FWc	0.7244
 lung	Rat	Ruark 2014	FWc	0.7554
+lung	Human	Schmitt 2008	FWc	0.8038
+muscle	Human	Schmitt 2008	FWc	0.7991
 muscle	Rat	Ruark 2014	FWc	0.7768
+placenta	Human	Httk estimate, various references needed; Lee 1972	FWc	0.793
+red blood cells	Rat	Ruark 2014	FWc	0.664
+red blood cells	Human	Schmitt 2008	FWc	0.6643
+skin	Human	Schmitt 2008	FWc	0.427
 skin	Rat	Ruark 2014	FWc	0.522
 spleen	Rat	Ruark 2014	FWc	0.645
-red blood cells	Rat	Ruark 2014	FWc	0.664
+spleen	Human	Schmitt 2008	FWc	0.7699
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FWc	0.69
 adipose	Human	Schmitt 2008	FLc	0.934
-bone	Human	Schmitt 2008	FLc	0.02
-brain	Human	Schmitt 2008	FLc	0.1123
-gut	Human	Schmitt 2008	FLc	0.07
-heart	Human	Schmitt 2008	FLc	0.1375
-kidney	Human	Schmitt 2008	FLc	0.06407
-liver	Human	Schmitt 2008	FLc	0.09231
-lung	Human	Schmitt 2008	FLc	0.01316
-muscle	Human	Schmitt 2008	FLc	0.02387
-skin	Human	Schmitt 2008	FLc	0.2831
-spleen	Human	Schmitt 2008	FLc	0.03946
-red blood cells	Human	Schmitt 2008	FLc	0.00501
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FLc	0.05
-placenta	Human	Httk estimate, various references needed; Lee 1972	FLc	0.0083
 adipose	Rat	Ruark 2014	FLc	0.9192
+bone	Human	Schmitt 2008	FLc	0.02
 bone	Rat	Ruark 2014	FLc	0.02
 brain	Rat	Ruark 2014	FLc	0.1154
+brain	Human	Schmitt 2008	FLc	0.1123
 gut	Rat	Ruark 2014	FLc	0.07
+gut	Human	Schmitt 2008	FLc	0.07
+heart	Human	Schmitt 2008	FLc	0.1375
 heart	Rat	Ruark 2014	FLc	0.03288
+kidney	Human	Schmitt 2008	FLc	0.06407
 kidney	Rat	Ruark 2014	FLc	0.05266
 liver	Rat	Ruark 2014	FLc	0.0622
+liver	Human	Schmitt 2008	FLc	0.09231
 lung	Rat	Ruark 2014	FLc	0.0833
+lung	Human	Schmitt 2008	FLc	0.01316
+muscle	Human	Schmitt 2008	FLc	0.02387
 muscle	Rat	Ruark 2014	FLc	0.02319
+placenta	Human	Httk estimate, various references needed; Lee 1972	FLc	0.0083
+red blood cells	Rat	Ruark 2014	FLc	0.005015
+red blood cells	Human	Schmitt 2008	FLc	0.00501
+skin	Human	Schmitt 2008	FLc	0.2831
 skin	Rat	Ruark 2014	FLc	0.06383
 spleen	Rat	Ruark 2014	FLc	0.03957
-red blood cells	Rat	Ruark 2014	FLc	0.005015
+spleen	Human	Schmitt 2008	FLc	0.03946
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FLc	0.05
 adipose	Human	Schmitt 2008	FPc	0.04601
-bone	Human	Schmitt 2008	FPc	0.21
-brain	Human	Schmitt 2008	FPc	0.08341
-gut	Human	Schmitt 2008	FPc	0.15
-heart	Human	Schmitt 2008	FPc	0.1668
-kidney	Human	Schmitt 2008	FPc	0.1698
-liver	Human	Schmitt 2008	FPc	0.1833
-lung	Human	Schmitt 2008	FPc	0.183
-muscle	Human	Schmitt 2008	FPc	0.177
-skin	Human	Schmitt 2008	FPc	0.2898
-spleen	Human	Schmitt 2008	FPc	0.1907
-red blood cells	Human	Schmitt 2008	FPc	0.3307
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FPc	0.16
-placenta	Human	Httk estimate, various references needed; Lee 1972	FPc	0.1535
 adipose	Rat	Ruark 2014	FPc	0.05194
+bone	Human	Schmitt 2008	FPc	0.21
 bone	Rat	Ruark 2014	FPc	0.21
 brain	Rat	Ruark 2014	FPc	0.08173
+brain	Human	Schmitt 2008	FPc	0.08341
 gut	Rat	Ruark 2014	FPc	0.15
+gut	Human	Schmitt 2008	FPc	0.15
+heart	Human	Schmitt 2008	FPc	0.1668
 heart	Rat	Ruark 2014	FPc	0.2031
+kidney	Human	Schmitt 2008	FPc	0.1698
 kidney	Rat	Ruark 2014	FPc	0.1937
 liver	Rat	Ruark 2014	FPc	0.256
+liver	Human	Schmitt 2008	FPc	0.1833
 lung	Rat	Ruark 2014	FPc	0.1613
+lung	Human	Schmitt 2008	FPc	0.183
+muscle	Human	Schmitt 2008	FPc	0.177
 muscle	Rat	Ruark 2014	FPc	0.2
+placenta	Human	Httk estimate, various references needed; Lee 1972	FPc	0.1535
+red blood cells	Rat	Ruark 2014	FPc	0.331
+red blood cells	Human	Schmitt 2008	FPc	0.3307
+skin	Human	Schmitt 2008	FPc	0.2898
 skin	Rat	Ruark 2014	FPc	0.4142
 spleen	Rat	Ruark 2014	FPc	0.3154
-red blood cells	Rat	Ruark 2014	FPc	0.331
+spleen	Human	Schmitt 2008	FPc	0.1907
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	FPc	0.16
 adipose	Human	Schmitt 2008	Fn_Lc	0.9361
-bone	Human	Schmitt 2008	Fn_Lc	0.85
-brain	Human	Schmitt 2008	Fn_Lc	0.3734
-gut	Human	Schmitt 2008	Fn_Lc	0.69
-heart	Human	Schmitt 2008	Fn_Lc	0.8901
-kidney	Human	Schmitt 2008	Fn_Lc	0.6375
-liver	Human	Schmitt 2008	Fn_Lc	0.7244
-lung	Human	Schmitt 2008	Fn_Lc	0.3
-muscle	Human	Schmitt 2008	Fn_Lc	0.5394
-skin	Human	Schmitt 2008	Fn_Lc	0.3599
-spleen	Human	Schmitt 2008	Fn_Lc	0.5341
-red blood cells	Human	Schmitt 2008	Fn_Lc	0.4
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_Lc	0.92
-placenta	Human	Httk estimate, various references needed; Lee 1972	Fn_Lc	0.6273
 adipose	Rat	Ruark 2014	Fn_Lc	0.9977
+bone	Human	Schmitt 2008	Fn_Lc	0.85
 bone	Rat	Ruark 2014	Fn_Lc	0.85
 brain	Rat	Ruark 2014	Fn_Lc	0.9535
+brain	Human	Schmitt 2008	Fn_Lc	0.3734
 gut	Rat	Ruark 2014	Fn_Lc	0.69
+gut	Human	Schmitt 2008	Fn_Lc	0.69
+heart	Human	Schmitt 2008	Fn_Lc	0.8901
 heart	Rat	Ruark 2014	Fn_Lc	0.5214
+kidney	Human	Schmitt 2008	Fn_Lc	0.6375
 kidney	Rat	Ruark 2014	Fn_Lc	0.2925
 liver	Rat	Ruark 2014	Fn_Lc	0.3305
+liver	Human	Schmitt 2008	Fn_Lc	0.7244
 lung	Rat	Ruark 2014	Fn_Lc	0.5758
+lung	Human	Schmitt 2008	Fn_Lc	0.3
+muscle	Human	Schmitt 2008	Fn_Lc	0.5394
 muscle	Rat	Ruark 2014	Fn_Lc	0.5339
+placenta	Human	Httk estimate, various references needed; Lee 1972	Fn_Lc	0.6273
+red blood cells	Rat	Ruark 2014	Fn_Lc	0.2273
+red blood cells	Human	Schmitt 2008	Fn_Lc	0.4
+skin	Human	Schmitt 2008	Fn_Lc	0.3599
 skin	Rat	Ruark 2014	Fn_Lc	0.8075
 spleen	Rat	Ruark 2014	Fn_Lc	0.3656
-red blood cells	Rat	Ruark 2014	Fn_Lc	0.2273
+spleen	Human	Schmitt 2008	Fn_Lc	0.5341
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_Lc	0.92
 adipose	Human	Schmitt 2008	Fn_PLc	0.05607
-bone	Human	Schmitt 2008	Fn_PLc	0.11
-brain	Human	Schmitt 2008	Fn_PLc	0.4588
-gut	Human	Schmitt 2008	Fn_PLc	0.26
-heart	Human	Schmitt 2008	Fn_PLc	0.07901
-kidney	Human	Schmitt 2008	Fn_PLc	0.294
-liver	Human	Schmitt 2008	Fn_PLc	0.2251
-lung	Human	Schmitt 2008	Fn_PLc	0.56
-muscle	Human	Schmitt 2008	Fn_PLc	0.3817
-skin	Human	Schmitt 2008	Fn_PLc	0.5019
-spleen	Human	Schmitt 2008	Fn_PLc	0.393
-red blood cells	Human	Schmitt 2008	Fn_PLc	0.5
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_PLc	0.064
-placenta	Human	Httk estimate, various references needed; Lee 1972	Fn_PLc	0.2987
 adipose	Rat	Ruark 2014	Fn_PLc	0.001871
+bone	Human	Schmitt 2008	Fn_PLc	0.11
 bone	Rat	Ruark 2014	Fn_PLc	0.11
 brain	Rat	Ruark 2014	Fn_PLc	0.03667
+brain	Human	Schmitt 2008	Fn_PLc	0.4588
 gut	Rat	Ruark 2014	Fn_PLc	0.26
+gut	Human	Schmitt 2008	Fn_PLc	0.26
+heart	Human	Schmitt 2008	Fn_PLc	0.07901
 heart	Rat	Ruark 2014	Fn_PLc	0.3948
+kidney	Human	Schmitt 2008	Fn_PLc	0.294
 kidney	Rat	Ruark 2014	Fn_PLc	0.5849
 liver	Rat	Ruark 2014	Fn_PLc	0.5619
+liver	Human	Schmitt 2008	Fn_PLc	0.2251
 lung	Rat	Ruark 2014	Fn_PLc	0.3219
+lung	Human	Schmitt 2008	Fn_PLc	0.56
+muscle	Human	Schmitt 2008	Fn_PLc	0.3817
 muscle	Rat	Ruark 2014	Fn_PLc	0.3844
+placenta	Human	Httk estimate, various references needed; Lee 1972	Fn_PLc	0.2987
+red blood cells	Rat	Ruark 2014	Fn_PLc	0.6591
+red blood cells	Human	Schmitt 2008	Fn_PLc	0.5
+skin	Human	Schmitt 2008	Fn_PLc	0.5019
 skin	Rat	Ruark 2014	Fn_PLc	0.148
 spleen	Rat	Ruark 2014	Fn_PLc	0.489
-red blood cells	Rat	Ruark 2014	Fn_PLc	0.6591
+spleen	Human	Schmitt 2008	Fn_PLc	0.393
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fn_PLc	0.064
 adipose	Human	Schmitt 2008	Fa_PLc	0.007859
-bone	Human	Schmitt 2008	Fa_PLc	0.04
-brain	Human	Schmitt 2008	Fa_PLc	0.1678
-gut	Human	Schmitt 2008	Fa_PLc	0.05
-heart	Human	Schmitt 2008	Fa_PLc	0.0309
-kidney	Human	Schmitt 2008	Fa_PLc	0.06853
-liver	Human	Schmitt 2008	Fa_PLc	0.05051
-lung	Human	Schmitt 2008	Fa_PLc	0.14
-muscle	Human	Schmitt 2008	Fa_PLc	0.07884
-skin	Human	Schmitt 2008	Fa_PLc	0.1382
-spleen	Human	Schmitt 2008	Fa_PLc	0.07287
-red blood cells	Human	Schmitt 2008	Fa_PLc	0.1
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fa_PLc	0.014
-placenta	Human	Httk estimate, various references needed; Lee 1972	Fa_PLc	0.0738
 adipose	Rat	Ruark 2014	Fa_PLc	0.0004678
+bone	Human	Schmitt 2008	Fa_PLc	0.04
 bone	Rat	Ruark 2014	Fa_PLc	0.04
 brain	Rat	Ruark 2014	Fa_PLc	0.00978
+brain	Human	Schmitt 2008	Fa_PLc	0.1678
 gut	Rat	Ruark 2014	Fa_PLc	0.05
+gut	Human	Schmitt 2008	Fa_PLc	0.05
+heart	Human	Schmitt 2008	Fa_PLc	0.0309
 heart	Rat	Ruark 2014	Fa_PLc	0.0838
+kidney	Human	Schmitt 2008	Fa_PLc	0.06853
 kidney	Rat	Ruark 2014	Fa_PLc	0.1226
 liver	Rat	Ruark 2014	Fa_PLc	0.1076
+liver	Human	Schmitt 2008	Fa_PLc	0.05051
 lung	Rat	Ruark 2014	Fa_PLc	0.1023
+lung	Human	Schmitt 2008	Fa_PLc	0.14
+muscle	Human	Schmitt 2008	Fa_PLc	0.07884
 muscle	Rat	Ruark 2014	Fa_PLc	0.08169
+placenta	Human	Httk estimate, various references needed; Lee 1972	Fa_PLc	0.0738
+red blood cells	Rat	Ruark 2014	Fa_PLc	0.1136
+red blood cells	Human	Schmitt 2008	Fa_PLc	0.1
+skin	Human	Schmitt 2008	Fa_PLc	0.1382
 skin	Rat	Ruark 2014	Fa_PLc	0.04441
 spleen	Rat	Ruark 2014	Fa_PLc	0.1453
-red blood cells	Rat	Ruark 2014	Fa_PLc	0.1136
+spleen	Human	Schmitt 2008	Fa_PLc	0.07287
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	Fa_PLc	0.014
 adipose	Human	Schmitt 2008	pH	7.1
-bone	Human	Schmitt 2008	pH	7
-brain	Human	Schmitt 2008	pH	7.1
-gut	Human	Schmitt 2008	pH	7
-heart	Human	Schmitt 2008	pH	7.1
-kidney	Human	Schmitt 2008	pH	7.22
-liver	Human	Schmitt 2008	pH	7.23
-lung	Human	Schmitt 2008	pH	6.6
-muscle	Human	Schmitt 2008	pH	6.81
-skin	Human	Schmitt 2008	pH	7
-spleen	Human	Schmitt 2008	pH	7
-red blood cells	Human	Schmitt 2008	pH	7.2
-thyroid	Human	Pilari et al. 2017; Chow et al. 1982	pH	7.3
-placenta	Human	Httk estimate, various references needed; Lee 1972	pH	7.32
 adipose	Rat	Ruark 2014	pH	7.1
+bone	Human	Schmitt 2008	pH	7
 bone	Rat	Ruark 2014	pH	7
 brain	Rat	Ruark 2014	pH	7.1
+brain	Human	Schmitt 2008	pH	7.1
 gut	Rat	Ruark 2014	pH	7
+gut	Human	Schmitt 2008	pH	7
+heart	Human	Schmitt 2008	pH	7.1
 heart	Rat	Ruark 2014	pH	7.1
+kidney	Human	Schmitt 2008	pH	7.22
 kidney	Rat	Ruark 2014	pH	7.22
 liver	Rat	Ruark 2014	pH	7.23
+liver	Human	Schmitt 2008	pH	7.23
 lung	Rat	Ruark 2014	pH	6.6
+lung	Human	Schmitt 2008	pH	6.6
+muscle	Human	Schmitt 2008	pH	6.81
 muscle	Rat	Ruark 2014	pH	6.81
+placenta	Human	Httk estimate, various references needed; Lee 1972	pH	7.32
+red blood cells	Rat	Ruark 2014	pH	7.2
+red blood cells	Human	Schmitt 2008	pH	7.2
+skin	Human	Schmitt 2008	pH	7
 skin	Rat	Ruark 2014	pH	7
 spleen	Rat	Ruark 2014	pH	7
-red blood cells	Rat	Ruark 2014	pH	7.2
+spleen	Human	Schmitt 2008	pH	7
+thyroid	Human	Pilari et al. 2017; Chow et al. 1982	pH	7.3
+adipose	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	0.916
+adipose	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	0.916
+bone	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.976
+bone	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.976
+brain	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.035
+brain	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.035
+gut	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.044
+gut	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.044
+heart	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.03
+heart	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.03
+kidney	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+kidney	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+liver	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+liver	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+lung	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+lung	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.05
+muscle	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.041
+muscle	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.041
+placenta	Human	Del Nero (2002)	Density (g/cm^3)	1.02
+red blood cells	Rat	Sun and Sethu (2017)	Density (g/cm^3)	1.08
+red blood cells	Human	Sun and Sethu (2017)	Density (g/cm^3)	1.08
+skin	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.117
+skin	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.117
+spleen	Rat	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.054
+spleen	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.054
+thyroid	Human	EPA, Physiological Parameters Database for PBPK Modeling	Density (g/cm^3)	1.051
 adipose	Human	ILSI-RSI 1994	Vol (L/kg)	0.2086
 bone	Human	ILSI-RSI 1994	Vol (L/kg)	0.07231
 brain	Human	ILSI-RSI 1994	Vol (L/kg)	0.01931

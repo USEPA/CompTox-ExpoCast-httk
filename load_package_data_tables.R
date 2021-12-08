@@ -1403,7 +1403,7 @@ dsstox <- NULL
 for (i in 1:(length(blocks)-1))
 {
   dsstox <- rbind(dsstox,
-    read.csv(paste("HTTK-DSSTox-output-",i,".tsv",sep=""),sep="\t"))
+    read.csv(paste("HTTK-DSSTox-output-",i,".tsv",sep="")))
 }
 
 # Get rid of the ones that weren't found:
@@ -1449,7 +1449,7 @@ cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPER
 cat("Save Dashboard output (tsv) to HTTK-NoCASMatch-DSSTox-output.tsv.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
-dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv",sep="\t")
+dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv")
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
