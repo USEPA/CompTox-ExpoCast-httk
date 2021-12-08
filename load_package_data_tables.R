@@ -1355,6 +1355,14 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
 # STOP TO GET NEW PHYSCHEM
 #
 
+# Replace bad CAS where we have DTXSID's
+chem.physical_and_invitro.data[
+  !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
+  !(is.na(chem.physical_and_invitro.data$DTXSID)),"CAS"] <-
+  chem.physical_and_invitro.data[
+  !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
+  !(is.na(chem.physical_and_invitro.data$DTXSID)),"DTXSID"]
+
 # Update with DSSTox Information
 # Have to chop this into chunks because the dashboard batch mode can't handle
 # more than 5000 chemicals at once (going with 2000 now for sanity's sake)
