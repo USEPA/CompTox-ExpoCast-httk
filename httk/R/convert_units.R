@@ -101,7 +101,7 @@ convert_units <- function(input.units = NULL,
     if(input.units!=output.units){
       stop(
         "User specified 'unitless' for a model compartment that has units, ",
-        "or alternatively specified units compartment that is unitless. "
+        "or alternatively specified units compartment that is 'unitless'. "
       )
     }else{
       conversion_factor <- 1
