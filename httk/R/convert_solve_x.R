@@ -137,11 +137,16 @@ convert_solve_x <- function(model.output.mat,
     if(class(cf.tmp)!="try-error"){
       cf[this.compartment] <- cf.tmp
     }else{
-      # save missing since unit conversion is not applicable
-      cf[this.compartment] <- NA
       # print a warning
       warning(this.compartment,
-              " was not converted since the specified units are not supported.")
+              " was not converted since the specified units '", ou[this.compartment],
+              "' are not supported. ",
+              "Units are set back to the default model compartment units, (i.e. '",
+              compartment_units[this.compartment],
+              "'), and the conversion factor is 1.")
+      # save missing since unit conversion is not applicable
+      cf[this.compartment] <- 1
+      ou[this.compartment] <- compartment_units[this.compartment]
     }
     # re-set the values in the compartment column with converted values
     out[,this.compartment] <- model.output.mat[,this.compartment]*cf[this.compartment]
