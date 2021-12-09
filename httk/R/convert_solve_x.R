@@ -71,15 +71,15 @@ convert_solve_x <- function(model.output.mat,
     # case 2: only one unit is provided with no specified compartment
     if(tolower(output.units)%in%c('um','umol')){
       ou[grepl(names(ou),pattern = "^A") & names(ou)!="AUC"] <- 'umol'
-      ou[names(ou)=="AUC"] <- 'uM*days'
+      ou[grepl(names(ou),pattern = "AUC$")] <- 'uM*days'
       ou[grepl(names(ou),pattern = "^C")] <- 'uM'
     }else if(tolower(output.units)%in%c('mg/l','mg')){
       ou[grepl(names(ou),pattern = "^A") & names(ou)!="AUC"] <- 'mg'
-      ou[names(ou)=="AUC"] <- 'mg/l*days'
+      ou[grepl(names(ou),pattern = "AUC$")] <- 'mg/l*days'
       ou[grepl(names(ou),pattern = '^C')] <- 'mg/l'
     }else if(tolower(output.units)=='ppmv'){
       ou[grepl(names(ou),pattern = "^A") & names(ou)!="AUC"] <- 'umol'
-      ou[names(ou)=="AUC"] <- 'ppmv*days'
+      ou[grepl(names(ou),pattern = "AUC$")] <- 'ppmv*days'
       ou[grepl(names(ou),pattern = '^C')] <- 'ppmv'
     }else{
       warning("The provided output.units '",output.units,"' are not currently supported.\n  ",
