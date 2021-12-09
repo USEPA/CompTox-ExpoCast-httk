@@ -51,10 +51,13 @@ includes MW (molecular weight) for our conversions.}
 temperature and compound state.  See details in \code{\link{convert_units}}.}
 }
 \value{
-A matrix with a column for time (in days), each
+'new.ouput.matrix' A matrix with a column for time (in days), each
 compartment, and the area under the curve (AUC) and a row
 for each time point. The compartment and AUC columns are
 converted from model specified units to user specified units.
+
+'output.units.vector' A vector of character strings providing the
+model compartments and their corresponding units after \code{convert_solve_x}.
 }
 \description{
 This function is designed to convert compartment values estimated from one
@@ -70,6 +73,14 @@ compartments.
 
 More details on the unit conversion can be found in the documentation for
 \code{\link{convert_units}}.
+}
+\examples{
+output.mat <- solve_1comp(dtxsid = "DTXSID0020573")
+new.output.mat <- convert_solve_x(output.units = "mg",
+                                  model.output.mat = output.mat,
+                                  model = "1compartment",
+                                  dtxsid = "DTXSID0020573")
+
 }
 \seealso{
 convert_units
