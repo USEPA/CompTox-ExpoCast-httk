@@ -43,7 +43,7 @@
 #' 
 #' @author Sarah E. Davidson
 #' 
-#' @example 
+#' @examples 
 #' output.mat <- solve_1comp(dtxsid = "DTXSID0020573")
 #' new.output.mat <- convert_solve_x(output.units = "mg",
 #'                                   model.output.mat = output.mat,
