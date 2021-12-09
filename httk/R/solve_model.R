@@ -688,17 +688,19 @@ specification in compartment_units for model ", model)
   out <- set_httk_precision(out)
   
 ### MODEL OUTPUT
-  
+
   # Convert output to desired units
-  # out <- convert_solve_x(model.output.mat = out,
-  #                        model = model,
-  #                        output.units = output.units,
-  #                        MW = MW,
-  #                        chem.cas = chem.cas,
-  #                        chem.name = chem.name,
-  #                        dtxsid = dtxsid,
-  #                        parameters = parameters,
-  #                        suppress.messages=suppress.messages)
+  cu.out <- convert_solve_x(model.output.mat = out,
+                            model = model,
+                            output.units = output.units,
+                            MW = MW,
+                            chem.cas = chem.cas,
+                            chem.name = chem.name,
+                            dtxsid = dtxsid,
+                            parameters = parameters,
+                            suppress.messages=suppress.messages)
+  # Re-assign 'out' with the new output from 'cu.out'
+  out <- cu.out[['new.ouput.matrix']]
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
@@ -783,6 +785,20 @@ Set recalc.clearance to TRUE if desired.")
             sep="")
       }
     }
+    
+    # Units for output message
+    out.units <- cu.out[['output.units.vector']]
+    # Message to report the output units
+    cat("The model outputs are provided in the following units:\n")
+      for(u in unique(out.units)){
+        cat(
+          paste0(
+            "\t",u,": ",
+            paste(names(out.units)[which(out.units==u)],collapse = ", ")
+            ),sep = "\n"
+          )
+      }
+    cat("\n")
   }
     
   return(set_httk_precision(out)) 
