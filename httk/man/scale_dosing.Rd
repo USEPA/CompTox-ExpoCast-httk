@@ -28,6 +28,10 @@ overrides chem.name and chem.cas.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 
+\item{input.units}{Units of the dose values being scaled. (Default is NULL.) 
+Currently supported units "mg/L", "ug/L","ug/mL", "uM", "umol/L", "ug/dL",
+"ug/g", "nmol/L", "nM", and "ppmw" (supported input.units subject to change).}
+
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
 

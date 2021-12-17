@@ -40,6 +40,8 @@
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param input.units Input units of interest assigned to dosing, defaults to
 #' mg/kg BW. 
+#' @param output.units Output units expected for the model results. Default is
+#' "uM".
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.

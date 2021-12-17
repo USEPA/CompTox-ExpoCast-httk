@@ -65,9 +65,12 @@
 #' lumen for oral route)
 #' @param days Simulated period. Default 10 days. 
 #' @param tsteps The number of time steps per hour. Default of 4. 
-#' @param initial.values Vector containing the initial concentrations or
-#' amounts of the chemical in specified tissues with units corresponding to
-#' those specified for the model outputs. Default values are zero.
+#' @param initial.values Vector of numeric values containing the initial
+#' concentrations or amounts of the chemical in specified tissues with units
+#' corresponding to those specified for the model outputs. Default values are zero.
+#' @param initial.value.units Vector of character strings containing the units
+#' corresponding to 'initial.values' specified for the model outputs.
+#' Default is assuming the units match expected compartment units for the model.
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #' @param species Species desired (models have been designed to be
