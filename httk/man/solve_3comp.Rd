@@ -21,7 +21,7 @@ solve_3comp(
   species = "Human",
   iv.dose = FALSE,
   input.units = "mg/kg",
-  output.units = "uM",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -79,8 +79,9 @@ default "Human").}
 \item{input.units}{Input units of interest assigned to dosing,
 defaults to mg/kg BW}
 
-\item{output.units}{Output units expected for the model results. Default is
-"uM".}
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
