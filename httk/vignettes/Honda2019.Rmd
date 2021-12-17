@@ -75,7 +75,7 @@ armitage.dt[,well_number:=384] %>%
 # Make sure we have data for the chemical:
 armitage.dt <- subset(armitage.dt,casrn%in%get_cheminfo())
 # These chemicals are missing water solubilities:
-armitage.dt <- subset(armitage.dt,!(casrn%in%c("71751-41-2","34590-94-8","1024-57-3")))
+armitage.dt <- subset(armitage.dt,!(casrn%in%c("71751-41-2","34590-94-8","141517-21-7")))
 
 armitage.dt2 <- armitage_estimate_sarea(tcdata = armitage.dt)
 armitage_output1 <- armitage_eval(tcdata = armitage.dt2[,ac50:=50])
