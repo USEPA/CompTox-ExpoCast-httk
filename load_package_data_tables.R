@@ -1293,10 +1293,6 @@ dawson2021.training <- as.data.frame(readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 3))
 dawson2021.training <- subset(dawson2021.training, DTXSID != "-")
-dawson2021.training[
-  regexpr("CHEMBL",dawson2021.training$CAS_CHEMBL_ID)!=-1, "CAS_CHEMBL_ID"] <- 
-  dawson2021.training[
-  regexpr("CHEMBL",dawson2021.training$CAS_CHEMBL_ID)!=-1, "DTXSID"] 
 chem.physical_and_invitro.data <- add_chemtable(dawson2021.training,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
@@ -1312,10 +1308,6 @@ dawson2021.test <- as.data.frame(readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 4))
 dawson2021.test <- subset(dawson2021.test, DTXSID != "-")
-dawson2021.test[
-  regexpr("CHEMBL",dawson2021.test$CAS_CHEMBL_ID)!=-1, "CAS_CHEMBL_ID"] <- 
-  dawson2021.test[
-  regexpr("CHEMBL",dawson2021.test$CAS_CHEMBL_ID)!=-1, "DTXSID"] 
 chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
