@@ -20,6 +20,7 @@ solve_3comp(
   suppress.messages = FALSE,
   species = "Human",
   iv.dose = FALSE,
+  input.units = "mg/kg",
   output.units = "uM",
   method = "lsoda",
   rtol = 1e-08,
@@ -75,6 +76,12 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
+\item{input.units}{Input units of interest assigned to dosing,
+defaults to mg/kg BW}
+
+\item{output.units}{Output units expected for the model results. Default is
+"uM".}
+
 \item{method}{Method used by integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
@@ -113,9 +120,6 @@ Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules",
 "Ametabolized", "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{input.units}{Input units of interest assigned to dosing,
-defaults to mg/kg BW}
 }
 \value{
 A matrix of class deSolve with a column for time(in days) and each
