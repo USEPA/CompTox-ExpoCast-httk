@@ -52,6 +52,11 @@
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param iv.dose Simulates a single i.v. dose if true.
+#' @param input.units Input units of interest assigned to dosing, defaults to
+#' mg/kg BW
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -106,6 +111,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              plots=FALSE,
                              suppress.messages=FALSE,
                              iv.dose=FALSE,
+                             input.units='mg/kg',
+                             output.units=NULL,
                              method="lsoda",rtol=1e-8,atol=1e-12, #begin.css = F,
                              default.to.human=FALSE,
                              recalc.blood2plasma=FALSE,
@@ -146,6 +153,8 @@ describe human gestation.")
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species='Human', #other species not (yet) supported by solve_fetal_pbtk
+    input.units=input.units,
+    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,

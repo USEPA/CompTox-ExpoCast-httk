@@ -90,12 +90,24 @@ convert_units <- function(input.units = NULL,
                           temp = 25, 
                           state="liquid")
 {
-# The volume of an ideal gas at this temperatre (L/mol)
+# The volume of an ideal gas at this temperature (L/mol)
   volidealgas <- (273.15 + temp)*0.08205
 
   #Take the lower case form of the units requested
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
+  
+  if(any(c(input.units,output.units)=='unitless')){
+    if(input.units!=output.units){
+      stop(
+        "User specified 'unitless' for a model compartment that has units, ",
+        "or alternatively specified units compartment that is 'unitless'. "
+      )
+    }else{
+      conversion_factor <- 1
+      return(set_httk_precision(conversion_factor))
+    }
+  }
   
   #Conditional block that checks if enough info is available to retrieve
   #MW value and use in determining conversion factor:
