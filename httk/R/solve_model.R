@@ -688,116 +688,19 @@ specification in compartment_units for model ", model)
   out <- set_httk_precision(out)
   
 ### MODEL OUTPUT
-  
-  #Check if there are any output.units provided by the user
-  if(!is.null(output.units)){
-    #Check if the output.units is a single value
-    if(length(output.units)==1){
-      if(output.units=='mg/l'){
-        # assume for 'mg/l' the compartments in amounts should be 'mg'
-        output.amounts <- 'mg'
-      }else{
-        # assume for 'uM' and 'ppmv' the compartments in amounts
-        # should be 'umol'
-        output.amounts <- 'umol'
-      }
-      out <- sapply(colnames(out),function(x){
-        if(x=="time"){
-          return(out[,x])
-        }else{
-          if(grepl(x,pattern = "^C")){
-            return(
-              out[,x]*convert_units(input.units = compartment_units[x],
-                                    output.units = output.units,
-                                    MW = MW)
-            )
-          }else if(grepl(x,pattern = "^A") & x!="AUC"){
-            return(
-              out[,x]*convert_units(input.units = compartment_units[x],
-                                    output.units = output.amounts,
-                                    MW = MW)
-            )
-          }else{
-            return(out[,x])
-          }
-        }
-      })
-    }else if(length(output.units)>1){
-      #Check if 'output.units' is a named vector linking values with
-      #model components
-      if(is.null(names(output.units))){
-        stop("The output.units for the model, ",
-             model,
-             ", should be named a named vector with corresponding compartments.")
-      }
-      #Check if 'output.units' are specified only for state or output variables
-      if(any(!(names(output.units)%in%colnames(out)))){
-        #Obtain any output units that ARE NOT IN the out matrix to TOSS
-        non.out.vars <- names(output.units)[
-          which(!(colnames(out)%in%names(output.units)))
-        ]
-        #Obtain any output units that ARE IN the out matrix to KEEP
-        keep.out.vars <- names(output.units)[
-          which((colnames(out)%in%names(output.units)))
-        ] 
-        #Subset to only state.vars
-        output.units <- output.units[keep.out.vars]
-        #Check if there are any non.out.vars
-        if(length(non.state.vars)!=0){
-          warning("Additional unnecessary elements were included in the",
-                  "output.units -- namely ",
-                  paste(non.out.vars,collapse = ", "),".\n    ",
-                  "These variables were removed from the output units.")
-        }
-      }
-      #Note that the results from the ODE are obtained, convert output to the
-      #desired units specified by the user
-      for(this.compartment in colnames(out)){
-        #Check if the compartment/variable is in the output.units argument
-        if(this.compartment%in%names(output.units)){
-          #Obtain units for conversion
-          # provided initial value units
-          given.units <- output.units[this.compartment]
-          # required model value units
-          model.units <- compartment_units[this.compartment]
-          
-          # # volume for the tissue
-          # # (1) get all tissues with volume from param_names
-          # all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
-          # # (2) get the potential volume tissue string with string update
-          # tissue.string <- paste0(stringr::str_replace(this.compartment,
-          #                                              pattern = "^A|^C",
-          #                                              replacement = "V"),"c")
-          # 
-          # # (3) Check if the tissue string is in all.tissue.vols,
-          # #     yes then get the provided parameter
-          # #     no then return null value
-          # #   (a) Check if the length of tissues with a volume in the parameter names is 0.
-          # if(length(all.tissue.vols)==0){
-          #   tissue.vol <- NULL
-          # }else if(tissue.string%in%all.tissue.vols){
-          #   tissue.vol <- parameters[[tissue.string]]*parameters[["BW"]]
-          # }else{
-          #   tissue.vol <- NULL
-          # }
-          # print(tissue.string)
-          # print(tissue.vol)
-          
-          output_conversion_factor <- convert_units(
-            input.units = model.units,
-            output.units = given.units,
-            MW = MW) #,
-            # vol = tissue.vol)
-        }else{
-          # If the compartment is not in the output.units assume the user wants
-          # the default model units
-          output_conversion_factor <- 1
-        }
-        #Now apply conversion factor to each relevant entry
-        out[,this.compartment] <- out[,this.compartment]*output_conversion_factor
-      }
-    }
-  }
+
+  # Convert output to desired units
+  cu.out <- convert_solve_x(model.output.mat = out,
+                            model = model,
+                            output.units = output.units,
+                            MW = MW,
+                            chem.cas = chem.cas,
+                            chem.name = chem.name,
+                            dtxsid = dtxsid,
+                            parameters = parameters,
+                            suppress.messages=suppress.messages)
+  # Re-assign 'out' with the new output from 'cu.out'
+  out <- cu.out[['new.ouput.matrix']]
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
@@ -857,13 +760,45 @@ Set recalc.clearance to TRUE if desired.")
     
     if (!is.null(Rblood2plasma))
     {
-      cat("AUC is area under plasma concentration curve in ",
-        compartment_units[["AUC"]], " units with Rblood2plasma = ",
-        signif(Rblood2plasma,3),".\n",sep="")
+      if(model!="fetal_pbtk"){
+        cat("AUC is area under the plasma concentration curve in ",
+            compartment_units[["AUC"]], " units with Rblood2plasma = ",
+            signif(Rblood2plasma,3),".\n",sep="")
+      }else{
+        cat("AUC is area under the maternal plasma concentration curve in ",
+            compartment_units[["AUC"]], " units with Rblood2plasma = ",
+            signif(Rblood2plasma,3),".\n",
+            "fAUC is area under the fetal plasma concentration curve in ",
+            compartment_units[["fAUC"]], " units with Rfblood2plasma = ",
+            signif(Rfblood2plasma,3),".\n",
+            sep="")
+      }
     } else {
-      cat("AUC is area under plasma concentration curve in ",
-        compartment_units[["AUC"]], " units.\n",sep="")
+      if(model!="fetal_pbtk"){
+        cat("AUC is area under the plasma concentration curve in ",
+            compartment_units[["AUC"]], " units.\n",sep="")
+      }else{
+        cat("AUC is area under the maternal plasma concentration curve in ",
+            compartment_units[["AUC"]], " units.\n",
+            "fAUC is area under the fetal plasma concentration curve in ",
+            compartment_units[["fAUC"]], " units.\n",
+            sep="")
+      }
     }
+    
+    # Units for output message
+    out.units <- cu.out[['output.units.vector']]
+    # Message to report the output units
+    cat("The model outputs are provided in the following units:\n")
+      for(u in unique(out.units)){
+        cat(
+          paste0(
+            "\t",u,": ",
+            paste(names(out.units)[which(out.units==u)],collapse = ", ")
+            ),sep = "\n"
+          )
+      }
+    cat("\n")
   }
     
   return(set_httk_precision(out)) 
