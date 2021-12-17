@@ -26,6 +26,7 @@ solve_gas_pbtk(
   suppress.messages = FALSE,
   species = "Human",
   input.units = "ppmv",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -107,6 +108,10 @@ default "Human").}
 
 \item{input.units}{Input units of interest assigned to dosing, including 
 forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
