@@ -144,10 +144,6 @@ calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 
 calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 
-calc_analytic_css(chem.name="pyrene",route="inhalation",model="gas_pbtk")
-
-calc_analytic_css(chem.cas="129-00-0",route="inhalation",model="gas_pbtk")
-
 params <- parameterize_pbtk(chem.cas="80-05-7") 
 
 calc_analytic_css(parameters=params,model="pbtk")
