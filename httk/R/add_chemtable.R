@@ -9,12 +9,9 @@
 #' by an increasing digit (1, 2, 3...) and sum as we work from right to left.
 #' The check digit should equal the final digit of the sum.
 #' 
-#' @param cas.string A charater string of three numbers separated by two dashes
+#' @param CAS.string A character string of three numbers separated by two dashes
 #'
-#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
-#' table, otherwise they are ignored.
-#'
-#' @return logical (TRUE if final digit of CAS is consistent with other digtits)
+#' @return logical (TRUE if final digit of CAS is consistent with other digits)
 #' 
 #' @author John Wambaugh
 #' 
