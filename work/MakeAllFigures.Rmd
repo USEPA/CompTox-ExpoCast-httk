@@ -1,0 +1,2357 @@
+---
+title: "Honda et al. (unsubmitted): Analysis and Figure Generation"
+author: "Greg Honda"
+date: "August 3, 2020"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{Honda et al. (unsubmitted): Analysis and Figure Generation}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+wambaugh.john@epa.gov
+
+## Abstract
+Apical-to-basolateral (PAB) and basolateral-to-apical (PBA) measurements were made in the Caco-2 assay for 484 environmental and pharmaceutical chemicals. After filtering, 310 chemicals had a useable PAB and 396 had a useable PBA. Replicates (> 30) were measured for the control chemicals Warfarin, Talinolol, and Ranitidine. Measurement uncertainty was high (SD: 0.3 log10 units) for the low permeability control (Ranitidine). Of our measured PAB, > 80% had high PAB (> 10x10-6 cm/s). Our measured PAB were combined with literature values to develop a classification quantitative-structure-property relationship (QSPR) model, with a balanced accuracy of 80% for the test set. Measured PAB were also used to predict in vivo oral bioavailability (Fbio,h)in human for pharmaceuticals, and performed slightly better (R2: -0.03, RMSE: 0.30) than assuming a fixed value for PAB. Additionally, measured PAB were used for prediction of in vivo oral bioavailability in rat, which resulted in improved prediction of maximum concentration (previous R2: 0.32, updated R2: 0.70). Finally, measurement uncertainty was accounted for in estimates of oral-equivalent dose (OED) from ToxCast in vitro assays for a simulated population using a Monte-Carlo method. OED were subsequently compared with exposure estimates, and the influence of different extrapolation assumptions on the bioactivity-to-exposure ratio (BER) was evaluated. Generally, the large measurement uncertainty for low PAB makes the use of Caco-2 data for accurate prediction of point values difficult. However, accounting for uncertainty enables the upper limits for oral bioavailability to be accurately represented in calculation of OED.
+
+## Prepare for session
+### Set the figure size
+```{r knitr_setup}
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+knitr::opts_knit$set(root.dir = 
+  "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Documents/Research Projects/Caco2/Honda_Caco2/")
+```
+
+### Load the relevant libraries
+```{r r_setup}
+
+packages <- c("ggplot2","hexbin","dplyr","gplots","httk","RColorBrewer",
+        "viridis","data.table","magrittr",
+        "stringr","gridExtra","stringi","RMySQL","DBI","grid","xlsx","lattice",
+        "gtable","ggpubr","randomForest","caret","recipes","quantregForest",
+        "tcpl")
+sapply(packages, require,character.only=TRUE) #Note, the "character.only" argument is necessary her
+```
+### Clear memory
+```{r clear_memory}
+# Delete all objects from memory:
+rm(list=ls())
+```
+
+###
+```{r load_custom_scripts}
+loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Documents/Research Projects/Caco2/Honda_Caco2/"
+source(paste0(loc.wd,"/r_scripts/Honda_Caco2_utilities.R"))
+#source('C:/Users/GHONDA/Documents/HTTKOralRoute/gh_ionization_functions.R')
+#source("C:/Users/GHONDA/Documents/R homebrew/chemprop_connect/query_dsstox.measchemprop.R")
+#source('C:/Users/GHONDA/Documents/HTTKOralRoute/r_scripts/rf_train.R')
+#source("C:/Users/GHONDA/Documents/HTTKOralRoute/r_scripts/Honda_Caco2_fullmodel.R")
+
+
+```
+
+## ANALYSIS
+
+
+### Data summary for chemical properties
+```{r summary}
+low_rec_co <- 0.4
+high_rec_co <- 2
+gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
+                axis.text.y = element_text(size=10, color = "black",face="bold"),
+                legend.text = element_text(size = 10),
+                legend.title = element_text(size = 10),
+                legend.key.size = unit(10, "points"),
+                panel.background = element_rect(fill="white"),
+                axis.line = element_line(color="black"),
+                axis.ticks.y = element_line(color="black"),
+                legend.position = "top",
+                axis.line.x=element_line(color="black"),
+                axis.ticks.x=element_line(color="black"),
+                axis.text.x = element_text(size = 10,face="bold",color="black"),
+                plot.title = element_text(hjust=0,size=12,face="bold"))
+```
+
+##### histograms #####
+# Raw Data
+```{r something}
+{ 
+  load(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_processed.RData"))
+  caco2.QC <- fread(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_line101_short.csv"))
+  
+  caco2.QC[,1] <- NULL
+  
+  caco2.dt <- caco2.QC[caco2.dt,on=.(test_article,dtxsid,task_order,file_id)]
+  caco2.dt <- copy(caco2.dt)
+  caco2.dt[, comment_ab3 := as.character(comment_ab3)] %>% 
+    .[!is.na(update_Pab1),Pab1:=update_Pab1] %>% 
+    .[!is.na(update_Pab2),Pab2:=update_Pab2] %>% 
+    .[!is.na(update_Pab3),Pab3:=update_Pab3] %>% 
+    .[!is.na(update_rec_ab1),rec_ab1:=update_rec_ab1] %>% 
+    .[!is.na(update_rec_ab2),rec_ab2:=update_rec_ab2] %>% 
+    .[!is.na(update_rec_ab3),rec_ab3:=update_rec_ab3] %>% 
+    .[!is.na(update_Pba1),Pba1:=update_Pba1] %>% 
+    .[!is.na(update_Pba2),Pba2:=update_Pba2] %>% 
+    .[!is.na(update_Pba3),Pba3:=update_Pba3] %>% 
+    .[!is.na(update_rec_ba1),rec_ba1:=update_rec_ba1] %>% 
+    .[!is.na(update_rec_ba2),rec_ba2:=update_rec_ba2] %>% 
+    .[!is.na(update_rec_ba3),rec_ba3:=update_rec_ba3] %>% 
+    .[comment_ab1=="",comment_ab1:=NA_character_] %>% 
+    .[comment_ab2=="",comment_ab2:=NA_character_] %>% 
+    .[comment_ab3=="",comment_ab3:=NA_character_] %>%
+    .[is.na(comment_ab1) & Pab1_orig=="ND",comment_ab1:="ND"] %>% 
+    .[is.na(comment_ab2) & Pab2_orig=="ND",comment_ab2:="ND"] %>% 
+    .[is.na(comment_ab3) & Pab3_orig=="ND",comment_ab3:="ND"] %>% 
+    .[comment_ba1=="",comment_ba1:=NA_character_] %>% 
+    .[comment_ba2=="",comment_ba2:=NA_character_] %>% 
+    .[comment_ba3=="",comment_ba3:=NA_character_] %>%
+    .[is.na(comment_ba1) & Pba1_orig=="ND",comment_ba1:="ND"] %>% 
+    .[is.na(comment_ba2) & Pba2_orig=="ND",comment_ba2:="ND"] %>% 
+    .[is.na(comment_ba3) & Pba3_orig=="ND",comment_ba3:="ND"] %>%
+    .[Pab1 <= 0, comment_ab1:="ND"] %>% 
+    .[Pab2 <= 0, comment_ab2:="ND"] %>% 
+    .[Pab3 <= 0, comment_ab3:="ND"] %>% 
+    .[Pba1 <= 0, comment_ba1:="ND"] %>% 
+    .[Pba2 <= 0, comment_ba2:="ND"] %>% 
+    .[Pba3 <= 0, comment_ba3:="ND"] %>% 
+    .[Pab1 <= 0, Pab1:=NA_real_] %>% 
+    .[Pab2 <= 0, Pab2:=NA_real_] %>% 
+    .[Pab3 <= 0, Pab3:=NA_real_] %>% 
+    .[Pba1 <= 0, Pba1:=NA_real_] %>% 
+    .[Pba2 <= 0, Pba2:= NA_real_] %>% 
+    .[Pba3 <= 0, Pba3:= NA_real_] %>% 
+    .[!(is.na(comment_ab1)|comment_ab1 %in% c("LOD","low_rec")),Pab1:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab1) | rec_ab1 < low_rec_co | rec_ab1 > high_rec_co, Pab1:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab1) & rec_ab1 < low_rec_co, comment_ab1:="low_rec"] %>% 
+    .[is.na(comment_ab1) & rec_ab1 > high_rec_co, comment_ab1:="high_rec"] %>% 
+    .[!(is.na(comment_ab2)|comment_ab2 %in% c("LOD","low_rec")),Pab2:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab2) | rec_ab2 < low_rec_co | rec_ab2 > high_rec_co, Pab2:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab2) & rec_ab2 < low_rec_co, comment_ab2:="low_rec"] %>% 
+    .[is.na(comment_ab2) & rec_ab2 > high_rec_co, comment_ab2:="high_rec"] %>% 
+    .[!(is.na(comment_ab3)|comment_ab3 %in% c("LOD","low_rec")),Pab3:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab3) | rec_ab3 < low_rec_co | rec_ab3 > high_rec_co, Pab3:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab3) & rec_ab3 < low_rec_co, comment_ab3:="low_rec"] %>% 
+    .[is.na(comment_ab3) & rec_ab3 > high_rec_co, comment_ab3:="high_rec"] %>% 
+    .[!(is.na(comment_ba1)|comment_ba1 %in% c("LOD","low_rec")),Pba1:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba1) | rec_ba1 < low_rec_co | rec_ba1 > high_rec_co, Pba1:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba1) & rec_ba1 < low_rec_co, comment_ba1:="low_rec"] %>% 
+    .[is.na(comment_ba1) & rec_ba1 > high_rec_co, comment_ba1:="high_rec"] %>% 
+    .[!(is.na(comment_ba2)|comment_ba2 %in% c("LOD","low_rec")),Pba2:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba2) | rec_ba2 < low_rec_co | rec_ba2 > high_rec_co, Pba2:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba2) & rec_ba2 < low_rec_co, comment_ba2:="low_rec"] %>% 
+    .[is.na(comment_ba2) & rec_ba2 > high_rec_co, comment_ba2:="high_rec"] %>% 
+    .[!(is.na(comment_ba3)|comment_ba3 %in% c("LOD","low_rec")),Pba3:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba3) | rec_ba3 < low_rec_co | rec_ba3 > high_rec_co, Pba3:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba3) & rec_ba3 < low_rec_co, comment_ba3:="low_rec"] %>% 
+    .[is.na(comment_ba3) & rec_ba3 > high_rec_co, comment_ba3:="high_rec"]
+}
+
+# Filter Caco2.dt
+{
+  caco2.filt <- copy(caco2.dt)
+  caco2.filt[!(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+           rec_ab:=mean(c(rec_ab1,rec_ab2,rec_ab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                                     (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                                     (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(rec_ab1,rec_ab2,rec_ab3)] %>% 
+    .[!(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      sd_rec_ab:=sd(c(rec_ab1,rec_ab2,rec_ab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                                 (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                                 (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(rec_ab1,rec_ab2,rec_ab3)] %>% 
+    .[!(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      rec_ba:=mean(c(rec_ba1,rec_ba2,rec_ba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                                (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                                (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(rec_ba1,rec_ba2,rec_ba3)] %>% 
+    .[!(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      sd_rec_ba:=sd(c(rec_ba1,rec_ba2,rec_ba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                                 (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                                 (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(rec_ba1,rec_ba2,rec_ba3)] %>% 
+    .[!(is.na(Pab1)&is.na(Pab2)&is.na(Pab3)) & !(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      Pab_c:=mean(c(Pab1,Pab2,Pab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                      (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                      (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm = T),.(Pab1,Pab2,Pab3)] %>% 
+    .[!(is.na(Pab1)&is.na(Pab2)&is.na(Pab3)) & !(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      sd_Pab:=sd(c(Pab1,Pab2,Pab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                     (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                     (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(Pab1,Pab2,Pab3)] %>% 
+    .[!(is.na(Pba1)&is.na(Pba2)&is.na(Pba3)) & !(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      Pba_c:=mean(c(Pba1,Pba2,Pba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                      (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                      (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(Pba1,Pba2,Pba3)] %>% 
+    .[!(is.na(Pba1)&is.na(Pba2)&is.na(Pba3)) & !(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      sd_Pba := sd(c(Pba1,Pba2,Pba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                       (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                       (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(Pba1,Pba2,Pba3)]
+  
+  caco2.filt[,Pab:=Pab_c] %>% 
+    .[,Pba:=Pba_c]
+  caco2.filt[,batch_id:=batch_guess]  
+  caco2.filt[casrn=="106-47-8",compound:="4-Chloroaniline"] %>% 
+    .[casrn=="33228-44-3",compound:="4-Pentylaniline"]
+  caco2.filt[casrn == "66357-35-5", c("compound", "dtxsid") := list("Ranitidine", "DTXSID8045191")] %>% 
+    .[casrn == "57460-41-0", c("compound", "dtxsid") := list("Talinolol", "DTXSID6046426")] %>% 
+    .[casrn == "81-81-2", c("compound", "dtxsid") := list("Warfarin", "DTXSID5023742")]
+  
+}
+
+# recovery vs permeability graphs - S1
+{
+
+  lmstat1 <- summary(lm(Pab ~ rec_ab, data = caco2.filt))
+  lmstat2 <- summary(lm(Pab/rec_ab ~ rec_ab, data = caco2.filt))
+  lmstat3 <- summary(lm(Pba ~ rec_ba, data = caco2.filt))
+  lmstat4 <- summary(lm(Pba/rec_ba ~ rec_ba, data = caco2.filt))
+  
+  
+  labl.dt1 <- data.table(x = 0.5,
+                         y = c(120,100),
+                         labl = c("p*'-'*value:~'<'~0.001",
+                                  paste0("R^2: ", signif(lmstat1$r.squared,2))))
+  labl.dt2 <- data.table(x = 0.5,
+                         y = c(120,100),
+                         labl = c(paste0("p*'-'*value: ", signif(lmstat2$coefficients[2,4],2)),
+                                  paste0("R^2: ", signif(lmstat2$r.squared,2))))
+  labl.dt3 <- data.table(x = 0.5,
+                         y = c(120,100),
+                         labl = c("p*'-'*value:~'<'~0.001",
+                                  paste0("R^2: ", signif(lmstat3$r.squared,2))))
+  labl.dt4 <- data.table(x = 0.5,
+                         y = c(120,100),
+                         labl = c(paste0("p*'-'*value: ", signif(lmstat2$coefficients[2,4],2)),
+                                  paste0("R^2: ", signif(lmstat4$r.squared,2))))
+  
+  # getsign <- function(x){
+  #   
+  #   if(x < 0){
+  #     y <- "-"
+  #   }else{
+  #     y <- "+"
+  #   }
+  #   return(y)
+  # }
+  
+  g1 <- ggplot(caco2.filt) +
+    geom_point(aes(x = rec_ab, y = Pab), 
+               fill = "grey90", color = "black",
+               size = 3, shape = 16, alpha = 0.5) +
+    geom_smooth(aes(x = rec_ab, y = Pab), method = "lm")+
+    geom_text(data = labl.dt1,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    lims(y= c(0,150))+
+    labs(x = expression(bold("Recovery")[bolditalic("AB")]), 
+         y = expression(bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("a)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 150,ymax = 150,xmax = 0.4, xmin = 0.4)
+  print(g1)
+  g2 <- ggplot(caco2.filt) +
+    geom_point(aes(x = rec_ab, y = Pab/rec_ab), 
+               fill = "grey90", color = "black",
+               size = 3, shape = 16, alpha = 0.5) +
+    geom_smooth(aes(x = rec_ab, y = Pab/rec_ab), method = "lm")+
+    geom_text(data = labl.dt2,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    lims(y = c(0,150))+
+    labs(x = expression(bold("Recovery")[bolditalic("AB")]), 
+         y = expression(bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("a)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 150,ymax = 150,xmax = 0.4, xmin = 0.4)
+  g3 <- ggplot(caco2.filt) +
+    geom_point(aes(x = rec_ba, y = Pba), 
+               fill = "grey90", color = "black",
+               size = 3, shape = 16, alpha = 0.5) +
+    geom_smooth(aes(x = rec_ba, y = Pba), method = "lm")+
+    geom_text(data = labl.dt3,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    lims(y= c(0,160))+
+    labs(x = expression(bold("Recovery")[bolditalic("BA")]), 
+         y = expression(bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("b)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 150,ymax = 150,xmax = 0.4, xmin = 0.4)
+  g4 <- ggplot(caco2.filt) +
+    geom_point(aes(x = rec_ba, y = Pba/rec_ba), 
+               fill = "grey90", color = "black",
+               size = 3, shape = 16, alpha = 0.5) +
+    geom_smooth(aes(x = rec_ba, y = Pba/rec_ba), method = "lm")+
+    geom_text(data = labl.dt4,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    lims(y = c(0,160))+
+    labs(x = expression(bold("Recovery")[bolditalic("BA")]), 
+         y = expression(bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("b)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 150,ymax = 150,xmax = 0.4, xmin = 0.4)
+  
+  ggsave(g1, file = paste0(loc.wd, "/r_data/results_for_paper/s1a_recab_v_Pab1.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/recab_v_Pab2.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3, file = paste0(loc.wd, "/r_data/results_for_paper/s1b_recba_v_Pba1.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g4, file = paste0(loc.wd, "/r_data/results_for_paper/recba_v_Pba2.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+}
+
+
+
+caco2.filt[, Pab0 := Pab] %>% 
+  .[, Pba0 := Pba] %>% 
+  .[, Pab := Pab/rec_ab] %>% 
+  .[, Pba := Pba/rec_ba] %>% 
+  .[, efflux0 := Pba0/Pab0] %>% 
+  .[, efflux.ratio := Pba/Pab] %>% 
+  .[, Pab := log10(Pab)] %>% 
+  .[, Pba := log10(Pba)] %>% 
+  .[, Pab0 := log10(Pab0)] %>% 
+  .[, Pba0 := log10(Pba0)]
+
+# batch control pab vs upper and lower 5th percentiles - S2
+{
+  names(caco2.filt)
+  caco2.5perc <- copy(caco2.filt)
+  s2.dt <- caco2.5perc[, hcPab := Pab[casrn == "81-81-2" & t_type == "control"], .(batch_id)] %>% 
+    .[, lcPab := Pab[casrn == "66357-35-5" & t_type == "control"], .(batch_id)] %>% 
+    .[, Pab95 := quantile(Pab[t_type != "control"], 0.95, na.rm = TRUE), .(batch_id)] %>% 
+    .[, Pab05 := quantile(Pab[t_type != "control"], 0.05, na.rm = TRUE), .(batch_id)] %>% 
+    .[,.(hcPab, lcPab, Pab95, Pab05, batch_id)] %>% 
+    unique(.)
+  
+  g1 <- ggplot(s2.dt) +
+    geom_point(aes(x = hcPab, y = Pab95), 
+               fill = "grey90", color = "black",
+               size = 3, shape = 16, alpha = 0.5) +
+    labs(x = expression(bold("Warfarin log"["10"])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)')), 
+         y = expression(bold("95%")~bold("log"["10"])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw()+
+    gtheme
+  #print(g1)
+  ggsave(g1, file = paste0(loc.wd, "/r_data/results_for_paper/S2figure.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  
+}
+caco2.perchem <- caco2.filt[,
+                            .(mPab = mean(Pab, na.rm = T),
+                              sdPab = sd(Pab, na.rm = T),
+                              mPba = mean(Pba, na.rm = T),
+                              sdPba = sd(Pba, na.rm = T),
+                              mPab0 = mean(Pab0, na.rm = T),
+                              sdPab0 = sd(Pab0, na.rm = T),
+                              mPba0 = mean(Pba0, na.rm = T),
+                              sdPba0 = sd(Pba0, na.rm = T),
+                              mefflux = mean(log10(efflux.ratio), na.rm = T),
+                              sdefflux = sd(log10(efflux.ratio), na.rm = T),
+                              mefflux0 = mean(efflux0, na.rm = T),
+                              sdefflux0 = sd(efflux0, na.rm = T),
+                              mrec_ab = mean(rec_ab, na.rm = T),
+                              mrec_ba = mean(rec_ba, na.rm = T),
+                              sdrec_ab = sd(rec_ab, na.rm = T),
+                              sdrec_ba = sd(rec_ba, na.rm = T),
+                              ntotal_recab = sum(!is.na(rec_ab)),
+                              ntotal_recba = sum(!is.na(rec_ba)),
+                              ntotal = .N,
+                              ntotal_ab = sum(!is.na(Pab)),
+                              ntotal_ba = sum(!is.na(Pba)),
+                              ntotal_efflux = sum(!is.na(log10(efflux.ratio)))),
+                            .(casrn, dtxsid, compound)]
+```
+###
+```{r something}
+# Permeability histograms
+{
+  labl.dt1 <- data.table(x = -2.5, y = 100,
+                      labl = paste0("Total Count: ",
+                                    caco2.perchem[,.N,.(x1 = !is.na(mPab))][x1 == TRUE, N])) 
+  # Pab chems - 310
+  labl.dt2 <- data.table(x = -2.5, y= 100,
+                      labl = paste0("Total Count: ",
+                                    caco2.perchem[,.N,.(x1 = !is.na(mPba))][x1 == TRUE, N])) # Pba chems - 396
+  labl.dt3 <- data.table(x = 1, y = 40,
+                        labl = paste0("Total Count: ",
+                                      caco2.perchem[,.N,.(x1 = !is.na(mPab) & !is.na(mPba))][x1 == TRUE, N])) # efflux chems - 306
+  min(caco2.perchem[,.(mPab,mPba,mPab0,mPba0)], na.rm = T)
+  max(caco2.perchem[,.(mPab,mPba,mPab0,mPba0)], na.rm = T)
+  
+  g1a <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = mPab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1, aes(x=x, y=y, label = labl), hjust = 0)+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-3.5,2.5),
+         y = c(0, 140))+
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("a)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 130,ymax = 130,xmax = -3, xmin = -3)
+  g1b <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = mPba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2, aes(x=x, y=y, label = labl), hjust = 0)+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-3.5,2.5),
+         y = c(0, 140))+
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("b)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 130,ymax = 130,xmax = -3, xmin = -3)
+  g1c <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = log10(mefflux)), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3, aes(x=x, y=y, label = labl), hjust = 0)+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    theme_bw()+
+    gtheme+
+    annotation_custom(grob = text_grob("c)", hjust = 0, size = 12, face = "bold"), 
+                      ymin = 70,ymax = 70,xmax = -1.2, xmin = -1.2)
+  
+  g2a <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = mPab0), fill= "grey80", color = "black")+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-3.5,2.5),
+         y = c(0, 140))+
+    theme_bw()+
+    gtheme
+  g2b <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = mPba0), fill= "grey80", color = "black")+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-3.5,2.5),
+         y = c(0, 140))+
+    theme_bw()+
+    gtheme
+  g2c <- ggplot(caco2.perchem)+
+    geom_histogram(aes(x = log10(mefflux0)), fill= "grey80", color = "black")+
+    labs(y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    theme_bw()+
+    gtheme
+
+
+    
+  ggsave(g1a, file = paste0(loc.wd, "/r_data/results_for_paper/f2a_mPab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g1b, file = paste0(loc.wd, "/r_data/results_for_paper/f2b_mPba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g1c, file = paste0(loc.wd, "/r_data/results_for_paper/f2c_mefflux_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  ggsave(g2a, file = paste0(loc.wd, "/r_data/results_for_paper/mPab0_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g2b, file = paste0(loc.wd, "/r_data/results_for_paper/mPba0_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g2c, file = paste0(loc.wd, "/r_data/results_for_paper/mefflux0_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  min(caco2.filt[casrn == "81-81-2",.(Pab,Pba,Pab0,Pba0)], na.rm = T)
+  max(caco2.filt[casrn == "81-81-2",.(Pab,Pba,Pab0,Pba0)], na.rm = T)
+  labl.dt1a <- caco2.perchem[casrn == "81-81-2",.(labl = c(paste0("Mean: ",signif(mPab,2)),
+                                                            paste0("SD: ", signif(sdPab,2)),
+                                                            paste0("Total Count: ", ntotal_ab)),
+                                                   x = 0.65,
+                                                   y = c(13,11,9))]
+  labl.dt1b <- caco2.perchem[casrn == "81-81-2",.(labl = c(paste0("Mean: ",signif(mPba,2)),
+                                                          paste0("SD: ", signif(sdPba,2)),
+                                                          paste0("Total Count: ", ntotal_ba)),
+                                                 x = 0.5,
+                                                 y = c(8,7,6))]
+  labl.dt1c <- caco2.perchem[casrn == "81-81-2",.(labl = c(paste0("Mean: ",signif(mefflux,2)),
+                                                          paste0("SD: ", signif(sdefflux,2)),
+                                                          paste0("Total Count: ", ntotal_efflux)),
+                                                 x = -1,
+                                                 y = c(8,7,6))]
+  
+  labl.dt1d <- caco2.perchem[casrn == "81-81-2",.(labl = c(paste0("Mean: ",signif(mrec_ab,2)),
+                                                              paste0("SD: ", signif(sdrec_ab,2)),
+                                                              paste0("Total Count: ", ntotal_recab
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(7,6,5))]
+  labl.dt1e <- caco2.perchem[casrn == "81-81-2",.(labl = c(paste0("Mean: ",signif(mrec_ba,2)),
+                                                              paste0("SD: ", signif(sdrec_ba,2)),
+                                                              paste0("Total Count: ", ntotal_recba
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(10,8,6))]
+  g3a <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = Pab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1a,aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    scale_x_continuous(breaks = c(1, 1.5, 2),limits = c(0.5,2.5), expand = c(0,0))+
+    scale_y_continuous(breaks = c(0, 5, 10, 15))+
+    theme_bw()+
+    gtheme
+  #print(g3a)
+  g4a <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = Pab0), fill= "grey80", color = "black")+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-0.5,2.5),y = c(0, 17.5))+
+    theme_bw()+
+    gtheme
+  g3b <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = Pba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1b,aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(0.5,1.75))+
+    theme_bw()+
+    gtheme
+  print(g3b)
+  g4b <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = Pba0), fill= "grey80", color = "black")+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-0.5,2.5), y = c(0, 17.5))+
+    theme_bw()+
+    gtheme
+  g3c <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = log10(efflux.ratio)), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1c,aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  g4c <- ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = efflux0), fill= "grey80", color = "black")+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  g3d <- 
+    ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = rec_ab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1d, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("AB")])) +
+    lims(x = c(0,2.2))+
+    theme_bw()+
+    gtheme
+  g3e <- 
+    ggplot(caco2.filt[casrn == "81-81-2",])+
+    geom_histogram(aes(x = rec_ba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt1e, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "a) Warfarin",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("BA")])) +
+    lims(x = c(0,2.2))+
+    theme_bw()+
+    gtheme
+  
+  ggsave(g3a, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_Pab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3b, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_Pba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3c, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_efflux_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3d, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_recab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3e, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_recba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  # ggsave(g4a, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_Pab0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4b, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_Pba0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4c, file = paste0(loc.wd, "/r_data/results_for_paper/warfarin_efflux0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  labl.dt2a <- caco2.perchem[casrn == "57460-41-0",.(labl = c(paste0("Mean: ",signif(mPab,2)),
+                                                                 paste0("SD: ", signif(sdPab,2)),
+                                                                 paste0("Total Count: ", ntotal_ab)),
+                                                   x = -0.75,
+                                                   y = c(7.5,6.5,5.5))]
+  labl.dt2b <- caco2.perchem[casrn == "57460-41-0",.(labl = c(paste0("Mean: ",signif(mPba,2)),
+                                                             paste0("SD: ", signif(sdPba,2)),
+                                                             paste0("Total Count: ", ntotal_ba)),
+                                                    x = -1,
+                                                    y = c(7.5,6.5,5.5))]
+  labl.dt2c <- caco2.perchem[casrn == "57460-41-0",.(labl = c(paste0("Mean: ",signif(mefflux,2)),
+                                                             paste0("SD: ", signif(sdefflux,2)),
+                                                             paste0("Total Count: ", ntotal_efflux)),
+                                                    x = 0,
+                                                    y = c(7.5,6.5,5.5))]
+  labl.dt2d <- caco2.perchem[casrn == "57460-41-0",.(labl = c(paste0("Mean: ",signif(mrec_ab,2)),
+                                                              paste0("SD: ", signif(sdrec_ab,2)),
+                                                              paste0("Total Count: ", ntotal_recab
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(10,8,6))]
+  labl.dt2e <- caco2.perchem[casrn == "57460-41-0",.(labl = c(paste0("Mean: ",signif(mrec_ba,2)),
+                                                              paste0("SD: ", signif(sdrec_ba,2)),
+                                                              paste0("Total Count: ", ntotal_recba
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(10,8,6))]
+  g3a <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = Pab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2a, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    scale_y_continuous(breaks = c(0,5,10), limits = c(0,10))+
+    scale_x_continuous(breaks = c(-1.5, -1.0, -0.5, 0.0), limits = c(-1.75,0.25), expand = c(0,0))+
+    theme_bw()+
+    gtheme
+  print(g3a)
+  g4a <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = Pab0), fill= "grey80", color = "black")+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-2.5,0.5))+
+    theme_bw()+
+    gtheme
+  g3b <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = Pba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2b, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-1,2.5))+
+    theme_bw()+
+    gtheme
+  g4b <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = Pba0), fill= "grey80", color = "black")+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-0.5,2.5))+
+    theme_bw()+
+    gtheme
+  g3c <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = log10(efflux.ratio)), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2c, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  g4c <- ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = efflux0), fill= "grey80", color = "black")+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  g3d <- 
+    ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = rec_ab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2d, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("AB")])) +
+    lims(x = c(0,2.2))+
+    theme_bw()+
+    gtheme
+  g3e <- 
+    ggplot(caco2.filt[casrn == "57460-41-0",])+
+    geom_histogram(aes(x = rec_ba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt2e, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "b) Talinolol",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("BA")])) +
+    lims(x = c(0,2.2))+
+    theme_bw()+
+    gtheme
+  
+  ggsave(g3a, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_Pab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3b, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_Pba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3c, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_efflux_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3d, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_recab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3e, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_recba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  # ggsave(g4a, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_Pab0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4b, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_Pba0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4c, file = paste0(loc.wd, "/r_data/results_for_paper/Talinolol_efflux0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  labl.dt3a <- caco2.perchem[casrn == "66357-35-5",.(labl = c(paste0("Mean: ",signif(mPab,2)),
+                                                            paste0("SD: ", signif(sdPab,2)),
+                                                            paste0("Total Count: ", ntotal_ab
+                                                                   )),
+                                                   x = -1.5,
+                                                   y = c(8,7,6))]
+  labl.dt3b <- caco2.perchem[casrn == "66357-35-5",.(labl = c(paste0("Mean: ",signif(mPba,2)),
+                                                             paste0("SD: ", signif(sdPba,2)),
+                                                             paste0("Total Count: ", ntotal_ba
+                                                             )),
+                                                    x = -1,
+                                                    y = c(7,6,5))]
+  labl.dt3c <- caco2.perchem[casrn == "66357-35-5",.(labl = c(paste0("Mean: ",signif(mefflux,2)),
+                                                             paste0("SD: ", signif(sdefflux,2)),
+                                                             paste0("Total Count: ", ntotal_efflux
+                                                             )),
+                                                    x = 0,
+                                                    y = c(4,3.5,3))]
+  labl.dt3d <- caco2.perchem[casrn == "66357-35-5",.(labl = c(paste0("Mean: ",signif(mrec_ab,2)),
+                                                              paste0("SD: ", signif(sdrec_ab,2)),
+                                                              paste0("Total Count: ", ntotal_recab
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(7,6,5))]
+  labl.dt3e <- caco2.perchem[casrn == "66357-35-5",.(labl = c(paste0("Mean: ",signif(mrec_ba,2)),
+                                                              paste0("SD: ", signif(sdrec_ba,2)),
+                                                              paste0("Total Count: ", ntotal_recba
+                                                              )),
+                                                     x = 1.25,
+                                                     y = c(10,8,6))]
+  
+  g3a <- ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = Pab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3a, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    scale_x_continuous(limits = c(-1.75,0.25), breaks = c(-1.5, -1.0, -0.5, 0.0), expand = c(0,0))+
+    scale_y_continuous(breaks = c(0,5,10), labels = c(0,5,10), limits = c(0,10))+
+    theme_bw()+
+    gtheme
+  print(g3a)
+  g4a <- ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = Pab0), fill= "grey80", color = "black")+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-2,1))+
+    theme_bw()+
+    gtheme
+  g3b <- ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = Pba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3b, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-1,2))+
+    theme_bw()+
+    gtheme
+  g4b <- ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = Pba0), fill= "grey80", color = "black")+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
+    lims(x = c(-1,2))+
+    theme_bw()+
+    gtheme
+  g3c <- 
+    ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = log10(efflux.ratio)), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3c, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  g3d <- 
+    ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = rec_ab), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3d, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("AB")])) +
+    lims(x = c(0,2.2))+
+    scale_y_continuous(breaks = c(0,5,10))+
+    theme_bw()+
+    gtheme
+  g3e <- 
+    ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = rec_ba), fill= "grey80", color = "black")+
+    geom_text(data = labl.dt3e, aes(x = x, y= y, label = labl), hjust = 0)+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("Recovery")[bolditalic("BA")])) +
+    lims(x = c(0,2.2))+
+    theme_bw()+
+    gtheme
+
+  g4c <- ggplot(caco2.filt[casrn == "66357-35-5",])+
+    geom_histogram(aes(x = efflux0), fill= "grey80", color = "black")+
+    labs(title = "c) Ranitidine",
+         y = expression(bold("Count")), 
+         x = expression(bold("log"['10'])*bold("Efflux Ratio"))) +
+    #lims(x = c(0.75,2.25))+
+    theme_bw()+
+    gtheme
+  
+  ggsave(g3a, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_Pab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3b, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_Pba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3c, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_efflux_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3d, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_recab_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  ggsave(g3e, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_recba_histo.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  # 
+  # ggsave(g4a, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_Pab0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4b, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_Pba0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  # ggsave(g4c, file = paste0(loc.wd, "/r_data/results_for_paper/Ranitidine_efflux0_histo.tiff"),
+  #        height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+  
+
+  
+}
+
+caco2.filt[!is.na(Pab),nrep_pab := .N,.(casrn)]
+caco2.dup <- caco2.filt[nrep_pab >= 2,] %>% 
+  .[,mPab := mean(Pab), .(casrn)]
+caco2.dup <- unique(caco2.dup[,.(mPab,casrn)])[, .(chemrank = rank(mPab),casrn)][caco2.dup, on = "casrn"]
+```
+###
+```{r something}
+# duplicate measures
+{
+
+  txt.dt <- unique(caco2.dup[casrn %in% c("66357-35-5", "57460-41-0", "81-81-2"),.(compound, casrn, mPab)]) %>% 
+    .[, y := mPab] %>% 
+    .[, x := c(0.1,1,0.3)] %>% 
+    .[, hjust := c(0, 1, 0)]
+  
+
+  predint1 <- pred_int(x0 = caco2.dup$Pab, y0 = caco2.dup$mPab, alpha = 0.95)
+  g1 <- ggplot(caco2.dup)+
+    geom_point(aes(x = Pab, y = mPab), alpha = 0.5)+
+    #geom_smooth(aes(x = Pab, y = mPab), method = "lm")+
+    geom_abline(slope = 1, linetype = "dashed")+
+    geom_ribbon(data = predint1$res.dt, aes(x= xn, ymin = yn2, ymax = yn1), alpha = 0.2, fill = "blue")+
+    geom_text(data = txt.dt, aes(x = x, y = y, label = compound, hjust = hjust))+
+    labs(y = expression(bold("Mean log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)')), 
+         x = expression(bold("log"['10'])*bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
+    theme_bw() +
+    gtheme
+  
+  ggplot(predint1$res.dt)+
+    geom_point(aes(x= xn, y = resint), alpha = 0.2, fill = "blue")
+  ggsave(g1, file = paste0(loc.wd, "/r_data/results_for_paper/f1_replicates.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+  
+   save(caco2.dup,file=paste0(loc.wd, "/r_data/results_for_paper/Table-Caco2Replicates.RData"))
+   write.csv(caco2.dup,row.names=FALSE,file=paste0(loc.wd, "/r_data/results_for_paper/Table-Caco2Replicates.txt"))
+}
+```
+###
+```{r something}
+# raw caco2
+{
+  load(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_processed.RData"))
+  caco2.QC <- fread(paste0(loc.wd,"/r_data/caco2_qc/caco2dt_line101_short.csv"))
+  low_rec_co <- -Inf
+  high_rec_co <- Inf
+  caco2.QC[,1] <- NULL
+  
+  caco2.raw <- caco2.QC[caco2.dt,on=.(test_article,dtxsid,task_order,file_id)]
+  caco2.raw <- copy(caco2.raw)
+  caco2.raw[, comment_ab3 := as.character(comment_ab3)] %>% 
+    .[!is.na(update_Pab1),Pab1:=update_Pab1] %>% 
+    .[!is.na(update_Pab2),Pab2:=update_Pab2] %>% 
+    .[!is.na(update_Pab3),Pab3:=update_Pab3] %>% 
+    .[!is.na(update_rec_ab1),rec_ab1:=update_rec_ab1] %>% 
+    .[!is.na(update_rec_ab2),rec_ab2:=update_rec_ab2] %>% 
+    .[!is.na(update_rec_ab3),rec_ab3:=update_rec_ab3] %>% 
+    .[!is.na(update_Pba1),Pba1:=update_Pba1] %>% 
+    .[!is.na(update_Pba2),Pba2:=update_Pba2] %>% 
+    .[!is.na(update_Pba3),Pba3:=update_Pba3] %>% 
+    .[!is.na(update_rec_ba1),rec_ba1:=update_rec_ba1] %>% 
+    .[!is.na(update_rec_ba2),rec_ba2:=update_rec_ba2] %>% 
+    .[!is.na(update_rec_ba3),rec_ba3:=update_rec_ba3] %>% 
+    .[comment_ab1=="",comment_ab1:=NA_character_] %>% 
+    .[comment_ab2=="",comment_ab2:=NA_character_] %>% 
+    .[comment_ab3=="",comment_ab3:=NA_character_] %>%
+    .[is.na(comment_ab1) & Pab1_orig=="ND",comment_ab1:="ND"] %>% 
+    .[is.na(comment_ab2) & Pab2_orig=="ND",comment_ab2:="ND"] %>% 
+    .[is.na(comment_ab3) & Pab3_orig=="ND",comment_ab3:="ND"] %>% 
+    .[comment_ba1=="",comment_ba1:=NA_character_] %>% 
+    .[comment_ba2=="",comment_ba2:=NA_character_] %>% 
+    .[comment_ba3=="",comment_ba3:=NA_character_] %>%
+    .[is.na(comment_ba1) & Pba1_orig=="ND",comment_ba1:="ND"] %>% 
+    .[is.na(comment_ba2) & Pba2_orig=="ND",comment_ba2:="ND"] %>% 
+    .[is.na(comment_ba3) & Pba3_orig=="ND",comment_ba3:="ND"] %>%
+    .[Pab1 <= 0, comment_ab1:="ND"] %>% 
+    .[Pab2 <= 0, comment_ab2:="ND"] %>% 
+    .[Pab3 <= 0, comment_ab3:="ND"] %>% 
+    .[Pba1 <= 0, comment_ba1:="ND"] %>% 
+    .[Pba2 <= 0, comment_ba2:="ND"] %>% 
+    .[Pba3 <= 0, comment_ba3:="ND"] %>% 
+    .[Pab1 <= 0, Pab1:=NA_real_] %>% 
+    .[Pab2 <= 0, Pab2:=NA_real_] %>% 
+    .[Pab3 <= 0, Pab3:=NA_real_] %>% 
+    .[Pba1 <= 0, Pba1:=NA_real_] %>% 
+    .[Pba2 <= 0, Pba2:= NA_real_] %>% 
+    .[Pba3 <= 0, Pba3:= NA_real_] %>% 
+    .[!(is.na(comment_ab1)|comment_ab1 %in% c("LOD","low_rec")),Pab1:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab1) | rec_ab1 < low_rec_co | rec_ab1 > high_rec_co, Pab1:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab1) & rec_ab1 < low_rec_co, comment_ab1:="low_rec"] %>% 
+    .[is.na(comment_ab1) & rec_ab1 > high_rec_co, comment_ab1:="high_rec"] %>% 
+    .[!(is.na(comment_ab2)|comment_ab2 %in% c("LOD","low_rec")),Pab2:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab2) | rec_ab2 < low_rec_co | rec_ab2 > high_rec_co, Pab2:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab2) & rec_ab2 < low_rec_co, comment_ab2:="low_rec"] %>% 
+    .[is.na(comment_ab2) & rec_ab2 > high_rec_co, comment_ab2:="high_rec"] %>% 
+    .[!(is.na(comment_ab3)|comment_ab3 %in% c("LOD","low_rec")),Pab3:=as.numeric(NA)] %>% 
+    .[is.na(rec_ab3) | rec_ab3 < low_rec_co | rec_ab3 > high_rec_co, Pab3:=as.numeric(NA)] %>% 
+    .[is.na(comment_ab3) & rec_ab3 < low_rec_co, comment_ab3:="low_rec"] %>% 
+    .[is.na(comment_ab3) & rec_ab3 > high_rec_co, comment_ab3:="high_rec"] %>% 
+    .[!(is.na(comment_ba1)|comment_ba1 %in% c("LOD","low_rec")),Pba1:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba1) | rec_ba1 < low_rec_co | rec_ba1 > high_rec_co, Pba1:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba1) & rec_ba1 < low_rec_co, comment_ba1:="low_rec"] %>% 
+    .[is.na(comment_ba1) & rec_ba1 > high_rec_co, comment_ba1:="high_rec"] %>% 
+    .[!(is.na(comment_ba2)|comment_ba2 %in% c("LOD","low_rec")),Pba2:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba2) | rec_ba2 < low_rec_co | rec_ba2 > high_rec_co, Pba2:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba2) & rec_ba2 < low_rec_co, comment_ba2:="low_rec"] %>% 
+    .[is.na(comment_ba2) & rec_ba2 > high_rec_co, comment_ba2:="high_rec"] %>% 
+    .[!(is.na(comment_ba3)|comment_ba3 %in% c("LOD","low_rec")),Pba3:=as.numeric(NA)] %>% 
+    .[is.na(rec_ba3) | rec_ba3 < low_rec_co | rec_ba3 > high_rec_co, Pba3:=as.numeric(NA)] %>% 
+    .[is.na(comment_ba3) & rec_ba3 < low_rec_co, comment_ba3:="low_rec"] %>% 
+    .[is.na(comment_ba3) & rec_ba3 > high_rec_co, comment_ba3:="high_rec"]
+
+  caco2.raw2 <- copy(caco2.raw)
+  caco2.raw2[!(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+             rec_ab:=mean(c(rec_ab1,rec_ab2,rec_ab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                                       (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                                       (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(rec_ab1,rec_ab2,rec_ab3)] %>% 
+    .[!(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      sd_rec_ab:=sd(c(rec_ab1,rec_ab2,rec_ab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                                 (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                                 (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(rec_ab1,rec_ab2,rec_ab3)] %>% 
+    .[!(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      rec_ba:=mean(c(rec_ba1,rec_ba2,rec_ba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                                (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                                (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(rec_ba1,rec_ba2,rec_ba3)] %>% 
+    .[!(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      sd_rec_ba:=sd(c(rec_ba1,rec_ba2,rec_ba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                                 (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                                 (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(rec_ba1,rec_ba2,rec_ba3)] %>% 
+    .[!(is.na(Pab1)&is.na(Pab2)&is.na(Pab3)) & !(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      Pab_c:=mean(c(Pab1,Pab2,Pab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                      (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                      (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm = T),.(Pab1,Pab2,Pab3)] %>% 
+    .[!(is.na(Pab1)&is.na(Pab2)&is.na(Pab3)) & !(is.na(rec_ab1)&is.na(rec_ab2)&is.na(rec_ab3)),
+      sd_Pab:=sd(c(Pab1,Pab2,Pab3)[!is.na(c(rec_ab1,rec_ab2,rec_ab3)) &
+                                     (c(rec_ab1,rec_ab2,rec_ab3) >= low_rec_co) &
+                                     (c(rec_ab1,rec_ab2,rec_ab3) <= high_rec_co)],na.rm=T),.(Pab1,Pab2,Pab3)] %>% 
+    .[!(is.na(Pba1)&is.na(Pba2)&is.na(Pba3)) & !(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      Pba_c:=mean(c(Pba1,Pba2,Pba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                      (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                      (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(Pba1,Pba2,Pba3)] %>% 
+    .[!(is.na(Pba1)&is.na(Pba2)&is.na(Pba3)) & !(is.na(rec_ba1)&is.na(rec_ba2)&is.na(rec_ba3)),
+      sd_Pba := sd(c(Pba1,Pba2,Pba3)[!is.na(c(rec_ba1,rec_ba2,rec_ba3)) &
+                                       (c(rec_ba1,rec_ba2,rec_ba3) >= low_rec_co) &
+                                       (c(rec_ba1,rec_ba2,rec_ba3) <= high_rec_co)],na.rm=T),.(Pba1,Pba2,Pba3)]
+  
+  caco2.raw2[,Pab:=Pab_c] %>% 
+    .[,Pba:=Pba_c]
+  caco2.raw2[,batch_id:=batch_guess]  
+  caco2.raw2[casrn=="106-47-8",compound:="4-Chloroaniline"] %>% 
+    .[casrn=="33228-44-3",compound:="4-Pentylaniline"]
+  caco2.raw2[casrn == "66357-35-5", c("compound", "dtxsid") := list("Ranitidine", "DTXSID8045191")] %>% 
+    .[casrn == "57460-41-0", c("compound", "dtxsid") := list("Talinolol", "DTXSID6046426")] %>% 
+    .[casrn == "81-81-2", c("compound", "dtxsid") := list("Warfarin", "DTXSID5023742")]
+  
+  
+}
+caco2.raw3 <- copy(caco2.raw2) %>% 
+  .[rec_ab < 0, rec_ab := NA_real_] %>% 
+  .[rec_ba < 0, rec_ba := NA_real_]
+caco2.perchemraw <- caco2.raw3[,
+                            .(mPab = mean(Pab, na.rm = T),
+                              sdPab = sd(Pab, na.rm = T),
+                              mPba = mean(Pba, na.rm = T),
+                              sdPba = sd(Pba, na.rm = T),
+                              mrec_ab = mean(rec_ab, na.rm = T),
+                              mrec_ba = mean(rec_ba, na.rm = T),
+                              sdrec_ab = sd(rec_ab, na.rm = T),
+                              sdrec_ba = sd(rec_ba, na.rm = T),
+                              ntotal = .N,
+                              ntotal_ab = sum(!is.na(Pab)),
+                              ntotal_ba = sum(!is.na(Pba)),
+                              ntotal_rab = sum(!is.na(rec_ab)),
+                              ntotal_rba = sum(!is.na(rec_ba))),
+                            .(casrn, dtxsid, compound)]
+
+
+labl.dt1 <- data.table(x = 2, y = c(150, 125, 100),
+                       labl = c(paste0("Mean: ", signif(mean(caco2.perchemraw[, mrec_ab], na.rm = T),2)),
+                                paste0("SD: ", signif(sd(caco2.perchemraw[, mrec_ab], na.rm = T),2)),
+                                paste0("Total Count: ", sum(caco2.perchemraw[, !is.na(mrec_ab) & mrec_ab > 0]))
+                                ))
+labl.dt2 <- data.table(x = 2, y = c(150, 125, 100),
+                       labl = c(paste0("Mean: ", signif(mean(caco2.perchemraw[, mrec_ba], na.rm = T),2)),
+                                paste0("SD: ", signif(sd(caco2.perchemraw[, mrec_ba], na.rm = T),2)),
+                                paste0("Total Count: ", sum(caco2.perchemraw[, !is.na(mrec_ba) & mrec_ba > 0]))
+                       ))
+
+g5a <- 
+  ggplot(caco2.perchemraw[mrec_ab > 0,])+
+  geom_histogram(aes(x = mrec_ab), fill= "grey80", color = "black")+
+  geom_vline(xintercept = 1, linetype = "dashed")+
+  geom_text(data = labl.dt1, aes(x = x, y = y, label = labl), hjust = 0)+
+  labs(#title = "a)",
+    y = expression(bold("Count")), 
+    x = expression(bold("Recovery"[bolditalic("AB")]))) +
+  #lims(x = c(0,2.1), y = c(0,85))+
+  scale_x_continuous(limits = c(0, 5), breaks = c(0,1,2,3,4), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,200))+
+  theme_bw()+
+  gtheme+
+  annotation_custom(grob = text_grob("a)", hjust = 0, size = 12, face = "bold"), 
+                    ymin = 195,ymax = 195,xmax = 0.1, xmin = 0.1)
+g5b <- 
+  ggplot(caco2.perchemraw[mrec_ba > 0,])+
+  geom_histogram(aes(x = mrec_ba), fill= "grey80", color = "black")+
+  geom_vline(xintercept = 1, linetype = "dashed")+
+  geom_text(data = labl.dt2, aes(x = x, y = y, label = labl), hjust = 0)+
+  labs(#title = "b) Talinolol",
+    y = expression(bold("Count")), 
+    x = expression(bold("Recovery"[bolditalic("BA")]))) +
+  scale_x_continuous(limits = c(0, 5), breaks = c(0,1,2,3,4), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,200))+
+  #lims(x = c(0,2.1), y = c(0,85))+
+  theme_bw()+
+  gtheme+
+  annotation_custom(grob = text_grob("b)", hjust = 0, size = 12, face = "bold"), 
+                    ymin = 195,ymax = 195,xmax = 0.1, xmin = 0.1)
+
+ggsave(g5a, file = paste0(loc.wd, "/r_data/results_for_paper/mrec_ab_histo.tiff"),
+       height = 3, width = 3, dpi = 600, compression = "lzw")
+ggsave(g5b, file = paste0(loc.wd, "/r_data/results_for_paper/mrec_ba_histo.tiff"),
+       height = 3, width = 3, dpi = 600, compression = "lzw")
+
+```
+
+```{r something}
+
+names(caco2.filt)
+
+caco2.raw2[, Pab.unadj.unfilt := log10(Pab)] %>% 
+  .[, Pba.unadj.unfilt := log10(Pba)] %>% 
+  .[, efflux.unadj.unfilt := Pba/Pab] %>% 
+  .[, rec_ab.unfilt := rec_ab] %>% 
+  .[, rec_ba.unfilt := rec_ba]
+
+
+dim(unique(caco2.raw2[,.(casrn, batch_id, t_type)]))
+caco2.publish <- caco2.raw2[,.(casrn, batch_id, t_type,
+                               Pab.unadj.unfilt,
+                               Pba.unadj.unfilt,
+                               efflux.unadj.unfilt,
+                               rec_ab.unfilt,
+                               rec_ba.unfilt)][caco2.filt, 
+                                               on = c("casrn", 
+                                                      "batch_id", 
+                                                      "t_type")]
+
+caco2.publish[, Pab.unadj := Pab0] %>% 
+  .[, Pba.unadj := Pba0] %>% 
+  .[, efflux.unadj := efflux0]
+
+setcolorder(caco2.publish,
+            c("compound","casrn","dtxsid","batch_id","t_type",
+              "Pab", "Pba", "efflux.ratio", "rec_ab", "rec_ba",
+              "Pab.unadj", "Pba.unadj", "efflux.unadj",
+              "Pab.unadj.unfilt", "Pba.unadj.unfilt", "efflux.unadj.unfilt",
+              "rec_ab.unfilt", "rec_ba.unfilt"))
+caco2.publish[, casrn := paste0(" ", casrn)]
+write.xlsx(caco2.publish, file = paste0(loc.wd, "/r_data/results_for_paper/caco2_data.xlsx"))
+
+
+length(unique(caco2.dt[!is.na(casrn),casrn])) #484
+caco2.all <- caco2.raw2[,.(mPab = mean(Pab,na.rm = T),
+                           mPba = mean(Pba, na.rm = T)),
+                        .(casrn)]
+caco2.all[,.N,.(is.na(mPab))] #423
+caco2.all[,.N,.(is.na(mPba))] #453
+length(unique(caco2.publish[!is.na(Pab), casrn])) # 310
+length(unique(caco2.publish[!is.na(Pba), casrn])) # 396
+length(unique(caco2.publish[!is.na(Pba) & !is.na(Pab), casrn])) # 302
+
+
+```
+
+###### QSAR ######
+```{r something}
+
+  alldesc.dt <- get_descriptors()
+
+
+
+  load("C:/Users/GHONDA/Documents/HTTKOralRoute/r_data/models/30MAY19/rfmodel_input34.RData")
+  load("C:/Users/GHONDA/Documents/HTTKOralRoute/r_data/models/30MAY19/rfmodel_list34.RData")
+
+  temp <- c(paste0("our_",1:14),paste0("comb_",1:14))
+  temp <- "comb_10"
+  catnm.vec <- paste0("rfcat_", temp)
+  regnm.vec <- paste0("rfreg_", temp)
+
+  caco2.comb <- copy(input.list$ready_caco2[[10]]$this.combcaco2)
+  this.testdt <- copy(input.list$ready_caco2[[10]]$this.combcaco2)
+  
+  test.modelinput <- create_qsardt(alldesc.dt = alldesc.dt, this.testdt, option.desc = "mordred")
+  desc.dt <- test.modelinput$qsar.dt
+  smiles.eval <- desc.dt[,smiles]
+
+  testperf.cat <- NULL
+  ymeas.dt <- copy(input.list$ready_caco2[[10]]$this.combcaco2)
+  
+  this.finalModel <- copy(rfmodel.list[[catnm.vec]])
+  desc.names <- rownames(this.finalModel$importance)
+  skiprow <- unique(which(is.na(desc.dt[,..desc.names])|is.inf(desc.dt[,..desc.names]),arr.ind=T)[,1])
+  
+  if(length(skiprow) > 0){
+    this.descdt <- copy(desc.dt[-skiprow,..desc.names])
+    smiles.skiprow <- this.testdt[-skiprow, smiles]
+  }else{
+    this.descdt <- copy(desc.dt[,..desc.names])
+    smiles.skiprow <- this.testdt[, smiles]
+  }
+  
+  # this.pred1 <- predict(this.finalModel, 
+  #                       this.descdt[, ..desc.names], 
+  #                       type = "prob")
+  this.pred2 <- predict(this.finalModel,
+                        this.descdt[, ..desc.names],
+                        type = "response")
+  
+  this.finalModel2 <- copy(rfmodel.list[["rfreg_comb_4"]])
+  desc.names2 <- rownames(this.finalModel2$importance)
+  skiprow2 <- unique(which(is.na(desc.dt[,..desc.names2])|is.inf(desc.dt[,..desc.names2]),arr.ind=T)[,1])
+  
+  if(length(skiprow2) > 0){
+    this.descdt2 <- copy(desc.dt[-skiprow2,..desc.names2])
+    smiles.skiprow2 <- this.testdt[-skiprow2, smiles]
+  }else{
+    this.descdt2 <- copy(desc.dt[,..desc.names2])
+    smiles.skiprow2 <- this.testdt[, smiles]
+  }
+  this.pred3 <- predict(this.finalModel2,
+                        this.descdt2[, ..desc.names2])[,2]
+  
+  testperf.cat <- rbind(testperf.cat, 
+                        as.data.table(calc_catstat(ymeas = ymeas.dt[,mpab.cat], ycalc = this.pred2[match(smiles.eval,smiles.skiprow)])))
+  ymeas.dt[, ycalc.cat := this.pred2[match(smiles.eval,smiles.skiprow)]]
+  ymeas.dt[, ycalc.val := this.pred3[match(smiles.eval,smiles.skiprow2)]]
+  
+  catperf1 <- rbind(ymeas.dt[setx =="reservex" & repref == "lit", calc_catstat(ymeas = mpab.cat, ycalc = ycalc.cat)],
+        ymeas.dt[setx != "reservex" & setx != "trainx", calc_catstat(ymeas = mpab.cat, ycalc = ycalc.cat)])[, setx := c("test", "remainder")]
+  valperf1 <- rbind(ymeas.dt[setx =="reservex" & repref == "lit", xysummary(ymeas = mpab, ycalc = ycalc.val)],
+        ymeas.dt[setx != "reservex" & setx != "trainx", xysummary(ymeas = mpab, ycalc = ycalc.val)])[, setx := c("test", "remainder")]
+  
+  load(paste0(loc.wd,"/r_data/models/30MAY19/rfmodel_perf34.RData"))
+  names(catperf1)
+  catperf2 <- rbind(perf.list$perf.catres[model_id == "comb_10",][,.(Accuracy, BalancedAccuracy, Sensitivity, Specificity, Size = perf.list$perf.regres[model_id == "comb_10",xyN])][,setx := "5CV"],
+                    catperf1[, .("Accuracy" = nacc, 
+                                 "BalancedAccuracy" = balacc, 
+                                 "Specificity" = lowacc,
+                                 "Sensitivity" = highacc, "Size" = ntot, setx)])
+  valperf2 <- rbind(perf.list$perf.regres[model_id == "comb_4", .(xysst,xysse,xyr2,xyrmse, xycor,xyN,setx = "5CV")],valperf1)
+  setnames(valperf2,c("SST","SSE", "R2","RMSE", "COR", "Size", "setx"))
+
+  # Table 1 and Table S1, first lines are in models/rfmodel34.xlsx, classification comb_10, regression comb_4
+  write.xlsx(catperf2, file = paste0(loc.wd, "/r_data/results_for_paper/table1_qspr_class_perf.xlsx"), sheetName = "classification", append = FALSE)
+  write.xlsx(valperf2, file = paste0(loc.wd, "/r_data/results_for_paper/s1table_qspr_reg_perf.xlsx"), sheetName = "regression", append = FALSE)
+  
+  
+  ymeas.dt[,.N,.(setx, mpab.cat)]  
+  caco2_prep_options[[1]] <- list("efflux.break" = 0.5,
+                                  "efflux.train.size" = 0,
+                                  "pab.breaks" = 0.9,
+                                  "pab.lims" = c(-2.5, 2.5),
+                                  "option.gap" = FALSE,
+                                  "option.round" = "one",
+                                  "option.flatten" = NA,
+                                  "option.drop.high_efflux" = TRUE,
+                                  "train.size" = NA,
+                                  "nval.smiles" = 50)
+  ready_caco2[[1]] <- prep_caco2(caco2_qc_file = "caco2_QC_rec0d4to2",
+                                 prep_options = caco2_prep_options[[1]])
+  testperf.cat[, model_id := catnm.vec]
+
+
+figlist <- list()
+testperf.reg <- NULL
+for(this.nm in regnm.vec){
+  this.finalModel <- copy(rfmodel.list[[this.nm]])
+  desc.names <- rownames(this.finalModel$importance)
+  skiprow <- unique(which(is.na(desc.dt[,..desc.names])|is.inf(desc.dt[,..desc.names]),arr.ind=T)[,1])
+  
+  if(length(skiprow) > 0){
+    this.descdt <- copy(desc.dt[-skiprow,..desc.names])
+    smiles.skiprow <- this.testdt[-skiprow, smiles]
+  }else{
+    this.descdt <- copy(desc.dt[,..desc.names])
+    smiles.skiprow <- this.testdt[, smiles]
+  }
+  
+  # this.pred1 <- predict(this.finalModel, 
+  #                       this.descdt[, ..desc.names], 
+  #                       type = "prob")
+  this.pred2 <- predict(this.finalModel,
+                        this.descdt[, ..desc.names],
+                        what = 0.5)
+  this.dt <- data.table(ymeas = this.testdt[,mpab], ycalc = this.pred2[match(smiles.eval,smiles.skiprow)])
+  this.perf <- this.dt[, xysummary(ymeas =ymeas, ycalc = ycalc)]
+  thisplot <- ggplot(this.dt)+
+    geom_point(aes(x = ymeas, y = ycalc))+
+    geom_abline(slope = 1, linetype = "dashed")+
+    labs(title = this.nm,
+         x = expression(bold("Test set log"['10'])*bolditalic('P'['AB'])),
+         y =  expression(bold("QSAR Predicted log"['10'])*bolditalic('P'['AB'])))+
+    theme_bw()+
+    gtheme
+  figlist <- c(figlist, list(thisplot))
+  testperf.reg <- rbind(testperf.reg, 
+                        as.data.table(xysummary(ymeas = this.testdt[,mpab], ycalc = this.pred2[match(smiles.eval,smiles.skiprow)])))
+  
+  
+}
+testperf.reg[, model_id := regnm.vec]
+
+gmult <- marrangeGrob(grobs = figlist, ncol = 3, nrow = 3)
+ggsave(gmult, file = paste0(loc.wd, "/r_data/results_for_paper/qsar_reg.pdf"), dpi = 300, height = 11, width = 8.5)
+
+write.xlsx(testperf.cat, file = paste0(loc.wd, "/r_data/results_for_paper/pab_testperformance.xlsx"), sheetName = "classification")
+write.xlsx(testperf.reg, file = paste0(loc.wd, "/r_data/results_for_paper/pab_testperformance.xlsx"), sheetName = "regression", append = TRUE)
+```
+
+##### main processing #####
+```{r something}
+caco2_gut_eval <- function(){
+  caco2_qc_file <- "caco2_QC_rec0d4to2"
+  ##### init ####
+  load(paste0(loc.wd,"/r_data/models/30MAY19/rfmodel_input34.RData"))
+  load(paste0(loc.wd,"/r_data/models/30MAY19/rfmodel_list34.RData"))  
+  load(paste0(loc.wd, "/r_data/processed/all_gut_data_25MAR2019.RData")) # gut.data; compiled data table of absorption and permeability data 
+  load(paste0(loc.wd, "/r_data/chemprop/gut_chems_all.RData")) # gut.chems.all; dtxsid, qsar_ready_smiles, matched to reference chem names
+  load(paste0(loc.wd, "/r_data/chemprop/combined_chemprop.RData")) # chemprops.dt
+  
+  # Load our Caco-2 data 
+  load(paste0(loc.wd,"/r_data/caco2_qc/",caco2_qc_file,".RData")) # caco2.dt
+  caco2.dt[,dtxsid := NULL]
+  caco2.dt <- unique(gut.chems.all[repref == "honda_caco2", 
+                                   .(dtxsid, casrn = ref.casrn, qsar_ready_smiles)])[caco2.dt, on = "casrn"]
+  caco2.dt[, Pab := Pab/rec_ab] %>%  # Normalize with respect to recovery
+    .[, Pba := Pba/rec_ba] %>% 
+    .[, efflux_ratio := Pba/Pab]
+  caco2.dt2 <- caco2.dt[!is.na(Pab) & !is.na(qsar_ready_smiles),
+                        .(mpab=mean(log10(Pab),na.rm=T),
+                          mpba = mean(log10(Pba),na.rm = T),
+                          mrecab=mean((rec_ab),na.rm=T),
+                          mrecba = mean((rec_ba),na.rm = T)),
+                        .(dtxsid, casrn, qsar_ready_smiles)] %>% 
+    .[, mefflux := 10^mpba/10^mpba]
+  # Load litcaco2 data, retain measured values with pH near our pH
+  load(paste0(loc.wd, "/r_data/processed/lit_caco2_26MAR2019.RData")) # lit.caco2.dt; Lanevskij and Obringer
+  lit.caco2.dt2 <- lit.caco2.dt[,near74 := (abs(lit_exp_pH - 7.4) == min(abs(lit_exp_pH - 7.4))), .(dtxsid)] %>% 
+    .[near74 == TRUE, .(mpab = mean(log10(lit_pab),na.rm = T)), .(dtxsid, casrn, qsar_ready_smiles)] %>% 
+    .[!is.na(mpab),]
+  
+  comb.caco2 <- rbind(caco2.dt2, lit.caco2.dt2[!dtxsid %in% caco2.dt2$dtxsid,], fill = TRUE)
+  
+  ##### load qsar model results #####
+  # load(file=paste0(loc.wd,"/r_data/models/09MAY19/rf_final_list.RData"))
+  # load(file=paste0(loc.wd,"/r_data/models/09MAY19/caco2_glm_models_13MAY19.RData"))
+  # 
+  use.models <- list("rc4_rf_reg_comb" = rfmodel.list$rfreg_comb_4,
+                     "rc10_rf_cat_comb" = rfmodel.list$rfcat_comb_10
+  )
+  
+  ready_caco2 <- input.list$ready_caco2
+  
+  # Descriptor data.table
+  alldesc.dt <- get_descriptors()
+  padel.nm <- names(alldesc.dt)[regexpr("padel",names(alldesc.dt))!=-1]
+  caco2.nm <- c("smiles",
+                "fraction_neutral", "fraction_charged", "fraction_negative", "fraction_positive", "fraction_zwitter",
+                "fneutral_logit", "fcharged_logit", "fnegative_logit", "fpositive_logit", "fzwitter_logit",
+                "logD_opera","logP_opera")
+  mordred.nm <- names(alldesc.dt)[!names(alldesc.dt) %in% padel.nm &
+                                    !names(alldesc.dt) %in% caco2.nm]
+  use.names <- c("smiles", padel.nm, mordred.nm)
+  alldesc.dt2 <- copy(alldesc.dt[, ..use.names]) %>% 
+    .[, X := 1:length(smiles)] %>% 
+    .[,X2 := 1:length(X),.(smiles)] %>% 
+    .[X2 == 1,] %>% 
+    .[, X2 := NULL]
+  
+  # Determine ionization and logD
+  chemprop.desc <- chemprop.dt[,
+              .(logP_opera = mean(LogP_use), 
+                pKa_a = mean(pKa_a_use), 
+                pKa_b = mean(pKa_b_use)),
+              .(smiles = qsar_ready_smiles)] %>% 
+    unique(.) %>% 
+    .[,c("fraction_neutral",
+         "fraction_charged",
+         "fraction_negative",
+         "fraction_positive",
+         "fraction_zwitter") := calc_ionization(pKa_Donor = pKa_a,
+                                                   pKa_Accept = pKa_b,
+                                                   pH = 7.4), .(pKa_a,pKa_b)] %>% 
+    .[, logD_opera := log10(calc_dow(Pow = 10^logP_opera, fraction_charged = fraction_charged)), .(logP_opera, fraction_charged)] %>% 
+    .[, fneutral_logit := logit(fraction_neutral, delta = 1e-6)] %>% 
+    .[, fcharged_logit := logit(fraction_charged, delta = 1e-6)] %>% 
+    .[, fpositive_logit := logit(fraction_positive, delta = 1e-6)] %>% 
+    .[, fnegative_logit := logit(fraction_negative, delta = 1e-6)] %>% 
+    .[, fzwitter_logit := logit(fraction_zwitter, delta = 1e-6)] %>% 
+    .[, c("pKa_a", "pKa_b") := NULL]
+
+  qsar.comb.mordpadl <- chemprop.desc[!is.na(smiles),][alldesc.dt2, on = "smiles"]
+  all.smiles <- qsar.comb.mordpadl[, smiles]
+  setx.list <- list("rc4" = ready_caco2[[4]]$this.litcaco2[,.(lit.setx = setx, smiles)][
+    ready_caco2[[4]]$this.combcaco2[,.(comb.setx = setx, smiles, mpab.cat, mpab)], 
+    on = "smiles"],
+    "rc10" = ready_caco2[[10]]$this.litcaco2[,.(lit.setx = setx, smiles)][
+      ready_caco2[[10]]$this.combcaco2[,.(comb.setx = setx, smiles, mpab.cat, mpab)], 
+      on = "smiles"])
+  
+  pred.prob <- make.predict(qsar.comb.mordpadl, rfmodel.list$rfcat_comb_10, type = "prob")
+  pred.class <- make.predict(qsar.comb.mordpadl, rfmodel.list$rfcat_comb_10, type = "response")
+  pred.vals <- make.predict.qrf(qsar.comb.mordpadl, rfmodel.list$rfreg_comb_4, what = c(0.025, 0.25, 0.50, 0.75, 0.975))
+  colnames(pred.vals) <- paste0("rf_q", c("025", "25", "50", "75", "975"))
+  rfpred.dt <- data.table(pred.vals, "rf_cat.prob" = pred.prob, "rf_cat.val" = pred.class, "qsar_ready_smiles" = qsar.comb.mordpadl$smiles) %>% 
+    .[, rf_reg.str := paste(rf_q50, rf_q025, rf_q975, sep = ",")] %>% 
+    .[pred.class == "low", rf_cat.str := "-0.4"] %>% 
+    .[pred.class == "high", rf_cat.str := "1.6"]
+  # 
+  chem.dt <- as.data.table(copy(chem.physical_and_invitro.data))
+  allgut.casrn <- rfpred.dt[gut.data, on = "qsar_ready_smiles"] %>% 
+    .[, c("clinth", "clintr", "fuph", "fupr") := NULL]
+  allgut.casrn <- merge(chem.dt[,.("dtxsid" = DTXSID,
+                             "clinth" = Human.Clint,
+                             "clintr" = Rat.Clint,
+                             "fuph" = Human.Funbound.plasma,
+                             "fupr" = Rat.Funbound.plasma,
+                             "logP" = logP,
+                             "MW" = MW)], allgut.casrn, all = TRUE, by = "dtxsid")
+  allgut.casrn <- merge(comb.caco2, allgut.casrn, all = TRUE, by = c("dtxsid", "qsar_ready_smiles", "casrn"))
+  chem.dt <- as.data.table(chem.physical_and_invitro.data)
+  chem.dt[Human.Funbound.plasma == "0",]
+  allgut.casrn[fupr == "#N/A", fupr := NA_character_] %>% 
+    .[fuph == "#N/A", fuph := NA_character_] %>% 
+    .[clinth == "ND", clinth := NA_character_] %>% 
+    .[regexpr("<",clinth)!=-1, clinth := NA_character_] %>% 
+    .[fuph == "NF", fuph := NA_character_]
+    allgut.casrn2 <- prep.fbio_input(allgut.casrn)
+    allgut.casrn2[, pab.default := 1.6]
+    
+    {
+    fbio.mpab.dt <- predict.fbio(allgut.casrn2, pab.use = "mpab", pab.type = "regression")
+    fbio.mpab.dt_fug1 <- predict.fbio_fug1(allgut.casrn2, pab.use = "mpab", pab.type = "regression")[,pab.use := "mpab"]
+    temp <- comp.gutdata1(folder.desc = "mpab_fug1",ycalc.dt = fbio.mpab.dt_fug1, ymeas.dt = allgut.casrn2, extra.catnm = NA)
+    names(fbio.mpab.dt)
+    temp2 <- fbio.mpab.dt_fug1[,.(fgh_qg,dtxsid)][allgut.casrn2[!is.na(dtxsid),], on = "dtxsid"][,.(dtxsid, ffph, fgh_qg, fuph.adj,clinth, mpab)]
+    temp3 <- fbio.mpab.dt[,.(fgh = fgh_qg,dtxsid)][temp2, on = "dtxsid"]
+    
+    names(allgut.casrn2)
+    fbio.rfq50.dt <- predict.fbio(allgut.casrn2, pab.use = "rf_q50", pab.type = "regression")
+    fbio.rfcat.dt <- predict.fbio(allgut.casrn2, pab.use = "rf_cat.val", 
+                                  pab.type = "class", pab.translate = list("low" = -0.4,
+                                                                           "high" = 1.6))
+    
+    fbio.default.dt <- predict.fbio(allgut.casrn2, pab.use = "pab.default", pab.type = "regression")
+    
+    fbio.calc.dt <- rbind(copy(fbio.mpab.dt)[, pab.use := "mpab"],
+                          copy(fbio.rfq50.dt)[, pab.use := "rf_q50"],
+                          copy(fbio.rfcat.dt)[, pab.use := "rf_cat.val"],
+                          copy(fbio.default.dt)[, pab.use := "default_1.6"])
+
+    temp <- comp.gutdata1(folder.desc = "default_1.6",ycalc.dt = fbio.calc.dt[pab.use == "default_1.6",], ymeas.dt = allgut.casrn2, extra.catnm = NA)
+    temp <- comp.gutdata1(folder.desc = "mpab",ycalc.dt = fbio.calc.dt[pab.use == "mpab",], ymeas.dt = allgut.casrn2, extra.catnm = NA)
+    temp <- comp.gutdata1(folder.desc = "rf_q50",ycalc.dt = fbio.calc.dt[pab.use == "rf_q50",], ymeas.dt = allgut.casrn2, extra.catnm = NA)
+    temp <- comp.gutdata1(folder.desc = "rf_cat.val",ycalc.dt = fbio.calc.dt[pab.use == "rf_cat.val",], ymeas.dt = allgut.casrn2, extra.catnm = NA)
+    }
+    ##### comp data #####
+    comp.gutdata1 <- function(ycalc.dt, ymeas.dt, folder.desc = "", extra.catnm = NA, extra.catlabl = "Data"){
+      if(!is.na(extra.catnm)){
+        setnames(ymeas.dt, extra.catnm, "extracat")
+      }else{
+        ymeas.dt[,extracat := NA]
+      }
+      
+      if(!dir.exists(paste0(loc.wd, "/r_data/results_for_paper/", folder.desc))){
+        dir.create(paste0(loc.wd, "/r_data/results_for_paper/", folder.desc))
+      }else{
+        print("Overwriting")
+      }
+        
+      
+      ycomp.dt <- ycalc.dt[ymeas.dt[!is.na(dtxsid),], on = "dtxsid"]
+      ystat.dt <- rbind(
+        ycomp.dt[,xysummary(ycalc = use.pab, ymeas = mpab), .(pab.use, extracat)][, yvar := "mpab"],
+        ycomp.dt[,xysummary(ycalc = log10(peffh), ymeas = log10(mpeff_lit)), .(pab.use, extracat)][, yvar := "mpeff_lit"],
+        ycomp.dt[,xysummary(ycalc = fbioh, ymeas = kim_fbioh), .(pab.use, extracat)][, yvar := "kim_fbioh"],
+        ycomp.dt[,xysummary(ycalc = fah_darwich, ymeas = vo_Fa), .(pab.use, extracat)][, yvar := "vo_Fa"],
+        ycomp.dt[,xysummary(ycalc = fgh_qg, ymeas = vo_Fg), .(pab.use, extracat)][, yvar := "vo_Fg"],
+        ycomp.dt[,xysummary(ycalc = ffph, ymeas = vo_Fh), .(pab.use, extracat)][, yvar := "vo_Fh"],
+        ycomp.dt[,xysummary(ycalc = fbioh, ymeas = vo_F), .(pab.use, extracat)][, yvar := "voF"]
+      )
+      
+      g1a <- ggplot(ycomp.dt)+
+        geom_point(aes(x = mpab, y = use.pab), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted log"["10"])*bolditalic("P"["ab"])~bold('(10'^'-6'~'cm/s)')),
+             x = expression(bold("Measured log"["10"])*bolditalic("P"["ab"])~bold('(10'^'-6'~'cm/s)')))+
+        lims(x = c(-5,3), y = c(-5,3)) +
+        gtheme
+      
+      g1b <- ggplot(ycomp.dt)+
+        geom_point(aes(x = log10(mpeff_lit), y = log10(peffh)), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted log"["10"])*bolditalic("P"["eff,h"])~bold('(10'^'-4'~'cm/s)')),
+             x = expression(bold("Measured log"["10"])*bolditalic("P"["eff,h"])~bold('(10'^'-4'~'cm/s)')))+
+        lims(x = c(-2,2), y = c(-2,2)) +
+        gtheme
+      
+      g1c <- ggplot(ycomp.dt)+
+        geom_point(aes(y = fbioh, x = kim_fbioh), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted")~bolditalic("F"["bio,h"])),
+             x = expression(bold("Measured")~bolditalic("F"["bio,h"])))+
+        lims(x = c(0,1), y = c(0,1))+
+        gtheme
+      
+      g1d <- ggplot(ycomp.dt)+
+        geom_point(aes(y = fah_darwich, x = vo_Fa), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted")~bolditalic("F"["abs,h"])),
+             x = expression(bold("Measured")~bolditalic("F"["abs,h"])))+
+        lims(x = c(0,1), y = c(0,1))+
+        gtheme
+      
+      g1e <- ggplot(ycomp.dt)+
+        geom_point(aes(y = fgh_qg, x = vo_Fg), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted")~bolditalic("F"["gut,h"])),
+             x = expression(bold("Measured")~bolditalic("F"["gut,h"])))+
+        lims(x = c(0,1), y = c(0,1))+
+        gtheme
+      
+      g1f <- ggplot(ycomp.dt)+
+        geom_point(aes(y = ffph, x = vo_Fh), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted")~bolditalic("F"["hep,h"])),
+             x = expression(bold("Measured")~bolditalic("F"["hep,h"])))+
+        lims(x = c(0,1), y = c(0,1))+
+        gtheme
+      
+      g1g <- ggplot(ycomp.dt)+
+        geom_point(aes(y = fbioh, x = vo_F), alpha = 0.5)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("Predicted")~bolditalic("F"["bio,h"])),
+             x = expression(bold("Measured")~bolditalic("F"["bio,h"])))+
+        lims(x = c(0,1), y = c(0,1))+
+        gtheme
+      
+      ggsave(g1a,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_a.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1b,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_b.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1c,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_c.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1d,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_d.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1e,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_e.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1f,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_f.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      ggsave(g1g,file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/predictions_g.tiff"), dpi = 600, height = 3, width = 3, compression = "lzw")
+      write.xlsx2(ystat.dt, file = paste0(loc.wd, "/r_data/results_for_paper/",folder.desc,"/fbio_perf.xlsx"))
+      
+      return(ystat.dt)
+    }
+    
+    
+    comp.gutdata <- function(ycalc.dt, ymeas.dt, extra.catnm = "mefflux.cat", file_desc = "4"){
+      if(!is.na(extra.catnm)){
+        setnames(ymeas.dt, extra.catnm, "extracat")
+      }else{
+        ymeas.dt[,extracat := "nocat"]
+      }
+      
+      ycomp.dt <- ycalc.dt[ymeas.dt[!is.na(dtxsid),], on = "dtxsid"]
+      ystat.dt <- rbind(
+        ycomp.dt[,xysummary(ycalc = use.pab, ymeas = mpab), .(pab.use, extracat)][, yvar := "mpab"],
+        ycomp.dt[,xysummary(ycalc = log10(peffh), ymeas = log10(mpeff_lit)), .(pab.use, extracat)][, yvar := "mpeff_lit"],
+        ycomp.dt[,xysummary(ycalc = fbioh, ymeas = kim_fbioh), .(pab.use, extracat)][, yvar := "kim_fbioh"],
+        ycomp.dt[,xysummary(ycalc = fah_darwich, ymeas = vo_Fa), .(pab.use, extracat)][, yvar := "vo_Fa"],
+        ycomp.dt[,xysummary(ycalc = fgh_qg, ymeas = vo_Fg), .(pab.use, extracat)][, yvar := "vo_Fg"],
+        ycomp.dt[,xysummary(ycalc = ffph, ymeas = vo_Fh), .(pab.use, extracat)][, yvar := "vo_Fh"],
+        ycomp.dt[,xysummary(ycalc = fbioh, ymeas = vo_F), .(pab.use, extracat)][, yvar := "voF"]
+      )
+      
+      gtheme <-  theme(axis.title = element_text(size=16,color="black",face="bold"),
+                       axis.text.y = element_text(size=14, color = "black",face="bold"),
+                       legend.text = element_text(size = 12),
+                       legend.title = element_text(size = 12),
+                       legend.key.size = unit(12, "points"),
+                       axis.text.x = element_text(size = 14, angle = 90, face="bold",color="black", hjust = 0, vjust = 0.5),
+                       plot.title = element_text(hjust=0.5,size=14,face="bold"),
+                       strip.background = element_rect(fill = NA),
+                       strip.text = element_text(size = 14, face = "bold", color = "black"))
+      
+      g1a <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(x = mpab, y = use.pab, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted P"["ab"]),
+             x = expression("Measured P"["ab"]),
+             color="Data")+
+        gtheme
+      
+      g1b <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(x = log10(mpeff_lit), y = log10(peffh), color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted P"["eff,h"]),
+             x = expression("Measured P"["eff,h"]),
+             color="Data")+
+        gtheme
+      
+      g1c <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(y = fbioh, x = kim_fbioh, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted F"["bio,h"]),
+             x = expression("Measured F"["bio,h"]*", Kim et al."),
+             color="Data")+
+        gtheme
+      
+      g1d <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(y = fah_darwich, x = vo_Fa, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted F"["a,h"]),
+             x = expression("Measured F"["a,h"]),
+             color="Data")+
+        gtheme
+      
+      g1e <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(y = fgh_qg, x = vo_Fg, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted F"["g,h"]),
+             x = expression("Measured F"["g,h"]),
+             color="Data")+
+        gtheme
+      
+      g1f <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(y = ffph, x = vo_Fh, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted F"["h,h"]),
+             x = expression("Measured F"["h,h"]),
+             color="Data")+
+        gtheme
+      
+      g1g <- ggplot(ycomp.dt)+
+        facet_grid( ~pab.use)+
+        geom_point(aes(y = fbioh, x = vo_F, color = extracat))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression("Predicted F"["bio,h"]),
+             x = expression("Measured F"["bio,h"]*", Varma"),
+             color="Data")+
+        gtheme
+      
+      fig.list <- list(g1a, g1b, g1c, g1d, g1e, g1f, g1g)
+      g1tot <- marrangeGrob(grobs = fig.list, ncol = 1, nrow = 3)
+      ggsave(g1tot, file = paste0(loc.wd, "/r_data/models/15JUL19/predictions",file_desc,".pdf"), dpi = 300, height = 10.5, width = 8)
+      write.xlsx2(ystat.dt, file = paste0(loc.wd, "/r_data/models/15JUL19/fbio_perf",file_desc,".xlsx"))
+      
+      return(ystat.dt)
+    }
+    
+    ##### predict fbio ######
+    prep.fbio_input <- function(input.dt){
+      tk.dt <- copy(input.dt)
+      httk.casrn <- chem.physical_and_invitro.data$CAS
+
+      tk.dt[,X:=1:length(casrn)] 
+      tk.dt[!is.na(fuph) & !is.na(clinth) & casrn %in% httk.casrn, fuph.adj := parameterize_steadystate(chem.cas = casrn, species = "Human")$Funbound.plasma,.(casrn)]
+      tk.dt[!is.na(fupr) & !is.na(clintr) & casrn %in% httk.casrn, fupr.adj := parameterize_steadystate(chem.cas = casrn, species = "Rat")$Funbound.plasma,.(casrn)]
+      tk.dt[!is.na(fuph) & !is.na(clinth) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn,cluh_us:=calc_hepatic_clearance(chem.cas = casrn[1],species = "Human", hepatic.model = "unscaled"),.(casrn)] 
+      tk.dt[!is.na(fupr) & !is.na(clintr) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn,clur_us:=calc_hepatic_clearance(chem.cas = casrn[1],species = "Rat", hepatic.model = "unscaled"),.(casrn)] 
+      tk.dt[!is.na(fupr) & !is.na(clintr) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn,ffpr_us:=calc_Ffp(species="Rat",chem.cas= casrn,clu=clur_us),.(casrn)]
+      tk.dt[!is.na(fuph) & !is.na(clinth) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn,ffph_us:=calc_Ffp(species="Human",chem.cas= casrn,clu=cluh_us),.(casrn)]
+      tk.dt[!is.na(fuph) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn, rb2ph := available_rblood2plasma(species="Human",chem.cas= casrn),.(casrn)]
+      tk.dt[!is.na(fupr) & !is.na(logP) & !is.na(MW) & casrn %in% httk.casrn, rb2pr := available_rblood2plasma(species="Rat",chem.cas= casrn),.(casrn)]
+      
+      #tk.dt[!is.na(vo_Fh),xysummary(ymeas=log10(vo_Fh),ycalc=log10(ffph_us))]
+      tk.dt[,cluh_hep:=cluh_us*70] %>% # L/h for 70 kg human
+        .[,cluh_gut:=cluh_hep/100] %>% # approximate ratio of cyp abundances
+        .[,clur_hep:=clur_us*0.25] %>% # L/h for 0.25 kg rat
+        .[,clur_gut:=clur_hep/100] %>% 
+        .[,ffph:=ffph_us] %>% 
+        .[,ffpr:=ffpr_us]
+      return(tk.dt)
+    }
+    
+    predict.fbio <- function(input.dt, 
+                             pab.use = "mpab", 
+                             pab.type = "class",
+                             pab.translate = list("low" = 0.9,
+                                                  "high" = 1.5)){
+      tk.dt <- copy(input.dt)
+      setnames(tk.dt, pab.use, "use.pab")
+      if(regexpr("class", pab.type) != -1){
+        for(this.name in names(pab.translate)){
+          tk.dt[use.pab == this.name, pab.num := pab.translate[[this.name]]]
+        }
+        tk.dt[, use.pab := pab.num] %>% 
+          .[, pab.num := NULL]
+      }
+      
+      tk.dt[,peffh:=(10^(0.4926*use.pab-0.1454))] %>% # peff dimensional 10-4 cm/s
+        .[,peffr:=peffh/3.6] %>% # Fagerhol 1996
+        .[,permh:=0.66*peffh*3.6] %>% # L/h, 0.66 m2 area intestine
+        .[,permr:=71/(100^2)*peffr*3.6] %>% 
+        .[,fgh_qg:=18/(18+fuph.adj*cluh_gut/rb2ph*(1+18/permh))] %>% 
+        .[,fgr_qg:=0.65/(0.65+fupr.adj*clur_gut/rb2pr*(1+.65/permr))] %>% 
+        .[,fah_darwich:=1-exp(-3.87*peffh)] %>% 
+        .[,fbioh:=ffph*fgh_qg*fah_darwich] %>% 
+        .[,fbior:=ffpr*fgr_qg*fah_darwich]
+      tk.dt2 <- tk.dt[,.(dtxsid, use.pab, peffh, peffr, permh, permr, fgh_qg, fgr_qg, fah_darwich, fbioh, fbior)]
+      return(tk.dt2)
+    }
+    
+    predict.fbio_fug1 <- function(input.dt, 
+                             pab.use = "mpab", 
+                             pab.type = "class",
+                             pab.translate = list("low" = 0.9,
+                                                  "high" = 1.5)){
+      tk.dt <- copy(input.dt)
+      setnames(tk.dt, pab.use, "use.pab")
+      if(regexpr("class", pab.type) != -1){
+        for(this.name in names(pab.translate)){
+          tk.dt[use.pab == this.name, pab.num := pab.translate[[this.name]]]
+        }
+        tk.dt[, use.pab := pab.num] %>% 
+          .[, pab.num := NULL]
+      }
+      
+      tk.dt[,peffh:=(10^(0.4926*use.pab-0.1454))] %>% # peff dimensional 10-4 cm/s
+        .[,peffr:=peffh/3.6] %>% # Fagerhol 1996
+        .[,permh:=0.66*peffh*3.6] %>% # L/h, 0.66 m2 area intestine
+        .[,permr:=71/(100^2)*peffr*3.6] %>% 
+        .[,fgh_qg:=18/(18+cluh_gut*(1+18/permh))] %>% 
+        .[,fgr_qg:=0.65/(0.65+clur_gut*(1+.65/permr))] %>% 
+        .[,fah_darwich:=1-exp(-3.87*peffh)] %>% 
+        .[,fbioh:=ffph*fgh_qg*fah_darwich] %>% 
+        .[,fbior:=ffpr*fgr_qg*fah_darwich]
+      tk.dt2 <- tk.dt[,.(dtxsid, use.pab, peffh, peffr, permh, permr, fgh_qg, fgr_qg, fah_darwich, fbioh, fbior)]
+      return(tk.dt2)
+    }
+    
+    #gcl <- marrangeGrob(grobs=list(gcl1,gcl2,gcl3,gcl4),ncol=2,nrow=2,top=NULL)
+    #ggsave(gcl,file=paste0(loc.wd,"/r_data/figures/05FEB2019/ffp.png"),dpi=600,height=9,width=9)
+    
+    load(paste0(loc.wd,"/r_data/tk_data/PKstats-2018-01-16.RData"))
+    pkstats2 <- as.data.table(copy(PKstats)) %>% 
+      .[Route == "po", Route := "Oral"] %>% 
+      .[Route == "iv", Route := "IV"] %>% 
+      .[, Route := factor(Route, levels = c("Oral", "IV"))]
+    
+    ratpk.dt <- copy(pkstats2)
+    
+    pred.all <- allgut.casrn2[!is.na(dtxsid)][fbio.calc.dt, on = "dtxsid"]
+    
+    {
+      
+      pkcomp.dt <- pred.all[pab.use == "default_1.6",][,.("CAS" = casrn, 
+                              "fbior_default" = fbior, 
+                              "fabsr_default" = fah_darwich,
+                              "fgutr_default" = fgr_qg,
+                              "fhepr_default" = ffpr)][ratpk.dt, on= "CAS"] %>% 
+        .[, AUC_default := AUC.pred] %>% 
+        .[Route == "Oral", AUC_default := AUC.pred*fbior_default] %>% 
+        .[, Cmax_default := Cmax.pred] %>% 
+        .[Route == "Oral", Cmax_default := Cmax.pred*fbior_default] %>% 
+        .[, ]
+      
+      pkcomp.dt <- pred.all[pab.use == "rf_q50",][,.("CAS" = casrn, 
+                                                          "fbior_rfq50" = fbior, 
+                                                          "fabsr_rfq50" = fah_darwich,
+                                                          "fgutr_rfq50" = fgr_qg,
+                                                          "fhepr_rfq50" = ffpr)][pkcomp.dt, on= "CAS"] %>% 
+        .[, AUC_rfq50 := AUC.pred] %>% 
+        .[Route == "Oral", AUC_rfq50 := AUC.pred*fbior_rfq50] %>% 
+        .[, Cmax_rfq50 := Cmax.pred] %>% 
+        .[Route == "Oral", Cmax_rfq50 := Cmax.pred*fbior_rfq50] %>% 
+        .[, ]
+      
+      pkcomp.dt <- pred.all[pab.use == "mpab",][,.("CAS" = casrn, 
+                                                   "fbior_mpab" = fbior, 
+                                                   "fabsr_mpab" = fah_darwich,
+                                                   "fgutr_mpab" = fgr_qg,
+                                                   "fhepr_mpab" = ffpr)][pkcomp.dt, on= "CAS"] %>% 
+        .[, AUC_mpab := AUC.pred] %>% 
+        .[Route == "Oral", AUC_mpab := AUC.pred*fbior_mpab] %>% 
+        .[, Cmax_mpab := Cmax.pred] %>% 
+        .[Route == "Oral", Cmax_mpab := Cmax.pred*fbior_mpab] %>% 
+        .[, ]
+      
+      pkcomp.dt <- pred.all[pab.use == "rf_cat.val",][,.("CAS" = casrn, 
+                                                   "fbior_rfcat" = fbior, 
+                                                   "fabsr_rfcat" = fah_darwich,
+                                                   "fgutr_rfcat" = fgr_qg,
+                                                   "fhepr_rfcat" = ffpr)][pkcomp.dt, on= "CAS"] %>% 
+        .[, AUC_rfcat := AUC.pred] %>% 
+        .[Route == "Oral", AUC_rfcat := AUC.pred*fbior_rfcat] %>% 
+        .[, Cmax_rfcat := Cmax.pred] %>% 
+        .[Route == "Oral", Cmax_rfcat := Cmax.pred*fbior_rfcat]
+      
+      pkcomp.dt[, AUC_fhep := AUC.pred] %>% 
+        .[Route == "Oral", AUC_fhep := AUC.pred*fhepr_default] %>% 
+        .[, Cmax_fhep := Cmax.pred] %>% 
+        .[Route == "Oral", Cmax_fhep := Cmax.pred*fhepr_default]
+      
+      fbiorcomp.dt <- unique(pkcomp.dt[,.(CAS, Fbio, fbior_default, fbior_mpab, fbior_rfcat, fbior_rfq50, fhepr_default)])
+
+      
+     
+      fbior.res <- rbind(rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = Fbio, ycalc = fbior_mpab)][,"route" := "Oral"],
+                    pkcomp.dt[Route == "IV", xysummary(ymeas = Fbio, ycalc = fbior_mpab)][,"route" := "IV"],
+                    pkcomp.dt[, xysummary(ymeas = Fbio, ycalc = fbior_mpab)][,"route" := "All"])[,"method" := "mpab"],
+              rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = Fbio, ycalc = fbior_default)][,"route" := "Oral"],
+                    pkcomp.dt[Route == "IV", xysummary(ymeas = Fbio, ycalc = fbior_default)][,"route" := "IV"],
+                    pkcomp.dt[, xysummary(ymeas = Fbio, ycalc = fbior_default)][,"route" := "All"])[,"method" := "default"],
+              rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = Fbio, ycalc = fbior_rfcat)][,"route" := "Oral"],
+                    pkcomp.dt[Route == "IV", xysummary(ymeas = Fbio, ycalc = fbior_rfcat)][,"route" := "IV"],
+                    pkcomp.dt[, xysummary(ymeas = Fbio, ycalc = fbior_rfcat)][,"route" := "All"])[,"method" := "rfcat"],
+              rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = Fbio, ycalc = fbior_rfq50)][,"route" := "Oral"],
+                    pkcomp.dt[Route == "IV", xysummary(ymeas = Fbio, ycalc = fbior_rfq50)][,"route" := "IV"],
+                    pkcomp.dt[, xysummary(ymeas = Fbio, ycalc = fbior_rfq50)][,"route" := "All"])[,"method" := "rfq50"],
+              rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = Fbio, ycalc = fhepr_default)][,"route" := "Oral"],
+                    pkcomp.dt[Route == "IV", xysummary(ymeas = Fbio, ycalc = fhepr_default)][,"route" := "IV"],
+                    pkcomp.dt[, xysummary(ymeas = Fbio, ycalc = fhepr_default)][,"route" := "All"])[,"method" := "fhep"])[, "measure" := "Fbior"]
+        
+      auc.res <- rbind(rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred))][,"route" := "All"])[,"method" := "none"],
+                  rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred.Fbio))][,"route" := "Oral"],
+                        pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred.Fbio))][,"route" := "IV"],
+                        pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC.pred.Fbio))][,"route" := "All"])[,"method" := "Fbio_meas"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_mpab))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_mpab))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC_mpab))][,"route" := "All"])[,"method" := "mpab"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_default))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_default))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC_default))][,"route" := "All"])[,"method" := "default"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfcat))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfcat))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfcat))][,"route" := "All"])[,"method" := "rfcat"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfq50))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfq50))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC_rfq50))][,"route" := "All"])[,"method" := "rfq50"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_fhep))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(AUC), ycalc = log10(AUC_fhep))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(AUC), ycalc = log10(AUC_fhep))][,"route" := "All"])[,"method" := "fhep"])[, "measure" := "log10AUC"]
+      
+      cmax.res <- rbind(rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred))][,"route" := "All"])[,"method" := "none"],
+                  rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred.Fbio))][,"route" := "Oral"],
+                        pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred.Fbio))][,"route" := "IV"],
+                        pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred.Fbio))][,"route" := "All"])[,"method" := "Fbio_meas"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_mpab))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_mpab))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_mpab))][,"route" := "All"])[,"method" := "mpab"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_default))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_default))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_default))][,"route" := "All"])[,"method" := "default"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfcat))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfcat))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfcat))][,"route" := "All"])[,"method" := "rfcat"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfq50))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfq50))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_rfq50))][,"route" := "All"])[,"method" := "rfq50"],
+            rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_fhep))][,"route" := "Oral"],
+                  pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_fhep))][,"route" := "IV"],
+                  pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax_fhep))][,"route" := "All"])[,"method" := "fhep"])[, "measure" := "log10Cmax"]
+      
+      
+      write.xlsx(fbior.res, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/rat_tk.xlsx"), append = FALSE, sheetName = "fbior")
+      write.xlsx(auc.res, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/rat_tk.xlsx"), append = TRUE, sheetName = "AUC")
+      write.xlsx(cmax.res, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/rat_tk.xlsx"), append = TRUE, sheetName = "Cmax")
+      comb.res <- rbind(fbior.res, auc.res, cmax.res)
+      write.xlsx(comb.res, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/rat_tk.xlsx"), append = TRUE, sheetName = "collected")
+      comb.res2 <- melt(comb.res[,.(measure, method, route, xyr2, xyrmse, xycor, xyN = as.numeric(xyN))], measure.vars = c("xyr2", "xyrmse", "xycor", "xyN"), value.name = "val")
+      comb.res3 <- dcast(comb.res2, route + measure + variable ~ method, value.var = "val")
+      write.xlsx(comb.res3, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/rat_tk.xlsx"), append = TRUE, sheetName = "collected_pivot")
+      
+```
+
+
+```{r something}      
+      # rbind(pkcomp.dt[Route == "Oral", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred))][,"route" := "Oral"],
+      #       pkcomp.dt[Route == "IV", xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred))][,"route" := "IV"],
+      #       pkcomp.dt[, xysummary(ymeas = log10(Cmax), ycalc = log10(Cmax.pred.new))][,"route" := "All"])[,"measure" := "log10Cmax"]
+      # 
+      leg.fig <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_mpab), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        lims(x = c(-4,4), y = c(-4,4))+
+        theme(legend.position = "bottom")+
+        annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      gleg <- get_legend(leg.fig)
+      select_grobs <- function(lay) {
+        id <- unique(c(t(lay))) 
+        id[!is.na(id)]
+      } 
+      hlay1 <- rbind(c(1,2,3),
+                     c(1,2,3),
+                     c(1,2,3),
+                     c(1,2,3),
+                     c(1,2,3),
+                     c(4,4,4))
+      hlay2 <- rbind(c(1,2,3,4),
+                     c(1,2,3,4),
+                     c(1,2,3,4),
+                     c(1,2,3,4),
+                     c(1,2,3,4),
+                     c(5,5,5,5))
+      
+      
+      {
+      g2a <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC.pred), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+          theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "a)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      g2b <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC.pred.Fbio), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "b)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      g2c <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_mpab), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      gs2a <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_fhep), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "a)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      gs2b <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_default), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "b)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      gs2c <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_rfcat), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "d)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      gs2d <- ggplot(pkcomp.dt)+
+        geom_point(aes(x = log10(AUC), y= log10(AUC_rfq50), color = Route))+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(title = "",
+             x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+             y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+        theme_bw()+
+        gtheme+
+        theme(legend.position = "none")+
+        lims(x = c(-4,4), y = c(-4,4))+
+        annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                          ymin = 3.5, ymax = 3.5, xmin = -4, xmax = -4)
+      
+      
+      g2 <- marrangeGrob(grobs = list(g2a, g2b, g2c, gs2c, gleg), nrow = 2, ncol = 3, layout_matrix = hlay2, top = NULL)
+      ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/AUC_3x.tiff"), 
+             dpi = 600, width = 9, height = 4, compression = "lzw")
+      gs2 <- marrangeGrob(grobs = list(gs2a, gs2b, gs2d,gleg), nrow = 2, ncol = 3, layout_matrix = hlay1, top = NULL)
+      ggsave(gs2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/sAUC_4x.tiff"), 
+             dpi = 600, width = 12, height = 4, compression = "lzw")
+      
+      }
+      
+      {
+        auc.dt <- rbind(pkcomp.dt[,.(x = AUC, y = AUC.pred, Route)][,"col.nm" := 1],
+                        pkcomp.dt[,.(x = AUC, y = AUC.pred.Fbio, Route)][,"col.nm" := 2],
+                        pkcomp.dt[,.(x = AUC, y = AUC_mpab, Route)][,"col.nm" := 3],
+                        pkcomp.dt[,.(x = AUC, y = AUC_rfcat, Route)][,"col.nm" := 4]
+        )
+        txt.dt <- data.table(col.nm = 1:4, y = 3.5, x = -3.5, labl = paste0("bold('",c("a","b","c","d"),")')"))
+        
+        g2 <- ggplot(auc.dt)+
+          facet_grid(~col.nm)+
+          geom_point(aes(x = log10(x), y = log10(y), color = Route))+
+          geom_text(data = txt.dt, aes(x = x, y = y, label = labl), hjust = 0, parse = T)+
+          geom_abline(slope = 1, linetype = "dashed")+
+          lims(x = c(-4,4), y = c(-4,4))+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+          coord_equal()+
+          theme_bw()+
+          gtheme+
+          theme(strip.background = element_rect(fill = NA, color = NA),
+                strip.text = element_blank(),
+                legend.position = "bottom")
+        
+        auc.dt <- rbind(pkcomp.dt[,.(x = AUC, y = AUC_fhep, Route)][,"col.nm" := 1],
+                        pkcomp.dt[,.(x = AUC, y = AUC_default, Route)][,"col.nm" := 2],
+                        pkcomp.dt[,.(x = AUC, y = AUC_rfq50, Route)][,"col.nm" := 3]
+        )
+        txt.dt <- data.table(col.nm = 1:3, y = 3.5, x = -3.5, labl = paste0("bold('",c("a","b","c"),")')"))
+        
+        gs2 <- ggplot(auc.dt)+
+          facet_grid(~col.nm)+
+          geom_point(aes(x = log10(x), y = log10(y), color = Route))+
+          geom_text(data = txt.dt, aes(x = x, y = y, label = labl), hjust = 0, parse = T)+
+          geom_abline(slope = 1, linetype = "dashed")+
+          lims(x = c(-4,4), y = c(-4,4))+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"AUC (mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"AUC (mg*h/L)")))+
+          coord_equal()+
+          theme_bw()+
+          gtheme+
+          theme(strip.background = element_rect(fill = NA, color = NA),
+                strip.text = element_blank(),
+                legend.position = "bottom")
+        
+        ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/AUC_4x.tiff"), 
+               dpi = 600, width = 9, height = 4, compression = "lzw")
+        ggsave(gs2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/sAUC_3x.tiff"), 
+               dpi = 600, width = 9, height = 4, compression = "lzw")
+        
+        cmax.dt <- rbind(pkcomp.dt[,.(x = Cmax, y = Cmax.pred, Route)][,"col.nm" := 1],
+                        pkcomp.dt[,.(x = Cmax, y = Cmax.pred.Fbio, Route)][,"col.nm" := 2],
+                        pkcomp.dt[,.(x = Cmax, y = Cmax_mpab, Route)][,"col.nm" := 3],
+                        pkcomp.dt[,.(x = Cmax, y = Cmax_rfcat, Route)][,"col.nm" := 4]
+        )
+        txt.dt <- data.table(col.nm = 1:4, y = 2, x = -3.5, labl = paste0("bold('",c("a","b","c","d"),")')"))
+        
+        g3 <- ggplot(cmax.dt)+
+          facet_grid(~col.nm)+
+          geom_point(aes(x = log10(x), y = log10(y), color = Route))+
+          geom_text(data = txt.dt, aes(x = x, y = y, label = labl), hjust = 0, parse = T)+
+          geom_abline(slope = 1, linetype = "dashed")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*bolditalic("C"["max"])~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*bolditalic("C"["max"])~"(mg*h/L)")))+
+          coord_equal()+
+          theme_bw()+
+          gtheme+
+          theme(strip.background = element_rect(fill = NA, color = NA),
+                strip.text = element_blank(),
+                legend.position = "bottom")
+        
+        cmax.dt <- rbind(pkcomp.dt[,.(x = Cmax, y = Cmax_fhep, Route)][,"col.nm" := 1],
+                        pkcomp.dt[,.(x = Cmax, y = Cmax_default, Route)][,"col.nm" := 2],
+                        pkcomp.dt[,.(x = Cmax, y = Cmax_rfq50, Route)][,"col.nm" := 3]
+        )
+        txt.dt <- data.table(col.nm = 1:3, y = 2, x = -3.5, labl = paste0("bold('",c("a","b","c"),")')"))
+        
+        gs3 <- ggplot(cmax.dt)+
+          facet_grid(~col.nm)+
+          geom_point(aes(x = log10(x), y = log10(y), color = Route))+
+          geom_text(data = txt.dt, aes(x = x, y = y, label = labl), hjust = 0, parse = T)+
+          geom_abline(slope = 1, linetype = "dashed")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*bolditalic("C"["max"])~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*bolditalic("C"["max"])~"(mg*h/L)")))+
+          coord_equal()+
+          theme_bw()+
+          gtheme+
+          theme(strip.background = element_rect(fill = NA, color = NA),
+                strip.text = element_blank(),
+                legend.position = "bottom")
+        
+        ggsave(g3, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/Cmax_4x.tiff"), 
+               dpi = 600, width = 9, height = 4, compression = "lzw")
+        ggsave(gs3, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/sCmax_3x.tiff"), 
+               dpi = 600, width = 9, height = 4, compression = "lzw")
+      
+      
+      }
+        
+        
+      {
+        g2a <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax.pred), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "a)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        g2b <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax.pred.Fbio), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "b)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        g2c <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax_mpab), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2a <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax_fhep), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "a)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2b <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax_default), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "b)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2c <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax_rfcat), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2d <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = log10(Cmax), y= log10(Cmax_rfq50), color = Route))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured log"["10"]*"C"["max"]~"(mg*h/L)")),
+               y = expression(bold("Predicted log"["10"]*"C"["max"]~"(mg*h/L)")))+
+          theme_bw()+
+          gtheme+
+          theme(legend.position = "none")+
+          lims(x = c(-4,3), y = c(-4,3))+
+          annotation_custom(grob = text_grob(label = "d)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        
+        g2 <- marrangeGrob(grobs = list(g2a, g2b, g2c, gleg), nrow = 2, ncol = 3, layout_matrix = hlay1, top = NULL)
+        ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/Cmax_3x.tiff"), 
+               dpi = 600, width = 9, height = 4, compression = "lzw")
+        gs2 <- marrangeGrob(grobs = list(gs2a, gs2b, gs2c,gs2d,gleg), nrow = 2, ncol = 3, layout_matrix = hlay2, top = NULL)
+        ggsave(gs2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/sCmax_4x.tiff"), 
+               dpi = 600, width = 12, height = 4, compression = "lzw")
+      }
+      
+      {
+        
+        g2 <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = Fbio, y= (fbior_mpab)))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured ")*bolditalic("F"["bio,r"])),
+               y = expression(bold("Predicted ")*bolditalic("F"["bio,r"])))+
+          theme_bw()+
+          gtheme+
+          lims(x = c(0,1), y = c(0,1))
+        
+        gs2a <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = Fbio, y= (fhepr_default)))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured ")*bolditalic("F"["bio,r"])),
+               y = expression(bold("Predicted ")*bolditalic("F"["hep,r"])))+
+          theme_bw()+
+          gtheme+
+          lims(x = c(0,1), y = c(0,1))+
+          annotation_custom(grob = text_grob(label = "a)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2b <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = Fbio, y= (fbior_default)))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured ")*bolditalic("F"["bio,r"])),
+               y = expression(bold("Predicted ")*bolditalic("F"["bio,r"])))+
+          theme_bw()+
+          gtheme+
+          lims(x = c(0,1), y = c(0,1))+
+          annotation_custom(grob = text_grob(label = "b)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2c <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = Fbio, y= (fbior_rfcat)))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured ")*bolditalic("F"["bio,r"])),
+               y = expression(bold("Predicted ")*bolditalic("F"["bio,r"])))+
+          theme_bw()+
+          gtheme+
+          lims(x = c(0,1), y = c(0,1))+
+          annotation_custom(grob = text_grob(label = "c)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        gs2d <- ggplot(pkcomp.dt)+
+          geom_point(aes(x = Fbio, y= (fbior_rfq50)))+
+          geom_abline(slope = 1, linetype = "dashed")+
+          labs(title = "",
+               x = expression(bold("Measured ")*bolditalic("F"["bio,r"])),
+               y = expression(bold("Predicted ")*bolditalic("F"["bio,r"])))+
+          theme_bw()+
+          gtheme+
+          lims(x = c(0,1), y = c(0,1))+
+          annotation_custom(grob = text_grob(label = "d)", face = "bold", hjust = 0), 
+                            ymin = 2.5, ymax = 2.5, xmin = -4, xmax = -4)
+        
+        ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/Fbior_1x.tiff"), 
+               dpi = 600, width = 4, height = 4, compression = "lzw")
+        gs2 <- marrangeGrob(grobs = list(gs2a, gs2b, gs2c,gs2d), nrow = 1, ncol = 4, top = NULL)
+        ggsave(gs2, file = paste0(loc.wd, "/r_data/results_for_paper/rat_tk/Fbior_4x.tiff"), 
+               dpi = 600, width = 12, height = 3, compression = "lzw")
+      }
+      
+    }
+    
+
+  
+  
+}
+
+```
+
+#### BER plots ####
+```{r something}
+#### BER plots ####
+
+# collect httk chems for IVIVE
+chem.dt <- as.data.table(chem.physical_and_invitro.data)
+temp <- chem.dt[!is.na(DTXSID) &
+                  !is.na(logP) &
+                  !is.na(MP) &
+                  !is.na(Human.Funbound.plasma) &
+                  !is.na(Human.Clint),
+                .(DTXSID, CAS, Compound, logP, Human.Funbound.plasma, Human.Clint, Human.Caco2.Pab)
+                ]
+for(this.cas in temp[regexpr("<",Human.Clint) == -1 &
+                     Human.Clint != "ND" &
+                     Human.Funbound.plasma != "NF",CAS]){
+  parameters <- parameterize_steadystate(chem.cas = this.cas)
+  temp[CAS == this.cas, adj.fuph := parameters$Funbound.plasma] %>% 
+    .[CAS == this.cas, clinth := parameters$Clint]
+  
+}
+use.dt <- temp[!is.na(adj.fuph) & !is.na(clinth), ]
+
+# Calculate css for different IVIVE assumptions
+set.seed(6252019)
+use.dt[, r1_mcaco2 := .(list(calc_mc_css(chem.cas = CAS,
+                                         which.quantile = c(0.025,0.05,0.25,0.5,
+                                                            0.75,0.95,0.975),
+                                         Caco2.options = list(Caco2.Pab.default = "1.6",
+                                                              Caco2.Fabs = TRUE,
+                                                              Caco2.Fgut = TRUE,
+                                                              overwrite.invivo = TRUE,
+                                                              keepit100 = FALSE),
+                                         output.units = "uM"))),.(CAS)] %>% 
+  .[, r2_mfabs := .(list(calc_mc_css(chem.cas = CAS,
+                                     which.quantile = c(0.025,0.05,0.25,0.5,
+                                                        0.75,0.95,0.975),
+                                     Caco2.options = list(Caco2.Pab.default = "1.6",
+                                                          Caco2.Fabs = FALSE,
+                                                          Caco2.Fgut = FALSE,
+                                                          overwrite.invivo = FALSE,
+                                                          keepit100 = FALSE),
+                                     output.units = "uM"))),.(CAS)] %>% 
+  .[, r3_mcaco2_honda1 := .(list(calc_mc_css(chem.cas = CAS,
+                                             which.quantile = c(0.025,0.05,0.25,0.5,
+                                                                0.75,0.95,0.975),
+                                             Caco2.options = list(Caco2.Pab.default = "1.6",
+                                                                  Caco2.Fabs = TRUE,
+                                                                  Caco2.Fgut = TRUE,
+                                                                  overwrite.invivo = TRUE,
+                                                                  keepit100 = FALSE),
+                                             output.units = "uM",
+                                             IVIVE = "Honda1"))),.(CAS)] %>% 
+  .[, r4_mfabs_honda1 := .(list(calc_mc_css(chem.cas = CAS,
+                                            which.quantile = c(0.025,0.05,0.25,0.5,
+                                                               0.75,0.95,0.975),
+                                            Caco2.options = list(Caco2.Pab.default = "1.6",
+                                                                 Caco2.Fabs = FALSE,
+                                                                 Caco2.Fgut = FALSE,
+                                                                 overwrite.invivo = FALSE,
+                                                                 keepit100 = FALSE),
+                                            output.units = "uM",
+                                            IVIVE = "Honda1"))),.(CAS)]
+```
+###
+```{r something}
+
+# load ToxCast Summary file
+load(file = paste0(loc.wd, "/r_data/BER/toxcast_summary_15AUG2019.RData"))
+
+# load httk-seem3 data 
+load(file = paste0(loc.wd, "/r_data/BER/seem3_httk_chems_15AUG2019.RData"))
+
+# Merge with Toxcast data and convert q5AC50 to OED (aka AED)
+aed.dt <- toxcast.summary[use.dt, on = "CAS"]
+aed_r1_mcaco2 <- aed.dt[, lapply(unlist(r1_mcaco2), function(x) q5cnom/x), .(CAS, DTXSID)][,c("gutabs", "IVIVE") := 
+                                                                                             list("bold('Caco-2')~bolditalic('F'['bio'])", "bold('Nominal Conc.')")]
+aed_r2_mfabs <- aed.dt[, lapply(unlist(r2_mfabs), function(x) q5cnom/x), .(CAS, DTXSID)][,c("gutabs", "IVIVE") := 
+                                                                                           list("bolditalic('In Vivo')~bolditalic('F'['bio'])", "bold('Nominal Conc.')")]
+aed_r3_mcaco2_honda1 <- aed.dt[, lapply(unlist(r1_mcaco2), function(x) q5cfree/x), .(CAS, DTXSID)][,c("gutabs", "IVIVE") := 
+                                                                                                     list("bold('Caco-2')~bolditalic('F'['bio'])", "bold('Free Conc.')")]
+aed_r4_mfabs_honda1 <- aed.dt[, lapply(unlist(r2_mfabs), function(x) q5cfree/x), .(CAS, DTXSID)][,c("gutabs", "IVIVE") := 
+                                                                                                   list("bolditalic('In Vivo')~bolditalic('F'['bio'])", "bold('Free Conc.')")]
+aed.full <- rbind(aed_r1_mcaco2,
+                  aed_r2_mfabs,
+                  aed_r3_mcaco2_honda1,
+                  aed_r4_mfabs_honda1)
+setnames(aed.full, 3:9, c("q025", "q05", "q25", "q50", "q75", "q95", "q975"))
+aed.full[, gutabs := factor(gutabs, levels = c("bolditalic('In Vivo')~bolditalic('F'['bio'])","bold('Caco-2')~bolditalic('F'['bio'])"))] %>% 
+  .[, IVIVE := factor(IVIVE, levels = c("bold('Nominal Conc.')", "bold('Free Conc.')"))]
+aed.full2 <- seem.dt[,.(DTXSID = dsstox_substance_id, seem3, seem3.l95, seem3.u95)][aed.full, on = "DTXSID"]
+aed.full3 <- aed.full2[gutabs == "bolditalic('In Vivo')~bolditalic('F'['bio'])" & IVIVE == "bold('Nominal Conc.')", .(r1 = rank(q95), CAS)][aed.full2, on = 'CAS']
+aed.full4 <- aed.full3[gutabs == "bolditalic('In Vivo')~bolditalic('F'['bio'])" & IVIVE == "bold('Nominal Conc.')", .(r2 = rank(log10(q95/seem3.u95)), CAS)][aed.full3, on = 'CAS']
+aed.full4[q95/seem3.u95 <= 1, cross.ber.min := max(c(q95, seem3.l95)), .(DTXSID, gutabs, IVIVE)] %>% 
+  .[q95/seem3.u95 <= 1, cross.ber.max := min(c(q05, seem3.u95)), .(DTXSID, gutabs, IVIVE)]
+```
+###
+```{r something}
+# make BER plot
+gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
+                axis.text.y = element_text(size=10, color = "black",face="bold"),
+                legend.text = element_text(size = 10),
+                legend.title = element_text(size = 10),
+                legend.key.size = unit(10, "points"),
+                panel.background = element_rect(fill="white"),
+                axis.line = element_line(color="black"),
+                strip.background = element_blank(),
+                axis.ticks.y = element_line(color="black"),
+                legend.position = "top",
+                axis.line.x=element_line(color="black"),
+                axis.ticks.x=element_line(color="black"),
+                axis.text.x = element_text(size = 10,face="bold",color="black"),
+                plot.title = element_text(hjust=0,size=12,face="bold"))
+
+legend.dt <- data.table(x = 1:3, y = 1:3, 
+                        leg.labl = c("OED","Exposure", "Overlap"), 
+                        leg.color = c("black", "blue", "red")) %>% 
+  .[, leg.labl := factor(leg.labl, levels = c("OED","Exposure", "Overlap"))]
+g1leg <- ggplot(legend.dt)+
+  geom_point(aes(x = x, y = y, color = leg.labl))+
+  scale_color_manual(labels = c("OED","Exposure", "Overlap"),values = c("black","blue","red"))+
+  labs(color = "Value:")+
+  theme_bw()+
+  gtheme+
+  theme(legend.position = "bottom")
+gleg <- get_legend(g1leg)
+
+aed.full4[q95/seem3.u95 <= 1,.(nlow.ber = .N), .(gutabs, IVIVE) ]
+# Might need to change labl2 to reflect output from previous line
+figtxt.dt <- unique(aed.full4[,.(gutabs, IVIVE)]) %>% 
+  .[,labl1 := c("b)","a)", "d)", "c)")] %>% 
+  .[, x1 := 0] %>% 
+  .[, y1 := 5] %>% 
+  .[,labl2 := paste("'N'['overlap']*': ", c("146'", "138'","206'","206'"))] %>% 
+  .[, x2 := 0] %>% 
+  .[, y2 := -15]
+figtxt.dt
+g1 <- ggplot(aed.full4)+
+  facet_grid(gutabs ~ IVIVE, labeller = label_parsed)+
+  geom_linerange(aes(ymin = log10(q95), ymax = log10(q05), x = r2), color = "black") +
+  geom_point(aes(y = log10(q50), x = r2), color = "black") +
+  geom_linerange(aes(ymin = log10(seem3.l95), ymax = log10(seem3.u95), x = r2), color = "blue") +
+  geom_point(aes(y = log10(seem3), x = r2), color = "blue") +
+  geom_linerange(aes(ymin = log10(cross.ber.min), ymax = log10(cross.ber.max), x = r2), color = "red")+
+  geom_text(data = figtxt.dt,mapping = aes(x = x1, y = y1, label = labl1),hjust = 0, parse = FALSE)+
+  geom_text(data = figtxt.dt,mapping = aes(x = x2, y = y2, label = labl2),hjust = 0, parse = TRUE)+
+  labs(x = "BER Rank (panel a)", y = expression(bold('log'['10']*'(mg/kgBW/day)')))+
+  theme_bw()+
+  gtheme
+hlay <- t(t(c(rep(1,8),2)))
+g2 <- marrangeGrob(grobs = list(g1, gleg), nrow = 2, ncol = 1, top = NULL, layout_matrix = hlay)
+ggsave(g2, file = paste0(loc.wd, "/r_data/results_for_paper/BERrank_15AUG2019.tiff"), dpi = 600, height = 5, width = 7.5, compression = "lzw")
+```
