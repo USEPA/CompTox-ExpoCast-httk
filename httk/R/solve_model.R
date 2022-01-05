@@ -386,8 +386,9 @@ specification in compartment_units for model ", model)
 # Address case where initial conditions provided using argument initial.values:
   if (!is.null(initial.values))
   {
-    #Check if 'initial.values' is a named vector linking values with
-    #model components
+    #-- Initial Values Checks --#
+    # Check if 'initial.values' is a named vector linking values with
+    # model components
     if(is.null(names(initial.values))){
       stop("The initial.values for the model, ",
            model,
@@ -396,30 +397,39 @@ specification in compartment_units for model ", model)
            paste(state.vars,collapse = ", "),".\n    ",
            "These should be amounts not concentrations.")
     }
-    #Check if 'initial.values' contains all state vars
-    if(any(!(state.vars%in%names(initial.values)))){
+    
+    # Check if 'initial.values' is a numeric vector
+    if(class(initial.values)!="numeric"){
+      stop("The initial.values argument is of class '",class(initial.values),
+           "' and should be 'numeric'.")
+    }
+    
+    # Check if 'initial.values' contains a subset of state vars.
+    # If the initial.values is not a subset of state vars reply with an error.
+    if(all(!(names(initial.values)%in%state.vars))){
       stop("The initial.values for the model, ",
            model,
            ", should correspond to model state variable compartments.\n    ",
            "Allowed compartments include: ",
            paste(state.vars,collapse = ", "),".\n    ",
            "These should be amounts not concentrations.")
-    }else{
-      #Obtain any initial values that are not state.vars
-      non.state.vars <- names(initial.values)[
-        which(!(state.vars%in%names(initial.values)))
-      ]
-      #Subset to only state.vars
-      initial.values <- initial.values[state.vars]
-      #Check if there are any non.state.vars
-      if(length(non.state.vars)!=0){
-        warning("Additional unnecessary elements were included in the",
-                "initial.values -- namely ",
-                paste(non.state.vars,collapse = ", "),".\n    ",
-                "These variables were removed from the initial conditions.")
-      }
     }
     
+    # Obtain any 'initial.values' that are not state.vars
+    non.state.vars <- which(!(names(initial.values)%in%state.vars))
+    # Check if there are any non.state.vars
+    if(length(non.state.vars)!=0){
+      warning("Additional unnecessary elements were included in the ",
+              "initial.values -- namely ",
+              paste(names(initial.values)[non.state.vars],collapse = ", "),
+              ".\n    ",
+              "These variables were removed from the initial conditions.")
+      
+      # Subset to only state.vars
+      initial.values <- initial.values[-non.state.vars]
+    }
+    
+    #-- Initial Value Units --#
     #Check if there are units specified for the initial.values provided
     #if no units are specified assume the user is giving initial values
     #in default units expected by the model and provide a warning message
@@ -437,6 +447,28 @@ specification in compartment_units for model ", model)
                 sep = " = "
               ),collapse = "\n    "))
     }else{
+      #Check if 'initial.value.units' is a named vector linking units with
+      #model components
+      if(is.null(names(initial.value.units))){
+        stop("The initial.value.units for the model, ",
+             model,
+             ", should correspond to model state variable compartments.\n    ",
+             "Allowed compartments include: ",
+             paste(state.vars,collapse = ", "),".\n    ",
+             "These should be amounts not concentrations.")
+      }
+      
+      #Check if 'initial.value.units' is a "character" vector
+      if(class(initial.value.units)!="character"){
+        stop("The initial.value.units argument is of class '",
+             class(initial.value.units),
+             "' and should be 'character'.")
+      }
+      
+      # Check if 'initial.value.units' contains units for all components
+      # in 'initial.values'.
+      # If the 'initial.value' vector is not a subset of 'initial.value.units'
+      # reply with an error.
       if(any(!(names(initial.values)%in%names(initial.value.units)))){
         stop("The initial.value.units for the model, ",
              model,
@@ -445,19 +477,20 @@ specification in compartment_units for model ", model)
              paste(state.vars,collapse = ", "),".\n    ",
              "These should be amounts not concentrations.")
       }else{
-        #Obtain any initial values that are not state.vars
-        non.state.vars <- names(initial.value.units)[
-          which(!(names(initial.values)%in%names(initial.value.units)))
-        ]
-        #Subset to only state.vars
-        initial.value.units <- initial.value.units[initial.values]
+        #Obtain any 'initial.value.units' that are not in 'initial.values'
+        non.state.vars <- which(!(names(initial.value.units)%in%names(initial.values)))
+        
         #Check if there are any non.state.vars
         if(length(non.state.vars)!=0){
           warning("Additional unnecessary elements were included in the",
-                  "initial.value.units -- namely ",
-                  paste(non.state.vars,collapse = ", "),".\n    ",
+                  "initial.values -- namely ",
+                  paste(names(initial.value.units)[non.state.vars],collapse = ", "),
+                  ".\n    ",
                   "These variables were removed from the initial conditions.")
         }
+        
+        #Subset to only components in 'initial.values' 
+        initial.value.units <- initial.value.units[names(initial.values)]
       }
     }
     
@@ -504,7 +537,8 @@ specification in compartment_units for model ", model)
     
     #...and apply units conversion factor to get the state value in 
     #umol-based units.
-    state <- initial.values * units_conversion_factor
+    state[names(initial.values)] <- initial.values*units_conversion_factor
+    # state <- initial.values * units_conversion_factor
   }
   
 ### SIMULATION TIME
@@ -664,7 +698,7 @@ specification in compartment_units for model ", model)
   names(parameters) <- compiled_param_names
 
 ### RUNNING DESOLVE
-  
+
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(
     y = state, 
@@ -686,7 +720,7 @@ specification in compartment_units for model ", model)
 
 # Cannot guarantee arbitrary precision for deSolve:
   out <- set_httk_precision(out)
-  
+
 ### MODEL OUTPUT
 
   # Convert output to desired units
