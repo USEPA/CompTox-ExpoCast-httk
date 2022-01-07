@@ -30,7 +30,6 @@ model.list[["1compartment"]]$alltissues=c(
   "skin",            
   "spleen",          
   "red blood cells",
-  "thyroid",
   "rest")
   
 # 1compartment model lumps everything, so list of compartments is empty.
