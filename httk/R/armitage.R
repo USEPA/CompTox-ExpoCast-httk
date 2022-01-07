@@ -155,6 +155,12 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.cellmass Mass per cell, ng/cell
 #'
 #' @param this.f_oc 1, everything assumed to be like proteins
+#' 
+#' @param this.conc_ser_alb 24 g/L, mass concentration of albumin in serum.
+#' 
+#' @param this.conc_ser_lip 1.9 g/L, mass concentration of lipids in serum.
+#' 
+#' @param this.Vdom 0 ml, the volume of dissolved organic matter (DOM)
 #'
 #' @return
 #' \tabular{lll}{
