@@ -7,13 +7,10 @@
 CAS.checksum(CAS.string)
 }
 \arguments{
-\item{cas.string}{A charater string of three numbers separated by two dashes}
-
-\item{allow.na}{If TRUE (default is FALSE) then NA values are written to the
-table, otherwise they are ignored.}
+\item{CAS.string}{A character string of three numbers separated by two dashes}
 }
 \value{
-logical (TRUE if final digit of CAS is consistent with other digtits)
+logical (TRUE if final digit of CAS is consistent with other digits)
 }
 \description{
 Chemical abstracts services registry numbers (CAS-RN) include a final digit
