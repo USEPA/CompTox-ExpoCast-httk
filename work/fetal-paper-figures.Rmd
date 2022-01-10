@@ -21,7 +21,7 @@ rm(list=ls())
 # Setup
 #
 #
-library(gdata)
+library(readxl)
 library(ggplot2)
 library(httk)
 library(scales)
@@ -50,7 +50,7 @@ RMSE <- function(x)
 #
 #
 ```{r process_aylward_data, eval = TRUE}
-MFdata <- read.xls("Aylward-MatFet.xlsx",stringsAsFactors=FALSE)
+MFdata <- read_excel("Aylward-MatFet.xlsx")
 
 cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
@@ -116,16 +116,27 @@ MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"obs.units"] <- "uM"
 ```
 
 
-# Make the HTTK Predictions:
+# Compare HTTK predictions with maternal:fetal observations from Aylward 2014
+#
+# Note that we can't do an absolute scale comparison (for example, fetal:fetal 
+# or maternal:maternal) because we don't know the dose for the Aylward data but
+# we assume that the maternal:fetal ratio is independent of dose and so we 
+# use the plasma ratio at full term (40 weeks) resulting from a 1 mg/kg/day
+# exposure rate starting in week 13.
 ```{r make_aylward_preds, eval = TRUE}
+# Simulate starting from the 13th week of gestation until full term (40 weeks):
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
-  
+
+# For each chemical with maternal-fetal ratio data and HTTK in vitro data:  
 for (this.id in unique(MFdata.httk$DTXSID))
 {
+# Load the chemical-specifc paramaters:
   p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
     fetal_fup_adjustment =TRUE,
     suppress.messages=TRUE))
-  if (!is.na(p$Funbound.plasma.dist))
+# Skip chemicals where the 95% credible interval for Fup spans more than 0.1 to
+# 0.9 (that is, Fup is effectively unknown):
+    if (!is.na(p$Funbound.plasma.dist))
   {
     if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
       as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.11)
@@ -135,7 +146,9 @@ for (this.id in unique(MFdata.httk$DTXSID))
   } else skip <- FALSE
   
   if (!skip)
-  {  
+  {
+# Solve the PBTK equations for the full simulation time assuming 1 total daily
+# dose of 1 mg/kg/day spread out over three evenly spaces exposures:
     out <- suppressWarnings(solve_fetal_pbtk(
       parameters=p,
       dose=0,
@@ -144,14 +157,16 @@ for (this.id in unique(MFdata.httk$DTXSID))
       doses.per.day=3,
       output.units = "uM",
       suppress.messages=TRUE))
-# The whole final day
+# Identify the concentrations from the final (279th) day:
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
-      # The compartments below will have to be changed when using the maternal-fetal model:
+# Average over the final day:
     MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- mean(out[last.row,"Cplasma"])
     MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred"] <- mean(out[last.row,"Cfplasma"])
     MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred"] <- 
       mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+
+# Repeat the analysis without the adjustment to fetal Fup:
     p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
       fetal_fup_adjustment =FALSE,
       suppress.messages = TRUE))
@@ -167,65 +182,16 @@ for (this.id in unique(MFdata.httk$DTXSID))
       
     last.row <- which(out[,"time"]>279) # The whole final day
     last.row <- last.row[!duplicated(out[last.row,"time"])]
-  # The compartments below will have to be changed when using the maternal-fetal model:
     MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred.nofup"] <- mean(out[last.row,"Cplasma"])
     MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred.nofup"] <- mean(out[last.row,"Cfplasma"])
     MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred.nofup"] <- 
       mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
   }
-#  if (!is.nan(MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"]) &
-#    is.nan(MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred.nofup"]))
-#    browser()
 }
 
 # Something is wrong with cotinine:
 MFdata.httk <- subset(MFdata.httk,Chemical!="Cotinine")
 
-
-# Aylward absolute comparison:
-# Can't do an absolute scale prediction because we don't know the dose rate:
-#
-#FigBa  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
-#  geom_point(aes(
-#    x=Fet.pred,
-#    y=infant,
-#    shape=Chemical.Category,
-#    color=Chemical.Category),
-#    size=3)   +
-#  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-#  geom_abline(slope=1, intercept=0) + 
-#  ylab(expression(paste(italic("In vivo")," Infant Plasma Conc. (uM))"))) + 
-#  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
-#  theme_bw()  +
-#  theme(legend.position="bottom")+
-#  theme( text  = element_text(size=14))+ 
-#  theme(legend.text=element_text(size=10))+ 
-#  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-#  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
-#    
-#print(FigBa)  
-#
-#FigBb  <- ggplot(data=subset(MFdata.httk,obs.units=="uM")) +
-#  geom_point(aes(
-#    x=Mat.pred,
-#    y=maternal,
-#    shape=Chemical.Category,
-#    color=Chemical.Category),
-#    size=3)   +
-#  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
-#  geom_abline(slope=1, intercept=0) + 
-#  ylab(expression(paste(italic("In vivo")," Maternal Plasma Conc. (uM))"))) + 
-#  xlab(expression(paste(italic("In vitro")," Predicted Conc. (uM)"))) +
-#  theme_bw()  +
-#  theme(legend.position="bottom")+
-#  theme( text  = element_text(size=14))+ 
-#  theme(legend.text=element_text(size=10))+ 
-#  guides(color=guide_legend(title="Class",nrow=3,byrow=TRUE))+ 
-#  guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
-#    
-#print(FigBb)  
-
-  
 max.chem <- MFdata.httk[which(MFdata.httk$MFratio==max(MFdata.httk$MFratio)),]
 min.chem <- MFdata.httk[which(MFdata.httk$MFratio==min(MFdata.httk$MFratio)),]
 cat(paste("The minimum observed ratio was ",
@@ -360,6 +326,7 @@ fit1sub <- lm(data=subset(MFdata.main,
   MFratio~MFratio.pred.nofup)
 summary(fit1sub)
 RMSE(fit1sub)
+
 ```
 ```{r voc_analysis, eval = TRUE}
 # Mean logHenry's law constant for PAH's:
@@ -519,6 +486,73 @@ dim(subset(repeats,!(Chemical.Category %in% c(
   "Polyaromatic Hydrocarbons"))))[1],
  " chemicals",sep=""))
    
+
+
+Fig4.table <- data.frame()
+Fig4.table["Number of Chemicals","All Fig 4"] <- length(unique(MFdata.httk$DTXSID))
+Fig4.table["Number of Observations","All Fig 4"] <- dim(MFdata.httk)[1]
+Fig4.table["Observed Mean (Min - Max)","All Fig 4"] <- paste(
+  signif(mean(MFdata.httk$MFratio),2)," (",
+  signif(min(MFdata.httk$MFratio),2)," - ",
+  signif(max(MFdata.httk$MFratio),2),")",sep="")
+Fig4.table["Observed Standard Deviation","All Fig 4"] <- signif(sd(MFdata.httk$MFratio),2) 
+Fig4.table["Predicted Mean (Min - Max)","All Fig 4"] <-  paste(
+  signif(mean(MFdata.main$MFratio.pred),2)," (",
+  signif(min(MFdata.main$MFratio.pred),2)," - ",
+  signif(max(MFdata.main$MFratio.pred),2),")",sep="") 
+Fig4.table["RMSE","All Fig 4"] <- signif(RMSE(fit2),2)
+Fig4.table["R-squared","All Fig 4"] <- signif(summary(fit2)[["adj.r.squared"]],2)
+Fig4.table["p-value","All Fig 4"] <- signif(summary(fit2)[["coefficients"]]["MFratio.pred",4],2)
+
+MFdata.sub1 <- subset(MFdata.httk,
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons")))
+
+Fig4.table["Number of Chemicals","No PFAS/PAH"] <- length(unique(MFdata.sub1$DTXSID))
+Fig4.table["Number of Observations","No PFAS/PAH"] <- dim(MFdata.sub1)[1]
+Fig4.table["Observed Mean (Min - Max)","No PFAS/PAH"] <- paste(
+  signif(mean(MFdata.sub1$MFratio),2)," (",
+  signif(min(MFdata.sub1$MFratio),2)," - ",
+  signif(max(MFdata.sub1$MFratio),2),")",sep="")
+Fig4.table["Observed Standard Deviation","No PFAS/PAH"] <- signif(sd(MFdata.sub1$MFratio),2) 
+
+MFdata.sub2 <- subset(MFdata.main,
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons")))
+
+Fig4.table["Predicted Mean (Min - Max)","No PFAS/PAH"] <-  paste(
+  signif(mean(MFdata.sub2$MFratio.pred),2)," (",
+  signif(min(MFdata.sub2$MFratio.pred),2)," - ",
+  signif(max(MFdata.sub2$MFratio.pred),2),")",sep="") 
+Fig4.table["RMSE","No PFAS/PAH"] <- signif(RMSE(fit2sub),2)
+Fig4.table["R-squared","No PFAS/PAH"] <- signif(summary(fit2sub)[["adj.r.squared"]],2)
+Fig4.table["p-value","No PFAS/PAH"] <- signif(summary(fit2sub)[["coefficients"]]["MFratio.pred",4],2)
+
+
+MFdata.sub3 <- subset(MFdata.main,N.obs > 1 &
+  !(Chemical.Category %in% c(
+    "Fluorinated compounds",
+    "Polyaromatic Hydrocarbons")))
+
+Fig4.table["Number of Chemicals","Replicates Only"] <- length(unique(MFdata.sub3$DTXSID))
+Fig4.table["Number of Observations","Replicates Only"] <- dim(MFdata.sub3)[1]
+Fig4.table["Observed Mean (Min - Max)","Replicates Only"] <- paste(
+  signif(mean(MFdata.sub3$MFratio),2)," (",
+  signif(min(MFdata.sub3$MFratio),2)," - ",
+  signif(max(MFdata.sub3$MFratio),2),")",sep="")
+Fig4.table["Observed Standard Deviation","Replicates Only"] <- signif(sd(MFdata.sub3$MFratio),2) 
+
+Fig4.table["Predicted Mean (Min - Max)","Replicates Only"] <-  paste(
+  signif(mean(MFdata.sub3$MFratio.pred),2)," (",
+  signif(min(MFdata.sub3$MFratio.pred),2)," - ",
+  signif(max(MFdata.sub3$MFratio.pred),2),")",sep="") 
+Fig4.table["RMSE","Replicates Only"] <- signif(RMSE(fit4sub),2)
+Fig4.table["R-squared","Replicates Only"] <- signif(summary(fit4sub)[["adj.r.squared"]],2)
+Fig4.table["p-value","Replicates Only"] <- signif(summary(fit4sub)[["coefficients"]]["MFratio.pred",4],2)
+
+write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 ```
 
 
@@ -529,7 +563,7 @@ dim(subset(repeats,!(Chemical.Category %in% c(
 #
 #
 ```{r dallmann2018_data, eval = TRUE}
-TKstats <- read.xls("MaternalFetalAUCData.xlsx",stringsAsFactors=FALSE)
+TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
 TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
 TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 
@@ -538,14 +572,18 @@ BW.nonpreg <- 61.103
 
 #TKstats$Dose <- TKstats$Dose/BW
 #TKstats$Dose.Units <- "mg/kg"
-
+colnames(TKstats)[colnames(TKstats)=="Observed Pregnant"] <- "Observed.Pregnant"
+colnames(TKstats)[colnames(TKstats)=="Observed Pregnant5"] <- "Observed.Pregnant5"
+colnames(TKstats)[colnames(TKstats)=="Observed Non-Pregnant"] <- "Observed.Non.Pregnant"
+colnames(TKstats)[colnames(TKstats)=="Observed Non-Pregnant2"] <- "Observed.Non.Pregnant2"
+colnames(TKstats)[colnames(TKstats)=="Dose Route"] <- "Dose.Route"
 ```
 
 
 ```{r dallmann2018_preds, eval = TRUE}
 for (this.id in unique(TKstats$DTXSID))
 {
-  if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"X.unit."])!=-1))
+  if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"Dose Units"])!=-1))
   {
   }  
   if (this.id %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
@@ -621,6 +659,8 @@ for (this.id in unique(TKstats$DTXSID))
 TKstats$Ratio.obs <- TKstats$Observed.Pregnant / TKstats$Observed.Non.Pregnant
 TKstats$Ratio.httk <- TKstats$Predicted.Pregnant.httk / TKstats$Predicted.Non.Pregnant.httk
 TKstats <- subset(TKstats, !is.na(TKstats$Ratio.httk))
+
+write.csv(TKstats,file="Table-Dallmann2018.csv",row.names=FALSE)
 ```
 
 ```{r dallmann2018_figure eval = TRUE}
@@ -648,6 +688,12 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   theme(legend.text=element_text(size=8))
     
 #print(FigEa)
+cat(paste(
+  "For the Dallman et al. (2018) data we observe an average-fold error (AFE)\n\ of",
+  signif(mean(TKstats$Predicted.Non.Pregnant.httk/TKstats$Observed.Non.Pregnant2),2),
+  "and a RMSE (log10-scale) of",
+  signif((mean((log10(TKstats$Predicted.Non.Pregnant.httk)-log10(TKstats$Observed.Non.Pregnant2))^2))^(1/2),2),
+  "for non-pregnant woman.\n"))
 
 FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_point(aes(
@@ -673,6 +719,13 @@ FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   theme(legend.text=element_text(size=8))
     
 #print(FigEb)
+cat(paste(
+  "We observe an AFE of",
+  signif(mean(TKstats$Predicted.Pregnant.httk/TKstats$Observed.Pregnant5),2),
+  "and a RMSE (log10-scale) of",
+  signif((mean((log10(TKstats$Predicted.Pregnant.httk)-log10(TKstats$Observed.Pregnant5))^2))^(1/2),2),
+  "for pregnant woman.\n"))
+
 
 
 FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
@@ -729,13 +782,6 @@ write.csv(subset(TKstats,Parameter=="AUCinf" &
   !is.na(Ratio.httk)),
   file="DallmanTable.txt")
   
-# AFE:
-mean(TKstats$Predicted.Pregnant.httk/TKstats$Observed.Pregnant5)
-# RMSLE
-(mean((log10(TKstats$Predicted.Pregnant.httk)-log10(TKstats$Observed.Pregnant5))^2))^(1/2)
-
-
-
 ```
 #
 #
@@ -743,7 +789,7 @@ mean(TKstats$Predicted.Pregnant.httk/TKstats$Observed.Pregnant5)
 #
 #
 ```{r curley1969_data, eval = TRUE}
-Curley <- read.xls("Curley1969.xlsx",stringsAsFactors=FALSE)
+Curley <- as.data.frame(read_excel("Curley1969.xlsx"))
 dim(Curley)
 Curley.compounds <- Curley[1,4:13]
 Curley <- Curley[4:47,]
@@ -789,10 +835,26 @@ for (this.tissue in unique(Curley$Tissue))
 )
 Curley.pcs[Curley.pcs$Tissue=="Lungs","Tissue"] <- "Lung"
 
-pearce2017 <- read.xls("PC_Data.xlsx",stringsAsFactors=FALSE)
+pearce2017 <- read_excel("PC_Data.xlsx")
 pearce2017 <- subset(pearce2017,DTXSID%in%Curley.pcs$DTXSID)
 any(pearce2017$DTXSID%in%Curley.pcs$DTXSID)
 print("None of the Curley chems were in the Pearce 2017 PC predictor evaluation.")
+```
+```{r csanady2002_pcs, eval = TRUE}
+csanadybpa <- read_excel("Csanady2002.xlsx",sheet="Table 2")
+csanadybpa$Compound <- "Bisphenol A"
+csanadybpa$DTXSID <- "DTXSID7020182"
+csanadybpa <- csanadybpa[,c("Compound","DTXSID","Tissue","Mean")]
+colnames(csanadybpa) <- colnames(Curley.pcs)
+
+csanadydaid <- read_excel("Csanady2002.xlsx",sheet="Table 3",skip=1)
+csanadydaid$Compound <- "Daidzein"
+csanadydaid$DTXSID <- "DTXSID9022310"
+csanadydaid <- csanadydaid[,c("Compound","DTXSID","Tissue","Mean...6")]
+colnames(csanadydaid) <- colnames(Curley.pcs)
+
+Curley.pcs <- rbind(Curley.pcs,csanadybpa,csanadydaid)
+Curley.pcs <- subset(Curley.pcs,Tissue!="Mammary gland")
 ```
 ```{r curley1969_makepreds, eval = TRUE}
 suppressWarnings(load_sipes2017())
@@ -817,11 +879,13 @@ for (this.chemical in unique(Curley.pcs$DTXSID))
     fetal_pcs <- suppressWarnings(
       predict_partitioning_schmitt(parameters = fetal_schmitt_parms,
         suppress.messages=TRUE,
-      minimum.Funbound.plasma = 1e-16))
+        model="fetal_pbtk",
+        minimum.Funbound.plasma = 1e-16))
     fetal_pcs.nocal <- suppressWarnings(predict_partitioning_schmitt(
       parameters = fetal_schmitt_parms,
       regression=FALSE,
       suppress.messages=TRUE,
+      model="fetal_pbtk",
       minimum.Funbound.plasma = 1e-16))
     out <- suppressWarnings(solve_fetal_pbtk(
       dtxsid = this.chemical,
@@ -852,20 +916,66 @@ for (this.chemical in unique(Curley.pcs$DTXSID))
       }  
   } else print(this.chemical)
 reset_httk()
+
+cat(paste(
+  "For the two placental observations (",
+  subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"PC"],
+  "for Bisphenol A and ",
+  subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"PC"],
+  "for Diadzen) the predictions were ",
+  subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"HTTK.pred"],
+  " and ",
+  subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"HTTK.pred"],
+  ", respectively.\n",sep=""))
+
+
 ```
+```{r weijs2013_loadPCs, eval = TRUE}
+weijstab3 <- read_excel("Weijs2013.xlsx",sheet="Table3",skip=1)
+weijstab3 <- subset(weijstab3, !is.na(Compound) & !is.na(Tissue))
+weijstab4 <- read_excel("Weijs2013.xlsx",sheet="Table4",skip=1)
+weijstab4 <- subset(weijstab4, !is.na(Compound) & !is.na(Tissue))
+
+for (this.compound in unique(weijstab3$Compound))
+  for (this.tissue in unique(weijstab3$Tissue))
+  {
+    Curley.pcs[
+      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
+      "Weijs2013"] <- weijstab3[weijstab3$Compound==this.compound &
+                                  weijstab3$Tissue==this.tissue,"value"]
+      
+  }
+
+for (this.compound in unique(weijstab4$Compound))
+  for (this.tissue in unique(weijstab4$Tissue))
+  {
+    Curley.pcs[
+      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
+      "Weijs2013"] <- weijstab4[weijstab4$Compound==this.compound &
+                                  weijstab4$Tissue==this.tissue,"value"]
+      
+  }
+
+```
+
 ```{r curley1969_figure, eval = TRUE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
+  geom_point(size=1,aes(
+    y=Weijs2013,
+    x=HTTK.pred,    
+    shape=Compound,
+    color=Compound)) +
   geom_point(size=3,aes(
     y=PC,
     x=HTTK.pred,
     shape=Compound,
-    color=Compound))   +
+    color=Compound)) +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+
+  scale_shape_manual(values=rep(c(15,16,17,18),4))+
   xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
-  ylab("Observed (Curley, 1969)") +
+  ylab("Observed") +
   scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
@@ -882,6 +992,11 @@ fitFb <- lm(data=Curley.pcs,log10(PC)~log10(HTTK.pred.nocal))
 RMSE(fitFb)
 
 FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
+  geom_point(size=1,aes(
+    y=Weijs2013,
+    x=HTTK.pred,
+    shape=Tissue,
+    color=Tissue)) +
   geom_point(size=3, aes(
     y=PC,
     x=HTTK.pred,
@@ -890,9 +1005,9 @@ FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-    scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6, 19))+
+  scale_shape_manual(values=rep(c(15,16,17,18),4))+
   xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
-  ylab("Observed (Curley, 1969)") +
+  ylab("Observed") +
   scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
@@ -910,7 +1025,7 @@ print(FigFb)
 #
 #
 ```{r wang2018_loaddata, eval = TRUE}
-Wangchems <- read.xls("Wang2018.xlsx",stringsAsFactors=FALSE,sheet=3,skip=2)
+Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
