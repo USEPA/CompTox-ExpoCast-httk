@@ -247,6 +247,7 @@ calc_analytic_css <- function(chem.name=NULL,
     if (route == "inhalation"){
       Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
         chem.cas = chem.cas,
+        chem.name = chem.name,
         parameters=parameters,
         exp.conc = exp.conc,
         period = period,
@@ -262,6 +263,7 @@ calc_analytic_css <- function(chem.name=NULL,
     {
       Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
         chem.cas = chem.cas,
+        chem.name = chem.name,
         parameters=parameters,
         hourly.dose=hourly.dose,
         concentration=concentration,
