@@ -35,7 +35,6 @@ model.list[["pbtk"]]$alltissues=c(
   "skin",            
   "spleen",          
   "red blood cells",
-  "thyroid",
   "rest")
 
 
