@@ -1,6 +1,6 @@
 ---
-title: "Generic Human Gestational Model"
-author: "John Wambaugh, Mark Sfeir, and Dustin Kapraun"
+title: "Kapraun et al. (submitted): Generic Human Gestational Model"
+author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, Lesa Aylward, André Dallmann, Richard Judson, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -8,11 +8,19 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+wambaugh.john@epa.gov
 
+## Abstract
+
+Chemical risk assessment considers potentially susceptible populations including pregnant women and developing fetuses. Humans encounter thousands of chemicals in their environments, few of which have been fully characterized in terms of internal human dosimetry and mode-of-action. Toxicokinetic (TK) information is needed to relate chemical exposure to potentially bioactive tissue concentrations. Observational data describing human gestational exposures are unavailable for most chemicals, but physiologically based TK (PBTK) models  provide a means for estimating such exposures. However, development of chemical-specific PBTK models requires considerable time and resources. As an alternative, generic PBTK approaches describe a standardized physiology and characterize chemicals with a set of standard physical and in vitro-measured descriptors. Here we report and evaluate a generic PBTK model of a human mother and developing fetus. We used a previously published set of formulas describing the major anatomical and physiological changes that occur during pregnancy to augment the High-Throughput Toxicokinetics (httk) software package. We then performed simulations using the httk pregnancy model to estimate the ratio of concentrations in maternal and fetal plasma and compared these estimates to literature in vivo measurements. We also evaluated the model with literature in vivo time-course measurements of maternal plasma concentrations in pregnant and non-pregnant women. Finally, , we demonstrated conceptual prioritization of chemicals measured in maternal [cord blood?] based on predicted fetal brain concentrations. This new chemical-independent model can be used with existing human-specific in vitro data for 957 chemicals as well as any new chemical data that become available. With sufficient evaluation, this gestational model may allow for in vitro to in vivo extrapolation of point of departure doses relevant to reproductive and developmental toxicity.
+
+## Prepare for session
 ```{r}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
-To use the code in this vignette, you'll first need to load a few packages (if you haven't already).
+
+### Load the relevant libraries
 ```{r load_packages, eval = TRUE}
 # Clear the memory:
 rm(list=ls()) 
@@ -21,17 +29,19 @@ rm(list=ls())
 # Setup
 #
 #
-library(readxl)
+#library(readxl)
 library(ggplot2)
 library(httk)
 library(scales)
 library(gridExtra)
-
+```
+### Change working directory
+```{r change directory, eval = TRUE}
 setwd("c:/users/jwambaug/git/httk/work")
 ```
-Load custom code 
-```{r load_code, eval = TRUE}
 
+### Prepare custom functions
+```{r load_code, eval = TRUE}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -44,13 +54,19 @@ RMSE <- function(x)
   mean(x$residuals^2)^(1/2)
 }
 ```
-#
-#
+
+
+
+Data sets were curated from the literature to allow evaluation of the gestational PBTK model. In all cases chemical identities from the original publications were mapped onto DTXSID’s from the CompTox Chemicals Dashboard (https://comptox.epa.gov/dashboard) [Williams et al., 2017](https://doi.org/10.1186/s13321-017-0247-6). Statistical testing for correlation between predictions and observations was performed using R function "lm" and p-values were calculated according to an F-distribution.
+
 # Aylward cord-blood data 
-#
-#
-```{r process_aylward_data, eval = TRUE}
-MFdata <- read_excel("Aylward-MatFet.xlsx")
+
+[Aylward et al., 2014](http://dx.doi.org/10.1080/10937404.2014.884956) compiled measurements of the ratio of maternal to fetal cord blood chemical concentrations at birth for a range of chemicals with environmental routes of exposure, including bromodiphenyl ethers, fluorinated compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke components, and vitamins. The PBTK model does not have an explicit cord blood compartment, so the ratio between maternal and fetal venous plasma concentrations was used as a surrogate when making comparisons of model predictions to these data.. For each chemical three daily oral doses (every eight hours) total 1 mg/kg/day were simulated starting from the 13th week of gestation until full term (40 weeks). Simulations were made both with and without the correction to $f_{up}^f$.
+
+## Load/format the data
+```{r load_aylward_data, eval = TRUE}
+#MFdata <- read_excel("Aylward-MatFet.xlsx")
+MFdata <- httk::AylwardMatFet
 
 cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
@@ -88,11 +104,10 @@ colnames(MFdata.httk)[17] <- "obs.units"
 MFdata.httk$infant <- suppressWarnings(as.numeric(MFdata.httk$infant))
 MFdata.httk$maternal <- suppressWarnings(as.numeric(MFdata.httk$maternal))
 MFdata.httk$AVERAGE_MASS <- as.numeric(MFdata.httk$AVERAGE_MASS)
+```
 
-
-
-
-# Convert the units:
+## Convert the units:
+```{r process_aylward_data, eval = TRUE}
 convert1.units <- c("ng/ml","ng/mL","ug/L","ug/l","ng/mL serum","ng/g",
   "ng/g wet wt.","ppb")
 
@@ -116,13 +131,14 @@ MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"obs.units"] <- "uM"
 ```
 
 
-# Compare HTTK predictions with maternal:fetal observations from Aylward 2014
-#
-# Note that we can't do an absolute scale comparison (for example, fetal:fetal 
-# or maternal:maternal) because we don't know the dose for the Aylward data but
-# we assume that the maternal:fetal ratio is independent of dose and so we 
-# use the plasma ratio at full term (40 weeks) resulting from a 1 mg/kg/day
-# exposure rate starting in week 13.
+## Compare HTTK predictions with maternal:fetal observations from Aylward 2014
+
+ Note that we can't do an absolute scale comparison (for example, fetal:fetal 
+ or maternal:maternal) because we don't know the dose for the Aylward data but
+ we assume that the maternal:fetal ratio is independent of dose and so we 
+ use the plasma ratio at full term (40 weeks) resulting from a 1 mg/kg/day
+ exposure rate starting in week 13.
+ 
 ```{r make_aylward_preds, eval = TRUE}
 # Simulate starting from the 13th week of gestation until full term (40 weeks):
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
@@ -206,13 +222,13 @@ cat(paste("The minimum observed ratio was ",
 
 
 ```  
-#
-#
-# Aylward Ratio figures:
-#
-#
-```{r aylward_figure, eval = TRUE}
-# Clean up repeated observations:
+
+
+
+
+## Aylward Ratio figures:
+### Clean up repeated observations:
+```{r cleanup_repeated_aylward_figure, eval = TRUE}
 MFdata.main <- NULL
 MFdata.outliers <- NULL
 for (this.id in unique(MFdata.httk$DTXSID))
@@ -229,7 +245,10 @@ for (this.id in unique(MFdata.httk$DTXSID))
     MFratio>this.row$MFratio.Q75)
   MFdata.outliers <- rbind(MFdata.outliers,this.subset) 
 }
+```
 
+### Cord Blood Ratio Predictions without Fup Adjustement:
+```{r aylward_figure_no_fup, eval = TRUE}
 FigCa  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred.nofup,
@@ -271,6 +290,10 @@ FigCa  <- ggplot(data=MFdata.main) +
   guides(shape=guide_legend(title="Class",nrow=3,byrow=TRUE))
     
 print(FigCa)
+```
+
+### Generate text for results section:
+```{r aylward_analysis_text, eval = TRUE}
 
 cat(paste("In Figure 4 we compare predictions made with our high throughput \
 human gestational PBTK model with experimental observations on a per chemical \
@@ -328,14 +351,10 @@ summary(fit1sub)
 RMSE(fit1sub)
 
 ```
-```{r voc_analysis, eval = TRUE}
-# Mean logHenry's law constant for PAH's:
-mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical.Category=="Polyaromatic Hydrocarbons")$DTXSID)$logHenry)
-
-nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$DTXSID
-fluoros <- chem.physical_and_invitro.data$DTXSID[regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))!=-1]
 
 
+### Cord Blood Ratio Predictions with Fup Adjustement:
+```{r aylward_figure_with_fup, eval = TRUE}
 FigCb  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred,
@@ -379,7 +398,15 @@ FigCb  <- ggplot(data=MFdata.main) +
 print(FigCb)
 
 ```
-```{r voc_stats, eval = TRUE}
+
+### Examine performance when excluding certain chemical classes:
+```{r voc_analysis, eval = TRUE}
+# Mean logHenry's law constant for PAH's:
+mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical.Category=="Polyaromatic Hydrocarbons")$DTXSID)$logHenry)
+
+nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$DTXSID
+fluoros <- chem.physical_and_invitro.data$DTXSID[regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))!=-1]
+
 fit2 <- lm(data=MFdata.main,MFratio~MFratio.pred)
 summary(fit2)
 RMSE(fit2)
@@ -557,13 +584,16 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 
 
-#
-#
-# Dallmann 2018 Comparison
-#
-#
+
+
+# Evaluation of Area Under the Curve Predictions
+
+[Dallman et al., 2018](http://dx.doi.org/10.1007/s40262-017-0594-5) includes descriptions of toxicokinetics summary statistics, including time-integrated plasma concentrations (area under the curve or AUC) for six drugs administered to a sample of subjects including both pregnant and non-pregnant women. Additional data from X and Y for two chemicals among the httk library were collected from the literature. 
+
 ```{r dallmann2018_data, eval = TRUE}
-TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
+#TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
+TKStats <- httk::DallmannData
+
 TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
 TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
 
@@ -579,6 +609,8 @@ colnames(TKstats)[colnames(TKstats)=="Observed Non-Pregnant2"] <- "Observed.Non.
 colnames(TKstats)[colnames(TKstats)=="Dose Route"] <- "Dose.Route"
 ```
 
+## Predict AUC
+The circumstances of the dosing varied slightly between drugs and pregnancy status required variation in simulated dose regimen as summarized in Table 12. The function solve_fetal_pbtk was used to determine the time-integrated plasma concentration (area under the curve, or AUC) for the mothers both when pregnant and non-pregnant.
 
 ```{r dallmann2018_preds, eval = TRUE}
 for (this.id in unique(TKstats$DTXSID))
@@ -663,7 +695,8 @@ TKstats <- subset(TKstats, !is.na(TKstats$Ratio.httk))
 write.csv(TKstats,file="Table-Dallmann2018.csv",row.names=FALSE)
 ```
 
-```{r dallmann2018_figure eval = TRUE}
+## Generate AUC Predicted vs. Observed Figure
+```{r dallmann2018_figure, eval = TRUE}
 FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   geom_point(aes(
     y=Observed.Non.Pregnant2,
@@ -783,12 +816,15 @@ write.csv(subset(TKstats,Parameter=="AUCinf" &
   file="DallmanTable.txt")
   
 ```
-#
-#
-# Curley 1969
-#
-#
-```{r curley1969_data, eval = TRUE}
+
+# Evaluation of Partition Coefficient Predictions
+
+For each tissue, the partition coefficient (which describes the ratio of the concentration in the tissue to concentration of unbound chemical in the plasma at equilibrium) is a constant. We calculate each partition coefficient using the method of [Schmitt, 2008](http://dx.doi.org/10.1016/j.tiv.2007.09.010) as described by [Pearce et al., 2017](http://dx.doi.org/10.1007/s10928-017-9548-7). The partition coefficient for any given type of tissue (for example, liver tissue) depends on fraction unbound in plasma ($f_{up}^m$  or $f_{up}^f$), so in general these differ for mother and fetus.
+
+
+[Curley et al., 1969](https://doi.org/10.1080/00039896.1969.10666901) compiled data on the concentration of a variety of pesticides in the cord blood of newborns and in the tissues of infants that were stillborn. 
+
+```{r curley1969_data, eval = FALSE}
 Curley <- as.data.frame(read_excel("Curley1969.xlsx"))
 dim(Curley)
 Curley.compounds <- Curley[1,4:13]
@@ -797,7 +833,14 @@ colnames(Curley)[1] <- "Tissue"
 colnames(Curley)[2] <- "N"
 colnames(Curley)[3] <- "Stat"
 ```
-```{r curley1969_calcpcs, eval = TRUE}
+
+The ratio of chemical concentration in tissue ($C_y^f$) vs. blood ($C_{venb}^f$) was related to the tissue-to-unbound-plasma concentration partition coefficients used in the PBTK model as
+$$
+	(C_y^f )/(C_{venb}^f  )=(C_y^f)/(R_{b:p}^f \times C_{plas}^f  )=(C_y^f \times f_{up}^f)/(R_{b:p}^f \times C_{up}^f)=(f_{up}^f)/(R_{b:p}^f) \times K_y^f
+$$
+where $C_{up}^f$ denotes the concentration of substance unbound in the fetal plasma.
+
+```{r curley1969_calcpcs, eval = FALSE}
 Curley.pcs <- NULL
 cord.blood <- subset(Curley, Tissue == "Cord Blood") 
 suppressWarnings(
@@ -840,7 +883,10 @@ pearce2017 <- subset(pearce2017,DTXSID%in%Curley.pcs$DTXSID)
 any(pearce2017$DTXSID%in%Curley.pcs$DTXSID)
 print("None of the Curley chems were in the Pearce 2017 PC predictor evaluation.")
 ```
-```{r csanady2002_pcs, eval = TRUE}
+
+Partition coefficients were measured for tissues, including placenta, in vitro by [Csanady et al., 2002](http://dx.doi.org/10.1007/s00204-002-0339-5) for Bisphenol A and Diadzen. 
+
+```{r csanady2002_pcs, eval = FALSE}
 csanadybpa <- read_excel("Csanady2002.xlsx",sheet="Table 2")
 csanadybpa$Compound <- "Bisphenol A"
 csanadybpa$DTXSID <- "DTXSID7020182"
@@ -856,7 +902,44 @@ colnames(csanadydaid) <- colnames(Curley.pcs)
 Curley.pcs <- rbind(Curley.pcs,csanadybpa,csanadydaid)
 Curley.pcs <- subset(Curley.pcs,Tissue!="Mammary gland")
 ```
+
+Three of the chemicals studied by [Curley et al., 1969](https://doi.org/10.1080/00039896.1969.10666901) were modeled by [Weijs et al., 2013](http://dx.doi.org/10.1021/es400386a) using the same partition coefficients for mother and fetus. The values used represented "prior knowledge" summarizing the available literature.
+
+
+```{r weijs2013_loadPCs, eval = FALSE}
+weijstab3 <- read_excel("Weijs2013.xlsx",sheet="Table3",skip=1)
+weijstab3 <- subset(weijstab3, !is.na(Compound) & !is.na(Tissue))
+weijstab4 <- read_excel("Weijs2013.xlsx",sheet="Table4",skip=1)
+weijstab4 <- subset(weijstab4, !is.na(Compound) & !is.na(Tissue))
+
+for (this.compound in unique(weijstab3$Compound))
+  for (this.tissue in unique(weijstab3$Tissue))
+  {
+    Curley.pcs[
+      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
+      "Weijs2013"] <- weijstab3[weijstab3$Compound==this.compound &
+                                  weijstab3$Tissue==this.tissue,"value"]
+      
+  }
+
+for (this.compound in unique(weijstab4$Compound))
+  for (this.tissue in unique(weijstab4$Tissue))
+  {
+    Curley.pcs[
+      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
+      "Weijs2013"] <- weijstab4[weijstab4$Compound==this.compound &
+                                  weijstab4$Tissue==this.tissue,"value"]
+      
+  }
+
+write.csv(Curley.pcs,"PCs-table.csv",row.names=FALSE)
+
+```
+
+## Predict partition coefficients
 ```{r curley1969_makepreds, eval = TRUE}
+Curley.pcs <- httk::FetalPCData
+
 suppressWarnings(load_sipes2017())
 for (this.chemical in unique(Curley.pcs$DTXSID))
   if (this.chemical %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
@@ -919,46 +1002,21 @@ reset_httk()
 
 cat(paste(
   "For the two placental observations (",
-  subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"PC"],
-  "for Bisphenol A and ",
-  subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"PC"],
-  "for Diadzen) the predictions were ",
-  subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"HTTK.pred"],
+  signif(subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"PC"],2),
+  " for Bisphenol A and ",
+  signif(subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"PC"],2),
+  " for Diadzen) the predictions were ",
+  signif(subset(Curley.pcs,Compound=="Bisphenol A" & Tissue=="Placenta")[,"HTTK.pred"],2),
   " and ",
-  subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"HTTK.pred"],
+  signif(subset(Curley.pcs,Compound=="Daidzein" & Tissue=="Placenta")[,"HTTK.pred"],2),
   ", respectively.\n",sep=""))
 
 
 ```
-```{r weijs2013_loadPCs, eval = TRUE}
-weijstab3 <- read_excel("Weijs2013.xlsx",sheet="Table3",skip=1)
-weijstab3 <- subset(weijstab3, !is.na(Compound) & !is.na(Tissue))
-weijstab4 <- read_excel("Weijs2013.xlsx",sheet="Table4",skip=1)
-weijstab4 <- subset(weijstab4, !is.na(Compound) & !is.na(Tissue))
 
-for (this.compound in unique(weijstab3$Compound))
-  for (this.tissue in unique(weijstab3$Tissue))
-  {
-    Curley.pcs[
-      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
-      "Weijs2013"] <- weijstab3[weijstab3$Compound==this.compound &
-                                  weijstab3$Tissue==this.tissue,"value"]
-      
-  }
-
-for (this.compound in unique(weijstab4$Compound))
-  for (this.tissue in unique(weijstab4$Tissue))
-  {
-    Curley.pcs[
-      Curley.pcs$DTXSID==this.compound & Curley.pcs$Tissue==this.tissue,
-      "Weijs2013"] <- weijstab4[weijstab4$Compound==this.compound &
-                                  weijstab4$Tissue==this.tissue,"value"]
-      
-  }
-
-```
-
-```{r curley1969_figure, eval = TRUE}
+## Create Observed vs. Predicted Plot
+### First indicate compound:
+```{r curley1969_figure_compounds, eval = TRUE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
   geom_point(size=1,aes(
     y=Weijs2013,
@@ -990,7 +1048,10 @@ fitFa <- lm(data=Curley.pcs,log10(PC)~log10(HTTK.pred))
 RMSE(fitFa)
 fitFb <- lm(data=Curley.pcs,log10(PC)~log10(HTTK.pred.nocal))
 RMSE(fitFb)
+```
 
+### Then indicate tissues:
+```{r curley1969_figure_tissues, eval = TRUE}
 FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
   geom_point(size=1,aes(
     y=Weijs2013,
@@ -1019,19 +1080,22 @@ FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
 print(FigFb)
 ```
 
-#
-#
-# Wang 2018
-#
-#
+
+
+
+
+# Chemical Prioritization on the Basis of Fetal Brain Concentration
 ```{r wang2018_loaddata, eval = TRUE}
-Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
+#Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
+Wangchems <- httk::Wang2018Chems
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
   regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))==-1]
 maternal.list <- maternal.list[maternal.list %in% intersect(nonvols,nonfluoros)]
 ```
+
+## Make predictions for three daily doses from week 13 to full term
 ```{r wang2018_makepreds, eval = TRUE}
 
 pred.table1 <- subset(suppressWarnings(get_cheminfo(
@@ -1071,45 +1135,13 @@ for (this.cas in maternal.list)
       mean(out[last.row,"Cfplasma"])/mean(out[last.row,"Cplasma"]) 
   }
 }
-# Create final table holding all predicitons for paper:
+```
+
+## Create final table holding all predicitons for paper:
+```{r brain_uncertainty_prop_table, eval = TRUE}
 PC.table <- pred.table1
 colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
-
-# In vitro error is included in Aylward eval:
-#pred.table2 <- pred.table1
-#pred.table2$Uncertainty <- "In Vitro Meas. Error"
-#for (this.cas in maternal.list)
-#{
-#  p <- parameterize_fetal_pbtk(chem.cas=this.cas)
-#  if (!is.na(p$Funbound.plasma.dist))
-#  {
-#    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
-#      as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.1)
-#    {
-#      skip <- TRUE
-#    } else skip <- FALSE
-#  } else skip <- FALSE
-#  
-#  if (!skip)
-#  {
-#    out <- calc_mc_css(chem.cas=this.cas,
-#      which.quantile = c(0.5,0.975),
-#      httkpop=FALSE,
-##      invitro.mc.arg.list = list(
-##        adjusted.Funbound.plasma = T, 
-##        poormetab = T,
-##        fup.censored.dist = FALSE, 
-##        fup.lod = 0.01, 
-##        fup.meas.cv = 0.4, 
-##        clint.meas.cv = 0.3,
-##        fup.pop.cv = 0.0, 
-##        clint.pop.cv = 0.0)
-#      )
-#    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"] <- 
-#      pred.table1[pred.table1$CAS==this.cas,"MFratio.pred"]*out[2]/out[1] 
-#  }
-#}
 
 pred.table3 <- pred.table1
 pred.table3$Uncertainty <- "Plasma Error (Fig. 4b)"
@@ -1200,6 +1232,8 @@ pred.table$Uncertainty <- factor(pred.table$Uncertainty,
     pred.table4[1,"Uncertainty"],
     pred.table5[1,"Uncertainty"]))
 ```
+
+## Make prioritization figure:
 ```{r wang2018_figure, eval = TRUE}
 #Wang 2018 confirmed 6 chemical identities:
 confirmed.chemicals <- c(
@@ -1243,8 +1277,8 @@ FigG  <- ggplot(data=pred.table) +
 print(FigG)
 ```
 
-# Need to elaborate on difference between 2-tert-butylphenol and 2,4di-tert-butylphenol
-```{r wang2018_details eval = TRUE}
+## Look at ioniation state:
+```{r wang2018_details, eval = TRUE}
 
 for (this.col in 7:14)
   PC.table[,this.col] <- signif(PC.table[,this.col],3)
@@ -1286,15 +1320,20 @@ write.csv(PC.table,
   row.names=FALSE)   
 ```
   
-Really slow figures below:
 
+The next two figures take a long time to generate and so are disabled by default.
 
-#
-#
-# PRotein Binding FIgures
-#
-#
-```{r fup_table, eval = TRUE}
+# Protein Binding Figures
+
+The fetal fraction unbound (f_{up}^f i) is calculated from the maternal fraction unbound and the serum protein concentration ratio in infants vs. mothers based on Equation 6 of [McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104),
+
+$$
+	f_{up}^f =(f_{up}^m )/(f_{up}^m +(P^f ⁄P^m  )×(1-f_{up}^m  ) )
+$$
+
+in which the maternal fraction unbound, $f_{up}^m$, is assumed to be equal to the in vitro measured value for fraction unbound in plasma, and the ratio of protein concentrations $P^f ⁄P^m$ depends on the identity of the dominant binding protein for the chemical (assumed to be either albumin or AAG). Lacking data to model the gestational kinetics of albumin and AAG concentrations, we used the concentrations at birth ([McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104)) to calculate a constant fetal $f_{up}$, using $P^f⁄P^m  =0.777$ for albumin and $P^f⁄P^m = 0.456$ for AAG ([McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104)). We determine the charge state of a compound separately for maternal and fetal plasma as a function of plasma pH (7.38 for maternal and 7.28 for fetal ([K.H. Lee, 1972](http://dx.doi.org/10.1136/pgmj.48.561.405)) and chemical-specific predictions for ionization affinity (that is, pKa ([Strope et al., 2018](http://dx.doi.org/10.1016/j.scitotenv.2017.09.033)) using the “httk” function “calc_ionization” ([Pearce et al.,  2017](http://dx.doi.org/10.1007/s10928-017-9548-7)). If the fraction of a chemical that is predicted to be in positive ionic form is greater than 50%, we treat the chemical as a base (which is in its conjugate acid form) and use only the maternal-to-infant ratio of AAG concentrations. Otherwise, we assume the chemical is neutral or an acid and use the ratio of albumin concentrations. 
+
+```{r fup_table, eval = FALSE}
 fup.table <- NULL
 all.chems <- suppressWarnings(get_cheminfo(model="fetal_pbtk",info="all")) 
 # Get rid of median fup 0:
@@ -1332,8 +1371,9 @@ fup.table[fup.table$Charge=="Neutral","Charge"] <- paste("Neutral (n=",
   sum(fup.table$Charge=="Neutral"),
   ")",sep="")
 ```  
-Plot the fetal protein binding changes predicted:
-```{r fup_figure, eval = TRUE}
+
+## Plot the fetal protein binding changes predicted:
+```{r fup_figure, eval = FALSE}
 FigA  <- ggplot(data=fup.table) +
   geom_point(alpha=0.25, aes(
     x=Fup.Mat.Pred,
@@ -1352,12 +1392,8 @@ FigA  <- ggplot(data=fup.table) +
 print(FigA) 
 ```  
 
-#
-#
-# Maternal-Fetal Predictions across HTTK:
-#
-#
-```{r MFratio_allhttk_preds, eval = TRUE}
+## Maternal-Fetal Predictions across HTTK Chemical Library:
+```{r MFratio_allhttk_preds, eval = FALSE}
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
   
 MFratio.pred <- NULL
@@ -1408,7 +1444,9 @@ for (this.cas in all.chems$CAS)
   }
   }
 ```
-```{r MFratio_allhttk_figure, eval = TRUE}
+
+## Histogram of maternal-fetal ratio
+```{r MFratio_allhttk_figure, eval = FALSE}
 FigD <- ggplot(data=MFratio.pred)+
    geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
   xlab("Maternal:Fetal Plasma Concentration Ratio") +
@@ -1419,7 +1457,9 @@ FigD <- ggplot(data=MFratio.pred)+
 
 print(FigD)
 ```
-```{r MFratio_allhttk_stats, eval = TRUE}
+
+## Statistics on maternal-fetal ratio for full HTTK library
+```{r MFratio_allhttk_stats, eval = FALSE}
 max.chem <- MFratio.pred[which(
   MFratio.pred$MFratio.pred==max(MFratio.pred$MFratio.pred,na.rm=TRUE)),]
 min.chem <- MFratio.pred[which(
@@ -1451,4 +1491,15 @@ suppressWarnings(apply(highratio,2,function(x) mean(as.numeric(x),na.rm=2)))
 
 lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
 # No obvious pattern
+```
+
+# Code used to create data distributed with vignette
+```{r create_distributable_data, eval = FALSE}
+AylwardMatFet <-MFdata
+Dallmann2018Data <- TKstats
+FetalPCData <- Curley.pcs
+Wang2018Chems <- Wangchems
+
+save(AylwardMatFet,Dallmann2018Data,FetalPCData,Wang2018Chems,
+     file="Kapraun2022Vignette.RData",version=2)
 ```
