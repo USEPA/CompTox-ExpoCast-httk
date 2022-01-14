@@ -8,6 +8,8 @@
 #' specified. 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -24,6 +26,9 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
 #' @param depth depth of skin, cm, used in calculating Kp.
 #' @param skin.pH pH of dermis/skin, used in calculating Kp and Kskin2media.
 #' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
@@ -88,6 +93,7 @@
 
 parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
+                              dtxsid=NULL,
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
@@ -96,43 +102,99 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               adjusted.Funbound.plasma=T,
                               regression=T,
                               suppress.messages=F,
+                              minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
                               depth=0.3,skin.pH=7,
                               vmax.km=F, BW=70, height = 175)
 {
   physiology.data <- physiology.data
+  
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+  
 # Look up the chemical name/CAS, depending on what was provide:
-  out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+  out <- get_chem_id(chem.cas=chem.cas,
+                     chem.name=chem.name,
+                     dtxsid=dtxsid)
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
+  dtxsid <- out$dtxsid
    
   if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
-  Clint <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
-  if ((class(Clint) == "try-error" & default.to.human) || force.human.clint.fup) 
+  Clint.db <- try(get_invitroPK_param("Clint",
+                                      species,
+                                      chem.cas=chem.cas),
+                  silent=TRUE)
+  # Check that the trend in the Clint assay was significant:
+  Clint.pValue <- try(get_introPK_param("Clint.pValue",
+                                        species,
+                                        chem.cas=chem.cas),
+                      silent=TRUE)
+  if ((class(Clint.db) == "try-error" & default.to.human) || 
+      force.human.clint.fup) 
   {
-    Clint <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=T)
-    warning(paste(species,"coerced to Human for metabolic clearance data."))
+    Clint.db <- try(get_invitroPK_param("Clint",
+                                     "Human",
+                                     chem.cas=chem.cas),
+                 silent=T)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue",
+                                            "Human",
+                                            chem.cas=chem.cas),
+                        silent=TRUE)
+    if (!suppress.messages){
+      warning(paste(species,"coerced to Human for metabolic clearance data."))
+    }
   }
-  if (class(Clint) == "try-error") stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-    # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas)
+  if (class(Clint.db) == "try-error") 
+    stop("Missing metabolic clearance data for given species. \n\
+         Set default.to.human to true to substitute human value.")
+  # Check if Clint is a point value or a distribution, if a distribution, use the median:
+  if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3)
+  {
+    Clint.dist <- Clint.db
+    Clint <- as.numeric(strsplit(Clint.db,",")[[1]][1])
+    Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
+    if (!suppress.messages) warning("Clint is provided as a distribution.")
+  } else {
+    Clint <- Clint.db
+    Clint.dist <- NA
+  }
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint <- 0
   
 # Predict the PCs for all tissues in the tissue.data table:
-  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,species=species,default.to.human=default.to.human,force.human.fup=force.human.clint.fup)
-  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma,regression=regression)
+  schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
+                                         species=species,
+                                         default.to.human=default.to.human,
+                                         force.human.fup=force.human.clint.fup)
+  PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
+                                      species=species,
+                                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                      regression=regression,
+                                      suppress.messages=suppress.messages,
+                                     minimum.Funbound.plasma=minimum.Funbound.plasma)
 # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-  lumped_params <- lump_tissues(PCs,tissuelist=tissuelist,species=species)
+  lumped_params <- lump_tissues(PCs,
+                                tissuelist=tissuelist,
+                                species=species,
+                                suppress.messages=suppress.messages)
+
+# CHheck to see if we should use the in vitro fup assay correction:
   if(adjusted.Funbound.plasma){
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  }else fup <- schmitt.params$unadjusted.Funbound.plasma
+    if (!suppress.messages) warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
+  } else fup <- schmitt.params$unadjusted.Funbound.plasma
+
+# Restrict the value of fup:
+  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=T)
   if (class(Fgutabs) == "try-error") Fgutabs <- 1
     
   
- # Check the species argument for capitilization problems and whether or not it is in the table:  
+ # Check the species argument for capitalization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -146,7 +208,16 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   names(this.phys.data) <- physiology.data[,1]
   
   MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
-
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+    "pKa_Donor",
+    chem.cas=chem.cas)) # acid dissociation constants
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+    "pKa_Accept",
+    chem.cas=chem.cas)) # basic association cosntants
+  Pow <- 10^get_physchem_param(
+    "logP",
+    chem.cas=chem.cas) # Octanol:water partition coeffiecient
+  
   outlist <- list()
    # Begin flows:
   #mL/min/kgBW converted to L/h/kgBW:
@@ -156,7 +227,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
 
   outlist <- c(outlist,c(
     Qcardiacc = as.numeric(Qcardiacc),
-    flows[!names(flows) %in% c('Qlungf','Qtotal.liverf')],
+    flows[!names(flows) %in% c('Qtotal.liverf')], #MWL removed "Qlungf, 9/19/19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
     Qliverf= flows[['Qtotal.liverf']] - flows[['Qgutf']],
     Qgfrc = as.numeric(QGFRc))) 
   # end flows  
@@ -174,20 +245,33 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   
   
 # Create the list of parameters:
+  BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
-  outlist <- c(outlist,list(BW = BW,
+  outlist <- c(outlist,list(BW = as.numeric(BW),
     kgutabs = 2.18, # 1/h
     Funbound.plasma = as.numeric(fup), # unitless fraction
+    Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
-    MW = MW)) #g/mol
+    MW = MW, #g/mol
+    Pow = Pow,
+    pKa_Donar = pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    MA=schmitt.params[["MA"]],
+    kUrtc = 11.0, #Added MWL 9-20-19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
+    Vmucc = 0.0001)) #Added MWL 9-20-19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
   
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(Fhep.assay.correction=calc_fu_hep(schmitt.params$Pow,pKa_Donor=schmitt.params$pKa_Donor,pKa_Accept=schmitt.params$pKa_Accept)))  # fraction 
-  if(vmax.km){
+ outlist <- c(outlist,list(
+   Fhep.assay.correction=calc_hep_fu(
+     parameters = list(Pow = schmitt.params$Pow,
+                       pKa_Donor=schmitt.params$pKa_Donor,
+                       pKa_Accept=schmitt.params$pKa_Accept,
+                       suppress.messages=suppress.messages))))  # fraction 
+  if(vmax.km){ 
     outlist <- c(outlist,list(Vmax=0,Km=1))
   }else{
     outlist <- c(outlist,
-    list(Clmetabolismc= as.numeric(calc_hepatic_clearance(hepatic.model="unscaled",parameters=list(
+    list(Clmetabolismc= as.numeric(calc_hep_clearance(hepatic.model="unscaled",parameters=list(
                                 Clint=Clint, #uL/min/10^6 cells
                                 Funbound.plasma=fup, # unitless fraction
                                 Fhep.assay.correction=outlist$Fhep.assay.correction, 
@@ -198,7 +282,10 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                                 Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),suppress.messages=T)),million.cells.per.gliver=110)) #L/h/kg BW
   }
 
-  outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma),Fgutabs=Fgutabs)
+  outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+                                                             species=species,
+                                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+    Fgutabs=Fgutabs)
 
     Kscw <- 0.9 * schmitt.params$Pow^0.69 
     Kvw <- 1#14.62 * schmitt.params$Pow^0.55
