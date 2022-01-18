@@ -30,7 +30,16 @@
 #' either CAS, name, or DTXSIDs.
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions.
+#' @param monitor.vars A vector of character strings indicating the model
+#' component variables to retain in the conversion factor table
+#' (assuming suppress.messages == FALSE).  It should also be noted this option
+#' does NOT exclude columns from the input matrix provided in the
+#' 'model.output.mat' parameter. (Default is NULL, i.e. conversion factors for
+#' all model components are included in the reporting matrix.)
 #' @param suppress.messages Whether or not the output messages are suppressed.
+#' (Default is FALSE, i.e. show messages.)
+#' @param verbose Whether or not to display the full conversion factor table.
+#' (Default is FALSE, i.e. only include rows where the conversion factor is 1.)
 #' @param ... Other parameters that can be passed to \code{convert_units}, e.g.
 #' temperature and compound state.  See details in \code{\link{convert_units}}.
 #' 
@@ -61,7 +70,9 @@ convert_solve_x <- function(model.output.mat,
                             chem.name = NULL,
                             dtxsid = NULL,
                             parameters = NULL,
+                            monitor.vars = NULL,
                             suppress.messages=FALSE,
+                            verbose = FALSE,
                             ...){
   # default compartment units; includes case 1, i.e. output.units is NULL
   compartment_units <- model.list[[model]]$compartment.units
@@ -155,7 +166,26 @@ convert_solve_x <- function(model.output.mat,
   # Print a matrix of desired output units and the conversion factors from
   # default solve_X model units specified in the model.info file.
   if(!suppress.messages){
-    print(cbind.data.frame(output.unit = ou,conversion.factor = cf))
+    reporter.df <- cbind.data.frame(output.unit = ou,conversion.factor = cf)
+    
+    if(!is.null(monitor.vars)){
+      # keep only the model components included in the 'monitor.vars'
+      reporter.df <- reporter.df[monitor.vars,]
+    }
+    
+    if(!verbose){
+      # remove any rows where the conversion factor is 1 (i.e. no unit change)
+      reporter.df <- reporter.df[-which(reporter.df[,"conversion.factor"]==1),]
+    }
+    
+    # Check if the reporter matrix/data.frame has any information to report
+    # that is nrow is equal to zero.
+    if(nrow(reporter.df)==0){
+      cat("None of the monitored components undergo unit conversions",
+          " (i.e. conversion factor of 1).\n\n")
+    }else{
+      print(reporter.df)
+    }
   }
   # Return the output units vector & new converted output matrix.
   return(list(new.ouput.matrix = out,output.units.vector = ou))
