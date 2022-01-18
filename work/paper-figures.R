@@ -335,7 +335,7 @@ FigCa  <- ggplot(data=MFdata.main) +
     
 print(FigCa)
 
-cat(paste("In Figure 4 we compare predictions made with our high throughput \
+cat(paste("In Figure 4 we compare predictions made with our high-throughput \
 human gestational PBTK model with experimental observations on a per chemical \
 basis wherever we had both in vitro HTTK data and in vivo observations (",
 length(unique(MFdata.main$DTXSID)),

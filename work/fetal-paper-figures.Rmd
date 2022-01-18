@@ -301,7 +301,7 @@ print(FigCa)
 ### Generate text for results section:
 ```{r aylward_analysis_text, eval = TRUE}
 
-cat(paste("In Figure 4 we compare predictions made with our high throughput \
+cat(paste("In Figure 4 we compare predictions made with our high-throughput \
 human gestational PBTK model with experimental observations on a per chemical \
 basis wherever we had both in vitro HTTK data and in vivo observations (",
 length(unique(MFdata.main$DTXSID)),
@@ -597,11 +597,22 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 [Dallmann et al., 2018](http://dx.doi.org/10.1007/s40262-017-0594-5) includes descriptions of toxicokinetics summary statistics, including time-integrated plasma concentrations (area under the curve or AUC) for six drugs administered to a sample of subjects including both pregnant and non-pregnant women. Additional data from X and Y for two chemicals among the httk library were collected from the literature. 
 
 ```{r dallmann2018_data, eval = TRUE}
-#TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-TKstats <- httk::Dallmann2018Data
+TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
+#TKstats <- httk::Dallmann2018Data
+
+
+ids <- unique(TKstats$DTXSID)
+cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+          "chemicals for which the model fetal_pbtk can run that are in the Dallmann data set."))
+
 
 TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
-TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
+TKstats <- subset(TKstats,DTXSID!="" & Parameter %in% c("AUCinf","AUClast"))
+
+ids <- unique(TKstats$DTXSID)
+cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+          "chemicals for which the model fetal_pbtk can run that have AUCs in the Dallmann data set."))
+
 
 # Assumed body weight (kg) from Kapraun 2019
 BW.nonpreg <- 61.103
@@ -703,17 +714,18 @@ write.csv(TKstats,file="Table-Dallmann2018.csv",row.names=FALSE)
 
 ## Generate AUC Predicted vs. Observed Figure
 ```{r dallmann2018_figure, eval = TRUE}
-FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEa  <- ggplot(data=TKstats) +
   geom_point(aes(
     y=Observed.Non.Pregnant2,
     x=Predicted.Non.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) + 
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
   scale_x_log10(#limits=c(10^-3,10^3),
@@ -723,8 +735,7 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Non-Pregnant") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 #print(FigEa)
 cat(paste(
@@ -734,17 +745,18 @@ cat(paste(
   signif((mean((log10(TKstats$Predicted.Non.Pregnant.httk)-log10(TKstats$Observed.Non.Pregnant2))^2))^(1/2),2),
   "for non-pregnant woman.\n"))
 
-FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEb  <- ggplot(data=TKstats) +
   geom_point(aes(
     y=Observed.Pregnant5,
     x=Predicted.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
       geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
   scale_x_log10(#limits=c(10^-5,10^3),
@@ -754,8 +766,7 @@ FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Pregnant")+
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 #print(FigEb)
 cat(paste(
@@ -767,17 +778,18 @@ cat(paste(
 
 
 
-FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEc  <- ggplot(data=TKstats) +
   geom_point(aes(
     x=Predicted.Non.Pregnant.httk,
     y=Predicted.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
       geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6),name="Route")+ 
+  scale_shape_manual(values=c(22,24),name="Route")+ 
   ylab("httk Pregnant (uM*h)") + 
   xlab("httk Non-Pregnant (uM*h)") + 
   scale_x_log10(#limits=c(10^-1,10^2),
@@ -787,20 +799,22 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Model Comparison") +
   theme_bw()  +
   theme(legend.position="left")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
-    
-#print(FigEc)
+  theme( text  = element_text(size=12))+ 
+  theme(legend.text=element_text(size=10))+
+  guides(fill=guide_legend(ncol=2,override.aes=list(shape=21)),alpha=guide_legend(ncol=2),shape=guide_legend(ncol=2))
+ print(FigEc)   
+FigEc <- get_legend(FigEc)
 
-FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
-  !is.na(Ratio.httk))) +
+
+FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
   geom_point(aes(
     y=Ratio.obs,
     x=Ratio.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted") + 
   ylab("Observed") +
  # scale_x_continuous(limits=c(0.25,3)) +
@@ -811,8 +825,7 @@ FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
   ggtitle("Ratio") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 dev.new()
 grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
@@ -1024,28 +1037,29 @@ cat(paste(
 ### First indicate compound:
 ```{r curley1969_figure_compounds, eval = TRUE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
-  geom_point(size=1,aes(
+  geom_point(size=2,aes(
     y=Weijs2013,
     x=HTTK.pred,    
     shape=Compound,
     color=Compound)) +
-  geom_point(size=3,aes(
+  geom_point(size=5,aes(
     y=PC,
     x=HTTK.pred,
     shape=Compound,
     color=Compound)) +
-  geom_abline(slope=1, intercept=0) +
-  geom_abline(slope=1, intercept=1, linetype=3) + 
-  geom_abline(slope=1, intercept=-1, linetype=3) +
+  geom_abline(slope=1, intercept=0, size=2) +
+  geom_abline(slope=1, intercept=1, linetype=3, size=2) + 
+  geom_abline(slope=1, intercept=-1, linetype=3, size=2) +
   scale_shape_manual(values=rep(c(15,16,17,18),4))+
-  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  xlab("Predicted Tissue:Blood Partition Coefificent") + 
   ylab("Observed") +
-  scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
+  scale_x_log10(label=scientific_10,limits=c(10^-1,10^2)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
   theme(legend.position="bottom")+
-  theme( text  = element_text(size=18))+ 
-  theme(legend.text=element_text(size=10))+  
+  theme( text  = element_text(size=28))+ 
+  theme(legend.text=element_text(size=16))+ 
+   theme(legend.title = element_blank())+
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
 print(FigFa)
@@ -1059,28 +1073,29 @@ RMSE(fitFb)
 ### Then indicate tissues:
 ```{r curley1969_figure_tissues, eval = TRUE}
 FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
-  geom_point(size=1,aes(
+  geom_point(size=2,aes(
     y=Weijs2013,
     x=HTTK.pred,
     shape=Tissue,
     color=Tissue)) +
-  geom_point(size=3, aes(
+  geom_point(size=5, aes(
     y=PC,
     x=HTTK.pred,
     shape=Tissue,
     color=Tissue))   +
-  geom_abline(slope=1, intercept=0) +
-  geom_abline(slope=1, intercept=1, linetype=3) + 
-  geom_abline(slope=1, intercept=-1, linetype=3) +
+  geom_abline(slope=1, intercept=0, size=2) +
+  geom_abline(slope=1, intercept=1, linetype=3, size=2) + 
+  geom_abline(slope=1, intercept=-1, linetype=3, size=2) +
   scale_shape_manual(values=rep(c(15,16,17,18),4))+
-  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  xlab("Predicted Tissue:Blood Partition Coefificent") + 
   ylab("Observed") +
-  scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
+  scale_x_log10(label=scientific_10,limits=c(10^-1,10^2)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
   theme(legend.position="bottom")+
-  theme( text  = element_text(size=18))+ 
-  theme(legend.text=element_text(size=14)) +  
+  theme( text  = element_text(size=28))+ 
+  theme(legend.text=element_text(size=20))+ 
+   theme(legend.title = element_blank())+
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
 print(FigFb)
@@ -1150,7 +1165,7 @@ colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 
 pred.table3 <- pred.table1
-pred.table3$Uncertainty <- "Plasma Error (Fig. 4b)"
+pred.table3$Uncertainty <- "Plasma Error (Fig. 4)"
 empirical.error <- RMSE(fit2sub)
 for (this.cas in maternal.list)
 {
