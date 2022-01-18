@@ -32,12 +32,12 @@ calc_mc_css(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   calc.analytic.css.arg.list = list(well.stirred.correction = TRUE,
     adjusted.Funbound.plasma = TRUE, regression = TRUE, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE),
-  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
-    regression = T, minimum.Funbound.plasma = 1e-04)
+    restrictive.clearance = TRUE, bioactive.free.invivo = FALSE),
+  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
+    regression = TRUE, minimum.Funbound.plasma = 1e-04)
 )
 }
 \arguments{

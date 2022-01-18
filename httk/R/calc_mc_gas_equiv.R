@@ -100,7 +100,7 @@ calc_mc_gas_equiv <- function(conc,
                                return.samples=F,
                                concentration = "plasma",
                                restrictive.clearance=T,
-                               bioactive.free.invivo = F,
+                               bioactive.free.invivo = FALSE,
                                tissue=NULL,
                                IVIVE=NULL,
                                ...)
