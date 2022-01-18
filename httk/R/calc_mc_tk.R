@@ -180,7 +180,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         parameterize.arg.list=list(
                           default.to.human=FALSE,
                           clint.pvalue.threshold=0.05,
-                          restrictive.clearance = T,
+                          restrictive.clearance = TRUE,
                           regression=TRUE),
                         return.all.sims=FALSE)
 {

@@ -335,7 +335,7 @@ FigCa  <- ggplot(data=MFdata.main) +
     
 print(FigCa)
 
-cat(paste("In Figure 4 we compare predictions made with our high throughput \
+cat(paste("In Figure 4 we compare predictions made with our high-throughput \
 human gestational PBTK model with experimental observations on a per chemical \
 basis wherever we had both in vitro HTTK data and in vivo observations (",
 length(unique(MFdata.main$DTXSID)),
@@ -1021,8 +1021,8 @@ pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 #      which.quantile = c(0.5,0.975),
 #      httkpop=F,
 ##      invitro.mc.arg.list = list(
-##        adjusted.Funbound.plasma = T, 
-##        poormetab = T,
+##        adjusted.Funbound.plasma = TRUE, 
+##        poormetab = TRUE,
 ##        fup.censored.dist = FALSE, 
 ##        fup.lod = 0.01, 
 ##        fup.meas.cv = 0.4, 

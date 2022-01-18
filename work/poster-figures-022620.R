@@ -94,8 +94,8 @@ for (this.id in unique(MFdata.httk$DTXSID))
   out <- calc_mc_css(chem.cas=this.cas,  #where is this.cas defined?
     which.quantile = c(0.5,0.975),
     invitro.mc.arg.list = list(
-      adjusted.Funbound.plasma = T, 
-      poormetab = T,
+      adjusted.Funbound.plasma = TRUE, 
+      poormetab = TRUE,
       fup.censored.dist = FALSE, 
       fup.lod = 0.01, 
       fup.meas.cv = 0.4, 
@@ -154,8 +154,8 @@ for (this.cas in maternal.list)
   out <- calc_mc_css(chem.cas=this.cas,
     which.quantile = c(0.5,0.975),
     invitro.mc.arg.list = list(
-      adjusted.Funbound.plasma = T, 
-      poormetab = T,
+      adjusted.Funbound.plasma = TRUE, 
+      poormetab = TRUE,
       fup.censored.dist = FALSE, 
       fup.lod = 0.01, 
       fup.meas.cv = 0.4, 

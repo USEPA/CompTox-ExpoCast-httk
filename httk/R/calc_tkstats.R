@@ -83,7 +83,7 @@ calc_tkstats <-function(
                default.to.human=FALSE,
                adjusted.Funbound.plasma=TRUE,
                regression=TRUE,
-               restrictive.clearance = T,
+               restrictive.clearance = TRUE,
                suppress.messages=FALSE,
                ...)
 {
@@ -344,7 +344,7 @@ calc_stats <-function(
                default.to.human=FALSE,
                adjusted.Funbound.plasma=TRUE,
                regression=TRUE,
-               restrictive.clearance = T,
+               restrictive.clearance = TRUE,
                suppress.messages=FALSE,
                ...)
 {
