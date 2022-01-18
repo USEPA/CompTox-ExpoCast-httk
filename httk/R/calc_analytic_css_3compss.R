@@ -179,7 +179,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     {
       Css <- Css * Rb2p
       
-    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+    }else if(bioactive.free.invivo == TRUE & tolower(concentration) == 'plasma'){
       
       Css <- Css * parameters[['Funbound.plasma']]
       

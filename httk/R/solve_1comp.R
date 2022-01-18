@@ -117,7 +117,7 @@ solve_1comp <- function(chem.name = NULL,
                     dosing.matrix=NULL,
                     adjusted.Funbound.plasma=TRUE,
                     regression=TRUE,
-                    restrictive.clearance = T,
+                    restrictive.clearance = TRUE,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,
                     ...)
