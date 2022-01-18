@@ -135,7 +135,7 @@ Disposition 30(12), 1446-54.
 
 Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
 Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
-a high throughput inhalation model for organic chemicals. Journal of 
+a high-throughput inhalation model for organic chemicals. Journal of 
 Exposure Science & Environmental Epidemiology, 1-12.
 
 Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 

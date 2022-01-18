@@ -27,7 +27,7 @@ https://doi.org/10.1093/toxsci/kfy020
 ## Abstract
 Prioritizing the risk posed by thousands of chemicals potentially present in the 
 environment requires exposure, toxicity, and toxicokinetic (TK) data, which are 
-often unavailable. Relatively high throughput, in vitro TK (HTTK) assays and in 
+often unavailable. Relatively high-throughput, in vitro TK (HTTK) assays and in 
 vitro-to-in vivo extrapolation (IVIVE) methods have been developed to predict TK, 
 but most of the in vivo TK data available to benchmark these methods are from 
 pharmaceuticals. Here we report on new, in vivo rat TK experiments for 26 
@@ -47,7 +47,7 @@ steady-state, peak, and time-integrated plasma concentrations of
 non-pharmaceuticals were predicted with reasonable accuracy. The plasma 
 concentration predictions improved when experimental measurements of 
 bioavailability were incorporated. In summary, HTTK and IVIVE methods are 
-adequately robust to be applied to high throughput in vitro toxicity 
+adequately robust to be applied to high-throughput in vitro toxicity 
 screening data of environmentally relevant chemicals for prioritizing based 
 on human health risks.
 
