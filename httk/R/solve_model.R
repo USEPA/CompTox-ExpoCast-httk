@@ -723,18 +723,6 @@ specification in compartment_units for model ", model)
 
 ### MODEL OUTPUT
 
-  # Convert output to desired units
-  cu.out <- convert_solve_x(model.output.mat = out,
-                            model = model,
-                            output.units = output.units,
-                            MW = MW,
-                            chem.cas = chem.cas,
-                            chem.name = chem.name,
-                            dtxsid = dtxsid,
-                            parameters = parameters,
-                            suppress.messages=suppress.messages)
-  # Re-assign 'out' with the new output from 'cu.out'
-  out <- cu.out[['new.ouput.matrix']]
   
 # The monitored variables can be altered by the user:
   if (is.null(monitor.vars))
@@ -749,6 +737,21 @@ specification in compartment_units for model ", model)
     stop("Some of the requested variables to monitor (monitor.vars) are not in
           the columns of the deSolve output object. These variables should
           belong to either the states or outputs of the model.")
+  
+# Convert output to desired units
+#   (Do not show conversion factors of 1 - i.e. verbose = FALSE.)
+  cu.out <- convert_solve_x(model.output.mat = out,
+                            model = model,
+                            output.units = output.units,
+                            MW = MW,
+                            chem.cas = chem.cas,
+                            chem.name = chem.name,
+                            dtxsid = dtxsid,
+                            parameters = parameters,
+                            monitor.vars = monitor.vars,
+                            suppress.messages=suppress.messages)
+  # Re-assign 'out' with the new output from 'cu.out'
+  out <- cu.out[['new.ouput.matrix']]
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==TRUE)
@@ -822,6 +825,8 @@ Set recalc.clearance to TRUE if desired.")
     
     # Units for output message
     out.units <- cu.out[['output.units.vector']]
+    # Cut down to only the desired parameters
+    out.units <- out.units[unique(c(monitor.vars,names(initial.values)))]
     # Message to report the output units
     cat("The model outputs are provided in the following units:\n")
       for(u in unique(out.units)){
