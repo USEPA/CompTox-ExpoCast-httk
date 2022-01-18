@@ -31,7 +31,7 @@ solve_1comp(
   dosing.matrix = NULL,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   ...

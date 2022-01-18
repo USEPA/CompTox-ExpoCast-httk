@@ -17,7 +17,7 @@ calc_mc_oral_equiv(
   return.samples = FALSE,
   concentration = "plasma",
   restrictive.clearance = TRUE,
-  bioactive.free.invivo = F,
+  bioactive.free.invivo = FALSE,
   tissue = NULL,
   IVIVE = NULL,
   ...

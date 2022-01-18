@@ -233,7 +233,7 @@ gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
                fill = "grey90", color = "black",
                size = 3, shape = 16, alpha = 0.5) +
     geom_smooth(aes(x = rec_ab, y = Pab), method = "lm")+
-    geom_text(data = labl.dt1,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    geom_text(data = labl.dt1,aes(x = x, y=y, label = labl), parse = TRUE, hjust = 0)+
     lims(y= c(0,150))+
     labs(x = expression(bold("Recovery")[bolditalic("AB")]), 
          y = expression(bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
@@ -247,7 +247,7 @@ gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
                fill = "grey90", color = "black",
                size = 3, shape = 16, alpha = 0.5) +
     geom_smooth(aes(x = rec_ab, y = Pab/rec_ab), method = "lm")+
-    geom_text(data = labl.dt2,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    geom_text(data = labl.dt2,aes(x = x, y=y, label = labl), parse = TRUE, hjust = 0)+
     lims(y = c(0,150))+
     labs(x = expression(bold("Recovery")[bolditalic("AB")]), 
          y = expression(bolditalic("P"["AB"])~bold('(10'^'-6'~'cm/s)'))) +
@@ -260,7 +260,7 @@ gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
                fill = "grey90", color = "black",
                size = 3, shape = 16, alpha = 0.5) +
     geom_smooth(aes(x = rec_ba, y = Pba), method = "lm")+
-    geom_text(data = labl.dt3,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    geom_text(data = labl.dt3,aes(x = x, y=y, label = labl), parse = TRUE, hjust = 0)+
     lims(y= c(0,160))+
     labs(x = expression(bold("Recovery")[bolditalic("BA")]), 
          y = expression(bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +
@@ -273,7 +273,7 @@ gtheme <- theme(axis.title = element_text(size=12,color="black",face="bold"),
                fill = "grey90", color = "black",
                size = 3, shape = 16, alpha = 0.5) +
     geom_smooth(aes(x = rec_ba, y = Pba/rec_ba), method = "lm")+
-    geom_text(data = labl.dt4,aes(x = x, y=y, label = labl), parse = T, hjust = 0)+
+    geom_text(data = labl.dt4,aes(x = x, y=y, label = labl), parse = TRUE, hjust = 0)+
     lims(y = c(0,160))+
     labs(x = expression(bold("Recovery")[bolditalic("BA")]), 
          y = expression(bolditalic("P"["BA"])~bold('(10'^'-6'~'cm/s)'))) +

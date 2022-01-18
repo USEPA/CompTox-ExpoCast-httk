@@ -769,7 +769,7 @@ FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2 +
 FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS, 
   function(x) calc_total_clearance(chem.cas=x,
   species="Rat",
-  default.to.human = T,
+  default.to.human = TRUE,
   suppress.messages=TRUE))
 
 Fig.SelectedClearance.fit <- lm(log(SelectedCLtot)~log(CLtot.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedCLtot.sd)))
