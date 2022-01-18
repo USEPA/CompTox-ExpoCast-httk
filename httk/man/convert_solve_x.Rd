@@ -14,7 +14,9 @@ convert_solve_x(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
+  monitor.vars = NULL,
   suppress.messages = FALSE,
+  verbose = FALSE,
   ...
 )
 }
@@ -45,7 +47,18 @@ either CAS, name, or DTXSIDs.}
 \item{parameters}{A set of model parameters, especially a set that
 includes MW (molecular weight) for our conversions.}
 
-\item{suppress.messages}{Whether or not the output messages are suppressed.}
+\item{monitor.vars}{A vector of character strings indicating the model
+component variables to retain in the conversion factor table
+(assuming suppress.messages == FALSE).  It should also be noted this option
+does NOT exclude columns from the input matrix provided in the
+'model.output.mat' parameter. (Default is NULL, i.e. conversion factors for
+all model components are included in the reporting matrix.)}
+
+\item{suppress.messages}{Whether or not the output messages are suppressed.
+(Default is FALSE, i.e. show messages.)}
+
+\item{verbose}{Whether or not to display the full conversion factor table.
+(Default is FALSE, i.e. only include rows where the conversion factor is 1.)}
 
 \item{...}{Other parameters that can be passed to \code{convert_units}, e.g.
 temperature and compound state.  See details in \code{\link{convert_units}}.}
