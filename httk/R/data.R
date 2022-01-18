@@ -1070,7 +1070,7 @@
 #'
 #' Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
 #' Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
-#' a high throughput inhalation model for organic chemicals. Journal of 
+#' a high-throughput inhalation model for organic chemicals. Journal of 
 #' Exposure Science & Environmental Epidemiology, 1-12.
 #' 
 #' Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
@@ -1182,7 +1182,7 @@
 
 #' Tox21 2015 Active Hit Calls (EPA)
 #'
-#' The ToxCast and Tox21 research programs employ batteries of high throughput
+#' The ToxCast and Tox21 research programs employ batteries of high-throughput
 #' assays to assess chemical bioactivity in vitro. Not every chemical is tested
 #' through every assay. Most assays are conducted in concentration response,
 #' and each corresponding assay endpoint is analyzed statistically to determine
@@ -1199,7 +1199,7 @@
 #' @format A data.table with 401 rows and 6 columns
 #' @author John Wambaugh
 #' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program:
-#' providing high throughput decision support tools for chemical risk
+#' providing high-throughput decision support tools for chemical risk
 #' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
 #'
 #' Tice, Raymond R., et al. "Improving the human hazard characterization of

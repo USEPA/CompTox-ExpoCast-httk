@@ -15,7 +15,7 @@ calc_analytic_css_1comp(
   recalc.blood2plasma = FALSE,
   tissue = NULL,
   restrictive.clearance = TRUE,
-  bioactive.free.invivo = F,
+  bioactive.free.invivo = FALSE,
   ...
 )
 }
