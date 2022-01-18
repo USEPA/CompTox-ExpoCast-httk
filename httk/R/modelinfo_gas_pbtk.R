@@ -338,7 +338,8 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "AUC",
     "Ainh", # SED 06-12-2021
     "Aexh", # SED 06-12-2021
-    "Amuc"
+    "Amuc",
+    "Cinhppmv"
     )        
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
