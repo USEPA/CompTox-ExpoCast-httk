@@ -167,7 +167,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     {
       Css <- Css * parameters[['Rblood2plasma']]
       
-    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+    }else if(bioactive.free.invivo == TRUE & tolower(concentration) == 'plasma'){
       
       Css <- Css * parameters[['Funbound.plasma']]
       

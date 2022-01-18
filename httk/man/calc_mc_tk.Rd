@@ -33,7 +33,7 @@ calc_mc_tk(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   return.all.sims = FALSE
 )
 }
