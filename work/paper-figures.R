@@ -1021,8 +1021,8 @@ pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 #      which.quantile = c(0.5,0.975),
 #      httkpop=F,
 ##      invitro.mc.arg.list = list(
-##        adjusted.Funbound.plasma = T, 
-##        poormetab = T,
+##        adjusted.Funbound.plasma = TRUE, 
+##        poormetab = TRUE,
 ##        fup.censored.dist = FALSE, 
 ##        fup.lod = 0.01, 
 ##        fup.meas.cv = 0.4, 
