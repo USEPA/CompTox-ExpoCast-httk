@@ -13,7 +13,7 @@
 {PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 
 \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
-'PBTK models for in vitro to in vivo extrapolation}
+PBTK models for in vitro to in vivo extrapolation}
 
 \doi{10.18637/jss.v079.i04}{Pearce et al. (2017): httk: R
 Package for High-Throughput Toxicokinetics}
@@ -56,7 +56,7 @@ Development and evaluation of a high-throughput inhalation model for organic
 chemicals}
 
 \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
-{EPA's ExpoCast (Exposure Forecasting) Project}
+{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 }
 \author{
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
