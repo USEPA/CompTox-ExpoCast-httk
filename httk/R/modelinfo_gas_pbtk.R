@@ -266,7 +266,7 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[["gas_pbtk"]]$compartment.units <- c(
+model.list[["gas_pbtk"]]$compartment.units <- c( #missing States: Ainh and Aexh - AM, 1/21/2022
                                           "Aart"="umol",
                                           "Agut"="umol",
                                           "Agutlumen"="umol",
@@ -275,7 +275,7 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Alung"="umol",
                                           "Ametabolized"="umol",
                                           "Amuc"="umol",
-                                          "Aplasma"="umol",
+                                          "Aplasma"="umol", #one of "Outputs" not in "States"
                                           "Arest"="umol",
                                           "Atubules"="umol",
                                           "AUC"="uM*days",
@@ -286,7 +286,7 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Cendexh"="uM",
                                           "Cendexhppmv"="ppmv",
                                           "Cgut"="uM",
-                                          "Cinhppmv"="ppmv",
+                                          "Cinhppmv"="ppmv", #forcing function in "Inputs"
                                           "Ckidney"="uM",
                                           "Cliver"="uM",
                                           "Clung"="uM",
