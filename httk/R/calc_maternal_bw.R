@@ -18,8 +18,6 @@
 #' PloS one 14.5 (2019): e0215906.
 #'
 #' @keywords Parameter
-#'
-#' @examples
 #' 
 #' @author John Wambaugh
 #' 

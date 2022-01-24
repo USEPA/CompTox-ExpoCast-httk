@@ -1626,3 +1626,80 @@
 #' @source Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
 #' @keywords data
 "pradeep2020"
+
+#' Aylward et al. 2014
+#' 
+#' Aylward et al. (2014) compiled measurements of the ratio of maternal to fetal 
+#' cord blood chemical concentrations at birth for a range of chemicals with 
+#' environmental routes of exposure, including bromodiphenyl ethers, fluorinated 
+#' compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke 
+#' components, and vitamins.
+#' 
+#' @name aylward2014
+#' @aliases Aylward2014
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Aylward2014matfet}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"aylward2014"
+
+#' Frechen et al. 2021
+#' 
+#' Frechen et al. (2021) includes compiled literature descriptions of 
+#' toxicokinetic summary statistics, including time-integrated plasma 
+#' concentrations (area under the curve or AUC) for drugs administered to a 
+#' sample of subjects including both pregnant and non-pregnant women. The 
+#' circumstances of the dosing varied slightly between drugs and are summarized 
+#' in the table.
+#' 
+#' @name frechen2021
+#' @aliases Frechen2021
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Frechen2021matfetpbpk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"frechen2021"  
+
+#' Fetal Partition Coefficients
+#' 
+#' Partition coefficients were measured for tissues, including placenta, in 
+#' vitro by Csanady et al. (2002) for Bisphenol A and Diadzen. Curley et al. 
+#' (1969) measured the concentration of a variety of pesticides in the cord 
+#' blood of newborns and in the tissues of infants that were stillborn. 
+#' 
+#' Three of the chemicals studied by Curley et al. (1969) were modeled by 
+#' Weijs et al. (2013) using the same partition coefficients for mother and 
+#' fetus. The values used represented "prior knowledge" summarizing the 
+#' available literature. 
+#' 
+#' @name fetalpcs
+#' @aliases fetalPCs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Csanady2002fetalpc}{httk}
+#' \insertRef{Curley1969fetalpc}{httk}
+#' \insertRef{Weijs2013fetalpc}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"fetalpcs"
+
+#' Wang et al. 2018
+#' Wang et al. (2018) screened the blood of 75 pregnant women for the presence 
+#' of environmental organic acids (EOAs) and identified mass spectral features 
+#' corresponding to 453 chemical formulae of which 48 could be mapped to likely 
+#' structures. Of the 48 with tentative structures the identity of six were 
+#' confirmed with available chemical standards. 
+#' @name wang2018
+#' @aliases Wang2018
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Wang2018matbloodnta}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"wang2018"
