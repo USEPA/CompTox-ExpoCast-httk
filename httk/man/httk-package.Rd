@@ -9,8 +9,8 @@
 \Sexpr{tools:::Rd_package_description("httk")}
 }
 \seealso{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}
-{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{
+PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 
 \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
 PBTK models for in vitro to in vivo extrapolation}
@@ -55,8 +55,8 @@ Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
 Development and evaluation of a high-throughput inhalation model for organic 
 chemicals}
 
-\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
-{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
+\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{
+The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 }
 \author{
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
