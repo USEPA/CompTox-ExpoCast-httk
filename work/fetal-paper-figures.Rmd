@@ -34,6 +34,7 @@ library(ggplot2)
 library(httk)
 library(scales)
 library(gridExtra)
+library(cowplot)
 ```
 ### Change working directory
 ```{r change directory, eval = TRUE}
@@ -72,7 +73,7 @@ Data sets were curated from the literature to allow evaluation of the gestationa
 ## Load/format the data
 ```{r load_aylward_data, eval = TRUE}
 #MFdata <- read_excel("Aylward-MatFet.xlsx")
-MFdata <- httk::AylwardMatFet
+MFdata <- httk::aylward2014
 
 cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
@@ -597,8 +598,8 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 [Dallmann et al., 2018](http://dx.doi.org/10.1007/s40262-017-0594-5) includes descriptions of toxicokinetics summary statistics, including time-integrated plasma concentrations (area under the curve or AUC) for six drugs administered to a sample of subjects including both pregnant and non-pregnant women. Additional data from X and Y for two chemicals among the httk library were collected from the literature. 
 
 ```{r dallmann2018_data, eval = TRUE}
-TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-#TKstats <- httk::Dallmann2018Data
+#TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
+TKstats <- httk::frechen2021
 
 
 ids <- unique(TKstats$DTXSID)
@@ -957,7 +958,7 @@ write.csv(Curley.pcs,"PCs-table.csv",row.names=FALSE)
 
 ## Predict partition coefficients
 ```{r curley1969_makepreds, eval = TRUE}
-Curley.pcs <- httk::FetalPCData
+Curley.pcs <- httk::fetalpcs
 
 suppressWarnings(load_sipes2017())
 for (this.chemical in unique(Curley.pcs$DTXSID))
@@ -1108,7 +1109,7 @@ print(FigFb)
 # Chemical Prioritization on the Basis of Fetal Brain Concentration
 ```{r wang2018_loaddata, eval = TRUE}
 #Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
-Wangchems <- httk::Wang2018Chems
+Wangchems <- httk::wang2018
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
@@ -1516,11 +1517,11 @@ lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,
 
 # Code used to create data distributed with vignette
 ```{r create_distributable_data, eval = FALSE}
-AylwardMatFet <-MFdata
-Dallmann2018Data <- TKstats
-FetalPCData <- Curley.pcs
-Wang2018Chems <- Wangchems
+aylward2014 <-MFdata
+frechen2021 <- TKstats
+fetalpcs <- Curley.pcs
+wang2018 <- Wangchems
 
-save(AylwardMatFet,Dallmann2018Data,FetalPCData,Wang2018Chems,
+save(aylward2014,frechen2021,fetalpcs,wang2018,
      file="Kapraun2022Vignette.RData",version=2)
 ```
