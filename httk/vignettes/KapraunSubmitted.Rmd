@@ -72,7 +72,7 @@ Data sets were curated from the literature to allow evaluation of the gestationa
 ## Load/format the data
 ```{r load_aylward_data, eval = TRUE}
 #MFdata <- read_excel("Aylward-MatFet.xlsx")
-MFdata <- httk::AylwardMatFet
+MFdata <- httk::aylward2014
 
 cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
@@ -598,10 +598,21 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 ```{r dallmann2018_data, eval = TRUE}
 #TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-TKstats <- httk::Dallmann2018Data
+TKstats <- httk::frechen2021
+
+
+ids <- unique(TKstats$DTXSID)
+cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+          "chemicals for which the model fetal_pbtk can run that are in the Dallmann data set."))
+
 
 TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
-TKstats <- subset(TKstats,DTXSID!="" & Parameter=="AUCinf")
+TKstats <- subset(TKstats,DTXSID!="" & Parameter %in% c("AUCinf","AUClast"))
+
+ids <- unique(TKstats$DTXSID)
+cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+          "chemicals for which the model fetal_pbtk can run that have AUCs in the Dallmann data set."))
+
 
 # Assumed body weight (kg) from Kapraun 2019
 BW.nonpreg <- 61.103
@@ -703,17 +714,18 @@ write.csv(TKstats,file="Table-Dallmann2018.csv",row.names=FALSE)
 
 ## Generate AUC Predicted vs. Observed Figure
 ```{r dallmann2018_figure, eval = TRUE}
-FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEa  <- ggplot(data=TKstats) +
   geom_point(aes(
     y=Observed.Non.Pregnant2,
     x=Predicted.Non.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
   geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) + 
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
   scale_x_log10(#limits=c(10^-3,10^3),
@@ -723,8 +735,7 @@ FigEa  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Non-Pregnant") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 #print(FigEa)
 cat(paste(
@@ -734,17 +745,18 @@ cat(paste(
   signif((mean((log10(TKstats$Predicted.Non.Pregnant.httk)-log10(TKstats$Observed.Non.Pregnant2))^2))^(1/2),2),
   "for non-pregnant woman.\n"))
 
-FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEb  <- ggplot(data=TKstats) +
   geom_point(aes(
     y=Observed.Pregnant5,
     x=Predicted.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
       geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted (uM*h)") + 
   ylab("Observed") +
   scale_x_log10(#limits=c(10^-5,10^3),
@@ -754,8 +766,7 @@ FigEb  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Pregnant")+
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 #print(FigEb)
 cat(paste(
@@ -767,17 +778,18 @@ cat(paste(
 
 
 
-FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
+FigEc  <- ggplot(data=TKstats) +
   geom_point(aes(
     x=Predicted.Non.Pregnant.httk,
     y=Predicted.Pregnant.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
       geom_abline(slope=1, intercept=0) +
   geom_abline(slope=1, intercept=1, linetype=3) + 
   geom_abline(slope=1, intercept=-1, linetype=3) +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6),name="Route")+ 
+  scale_shape_manual(values=c(22,24),name="Route")+ 
   ylab("httk Pregnant (uM*h)") + 
   xlab("httk Non-Pregnant (uM*h)") + 
   scale_x_log10(#limits=c(10^-1,10^2),
@@ -787,20 +799,22 @@ FigEc  <- ggplot(data=subset(TKstats,Parameter=="AUCinf")) +
   ggtitle("Model Comparison") +
   theme_bw()  +
   theme(legend.position="left")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
-    
-#print(FigEc)
+  theme( text  = element_text(size=12))+ 
+  theme(legend.text=element_text(size=10))+
+  guides(fill=guide_legend(ncol=2,override.aes=list(shape=21)),alpha=guide_legend(ncol=2),shape=guide_legend(ncol=2))
+ print(FigEc)   
+FigEc <- get_legend(FigEc)
 
-FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
-  !is.na(Ratio.httk))) +
+
+FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
   geom_point(aes(
     y=Ratio.obs,
     x=Ratio.httk,
     shape=Dose.Route,
-    color=Drug),
-    size=3)   +
-  scale_shape_manual(values=c(15, 16,2, 23, 0, 1, 17, 5, 6))+ 
+    alpha=Drug,
+    fill=Drug),
+    size=5)   +
+  scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted") + 
   ylab("Observed") +
  # scale_x_continuous(limits=c(0.25,3)) +
@@ -811,8 +825,7 @@ FigEd  <- ggplot(data=subset(TKstats,Parameter=="AUCinf" &
   ggtitle("Ratio") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=10))+ 
-  theme(legend.text=element_text(size=8))
+  theme( text  = element_text(size=12))
     
 dev.new()
 grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
@@ -944,7 +957,7 @@ write.csv(Curley.pcs,"PCs-table.csv",row.names=FALSE)
 
 ## Predict partition coefficients
 ```{r curley1969_makepreds, eval = TRUE}
-Curley.pcs <- httk::FetalPCData
+Curley.pcs <- httk::fetalpcs
 
 suppressWarnings(load_sipes2017())
 for (this.chemical in unique(Curley.pcs$DTXSID))
@@ -1024,28 +1037,29 @@ cat(paste(
 ### First indicate compound:
 ```{r curley1969_figure_compounds, eval = TRUE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
-  geom_point(size=1,aes(
+  geom_point(size=2,aes(
     y=Weijs2013,
     x=HTTK.pred,    
     shape=Compound,
     color=Compound)) +
-  geom_point(size=3,aes(
+  geom_point(size=5,aes(
     y=PC,
     x=HTTK.pred,
     shape=Compound,
     color=Compound)) +
-  geom_abline(slope=1, intercept=0) +
-  geom_abline(slope=1, intercept=1, linetype=3) + 
-  geom_abline(slope=1, intercept=-1, linetype=3) +
+  geom_abline(slope=1, intercept=0, size=2) +
+  geom_abline(slope=1, intercept=1, linetype=3, size=2) + 
+  geom_abline(slope=1, intercept=-1, linetype=3, size=2) +
   scale_shape_manual(values=rep(c(15,16,17,18),4))+
-  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  xlab("Predicted Tissue:Blood Partition Coefificent") + 
   ylab("Observed") +
-  scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
+  scale_x_log10(label=scientific_10,limits=c(10^-1,10^2)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
   theme(legend.position="bottom")+
-  theme( text  = element_text(size=18))+ 
-  theme(legend.text=element_text(size=10))+  
+  theme( text  = element_text(size=28))+ 
+  theme(legend.text=element_text(size=16))+ 
+   theme(legend.title = element_blank())+
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
 print(FigFa)
@@ -1059,28 +1073,29 @@ RMSE(fitFb)
 ### Then indicate tissues:
 ```{r curley1969_figure_tissues, eval = TRUE}
 FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
-  geom_point(size=1,aes(
+  geom_point(size=2,aes(
     y=Weijs2013,
     x=HTTK.pred,
     shape=Tissue,
     color=Tissue)) +
-  geom_point(size=3, aes(
+  geom_point(size=5, aes(
     y=PC,
     x=HTTK.pred,
     shape=Tissue,
     color=Tissue))   +
-  geom_abline(slope=1, intercept=0) +
-  geom_abline(slope=1, intercept=1, linetype=3) + 
-  geom_abline(slope=1, intercept=-1, linetype=3) +
+  geom_abline(slope=1, intercept=0, size=2) +
+  geom_abline(slope=1, intercept=1, linetype=3, size=2) + 
+  geom_abline(slope=1, intercept=-1, linetype=3, size=2) +
   scale_shape_manual(values=rep(c(15,16,17,18),4))+
-  xlab("httk Predicted Tissue:Blood Partition Coefificent") + 
+  xlab("Predicted Tissue:Blood Partition Coefificent") + 
   ylab("Observed") +
-  scale_x_log10(label=scientific_10,limits=c(10^-1,10^4)) +
+  scale_x_log10(label=scientific_10,limits=c(10^-1,10^2)) +
   scale_y_log10(label=scientific_10,limits=c(10^-1,10^4)) +
   theme_bw()  +
   theme(legend.position="bottom")+
-  theme( text  = element_text(size=18))+ 
-  theme(legend.text=element_text(size=14)) +  
+  theme( text  = element_text(size=28))+ 
+  theme(legend.text=element_text(size=20))+ 
+   theme(legend.title = element_blank())+
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
 print(FigFb)
@@ -1093,7 +1108,7 @@ print(FigFb)
 # Chemical Prioritization on the Basis of Fetal Brain Concentration
 ```{r wang2018_loaddata, eval = TRUE}
 #Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
-Wangchems <- httk::Wang2018Chems
+Wangchems <- httk::wang2018
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
@@ -1150,7 +1165,7 @@ colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 
 pred.table3 <- pred.table1
-pred.table3$Uncertainty <- "Plasma Error (Fig. 4b)"
+pred.table3$Uncertainty <- "Plasma Error (Fig. 4)"
 empirical.error <- RMSE(fit2sub)
 for (this.cas in maternal.list)
 {
@@ -1501,11 +1516,11 @@ lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,
 
 # Code used to create data distributed with vignette
 ```{r create_distributable_data, eval = FALSE}
-AylwardMatFet <-MFdata
-Dallmann2018Data <- TKstats
-FetalPCData <- Curley.pcs
-Wang2018Chems <- Wangchems
+aylward2014 <-MFdata
+frechen2021 <- TKstats
+fetalpcs <- Curley.pcs
+wang2018 <- Wangchems
 
-save(AylwardMatFet,Dallmann2018Data,FetalPCData,Wang2018Chems,
+save(aylward2014,frechen2021,fetalpcs,wang2018,
      file="Kapraun2022Vignette.RData",version=2)
 ```
