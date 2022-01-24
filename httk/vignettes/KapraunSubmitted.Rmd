@@ -34,6 +34,7 @@ library(ggplot2)
 library(httk)
 library(scales)
 library(gridExtra)
+library(cowplot)
 ```
 ### Change working directory
 ```{r change directory, eval = TRUE}
