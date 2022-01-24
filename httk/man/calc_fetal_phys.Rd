@@ -304,9 +304,6 @@ Qfkidney_percent + Qfgut_percent ) / Qfnonplacental_percent ) * ( 1 - Qfplacenta
  Qfbypass = Qfcardiac - Qflung ;
  }
 }
-\examples{
-
-}
 \references{
 Kapraun, Dustin F., et al. "Empirical models for anatomical and physiological 
 changes in a human mother and fetus during pregnancy and gestation." 
