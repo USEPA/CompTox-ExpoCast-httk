@@ -36,10 +36,6 @@ library(scales)
 library(gridExtra)
 library(cowplot)
 ```
-### Change working directory
-```{r change directory, eval = TRUE}
-setwd("c:/users/jwambaug/git/httk/work")
-```
 
 ### Prepare custom functions
 ```{r load_code, eval = TRUE}
