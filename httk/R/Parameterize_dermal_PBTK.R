@@ -29,7 +29,7 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' @param depth depth of skin, cm, used in calculating Kp.
+#' @param skin_depth skin_depth of skin, cm, used in calculating Kp.
 #' @param skin.pH pH of dermis/skin, used in calculating Kp and Kskin2media.
 #' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
 #' Vmax and Km in parameters instead of Clmetabolismc and
@@ -72,9 +72,9 @@
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 #' \item{Kp}{Permeability, cm/h.} \item{Kskin2media}{Partition coefficient
 #' between exposed skin and media.} \item{totalSA}{Total body surface area,
-#' cm^2.} \item{Vmedia}{Volume of media, L.} \item{depth}{Skin depth, cm.}
+#' cm^2.} \item{Vmedia}{Volume of media, L.} \item{skin_depth}{Skin skin_depth, cm.}
 #' \item{Fdermabs}{Fraction of media concentration available for absorption.}
-#' \item{Fskinexposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
+#' \item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
 #' units corresponding to dosing concentration.} \item{Km}{units same as dosing
 #' concentration.} 
 #' @author John Wambaugh and Robert Pearce
@@ -103,7 +103,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               regression=T,
                               suppress.messages=F,
                               minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
-                              depth=0.3,skin.pH=7,
+                              skin_depth=0.3,skin.pH=7,
                               vmax.km=F, BW=70, height = 175)
 {
   physiology.data <- physiology.data
@@ -285,16 +285,22 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
                                                              species=species,
                                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma),
-    Fgutabs=Fgutabs)
+               Fgutabs=Fgutabs)
 
-    Kscw <- 0.9 * schmitt.params$Pow^0.69 
+    Kscw <- 0.9 * schmitt.params$Pow^0.69 #stratum-corneum "water?"
     Kvw <- 1#14.62 * schmitt.params$Pow^0.55
     ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
     fnon <- 1 - ionization$fraction_charged      
-    Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw 
+    Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw #Look at Marina's paper
     D <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) * 100^2 * 60^2  #cm^2/h
-    Kp <- Kd2m * D / depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h    
-    outlist <- c(outlist,Kp = Kp,Kskin2media = Kd2m, totalSA = sqrt(height * BW / 3600) * 100^2 , Vmedia = 0.001,depth=depth,Fdermabs=1,Fskinexposed=0.1)  #Vmedia in L TotalSA in cm^2   SA = 2 * 100^2?
+    Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h    
+    outlist <- c(outlist,Kp = Kp,
+                 Kskin2media = Kd2m, 
+                 totalSA = sqrt(height * BW / 3600) * 100^2 , 
+                 Vmedia = 0.001,
+                 skin_depth=skin_depth,
+                 Fdermabs=1,
+                 Fskin_exposed=0.1)  #Vmedia in L TotalSA in cm^2   SA = 2 * 100^2?
       #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
       #outlist <- c(outlist,Qskinexposedf = 0.3 * 75 * 0.001 / 70 / outlist$Vskinc * outlist$Qskinf)
       #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf      
