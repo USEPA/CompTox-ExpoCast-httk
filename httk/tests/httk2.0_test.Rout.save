@@ -686,6 +686,3 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > quit("no")
-> proc.time()
-   user  system elapsed 
-  18.81    2.04   21.12 
