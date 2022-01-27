@@ -355,6 +355,3 @@ Warning messages:
 + }
 > 
 > quit("no")
-> proc.time()
-   user  system elapsed 
-   6.46    1.85    8.25 

@@ -301,6 +301,3 @@ Warning messages:
   Rblood2plasma has been recalculated.
 > 
 > quit("no")
-> proc.time()
-   user  system elapsed 
-   7.29    1.73    9.06 

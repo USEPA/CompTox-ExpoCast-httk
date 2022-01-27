@@ -256,6 +256,3 @@ In parameterize_schmitt(chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
 > 
 > quit("no")
-> proc.time()
-   user  system elapsed 
-  23.84    2.15   26.43 
