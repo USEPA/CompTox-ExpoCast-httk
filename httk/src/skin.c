@@ -48,7 +48,7 @@
      switch (forcing function)
 
    51 Parameters:
-     depth = 0,
+     skin_depth = 0,
      V0 = 0,
      Fskinexposed = 0,
      totalSA = 0,
@@ -136,7 +136,7 @@
 /* Parameters */
 static double parms[51];
 
-#define depth parms[0]
+#define skin_depth parms[0]
 #define V0 parms[1]
 #define Fskinexposed parms[2]
 #define totalSA parms[3]
@@ -226,7 +226,7 @@ void getParms_skin (double *inParms, double *out, int *nout) {
   Qkidney = Qcardiac * Qkidneyf ;
   Qliver = Qcardiac * Qliverf ;
   SA = Fskinexposed * totalSA ;
-  Vskinexposed = SA * depth * 0.001 ;
+  Vskinexposed = SA * skin_depth * 0.001 ;
   Vskin = Vskinc * BW - Vskinexposed ;
   Qskin = Qcardiac * Qskinf * ( 1 - Vskinexposed / ( Vskinc * BW ) ) ;
   Qskinexposed = Qcardiac * Qskinf * Vskinexposed / ( Vskinc * BW ) ;

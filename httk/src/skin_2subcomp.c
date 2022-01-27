@@ -75,10 +75,10 @@
      Klung2pu = 0,
      Qcardiacc = 4.8,
      Qgfrc = 0.108,
-     Qcomposite_dermalc = 0,
-     Qgutc = 0,
-     Qkidneyc = 0,
-     Qliverc = 0,
+     Qcomposite_dermalf = 0,
+     Qgutf = 0,
+     Qkidneyf = 0,
+     Qliverf = 0,
      Vartc = 0,
      Vgutc = 0,
      Vkidneyc = 0,
@@ -179,10 +179,10 @@ static double parms[63];
 #define Klung2pu parms[20]
 #define Qcardiacc parms[21]
 #define Qgfrc parms[22]
-#define Qcomposite_dermalc parms[23]
-#define Qgutc parms[24]
-#define Qkidneyc parms[25]
-#define Qliverc parms[26]
+#define Qcomposite_dermalf parms[23]
+#define Qgutf parms[24]
+#define Qkidneyf parms[25]
+#define Qliverf parms[26]
 #define Vartc parms[27]
 #define Vgutc parms[28]
 #define Vkidneyc parms[29]
@@ -256,9 +256,9 @@ void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
   Clmetabolism = Clmetabolismc * 24 * BW ;
   Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
   Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
-  Qgut = Qcardiac * Qgutc ;
-  Qkidney = Qcardiac * Qkidneyc ;
-  Qliver = Qcardiac * Qliverc ;
+  Qgut = Qcardiac * Qgutf ;
+  Qkidney = Qcardiac * Qkidneyf ;
+  Qliver = Qcardiac * Qliverf ;
   SA_exposed = Fskin_exposed * totalSA ;
   Vskin = BW * Vskinc ;
   Vstratum_corneum = Vskin * Fskin_depth_sc ;
@@ -267,7 +267,7 @@ void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
   Vcomposite_dermal = Vskin * Fskin_depth_cd ;
   Vcomposite_dermal_exposed = Vcomposite_dermal * Fskin_exposed ;
   Vcomposite_dermal_unexposed = Vcomposite_dermal * ( 1 - Fskin_exposed ) ;
-  Qcomposite_dermal = Qcardiac * Qcomposite_dermalc ;
+  Qcomposite_dermal = Qcardiac * Qcomposite_dermalf ;
   Qcomposite_dermal_unexposed = Qcomposite_dermal * ( 1 - Vskin_exposed / Vskin ) ;
   Qcomposite_dermal_exposed = Qcomposite_dermal * Vskin_exposed / Vskin ;
   Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qcomposite_dermal ) ;
