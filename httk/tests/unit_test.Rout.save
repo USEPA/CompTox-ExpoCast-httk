@@ -42,6 +42,3 @@ Type 'q()' to quit R.
 > convert_units("ppmv","mg/L",chem.name="toluene")
 [1] 0.003766
 > 
-> proc.time()
-   user  system elapsed 
-   3.09    1.70    4.79 
