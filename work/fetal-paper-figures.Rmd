@@ -818,11 +818,11 @@ FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
   scale_shape_manual(values=c(22,24))+ 
   xlab("httk Predicted") + 
   ylab("Observed") +
- # scale_x_continuous(limits=c(0.25,3)) +
- # scale_y_continuous(limits=c(0.25,3)) +
+  scale_x_continuous(limits=c(0.25,3)) +
+  scale_y_continuous(limits=c(0.25,3)) +
   geom_abline(slope=1, intercept=0) +
-  geom_abline(slope=1, intercept=1.15, linetype=3) + 
-  geom_abline(slope=1, intercept=-1.15, linetype=3) + 
+ geom_abline(slope=1, intercept=1, linetype=3) + 
+  geom_abline(slope=1, intercept=-1, linetype=3) + 
   ggtitle("Ratio") +
   theme_bw()  +
   theme(legend.position="none")+
