@@ -104,7 +104,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               suppress.messages=F,
                               minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
                               skin_depth=0.3,skin.pH=7,
-                              vmax.km=F, BW=70, height = 175)
+                              vmax.km=F, BW=70, height = 175,
+                              ...) 
 {
   physiology.data <- physiology.data
   
@@ -294,15 +295,29 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw #Look at Marina's paper
     D <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) * 100^2 * 60^2  #cm^2/h
     Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h    
+    totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
     outlist <- c(outlist,Kp = Kp,
                  Kskin2media = Kd2m, 
-                 totalSA = sqrt(height * BW / 3600) * 100^2 , 
-                 Vmedia = 0.001,
+                 totalSA = totalSA,
+                 Vmedia = 0.001,  #Vmedia in L TotalSA in cm^2 
                  skin_depth=skin_depth,
                  Fdermabs=1,
-                 Fskin_exposed=0.1)  #Vmedia in L TotalSA in cm^2   SA = 2 * 100^2?
-      #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
+                 Fskin_exposed=0.1)   #SA = 2 * 100^2?
       #outlist <- c(outlist,Qskinexposedf = 0.3 * 75 * 0.001 / 70 / outlist$Vskinc * outlist$Qskinf)
-      #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf      
+      #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf
+    
+    # Added by AEM, 1/27/2022
+    outlist <- c(outlist, Fskin_depth_sc = 11/560, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
+                 Fskin_depth_cd = 1-11/560, #AEM's best guess
+                 Pmedia2sc = 1, #guess
+                 Psc2cd = 1, #guess
+                 Ksc2media = 1, #guess
+                 Ksc2cd = 1, #guess
+                 Kcd2pu = 1, #guess
+                 Qcomposite_dermalf = flows[["Qskinf"]], #not sure if this is totally accurate
+                 V0 = 1,
+                 Vstratum_corneumc = 1,
+                 Vcomposite_dermalc=1)
+
   return(outlist[sort(names(outlist))])
 }

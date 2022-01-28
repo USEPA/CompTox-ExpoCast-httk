@@ -96,7 +96,7 @@
 #' @export solve_dermal_pbtk
 #' @useDynLib httk
 #' @import deSolve
-solve_dermal_pbtk <- function(chem.name = NULL,
+solve_dermal_pbtk_old <- function(chem.name = NULL,
                     chem.cas = NULL,
                     times=NULL,
                     parameters=NULL,
