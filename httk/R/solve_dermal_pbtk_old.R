@@ -93,7 +93,7 @@
 #' parameters$Vmedia <- 1
 #' out <- solve_dermal_pbtk(parameters=parameters,concentration=100,plots=T)
 #' 
-#' @export solve_dermal_pbtk
+#' @export solve_dermal_pbtk_old
 #' @useDynLib httk
 #' @import deSolve
 solve_dermal_pbtk_old <- function(chem.name = NULL,

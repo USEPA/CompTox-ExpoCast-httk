@@ -7,6 +7,7 @@
 parameterize_dermal_pbtk(
   chem.cas = NULL,
   chem.name = NULL,
+  dtxsid = NULL,
   species = "Human",
   default.to.human = F,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
@@ -16,11 +17,13 @@ parameterize_dermal_pbtk(
   adjusted.Funbound.plasma = T,
   regression = T,
   suppress.messages = F,
-  depth = 0.3,
+  minimum.Funbound.plasma = 1e-04,
+  skin_depth = 0.3,
   skin.pH = 7,
   vmax.km = F,
   BW = 70,
-  height = 175
+  height = 175,
+  ...
 )
 }
 \arguments{
@@ -29,6 +32,9 @@ specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
+
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -54,7 +60,11 @@ partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{depth}{depth of skin, cm, used in calculating Kp.}
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
+
+\item{skin_depth}{skin_depth of skin, cm, used in calculating Kp.}
 
 \item{skin.pH}{pH of dermis/skin, used in calculating Kp and Kskin2media.}
 
@@ -101,9 +111,9 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 \item{Kp}{Permeability, cm/h.} \item{Kskin2media}{Partition coefficient
 between exposed skin and media.} \item{totalSA}{Total body surface area,
-cm^2.} \item{Vmedia}{Volume of media, L.} \item{depth}{Skin depth, cm.}
+cm^2.} \item{Vmedia}{Volume of media, L.} \item{skin_depth}{Skin skin_depth, cm.}
 \item{Fdermabs}{Fraction of media concentration available for absorption.}
-\item{Fskinexposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
+\item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
 units corresponding to dosing concentration.} \item{Km}{units same as dosing
 concentration.}
 }

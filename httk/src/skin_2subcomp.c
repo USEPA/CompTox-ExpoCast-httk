@@ -118,6 +118,9 @@
 */
 
 #include <R.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R_ext/Rdynload.h>
 
 /* Model variables: States */
 #define ID_Agutlumen 0x00000
