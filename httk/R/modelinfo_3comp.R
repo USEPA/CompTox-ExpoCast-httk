@@ -260,3 +260,9 @@ model.list[["3compartment"]]$exclude.fup.zero <- T
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["3compartment"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["3compartment"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["3compartment"]]$chem.class.filt <- c("PFAS")
