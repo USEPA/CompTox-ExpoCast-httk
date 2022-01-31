@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.2.6
-Date: 2022-01-24
+Version: 99.4.1
+Date: 2021-06-25
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
@@ -94,7 +94,7 @@ LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
