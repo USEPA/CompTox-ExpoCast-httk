@@ -708,3 +708,9 @@ model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["fetal_pbtk"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["fetal_pbtk"]]$chem.class.filt <- c("PFAS")
