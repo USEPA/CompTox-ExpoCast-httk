@@ -205,7 +205,7 @@
 #' # Convert all compartment units to mg/L:
 #' head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
 #' # Convert just the plasma to mg/L:
-#' head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L"))
+#' head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
 #' 
 #' @export solve_gas_pbtk
 #' 
