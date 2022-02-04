@@ -109,6 +109,8 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
+#' @param iv.dose Simulates a single i.v. dose if true.
+#' 
 #' @param input.units Input units of interest assigned to dosing, including 
 #' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
 #' 
@@ -234,6 +236,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=FALSE,
                            suppress.messages=FALSE,
                            species="Human",
+                           iv.dose=FALSE,
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
                            # input.units = "uM",
                            output.units=NULL,
@@ -337,6 +340,12 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #dosing.matrix = cbind(dose,time)
       ###
   
+  # Appropriate route indicator
+  if(is.null(daily.dose)){
+    route <- "inhalation"
+  }else{
+    route <- ifelse(iv.dose,yes = "iv",no = "oral")
+  }
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
@@ -346,7 +355,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     times=times,
     parameters=parameters,
     model="gas_pbtk",
-    route='inhalation',
+    route=route,
+    # route='inhalation',
     dosing=list(
       initial.dose=dose,
       dosing.matrix=dosing.matrix,
