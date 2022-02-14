@@ -265,6 +265,37 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
+  # Screen whether exposure and dosing are both indicated to occur
+  if((exp.conc!=0 | is.null(forcings)==FALSE) & (is.null(dose)==FALSE | is.null(daily.dose)==FALSE)){
+    stop("Currently, 'httk' only evaluates the model using the exposure or dose",
+         " route but not both simultaneously. If exposure is the goal, then",
+         " set dose and/or daily.dose to NULL.  If dose is the goal, then",
+         " set exp.conc to 0.")
+  }
+  
+  # Obtain the appropriate route for compound exposure/dosing.
+  if(exp.conc!=0 | is.null(forcings)==FALSE){
+    route <- "inhalation"
+    
+    # if(input.units!="ppmv"){
+    #   stop("The ",input.units," units are not appropriate for the exposure route. ",
+    #        "Review input units for doses and update argument. ",
+    #        "Several suggestions 'umol', 'mg', or an alternative input.")
+    # }
+  }else if(is.null(dose)==FALSE | is.null(daily.dose)==FALSE){
+    route <- ifelse(iv.dose,yes = "iv",no = "oral")
+    
+    if(input.units=="ppmv"){
+      stop("The 'ppmv' units are not appropriate for the dosing routes. ",
+           "Review input units for doses and update argument. ",
+           "Several suggestions 'umol', 'mg', or an alternative input.")
+    }
+  }
+  # else{
+  #   route <- c("exposure" = "inhalation",
+  #              "dosing" = ifelse(iv.dose,yes = "iv",no = "oral"))
+  # }
+  print(route)
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
@@ -339,13 +370,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #dose  <- rep(c(exp.conc,0), Nrep)
     #dosing.matrix = cbind(dose,time)
       ###
-  
-  # Appropriate route indicator
-  if(is.null(daily.dose)){
-    route <- "inhalation"
-  }else{
-    route <- ifelse(iv.dose,yes = "iv",no = "oral")
-  }
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
