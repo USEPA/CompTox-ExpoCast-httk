@@ -1529,6 +1529,41 @@ chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
 
+
+#Remove chemicals with no DTXSID:
+if (any(is.na(chem.physical_and_invitro.data$DTXSID)))
+{
+  cat("There are chemicals missing DTXSID's that are removed from the the\n\
+chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
+  write.csv(subset(chem.physical_and_invitro.data,is.na(DTXSID)), 
+    file="nodtxsid.txt",row.names=FALSE)
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+    !is.na(DTXSID))
+}
+
+# check for duplicate identifier entries (all of the following should be TRUE):
+# A unique CAS-RN for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$CAS)) == 
+  dim(chem.physical_and_invitro.data)[1]
+# A unique compound name for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$Compound)) == 
+  dim(chem.physical_and_invitro.data)[1]
+# A unique DTXSID for each row of chem.physical_and_invitro.data table:
+length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
+  dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
+ 
+if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
+{
+  cat("There are instances of chemicals with same names but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
+  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
+  
+  browser()  
+# Get rid of duplicates (shouldn't be any!)
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+    !duplicated(Compound))
+}
+
 #
 #
 #
@@ -1750,22 +1785,19 @@ pradeep2020 <- dplyr::select(
 # END pradeep2020 Creation
 #
 
+
+#
+#
+#
+#
+#
 #Add in vivo data from Wambaugh (2018):
 load('NewInVivoTablesForHTTK.RData')
 
-
-if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
-{
-  cat("There are instances of chemicals with same names but differing in other properties.\n")
-  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
-  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
-  
-  browser()
-# Get rid of duplicates (shouldn't be any!)
-  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-    !duplicated(Compound))
-}
-
+#
+#
+#
+#
 #
 # Create Matrix pearce2017regression:
 #
