@@ -291,11 +291,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
            "Several suggestions 'umol', 'mg', or an alternative input.")
     }
   }
-  # else{
-  #   route <- c("exposure" = "inhalation",
-  #              "dosing" = ifelse(iv.dose,yes = "iv",no = "oral"))
-  # }
-  print(route)
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
