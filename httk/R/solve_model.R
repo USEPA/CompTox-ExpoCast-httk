@@ -784,9 +784,9 @@ specification in compartment_units for model ", model)
     out <- subset(out,select = -c(Cinhppmv))
     
     cat("'Cinhppmv' is a forcings variable and is not tracked with 'deSolve'.",
-        "Thus, all resulting values are '0' and are dropped from the results",
-        "matrix.\n To see additional information use help('forcings') in the",
-        "R console.\n\n")
+        "Thus, all resulting values are '0' and the column is dropped from the",
+        "results matrix.\n To see additional information from the 'deSolve'",
+        "package use help('forcings') in the R console.\n\n")
   }
   
   class(out) <- c('matrix','deSolve')
