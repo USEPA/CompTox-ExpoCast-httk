@@ -1127,7 +1127,9 @@ new.httk.data$Human.Funbound.plasma <- paste(
   sep=",")
 new.httk.data[new.httk.data$Human.Clint=="NA,NA,NA,NA", "Human.Clint"] <- NA
 new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.plasma"] <-NA
-                                   
+                     
+# NOCAS_47353 is a salt, its ion is: 476013-14-6
+new.httk.data[new.httk.data$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"               
 
 chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   current.table=chem.physical_and_invitro.data,
@@ -1153,6 +1155,9 @@ sipes2017 <- readRDS("ADMET.data.table.RData")
 # Replace "bad" CAS:
 sipes.bad.cas <- read.csv("SipesBadCAS.csv")
 sipes.bad.cas <- subset(sipes.bad.cas,TOX21SL=="Y")
+
+# NOCAS_47353 is a salt, its ion is: 476013-14-6
+sipes2017[sipes2017$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"               
 
 for (this.row in 1:dim(sipes.bad.cas)[1])
 {
