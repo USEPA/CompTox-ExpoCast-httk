@@ -1129,7 +1129,12 @@ new.httk.data[new.httk.data$Human.Clint=="NA,NA,NA,NA", "Human.Clint"] <- NA
 new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.plasma"] <-NA
                      
 # NOCAS_47353 is a salt, its ion is: 476013-14-6
-new.httk.data[new.httk.data$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"               
+new.httk.data[new.httk.data$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"       
+
+# These chemicals have been assigned a "NOCAS":
+new.httk.data[new.httk.data$Compound=="Ci-1044","CAS"] <- "NOCAS_47291"
+new.httk.data[new.httk.data$Compound=="Pharmagsid_48505","CAS"] <- "NOCAS_48505"
+new.httk.data[new.httk.data$Compound=="Ssr162369","CAS"] <- "NOCAS_47346"
 
 chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   current.table=chem.physical_and_invitro.data,
@@ -1158,6 +1163,11 @@ sipes.bad.cas <- subset(sipes.bad.cas,TOX21SL=="Y")
 
 # NOCAS_47353 is a salt, its ion is: 476013-14-6
 sipes2017[sipes2017$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"               
+
+# These chemicals have been assigned a "NOCAS":
+sipes2017[sipes2017$Compound=="Ci-1044","CAS"] <- "NOCAS_47291"
+sipes2017[sipes2017$Compound=="Pharmagsid_48505","CAS"] <- "NOCAS_48505"
+sipes2017[sipes2017$Compound=="Ssr162369","CAS"] <- "NOCAS_47346"
 
 for (this.row in 1:dim(sipes.bad.cas)[1])
 {
@@ -1203,26 +1213,9 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 #
 #
+# Data from Paini et al. (2020)
 #
 #
-#
-#
-#
-#
-#
-#
-# ADD NEW DATA HERE:
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
 JRC.data.clint <- set.precision(read_excel(
   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
   sheet=2))
@@ -1276,6 +1269,13 @@ chem.physical_and_invitro.data <- add_chemtable(JRC.data.fup,
                                   reference = 'Paini 2020',
                                   species="Human")
                                   
+                                  
+#
+#
+# Data from Linakis et al. (2020)
+# https://doi.org/10.1038/s41370-020-0238-y
+#
+#
 volatile.data.raw <- read.csv('Linakis2020.csv',stringsAsFactors = F)
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
@@ -1294,10 +1294,21 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                   Funbound.plasma='CALC_FUP',
                                   Species='SPECIES'),overwrite=F,reference='Linakis 2020')
 
+#
+#
+# Data from Dawson et al. (2021)
+# https://doi.org/10.1021/acs.est.0c06117
+#
+#
 dawson2021.training <- as.data.frame(readxl::read_xlsx(
   path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 3))
 dawson2021.training <- subset(dawson2021.training, DTXSID != "-")
+
+# This chemical was assigned a "NOCAS":
+dawson2021.training[dawson2021.training$DTXSID=="DTXSID6057875",
+  "CAS_CHEMBL_ID"] <- "NOCAS_57875"
+  
 chem.physical_and_invitro.data <- add_chemtable(dawson2021.training,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
@@ -1324,7 +1335,27 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
                                   reference = 'Dawson 2021',
                                   species="Human")
 
-
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# ADD NEW DATA HERE:
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
 #
 #
@@ -1538,7 +1569,7 @@ chem.physical_and_invitro.data[
 #Remove chemicals with no DTXSID:
 if (any(is.na(chem.physical_and_invitro.data$DTXSID)))
 {
-  cat("There are chemicals missing DTXSID's that are removed from the the\n\
+  cat("There are chemicals missing DTXSID's that have been removed from the\n\
 chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
   write.csv(subset(chem.physical_and_invitro.data,is.na(DTXSID)), 
     file="nodtxsid.txt",row.names=FALSE)
@@ -1546,17 +1577,43 @@ chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
     !is.na(DTXSID))
 }
 
-# check for duplicate identifier entries (all of the following should be TRUE):
-# A unique CAS-RN for each row of chem.physical_and_invitro.data table:
-length(unique(chem.physical_and_invitro.data$CAS)) == 
-  dim(chem.physical_and_invitro.data)[1]
-# A unique compound name for each row of chem.physical_and_invitro.data table:
-length(unique(chem.physical_and_invitro.data$Compound)) == 
-  dim(chem.physical_and_invitro.data)[1]
-# A unique DTXSID for each row of chem.physical_and_invitro.data table:
+
+# Check for unique DTXSID for each row of chem.physical_and_invitro.data table:
 length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
- 
+if (dim(subset(chem.physical_and_invitro.data,duplicated(DTXSID))))[1]>0) 
+{
+  cat("There are instances of chemicals with same DTXSID but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,
+    duplicated(DTXSID))$DTXSID
+  subset(chem.physical_and_invitro.data,DTXSID%in%dup.chems)
+  
+  browser()  
+# Get rid of duplicates (shouldn't be any!)
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+    !duplicated(DTXSID)))
+} 
+
+# Check for unique CAS-RN for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$CAS)) == 
+  dim(chem.physical_and_invitro.data)[1]
+if (dim(subset(chem.physical_and_invitro.data,duplicated(CAS)))[1]>0) 
+{
+  cat("There are instances of chemicals with same CAS but differing in other properties.\n")
+  dup.chems <- subset(chem.physical_and_invitro.data,
+    duplicated(CAS))$CAS
+  subset(chem.physical_and_invitro.data,CAS%in%dup.chems)
+  
+  browser()  
+# Get rid of duplicates (shouldn't be any!)
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+    !duplicated(CAS))
+}
+
+
+# Check for unique name for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$Compound)) == 
+  dim(chem.physical_and_invitro.data)[1]
 if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
 {
   cat("There are instances of chemicals with same names but differing in other properties.\n")
@@ -1568,6 +1625,8 @@ if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0)
   chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
     !duplicated(Compound))
 }
+
+
 
 #
 #
