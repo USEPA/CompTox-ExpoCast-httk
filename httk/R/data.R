@@ -1662,7 +1662,7 @@
 #' \insertRef{Frechen2021matfetpbpk}{httk}
 #' @source Kapraun et al. 2021 (submitted)
 #' @keywords data
-"frechen2021"  
+"pregnonpregaucs"  
 
 #' Fetal Partition Coefficients
 #' 
