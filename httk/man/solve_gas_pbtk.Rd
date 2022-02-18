@@ -87,7 +87,7 @@ default 0.}
 
 \item{exp.conc}{Specified inhalation exposure concentration for use in 
 assembling "forcings" data series argument for integrator. Defaults to
-units of uM}
+units of ppmv.}
 
 \item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}
