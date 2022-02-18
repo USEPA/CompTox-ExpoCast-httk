@@ -30,6 +30,50 @@ set.precision <- function(x, sig.figs=4)
   return(x)
 }
 
+check_duplicates <- function(
+  chem.table, 
+  check.cols = c("DTXSID","Compound","CAS"), 
+  remove.duplicates=TRUE)
+{
+  for (this.col in check.cols)
+  {
+    if (!(length(unique(tolower(chem.table[,this.col]))) == 
+      dim(chem.table)[1])) print(paste(this.col,"values are not unique."))
+  
+    if (dim(subset(chem.table, duplicated(tolower(chem.table[,this.col]))))[1]>0) 
+    {
+      cat(paste("There are instances of chemicals with same",
+        this.col,
+        "but differing in other properties.\n"))
+      dup.chems <- subset(chem.table,
+        duplicated(tolower(chem.table[,this.col])))[,this.col]
+      print(subset(chem.table, chem.table[,this.col]%in%dup.chems))
+      
+      browser()  
+# merge records:
+      for (this.chem in dup.chems)
+      {
+        dup.rows <- which(chem.table[,this.col]==this.chem)
+        dup.1 <- dup.rows[1]
+        dup.2 <- dup.rows[2]
+        for (this.col2 in 1:dim(chem.table)[2])
+        {
+          if (is.na(chem.table[dup.1,this.col2]))
+          {
+            if (!is.na(chem.table[dup.2,this.col2]))
+              chem.table[dup.1,this.col2] <- chem.table[dup.2,this.col2]
+          }
+        }
+      }
+    # Get rid of duplicates (shouldn't be any!)
+      if (remove.duplicates) chem.table <- subset(chem.table,
+        !duplicated(tolower(chem.table[,this.col])))
+    } 
+  }
+  
+  return(chem.table)
+}
+
 #
 # CREATE TABLES physiology.data and tissue.data
 #
@@ -1108,8 +1152,11 @@ chem.physical_and_invitro.data <- add_chemtable(
     Funbound.plasma="Funbound.plasma",
     Compound = "preferred_name"),
   reference="Honda 2019",
-  species="Rat",
+  species="Rat",     
   overwrite=T)
+
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 
 #Load data from Wambaugh 2019:
 
@@ -1131,11 +1178,6 @@ new.httk.data[new.httk.data$Human.Funbound.plasma=="NA,NA,NA", "Human.Funbound.p
 # NOCAS_47353 is a salt, its ion is: 476013-14-6
 new.httk.data[new.httk.data$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"       
 
-# These chemicals have been assigned a "NOCAS":
-new.httk.data[new.httk.data$Compound=="Ci-1044","CAS"] <- "NOCAS_47291"
-new.httk.data[new.httk.data$Compound=="Pharmagsid_48505","CAS"] <- "NOCAS_48505"
-new.httk.data[new.httk.data$Compound=="Ssr162369","CAS"] <- "NOCAS_47346"
-
 chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Compound",
@@ -1152,6 +1194,8 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   species="Human",
   overwrite=T)
 
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 #
 # Load predictions from Sipes 2017:
 #
@@ -1163,11 +1207,6 @@ sipes.bad.cas <- subset(sipes.bad.cas,TOX21SL=="Y")
 
 # NOCAS_47353 is a salt, its ion is: 476013-14-6
 sipes2017[sipes2017$CAS=="NOCAS_47353","CAS"] <- "476013-14-6"               
-
-# These chemicals have been assigned a "NOCAS":
-sipes2017[sipes2017$Compound=="Ci-1044","CAS"] <- "NOCAS_47291"
-sipes2017[sipes2017$Compound=="Pharmagsid_48505","CAS"] <- "NOCAS_48505"
-sipes2017[sipes2017$Compound=="Ssr162369","CAS"] <- "NOCAS_47346"
 
 for (this.row in 1:dim(sipes.bad.cas)[1])
 {
@@ -1210,7 +1249,8 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
                                   species= 'Human', 
                                   overwrite=F)
 
-
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 #
 #
 # Data from Paini et al. (2020)
@@ -1269,7 +1309,8 @@ chem.physical_and_invitro.data <- add_chemtable(JRC.data.fup,
                                   reference = 'Paini 2020',
                                   species="Human")
                                   
-                                  
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 #
 #
 # Data from Linakis et al. (2020)
@@ -1294,6 +1335,8 @@ chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
                                   Funbound.plasma='CALC_FUP',
                                   Species='SPECIES'),overwrite=F,reference='Linakis 2020')
 
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 #
 #
 # Data from Dawson et al. (2021)
@@ -1335,6 +1378,8 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
                                   reference = 'Dawson 2021',
                                   species="Human")
 
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data, check.cols="Compound")
 #
 #
 #
@@ -1383,12 +1428,18 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
 # STOP TO GET NEW PHYSCHEM
 #
 
+#
+#
 # Replace bad CAS where we have DTXSID's
+#
+#
 chem.physical_and_invitro.data[
   !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
+  regexpr("NOCAS",chem.physical_and_invitro.data$CAS) == -1 &
   !(is.na(chem.physical_and_invitro.data$DTXSID)),"CAS"] <-
   chem.physical_and_invitro.data[
   !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
+  regexpr("NOCAS",chem.physical_and_invitro.data$CAS) == -1 &
   !(is.na(chem.physical_and_invitro.data$DTXSID)),"DTXSID"]
 
 # Update with DSSTox Information
@@ -1436,11 +1487,17 @@ for (i in 1:(length(blocks)-1))
 
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
+# Don't use DTXSID as CASRN:
+dsstox[regexpr("DTXSID",dsstox[,"CASRN"])!=-1,"CASRN"] <- NA
+# Calculate log10 Henry's law constnat:
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
   "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
+# Calculate log10 water solubility:
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
   "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
+# Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
+
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(Compound='PREFERRED_NAME',
@@ -1453,11 +1510,12 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
     logHenry = "logHenry",
     logWSol = "logWSol",
     MP = "MELTING_POINT_DEGC_OPERA_PRED"
-  ),
+  ),                                                                        
   reference="EPA",
   overwrite=T)
 
-EPA.ref <- paste('CompTox Dashboard',Sys.Date())
+EPA.ref <- paste('CompTox Dashboard',
+  file.info(paste("HTTK-DSSTox-output-",i,".tsv",sep=""))$ctime)
 
 
 #
@@ -1478,20 +1536,30 @@ cat("Save Dashboard output (tsv) to HTTK-NoCASMatch-DSSTox-output.tsv.\n")
 cat("Enter \"c\" to continue when ready.\n")
 browser()
 dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv")
+
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
+# Calculate log10 Henry's law constnat:
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
   "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
+# Calculate log10 water solubility:
 dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
   "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
+# Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
+
+#
+#
 # Replace any bad CASRN's:
+#
+#
 for (this.row in 1:dim(dsstox)[1])
-{
-  chem.physical_and_invitro.data[
-    chem.physical_and_invitro.data$Compound ==
-    dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
-    dsstox[this.row,"CASRN"]
+  if (!is.na(dsstox[this.row,"CASRN"]))
+  {
+    chem.physical_and_invitro.data[
+      chem.physical_and_invitro.data$Compound ==
+      dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
+      dsstox[this.row,"CASRN"]
 }
 
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
@@ -1577,57 +1645,20 @@ chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
     !is.na(DTXSID))
 }
 
-
+chem.physical_and_invitro.data <- check_duplicates(
+  chem.physical_and_invitro.data)
+  
 # Check for unique DTXSID for each row of chem.physical_and_invitro.data table:
 length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
-if (dim(subset(chem.physical_and_invitro.data,duplicated(DTXSID))))[1]>0) 
-{
-  cat("There are instances of chemicals with same DTXSID but differing in other properties.\n")
-  dup.chems <- subset(chem.physical_and_invitro.data,
-    duplicated(DTXSID))$DTXSID
-  subset(chem.physical_and_invitro.data,DTXSID%in%dup.chems)
-  
-  browser()  
-# Get rid of duplicates (shouldn't be any!)
-  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-    !duplicated(DTXSID)))
-} 
 
 # Check for unique CAS-RN for each row of chem.physical_and_invitro.data table:
 length(unique(chem.physical_and_invitro.data$CAS)) == 
   dim(chem.physical_and_invitro.data)[1]
-if (dim(subset(chem.physical_and_invitro.data,duplicated(CAS)))[1]>0) 
-{
-  cat("There are instances of chemicals with same CAS but differing in other properties.\n")
-  dup.chems <- subset(chem.physical_and_invitro.data,
-    duplicated(CAS))$CAS
-  subset(chem.physical_and_invitro.data,CAS%in%dup.chems)
-  
-  browser()  
-# Get rid of duplicates (shouldn't be any!)
-  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-    !duplicated(CAS))
-}
-
 
 # Check for unique name for each row of chem.physical_and_invitro.data table:
 length(unique(chem.physical_and_invitro.data$Compound)) == 
   dim(chem.physical_and_invitro.data)[1]
-if (dim(subset(chem.physical_and_invitro.data,duplicated(Compound)))[1]>0) 
-{
-  cat("There are instances of chemicals with same names but differing in other properties.\n")
-  dup.chems <- subset(chem.physical_and_invitro.data,duplicated(Compound))$Compound
-  subset(chem.physical_and_invitro.data,Compound%in%dup.chems)
-  
-  browser()  
-# Get rid of duplicates (shouldn't be any!)
-  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-    !duplicated(Compound))
-}
-
-
-
 #
 #
 #
