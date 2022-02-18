@@ -599,7 +599,7 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 ```{r dallmann2018_data, eval = TRUE}
 #TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-TKstats <- httk::frechen2021
+TKstats <- httk::pregnonpregaucs
 
 
 ids <- unique(TKstats$DTXSID)
@@ -831,7 +831,7 @@ FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
 dev.new()
 grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
 
-write.csv(subset(TKstats,Parameter=="AUCinf" &
+write.csv(subset(TKstats,
   !is.na(Ratio.httk)),
   file="DallmanTable.txt")
   
@@ -1492,9 +1492,9 @@ cat(paste("In Figure X we examine the ratios predicted for the ",
   sep=""))
 
 
-cat(paste("We observe a median value of ",
+cat(paste("We observe a median ratio of ",
   signif(median(MFratio.pred$MFratio.pred,na.rm=TRUE),3),
-  " ranging from ",
+  ", with values ranging from ",
   signif(min.chem[,"MFratio.pred"],3),
   " for ",
   min.chem[,"DTXSID"],
@@ -1518,10 +1518,10 @@ lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,
 # Code used to create data distributed with vignette
 ```{r create_distributable_data, eval = FALSE}
 aylward2014 <-MFdata
-frechen2021 <- TKstats
+pregnonpregaucs <- TKstats
 fetalpcs <- Curley.pcs
 wang2018 <- Wangchems
 
-save(aylward2014,frechen2021,fetalpcs,wang2018,
+save(aylward2014,pregnonpregaucs,fetalpcs,wang2018,
      file="Kapraun2022Vignette.RData",version=2)
 ```

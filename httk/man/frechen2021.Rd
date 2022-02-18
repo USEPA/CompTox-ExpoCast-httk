@@ -3,6 +3,7 @@
 \docType{data}
 \name{frechen2021}
 \alias{frechen2021}
+\alias{pregnonpregaucs}
 \alias{Frechen2021}
 \title{Frechen et al. 2021}
 \format{
@@ -12,7 +13,7 @@ data.frame
 Kapraun et al. 2021 (submitted)
 }
 \usage{
-frechen2021
+pregnonpregaucs
 }
 \description{
 Frechen et al. (2021) includes compiled literature descriptions of 

@@ -10,8 +10,13 @@ length(pbpk.list)
 length(rat.list)
                                                  
 # check for duplicate entries (all of the following should be TRUE):
-length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
-length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
+# A unique CAS-RN for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$CAS)) == 
+  dim(chem.physical_and_invitro.data)[1]
+# A unique compound name for each row of chem.physical_and_invitro.data table:
+length(unique(chem.physical_and_invitro.data$Compound)) == 
+  dim(chem.physical_and_invitro.data)[1]
+# A unique DTXSID for each row of chem.physical_and_invitro.data table:
 length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
   

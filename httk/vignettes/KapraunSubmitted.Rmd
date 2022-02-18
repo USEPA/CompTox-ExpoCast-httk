@@ -595,7 +595,7 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 ```{r dallmann2018_data, eval = TRUE}
 #TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-TKstats <- httk::frechen2021
+TKstats <- httk::pregnonpregaucs
 
 
 ids <- unique(TKstats$DTXSID)
