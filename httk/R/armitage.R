@@ -380,6 +380,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
   ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
   logHenry <- logWSol <- NULL
+  conc_ser_alb <- conc_ser_lip <- Vbm <- NULL
   #End R CMD CHECK appeasement.
   
   if(all(is.na(tcdata))){

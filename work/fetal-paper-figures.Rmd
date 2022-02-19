@@ -736,7 +736,8 @@ FigEa  <- ggplot(data=TKstats) +
   ggtitle("Non-Pregnant") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.1, y = 1000, label = "A", fontface =2)
     
 #print(FigEa)
 cat(paste(
@@ -767,7 +768,8 @@ FigEb  <- ggplot(data=TKstats) +
   ggtitle("Pregnant")+
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.1, y = 300, label = "B", fontface =2)
     
 #print(FigEb)
 cat(paste(
@@ -826,7 +828,8 @@ FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
   ggtitle("Ratio") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.5, y = 2.75, label = "C", fontface =2)
     
 dev.new()
 grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
