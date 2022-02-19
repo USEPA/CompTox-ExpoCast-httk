@@ -807,7 +807,7 @@ Set recalc.clearance to TRUE if desired.")
             signif(Rblood2plasma,3),".\n",
             "fAUC is area under the fetal plasma concentration curve in ",
             compartment_units[["fAUC"]], " units with Rfblood2plasma = ",
-            signif(Rfblood2plasma,3),".\n",
+            signif(parameters[["Rfblood2plasma"]],3),".\n",
             sep="")
       }
     } else {
