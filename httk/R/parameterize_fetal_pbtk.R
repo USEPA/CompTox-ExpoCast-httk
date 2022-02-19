@@ -346,7 +346,7 @@ parameterize_fetal_pbtk<- function(
 
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
-  if (return.kapraun2019) parms <- c(parms,kapraun2019)
+  if (return.kapraun2019) parms <- c(parms, httk::kapraun2019)
  
  return(parms)                             
 }
