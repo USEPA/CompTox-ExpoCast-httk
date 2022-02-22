@@ -192,7 +192,7 @@
 #' 
 #' \donttest{
 #' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
 #' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 #' exp.duration = 6, exercise = TRUE)
