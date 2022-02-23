@@ -36,12 +36,7 @@ library(scales)
 library(gridExtra)
 library(cowplot)
 ```
-### Change working directory
-```{r change directory, eval = TRUE}
-setwd("c:/users/jwambaug/git/httk/work")
-```
 
-### Prepare custom functions
 ```{r load_code, eval = TRUE}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
@@ -1278,7 +1273,7 @@ for (this.cas in maternal.list)
       fetal_fup_adjustment=FALSE,
       suppress.messages=TRUE))
   Kbrain2pu <- p$Kfbrain2pu
-  fup <- pred.table5[pred.table5$CAS==this.cas,"fup"]
+  fup <- PC.table[PC.table$CAS==this.cas,"fup"]
   pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"] <- signif(
      PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]*
     Kbrain2pu * fup, 3)
@@ -1300,7 +1295,7 @@ for (this.cas in maternal.list)
       suppress.messages=TRUE))
   Kbrain2pu <- p$Kfbrain2pu
 
-  fup <- pred.table5[pred.table5$CAS==this.cas,"fup"]
+  fup <- PC.table[PC.table$CAS==this.cas,"fup"]
   sigma.fup <- pred.table5[pred.table5$CAS==this.cas,"fup.sigma"]
   Rmatfet <- 1/PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]
   Rbrain2matblood <- Kbrain2pu * fup / Rmatfet
@@ -1332,7 +1327,7 @@ for (this.cas in maternal.list)
 ```
 
 ### Combine different ratio predicitons together for figure
-```{r Rfetbrain_uncertainty, eval = TRUE}
+```{r Wang_Uncertainty_Propagation, eval = TRUE}
 
 pred.levels <- pred.table5$Compound[order(pred.table5$Ratio.pred)]
 

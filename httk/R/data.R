@@ -1645,24 +1645,39 @@
 #' @keywords data
 "aylward2014"
 
-#' Frechen et al. 2021
+#' AUCs for Pregnant and Non-Pregnant Women
 #' 
-#' Frechen et al. (2021) includes compiled literature descriptions of 
+#' Dallmann et al. (2018) includes compiled literature descriptions of 
 #' toxicokinetic summary statistics, including time-integrated plasma 
 #' concentrations (area under the curve or AUC) for drugs administered to a 
 #' sample of subjects including both pregnant and non-pregnant women. The 
 #' circumstances of the dosing varied slightly between drugs and are summarized 
 #' in the table.
 #' 
-#' @name frechen2021
-#' @aliases Frechen2021
+#' @name pregnonpregaucs
+#' @aliases pregnonpregaucs
 #' @docType data
 #' @format data.frame
 #' @references
-#' \insertRef{Frechen2021matfetpbpk}{httk}
+#' \insertRef{dallmann2018pregpbtk}{httk}
 #' @source Kapraun et al. 2021 (submitted)
 #' @keywords data
 "pregnonpregaucs"  
+
+#' Partition Coefficients from PK-Sim
+#' 
+#' Dallmann et al. (2018) made use of PK-Sim to predict chemical- and tissue-
+#' specific partition coefficients. The methods include both the default
+#' PK-Sim approach and PK-Sim Standard and Rodgers & Rowland (2006).
+#' 
+#' @name pksim.pcs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{dallmann2018pregpbtk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"pksim.pcs"  
 
 #' Fetal Partition Coefficients
 #' 

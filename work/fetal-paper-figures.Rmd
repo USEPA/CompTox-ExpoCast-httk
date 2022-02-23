@@ -1332,7 +1332,7 @@ for (this.cas in maternal.list)
 ```
 
 ### Combine different ratio predicitons together for figure
-```{r Rfetbrain_uncertainty, eval = TRUE}
+```{r Wang_Uncertainty_Propagation, eval = TRUE}
 
 pred.levels <- pred.table5$Compound[order(pred.table5$Ratio.pred)]
 
