@@ -41,6 +41,8 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
+           person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
+             role = c("ctb"), comment = c(ORCID= "0000-0001-5570-6383")),
            person("Shannon", "Bell", email="sbell@ils-inc.com",
              role = c("ctb")), 
            person("Xiaoqing", "Chang", email="xchang@ils-inc.com",
