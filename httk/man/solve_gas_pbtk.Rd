@@ -25,6 +25,7 @@ solve_gas_pbtk(
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
+  iv.dose = FALSE,
   input.units = "ppmv",
   output.units = NULL,
   method = "lsoda",
@@ -105,6 +106,8 @@ those specified for the model outputs. Default values are zero.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{iv.dose}{Simulates a single i.v. dose if true.}
 
 \item{input.units}{Input units of interest assigned to dosing, including 
 forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
@@ -231,7 +234,7 @@ solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24
 
 \donttest{
 out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
 
 out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 exp.duration = 6, exercise = TRUE)
