@@ -1070,7 +1070,7 @@
 #'
 #' Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
 #' Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
-#' a high throughput inhalation model for organic chemicals. Journal of 
+#' a high-throughput inhalation model for organic chemicals. Journal of 
 #' Exposure Science & Environmental Epidemiology, 1-12.
 #' 
 #' Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
@@ -1182,7 +1182,7 @@
 
 #' Tox21 2015 Active Hit Calls (EPA)
 #'
-#' The ToxCast and Tox21 research programs employ batteries of high throughput
+#' The ToxCast and Tox21 research programs employ batteries of high-throughput
 #' assays to assess chemical bioactivity in vitro. Not every chemical is tested
 #' through every assay. Most assays are conducted in concentration response,
 #' and each corresponding assay endpoint is analyzed statistically to determine
@@ -1199,7 +1199,7 @@
 #' @format A data.table with 401 rows and 6 columns
 #' @author John Wambaugh
 #' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program:
-#' providing high throughput decision support tools for chemical risk
+#' providing high-throughput decision support tools for chemical risk
 #' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
 #'
 #' Tice, Raymond R., et al. "Improving the human hazard characterization of
@@ -1587,3 +1587,134 @@
 #' @source Dawson et al. 2021 Random Forest QSAR Model
 #' @keywords data
 "dawson2021"
+
+#' Kapraun et al. 2019 data
+#' 
+#' A list object containing time-varying parameters for the human maternal-fetal
+#' HTTK model. List elements contain scalar coefficients for the polynomial,
+#' logistic, Gompertz, and other functions of time describing blood flow rates,
+#' tissue volumes, hematocrits, and other anatomical/physiological quantities
+#' that change in the human mother and her fetus during pregnancy and gestation.
+#' 
+#' @name kapraun2019
+#' @aliases Kapraun2019
+#' @docType data
+#' @format list
+#' @author Dustin F. Kapraun
+#' @references
+#' \insertRef{kapraun2019empirical}{httk}
+#' @source Kapraun et al. 2019 Fetal PBTK Model
+#' @keywords data
+"kapraun2019"
+
+#' Pradeep et al. 2020
+#' 
+#' This table includes Support Vector Machine and Random Forest model predicted
+#' values for unbound fraction plasma protein (fup) and intrinsic hepatic
+#' clearance (clint) values for a subset of chemicals in the Tox21 library
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}).
+#'
+#' Prediction were made with Support Vector Machine and Random Forest models,
+#' as reported in Pradeep et al. (2020).
+#' 
+#' @name pradeep2020
+#' @aliases Pradeep2020
+#' @docType data
+#' @format data.frame
+#' @references 
+#' \insertRef{pradeep2020chemstr}{httk}
+#' @source Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
+#' @keywords data
+"pradeep2020"
+
+#' Aylward et al. 2014
+#' 
+#' Aylward et al. (2014) compiled measurements of the ratio of maternal to fetal 
+#' cord blood chemical concentrations at birth for a range of chemicals with 
+#' environmental routes of exposure, including bromodiphenyl ethers, fluorinated 
+#' compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke 
+#' components, and vitamins.
+#' 
+#' @name aylward2014
+#' @aliases Aylward2014
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Aylward2014matfet}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"aylward2014"
+
+#' AUCs for Pregnant and Non-Pregnant Women
+#' 
+#' Dallmann et al. (2018) includes compiled literature descriptions of 
+#' toxicokinetic summary statistics, including time-integrated plasma 
+#' concentrations (area under the curve or AUC) for drugs administered to a 
+#' sample of subjects including both pregnant and non-pregnant women. The 
+#' circumstances of the dosing varied slightly between drugs and are summarized 
+#' in the table.
+#' 
+#' @name pregnonpregaucs
+#' @aliases pregnonpregaucs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{dallmann2018pregpbtk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"pregnonpregaucs"  
+
+#' Partition Coefficients from PK-Sim
+#' 
+#' Dallmann et al. (2018) made use of PK-Sim to predict chemical- and tissue-
+#' specific partition coefficients. The methods include both the default
+#' PK-Sim approach and PK-Sim Standard and Rodgers & Rowland (2006).
+#' 
+#' @name pksim.pcs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{dallmann2018pregpbtk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"pksim.pcs"  
+
+#' Fetal Partition Coefficients
+#' 
+#' Partition coefficients were measured for tissues, including placenta, in 
+#' vitro by Csanady et al. (2002) for Bisphenol A and Diadzen. Curley et al. 
+#' (1969) measured the concentration of a variety of pesticides in the cord 
+#' blood of newborns and in the tissues of infants that were stillborn. 
+#' 
+#' Three of the chemicals studied by Curley et al. (1969) were modeled by 
+#' Weijs et al. (2013) using the same partition coefficients for mother and 
+#' fetus. The values used represented "prior knowledge" summarizing the 
+#' available literature. 
+#' 
+#' @name fetalpcs
+#' @aliases fetalPCs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Csanady2002fetalpc}{httk}
+#' \insertRef{Curley1969fetalpc}{httk}
+#' \insertRef{Weijs2013fetalpc}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"fetalpcs"
+
+#' Wang et al. 2018
+#' Wang et al. (2018) screened the blood of 75 pregnant women for the presence 
+#' of environmental organic acids (EOAs) and identified mass spectral features 
+#' corresponding to 453 chemical formulae of which 48 could be mapped to likely 
+#' structures. Of the 48 with tentative structures the identity of six were 
+#' confirmed with available chemical standards. 
+#' @name wang2018
+#' @aliases Wang2018
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Wang2018matbloodnta}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"wang2018"
