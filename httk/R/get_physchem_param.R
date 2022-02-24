@@ -1,4 +1,3 @@
-
 #' Get physico-chemical parameters from chem.physical_and_invitro.data
 #'
 #' This function retrieves physico-chemical properties ("param") for the chemical specified 
@@ -41,7 +40,7 @@ get_physchem_param <- function(
       is.null(dtxsid) ) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
     
-  # Look up the chemical name/CAS, depending on what was provide:
+  # Look up the chemical name/CAS, depending on what was provided:
   if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(

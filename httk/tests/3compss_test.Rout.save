@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,7 +22,7 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.465
 Warning messages:
 1: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint is provided as a distribution.
@@ -30,13 +30,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In any(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
-5: In all(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.465
 Warning messages:
 1: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint is provided as a distribution.
@@ -44,13 +40,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In any(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
-5: In all(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.465
 Warning messages:
 1: In parameterize_steadystate(chem.cas = "80-05-7") :
   Clint is provided as a distribution.
@@ -58,10 +50,6 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In parameterize_steadystate(chem.cas = "80-05-7") :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In any(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
-5: In all(lapply(chem_id_list, is.null)) :
-  coercing argument of type 'list' to logical
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
