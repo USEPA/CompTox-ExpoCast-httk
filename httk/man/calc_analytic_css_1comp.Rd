@@ -15,7 +15,7 @@ calc_analytic_css_1comp(
   recalc.blood2plasma = FALSE,
   tissue = NULL,
   restrictive.clearance = TRUE,
-  bioactive.free.invivo = F,
+  bioactive.free.invivo = FALSE,
   ...
 )
 }
@@ -60,7 +60,7 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 parameters is NULL.}
 }
 \value{
-Steady state concentration in uM units
+Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 

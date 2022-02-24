@@ -31,7 +31,7 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords 1compartment
@@ -45,7 +45,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    recalc.blood2plasma=FALSE,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
-                                   bioactive.free.invivo = F,
+                                   bioactive.free.invivo = FALSE,
                                    ...)
 {
 
@@ -132,7 +132,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
     {
       Css <- Css * parameters[['Rblood2plasma']]
       
-    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+    }else if(bioactive.free.invivo == TRUE & tolower(concentration) == 'plasma'){
       
       Css <- Css * parameters[['Funbound.plasma']]
       

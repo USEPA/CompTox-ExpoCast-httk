@@ -91,6 +91,9 @@ model.list[["pbtk"]]$param.names <- c(
 # This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code, even if 
 # some items are omitted)
+#
+# String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
 model.list[["pbtk"]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
@@ -297,7 +300,7 @@ model.list[["pbtk"]]$required.params <- c(
   "pKa_Donor",
   "pKa_Accept",
   "MW"
-   )
+  )
 
 # Function for calculating Clmetabolismc after Clint is varied:
 model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
@@ -339,7 +342,13 @@ model.list[["pbtk"]]$calcpc <- TRUE
 model.list[["pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["pbtk"]]$exclude.fup.zero <- T
+model.list[["pbtk"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["pbtk"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["pbtk"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["pbtk"]]$chem.class.filt <- c("PFAS")
