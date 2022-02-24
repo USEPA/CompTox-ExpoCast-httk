@@ -31,7 +31,7 @@ create_mc_samples(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   propagate.invitrouv.arg.list = list(),
-  parameterize.arg.list = list(restrictive.clearance = T, default.to.human = FALSE,
+  parameterize.arg.list = list(restrictive.clearance = TRUE, default.to.human = FALSE,
     clint.pvalue.threshold = 0.05, regression = TRUE)
 )
 }

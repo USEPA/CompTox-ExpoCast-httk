@@ -137,7 +137,7 @@ create_mc_samples <- function(chem.cas=NULL,
                         convert.httkpop.arg.list=list(),
                         propagate.invitrouv.arg.list=list(),
                         parameterize.arg.list=list(
-                          restrictive.clearance = T,
+                          restrictive.clearance = TRUE,
                           default.to.human=FALSE,
                           clint.pvalue.threshold=0.05,
                           regression=TRUE))
@@ -376,8 +376,9 @@ Set species=\"Human\" to run httkpop model.')
      lumptissues <- lump_tissues(
                       PCs,
                       parameters=parameters.dt,
-                      tissuelist=model.list[[model]]$tissue.list,
-                      species=species
+                      tissuelist=model.list[[model]]$tissuelist,
+                      species=species,
+                      model=model
                       ) 
                       
      parameters.dt[, names(lumptissues):= lumptissues]

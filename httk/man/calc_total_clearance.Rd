@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_total_clearance.R
 \name{calc_total_clearance}
 \alias{calc_total_clearance}
-\title{Calculate the total clearance.}
+\title{Calculate the total plasma clearance.}
 \usage{
 calc_total_clearance(
   chem.cas = NULL,
@@ -58,6 +58,7 @@ parameters is NULL.}
 }
 \description{
 This function calculates the total clearance rate for a one compartment model
+for plasma
 where clearance is entirely due to metablism by the liver and glomerular
 filtration in the kidneys, identical to clearance of three compartment
 steady state model.

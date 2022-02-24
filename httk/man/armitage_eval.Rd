@@ -16,8 +16,8 @@ armitage_eval(
   this.cell_yield = NA_real_,
   this.Tsys = 37,
   this.Tref = 298.15,
-  this.option.kbsa2 = F,
-  this.option.swat2 = F,
+  this.option.kbsa2 = FALSE,
+  this.option.swat2 = FALSE,
   this.pseudooct = 0.01,
   this.memblip = 0.04,
   this.nlom = 0.2,
@@ -27,7 +27,10 @@ armitage_eval(
   this.csalt = 0.15,
   this.celldensity = 1,
   this.cellmass = 3,
-  this.f_oc = 1
+  this.f_oc = 1,
+  this.conc_ser_alb = 24,
+  this.conc_ser_lip = 1.9,
+  this.Vdom = 0
 )
 }
 \arguments{
@@ -80,6 +83,12 @@ model}
 \item{this.cellmass}{Mass per cell, ng/cell}
 
 \item{this.f_oc}{1, everything assumed to be like proteins}
+
+\item{this.conc_ser_alb}{24 g/L, mass concentration of albumin in serum.}
+
+\item{this.conc_ser_lip}{1.9 g/L, mass concentration of lipids in serum.}
+
+\item{this.Vdom}{0 ml, the volume of dissolved organic matter (DOM)}
 }
 \value{
 \tabular{lll}{
@@ -96,7 +105,7 @@ logHenry \tab log10 Henry's law constant '\tab log10 atm-m3/mol \cr
 gswat \tab log10 Water solubility \tab log10 mol/L \cr         
 MP \tab Melting Point \tab degrees Celsius \cr           
 MW \tab Molecular Weight \tab g/mol \cr            
-gkaw \tab air to water PC \tab (mol/m3)/(mol/m3) \cr
+gkaw \tab air-water partition coefficient \tab (mol/m3)/(mol/m3) \cr          
 dsm \tab \tab \cr           
 duow \tab \tab \cr          
 duaw \tab \tab \cr          
@@ -198,7 +207,7 @@ print(temp$cfree.invitro)
 # Check to see if we have info on the chemical:
 "793-24-8" \%in\% get_cheminfo()
 
-# Since we don't look up phys-chem from dashboard:
+# Since we don't have any info, let's look up phys-chem from dashboard:
 cheminfo <- data.frame(
   Compound="6-PPD",
   CASRN="793-24-8",

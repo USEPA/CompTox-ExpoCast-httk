@@ -90,7 +90,7 @@
 #' 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
-#' units of uM
+#' units of ppmv.
 #' 
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
@@ -109,8 +109,14 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
+#' @param iv.dose Simulates a single i.v. dose if true.
+#' 
 #' @param input.units Input units of interest assigned to dosing, including 
 #' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
+#' 
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' 
 #' @param method Method used by integrator (deSolve).
 #' 
@@ -186,7 +192,7 @@
 #' 
 #' \donttest{
 #' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+#' daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
 #' 
 #' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 #' exp.duration = 6, exercise = TRUE)
@@ -194,6 +200,14 @@
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 #' solve_gas_pbtk(parameters=params)
 #' }
+#'
+#' # Note that different model compartments for this model have different units 
+#' # and that the final units can be controlled with the output.units argument:
+#' head(solve_gas_pbtk(chem.name="lindane"))
+#' # Convert all compartment units to mg/L:
+#' head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
+#' # Convert just the plasma to mg/L:
+#' head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
 #' 
 #' @export solve_gas_pbtk
 #' 
@@ -222,20 +236,22 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=FALSE,
                            suppress.messages=FALSE,
                            species="Human",
+                           iv.dose=FALSE,
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
                            # input.units = "uM",
+                           output.units=NULL,
                            method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
                            regression=TRUE,
-                           restrictive.clearance = T,
+                           restrictive.clearance = TRUE,
                            minimum.Funbound.plasma=0.0001,
                            monitor.vars=NULL,
                            vmax = 0,
                            km = 1,
-                           exercise = F,
+                           exercise = FALSE,
                            fR = 12,
                            VT = 0.75,
                            VD = 0.15,
@@ -249,6 +265,32 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
+  # Screen whether exposure and dosing are both indicated to occur
+  if((exp.conc!=0 | is.null(forcings)==FALSE) & (is.null(dose)==FALSE | is.null(daily.dose)==FALSE)){
+    stop("Currently, 'httk' only evaluates the model using the exposure or dose",
+         " route but not both simultaneously. If exposure is the goal, then",
+         " set dose and/or daily.dose to NULL.  If dose is the goal, then",
+         " set exp.conc to 0.")
+  }
+  
+  # Obtain the appropriate route for compound exposure/dosing.
+  if(exp.conc!=0 | is.null(forcings)==FALSE){
+    route <- "inhalation"
+    
+    # if(input.units!="ppmv"){
+    #   stop("The ",input.units," units are not appropriate for the exposure route. ",
+    #        "Review input units for doses and update argument. ",
+    #        "Several suggestions 'umol', 'mg', or an alternative input.")
+    # }
+  }else if(is.null(dose)==FALSE | is.null(daily.dose)==FALSE){
+    route <- ifelse(iv.dose,yes = "iv",no = "oral")
+    
+    if(input.units=="ppmv"){
+      stop("The 'ppmv' units are not appropriate for the dosing routes. ",
+           "Review input units for doses and update argument. ",
+           "Several suggestions 'umol', 'mg', or an alternative input.")
+    }
+  }
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
@@ -324,7 +366,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     #dosing.matrix = cbind(dose,time)
       ###
   
-  
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
     chem.name = chem.name,
@@ -333,7 +374,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     times=times,
     parameters=parameters,
     model="gas_pbtk",
-    route='inhalation',
+    route=route,
+    # route='inhalation',
     dosing=list(
       initial.dose=dose,
       dosing.matrix=dosing.matrix,
@@ -347,7 +389,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    input.units = input.units,
+    input.units=input.units,
+    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,

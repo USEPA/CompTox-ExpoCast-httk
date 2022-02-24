@@ -25,7 +25,9 @@ solve_gas_pbtk(
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
+  iv.dose = FALSE,
   input.units = "ppmv",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -34,12 +36,12 @@ solve_gas_pbtk(
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   vmax = 0,
   km = 1,
-  exercise = F,
+  exercise = FALSE,
   fR = 12,
   VT = 0.75,
   VD = 0.15,
@@ -86,7 +88,7 @@ default 0.}
 
 \item{exp.conc}{Specified inhalation exposure concentration for use in 
 assembling "forcings" data series argument for integrator. Defaults to
-units of uM}
+units of ppmv.}
 
 \item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}
@@ -105,8 +107,14 @@ those specified for the model outputs. Default values are zero.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
+\item{iv.dose}{Simulates a single i.v. dose if true.}
+
 \item{input.units}{Input units of interest assigned to dosing, including 
 forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -226,7 +234,7 @@ solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24
 
 \donttest{
 out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
 
 out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 exp.duration = 6, exercise = TRUE)
@@ -234,6 +242,14 @@ exp.duration = 6, exercise = TRUE)
 params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
 }
+
+# Note that different model compartments for this model have different units 
+# and that the final units can be controlled with the output.units argument:
+head(solve_gas_pbtk(chem.name="lindane"))
+# Convert all compartment units to mg/L:
+head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
+# Convert just the plasma to mg/L:
+head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
 
 }
 \references{
