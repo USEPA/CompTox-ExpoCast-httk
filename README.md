@@ -131,22 +131,22 @@ John Wambaugh [@wambaugh.john@epa.gov]
 Sarah Davidson [@Davidson.Sarah.E@epa.gov]
 
 ### Model Authors / Function Developers
-Robert Pearce
-Caroline Ring [Ring.Caroline@epa.gov]
-Greg Honda [honda.gregory@epa.gov]
-Mark Sfeir
-Matt Linakis [MLINAKIS@ramboll.com], 
+Robert Pearce,
+Caroline Ring [Ring.Caroline@epa.gov],
+Greg Honda [honda.gregory@epa.gov], 
+Mark Sfeir, 
+Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
 ### Bug-Fixes
-Miyuki Breen [breen.miyuki@epa.gov]
-Shannon Bell [Shannon.bell@inotivco.com]
-Xiaoqing Chang [Xiaoqing.chang@inotivco.com]
-Todor Antonijevic [tantonijevic@toxstrategies.com]
-Jimena Davis 
-James Sluka [jsluka@indiana.edu] 
-Nisha Sipes [sipes.nisha@epa.gov]
-Barbara Wetmore [wetmore.barbara@epa.gov] 
+Miyuki Breen [breen.miyuki@epa.gov], 
+Shannon Bell [Shannon.bell@inotivco.com], 
+Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
+Todor Antonijevic [tantonijevic@toxstrategies.com], 
+Jimena Davis, 
+James Sluka [jsluka@indiana.edu],  
+Nisha Sipes [sipes.nisha@epa.gov], 
+Barbara Wetmore [wetmore.barbara@epa.gov], and 
 Woodrow Setzer [setzer.woodrow@epa.gov]
 
 ## License
