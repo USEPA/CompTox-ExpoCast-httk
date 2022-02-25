@@ -130,7 +130,7 @@ John Wambaugh [@wambaugh.john@epa.gov]
 ### Lead Software Engineer 
 Sarah Davidson [@Davidson.Sarah.E@epa.gov]
 
-###Model Authors / Function Developers
+### Model Authors / Function Developers
 Robert Pearce
 Caroline Ring [Ring.Caroline@epa.gov]
 Greg Honda [honda.gregory@epa.gov]
@@ -138,7 +138,7 @@ Mark Sfeir
 Matt Linakis [MLINAKIS@ramboll.com], 
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
-###Bug-Fixes
+### Bug-Fixes
 Miyuki Breen [breen.miyuki@epa.gov]
 Shannon Bell [Shannon.bell@inotivco.com]
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com]
