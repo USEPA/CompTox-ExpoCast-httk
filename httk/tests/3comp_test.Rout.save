@@ -22,67 +22,57 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 0.9961
+[1] 1.468
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 0.9961
+[1] 1.468
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 0.9961
+[1] 1.468
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 18.3
+[1] 26.98
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-5: In calc_analytic_css(chem.name = "bisphenol a", model = "3compartment",  :
+4: In calc_analytic_css(chem.name = "bisphenol a", model = "3compartment",  :
   Tissue selected. Overwriting option for concentration with "tissue".
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 5.817
+[1] 8.575
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-5: In calc_analytic_css(chem.name = "bisphenol a", model = "3compartment",  :
+4: In calc_analytic_css(chem.name = "bisphenol a", model = "3compartment",  :
   Tissue selected. Overwriting option for concentration with "tissue".
 > 
 > head(solve_3comp(chem.name="bisphenol a"))
@@ -96,26 +86,24 @@ The model outputs are provided in the following units:
 
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
-[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
-[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
-[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
-[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.290000 1.146e+00 0.008551    2.830e+00 0.004637
+[4,] 0.02083     103.10 30.990000 2.575e+00 0.044970    6.776e+00 0.024380
+[5,] 0.03125      59.77 24.130000 3.522e+00 0.104300    9.962e+00 0.056540
+[6,] 0.04167      34.66 19.390000 4.082e+00 0.177800    1.247e+01 0.096410
        Cplasma
 [1,] 0.000e+00
 [2,] 3.200e-08
-[3,] 1.136e+00
-[4,] 2.538e+00
-[5,] 3.459e+00
-[6,] 3.998e+00
+[3,] 1.146e+00
+[4,] 2.575e+00
+[5,] 3.522e+00
+[6,] 4.082e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > head(solve_3comp(chem.cas="80-05-7"))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
@@ -128,26 +116,24 @@ The model outputs are provided in the following units:
 
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
-[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
-[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
-[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
-[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.290000 1.146e+00 0.008551    2.830e+00 0.004637
+[4,] 0.02083     103.10 30.990000 2.575e+00 0.044970    6.776e+00 0.024380
+[5,] 0.03125      59.77 24.130000 3.522e+00 0.104300    9.962e+00 0.056540
+[6,] 0.04167      34.66 19.390000 4.082e+00 0.177800    1.247e+01 0.096410
        Cplasma
 [1,] 0.000e+00
 [2,] 3.200e-08
-[3,] 1.136e+00
-[4,] 2.538e+00
-[5,] 3.459e+00
-[6,] 3.998e+00
+[3,] 1.146e+00
+[4,] 2.575e+00
+[5,] 3.522e+00
+[6,] 4.082e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
@@ -160,31 +146,29 @@ The model outputs are provided in the following units:
 
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
 [1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
-[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
-[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
-[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
-[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    7.500e-08 0.000000
+[3,] 0.01042     177.80 35.290000 1.146e+00 0.008551    2.830e+00 0.004637
+[4,] 0.02083     103.10 30.990000 2.575e+00 0.044970    6.776e+00 0.024380
+[5,] 0.03125      59.77 24.130000 3.522e+00 0.104300    9.962e+00 0.056540
+[6,] 0.04167      34.66 19.390000 4.082e+00 0.177800    1.247e+01 0.096410
        Cplasma
 [1,] 0.000e+00
 [2,] 3.200e-08
-[3,] 1.136e+00
-[4,] 2.538e+00
-[5,] 3.459e+00
-[6,] 3.998e+00
+[3,] 1.146e+00
+[4,] 2.575e+00
+[5,] 3.522e+00
+[6,] 4.082e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-5: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
+4: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Rblood2plasma not recalculated. 
 Set recalc.blood2plasma to TRUE if desired.
-6: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
+5: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Clearance not recalculated. 
 Set recalc.clearance to TRUE if desired.
 > 
@@ -198,10 +182,8 @@ Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > #and get MW of bisphenol a for checking units
 > MW = get_physchem_param(param = "MW",chem.name = "bisphenol a")
@@ -226,10 +208,8 @@ Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > #The following two initial dose metrics should be the same, and the same as
 > #the initial_default_dose_target in turn.
@@ -255,10 +235,8 @@ Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
 2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > #so, the dose target of what should appear at time zero in the intestine is:
 > initial_nondefault_dose_target = 3/5*BW/(MW*10^-3)
@@ -290,6 +268,9 @@ $Clmetabolismc
 
 $Fgutabs
 [1] 1
+
+$Fhep.assay.correction
+[1] 0.9229
 
 $Fhep.assay.correction
 [1] 0.9229
@@ -372,25 +353,21 @@ $Vrestc
 [1] 0.7879
 
 Warning messages:
-1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-6: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-7: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+5: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-8: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+6: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-9: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-10: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > script.args <- commandArgs(TRUE)
