@@ -6,8 +6,8 @@ Changes in version 2.1.0 (March, 2022)
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Pradeep et al. (2020) (https://doi.org/10.1016/j.comtox.2020.100136) is now included as Pradeep2020 and can be added with the new function: load_pradeep2020().
   Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
-  Added function calc_halflife (thank you Imran Shah for idea)
-  Internal reusable function convert_units() added to ensure consistency in unit conversions acrpss functions
+  Added function calc_halflife (thank you Imran Shah)
+  Internal reusable function convert_units() added to ensure consistency in unit conversions across functions
   Units corrected for gas_pbtk model to more natuarlly handle ppmv (parts per million by volume) and uM
   Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
   Further revised documentation to Armitage functions (thank you Madison Feshuk)
@@ -21,7 +21,7 @@ Changes in version 2.1.0 (March, 2022)
   Corrected major bug introduced in 2.0.0 (vectorization of calc_ionization) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
   Corrected monkey cardiac output (thank you Peter Egeghy)
   Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
-  Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Lynne Haber and Mark Bradley)  
+  Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Haber and Mark Bradley)  
   Expanded example for add_chemtable to address ionization (thank you Johann Fribl)
   Added Clint data from Dawson (2021) supplemental information (CHEMBL)
   Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss", based on Wambaugh et al. (2015) (https://doi.org/10.1093/toxsci/kfv118).
