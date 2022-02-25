@@ -1,4 +1,4 @@
-![HTTK logo](HTTK_logo.png)
+![HTTK logo](httk-logo.png)
 
 # R Package "httk"
 
