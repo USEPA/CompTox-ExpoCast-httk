@@ -40,7 +40,7 @@ Authors@R: c(
            person("Matt", "Linakis", email = "MLINAKIS@ramboll.com", 
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
-             role = c("ctb"), comment = c(ORCID= "0000-0001-5570-6383")),
+             role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
            person("Shannon", "Bell", email="Shannon.bell@inotivco.com",
