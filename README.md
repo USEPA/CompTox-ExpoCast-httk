@@ -125,10 +125,10 @@ vignette(‘Frank2018’)
 ## Authors
 
 ### Principal Investigator 
-John Wambaugh [@wambaugh.john@epa.gov]
+John Wambaugh [wambaugh.john@epa.gov]
 
 ### Lead Software Engineer 
-Sarah Davidson [@Davidson.Sarah.E@epa.gov]
+Sarah Davidson [Davidson.Sarah.E@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
@@ -145,7 +145,7 @@ Xiaoqing Chang [Xiaoqing.chang@inotivco.com],
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
 James Sluka [jsluka@indiana.edu],  
-Nisha Sipes [sipes.nisha@epa.gov], and  
+Nisha Sipes [sipes.nisha@epa.gov], and 
 Barbara Wetmore [wetmore.barbara@epa.gov]
 
 ### Statistical Expertise
