@@ -153,6 +153,14 @@ solve_model <- function(chem.name = NULL,
                       regression=TRUE),
                     ...)
 {
+#R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Cinhppmv <- NULL
+  #End R CMD CHECK appeasement.
+  
 # Handy string manipulation functions for processing variable names that adhere
 # to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
