@@ -130,7 +130,7 @@ John Wambaugh [@wambaugh.john@epa.gov]
 ### Lead Software Engineer 
 Sarah Davidson [@Davidson.Sarah.E@epa.gov]
 
-### Model Authors / Function Developers
+### Model Authors and Function Developers
 Robert Pearce,
 Caroline Ring [Ring.Caroline@epa.gov],
 Greg Honda [honda.gregory@epa.gov], 
@@ -138,15 +138,17 @@ Mark Sfeir,
 Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
-### Bug-Fixes
+### Bug-Fixes and Parameter Values
 Miyuki Breen [breen.miyuki@epa.gov], 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
 James Sluka [jsluka@indiana.edu],  
-Nisha Sipes [sipes.nisha@epa.gov], 
-Barbara Wetmore [wetmore.barbara@epa.gov], and 
+Nisha Sipes [sipes.nisha@epa.gov], and  
+Barbara Wetmore [wetmore.barbara@epa.gov]
+
+### Statistical Expertise
 Woodrow Setzer [setzer.woodrow@epa.gov]
 
 ## License
