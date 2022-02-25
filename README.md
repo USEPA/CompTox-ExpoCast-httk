@@ -1,3 +1,5 @@
+![HTTK logo](HTTK_logo.png)
+
 # R Package "httk"
 
 This R package provides data and models for prediction toxicokinetics (chemical 
