@@ -23,13 +23,10 @@ Type 'q()' to quit R.
 > signif(head(solve_gas_pbtk(chem.name="pyrene")),3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-'Cinhppmv' is a forcings variable and is not tracked with 'deSolve'. Thus, all resulting values are '0' and the column is dropped from the results matrix.
- To see additional information from the 'deSolve' package use help('forcings') in the R console.
-
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
 The model outputs are provided in the following units:
-	ppmv: Cinhppmv, Calvppmv, Cendexhppmv, Cmixexhppmv
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cmuc
+	ppmv: Calvppmv, Cendexhppmv, Cmixexhppmv
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
@@ -62,13 +59,10 @@ Warning messages:
 > signif(head(solve_gas_pbtk(chem.cas="129-00-0")),3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-'Cinhppmv' is a forcings variable and is not tracked with 'deSolve'. Thus, all resulting values are '0' and the column is dropped from the results matrix.
- To see additional information from the 'deSolve' package use help('forcings') in the R console.
-
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
 The model outputs are provided in the following units:
-	ppmv: Cinhppmv, Calvppmv, Cendexhppmv, Cmixexhppmv
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cmuc
+	ppmv: Calvppmv, Cendexhppmv, Cmixexhppmv
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
@@ -102,13 +96,10 @@ Warning messages:
 +   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-'Cinhppmv' is a forcings variable and is not tracked with 'deSolve'. Thus, all resulting values are '0' and the column is dropped from the results matrix.
- To see additional information from the 'deSolve' package use help('forcings') in the R console.
-
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
 The model outputs are provided in the following units:
-	ppmv: Cinhppmv, Calvppmv, Cendexhppmv, Cmixexhppmv
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cmuc
+	ppmv: Calvppmv, Cendexhppmv, Cmixexhppmv
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
