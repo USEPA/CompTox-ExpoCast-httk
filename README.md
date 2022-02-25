@@ -124,11 +124,30 @@ vignette(‘Frank2018’)
 
 ## Authors
 
-principal investigator John Wambaugh
-[@wambaugh.john@epa.gov]
+### Principal Investigator 
+John Wambaugh [@wambaugh.john@epa.gov]
 
-lead software engineer Sarah Davidson
-[@Davidson.Sarah.E@epa.gov]
+### Lead Software Engineer 
+Sarah Davidson [@Davidson.Sarah.E@epa.gov]
+
+###Model Authors / Function Developers
+Robert Pearce
+Caroline Ring [Ring.Caroline@epa.gov]
+Greg Honda [honda.gregory@epa.gov]
+Mark Sfeir
+Matt Linakis [MLINAKIS@ramboll.com], 
+Dustin Kapraun [kapraun.dustin@epa.gov]
+
+###Bug-Fixes
+Miyuki Breen [breen.miyuki@epa.gov]
+Shannon Bell [Shannon.bell@inotivco.com]
+Xiaoqing Chang [Xiaoqing.chang@inotivco.com]
+Todor Antonijevic [tantonijevic@toxstrategies.com]
+Jimena Davis 
+James Sluka [jsluka@indiana.edu] 
+Nisha Sipes [sipes.nisha@epa.gov]
+Barbara Wetmore [wetmore.barbara@epa.gov] 
+Woodrow Setzer [setzer.woodrow@epa.gov]
 
 ## License
 
