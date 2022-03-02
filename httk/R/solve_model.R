@@ -785,18 +785,6 @@ specification in compartment_units for model ", model)
                
 # Down-select to only the desired parameters:
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
-  # Remove any 'forcings' variables from the results matrix since these
-  # variables are not tracked.
-  # NOTE: Only applicable to model="gas_pbtk" with route=="inhalation".
-#  if(model=="gas_pbtk" & route=="inhalation"){
-#    out <- subset(out,select = -c(Cinhppmv))
-#    
-#    cat("'Cinhppmv' is a forcings variable and is not tracked with 'deSolve'.",
-#        "Thus, all resulting values are '0' and the column is dropped from the",
-#        "results matrix.\n To see additional information from the 'deSolve'",
-#        "package use help('forcings') in the R console.\n\n")
-#  }
-  
   class(out) <- c('matrix','deSolve')
   
 
