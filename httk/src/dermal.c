@@ -1,7 +1,7 @@
 /* model.c for R deSolve package
    ___________________________________________________
 
-   Model File:  skin_2subcomp.model
+   Model File:  dermal.model
 
    Date:  Mon Jun 22 16:17:08 2020
 
@@ -27,8 +27,8 @@
      AUC = 0.0,
      Astratum_corneum_exposed = 0.0,
      Astratum_corneum_unexposed = 0.0,
-     Acomposite_dermal_exposed = 0.0,
-     Acomposite_dermal_unexposed = 0.0,
+     Aviable_epidermis_exposed = 0.0,
+     Aviable_epidermis_unexposed = 0.0,
      Amedia = 0.0,
 
    14 Outputs:
@@ -43,8 +43,8 @@
     "Aplasma",
     "Cstratum_corneum_exposed",
     "Cstratum_corneum_unexposed",
-    "Ccomposite_dermal_exposed",
-    "Ccomposite_dermal_unexposed",
+    "Cviable_epidermis_exposed",
+    "Cviable_epidermis_unexposed",
     "Cmedia",
 
    2 Inputs:
@@ -54,9 +54,9 @@
    63 Parameters:
      skin_depth = 0,
      Fskin_depth_sc = 0,
-     Fskin_depth_cd = 0,
+     Fskin_depth_ve = 0,
      Pmedia2sc = 0,
-     Psc2cd = 0,
+     Psc2ve = 0,
      V0 = 0,
      Fskin_exposed = 0,
      totalSA = 0,
@@ -66,8 +66,8 @@
      hematocrit = 0.44,
      kgutabs = 1,
      Ksc2media = 0,
-     Ksc2cd = 0,
-     Kcd2pu = 0,
+     Ksc2ve = 0,
+     Kve2pu = 0,
      Kkidney2pu = 0,
      Kliver2pu = 0,
      Krest2pu = 0,
@@ -75,7 +75,7 @@
      Klung2pu = 0,
      Qcardiacc = 4.8,
      Qgfrc = 0.108,
-     Qcomposite_dermalf = 0,
+     Qviable_epidermisf = 0,
      Qgutf = 0,
      Qkidneyf = 0,
      Qliverf = 0,
@@ -88,14 +88,14 @@
      Vvenc = 0,
      Vskinc = 0,
      Vstratum_corneumc = 0,
-     Vcomposite_dermalc = 0,
+     Vviable_epidermisc = 0,
      Fraction_unbound_plasma = 0.0,
      Rblood2plasma = 0.0,
      Clmetabolism = 0.0,
      Qcardiac = 0.0,
-     Qcomposite_dermal = 0,
-     Qcomposite_dermal_exposed = 0,
-     Qcomposite_dermal_unexposed = 0,
+     Qviable_epidermis = 0,
+     Qviable_epidermis_exposed = 0,
+     Qviable_epidermis_unexposed = 0,
      Qgfr = 0.0,
      Qgut = 0.0,
      Qkidney = 0.0,
@@ -112,9 +112,9 @@
      Vstratum_corneum = 0,
      Vstratum_corneum_exposed = 0,
      Vstratum_corneum_unexposed = 0,
-     Vcomposite_dermal = 0,
-     Vcomposite_dermal_exposed = 0,
-     Vcomposite_dermal_unexposed = 0,
+     Vviable_epidermis = 0,
+     Vviable_epidermis_exposed = 0,
+     Vviable_epidermis_unexposed = 0,
 */
 
 #include <R.h>
@@ -136,8 +136,8 @@
 #define ID_AUC 0x0000a
 #define ID_Astratum_corneum_exposed 0x0000b
 #define ID_Astratum_corneum_unexposed 0x0000c
-#define ID_Acomposite_dermal_exposed 0x0000d
-#define ID_Acomposite_dermal_unexposed 0x0000e
+#define ID_Aviable_epidermis_exposed 0x0000d
+#define ID_Aviable_epidermis_unexposed 0x0000e
 #define ID_Amedia 0x0000f
 
 /* Model variables: Outputs */
@@ -152,8 +152,8 @@
 #define ID_Aplasma 0x00008
 #define ID_Cstratum_corneum_exposed 0x00009
 #define ID_Cstratum_corneum_unexposed 0x0000a
-#define ID_Ccomposite_dermal_exposed 0x0000b
-#define ID_Ccomposite_dermal_unexposed 0x0000c
+#define ID_Cviable_epidermis_exposed 0x0000b
+#define ID_Cviable_epidermis_unexposed 0x0000c
 #define ID_Cmedia 0x0000d
 
 /* Parameters */
@@ -161,9 +161,9 @@ static double parms[63];
 
 #define skin_depth parms[0]
 #define Fskin_depth_sc parms[1]
-#define Fskin_depth_cd parms[2]
+#define Fskin_depth_ve parms[2]
 #define Pmedia2sc parms[3]
-#define Psc2cd parms[4]
+#define Psc2ve parms[4]
 #define V0 parms[5]
 #define Fskin_exposed parms[6]
 #define totalSA parms[7]
@@ -173,8 +173,8 @@ static double parms[63];
 #define hematocrit parms[11]
 #define kgutabs parms[12]
 #define Ksc2media parms[13]
-#define Ksc2cd parms[14]
-#define Kcd2pu parms[15]
+#define Ksc2ve parms[14]
+#define Kve2pu parms[15]
 #define Kkidney2pu parms[16]
 #define Kliver2pu parms[17]
 #define Krest2pu parms[18]
@@ -182,7 +182,7 @@ static double parms[63];
 #define Klung2pu parms[20]
 #define Qcardiacc parms[21]
 #define Qgfrc parms[22]
-#define Qcomposite_dermalf parms[23]
+#define Qviable_epidermisf parms[23]
 #define Qgutf parms[24]
 #define Qkidneyf parms[25]
 #define Qliverf parms[26]
@@ -195,14 +195,14 @@ static double parms[63];
 #define Vvenc parms[33]
 #define Vskinc parms[34]
 #define Vstratum_corneumc parms[35]
-#define Vcomposite_dermalc parms[36]
+#define Vviable_epidermisc parms[36]
 #define Fraction_unbound_plasma parms[37]
 #define Rblood2plasma parms[38]
 #define Clmetabolism parms[39]
 #define Qcardiac parms[40]
-#define Qcomposite_dermal parms[41]
-#define Qcomposite_dermal_exposed parms[42]
-#define Qcomposite_dermal_unexposed parms[43]
+#define Qviable_epidermis parms[41]
+#define Qviable_epidermis_exposed parms[42]
+#define Qviable_epidermis_unexposed parms[43]
 #define Qgfr parms[44]
 #define Qgut parms[45]
 #define Qkidney parms[46]
@@ -219,9 +219,9 @@ static double parms[63];
 #define Vstratum_corneum parms[57]
 #define Vstratum_corneum_exposed parms[58]
 #define Vstratum_corneum_unexposed parms[59]
-#define Vcomposite_dermal parms[60]
-#define Vcomposite_dermal_exposed parms[61]
-#define Vcomposite_dermal_unexposed parms[62]
+#define Vviable_epidermis parms[60]
+#define Vviable_epidermis_exposed parms[61]
+#define Vviable_epidermis_unexposed parms[62]
 
 /* Forcing (Input) functions */
 static double forc[2];
@@ -230,20 +230,20 @@ static double forc[2];
 #define switch forc[1]
 
 /*----- Initializers */
-void initmod_skin_2subcomp (void (* odeparms)(int *, double *))
+void initmod_dermal (void (* odeparms)(int *, double *))
 {
   int N=63;
   odeparms(&N, parms);
 }
 
-void initforc_skin_2subcomp (void (* odeforcs)(int *, double *))
+void initforc_dermal (void (* odeforcs)(int *, double *))
 {
   int N=2;
   odeforcs(&N, forc);
 }
 
 
-void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
+void getParms_dermal (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   /* local */ double Vskin_exposed;
@@ -267,13 +267,13 @@ void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
   Vstratum_corneum = Vskin * Fskin_depth_sc ;
   Vstratum_corneum_exposed = Vstratum_corneum * Fskin_exposed ;
   Vstratum_corneum_unexposed = Vstratum_corneum * ( 1 - Fskin_exposed ) ;
-  Vcomposite_dermal = Vskin * Fskin_depth_cd ;
-  Vcomposite_dermal_exposed = Vcomposite_dermal * Fskin_exposed ;
-  Vcomposite_dermal_unexposed = Vcomposite_dermal * ( 1 - Fskin_exposed ) ;
-  Qcomposite_dermal = Qcardiac * Qcomposite_dermalf ;
-  Qcomposite_dermal_unexposed = Qcomposite_dermal * ( 1 - Vskin_exposed / Vskin ) ;
-  Qcomposite_dermal_exposed = Qcomposite_dermal * Vskin_exposed / Vskin ;
-  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qcomposite_dermal ) ;
+  Vviable_epidermis = Vskin * Fskin_depth_ve ;
+  Vviable_epidermis_exposed = Vviable_epidermis * Fskin_exposed ;
+  Vviable_epidermis_unexposed = Vviable_epidermis * ( 1 - Fskin_exposed ) ;
+  Qviable_epidermis = Qcardiac * Qviable_epidermisf ;
+  Qviable_epidermis_unexposed = Qviable_epidermis * ( 1 - Vskin_exposed / Vskin ) ;
+  Qviable_epidermis_exposed = Qviable_epidermis * Vskin_exposed / Vskin ;
+  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qviable_epidermis ) ;
   Vart = Vartc * BW ;
   Vgut = Vgutc * BW ;
   Vkidney = Vkidneyc * BW ;
@@ -288,7 +288,7 @@ void getParms_skin_2subcomp (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs_skin_2subcomp (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double Vmedia;
 
@@ -314,9 +314,9 @@ void derivs_skin_2subcomp (int *neq, double *pdTime, double *y, double *ydot, do
 
   yout[ID_Cstratum_corneum_exposed] = y[ID_Astratum_corneum_exposed] / Vstratum_corneum_exposed ;
 
-  yout[ID_Ccomposite_dermal_unexposed] = y[ID_Acomposite_dermal_unexposed] / Vcomposite_dermal_unexposed ;
+  yout[ID_Cviable_epidermis_unexposed] = y[ID_Aviable_epidermis_unexposed] / Vviable_epidermis_unexposed ;
 
-  yout[ID_Ccomposite_dermal_exposed] = y[ID_Acomposite_dermal_exposed] / Vcomposite_dermal_exposed ;
+  yout[ID_Cviable_epidermis_exposed] = y[ID_Aviable_epidermis_exposed] / Vviable_epidermis_exposed ;
 
   Vmedia = V0 * forcing ;
 
@@ -330,7 +330,7 @@ void derivs_skin_2subcomp (int *neq, double *pdTime, double *y, double *ydot, do
 
   ydot[ID_Aliver] = Qliver * y[ID_Aart] / Vart + Qgut * y[ID_Agut] / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
-  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qrest * y[ID_Arest] / Vrest / Krest2pu + Qcomposite_dermal_unexposed * yout[ID_Ccomposite_dermal_unexposed] / Kcd2pu + Qcomposite_dermal_exposed * yout[ID_Ccomposite_dermal_exposed] / Kcd2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / Vven ;
+  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qrest * y[ID_Arest] / Vrest / Krest2pu + Qviable_epidermis_unexposed * yout[ID_Cviable_epidermis_unexposed] / Kve2pu + Qviable_epidermis_exposed * yout[ID_Cviable_epidermis_exposed] / Kve2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / Vven ;
 
   ydot[ID_Alung] = Qcardiac * ( y[ID_Aven] / Vven - y[ID_Alung] / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
@@ -346,32 +346,32 @@ void derivs_skin_2subcomp (int *neq, double *pdTime, double *y, double *ydot, do
 
   ydot[ID_AUC] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  ydot[ID_Astratum_corneum_exposed] = Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch + Psc2cd * SA_exposed * 24 * 0.001 * ( yout[ID_Ccomposite_dermal_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2cd ) ;
+  ydot[ID_Astratum_corneum_exposed] = Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) * switch + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cviable_epidermis_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2ve ) ;
 
-  ydot[ID_Astratum_corneum_unexposed] = Psc2cd * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Ccomposite_dermal_unexposed] - yout[ID_Cstratum_corneum_unexposed] / Ksc2cd ) ;
+  ydot[ID_Astratum_corneum_unexposed] = Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cviable_epidermis_unexposed] - yout[ID_Cstratum_corneum_unexposed] / Ksc2ve ) ;
 
-  ydot[ID_Acomposite_dermal_exposed] = Qcomposite_dermal_exposed * ( yout[ID_Cart] - yout[ID_Ccomposite_dermal_exposed] * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma ) + Psc2cd * SA_exposed * 24 * 0.001 * ( yout[ID_Cstratum_corneum_exposed] / Ksc2cd - yout[ID_Ccomposite_dermal_exposed] ) ;
+  ydot[ID_Aviable_epidermis_exposed] = Qviable_epidermis_exposed * ( yout[ID_Cart] - yout[ID_Cviable_epidermis_exposed] * Rblood2plasma / Kve2pu / Fraction_unbound_plasma ) + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cstratum_corneum_exposed] / Ksc2ve - yout[ID_Cviable_epidermis_exposed] ) ;
 
-  ydot[ID_Acomposite_dermal_unexposed] = Qcomposite_dermal_unexposed * ( yout[ID_Cart] - yout[ID_Ccomposite_dermal_unexposed] * Rblood2plasma / Kcd2pu / Fraction_unbound_plasma ) + Psc2cd * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cstratum_corneum_unexposed] / Ksc2cd - yout[ID_Ccomposite_dermal_unexposed] ) ;
+  ydot[ID_Aviable_epidermis_unexposed] = Qviable_epidermis_unexposed * ( yout[ID_Cart] - yout[ID_Cviable_epidermis_unexposed] * Rblood2plasma / Kve2pu / Fraction_unbound_plasma ) + Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cstratum_corneum_unexposed] / Ksc2ve - yout[ID_Cviable_epidermis_unexposed] ) ;
 
 } /* derivs */
 
 
 /*----- Jacobian calculations: */
-void jac_skin_2subcomp (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_dermal (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event_skin_2subcomp (int *n, double *t, double *y)
+void event_dermal (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root_skin_2subcomp (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_dermal (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */

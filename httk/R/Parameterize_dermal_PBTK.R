@@ -10,13 +10,16 @@
 #' specified. 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param model.type Choice of dermal model, either the default "dermal" for the 
+#' model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
+#' or "dermal_1subcomp" for the model with 1 compartment for the skin.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
-#' However, solve_pbtk only works with the default parameters.
+#' However, solve_dermal_pbtk only works with the default parameters.
 #' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
@@ -94,6 +97,7 @@
 parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
+                              model.type="dermal", #can also be "dermal_1subcomp"
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
@@ -219,7 +223,9 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     "logP",
     chem.cas=chem.cas) # Octanol:water partition coeffiecient
   
+  #INITIALIZE outlist
   outlist <- list()
+  
    # Begin flows:
   #mL/min/kgBW converted to L/h/kgBW:
   QGFRc <- this.phys.data["GFR"]/1000*60 
@@ -231,9 +237,13 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     flows[!names(flows) %in% c('Qtotal.liverf')], #MWL removed "Qlungf, 9/19/19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
     Qliverf= flows[['Qtotal.liverf']] - flows[['Qgutf']],
     Qgfrc = as.numeric(QGFRc))) 
+  
+  if (model.type=="dermal"){ #rename Qskinf for dermal model (2 subcompartments)
+    names(outlist)[names(outlist)=="Qskinf"] <- "Qviable_epidermisf"
+  }
   # end flows  
   
-  # Begin volumes
+  # Begin volumes:
   # units should be L/kgBW  
   Vartc = this.phys.data["Plasma Volume"]/(1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
   Vvenc = this.phys.data["Plasma Volume"]/(1-this.phys.data["Hematocrit"])/2/1000 #L/kgBW
@@ -244,6 +254,9 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     lumped_params[substr(names(lumped_params),1,1) == 'V'],
     lumped_params[substr(names(lumped_params),1,1) == 'K'])
   
+  if (model.type=="dermal"){ #rename Kskin2pu for dermal model (2 subcompartments)
+    names(outlist)[names(outlist)=="Kskin2pu"] <- "Kve2pu"
+  }
   
 # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
@@ -292,32 +305,77 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Kvw <- 1#14.62 * schmitt.params$Pow^0.55
     ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
     fnon <- 1 - ionization$fraction_charged      
-    Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw #Look at Marina's paper
+    Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw #Look at Marina's paper???
     D <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) * 100^2 * 60^2  #cm^2/h
-    Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h    
+    Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation   
     totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
-    outlist <- c(outlist,Kp = Kp,
-                 Kskin2media = Kd2m, 
-                 totalSA = totalSA,
-                 Vmedia = 0.001,  #Vmedia in L TotalSA in cm^2 
-                 skin_depth=skin_depth,
-                 Fdermabs=1,
-                 Fskin_exposed=0.1)   #SA = 2 * 100^2?
-      #outlist <- c(outlist,Qskinexposedf = 0.3 * 75 * 0.001 / 70 / outlist$Vskinc * outlist$Qskinf)
-      #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf
     
     # Added by AEM, 1/27/2022
-    outlist <- c(outlist, Fskin_depth_sc = 11/560, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
-                 Fskin_depth_cd = 1-11/560, #AEM's best guess
-                 Pmedia2sc = 1, #guess
-                 Psc2cd = 1, #guess
-                 Ksc2media = 1, #guess
-                 Ksc2cd = 1, #guess
-                 Kcd2pu = 1, #guess
-                 Qcomposite_dermalf = flows[["Qskinf"]], #not sure if this is totally accurate
-                 V0 = 1,
-                 Vstratum_corneumc = 1,
-                 Vcomposite_dermalc=1)
+    if (model.type=="dermal"){
+      outlist <- c(outlist, totalSA = totalSA,
+                   V0 = 0.001, #changed from Vmedia
+                   skin_depth = skin_depth,
+                   Fdermabs = 1,
+                   Fskin_exposed=0.1,
+                   Fskin_depth_sc = 11/560, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
+                   Fskin_depth_ve = 1-11/560, #AEM's best guess
+                   Pmedia2sc = Kp, #guess
+                   Psc2ve = Kp, #guess
+                   Ksc2media = Kd2m, #function above
+                   Ksc2ve = 10, #guess
+                   Kve2pu = outlist$Kskin2pu, #partition coefficient
+                   Qviable_epidermisf = flows[["Qskinf"]], #not sure if this is totally accurate
+                   V0 = 1,
+                   Vstratum_corneumc = 1,
+                   Vviable_epidermisc=1)
+    } else if (model.type=="dermal_1subcomp"){
+      outlist <- c(outlist,Kp = Kp,
+                   Kskin2media = Kd2m, 
+                   totalSA = totalSA,
+                   V0 = 0.001,  #Vmedia in L TotalSA in cm^2 #changed from Vmedia
+                   skin_depth=skin_depth,
+                   Fdermabs=1,
+                   Fskin_exposed=0.1)   #SA = 2 * 100^2?
+      #outlist <- c(outlist,Qskinexposedf = 0.3 * 75 * 0.001 / 70 / outlist$Vskinc * outlist$Qskinf)
+      #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf
+    }
+    
 
   return(outlist[sort(names(outlist))])
+}
+
+parameterize_dermal_1subcomp_pbtk <- function(chem.cas=NULL,
+                                              chem.name=NULL,
+                                              dtxsid=NULL,
+                                              model.type="dermal_1subcomp", 
+                                              species="Human",
+                                              default.to.human=F,
+                                              tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
+                                              force.human.clint.fup = F,
+                                              clint.pvalue.threshold=0.05,
+                                              adjusted.Funbound.plasma=T,
+                                              regression=T,
+                                              suppress.messages=F,
+                                              minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
+                                              skin_depth=0.3,skin.pH=7,
+                                              vmax.km=F, BW=70, height = 175,
+                                              ...) 
+{
+  return(
+    parameterize_dermal_pbtk(chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             dtxsid=dtxsid,
+                             model.type=model.type,
+                             species=species,
+                             default.to.human=default.to.human,
+                             tissuelist=tissuelist,
+                             force.human.clint.fup = force.human.clint.fup,
+                             clint.pvalue.threshold=clint.pvalue.threshold,
+                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                             regression=regression,
+                             suppress.messages=suppress.messages,
+                             minimum.Funbound.plasma = minimum.Funbound.plasma, #added copying parameterize_gas_pbtk, AEM 1/13/2022
+                             skin_depth=skin_depth,skin.pH=skin.pH,
+                             vmax.km=vmax.km, BW=BW, height = height)
+  )
 }
