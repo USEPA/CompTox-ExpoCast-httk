@@ -86,7 +86,16 @@
 #'@references 
 #'
 #' @examples
-#' 
+#'
+#' library(httk)
+#' PFASCssTable <- NULL
+#' for (this.id in get_2022pfasinfo(info="dtxsid"))
+#' {
+#'   PFASCssTable <- rbind(PFASCssTable, data.frame(
+#'     DTXSID = this.id,
+#'     Css = calc_mc_css(dtxsid=this.id)
+#'     ))
+#' }
 #' 
 #' @export get_2022pfasinfo
 get_2022pfasinfo <- function(info="CAS",
