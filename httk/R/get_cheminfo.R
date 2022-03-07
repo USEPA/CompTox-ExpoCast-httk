@@ -159,7 +159,7 @@ get_cheminfo <- function(info="CAS",
                          clint.pvalue.threshold=0.05,
                          suppress.messages=FALSE)
 {
-# Parameters in this list can be retrieve with the info argument:
+                                        # Parameters in this list can be retrieve with the info argument:
   valid.info <- c("Compound",
                   "CAS",
                   "Clint",
