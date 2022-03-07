@@ -83,8 +83,15 @@ scale_dosing <- function(
     as.numeric(dosing$dosing.matrix[,"dose"]) * scale.factor
   if (!is.null(dosing$daily.dose)) dosing$daily.dose <- 
     as.numeric(dosing$daily.dose) * scale.factor
-  if (!is.null(dosing$forcings)) dosing$forcings[,"forcing_values"] <- 
-    as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor
+  if (!is.null(dosing$forcings)) {
+    if (typeof(dosing$forcings)=="list") { #if multiple forcing functions, added by A. Meade, March 2022
+      n.forcings <- length(dosing$forcings);
+      for (i.forcings in 1:n.forcings) {
+        dosing$forcings[[i.forcings]][,"forcing_values"] <- 
+          as.numeric(dosing$forcings[[i.forcings]][,"forcing_values"]) * scale.factor} 
+    } else if (typeof(dosing$forcings)=="numeric"){ dosing$forcings[,"forcing_values"] <- 
+      as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor }
+  }
     
   return(dosing)
 }
