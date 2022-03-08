@@ -104,9 +104,9 @@ Qcardiac = 0.0;			# Cardiac output (L/d) NOTE change to days from hours
 Qgfr = 0.0;			# Glomerular Filtration Rate (L/d)
 
 # Blood flow to ... (L/d)
-Qskin = 0.0;
-Qskin_unexposed = 0.0;	# Unexposed skin
+Qskin = 0.0;		# Skin (exposed and unexposed)
 Qskin_exposed = 0.0;	# Exposed skin
+Qskin_unexposed = 0.0;	# Unexposed skin
 Qgut = 0.0;		# Gut
 Qkidney = 0.0;		# Kidney
 Qliver = 0.0;		# Liver
@@ -121,8 +121,8 @@ Vlung = 0.0;		# Lung tissue
 Vrest = 0.0;		# Rest of body
 Vven = 0.0;		# Venous blood
 Vskin = 0.0;		# Skin (exposed and unexposed)
-Vskin_unexposed = 0.0; 	# Unexposed skin
 Vskin_exposed = 0.0;	# Exposed skin
+Vskin_unexposed = 0.0; 	# Unexposed skin
 
 # End of PARAMETERS
 #---------------------------------------------------------------------------------------------
