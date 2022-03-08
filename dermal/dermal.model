@@ -1,0 +1,240 @@
+#---------------------------------------------------------------------------------------------
+# STATE VARIABLES for the model (for which ODEs are provided).
+
+States = {
+	Agutlumen,			# Amount of the compound in gut lumen (umol)
+	Agut,				# ... gut (umol)
+	Aliver,				# ... liver (umol)
+	Aven,				# ... veins (umol)
+	Alung,				# ... lung (umol)
+	Aart,				# ... arterioles (umol)
+	Arest,				# ... rest of the body (umol)
+	Akidney,			# ... kidney (umol)
+	Atubules,			# ... tubules (umol)
+	Ametabolized,			# ... metabolized (umol)
+	AUC,				# Area under the curve (umol*days)
+	Astratum_corneum_exposed,	# Amount in exposed stratum corneum (umol)
+	Astratum_corneum_unexposed,	# Amount in unexposed stratum corneum (umol)
+	Aviable_epidermis_exposed,	# Amount in exposed dermal layer (umol)
+	Aviable_epidermis_unexposed,	# Amount in unexposed dermal layer (umol)
+	Amedia,				# ?
+};
+
+# End of STATE VARIABLES
+#---------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------
+# INPUT VARIABLES for the model (which are independent of other variables, and which may vary
+# in time).
+
+Inputs = {
+	Vmedia, # Volume of media (L)
+};
+
+# End of INPUT VARAIBLES
+#---------------------------------------------------------------------------------------------
+
+
+#---------------------------------------------------------------------------------------------
+# OUTPUT VARIABLES for the model (which can be obtained at any point in time as analytic 
+# functions of state variables, inputs, and parameters).
+
+Outputs = {
+	Cgut,				# Concentration in gut (uM)
+	Cliver,				# ... liver (uM)
+	Cven,				# ... veins (uM)
+	Clung,				# ... lung (uM)
+	Cart,				# ... arterioles (uM)
+	Crest,             		# ... rest of the body (uM)
+	Ckidney,			# ... kidney (uM)
+	Cplasma,			# ... plasma (uM)
+	Aplasma,			# ??
+	Cstratum_corneum_exposed,	# ... exposed stratum corneum (uM)
+	Cstratum_corneum_unexposed,	# ... unexposed stratum corneum (uM)
+	Cviable_epidermis_exposed,	# ... exposed dermal layer (uM)
+	Cviable_epidermis_unexposed,	# ... unexposed dermal layer (uM)
+	Cmedia,				# ... media (uM)
+};
+
+# End of OUTPUT VARIABLES
+#---------------------------------------------------------------------------------------------
+
+
+#---------------------------------------------------------------------------------------------
+# PARAMETERS for the model (which are independent of time).
+
+
+skin_depth = 0;
+Fskin_depth_sc = 0;
+Fskin_depth_ve = 0;	# CALCULATED= 1 - Fskin_depth_sc
+Pmedia2sc = 0;
+Psc2ve = 0;
+Fskin_exposed = 0;
+totalSA = 0;
+SA_exposed = 0;		# CALCULATED = totalSA * Fskin_exposed
+BW = 70;
+Clmetabolismc = 0.0;
+hematocrit = 0.0;
+kgutabs = 0.0;
+
+# Particion coefficient of ... (N/A)
+Ksc2media = 0;		
+Ksc2ve = 0;
+Kve2pu = 0;
+Kkidney2pu = 0;
+Kliver2pu = 0;
+Krest2pu = 0;
+Kgut2pu = 0;
+Klung2pu = 0;
+
+Qcardiacc = 0.0;
+Qgfrc = 0.0;
+Qskinc = 0; 		# for viable epidermis ONLY
+Qgutc = 0;
+Qkidneyc = 0;
+Qliverc = 0;
+
+# Volume of the ... per kg of body weight (L/kg BW)
+Vartc = 0;
+Vgutc = 0;
+Vkidneyc = 0;
+Vliverc = 0;
+Vlungc = 0;
+Vrestc = 0;
+Vvenc = 0;
+Vskinc = 0;
+Vstratum_corneumc = 0;		
+Vviable_epidermisc = 0;	# CALCULATED = Vskinc - Vstratum_corneumc
+
+Fraction_unbound_plasma = 0.0;
+Rblood2plasma = 0.0;
+Clmetabolism = 0.0;
+Qcardiac = 0.0;
+Qskin = 0; # same as Qskin in code
+Qskin_exposed = 0;
+Qskin_unexposed = 0;
+Qgfr = 0.0;
+
+# Blood flow to ... (L/d)
+Qgut = 0.0;
+Qkidney = 0.0;
+Qliver = 0.0;
+Qrest = 0.0;
+
+# Volume of ... (L)
+Vart = 0.0;
+Vgut = 0.0;
+Vkidney = 0.0;
+Vliver = 0.0;
+Vlung = 0.0;
+Vrest = 0.0;
+Vven = 0.0;
+
+# Volume of skin, stratum corneum, and viable epidermis (exposed, unexposed, and all together) ... (L)
+Vskin = 0;
+Vskin_exposed = 0.0;
+Vskin_unexposed = 0.0;
+Vstratum_corneum = 0;
+Vstratum_corneum_exposed = 0;
+Vstratum_corneum_unexposed = 0;
+Vviable_epidermis = 0;
+Vviable_epidermis_exposed = 0;
+Vviable_epidermis_unexposed = 0;
+
+
+Initialize{
+	# Skin parameter mass balance
+	Vviable_epidermisc = Vskinc - Vstratum_corneumc; #Volume of skin = SC and VE
+	Fskin_depth_ve = 1 - Fskin_depth_sc;
+	
+	# Metabolism parameters
+	kgutabs = kgutabs * 24;
+	Clmetabolism = Clmetabolismc * 24 * BW;
+	Qcardiac = Qcardiacc * 24 * pow(BW, 0.75);
+	Qgfr = Qgfrc * pow(BW, 0.75) * 24;
+	
+	# Flow rates
+	Qgut = Qcardiac * Qgutc;
+	Qkidney = Qcardiac * Qkidneyc;
+	Qliver = Qcardiac * Qliverc;
+	
+	# Surface area of exposed skin
+	SA_exposed = Fskin_exposed * totalSA;
+
+	# Volumes of skin (L)
+	Vskin = BW * Vskinc;
+	Vskin_exposed = SA_exposed * skin_depth * 0.001;
+	Vskin_unexposed = Vskin - Vskin_exposed;
+	Vstratum_corneum = Vskin * Fskin_depth_sc;
+	Vstratum_corneum_exposed = Vstratum_corneum * Fskin_exposed;
+	Vstratum_corneum_unexposed = Vstratum_corneum * (1 - Fskin_exposed);
+	Vviable_epidermis = Vskin * Fskin_depth_ve;
+	Vviable_epidermis_exposed = Vviable_epidermis * Fskin_exposed;
+	Vviable_epidermis_unexposed = Vviable_epidermis * (1 - Fskin_exposed);
+
+	# Flow rates of skin 
+	Qskin = Qcardiac * Qskinc;
+	Qskin_unexposed = Qskin * Vskin_unexposed / Vskin;
+	Qskin_exposed = Qskin * Vskin_exposed / Vskin;
+	Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qskin);
+
+	# Volumes (L)
+	Vart = Vartc * BW;
+	Vgut = Vgutc * BW;
+	Vkidney = Vkidneyc * BW;
+	Vliver = Vliverc * BW;
+	Vlung = Vlungc * BW;
+	Vrest = Vrestc * BW;
+	Vven = Vvenc * BW;
+}
+
+Dynamics{
+	# Concentrations (uM = umol / L)
+	Cgut = Agut / Vgut;
+	Cliver = Aliver / Vliver;
+	Cven = Aven / Vven;
+	Clung = Alung / Vlung;
+	Cart = Aart / Vart;
+	Crest = Arest / Vrest;
+	Ckidney = Akidney / Vkidney;
+	
+	# Concentration and amount in plasma
+	Cplasma = Aven / Vven / Rblood2plasma;
+	Aplasma = Aven / Rblood2plasma * (1 - hematocrit);
+	
+	# Concentrations of skin and media (uM = umol / L)
+	Cstratum_corneum_unexposed = Astratum_corneum_unexposed / Vstratum_corneum_unexposed;
+	Cstratum_corneum_exposed = Astratum_corneum_exposed / Vstratum_corneum_exposed;
+	Cviable_epidermis_unexposed = Aviable_epidermis_unexposed / Vviable_epidermis_unexposed;
+	Cviable_epidermis_exposed = Aviable_epidermis_exposed / Vviable_epidermis_exposed;
+	Cmedia = Amedia / Vmedia;
+	
+	# Rate of absorbtion into skin from media (umol / day). This is zero if Amedia is zero (non negative rate).
+	R_absorbtion = (Amedia ? Pmedia2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) : 0.0); 
+	
+	# Rate of change of chemical in media (umol / day).
+	dt (Amedia) = - R absorbtion;
+	
+	# Rate of change of chemical in skin (umol / day).
+	dt (Astratum_corneum_exposed) = R_absorbtion + Psc2ve * SA_exposed * 24 * 0.001 * (Cviable_epidermis_exposed - Cstratum_corneum_exposed / Ksc2ve)  ;
+	dt (Astratum_corneum_unexposed) = Psc2ve * (totalSA - SA_exposed) * 24 * 0.001 * (Cviable_epidermis_unexposed - Cstratum_corneum_unexposed / Ksc2ve);
+	dt (Aviable_epidermis_exposed) = Qskin_exposed * (Cart - Cviable_epidermis_exposed * Rblood2plasma / Kve2pu / Fraction_unbound_plasma) + Psc2ve * SA_exposed * 24 * 0.001 * (Cstratum_corneum_exposed / Ksc2ve - Cviable_epidermis_exposed);
+	dt (Aviable_epidermis_unexposed) = Qskin_unexposed * (Cart - Cviable_epidermis_unexposed * Rblood2plasma / Kve2pu / Fraction_unbound_plasma) + Psc2ve * (totalSA - SA_exposed) * 24 * 0.001 * (Cstratum_corneum_unexposed / Ksc2ve - Cviable_epidermis_unexposed);
+	
+	# Rate of change of chemical in rest of the body (umol / day).
+	dt (Agutlumen) = - kgutabs * Agutlumen;
+	dt (Agut) = kgutabs * Agutlumen + Qgut * (Cart - Cgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma);
+	dt (Aliver) = Qliver * Cart + Qgut * Cgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - (Qliver + Qgut) * Cliver / Kliver2pu/ Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * Cliver / Kliver2pu;
+	dt (Aven) = ((Qliver + Qgut) * Cliver / Kliver2pu + Qkidney * Ckidney / Kkidney2pu + Qrest * Crest / Krest2pu + Qskin_unexposed * Cviable_epidermis_unexposed / Kve2pu + Qskin_exposed * Cviable_epidermis_exposed / Kve2pu) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * Cven;
+	dt (Alung) = Qcardiac * (Cven - Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
+	dt (Aart) = Qcardiac * (Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - Cart );
+	dt (Arest) = Qrest * (Cart - Crest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
+	dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Ckidney / Kkidney2pu;
+	dt (Atubules) = Qgfr * Ckidney / Kkidney2pu;
+	
+	# Rate of change of amount of chemical metabolized (umol/day).
+	dt (Ametabolized) = Clmetabolism * Cliver / Kliver2pu ;
+	dt (AUC) = Cven / Rblood2plasma;
+}
+
+End.
