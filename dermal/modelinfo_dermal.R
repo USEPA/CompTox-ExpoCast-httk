@@ -231,6 +231,7 @@ model.list[["dermal"]]$compartment.units <- c(
   "Aviable_epidermis_exposed"="umol",
   "Aviable_epidermis_unexposed"="umol",
   "Amedia"="umol",
+  "Ain"="umol",
   "Cgut"="uM",
   "Cliver"="uM",
   "Cven"="uM",
@@ -291,7 +292,8 @@ model.list[["dermal"]]$state.vars <- c(
   "Astratum_corneum_unexposed",
   "Aviable_epidermis_exposed",
   "Aviable_epidermis_unexposed",
-  "Amedia"
+  "Amedia",
+  "Ain"
 ) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
