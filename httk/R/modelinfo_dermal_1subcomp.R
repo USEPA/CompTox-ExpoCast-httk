@@ -24,25 +24,6 @@ model.list[["dermal_1subcomp"]]$alltissues=c(
   "red blood cells",
   "rest") 
 
-# These are all the parameters returned by the R model parameterization function.
-# Some of these parameters are not directly used to solve the model, but describe
-# how other parameters were calculated:
-# model.list[["dermal_1subcomp"]]$param.names <- c(
-#   "BW",
-#   "Clmetabolismc",
-#   "Fdermabs",
-#   "Fgutabs",
-#   "Fhep.assay.correction",
-#   "Fskin_depth_cd",
-#   "Fskin_depth_sc",
-#   "Fskin_exposed",
-#   "Funbound.plasma",
-#   "Funbound.plasma.dist",
-#   "hematocrit",
-#   "Kcd2pu",
-#   "Kgut2pu",
-#   ""
-
 # Which tissues from tissue.data are not lumped together when forming
 # the model: The dermal PBTK model has liver, kidney, gut, lung, and skin compartments 
 # that draw info from tissue.data; everything else from alltissues should be 
@@ -58,7 +39,6 @@ model.list[["dermal_1subcomp"]]$tissuelist=list(
 # code for the solver: (must match ORDER under "parameters" in C code)
 model.list[["dermal_1subcomp"]]$Rtosolvermap <- list( 
   skin_depth = "skin_depth",
-  V0 = "V0",
   Fskin_exposed = "Fskin_exposed",
   totalSA = "totalSA",
   Kp = "Kp",
@@ -99,7 +79,6 @@ model.list[["dermal_1subcomp"]]$compiled.parameters.init <- "getParms_dermal_1su
 # calculate the derivative of the system of equations describing the model 
 model.list[["dermal_1subcomp"]]$compiled.param.names <- c( 
   "skin_depth",
-  "V0",
   "Fskin_exposed",
   "totalSA",
   "SA_exposed",
@@ -133,9 +112,10 @@ model.list[["dermal_1subcomp"]]$compiled.param.names <- c(
   "Rblood2plasma",
   "Clmetabolism",
   "Qcardiac",
+  "Qgfr",
   "Qskin",
   "Qskin_exposed",
-  "Qgfr",
+  "Qskin_unexposed",
   "Qgut",
   "Qkidney",
   "Qliver",
@@ -148,7 +128,8 @@ model.list[["dermal_1subcomp"]]$compiled.param.names <- c(
   "Vrest",
   "Vven",
   "Vskin",
-  "Vskin_exposed"
+  "Vskin_exposed",
+  "Vskin_unexposed"
 )
 
 # This function initializes the state vector for the compiled model:
@@ -161,8 +142,7 @@ model.list[["dermal_1subcomp"]]$derivative.func <- "derivs_dermal_1subcomp" #in 
 # This is the ORDERED list of input variables given to the C code by the solver
 # (from Forcing (Input) functions -- forc):
 model.list[["dermal_1subcomp"]]$input.var.names <- c(
-  "forcing",
-  "switch"
+  "Vmedia"
 )
 
 # This is the ORDERED list of variables returned by the derivative function
@@ -178,7 +158,7 @@ model.list[["dermal_1subcomp"]]$derivative.output.names <- c(
   "Cplasma",
   "Aplasma",
   "Cskin_exposed",
-  "Cskin",
+  "Cskin_unexposed",
   "Cmedia"
   )
 
@@ -193,8 +173,9 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
   "Cplasma",
   "Aplasma",
   "Cskin_exposed",
-  "Cskin",
+  "Cskin_unexposed",
   "Cmedia",
+  "Ain",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -202,14 +183,14 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
-  "oral" = c('umol','mg','mg/kg'),
-  "iv" = c('umol','mg','mg/kg'),
+  # "oral" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
+  # "iv" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
   "dermal" = c('mg/L','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
-  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
-  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
+  # "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
+  # "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
   "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
@@ -227,8 +208,9 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Atubules"="umol",
   "Ametabolized"="umol",
   "Askin_exposed"="umol",
-  "Askin"="umol",
+  "Askin_unexposed"="umol",
   "Amedia"="umol",
+  "Ain"="umol",
   "Cgut"="uM",
   "Cliver"="uM",
   "Cven"="uM",
@@ -239,23 +221,21 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Cplasma"="uM",
   "Aplasma"="umol",
   "Cskin_exposed"="uM",
-  "Cskin"="uM",
+  "Cskin_unexposed"="uM",
   "Cmedia"="uM",
   "AUC"="uM*days")
-  #"forcing", #forcing function in "Inputs"
-  #"switch") #forcing function in "Inputs"
 
 model.list[["dermal_1subcomp"]]$routes <- list( 
-  "oral" = list(
-    # We need to know which compartment gets the dose 
-    "entry.compartment" = "Agutlumen",
-    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
-    # "replace" to change the value C1 <- dose
-    # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add"),
-  "iv" = list(
-    "entry.compartment" = "Aven",
-    "dose.type" = "add"),
+  # "oral" = list( # not used? -AEM, March 2022
+  #   # We need to know which compartment gets the dose 
+  #   "entry.compartment" = "Agutlumen",
+  #   # desolve events can take the values "add" to add dose C1 <- C1 + dose,
+  #   # "replace" to change the value C1 <- dose
+  #   # or "multiply" to change the value to C1 <- C1*dose
+  #   "dose.type" = "add"),
+  # "iv" = list( # not used? -AEM, March 2022
+  #   "entry.compartment" = "Aven",
+  #   "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Amedia",
     "dose.type" = "add")   
@@ -286,8 +266,9 @@ model.list[["dermal_1subcomp"]]$state.vars <- c(
   "Ametabolized",
   "AUC",
   "Askin_exposed",
-  "Askin",
-  "Amedia"
+  "Askin_unexposed",
+  "Amedia",
+  "Ain"
 ) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):

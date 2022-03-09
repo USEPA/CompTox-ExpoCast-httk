@@ -309,25 +309,24 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     D <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) * 100^2 * 60^2  #cm^2/h
     Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation   
     totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
+    Fskin_depth_sc = 11/560;
     
     # Added by AEM, 1/27/2022
     if (model.type=="dermal"){
       outlist <- c(outlist, totalSA = totalSA,
-                   V0 = 0.001, #changed from Vmedia
                    skin_depth = skin_depth,
                    Fdermabs = 1,
                    Fskin_exposed=0.1,
-                   Fskin_depth_sc = 11/560, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
-                   Fskin_depth_ve = 1-11/560, #AEM's best guess
+                   Fskin_depth_sc = Fskin_depth_sc, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
+                   Fskin_depth_ve = 1-Fskin_depth_sc, #AEM's best guess
                    Pmedia2sc = Kp, #guess
                    Psc2ve = Kp, #guess
                    Ksc2media = Kd2m, #function above
                    Ksc2ve = 10, #guess
                    Kve2pu = outlist$Kskin2pu, #partition coefficient
-                   Qviable_epidermisf = flows[["Qskinf"]], #not sure if this is totally accurate
-                   V0 = 1,
-                   Vstratum_corneumc = 1,
-                   Vviable_epidermisc=1)
+                   Qskinf = flows[["Qskinf"]], #not sure if this is totally accurate
+                   Vstratum_corneumc = outlist$Vskinc*Fskin_depth_sc,
+                   Vviable_epidermisc=outlist$Vskinc*(1-Fskin_depth_sc))
     } else if (model.type=="dermal_1subcomp"){
       outlist <- c(outlist,Kp = Kp,
                    Kskin2media = Kd2m, 

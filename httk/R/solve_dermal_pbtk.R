@@ -174,8 +174,7 @@ solve_dermal_pbtk <- function(chem.name = NULL,
     forcings = list(forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days), #forcing
                     forcings_gen(exp.conc,period,exp.start.time=0,exp.duration,days)) #switch
     #default forcings are 1 and 1
-    forcings = list(cbind(times=exp.start.time,forcing_values=1), #forcing
-                    cbind(times=exp.start.time,forcing_values=1)) #switch
+    forcings = cbind(times=exp.start.time,forcing_values=1)
   }
   
   if (model.type=="dermal"){
