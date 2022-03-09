@@ -175,6 +175,7 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
   "Cskin_exposed",
   "Cskin_unexposed",
   "Cmedia",
+  "Ain",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -209,6 +210,7 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Askin_exposed"="umol",
   "Askin_unexposed"="umol",
   "Amedia"="umol",
+  "Ain"="umol",
   "Cgut"="uM",
   "Cliver"="uM",
   "Cven"="uM",
@@ -265,7 +267,8 @@ model.list[["dermal_1subcomp"]]$state.vars <- c(
   "AUC",
   "Askin_exposed",
   "Askin_unexposed",
-  "Amedia"
+  "Amedia",
+  "Ain"
 ) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
