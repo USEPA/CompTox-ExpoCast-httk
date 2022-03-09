@@ -153,6 +153,14 @@ solve_model <- function(chem.name = NULL,
                       regression=TRUE),
                     ...)
 {
+#R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Cinhppmv <- NULL
+  #End R CMD CHECK appeasement.
+  
 # Handy string manipulation functions for processing variable names that adhere
 # to our naming conventions:
   lastchar <- function(x){substr(x, nchar(x), nchar(x))}
@@ -777,7 +785,6 @@ specification in compartment_units for model ", model)
                
 # Down-select to only the desired parameters:
   out <- out[,unique(c("time",monitor.vars,names(initial.values)))]
-  
   class(out) <- c('matrix','deSolve')
   
 
@@ -807,7 +814,7 @@ Set recalc.clearance to TRUE if desired.")
             signif(Rblood2plasma,3),".\n",
             "fAUC is area under the fetal plasma concentration curve in ",
             compartment_units[["fAUC"]], " units with Rfblood2plasma = ",
-            signif(Rfblood2plasma,3),".\n",
+            signif(parameters[["Rfblood2plasma"]],3),".\n",
             sep="")
       }
     } else {

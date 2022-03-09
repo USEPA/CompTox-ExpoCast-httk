@@ -324,6 +324,8 @@ model.list[["gas_pbtk"]]$routes <- list(
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
+# NOTE: C code Input variables (i.e. those that get forcing data) should not 
+#       be included in this list. See 'input.var.names' for C Input variables.
 model.list[["gas_pbtk"]]$state.vars <- c(
     "Agutlumen",
     "Agut",
@@ -338,8 +340,7 @@ model.list[["gas_pbtk"]]$state.vars <- c(
     "AUC",
     "Ainh", # SED 06-12-2021
     "Aexh", # SED 06-12-2021
-    "Amuc",
-    "Cinhppmv"
+    "Amuc"
     )        
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
@@ -354,7 +355,7 @@ model.list[["gas_pbtk"]]$required.params <- c(
    )
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["gas_pbtk"]]$exclude.fup.zero <- T
+model.list[["gas_pbtk"]]$exclude.fup.zero <- TRUE
   
 #Key forcings objects and names: name of forcing function as it appears in 
 #.c model code for specification to ode solver (initforc), fcontrol list
@@ -403,4 +404,7 @@ model.list[["gas_pbtk"]]$calcpc <- TRUE
 model.list[["gas_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-# model.list[["gas_pbtk"]]$exclude.fup.zero <- T
+# model.list[["gas_pbtk"]]$exclude.fup.zero <- TRUE
+
+# Filter out compounds belonging to select chemical classes
+model.list[["gas_pbtk"]]$chem.class.filt <- c("PFAS")

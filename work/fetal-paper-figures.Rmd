@@ -1,6 +1,6 @@
 ---
 title: "Kapraun et al. (submitted): Generic Human Gestational Model"
-author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, Lesa Aylward, André Dallmann, Richard Judson, and John F. Wambaugh"
+author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, André Dallmann, Richard Judson, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -12,7 +12,7 @@ wambaugh.john@epa.gov
 
 ## Abstract
 
-Chemical risk assessment considers potentially susceptible populations including pregnant women and developing fetuses. Humans encounter thousands of chemicals in their environments, few of which have been fully characterized in terms of internal human dosimetry and mode-of-action. Toxicokinetic (TK) information is needed to relate chemical exposure to potentially bioactive tissue concentrations. Observational data describing human gestational exposures are unavailable for most chemicals, but physiologically based TK (PBTK) models  provide a means for estimating such exposures. However, development of chemical-specific PBTK models requires considerable time and resources. As an alternative, generic PBTK approaches describe a standardized physiology and characterize chemicals with a set of standard physical and in vitro-measured descriptors. Here we report and evaluate a generic PBTK model of a human mother and developing fetus. We used a previously published set of formulas describing the major anatomical and physiological changes that occur during pregnancy to augment the High-Throughput Toxicokinetics (httk) software package. We then performed simulations using the httk pregnancy model to estimate the ratio of concentrations in maternal and fetal plasma and compared these estimates to literature in vivo measurements. We also evaluated the model with literature in vivo time-course measurements of maternal plasma concentrations in pregnant and non-pregnant women. Finally, , we demonstrated conceptual prioritization of chemicals measured in maternal [cord blood?] based on predicted fetal brain concentrations. This new chemical-independent model can be used with existing human-specific in vitro data for 957 chemicals as well as any new chemical data that become available. With sufficient evaluation, this gestational model may allow for in vitro to in vivo extrapolation of point of departure doses relevant to reproductive and developmental toxicity.
+Chemical risk assessment considers potentially susceptible populations including pregnant women and developing fetuses. Humans encounter thousands of chemicals in their environments, few of which have been fully characterized in terms of internal human dosimetry and mode-of-action. Toxicokinetic (TK) information is needed to relate chemical exposure to potentially bioactive tissue concentrations. Observational data describing human gestational exposures are unavailable for most chemicals, but physiologically based TK (PBTK) models estimate such exposures. However, development of chemical-specific PBTK models themselves requires considerable time and resources. As an alternative, generic PBTK approaches describe a standardized physiology and characterize chemicals with a set of standard physical and TK descriptors – primarily plasma protein binding and hepatic clearance. Here we report and evaluate a generic PBTK model of a human mother and developing fetus. We used a previously published set of formulas describing the major anatomical and physiological changes that occur during pregnancy to augment the High-Throughput Toxicokinetics (httk) software package. We performed simulations to estimate the ratio of concentrations in maternal and fetal plasma and compared these estimates to literature in vivo measurements. We evaluated the model with literature in vivo time-course measurements of maternal plasma concentrations in pregnant and non-pregnant women. Finally, we demonstrated conceptual prioritization of chemicals measured in maternal serum based on predicted fetal brain concentrations. This new generic model can be used for TK simulations of any of the 859 chemicals with existing human-specific in vitro data that were found to be within the domain of the model, as well as any new chemicals for which such data become available. With sufficient evaluation, this gestational model may allow for in vitro to in vivo extrapolation of point of departure doses relevant to reproductive and developmental toxicity.
 
 ## Prepare for session
 ```{r}
@@ -79,8 +79,8 @@ cat(paste("summarized data from over 100 studies covering ",
   length(unique(MFdata$DTXSID)[!(unique(MFdata$DTXSID)%in%c("","-"))]),
   " unique chemicals structures\n",sep=""))
   
-
-MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(info="DTXSID",model="pbtk"))
+# We don't want to exclude the volatiles and PFAS at this point:
+MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(info="DTXSID"))
 MFdata.httk[MFdata.httk$Chemical.Category=="bromodiphenylethers",
   "Chemical.Category"] <- "Bromodiphenylethers"  
 MFdata.httk[MFdata.httk$Chemical.Category=="organochlorine Pesticides",
@@ -153,62 +153,69 @@ times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
 # For each chemical with maternal-fetal ratio data and HTTK in vitro data:  
 for (this.id in unique(MFdata.httk$DTXSID))
 {
-# Load the chemical-specifc paramaters:
-  p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
-    fetal_fup_adjustment =TRUE,
-    suppress.messages=TRUE))
-# Skip chemicals where the 95% credible interval for Fup spans more than 0.1 to
-# 0.9 (that is, Fup is effectively unknown):
-    if (!is.na(p$Funbound.plasma.dist))
+  p <- suppressWarnings(parameterize_steadystate(dtxsid=this.id,
+                        suppress.messages=TRUE))
+  # skip chemicals where Fup is 0:  
+  if (p$Funbound.plasma>1e-4)
   {
-    if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
-      as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.11)
-    {
-      skip <- TRUE
-    } else skip <- FALSE
-  } else skip <- FALSE
-  
-  if (!skip)
-  {
-# Solve the PBTK equations for the full simulation time assuming 1 total daily
-# dose of 1 mg/kg/day spread out over three evenly spaces exposures:
-    out <- suppressWarnings(solve_fetal_pbtk(
-      parameters=p,
-      dose=0,
-      times=times,
-      daily.dose=1,
-      doses.per.day=3,
-      output.units = "uM",
-      suppress.messages=TRUE))
-# Identify the concentrations from the final (279th) day:
-    last.row <- which(out[,"time"]>279)
-    last.row <- last.row[!duplicated(out[last.row,"time"])]
-# Average over the final day:
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- mean(out[last.row,"Cplasma"])
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred"] <- mean(out[last.row,"Cfplasma"])
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred"] <- 
-      mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
 
-# Repeat the analysis without the adjustment to fetal Fup:
+    # Load the chemical-specifc paramaters:
     p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
-      fetal_fup_adjustment =FALSE,
-      suppress.messages = TRUE))
-    out <- suppressWarnings(solve_fetal_pbtk(
-      parameters=p,
-      dose=0,
-      times=times,
-      daily.dose=1,
-      doses.per.day=3,
-      output.units = "uM",
-      maxsteps=1e7,
-      suppress.messages = TRUE))
+                                                  fetal_fup_adjustment =TRUE,
+                                                  suppress.messages=TRUE))
+    # Skip chemicals where the 95% credible interval for Fup spans more than 0.1 to
+    # 0.9 (that is, Fup is effectively unknown):
+    if (!is.na(p$Funbound.plasma.dist))
+    {
+      if (as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][3])>0.9 & 
+          as.numeric(strsplit(p$Funbound.plasma.dist,",")[[1]][2])<0.11)
+      {
+        skip <- TRUE
+      } else skip <- FALSE
+    } else skip <- FALSE
+    
+    if (!skip)
+    {
+      # Solve the PBTK equations for the full simulation time assuming 1 total daily
+      # dose of 1 mg/kg/day spread out over three evenly spaces exposures:
+      out <- suppressWarnings(solve_fetal_pbtk(
+        parameters=p,
+        dose=0,
+        times=times,
+        daily.dose=1,
+        doses.per.day=3,
+        output.units = "uM",
+        suppress.messages=TRUE))
+      # Identify the concentrations from the final (279th) day:
+      last.row <- which(out[,"time"]>279)
+      last.row <- last.row[!duplicated(out[last.row,"time"])]
+      # Average over the final day:
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred"] <- mean(out[last.row,"Cplasma"])
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred"] <- mean(out[last.row,"Cfplasma"])
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred"] <- 
+        mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
       
-    last.row <- which(out[,"time"]>279) # The whole final day
-    last.row <- last.row[!duplicated(out[last.row,"time"])]
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred.nofup"] <- mean(out[last.row,"Cplasma"])
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred.nofup"] <- mean(out[last.row,"Cfplasma"])
-    MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred.nofup"] <- 
-      mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+      # Repeat the analysis without the adjustment to fetal Fup:
+      p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
+                                                    fetal_fup_adjustment =FALSE,
+                                                    suppress.messages = TRUE))
+      out <- suppressWarnings(solve_fetal_pbtk(
+        parameters=p,
+        dose=0,
+        times=times,
+        daily.dose=1,
+        doses.per.day=3,
+        output.units = "uM",
+        maxsteps=1e7,
+        suppress.messages = TRUE))
+      
+      last.row <- which(out[,"time"]>279) # The whole final day
+      last.row <- last.row[!duplicated(out[last.row,"time"])]
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"Mat.pred.nofup"] <- mean(out[last.row,"Cplasma"])
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"Fet.pred.nofup"] <- mean(out[last.row,"Cfplasma"])
+      MFdata.httk[MFdata.httk$DTXSID==this.id,"MFratio.pred.nofup"] <- 
+        mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+    }
   }
 }
 
@@ -316,8 +323,8 @@ cat(paste("Multiple observations were available for ",
   " of the chemicals,\n",sep=""))
 
 
-max.chem <- repeats[which(repeats$MFratio==max(repeats$MFratio)),]
-min.chem <- repeats[which(repeats$MFratio==min(repeats$MFratio)),]
+max.chem <- as.data.frame(repeats[which(repeats$MFratio==max(repeats$MFratio)),])
+min.chem <- as.data.frame(repeats[which(repeats$MFratio==min(repeats$MFratio)),])
 
 cat(paste("However, among the chemicals with repeated observations, the median \
 observations only ranged from ",
@@ -330,8 +337,8 @@ observations only ranged from ",
   max.chem[,"Chemical"],
   ".\n",sep=""))
   
-max.chem <- MFdata.main[which(MFdata.main$MFratio.pred==max(MFdata.main$MFratio.pred,na.rm=TRUE)),]
-min.chem <- MFdata.main[which(MFdata.main$MFratio.pred==min(MFdata.main$MFratio.pred,na.rm=TRUE)),]
+max.chem <- as.data.frame(MFdata.main[which(MFdata.main$MFratio.pred==max(MFdata.main$MFratio.pred,na.rm=TRUE)),])
+min.chem <- as.data.frame(MFdata.main[which(MFdata.main$MFratio.pred==min(MFdata.main$MFratio.pred,na.rm=TRUE)),])
 
 cat(paste("The predictions for all chemicals ranged from ",
   signif(min.chem[,"MFratio.pred"],2),
@@ -531,9 +538,9 @@ Fig4.table["Observed Mean (Min - Max)","All Fig 4"] <- paste(
   signif(max(MFdata.httk$MFratio),2),")",sep="")
 Fig4.table["Observed Standard Deviation","All Fig 4"] <- signif(sd(MFdata.httk$MFratio),2) 
 Fig4.table["Predicted Mean (Min - Max)","All Fig 4"] <-  paste(
-  signif(mean(MFdata.main$MFratio.pred),2)," (",
-  signif(min(MFdata.main$MFratio.pred),2)," - ",
-  signif(max(MFdata.main$MFratio.pred),2),")",sep="") 
+  signif(mean(MFdata.main$MFratio.pred,na.rm=TRUE),2)," (",
+  signif(min(MFdata.main$MFratio.pred,na.rm=TRUE),2)," - ",
+  signif(max(MFdata.main$MFratio.pred,na.rm=TRUE),2),")",sep="") 
 Fig4.table["RMSE","All Fig 4"] <- signif(RMSE(fit2),2)
 Fig4.table["R-squared","All Fig 4"] <- signif(summary(fit2)[["adj.r.squared"]],2)
 Fig4.table["p-value","All Fig 4"] <- signif(summary(fit2)[["coefficients"]]["MFratio.pred",4],2)
@@ -546,9 +553,9 @@ MFdata.sub1 <- subset(MFdata.httk,
 Fig4.table["Number of Chemicals","No PFAS/PAH"] <- length(unique(MFdata.sub1$DTXSID))
 Fig4.table["Number of Observations","No PFAS/PAH"] <- dim(MFdata.sub1)[1]
 Fig4.table["Observed Mean (Min - Max)","No PFAS/PAH"] <- paste(
-  signif(mean(MFdata.sub1$MFratio),2)," (",
-  signif(min(MFdata.sub1$MFratio),2)," - ",
-  signif(max(MFdata.sub1$MFratio),2),")",sep="")
+  signif(mean(MFdata.sub1$MFratio,na.rm=TRUE),2)," (",
+  signif(min(MFdata.sub1$MFratio,na.rm=TRUE),2)," - ",
+  signif(max(MFdata.sub1$MFratio,na.rm=TRUE),2),")",sep="")
 Fig4.table["Observed Standard Deviation","No PFAS/PAH"] <- signif(sd(MFdata.sub1$MFratio),2) 
 
 MFdata.sub2 <- subset(MFdata.main,
@@ -557,9 +564,9 @@ MFdata.sub2 <- subset(MFdata.main,
     "Polyaromatic Hydrocarbons")))
 
 Fig4.table["Predicted Mean (Min - Max)","No PFAS/PAH"] <-  paste(
-  signif(mean(MFdata.sub2$MFratio.pred),2)," (",
-  signif(min(MFdata.sub2$MFratio.pred),2)," - ",
-  signif(max(MFdata.sub2$MFratio.pred),2),")",sep="") 
+  signif(mean(MFdata.sub2$MFratio.pred,na.rm=TRUE),2)," (",
+  signif(min(MFdata.sub2$MFratio.pred,na.rm=TRUE),2)," - ",
+  signif(max(MFdata.sub2$MFratio.pred,na.rm=TRUE),2),")",sep="") 
 Fig4.table["RMSE","No PFAS/PAH"] <- signif(RMSE(fit2sub),2)
 Fig4.table["R-squared","No PFAS/PAH"] <- signif(summary(fit2sub)[["adj.r.squared"]],2)
 Fig4.table["p-value","No PFAS/PAH"] <- signif(summary(fit2sub)[["coefficients"]]["MFratio.pred",4],2)
@@ -579,9 +586,9 @@ Fig4.table["Observed Mean (Min - Max)","Replicates Only"] <- paste(
 Fig4.table["Observed Standard Deviation","Replicates Only"] <- signif(sd(MFdata.sub3$MFratio),2) 
 
 Fig4.table["Predicted Mean (Min - Max)","Replicates Only"] <-  paste(
-  signif(mean(MFdata.sub3$MFratio.pred),2)," (",
-  signif(min(MFdata.sub3$MFratio.pred),2)," - ",
-  signif(max(MFdata.sub3$MFratio.pred),2),")",sep="") 
+  signif(mean(MFdata.sub3$MFratio.pred,na.rm=TRUE),2)," (",
+  signif(min(MFdata.sub3$MFratio.pred,na.rm=TRUE),2)," - ",
+  signif(max(MFdata.sub3$MFratio.pred,na.rm=TRUE),2),")",sep="") 
 Fig4.table["RMSE","Replicates Only"] <- signif(RMSE(fit4sub),2)
 Fig4.table["R-squared","Replicates Only"] <- signif(summary(fit4sub)[["adj.r.squared"]],2)
 Fig4.table["p-value","Replicates Only"] <- signif(summary(fit4sub)[["coefficients"]]["MFratio.pred",4],2)
@@ -599,7 +606,7 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 ```{r dallmann2018_data, eval = TRUE}
 #TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
-TKstats <- httk::frechen2021
+TKstats <- httk::pregnonpregaucs
 
 
 ids <- unique(TKstats$DTXSID)
@@ -736,7 +743,8 @@ FigEa  <- ggplot(data=TKstats) +
   ggtitle("Non-Pregnant") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.1, y = 1000, label = "A", fontface =2)
     
 #print(FigEa)
 cat(paste(
@@ -767,7 +775,8 @@ FigEb  <- ggplot(data=TKstats) +
   ggtitle("Pregnant")+
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.1, y = 300, label = "B", fontface =2)
     
 #print(FigEb)
 cat(paste(
@@ -826,12 +835,13 @@ FigEd  <- ggplot(data=subset(TKstats,!is.na(Ratio.httk))) +
   ggtitle("Ratio") +
   theme_bw()  +
   theme(legend.position="none")+
-  theme( text  = element_text(size=12))
+  theme( text  = element_text(size=12)) + 
+  annotate("text", x = 0.5, y = 2.75, label = "C", fontface =2)
     
 dev.new()
 grid.arrange(FigEa,FigEb,FigEc,FigEd,nrow=2)
 
-write.csv(subset(TKstats,Parameter=="AUCinf" &
+write.csv(subset(TKstats,
   !is.na(Ratio.httk)),
   file="DallmanTable.txt")
   
@@ -1059,7 +1069,7 @@ FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
   theme_bw()  +
   theme(legend.position="bottom")+
   theme( text  = element_text(size=28))+ 
-  theme(legend.text=element_text(size=16))+ 
+  theme(legend.text=element_text(size=12))+ 
    theme(legend.title = element_blank())+
   guides(shape=guide_legend(nrow=3,byrow=TRUE))
 
@@ -1102,7 +1112,59 @@ FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
 print(FigFb)
 ```
 
+## Compare httk partition coefficients with PKsim:
+```{r read_pksim_pcs, eval = FALSE}
+pksim.pcs <- as.data.frame(read_excel("PartitionCoefficients.xlsx"))
+dim(pksim.pcs)
+for (this.id in unique(pksim.pcs$DTXSID))
+{
+  httk.PCs <- suppressWarnings(predict_partitioning_schmitt(dtxsid=this.id,
+                                           suppress.messages = TRUE))
+  p <- 
+    suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id, 
+    suppress.messages = TRUE))
+  httk.PCs[["Kplacenta2pu"]] <- p[["Kplacenta2pu"]] 
+  httk.PCs[["Fup"]] <- p[["Funbound.plasma"]]
+  lapply(httk.PCs,as.numeric)
+  this.subset <- subset(pksim.pcs,DTXSID==this.id)
+  for (this.tissue in unique(this.subset$Tissue))
+  {
+    if (any(regexpr(tolower(this.tissue),names(httk.PCs))!=-1))
+    {
+      pksim.pcs[pksim.pcs$DTXSID==this.id & pksim.pcs$Tissue==this.tissue,
+        "HTTK.pred"] <-     
+        httk.PCs[regexpr(tolower(this.tissue),names(httk.PCs))!=-1][[1]]*
+        httk.PCs[["Fup"]][[1]]         
+    }
+  }
+}
+colnames(pksim.pcs)[colnames(pksim.pcs) ==
+                      "Tissue-to-plasma partition coefficient"] <- "PKSim.pred"
+colnames(pksim.pcs)[colnames(pksim.pcs) ==
+        "Method for calculating tissue-to-plasma partition coefficients"] <- 
+  "Method"
+pksim.pcs[,"Method"] <- as.factor(pksim.pcs[,"Method"])
+pksim.pcs[,"Drug"] <- as.factor(pksim.pcs[,"Drug"])
+pksim.pcs[,"Tissue"] <- as.factor(pksim.pcs[,"Tissue"])
 
+
+pksim.pcs[,"PKSim.pred"] <- as.numeric(
+  pksim.pcs[,"PKSim.pred"])
+
+```
+```{r compare_pksim_pcs, eval = FALSE}
+pksim.pcs <- httk::pksim.pcs
+
+pksim.fit1 <- lm(data=pksim.pcs,
+                log10(PKSim.pred)~log10(HTTK.pred))
+summary(pksim.fit1)
+
+pksim.fit2 <- lm(data=pksim.pcs,
+                log10(PKSim.pred)~log10(HTTK.pred)+
+                  Drug+Tissue+Method)
+summary(pksim.fit2)
+
+```
 
 
 
@@ -1117,7 +1179,13 @@ nonfluoros <- chem.physical_and_invitro.data$CAS[
 maternal.list <- maternal.list[maternal.list %in% intersect(nonvols,nonfluoros)]
 ```
 
-## Make predictions for three daily doses from week 13 to full term
+
+For the plot we need a data frame with a column "Ratio.pred" broken down by the
+different contributions to uncertainty being plotted (columne "Uncertainty").
+We build this plot by making multiple versions of pred.table and concatonating
+them together at the end.
+
+## Make predictions for fetal:maternal plasma ratio using three daily doses from week 13 to full term
 ```{r wang2018_makepreds, eval = TRUE}
 
 pred.table1 <- subset(suppressWarnings(get_cheminfo(
@@ -1129,6 +1197,7 @@ pred.table1$Compound <- gsub("\"","",pred.table1$Compound)
 for (this.cas in maternal.list)
 {
   Fup <- suppressWarnings(subset(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma)
+  # Check if Fup is provided as a distribution:
   if (regexpr(",",Fup)!=-1)
   {
     if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
@@ -1137,11 +1206,23 @@ for (this.cas in maternal.list)
     {
       skip <- TRUE
     } else skip <- FALSE
-  } else if (Fup== 0) 
+    Fup.upper <- as.numeric(strsplit(Fup,",")[[1]][3])
+    Fup <- as.numeric(strsplit(Fup,",")[[1]][1])
+    # These results are actually from a Bayesian posterior, but we can approximate that
+    # they are normally distributed about the median to estimate a standard deviation:
+    Fup.sigma <- (Fup.upper - Fup)/1.96
+  # If it's not a distribution use defaults (see Wambaugh et al. 2019)
+  } else if (as.numeric(Fup)== 0) 
   {
     skip <- TRUE
-  } else skip <- FALSE
+  } else {
+    skip <- FALSE
+    Fup <- as.numeric(Fup)
+    Fup.sigma <- Fup*0.4
+    Fup.upper  <- min(1,(1+1.96*0.4)*Fup)
+  }
   
+  # Only run the simulation if we have the necessary parameters:
   if (!skip)
   {  
     out <- suppressWarnings(solve_fetal_pbtk(
@@ -1153,88 +1234,105 @@ for (this.cas in maternal.list)
       suppress.messages=TRUE))
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
+    pred.table1[pred.table1$CAS==this.cas,"fup"] <- signif(Fup,3)
+    pred.table1[pred.table1$CAS==this.cas,"fup.sigma"] <- signif(Fup.sigma,3)
+    pred.table1[pred.table1$CAS==this.cas,"fup.upper"] <- signif(Fup.upper,3)
     pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"] <- 
-      mean(out[last.row,"Cfplasma"])/mean(out[last.row,"Cplasma"]) 
+      signif(mean(out[last.row,"Cfplasma"])/mean(out[last.row,"Cplasma"]),3)
   }
 }
 ```
 
-## Create final table holding all predicitons for paper:
+
+## Create final table holding all predictions for paper:
 ```{r brain_uncertainty_prop_table, eval = TRUE}
 PC.table <- pred.table1
 colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
+```
 
+### Error in fetal:maternal ratio (inverse of maternal:fetal ratio):
+```{r Rfetmat_uncertainty, eval = TRUE}
 pred.table3 <- pred.table1
 pred.table3$Uncertainty <- "Plasma Error (Fig. 4)"
 empirical.error <- RMSE(fit2sub)
 for (this.cas in maternal.list)
 {
 
-  pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"] <- 
-#    pred.table2[pred.table2$CAS==this.cas,"MFratio.pred"]*(1+empirical.error) 
-    1/((1/pred.table1[pred.table3$CAS==this.cas,"Ratio.pred"])*(1-1.96*empirical.error)) 
+  pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"] <- signif(
+    1/((1/pred.table1[pred.table3$CAS==this.cas,"Ratio.pred"])*
+         (1-1.96*empirical.error)), 3)
 }
 # Update final table for paper:
-PC.table$RMSE <- RMSE(fit2sub)
+PC.table$RMSE <- signif(RMSE(fit2sub),3)
 PC.table$R.plasma.FtoM.upper <- pred.table3$Ratio.pred
+```
 
+### brain:plasma partitioning
+```{r Rfetbrain, eval = TRUE}
 pred.table4 <- pred.table1
-pred.table4$Uncertainty <- "Fetal Brain Partioning"
+pred.table4$Uncertainty <- "Fetal Brain Partitioning"
 for (this.cas in maternal.list)
 {
   p <- suppressWarnings(parameterize_fetal_pbtk(chem.cas=this.cas,
       fetal_fup_adjustment=FALSE,
       suppress.messages=TRUE))
   Kbrain2pu <- p$Kfbrain2pu
-  fup <- p$Fraction_unbound_plasma_fetus
-#  out <- solve_fetal_pbtk(
-#    chem.cas=this.cas,
-#    dose=0,
-#    daily.dose=1,
-#    doses.per.day=3,
-#    fetal_fup_adjustenment=FALSE)
-#  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
-  pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"] <- 
-    pred.table3[pred.table3$CAS==this.cas,"Ratio.pred"]*
-    Kbrain2pu * fup
+  fup <- pred.table5[pred.table5$CAS==this.cas,"fup"]
+  pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"] <- signif(
+     PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]*
+    Kbrain2pu * fup, 3)
   PC.table[PC.table$CAS==this.cas,"Kbrain2pu"] <- Kbrain2pu
-  PC.table[PC.table$CAS==this.cas,"fup"] <- fup
-#  PC.table[PC.table$CAS==this.cas,"Rb2p"] <- Kbrain2pu
   PC.table[PC.table$CAS==this.cas,"R.brain.FtoM"] <- 
     pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"]
 }
+```
+
+### brain:plasma uncertainty partitioning
+```{r Rfetbrain_uncertainty, eval = TRUE}
 
 pred.table5 <- pred.table1
-pred.table5$Uncertainty <- "Brain Partitioning Error"
+pred.table5$Uncertainty <- "Brain Partitioning Error (Pearce et al., 2017)"
 for (this.cas in maternal.list)
 {                                             
   p <- suppressWarnings(parameterize_fetal_pbtk(chem.cas=this.cas,
       fetal_fup_adjustment=FALSE,
       suppress.messages=TRUE))
   Kbrain2pu <- p$Kfbrain2pu
-  fup <- p$Fraction_unbound_plasma_fetus  
-#  out <- solve_fetal_pbtk(
-#    chem.cas=this.cas,
-#    dose=0,
-#    daily.dose=1,
-#    doses.per.day=3,
-#    fetal_fup_adjustenment=FALSE)
-#  Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
+
+  fup <- pred.table5[pred.table5$CAS==this.cas,"fup"]
+  sigma.fup <- pred.table5[pred.table5$CAS==this.cas,"fup.sigma"]
+  Rmatfet <- 1/PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]
+  Rbrain2matblood <- Kbrain2pu * fup / Rmatfet
+
 # From Pearce et al. (2017) PC paper:
-  Kbrain2pu.upper <- Kbrain2pu*10^(1.96*0.647)
-  quad.error <- ((RMSE(fit2sub) /
-    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"])^2 +
-    (log(10)*10^0.647)^2)^(1/2)
+  sigma.logKbrain <- 0.647
+  Kbrain2pu.upper <- signif(10^(log10(Kbrain2pu)+1.96*sigma.logKbrain),3)
+
+  error.Rmatfet <- PC.table[PC.table$CAS==this.cas,"RMSE"]
+  sigma.Rbrain2matblood <- Rbrain2matblood * 
+    (log(10)^2*sigma.logKbrain^2 +
+    sigma.fup^2/fup^2 +
+    error.Rmatfet^2/Rmatfet^2)^(1/2)
+  Rbrain2matblood.upper <- Rbrain2matblood * 
+    (1 + 1.96*(log(10)^2*sigma.logKbrain^2 +
+    sigma.fup^2/fup^2 +
+    error.Rmatfet^2/Rmatfet^2)^(1/2))
   pred.table5[pred.table5$CAS==this.cas,"Ratio.pred"] <- 
-    pred.table1[pred.table1$CAS==this.cas,"Ratio.pred"]*Kbrain2pu*
-    (1+1.96*quad.error)* fup 
-  PC.table[PC.table$CAS==this.cas,"Kbrain2pu.upper"] <- Kbrain2pu.upper
-  PC.table[PC.table$CAS==this.cas,"Quad.error"] <- quad.error
+    signif(Rbrain2matblood.upper,3)
+  PC.table[PC.table$CAS==this.cas,"sigma.logKbrain"] <- 
+    signif(sigma.logKbrain, 3)
+  PC.table[PC.table$CAS==this.cas,"Kbrain2pu.upper"] <- 
+    signif(Kbrain2pu.upper, 3)
+  PC.table[PC.table$CAS==this.cas,"sigma.Rbrain2matblood"] <- 
+    signif(sigma.Rbrain2matblood, 3)
   PC.table[PC.table$CAS==this.cas,"R.brain.FtoM.upper"] <- 
     pred.table5[pred.table5$CAS==this.cas,"Ratio.pred"]
 }
+```
 
+### Combine different ratio predicitons together for figure
+```{r Wang_Uncertainty_Propagation, eval = TRUE}
 
 pred.levels <- pred.table5$Compound[order(pred.table5$Ratio.pred)]
 
@@ -1299,7 +1397,7 @@ FigG  <- ggplot(data=pred.table) +
 print(FigG)
 ```
 
-## Look at ioniation state:
+## Look at ionization state:
 ```{r wang2018_details, eval = TRUE}
 
 for (this.col in 7:14)
@@ -1404,7 +1502,7 @@ FigA  <- ggplot(data=fup.table) +
     color=Charge),
     size=3)   +
   geom_abline(slope=1, intercept=0) + 
-  ylab(expression(paste("Predicted Neonate ",f[up]))) + 
+  ylab(expression(paste("Adjusted Neonate ",f[up]))) + 
   xlab(expression(paste(italic("In vitro")," Measured Adult ",f[up]))) +
    scale_x_log10(label=scientific_10) +
    scale_y_log10(label=scientific_10) +
@@ -1492,9 +1590,9 @@ cat(paste("In Figure X we examine the ratios predicted for the ",
   sep=""))
 
 
-cat(paste("We observe a median value of ",
+cat(paste("We observe a median ratio of ",
   signif(median(MFratio.pred$MFratio.pred,na.rm=TRUE),3),
-  " ranging from ",
+  ", with values ranging from ",
   signif(min.chem[,"MFratio.pred"],3),
   " for ",
   min.chem[,"DTXSID"],
@@ -1518,10 +1616,10 @@ lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,
 # Code used to create data distributed with vignette
 ```{r create_distributable_data, eval = FALSE}
 aylward2014 <-MFdata
-frechen2021 <- TKstats
+pregnonpregaucs <- TKstats
 fetalpcs <- Curley.pcs
 wang2018 <- Wangchems
 
-save(aylward2014,frechen2021,fetalpcs,wang2018,
+save(aylward2014,pregnonpregaucs,fetalpcs,wang2018,pksim.pcs,
      file="Kapraun2022Vignette.RData",version=2)
 ```

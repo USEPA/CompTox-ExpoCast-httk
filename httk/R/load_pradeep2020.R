@@ -30,12 +30,12 @@
 load_pradeep2020 <- function(overwrite=FALSE,target.env=.GlobalEnv)
 {
   cat(paste("Loading predictions from Pradeep et al. (2020) for",
-            dim(pradeep2020)[1],"chemicals.\n"))
+            dim(httk::pradeep2020)[1],"chemicals.\n"))
   cat(paste("Existing data are",
             ifelse(overwrite,""," not"),
             " being overwritten.\n",sep=""))
   cat("Please wait...\n")
-  assign("chem.physical_and_invitro.data", add_chemtable(pradeep2020,
+  assign("chem.physical_and_invitro.data", add_chemtable(httk::pradeep2020,
                                                          current.table=chem.physical_and_invitro.data,
                                                          data.list=list(
                                                            CAS = 'CASRN',

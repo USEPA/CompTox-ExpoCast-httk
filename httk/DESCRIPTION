@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.4.1
-Date: 2021-06-25
+Version: 99.4.2
+Date: 2022-03-09
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
@@ -27,23 +27,25 @@ Authors@R: c(
            person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
              role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4024-534X")), 
+           person("Sarah", "Davidson", email = "davidson.sarah.e@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
            person("Robert", "Pearce", role = c("aut"),
              comment = c(ORCID = "0000-0003-3168-4049")), 
-           person("Caroline", "Ring", email = "cring@toxstrategies.com", 
+           person("Caroline", "Ring", email = "Ring.Caroline@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0002-0463-1251")), 
            person("Greg", "Honda", email = "honda.gregory@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0001-7713-9850")), 
-           person("Mark", "Sfeir", email = "sfeir.mark@epa.gov", 
+           person("Mark", "Sfeir", 
              role = c("aut")), 
-           person("Matt", "Linakis", email = "matthew.linakis.1@us.af.mil", 
+           person("Matt", "Linakis", email = "MLINAKIS@ramboll.com", 
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
-           person("Sarah", "Davidson", email = "davidson.sarah.e@epa.gov", 
-             role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
+           person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
+             role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
-           person("Shannon", "Bell", email="sbell@ils-inc.com",
-             role = c("ctb")), 
-           person("Xiaoqing", "Chang", email="xchang@ils-inc.com",
+           person("Shannon", "Bell", email="Shannon.bell@inotivco.com",
+             role = c("ctb"), comment = c(ORCID= "0000-0002-5754-6085")), 
+           person("Xiaoqing", "Chang", email="Xiaoqing.chang@inotivco.com",
              role = c("ctb"), comment = c(ORCID = "0000-0003-0752-1848")), 
            person("Todor", "Antonijevic", email="tantonijevic@toxstrategies.com",
              role = c("ctb"), comment = c(ORCID = "0000-0002-0248-8412")),
@@ -100,14 +102,15 @@ BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
 Packaged: 2019-07-25 18:56:22 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
+  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>),  
   Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
-  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>), 
+  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
   Mark Sfeir [aut], 
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
-  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>), 
+  Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>), 
   Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
-  Shannon Bell [ctb],
+  Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb], 
