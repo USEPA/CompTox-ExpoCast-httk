@@ -17,7 +17,8 @@ States = {
 	Astratum_corneum_unexposed,	# Amount in unexposed stratum corneum (umol)
 	Aviable_epidermis_exposed,	# Amount in exposed dermal layer (umol)
 	Aviable_epidermis_unexposed,	# Amount in unexposed dermal layer (umol)
-	Amedia,				# ?
+	Amedia,				# Amount in media (umol)
+	Ain,				# Total amount that enters body (umol)
 };
 
 # End of STATE VARIABLES
@@ -89,10 +90,10 @@ Klung2pu = 0;
 
 Qcardiacc = 0.0;
 Qgfrc = 0.0;
-Qskinc = 0; 		# for viable epidermis ONLY
-Qgutc = 0;
-Qkidneyc = 0;
-Qliverc = 0;
+Qskinf = 0; 		# for viable epidermis ONLY
+Qgutf = 0;
+Qkidneyf = 0;
+Qliverf = 0;
 
 # Volume of the ... per kg of body weight (L/kg BW)
 Vartc = 0;
@@ -154,9 +155,9 @@ Initialize{
 	Qgfr = Qgfrc * pow(BW, 0.75) * 24;
 	
 	# Flow rates
-	Qgut = Qcardiac * Qgutc;
-	Qkidney = Qcardiac * Qkidneyc;
-	Qliver = Qcardiac * Qliverc;
+	Qgut = Qcardiac * Qgutf;
+	Qkidney = Qcardiac * Qkidneyf;
+	Qliver = Qcardiac * Qliverf;
 	
 	# Surface area of exposed skin
 	SA_exposed = Fskin_exposed * totalSA;
@@ -173,7 +174,7 @@ Initialize{
 	Vviable_epidermis_unexposed = Vviable_epidermis * (1 - Fskin_exposed);
 
 	# Flow rates of skin 
-	Qskin = Qcardiac * Qskinc;
+	Qskin = Qcardiac * Qskinf;
 	Qskin_unexposed = Qskin * Vskin_unexposed / Vskin;
 	Qskin_exposed = Qskin * Vskin_exposed / Vskin;
 	Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qskin);
@@ -210,13 +211,16 @@ Dynamics{
 	Cmedia = Amedia / Vmedia;
 	
 	# Rate of absorbtion into skin from media (umol / day). This is zero if Amedia is zero (non negative rate).
-	R_absorbtion = (Amedia ? Pmedia2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) : 0.0); 
+	Rin = (Amedia ? Pmedia2sc * SA_exposed * 24 * 0.001 * (Cmedia - Cstratum_corneum_exposed / Ksc2media) : 0.0); 
 	
 	# Rate of change of chemical in media (umol / day).
-	dt (Amedia) = - R absorbtion;
+	dt (Amedia) = - Rin;
+	
+	# Rate of change of total amount that enters body (umol / day).
+	dt (Ain) = Rin;
 	
 	# Rate of change of chemical in skin (umol / day).
-	dt (Astratum_corneum_exposed) = R_absorbtion + Psc2ve * SA_exposed * 24 * 0.001 * (Cviable_epidermis_exposed - Cstratum_corneum_exposed / Ksc2ve)  ;
+	dt (Astratum_corneum_exposed) = Rin + Psc2ve * SA_exposed * 24 * 0.001 * (Cviable_epidermis_exposed - Cstratum_corneum_exposed / Ksc2ve)  ;
 	dt (Astratum_corneum_unexposed) = Psc2ve * (totalSA - SA_exposed) * 24 * 0.001 * (Cviable_epidermis_unexposed - Cstratum_corneum_unexposed / Ksc2ve);
 	dt (Aviable_epidermis_exposed) = Qskin_exposed * (Cart - Cviable_epidermis_exposed * Rblood2plasma / Kve2pu / Fraction_unbound_plasma) + Psc2ve * SA_exposed * 24 * 0.001 * (Cstratum_corneum_exposed / Ksc2ve - Cviable_epidermis_exposed);
 	dt (Aviable_epidermis_unexposed) = Qskin_unexposed * (Cart - Cviable_epidermis_unexposed * Rblood2plasma / Kve2pu / Fraction_unbound_plasma) + Psc2ve * (totalSA - SA_exposed) * 24 * 0.001 * (Cstratum_corneum_unexposed / Ksc2ve - Cviable_epidermis_unexposed);

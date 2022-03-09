@@ -16,6 +16,7 @@ States = {
      Askin_exposed,	# Amount in exposed skin (umol)
      Askin_unexposed,	# Amount in unexposed skin (umol)
      Amedia,		# Amount in media (e.g. lotion, ointment, etc.) (umol)
+     Ain,		# Total amount that enters the body (umol)
 };
 
 # End of STATE VARIABLES
@@ -194,13 +195,16 @@ Dynamics{
 	Cmedia = Amedia / Vmedia;
 
 	# Rate of absorbtion into skin from media (umol / day). This is zero if Amedia is zero (non negative rate).
-	R_absorbtion = (Amedia ? Kp * SA_exposed * 24 * 0.001 * (Cmedia - Cskin_exposed / Kskin2media) : 0.0);
+	Rin = (Amedia ? Kp * SA_exposed * 24 * 0.001 * (Cmedia - Cskin_exposed / Kskin2media) : 0.0);
 	
-	#Rate of change of chemical in media (umol / day).
-	dt (Amedia) = - R_absorbtion;
+	# Rate of change of chemical in media (umol / day).
+	dt (Amedia) = - Rin;
+
+	# Rate of change of total amount that enters the body (umol / day).
+	dt (Ain) = Rin;
 	
 	# Rate of change of chemical in skin (umol / day).
-	dt (Askin_exposed) = Qskin_exposed * (Cart - Cskin_exposed * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma) + R_absorbtion;
+	dt (Askin_exposed) = Qskin_exposed * (Cart - Cskin_exposed * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma) + Rin;
 	dt (Askin_unexposed) = Qskin_unexposed * (Cart - Cskin_unexposed * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma);
 	
 	# Rate of change of chemical in rest of body (umol / day).
