@@ -263,14 +263,12 @@ model.list[["dermal"]]$routes <- list(
   #   "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Amedia",
-    "dose.type" = "add")   
+    "dose.type" = "replace")   
 )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["dermal"]]$dosing.params <- c(
   "initial.dose",
-  "daily.dose",
-  "doses.per.day",
   "dosing.matrix",
   "forcings")
 

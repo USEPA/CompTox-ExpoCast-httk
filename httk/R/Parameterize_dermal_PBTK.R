@@ -64,6 +64,9 @@
 #' excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 #' \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 #' \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
+#' \item{Qlungf}{Fraction of cardiac output flowing to the lung.}
+#' \item{Qskinf}{Fraction of cardiac output flowing to the skin, or to the viable
+#' epidermis layer of the skin when model.type="dermal".}
 #' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
 #' blood to the concentration in the plasma from available_rblood2plasma.}
 #' \item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
@@ -71,8 +74,16 @@
 #' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+#' \item{Vmucc}{Volume of the ? per kg body weight, L/kg BW. (Not used in model?)}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+#' \item{Vskinc}{Volume of the skin per kg body weight, L/kg BW.}
+#' \item{Vstratum_corneumc}{Volume of the stratum corneum layer of the skin per 
+#' kg body weight, L/kg BW. This parameter does not appear when 
+#' model.type="dermal_1subcomp".}
+#' \item{Vviable_epidermisc}{Volume of the viable epidermis layer of the skin per 
+#' kg body weight, L/kg BW. This parameter does not appear when 
+#' model.type="dermal_1subcomp".}
 #' \item{Kp}{Permeability, cm/h.} \item{Kskin2media}{Partition coefficient
 #' between exposed skin and media.} \item{totalSA}{Total body surface area,
 #' cm^2.} \item{Vmedia}{Volume of media, L.} \item{skin_depth}{Skin skin_depth, cm.}
@@ -107,8 +118,11 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               regression=T,
                               suppress.messages=F,
                               minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
-                              skin_depth=0.3,skin.pH=7,
-                              vmax.km=F, BW=70, height = 175,
+                              skin_depth=0.3,
+                              skin.pH=7,
+                              vmax.km=F, 
+                              BW=70, 
+                              height = 175,
                               ...) 
 {
   physiology.data <- physiology.data
@@ -238,9 +252,6 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Qliverf= flows[['Qtotal.liverf']] - flows[['Qgutf']],
     Qgfrc = as.numeric(QGFRc))) 
   
-  if (model.type=="dermal"){ #rename Qskinf for dermal model (2 subcompartments)
-    names(outlist)[names(outlist)=="Qskinf"] <- "Qviable_epidermisf"
-  }
   # end flows  
   
   # Begin volumes:
@@ -341,40 +352,4 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     
 
   return(outlist[sort(names(outlist))])
-}
-
-parameterize_dermal_1subcomp_pbtk <- function(chem.cas=NULL,
-                                              chem.name=NULL,
-                                              dtxsid=NULL,
-                                              model.type="dermal_1subcomp", 
-                                              species="Human",
-                                              default.to.human=F,
-                                              tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
-                                              force.human.clint.fup = F,
-                                              clint.pvalue.threshold=0.05,
-                                              adjusted.Funbound.plasma=T,
-                                              regression=T,
-                                              suppress.messages=F,
-                                              minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
-                                              skin_depth=0.3,skin.pH=7,
-                                              vmax.km=F, BW=70, height = 175,
-                                              ...) 
-{
-  return(
-    parameterize_dermal_pbtk(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid,
-                             model.type=model.type,
-                             species=species,
-                             default.to.human=default.to.human,
-                             tissuelist=tissuelist,
-                             force.human.clint.fup = force.human.clint.fup,
-                             clint.pvalue.threshold=clint.pvalue.threshold,
-                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                             regression=regression,
-                             suppress.messages=suppress.messages,
-                             minimum.Funbound.plasma = minimum.Funbound.plasma, #added copying parameterize_gas_pbtk, AEM 1/13/2022
-                             skin_depth=skin_depth,skin.pH=skin.pH,
-                             vmax.km=vmax.km, BW=BW, height = height)
-  )
 }

@@ -2,7 +2,7 @@
 #model.list[["dermal_1subcomp"]]$analytic.css.func <- "calc_analytic_css_dermal_1subcomp" # added by MB 4/8/2020
 
 # The is the R function for generating model parameters:
-model.list[["dermal_1subcomp"]]$parameterize.func <- "parameterize_dermal_1subcomp_pbtk" 
+model.list[["dermal_1subcomp"]]$parameterize.func <- "parameterize_dermal_pbtk" 
 
 # Function called for running the model:
 model.list[["dermal_1subcomp"]]$solve.func <- "solve_dermal_pbtk"
@@ -238,15 +238,15 @@ model.list[["dermal_1subcomp"]]$routes <- list(
   #   "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Amedia",
-    "dose.type" = "add")   
+    "dose.type" = "replace")   
 )
 
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["dermal_1subcomp"]]$dosing.params <- c(
   "initial.dose",
-  "daily.dose",
-  "doses.per.day",
+  #"daily.dose",
+  #"doses.per.day",
   "dosing.matrix",
   "forcings")
 

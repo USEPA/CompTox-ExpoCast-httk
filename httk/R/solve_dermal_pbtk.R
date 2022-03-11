@@ -33,49 +33,51 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' the chemical must be identified by either CAS, name, or DTXSIDs.
+#' @param model.type Choice of dermal model, either the default "dermal" for the 
+#' model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
+#' or "dermal_1subcomp" for the model with 1 compartment for the skin.
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
 #' @param tsteps The number time steps per hour.
-#' @param concentration Concentration of media at dosing times, units/L.
-#' @param doses.per.day Number of doses per day.
-#' @param initial.values Vector containing the initial concentrations or
-#' amounts of the chemical in specified tissues with units corresponding to
-#' output.units.  Defaults are zero.
-#' @param initial.value.units Vector of character strings containing the units
-#' corresponding to 'initial.values' specified for the model outputs.
-#' Default is assuming the units match expected compartment units for the model.
 #' @param plots Plots all outputs if true.
+#' @param monitor.vars Which variables are returned as a function of time. 
+#' Default values of NULL looks up variables specified in modelinfo_MODEL.R
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param use.amounts Return outputs as amounts instead of concentrations.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
-#' @param dosing.matrix Matrix consisting of three columns named
-#' "concentration", "Vmedia", and "time" containing the dosing times, days,
-#' with the applied concentration, units/L, and the volume of the applied
-#' media, L.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param skin_depth skin_depth of skin, cm, used in calculating Kp.
 #' @param skin.pH pH of dermis/skin, used in calculating Kp and Kskin2media.
-#' @param vmax.km Whether or not to use Michaelis-Menten kinetics
+#' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
+#' Vmax and Km in parameters instead of Clmetabolismc and
+#' million.cells.per.gliver.
+#' @param BW Body weight, kg.
+#' @param height Height in cm.
+#' @param Vmedia Volume of media applied to skin in L, defaults to 0.01 L.
+#' @param initial.dose Concentration
+#' @param dermal.dosing Matrix consisting of three columns named
+#' "concentration", "Vmedia", and "time" containing the dosing times, days,
+#' with the applied concentration, units/L, and the volume of the applied
+#' media, L.
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -101,80 +103,75 @@
 #' @export solve_dermal_pbtk
 #' @useDynLib httk
 #' @import deSolve
-solve_dermal_pbtk <- function(chem.name = NULL,
-                    chem.cas = NULL,
-                    dtxsid = NULL, 
+solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
+                    chem.cas = NULL, #solve_model
+                    dtxsid = NULL,#solve_model
                     model.type = "dermal", #can also be "dermal_1subcomp"
-                    times=NULL,
-                    parameters=NULL,
-                    days=10,
-                    species="Human",
-                    tsteps = 4, # tsteps is number of steps per hour
-                    dose = NULL, #changed from concentration = 1
-                    dosing.matrix=NULL,
-                    forcings=NULL, # added by AEM, 2/1/2022, copying solve_gas_pbtk
-                    exp.start.time = 0, #default starting time in specifying forcing exposure, AEM 2/1/2022
-                    exp.conc = 1, #default exposure concentration for forcing data series, AEM 2/1/2022
-                    exp.duration = 12, #for forcing functions, AEM, 2/1/2022
-                    period = 24, #for forcing functions, AEM, 2/1/2022
-                    daily.dose=NULL, #added
-                    doses.per.day=NULL,
-                    initial.values=NULL,
-                    initial.value.units=NULL,
-                    plots=F,
-                    suppress.messages=F,
-                    #use.amounts=F, #added
-                    input.units="mg/kg", #added
-                    output.units=NULL, #added
-                    method="lsoda",rtol=1e-8,atol=1e-12,
-                    default.to.human=F,
-                    recalc.blood2plasma=F,
-                    recalc.clearance=F,
-                    adjusted.Funbound.plasma=T,
-                    regression=T,
-                    restrictive.clearance = T,
-                    minimum.Funbound.plasma=0.0001, #added
-                    monitor.vars=NULL, #added
-                    skin_depth=0.3,skin.pH=7,
-                    vmax.km=F,
+                    times=NULL, #solve_model
+                    parameters=NULL, #solve_model
+                    days=10, #solve_model
+                    tsteps = 4, # solve_model
+                    #initial.values=NULL, #solve_model
+                    #initial.value.units=NULL, #solve_model
+                    plots = FALSE, #solve_model
+                    monitor.vars=NULL, #solve_model
+                    suppress.messages=F, #solve_model
+                    species = "Human", #solve_model
+                    #input.units="mg/kg", #solve_model DOSING
+                    #output.units=NULL, #solve_model DOSING
+                    method="lsoda",rtol=1e-8,atol=1e-12, #solve_model
+                    recalc.blood2plasma=FALSE, #solve_model
+                    recalc.clearance=FALSE, #solve_model
+                    adjusted.Funbound.plasma=TRUE, #solve_model
+                    minimum.Funbound.plasma=1e-4, #solve_model
+                    regression=TRUE, #pars
+                    default.to.human=FALSE, #pars
+                    restrictive.clearance = TRUE,
+                    clint.pvalue.threshold=0.05, #pars
+                    skin_depth=0.3, #pars
+                    skin.pH=7, #pars
+                    vmax.km=F, #pars
+                    BW = 70, #pars
+                    height=175, #pars
+                    Vmedia = 0.01, # single value
+                    initial.dose = 0.1, 
+                    dosing.dermal = NULL,
+                    #doses.per.day = NULL,
+                    #daily.dose = NULL,
+                    dosing.matrix = NULL,
                     ...)
 {
-
-  # COPIED BY AEM, 2/1/2022 from solve_gas_pbtk
-  #Only generate the forcings if other dosing metrics are null; they're not
-  #designed to work together in a very meaningful way
-  if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
-  {
-    if (exp.duration > period){
-      stop('If not specifying \'dose.matrix\' data series explicitly, 
-      additional arguments are needed to generate a \'dose.matrix\' argument
-      with a cyclic exposure pattern across the simulation:
-      exp.conc, period, exp.start.time, exp.duration, and days simulated.')
-    }
-    period <- period/24 #convert time period in hours to days
-    exp.duration <- exp.duration/24 #convert exposure duration in hours to days
+  # DOSING
+  # Set start.time for dosing
+  if (is.null(times)) {start.time = 0} else {start.time = times[1]}
+  
+  # Create forcing function for Vmedia - single value
+  if (length(Vmedia)!=1) stop(
+    "Vmedia input must be one value. To change the volume of the media over time, 
+    use the dosing.dermal input.") else {
+    forcings = cbind(times = start.time, forcing_values = Vmedia)
+  }
+  
+  # Account for dosing.dermal
+  if (!is.null(dosing.dermal)){ 
+    if (!is.null(dosing.matrix)) stop(
+      "Either dosing.matrix or dosing.dermal can be used, but not both. One must be null.")
+    if (any(is.na(dosing.dermal))) stop(#check for NaNs
+      "Dosing matrix dosing.dermal cannot contain NA values.")
+    if (dim(dosing.dermal)[2]!=3) stop( #check for dimensions
+    "dosing.dermal should be matrix with three named columns: time, 
+    concentration, and Vmedia.")
     
-    #Assemble function for initializing 'forcings' argument data series with
-    #certain periodicity and exposure concentration in default case, used if 
-    #the 'forcings' argument is not otherwise specified.
-    forcings_gen <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-      #Provide for case in which forcing functionality is effectively turned off
-      if (exp.conc == 0) {
-        conc.matrix = NULL
-      } else {
-        Nrep <- ceiling((days - exp.start.time)/period) 
-        times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-        #times <- sort(c(times,times)) # two forcings, so two times AEM, 2/1/2022
-        forcing_values  <- rep(c(exp.conc,0), Nrep) #exp.conc, 0 -forcing; 0,0 -switch, AEM 2/1/2022
-        conc.matrix = cbind(times,forcing_values)
-      }
-      return(conc.matrix)
-    }
+    dose.times <- dosing.dermal[,"time"]
+    dose.Vmedia <- dosing.dermal[,"Vmedia"]
+    dose.conc <- dosing.dermal[,"concentration"]
     
-    forcings = list(forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days), #forcing
-                    forcings_gen(exp.conc,period,exp.start.time=0,exp.duration,days)) #switch
-    #default forcings are 1 and 1
-    forcings = cbind(times=exp.start.time,forcing_values=1)
+    # Set dosing.matrix based on amount
+    dose.vec <- dose.Vmedia*dose.conc #Amedia inputs
+    dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
+    
+    #Reset forcing function for Vmedia
+    forcings = cbind(times = dose.times, forcing_values = dose.Vmedia)
   }
   
   if (model.type=="dermal"){
@@ -192,30 +189,36 @@ solve_dermal_pbtk <- function(chem.name = NULL,
     model=model.forsolver,
     route='dermal',
     dosing=list(
-      initial.dose=dose,
+      initial.dose=initial.dose,
       dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day,
-      forcings=forcings #added by AEM, 2/1/2022, copying solve_gas_pbtk
+      forcings=forcings 
     ),
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
-    initial.values=initial.values,
-    initial.value.units=initial.value.units,
+    #initial.values=initial.values,
+    #initial.value.units=initial.value.units,
     plots=plots,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species, #other species not (yet) supported by solve_fetal_pbtk
     #input.units=input.units,
-    output.units=output.units,
+    #output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
-    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list = list(
+      model.type = model.type,
+      default.to.human = default.to.human,
+      regression = regression,
+      restrictive.clearance = restrictive.clearance,
+      clint.pvalue.threshold = clint.pvalue.threshold,
+      skin_depth = skin_depth,
+      skin.pH = skin.pH,
+      vmax.km = vmax.km,
+      BW = BW,
+      height = height
+    ),
     ...)
   
   return(out) 
