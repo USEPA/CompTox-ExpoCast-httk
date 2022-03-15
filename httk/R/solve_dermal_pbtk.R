@@ -117,7 +117,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     monitor.vars=NULL, #solve_model
                     suppress.messages=F, #solve_model
                     species = "Human", #solve_model
-                    #input.units="mg/kg", #solve_model DOSING
                     #output.units=NULL, #solve_model DOSING
                     method="lsoda",rtol=1e-8,atol=1e-12, #solve_model
                     recalc.blood2plasma=FALSE, #solve_model
@@ -133,22 +132,40 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     vmax.km=F, #pars
                     BW = 70, #pars
                     height=175, #pars
-                    Vmedia = 0.01, # single value
-                    initial.dose = 0.1, 
-                    dosing.dermal = NULL,
+                    route = NULL, #DERMAL
+                    Vmedia = NULL, #DERMAL
+                    initial.dose = NULL, #DERMAL - DOSING
+                    input.units="mg/kg", #DERMAL - DOSING
+                    dosing.dermal = NULL, #DERMAL
                     #doses.per.day = NULL,
                     #daily.dose = NULL,
-                    dosing.matrix = NULL,
+                    dosing.matrix = NULL, #DERMAL - DOSING
                     ...)
 {
   # DOSING
   # Set start.time for dosing
-  if (is.null(times)) {start.time = 0} else {start.time = times[1]}
+  if (is.null(times)) {
+    start.time = 0
+    } else {start.time = times[1]}
+  
+  # Check for exposure route
+  if (is.null(route)) { route <- 'dermal'; warning(
+    "If route is not chosen, it is set to dermal by default.")}
   
   # Create forcing function for Vmedia - single value
-  if (length(Vmedia)!=1) stop(
-    "Vmedia input must be one value. To change the volume of the media over time, 
-    use the dosing.dermal input.") else {
+  if (is.null(dosing.dermal)) {
+    if (is.null(Vmedia)) {
+      Vmedia <- 0.1; 
+      if (route=='dermal') warning(paste("Vmedia not specified, so set to", Vmedia, "L."))
+      if (is.null(initial.dose)) initial.dose = 1; warning(
+        paste("Initial dose not specified, so automatrically set to 1 mg/kg BW."))
+    } 
+    if (length(Vmedia)!=1) stop(
+      "Vmedia input must be one value. To change the volume of the media over time, 
+      use the dosing.dermal input.") 
+    if ((Vmedia<=0) & (route=="dermal")) { stop(
+      "Vmedia must be positive and non-zero if the initial dose is dermal.")
+    }
     forcings = cbind(times = start.time, forcing_values = Vmedia)
   }
   
@@ -156,11 +173,13 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   if (!is.null(dosing.dermal)){ 
     if (!is.null(dosing.matrix)) stop(
       "Either dosing.matrix or dosing.dermal can be used, but not both. One must be null.")
+    if (route!='dermal') stop(
+      "Route must be set to dermal in order to use dosing.dermal input.")
     if (any(is.na(dosing.dermal))) stop(#check for NaNs
       "Dosing matrix dosing.dermal cannot contain NA values.")
     if (dim(dosing.dermal)[2]!=3) stop( #check for dimensions
-    "dosing.dermal should be matrix with three named columns: time, 
-    concentration, and Vmedia.")
+    "dosing.dermal should be matrix with three named columns: time (days), 
+    concentration (uM), and Vmedia (L).")
     
     dose.times <- dosing.dermal[,"time"]
     dose.Vmedia <- dosing.dermal[,"Vmedia"]
@@ -169,6 +188,11 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     # Set dosing.matrix based on amount
     dose.vec <- dose.Vmedia*dose.conc #Amedia inputs
     dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
+    if (dose.times[1]==start.time){ #if dermal.dosing starts at beginning of time
+      initial.dose <- dose.vec[1];
+      input.units <- "umol";
+      dosing.matrix <- dosing.matrix[-1,];
+    }
     
     #Reset forcing function for Vmedia
     forcings = cbind(times = dose.times, forcing_values = dose.Vmedia)
@@ -187,7 +211,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     times=times,
     parameters=parameters,
     model=model.forsolver,
-    route='dermal',
+    route=route,
     dosing=list(
       initial.dose=initial.dose,
       dosing.matrix=dosing.matrix,
@@ -201,7 +225,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species, #other species not (yet) supported by solve_fetal_pbtk
-    #input.units=input.units,
+    input.units=input.units,
     #output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,

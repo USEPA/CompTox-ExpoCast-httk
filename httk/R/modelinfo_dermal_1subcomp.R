@@ -183,14 +183,14 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
-  # "oral" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
-  # "iv" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
+  "oral" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
+  "iv" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
   "dermal" = c('mg/L','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
-  # "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
-  # "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
+  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
+  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
   "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
@@ -226,16 +226,16 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "AUC"="uM*days")
 
 model.list[["dermal_1subcomp"]]$routes <- list( 
-  # "oral" = list( # not used? -AEM, March 2022
-  #   # We need to know which compartment gets the dose 
-  #   "entry.compartment" = "Agutlumen",
-  #   # desolve events can take the values "add" to add dose C1 <- C1 + dose,
-  #   # "replace" to change the value C1 <- dose
-  #   # or "multiply" to change the value to C1 <- C1*dose
-  #   "dose.type" = "add"),
-  # "iv" = list( # not used? -AEM, March 2022
-  #   "entry.compartment" = "Aven",
-  #   "dose.type" = "add"),
+  "oral" = list( # not used? -AEM, March 2022
+    # We need to know which compartment gets the dose
+    "entry.compartment" = "Agutlumen",
+    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
+    # "replace" to change the value C1 <- dose
+    # or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list( # not used? -AEM, March 2022
+    "entry.compartment" = "Aven",
+    "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Amedia",
     "dose.type" = "replace")   

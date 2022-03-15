@@ -300,7 +300,8 @@ void getParms_dermal (double *inParms, double *out, int *nout) {
 
 void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Rin;
+  /* local */ double Rin_dermal;
+  /* local */ double Rin_oral;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -330,13 +331,15 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   yout[ID_Cmedia] = y[ID_Amedia] / Vmedia ;
 
-  Rin = ( y[ID_Amedia] ? Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) : 0.0 ) ;
+  Rin_dermal = ( y[ID_Amedia] ? Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) : 0.0 ) ;
 
-  ydot[ID_Amedia] = - Rin ;
+  Rin_oral = kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Ain] = Rin ;
+  ydot[ID_Amedia] = - Rin_dermal ;
 
-  ydot[ID_Astratum_corneum_exposed] = Rin + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cviable_epidermis_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2ve ) ;
+  ydot[ID_Ain] = Rin_dermal + Rin_oral ;
+
+  ydot[ID_Astratum_corneum_exposed] = Rin_dermal + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cviable_epidermis_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2ve ) ;
 
   ydot[ID_Astratum_corneum_unexposed] = Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cviable_epidermis_unexposed] - yout[ID_Cstratum_corneum_unexposed] / Ksc2ve ) ;
 
@@ -344,9 +347,9 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   ydot[ID_Aviable_epidermis_unexposed] = Qskin_unexposed * ( yout[ID_Cart] - yout[ID_Cviable_epidermis_unexposed] * Rblood2plasma / Kve2pu / Fraction_unbound_plasma ) + Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cstratum_corneum_unexposed] / Ksc2ve - yout[ID_Cviable_epidermis_unexposed] ) ;
 
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Agutlumen] = - Rin_oral ;
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = Rin_oral + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
   ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 

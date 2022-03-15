@@ -259,7 +259,8 @@ void getParms_dermal_1subcomp (double *inParms, double *out, int *nout) {
 
 void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Rin;
+  /* local */ double Rin_dermal;
+  /* local */ double Rin_oral;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -285,19 +286,21 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cmedia] = y[ID_Amedia] / Vmedia ;
 
-  Rin = ( y[ID_Amedia] ? Kp * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskin_exposed] / Kskin2media ) : 0.0 ) ;
+  Rin_dermal = ( y[ID_Amedia] ? Kp * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskin_exposed] / Kskin2media ) : 0.0 ) ;
 
-  ydot[ID_Amedia] = - Rin ;
+  Rin_oral = kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Ain] = Rin ;
+  ydot[ID_Amedia] = - Rin_dermal ;
 
-  ydot[ID_Askin_exposed] = Qskin_exposed * ( yout[ID_Cart] - yout[ID_Cskin_exposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) + Rin ;
+  ydot[ID_Ain] = Rin_dermal + Rin_oral;
+
+  ydot[ID_Askin_exposed] = Qskin_exposed * ( yout[ID_Cart] - yout[ID_Cskin_exposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) + Rin_dermal ;
 
   ydot[ID_Askin_unexposed] = Qskin_unexposed * ( yout[ID_Cart] - yout[ID_Cskin_unexposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Agutlumen] = - Rin_oral ;
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = Rin_oral + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
   ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 
