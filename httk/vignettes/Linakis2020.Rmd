@@ -845,37 +845,38 @@ fig2 <- ggplot(
     y = -Inf, 
     hjust = 1.05, 
     vjust = -0.15, 
-#    size = 6, 
+    size = 8, 
     label = paste0(
-      "Regression slope: ", 
-      round(summary(lmall)$coef[2,1],digits = 2),
+  #    "Regression slope: ", 
+#      round(summary(lmall)$coef[2,1],digits = 2),
       "\nRegression R^2: ", 
       round(summary(lmall)$r.squared,digits = 2),
       "\nRegression RMSE: ", 
       round(sqrt(mean(lmall$residuals^2)),digits = 2),
       "\nRMSE (Identity): ", 
-      round(totalrmse,digits = 2),
-      "\n% Missing:", 
-      round(pmiss, digits = 2), "%")) + 
-  geom_text(
-    data = simobsfull[
-      abs(log10(simobsfull$simconc) - log10(simobsfull$obsconc))>7 & 
-      simobsfull$simconc>0 & simobsfull$obsconc > 0,], 
-    aes(label = paste(chem,species,matrix)),
-    fontface = 'bold',
-    check_overlap = TRUE,
+      round(totalrmse,digits = 2)
+ #     "\n% Missing:", 
+#      round(pmiss, digits = 2), "%")
+    )) + 
+  #geom_text(
+  #  data = simobsfull[
+  #    abs(log10(simobsfull$simconc) - log10(simobsfull$obsconc))>7 & 
+  #    simobsfull$simconc>0 & simobsfull$obsconc > 0,], 
+  #  aes(label = paste(chem,species,matrix)),
+   ## fontface = 'bold',
+  #  check_overlap = TRUE,
 #    size = 3.5, 
-    hjust = 0.5, 
-    vjust = -0.8) + 
-  scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat")) #+
-#  theme(
-#    plot.title = element_text(face = 'bold', size = 15),
-#    axis.title.x = element_text(face = 'bold', size = 20), 
-#    axis.text.x = element_text(size=16), 
-#    axis.title.y = element_text(face = 'bold', size = 20), 
-#    axis.text.y = element_text(size = 16),
-#    legend.title = element_text(face = 'bold', size = 16),
-#    legend.text = element_text(face = 'bold',size = 14))
+  #  hjust = 0.5, 
+  #  vjust = -0.8) + 
+  scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat")) +
+  theme(
+    plot.title = element_text(face = 'bold', size = 15),
+    axis.title.x = element_text(face = 'bold', size = 30), 
+    axis.text.x = element_text(size=16), 
+    axis.title.y = element_text(face = 'bold', size = 30), 
+    axis.text.y = element_text(size = 16),
+    legend.title = element_text(face = 'bold', size = 24),
+    legend.text = element_text(face = 'bold',size = 24))
 fig2 #Display plot in R
 ```
 
