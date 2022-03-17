@@ -1,47 +1,72 @@
-#' Parameterize_gas_pbtk
+#' Parameters for a generic gas inhalation physiologically-based toxicokinetic model
 #' 
-#' This function initializes the parameters needed in the function solve_gas_pbtk
-#' 
+#' This function initializes the parameters needed for the model 'gas_pbtk', for
+#' example \code{\link{solve_gas_pbtk}}. Chemical- and species-specific model 
+#' parameters are generated. These include tissue:plasma partition coefficients 
+#' via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
+#' and flows are retrieved from table \code{\link{physiology.data}}). This model
+#' was first described by Linakis et al. (2020).
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
+#' 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
 #' However, solve_pbtk only works with the default parameters.
+#' 
 #' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
-#' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
-#' TRUE along with parition coefficients calculated with this value.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @param vmax Michaelis-Menten vmax value in reactions/min
+#' 
 #' @param km Michaelis-Menten concentration of half-maximal reaction velocity
 #' in desired output concentration units. 
+#' 
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
+#' 
 #' @param fR Respiratory frequency (breaths/minute), used especially to adjust
 #' breathing rate in the case of exercise. This parameter, along with VT and VD
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
+#' 
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
+#' 
 #' @param ... Other parameters
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
@@ -107,8 +132,16 @@
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
 #' @references 
-#' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-#' Inhalation Model for Organic Chemicals", submitted
+#' Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
+#' inhalation model for organic chemicals." Journal of exposure science & 
+#' environmental epidemiology 30.5 (2020): 866-877.
+#'
+#' Schmitt, Walter. "General approach for the calculation of tissue 
+#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
 #'
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -146,6 +179,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               force.human.clint.fup = FALSE,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=TRUE,
+                              adjusted.Clint=TRUE,
                               regression=TRUE,
                               vmax = 0,
                               km = 1,
@@ -225,6 +259,19 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     if (!suppress.messages) warning(
 'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
+
+  # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+  # clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
+                "Pow","pKa_Donor","pKa_Accept")])  # fraction
+  if (adjusted.Clint) 
+  {
+    Clint <- Clint / Fu_hep
+    if (!suppress.messages) 
+    {
+      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
+    }
+  }
 
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma

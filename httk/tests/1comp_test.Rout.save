@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.464
+[1] 0.9934
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -32,7 +32,7 @@ Warning messages:
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.464
+[1] 0.9934
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -41,7 +41,7 @@ Warning messages:
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.464
+[1] 0.9934
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -50,7 +50,7 @@ Warning messages:
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for liver returned in uM units.
-[1] 26.83
+[1] 18.21
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -61,7 +61,7 @@ Warning messages:
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.549
+[1] 5.801
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -81,12 +81,12 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
-[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
-[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
-[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
-[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
-[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
+[1,] 0.00000    259.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    259.10    0.0003054    3.980e-07 2.000e-09
+[3,] 0.01042    150.30    0.2445000    3.627e-01 1.390e-03
+[4,] 0.02083     87.15    0.3848000    1.236e+00 4.735e-03
+[5,] 0.03125     50.53    0.4646000    2.400e+00 9.199e-03
+[6,] 0.04167     29.30    0.5095000    3.730e+00 1.429e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -103,12 +103,12 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
-[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
-[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
-[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
-[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
-[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
+[1,] 0.00000    259.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    259.10    0.0003054    3.980e-07 2.000e-09
+[3,] 0.01042    150.30    0.2445000    3.627e-01 1.390e-03
+[4,] 0.02083     87.15    0.3848000    1.236e+00 4.735e-03
+[5,] 0.03125     50.53    0.4646000    2.400e+00 9.199e-03
+[6,] 0.04167     29.30    0.5095000    3.730e+00 1.429e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -125,12 +125,12 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
-[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
-[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
-[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
-[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
-[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
+[1,] 0.00000    259.20    0.0000000    0.000e+00 0.000e+00
+[2,] 0.00001    259.10    0.0003054    3.980e-07 2.000e-09
+[3,] 0.01042    150.30    0.2445000    3.627e-01 1.390e-03
+[4,] 0.02083     87.15    0.3848000    1.236e+00 4.735e-03
+[5,] 0.03125     50.53    0.4646000    2.400e+00 9.199e-03
+[6,] 0.04167     29.30    0.5095000    3.730e+00 1.429e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -170,11 +170,13 @@ Volume of distribution returned in units of L/kg BW.
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+4: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
@@ -183,11 +185,13 @@ Volume of distribution returned in units of L/kg BW.
 Warning messages:
 1: In parameterize_pbtk(chem.name = "triclosan") :
   Clint is provided as a distribution.
-2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+2: In parameterize_pbtk(chem.name = "triclosan") :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-3: In parameterize_pbtk(chem.name = "triclosan") :
+4: In parameterize_pbtk(chem.name = "triclosan") :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.

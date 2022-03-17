@@ -1,8 +1,16 @@
 News for R package httk
 
+Changes in feature/uvupdate (Summer, 2022)
+  Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
+  Added internal function remd0non0u95 to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
+  Added logical arguments to invitro_mc to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
+  If fup measurment Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
+  Moved Kilford (2008) correction for fraction unbound in hepatocyte assay from calc_hep_clearance to the parameterize functions and invitro_mc -- can now be toggled with argument adjusted.Clint
+
 Changes in version 2.1.0 (March, 2022)
   This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
   New HT-PBTK model added as described by Kapraun et al. (submitted) including functions solve_fetal_pbtk() and parameterize_fetal_pbtk()
+
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
   QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Pradeep et al. (2020) (https://doi.org/10.1016/j.comtox.2020.100136) is now included as Pradeep2020 and can be added with the new function: load_pradeep2020().
   Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
