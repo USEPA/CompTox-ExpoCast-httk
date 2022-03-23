@@ -25,9 +25,6 @@ Afkidney,
 Afbrain,
 };
 
-Inputs = {
-};
-
 Outputs = {
 Cgut,
 Cliver,
