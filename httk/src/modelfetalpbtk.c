@@ -1,11 +1,11 @@
-/* modelfetalpbtk.c for R deSolve package
+/* model_fetal_pbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  fetalpbtk.model
+   Model File:  model_fetal_pbtk.model
 
-   Date:  Sun Mar 07 21:56:10 2021
+   Date:  Wed Mar 23 13:29:41 2022
 
-   Created by:  "mod.exe v6.1.0"
+   Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
@@ -402,8 +402,35 @@ static double parms[134];
 #define Qfthyroid_percent parms[133]
 
 /* Forcing (Input) functions */
-static double forc[0];
+//static double forc[0];
 
+
+/* Function definitions for delay differential equations */
+//
+//int Nout=1;
+//int nr[1]={0};
+//double ytau[1] = {0.0};
+//
+//static double yini[24] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+//
+//void lagvalue(double T, int *nr, int N, double *ytau) {
+//  static void(*fun)(double, int*, int, double*) = NULL;
+//  if (fun == NULL)
+//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//  return fun(T, nr, N, ytau);
+//}
+//
+//double CalcDelay(int hvar, double dTime, double delay) {
+//  double T = dTime-delay;
+//  if (dTime > delay){
+//    nr[0] = hvar;
+//    lagvalue( T, nr, Nout, ytau );
+//}
+//  else{
+//    ytau[0] = yini[hvar];
+//}
+//  return(ytau[0]);
+//}
 
 /*----- Initializers */
 void initmodfetal_pbtk (void (* odeparms)(int *, double *))
@@ -418,6 +445,18 @@ void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
   odeforcs(&N, forc);
 }
 
+
+/* Calling R code will ensure that input y has same
+   dimension as yini */
+//void initState (double *y)
+//{
+//  int i;
+//
+//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//  {
+//    yini[i] = y[i];
+//  }
+//}
 
 void getParmsfetal_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
