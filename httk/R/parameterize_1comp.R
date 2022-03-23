@@ -198,7 +198,7 @@ parameterize_1comp <- function(
                    chem.cas=chem.cas),
                  silent=TRUE)
 
-    if (class(Fgutabs) == "try-error") Fgutabs <- 1
+    if (is(Fgutabs,"try-error")) Fgutabs <- 1
     
     params[['Fgutabs']] <- Fgutabs
     params[['hepatic.bioavailability']] <- 

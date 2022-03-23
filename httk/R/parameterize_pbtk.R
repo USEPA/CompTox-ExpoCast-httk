@@ -143,7 +143,7 @@ parameterize_pbtk <- function(
                         species,
                         chem.cas=chem.cas),
                     silent=TRUE)
-  if ((class(Clint.db) == "try-error" & default.to.human) || 
+  if ((is(Clint.db,"try-error") & default.to.human) || 
       force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param(
@@ -159,7 +159,7 @@ parameterize_pbtk <- function(
 
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint.db) == "try-error") 
+  if (is(Clint.db,"try-error")) 
     stop("Missing metabolic clearance data for given species. \n\
          Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
@@ -221,7 +221,7 @@ parameterize_pbtk <- function(
                    chem.cas=chem.cas),
                silent=TRUE)
 
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  if (is(Fgutabs,"try-error")) Fgutabs <- 1
   
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  

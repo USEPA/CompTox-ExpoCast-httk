@@ -109,7 +109,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       pcs <- predict_partitioning_schmitt(parameters =
             parameters[, param.names.schmitt[param.names.schmitt %in% 
                                              names(parameters)], with = F])
-    }else if (class(parameters) == "list") {
+    }else if (is(parameters,"list")) {
       pcs <- predict_partitioning_schmitt(parameters =
          parameters[param.names.schmitt[param.names.schmitt %in% 
                                     names(parameters)]])
