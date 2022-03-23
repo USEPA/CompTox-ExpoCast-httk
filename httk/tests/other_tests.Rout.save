@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -65,16 +65,16 @@ Warning messages:
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 1057
+[1] 3023
 
 $frac
-[1] 0.9899
+[1] 0.9898
 
 $max
-[1] 1058
+[1] 3023
 
 $the.day
-[1] 1330
+[1] 813
 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
@@ -129,13 +129,13 @@ Warning messages:
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.8238 .
 $AUC
-[1] 6.687
+[1] 7.631
 
 $peak
-[1] 3.907
+[1] 4.004
 
 $mean
-[1] 0.6687
+[1] 0.7631
 
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "nicotine", dtxsid = NULL,  :
@@ -147,13 +147,13 @@ Warning messages:
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 9.559
+[1] 10.72
 
 $peak
-[1] 10.7
+[1] 10.96
 
 $mean
-[1] 9.559
+[1] 10.72
 
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = "DTXSID0020442",  :
@@ -165,13 +165,13 @@ Warning messages:
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 296.9
+[1] 580.5
 
 $peak
-[1] 44.77
+[1] 104.7
 
 $mean
-[1] 29.69
+[1] 58.05
 
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = "DTXSID0020442",  :
@@ -183,13 +183,13 @@ Warning messages:
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 4244
+[1] 40170
 
 $peak
-[1] 48.81
+[1] 683
 
 $mean
-[1] 42.44
+[1] 401.7
 
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = NULL, dtxsid = "DTXSID0020442",  :
