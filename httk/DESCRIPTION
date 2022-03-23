@@ -1,12 +1,12 @@
 Package: httk
-Version: 99.11.0
-Date: 2021-10-13
+Version: 99.11.1
+Date: 2022-02-23
 Title: High-Throughput Toxicokinetics
 Description: Generic models and chemical-specific data for simulation and
              statistical analysis of chemical toxicokinetics ("TK") as
              described by Pearce et al. (2017) <doi:10.18637/jss.v079.i04>.
              Chemical-specific in vitro data have been obtained from relatively
-             high throughput experiments. Both physiologically-based ("PBTK")
+             high-throughput experiments. Both physiologically-based ("PBTK")
              and empirical (for example, one compartment) "TK" models can be
              parameterized with the data provided for thousands of chemicals,
              multiple exposure routes, and various species. The models consist
@@ -19,7 +19,7 @@ Description: Generic models and chemical-specific data for simulation and
              volume of distribution
              (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>).
              These functions and data provide a set of tools for
-             in vitro-in vivo extrapolation ("IVIVE") of high throughput
+             in vitro-in vivo extrapolation ("IVIVE") of high-throughput
              screening data (for example, Tox21, ToxCast) to real-world
              exposures via reverse dosimetry (also known as "RTK")
              (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
@@ -41,10 +41,14 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
+           person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
+             role = c("ctb"), comment = c(ORCID= "0000-0001-5570-6383")),
            person("Shannon", "Bell", email="sbell@ils-inc.com",
              role = c("ctb")), 
            person("Xiaoqing", "Chang", email="xchang@ils-inc.com",
              role = c("ctb"), comment = c(ORCID = "0000-0003-0752-1848")), 
+           person("Todor", "Antonijevic", email="tantonijevic@toxstrategies.com",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-0248-8412")),
            person("Jimena", "Davis", role = c("ctb")), 
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
@@ -59,58 +63,40 @@ Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
         graphics, utils, magrittr, purrr, methods, Rdpack
 RdMacros: Rdpack
-Suggests: 
-    ggplot2,
-    knitr,
-    rmarkdown,
-    R.rsp,
-    GGally,
-    gplots,
-    scales,
-    EnvStats,
-    MASS,
-    RColorBrewer,
-    TeachingDemos,
-    classInt,
-    ks,
-    stringr,
-    reshape,
-    reshape2,
-    viridis,
-    CensRegMod,
-    gmodels,
-    colorspace,
-    cowplot,
-    ggrepel,
-    dplyr,
-    forcats,
-    smatr,
-    gridExtra,
-    testthat
+Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
+        EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
+        stringr, reshape, reshape2, viridis, CensRegMod, gmodels,
+        colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
+        testthat
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
 RoxygenNote: 7.1.1
-URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
+URL:
+        https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
-Packaged: 2019-07-25 18:56:22 UTC; jwambaug
+Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
   Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
   Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>), 
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
   Mark Sfeir [aut], 
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
-  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>), 
+  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>),
+  Dustin Kapraun [ctb] (<https://orcid.org/0000-0001-5570-6383>), 
   Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
-  Shannon Bell [ctb],
+  Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
+  Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb], 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
-Copyright: This package is primarily developed by employees of the U.S. Federal government as part of their official duties and is therefore public domain.
+Copyright: This package is primarily developed by employees of the U.S.
+        Federal government as part of their official duties and is
+        therefore public domain.

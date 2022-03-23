@@ -19,9 +19,18 @@ Changes in version 2.0.5 (Fall, 2021)
   Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
   Further revised documentation to Armitage functions (thank you Madison Feshuk)
   Corrected swapped "area_bottom" values in table well_param for the Armitage model. (thank you Todor Antonijevic) 
+  Contribution from Todor Antonijevic:
+    this.conc_ser_alb, this.conc_ser_lip and this.Vdom added to the list of arguments.
+    the volume of headspace calculated as in Armitage et al. 2014.
+    the volume of medium calculated as in Armitage et al. 2014.
+    f_ratio calculated as in Armitage et al. 2014
+    kow added in the denominator of cwat, i.e. kowP_domf_oc*Vdom
   Corrected major bug introduced in 2.0.0 (vectorization of calc_ionization) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
   Corrected monkey cardiac output (thank you Peter Egeghy)
-  Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Lynne Haber and Mark Bradley)
+  Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
+  Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Lynne Haber and Mark Bradley)  
+  Expanded example for add_chemtable to address ionization (thank you Johann Fribl)
+  Added Clint data from Dawson (2021) supplemental information (CHEMBL)
 
 Changes in version 2.0.4 (May 7, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
