@@ -22,7 +22,7 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.467
+[1] 0.9961
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -34,7 +34,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.467
+[1] 0.9961
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -46,7 +46,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.467
+[1] 0.9961
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -58,7 +58,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
 Tissue concentration for liver returned in uM units.
-[1] 26.96
+[1] 18.3
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -72,7 +72,7 @@ Warning messages:
   Tissue selected. Overwriting option for concentration with "tissue".
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 Tissue concentration for brain returned in uM units.
-[1] 8.568
+[1] 5.817
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -86,21 +86,28 @@ Warning messages:
   Tissue selected. Overwriting option for concentration with "tissue".
 > 
 > head(solve_3comp(chem.name="bisphenol a"))
-AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Aintestine, Atubules, Ametabolized
+	uM: Cliver, Csyscomp
+	uM*days: AUC
+
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
-[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
-[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004576
-[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
-[5,] 0.03125      59.77 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
-[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
+[1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
+[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
+[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
+[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
+[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
        Cplasma
 [1,] 0.000e+00
-[2,] 3.100e-08
-[3,] 1.129e+00
-[4,] 2.524e+00
-[5,] 3.442e+00
-[6,] 3.980e+00
+[2,] 3.200e-08
+[3,] 1.136e+00
+[4,] 2.538e+00
+[5,] 3.459e+00
+[6,] 3.998e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -111,21 +118,28 @@ Warning messages:
 4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > head(solve_3comp(chem.cas="80-05-7"))
-AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Aintestine, Atubules, Ametabolized
+	uM: Cliver, Csyscomp
+	uM*days: AUC
+
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
-[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
-[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004576
-[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
-[5,] 0.03125      59.77 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
-[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
+[1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
+[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
+[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
+[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
+[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
        Cplasma
 [1,] 0.000e+00
-[2,] 3.100e-08
-[3,] 1.129e+00
-[4,] 2.524e+00
-[5,] 3.442e+00
-[6,] 3.980e+00
+[2,] 3.200e-08
+[3,] 1.136e+00
+[4,] 2.538e+00
+[5,] 3.459e+00
+[6,] 3.998e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -136,21 +150,28 @@ Warning messages:
 4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
-AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Aintestine, Atubules, Ametabolized
+	uM: Cliver, Csyscomp
+	uM*days: AUC
+
         time Aintestine    Cliver  Csyscomp Atubules Ametabolized      AUC
-[1,] 0.00000     306.60  0.000000 0.000e+00  0.00000    0.000e+00 0.000000
-[2,] 0.00001     306.40  0.001995 3.100e-08  0.00000    7.500e-08 0.000000
-[3,] 0.01042     177.80 35.770000 1.129e+00  0.01108    2.850e+00 0.004576
-[4,] 0.02083     103.10 32.450000 2.524e+00  0.05802    6.912e+00 0.023970
-[5,] 0.03125      59.77 26.370000 3.442e+00  0.13420    1.032e+01 0.055440
-[6,] 0.04167      34.66 22.140000 3.980e+00  0.22840    1.312e+01 0.094360
+[1,] 0.00000     306.60  0.000000 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 0.00001     306.40  0.001997 3.200e-08 0.000000    1.110e-07 0.000000
+[3,] 0.01042     177.80 34.830000 1.136e+00 0.008496    4.164e+00 0.004607
+[4,] 0.02083     103.10 30.330000 2.538e+00 0.044480    9.919e+00 0.024120
+[5,] 0.03125      59.77 23.480000 3.459e+00 0.102800    1.453e+01 0.055760
+[6,] 0.04167      34.66 18.780000 3.998e+00 0.174900    1.815e+01 0.094860
        Cplasma
 [1,] 0.000e+00
-[2,] 3.100e-08
-[3,] 1.129e+00
-[4,] 2.524e+00
-[5,] 3.442e+00
-[6,] 3.980e+00
+[2,] 3.200e-08
+[3,] 1.136e+00
+[4,] 2.538e+00
+[5,] 3.459e+00
+[6,] 3.998e+00
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -193,7 +214,14 @@ Warning messages:
 [1] 306.6141
 > 
 > out_default_dosing = solve_3comp(chem.name = "bisphenol a")
-AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Aintestine, Atubules, Ametabolized
+	uM: Cliver, Csyscomp
+	uM*days: AUC
+
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -215,7 +243,14 @@ Aintestine
 > 
 > out_nondefault_dosing = solve_3comp(chem.name = "bisphenol a", 
 +                                     daily.dose =3,doses.per.day = 5)
-AUC is area under plasma concentration curve in uM*days units with Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Aintestine, Atubules, Ametabolized
+	uM: Cliver, Csyscomp
+	uM*days: AUC
+
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint is provided as a distribution.
@@ -284,7 +319,7 @@ $Krbc2pu
 [1] 0.6228
 
 $Krest2pu
-[1] 0.6237
+[1] 0.6018
 
 $liver.density
 [1] 1.05
@@ -331,10 +366,10 @@ $Vgutc
 [1] 0.0158
 
 $Vliverc
-[1] 0.0245
+[1] 0.02448
 
 $Vrestc
-[1] 0.788
+[1] 0.7879
 
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :

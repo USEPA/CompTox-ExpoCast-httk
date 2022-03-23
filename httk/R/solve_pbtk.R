@@ -54,10 +54,13 @@
 #' @param iv.dose Simulates a single i.v. dose if true.
 #' @param input.units Input units of interest assigned to dosing, defaults to
 #' mg/kg BW
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param 3man Substitutes missing animal values with human values
+#' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -160,8 +163,9 @@ solve_pbtk <- function(chem.name = NULL,
                     suppress.messages=FALSE,
                     species="Human",
                     iv.dose=FALSE,
-                    input.units="mg/kg",
-                    output.units='uM',
+                    input.units='mg/kg',
+                    # output.units='uM',
+                    output.units=NULL,
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
@@ -169,7 +173,7 @@ solve_pbtk <- function(chem.name = NULL,
                     dosing.matrix=NULL,
                     adjusted.Funbound.plasma=TRUE,
                     regression=TRUE,
-                    restrictive.clearance = T,
+                    restrictive.clearance = TRUE,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,
                     ...)
@@ -196,6 +200,7 @@ solve_pbtk <- function(chem.name = NULL,
     suppress.messages=suppress.messages,
     species=species,
     input.units=input.units,
+    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,

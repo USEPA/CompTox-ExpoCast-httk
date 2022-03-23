@@ -16,7 +16,7 @@ calc_css(
   days = 21,
   output.units = "uM",
   suppress.messages = FALSE,
-  tissue = "plasma",
+  tissue = NULL,
   model = "pbtk",
   default.to.human = FALSE,
   f.change = 1e-05,
@@ -59,8 +59,9 @@ each iteration.}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
 
-\item{tissue}{Desired tissue concentration (defaults to whole body 
-concentration.)}
+\item{tissue}{Desired tissue concentration (default value is NULL, will
+depend on model -- see \code{steady.state.compartment} in model.info file for
+further details.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
