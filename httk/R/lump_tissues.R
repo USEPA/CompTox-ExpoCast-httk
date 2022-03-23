@@ -131,7 +131,11 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
       tissue_name_verification_vec <- 
         substr(names(Ktissue2pu.in),2,nchar(names(Ktissue2pu.in))-3)
     }
-     
+
+    #Exclude "rest" from list of tissues called for among alltissues entries
+#    tissue_name_verification_vec <- 
+#      tissue_name_verification_vec[tissue_name_verification_vec != "rest"] 
+    
     #Now use this verification vector to check if the requested tissuenames 
     #are among those for which partitioning info has been passed. 
     if (!all(tissuenames %in% tissue_name_verification_vec)){

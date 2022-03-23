@@ -21,7 +21,7 @@ solve_pbtk(
   species = "Human",
   iv.dose = FALSE,
   input.units = "mg/kg",
-  output.units = "uM",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -31,7 +31,7 @@ solve_pbtk(
   dosing.matrix = NULL,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   ...
@@ -79,11 +79,18 @@ default "Human").}
 \item{input.units}{Input units of interest assigned to dosing, defaults to
 mg/kg BW}
 
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
+
 \item{method}{Method used by integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
 
 \item{atol}{Argument passed to integrator (deSolve).}
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -114,9 +121,6 @@ The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{3man}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

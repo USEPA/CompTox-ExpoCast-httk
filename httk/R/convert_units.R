@@ -90,12 +90,24 @@ convert_units <- function(input.units = NULL,
                           temp = 25, 
                           state="liquid")
 {
-# The volume of an ideal gas at this temperatre (L/mol)
+# The volume of an ideal gas at this temperature (L/mol)
   volidealgas <- (273.15 + temp)*0.08205
 
   #Take the lower case form of the units requested
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
+  
+  if(any(c(input.units,output.units)=='unitless')){
+    if(input.units!=output.units){
+      stop(
+        "User specified 'unitless' for a model compartment that has units, ",
+        "or alternatively specified units compartment that is 'unitless'. "
+      )
+    }else{
+      conversion_factor <- 1
+      return(set_httk_precision(conversion_factor))
+    }
+  }
   
   #Conditional block that checks if enough info is available to retrieve
   #MW value and use in determining conversion factor:
@@ -255,11 +267,16 @@ compound data.table/data.frame or list.')
   
   #Now check to see if our compiled information can appropriately support
   #the requested units conversion, and if so, provide the conversion factor.
-  if(any(!c(input.units,output.units)%in%httk_dose_units_list)){
-    stop("Requested units not supported for unit conversion. Extrinsic amounts
-  are supported in units of 'mg' and 'umol', and intrinsic concentrations
-  are supported in 'mg/L', 'uM', and, in the case of gas models where 
-  the gas is assumed ideal, 'ppmv'.") 
+  if(any(!c(input.units,output.units)%in%httk_dose_units_list))
+  {
+    stop(paste("Requested units",
+      paste(unique(c(input.units,output.units))[!(
+      unique(c(input.units,output.units)) %in% httk_dose_units_list)],
+      collapse=", "), "
+not supported for unit conversion. 
+Extrinsic amounts are supported in units of \'mg\' and \'umol\', and intrinsic 
+concentrations are supported in \'mg/L\', \'uM\', and, in the case of gas models 
+where the gas is assumed ideal, \'ppmv\'.")) 
   }
 
   if(all(c(input.units,output.units)%in%names(amounts_units_conversion_frame))){

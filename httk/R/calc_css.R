@@ -26,8 +26,9 @@
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
 #' @param suppress.messages Whether or not to suppress messages.
-#' @param tissue Desired tissue concentration (defaults to whole body 
-#' concentration.)
+#' @param tissue Desired tissue concentration (default value is NULL, will
+#' depend on model -- see \code{steady.state.compartment} in model.info file for
+#' further details.)
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
@@ -97,7 +98,7 @@ calc_css <- function(chem.name=NULL,
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
-                    tissue="plasma",
+                    tissue=NULL,
                     model='pbtk',
                     default.to.human=FALSE,
                     f.change = 0.00001,

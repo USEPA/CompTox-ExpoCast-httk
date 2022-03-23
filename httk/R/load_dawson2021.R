@@ -38,17 +38,26 @@
 #' @export load_dawson2021
 load_dawson2021 <- function(overwrite=FALSE,exclude_oad=TRUE,target.env=.GlobalEnv)
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  `Clint QSAR AD Outlier` <- `Fup QSAR AD Outlier` <- `CASRN` <- NULL
+  `QSAR_Clint` <- `QSAR_Fup` <- NULL
+  #End R CMD CHECK appeasement.
+
   cat(paste("Chemicals outside the applicabilty domain are",
             ifelse(exclude_oad,""," not"),
             " excluded in the data load.\n",sep=""))
   if(exclude_oad){
-    tmp_dawson2021 <- dawson2021 %>%
+    tmp_dawson2021 <- httk::dawson2021 %>%
       dplyr::filter(`Clint QSAR AD Outlier`==0) %>%
       dplyr::filter(`Fup QSAR AD Outlier`==0) %>% 
       dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>%
       as.data.frame()
   }else{
-    tmp_dawson2021 <- dawson2021 %>%
+    tmp_dawson2021 <- httk::dawson2021 %>%
       dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>% 
       as.data.frame()
   }
