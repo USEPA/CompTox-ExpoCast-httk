@@ -174,19 +174,19 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
    
-  if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+  if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=TRUE)
   # Check that the trend in the CLint assay was significant:
   Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=TRUE)
-  if ((class(Clint.db) == "try-error" & default.to.human) || force.human.clint.fup) 
+  if ((is(Clint.db,"try-error") & default.to.human) || force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=TRUE)
     Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=TRUE)
     if (!suppress.messages)
       warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint.db) == "try-error") 
+  if (is(Clint.db,"try-error")) 
     stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
@@ -230,7 +230,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=TRUE)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  if (is(Fgutabs,"try-error")) Fgutabs <- 1
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))

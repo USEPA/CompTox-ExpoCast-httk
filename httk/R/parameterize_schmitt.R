@@ -133,7 +133,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 chem.name=chem.name,
                 dtxsid=dtxsid),
               silent=TRUE)
-  if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
+  if ((is(fup.db,"try-error") & default.to.human) || force.human.fup) 
   {
     fup.db <- try(
                 get_invitroPK_param(
@@ -146,7 +146,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
   }
-  if (class(fup.db) == "try-error") 
+  if (is(fup.db,"try-error")) 
     stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   if (!is.null(parameters))
     if ("Fraction_unbound_plasma" %in% names(parameters))
