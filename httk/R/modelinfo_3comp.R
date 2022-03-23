@@ -256,7 +256,13 @@ model.list[["3compartment"]]$calcpc <- TRUE
 model.list[["3compartment"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["3compartment"]]$exclude.fup.zero <- T
+model.list[["3compartment"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["3compartment"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["3compartment"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["3compartment"]]$chem.class.filt <- c("PFAS")

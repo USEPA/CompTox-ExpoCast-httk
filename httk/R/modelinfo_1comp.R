@@ -72,7 +72,7 @@ model.list[["1compartment"]]$Rtosolvermap <- list(
 # If the model does not include an explicit gut-liver link before systemic
 # circulation, then we want to decrease the absorbed dose by the first past
 # hepatic extraction factor:
-model.list[["1compartment"]]$do.first.pass <- T
+model.list[["1compartment"]]$do.first.pass <- TRUE
 
 # This function translates the R model parameters into the compiled model
 # parameters:
@@ -192,7 +192,13 @@ model.list[["1compartment"]]$calcpc <- TRUE
 model.list[["1compartment"]]$firstpass <- TRUE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["1compartment"]]$exclude.fup.zero <- T
+model.list[["1compartment"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["1compartment"]]$chem.class.filt <- c("PFAS")

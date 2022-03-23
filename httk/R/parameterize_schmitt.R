@@ -45,9 +45,9 @@
 #' @return
 #' \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
-#' if below limit of detection)} \item{Pow}{octonol:water partition coefficient
-#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibirum
-#' constant(s)} \item{pKa_Accept}{compound H association equilibirum
+#' if below limit of detection)} \item{Pow}{octanol:water partition coefficient
+#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
+#' constant(s)} \item{pKa_Accept}{compound H association equilibrium
 #' constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
 #' affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 #' \item{plasma.pH}{pH of the plasma}
@@ -121,7 +121,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     dtxsid <- out$dtxsid
   }
 
-# Check the species argument for capitilization problems and whether or not it 
+# Check the species argument for capitalization problems and whether or not it 
 # is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
