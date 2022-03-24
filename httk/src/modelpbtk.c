@@ -1,15 +1,15 @@
-/* modelpbtk.c for R deSolve package
+/* modelpbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  vLiverPBPK.model
+   Model File:  modelpbtk.model
 
-   Date:  Fri Dec 18 12:22:16 2020
+   Date:  Thu Mar 24 09:59:47 2022
 
-   Created by:  "mod v5.6.5"
+   Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2015 Free Software Foundation, Inc.
+   Copyright (c) 1993-2019 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
@@ -80,6 +80,9 @@
 */
 
 #include <R.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R_ext/Rdynload.h>
 
 /* Model variables: States */
 #define ID_Agutlumen 0x00000
@@ -147,8 +150,35 @@ static double parms[37];
 #define Vven parms[36]
 
 /* Forcing (Input) functions */
-static double forc[0];
+//static double forc[0];
 
+
+/* Function definitions for delay differential equations */
+//
+//int Nout=1;
+//int nr[1]={0};
+//double ytau[1] = {0.0};
+//
+//static double yini[11] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+//
+//void lagvalue(double T, int *nr, int N, double *ytau) {
+//  static void(*fun)(double, int*, int, double*) = NULL;
+//  if (fun == NULL)
+//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//  return fun(T, nr, N, ytau);
+//}
+//
+//double CalcDelay(int hvar, double dTime, double delay) {
+//  double T = dTime-delay;
+//  if (dTime > delay){
+//    nr[0] = hvar;
+//    lagvalue( T, nr, Nout, ytau );
+//}
+//  else{
+//    ytau[0] = yini[hvar];
+//}
+//  return(ytau[0]);
+//}
 
 /*----- Initializers */
 void initmodpbtk (void (* odeparms)(int *, double *))
@@ -163,6 +193,18 @@ void initforcpbtk (void (* odeforcs)(int *, double *))
   odeforcs(&N, forc);
 }
 
+
+/* Calling R code will ensure that input y has same
+   dimension as yini */
+//void initState (double *y)
+//{
+//  int i;
+//
+//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//  {
+//    yini[i] = y[i];
+//  }
+//}
 
 void getParmspbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -231,9 +273,9 @@ void derivspbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_Arest] = Qrest * ( y[ID_Aart] / Vart - y[ID_Arest] / Vrest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Akidney] = Qkidney * y[ID_Aart] / Vart - Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * y[ID_Aart] / Vart / Kkidney2pu / Rblood2plasma * Fraction_unbound_plasma ;
+  ydot[ID_Akidney] = Qkidney * y[ID_Aart] / Vart - Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * y[ID_Akidney] / Vkidney / Kkidney2pu ;
 
-  ydot[ID_Atubules] = Qgfr * y[ID_Aart] / Vart / Rblood2plasma * Fraction_unbound_plasma ;
+  ydot[ID_Atubules] = Qgfr * y[ID_Akidney] / Vkidney / Kkidney2pu ;
 
   ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
