@@ -136,8 +136,7 @@ Set recalc.blood2plasma to TRUE if desired.
   Clearance not recalculated. 
 Set recalc.clearance to TRUE if desired.
 > 
-> parameterize_gas_pbtk(chem.name="styrene")[
-+   sort(names(parameterize_gas_pbtk(chem.name="styrene")))]
+> parameterize_gas_pbtk(chem.name="styrene")
 $BW
 [1] 70
 
@@ -284,12 +283,6 @@ Warning messages:
 2: In parameterize_gas_pbtk(chem.name = "styrene") :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.name = "styrene") :
-  Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-4: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-5: In parameterize_gas_pbtk(chem.name = "styrene") :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-6: In parameterize_gas_pbtk(chem.name = "styrene") :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 > 
 > quit("no")
