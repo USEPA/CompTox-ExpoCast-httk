@@ -331,5 +331,6 @@ Set default.to.human to true to substitute human value.")
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
-  return(lapply(Params,set_httk_precision))
+  
+  return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
 }

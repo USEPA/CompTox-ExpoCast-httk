@@ -371,5 +371,5 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
         
-  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
+  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
 }
