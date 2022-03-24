@@ -338,6 +338,8 @@ parameterize_pbtk <- function(
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
 
-        
-  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
+  # alphabetize:
+  outlist <- outlist[order(tolower(names(outlist)))]
+  
+  return(lapply(outlist, set_httk_precision))
 }
