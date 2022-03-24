@@ -300,12 +300,6 @@ parameterize_pbtk <- function(
   outlist <- c(outlist,
                Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
                  "Pow","pKa_Donor","pKa_Accept")])) #fraction
-  
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
- outlist <- c(outlist, 
-              Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
-                "Pow","pKa_Donor","pKa_Accept")]))  # fraction 
 
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
