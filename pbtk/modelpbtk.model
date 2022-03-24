@@ -12,9 +12,6 @@ Ametabolized,
 AUC,
 };
 
-Inputs = {
-};
-
 Outputs = {
 Cgut,
 Cliver,
