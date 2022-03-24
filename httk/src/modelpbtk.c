@@ -187,12 +187,13 @@ void initmodpbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
+/*
 void initforcpbtk (void (* odeforcs)(int *, double *))
 {
   int N=0;
   odeforcs(&N, forc);
 }
-
+*/
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
