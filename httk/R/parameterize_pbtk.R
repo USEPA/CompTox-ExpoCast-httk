@@ -345,5 +345,5 @@ parameterize_pbtk <- function(
    
 
         
-  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
+  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
 }

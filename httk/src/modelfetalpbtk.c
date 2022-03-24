@@ -439,12 +439,12 @@ void initmodfetal_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
+/*void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=0;
   odeforcs(&N, forc);
 }
-
+*/
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
