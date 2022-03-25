@@ -338,7 +338,7 @@ NULL
 #' models and the chemical activity concept to facilitate the use of in vitro 
 #' toxicity data for risk assessment}
 #' 
-#' \doi{10.1093/toxsci/kefv171}{Incorporating High-Throughput Exposure 
+#' \doi{10.1093/toxsci/kfv171}{Incorporating High-Throughput Exposure 
 #' Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 #' 
