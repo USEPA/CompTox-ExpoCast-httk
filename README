@@ -39,9 +39,23 @@ The changes (adding _<name>, an arbitrary choice) in the initialization file
 include: initparms_<name>, getParms_<name> (calling function from .c within 
 initparms argument), Outputs_<name>, and initState_<name>.
 
-The changes in the .c file include: initmod_<name>, initforc_<name> (or 
-delete function), getParms_<name>, derivs_<name>, jac_<name>, event_<name>, 
-and root_<name>.
+The changes in the .c file (when 'forcings' are used) include: 
+
+  - Updating the names of C functions, including initmod_<name>,
+    initforc_<name>, getParms_<name>, derivs_<name>, jac_<name>, event_<name>,
+    and root_<name>.
+  - Removing or commenting out, using "//", C functions under "Function
+    definitions for delay differential equations" and "Calling R code will
+    ensure that input y has same dimension as yini".
+    
+The changes in the .c file (when 'forcings' are *not* used) include:
+
+  - Updating the names of C functions, including initmod_<name>, initforc_<name>
+    (if not deleting or commenting out),  getParms_<name>, derivs_<name>,
+    jac_<name>, event_<name>, and root_<name>. 
+  - Removing or commenting out, using "//", C functions under "Forcing (Input)
+    functions", "Function definitions for delay differential equations", and
+    "Calling R code will ensure that input y has same dimension as yini".
 
 These function names then must also be changed in the corresponding 
 solve_pbtk function, specifically the state and parameter initilaizers as 
