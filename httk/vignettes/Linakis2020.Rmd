@@ -33,7 +33,7 @@ high-throughput estimates of inhalation chemical exposures.
 
 ## Prepare for session
 ### Load the relevant libraries
-```{r setup}
+```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 library(httk)
 library(ggplot2)
@@ -48,7 +48,7 @@ library(smatr)
 rm(list=ls())
 ```
 ###Get metabolism and concentration data 
-```{r data}
+```{r data, eval = FALSE}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
 conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
@@ -74,7 +74,7 @@ Sets the units based on the sampling matrix (gas/liquid):
   +W with work/exercise
     
 Normalize units for gaseous samples to ppmv:
-```{r convert_to_ppmweight}
+```{r convert_to_ppmweight, eval = FALSE}
 gas.media <- c("EB","MEB","EEB","EB (+W)")
 gas.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% gas.media)$CONC_U)
@@ -110,7 +110,7 @@ for (this.unit in gas.units)
 ```
 
 Normalize the units for tissue samples to uM:
-```{r normalize_other_units}
+```{r normalize_other_units, eval = FALSE}
 tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
 tissue.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% tissue.media)$CONC_U)
@@ -151,7 +151,7 @@ Identify chemicals currently in our metabolism data that we don't have good
 concentration/time data for and remove them from our training dataset
 
 ### Data summary for chemical properties
-```{r summary}
+```{r summary, eval = FALSE}
 # Small molecule chemicals
 summary(met_data$AVERAGE_MASS)
 # Generally more lipophilic chemicals
@@ -165,7 +165,7 @@ table(conc_data$SAMPLING_MATRIX)/nrow(conc_data)*100
 ```
 
 ### Exposure scenarios
-```{r scenarios}
+```{r scenarios, eval = FALSE}
 # Create a dataframe with 1 row for each unique external exposure scenario
 unique_scenarios <- conc_data[with(conc_data,                             
   order(PREFERRED_NAME,
@@ -178,7 +178,7 @@ unique_scenarios <- conc_data[with(conc_data,
 ### Observations and Predictions
 Create a list of dataframes of observed and predicted concentrations
 for each unique external exposure scenario (corresponding to 142 studies)
-```{r runmodel}
+```{r runmodel, eval = FALSE}
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
@@ -277,7 +277,7 @@ for(i in 1:nrow(unique_scenarios)){
 
 
 Create a predicted vs. observed plot for each study:
-```{r Makestudyplots}
+```{r Makestudyplots, eval = FALSE}
 cvtlist <- list()
 for(i in 1:nrow(unique_scenarios))
 {
@@ -316,7 +316,7 @@ for(i in 1:nrow(unique_scenarios))
 ```
 
 Create a list to hold the combined observations and predictions for each scenario:
-```{r init_dataset}
+```{r init_dataset, eval = FALSE}
 # Creation of simulated vs. observed concentration dataset
 unique_scenarios$RSQD <- 0
 unique_scenarios$RMSE <- 0
@@ -326,7 +326,7 @@ obvpredlist <- list()
 ```
 
 Merge the simulations and observations on the basis of simulation time:
-```{r merge_datasets}
+```{r merge_datasets, eval = FALSE}
 for(i in 1:length(simlist))
 {
   obsdata <- as.data.frame(obslist[[i]])
@@ -416,7 +416,7 @@ for(i in 1:length(simlist))
 
 Identify which quartile each observation occurred in with respect to the latest (maximum)
 observed time
-```{r time_quartile, eval=F}
+```{r time_quartile, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -439,7 +439,7 @@ for(i in 1:length(simobslist))
 ```
 
 Calculate the area under the curve (AUC)
-```{r calc_AUC}
+```{r calc_AUC, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -485,7 +485,7 @@ for(i in 1:length(simobslist))
 ```
 
 Calculate performance statistics
-```{r calc_error}
+```{r calc_error, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -507,7 +507,7 @@ for(i in 1:length(simobslist))
 ```
 
 Combine individual studies into single table
-```{r combine_studies}
+```{r combine_studies, eval = FALSE}
 obsvpredlist <- list()
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
@@ -543,7 +543,7 @@ for(i in 1:length(simobslist))
 
 ### Write out the study-level figures:
 
-```{r obsvspredplots, eval = F}
+```{r obsvspredplots, eval = FALSE}
 # Create pdfs of observed vs. predicted concentration plots
 dir.create("Linakis2020")
 pdf("Linakis2020/obvpredplots.pdf", width = 10, height = 10)
@@ -554,7 +554,7 @@ dev.off()
 ```
 
 ### Finish simulated concentration/time plots
-```{r annotate_study_stats}
+```{r annotate_study_stats, eval = FALSE}
 for (i in 1:length(cvtlist))
 {
   cvtlist[[i]] <- cvtlist[[i]] + 
@@ -580,7 +580,7 @@ for (i in 1:length(cvtlist))
 }
 ```
 
-```{r cvtplots, eval = F}
+```{r cvtplots, eval = FALSE}
 # Create pdfs of simulated concentration-time plots against observed c-t values
 pdf("Linakis2020/simdataplots.pdf")
 for (i in 1:length(cvtlist)) {
@@ -590,7 +590,7 @@ dev.off()
 ```
 
 Combine obs. vs. pred. into single table:
-```{r combine_obs_vs_pred}
+```{r combine_obs_vs_pred, eval = FALSE}
 simobsfull <- do.call("rbind",simobslist)
 simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
 simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
@@ -598,7 +598,7 @@ unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
 The observations in simobsfull are in both uM and ppmv -- standardize to uM
-```{r Standardize Units}
+```{r Standardize Units, eval = FALSE}
 these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
 for (this.chem in these.chems)
 {
@@ -628,7 +628,7 @@ for (this.chem in these.chems)
 
 ### Regressions
 Other analytics including linear regression on overall concentration vs. time observed vs. predicted
-```{r regression}
+```{r regression, eval = FALSE}
 table(unique_scenarios$CONC_SPECIES)
 nrow(simobsfull) - nrow(simobsfull[
   !is.na(simobsfull$simconc) & 
@@ -817,7 +817,7 @@ table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 ## TABLE AND PLOT GENERATION
 
 ### Figure 2: overall observed vs. predicted plot
-```{r obspredFig2}
+```{r obspredFig2, eval = FALSE}
 fig2 <- ggplot(
   data = simobsfull[
     simobsfull$simconc > 0 & 
@@ -880,14 +880,14 @@ fig2 <- ggplot(
 fig2 #Display plot in R
 ```
 
-```{r write_figure2, eval = F}
+```{r write_figure2, eval = FALSE}
 pdf("Linakis2020/Figure2.pdf", width = 10, height = 10)
 print(fig2)
 dev.off()
 ```
 
 ### Create and read out plots of overall cvt, cmax, and auc observed vs. pred
-```{r calculations}
+```{r calculations, eval = FALSE}
 # Create data and run calculations for populating plots
 cmaxfull <- subset(simobsfull, !duplicated(simobsfull$AUCobs) & simobsfull$Cmaxobs != 0)
 cmaxobs <- cmaxfull$Cmaxobs
@@ -952,7 +952,7 @@ aucmisschem <- table(aucfull[
 ```
 
 ### Figure 4: Cmax and AUC observed vs. Predicted Values
-```{r Fig4plot}
+```{r Fig4plot, eval = FALSE}
 cmaxp <- ggplot(data = cmaxfull, aes(x = log10(Cmaxsim), y = log10(Cmaxobs))) +
   geom_point(color = 
     ifelse(abs(log10(cmaxfull$Cmaxsim)  -log10(cmaxfull$Cmaxobs))>=1, "red","black"))  +
@@ -1069,14 +1069,14 @@ aucp <- ggplot(
 aucp
 ```
 
-```{r write_figure4, eval = F}
+```{r write_figure4, eval = FALSE}
 pdf("Linakis2020/Figure4.pdf", width = 20, height = 10)
 plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
 dev.off()
 ```
 
 ### Figure 3: Separation by chemical class
-```{r Fig3plot, eval=F}
+```{r Fig3plot, eval = FALSE}
 simobsfull$aggscen <- as.factor(paste(simobsfull$chem, 
   simobsfull$species, 
   simobsfull$matrix))
@@ -1116,7 +1116,7 @@ fig3 <- ggplot(
 fig3
 ```
 
-```{r write_figure3, eval = F}
+```{r write_figure3, eval = FALSE}
 pdf("Linakis2020/Figure3.pdf", width = 40, height = 13)
 print(fig3)
 dev.off()
@@ -1199,7 +1199,7 @@ figs1d <- ggplot(
 figs1d
 ```
 
-```{r write_figures1, eval = F}
+```{r write_figures1, eval = FALSE}
 pdf("Linakis2020/FigureS1.pdf", width = 20, height = 20)
 plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
 dev.off()

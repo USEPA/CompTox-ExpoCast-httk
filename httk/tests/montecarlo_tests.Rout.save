@@ -20,7 +20,7 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 > library(httk)
 > 
-> NSAMP <- 250
+> NSAMP <- 10
 > 
 > 
 > 
@@ -75,7 +75,7 @@ Warning messages:
 > calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-112.5 
+62.74 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -96,7 +96,7 @@ Warning messages:
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-5.605 
+2.347 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -114,7 +114,7 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-29.15 
+5.929 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound = 0, changed to 0.005.
@@ -130,8 +130,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-2.012 
+   95% 
+0.5009 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -144,7 +144,7 @@ Warning messages:
 > calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
  95% 
-2829 
+2433 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound is provided as a distribution.
@@ -169,8 +169,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-2.012 
+   95% 
+0.5018 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
@@ -191,8 +191,8 @@ Warning messages:
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
 Human volume of distribution returned in units of L/kg BW.
-  95% 
-2.012 
+   95% 
+0.5009 
 Warning messages:
 1: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
@@ -205,8 +205,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-1.284 
+   95% 
+0.3913 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
@@ -231,7 +231,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-86.66 
+94.94 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -262,7 +262,7 @@ Warning messages:
 +     clint.pop.cv = 0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-68.69 
+54.13 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -283,7 +283,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-59.27 
+81.38 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -304,7 +304,7 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-31.67 
+26.09 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -364,7 +364,7 @@ Warning messages:
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-13.17 
+13.05 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
@@ -390,8 +390,8 @@ Warning messages:
 > # make sure the oral equivalent function works:
 > calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
- 95% 
-3.84 
+  95% 
+9.174 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
