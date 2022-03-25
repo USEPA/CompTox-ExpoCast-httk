@@ -20,15 +20,7 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 > library(httk)
 > 
-> calc_analytic_css(chem.name="bisphenol a",model="1compartment")
-Human volume of distribution returned in units of L/kg BW.
-Plasma concentration returned in uM units.
-[1] 1.464
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
+> #calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
@@ -47,17 +39,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
-> calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
-Human volume of distribution returned in units of L/kg BW.
-Tissue concentration for liver returned in uM units.
-[1] 26.83
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-3: In calc_analytic_css(chem.cas = "80-05-7", model = "1compartment",  :
-  Tissue selected. Overwriting option for concentration with "tissue".
+> #calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
@@ -70,50 +52,8 @@ Warning messages:
 3: In calc_analytic_css(chem.cas = "80-05-7", model = "1compartment",  :
   Tissue selected. Overwriting option for concentration with "tissue".
 > 
-> head(solve_1comp(chem.name="bisphenol a"))
-Human volume of distribution returned in units of L/kg BW.
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
-The model outputs are provided in the following units:
-	umol: Agutlumen, Ametabolized
-	uM: Ccompartment
-	uM*days: AUC
-
-        time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
-[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
-[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
-[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
-[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
-[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-> head(solve_1comp(chem.cas="80-05-7"))
-Human volume of distribution returned in units of L/kg BW.
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
-The model outputs are provided in the following units:
-	umol: Agutlumen, Ametabolized
-	uM: Ccompartment
-	uM*days: AUC
-
-        time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
-[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
-[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
-[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
-[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
-[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
+> ##head(solve_1comp(chem.name="bisphenol a"))
+> #head(solve_1comp(chem.cas="80-05-7"))
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
 Human volume of distribution returned in units of L/kg BW.
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
@@ -265,49 +205,5 @@ Warning messages:
   Rblood2plasma has been recalculated.
 2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-> 
-> script.args <- commandArgs(TRUE)
-> if (length(script.args) > 0) 
-+ {
-+   if (any(script.args=="mctest"))
-+   {
-+     set.seed(12345)
-+     calc_mc_css(chem.name="bisphenol a",model="1compartment")
-+     set.seed(12345)
-+     calc_mc_css(chem.cas="80-05-7",model="1compartment")
-+     set.seed(12345)
-+     calc_mc_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
-+   }
-+   if (any(script.args=="wetmoretest"))
-+   {
-+     wetmore.chems <- subset(chem.physical_and_invitro.data,
-+       regexpr("Wetmore",Human.Clint.Reference)!=-1 &
-+       regexpr("Wetmore",Human.Funbound.plasma.Reference)!=-1)
-+     Css.table <- data.frame()
-+     for (this.cas in sort(get_lit_cheminfo()))
-+       if (this.cas %in% get_cheminfo(model="pbtk") &
-+         this.cas %in% wetmore.chems$CAS)
-+       {
-+         Css.table[this.cas,"Css.lit"] <- get_lit_css(chem.cas=this.cas,
-+           output.units="uM",
-+           which.quantile=0.5)
-+         Css.table[this.cas,"Css.calc"] <- calc_analytic_css(chem.cas=this.cas,
-+           model="1compartment")
-+       }                                                                          
-+     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
-+    
-+     #library(ggplot2)
-+     #test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
-+     #         geom_point(size=3)+
-+     #   scale_y_log10()+
-+     #   scale_x_log10()+
-+     #  ylab(expression(paste(C[aa]," Literature (uM)"))) +
-+     #  xlab(expression(paste(C[aa]," 1compartment model (uM)"))) +
-+     #  geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
-+     #
-+     #dev.new()
-+     #print(test.fig)
-+   }
-+ }
 > 
 > quit("no")

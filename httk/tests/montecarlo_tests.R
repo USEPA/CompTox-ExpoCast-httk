@@ -1,7 +1,7 @@
 #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 library(httk)
 
-NSAMP <- 250
+NSAMP <- 10
 
 
 

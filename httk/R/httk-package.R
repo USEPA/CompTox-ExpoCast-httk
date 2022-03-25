@@ -325,7 +325,7 @@ NULL
 #' @author John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 #' Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 #' @seealso
-#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{
+#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
 #' PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 #' 
 #' \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
@@ -338,7 +338,7 @@ NULL
 #' models and the chemical activity concept to facilitate the use of in vitro 
 #' toxicity data for risk assessment}
 #' 
-#' \doi{10.1093/toxsci/kfv171}{Incorporating High-Throughput Exposure 
+#' \doi{10.1093/toxsci/kefv171}{Incorporating High-Throughput Exposure 
 #' Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 #' 
