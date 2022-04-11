@@ -1,10 +1,10 @@
 ---
-title: "Ring et al. (2017) AER plotting"
+title: "Ring et al. (2017) Vignette 6: AER plotting"
 author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring et al. (2017): AER plotting}
+  %\VignetteIndexEntry{Ring et al. (2017) Vignette 6: AER plotting}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,7 +25,7 @@ The vignette about model evaluations for subpopulations produced data files for 
 
 # Computing OEDs
 The first step is to read in the Css percentile data. We'll go ahead and do this for all 10 subpopulations.
-```{r read_css_data, eval=FALSE}
+```{r read_css_data, eval = FALSE}
 #Set some basic parameters for which data set to use
 poormetab <- TRUE
 fup.censored.dist <- TRUE
@@ -62,14 +62,14 @@ dat <- rbindlist(lapply(ExpoCast.groups,
                           }))
 ```
 Get the compound names that correspond to each CAS.
-```{r add_chemnames, eval=FALSE}
+```{r add_chemnames, eval = FALSE}
 chem.dt <- as.data.table(httk::get_cheminfo(info=c('CAS', 'Compound'),
                                             exclude.fup.zero=FALSE))
 setnames(chem.dt, 'CAS', 'chemcas')
 dat <- merge(dat, chem.dt, by='chemcas')
 ```
 Next, read in the ToxCast AC50 values.
-```{r read_toxcast, eval=FALSE}
+```{r read_toxcast, eval = FALSE}
 #Column names are Assay Endpoint, CASRN, Activity Call, Q, AC50, Emax, Log AC50,
 #B, T, W, Data Type, Chemical Name.
 #Replace names containing spaces with names without spaces.
@@ -78,13 +78,13 @@ Next, read in the ToxCast AC50 values.
 #         c('Assay.Endpoint', 'AC50', 'Chemical.Name', 'Activity.Call'))
 ```
 Keep only the rows of ToxCast data where the chemical was judged "Active" in an assay. Note: this will remove some chemicals entirely (if they were "Inactive" in all assays).
-```{r delete_inactives, eval=FALSE}
+```{r delete_inactives, eval = FALSE}
 #Keep only the rows with "Active" calls.
 #tc.dt.sub <- tc.dt[Activity.Call=="Active", 
 #                   .(Chemical.Name, CASRN, Assay.Endpoint, Activity.Call, AC50)]
 ```
 We summarize the distribution of AC50 values across all assays for each chemical by taking several percentiles.
-```{r compute_ac50_pctiles, eval=FALSE}
+```{r compute_ac50_pctiles, eval = FALSE}
 ac50pct <- tc.dt.sub[, 
                      as.list(quantile(AC50, 
                                       probs=c(0,0.05,0.1,
@@ -94,7 +94,7 @@ ac50pct <- tc.dt.sub[,
                      keyby=CASRN]
 ```
 By default, the columns of `ac50pct` have names like "5%", "10%", etc. The "%" sign interferes with `data.table`'s syntax for referring to columns. So we replace names like "5%" with names like "AC50p5", to indicate that the column contains AC50 values, percentile 5. To do this, use regular expressions.
-```{r fix_ac50_names, eval=FALSE}
+```{r fix_ac50_names, eval = FALSE}
 pctnames <- grep(names(ac50pct), pattern='%',value=TRUE)
 setnames(ac50pct,
          pctnames,
@@ -108,7 +108,7 @@ setnames(ac50pct,
 setnames(ac50pct, 'CASRN', 'chemcas')
 ```
 Now we are ready to compute OEDs. Let's compute one OED corresponding to each ToxCast AC50, using the 95th percentile Css for all of them.
-```{r compute_oed, eval=FALSE}
+```{r compute_oed, eval = FALSE}
 #merge in the AC50 percentile data
 m.tmp <- merge(dat,ac50pct,by='chemcas')
 #find column names beginning with "AC50"
@@ -124,7 +124,7 @@ m.tmp[, (paste('oed', ac50names, sep='.')):=lapply(.SD,
 ```
 For another view of the data, let's compute one OED corresponding to each Css percentile, using the 10th percentile AC50 value for all of them.
 
-```{r compute_oed_css, eval=FALSE}
+```{r compute_oed_css, eval = FALSE}
 #merge in the AC50 percentile data
 m.css <- merge(dat,ac50pct,by='chemcas')
 #find column names beginning with "css"
@@ -141,7 +141,7 @@ m.css[, (paste('oed', cssnames, sep='.')):=lapply(.SD,
 
 # Exposure data
 Bringing in the NHANES exposure inference data, onlyp, let's compute the "worst-case" AER: using `oed.css95` (the OED based on the 95th percentile Css value and 10th percentile AC50) and `exposure.median.95CI.upper` (the upper bound of the 95% confidence interval on the median exposure estimate).
-```{r compute_aer, eval=FALSE}
+```{r compute_aer, eval = FALSE}
 #Merge in the exposure data
 m.tmp <- merge(m.tmp,onlyp,
                by=c("chemcas", "ExpoCast.group"))
@@ -153,7 +153,7 @@ m.css[, aer:=oed.css95/exposure.median.95CI.upper]
 ```
 # Plotting OED vs. exposure boxplots
 First, take care of some housekeeping. Replace a couple of very long chemical names with shorter names, for better display.
-```{r shorten_chemnames, eval=FALSE}
+```{r shorten_chemnames, eval = FALSE}
 #Shorten a couple of compound names for display
 m.tmp[Compound=="O-ethyl o-(p-nitrophenyl) phenylphosphonothioate",
       Compound:="Phosphonothioic acid"]
@@ -165,13 +165,13 @@ m.css[Compound=="4-(1,1,3,3-tetramethylbutyl)phenol",
       Compound:="p-tert-Octylphenol"]
 ```
 For this plot, show only the total population.
-```{r keep_only_total, eval=FALSE}
+```{r keep_only_total, eval = FALSE}
 #Plot only for the total population
 m.Total <- m.tmp[ExpoCast.group=='Total',]
 m.css.Total <- m.css[ExpoCast.group=='Total',]
 ```
 By default, `ggplot2` will plot the chemicals in alphabetical order. Instead, let's order them from smallest to largest AER. To do this, we need to sort the data table, then create a chemical names *factor* variable, with levels given by the AER-sorted order.
-```{r order_chemnames_by_aer, eval=FALSE}
+```{r order_chemnames_by_aer, eval = FALSE}
 #Order the chemicals by AER
 setorder(m.Total, aer)
 #Get a list of ordered chemical names so that ggplot2 will plot them in the 
@@ -189,7 +189,7 @@ m.css.Total[, Compound.factor:=factor(Compound, levels=cpdlevels)]
 m.css[, Compound.factor:=factor(Compound, levels=cpdlevels)]
 ```
 Now, we're ready to start the plot. First, make the OED boxes, ranging from 25th percentile AC50 to 75th percentile AC50, with a crossbar at median AC50.
-```{r oed_boxplot_boxes, eval=FALSE}
+```{r oed_boxplot_boxes, eval = FALSE}
 #Start the plot: first, make the OED boxes, ranging between 25th and 75th 
 #percentile AC50, with a crossbar at median AC50.
 p <- ggplot(data=m.Total) +
@@ -197,7 +197,7 @@ p <- ggplot(data=m.Total) +
                     ymin=oed.AC50p25,ymax=oed.AC50p75))
 ```
 Add the upper whisker (to OED for 90th percentile AC50) and the lower whisker (to OED for 10th percentile OED).
-```{r oed_boxplot_whiskers, eval=FALSE}
+```{r oed_boxplot_whiskers, eval = FALSE}
 p <- p +
   geom_linerange(aes(x=Compound.factor,
                      ymin=oed.AC50p75,
@@ -207,13 +207,13 @@ p <- p +
                      ymax=oed.AC50p25))  
 ```
 And add points above and below the box-and-whisker plots, to represent OEDs for 95th percentile AC50 values, and for 5th percentile AC50 values.
-```{r oed_boxplot_points, eval=FALSE}
+```{r oed_boxplot_points, eval = FALSE}
 p <- p +
   geom_point(aes(x=Compound.factor, y=oed.AC50p95)) + 
   geom_point(aes(x=Compound.factor, y=oed.AC50p5))
 ```
 Finally, add the exposure box plots, ranging between the upper and lower bounds on the 95% confidence interval for the median, with a crossbar at the median.
-```{r oed_boxplot_exposure_boxes, eval=FALSE}
+```{r oed_boxplot_exposure_boxes, eval = FALSE}
 p <- p +
   geom_crossbar(aes(x=Compound.factor, y=exposure.median,
                     ymin=exposure.median.95CI.lower,
@@ -221,7 +221,7 @@ p <- p +
                 color='#FC8D62') 
 ```
 Set the OED/exposure axis (vertical axis) to a log scale, and do some tweaking of the plot labels to make things more readable.
-```{r oed_boxplot_tweak, eval=FALSE}
+```{r oed_boxplot_tweak, eval = FALSE}
 p <- p +
   scale_y_log10()+
   theme_bw()+
@@ -234,7 +234,7 @@ p <- p +
        y='OED or Inferred Exposure, \n mg/kg/day')
 ```
 Then save the plot.
-```{r oed_boxplot_save, fig.width=14, fig.height=11, eval=FALSE}
+```{r oed_boxplot_save, fig.width=14, fig.height=11, eval = FALSE}
 ggsave(plot=p, filename=paste0('pdf_figures/',
                                paste('oed_exposure_plot',model,
                                      'poormetab', poormetab,
@@ -248,7 +248,7 @@ print(p)
 
 Then let's do it again for the OEDs computed for different Css percentiles. Remember that the OEDs are inversely proportional to Css.
 
-```{r oed_css_boxplot, fig.width=14, fig.height=11, eval=FALSE}
+```{r oed_css_boxplot, fig.width=14, fig.height=11, eval = FALSE}
 p <- ggplot(data=m.css.Total) +
   geom_crossbar(aes(x=Compound.factor,y=oed.css50,
                     ymin=oed.css75,
@@ -292,7 +292,7 @@ Heatmaps will let us visualize the magnitude of the difference in AER, OED, and 
 To visualize the difference in AER from the total population for each group, it's probably best to look at the order-of-magnitude differences. That is, if AER for the total population for a given chemical is 1e6, and AER for the same chemical for the Age.6.11 population is 1, then AER for Age.6.11 is 6 orders of magnitude less than AER for the total population.
 
 To compute this numerically, compute the difference in the log10 AERs between each subpopulation and the total population. In the example above, log10 AER for Age.6.11 is log10(1) = 0, and log10 AER for the total population is log10(1e6) = 6. So the difference is 0 - 6 = -6.
-```{r compute_aer_log10diff, eval=FALSE}
+```{r compute_aer_log10diff, eval = FALSE}
 #Compute difference in log AERs:
 #log AER group - log AER Total
 m.tmp[, logAER.diff:=log10(aer)-
@@ -302,7 +302,7 @@ m.tmp[, logAER.diff:=log10(aer)-
 #if logAER.diff is negative, then log AER group < log AER Total
 ```
 To create the heatmap, first cast the data table into matrix form.
-```{r cast_matrix_aer, eval=FALSE}
+```{r cast_matrix_aer, eval = FALSE}
 #Cast into matrix
 m.mat <- reshape2::acast(m.tmp[,
                                .(Compound.factor, ExpoCast.group, logAER.diff)],
@@ -310,7 +310,7 @@ m.mat <- reshape2::acast(m.tmp[,
                          value.var='logAER.diff')
 ```
 To visualize differences above and below some mean value, it's usually best to use a diverging colormap, like those in [ColorBrewer 2](https://colorbrewer2.org). Unfortunately, `heatmap.2` --- the function we'll use to create the heatmap plots --- doesn't have a built-in way to properly interpolate the diverging color palettes provided by, e.g., `RColorBrewer`. So we have to set up a function to do the interpolation. This function is a minor adaptation of some code provided in [a Stack Overflow answer by Josh O'Brien](https://stackoverflow.com/a/10986203).
-```{r diverge_color, eval=FALSE}
+```{r diverge_color, eval = FALSE}
 #Use a diverging color palette
 #Based on http://stackoverflow.com/a/10986203 by Josh O'Brien
 diverge.color <- function(data,pal_choice="RdBu",Thresh=0){
@@ -336,18 +336,18 @@ diverge.color <- function(data,pal_choice="RdBu",Thresh=0){
   }
 ```
 Then we use the `diverge.color` function to generate the appropriate colors and breaks for the AER data.
-```{r aer_colors, eval=FALSE}
+```{r aer_colors, eval = FALSE}
 brks <- diverge.color(data=c(as.vector(m.mat), -0.8,0.8),pal_choice='RdBu')
 breaksv <- brks$cuts[['brks']]
 ```
 Then we generate a matrix of character strings so that we can label the single cell with missing data for the AER and exposure heatmaps.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 notemat <- matrix(rep("", length(m.mat)), nrow=nrow(m.mat), ncol=ncol(m.mat))
 notemat[which(is.na(m.mat), arr.ind=TRUE)] <- 'NA'
 ```
 
 For ease of use later, define a list of plotting options to use for all the heatmap.2 calls.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 hm_args <- list(Rowv=FALSE, #don't reorder rows
                  dendrogram = 'column',
                  col=brks$rc1,
@@ -368,7 +368,7 @@ hm_args <- list(Rowv=FALSE, #don't reorder rows
 ```
 
 Finally, we actually plot the heatmap!
-```{r plot_heatmap_aer, fig.width=12, fig.height=12, eval=FALSE}
+```{r plot_heatmap_aer, fig.width=12, fig.height=12, eval = FALSE}
 pdf(paste0('pdf_figures/',
            paste('deltaAERheatmap',
                  'model',model,
@@ -386,7 +386,7 @@ hm1 <- do.call(what=heatmap.2,
                       hm_args))
 ```
 We also want to plot a version with a colorbar to the left of the heatmap, illustrating the orders of magnitude of the AERs in the Total population.
-```{r plot_heatmap_aer_annotate, fig.width=12, fig.height=12, eval=FALSE}
+```{r plot_heatmap_aer_annotate, fig.width=12, fig.height=12, eval = FALSE}
 m.Total[, aer.ordermag:=findInterval(log10(aer), 0:8)]
 cols <- RColorBrewer::brewer.pal(name='Set3', n=9)
 colvect <- cols[m.Total[,aer.ordermag+1]]
@@ -412,30 +412,30 @@ hm1.ann <- do.call(what=heatmap.2,
 
 ## Plotting OED heatmap
 We follow a similar procedure for the OED heatmap. First, compute differences in the log10 OEDs for each subpopulation from the total population.
-```{r compute_log10diff_oed, eval=FALSE}
+```{r compute_log10diff_oed, eval = FALSE}
 #Likewise, compute differences in log OEDs
 m.tmp[, logOED.diff:=log10(oed.AC50p10)-
         m.tmp[ExpoCast.group=='Total', log10(oed.AC50p10)],
       by=ExpoCast.group]
 ```
 Then construct the matrix in the same way.
-```{r cast_matrix_oed, eval=FALSE}
+```{r cast_matrix_oed, eval = FALSE}
 m.mat2 <- reshape2::acast(m.tmp[,
                                 .(Compound.factor, ExpoCast.group, logOED.diff)],
                           Compound.factor~ExpoCast.group,
                           value.var='logOED.diff')
 ```
 Generate the diverging colormap for the OED data.
-```{r oed_color, eval=FALSE}
+```{r oed_color, eval = FALSE}
 brks <- diverge.color(data=c(as.vector(m.mat2), -0.8,0.8), pal_choice='RdBu')
 breaksv <- brks$cuts[['brks']]
 ```
 Put the subpopulations in the same order as for the AER heatmap.
-```{r oed_order_subpops, eval=FALSE}
+```{r oed_order_subpops, eval = FALSE}
 m.mat2 <- m.mat2[, hm1$colInd]
 ```
 And finally, plot the heatmap.
-```{r plot_heatmap_oed, fig.width=12, fig.height=12, eval=FALSE}
+```{r plot_heatmap_oed, fig.width=12, fig.height=12, eval = FALSE}
 hm_args_oed <- hm_args
 hm_args_oed$col <- brks$rc1
 hm_args_oed$breaks <- breaksv
@@ -461,7 +461,7 @@ do.call(what=heatmap.2,
 
 ## Exposure heatmap
 The procedure is the same for the exposure data.
-```{r plot_heatmap_exposure, fig.width=12, fig.height=12, eval=FALSE}
+```{r plot_heatmap_exposure, fig.width=12, fig.height=12, eval = FALSE}
 #And likewise, compute differences in log exposures
 m.tmp[, logexposure.diff:=log10(exposure.median.95CI.upper)-
         m.tmp[ExpoCast.group=='Total', log10(exposure.median.95CI.upper)],
@@ -505,7 +505,7 @@ do.call(what=heatmap.2,
 ```
 
 Finally, write the OED, exposure, and AER data in tabular form.
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 setorder(m.tmp, ExpoCast.group, aer)
 write.table(m.tmp[, .(Compound, ExpoCast.group, css95, oed.AC50p10, exposure.median.95CI.upper, aer)], file="data/aer_data_FuptoFub.txt", row.names=FALSE)
 ```

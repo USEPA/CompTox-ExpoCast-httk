@@ -31,7 +31,7 @@ create_mc_samples(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   propagate.invitrouv.arg.list = list(),
-  parameterize.arg.list = list(restrictive.clearance = T, default.to.human = FALSE,
+  parameterize.arg.list = list(restrictive.clearance = TRUE, default.to.human = FALSE,
     clint.pvalue.threshold = 0.05, regression = TRUE)
 )
 }
@@ -76,7 +76,7 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
+of detection (specified separately for each parameter). This argument should
 be a list of sub-lists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New
