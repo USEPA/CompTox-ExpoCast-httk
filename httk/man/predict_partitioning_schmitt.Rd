@@ -9,6 +9,7 @@ predict_partitioning_schmitt(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
+  model = "pbtk",
   default.to.human = FALSE,
   parameters = NULL,
   alpha = 0.001,
@@ -33,6 +34,9 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{model}{Model for which partition coefficients are neeeded (for example,
+"pbtk", "3compartment")}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}

@@ -63,7 +63,7 @@ calc_hep_fu <- function(
   
   if (!all(c("Pow","pKa_Donor","pKa_Accept") 
     %in% names(parameters))) 
-    stop("Missing parameters needed in calc_fu_hep.")            
+    stop("Missing parameters needed in calc_hep_fu.")            
                  
   Pow <- parameters$Pow
   pKa_Donor <- parameters$pKa_Donor

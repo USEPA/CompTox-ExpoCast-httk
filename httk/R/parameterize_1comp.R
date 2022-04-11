@@ -116,7 +116,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=FALSE)
+                         suppress.messages=suppress.messages)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -198,12 +198,12 @@ parameterize_1comp <- function(
                    chem.cas=chem.cas),
                  silent=TRUE)
 
-    if (class(Fgutabs) == "try-error") Fgutabs <- 1
+    if (is(Fgutabs,"try-error")) Fgutabs <- 1
     
     params[['Fgutabs']] <- Fgutabs
     params[['hepatic.bioavailability']] <- 
       ss.params[['hepatic.bioavailability']]  
     params[['BW']] <- this.phys.data[["Average BW"]]
   
-  return(lapply(params,set_httk_precision))
+  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
 }

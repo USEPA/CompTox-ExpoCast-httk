@@ -6,13 +6,32 @@
 # Analytic expression for steady-state plasma concentration.
 model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 
+# When calculating steady-state, which compartment do we test? 
+# ("C" is preprended):
+model.list[["1compartment"]]$steady.state.compartment <- "compartment"
+
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
 # Function called for running the model:
 model.list[["1compartment"]]$solve.func <- "solve_1comp"
 
-# How the tissues from tissue.table are lumped together to form the model:
+# Here are the tissues from tissue.data that are considered:
+model.list[["1compartment"]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",          
+  "red blood cells",
+  "rest")
+  
 # 1compartment model lumps everything, so list of compartments is empty.
 model.list[['1compartment']]$tissuelist <- NULL
 
@@ -53,7 +72,7 @@ model.list[["1compartment"]]$Rtosolvermap <- list(
 # If the model does not include an explicit gut-liver link before systemic
 # circulation, then we want to decrease the absorbed dose by the first past
 # hepatic extraction factor:
-model.list[["1compartment"]]$do.first.pass <- T
+model.list[["1compartment"]]$do.first.pass <- TRUE
 
 # This function translates the R model parameters into the compiled model
 # parameters:
@@ -84,23 +103,47 @@ model.list[["1compartment"]]$default.monitor.vars <- c(
   "Ametabolized",
   "AUC")
 
-# Allowable units:
-model.list[["1compartment"]]$allowed.units <- c('um', 'mg/l')
+
+# Allowable units assigned to dosing input:
+model.list[["1compartment"]]$allowed.units.input <- list(
+      "oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[["1compartment"]]$allowed.units.output <- list(
+       "oral" = c('umol','uM','mg/L','uM*days','mg/L*days'),
+       "iv" = c('umol','uM','mg/L','uM*days','mg/L*days'))
+
+# Default set of units assigned to correspond to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
+# AUC values should also be included.
+model.list[["1compartment"]]$compartment.units <- c(
+    "Agutlumen"="umol",
+    "Acompartment"="umol",
+    "Ametabolized"="umol", 
+    "Ccompartment"="uM",
+    "AUC" = "uM*days")
 
 # These parameters specific the exposure scenario simulated by the model:
-model.list[["1compartment"]]$dosing.params <- c("daily.dose",
+model.list[["1compartment"]]$dosing.params <- c(
+  "daily.dose",
   "initial.dose",
   "doses.per.day",
   "dosing.matrix")
-model.list[["1compartment"]]$routes <- c("oral","iv")
+
+model.list[["1compartment"]]$routes <- list(
+  "oral" = list(
 # We need to know which compartment gets the dose 
-model.list[["1compartment"]]$dose.variable <- list(oral="Agutlumen",
-  iv="Acompartment")
-# Can take the values "add" to add dose C1 <- C1 + dose,
-#"replace" to change the value C1 <- dose
-#or "multiply" to change the value to C1 <- C1*dose
-model.list[["1compartment"]]$dose.type <- list(oral="add",
-  iv="add")
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
+  "iv" = list(
+    "entry.compartment" = "Acompartment",
+    "dose.type" = "add")
+  )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
@@ -141,9 +184,6 @@ model.list[["1compartment"]]$httkpop.params <- c(
   "Rblood2plasma",
   "Vdist")
 
-#Governs how tissues are lumped:
-model.list[["1compartment"]]$tissue.list <- NULL
-
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["1compartment"]]$calcpc <- TRUE
 
@@ -152,4 +192,13 @@ model.list[["1compartment"]]$calcpc <- TRUE
 model.list[["1compartment"]]$firstpass <- TRUE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["1compartment"]]$exclude.fup.zero <- T
+model.list[["1compartment"]]$exclude.fup.zero <- TRUE
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["1compartment"]]$chem.class.filt <- c("PFAS")

@@ -1,20 +1,41 @@
+#' Test the check digit of a CAS number to confirm validity
+#' 
+#' Chemical abstracts services registry numbers (CAS-RN) include a final digit
+#' as a "checksum" to test for validity (that is, that the number has not been
+#' corrupted). 
+#' 
+#' The check digit (final number) is calculated by working from right to left,
+#' starting with the second to last digit of the CAS-RN. We multiply each digit
+#' by an increasing digit (1, 2, 3...) and sum as we work from right to left.
+#' The check digit should equal the final digit of the sum.
+#' 
+#' @param CAS.string A character string of three numbers separated by two dashes
+#'
+#' @return logical (TRUE if final digit of CAS is consistent with other digits)
+#' 
+#' @author John Wambaugh
+#' 
+#' @export CAS.checksum
 CAS.checksum <- function(CAS.string)
 {
   test.num <- 0
   multiplier <- 1
   if(is.factor(CAS.string)) CAS.string <- as.character(CAS.string)
   for (i in (nchar(CAS.string)-2):1)
-    if (!is.na(as.numeric(substr(CAS.string,i,i))))
+    if (!is.na(suppressWarnings(as.numeric(substr(CAS.string,i,i)))))
     {
-      test.num <- test.num + as.numeric(substr(CAS.string,i,i))*multiplier
+      test.num <- test.num + 
+        suppressWarnings(as.numeric(substr(CAS.string,i,i)))*multiplier
       multiplier <- multiplier + 1
     }
-  if (is.na(test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))) return(F)
-  return (test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))
+  if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))) return(F)
+  return (test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))
 }
 
 
-#' Add a paramter value to the chem.physical_and_invitro.data table
+#' Add a parameter value to the chem.physical_and_invitro.data table
 #' 
 #' This internal function is used by \code{\link{add_chemtable}} to add a single 
 #' new parameter to the table of chemical parameters. It should not be typically
@@ -242,18 +263,21 @@ augment.table <- function(
     {
       if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
       {
+    # If it's numeric we want to control sig figs:
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
+    # Otherwise force it to be a character:
         if (class(this.table[,this.property])!='character')
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
 # Check to see if this is actually a number and we can use sig figs:        
-        if (!is.na(as.numeric(value)))
+        if (!is.na(suppressWarnings(as.numeric(value))))
         {
-          if (as.character(as.numeric(value)) == as.character(value))
+          if (as.character(suppressWarnings(as.numeric(value))) == 
+            as.character(value))
           {
-            value <- signif(as.numeric(value), sig.fig)
+            value <- signif(suppressWarnings(as.numeric(value)), sig.fig)
           }
         }
         this.table[index,this.property] <- as.character(value)
@@ -343,9 +367,10 @@ augment.table <- function(
 #' @author John Wambaugh
 #' @examples
 #' 
-#' \donttest{
+#' library(httk)
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
-#' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(
+#'                      "111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
 #'                     stringsAsFactors=FALSE))
@@ -356,7 +381,8 @@ augment.table <- function(
 #' colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 #' 
 #' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
-#'                                   current.table=chem.physical_and_invitro.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
 #'                                   data.list=list(
 #'                                   Compound="Name",
 #'                                   CAS="CASRN",
@@ -369,7 +395,41 @@ augment.table <- function(
 #'                                   reference="MyPaper 2015")
 #' parameterize_steadystate(chem.name="C")  
 #' calc_css(chem.name="B")                                
-#' }
+#'
+#' # Initialize a column describing proton donors ("acids")
+#' my.new.data$pka.a <- NA 
+#' # set chemical C to an acid (pKa_donor = 5):
+#' my.new.data[my.new.data$Name=="C","pka.a"] <- "5"
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
+#'                                  data.list=list(
+#'                                  Compound="Name",
+#'                                  CAS="CASRN",
+#'                                  DTXSID="DTXSID",
+#'                                  pKa_Donor="pka.a"),
+#'                                  species="Human",
+#'                                  reference="MyPaper 2015") 
+#'
+#' # Note Rblood2plasma and hepatic bioavailability change (relative to above):
+#' parameterize_steadystate(chem.name="C")  
+#'
+#' # Initialize a column describing proton acceptors ("bases")
+#' my.new.data$pka.b <- NA 
+#' # set chemical B to a base with multiple pka's (pKa_accept = 7 and 8):
+#' my.new.data[my.new.data$Name=="B","pka.b"] <- "7;8"
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
+#'                                  data.list=list(
+#'                                  Compound="Name",
+#'                                  CAS="CASRN",
+#'                                  DTXSID="DTXSID",
+#'                                  pKa_Accept="pka.b"),
+#'                                  species="Human",
+#'                                  reference="MyPaper 2015") 
+#' # Note that average and max change (relative to above):
+#' calc_css(chem.name="B")     
 #' 
 #' @export add_chemtable
 add_chemtable <- function(
@@ -383,12 +443,19 @@ add_chemtable <- function(
   clint.pvalue.overwrite=TRUE,
   allow.na=FALSE)
 {
+# Trouble with tibls:
+  new.table <- as.data.frame(new.table)
+
 # Let's make the capitalization consistent in data.list:
-  exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
+  exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol",
+    "MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt",
+    "DTXSID","Formula","Caco2.Pab")
   for (this.name in names(data.list))
   {
-    if (tolower(this.name) %in% tolower(exceptions)) this.name <- exceptions[tolower(exceptions)==tolower(this.name)]
-    else {
+    if (tolower(this.name) %in% tolower(exceptions)) 
+    {
+      this.name <- exceptions[tolower(exceptions)==tolower(this.name)]
+    } else {
       this.name <- tolower(this.name)
       substring(this.name,1,1) <- toupper(substring(this.name,1,1))
     }
@@ -411,7 +478,8 @@ matched to a \"new.table\" column in argument \"data.list\".")
 columns in \"data.list\".")
 
 # Identify which entries in data.list are being added to the table:
-  new.data <- names(data.list)[!(names(data.list) %in% c("CAS","Compound","Reference","Species"))]
+  new.data <- names(data.list)[!(names(data.list) %in% c(
+    "CAS","Compound","Reference","Species"))]
   if (!is.null(reference)) this.reference <- reference
   for (this.row in 1:dim(new.table)[1])
   {
@@ -421,7 +489,10 @@ columns in \"data.list\".")
       this.compound <- tolower(new.table[this.row,data.list[["Compound"]]])
     }
     else this.compound <- NULL
-    if (is.null(reference)) this.reference <- new.table[this.row,data.list[["Reference"]]]
+    if (is.null(reference)) 
+    {
+      this.reference <- new.table[this.row,data.list[["Reference"]]]
+    }
     if (is.null(species))
     {
       if ("Species" %in% names(data.list))
@@ -434,8 +505,10 @@ columns in \"data.list\".")
     }
     for (this.data in new.data)
     {
-      if (!(data.list[[this.data]] %in% colnames(new.table))) stop(paste(data.list[[this.data]],
-        "is not a column in the new table."))
+      if (!(data.list[[this.data]] %in% colnames(new.table)))
+      {
+        stop(paste(data.list[[this.data]], "is not a column in the new table."))
+      }
       current.table <- augment.table(
         current.table,
         this.CAS,
