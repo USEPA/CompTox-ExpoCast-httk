@@ -130,7 +130,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     skin_depth=0.3, #pars
                     skin.pH=7, #pars
                     vmax.km=F, #pars
-                    BW = 70, #pars
                     height=175, #pars
                     route = NULL, #DERMAL
                     Vmedia = NULL, #DERMAL
@@ -240,7 +239,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       skin_depth = skin_depth,
       skin.pH = skin.pH,
       vmax.km = vmax.km,
-      BW = BW,
       height = height
     ),
     ...)

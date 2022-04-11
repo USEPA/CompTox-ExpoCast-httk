@@ -13,6 +13,10 @@
 #' @param model.type Choice of dermal model, either the default "dermal" for the 
 #' model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
 #' or "dermal_1subcomp" for the model with 1 compartment for the skin.
+#' @param method.permeability For "dermal_1subcomp" model, method of calculating 
+#' the permeability coefficient, Kp, either "Potts-Guy" or "Sawyer-Chen". Default
+#' is "Sawyer-Chen" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' law of diffusion to calculate Kp.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -37,8 +41,6 @@
 #' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
 #' Vmax and Km in parameters instead of Clmetabolismc and
 #' million.cells.per.gliver.
-#' @param BW Body weight, kg, used in calculating totalSA and returned in
-#' parameter list.
 #' @param height Height in cm, used in calculating totalSA.
 #' @return
 #' 
@@ -109,6 +111,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               model.type="dermal", #can also be "dermal_1subcomp"
+                              method.permeability = "Sawyer-Chen",
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
@@ -120,8 +123,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
                               skin_depth=0.3,
                               skin.pH=7,
-                              vmax.km=F, 
-                              BW=70, 
+                              vmax.km=F,
                               height = 175,
                               ...) 
 {
@@ -281,10 +283,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Pow = Pow,
     pKa_Donar = pKa_Donor,
     pKa_Accept=pKa_Accept,
-    MA=schmitt.params[["MA"]],
-    kUrtc = 11.0, #Added MWL 9-20-19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
-    Vmucc = 0.0001)) #Added MWL 9-20-19??? (copying parameterize_gas_pbtk.R, AEM 1/13/2022)
-  
+    MA=schmitt.params[["MA"]])
+    
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
  outlist <- c(outlist,list(
    Fhep.assay.correction=calc_hep_fu(
@@ -311,17 +311,44 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                                                              species=species,
                                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma),
                Fgutabs=Fgutabs)
-
-    Kscw <- 0.9 * schmitt.params$Pow^0.69 #stratum-corneum "water?"
-    Kvw <- 1#14.62 * schmitt.params$Pow^0.55
-    ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
-    fnon <- 1 - ionization$fraction_charged      
-    Kd2m <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) / Kvw #Look at Marina's paper???
-    D <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Kscw) * 100^2 * 60^2  #cm^2/h
-    Kp <- Kd2m * D / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation   
-    totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
-    Fskin_depth_sc = 11/560;
+  
+  #Skin parameters
+  Fskin_depth_sc = 11/560;
+  Fskin_depth_ve = 1 - Fskin_depth_sc;
+  totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
+  
+  # Calculation of dermal partition coefficient (Sawyer, 2016 and Chen, 2015):
     
+    # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ve = viable epidermis and dermis layers)
+    Ksc2w <- 0.9 * schmitt.params$Pow^0.69 #Equation 2, Chen, 2015 (0.9 = rho_lipid/rho_water = (0.9 g/cm^3)/(1 g/cm^3))
+    Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
+    Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
+      ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
+      fnon <- 1 - ionization$fraction_charged      
+    Kve2w <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) #Equation 11, Chen , 2015
+    Kve2m <-  Kve2w / Km2w
+    Kve2sc <- Kve2w / Ksc2w
+    
+      # Diffusion in viable epidermis and dermis: Equation 15, Chen, 2015
+      Dve <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) * 100^2 * 60^2  #cm^2/h
+      
+      # Diffusion in sc
+      Dsc <- Dve
+            
+      # Permeability coefficient from sc to ve
+      Psc2ve <- Kve2sc * Dve / (skin_depth*Fskin_depth_ve) #cm/h
+      
+      # Permeability coefficient from m to sc
+      Pm2sc <- (1/Km2sc) * Dsc / (skin_depth*Fskin_depth_sc)
+      
+    # Permeability coefficient from m to ve
+    if (method.permeability=="Sawyer-Chen"){
+      Kp <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
+    } else if (method.permeability=="Potts-Guy"){
+      Kp <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
+    } else stop(
+      "method.permeatility must be se to either 'Potts-Guy' or 'Sawyer-Chen'")
+
     # Added by AEM, 1/27/2022
     if (model.type=="dermal"){
       outlist <- c(outlist, totalSA = totalSA,
@@ -330,24 +357,21 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                    Fskin_exposed=0.1,
                    Fskin_depth_sc = Fskin_depth_sc, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
                    Fskin_depth_ve = 1-Fskin_depth_sc, #AEM's best guess
-                   Pmedia2sc = Kp, #guess
-                   Psc2ve = Kp, #guess
-                   Ksc2media = Kd2m, #function above
-                   Ksc2ve = 10, #guess
+                   Pmedia2sc = Pm2sc, #guess
+                   Psc2ve = Psc2ve,
+                   Ksc2media = 1/Km2sc, #function above
+                   Ksc2ve = 1/Kve2sc,
                    Kve2pu = outlist$Kskin2pu, #partition coefficient
                    Qskinf = flows[["Qskinf"]], #not sure if this is totally accurate
                    Vstratum_corneumc = outlist$Vskinc*Fskin_depth_sc,
                    Vviable_epidermisc=outlist$Vskinc*(1-Fskin_depth_sc))
     } else if (model.type=="dermal_1subcomp"){
       outlist <- c(outlist,Kp = Kp,
-                   Kskin2media = Kd2m, 
+                   Kskin2media = Kve2m, 
                    totalSA = totalSA,
-                   V0 = 0.001,  #Vmedia in L TotalSA in cm^2 #changed from Vmedia
                    skin_depth=skin_depth,
                    Fdermabs=1,
-                   Fskin_exposed=0.1)   #SA = 2 * 100^2?
-      #outlist <- c(outlist,Qskinexposedf = 0.3 * 75 * 0.001 / 70 / outlist$Vskinc * outlist$Qskinf)
-      #outlist$Qskinf <- outlist$Qskinf - outlist$Qskinexposedf
+                   Fskin_exposed=0.1) 
     }
     
 
