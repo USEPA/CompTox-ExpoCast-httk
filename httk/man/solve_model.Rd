@@ -16,11 +16,13 @@ solve_model(
   days = 10,
   tsteps = 4,
   initial.values = NULL,
+  initial.value.units = NULL,
   plots = FALSE,
   monitor.vars = NULL,
   suppress.messages = FALSE,
   species = "Human",
-  output.units = "uM",
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -29,7 +31,7 @@ solve_model(
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   ...
 )
 }
@@ -40,7 +42,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days. Dosing
@@ -55,37 +57,46 @@ parameterize_pbtk function. Overrides chem.name and chem.cas.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 
-\item{dosing}{List of dosing metrics passed to solver for a given model,
-which must at least include entries with names "initial.dose", 
-"doses.per.day", "daily.dose", and "dosing.matrix". The "dosing.matrix" can 
-be used for more precise dose regimen specification, and is a matrix
-consisting of two columns or rows named "time" and "dose" which contain the
-time and amount, in mg/kg BW, of each dose. If none of the namesake entries 
-of the dosing list is set to a non-NULL value, solve_model uses a default
-dose of 1 mg/kg BW along with the dose type (add/multiply) specified for 
-a given route (e.g. add the dose to gut lumen for oral route)}
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. In the case
+of most httk models, these should include "initial.dose", "doses.per.day", 
+"daily.dose", and "dosing.matrix". The "dosing.matrix" is used for more
+precise dose regimen specification, and is a matrix consisting of two
+columns or rows named "time" and "dose" containing the time and amount of 
+each dose. If none of the namesake entries of the dosing list is set to a
+non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
+dose type (add/multiply) specified for a given route (e.g. add the dose to gut
+lumen for oral route)}
 
 \item{days}{Simulated period. Default 10 days.}
 
 \item{tsteps}{The number of time steps per hour. Default of 4.}
 
-\item{initial.values}{Vector containing the initial concentrations or
-amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
+\item{initial.values}{Vector of numeric values containing the initial
+concentrations or amounts of the chemical in specified tissues with units
+corresponding to those specified for the model outputs. Default values are zero.}
+
+\item{initial.value.units}{Vector of character strings containing the units
+corresponding to 'initial.values' specified for the model outputs.
+Default is assuming the units match expected compartment units for the model.}
 
 \item{plots}{Plots all outputs if true.}
 
 \item{monitor.vars}{Which variables are returned as a function of time. 
 Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 
 \item{species}{Species desired (models have been designed to be
 parameterized for some subset of the following species: "Rat", "Rabbit", 
 "Dog", "Mouse", or default "Human").}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing. Defaults
+to mg/kg BW, in line with the default dosing scheme of a one-time dose of
+1 mg/kg in which no other dosing parameters are specified.}
+
+\item{output.units}{Output units of interest for the compiled components.
+Defaults to NULL, and will provide values in model units if unspecified.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -127,23 +138,27 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-solve_model's arguments prepare an ode system for numerical solution over
-time of the amounts or concentrations (uM) of chemical in the different
-bodily compartments of a given available species (either "Rat", "Rabbit",
-"Dog", "Mouse", or default "Human").
+solve_model is designed to accept systematized metadata (provided by the
+model.list defined in the modelinfo files) for a given 
+toxicokinetic model, including names of variables, parameterization
+functions, and key units, and use it along with chemical information
+to prepare an ode system for numerical solution over time of the amounts
+or concentrations of chemical in different bodily compartments of a given
+species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 }
 \details{
-The minimal usage case requires input that includes a chemical identifier
-(whether name, CAS number, or other chemical parameterization) and a model
-system of interest ("pbtk", "3compartment", "3compartmentss", "1compartment",
-"schmitt", ...).
+Dosing values with certain acceptable associated input.units (like mg/kg BW)
+are configured to undergo a unit conversion. All model simulations are 
+intended to run with units as specifed by "compartment.units" in the 
+model.list (as defined by the modelinfo files).
 
 The 'dosing' argument includes all parameters needed to describe exposure
 in terms of route of administration, frequency, and quantity short of 
 scenarios that require use of a more precise forcing function. If the dosing
 argument's namesake entries are left NULL, solve_model defaults to a
 single-time dose of 1 mg/kg BW according to the given dosing route and 
-associated type (either add/multiply, e.g. typically adds dose to gut lumen 
+associated type (either add/multiply, for example we typically add a dose to 
+gut lumen 
 when oral route is specified).
 
 AUC is the area under the curve of the plasma concentration.
@@ -168,6 +183,7 @@ Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \author{
-John Wambaugh and Robert Pearce
+John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and
+Sarah E. Davidson
 }
 \keyword{Solve}

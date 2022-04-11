@@ -23,7 +23,7 @@ calc_tkstats(
   default.to.human = FALSE,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   suppress.messages = FALSE,
   ...
 )

@@ -32,10 +32,12 @@ calc_mc_css(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   calc.analytic.css.arg.list = list(well.stirred.correction = TRUE,
     adjusted.Funbound.plasma = TRUE, regression = TRUE, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = T, bioactive.free.invivo = FALSE)
+    restrictive.clearance = TRUE, bioactive.free.invivo = FALSE),
+  parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
+    regression = T, minimum.Funbound.plasma = 1e-04)
 )
 }
 \arguments{
@@ -64,10 +66,11 @@ default "Human").  Species must be set to "Human" to run httkpop model.}
 
 \item{suppress.messages}{Whether or not to suppress output message.}
 
-\item{model}{Model used in calculation: 'pbtk' for the multiple compartment
-model,'3compartment' for the three compartment model, '3compartmentss' for
-the three compartment steady state model, and '1compartment' for one
-compartment model.  This only applies when httkpop=TRUE and species="Human",
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model. This only applies when httkpop=TRUE and species="Human",
 otherwise '3compartmentss' is used.}
 
 \item{httkpop}{Whether or not to use population generator and sampler from
@@ -119,6 +122,10 @@ parameterize_* function for the model.}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
+
+\item{parameterize.args}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
 }
 \value{
 Quantiles (specified by which.quantile) of the distribution of plasma
@@ -160,7 +167,10 @@ used by this function.
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)
-             
+
+ set.seed(1234)
+ calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+                          
  set.seed(1234)
  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
@@ -231,7 +241,7 @@ Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
-Caroline Ring, Robert Pearce, and John Wambaugh
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}

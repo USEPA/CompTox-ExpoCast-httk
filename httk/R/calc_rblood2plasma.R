@@ -10,7 +10,7 @@
 #' the red blood cell to plasma and plasma:plasma (equal to 1) partition
 #' coefficients multiplied by their respective fractional volumes. When
 #' species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data (hematocrit and temperature), but substitues
+#' appropriate physiological data (hematocrit and temperature), but substitutes
 #' human fraction unbound and tissue volumes. 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be

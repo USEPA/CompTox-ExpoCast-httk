@@ -1,3 +1,5 @@
+![HTTK logo](httk-logo.png)
+
 # R Package "httk"
 
 This R package provides data and models for prediction toxicokinetics (chemical 
@@ -18,7 +20,7 @@ Generic models and chemical-specific data for simulation and
 statistical analysis of chemical toxicokinetics ("TK") as
 described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
 Chemical-specific in vitro data have been obtained from relatively
-high throughput experiments. Both physiologically-based ("PBTK")
+high-throughput experiments. Both physiologically-based ("PBTK")
 and empirical (for example, one compartment) "TK" models can be
 parameterized with the data provided for thousands of chemicals,
 multiple exposure routes, and various species. The models consist
@@ -31,7 +33,7 @@ included for predicting tissue:plasma partition coefficients and
 volume of distribution
 (Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
 These functions and data provide a set of tools for
-in vitro-in vivo extrapolation ("IVIVE") of high throughput
+in vitro-in vivo extrapolation ("IVIVE") of high-throughput
 screening data (for example, Tox21, ToxCast) to real-world
 exposures via reverse dosimetry (also known as "RTK")
 (Wetmore et al., 2015 <https://doi.org/10.1093/toxsci/kfv171>).
@@ -122,11 +124,32 @@ vignette(‘Frank2018’)
 
 ## Authors
 
-principal investigator John Wambaugh
-[@wambaugh.john@epa.gov]
+### Principal Investigator 
+John Wambaugh [wambaugh.john@epa.gov]
 
-lead software engineer Sarah Davidson
-[@Davidson.Sarah.E@epa.gov]
+### Lead Software Engineer 
+Sarah Davidson [Davidson.Sarah.E@epa.gov]
+
+### Model Authors and Function Developers
+Robert Pearce,
+Caroline Ring [Ring.Caroline@epa.gov],
+Greg Honda [honda.gregory@epa.gov], 
+Mark Sfeir, 
+Matt Linakis [MLINAKIS@ramboll.com], and
+Dustin Kapraun [kapraun.dustin@epa.gov]
+
+### Bug-Fixes and Parameter Values
+Miyuki Breen [breen.miyuki@epa.gov], 
+Shannon Bell [Shannon.bell@inotivco.com], 
+Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
+Todor Antonijevic [tantonijevic@toxstrategies.com], 
+Jimena Davis, 
+James Sluka [jsluka@indiana.edu],  
+Nisha Sipes [sipes.nisha@epa.gov], and 
+Barbara Wetmore [wetmore.barbara@epa.gov]
+
+### Statistical Expertise
+Woodrow Setzer [setzer.woodrow@epa.gov]
 
 ## License
 
