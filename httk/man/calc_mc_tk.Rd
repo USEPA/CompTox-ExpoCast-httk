@@ -33,7 +33,7 @@ calc_mc_tk(
     "Non-Hispanic White", "Non-Hispanic Black", "Other")),
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = T, regression = TRUE),
+    restrictive.clearance = TRUE, regression = TRUE),
   return.all.sims = FALSE
 )
 }
@@ -78,7 +78,7 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
+of detection (specified separately for each parameter). This argument should
 be a list of sub-lists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New

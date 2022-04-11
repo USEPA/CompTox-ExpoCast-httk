@@ -47,6 +47,7 @@ head(initial_nondefault_dose)
 initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
 head(initial_nondefault_dose_intestine)
 
+#parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 

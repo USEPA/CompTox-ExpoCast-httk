@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r knitrPRrep, include=FALSE, eval=TRUE}
+```{r knitrPRrep, include=FALSE, eval = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
 ```
 
@@ -27,7 +27,7 @@ https://doi.org/10.1093/toxsci/kfy020
 ## Abstract
 Prioritizing the risk posed by thousands of chemicals potentially present in the 
 environment requires exposure, toxicity, and toxicokinetic (TK) data, which are 
-often unavailable. Relatively high throughput, in vitro TK (HTTK) assays and in 
+often unavailable. Relatively high-throughput, in vitro TK (HTTK) assays and in 
 vitro-to-in vivo extrapolation (IVIVE) methods have been developed to predict TK, 
 but most of the in vivo TK data available to benchmark these methods are from 
 pharmaceuticals. Here we report on new, in vivo rat TK experiments for 26 
@@ -47,7 +47,7 @@ steady-state, peak, and time-integrated plasma concentrations of
 non-pharmaceuticals were predicted with reasonable accuracy. The plasma 
 concentration predictions improved when experimental measurements of 
 bioavailability were incorporated. In summary, HTTK and IVIVE methods are 
-adequately robust to be applied to high throughput in vitro toxicity 
+adequately robust to be applied to high-throughput in vitro toxicity 
 screening data of environmentally relevant chemicals for prioritizing based 
 on human health risks.
 
@@ -57,8 +57,8 @@ To use the code in this vignette, you'll first need to load a few packages.
 library(scales)
 library(ggplot2)
 library(data.table)
-library(gdata)
-library(gtools)
+#library(gdata)
+#library(gtools)
 library(httk)
 library(RColorBrewer)
 library(grid)
@@ -598,7 +598,7 @@ na.dist <- function(x,method="euclidian",...)
 ```
 ## Figure Three
 A "heatmap" of physico-chemical properties, in vitro TK parameters (Wetmore, et al., 2013), and TK parameters estimated from in vivo plasma concentration. Rows (chemicals) are clustered by Euclidean distance so that adjacent rows are more similar to each other. Each column (chemical properties) was scaled by the standard deviation of the column and the mean value was subtracted, such that a value of 0 corresponds to the mean and values of -1 or 1 correspond to values one standard deviation above or below the chemicals, respectively. In some cases, TK parameters could not be estimated (e.g., no oral data available for estimating Fbio and kgutabs). Fraction of the compound that is neutral, positively, or negatively ionized at pH 7.4 is indicated by "neutral ph74", "positive ph74" and "negative ph74". The color bar at the left-hand side indicates pharmaceuticals in grey and other chemicals in black.
-```{r fig3, eval=TRUE}
+```{r fig3, eval = FALSE}
 physprop.matrix <- chem.invivo.PK.aggregate.data[,c("MW",
                                     "logP",
                                     "WaterSol",
@@ -622,9 +622,9 @@ row.side.cols[sapply(chem.invivo.PK.aggregate.data$CAS,is.pharma)] <- "Grey"
 apply(physprop.matrix,2,function(x) mean(x,na.rm=TRUE))
 for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log10(10^-6+physprop.matrix[,this.col])
 
-
-physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(TRUE))
+physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE))
 ```
+
 ```{r PlotFigure3, eval = FALSE}
 main_title="in vivo Toxicokinetic Parameters"
 heatmap.2(physprop.matrix, 
@@ -645,7 +645,7 @@ text(0.75,0.81,expression(paste("Estimated from ",italic("In Vivo")," Data")))
 
 The original scripts used a data.table called FitData that contains a lot of stuff we don't need to make these figures. 
 We recreate it from the httk object chem.invivo.PK.aggregate.data:
-```{r Make FitData, eval=TRUE}
+```{r Make FitData, eval = FALSE}
 # Use joint analysis data from both labs:
 FitData <- subset(chem.invivo.PK.aggregate.data,Compound!="Bensulide"|Source=="Wambaugh et al. (2018), NHEERL/RTI")
 FitData <- subset(FitData,Compound!="Propyzamide"|Source=="Wambaugh et al. (2018), NHEERL/RTI")
@@ -658,7 +658,7 @@ FitData[sapply(FitData$CAS,is.pharma),"Chemical"] <- "Pharmaceutical"
 
 ## Figure Four
 Comparison of measured volumes of distribution (Vd) with predictions based upon in vitro data and in silico methods (Pearce, et al., 2017a;  Schmitt, 2008). The solid line in each panel indicates the identity line (1:1, perfect predictions). Chemicals can be identified by their chemical abbreviation given in Table 1.
-```{r fig4, eval=TRUE}
+```{r fig4, eval = FALSE}
 # Get rid of chemicals with Fup < LOD:
 FitData.Fup <- subset(FitData,!(CAS%in%subset(chem.physical_and_invitro.data,Human.Funbound.plasma==0)$CAS))
 
@@ -678,7 +678,6 @@ FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
   species="Rat",
   default.to.human = TRUE,
   suppress.messages=TRUE)))
-
 
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
 summary(FigVdista.fit)
@@ -757,7 +756,7 @@ Fig4b.MSE <- mean((log(Fig4b.data$Vdist.1comp.pred.nocal)-log(Fig4b.data$Selecte
 ```
 ## Figure Five
 Comparison of the TK clearance estimated from the in vivo data with the clearance predictions made using HTTK data. The more likely empirical TK model (either one or two-compartments, as in Figure 2) is selected for each chemical using the AIC (Akaike, 1974). A non-compartmental estimate of clearance is used if neither model is selected. Estimated standard deviation is indicated by a vertical line, and is often smaller than the plot point. The solid line indicates the identity line (1:1, perfect predictions), while the dotted and dashed lines indicate the linear regression (log-scale) trend-lines for pharmaceuticals and other chemicals, respectively. Chemicals can be identified by their chemical abbreviation given in Table 1.
-```{r fig5, eval=TRUE}
+```{r fig5, eval = FALSE}
 #FitData.Fup$CLtot.1comp <- FitData.Fup$Vdist.1comp.meas*FitData.Fup$kelim.1comp.meas
 #FitData.Fup$CLtot.1comp.sd <- (FitData.Fup$Vdist.1comp.meas.sd^2+FitData.Fup$kelim.1comp.meas.sd^2)^(1/2)
 #FitData.Fup[is.na(CLtot.1comp.sd)]$CLtot.1comp.sd <- Inf
@@ -770,7 +769,7 @@ FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2 +
 FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS, 
   function(x) calc_total_clearance(chem.cas=x,
   species="Rat",
-  default.to.human = T,
+  default.to.human = TRUE,
   suppress.messages=TRUE))
 
 Fig.SelectedClearance.fit <- lm(log(SelectedCLtot)~log(CLtot.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedCLtot.sd)))
@@ -817,7 +816,7 @@ paste("with",with(FitData.Fup,sum(SelectedCLtot<CLtot.1comp.pred,na.rm=TRUE)),"c
 ```
 ## Figure Six
 Distribution of Gut Absorption Rate for Environmental and Pharmaceutical Chemicals.
-```{r fig6, eval=TRUE}
+```{r fig6, eval = FALSE}
 FitData$Selectedkgutabs <- FitData$kgutabs
 # Cutoff from optimizer is 1000:
 Figkgutabs <- ggplot(subset(FitData,Selectedkgutabs<999), aes(Selectedkgutabs, fill = Chemical)) +
@@ -839,7 +838,7 @@ median(subset(FitData,Selectedkgutabs<999)$Selectedkgutabs)
 ```
 ## Figure Seven
 In panel A, the observed fraction of oral dose absorbed from the gut is compared with predictions made using Gastroplus (Simulations Plus, 2017). The solid line indicates the identity line (1:1, perfect predictions). These fractions are distrusted from nearly zero to effectively 100% (Panel B). Chemicals can be identified by their chemical abbreviation given in Table 1.
-```{r fig7, eval=FALSE}
+```{r fig7, eval = FALSE}
 FitData$SelectedFbio <- FitData$Fbio
 
 FigFbioa <- ggplot(data=FitData) +
@@ -885,7 +884,7 @@ min(FitData$SelectedFbio,na.rm=TRUE)
 ```
 ## Figure Eight
 Rat in vivo data were collected for diverse environmental chemicals to evaluate the predictive ability of HTTK, especially with respect to predicting steady-state serum concentration (Css). Chemicals can be identified by their chemical abbreviation given in Table 1. The abbreviations are centered at the measured and predicted values. The solid line indicates the identity line (1:1, perfect predictions). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately.
-```{r fig8, eval=TRUE}
+```{r fig8, eval = FALSE}
 FitData$SelectedFbio <- FitData$Fbio
 FitData$SelectedCss <- FitData$Css
 FitData$SelectedCss.sd <- FitData$Css.sd
@@ -997,7 +996,7 @@ print(Fig.Triage)
 ```
 ## Figure Ten
 Evaluation of the ability of in vitro HTTK data, coupled with a one-compartment model, to predict important TK statistics like the maximum plasma concentration (Cmax) for characterizing tissue exposure. A single point is plotted for each combination of chemical, dose amount, and dose route, either intravenous (iv) or per oral (po). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately.
-```{r fig10, eval=TRUE}
+```{r fig10, eval = FALSE}
 PKstats <- chem.invivo.PK.summary.data
 # Add a column indicating chemical type:
 PKstats$Chemical <- "Other"
@@ -1054,7 +1053,7 @@ multiplot(FigCmaxa,FigCmaxb,cols=2,widths=c(1.75,1.75))
 ```
 ## Figure Eleven
 Evaluation of predictions for the time integrated plasma concentration (i.e., area under the curve or AUC). A single point is plotted for each combination of chemical, dose amount, and dose route, either intravenous (iv) or per oral (po). In panel A, the one-compartment model is parameterized with a predicted volume of distribution and clearance, based upon in vitro measured parameters. Fbio is assumed to be 100%. In panel B, the in vivo measured Fbio is used to reduce the amount of the oral dose absorbed in the one-compartment model, to illustrate the improvement possible if Fbio could be predicted accurately. The solid line in each panel indicates the identity line (1:1, perfect predictions).
-```{r fig11, eval=TRUE}
+```{r fig11, eval = FALSE}
 FigAUCa.fit <- lm(log(AUC)~log(AUC.pred),data=subset(PKstats,is.finite(log(AUC))))
 FigAUCb.fit <- lm(log(AUC)~log(AUC.pred.Fbio),data=subset(PKstats,is.finite(log(AUC))))
 summary(FigAUCa.fit)

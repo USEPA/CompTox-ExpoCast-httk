@@ -9,14 +9,21 @@
 \Sexpr{tools:::Rd_package_description("httk")}
 }
 \seealso{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{PowerPoint
-Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
+PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+
+\doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
+PBTK models for in vitro to in vivo extrapolation}
 
 \doi{10.18637/jss.v079.i04}{Pearce et al. (2017): httk: R
 Package for High-Throughput Toxicokinetics}
 
-\doi{10.1093/toxsci/kfv171}{Wetmore et al. (2015):
-Incorporating High-Throughput Exposure Predictions With Dosimetry-Adjusted
+\doi{10.1021/es501955g}{Armitage et al. (2014): Application of mass balance 
+models and the chemical activity concept to facilitate the use of in vitro 
+toxicity data for risk assessment}
+
+\doi{10.1093/toxsci/kfv171}{Incorporating High-Throughput Exposure 
+Predictions with Dosimetry-Adjusted
 In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 
 \doi{10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
@@ -38,16 +45,18 @@ Intuitive Approach for Predicting Potential Human Health Risk with the Tox21
 Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
 
 \doi{10.1371/journal.pone.0217564}{Honda et al. (2019):
-Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionss}
+Using the concordance of in vitro and in vivo data to evaluate extrapolation 
+assumptions}
 
 \doi{10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
 Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
 
 \doi{10.1038/s41370-020-0238-y}{Linakis et al. (2020):
-Development and evaluation of a high throughput inhalation model for organic chemicals}
+Development and evaluation of a high-throughput inhalation model for organic 
+chemicals}
 
-\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
-ExpoCast (Exposure Forecasting) Project}
+\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{
+The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 }
 \author{
 John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha

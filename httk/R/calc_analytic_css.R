@@ -1,7 +1,7 @@
 #Initialize model.list to be fleshed out in the model info files and elsewhere. 
 model.list <- list()
 
-#'Calculate the analytic steady state concentration.
+#'Calculate the analytic steady state plasma concentration.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing for the three compartment and 
@@ -16,20 +16,29 @@ model.list <- list()
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #''pbtk'), parameterize_3comp (for model = '3compartment), 
-#'parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#'parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #'(for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
 #'@param daily.dose Total daily dose, mg/kg BW.
+#'@param exp.conc Specified inhalation exposure concentration for use in assembling
+#''forcings' data series argument for integrator. Defaults to uM/L 
+#'@param period For use in assembling forcing function data series 'forcings'
+#'argument, specified in hours
+#'@param exp.duration For use in assembling forcing function data 
+#'series 'forcings' argument, specified in hours
 #'@param output.units Units for returned concentrations, defaults to uM 
 #'(specify units = "uM") but can also be mg/L.
-#'@param model Model used in calculation, 'pbtk' for the multiple compartment 
-#'model,'3compartment' for the three compartment model, '3compartmentss' for 
+#'@param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#''pbtk' for the multiple compartment model,
+#''3compartment' for the three compartment model, '3compartmentss' for 
 #'the three compartment steady state model, and '1compartment' for one 
 #'compartment model.
 #'@param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
 #'@param suppress.messages Whether or not the output message is suppressed.
-#'@param tissue Desired tissue conentration (defaults to whole body 
+#'@param tissue Desired tissue concentration (defaults to whole body 
 #'concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
@@ -56,7 +65,7 @@ model.list <- list()
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
-#'@return Steady state concentration
+#'@return Steady state plasma concentration in specified units
 #'
 #'@details Concentrations are calculated for the specifed model with constant 
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 
@@ -92,7 +101,7 @@ model.list <- list()
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
-#'@author Robert Pearce, John Wambaugh, and Greg Honda
+#'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
 #'@keywords Solve
 #'
@@ -107,13 +116,17 @@ calc_analytic_css <- function(chem.name=NULL,
                               parameters=NULL,
                               species="human",
                               daily.dose=1,
+                              route="oral",
+                              exp.conc = 1, #default exposure concentration for forcing data series
+                              period = 24,
+                              exp.duration = 24,
                               output.units='uM',
                               model = 'pbtk',
                               concentration='plasma',
                               suppress.messages=FALSE,
                               tissue=NULL,
-                              restrictive.clearance = T,
-                              bioactive.free.invivo = F,
+                              restrictive.clearance = TRUE,
+                              bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
                               parameterize.args = list(
                                 default.to.human=FALSE,
@@ -213,8 +226,10 @@ calc_analytic_css <- function(chem.name=NULL,
     warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
-# Check that the output units are ones we can work with:
   good.units <- c("uM","mg/L")
+# Check that the output units are ones we can work with:
+  #good.units <- model.list[[model]]$compartment.units?
+    #good.units <- c("uM","mg/L")
   if (!(tolower(output.units) %in% tolower(good.units))) 
   {
     stop(paste("Do not know how to calculate units",output.units,
@@ -229,27 +244,46 @@ calc_analytic_css <- function(chem.name=NULL,
   
   if (model %in% names(model.list))            
   {
-    Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-      chem.cas = chem.cas,
-      chem.name = chem.name,
-      dtxsid = dtxsid,
-      parameters=parameters,
-      hourly.dose=hourly.dose,
-      concentration=concentration,
-      suppress.messages=suppress.messages,
-      tissue=tissue,
-      restrictive.clearance=restrictive.clearance,
-      bioactive.free.invivo = bioactive.free.invivo),
-      list(...)))
+    if (route == "inhalation"){
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        chem.name = chem.name,
+        parameters=parameters,
+        exp.conc = exp.conc,
+        period = period,
+        exp.duration = exp.duration,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+      
+    } else if (route %in% c("oral","iv"))
+    {
+      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
+        chem.cas = chem.cas,
+        chem.name = chem.name,
+        parameters=parameters,
+        hourly.dose=hourly.dose,
+        concentration=concentration,
+        suppress.messages=suppress.messages,
+        tissue=tissue,
+        restrictive.clearance=restrictive.clearance,
+        bioactive.free.invivo = bioactive.free.invivo),
+        list(...)))
+    }
   } else {
     stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
+               paste(names(model.list),collapse=", ")))
   }
-
-# Convert to uM if requested
-  if (tolower(output.units)=='um')
-  { 
-    Css <- Css / 1e3 / MW * 1e6 # mg/L -> uM
+  
+# Convert to uM (inhalation already uM) if requested
+  if (route != "inhalation"){
+    if (tolower(output.units)=='um')
+    { 
+      Css <- Css / 1e3 / MW * 1e6 # mg/L -> uM
+    }
   }
 
 #User message:

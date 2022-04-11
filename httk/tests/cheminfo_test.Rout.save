@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,6 +18,9 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
 > library(httk)
 > 
 > # Check if the number of chemicals has changed:
@@ -25,71 +28,81 @@ Type 'q()' to quit R.
 > pbpk.list <- get_cheminfo(model='pbtk')
 > rat.list <- get_cheminfo(species="rat")
 > length(Css.list)
-[1] 998
+[1] 943
 > length(pbpk.list)
-[1] 923
+[1] 859
 > length(rat.list)
-[1] 226
+[1] 190
 >                                                  
 > # check for duplicate entries (all of the following should be TRUE):
-> length(unique(chem.physical_and_invitro.data$CAS)) == dim(chem.physical_and_invitro.data)[1]
+> # A unique CAS-RN for each row of chem.physical_and_invitro.data table:
+> length(unique(chem.physical_and_invitro.data$CAS)) == 
++   dim(chem.physical_and_invitro.data)[1]
 [1] TRUE
-> length(unique(chem.physical_and_invitro.data$Compound)) == dim(chem.physical_and_invitro.data)[1]
+> # A unique compound name for each row of chem.physical_and_invitro.data table:
+> length(unique(chem.physical_and_invitro.data$Compound)) == 
++   dim(chem.physical_and_invitro.data)[1]
 [1] TRUE
+> # A unique DTXSID for each row of chem.physical_and_invitro.data table:
 > length(unique(subset(chem.physical_and_invitro.data,!is.na(DTXSID))$DTXSID)) == 
 +   dim(subset(chem.physical_and_invitro.data,!is.na(DTXSID)))[1]
 [1] TRUE
 >   
 > # Check if the requirements for diffrent models has changed:
 > length(get_cheminfo())
-[1] 998
+[1] 943
 > length(get_cheminfo(species="rat"))
-[1] 226
+[1] 190
 > length(get_cheminfo(model="pbtk"))
-[1] 923
+[1] 859
 > length(get_cheminfo(model="pbtk",species="rat"))
-[1] 195
+[1] 160
 > length(get_cheminfo(info="all"))
 [1] 11
-Warning message:
-In get_cheminfo(info = "all") :
+Warning messages:
+1: In get_cheminfo(info = "all") :
+  Clint values with a pvalue > 0.05 were set to 0.
+2: In get_cheminfo(info = "all") :
   Clint values with a pvalue > 0.05 were set to 0.
 > length(get_cheminfo(model="schmitt"))
-[1] 1648
+[1] 1550
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 297
+[1] 263
 > length(get_cheminfo(model="1compartment"))
-[1] 923
+[1] 859
 > length(get_cheminfo(model="1compartment",species="rat"))
-[1] 195
+[1] 160
 >   
 > # Check to see if the paramerer values have changed:
-> subset(get_cheminfo(info="all"), CAS %in% c(
+> print(subset(get_cheminfo(info="all"), CAS %in% c(
 +   "80-05-7",
 +   "335-67-1",
 +   "1912-24-9",
 +   "2921-88-2",	
-+   "117-81-7"))  
-                         Compound       CAS        DTXSID  logP    MW
-16                       Atrazine 1912-24-9 DTXSID9020112 2.611 215.7
-26                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3
-66  Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6
-170        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1
-313                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6
-    pKa_Accept  pKa_Donor      Human.Clint Human.Clint.pValue
-16        1.22       None                0             0.0537
-26        None 9.78,10.39 19.9,10.2,29.8,0             0.0000
-66        None       None                0             0.1940
-170       None       -4.2                0             0.0636
-313      -2.86       None              2.6                 NA
-    Human.Funbound.plasma Human.Rblood2plasma
-16                  0.124                  NA
-26   0.0385,0.0334,0.0456                0.79
-66                  0.005                  NA
-170                 0.005                0.64
-313              0.007932                0.73
-Warning message:
-In get_cheminfo(info = "all") :
++   "117-81-7")),
++   row.names=FALSE)
+                      Compound       CAS        DTXSID  logP    MW pKa_Accept
+                      Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       1.22
+                   Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3       None
+ Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6       None
+        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1       None
+                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6      -2.86
+  pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
+       None                0            0.05366                0.1237
+ 9.78,10.39 19.9,10.2,29.8,0            0.00000  0.0385,0.0334,0.0456
+       None                0            0.19370                 0.005
+       -4.2                0            0.06358              0.004779
+       None              2.6                 NA              0.007932
+ Human.Rblood2plasma
+                  NA
+              0.7949
+                  NA
+              0.6436
+              0.7333
+Warning messages:
+1: In get_cheminfo(info = "all") :
+  Clint values with a pvalue > 0.05 were set to 0.
+2: In get_cheminfo(info = "all") :
   Clint values with a pvalue > 0.05 were set to 0.
 > 
 > quit("no")

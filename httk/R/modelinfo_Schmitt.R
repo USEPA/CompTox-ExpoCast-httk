@@ -42,7 +42,7 @@ model.list[["schmitt"]]$required.params <- c(
   "MW")
 
 #Parameters needed to run parameterize function without a chemical id:
-model.list[["schmitt"]]$paramterize_params <- c(
+model.list[["schmitt"]]$parameterize_params <- c(
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
@@ -90,4 +90,10 @@ schmitt.specific.names <- c("Kadipose2pu",
                             "Kspleen2pu") 
                               
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["schmitt"]]$exclude.fup.zero <- T                   
+model.list[["schmitt"]]$exclude.fup.zero <- TRUE  
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["schmitt"]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[["schmitt"]]$chem.class.filt <- c("PFAS")

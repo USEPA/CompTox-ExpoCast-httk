@@ -17,8 +17,13 @@
 #' overrides chem.name and chem.cas.
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
+#' @param input.units Units of the dose values being scaled. (Default is NULL.) 
+#' Currently supported units "mg/L", "ug/L","ug/mL", "uM", "umol/L", "ug/dL",
+#' "ug/g", "nmol/L", "nM", and "ppmw" (supported input.units subject to change).
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
+#' @param vol Volume for the target tissue of interest.
+#' NOTE: Volume should not be in units of per BW, i.e. "kg".
 #' 
 #' @return
 #' A list of numeric values for doses converted to output.units, potentially
@@ -28,36 +33,48 @@
 #' the second is dose amount for N doses}
 #' \item{daily.dose}{The total cumulative daily dose}
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Sarah E. Davidson
 #'
 #' @keywords Dynamic
-scale_dosing <- function(dosing,parameters,route,output.units="uM")
+scale_dosing <- function(
+  dosing,
+  parameters,                   
+  route,
+  input.units=NULL,
+  output.units="uM",
+  vol = NULL)# add volume conversion update for amount to conc (or vice versa)
+             # then update solve_model
 {
   if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
     stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
 
-    BW <- as.numeric(parameters[["BW"]])
-    MW <- as.numeric(parameters[["MW"]])
+  BW <- as.numeric(parameters[["BW"]]) # kg
+  MW <- as.numeric(parameters[["MW"]]) # mol/g
 
-# If we are working in molar units then we need to convert parameters:
-  if (tolower(output.units)=='um' | tolower(output.units) == 'umol')
-  {
-    scale.factor <- 
-      BW /  # mg/kg BW -> mg
-      1e3 / # mg -> g
-      MW *  # g -> mol
-      1e6   # mol -> umol
-  } else if (tolower(output.units) == 'mg/l' | tolower(output.units) == 'mg')
+  if (is.null(input.units)) stop("Input dose units must be specified.")
+
+  # Convert_units doesn't do bodyweight scaling so we handle that here:
+  if (regexpr("/kg",input.units)!=-1) 
   {
     scale.factor <- BW
-  } else stop('Output.units can only be uM, umol, mg, or mg/L.')
+    input.units <- gsub("/kg","",input.units)
+  }
+  else scale.factor <- 1
+ 
+  scale.factor <- scale.factor * 
+    convert_units(
+      input.units = input.units, 
+      output.units = output.units, 
+      MW =MW,
+      vol=vol) # Should NOT be in '/kg' if applicable
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
   {
+    if (!("Fgutabs"%in%names(parameters))) 
+      stop(
+"Argument \"parameters\" to scale_dosing must specify Fgutabs for oral route.")
     scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
-  } else if (route == "inhalation"){ #Added 9-25-19 MWL, obviously needs touching up, but for now, takes uM inputs and returns uM outputs
-    scale.factor <- 1
   }
   
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 
@@ -65,7 +82,9 @@ scale_dosing <- function(dosing,parameters,route,output.units="uM")
   if (!is.null(dosing$dosing.matrix)) dosing$dosing.matrix[,"dose"] <- 
     as.numeric(dosing$dosing.matrix[,"dose"]) * scale.factor
   if (!is.null(dosing$daily.dose)) dosing$daily.dose <- 
-    as.numeric(dosing$daily.dose) * scale.factor 
+    as.numeric(dosing$daily.dose) * scale.factor
+  if (!is.null(dosing$forcings)) dosing$forcings[,"forcing_values"] <- 
+    as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor
     
   return(dosing)
 }

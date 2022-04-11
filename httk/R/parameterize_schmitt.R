@@ -31,9 +31,9 @@
 #' @return
 #' \item{Funbound.plasma}{corrected unbound fraction in plasma}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
-#' if below limit of detection)} \item{Pow}{octonol:water partition coefficient
-#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibirum
-#' constant(s)} \item{pKa_Accept}{compound H association equilibirum
+#' if below limit of detection)} \item{Pow}{octanol:water partition coefficient
+#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
+#' constant(s)} \item{pKa_Accept}{compound H association equilibrium
 #' constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
 #' affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 #' \item{plasma.pH}{pH of the plasma}
@@ -102,7 +102,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     dtxsid <- out$dtxsid
   }
 
-# Check the species argument for capitilization problems and whether or not it 
+# Check the species argument for capitalization problems and whether or not it 
 # is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
@@ -117,7 +117,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
 
-#    required.params <- model.table[["Schmitt"]]$paramterize_params
+#    required.params <- model.table[["Schmitt"]]$parameterize_params
 #    if (!(all(required.parasms%in%names(parameters)))) 
 #      stop("Missing parameters",
 #        paste(required.params[!(required.params%in%names(parameters))],
@@ -133,7 +133,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 chem.name=chem.name,
                 dtxsid=dtxsid),
               silent=TRUE)
-  if ((class(fup.db) == "try-error" & default.to.human) || force.human.fup) 
+  if ((is(fup.db,"try-error") & default.to.human) || force.human.fup) 
   {
     fup.db <- try(
                 get_invitroPK_param(
@@ -146,7 +146,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
   }
-  if (class(fup.db) == "try-error") 
+  if (is(fup.db,"try-error")) 
     stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
   if (!is.null(parameters))
     if ("Fraction_unbound_plasma" %in% names(parameters))
