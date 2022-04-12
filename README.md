@@ -1,3 +1,5 @@
+![HTTK logo](httk-logo.png)
+
 # R Package "httk"
 
 This R package provides data and models for prediction toxicokinetics (chemical 
@@ -122,11 +124,32 @@ vignette(‘Frank2018’)
 
 ## Authors
 
-principal investigator John Wambaugh
-[@wambaugh.john@epa.gov]
+### Principal Investigator 
+John Wambaugh [wambaugh.john@epa.gov]
 
-lead software engineer Sarah Davidson
-[@Davidson.Sarah.E@epa.gov]
+### Lead Software Engineer 
+Sarah Davidson [Davidson.Sarah.E@epa.gov]
+
+### Model Authors and Function Developers
+Robert Pearce,
+Caroline Ring [Ring.Caroline@epa.gov],
+Greg Honda [honda.gregory@epa.gov], 
+Mark Sfeir, 
+Matt Linakis [MLINAKIS@ramboll.com], and
+Dustin Kapraun [kapraun.dustin@epa.gov]
+
+### Bug-Fixes and Parameter Values
+Miyuki Breen [breen.miyuki@epa.gov], 
+Shannon Bell [Shannon.bell@inotivco.com], 
+Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
+Todor Antonijevic [tantonijevic@toxstrategies.com], 
+Jimena Davis, 
+James Sluka [jsluka@indiana.edu],  
+Nisha Sipes [sipes.nisha@epa.gov], and 
+Barbara Wetmore [wetmore.barbara@epa.gov]
+
+### Statistical Expertise
+Woodrow Setzer [setzer.woodrow@epa.gov]
 
 ## License
 

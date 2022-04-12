@@ -1,6 +1,11 @@
 
+<<<<<<< HEAD:httk/tests/3comp_test.Rout,save
 R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
 Copyright (C) 2021 The R Foundation for Statistical Computing
+=======
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+>>>>>>> feature/fetal:httk/tests/3comp_test.Rout.save
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -275,6 +280,7 @@ Warning messages:
 Aintestine 
      183.9 
 > 
+<<<<<<< HEAD:httk/tests/3comp_test.Rout,save
 > parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 $BW
 [1] 70
@@ -392,6 +398,9 @@ Warning messages:
   Rblood2plasma has been recalculated.
 10: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
+=======
+> #parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
+>>>>>>> feature/fetal:httk/tests/3comp_test.Rout.save
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
