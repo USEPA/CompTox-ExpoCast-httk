@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -49,16 +49,16 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 50.77
+[1] 50.94
 
 $frac
-[1] 0.9874
+[1] 0.9708
 
 $max
-[1] 51.33
+[1] 51.51
 
 $the.day
-[1] 29
+[1] 28
 
 Warning messages:
 1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :

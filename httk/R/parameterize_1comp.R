@@ -237,12 +237,12 @@ parameterize_1comp <- function(
                    chem.cas=chem.cas),
                  silent=TRUE)
 
-    if (class(Fgutabs) == "try-error") Fgutabs <- 1
+    if (is(Fgutabs,"try-error")) Fgutabs <- 1
     
     params[['Fgutabs']] <- Fgutabs
     params[['hepatic.bioavailability']] <- 
       ss.params[['hepatic.bioavailability']]  
     params[['BW']] <- this.phys.data[["Average BW"]]
   
-  return(lapply(params,set_httk_precision))
+  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
 }

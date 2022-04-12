@@ -117,12 +117,12 @@ calc_vdist<- function(chem.cas=NULL,
       chem.cas <- out$chem.cas
     }
     fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=TRUE)
-    if (class(fup) == "try-error" & default.to.human) 
+    if (is(fup,"try-error") & default.to.human) 
     {
       fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=TRUE)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
-    if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+    if (is(fup,"try-error")) stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
     if (fup == 0)
     {
       fup <- 0.005
