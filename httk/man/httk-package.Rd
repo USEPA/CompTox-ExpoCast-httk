@@ -9,7 +9,7 @@
 \Sexpr{tools:::Rd_package_description("httk")}
 }
 \seealso{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{
+\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
 PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 
 \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 

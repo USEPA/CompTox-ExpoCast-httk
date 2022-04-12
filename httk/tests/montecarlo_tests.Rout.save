@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,7 +20,7 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
 > library(httk)
 > 
-> NSAMP <- 250
+> NSAMP <- 10
 > 
 > 
 > 
@@ -29,7 +29,11 @@ Type 'q()' to quit R.
 > # Test that the underlying PK models give the same answers:
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.1464
+=======
+[1] 0.2375
+>>>>>>> feature/fetal
 Warning messages:
 1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -42,13 +46,21 @@ Warning messages:
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.1716
+=======
+[1] 0.2783
+>>>>>>> feature/fetal
 Warning message:
 In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.1464
+=======
+[1] 0.2375
+>>>>>>> feature/fetal
 Warning messages:
 1: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -60,7 +72,11 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.1722
+=======
+[1] 0.2793
+>>>>>>> feature/fetal
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -81,7 +97,7 @@ Warning messages:
 > calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-112.5 
+62.74 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -93,6 +109,7 @@ Warning messages:
   Clint adjusted for in vitro partioning (Kilford, 2008).
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint is provided as a distribution.
 7: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -101,12 +118,20 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 9: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
+=======
+5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Clint is provided as a distribution.
+6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Fraction unbound is provided as a distribution.
+7: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+>>>>>>> feature/fetal
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-5.605 
+2.347 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -122,13 +147,21 @@ Warning messages:
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
+4: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
 > # Human.Funbound.plasma is below LOD (0.005), can't do PBPK, can't predict
 > # Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 7.468 
+=======
+5.929 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound = 0, changed to 0.005.
@@ -138,18 +171,29 @@ Warning messages:
   Clint adjusted for in vitro partioning (Kilford, 2008).
 4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Fraction unbound = 0, changed to 0.005.
 6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 7: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
+=======
+4: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Fraction unbound = 0, changed to 0.005.
+5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+>>>>>>> feature/fetal
 > # well-behaved chemical with a measured Rblood2plasma:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.7649 
+=======
+0.5009 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
@@ -157,26 +201,45 @@ Warning messages:
   Clint adjusted for in vitro partioning (Kilford, 2008).
 3: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 4: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
 5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
+=======
+3: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+>>>>>>> feature/fetal
 > # Chemical where median fup is 0 but upper 95th percentile is non-zero:
 > set.seed(1234)
 > calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
  95% 
+<<<<<<< HEAD
 2868 
+=======
+2433 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Fraction unbound is provided as a distribution.
 2: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+<<<<<<< HEAD
 3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 4: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+=======
+3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+>>>>>>> feature/fetal
   Rblood2plasma has been recalculated.
-5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
+4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
+  Rblood2plasma has been recalculated.
+5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Fraction unbound is provided as a distribution.
+6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Fraction unbound is provided as a distribution.
@@ -195,8 +258,13 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
+<<<<<<< HEAD
   95% 
 0.765 
+=======
+   95% 
+0.5018 
+>>>>>>> feature/fetal
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -208,6 +276,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
@@ -215,6 +284,13 @@ Warning messages:
 8: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+6: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human in vivo measured Rblood2plasma used.
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
@@ -222,7 +298,11 @@ Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
 Human volume of distribution returned in units of L/kg BW.
    95% 
+<<<<<<< HEAD
 0.7648 
+=======
+0.5009 
+>>>>>>> feature/fetal
 Warning messages:
 1: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
@@ -236,7 +316,11 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.4897 
+=======
+0.3913 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -248,6 +332,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
@@ -255,6 +340,13 @@ Warning messages:
 8: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human in vivo measured Rblood2plasma used.
 > 
 > #
@@ -265,7 +357,11 @@ Warning messages:
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 86.66 
+=======
+94.94 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -277,6 +373,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -284,6 +381,13 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > set.seed(1234)
 > # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
@@ -300,7 +404,11 @@ Warning messages:
 +     clint.pop.cv = 0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 68.69 
+=======
+54.13 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -312,6 +420,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -319,13 +428,24 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop physiological variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 59.27 
+=======
+81.38 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -337,6 +457,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -344,13 +465,24 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > set.seed(1234)
 > # HTTK Monte Carlo with no in vitro uncertainty and variability):
 > calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 31.67 
+=======
+26.09 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -362,6 +494,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -369,6 +502,13 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > set.seed(1234)
 > # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
@@ -387,6 +527,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -394,6 +535,13 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > # Should be the same as the mean result:
@@ -420,7 +568,7 @@ Warning messages:
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-13.17 
+13.05 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
@@ -432,6 +580,7 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 5: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
   Rblood2plasma has been recalculated.
+<<<<<<< HEAD
 6: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
   Clint adjusted for in vitro partioning (Kilford, 2008).
 7: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
@@ -439,6 +588,13 @@ Warning messages:
 8: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
 9: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+=======
+5: In parameterize_pbtk(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+>>>>>>> feature/fetal
   Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > 
@@ -451,7 +607,11 @@ Warning messages:
 > calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 5.637 
+=======
+9.174 
+>>>>>>> feature/fetal
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.

@@ -139,5 +139,5 @@ parameterize_3comp<- function(
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(lapply(parms,set_httk_precision))                          
+  return(lapply(parms[order(tolower(names(parms)))],set_httk_precision))                     
 }

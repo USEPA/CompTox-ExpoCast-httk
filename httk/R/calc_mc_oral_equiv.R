@@ -157,7 +157,7 @@ calc_mc_oral_equiv <- function(conc,
                          return.samples=return.samples,
                          ...))
                          
-  if (class(Css) == "try-error")
+  if (is(Css,"try-error"))
   {
     return(NA)
   }

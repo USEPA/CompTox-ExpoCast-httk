@@ -86,7 +86,7 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
     cat(paste("Retrieving Css from literature based on ",this.conc," uM intrinsic clearance data for the ",which.quantile," quantile in ",species,".\n",sep=""))
     cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),input.units,"concentration converted to",output.units,"/kg bw/day dose.\n")
    }
-   if (class(Css) == "try-error"){
+   if (is(Css,"try-error")){
      return(NA)
    }else{
 # Converting Css for 1 mg/kg/day to dose needed to produce concentration conc uM:   

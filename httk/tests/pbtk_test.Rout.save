@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -85,19 +85,19 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
-[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.1600 2.380e+01 2.858e-01 2.352 0.2491 0.06594   3.134
-[4,] 0.02083    103.10 73.2500 4.919e+01 6.794e-01 5.927 0.6512 0.41390  12.370
-[5,] 0.03125     59.77 59.4500 5.912e+01 8.970e-01 7.969 0.8852 0.97910  19.640
-[6,] 0.04167     34.66 45.5300 5.797e+01 9.544e-01 8.545 0.9538 1.60500  22.770
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000    0.00
+[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000    0.00
+[3,] 0.01042    177.80 72.1600 2.380e+01 2.859e-01 2.353 0.2491 0.06595    3.14
+[4,] 0.02083    103.10 73.2600 4.919e+01 6.795e-01 5.928 0.6513 0.41400   12.38
+[5,] 0.03125     59.77 59.4500 5.912e+01 8.971e-01 7.970 0.8854 0.97920   19.65
+[6,] 0.04167     34.66 45.5300 5.797e+01 9.545e-01 8.546 0.9539 1.60500   22.77
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.596e-01 0.004813    1.104e+00 0.001391
-[4,] 8.546e-01 0.031090    5.485e+00 0.007852
-[5,] 1.128e+00 0.076030    1.191e+01 0.018390
-[6,] 1.201e+00 0.129300    1.879e+01 0.030660
+[1,] 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 6.000e-09  0.00000    2.000e-09 0.000000
+[3,] 3.596e-01  0.00197    1.104e+00 0.001391
+[4,] 8.548e-01  0.01985    5.485e+00 0.007854
+[5,] 1.129e+00  0.05810    1.192e+01 0.018390
+[6,] 1.201e+00  0.10840    1.879e+01 0.030660
 Warning messages:
 1: In parameterize_pbtk(chem.cas = NULL, chem.name = "bisphenol a",  :
   Clint is provided as a distribution.
@@ -115,19 +115,19 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
-[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.1600 2.380e+01 2.858e-01 2.352 0.2491 0.06594   3.134
-[4,] 0.02083    103.10 73.2500 4.919e+01 6.794e-01 5.927 0.6512 0.41390  12.370
-[5,] 0.03125     59.77 59.4500 5.912e+01 8.970e-01 7.969 0.8852 0.97910  19.640
-[6,] 0.04167     34.66 45.5300 5.797e+01 9.544e-01 8.545 0.9538 1.60500  22.770
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000    0.00
+[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000    0.00
+[3,] 0.01042    177.80 72.1600 2.380e+01 2.859e-01 2.353 0.2491 0.06595    3.14
+[4,] 0.02083    103.10 73.2600 4.919e+01 6.795e-01 5.928 0.6513 0.41400   12.38
+[5,] 0.03125     59.77 59.4500 5.912e+01 8.971e-01 7.970 0.8854 0.97920   19.65
+[6,] 0.04167     34.66 45.5300 5.797e+01 9.545e-01 8.546 0.9539 1.60500   22.77
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.596e-01 0.004813    1.104e+00 0.001391
-[4,] 8.546e-01 0.031090    5.485e+00 0.007852
-[5,] 1.128e+00 0.076030    1.191e+01 0.018390
-[6,] 1.201e+00 0.129300    1.879e+01 0.030660
+[1,] 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 6.000e-09  0.00000    2.000e-09 0.000000
+[3,] 3.596e-01  0.00197    1.104e+00 0.001391
+[4,] 8.548e-01  0.01985    5.485e+00 0.007854
+[5,] 1.129e+00  0.05810    1.192e+01 0.018390
+[6,] 1.201e+00  0.10840    1.879e+01 0.030660
 Warning messages:
 1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -145,19 +145,19 @@ The model outputs are provided in the following units:
 	uM*days: AUC
 
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
-[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 72.1600 2.380e+01 2.858e-01 2.352 0.2491 0.06594   3.134
-[4,] 0.02083    103.10 73.2500 4.919e+01 6.794e-01 5.927 0.6512 0.41390  12.370
-[5,] 0.03125     59.77 59.4500 5.912e+01 8.970e-01 7.969 0.8852 0.97910  19.640
-[6,] 0.04167     34.66 45.5300 5.797e+01 9.544e-01 8.545 0.9538 1.60500  22.770
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000    0.00
+[2,] 0.00001    306.40  0.1449 4.391e-05 5.000e-09 0.000 0.0000 0.00000    0.00
+[3,] 0.01042    177.80 72.1600 2.380e+01 2.859e-01 2.353 0.2491 0.06595    3.14
+[4,] 0.02083    103.10 73.2600 4.919e+01 6.795e-01 5.928 0.6513 0.41400   12.38
+[5,] 0.03125     59.77 59.4500 5.912e+01 8.971e-01 7.970 0.8854 0.97920   19.65
+[6,] 0.04167     34.66 45.5300 5.797e+01 9.545e-01 8.546 0.9539 1.60500   22.77
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.596e-01 0.004813    1.104e+00 0.001391
-[4,] 8.546e-01 0.031090    5.485e+00 0.007852
-[5,] 1.128e+00 0.076030    1.191e+01 0.018390
-[6,] 1.201e+00 0.129300    1.879e+01 0.030660
+[1,] 0.000e+00  0.00000    0.000e+00 0.000000
+[2,] 6.000e-09  0.00000    2.000e-09 0.000000
+[3,] 3.596e-01  0.00197    1.104e+00 0.001391
+[4,] 8.548e-01  0.01985    5.485e+00 0.007854
+[5,] 1.129e+00  0.05810    1.192e+01 0.018390
+[6,] 1.201e+00  0.10840    1.879e+01 0.030660
 Warning messages:
 1: In parameterize_pbtk(chem.cas = "80-05-7") :
   Clint is provided as a distribution.
@@ -172,143 +172,7 @@ Set recalc.blood2plasma to TRUE if desired.
   Clearance not recalculated. 
 Set recalc.clearance to TRUE if desired.
 > 
-> parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
-$BW
-[1] 70
-
-$Clint
-[1] 0
-
-$Clint.dist
-[1] NA
-
-$Clmetabolismc
-[1] 0
-
-$Fgutabs
-[1] 1
-
-$Fhep.assay.correction
-[1] 0.9229
-
-$Fhep.assay.correction
-[1] 0.9229
-
-$Funbound.plasma
-[1] 0.75
-
-$Funbound.plasma.adjustment
-[1] 1
-
-$Funbound.plasma.dist
-[1] NA
-
-$hematocrit
-[1] 0.44
-
-$Kgut2pu
-[1] 1.022
-
-$kgutabs
-[1] 2.18
-
-$Kkidney2pu
-[1] 2.922
-
-$Kliver2pu
-[1] 3.203
-
-$Klung2pu
-[1] 0.5529
-
-$Krbc2pu
-[1] 0.6228
-
-$Krest2pu
-[1] 0.5898
-
-$liver.density
-[1] 1.05
-
-$MA
-[1] NA
-
-$million.cells.per.gliver
-[1] 110
-
-$MW
-[1] 440.4
-
-$pKa_Accept
-  pKa_Accept 
-"4.95,13.56" 
-
-$pKa_Donor
-  pKa_Donor 
-"3.38,4.18" 
-
-$Pow
-[1] 0.8903
-
-$Qcardiacc
-[1] 13.88
-
-$Qgfrc
-[1] 0.3099
-
-$Qgutf
-[1] 0.2054
-
-$Qkidneyf
-[1] 0.2214
-
-$Qliverf
-[1] 0.05359
-
-$Qrestf
-[1] 0.4757
-
-$Rblood2plasma
-[1] 0.7655
-
-$Vartc
-[1] 0.03827
-
-$Vgutc
-[1] 0.0158
-
-$Vkidneyc
-[1] 0.00419
-
-$Vliverc
-[1] 0.02448
-
-$Vlungc
-[1] 0.007235
-
-$Vrestc
-[1] 0.7765
-
-$Vvenc
-[1] 0.03827
-
-Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(chem.name = "Aminopterin") :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-5: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-6: In parameterize_pbtk(chem.name = "Aminopterin") :
-  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
+> #parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 
