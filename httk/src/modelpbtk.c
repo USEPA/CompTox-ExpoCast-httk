@@ -1,15 +1,15 @@
-/* vLiverPBPK.c for R deSolve package
+/* modelpbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  vLiverPBPK.model
+   Model File:  modelpbtk.model
 
-   Date:  Tue Nov 28 10:57:11 2017
+   Date:  Thu Mar 24 09:59:47 2022
 
-   Created by:  "mod v5.5.0"
+   Created by:  "mod v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2013 Free Software Foundation, Inc.
+   Copyright (c) 1993-2019 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
@@ -80,30 +80,33 @@
 */
 
 #include <R.h>
+#include <Rinternals.h>
+#include <Rdefines.h>
+#include <R_ext/Rdynload.h>
 
 /* Model variables: States */
-#define ID_Agutlumen 0x0000
-#define ID_Agut 0x0001
-#define ID_Aliver 0x0002
-#define ID_Aven 0x0003
-#define ID_Alung 0x0004
-#define ID_Aart 0x0005
-#define ID_Arest 0x0006
-#define ID_Akidney 0x0007
-#define ID_Atubules 0x0008
-#define ID_Ametabolized 0x0009
-#define ID_AUC 0x000a
+#define ID_Agutlumen 0x00000
+#define ID_Agut 0x00001
+#define ID_Aliver 0x00002
+#define ID_Aven 0x00003
+#define ID_Alung 0x00004
+#define ID_Aart 0x00005
+#define ID_Arest 0x00006
+#define ID_Akidney 0x00007
+#define ID_Atubules 0x00008
+#define ID_Ametabolized 0x00009
+#define ID_AUC 0x0000a
 
 /* Model variables: Outputs */
-#define ID_Cgut 0x0000
-#define ID_Cliver 0x0001
-#define ID_Cven 0x0002
-#define ID_Clung 0x0003
-#define ID_Cart 0x0004
-#define ID_Crest 0x0005
-#define ID_Ckidney 0x0006
-#define ID_Cplasma 0x0007
-#define ID_Aplasma 0x0008
+#define ID_Cgut 0x00000
+#define ID_Cliver 0x00001
+#define ID_Cven 0x00002
+#define ID_Clung 0x00003
+#define ID_Cart 0x00004
+#define ID_Crest 0x00005
+#define ID_Ckidney 0x00006
+#define ID_Cplasma 0x00007
+#define ID_Aplasma 0x00008
 
 /* Parameters */
 static double parms[37];
@@ -146,7 +149,36 @@ static double parms[37];
 #define Vrest parms[35]
 #define Vven parms[36]
 
+/* Forcing (Input) functions */
+//static double forc[0];
 
+
+/* Function definitions for delay differential equations */
+//
+//int Nout=1;
+//int nr[1]={0};
+//double ytau[1] = {0.0};
+//
+//static double yini[11] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+//
+//void lagvalue(double T, int *nr, int N, double *ytau) {
+//  static void(*fun)(double, int*, int, double*) = NULL;
+//  if (fun == NULL)
+//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//  return fun(T, nr, N, ytau);
+//}
+//
+//double CalcDelay(int hvar, double dTime, double delay) {
+//  double T = dTime-delay;
+//  if (dTime > delay){
+//    nr[0] = hvar;
+//    lagvalue( T, nr, Nout, ytau );
+//}
+//  else{
+//    ytau[0] = yini[hvar];
+//}
+//  return(ytau[0]);
+//}
 
 /*----- Initializers */
 void initmodpbtk (void (* odeparms)(int *, double *))
@@ -155,7 +187,25 @@ void initmodpbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
+/*
+void initforcpbtk (void (* odeforcs)(int *, double *))
+{
+  int N=0;
+  odeforcs(&N, forc);
+}
+*/
 
+/* Calling R code will ensure that input y has same
+   dimension as yini */
+//void initState (double *y)
+//{
+//  int i;
+//
+//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//  {
+//    yini[i] = y[i];
+//  }
+//}
 
 void getParmspbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
