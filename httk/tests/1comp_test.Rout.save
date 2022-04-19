@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2021-04-27 r80234) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,19 +20,11 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save 1comp_test.R 1comp_test.Rout
 > library(httk)
 > 
-> calc_analytic_css(chem.name="bisphenol a",model="1compartment")
-Human volume of distribution returned in units of L/kg BW.
-Plasma concentration returned in uM units.
-[1] 1.463
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
+> #calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.464
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -41,27 +33,17 @@ Warning messages:
 > calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.464
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
 2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
-> calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
-Human volume of distribution returned in units of L/kg BW.
-Tissue concentration for liver returned in uM units.
-[1] 26.82
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-3: In calc_analytic_css(chem.cas = "80-05-7", model = "1compartment",  :
-  Tissue selected. Overwriting option for concentration with "tissue".
+> #calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 Human volume of distribution returned in units of L/kg BW.
 Tissue concentration for brain returned in uM units.
-[1] 8.543
+[1] 8.549
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -70,52 +52,25 @@ Warning messages:
 3: In calc_analytic_css(chem.cas = "80-05-7", model = "1compartment",  :
   Tissue selected. Overwriting option for concentration with "tissue".
 > 
-> head(solve_1comp(chem.name="bisphenol a"))
-Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
-        time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
-[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
-[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
-[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
-[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-> head(solve_1comp(chem.cas="80-05-7"))
-Human volume of distribution returned in units of L/kg BW.
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
-        time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
-[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
-[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
-[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
-[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
-Warning messages:
-1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
-  Fraction unbound is provided as a distribution.
-2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
+> ##head(solve_1comp(chem.name="bisphenol a"))
+> #head(solve_1comp(chem.cas="80-05-7"))
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
 Human volume of distribution returned in units of L/kg BW.
-Amounts returned in umol  and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Agutlumen, Ametabolized
+	uM: Ccompartment
+	uM*days: AUC
+
         time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000    272.80    0.0000000    0.000e+00 0.000e+00
-[2,] 0.00001    272.60    0.0004031    3.760e-07 2.000e-09
-[3,] 0.01042    158.20    0.3228000    3.422e-01 1.835e-03
-[4,] 0.02083     91.71    0.5083000    1.166e+00 6.254e-03
-[5,] 0.03125     53.18    0.6140000    2.265e+00 1.215e-02
-[6,] 0.04167     30.83    0.6736000    3.521e+00 1.889e-02
+[1,] 0.00000    273.00    0.0000000    0.0000000 0.000e+00
+[2,] 0.00001    272.80    0.0003216    0.0000003 2.000e-09
+[3,] 0.01042    158.30    0.2577000    0.2731000 1.465e-03
+[4,] 0.02083     91.78    0.4060000    0.9310000 4.993e-03
+[5,] 0.03125     53.22    0.4909000    1.8100000 9.706e-03
+[6,] 0.04167     30.86    0.5390000    2.8140000 1.509e-02
 Warning messages:
 1: In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -130,13 +85,13 @@ Set recalc.clearance to TRUE if desired.
 > 
 > calc_vdist(chem.name="triclosan")
 Human volume of distribution returned in units of L/kg BW.
-[1] 2.187
+[1] 2.111
 Warning message:
 In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
 > calc_vdist(chem.cas="80-05-7")
 Human volume of distribution returned in units of L/kg BW.
-[1] 5.056
+[1] 6.342
 Warning message:
 In parameterize_schmitt(chem.cas = chem.cas, chem.name = chem.name,  :
   Fraction unbound is provided as a distribution.
@@ -150,7 +105,7 @@ In predict_partitioning_schmitt(parameters = params) :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.187
+[1] 2.111
 > params <- parameterize_3comp(chem.name="triclosan")
 Warning messages:
 1: In parameterize_pbtk(chem.cas = chem.cas, chem.name = chem.name,  :
@@ -163,7 +118,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.187
+[1] 2.111
 > params <- parameterize_pbtk(chem.name="triclosan")
 Warning messages:
 1: In parameterize_pbtk(chem.name = "triclosan") :
@@ -176,50 +131,79 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
-[1] 2.187
+[1] 2.112
 > 
-> script.args <- commandArgs(TRUE)
-> if (length(script.args) > 0) 
-+ {
-+   if (any(script.args=="mctest"))
-+   {
-+     set.seed(12345)
-+     calc_mc_css(chem.name="bisphenol a",model="1compartment")
-+     set.seed(12345)
-+     calc_mc_css(chem.cas="80-05-7",model="1compartment")
-+     set.seed(12345)
-+     calc_mc_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
-+   }
-+   if (any(script.args=="wetmoretest"))
-+   {
-+     wetmore.chems <- subset(chem.physical_and_invitro.data,
-+       regexpr("Wetmore",Human.Clint.Reference)!=-1 &
-+       regexpr("Wetmore",Human.Funbound.plasma.Reference)!=-1)
-+     Css.table <- data.frame()
-+     for (this.cas in sort(get_lit_cheminfo()))
-+       if (this.cas %in% get_cheminfo(model="pbtk") &
-+         this.cas %in% wetmore.chems$CAS)
-+       {
-+         Css.table[this.cas,"Css.lit"] <- get_lit_css(chem.cas=this.cas,
-+           output.units="uM",
-+           which.quantile=0.5)
-+         Css.table[this.cas,"Css.calc"] <- calc_analytic_css(chem.cas=this.cas,
-+           model="1compartment")
-+       }                                                                          
-+     cat(lm(log(Css.lit)~log(Css.calc),data=Css.table)$coefficients)
-+    
-+     #library(ggplot2)
-+     #test.fig <- ggplot(Css.table,aes(x=Css.calc,y=Css.lit)) +
-+     #         geom_point(size=3)+
-+     #   scale_y_log10()+
-+     #   scale_x_log10()+
-+     #  ylab(expression(paste(C[aa]," Literature (uM)"))) +
-+     #  xlab(expression(paste(C[aa]," 1compartment model (uM)"))) +
-+     #  geom_abline(intercept = 0, slope = 1,linetype="dashed", colour="Blue") 
-+     #
-+     #dev.new()
-+     #print(test.fig)
-+   }
-+ }
+> parameterize_1comp(chem.name="Aminopterin")
+Human volume of distribution returned in units of L/kg BW.
+$BW
+[1] 70
+
+$Clint
+[1] 0
+
+$Clint.dist
+[1] NA
+
+$Fgutabs
+[1] 1
+
+$Fhep.assay.correction
+[1] 0.9229
+
+$Funbound.plasma
+[1] 0.75
+
+$Funbound.plasma.adjustment
+[1] 1
+
+$Funbound.plasma.dist
+[1] NA
+
+$hematocrit
+[1] 0.44
+
+$hepatic.bioavailability
+[1] 1
+
+$kelim
+[1] 0.1656
+
+$kgutabs
+[1] 2.18
+
+$liver.density
+[1] 1.05
+
+$MA
+[1] NA
+
+$million.cells.per.gliver
+[1] 110
+
+$MW
+[1] 440.4
+
+$pKa_Accept
+  pKa_Accept 
+"4.95,13.56" 
+
+$pKa_Donor
+  pKa_Donor 
+"3.38,4.18" 
+
+$Pow
+[1] 0.8903
+
+$Rblood2plasma
+[1] 0.7655
+
+$Vdist
+[1] 0.4851
+
+Warning messages:
+1: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > quit("no")

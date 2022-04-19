@@ -14,7 +14,7 @@ A data.table with 401 rows and 6 columns
 wambaugh2019.tox21
 }
 \description{
-The ToxCast and Tox21 research programs employ batteries of high throughput
+The ToxCast and Tox21 research programs employ batteries of high-throughput
 assays to assess chemical bioactivity in vitro. Not every chemical is tested
 through every assay. Most assays are conducted in concentration response,
 and each corresponding assay endpoint is analyzed statistically to determine
@@ -28,7 +28,7 @@ and only the quantiles across all assays for the ACC.
 }
 \references{
 Kavlock, Robert, et al. "Update on EPA's ToxCast program:
-providing high throughput decision support tools for chemical risk
+providing high-throughput decision support tools for chemical risk
 management." Chemical research in toxicology 25.7 (2012): 1287-1302.
 
 Tice, Raymond R., et al. "Improving the human hazard characterization of

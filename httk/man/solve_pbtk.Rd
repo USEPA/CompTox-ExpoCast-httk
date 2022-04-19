@@ -20,7 +20,8 @@ solve_pbtk(
   suppress.messages = FALSE,
   species = "Human",
   iv.dose = FALSE,
-  output.units = "uM",
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -30,7 +31,7 @@ solve_pbtk(
   dosing.matrix = NULL,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   ...
@@ -56,9 +57,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number of time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -75,8 +76,12 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -142,7 +147,7 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 Model Figure 
-\if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
+\if{html}{\figure{pbtk.jpg}{options: width="60\%" alt="Figure: PBTK Model
 Schematic"}}
 \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
 Schematic"}}

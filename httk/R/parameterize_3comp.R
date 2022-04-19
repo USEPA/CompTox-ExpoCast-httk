@@ -82,13 +82,13 @@ parameterize_3comp<- function(
                        chem.name = NULL,
                        dtxsid = NULL,
                        species = "Human",
-                       default.to.human = F,
-                       force.human.clint.fup = F,
+                       default.to.human = FALSE,
+                       force.human.clint.fup = FALSE,
                        clint.pvalue.threshold = 0.05,
-                       adjusted.Funbound.plasma = T,
-                       regression = T,
-                       suppress.messages = F,
-                       restrictive.clearance = T,
+                       adjusted.Funbound.plasma = TRUE,
+                       regression = TRUE,
+                       suppress.messages = FALSE,
+                       restrictive.clearance = TRUE,
                        minimum.Funbound.plasma = 0.0001)
 {
   parms <- parameterize_pbtk(
@@ -111,5 +111,5 @@ parameterize_3comp<- function(
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(lapply(parms,set_httk_precision))                          
+  return(lapply(parms[order(tolower(names(parms)))],set_httk_precision))                     
 }

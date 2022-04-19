@@ -9,6 +9,13 @@ estimate_gfr(gfrtmp.dt)
 \arguments{
 \item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth}, 
 \code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.}
+
+\item{gfr_resid_var}{Logical value indicating whether or not to include
+residual variability when generating GFR values. (Default is TRUE.)}
+
+\item{ckd_epi_race_coeff}{Logical value indicating whether or not to use the
+"race coefficient" from the CKD-EPI equation when estimating GFR values.
+(Default is FALSE.)}
 }
 \value{
 The same data.table with a \code{gfr_est} column added, containing 
