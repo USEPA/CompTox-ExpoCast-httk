@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 ![HTTK logo](httk-logo.png)
 
->>>>>>> feature/fetal
 # R Package "httk"
 
 This R package provides data and models for prediction toxicokinetics (chemical 
@@ -155,7 +152,6 @@ Barbara Wetmore [wetmore.barbara@epa.gov]
 
 ### Statistical Expertise
 Woodrow Setzer [setzer.woodrow@epa.gov]
-
 
 ## License
 
