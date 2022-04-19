@@ -26,8 +26,9 @@
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
 #' @param suppress.messages Whether or not to suppress messages.
-#' @param tissue Desired tissue concentration (defaults to whole body 
-#' concentration.)
+#' @param tissue Desired tissue concentration (default value is NULL, will
+#' depend on model -- see \code{steady.state.compartment} in model.info file for
+#' further details.)
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
@@ -97,7 +98,7 @@ calc_css <- function(chem.name=NULL,
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
-                    tissue="plasma",
+                    tissue=NULL,
                     model='pbtk',
                     default.to.human=FALSE,
                     f.change = 0.00001,
@@ -132,12 +133,25 @@ calc_css <- function(chem.name=NULL,
     parameterize_function <- model.list[[model]]$parameterize.func
     # the names of the state variables of the model (so far, always in units of 
     # amounts)
-    state.vars <- model.list[[model]]$default.monitor.vars
-    state.vars <- state.vars[!(state.vars %in% c(
-      "Atubules",
-      "Ametabolized",
-      "AUC",
-      "Cplasma"))]
+    state.vars <- model.list[[model]]$state.vars
+    # The compartment where we test for steady-state:
+    # Check if set in function call:
+    if (!is.null(tissue))
+    {
+      ss.compartment <- tissue
+    # Then check to see if model sets a default:
+    } else if (!is.null(model.list[[model]]$steady.state.compartment))
+    {
+      ss.compartment <- model.list[[model]]$steady.state.compartment
+    # Otherwise plasma:
+    } else ss.compartment <- "plasma"
+# Not sure why we have this, commenting out for now:
+#     state.vars <- state.vars[!(state.vars %in% c(
+#      "Atubules",
+#      "Ametabolized",
+#      "AUC",
+#      "Cplasma"))]
+    
   }   
 
   # We only want to call the parameterize function once:
@@ -179,7 +193,15 @@ calc_css <- function(chem.name=NULL,
     restrictive.clearance=restrictive.clearance) 
   target.conc <- (1 - f) * css 
 
+# Identify the concentration that we are intending to check for steady-state:
+  target <- paste("C",ss.compartment,sep="") 
+
   # Initially simulate for a time period of length "days":
+  # We monitor the state parameters plus the target (we need the state vars
+  # in case we need to restart the simulation):
+  monitor.vars <- unique(c(state.vars, target))
+  
+# Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
   out <- solve_model(parameters=parameters,
     model=model, 
     dosing=dosing,
@@ -187,19 +209,23 @@ calc_css <- function(chem.name=NULL,
     days=days,
     output.units = output.units,
     restrictive.clearance=restrictive.clearance,
+    monitor.vars=monitor.vars,
     ...)
-  Final_Conc <- out[dim(out)[1],state.vars]
+    
+# Make sure we have the compartment we need: 
+  if (!(target %in% colnames(out))) stop(paste(
+    "Requested tissue",ss.compartment,"is not an output of model",model))
+    
+  Final_Conc <- out[dim(out)[1],monitor.vars]
   total.days <- days
   additional.days <- days
 
-  # For the 3-compartment model:  
-  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
+#  # For the 3-compartment model:  
+#  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
-  target <- paste("C",tissue,sep="") 
-  if (!(target %in% colnames(out))) stop(paste(
-    "Requested tissue",tissue,"is not an output of model",model))
-    
-  while(all(out[,"Cplasma"] < target.conc) & 
+# Until we reach steady-state, keep running the solver for longer times, 
+# restarting each time from where we left off:
+  while(all(out[,target] < target.conc) & 
        ((out[match((additional.days - 1),out[,'time']),target]-
         out[match((additional.days - 2),out[,'time']),target])/
         out[match((additional.days - 2),out[,'time']),target] > f.change))
@@ -214,13 +240,16 @@ calc_css <- function(chem.name=NULL,
     
     out <- solve_model(parameters=parameters,
       model=model,
-      initial.values = Final_Conc,  
+      initial.values = Final_Conc[state.vars],  
       dosing=dosing,
       days = additional.days,
+      output.units = output.units,
+      restrictive.clearance=restrictive.clearance,
+      monitor.vars=monitor.vars,    
       suppress.messages=TRUE,
       restrictive.clearance=restrictive.clearance,
       ...)
-    Final_Conc <- out[dim(out)[1],state.vars]
+    Final_Conc <- out[dim(out)[1],monitor.vars]
   
     if(total.days > 36500) break 
   }
@@ -249,8 +278,11 @@ calc_css <- function(chem.name=NULL,
    frac_achieved <- as.numeric(max(out[,target])/css)  
   }     
   
+  # Calculate the peak concentration:
   max.conc <- as.numeric(max(out[,target]))
-  avg.conc <- as.numeric(out[dim(out)[1],'AUC'] - out[match(additional.days-1,out[,'time']),'AUC']) 
+  # Calculate the mean concentration on the last day:
+  avg.conc <- mean(as.numeric(subset(out, 
+    out[,"time"] > additional.days-1)[,target]))
    
   return(list(
     avg=set_httk_precision(avg.conc),

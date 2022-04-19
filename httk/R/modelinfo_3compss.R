@@ -62,7 +62,7 @@ model.list[["3compartmentss"]]$httkpop.params <- c(
   "Vliverc")
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[["3compartmentss"]]$calcpc <- TRUE
+model.list[["3compartmentss"]]$calcpc <- FALSE
 
 
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
@@ -82,5 +82,10 @@ model.list[["3compartmentss"]]$invitro.params <- c("BW",
 
 
 # Do we ignore the Fups where the alue was below the limit of detection?
-model.list[["3compartmentss"]]$exclude.fup.zero <- F
+model.list[["3compartmentss"]]$exclude.fup.zero <- FALSE
 
+# These are the parameter names needed to describe steady-state dosing:
+model.list[["3compartmentss"]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[["3compartmentss"]]$log.henry.threshold <- c(-4.5)

@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
 ```
 from "Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionst"
@@ -62,7 +62,7 @@ library(magrittr)
 library(ggplot2)
 library(httk)
 ```
-```{r MakeTable}
+```{r MakeTable, eval = FALSE}
 armitage.dt <- copy(armitage_input)
 armitage.dt[,well_number:=384] %>% 
   .[,option.bottom:=TRUE] %>% 
@@ -75,7 +75,7 @@ armitage.dt[,well_number:=384] %>%
 # Make sure we have data for the chemical:
 armitage.dt <- subset(armitage.dt,casrn%in%get_cheminfo())
 # These chemicals are missing water solubilities:
-armitage.dt <- subset(armitage.dt,!(casrn%in%c("71751-41-2","34590-94-8","1024-57-3")))
+armitage.dt <- subset(armitage.dt,!(casrn%in%c("71751-41-2","34590-94-8","141517-21-7")))
 
 armitage.dt2 <- armitage_estimate_sarea(tcdata = armitage.dt)
 armitage_output1 <- armitage_eval(tcdata = armitage.dt2[,ac50:=50])
@@ -86,7 +86,7 @@ armitage_output3 <- armitage_eval(tcdata = armitage.dt2[,ac50:=0.001])
 
 ## Plot results
 
-```{r MakePlot, echo=TRUE}
+```{r MakePlot, echo=TRUE, eval = FALSE}
 armitage_output <- rbind(armitage_output1[,xfill:="50 \U00B5M"],
                          armitage_output2[,xfill:="1 \U00B5M"],
                          armitage_output3[,xfill:="1 nM"])

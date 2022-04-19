@@ -1,0 +1,44 @@
+
+R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+> library(httk)
+> #
+> # MW BPA is 228.29 g/mol
+> # 1 mg/L -> 1/228.29*1000 = 4.38 uM
+> convert_units("mg/L","uM",chem.cas="80-05-7")
+[1] 4.38
+> #
+> # MW Diclofenac is 296.148 g/mol
+> # 1 uM -> 296.148/1000 =  0.296
+> convert_units("uM","mg/L",chem.name="diclofenac")
+[1] 0.2962
+> #
+> convert_units("uM","ppmv",chem.name="styrene")
+[1] 24.45
+> #
+> # Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
+> # 1 ug/L Toluene -> 0.263 ppmv
+> convert_units("ug/L","ppmv",chem.name="toluene")
+[1] 0.2655
+> #
+> # 1 pppmv Toluene, 0.0038 mg/L
+> convert_units("ppmv","mg/L",chem.name="toluene")
+[1] 0.003766
+> 

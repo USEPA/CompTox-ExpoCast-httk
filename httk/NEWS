@@ -1,5 +1,31 @@
 News for R package httk
 
+Changes in version 2.1.0 (March, 2022)
+  This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
+  New HT-PBTK model added as described by Kapraun et al. (submitted) including functions solve_fetal_pbtk() and parameterize_fetal_pbtk()
+  QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Dawson et al. (2021) (https://doi.org/10.1021/acs.est.0c06117) is now included as Dawson2021 and can be added with the new function: load_dawson2021().
+  QSAR predicted chemical-specific plasma protein unbound plasma fraction and intrinsic hepatic clearance values data from Pradeep et al. (2020) (https://doi.org/10.1016/j.comtox.2020.100136) is now included as Pradeep2020 and can be added with the new function: load_pradeep2020().
+  Updated predict_partitioning_schmitt() removing the hard coded predicted fup regression values from Pearce et al. (2017) (https://doi.org/10.1007/s10928-017-9548-7) and created stand-alone data matrix 'pearce2017regression' read in by the function.
+  Added function calc_halflife (thank you Imran Shah)
+  Internal reusable function convert_units() added to ensure consistency in unit conversions across functions
+  Units corrected for gas_pbtk model to more natuarlly handle ppmv (parts per million by volume) and uM
+  Reworked code for predict_partitioning_schmitt() -- now we read list of tissues needed for a model from modelinfo variable alltissues
+  Further revised documentation to Armitage functions (thank you Madison Feshuk)
+  Corrected swapped "area_bottom" values in table well_param for the Armitage model. (thank you Todor Antonijevic) 
+  Contribution from Todor Antonijevic:
+    this.conc_ser_alb, this.conc_ser_lip and this.Vdom added to the list of arguments.
+    the volume of headspace calculated as in Armitage et al. 2014.
+    the volume of medium calculated as in Armitage et al. 2014.
+    f_ratio calculated as in Armitage et al. 2014
+    kow added in the denominator of cwat, i.e. kowP_domf_oc*Vdom
+  Corrected major bug introduced in 2.0.0 (vectorization of calc_ionization) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
+  Corrected monkey cardiac output (thank you Peter Egeghy)
+  Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
+  Expanded documentation for function get_cheminfo and table chem.phys_and_invitro.data (thank you Lynne Haber and Mark Bradley)  
+  Expanded example for add_chemtable to address ionization (thank you Johann Fribl)
+  Added Clint data from Dawson (2021) supplemental information (CHEMBL)
+  Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss", based on Wambaugh et al. (2015) (https://doi.org/10.1093/toxsci/kfv118).
+
 Changes in version 2.0.4 (May 7, 2021)
   Changed DESCRIPTION to indicate LazyDataCompression is xz
   Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
@@ -12,8 +38,7 @@ Changes in version 2.0.4 (May 7, 2021)
   Revised get_cheminfo behavior to remove fraction unbound in plasma values if credible interval spans from < 0.1 to > 0.9 (turn off with fup.ci.cutoff=FALSE).
   Revised get_cheminfo to include "median.only" argument allowing confidence intervals to be removed for chemical intrinsic hepatic clearance values and fraction unbound in plasma values where they exist (turn on with median.only=TRUE).
   Revised get_cheminfo to filter volatile compounds using Henry's law constant for all models, excluding the "gas_pbtk" model.
-  Revised get_cheminfo to incorporate a chemical class filter to remove "PFAS" compounds for all models, except "3compartmentss", based on Wambaugh et al. (2015) (https://doi.org/10.1093/toxsci/kfv118).
-  Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
+    Fixed problems with Clint values reported from Wood et al. 2017 (https://doi.org/10.1124/dmd.117.077040), fraction unbound in hepatocyte assay adjustement was being applied twice (thank you Xiaoqing Chang)
   Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
 
 Changes in version 2.0.3 (August 16, 2020)
