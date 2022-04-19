@@ -142,7 +142,7 @@ The compartments used in this model are the gutlumen, gut, liver, and
 rest-of-body, with the plasma equivalent to the liver plasma.
 
 Model Figure 
-\if{html}{\figure{3comp.png}{options: width="60\%" alt="Figure: Three
+\if{html}{\figure{3comp.jpg}{options: width="60\%" alt="Figure: Three
 Compartment Model Schematic"}} 
 \if{latex}{\figure{3comp.pdf}{options: width=12cm alt="Figure: Three Compartment
 Model Schematic"}}
