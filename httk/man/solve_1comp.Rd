@@ -20,7 +20,8 @@ solve_1comp(
   suppress.messages = FALSE,
   species = "Human",
   iv.dose = FALSE,
-  output.units = "uM",
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -30,7 +31,7 @@ solve_1comp(
   dosing.matrix = NULL,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   ...
@@ -55,9 +56,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, default is mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, default is mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -74,8 +75,12 @@ output.units.  Defaults are zero.}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+"mg/kg" BW.}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -94,7 +99,7 @@ rate.}
 
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
-mg/kg BW, of each dose.}
+mg/kg BW by default, of each dose.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with volume of distribution calculated with this value.}
@@ -131,13 +136,13 @@ in days.
 Default value of NULL for doses.per.day solves for a single dose.
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 AUC is area under plasma concentration curve.
 
 Model Figure 
-\if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+\if{html}{\figure{1comp.jpg}{options: width="60\%" alt="Figure: One
 Compartment Model Schematic"}}
 \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 Compartment Model Schematic"}}

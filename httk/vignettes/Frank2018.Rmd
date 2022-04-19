@@ -1,5 +1,5 @@
 ---
-title: "Frank et al. (2018): Creating Figure Six (IVIVE)"
+title: "Frank et al. (2018): Creating IVIVE Figure (Fig. 6)"
 author: "John F. Wambaugh"
 date: "September 25, 2019"
 output: rmarkdown::html_vignette
@@ -43,10 +43,10 @@ suggests there is potential for using tipping points for chemical prioritization
 
 ## Prepare for session
 ### Load the relevant libraries
-```{r setup}
+```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
-library(gdata)
 library(httk)
+#library(gdata)
 library(ggplot2)
 library(scales)
 ```
@@ -61,12 +61,12 @@ scientific_10 <- function(x) {
 }  
 ```
 ### Load the data
-```{r Frank2018data}
+```{r Frank2018data, eval = FALSE}
 chem.table <- Frank2018invivo
 ```
 ## Use HTTK to perform IVIVE
 ### This loops through each study design in the table and runs solve_pbtk:
-```{R ivive.loop}
+```{R ivive.loop, eval = FALSE}
 for (this.row in 1:dim(chem.table)[1])
 {
   this.cas <- chem.table[this.row,"Substance_CASRN"]
@@ -108,6 +108,7 @@ for (this.row in 1:dim(chem.table)[1])
            days=this.days,
            iv.dose=iv.dose,
            default.to.human=TRUE))
+
 # Record the Cmax and the AUC:
   chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
   chem.table[this.row,"AUC"] <- max(out[,"AUC"])
@@ -129,7 +130,7 @@ and below perfect prediction. Because all in vitro treatments
 were exposed for the same amount of time, the relationship
 between nominal in vitro concentration and time-integrated
 concentration is a constant.
-```{R Frank2018.Fig6}
+```{R Frank2018.Fig6, eval = FALSE}
 Fig.AUC <- ggplot(data=chem.table) +
   geom_segment(color="grey",aes(x=AUC,y=Lower.95..CI,xend=AUC,yend=Higher.95..CI))+    
 #  geom_point(aes(x=AUC,y=Critical.concentration,color="Chemical"))+ 

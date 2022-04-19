@@ -9,13 +9,13 @@ parameterize_3comp(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  force.human.clint.fup = F,
+  default.to.human = FALSE,
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  suppress.messages = F,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  suppress.messages = FALSE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }

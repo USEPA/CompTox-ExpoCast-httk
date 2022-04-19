@@ -42,14 +42,14 @@
 #' 2014).
 #' 
 #' Data were combined from the three most recent publicly-available
-#' NHANES cycles: 2007–2008, 2009–2010, and 2011–2012. For each
-#' cycle, some NHANES quantities — height, weight, serum creatinine,
-#' and hematocrit — were measured only in a subset of respondents. Only
+#' NHANES cycles: 2007-2008, 2009-2010, and 2011-2012. For each
+#' cycle, some NHANES quantities - height, weight, serum creatinine,
+#' and hematocrit - were measured only in a subset of respondents. Only
 #' these subsets were included in HTTKePop. The pooled subsets from the
 #' three cycles contained 29,353 unique respondents. Some respondents
 #' were excluded from analysis: those with age recorded as 80 years (because
 #' all NHANES respondents 80 years and older were marked as
-#' “80”); those with missing height, weight or hematocrit data; and those
+#' "80"); those with missing height, weight or hematocrit data; and those
 #' aged 12 years or older with missing serum creatinine data. These criteria
 #' excluded 4807 respondents, leaving 24,546 unique respondents. Each
 #' NHANES respondent was assigned a cycle-specific sample weight,
@@ -74,8 +74,8 @@
 #' NHANES respondents with replacement, with probabilities proportional
 #' to the sample weights. Each individual in the resulting simulated population
 #' was an NHANES respondent, identified by a unique NHANES
-#' sequence number. By contrast, the second method generates “virtual
-#' individuals” — sets of NHANES quantities that obey the approximate
+#' sequence number. By contrast, the second method generates "virtual
+#' individuals" - sets of NHANES quantities that obey the approximate
 #' joint distribution of the NHANES quantities (calculated using weighted
 #' smoothing functions and kernel density estimators), but do not necessarily correspond to
 #' any particular NHANES respondent. The direct-resampling method removed
@@ -187,77 +187,77 @@
 #' 
 #' Levey, A.S., Stevens, L.A., Schmid, C.H., Zhang, Y.L., Castro, A.F., Feldman, H.I., et al.,
 #' 2009. A new equation to estimate glomerular filtration rate. Ann. Intern. Med. 150,
-#' 604–612.
+#' 604-612.
 #' 
 #' Howgate, E., Rowland-Yeo, K., Proctor, N., Tucker, G., Rostami-Hodjegan, A., 2006.
 #' Prediction of in vivo drug clearance from in vitro data. I: impact of inter-individual
-#' variability. Xenobiotica 36, 473–497.
+#' variability. Xenobiotica 36, 473-497.
 #' 
 #' Jamei, M., Dickinson, G.L., Rostami-Hodjegan, A., 2009a. A framework for assessing
 #' inter-individual variability in pharmacokinetics using virtual human populations and
 #' integrating general knowledge of physical chemistry, biology, anatomy, physiology
-#' and genetics: a tale of ‘bottom-up'vs ‘top-down'recognition of covariates. Drug Metab.
-#' Pharmacokinet. 24, 53–75.
+#' and genetics: a tale of 'bottom-up' vs 'top-down' recognition of covariates. Drug Metab.
+#' Pharmacokinet. 24, 53-75.
 #' 
 #' Johnson, T.N., Rostami-Hodjegan, A., Tucker, G.T., 2006. Prediction of the clearance of
 #' eleven drugs and associated variability in neonates, infants and children. Clin.
-#' Pharmacokinet. 45, 931–956.
+#' Pharmacokinet. 45, 931-956.
 #' 
 #' McNally, K., Cotton, R., Hogg, A., Loizou, G., 2014. PopGen: a virtual human population
-#' generator. Toxicology 315, 70–85.
+#' generator. Toxicology 315, 70-85.
 #' 
 #' Price, P.S., Conolly, R.B., Chaisson, C.F., Gross, E.A., Young, J.S., Mathis, E.T., et al.,
 #' 2003. Modeling interindividual variation in physiological factors used in PBPK
-#' models of humans. Crit. Rev. Toxicol. 33, 469–503.
+#' models of humans. Crit. Rev. Toxicol. 33, 469-503.
 #' 
 #' Barter, Z.E., Bayliss, M.K., Beaune, P.H., Boobis, A.R., Carlile, D.J., Edwards, R.J., et al.,
 #' 2007. Scaling factors for the extrapolation of in vivo metabolic drug clearance from
 #' in vitro data: reaching a consensus on values of human micro-somal protein and
-#' hepatocellularity per gram of liver. Curr. Drug Metab. 8, 33–45.
+#' hepatocellularity per gram of liver. Curr. Drug Metab. 8, 33-45.
 #' 
 #' Baxter-Jones, A.D., Faulkner, R.A., Forwood, M.R., Mirwald, R.L., Bailey, D.A., 2011.
 #' Bone mineral accrual from 8 to 30 years of age: an estimation of peak bone mass. J.
-#' Bone Miner. Res. 26, 1729–1739.
+#' Bone Miner. Res. 26, 1729-1739.
 #' 
 #' Bosgra, S., van Eijkeren, J., Bos, P., Zeilmaker, M., Slob, W., 2012. An improved model to
 #' predict physiologically based model parameters and their inter-individual variability
-#' from anthropometry. Crit. Rev. Toxicol. 42, 751–767.
+#' from anthropometry. Crit. Rev. Toxicol. 42, 751-767.
 #' 
 #' Koo, W.W., Walters, J.C., Hockman, E.M., 2000. Body composition in human infants at
-#' birth and postnatally. J. Nutr. 130, 2188–2194.
+#' birth and postnatally. J. Nutr. 130, 2188-2194.
 #' 
 #' Looker, A., Borrud, L., Hughes, J., Fan, B., Shepherd, J., Sherman, M., 2013. Total body
 #' bone area, bone mineral content, and bone mineral density for individuals aged 8
 #' years and over: United States, 1999-2006. In: Vital and health statistics Series 11,
-#' Data from the National Health Survey, pp. 1–78.
+#' Data from the National Health Survey, pp. 1-78.
 #' 
 #' Ogiu, N., Nakamura, Y., Ijiri, I., Hiraiwa, K., Ogiu, T., 1997. A statistical analysis of the
-#' internal organ weights of normal Japanese people. Health Phys. 72, 368–383.
+#' internal organ weights of normal Japanese people. Health Phys. 72, 368-383.
 #' 
 #' Schwartz, G.J., Work, D.F., 2009. Measurement and estimation of GFR in children and
-#' adolescents. Clin. J. Am. Soc. Nephrol. 4, 1832–1843.
+#' adolescents. Clin. J. Am. Soc. Nephrol. 4, 1832-1843.
 #' 
 #' Webber, C.E., Barr, R.D., 2012. Age-and gender-dependent values of skeletal muscle mass
-#' in healthy children and adolescents. J. Cachex. Sarcopenia Muscle 3, 25–29.
+#' in healthy children and adolescents. J. Cachex. Sarcopenia Muscle 3, 25-29.
 #' 
 #' Johnson, C.L., Paulose-Ram, R., Ogden, C.L., Carroll, M.D., Kruszon-Moran, D.,
 #' Dohrmann, S.M., et al., 2013. National health and nutrition examination survey:
 #' analytic guidelines, 1999-2010. Vital and health statistics Series 2. Data Eval.
-#' Methods Res. 1–24.
+#' Methods Res. 1-24.
 #' 
-#' Lumley, T., 2004. Analysis of complex survey samples. J. Stat. Softw. 9, 1–19.
+#' Lumley, T., 2004. Analysis of complex survey samples. J. Stat. Softw. 9, 1-19.
 #' 
 #' Grummer-Strawn, L.M., Reinold, C.M., Krebs, N.F., Control, C.f.D.; Prevention, 2010. Use
-#' of World Health Organization and CDC Growth Charts for Children Aged 0–59
+#' of World Health Organization and CDC Growth Charts for Children Aged 0-59
 #' Months in the United States. Department of Health and Human Services, Centers for
 #' Disease Control and Prevention.
 #' 
 #' Kuczmarski, R.J., Ogden, C.L., Guo, S.S., Grummer-Strawn, L.M., Flegal, K.M., Mei, Z.,
 #' et al., 2002. 2000 CDC growth charts for the United States: methods and development.
-#' Vital Health Stat. Series 11, Data from the national health survey 246, 1–190.
+#' Vital Health Stat. Series 11, Data from the national health survey 246, 1-190.
 #' 
 #' Ogden, C.L., Carroll, M.D., Kit, B.K., Flegal, K.M., 2014. Prevalence of childhood and
-#' adult obesity in the United States, 2011-2012. JAMA 311, 806–814.
+#' adult obesity in the United States, 2011-2012. JAMA 311, 806-814.
 #' 
 #' WHO, 2006. In: WHO D.o.N.f.H.a.D. (Ed.), WHO Child Growth Standards: Length/Heightfor-
 #' Age, Weight-for-Age, Weight-for-Length, Weight-for-Height and Body Mass Indexfor-
@@ -268,48 +268,48 @@
 #' 3.2.2, 2011. WHO, Geneva.
 #' 
 #' Valentin, J., 2002. Basic anatomical and physiological data for use in radiological protection:
-#' reference values: ICRP publication 89. Ann. ICRP 32, 1–277.
+#' reference values: ICRP publication 89. Ann. ICRP 32, 1-277.
 #' 
 #' Johnson, T.N., Rostami-Hodjegan, A., Tucker, G.T., 2006. Prediction of the clearance of
 #' eleven drugs and associated variability in neonates, infants and children. Clin.
-#' Pharmacokinet. 45, 931–956.
+#' Pharmacokinet. 45, 931-956.
 #' 
 #' Verbraecken, J., Van de Heyning, P., De Backer, W., Van Gaal, L., 2006. Body surface area
 #' in normal-weight, overweight, and obese adults. A comparison study. Metabolism 55,
-#' 515–524
+#' 515-524
 #' 
 #' Haycock, G.B., Schwartz, G.J., Wisotsky, D.H., 1978. Geometric method for measuring
 #' body surface area: a height-weight formula validated in infants, children, and adults.
-#' J. Pediatr. 93, 62–66.
+#' J. Pediatr. 93, 62-66.
 #' 
 #' Lubin, B., 1987. Reference values in infancy and childhood. In: Nathan, D., Oski, F. (Eds.),
 #' Hematology of Infancy and Childhood.
 #' 
 #' Wambaugh, J.F., Wetmore, B.A., Pearce, R., Strope, C., Goldsmith, R., Sluka, J.P., et al.,
-#' 2015. Toxicokinetic triage for environmental chemicals. Toxicol. Sci. 147, 55–67
+#' 2015. Toxicokinetic triage for environmental chemicals. Toxicol. Sci. 147, 55-67
 #' 
 #' Ma, M.K., Woo, M.H., Mcleod, H.L., 2002. Genetic basis of drug metabolism. Am. J.
-#' Health Syst. Pharm. 59, 2061–2069.
+#' Health Syst. Pharm. 59, 2061-2069.
 #' 
 #' Yasuda, S.U., Zhang, L., Huang, S.M., 2008. The role of ethnicity in variability in response
-#' to drugs: focus on clinical pharmacology studies. Clin. Pharmacol. Ther. 84, 417–423.
+#' to drugs: focus on clinical pharmacology studies. Clin. Pharmacol. Ther. 84, 417-423.
 #' 
 #' Rotroff, D.M., Wetmore, B.A., Dix, D.J., Ferguson, S.S., Clewell, H.J., Houck, K.A., et al.,
 #' 2010. Incorporating human dosimetry and exposure into high-throughput in vitro
-#' toxicity screening. Toxicol. Sci. 117, 348–358.
+#' toxicity screening. Toxicol. Sci. 117, 348-358.
 #' 
 #' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A., Rotroff, D.M., Freeman,
 #' K., et al., 2012. Integration of dosimetry, exposure, and high-throughput screening
-#' data in chemical toxicity assessment. Toxicol. Sci. 125, 157–174.
+#' data in chemical toxicity assessment. Toxicol. Sci. 125, 157-174.
 #' 
 #' Wetmore, B.A., Allen, B., Clewell 3rd, H.J., Parker, T., Wambaugh, J.F., Almond, L.M.,
 #' et al., 2014. Incorporating population variability and susceptible subpopulations into
-#' dosimetry for high-throughput toxicity testing. Toxicol. Sci. 142, 210–224.
+#' dosimetry for high-throughput toxicity testing. Toxicol. Sci. 142, 210-224.
 #' 
 #' Wetmore, B.A., Wambaugh, J.F., Allen, B., Ferguson, S.S., Sochaski, M.A., Setzer, R.W.,
 #' et al., 2015. Incorporating high-throughput exposure predictions with Dosimetryadjusted
 #' in vitro bioactivity to inform chemical toxicity testing. Toxicol. Sci. 148,
-#' 121–136.
+#' 121-136.
 NULL
 
 
@@ -325,14 +325,21 @@ NULL
 #' @author John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 #' Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 #' @seealso
-#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{PowerPoint
-#' Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
+#' PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+#' 
+#' \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
+#' PBTK models for in vitro to in vivo extrapolation}
 #' 
 #' \doi{10.18637/jss.v079.i04}{Pearce et al. (2017): httk: R
 #' Package for High-Throughput Toxicokinetics}
 #' 
-#' \doi{10.1093/toxsci/kfv171}{Wetmore et al. (2015):
-#' Incorporating High-Throughput Exposure Predictions With Dosimetry-Adjusted
+#' \doi{10.1021/es501955g}{Armitage et al. (2014): Application of mass balance 
+#' models and the chemical activity concept to facilitate the use of in vitro 
+#' toxicity data for risk assessment}
+#' 
+#' \doi{10.1093/toxsci/kfv171}{Incorporating High-Throughput Exposure 
+#' Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing}
 #' 
 #' \doi{10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
@@ -354,15 +361,17 @@ NULL
 #' Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
 #'
 #' \doi{10.1371/journal.pone.0217564}{Honda et al. (2019):
-#' Using the concordance of in vitro and in vivo data to evaluate extrapolation assumptionss}
+#' Using the concordance of in vitro and in vivo data to evaluate extrapolation 
+#' assumptions}
 #' 
 #' \doi{10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
 #' Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
 #' 
 #' \doi{10.1038/s41370-020-0238-y}{Linakis et al. (2020):
-#' Development and evaluation of a high throughput inhalation model for organic chemicals}
+#' Development and evaluation of a high-throughput inhalation model for organic 
+#' chemicals}
 #' 
-#' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{EPA's
-#' ExpoCast (Exposure Forecasting) Project}
+#' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{
+#' The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 #' @keywords package
 NULL
