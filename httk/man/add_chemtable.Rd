@@ -65,9 +65,10 @@ modeled.
 }
 \examples{
 
-\donttest{
+library(httk)
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
-my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+my.new.data <- cbind(my.new.data,as.data.frame(c(
+                     "111-11-2","222-22-0","333-33-5"),
                      stringsAsFactors=FALSE))
 my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
                     stringsAsFactors=FALSE))
@@ -78,7 +79,8 @@ my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
 colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 
 chem.physical_and_invitro.data <- add_chemtable(my.new.data,
-                                  current.table=chem.physical_and_invitro.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
                                   data.list=list(
                                   Compound="Name",
                                   CAS="CASRN",
@@ -91,7 +93,41 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                   reference="MyPaper 2015")
 parameterize_steadystate(chem.name="C")  
 calc_css(chem.name="B")                                
-}
+
+# Initialize a column describing proton donors ("acids")
+my.new.data$pka.a <- NA 
+# set chemical C to an acid (pKa_donor = 5):
+my.new.data[my.new.data$Name=="C","pka.a"] <- "5"
+chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
+                                 data.list=list(
+                                 Compound="Name",
+                                 CAS="CASRN",
+                                 DTXSID="DTXSID",
+                                 pKa_Donor="pka.a"),
+                                 species="Human",
+                                 reference="MyPaper 2015") 
+
+# Note Rblood2plasma and hepatic bioavailability change (relative to above):
+parameterize_steadystate(chem.name="C")  
+
+# Initialize a column describing proton acceptors ("bases")
+my.new.data$pka.b <- NA 
+# set chemical B to a base with multiple pka's (pKa_accept = 7 and 8):
+my.new.data[my.new.data$Name=="B","pka.b"] <- "7;8"
+chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
+                                 data.list=list(
+                                 Compound="Name",
+                                 CAS="CASRN",
+                                 DTXSID="DTXSID",
+                                 pKa_Accept="pka.b"),
+                                 species="Human",
+                                 reference="MyPaper 2015") 
+# Note that average and max change (relative to above):
+calc_css(chem.name="B")     
 
 }
 \author{

@@ -21,12 +21,13 @@ solve_gas_pbtk(
   exp.conc = 1,
   period = 24,
   exp.duration = 12,
-  fcontrol = list(method = "constant", rule = 2, f = 0),
   initial.values = NULL,
   plots = FALSE,
   suppress.messages = FALSE,
   species = "Human",
-  output.units = "uM",
+  iv.dose = FALSE,
+  input.units = "ppmv",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
@@ -35,12 +36,12 @@ solve_gas_pbtk(
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = T,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   vmax = 0,
   km = 1,
-  exercise = F,
+  exercise = FALSE,
   fR = 12,
   VT = 0.75,
   VD = 0.15,
@@ -67,40 +68,37 @@ sequence begins at the beginning of times.}
 
 \item{tsteps}{The number of time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose}
 
 \item{doses.per.day}{Number of doses per day.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose}
 
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
-columns or rows named "dose" and "time" containing the time and amount, in
-mg/kg BW, of each dose. With the gas pbtk model, dosing.matrix is set to 
-specify forcing concentrations to the integrator, either in combination 
-with eventdata or on its own.}
+columns or rows named "dose" and "time" containing the time and amount of 
+each dose.}
 
-\item{forcings}{Manual input of "forcings" data series argument for ode
-integrator, defaults to NULL}
+\item{forcings}{Manual input of 'forcings' data series argument for ode
+integrator. If left unspecified, 'forcings' defaults to NULL, and then other 
+input parameters (see exp.start.time, exp.conc, exp.duration, and period)
+provide the necessary information to assemble a forcings data series.}
 
 \item{exp.start.time}{Start time in specifying forcing exposure series,
 default 0.}
 
 \item{exp.conc}{Specified inhalation exposure concentration for use in 
 assembling "forcings" data series argument for integrator. Defaults to
-uM, in line with output.units}
+units of ppmv.}
 
-\item{period}{For use in assembling forcing function data series "forcings"
+\item{period}{For use in assembling forcing function data series 'forcings'
 argument, specified in hours}
 
 \item{exp.duration}{For use in assembling forcing function data 
 series 'forcings' argument, specified in hours}
 
-\item{fcontrol}{List of arguments for finetuning inhalation forcing function
-in conjunction with existing ode integrator methods}
-
 \item{initial.values}{Vector containing the initial concentrations or
 amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
+those specified for the model outputs. Default values are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
@@ -109,8 +107,14 @@ output.units.  Defaults are zero.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{iv.dose}{Simulates a single i.v. dose if true.}
+
+\item{input.units}{Input units of interest assigned to dosing, including 
+forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -175,21 +179,21 @@ for each time point.
 \description{
 This function solves for the amounts or concentrations of a chemical
 in different tissues as functions of time as a result of inhalation 
-exposure.
+exposure to an ideal gas.
 }
 \details{
-The default dosing scheme involves specifying the start time
-of exposure, the concentration of gas inhaled, the period of a given 
-assumed cycle of exposure, and the duration of the exposure during that 
-period. Together, these arguments determine the forcings passed to the 
-ODE integrator. The "forcings" can also be specified manually, or 
-effectively turned off by setting exposure concentration to zero, if the
-user prefers to simulate dosing by other means. 
+The default dosing scheme involves a specification of the start time
+of exposure (exp.start.time), the concentration of gas inhaled (exp.conc),
+the period of a cycle of exposure and non-exposure (period), the
+duration of the exposure during that period (exp.duration), and the total
+days simulated. Together,these arguments determine the "forcings" passed to
+the ODE integrator. Forcings can also be specified manually, or effectively
+turned off by setting exposure concentration to zero, if the user prefers to 
+simulate dosing by other means. 
 
-
-This function solves for the amounts or concentrations in uM of a chemical
-in different tissues as functions of time based on the dose and dosing
-frequency. 
+The "forcings" object is configured to be passed to the integrator with,
+at the most, a basic unit conversion among ppmv, mg/L, and uM. No scaling by
+BW is set to be performed on the forcings series.
 
 Note that the model parameters have units of hours while the model output is
 in days.
@@ -203,6 +207,12 @@ The extra compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.
 
 AUC is the area under the curve of the plasma concentration.
+
+Model Figure from \insertCite{linakis2020development}{httk}:
+\if{html}{\figure{gaspbtk.jpg}{options: width="100\%" alt="Figure: Gas PBTK 
+Model Schematic"}}
+\if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
+Model Schematic"}}
 
 Model parameters are named according to the following convention:\tabular{lrrrr}{
 prefix \tab suffic \tab Meaning \tab units \cr
@@ -220,11 +230,11 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_gas_pbtk(chem.name='Pyrene',dose=.5,days = 3,tsteps=2)
+solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 
 \donttest{
 out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
+daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
 
 out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
 exp.duration = 6, exercise = TRUE)
@@ -233,15 +243,21 @@ params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
 }
 
+# Note that different model compartments for this model have different units 
+# and that the final units can be controlled with the output.units argument:
+head(solve_gas_pbtk(chem.name="lindane"))
+# Convert all compartment units to mg/L:
+head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
+# Convert just the plasma to mg/L:
+head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
+
 }
 \references{
-Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-Inhalation Model for Organic Chemicals", submitted
+\insertRef{linakis2020development}{httk}
 
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \author{
-Matt Linakis, John Wambaugh, and Mark Sfeir
+Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 }
 \keyword{Solve}

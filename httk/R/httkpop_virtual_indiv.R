@@ -28,7 +28,12 @@
 #'@param gfr_category The kidney function categories to include in the 
 #'  population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
 #'  to include all kidney function levels.
-#'
+#' @param gfr_resid_var Logical value indicating whether or not to include
+#' residual variability when generating GFR values. (Default is TRUE.)
+#' @param ckd_epi_race_coeff Logical value indicating whether or not to use the
+#' "race coefficient" from the CKD-EPI equation when estimating GFR values.
+#' (Default is FALSE.)
+#' 
 #'@return A data.table where each row represents an individual, and
 #'  each column represents a demographic, anthropometric, or physiological
 #'  parameter.

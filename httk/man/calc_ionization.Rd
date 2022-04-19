@@ -10,8 +10,8 @@ calc_ionization(
   dtxsid = NULL,
   parameters = NULL,
   pH = NULL,
-  pKa_Donor = NA,
-  pKa_Accept = NA
+  pKa_Donor = NULL,
+  pKa_Accept = NULL
 )
 }
 \arguments{
@@ -48,6 +48,13 @@ pKa's are either entered as parameters or taken from a specific compound in
 the package.
 }
 \details{
+The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or 
+vectors. We support characters because there are many instances with multiple 
+predicted values and all those values can be included by concatenating with 
+commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
+may be vectors of characters representing different chemicals or instances of
+chemical parameters to allow for uncertainty analysis.
+
 The fractions are calculated by determining the coefficients for each
 species and dividing the particular species by the sum of all three.  The
 positive, negative and zwitterionic/neutral coefficients are given by:
@@ -62,15 +69,45 @@ donors, or everything below the pKa donors if there are no acceptors.  Each
 of the terms in the sums represent a different ionization.
 }
 \examples{
+# Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
+out <- calc_ionization(chem.name='bisphenola',pH=7.4)
+print(out)
+out[["fraction_neutral"]]==max(unlist(out))
 
-calc_ionization(chem.name='bisphenola',pH=7.4)
-calc_ionization(pKa_Donor=8,pKa_Accept=c(1,4),pH=9)
+# Donor pKa's 9.78,10.39 -- Should be almost all negative (anion) at higher pH:
+out <- calc_ionization(chem.name='bisphenola',pH=11)
+print(out)
+out[["fraction_negative"]]==max(unlist(out))
+
+# Fictious compound, should be almost all all negative (anion):
+out <- calc_ionization(pKa_Donor=8,pKa_Accept="1,4",pH=9)
+print(out)
+out[["fraction_negative"]]>0.9
+
+# Donor pKa 6.54 -- Should be mostly negative (anion):
+out <- calc_ionization(chem.name='Acephate',pH=7)
+print(out)
+out[["fraction_negative"]]==max(unlist(out))
+
+#Acceptor pKa's "9.04,6.04"  -- Should be almost all positive (cation) at plasma pH:
+out <- calc_ionization(chem.cas="145742-28-5",pH=7.4)
+print(out)
+out[["fraction_positive"]]==max(unlist(out))
+
+#Fictious Zwitteron:
+out <- calc_ionization(pKa_Donor=6,pKa_Accept="8",pH=7.4)
+print(out)
+out[["fraction_zwitter"]]==max(unlist(out))
 
 }
 \references{
 Pearce, Robert G., et al. "Evaluation and calibration of
 high-throughput predictions of chemical distribution to tissues." Journal of
-pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+
+Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
+equilibria for pharmacokinetic modeling." Science of The Total Environment 
+615 (2018): 150-160.
 }
 \author{
 Robert Pearce and John Wambaugh

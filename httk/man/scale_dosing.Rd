@@ -4,7 +4,14 @@
 \alias{scale_dosing}
 \title{Scale mg/kg body weight doses according to body weight and units}
 \usage{
-scale_dosing(dosing, parameters, route, output.units = "uM")
+scale_dosing(
+  dosing,
+  parameters,
+  route,
+  input.units = NULL,
+  output.units = "uM",
+  vol = NULL
+)
 }
 \arguments{
 \item{dosing}{List of dosing metrics used in simulation, which must include
@@ -21,8 +28,15 @@ overrides chem.name and chem.cas.}
 \item{route}{String specification of route of exposure for simulation:
 "oral", "iv", "inhalation", ...}
 
+\item{input.units}{Units of the dose values being scaled. (Default is NULL.) 
+Currently supported units "mg/L", "ug/L","ug/mL", "uM", "umol/L", "ug/dL",
+"ug/g", "nmol/L", "nM", and "ppmw" (supported input.units subject to change).}
+
 \item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
 "uM").}
+
+\item{vol}{Volume for the target tissue of interest.
+NOTE: Volume should not be in units of per BW, i.e. "kg".}
 }
 \value{
 A list of numeric values for doses converted to output.units, potentially
@@ -40,6 +54,6 @@ and scaling is currently avoided in the inhalation exposure case with a
 scale factor of 1
 }
 \author{
-John Wambaugh
+John Wambaugh and Sarah E. Davidson
 }
 \keyword{Dynamic}

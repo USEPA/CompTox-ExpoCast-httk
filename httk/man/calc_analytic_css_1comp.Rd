@@ -15,7 +15,7 @@ calc_analytic_css_1comp(
   recalc.blood2plasma = FALSE,
   tissue = NULL,
   restrictive.clearance = TRUE,
-  bioactive.free.invivo = F,
+  bioactive.free.invivo = FALSE,
   ...
 )
 }
@@ -31,7 +31,7 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
-parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
@@ -60,7 +60,7 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 parameters is NULL.}
 }
 \value{
-Steady state concentration in uM units
+Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 

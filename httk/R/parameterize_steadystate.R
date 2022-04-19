@@ -154,7 +154,7 @@ parameterize_steadystate <- function(
                         dtxsid=dtxsid),
                      silent=TRUE)
                     
-  if (class(Clint.db) == "try-error" & default.to.human || human.clint.fup) 
+  if (is(Clint.db,"try-error") & default.to.human || human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param(
                       "Clint",
@@ -172,7 +172,7 @@ parameterize_steadystate <- function(
                       silent=TRUE)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
-  if (class(Clint.db) == "try-error") 
+  if (is(Clint.db,"try-error")) 
     stop("Missing metabolic clearance data for given species.\n\
 Set default.to.human to true to substitute human value.")
 # Check if clintis a point value or a distribution, if a distribution, 
@@ -199,7 +199,7 @@ Set default.to.human to true to substitute human value.")
                         chem.name=chem.name,
                         dtxsid=dtxsid),
               silent=TRUE)
-  if (class(fup.db) == "try-error" & default.to.human || human.clint.fup) 
+  if (is(fup.db,"try-error") & default.to.human || human.clint.fup) 
   {
     fup.db<- try(get_invitroPK_param(
                    "Funbound.plasma",
@@ -211,7 +211,7 @@ Set default.to.human to true to substitute human value.")
     if (!suppress.messages) 
       warning(paste(species,"coerced to Human for protein binding data."))
   }
-  if (class(fup.db) == "try-error") 
+  if (is(fup.db,"try-error")) 
     stop("Missing protein binding data for given species.\n\
 Set default.to.human to true to substitute human value.")
 # Check if fup is a point value or a distribution, if a distribution, 
@@ -283,7 +283,7 @@ Set default.to.human to true to substitute human value.")
                         chem.name=chem.name,
                         dtxsid=dtxsid),
                silent=TRUE)
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  if (is(Fgutabs,"try-error")) Fgutabs <- 1
 
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
@@ -331,5 +331,6 @@ Set default.to.human to true to substitute human value.")
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
-  return(lapply(Params,set_httk_precision))
+  
+  return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
 }
