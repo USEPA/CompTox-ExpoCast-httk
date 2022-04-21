@@ -82,12 +82,12 @@ subset(get_cheminfo(info = "all"), Compound %in% c("A","B","C"))
 * Administrated equivalent dose (mg/kg BW/day) to produce 0.1 uM plasma concentration, 0.95
 quantile, for a specified CAS number and species
 ```
-calc_mc_oral_equiv(0.1,chem.cas = "34,256–82-1", species = "human")
+calc_mc_oral_equiv(0.1,chem.cas = "99-71-8", species = "human")
 ```
 * Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
 default) for a specified CAS number and species
 ```
-calc_tkstats(chem.cas = "34,256–82-1", species = "rat")
+calc_tkstats(chem.cas = "962-58-3", species = "rat")
 ```
 * Using the PBTK solver for a specified chem name 
 ```
