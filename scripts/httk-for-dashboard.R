@@ -1,5 +1,6 @@
 library(httk)
 library(parallel)
+library(data.table)
 
 # Clear the memory:
 rm(list=ls())
@@ -232,6 +233,8 @@ dashboard.list <- clusterApply(cl,all.ids,function(x)
     ))
 
 stopCluster(cl)
+# Combine all the individual tables into a single table:
+dashboard.table <- rbindlist(dashboard.list)
 
 write.table(
   dashboard.table,
