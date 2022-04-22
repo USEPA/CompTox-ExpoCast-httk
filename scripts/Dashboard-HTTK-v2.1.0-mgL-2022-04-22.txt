@@ -1,0 +1,54 @@
+DTXSID	Parameter	Measured	Predicted	Units	Model	Percentile	Species	Data.Source.Species
+DTXSID0020020	Clint	NA	2.334	uL/min/million hepatocytes	Sipes et al. 2017	NA	Human	Human
+DTXSID0020020	Fup	NA	0.1958		Sipes et al. 2017	NA	Human	Human
+DTXSID0020020	Vd	NA	0.3521	L/kg	1compartment	NA	Human	Human
+DTXSID0020020	Days.Css	NA	0	Days	PBTK	NA	Human	Human
+DTXSID0020020	TK.Half.Life	NA	2.558	hours	1compartment	NA	Human	Human
+DTXSID0020020	Css	NA	0.5576	mg/L	3compartmentss	50%	Human	Human
+DTXSID0020020	Css	NA	2.506	mg/L	3compartmentss	95%	Human	Human
+DTXSID0020020	Css	NA	28.26	mg/L	PBTK	50%	Human	Human
+DTXSID0020020	Css	NA	90.58	mg/L	PBTK	95%	Human	Human
+DTXSID0020020	Clint	NA	2.334	uL/min/million hepatocytes	Sipes et al. 2017	NA	Rat	Human
+DTXSID0020020	Fup	NA	0.1958		Sipes et al. 2017	NA	Rat	Human
+DTXSID0020020	Vd	NA	0.3531	L/kg	1compartment	NA	Rat	Human
+DTXSID0020020	Days.Css	NA	0	Days	PBTK	NA	Rat	Human
+DTXSID0020020	TK.Half.Life	NA	1.428	hours	1compartment	NA	Rat	Human
+DTXSID0020022	Clint	0	NA	uL/min/million hepatocytes	NA	NA	Human	Human
+DTXSID0020022	Fup	0.0111	NA		NA	NA	Human	Human
+DTXSID0020022	Vd	NA	0.238	L/kg	1compartment	NA	Human	Human
+DTXSID0020022	Days.Css	NA	8	Days	PBTK	NA	Human	Human
+DTXSID0020022	TK.Half.Life	NA	138.7	hours	1compartment	NA	Human	Human
+DTXSID0020022	Css	NA	37.59	mg/L	3compartmentss	50%	Human	Human
+DTXSID0020022	Css	NA	115	mg/L	3compartmentss	95%	Human	Human
+DTXSID0020022	Css	NA	25.54	mg/L	PBTK	50%	Human	Human
+DTXSID0020022	Css	NA	71.66	mg/L	PBTK	95%	Human	Human
+DTXSID0020022	Clint	0	NA	uL/min/million hepatocytes	NA	NA	Rat	Rat
+DTXSID0020022	Fup	0.004729	NA		NA	NA	Rat	Rat
+DTXSID0020022	Vd	NA	0.1907	L/kg	1compartment	NA	Rat	Rat
+DTXSID0020022	Days.Css	NA	5	Days	PBTK	NA	Rat	Rat
+DTXSID0020022	TK.Half.Life	NA	88.89	hours	1compartment	NA	Rat	Rat
+DTXSID0020022	Css	NA	37.22	mg/L	3compartmentss	50%	Rat	Rat
+DTXSID0020022	Css	NA	197.8	mg/L	3compartmentss	95%	Rat	Rat
+DTXSID0020022	Css	NA	23.12	mg/L	PBTK	50%	Rat	Rat
+DTXSID0020022	Css	NA	110.4	mg/L	PBTK	95%	Rat	Rat
+DTXSID0020070	Clint	NA	1.438	uL/min/million hepatocytes	Sipes et al. 2017	NA	Human	Human
+DTXSID0020070	Fup	0.92	NA		NA	NA	Human	Human
+DTXSID0020070	Vd	NA	0.6524	L/kg	1compartment	NA	Human	Human
+DTXSID0020070	Days.Css	NA	0	Days	PBTK	NA	Human	Human
+DTXSID0020070	TK.Half.Life	NA	1.493	hours	1compartment	NA	Human	Human
+DTXSID0020070	Css	NA	0.2128	mg/L	3compartmentss	50%	Human	Human
+DTXSID0020070	Css	NA	1.107	mg/L	3compartmentss	95%	Human	Human
+DTXSID0020070	Css	NA	0.1768	mg/L	PBTK	50%	Human	Human
+DTXSID0020070	Css	NA	0.8257	mg/L	PBTK	95%	Human	Human
+DTXSID0020070	Clint	NA	1.438	uL/min/million hepatocytes	Sipes et al. 2017	NA	Rat	Human
+DTXSID0020070	Fup	0.92	NA		NA	NA	Rat	Human
+DTXSID0020070	Vd	NA	0.7028	L/kg	1compartment	NA	Rat	Human
+DTXSID0020070	Days.Css	NA	0	Days	PBTK	NA	Rat	Human
+DTXSID0020070	TK.Half.Life	NA	0.8082	hours	1compartment	NA	Rat	Human
+DTXSID0020072	Clint	NA	10.48	uL/min/million hepatocytes	Sipes et al. 2017	NA	Human	Human
+DTXSID0020072	Fup	NA	0.0934		Sipes et al. 2017	NA	Human	Human
+DTXSID0020072	Vd	NA	0.2637	L/kg	1compartment	NA	Human	Human
+DTXSID0020072	Days.Css	NA	0	Days	PBTK	NA	Human	Human
+DTXSID0020072	TK.Half.Life	NA	1.214	hours	1compartment	NA	Human	Human
+DTXSID0020072	Css	NA	0.3842	mg/L	3compartmentss	50%	Human	Human
+DTXSID0020072	Css	NA	2.772	mg/L	3compartmentss	95%	Human	Human
