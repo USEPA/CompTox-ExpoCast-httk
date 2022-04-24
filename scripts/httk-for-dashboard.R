@@ -67,7 +67,10 @@ make.ccd.table <- function(
   model.list,
   param.list,
   units.list,
-  all.ids
+  all.ids,
+  RANDOM.SEED,
+  which.quantiles,
+  num.samples
   ) {
   # Total number of unique chemicals:
   num.chems <- length(all.ids)
@@ -106,7 +109,8 @@ make.ccd.table <- function(
             paste(this.row["Data.Source.Species"],"Clint.Reference",sep=".")]
           if (is.na(clint.ref))
           {
-            this.row$Measured <- HTTK.human[HTTK.human$DTXSID==this.id,4]
+            this.row$Measured <- HTTK.data.list[["Human"]][
+              HTTK.data.list[["Human"]]$DTXSID==this.id,4]
             this.row$Data.Source.Species <- "Human"
           } else if (clint.ref == "Sipes 2017") {
             this.row$Predicted <- HTTK.data[HTTK.index,4]
@@ -121,7 +125,8 @@ make.ccd.table <- function(
           fup.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
             paste(this.row["Data.Source.Species"],"Funbound.plasma.Reference",sep=".")]
           if (is.na(fup.ref)) {
-            this.row$Measured <- HTTK.human[HTTK.human$DTXSID==this.id,5]
+            this.row$Measured <- HTTK.data.list[["Human"]][
+              HTTK.data.list[["Human"]]$DTXSID==this.id,5]
             this.row$Data.Source.Species <- "Human"        
           } else if (fup.ref == "Sipes 2017") {
             this.row$Predicted <- HTTK.data[HTTK.index,5]
@@ -136,42 +141,48 @@ make.ccd.table <- function(
           #check for Fup >0 (can't do Vd otherwise):
           if (HTTK.data[HTTK.index,5] > 0)
           {
-            this.row$Predicted <- try(calc_vdist(dtxsid=this.id,
+            this.vd <- try(calc_vdist(dtxsid=this.id,
               default.to.human=default.to.human,
               species=this.species))
-            this.row$Model <- "1compartment"
+            if (!inherits(this.vd, "try-error")) { 
+              this.row$Predicted <- this.vd
+              this.row$Model <- "1compartment"
+              dashboard.table <- rbind(dashboard.table, this.row)
+            }
           }
-          dashboard.table <- rbind(dashboard.table, this.row)
   # TK.Half.Life:
         } else if (this.param == "TK.Half.Life") {
           #check for Fup >0 (can't do Vd otherwise):
-          if (HTTK.data[HTTK.index,5] > 0)
-          {
+          if (HTTK.data[HTTK.index,5] > 0) {
             # need cas because of bug with DTXSID's:
             this.cas <- HTTK.data[HTTK.index,"CAS"]
-            this.row$Predicted <- try(calc_half_life(chem.cas=this.cas,
+            this.tkhalflife <- try(calc_half_life(chem.cas=this.cas,
                 default.to.human=default.to.human,
-                species=this.species)) 
-            this.row$Model <- "1compartment"
+                species=this.species))
+            if (!inherits(this.tkhalflife, "try-error")) { 
+              this.row$Model <- "1compartment"
+              this.row$Predicted <- this.tkhalflife
+              dashboard.table <- rbind(dashboard.table, this.row)
+            }
           }
-          dashboard.table <- rbind(dashboard.table, this.row)
   # Days to Css:
         } else if (this.param == "Days.Css") {
           #check for Fup >0 (can't do pbtk otherwise):
-          if (HTTK.data[HTTK.index,5] > 0)
-          {
-            this.row$Predicted <- try(calc_css(dtxsid=this.id,
+          if (HTTK.data[HTTK.index,5] > 0) {
+            this.dayscss <- try(calc_css(dtxsid=this.id,
               species=this.species,
               default.to.human=default.to.human)$the.day)
-            this.row$Model <- "PBTK"
+            if (!inherits(this.dayscss, "try-error")) { 
+              this.row$Predicted <- this.dayscss
+              this.row$Model <- "PBTK"
+              dashboard.table <- rbind(dashboard.table, this.row)
+            }
           }
-          dashboard.table <- rbind(dashboard.table, this.row)
   # Css:
         } else if (this.param == "Css") {
           for (this.model in model.list)
           {
-            if (HTTK.data[HTTK.index,5] > 0 | this.model=="3compartmentss")
-            {
+            if (HTTK.data[HTTK.index,5] > 0 | this.model=="3compartmentss") {
               this.row$Model <- this.model
               parameterize.arg.list = list(
                 default.to.human = default.to.human, 
@@ -181,14 +192,13 @@ make.ccd.table <- function(
               # For reproducible pseudo-random numbers:
               set.seed(RANDOM.SEED)
               this.css <-try(calc_mc_css(chem.cas=this.cas,
-                which.quantile=WHICH.QUANTILES,
-                samples=NUM.SAMPLES,
+                which.quantile=which.quantiles,
+                samples=num.samples,
                 output.units="mg/L",
                 species=this.species,
                 model=this.model,
                 parameterize.arg.list=parameterize.arg.list))
-              if (!inherits(this.css, "try-error"))
-              {
+              if (!inherits(this.css, "try-error")) {
                 for (this.quantile in names(this.css))
                 {
                   this.row$Predicted <- this.css[this.quantile]
@@ -206,9 +216,14 @@ make.ccd.table <- function(
 }
 
 # Create a multicore cluster:
-cl <- makeCluster(NUM.CPU)
+cl <- parallel::makeCluster(detectCores())
+
 # Load httk on all cores:
 clusterEvalQ(cl, library(httk))
+# Clear memory all cores:
+clusterEvalQ(cl, rm(list=ls()))
+# Load ADMet predicitons:
+clusterEvalQ(cl, load_sipes2017())
 # Define the table creator function on all cores:
 clusterExport(cl, "make.ccd.table")
 # Share data with all cores:
@@ -218,7 +233,10 @@ clusterExport(cl, c(
   "MODELS.LIST",
   "param.list",
   "units.list",
-  "all.ids"))
+  "all.ids",
+  "RANDOM.SEED",
+  "WHICH.QUANTILES",
+  "NUM.SAMPLES"))
 
 # Create a list with one table per chemical:
 dashboard.list <- clusterApply(cl,all.ids,function(x)
@@ -229,7 +247,10 @@ dashboard.list <- clusterApply(cl,all.ids,function(x)
     model.list=MODELS.LIST,
     param.list=param.list,
     units.list=units.list,
-    all.ids=all.ids
+    all.ids=all.ids,
+    RANDOM.SEED=RANDOM.SEED,
+    which.quantiles=WHICH.QUANTILES,
+    num.samples=NUM.SAMPLES
     ))
 
 stopCluster(cl)
