@@ -1,7 +1,7 @@
 ---
 title: "Differences from GFR changes"
 author: "Caroline Ring"
-date: "11/5/2020"
+date: "26 April 2022"
 output: html_document
 ---
 
@@ -19,15 +19,26 @@ library(patchwork)
 devtools::load_all(path = "../httk")
 ```
 
-Path for saving output files (e.g. figures):
+Path for saving output files (e.g. figures). This is currently set to a local folder on my machine that is *not* tracked by git or on Bitbucket. It doesn't need to be tracked, because the code in this document is sufficient to reproduce the output at any time.
 
 ```{r}
 out_path <- "C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk/gfr_changes_output/"
 ```
 
+# Introduction
 
+The goal of this document is to investigate the effects of two changes that have been made:
 
-# GFR distributions for Black individuals with and without the race coefficient
+1. Setting the "race coefficient" to 1 in the CKD-EPI equation that estimates GFR (glomerular filtration rate)
+2. Adding estimated residual variability to the estimated GFR (estimated from summary statistics on the original data used to fit the CKD-EPI equation)
+
+We will first investigate the effects of these changes on the simulated population distribution of GFR for a simulated non-Hispanic Black population. The "race coefficient" affects estimated GFR specifically for Black individuals, so we want to investigate the effects of removing it specifically for a non-Hispanic Black population.
+
+The CKD-EPI equation "race coefficient" also applies only to adults (over age 18). For simulated individuals below age 18, a different (pediatric) equation is used to estimate GFR, one that does not have a "race coefficient". So we will restrict our investigation to a non-Hispanic Black *adult* population.
+
+Second, we will investigate how these differences in simulated GFR distribution propagate to differences in steady-state plasma concentration distributions, in the same non-Hispanic Black adult population.
+
+# GFR distributions for a simulated non-Hispanic Black adult population with and without the race coefficient
 
 We want to get the GFR distributions for four combinations of conditions: including/excluding residual variability, and including/excluding the CKD-EPI "race coefficient." These are parameters for the HTTK-Pop functions, so we can set up a table of the various combinations and use it as input to HTTK-Pop.
 
@@ -42,16 +53,17 @@ knitr::kable(par) #print in table format
 
 To get the HTTK-Pop distributions for GFR under each of these four conditions, we call `httkpop_generate()`. This function returns a `data.table` of simulated individuals. Each row is one individual; each column is one demographic, physiological or other TK-relevant parameter. One of the columns is called `gfr_est`; this is the estimated GFR from the CKD-EPI equation. For the sake of efficiency, we'll keep only this column, discarding the other columns with demographic and physiology information.
 
-To get a good sampling, we'll simulate 5000 individuals for each condition. 
+To get a good sampling, we'll simulate 5000 individuals for each condition.
+
 ```{r}
 #use data.table syntax to efficiently loop over rows of par
 DT <- par[,
-          .(gfr_est=httkpop_generate(method = "d", #direct resampling
-                                     nsamp = 5000, #5000 individuals
+          httkpop_generate(method = "d", #direct resampling
+                                     nsamp = 10000, #5000 individuals
                                      agelim_years = c(18,65), #adults 18-65
-                                     reths = "Non-Hispanic Black", #Black individuals
+                                     reths = "Non-Hispanic Black", #non-Hispanic Black individuals
                                      gfr_resid_var = gfr_resid_var,
-                                     ckd_epi_race_coeff = ckd_epi_race_coeff)$gfr_est),
+                                     ckd_epi_race_coeff = ckd_epi_race_coeff)[, .(age_years, gender, reth, gfr_est, serum_creat)],
           by = .(gfr_resid_var,
                  ckd_epi_race_coeff)]
 ```
@@ -61,6 +73,7 @@ Here are the first few rows.
 ```{r}
 head(DT)
 ```
+
 Each row represents one simulated individual between ages 18-65, with ethnicity reported in NHANES as "Non-Hispanic Black."
 
 For more informative plot labels, let's create labels that clearly explain the meaning of each combination of `gfr_resid_var` and `ckd_epi_race_coeff` values.
@@ -88,6 +101,7 @@ Now here are the first few rows of `DT`:
 ```{r}
 head(DT)
 ```
+
 Plot the distributions. Color-code them by the four different conditions on residual variability and CKD-EPI race coefficient.
 
 ```{r}
@@ -130,7 +144,7 @@ figlist <- apply(combinations,
                      limits = force) +
   scale_fill_manual(values = colvect,
                      limits = force) +
-  scale_x_continuous(limits = c(0,250)) +
+  scale_x_continuous(limits = c(0,300)) +
   scale_y_continuous(limits = c(0,0.021)) +
   xlab("eGFR, mL/min/1.73 m2") +
   theme_bw() +
@@ -140,6 +154,9 @@ figlist <- apply(combinations,
                    },
   simplify = FALSE
   )
+```
+
+```{r}
 
 #use `patchwork` R package to lay these out in a grid
 patchwork::wrap_plots(figlist, ncol = 2) +
@@ -153,7 +170,9 @@ axis.text = element_text(size=12))
 #save the grid as a PNG
 png(paste0(out_path,
            "eGFR_dist.png"),
-    height = 8, width = 10, units = "in", res = 300)
+    height = 8, width = 10, units = "in", res = 300) #open PNG device
+
+#output plot to PNG device by re-plotting it
 patchwork::wrap_plots(figlist, ncol = 2) +
 plot_annotation(tag_levels = "A",
 title = "eGFR in a simulated Non-Hispanic Black adult population (n = 5000)") &
@@ -161,12 +180,16 @@ guides(fill = guide_legend(byrow = TRUE),
 color = guide_legend(byrow = TRUE)) &
 theme(legend.spacing.y = unit(0.5, "line"),
 axis.text = element_text(size=12))
-dev.off()
+
+dev.off() #close PNG device
 
 #save the grid as a PDF
 pdf(paste0(out_path,
            "eGFR_dist.pdf"),
-    height = 8, width = 10)
+    height = 8, width = 10) #open PDF device
+
+#output plot to PDF device by re-plotting it
+
 patchwork::wrap_plots(figlist, ncol = 2) +
 plot_annotation(tag_levels = "A",
 title = "eGFR in a simulated Non-Hispanic Black adult population (n = 5000)") &
@@ -174,7 +197,8 @@ guides(fill = guide_legend(byrow = TRUE),
 color = guide_legend(byrow = TRUE)) &
 theme(legend.spacing.y = unit(0.5, "line"),
 axis.text = element_text(size=12))
-dev.off()
+
+dev.off() #close PDF device
 
 ```
 
@@ -229,6 +253,125 @@ ggsave(filename = paste0(out_path,
        units = "in")
 ```
 
+```{r}
+rm(figlist)
+```
+
+
+## Lower "bump" in GFR?
+
+What is that lower peak?
+
+Here's eGFR as a histogram, zoomed in to show only eGFR <= 50.
+
+```{r}
+ggplot(DT[label %in% c("Race coeff, no resid var\n(previous status quo)", "No race coeff, resid var\n(new default)") &
+            gfr_est <=50]) +
+geom_histogram(aes(x=gfr_est,
+color = label,
+fill = label),
+alpha = 0.2,
+size=1, position = "identity") +
+scale_color_manual(values = colvect,
+limits = force) +
+scale_fill_manual(values = colvect,
+limits = force)
+```
+
+and puton a log10 scale:
+
+```{r}
+ggplot(DT[label %in% c("Race coeff, no resid var\n(previous status quo)", "No race coeff, resid var\n(new default)") &
+            gfr_est <=50]) +
+geom_histogram(aes(x=gfr_est,
+color = label,
+fill = label),
+alpha = 0.2,
+size=1, position = "identity") +
+scale_color_manual(values = colvect,
+limits = force) +
+scale_fill_manual(values = colvect,
+limits = force) +
+  scale_x_log10() +
+  annotation_logticks(sides = "b")
+```
+
+
+Calculate GFR *without* adding residual variability -- purely as estimated by the CKD EPI equation. This will tell is whether the bump comes from the residual variability, or from the CKD-EPI equation itself.
+
+
+```{r}
+DT[, gfr_ckd_epi:=ckd_epi_eq(scr = serum_creat,
+                                 gender = gender,
+                                 reth = reth,
+                                 age_years = age_years,
+                                 ckd_epi_race_coeff = unique(ckd_epi_race_coeff)),
+       by = ckd_epi_race_coeff]
+```
+
+```{r}
+ggplot(DT) +
+  geom_density(aes(x = gfr_ckd_epi)) +
+ facet_grid(rows = vars(ckd_epi_race_coeff),
+             cols = vars(gfr_resid_var),
+             labeller = "label_both") +
+  ggtitle("CKD-EPI eGFR, no residual variability")
+```
+
+```{r}
+ggplot(DT) +
+  geom_density(aes(x = gfr_est)) +
+  facet_grid(rows = vars(ckd_epi_race_coeff),
+             cols = vars(gfr_resid_var),
+             labeller = "label_both") +
+  ggtitle("CKD-EPI eGFR, with residual variability")
+```
+
+
+I think the "small bump" is just the nature of the CKD-EPI equation at serum creatinine levels higher than about 2. Here is eGFR plotted vs. serum creatinine. 
+
+```{r}
+ggplot(DT) +
+  geom_point(aes(x = serum_creat, y = gfr_ckd_epi, color = gender)) +
+  facet_grid(rows = vars(ckd_epi_race_coeff),
+             cols = vars(gfr_resid_var),
+             labeller = "label_both")
+```
+
+It's because of the asymptotic behavior of the CKD-EPI equation at high serum creatinine, plus the nature of the population distribution of high serum creatinine, plus the way the kernel density plotting works in ggplot. You get those few outliers with very high serum creatinine
+
+Here is the serum creatinine distribution:
+
+```{r}
+ggplot(DT) +
+  geom_density(aes(x = serum_creat)) +
+  facet_grid(rows = vars(ckd_epi_race_coeff),
+             cols = vars(gfr_resid_var),
+             labeller = "label_both") +
+  ggtitle("Serum creatinine") +
+  scale_x_log10()
+```
+
+There is a long/heavy right tail on these distributions, which when transformed by the CKD-EPI equation, winds up turning into a "bump" on the lower end of eGFR. Basically, the CKD-EPI equation compresses all of that probability density into a bump on the lower end. 
+
+Zoom in on the lower end of eGFR:
+
+```{r}
+ggplot(DT) +
+  geom_point(aes(x = serum_creat, y = gfr_est, color = gender)) +
+  facet_grid(rows = vars(ckd_epi_race_coeff),
+             cols = vars(gfr_resid_var),
+             labeller = "label_both") +
+  coord_cartesian(ylim = c(0,50))
+```
+
+Notice that adding the residual variability smooths out those lower bumps a bit because it spreads out the estimated GFR values more smoothly across the lower range.
+
+```{r}
+rm(DT)
+```
+
+
 
 # Effect on Css
 
@@ -250,7 +393,8 @@ First, do this for the new default: no race coefficient, add residual variabilit
 
 Note that this is a big simulation job, and will likely take several minutes to run.
 
-```{r}
+```{r, eval = FALSE}
+set.seed(42)
 system.time(
   suppressWarnings(
     css_list_new <- t(
@@ -258,7 +402,7 @@ system.time(
         chemlist,
                       calc_mc_css,
                       suppress.messages = TRUE,
-                      samples = 5000,
+                      samples = 10000,
                       which.quantile = c(0.05, 0.5, 0.95),
                       httkpop.generate.arg.list = list("method" = "d",
                                  "gfr_resid_var" = TRUE,
@@ -268,10 +412,8 @@ system.time(
       )
     )
   )
-```
 
-Save these results as an .Rds file.
-```{r}
+#save results
 saveRDS(css_list_new,
         paste0(out_path,
                "css_list_new.Rds")
@@ -280,14 +422,14 @@ saveRDS(css_list_new,
 
 Now, repeat the simulations for the old status quo (using the race coefficient, not adding residual variability).
 
-```{r}
+```{r, eval = FALSE}
 system.time(
   suppressWarnings(
     css_list_old <- t(
       sapply(chemlist,
              calc_mc_css,
              suppress.messages = TRUE,
-             samples = 5000,
+             samples = 10000,
              which.quantile = c(0.05, 0.5, 0.95),
              httkpop.generate.arg.list = list("method" = "d",
                                               "gfr_resid_var" = FALSE,
@@ -304,6 +446,17 @@ saveRDS(css_list_old,
                "css_list_old.Rds")
 )
 ```
+
+If the simulations have already been run and saved, read in the results.
+
+```{r}
+css_list_new <- readRDS(paste0(out_path,
+               "css_list_new.Rds"))
+
+css_list_old <- readRDS(paste0(out_path,
+               "css_list_old.Rds"))
+```
+
 
 Combine these two output matrices together into a single `data.table`, identifying which ones are the new default and which ones are the old status quo.
 ```{r}
@@ -356,6 +509,8 @@ ggplot(css_melt[GFR %in% "new"]) +
                  color = Percentile)) +
   scale_color_brewer(palette="Set2") +
   scale_y_log10() + annotation_logticks(sides="l")
+
+ggsave(paste0(out_path, "css_percentiles_new_default.png"))
 ```
 
 Plot the percentiles for the "previous status quo" case.
@@ -367,6 +522,8 @@ ggplot(css_melt[GFR %in% "old"]) +
                  color = Percentile)) +
   scale_color_brewer(palette="Set2") +
   scale_y_log10() + annotation_logticks(sides="l")
+
+ggsave(paste0(out_path, "css_percentiles_previous_status_quo.png"))
 ```
 
 
@@ -391,6 +548,8 @@ ggplot(css_cast) +
   theme_bw() +
   theme(legend.position = "none") +
   geom_blank()
+
+ggsave(paste0(out_path, "css_percentiles_old_vs_new.png"))
 ```
 
 
@@ -413,10 +572,33 @@ ggplot(css_cast[Percentile %in% "P95"]) +
   annotation_logticks() +
   scale_color_brewer(palette = "Set2") +
   theme_bw() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
   geom_blank()
+  
+  ggsave(paste0(out_path, "css_old_vs_new_P95.png"))
 ```
 
+What is that one down in the lower left corner?
+
+```{r}
+css_cast[Percentile %in% "P95" & old < 1e-6]
+```
+CASRN 129453-61-8 is Fulvestrant.
+
+What's going on with CASRN 103-24-2 though? Why are the percentiles zero? That is Bis(2-ethylhexyl) nonanedioate
+
+```{r}
+css_list[CASRN %in% "103-24-2"]
+```
+
+All of them are zero... suspicious.
+
+```{r}
+httk::parameterize_pbtk(chem.cas = "103-24-2")
+```
+
+
+So httk thinks Clint is enormous for one thing, and partitioning is also 
 
 What is the difference between new and old?
 
@@ -432,6 +614,8 @@ ggplot(css_cast) +
                size = 1) +
   geom_vline(aes(xintercept = 1)) +
   scale_color_brewer(palette = "Set2")
+
+ggsave(paste0(out_path, "css_ratio_new_old.png"))
 ```
 To the right of the vertical line, Css is higher, meaning that equivalent dose (bioactive conentration/Css) is lower, meaning that BER would be lower for the same exposure, meaning that potential risk is higher.
 
@@ -468,4 +652,110 @@ ggplot(css_cast) +
   xlab("Factor of change in equiv. dose")
 ```
 
+I think it would be best to relabel the x-axis as percentage change in equivalent dose
+
+
+```{r}
+library(scales)
+
+ggplot(css_cast) +
+  geom_density(aes(x=(1/ratio_new_old) - 1,
+                   color = Percentile),
+               size = 1) +
+  geom_vline(aes(xintercept = 0)) +
+  scale_color_brewer(palette = "Set2",
+                     name = "Css percentile") +
+  xlab("Percent change in equiv. dose with new eGFR defaults") +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_bw() +
+  theme(legend.position = c(0.8,0.8),
+        axis.text = element_text(size= 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+
+
+ggsave(paste0(out_path, "change_in_equiv_dose.png"))
+ggsave(paste0(out_path, "change_in_equiv_dose.pdf"))
+```
+
 What this is showing me is that, *in vitro* bioactivity and exposure levels being equal, the change in Css is going to reduce BERs by at maximum 30\%. There aren't very many chemicals where that reduction would make the difference between low risk and high risk. But, these results do show that the "race coefficient" in the way we calculate GFR could have resulted in mathematical bias in the way we estimate potential risk.
+
+We see an increasingly bimodal distribution as the Css percentile increases. I'm guessing those are chemicals primarily cleared via urine, vs. primarily cleared via hepatic metabolism? Let's plot against CLint.
+
+```{r}
+css_cast[, c("Clint",
+             "Funbound.plasma",
+             "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN))[c("Clint",
+                                                                                        "Funbound.plasma",
+                                                                                        "Funbound.plasma.adjustment")]),
+                                                                                        by = CASRN]
+```
+
+```{r}
+css_cast[, Percentile_label:=paste0(gsub(x = Percentile,
+                                         pattern = "P",
+                                         replacement = ""),
+                                    "th percentile Css")]
+
+css_cast[, Percentile_label:=factor(Percentile_label,
+                                    levels = c("5th percentile Css",
+                                               "50th percentile Css",
+                                               "95th percentile Css"))]
+```
+
+```{r}
+css_cast[, Clint_plot:=Clint]
+css_cast[Clint==0, Clint_plot:=1e-5]
+```
+
+
+
+```{r}
+ggplot(css_cast) +
+  geom_point(aes(x = Clint_plot,
+                 y=(1/ratio_new_old) - 1,
+                 color = Funbound.plasma)) +
+  facet_wrap(vars(Percentile_label),
+             nrow = 3,
+             ncol = 1) +
+  scale_color_viridis_c() +
+  ylab("Percent change in equiv. dose with new eGFR defaults") +
+  xlab("Clint") +
+  scale_x_log10() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  annotation_logticks(sides = "b") +
+  theme_bw() +
+  theme(axis.text = element_text(size= 12),
+        axis.title = element_text(size = 14),
+        strip.background = element_blank(),
+        legend.position = "top")
+```
+
+OK, that's very interesting. Almost all of the lower mode is coming from Clint = 0 chemicals.
+
+Let's try a hex plot?
+
+```{r}
+ggplot(css_cast) +
+  geom_hex(aes(x = Clint_plot,
+                 y=(1/ratio_new_old) - 1)) +
+  facet_wrap(vars(Percentile_label),
+             nrow = 3,
+             ncol = 1) +
+  scale_fill_viridis_c() +
+  ylab("Percent change in equiv. dose with new eGFR defaults") +
+  xlab("Clint") +
+  scale_x_log10() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  annotation_logticks(sides = "b") +
+  theme_bw() +
+  theme(axis.text = element_text(size= 12),
+        axis.title = element_text(size = 14),
+        strip.background = element_blank(),
+        legend.position = "top")
+```
+
+The variability for chemicals with nominal Clint = 0 comes from the Monte Carlo simulation of uncertainty & variability in Clint.
+
+But clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important.
