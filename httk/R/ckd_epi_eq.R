@@ -24,10 +24,10 @@
 #'@export ckd_epi_eq
 
 ckd_epi_eq <- function(scr, gender, reth, age_years, ckd_epi_race_coeff = FALSE){
-  kappa <- rep(NA, length(scr))
+  kappa <- rep(NA_real_, length(scr))
   kappa[gender=='Female'] <- 0.7
   kappa[gender=='Male'] <- 0.9
-  alph <- rep(NA, length(scr))
+  alph <- rep(NA_real_, length(scr))
   alph[gender=='Female'] <- -0.329
   alph[gender=='Male'] <- -0.411
   genfact <- rep(1,length(scr))
