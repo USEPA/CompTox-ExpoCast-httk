@@ -576,29 +576,93 @@ ggplot(css_cast[Percentile %in% "P95"]) +
   geom_blank()
   
   ggsave(paste0(out_path, "css_old_vs_new_P95.png"))
+   ggsave(paste0(out_path, "css_old_vs_new_P95.pdf"))
 ```
+
+## Very low Css?
 
 What is that one down in the lower left corner?
 
 ```{r}
 css_cast[Percentile %in% "P95" & old < 1e-6]
 ```
-CASRN 129453-61-8 is Fulvestrant.
 
-What's going on with CASRN 103-24-2 though? Why are the percentiles zero? That is Bis(2-ethylhexyl) nonanedioate
-
-```{r}
-css_list[CASRN %in% "103-24-2"]
-```
-
-All of them are zero... suspicious.
+What are these names?
 
 ```{r}
-httk::parameterize_pbtk(chem.cas = "103-24-2")
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS %in% css_cast[Percentile %in% "P95" & old < 1e-6, CASRN], c("Compound", "CAS")]
+```
+
+Why are the percentiles zero?
+
+```{r}
+css_list[CASRN %in% c("129453-61-8", "103-24-2")]
+```
+
+What happens if we just run analytical Css for these CASRNs?
+
+```{r}
+calc_analytic_css(chem.cas = "103-24-2", suppress.messages = TRUE)
+```
+
+OK, small, but not zero.
+
+What does `calc_mc_css()` do?
+
+```{r}
+calc_mc_css(chem.cas = "103-24-2", suppress.messages = TRUE, which.quantile = c(0.05, 0.25, 0.5, 0.75, 0.95))
+```
+
+OK, that is just not right. Something is very strange here.
+
+What about the other one?
+
+```{r}
+calc_analytic_css(chem.cas = "129453-61-8", suppress.messages = TRUE)
+```
+
+Well, that's absolutely not small. What the heck?
+
+What does `calc_mc_css()` do?
+
+```{r}
+calc_mc_css(chem.cas = "129453-61-8", suppress.messages = TRUE, which.quantile = c(0.05, 0.25, 0.5, 0.75, 0.95))
+```
+
+Hmmm, OK, that is funky. Something is plain old wrong.
+
+### Checking parameters
+
+
+```{r}
+parameterize_steadystate(chem.cas = "103-24-2")
+```
+
+I notice that Clint is large (392600) and Funbound.plasma is small (1e-04).
+
+```{r}
+parameterize_steadystate(chem.cas = "129453-61-8")
+```
+
+Clint is zero but seems to have an non-zero distribution. Similarly, Funbound.plasma is 1e-04 but seems to have a different distirbution?
+
+What does `chem.physical_and_invitro_data` say?
+
+```{r}
+tmp <- get_cheminfo(info = c("CAS", "Compound", "Clint", "Clint.pValue", "Funbound.plasma"))
+tmp[tmp$CAS %in% c("103-24-2", "129453-61-8"), ]
+```
+
+OK -- curiouser and curiouser. So that is not the same Clint distribution that gets returned by `parameterize_steadystate()` for CAS 129453-61-8.
+
+```{r}
+parameterize_pbtk(chem.cas = "129453-61-8")
 ```
 
 
-So httk thinks Clint is enormous for one thing, and partitioning is also 
+
+
+# Difference between new and old Css
 
 What is the difference between new and old?
 
@@ -686,10 +750,15 @@ We see an increasingly bimodal distribution as the Css percentile increases. I'm
 ```{r}
 css_cast[, c("Clint",
              "Funbound.plasma",
-             "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN))[c("Clint",
+             "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN),
+                                                                                      suppress.messages = TRUE)[c("Clint",
                                                                                         "Funbound.plasma",
                                                                                         "Funbound.plasma.adjustment")]),
                                                                                         by = CASRN]
+
+css_cast[, Cl_hep:=suppressWarnings(calc_hep_clearance(chem.cas = unique(CASRN),
+                                                                        suppress.messages = TRUE)),
+         by = CASRN]
 ```
 
 ```{r}
@@ -707,6 +776,9 @@ css_cast[, Percentile_label:=factor(Percentile_label,
 ```{r}
 css_cast[, Clint_plot:=Clint]
 css_cast[Clint==0, Clint_plot:=1e-5]
+
+css_cast[, Clhep_plot:=Cl_hep]
+css_cast[Cl_hep==0, Clhep_plot:=1e-7]
 ```
 
 
@@ -714,14 +786,12 @@ css_cast[Clint==0, Clint_plot:=1e-5]
 ```{r}
 ggplot(css_cast) +
   geom_point(aes(x = Clint_plot,
-                 y=(1/ratio_new_old) - 1,
-                 color = Funbound.plasma)) +
+                 y=(1/ratio_new_old) - 1)) +
   facet_wrap(vars(Percentile_label),
              nrow = 3,
              ncol = 1) +
-  scale_color_viridis_c() +
   ylab("Percent change in equiv. dose with new eGFR defaults") +
-  xlab("Clint") +
+  xlab("Clint, uL/min/10^6 hepatocytes") +
   scale_x_log10() +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   annotation_logticks(sides = "b") +
@@ -732,7 +802,7 @@ ggplot(css_cast) +
         legend.position = "top")
 ```
 
-OK, that's very interesting. Almost all of the lower mode is coming from Clint = 0 chemicals.
+OK, that's very interesting. Almost all of the lower mode (below -10% change) is coming from Clint = 0 chemicals.
 
 Let's try a hex plot?
 
@@ -741,12 +811,17 @@ ggplot(css_cast) +
   geom_hex(aes(x = Clint_plot,
                  y=(1/ratio_new_old) - 1)) +
   facet_wrap(vars(Percentile_label),
-             nrow = 3,
-             ncol = 1) +
+             nrow = 2,
+             ncol = 2) +
   scale_fill_viridis_c() +
   ylab("Percent change in equiv. dose with new eGFR defaults") +
-  xlab("Clint") +
-  scale_x_log10() +
+  xlab("Clint, uL/min/10^6 hepatocytes") +
+  scale_x_log10(breaks = 10^c(-5, seq(-4,4, by = 2)),
+                labels = c(0, paste0("1e",
+                seq(-4,5, by = 2)
+                )
+                )
+                )+
   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   annotation_logticks(sides = "b") +
   theme_bw() +
@@ -754,8 +829,53 @@ ggplot(css_cast) +
         axis.title = element_text(size = 14),
         strip.background = element_blank(),
         legend.position = "top")
+
+ggsave(paste0(out_path,
+              "hex_plot_css_changs_vs_Clint.png"),
+       height = 7,
+       width = 7,
+       units = "in")
+
+ggsave(paste0(out_path,
+              "hex_plot_css_changs_vs_Clint.pdf"),
+       height = 7, width = 7,
+       units = "in")
 ```
 
-The variability for chemicals with nominal Clint = 0 comes from the Monte Carlo simulation of uncertainty & variability in Clint.
+Clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important.
 
-But clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important.
+Now, why there are chemicals where Clint is 0 and where the CKD-EPI revisions do not reduce equivalent dose, or even increase it?
+
+I suspect these are chemicals where the measured Clint of 0 actually has some uncertainty and may not be zero. 
+
+```{r}
+tmp <- unique(css_cast[Clint==0, .(CASRN, Clint)])
+foo <- as.data.table(chem.physical_and_invitro.data)
+footmp <- foo[tmp, on = c("CAS" = "CASRN")][, .(Compound, CAS, Clint, Human.Clint, Human.Clint.pValue, Human.Funbound.plasma)]
+head(footmp)
+
+```
+
+Find the Clint upper bound by splitting the string for the ones with comma-separated distribution.s
+
+```{r}
+footmp[grepl(x = Human.Clint,
+             pattern = ","),
+       Clint.ub := tstrsplit(Human.Clint, split = ",", keep = 3) ]
+footmp[, Clint.ub:=as.numeric(Clint.ub)]
+```
+
+What are the range of those upper bounds?
+
+```{r}
+footmp[, range(Clint.ub, na.rm = TRUE)]
+```
+
+```{r}
+ggplot(footmp) + geom_histogram(aes(x = Clint.ub)) + scale_x_log10()
+```
+
+Does that explain it? Shouldn't the effective population distribution of Clint center around the median anyway, though? And wouldn't the Css95 be on the low end of Clint for a given chemical, not the high end? 
+
+
+
