@@ -50,7 +50,7 @@ exposures via reverse dosimetry (also known as "RTK")
 Adapted from Breen et al. (2021) <https://doi.org/10.1080/17425255.2021.1935867>
 * Getting Started with R Package httk from the R command line
 ```
-install.packages(httk)
+install.packages("httk")
 ```
 * RStudio provides a menu ‘Install Packages’ under ‘Tools’ tab
 * Load the HTTK data, models, and functions
@@ -59,7 +59,7 @@ library(httk)
 ```
 * Check what version you are using 
 ```
-packageVersion(httk)
+packageVersion("httk")
 ```
 * List all CAS numbers for all chemicals with sufficient data to run httk 
 ```
@@ -73,9 +73,9 @@ get_cheminfo(info = "all", median.only=TRUE)
 ```
 * Is a chemical with a specified CAS number available? 
 ```
-"80–05-7" %in% get_cheminfo()
+"80-05-7" %in% get_cheminfo()
 ```
-* All data on chemicals A, B, C 
+* All data on chemicals A, B, C (You need to specify the names instead of "A","B","C"...)
 ```
 subset(get_cheminfo(info = "all"), Compound %in% c("A","B","C"))
 ```
@@ -116,7 +116,7 @@ help(package = httk)
 ```
 * List all vignettes for httk 
 ```
-vignette(package = httk)
+vignette(package = "httk")
 ```
 * Displays the vignette for a specified vignette 
 ```
