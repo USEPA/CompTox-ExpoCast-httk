@@ -175,6 +175,7 @@ calc_tkstats <-function(
                       dosing=dosing,
                       suppress.messages=TRUE,
                       output.units=output.units,
+                      default.to.human=default.to.human,
                       ...)
     
     # For the 3-compartment model:  
