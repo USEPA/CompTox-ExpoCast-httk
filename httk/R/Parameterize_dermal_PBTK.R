@@ -14,8 +14,8 @@
 #' model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
 #' or "dermal_1subcomp" for the model with 1 compartment for the skin.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
-#' the permeability coefficient, Kp, either "Potts-Guy" or "Sawyer-Chen". Default
-#' is "Sawyer-Chen" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' the permeability coefficient, Kp, either "Potts-Guy" or "Ficks-Law". Default
+#' is "Ficks-Law" (Sawyer et al., 2016 and Chen and Han et al., 2015), which uses Fick's
 #' law of diffusion to calculate Kp.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -111,7 +111,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               model.type="dermal", #can also be "dermal_1subcomp"
-                              method.permeability = "Sawyer-Chen",
+                              method.permeability = "Ficks-Law",
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
@@ -283,11 +283,10 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Pow = Pow,
     pKa_Donar = pKa_Donor,
     pKa_Accept=pKa_Accept,
-    MA=schmitt.params[["MA"]])
+    MA=schmitt.params[["MA"]]))
     
   # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
- outlist <- c(outlist,list(
-   Fhep.assay.correction=calc_hep_fu(
+ outlist <- c(outlist,list(Fhep.assay.correction=calc_hep_fu(
      parameters = list(Pow = schmitt.params$Pow,
                        pKa_Donor=schmitt.params$pKa_Donor,
                        pKa_Accept=schmitt.params$pKa_Accept,
@@ -342,12 +341,12 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
       Pm2sc <- (1/Km2sc) * Dsc / (skin_depth*Fskin_depth_sc)
       
     # Permeability coefficient from m to ve
-    if (method.permeability=="Sawyer-Chen"){
+    if (method.permeability=="Ficks-Law"){
       Kp <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
     } else if (method.permeability=="Potts-Guy"){
       Kp <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
     } else stop(
-      "method.permeatility must be se to either 'Potts-Guy' or 'Sawyer-Chen'")
+      "method.permeatility must be se to either 'Potts-Guy' or 'Ficks-Law'")
 
     # Added by AEM, 1/27/2022
     if (model.type=="dermal"){

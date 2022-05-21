@@ -154,10 +154,10 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   # Create forcing function for Vmedia - single value
   if (is.null(dosing.dermal)) {
     if (is.null(Vmedia)) {
-      Vmedia <- 0.1; 
+      Vmedia <- 0.1; #only affects model if route=dermal
       if (route=='dermal') warning(paste("Vmedia not specified, so set to", Vmedia, "L."))
-      if (is.null(initial.dose)) initial.dose = 1; warning(
-        paste("Initial dose not specified, so automatrically set to 1 mg/kg BW."))
+      if (is.null(initial.dose)){ initial.dose = 1; warning(paste(
+        "Initial dose not specified, so automatrically set to 1 mg/kg BW."))}
     } 
     if (length(Vmedia)!=1) stop(
       "Vmedia input must be one value. To change the volume of the media over time, 

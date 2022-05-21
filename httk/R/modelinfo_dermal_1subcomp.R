@@ -183,14 +183,14 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
-  "oral" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
-  "iv" = c('umol','mg','mg/kg'), # not used? -AEM, March 2022
+  "oral" = c('umol','mg','mg/kg'), 
+  "iv" = c('umol','mg','mg/kg'), 
   "dermal" = c('mg/L','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
-  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
-  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? -AEM, March 2022
+  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
   "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
