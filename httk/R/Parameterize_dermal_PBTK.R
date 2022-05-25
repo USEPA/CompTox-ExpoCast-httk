@@ -16,7 +16,7 @@
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
 #' the permeability coefficient, Kp, either "Potts-Guy" or "Ficks-Law". Default
 #' is "Ficks-Law" (Sawyer et al., 2016 and Chen and Han et al., 2015), which uses Fick's
-#' law of diffusion to calculate Kp.
+#' law of diffusion to calculate Kp. For "dermal" model, this parameter is ignored.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param default.to.human Substitutes missing animal values with human values
@@ -40,7 +40,7 @@
 #' @param skin.pH pH of dermis/skin, used in calculating Kp and Kskin2media.
 #' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
 #' Vmax and Km in parameters instead of Clmetabolismc and
-#' million.cells.per.gliver.
+#' million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.
 #' @param height Height in cm, used in calculating totalSA.
 #' @return
 #' 
@@ -86,13 +86,22 @@
 #' \item{Vviable_epidermisc}{Volume of the viable epidermis layer of the skin per 
 #' kg body weight, L/kg BW. This parameter does not appear when 
 #' model.type="dermal_1subcomp".}
-#' \item{Kp}{Permeability, cm/h.} \item{Kskin2media}{Partition coefficient
-#' between exposed skin and media.} \item{totalSA}{Total body surface area,
+#' \item{Kp}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
+#' this parameter changes depending on method.permeability. When model.type="dermal",
+#' this parameter is replaced by Pmedia2sc and Psc2ve.} \item{Pmedia2sc}{Permeability
+#' of the stratum corneum (SC), cm/h. This parameter does not appear when 
+#' model.type="dermal_1subcomp".} \item{Psc2ve}{Permeability of the viable epidermis (VE), cm/h.
+#' This parameter does not appear when model.type="dermal_1subcomp".} \item{Kskin2media}{Partition coefficient
+#' between exposed skin and media. This parameter only appears when model.type="dermal_1subcomp"
+#' and is replaced by Ksc2media when model.type="dermal".} \item{Ksc2media}{Partition 
+#' coefficient between SC and media. This parameter does not appear when 
+#' model.type="dermal_1subcomp".} \item{Kve2media}{Partition coefficient between VE and
+#' SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
 #' cm^2.} \item{Vmedia}{Volume of media, L.} \item{skin_depth}{Skin skin_depth, cm.}
 #' \item{Fdermabs}{Fraction of media concentration available for absorption.}
 #' \item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
-#' units corresponding to dosing concentration.} \item{Km}{units same as dosing
-#' concentration.} 
+#' units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{units same as dosing
+#' concentration. CURRENTLY NOT IN USE.} 
 #' @author John Wambaugh and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -330,29 +339,31 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     
       # Diffusion in viable epidermis and dermis: Equation 15, Chen, 2015
       Dve <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) * 100^2 * 60^2  #cm^2/h
-      
-      # Diffusion in sc
-      Dsc <- Dve
             
       # Permeability coefficient from sc to ve
       Psc2ve <- Kve2sc * Dve / (skin_depth*Fskin_depth_ve) #cm/h
       
-      # Permeability coefficient from m to sc
-      Pm2sc <- (1/Km2sc) * Dsc / (skin_depth*Fskin_depth_sc)
+      # Permeability coefficient from m to sc: Ellison dataset in Marina Evans, et al. (not yet published)
+      Pm2sc <- -0.0051 + 1.4 * Pve2sc #R = 0.83, p=7.2e-14
       
     # Permeability coefficient from m to ve
+    if (model.type=="dermal_1subcomp") {
     if (method.permeability=="Ficks-Law"){
       Kp <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
     } else if (method.permeability=="Potts-Guy"){
       Kp <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
     } else stop(
       "method.permeatility must be se to either 'Potts-Guy' or 'Ficks-Law'")
+    } else if (model.type=="dermal") {
+      warning("Input method.permeability ignored, since there is only one method do calculate Psc2ve and Pm2sc in this function.")
+    }
 
     # Added by AEM, 1/27/2022
     if (model.type=="dermal"){
-      outlist <- c(outlist, totalSA = totalSA,
+      outlist <- c(outlist, 
+                   totalSA = totalSA,
                    skin_depth = skin_depth,
-                   Fdermabs = 1,
+                   #Fdermabs = 1,
                    Fskin_exposed=0.1,
                    Fskin_depth_sc = Fskin_depth_sc, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
                    Fskin_depth_ve = 1-Fskin_depth_sc, #AEM's best guess
@@ -360,17 +371,18 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                    Psc2ve = Psc2ve,
                    Ksc2media = 1/Km2sc, #function above
                    Ksc2ve = 1/Kve2sc,
-                   Kve2pu = outlist$Kskin2pu, #partition coefficient
+                   #Kve2pu = outlist$Kskin2pu, #partition coefficient
                    Qskinf = flows[["Qskinf"]], #not sure if this is totally accurate
                    Vstratum_corneumc = outlist$Vskinc*Fskin_depth_sc,
                    Vviable_epidermisc=outlist$Vskinc*(1-Fskin_depth_sc))
     } else if (model.type=="dermal_1subcomp"){
-      outlist <- c(outlist,Kp = Kp,
-                   Kskin2media = Kve2m, 
+      outlist <- c(outlist,
                    totalSA = totalSA,
                    skin_depth=skin_depth,
-                   Fdermabs=1,
-                   Fskin_exposed=0.1) 
+                   #Fdermabs=1,
+                   Fskin_exposed=0.1,
+                   Kp = Kp,
+                   Kskin2media = Kve2m) 
     }
     
 

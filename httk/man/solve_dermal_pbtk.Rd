@@ -8,39 +8,36 @@ solve_dermal_pbtk(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  model.type = "dermal",
   times = NULL,
   parameters = NULL,
   days = 10,
-  species = "Human",
   tsteps = 4,
-  dose = NULL,
-  dosing.matrix = NULL,
-  forcings = NULL,
-  exp.start.time = 0,
-  exp.conc = 1,
-  exp.duration = 12,
-  period = 24,
-  daily.dose = NULL,
-  doses.per.day = NULL,
-  initial.values = NULL,
-  plots = F,
+  plots = FALSE,
+  monitor.vars = NULL,
   suppress.messages = F,
-  input.units = "mg/kg",
-  output.units = NULL,
+  species = "Human",
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
+  adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  monitor.vars = NULL,
+  regression = TRUE,
+  default.to.human = FALSE,
+  restrictive.clearance = TRUE,
+  clint.pvalue.threshold = 0.05,
   skin_depth = 0.3,
   skin.pH = 7,
   vmax.km = F,
+  height = 175,
+  route = NULL,
+  Vmedia = NULL,
+  initial.dose = NULL,
+  input.units = "mg/kg",
+  dosing.dermal = NULL,
+  dosing.matrix = NULL,
   ...
 )
 }
@@ -52,7 +49,11 @@ must be specified.}
 be specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
+the chemical must be identified by either CAS, name, or DTXSIDs.}
+
+\item{model.type}{Choice of dermal model, either the default "dermal" for the 
+model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
+or "dermal_1subcomp" for the model with 1 compartment for the skin.}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -62,34 +63,23 @@ overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
 \item{tsteps}{The number time steps per hour.}
-
-\item{dosing.matrix}{Matrix consisting of three columns named
-"concentration", "Vmedia", and "time" containing the dosing times, days,
-with the applied concentration, units/L, and the volume of the applied
-media, L.}
-
-\item{doses.per.day}{Number of doses per day.}
-
-\item{initial.values}{Vector containing the initial concentrations or
-amounts of the chemical in specified tissues with units corresponding to
-output.units.  Defaults are zero.}
 
 \item{plots}{Plots all outputs if true.}
 
+\item{monitor.vars}{Which variables are returned as a function of time. 
+Default values of NULL looks up variables specified in modelinfo_MODEL.R}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 
 \item{method}{Method used by integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
 
 \item{atol}{Argument passed to integrator (deSolve).}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -104,6 +94,9 @@ TRUE along with partition coefficients calculated with this value.}
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
@@ -111,13 +104,24 @@ partition coefficients.}
 
 \item{skin.pH}{pH of dermis/skin, used in calculating Kp and Kskin2media.}
 
-\item{vmax.km}{Whether or not to use Michaelis-Menten kinetics}
+\item{vmax.km}{Whether or not to use Michaelis-Menten kinetics, returning
+Vmax and Km in parameters instead of Clmetabolismc and
+million.cells.per.gliver.}
+
+\item{height}{Height in cm.}
+
+\item{Vmedia}{Volume of media applied to skin in L, defaults to 0.01 L.}
+
+\item{initial.dose}{Concentration}
 
 \item{...}{Additional arguments passed to the integrator.}
 
-\item{concentration}{Concentration of media at dosing times, units/L.}
+\item{BW}{Body weight, kg.}
 
-\item{use.amounts}{Return outputs as amounts instead of concentrations.}
+\item{dermal.dosing}{Matrix consisting of three columns named
+"concentration", "Vmedia", and "time" containing the dosing times, days,
+with the applied concentration, units/L, and the volume of the applied
+media, L.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
