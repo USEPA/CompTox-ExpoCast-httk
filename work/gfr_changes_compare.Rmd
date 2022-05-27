@@ -2,7 +2,9 @@
 title: "Differences from GFR changes"
 author: "Caroline Ring"
 date: "26 April 2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -53,17 +55,26 @@ knitr::kable(par) #print in table format
 
 To get the HTTK-Pop distributions for GFR under each of these four conditions, we call `httkpop_generate()`. This function returns a `data.table` of simulated individuals. Each row is one individual; each column is one demographic, physiological or other TK-relevant parameter. One of the columns is called `gfr_est`; this is the estimated GFR from the CKD-EPI equation. For the sake of efficiency, we'll keep only this column, discarding the other columns with demographic and physiology information.
 
-To get a good sampling, we'll simulate 5000 individuals for each condition.
+To get a good sampling, we'll simulate 10000 individuals.
 
 ```{r}
-#use data.table syntax to efficiently loop over rows of par
-DT <- par[,
-          httkpop_generate(method = "d", #direct resampling
+set.seed(42)
+DT_orig <- httkpop_generate(method = "d", #direct resampling
                                      nsamp = 10000, #5000 individuals
-                                     agelim_years = c(18,65), #adults 18-65
+                                     agelim_years = c(18,79), #adults 18-79
                                      reths = "Non-Hispanic Black", #non-Hispanic Black individuals
-                                     gfr_resid_var = gfr_resid_var,
-                                     ckd_epi_race_coeff = ckd_epi_race_coeff)[, .(age_years, gender, reth, gfr_est, serum_creat)],
+                                     gfr_resid_var = TRUE,
+                                     ckd_epi_race_coeff = FALSE)
+
+#use data.table syntax to efficiently loop over rows of par
+#recalculate GFR for the same poplation for each set of conditions -- this controls for random variation in other things (such as age, sex, etc.)
+DT <- par[,
+          .(gfr_est={
+            tmp <- estimate_gfr(gfrtmp.dt = DT_orig,
+                                 gfr_resid_var = gfr_resid_var,
+                                 ckd_epi_race_coeff = ckd_epi_race_coeff)
+            tmp[, gfr_est]
+            }),
           by = .(gfr_resid_var,
                  ckd_epi_race_coeff)]
 ```
@@ -83,14 +94,14 @@ For more informative plot labels, let's create labels that clearly explain the m
 DT[gfr_resid_var %in% FALSE & ckd_epi_race_coeff %in% FALSE,
    label:="No race coeff, no resid var"]
 DT[gfr_resid_var %in% FALSE & ckd_epi_race_coeff %in% TRUE,
-   label:="Race coeff, no resid var\n(previous status quo)"]
+   label:="Race coeff, no resid var\n(old status quo)"]
 DT[gfr_resid_var %in% TRUE & ckd_epi_race_coeff %in% FALSE,
    label:="No race coeff, resid var\n(new default)"]
 DT[gfr_resid_var %in% TRUE & ckd_epi_race_coeff %in% TRUE,
    label:="Race coeff, resid var"]
 
 DT[, label:=factor(label,
-                   levels = c("Race coeff, no resid var\n(previous status quo)",
+                   levels = c("Race coeff, no resid var\n(old status quo)",
                              "No race coeff, resid var\n(new default)",
                              "Race coeff, resid var",
                              "No race coeff, no resid var"))]
@@ -253,9 +264,7 @@ ggsave(filename = paste0(out_path,
        units = "in")
 ```
 
-```{r}
-rm(figlist)
-```
+
 
 
 ## Lower "bump" in GFR?
@@ -296,58 +305,26 @@ limits = force) +
   annotation_logticks(sides = "b")
 ```
 
-
-Calculate GFR *without* adding residual variability -- purely as estimated by the CKD EPI equation. This will tell is whether the bump comes from the residual variability, or from the CKD-EPI equation itself.
-
-
-```{r}
-DT[, gfr_ckd_epi:=ckd_epi_eq(scr = serum_creat,
-                                 gender = gender,
-                                 reth = reth,
-                                 age_years = age_years,
-                                 ckd_epi_race_coeff = unique(ckd_epi_race_coeff)),
-       by = ckd_epi_race_coeff]
-```
-
-```{r}
-ggplot(DT) +
-  geom_density(aes(x = gfr_ckd_epi)) +
- facet_grid(rows = vars(ckd_epi_race_coeff),
-             cols = vars(gfr_resid_var),
-             labeller = "label_both") +
-  ggtitle("CKD-EPI eGFR, no residual variability")
-```
-
+Does the bump come rfom the residual varibility or not?
 ```{r}
 ggplot(DT) +
   geom_density(aes(x = gfr_est)) +
-  facet_grid(rows = vars(ckd_epi_race_coeff),
+ facet_grid(rows = vars(ckd_epi_race_coeff),
              cols = vars(gfr_resid_var),
              labeller = "label_both") +
-  ggtitle("CKD-EPI eGFR, with residual variability")
+  ggtitle("CKD-EPI eGFR")
 ```
 
 
-I think the "small bump" is just the nature of the CKD-EPI equation at serum creatinine levels higher than about 2. Here is eGFR plotted vs. serum creatinine. 
 
-```{r}
-ggplot(DT) +
-  geom_point(aes(x = serum_creat, y = gfr_ckd_epi, color = gender)) +
-  facet_grid(rows = vars(ckd_epi_race_coeff),
-             cols = vars(gfr_resid_var),
-             labeller = "label_both")
-```
 
-It's because of the asymptotic behavior of the CKD-EPI equation at high serum creatinine, plus the nature of the population distribution of high serum creatinine, plus the way the kernel density plotting works in ggplot. You get those few outliers with very high serum creatinine
+I think the "small bump" is just the nature of the CKD-EPI equation at serum creatinine levels higher than about 2. It's because of the asymptotic behavior of the CKD-EPI equation at high serum creatinine, plus the nature of the population distribution of high serum creatinine, plus the way the kernel density plotting works in ggplot. You get those few outliers with very high serum creatinine
 
 Here is the serum creatinine distribution:
 
 ```{r}
-ggplot(DT) +
+ggplot(DT_orig) +
   geom_density(aes(x = serum_creat)) +
-  facet_grid(rows = vars(ckd_epi_race_coeff),
-             cols = vars(gfr_resid_var),
-             labeller = "label_both") +
   ggtitle("Serum creatinine") +
   scale_x_log10()
 ```
@@ -357,20 +334,12 @@ There is a long/heavy right tail on these distributions, which when transformed 
 Zoom in on the lower end of eGFR:
 
 ```{r}
-ggplot(DT) +
+ggplot(DT_orig) +
   geom_point(aes(x = serum_creat, y = gfr_est, color = gender)) +
-  facet_grid(rows = vars(ckd_epi_race_coeff),
-             cols = vars(gfr_resid_var),
-             labeller = "label_both") +
   coord_cartesian(ylim = c(0,50))
 ```
 
 Notice that adding the residual variability smooths out those lower bumps a bit because it spreads out the estimated GFR values more smoothly across the lower range.
-
-```{r}
-rm(DT)
-```
-
 
 
 # Effect on Css
@@ -400,18 +369,27 @@ system.time(
     css_list_new <- t(
       sapply(
         chemlist,
-                      calc_mc_css,
-                      suppress.messages = TRUE,
-                      samples = 10000,
-                      which.quantile = c(0.05, 0.5, 0.95),
-                      httkpop.generate.arg.list = list("method" = "d",
-                                 "gfr_resid_var" = TRUE,
-                                 "ckd_epi_race_coeff" = FALSE,
-                                 "reths"="Non-Hispanic Black")
+                      function(chem){
+                      suppressWarnings(parameter.dt <-  create_mc_samples(chem.cas = chem,
+                                                         samples = 1e4,
+                                         httkpop.dt = DT_orig,
+                                         suppress.messages = TRUE))
+                       parameter.dt[,Css:= do.call(calc_analytic_css,
+                            args=list(parameters=.SD,
+                              model="3compartmentss",
+                              suppress.messages=TRUE,
+                              chem.cas=chem,
+                              output.units="uM")
+                            )]
+                       out <- parameter.dt[, quantile(Css, c(0.05,0.5,0.95), na.rm = TRUE)]
+                       out <- c(out, parameter.dt[, sum(is.na(Css))])
+                       out
+                      }
         )
       )
     )
   )
+
 
 #save results
 saveRDS(css_list_new,
@@ -423,22 +401,34 @@ saveRDS(css_list_new,
 Now, repeat the simulations for the old status quo (using the race coefficient, not adding residual variability).
 
 ```{r, eval = FALSE}
+set.seed(42)
+DT_old <- copy(DT_orig)
+DT_old[, gfr_est:=DT[label %in% "Race coeff, no resid var\n(old status quo)", gfr_est]]
 system.time(
   suppressWarnings(
     css_list_old <- t(
-      sapply(chemlist,
-             calc_mc_css,
-             suppress.messages = TRUE,
-             samples = 10000,
-             which.quantile = c(0.05, 0.5, 0.95),
-             httkpop.generate.arg.list = list("method" = "d",
-                                              "gfr_resid_var" = FALSE,
-                                              "ckd_epi_race_coeff" = TRUE,
-                                              "reths"="Non-Hispanic Black")
+      sapply(
+        chemlist,
+                      function(chem){
+                      suppressWarnings(parameter.dt <-  create_mc_samples(chem.cas = chem,
+                                                         samples = 1e4,
+                                         httkpop.dt = DT_old,
+                                         suppress.messages = TRUE))
+                       parameter.dt[,Css:= do.call(calc_analytic_css,
+                            args=list(parameters=.SD,
+                              model="3compartmentss",
+                              suppress.messages=TRUE,
+                              chem.cas=chem,
+                              output.units="uM")
+                            )]
+                       out <- parameter.dt[, quantile(Css, c(0.05,0.5,0.95), na.rm = TRUE)]
+                       out <- c(out, parameter.dt[, sum(is.na(Css))])
+                       out
+                      }
+        )
       )
     )
   )
-)
 
 #save as Rds file
 saveRDS(css_list_old,
@@ -462,8 +452,8 @@ Combine these two output matrices together into a single `data.table`, identifyi
 ```{r}
 css_list_new <- as.data.table(css_list_new)
 css_list_old <- as.data.table(css_list_old)
-setnames(css_list_new, names(css_list_new), c("P5", "P50", "P95"))
-setnames(css_list_old, names(css_list_old), c("P5", "P50", "P95"))
+setnames(css_list_new, names(css_list_new), c("P5", "P50", "P95", "numNA"))
+setnames(css_list_old, names(css_list_old), c("P5", "P50", "P95", "numNA"))
 css_list_new[, CASRN:=chemlist]
 css_list_old[, CASRN:=chemlist]
 css_list <- rbindlist(list("new"=css_list_new,
@@ -681,6 +671,7 @@ ggplot(css_cast) +
 
 ggsave(paste0(out_path, "css_ratio_new_old.png"))
 ```
+
 To the right of the vertical line, Css is higher, meaning that equivalent dose (bioactive conentration/Css) is lower, meaning that BER would be lower for the same exposure, meaning that potential risk is higher.
 
 Can simplify that to just "If Css is higher, then potential risk is also higher, assuming the same in vitro bioactive concentration and the same exposure."
@@ -745,139 +736,320 @@ ggsave(paste0(out_path, "change_in_equiv_dose.pdf"))
 
 What this is showing me is that, *in vitro* bioactivity and exposure levels being equal, the change in Css is going to reduce BERs by at maximum 30\%. There aren't very many chemicals where that reduction would make the difference between low risk and high risk. But, these results do show that the "race coefficient" in the way we calculate GFR could have resulted in mathematical bias in the way we estimate potential risk.
 
-# Beyond this is some more exploratory analysis
-
-We see an increasingly bimodal distribution as the Css percentile increases. I'm guessing those are chemicals primarily cleared via urine, vs. primarily cleared via hepatic metabolism? Let's plot against CLint.
+Paste together this figure and the "eGFR_main" figure into a two panel figure
 
 ```{r}
-css_cast[, c("Clint",
-             "Funbound.plasma",
-             "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN),
-                                                                                      suppress.messages = TRUE)[c("Clint",
-                                                                                        "Funbound.plasma",
-                                                                                        "Funbound.plasma.adjustment")]),
-                                                                                        by = CASRN]
+panelA <- figlist[[1]] + 
+         #setting byrow = TRUE is the only way legend.spacing.y has any effect
+         guides(fill = guide_legend(byrow = TRUE),
+                color = guide_legend(byrow = TRUE)) + 
+         theme(axis.text = element_text(size=12),
+                           legend.text = element_text(size=12),
+               axis.title = element_text(size = 14),
+               legend.key.size = unit(24, "pt"),
+               legend.spacing.y = unit(12, "pt"),
+               legend.position = c(0.77,0.7))
 
-css_cast[, Cl_hep:=suppressWarnings(calc_hep_clearance(chem.cas = unique(CASRN),
-                                                                        suppress.messages = TRUE)),
-         by = CASRN]
+css_cast[, AED_pct:=(1/ratio_new_old) - 1]
+panelB <- ggplot(css_cast[Percentile %in% "P95"]) +
+  geom_histogram(aes(x=AED_pct),
+                binwidth = 0.005,
+               size = 1,
+               fill = "white",
+               color = "black") +
+  # geom_vline(aes(xintercept = 0)) +
+  # scale_color_brewer(palette = "Set2",
+  #                    name = "Css percentile") +
+  xlab("Percent change in equiv. dose with new eGFR defaults") +
+  ylab("Count of chemicals") +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.6),
+        axis.text = element_text(size= 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+
+#use patchwork to paste together panels
+patchwork::wrap_plots(list(panelA, panelB), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+
+pdf(paste0(out_path,
+           "eGFR_results_main.pdf"),
+    height = 5, width = 7) #open PDF device
+patchwork::wrap_plots(list(panelA, panelB), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+dev.off()
+
+png(paste0(out_path,
+           "eGFR_results_main.png"),
+    res = 300,
+    height = 5, width = 7,
+    units = "in") #open PNG device
+patchwork::wrap_plots(list(panelA, panelB), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+dev.off()
+
+```
+
+
+Or get the empriical CDF
+
+```{r}
+panelB2 <- ggplot(css_cast) +
+  stat_ecdf(aes(x=(1/ratio_new_old) - 1,
+                   color = Percentile),
+               size = 1) +
+  # geom_vline(aes(xintercept = 0)) +
+  scale_color_brewer(palette = "Set2",
+                     name = "Css percentile") +
+  xlab("Percent change in equiv. dose with new eGFR defaults") +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_bw() +
+  theme(legend.position = c(0.2,0.6),
+        axis.text = element_text(size= 12),
+        axis.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+
+#use patchwork to paste together panels
+patchwork::wrap_plots(list(panelA, panelB2), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+
+pdf(paste0(out_path,
+           "eGFR_results_main_ecdf.pdf"),
+    height = 5, width = 7) #open PDF device
+patchwork::wrap_plots(list(panelA, panelB2), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+dev.off()
+
+png(paste0(out_path,
+           "eGFR_results_main_ecdf.png"),
+    res = 300,
+    height = 5, width = 7,
+    units = "in") #open PNG device
+patchwork::wrap_plots(list(panelA, panelB2), ncol = 1, nrow = 2) +
+plot_annotation(tag_levels = "A")
+dev.off()
+```
+
+# hepatic clearance
+
+```{r}
+tmp <- chem.physical_and_invitro.data[css_cast$CASRN, c("Human.Clint", "Human.Clint.pValue", "Human.Funbound.plasma")]
+css_cast[, (names(tmp)):=lapply(names(tmp), function(x) tmp[[x]])]
+css_cast[grepl(x = Human.Clint, pattern = ",", fixed = TRUE),
+         Clint_char:=tstrsplit(Human.Clint, split = ",", fixed = TRUE, keep = 1)]
+css_cast[, Clint:=as.numeric(Clint_char)]
+css_cast[!grepl(x = Human.Clint, pattern = ",", fixed = TRUE),
+         Clint:=as.numeric(Human.Clint)]
+css_cast[, Clint_p_correct:=Clint]
+css_cast[Human.Clint.pValue>=0.05, Clint_p_correct:=0]
+
+css_cast[, AED_pct_pos:=AED_pct>0]
+
+ggplot(css_cast[is.finite(AED_pct_pos)]) +
+  geom_histogram(aes(x = Clint_p_correct)) +
+  facet_grid(vars(AED_pct_pos),
+             scales = "free_y") +
+  scale_x_log10()
+
 ```
 
 ```{r}
-css_cast[, Percentile_label:=paste0(gsub(x = Percentile,
-                                         pattern = "P",
-                                         replacement = ""),
-                                    "th percentile Css")]
+css_cast[grepl(x = Human.Funbound.plasma, pattern = ",", fixed = TRUE),
+         Fup_char:=tstrsplit(Human.Funbound.plasma, split = ",", fixed = TRUE, keep = 1)]
+css_cast[, Fup:=as.numeric(Fup_char)]
+css_cast[!grepl(x = Human.Funbound.plasma, pattern = ",", fixed = TRUE),
+         Fup:=as.numeric(Human.Funbound.plasma)]
 
-css_cast[, Percentile_label:=factor(Percentile_label,
-                                    levels = c("5th percentile Css",
-                                               "50th percentile Css",
-                                               "95th percentile Css"))]
+ggplot(css_cast[is.finite(AED_pct_pos)]) +
+  geom_histogram(aes(x = Fup)) +
+  facet_grid(vars(AED_pct_pos),
+             scales = "free_y") +
+  scale_x_log10()
 ```
-
-```{r}
-css_cast[, Clint_plot:=Clint]
-css_cast[Clint==0, Clint_plot:=1e-5]
-
-css_cast[, Clhep_plot:=Cl_hep]
-css_cast[Cl_hep==0, Clhep_plot:=1e-7]
-```
-
-
 
 ```{r}
 ggplot(css_cast) +
-  geom_point(aes(x = Clint_plot,
-                 y=(1/ratio_new_old) - 1)) +
-  facet_wrap(vars(Percentile_label),
-             nrow = 3,
-             ncol = 1) +
-  ylab("Percent change in equiv. dose with new eGFR defaults") +
-  xlab("Clint, uL/min/10^6 hepatocytes") +
+  geom_hex(aes(y = Clint_p_correct,
+               x = AED_pct),
+           binwidth = c(0.005, 1)) +
+  scale_y_log10() +
+  scale_fill_viridis_c(trans = "log10") +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  annotation_logticks(sides = "l") +
+  facet_grid(vars(Percentile)) +
+  NULL
+```
+
+```{r}
+css_cast[, AED_pct_lt_15:=AED_pct<=-0.15]
+
+css_cast[, AED_pct_lt_10:=AED_pct<=-0.10]
+css_cast[AED_pct_lt_10 %in% TRUE, category:="AED% < -10%"]
+css_cast[AED_pct_lt_10 %in% FALSE, category:="AED% >= 10%"]
+
+ggplot(css_cast[is.finite(AED_pct_lt_10)]) + 
+  geom_histogram(aes(x = Clint_p_correct)) +
+  facet_wrap(vars(category), scales = "free_y", nrow = 2) +
+  #scale_x_log10(oob = squish_infinite) +
   scale_x_log10() +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
   annotation_logticks(sides = "b") +
+  xlab("Clint") +
   theme_bw() +
-  theme(axis.text = element_text(size= 12),
+  theme(strip.background = element_blank(),
         axis.title = element_text(size = 14),
-        strip.background = element_blank(),
-        legend.position = "top")
-```
+        axis.text = element_text(size=12),
+        strip.text = element_text(size = 14))
 
-OK, that's very interesting. Almost all of the lower mode (below -10% change) is coming from Clint = 0 chemicals.
-
-Let's try a hex plot?
-
-```{r}
-ggplot(css_cast) +
-  geom_hex(aes(x = Clint_plot,
-                 y=(1/ratio_new_old) - 1)) +
-  facet_wrap(vars(Percentile_label),
-             nrow = 2,
-             ncol = 2) +
-  scale_fill_viridis_c() +
-  ylab("Percent change in equiv. dose with new eGFR defaults") +
-  xlab("Clint, uL/min/10^6 hepatocytes") +
-  scale_x_log10(breaks = 10^c(-5, seq(-4,4, by = 2)),
-                labels = c(0, paste0("1e",
-                seq(-4,5, by = 2)
-                )
-                )
-                )+
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  annotation_logticks(sides = "b") +
-  theme_bw() +
-  theme(axis.text = element_text(size= 12),
-        axis.title = element_text(size = 14),
-        strip.background = element_blank(),
-        legend.position = "top")
-
-ggsave(paste0(out_path,
-              "hex_plot_css_changs_vs_Clint.png"),
+ggsave(paste0(out_path, "Clint_hist_by_AED_pct.pdf"),
        height = 7,
-       width = 7,
+       width = 5)
+
+ggsave(paste0(out_path, "Clint_hist_by_AED_pct.png"),
+       height = 7,
+       width = 5,
        units = "in")
 
-ggsave(paste0(out_path,
-              "hex_plot_css_changs_vs_Clint.pdf"),
-       height = 7, width = 7,
-       units = "in")
-```
-
-Clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important.
-
-Now, why there are chemicals where Clint is 0 and where the CKD-EPI revisions do not reduce equivalent dose, or even increase it?
-
-I suspect these are chemicals where the measured Clint of 0 actually has some uncertainty and may not be zero. 
-
-```{r}
-tmp <- unique(css_cast[Clint==0, .(CASRN, Clint)])
-foo <- as.data.table(chem.physical_and_invitro.data)
-footmp <- foo[tmp, on = c("CAS" = "CASRN")][, .(Compound, CAS, Clint, Human.Clint, Human.Clint.pValue, Human.Funbound.plasma)]
-head(footmp)
 
 ```
 
-Find the Clint upper bound by splitting the string for the ones with comma-separated distribution.s
 
-```{r}
-footmp[grepl(x = Human.Clint,
-             pattern = ","),
-       Clint.ub := tstrsplit(Human.Clint, split = ",", keep = 3) ]
-footmp[, Clint.ub:=as.numeric(Clint.ub)]
-```
 
-What are the range of those upper bounds?
+<!-- # Beyond this is some more exploratory analysis -->
 
-```{r}
-footmp[, range(Clint.ub, na.rm = TRUE)]
-```
+<!-- We see an increasingly bimodal distribution as the Css percentile increases. I'm guessing those are chemicals primarily cleared via urine, vs. primarily cleared via hepatic metabolism? Let's plot against CLint. -->
 
-```{r}
-ggplot(footmp) + geom_histogram(aes(x = Clint.ub)) + scale_x_log10()
-```
+<!-- ```{r} -->
+<!-- css_cast[, c("Clint", -->
+<!--              "Funbound.plasma", -->
+<!--              "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN), -->
+<!--                                                                                       suppress.messages = TRUE)[c("Clint", -->
+<!--                                                                                         "Funbound.plasma", -->
+<!--                                                                                         "Funbound.plasma.adjustment")]), -->
+<!--                                                                                         by = CASRN] -->
 
-Does that explain it? Shouldn't the effective population distribution of Clint center around the median anyway, though? And wouldn't the Css95 be on the low end of Clint for a given chemical, not the high end? 
+<!-- css_cast[, Cl_hep:=suppressWarnings(calc_hep_clearance(chem.cas = unique(CASRN), -->
+<!--                                                                         suppress.messages = TRUE)), -->
+<!--          by = CASRN] -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- css_cast[, Percentile_label:=paste0(gsub(x = Percentile, -->
+<!--                                          pattern = "P", -->
+<!--                                          replacement = ""), -->
+<!--                                     "th percentile Css")] -->
+
+<!-- css_cast[, Percentile_label:=factor(Percentile_label, -->
+<!--                                     levels = c("5th percentile Css", -->
+<!--                                                "50th percentile Css", -->
+<!--                                                "95th percentile Css"))] -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- css_cast[, Clint_plot:=Clint] -->
+<!-- css_cast[Clint==0, Clint_plot:=1e-5] -->
+
+<!-- css_cast[, Clhep_plot:=Cl_hep] -->
+<!-- css_cast[Cl_hep==0, Clhep_plot:=1e-7] -->
+<!-- ``` -->
+
+
+
+<!-- ```{r} -->
+<!-- ggplot(css_cast) + -->
+<!--   geom_point(aes(x = Clint_plot, -->
+<!--                  y=(1/ratio_new_old) - 1)) + -->
+<!--   facet_wrap(vars(Percentile_label), -->
+<!--              nrow = 3, -->
+<!--              ncol = 1) + -->
+<!--   ylab("Percent change in equiv. dose with new eGFR defaults") + -->
+<!--   xlab("Clint, uL/min/10^6 hepatocytes") + -->
+<!--   scale_x_log10() + -->
+<!--   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + -->
+<!--   annotation_logticks(sides = "b") + -->
+<!--   theme_bw() + -->
+<!--   theme(axis.text = element_text(size= 12), -->
+<!--         axis.title = element_text(size = 14), -->
+<!--         strip.background = element_blank(), -->
+<!--         legend.position = "top") -->
+<!-- ``` -->
+
+<!-- OK, that's very interesting. Almost all of the lower mode (below -10% change) is coming from Clint = 0 chemicals. -->
+
+<!-- Let's try a hex plot? -->
+
+<!-- ```{r} -->
+<!-- ggplot(css_cast) + -->
+<!--   geom_hex(aes(x = Clint_plot, -->
+<!--                  y=(1/ratio_new_old) - 1)) + -->
+<!--   facet_wrap(vars(Percentile_label), -->
+<!--              nrow = 2, -->
+<!--              ncol = 2) + -->
+<!--   scale_fill_viridis_c() + -->
+<!--   ylab("Percent change in equiv. dose with new eGFR defaults") + -->
+<!--   xlab("Clint, uL/min/10^6 hepatocytes") + -->
+<!--   scale_x_log10(breaks = 10^c(-5, seq(-4,4, by = 2)), -->
+<!--                 labels = c(0, paste0("1e", -->
+<!--                 seq(-4,5, by = 2) -->
+<!--                 ) -->
+<!--                 ) -->
+<!--                 )+ -->
+<!--   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + -->
+<!--   annotation_logticks(sides = "b") + -->
+<!--   theme_bw() + -->
+<!--   theme(axis.text = element_text(size= 12), -->
+<!--         axis.title = element_text(size = 14), -->
+<!--         strip.background = element_blank(), -->
+<!--         legend.position = "top") -->
+
+<!-- ggsave(paste0(out_path, -->
+<!--               "hex_plot_css_changs_vs_Clint.png"), -->
+<!--        height = 7, -->
+<!--        width = 7, -->
+<!--        units = "in") -->
+
+<!-- ggsave(paste0(out_path, -->
+<!--               "hex_plot_css_changs_vs_Clint.pdf"), -->
+<!--        height = 7, width = 7, -->
+<!--        units = "in") -->
+<!-- ``` -->
+
+<!-- Clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important. -->
+
+<!-- Now, why there are chemicals where Clint is 0 and where the CKD-EPI revisions do not reduce equivalent dose, or even increase it? -->
+
+<!-- I suspect these are chemicals where the measured Clint of 0 actually has some uncertainty and may not be zero.  -->
+
+<!-- ```{r} -->
+<!-- tmp <- unique(css_cast[Clint==0, .(CASRN, Clint)]) -->
+<!-- foo <- as.data.table(chem.physical_and_invitro.data) -->
+<!-- footmp <- foo[tmp, on = c("CAS" = "CASRN")][, .(Compound, CAS, Clint, Human.Clint, Human.Clint.pValue, Human.Funbound.plasma)] -->
+<!-- head(footmp) -->
+
+<!-- ``` -->
+
+<!-- Find the Clint upper bound by splitting the string for the ones with comma-separated distribution.s -->
+
+<!-- ```{r} -->
+<!-- footmp[grepl(x = Human.Clint, -->
+<!--              pattern = ","), -->
+<!--        Clint.ub := tstrsplit(Human.Clint, split = ",", keep = 3) ] -->
+<!-- footmp[, Clint.ub:=as.numeric(Clint.ub)] -->
+<!-- ``` -->
+
+<!-- What are the range of those upper bounds? -->
+
+<!-- ```{r} -->
+<!-- footmp[, range(Clint.ub, na.rm = TRUE)] -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- ggplot(footmp) + geom_histogram(aes(x = Clint.ub)) + scale_x_log10() -->
+<!-- ``` -->
+
+<!-- Does that explain it? Shouldn't the effective population distribution of Clint center around the median anyway, though? And wouldn't the Css95 be on the low end of Clint for a given chemical, not the high end?  -->
 
 
 
