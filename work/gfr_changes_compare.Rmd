@@ -745,6 +745,8 @@ ggsave(paste0(out_path, "change_in_equiv_dose.pdf"))
 
 What this is showing me is that, *in vitro* bioactivity and exposure levels being equal, the change in Css is going to reduce BERs by at maximum 30\%. There aren't very many chemicals where that reduction would make the difference between low risk and high risk. But, these results do show that the "race coefficient" in the way we calculate GFR could have resulted in mathematical bias in the way we estimate potential risk.
 
+# Beyond this is some more exploratory analysis
+
 We see an increasingly bimodal distribution as the Css percentile increases. I'm guessing those are chemicals primarily cleared via urine, vs. primarily cleared via hepatic metabolism? Let's plot against CLint.
 
 ```{r}
