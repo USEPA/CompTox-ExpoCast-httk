@@ -17,7 +17,10 @@
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
 #' The compartments used in this model are the gutlumen, gut, liver, kidneys,
-#' veins, arteries, lungs, skin, exposed skin, media, and the rest of the body.
+#' veins, arteries, lungs, unexposed stratum corneum and viable epidermis, exposed 
+#' stratum corneum and viable epidermis, media, and the rest of the body. When model.type 
+#' = "dermal_1subcomp", the stratum corneum and viable epidermis are replaced with 
+#' one compartment: skin.
 #' 
 #' The extra compartments include the amounts or concentrations metabolized by
 #' the liver and excreted by the kidneys through the tubules.
@@ -25,7 +28,7 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data(volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
@@ -39,7 +42,7 @@
 #' or "dermal_1subcomp" for the model with 1 compartment for the skin.
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
-#' @param parameters Chemical parameters from parameterize_pbtk function,
+#' @param parameters Chemical parameters from parameterize_dermal_pbtk function,
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
 #' @param tsteps The number time steps per hour.
@@ -83,22 +86,20 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh and Robert Pearce
+#' @author Annabel Meade, John Wambaugh, and Robert Pearce
 #' @keywords Solve
 #' @examples
 #' 
 #' Vmedia <- c(.1,.2,.3)
 #' time <- c(0,.5,3)
 #' concentration <- c(2,0,3)
-#' dosing.matrix <- cbind(time,concentration,Vmedia)
-#' out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.matrix=dosing.matrix,plots=T)
+#' dermal.dosing <- cbind(time,concentration,Vmedia)
+#' out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 #' 
 #' parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
-#' parameters$Fskinexposed <- 0.25
-#' parameters$Kp <- 2
-#' parameters$Fdermabs <- 0.5
+#' parameters$Fskin_exposed <- 0.25
 #' parameters$Vmedia <- 1
-#' out <- solve_dermal_pbtk(parameters=parameters,concentration=100,plots=T)
+#' out <- solve_dermal_pbtk(parameters=parameters,plots=T)
 #' 
 #' @export solve_dermal_pbtk
 #' @useDynLib httk
@@ -107,6 +108,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     chem.cas = NULL, #solve_model
                     dtxsid = NULL,#solve_model
                     model.type = "dermal", #can also be "dermal_1subcomp"
+                    method.permeability = "Ficks-Law",
                     times=NULL, #solve_model
                     parameters=NULL, #solve_model
                     days=10, #solve_model
@@ -131,6 +133,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     skin.pH=7, #pars
                     vmax.km=F, #pars
                     height=175, #pars
+                    Kmedia2water=NULL, #pars
                     route = NULL, #DERMAL
                     Vmedia = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
@@ -192,6 +195,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       input.units <- "umol";
       dosing.matrix <- dosing.matrix[-1,];
     }
+    dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
     
     #Reset forcing function for Vmedia
     forcings = cbind(times = dose.times, forcing_values = dose.Vmedia)
@@ -232,6 +236,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     parameterize.arg.list = list(
       model.type = model.type,
+      method.permeability = method.permeability,
       default.to.human = default.to.human,
       regression = regression,
       restrictive.clearance = restrictive.clearance,
@@ -239,7 +244,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       skin_depth = skin_depth,
       skin.pH = skin.pH,
       vmax.km = vmax.km,
-      height = height
+      height = height,
+      Kmedia2water = Kmedia2water
     ),
     ...)
   

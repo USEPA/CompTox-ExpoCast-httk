@@ -1,7 +1,7 @@
 #' Parameterize_dermal_PBTK
 #' 
-#' This function initializes the parameters needed in the functions solve_pbtk,
-#' calc_css, and others using the multiple compartment model. 
+#' This function initializes the parameters needed in the functions solve_dermal_pbtk
+#' by calling solve_pbtk and adding additional parameters. 
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
@@ -42,6 +42,8 @@
 #' Vmax and Km in parameters instead of Clmetabolismc and
 #' million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.
 #' @param height Height in cm, used in calculating totalSA.
+#' @param Kmedia2water Partition coefficient for the media (sometimes called the 
+#' vehicle) carrying the chemical to water. Default is NULL, which assumes the media is olive oil.
 #' @return
 #' 
 #' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -102,13 +104,27 @@
 #' \item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
 #' units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{units same as dosing
 #' concentration. CURRENTLY NOT IN USE.} 
-#' @author John Wambaugh and Robert Pearce
+#' @author Annabel Meade, John Wambaugh, and Robert Pearce
 #' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' 
+#' Potts, R. O., Guy, R. H. (1992). Predicting skin permeability. Pharmaceutical 
+#' research 9(5), 663-9, 10.1002/ajim.4700230505.
+#' 
+#' Sawyer, M. E., Evans, M. V., Wilson, C. A., Beesley, L. J., Leon, L. S., Eklund, 
+#' C. R., Croom, E. L., Pegram, R. A. (2016). Development of a human physiologically 
+#' based pharmacokinetic (PBPK) model for dermal permeability for lindane. Toxicology
+#' Letters 245, 106-9, 10.1016/j.toxlet.2016.01.008
+#' 
 #' @keywords Parameter
 #' @examples
+#' 
+#' params <- parameterize_dermal_pbtk(chem.cas="80-05-7")
+#' 
+#' params <- parameterize_dermal_pbtk(chem.name="bisphenola", model.type="dermal_1subcomp", 
+#' method.permeability="Potts-Guy")
 #' 
 #' 
 #'  
@@ -134,6 +150,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               skin.pH=7,
                               vmax.km=F,
                               height = 175,
+                              Kmedia2water = NULL,
                               ...) 
 {
   physiology.data <- physiology.data
@@ -329,7 +346,14 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     
     # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ve = viable epidermis and dermis layers)
     Ksc2w <- 0.9 * schmitt.params$Pow^0.69 #Equation 2, Chen, 2015 (0.9 = rho_lipid/rho_water = (0.9 g/cm^3)/(1 g/cm^3))
-    Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
+    if (is.numeric(Kmedia2water)){
+      Km2w <- Kmedia2water
+    } else if (Kmedia2water=="octanol"){
+      Kmedia2water = schmitt.params$Pow
+    } else {
+      Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
+      warning("Since parameter Kmedia2water is null, media containing chemical is assumed to be olive oil.")
+    }
     Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
       ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
       fnon <- 1 - ionization$fraction_charged      
@@ -344,7 +368,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
       Psc2ve <- Kve2sc * Dve / (skin_depth*Fskin_depth_ve) #cm/h
       
       # Permeability coefficient from m to sc: Ellison dataset in Marina Evans, et al. (not yet published)
-      Pm2sc <- -0.0051 + 1.4 * Pve2sc #R = 0.83, p=7.2e-14
+      Pm2sc <- 1.4 * Psc2ve #R = 0.83, p=7.2e-14
       
     # Permeability coefficient from m to ve
     if (model.type=="dermal_1subcomp") {

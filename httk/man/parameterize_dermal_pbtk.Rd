@@ -24,6 +24,7 @@ parameterize_dermal_pbtk(
   skin.pH = 7,
   vmax.km = F,
   height = 175,
+  Kmedia2water = NULL,
   ...
 )
 }
@@ -83,6 +84,9 @@ Vmax and Km in parameters instead of Clmetabolismc and
 million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.}
 
 \item{height}{Height in cm, used in calculating totalSA.}
+
+\item{Kmedia2water}{Partition coefficient for the media (sometimes called the 
+vehicle) carrying the chemical to water. Default is NULL, which assumes the media is olive oil.}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -145,10 +149,15 @@ units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{un
 concentration. CURRENTLY NOT IN USE.}
 }
 \description{
-This function initializes the parameters needed in the functions solve_pbtk,
-calc_css, and others using the multiple compartment model.
+This function initializes the parameters needed in the functions solve_dermal_pbtk
+by calling solve_pbtk and adding additional parameters.
 }
 \examples{
+
+params <- parameterize_dermal_pbtk(chem.cas="80-05-7")
+
+params <- parameterize_dermal_pbtk(chem.name="bisphenola", model.type="dermal_1subcomp", 
+method.permeability="Potts-Guy")
 
 
  
@@ -159,8 +168,16 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+
+Potts, R. O., Guy, R. H. (1992). Predicting skin permeability. Pharmaceutical 
+research 9(5), 663-9, 10.1002/ajim.4700230505.
+
+Sawyer, M. E., Evans, M. V., Wilson, C. A., Beesley, L. J., Leon, L. S., Eklund, 
+C. R., Croom, E. L., Pegram, R. A. (2016). Development of a human physiologically 
+based pharmacokinetic (PBPK) model for dermal permeability for lindane. Toxicology
+Letters 245, 106-9, 10.1016/j.toxlet.2016.01.008
 }
 \author{
-John Wambaugh and Robert Pearce
+Annabel Meade, John Wambaugh, and Robert Pearce
 }
 \keyword{Parameter}

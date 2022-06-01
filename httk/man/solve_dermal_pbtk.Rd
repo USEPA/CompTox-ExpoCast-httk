@@ -9,6 +9,7 @@ solve_dermal_pbtk(
   chem.cas = NULL,
   dtxsid = NULL,
   model.type = "dermal",
+  method.permeability = "Ficks-Law",
   times = NULL,
   parameters = NULL,
   days = 10,
@@ -32,6 +33,7 @@ solve_dermal_pbtk(
   skin.pH = 7,
   vmax.km = F,
   height = 175,
+  Kmedia2water = NULL,
   route = NULL,
   Vmedia = NULL,
   initial.dose = NULL,
@@ -58,7 +60,7 @@ or "dermal_1subcomp" for the model with 1 compartment for the skin.}
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk function,
+\item{parameters}{Chemical parameters from parameterize_dermal_pbtk function,
 overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
@@ -147,7 +149,10 @@ in days.
 Default NULL value for doses.per.day solves for a single dose.
 
 The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, skin, exposed skin, media, and the rest of the body.
+veins, arteries, lungs, unexposed stratum corneum and viable epidermis, exposed 
+stratum corneum and viable epidermis, media, and the rest of the body. When model.type 
+= "dermal_1subcomp", the stratum corneum and viable epidermis are replaced with 
+one compartment: skin.
 
 The extra compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.
@@ -155,7 +160,7 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
@@ -163,18 +168,16 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 Vmedia <- c(.1,.2,.3)
 time <- c(0,.5,3)
 concentration <- c(2,0,3)
-dosing.matrix <- cbind(time,concentration,Vmedia)
-out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.matrix=dosing.matrix,plots=T)
+dermal.dosing <- cbind(time,concentration,Vmedia)
+out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
-parameters$Fskinexposed <- 0.25
-parameters$Kp <- 2
-parameters$Fdermabs <- 0.5
+parameters$Fskin_exposed <- 0.25
 parameters$Vmedia <- 1
-out <- solve_dermal_pbtk(parameters=parameters,concentration=100,plots=T)
+out <- solve_dermal_pbtk(parameters=parameters,plots=T)
 
 }
 \author{
-John Wambaugh and Robert Pearce
+Annabel Meade, John Wambaugh, and Robert Pearce
 }
 \keyword{Solve}
