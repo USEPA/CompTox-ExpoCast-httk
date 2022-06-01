@@ -86,6 +86,55 @@
 #'
 #' print(c.vs.t)
 #' 
+#' \donttest{
+#' 
+#'    # load related packages
+#'    library("ggplot2")
+#'    # get the chems with 'pbtk' models
+#'    cas.id.list <- get_cheminfo(model = 'pbtk')
+#'    # allocate an empty data.frame for the generating plots
+#'    css.info.DF <- data.frame(row.names = cas.id.list)
+#'    # run the calc_css loop for CAS ID's relevant for the 'pbtk' model
+#'    #   - this for loop takes roughly 11-15 minutes to complete execution
+#'    #   - the runtime can be evaluated using other R timing packages
+#'    for(this.cas in cas.id.list){
+#'      css.info <- suppressWarnings(
+#'        calc_css(
+#'          chem.cas = this.cas,
+#'          doses.per.day = 1,
+#'          suppress.messages = TRUE
+#'        )
+#'      )
+#'      css.info.DF[this.cas,'days'] <- css.info[["the.day"]]
+#'      css.info.DF[this.cas,'avg']  <- css.info[["avg"]]
+#'      css.info.DF[this.cas,'max']  <- css.info[["max"]]
+#'    }
+#'    
+#'    # set up the histogram plot
+#'    myhist <- ggplot(data = css.info.DF,aes(x = days))+
+#'              geom_histogram(fill = 'blue',binwidth = 1/6)+
+#'              scale_x_log10()+
+#'              ylab("Number of Chemicals")+
+#'              xlab("Days")+
+#'              theme(axis.text = element_text(size = 16),
+#'                    axis.title = element_text(size = 16))
+#'    # print the histogram plot
+#'    print(myhist)
+#'    # set up the scatter plot
+#'    avg.vs.max <- ggplot(css.info.DF, aes(avg, max)) +
+#'                  geom_point() +
+#'                  geom_abline() +
+#'                  scale_x_log10() +
+#'                  scale_y_log10() +
+#'                  xlab("Average Concentration at Steady State (uM)") +
+#'                  ylab("Max Concentration at Steady State (uM)") +
+#'                  theme(axis.text = element_text(size = 16),
+#'                        axis.title = element_text(size = 16))
+#'    # print the scatter plot
+#'    print(avg.vs.max)
+#'    
+#' }
+#' 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,
                     chem.cas=NULL, 
