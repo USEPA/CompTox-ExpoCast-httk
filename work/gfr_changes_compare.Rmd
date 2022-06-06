@@ -823,6 +823,7 @@ patchwork::wrap_plots(list(panelA, panelB2), ncol = 1, nrow = 2) +
 plot_annotation(tag_levels = "A")
 dev.off()
 
+
 png(paste0(out_path,
            "eGFR_results_main_ecdf.png"),
     res = 300,
@@ -893,7 +894,6 @@ css_cast[AED_pct_lt_10 %in% FALSE, category:="AED% >= 10%"]
 ggplot(css_cast[is.finite(AED_pct_lt_10)]) + 
   geom_histogram(aes(x = Clint_p_correct)) +
   facet_wrap(vars(category), scales = "free_y", nrow = 2) +
-  #scale_x_log10(oob = squish_infinite) +
   scale_x_log10() +
   annotation_logticks(sides = "b") +
   xlab("Clint") +
