@@ -27,6 +27,21 @@ an upper 95th percentile (x.u95) that is above x.LOD. We make the assumption
 that values above x.u95 are uniformly distributed between x.u95 and x.u95 +
 (x.u95 - x.LOD)
 }
+\examples{
+Fup.95 <- 0.02
+N <- 1000
+
+set.seed(1235)
+Fup.vec <- rmed0non0u95(n=N, x.u95=Fup.95)
+quantile(Fup.vec,c(0.5,0.975))
+
+quantile(rmed0non0u95(200,x.u95=0.05,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
+hist(rmed0non0u95(1000,x.u95=0.05,x.min=10^-4,x.LOD=0.01))
+
+quantile(rmed0non0u95(200,x.u95=0.005,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
+hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
+
+}
 \references{
 Breen et al., in preparation
 }
