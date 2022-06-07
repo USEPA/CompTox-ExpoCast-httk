@@ -13,7 +13,15 @@ if (getRversion() >= "2.15.1") {
 
 #' Generate a virtual population for PBTK
 #'
-#' Generate a virtual population where each virtual indivdiual
+#' Generate a virtual population characterized by demographic, anthropometric, and physiological parameters relevant to PBTK.
+#' 
+#' Demographic and anthropometric (body measures) variables, along with serum creatinine and hematocrit,
+#' are generated from survey data from the Centers for Disease Control's National Health and Nutrition Examination Survey (NHANES).
+#' Those data are stored in the object \code{nhanes_mec_svy} (a \code{survey.design} object, see package \code{survey}).
+#' With \code{method = "d"}, these variables will be sampled with replacement directly from NHANES data. Each NHANES respondent's likelihood of being sampled is given by their sample weight.
+#' With \code{method = "v"}, these variables will be sampled from distributions fitted to NHANES data.
+#' Tissue masses and flows are generated based on demographic, body measures, and serum creatinine values, using regression equations from the literature and/or allometric scaling based on height. 
+#' Extensive details about how each of these parameters are generated are available in the supplemental material of Ring et al. (2017) (see References for full citation).
 #' 
 #' 
 #' @section Demographic variables:
