@@ -22,7 +22,7 @@
 #' 
 #' @references Breen et al., in preparation
 #'
-#' @example
+#' @examples
 #' Fup.95 <- 0.02
 #' N <- 1000
 #'
