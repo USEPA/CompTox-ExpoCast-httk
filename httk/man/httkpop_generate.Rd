@@ -73,19 +73,38 @@ identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
 }
 \value{
 A data.table where each row represents an individual, and each column
-  represents a demographic, anthropometric, or physiological parameter. The
-  following table gives details about the variables in the output data.table.
+  represents a demographic, anthropometric, or physiological parameter. See "Details" for details of the parameters returned and their units.
+}
+\description{
+Generate a virtual population
+}
+\section{Demographic variables}{
+
   \tabular{rrr}{
   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
   \code{seqn} \tab NHANES unique identifier (only included if \code{method = "direct resampling"}) \tab NA \cr
   \code{gender} \tab Sex: "Male" or "Female" \tab NA \cr
   \code{reth} \tab Race/ethnicity: "Non-Hispanic Black", "Non-Hispanic white", "Mexican American", "Other Hispanic", or "Other". \tab NA \cr
   \code{age_years} \tab Age (0-79 years) \tab years \cr
-  \code{age_months} \tab Age (0-959 months) \tab months \cr
+  \code{age_months} \tab Age (0-959 months) \tab months
+  }
+}
+
+\section{Body measures and laboratory measurements}{
+
+  \tabular{rrr}{
+   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
   \code{height} \tab Height \tab cm \cr
   \code{weight} \tab Body weight \tab kg \cr
   \code{serum_creat} \tab Serum creatinine \tab mg/dL \cr
-  \code{hematocrit} \tab Hematocrit (percentage by volume of red blood cells in blood) \tab \% \cr
+  \code{hematocrit} \tab Hematocrit (percentage by volume of red blood cells in blood) \tab \% 
+  }
+}
+
+\section{Tissue masses}{
+
+  \tabular{rrr}{
+   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
   \code{Blood_mass} \tab Mass of blood \tab kg \cr
   \code{Brain_mass} \tab Mass of brain \tab kg \cr
   \code{Gonads_mass} \tab Mass of gonads \tab kg \cr
@@ -103,7 +122,14 @@ A data.table where each row represents an individual, and each column
   \code{Stomach_mass} \tab Mass of stomach tissue \tab kg \cr
   \code{Other_mass} \tab Mass of GI tract contents (1.4\% of body weight) and tissues not otherwise enumerated (3.3\% of body weight). \tab kg \cr
   \code{org_mass_sum} \tab Sum of the above tissue masses.  A check to ensure this is less than body weight. \tab kg \cr
-  \code{Adipose_mass} \tab Mass of adipose tissue. Assigned as \code{weight - org_mass_sum}. \tab kg \cr
+  \code{Adipose_mass} \tab Mass of adipose tissue. Assigned as \code{weight - org_mass_sum}. \tab kg
+  }
+}
+
+\section{Tissue flows}{
+
+\tabular{rrr}{
+ \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
   \code{Adipose_flow} \tab Blood flow to adipose tissue \tab L/h \cr
   \code{Brain_flow} \tab Blood flow to brain tissue \tab L/h \cr
   \code{CO} \tab Cardiac output \tab L/h \cr
@@ -120,7 +146,14 @@ A data.table where each row represents an individual, and each column
   \code{Small_intestine_flow} \tab Blood flow to small intestine \tab L/h \cr
   \code{Spleen_flow} \tab Blood flow to spleen \tab L/h \cr
   \code{Stomach_flow} \tab Blood flow to stomach \tab L/h \cr
-  \code{org_flow_check} \tab Sum of blood flows as a fraction of cardiac output (CO). A check to make sure this is less than 1. \tab Unitless fraction \cr
+  \code{org_flow_check} \tab Sum of blood flows as a fraction of cardiac output (CO). A check to make sure this is less than 1. \tab Unitless fraction
+  }
+}
+
+\section{Adjusted variables}{
+
+\tabular{rrr}{
+ \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
   \code{weight_adj} \tab Adjusted body weight: Sum of all tissue masses. \tab kg \cr
   \code{BSA_adj} \tab Adjusted body surface area, based on \code{height} and \code{weight_adj}. \tab cm^2 \cr
   \code{million.cells.per.gliver} \tab Hepatocellularity \tab 1e6 cells/g liver \cr
@@ -130,9 +163,7 @@ A data.table where each row represents an individual, and each column
   \code{gfr_class} \tab Kidney function category based on GFR: "Normal" (GFR >=60 mL/min/1.73 m^2), "Kidney Disease" (15 <= GFR <= 60), or "Kidney Failure" (GFR < 15). \tab Unitless category
   }
 }
-\description{
-Generate a virtual population
-}
+
 \examples{
 
 \donttest{
