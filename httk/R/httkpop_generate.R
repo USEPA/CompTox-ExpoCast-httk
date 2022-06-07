@@ -11,10 +11,84 @@ if (getRversion() >= "2.15.1") {
 
 
 
-#' Generate a virtual population
+#' Generate a virtual population for PBTK
 #'
-#' Generate a virtual population
-#'
+#' Generate a virtual population where each virtual indivdiual
+#' 
+#' 
+#' @section Demographic variables:
+#'   \tabular{rrr}{
+#'   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+#'   \code{seqn} \tab NHANES unique identifier (only included if \code{method = "direct resampling"}) \tab NA \cr
+#'   \code{gender} \tab Sex: "Male" or "Female" \tab NA \cr
+#'   \code{reth} \tab Race/ethnicity: "Non-Hispanic Black", "Non-Hispanic white", "Mexican American", "Other Hispanic", or "Other". \tab NA \cr
+#'   \code{age_years} \tab Age (0-79 years) \tab years \cr
+#'   \code{age_months} \tab Age (0-959 months) \tab months
+#'   }
+#' @section Body measures and laboratory measurements:
+#'   \tabular{rrr}{
+#'    \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+#'   \code{height} \tab Height \tab cm \cr
+#'   \code{weight} \tab Body weight \tab kg \cr
+#'   \code{serum_creat} \tab Serum creatinine \tab mg/dL \cr
+#'   \code{hematocrit} \tab Hematocrit (percentage by volume of red blood cells in blood) \tab \% 
+#'   }
+#' @section Tissue masses:
+#'   \tabular{rrr}{
+#'    \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+#'   \code{Blood_mass} \tab Mass of blood \tab kg \cr
+#'   \code{Brain_mass} \tab Mass of brain \tab kg \cr
+#'   \code{Gonads_mass} \tab Mass of gonads \tab kg \cr
+#'   \code{Heart_mass} \tab Mass of heart \tab kg \cr
+#'   \code{Kidneys_mass} \tab Mass of kidneys \tab kg \cr
+#'   \code{Large_intestine_mass} \tab Mass of large intestine \tab kg \cr
+#'   \code{Liver_mass} \tab Mass of liver \tab kg \cr
+#'   \code{Lung_mass} \tab Mass of lungs \tab kg \cr
+#'   \code{Muscle_mass} \tab Mass of skeletal muscle \tab kg \cr
+#'   \code{Pancreas_mass} \tab Mass of pancreas \tab kg \cr
+#'   \code{Skeleton_mass} \tab Mass of skeleton (including bone, red and yellow marrow, cartilage, periarticular tissue) \tab kg \cr
+#'   \code{Skin_mass} \tab Mass of skin \tab kg \cr
+#'   \code{Small_intestine_mass} \tab Mass of small intestine \tab kg \cr
+#'   \code{Spleen_mass} \tab Mass of spleen \tab kg \cr
+#'   \code{Stomach_mass} \tab Mass of stomach tissue \tab kg \cr
+#'   \code{Other_mass} \tab Mass of GI tract contents (1.4\% of body weight) and tissues not otherwise enumerated (3.3\% of body weight). \tab kg \cr
+#'   \code{org_mass_sum} \tab Sum of the above tissue masses.  A check to ensure this is less than body weight. \tab kg \cr
+#'   \code{Adipose_mass} \tab Mass of adipose tissue. Assigned as \code{weight - org_mass_sum}. \tab kg
+#'   }
+#'   
+#' @section Tissue flows:
+#' \tabular{rrr}{
+#'  \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+#'   \code{Adipose_flow} \tab Blood flow to adipose tissue \tab L/h \cr
+#'   \code{Brain_flow} \tab Blood flow to brain tissue \tab L/h \cr
+#'   \code{CO} \tab Cardiac output \tab L/h \cr
+#'   \code{Gonads_flow} \tab Blood flow to gonads tissue \tab L/h \cr
+#'   \code{Heart_flow} \tab Blood flow to heart tissue \tab L/h \cr
+#'   \code{Kidneys_flow} \tab Blood flow to kidneys tissue (not for glomerular filtration!) \tab L/h \cr
+#'   \code{Large_intestine_flow} \tab Blood flow to large intestine tissue \tab L/h \cr
+#'   \code{Liver_flow} \tab Blood flow to liver tissue \tab L/h \cr
+#'   \code{Lung_flow} \tab Blood flow to lung tissue \tab L/h \cr
+#'   \code{Muscle_flow} \tab Blood flow to skeletal muscle tissue \tab L/h \cr
+#'   \code{Pancreas_flow} \tab Blood flow to pancreas tissue \tab L/h \cr
+#'   \code{Skeleton_flow} \tab Blood flow to skeleton \tab L/h \cr
+#'   \code{Skin_flow} \tab Blood flow to skin \tab L/h \cr
+#'   \code{Small_intestine_flow} \tab Blood flow to small intestine \tab L/h \cr
+#'   \code{Spleen_flow} \tab Blood flow to spleen \tab L/h \cr
+#'   \code{Stomach_flow} \tab Blood flow to stomach \tab L/h \cr
+#'   \code{org_flow_check} \tab Sum of blood flows as a fraction of cardiac output (CO). A check to make sure this is less than 1. \tab Unitless fraction
+#'   }
+#'   
+#' @section Adjusted variables:
+#' \tabular{rrr}{
+#'  \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+#'   \code{weight_adj} \tab Adjusted body weight: Sum of all tissue masses. \tab kg \cr
+#'   \code{BSA_adj} \tab Adjusted body surface area, based on \code{height} and \code{weight_adj}. \tab cm^2 \cr
+#'   \code{million.cells.per.gliver} \tab Hepatocellularity \tab 1e6 cells/g liver \cr
+#'   \code{gfr_est} \tab Glomerular filtration rate (GFR) estimated using either the CKD-EPI equation (for adults) or a body-surface-area-based equation (for children). \tab mL/min/1.73 m^2 body surface area \cr
+#'   \code{bmi_adj} \tab Body mass index (BMI), adjusted to match \code{weight_adj} and \code{height}. \tab kg/m^2 \cr
+#'   \code{weight_class} \tab Weight category based on \code{bmi_adj}: "Underweight" (BMI < 18.5), "Normal" (18.5 < BMI < 24.9), "Overweight" (25.0 < BMI < 29.9), or "Obese" (BMI >= 30) \tab Unitless category \cr
+#'   \code{gfr_class} \tab Kidney function category based on GFR: "Normal" (GFR >=60 mL/min/1.73 m^2), "Kidney Disease" (15 <= GFR <= 60), or "Kidney Failure" (GFR < 15). \tab Unitless category
+#'   }
 #'
 #' @param method The population-generation method to use. Either "virtual
 #'   individuals" or "direct resampling." Short names may be used: "d" or "dr"
@@ -59,62 +133,7 @@ if (getRversion() >= "2.15.1") {
 #'   published (with a coefficient changing predicted GFR for individuals
 #'   identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.
 #' @return A data.table where each row represents an individual, and each column
-#'   represents a demographic, anthropometric, or physiological parameter. The
-#'   following table gives details about the variables in the output data.table.
-#'   \tabular{rrr}{
-#'   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
-#'   \code{seqn} \tab NHANES unique identifier (only included if \code{method = "direct resampling"}) \tab NA \cr
-#'   \code{gender} \tab Sex: "Male" or "Female" \tab NA \cr
-#'   \code{reth} \tab Race/ethnicity: "Non-Hispanic Black", "Non-Hispanic white", "Mexican American", "Other Hispanic", or "Other". \tab NA \cr
-#'   \code{age_years} \tab Age (0-79 years) \tab years \cr
-#'   \code{age_months} \tab Age (0-959 months) \tab months \cr
-#'   \code{height} \tab Height \tab cm \cr
-#'   \code{weight} \tab Body weight \tab kg \cr
-#'   \code{serum_creat} \tab Serum creatinine \tab mg/dL \cr
-#'   \code{hematocrit} \tab Hematocrit (percentage by volume of red blood cells in blood) \tab \% \cr
-#'   \code{Blood_mass} \tab Mass of blood \tab kg \cr
-#'   \code{Brain_mass} \tab Mass of brain \tab kg \cr
-#'   \code{Gonads_mass} \tab Mass of gonads \tab kg \cr
-#'   \code{Heart_mass} \tab Mass of heart \tab kg \cr
-#'   \code{Kidneys_mass} \tab Mass of kidneys \tab kg \cr
-#'   \code{Large_intestine_mass} \tab Mass of large intestine \tab kg \cr
-#'   \code{Liver_mass} \tab Mass of liver \tab kg \cr
-#'   \code{Lung_mass} \tab Mass of lungs \tab kg \cr
-#'   \code{Muscle_mass} \tab Mass of skeletal muscle \tab kg \cr
-#'   \code{Pancreas_mass} \tab Mass of pancreas \tab kg \cr
-#'   \code{Skeleton_mass} \tab Mass of skeleton (including bone, red and yellow marrow, cartilage, periarticular tissue) \tab kg \cr
-#'   \code{Skin_mass} \tab Mass of skin \tab kg \cr
-#'   \code{Small_intestine_mass} \tab Mass of small intestine \tab kg \cr
-#'   \code{Spleen_mass} \tab Mass of spleen \tab kg \cr
-#'   \code{Stomach_mass} \tab Mass of stomach tissue \tab kg \cr
-#'   \code{Other_mass} \tab Mass of GI tract contents (1.4\% of body weight) and tissues not otherwise enumerated (3.3\% of body weight). \tab kg \cr
-#'   \code{org_mass_sum} \tab Sum of the above tissue masses.  A check to ensure this is less than body weight. \tab kg \cr
-#'   \code{Adipose_mass} \tab Mass of adipose tissue. Assigned as \code{weight - org_mass_sum}. \tab kg \cr
-#'   \code{Adipose_flow} \tab Blood flow to adipose tissue \tab L/h \cr
-#'   \code{Brain_flow} \tab Blood flow to brain tissue \tab L/h \cr
-#'   \code{CO} \tab Cardiac output \tab L/h \cr
-#'   \code{Gonads_flow} \tab Blood flow to gonads tissue \tab L/h \cr
-#'   \code{Heart_flow} \tab Blood flow to heart tissue \tab L/h \cr
-#'   \code{Kidneys_flow} \tab Blood flow to kidneys tissue (not for glomerular filtration!) \tab L/h \cr
-#'   \code{Large_intestine_flow} \tab Blood flow to large intestine tissue \tab L/h \cr
-#'   \code{Liver_flow} \tab Blood flow to liver tissue \tab L/h \cr
-#'   \code{Lung_flow} \tab Blood flow to lung tissue \tab L/h \cr
-#'   \code{Muscle_flow} \tab Blood flow to skeletal muscle tissue \tab L/h \cr
-#'   \code{Pancreas_flow} \tab Blood flow to pancreas tissue \tab L/h \cr
-#'   \code{Skeleton_flow} \tab Blood flow to skeleton \tab L/h \cr
-#'   \code{Skin_flow} \tab Blood flow to skin \tab L/h \cr
-#'   \code{Small_intestine_flow} \tab Blood flow to small intestine \tab L/h \cr
-#'   \code{Spleen_flow} \tab Blood flow to spleen \tab L/h \cr
-#'   \code{Stomach_flow} \tab Blood flow to stomach \tab L/h \cr
-#'   \code{org_flow_check} \tab Sum of blood flows as a fraction of cardiac output (CO). A check to make sure this is less than 1. \tab Unitless fraction \cr
-#'   \code{weight_adj} \tab Adjusted body weight: Sum of all tissue masses. \tab kg \cr
-#'   \code{BSA_adj} \tab Adjusted body surface area, based on \code{height} and \code{weight_adj}. \tab cm^2 \cr
-#'   \code{million.cells.per.gliver} \tab Hepatocellularity \tab 1e6 cells/g liver \cr
-#'   \code{gfr_est} \tab Glomerular filtration rate (GFR) estimated using either the CKD-EPI equation (for adults) or a body-surface-area-based equation (for children). \tab mL/min/1.73 m^2 body surface area \cr
-#'   \code{bmi_adj} \tab Body mass index (BMI), adjusted to match \code{weight_adj} and \code{height}. \tab kg/m^2 \cr
-#'   \code{weight_class} \tab Weight category based on \code{bmi_adj}: "Underweight" (BMI < 18.5), "Normal" (18.5 < BMI < 24.9), "Overweight" (25.0 < BMI < 29.9), or "Obese" (BMI >= 30) \tab Unitless category \cr
-#'   \code{gfr_class} \tab Kidney function category based on GFR: "Normal" (GFR >=60 mL/min/1.73 m^2), "Kidney Disease" (15 <= GFR <= 60), or "Kidney Failure" (GFR < 15). \tab Unitless category
-#'   }
+#'   represents a demographic, anthropometric, or physiological parameter. See "Details" for details of the parameters returned and their units.
 #'
 #'
 #' @author Caroline Ring
