@@ -141,7 +141,8 @@ if (getRversion() >= "2.15.1") {
 #'   published (with a coefficient changing predicted GFR for individuals
 #'   identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.
 #' @return A data.table where each row represents an individual, and each column
-#'   represents a demographic, anthropometric, or physiological parameter. See "Details" for details of the parameters returned and their units.
+#'   represents a demographic, anthropometric, or physiological parameter.
+#'   Details of the parameters returned and their units are in the following tables.
 #'
 #'
 #' @author Caroline Ring
