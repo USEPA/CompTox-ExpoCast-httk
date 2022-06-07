@@ -73,7 +73,8 @@ identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
 }
 \value{
 A data.table where each row represents an individual, and each column
-  represents a demographic, anthropometric, or physiological parameter. See "Details" for details of the parameters returned and their units.
+  represents a demographic, anthropometric, or physiological parameter.
+  Details of the parameters returned and their units are in the following tables.
 }
 \description{
 Generate a virtual population characterized by demographic, anthropometric, and physiological parameters relevant to PBTK.
