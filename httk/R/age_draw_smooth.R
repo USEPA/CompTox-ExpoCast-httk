@@ -31,18 +31,21 @@ age_draw_smooth <- function(g, r, nsamp, agelim_months){
   indiv_ages_m <- vector()
   indiv_ages_y <- vector()
   while(length(indiv_ages_m)<nsamp){
+    smooth_x <- DT_age[g==g & r==r,
+                           x]
+    smooth_y <- DT_age[g==g & r==r,
+                       y]
+    age_dist <- approx(smooth_x,
+                       smooth_y,
+                       xout=0:959,
+                       rule=2,
+                       method='linear')$y
+    
       tmp.m <- sample(x=0:959,
                          size=nsamp,
                          replace=TRUE,
-                         prob=approx(age_dist_smooth[gender==g &
-                                                       reth==r,
-                                                     smth[[1]]$x],
-                                     age_dist_smooth[gender==g &
-                                                       reth==r,
-                                                     smth[[1]]$y],
-                                     xout=0:959,
-                                     rule=2,
-                                     method='linear')$y)
+                         prob=age_dist)
+      
     indiv_ages_m <- c(indiv_ages_m, 
                     tmp.m[tmp.m>=min(agelim_months) &
                             tmp.m<max(agelim_months)])
