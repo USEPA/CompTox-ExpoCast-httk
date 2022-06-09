@@ -17,7 +17,10 @@
 #'International 106 (2017): 105-118
 #' @import stats
 #' @export gen_serum_creatinine
-gen_serum_creatinine <- function(serumcreat.dt){
+gen_serum_creatinine <- function(gender,
+                                 reth,
+                                 age_years,
+                                 age_months){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -27,34 +30,40 @@ gen_serum_creatinine <- function(serumcreat.dt){
   sc_kde <- serum_creat <- gfr_est <- gender <- reth <- BSA_adj <- NULL
   #End of R CMD CHECK appeasement.
   
-  serumcreat.dt <- data.table::copy(serumcreat.dt) #to avoid altering the original item
-  #Take a list of sample individuals with gender, race, age_years, height, BSA in cm^2
-  #Draw their serum creatinine levels from the appropriate KDE distribution
-  serumcreat.dt[, id:=1:nrow(serumcreat.dt)]
-  
-  serumcreat.tmp <- merge(serumcreat.dt, 
-                      spline_serumcreat,
-                      by=c('gender', 'reth'))
-  
-  if (serumcreat.tmp[, any(age_years>=12)]){
-    serumcreat.tmp[age_years>=12, 
-               log_serum_creat:=predict(sc_spline[[1]], #spline
-                                        x=age_months)$y + 
-                 rfun(n=sum(age_years>=12), #residual variability KDE
-                      fhat=sc_kde[[1]]),
-               by=list(gender, reth)] #Note: separate spline for each gender and reth
-    
-    serumcreat.dt <- merge(serumcreat.dt,
-                       serumcreat.tmp[, list(id, log_serum_creat)],
-                       by='id')
-    serumcreat.dt[, id:=NULL]
-    
-    serumcreat.dt[age_years>=12, 
-              serum_creat:=exp(log_serum_creat)]
-  }else{ #if no one over age 12, don't assign any serum creatinine values
-    serumcreat.dt[age_years<12, 
-                  serum_creat:=NA_real_]
+
+  #initialize serum creatinine vector
+  serum_creat <- vector(mode = "numeric", length = length(age_months))
+  grname <- unique(paste(gender, reth))
+
+  if (any(age_years>=12)){
+    n <- sum(age_years>=12)
+   log_serum_creat_pred <- predict(scr_spline[[grname]], 
+                                        x=age_months[age_years>=12])$y
+   
+   #centers for KDE sampling
+   kde_centers_gr <- kde_centers[g %in% gender &
+                                   r %in% reth &
+                                   is.finite(logscresid),
+                                 .(seqn,
+                                   logscresid)]
+   #merge in weights
+   kde_centers_gr <- nhanes_mec_svy$variables[kde_centers_gr, on = "seqn"][, .(seqn,
+                                                             wtmec6yr,
+                                                             logscresid)]
+   
+   #sample from centers
+   centers_samp <- sample(kde_centers_gr$logscresid,
+                        size = n,
+                        replace = TRUE,
+                        prob = kde_centers_gr$wtmec6yr/sum( kde_centers_gr$wtmec6yr))
+   
+   #sample from normal distirbution with optimal bandwidth for this gender/reth
+   resids <- rnorm(n =n,
+                   mean = centers_samp,
+                   sd = scr_h[[grname]])
+   
+   serum_creat[age_years>=12] <- exp(log_serum_creat_pred + resids)
   }
-  
-  return(serumcreat.dt)
+ 
+  return(serum_creat)
 }
