@@ -1,23 +1,36 @@
-#' Predict hematocrit using smoothing spline.
-#' 
-#' Using precalculated smoothing splines on NHANES log hematocrit vs. age in 
-#' months (and KDE residuals) by gender and race/ethnicity, generate hematocrit 
-#' values for individuals specified by age, gender, and race/ethnicity.
-#' 
-#' @param hcttmp_dt A data.table with columns \code{age_years},
-#'   \code{age_months}, \code{gender}, \code{reth}.
-#'   
-#' @return The same data.table with a \code{hematocrit} column added.
+#'Generate hematocrit values for a virtual populaion
 #'
-#' @keywords httk-pop
+#'Predict hematocrit from age using smoothing splines and kernel density
+#'estimates of residual variability fitted to NHANES data, for a given
+#'combination of gender and NHANES race/ethnicity category.
 #'
-#' @author Caroline Ring
+#'This function should usually not be called directly by the user. It is used by
+#'\code{httkpop_generate()} in "virtual-individuals" mode, after drawing gender,
+#'NHANES race/ethnicity category, and age from their NHANES
+#'proportions/distributions.
 #'
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#' @import stats
-#' @export estimate_hematocrit
+#'@param gender Gender for which to generate hematocrit values ("Male" or
+#'  "Female")
+#'@param reth NHANES race/ethnicity category for which to generate serum
+#'  creatinine values ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+#'  White", "Other", or "Other Hispanic")
+#'@param age_months vector of ages in months for individuals for whom to
+#'  generate hematocrit values (between 0-959 months)
+#'@param age_years Vector of ages in years for individuals for whom to generate
+#'  hematocrit values (corresponding to age_months)
+#'
+#'@return A vector of numeric generated hematocrit values (blood percentage red
+#'  blood cells by volume).
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+#'@import stats
+#'@export estimate_hematocrit
 
 estimate_hematocrit <- function(gender,
                                 reth,
