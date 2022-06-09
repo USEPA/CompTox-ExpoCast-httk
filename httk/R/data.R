@@ -30,19 +30,22 @@
 #'  Environment International 106 (2017): 105-118
 "mcnally_dt"
 
-#'Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
-#'race and gender.
+#'Smoothing splines for log hematocrit vs. age in months
 #'
-#'Smoothing splines and KDE residuals pre-calculated from NHANES hematocrit and
-#'age data by race/ethnicity and gender.
+#'Smoothing splines fitted to NHANES hematocrit and age data by race/ethnicity
+#'and gender.
 #'
-#'@format A data.table with 6 variables: \describe{ \item{\code{gender}}{Gender:
-#'  Male or Female} \item{\code{reth}}{Race/ethnicity: Mexican American, Other
-#'  Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
-#'  \item{\code{hct_spline}}{A list of smooth.spline objects, each giving a
-#'  smoothed relationship between log hematocrit and age in months}
-#'  \item{\code{hct_kde}}{A list of kde objects; each is a KDE of the
-#'  distribution of residuals about the smoothing spline.}}
+#'@format A list with 10 elements, named for unique combinations of gender
+#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
+#'  Hispanic". Each list element consists of an object of class
+#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
+#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
+#'  predict natural-log hematocrit from age in months. The smoothing splines
+#'  were fitted to NHANES data for each combination of NHANES gender and
+#'  race/ethnicity categories: natural log hematocrit vs. age in months,
+#'  weighted using the NHANES sample weights.
+)
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -51,25 +54,23 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
 #'environmental chemicals by simulating toxicokinetic variability." Environment
 #'International 106 (2017): 105-118
-"spline_hematocrit"
+"hct_spline"
 
-#'Smoothing splines for log serum creatinine vs. age in months, along with KDE
-#'residuals, by race and gender.
+#'Smoothing splines for log serum creatinine vs. age in months, by race and gender.
 #'
-#'#'Smoothing splines and KDE residuals pre-calculated from NHANES serum creatinine and
-#'age data by race/ethnicity and gender.
+#'Smoothing splines fitted to NHANES serum creatinine and age data by race/ethnicity
+#'and gender.
 #'
-#'@format A data.table with 6 variables: \describe{
-#'\item{\code{gender}}{Gender:
-#'  Male or Female}
-#'  \item{\code{reth}}{Race/ethnicity: Mexican American, Other
-#'  Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
-#'  \item{\code{sc_spline}}{A list of smooth.spline objects, each giving a
-#'  smoothed relationship between log serum creatinine and age in months}
-#'  \item{\code{sc_kde}}{A list of kde
-#'  objects; each is a KDE of the distribution of residuals about the smoothing
-#'  spline.}
-#'   }
+#'@format A list with 10 elements, named for unique combinations of gender
+#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
+#'  Hispanic". Each list element consists of an object of class
+#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
+#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
+#'  predict natural-log serum creatinine from age in months. The smoothing splines
+#'  were fitted to NHANES data for each combination of NHANES gender and
+#'  race/ethnicity categories: natural-log serum creatinine vs. age in months,
+#'  weighted using the NHANES sample weights.
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -78,24 +79,23 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
 #'environmental chemicals by simulating toxicokinetic variability." Environment
 #'International 106 (2017): 105-118
-"spline_serumcreat"
+"scr_spline"
 
-#'Smoothing splines for log height vs. age and log body weight vs. age, along
-#'with 2-D KDE residuals, by race and gender.
+#'Smoothing splines for natural-log height vs. age, by race and gender.
 #'
-#'#'Smoothing splines and KDE fits to joint distribution of height and weight
-#'residuals pre-calculated from NHANES height, weight, and age data by
-#'race/ethnicity and gender.
+#'#'Smoothing splines fitted to NHANES height and age data by race/ethnicity
+#'and gender.
 #'
-#'@format A data.table with 6 variables: \describe{ \item{\code{g}}{Gender: Male
-#'  or Female} \item{\code{r}}{Race/ethnicity: Mexican American, Other Hispanic,
-#'  Non-Hispanic White, Non-Hispanic Black, Other} \item{\code{height_spline}}{A
-#'  list of smooth.spline objects, each giving a smoothed relationship between
-#'  log height in cm and age in months} \item{\code{weight_spline}}{A list of
-#'  smooth.spline objects, each giving a smoothed relationship between log body
-#'  weight in kg and age in months} \item{\code{hw_kde}}{A list of kde objects;
-#'  each is a 2-D KDE of the distribution of log height and log body weight
-#'  residuals about the smoothing splines.} }
+#'@format A list with 10 elements, named for unique combinations of gender
+#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
+#'  Hispanic". Each list element consists of an object of class
+#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
+#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
+#'  predict natural-log height from age in months. The smoothing splines
+#'  were fitted to NHANES data for each combination of NHANES gender and
+#'  race/ethnicity categories: natural-log height vs. age in months,
+#'  weighted using the NHANES sample weights.
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -104,7 +104,32 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
 #'environmental chemicals by simulating toxicokinetic variability." Environment
 #'International 106 (2017): 105-118
-"spline_heightweight"
+"height_spline"
+
+#'Smoothing splines for natural-log height vs. age, by race and gender.
+#'
+#'#'Smoothing splines fitted to NHANES height and age data by race/ethnicity
+#'and gender.
+#'
+#'@format A list with 10 elements, named for unique combinations of gender
+#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
+#'  Hispanic". Each list element consists of an object of class
+#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
+#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
+#'  predict natural-log height from age in months. The smoothing splines
+#'  were fitted to NHANES data for each combination of NHANES gender and
+#'  race/ethnicity categories: natural-log height vs. age in months,
+#'  weighted using the NHANES sample weights.
+#'@keywords data
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'environmental chemicals by simulating toxicokinetic variability." Environment
+#'International 106 (2017): 105-118
+"weight_spline"
 
 #' A timestamp of table creation
 #'
@@ -130,18 +155,28 @@
 #'NHANES data on demographics, anthropometrics, and some laboratory measures,
 #'cleaned and combined into a single data set.
 #'
-#'@format A survey.design2 object, including masked cluster and strata.
+#'@format An object of class \code{survey.design} (see
+#'  \code{\link[survey]{svydesign}}), including masked cluster and strata.
 #'  Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
-#'  Variables are as described in NHANES Demographics and Examination
-#'  documentation, with the exception of: \describe{
-#'  \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
+#'  \code{nhanes_mec_svy$variables} is a data.table with 23620 rows and 12
+#'  variables.  \describe{ \item{seqn}{NHANES unique identifier for individual
+#'  respondents.} \item{sddsrvyr}{NHANES two-year cycle: one of "NHANES
+#'  2013-2014", "NHANES 2015-2016", "NHANES 2017-2018".} \item{riagendr}{Gender:
+#'  "Male" or "Female"} \item{ridreth1}{Race/ethnicity category: one of "Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", "Other
+#'  Hispanic".} \item{ridexagm}{Age in months at the time of examination (if not
+#'  recorded by NHANES, it was imputed based on age at the time of screening)}
+#'  \item{ridexagy}{Age in years at the time of examination (if not recorded by
+#'  NHANES, it was imputed based on age at the time of screening)}
+#'  \item{bmxwt}{Weight in kg} \item{lbxscr}{Serum creatinine, mg/dL}
+#'  \item{lbxhct}{Hematocrit, percent by volume of blood composed of red blood
+#'  cells} \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
 #'  computed by dividing 2-year sample weights by 3.}
 #'  \item{\code{bmxhtlenavg}}{Average of height and recumbent length if both
 #'  were measured; if only one was measured, takes value of the one that was
-#'  measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.}
-#'  \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.}
-#'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
-#'  Assigned using methods in \code{get_weight_class}.} }
+#'  measured.} \item{\code{weight_class}}{One of Underweight, Normal,
+#'  Overweight, or Obese. Assigned using methods in
+#'  \code{\link{get_weight_class}}.} }
 #'
 #'@source \url{https://wwwn.cdc.gov/nchs/nhanes/Default.aspx}
 #'
@@ -151,8 +186,8 @@
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
 "nhanes_mec_svy"
 
 #'Smoothed age distributions by race and gender.
