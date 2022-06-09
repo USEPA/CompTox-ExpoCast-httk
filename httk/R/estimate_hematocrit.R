@@ -1,4 +1,4 @@
-#'Generate hematocrit values for a virtual populaion
+#'Generate hematocrit values for a virtual population
 #'
 #'Predict hematocrit from age using smoothing splines and kernel density
 #'estimates of residual variability fitted to NHANES data, for a given
@@ -30,7 +30,6 @@
 #'  environmental chemicals by simulating toxicokinetic variability."
 #'  Environment International 106 (2017): 105-118
 #'@import stats
-#'@export estimate_hematocrit
 
 estimate_hematocrit <- function(gender,
                                 reth,
