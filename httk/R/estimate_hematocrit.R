@@ -50,7 +50,7 @@ estimate_hematocrit <- function(gender,
   if (any(age_years>=1)){
     n <- sum(age_years>=1)
     #predict conditional mean from age using spline
-    log_hematocrit <- predict(scr_spline[[grname]],
+    log_hematocrit <- predict(hct_spline[[grname]],
                               x = age_months[age_years>=1])$y
     #draw residuals from KDE
     #first take the relevant centers
