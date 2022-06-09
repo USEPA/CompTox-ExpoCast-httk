@@ -86,7 +86,11 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   indiv_dt <- tissue_masses_flows(tmf_dt=indiv_dt)
   
   #Generate serum creatinine levels
-  indiv_dt <- gen_serum_creatinine(serumcreat.dt = indiv_dt)
+  indiv_dt <- indiv_dt[, serum_creat:=gen_serum_creatinine(gender = gender,
+                                                           reth = reth,
+                                                           age_years = age_years,
+                                                           age_months = age_months),
+                       by = list(gender, reth)]
   #Estimate GFR
   indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
                          gfr_resid_var = gfr_resid_var,
@@ -144,7 +148,11 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
     #values
     indiv_tmp<-tissue_masses_flows(tmf_dt=indiv_tmp)
     #Recompute serum creatinine levels
-    indiv_tmp <- gen_serum_creatinine(serumcreat.dt = indiv_tmp)
+    indiv_tmp[, serum_creat:=gen_serum_creatinine(gender = gender,
+                                                 reth = reth,
+                                                 age_years = age_years,
+                                                 age_months = age_months),
+             by = list(gender, reth)]
     #Recompute GFR using the new serum creatinine values
     indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp)
     #Recompute BMI using the new height, adjusted weight values
