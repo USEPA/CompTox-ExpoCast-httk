@@ -1,16 +1,3 @@
-#declare names of data variables as global
-#Effectively they are global anyway, but R CMD CHECK wants it explicit
-
-if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c('age_dist_smooth', 'bmiage', 'spline_heightweight',
-                  'nhanes_mec_svy', 'spline_hematocrit', 'mcnally_dt', 
-                  'spline_serumcreat', 'wfl'))
-}
-
-
-
-
-
 #' Generate a virtual population for PBTK
 #'
 #' Generate a virtual population characterized by demographic, anthropometric, and physiological parameters relevant to PBTK.
