@@ -186,7 +186,10 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   
   #Once rejection sampling is completed,
   #draw hematocrit values
-  indiv_dt <- estimate_hematocrit(hcttmp_dt=indiv_dt)
+  indiv_dt[, hematocrit:=estimate_hematocrit(gender = gender,
+                                             reth = reth,
+                                             age_years = age_years,
+                                             age_months = age_months)]
   
   #Replace any spaces in column names with underscores,
   #for ease of use later
