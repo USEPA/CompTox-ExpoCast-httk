@@ -345,12 +345,8 @@ save(list=c("bmiage",
             "scr_spline"),
      compress = "bzip2",
      version = 3,
-     file="httkpop.RData")
-#nhanes_mec_svy alone is 4.4 MB, yikes
-save("nhanes_mec_svy",
-     compress = "bzip2",
-     version = 3,
-     file="nhanes_mec_svy.RData")
+     file="../data/httkpop.RData")
+
 
 #' 
 #' Now we have all the spline fits and residual KDEs used to generate 
