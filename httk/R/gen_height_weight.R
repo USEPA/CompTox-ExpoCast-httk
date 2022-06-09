@@ -76,7 +76,7 @@ gen_height_weight <- function(gender,
   centers_id <- sample(nrow(kde_centers_gr),
                        size = n,
                        replace = TRUE,
-                       prob = kde_centers_gr$wtmec6yr)
+                       prob = kde_centers_gr$wtmec6yr/sum(kde_centers_gr$wtmec6yr))
   centers <- kde_centers_gr[centers_id,
                             .(logwresid,
                               loghresid)]
