@@ -28,4 +28,6 @@ setnames(wfl,names(wfl),
               replacement='P\\1', 
               perl=TRUE))
 
+wfl <- wfl[, .(Sex, Length, P2.3, P97.7)]
+
 save(wfl, file = "wfl.Rdata")
