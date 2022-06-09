@@ -258,14 +258,11 @@ DT_hw_kde_H <- DT_hw[, as.data.table(
       )
     )
 ), by = .(g,r)]
-DT_hw_kde_H <- unique(DT_hw_kde_H)
-#name columns to indicate position in H matrix
-setnames(DT_hw_kde_H,
-         paste0("V", 1:4),
-         c("H_11",
-         "H_21",
-         "H_12",
-         "H_22"))
+
+DT_hw_kde_H <- DT_hw[, .(H = hw_kde_H[1]), by = .(g,r)]
+hw_H <- DT_hw_kde_H[, H]
+names(hw_H) <- DT_hw_kde_H[, paste(g,r)]
+
 
 
 # Hematocrit
@@ -283,6 +280,8 @@ names(hct_spline) <- DT_hct_spline[, paste(g, r)]
 DT_hct_kde_centers <- DT_hct[, .(g, r, seqn, loghtcresid)]
 #Pull out kde bandwidth separately to save space
 DT_hct_kde_h <- unique(DT_hct[, .(g, r, h)])
+hct_h <- as.list(DT_hct_kde_h[, h])
+names(hct_h) <- DT_hct_kde_h[, paste(g,r)]
 
 #Serum creatinine
 DT_scr <- gr_all[, serumcreat(g=g,
@@ -298,27 +297,8 @@ names(scr_spline) <- DT_scr_spline[, paste(g, r)]
 DT_scr_kde_centers <- DT_scr[, .(g, r, seqn, logscresid)]
 #Pull out kde bandwidth separately to save space
 DT_scr_kde_h <- unique(DT_scr[, .(g, r, h)])
-
-#actually let's just merge all the bandwidths together so we don't have to repeat the gender/race columns too often
-setnames(DT_hw_kde_H,
-         c("H_11",
-           "H_21",
-           "H_12",
-           "H_22"),
-         paste0("hw_",
-                c("H_11",
-                  "H_21",
-                  "H_12",
-                  "H_22")
-                )
-         )
-setnames(DT_hct_kde_h, "h", "hct_h")
-setnames(DT_scr_kde_h, "h", "scr_h")
-kde_H <- DT_hw_kde_H[
-  DT_hct_kde_h,
-  on = c("g", "r")][
-    DT_scr_kde_h,
-    on = c("g", "r")]
+scr_h <- as.list(DT_scr_kde_h[, h])
+names(scr_h) <- DT_scr_kde_h[, paste(g,r)]
 
 #similarly, merge KDE centers -- and age smooth
 #note that we'll need to remove NAs before sampling/predicting,
@@ -348,6 +328,7 @@ nhanes_mec_svy$variables[, loglbxhct:=NULL]
 nhanes_mec_svy$variables[, sdmvpsu:=NULL]
 nhanes_mec_svy$variables[, sdmvstra:=NULL]
 
+
 #save updated httkpop data
 save(list=c("bmiage",
             "mcnally_dt",
@@ -355,7 +336,9 @@ save(list=c("bmiage",
             "wfl",
             "DT_age",
             "kde_centers",
-            "kde_H",
+            "hw_H",
+            "hct_h",
+            "scr_h",
             "height_spline",
             "weight_spline",
             "hct_spline",
