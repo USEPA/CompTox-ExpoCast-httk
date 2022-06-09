@@ -1,3 +1,9 @@
+### Miyuki Breen
+### update Caroline Ring's nhanes_analysis.r to get NHANES 2017-2018, 2015-2016, 2013-2014
+### devtools::use_data has been deprecated and transferred to the usethis package 
+### using usethis::use_data instead of devtools:use_data 
+### June 30, 2020
+
 #' NHANES analysis
 #' ========================================================
 #'
@@ -12,22 +18,23 @@
 library(data.table)
 library(survey)
 library(ks)
+library(TeachingDemos)
 
+#Load McNally data
+load("mcnally_dt.Rdata")
 #' 
 #' Pre-process the NHANES data.
 source("make_bmiage_dt.R") #loads data.table called bmiage
-devtools::use_data(bmiage, overwrite=TRUE)
+#usethis::use_data(bmiage, overwrite=TRUE)
 source("make_wfl.R") #loads data_table called wfl (weight for length)
-devtools::use_data(wfl, overwrite=TRUE)
+#usethis::use_data(wfl, overwrite=TRUE)
 source("get_weight_class.R")
-source("nhanes_init.R")
+source("nhanes_init_update.R")
 #For reproducibility, first set a seed!
 TeachingDemos::char2seed("Caroline Ring")
 #Now read in and process the NHANES data.
-nhanes_mec_svy <- nhanes_init(bmiage, wfl)
+nhanes_mec_svy <- nhanes_init_update(bmiage, wfl)
 #Add the data to the package.
-devtools::use_data(nhanes_mec_svy, overwrite=TRUE)
-
 #' 
 #' Since everything is done by gender and race/ethnicity, we'll write a function
 #' for each item that takes gender and race/ethnicity as input arguments. Then
@@ -48,15 +55,13 @@ age_smooth <- function(g, r, nhanes_mec_svy){
   d.sub <- subset(nhanes_mec_svy, #take gender and race/ethnicity subset of data
                   riagendr==g & 
                     ridreth1==r)
+  
   overall_smooth <- survey::svysmooth(~ridexagm, #smooth distribution of age in months
                                       d.sub, 
                                       ngrid=960)$ridexagm #evaluate at 0:959 months
- 
-   overall_smooth<- c(overall_smooth, 
-                     list(year=rep('Overall', 
-                                   length(overall_smooth$x))))
-   #Pack into a list and return
-  return(list(gender=g, reth=r, smth=overall_smooth))
+ #return the smoothed age density
+  return(data.table(x = overall_smooth$x,
+                   y = overall_smooth$y))
   }
 
 #' 
@@ -112,17 +117,14 @@ heightweight <- function(g, r, nhanes_mec_svy){
                                                     loghresid)]),
                     w=d.sub$variables[, wtmec6yr])
   #Put together output list
-  out_kde <- list(x=as.matrix(d.sub$variables[, .(logwresid,  #kernel centers
-                                                  loghresid)]), 
-                  w=d.sub$variables[, wtmec6yr], #kernel weights
-                  H=hw_kde$H) #optimal kernel bandwidth matrix
-  #return gender and race along with spline fits and optimal KDE bandwidth matrix
-  #to later be turned into a data.table
-  return(list(g=g, 
-              r=r, 
-              height_spline=height_spline, 
-              weight_spline=weight_spline,
-              hw_kde=out_kde))
+  hw_fit <- data.table(seqn = d.sub$variables$seqn,
+                         logwresid = d.sub$variables$logwresid, #kernel centers
+                        loghresid = d.sub$variables$loghresid,
+                        hw_kde_H = list(hw_kde$H),
+                        weight_spline = list(weight_spline),
+                        height_spline = list(height_spline))
+  
+  return(hw_fit)
   }
 
 #' 
@@ -159,14 +161,12 @@ hematocrit <- function(g, r, nhanes_mec_svy){
   #Fit 1-D KDE to residuals
   hct_kde <- ks::kde(x=d.sub$variables[, loghtcresid],
                      w=d.sub$variables[['wtmec6yr']])
-  tmp_kde <- list(x=d.sub$variables[, loghtcresid], #kernel centers
-                  w=d.sub$variables[['wtmec6yr']], #kernel weights
-                  h=hct_kde$h) #optimal kernel bandwidth
+  outDT <- data.table(hct_spline=list(hematocrit_spline),
+                      seqn = d.sub$variables$seqn,
+                      loghtcresid=d.sub$variables[, loghtcresid], #kernel centers
+                  h=hct_kde$h) 
   
-  return(list(gender=g,
-              reth=r, 
-              hct_spline=hematocrit_spline,
-              hct_kde=tmp_kde))
+  return(outDT)
   }
 
 #' 
@@ -205,14 +205,12 @@ serumcreat <- function(g, r, nhanes_mec_svy){
   #Fit 1-dimensional KDE to residuals
   sc_kde <- ks::kde(x=d.sub$variables[, logscresid],
                     w=d.sub$variables[['wtmec6yr']])
-  tmp_kde <- list(x=d.sub$variables[, logscresid], #kernel centers
-                  w=d.sub$variables[['wtmec6yr']], #kernel weights
+  outDT<- list(sc_spline=list(serumcreat_spline),
+               seqn = d.sub$variables$seqn,
+               logscresid=d.sub$variables[, logscresid], #kernel centers
                   h=sc_kde$h) #optimal kernel bandwidth
   
-  return(list(gender=g,
-              reth=r, 
-              sc_spline=serumcreat_spline,
-              sc_kde=tmp_kde))
+  return(outDT)
   }
 
 #' 
@@ -224,71 +222,154 @@ serumcreat <- function(g, r, nhanes_mec_svy){
 ## ----gender_race_combinations--------------------------------------------
 genders <- nhanes_mec_svy$variables[,levels(riagendr)] 
 reths <- nhanes_mec_svy$variables[, levels(ridreth1)]
-gr_all <- expand.grid(g=genders, r=reths)
+gr_all <- as.data.table(expand.grid(g=genders,
+                                    r=reths,
+                                    stringsAsFactors = FALSE))
 
-#' 
-#' Each function returns a list. Use `mapply` with `SIMPLIFY=FALSE` to get 
-#' a list of lists; then transform that nested list into a data.table. 
-#' 
-#' ## Smoothed age distribution
-## ----mapply_age_smooth---------------------------------------------------
-age_smooth_list <- mapply(FUN=age_smooth,
-                          g=as.character(gr_all$g),
-                          r=as.character(gr_all$r),
-                          MoreArgs=list(nhanes_mec_svy=nhanes_mec_svy),
-                          SIMPLIFY=FALSE)
-#Transform list of lists into a data.table
-age_dist_smooth <- as.data.table(t(sapply(age_smooth_list,c)))
-age_dist_smooth[, gender:=unlist(gender)]
-age_dist_smooth[, reth:=unlist(reth)]
-#add the data to the package
-devtools::use_data(age_dist_smooth, overwrite=TRUE)
 
-#' 
+# use data.table syntax to loop over variables.
+
+DT_age <- gr_all[, age_smooth(g = g,
+                             r = r,
+                             nhanes_mec_svy = nhanes_mec_svy),
+                by = .(g, r)]
+
 #' ## Height and weight
-## ----mapply_heightweight, warning=FALSE----------------------------------
-hw_list <- mapply(FUN=heightweight,
-                  g=as.character(gr_all$g),
-                  r=as.character(gr_all$r),
-                  MoreArgs=list(nhanes_mec_svy=nhanes_mec_svy),
-                  SIMPLIFY=FALSE)
-#Transform list of lists into a data.table
-spline_heightweight <- as.data.table(t(sapply(hw_list,c)))
-spline_heightweight[, g:=unlist(g)]
-spline_heightweight[, r:=unlist(r)]
-spline_heightweight[, nkde:=length(hw_kde[[1]]$w),
-      by=1:nrow(spline_heightweight)]
-#add the data to the package
-devtools::use_data(spline_heightweight, overwrite=TRUE)
+DT_hw <- gr_all[, heightweight(g=g,
+                               r=r,
+                               nhanes_mec_svy = nhanes_mec_svy),
+                by = .(g,r)]
 
-#' 
-#' ## Hematocrit
-## ----mapply_hematocrit, warning=FALSE------------------------------------
-hct_list <- mapply(FUN=hematocrit,
-                   g=as.character(gr_all$g),
-                  r=as.character(gr_all$r),
-                  MoreArgs=list(nhanes_mec_svy=nhanes_mec_svy),
-                  SIMPLIFY=FALSE)
-#Transform list of lists into a data.table
-spline_hematocrit <- as.data.table(t(sapply(hct_list,c)))
-spline_hematocrit[, gender:=unlist(gender)]
-spline_hematocrit[, reth:=unlist(reth)]
-#add the data to the package
-devtools::use_data(spline_hematocrit, overwrite=TRUE)
-#' 
-#' ## Serum creatinine
-## ----mapply_serumcreat, warning=FALSE------------------------------------
-sc_list <- mapply(FUN=serumcreat,
-                   g=as.character(gr_all$g),
-                  r=as.character(gr_all$r),
-                  MoreArgs=list(nhanes_mec_svy=nhanes_mec_svy),
-                  SIMPLIFY=FALSE)
-#Transform list of lists into a data.table
-spline_serumcreat <- as.data.table(t(sapply(sc_list,c)))
-spline_serumcreat[, gender:=unlist(gender)]
-spline_serumcreat[, reth:=unlist(reth)]
-#add the data to the package
-devtools::use_data(spline_serumcreat, overwrite=TRUE)
+#Pull out spline fits separately to reduce space
+DT_hw_spline <- DT_hw[, .(height_spline = height_spline[1],
+                          weight_spline = weight_spline[1]),
+                      by = .(g, r)]
+height_spline <- DT_hw_spline[, height_spline]
+weight_spline <- DT_hw_spline[, weight_spline]
+names(height_spline) <- names(weight_spline) <- DT_hw_spline[, paste(g, r)]
+#Pull out KDE centers separately
+DT_hw_kde_centers <- DT_hw[, .(g, r, seqn, logwresid, loghresid)]
+#Pull out KDE 2-D bandwidth matrix separately
+DT_hw_kde_H <- DT_hw[, as.data.table(
+  t(
+    sapply(
+      hw_kde_H,
+      as.vector
+      )
+    )
+), by = .(g,r)]
+DT_hw_kde_H <- unique(DT_hw_kde_H)
+#name columns to indicate position in H matrix
+setnames(DT_hw_kde_H,
+         paste0("V", 1:4),
+         c("H_11",
+         "H_21",
+         "H_12",
+         "H_22"))
+
+
+# Hematocrit
+DT_hct <- gr_all[, hematocrit(g=g,
+                               r=r,
+                               nhanes_mec_svy = nhanes_mec_svy),
+                 by = .(g,r)]
+#Pull out splines separately to save space
+DT_hct_spline <- DT_hct[, .(hct_spline = hct_spline[1]),
+                      by = .(g, r)]
+hct_spline <- DT_hct_spline[, hct_spline]
+names(hct_spline) <- DT_hct_spline[, paste(g, r)]
+
+#Pull out kde centers separately to save space
+DT_hct_kde_centers <- DT_hct[, .(g, r, seqn, loghtcresid)]
+#Pull out kde bandwidth separately to save space
+DT_hct_kde_h <- unique(DT_hct[, .(g, r, h)])
+
+#Serum creatinine
+DT_scr <- gr_all[, serumcreat(g=g,
+                              r=r,
+                              nhanes_mec_svy = nhanes_mec_svy),
+                 by = .(g,r)]
+#Pull out splines separately to save space
+DT_scr_spline <- DT_scr[, .(sc_spline = sc_spline[1]),
+                        by = .(g, r)]
+scr_spline <- DT_scr_spline[, sc_spline]
+names(scr_spline) <- DT_scr_spline[, paste(g, r)]
+#Pull out kde centers separately to save space
+DT_scr_kde_centers <- DT_scr[, .(g, r, seqn, logscresid)]
+#Pull out kde bandwidth separately to save space
+DT_scr_kde_h <- unique(DT_scr[, .(g, r, h)])
+
+#actually let's just merge all the bandwidths together so we don't have to repeat the gender/race columns too often
+setnames(DT_hw_kde_H,
+         c("H_11",
+           "H_21",
+           "H_12",
+           "H_22"),
+         paste0("hw_",
+                c("H_11",
+                  "H_21",
+                  "H_12",
+                  "H_22")
+                )
+         )
+setnames(DT_hct_kde_h, "h", "hct_h")
+setnames(DT_scr_kde_h, "h", "scr_h")
+kde_H <- DT_hw_kde_H[
+  DT_hct_kde_h,
+  on = c("g", "r")][
+    DT_scr_kde_h,
+    on = c("g", "r")]
+
+#similarly, merge KDE centers -- and age smooth
+#note that we'll need to remove NAs before sampling/predicting,
+#since not all seqns had values for all data
+kde_centers <- DT_hw_kde_centers[
+  DT_hct_kde_centers,
+  on = c("g", "r", "seqn")
+][
+  DT_scr_kde_centers,
+  on = c("g", "r", "seqn")]
+
+#remove extraneous variables from nhanes_mec_svy
+#Remove extraneous variables
+nhanes_mec_svy$variables[, bmxbmi:=NULL]
+nhanes_mec_svy$variables[, lbxsal:=NULL]
+nhanes_mec_svy$variables[, ridstatr:=NULL]
+nhanes_mec_svy$variables[, ridageyr:=NULL]
+nhanes_mec_svy$variables[, ridagemn:=NULL]
+nhanes_mec_svy$variables[, wtmec2yr:=NULL]
+nhanes_mec_svy$variables[, bmdstats:=NULL]
+nhanes_mec_svy$variables[, bmxrecum:=NULL]
+nhanes_mec_svy$variables[, bmxht:=NULL]
+nhanes_mec_svy$variables[, logbmxwt:=NULL]
+nhanes_mec_svy$variables[, logbmxhtlenavg:=NULL]
+nhanes_mec_svy$variables[, loglbxscr:=NULL]
+nhanes_mec_svy$variables[, loglbxhct:=NULL]
+nhanes_mec_svy$variables[, sdmvpsu:=NULL]
+nhanes_mec_svy$variables[, sdmvstra:=NULL]
+
+#save updated httkpop data
+save(list=c("bmiage",
+            "mcnally_dt",
+            "nhanes_mec_svy",
+            "wfl",
+            "DT_age",
+            "kde_centers",
+            "kde_H",
+            "height_spline",
+            "weight_spline",
+            "hct_spline",
+            "scr_spline"),
+     compress = "bzip2",
+     version = 3,
+     file="httkpop.RData")
+#nhanes_mec_svy alone is 4.4 MB, yikes
+save("nhanes_mec_svy",
+     compress = "bzip2",
+     version = 3,
+     file="nhanes_mec_svy.RData")
+
 #' 
 #' Now we have all the spline fits and residual KDEs used to generate 
 #' virtual populations using the virtual-individuals method.
+

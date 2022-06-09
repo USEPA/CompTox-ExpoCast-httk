@@ -76,3 +76,4 @@ bmiage <- rbind(bmiage_males,
                 bmiage_females)
 #and sort by age in months
 setkey(bmiage, Sex, Agemos)
+#save(bmiage, file = "bmiage.Rdata")
