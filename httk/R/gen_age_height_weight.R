@@ -204,12 +204,16 @@ gen_age_height_weight <- function(nsamp=NULL,
   gen_dt[, ctcol:=1] #Add tmp variable to count items in each group
   gen_dt[, c('age_months','age_years'):= age_draw_smooth(g=gender, 
                                                          r=reth, 
-                                                         nsamp=length(ctcol), 
+                                                         nsamp=.N, 
                                                          agelim_months=agelim_months), 
          by=list(gender,reth)]
   
   #Draw height and body weight
-  gen_dt <- gen_height_weight(hbw_dt=gen_dt)
+  gen_dt[, c("weight",
+             "height"):=gen_height_weight(gender = gender,
+                                          reth = reth,
+                                          age_months = age_months),
+         by = list(gender, reth)]
   
   if (length(setdiff(c('Underweight', 
                        'Normal',
@@ -226,22 +230,27 @@ gen_age_height_weight <- function(nsamp=NULL,
     rct <- 1
     while(nrow(gen_dt[!(weight_class %in% weight_category),])>0){
       #If not in the right weight class, then redraw age, height, and body weight
+      #redraw age for those not in selected weight classes
       gen_dt[!(weight_class %in% 
                  weight_category),
              c('age_months','age_years'):= age_draw_smooth(g=gender, 
                                                            r=reth, 
-                                                           nsamp=length(ctcol), 
+                                                           nsamp=.N, 
                                                            agelim_months=agelim_months), 
              by=list(gender,reth)] #Now age will be updated, but weight_category isn't yet, so we can still use it
-      tmp <- gen_height_weight(hbw_dt=gen_dt[!(weight_class %in% 
-                                                 weight_category),]) #redraw heights, weights based on new ages
-      tmp.h <- tmp[,height]
-      tmp.bw <- tmp[, weight]
+    
+      #redraw height & weight for those not in selected weight classes
       gen_dt[!(weight_class %in% weight_category),
-             height:=tmp.h]
-      gen_dt[!(weight_class %in% weight_category),
-             weight:=tmp.bw]
+             c("weight",
+               "height"):=gen_height_weight(gender = gender,
+                                            reth = reth,
+                                            age_months = age_months)\,
+             by = list(gender, reth)]
+    
+      #recalc BMI
       gen_dt[, bmi:=weight/((height/100)^2)]
+      
+      #recalc weight class
       gen_dt[, weight_class:=get_weight_class(age_years=age_years,
                                               age_months=age_months,
                                               bmi=bmi,
