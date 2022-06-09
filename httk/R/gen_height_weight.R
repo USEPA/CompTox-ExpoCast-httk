@@ -21,7 +21,9 @@
 #' @importFrom mvtnorm rmvnorm
 #'
 #' @export gen_height_weight
-gen_height_weight <- function(hbw_dt){
+gen_height_weight <- function(gender,
+                              reth,
+                              age_months){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -34,21 +36,17 @@ gen_height_weight <- function(hbw_dt){
   logbw_resid <-   height <- logh_resid <- NULL
   #End R CMD CHECK appeasement.
   
-  hbw_dt <- data.table::copy(hbw_dt)
+   n <- length(age_months)
+   gr <- unique(paste(gender, reth))
+   
   #Get "mean" heights (cm) and bodyweights (kg) for each individual
   #Subset dt by gender and race/ethnicity,
   #then predict mean heights and BWs from ages
   #using the spline for that gender/race combination
-  hbw_dt[, 
-         mean_logh:=predict(spline_heightweight[g==gender & r==reth, 
-                                                height_spline][[1]], 
-                            x=age_months)$y, 
-         by=list(gender, reth)]
-  hbw_dt[, 
-         mean_logbw:=predict(spline_heightweight[g==gender & r==reth, 
-                                                 weight_spline][[1]], 
-                             x=age_months)$y, 
-         by=list(gender,reth)]
+ mean_logh <- predict(height_spline[[grname]], 
+                            x=age_months)$y
+  mean_logbw <- predict(weight_spline[[grname]], 
+                             x=age_months)$y
   
   #Draw log BW and log height residuals from the 2-d KDE
   #Procedure: 
@@ -57,34 +55,43 @@ gen_height_weight <- function(hbw_dt){
   #using the sample weights used to construct the KDE in the first place,
   #and randomly draw a value from the 2-D distribution about that center point,
   #using the optimal bandwidth matrix calculated when constructing the KDE.
-  spline_kde <- spline_heightweight[, list(g,r,hw_kde, nkde)]
-  setnames(spline_kde,
-           c('g', 'r'),
-           c('gender', 'reth'))
+  kde_centers_gr <- kde_centers[g==gender &
+                                  r==reth &
+                                  is.finite(logwresid) &
+                                  is.finite(loghresid),
+                                .(seqn,
+                                  logwresid,
+                                  loghresid)]
+  #merge in wtmec6yr
+  kde_centers_gr <- nhanes_mec_svy$variables[kde_centers_gr,
+                           on = "seqn"][,
+                                        .(seqn,
+                                          logwresid,
+                                          loghresid,
+                                          wtmec6yr)]
   
-  hbw_dt[, id:=1:nrow(hbw_dt)]
-  
-  hbw_dt <- merge(hbw_dt, spline_kde,
-                  by=c('gender', 'reth'))
   #get residuals: draw from the multivariate normal dist 
   #with centers randomly chosen from the original residuals,
   #and the optimal bandwidth matrix
-  hbw_dt[, 
-         c('logbw_resid',
-           'logh_resid'):=as.data.frame(hw_kde[[1]]$x[sample(unique(nkde),
-                                                                    size=length(id),
-                                                                    prob=hw_kde[[1]]$w), ] +
-                                               mvtnorm::rmvnorm(n=length(id),
-                                                                mean=c(0,0),
-                                                                sigma=hw_kde[[1]]$H)),
-         by=list(gender, reth)]
+  centers_id <- sample(nrow(kde_centers_gr),
+                       size = n,
+                       replace = TRUE,
+                       prob = kde_centers_gr$wtmec6yr)
+  centers <- kde_centers_gr[centers_id,
+                            .(logwresid,
+                              loghresid)]
+  H <- hw_H[[grname]] #KDE bandwidth for this gender & race combination
   
-  hbw_dt[, weight:=exp(mean_logbw+logbw_resid)]
-  hbw_dt[, height:=exp(mean_logh+logh_resid)]
+  resids <- centers[,
+                    c("logw_resid",
+                      "logh_resid"):=rmvnorm(n = 1,
+                    mean = c(logwresid, loghresid),
+                    sigma = H),
+                    by = 1:nrow(centers)]
   
-  #Remove the temporary columns
-  hbw_dt[, id:=NULL]
-  hbw_dt[, hw_kde:=NULL]
-  hbw_dt[, nkde:=NULL]
-  return(hbw_dt)
+   weight <- exp(mean_logbw + resids$logw_resid)
+   height <- exp(mean_logh + resids$logh_resid)
+
+  return(list(weight=weight,
+              height = height))
 }
