@@ -27,3 +27,5 @@ setnames(wfl,names(wfl),
               pattern='(\\d{1,2})th', 
               replacement='P\\1', 
               perl=TRUE))
+
+save(wfl, file = "wfl.Rdata")
