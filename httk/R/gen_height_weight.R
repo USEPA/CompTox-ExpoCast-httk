@@ -15,6 +15,9 @@
 #'  White", "Other", or "Other Hispanic")
 #'@param age_months vector of ages in months for individuals for whom to
 #'  calculate height/weight (between 0-959 months)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'@return A list containing two named elements, \code{weight} and \code{height},
 #'  each of which is a numeric vector. \code{weight} gives individual body
 #'  weights in kg, and \code{height} gives individual heights in cm,
