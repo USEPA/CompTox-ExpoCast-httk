@@ -44,7 +44,7 @@ gen_serum_creatinine <- function(gender,
   
 
   #initialize serum creatinine vector
-  serum_creat <- vector(mode = "numeric", length = length(age_months))
+  serum_creat <- rep(NA_real_, length(age_months))
   grname <- unique(paste(gender, reth))
 
   if (any(age_years>=12)){
