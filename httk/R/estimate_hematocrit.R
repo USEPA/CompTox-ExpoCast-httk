@@ -41,8 +41,7 @@ estimate_hematocrit <- function(gender,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  id <- age_years <- log_hematocrit <- hct_spline <- age_months <- NULL
-  hct_kde <- hematocrit <- gender <- reth <- NULL
+  g <- r <- loghctresid <- seqn <- wtmec6yr <- NULL
   #End R CMD CHECK appeasement.
   
   hematocrit <- vector(mode = "numeric", length = length(age_months))
@@ -60,9 +59,9 @@ estimate_hematocrit <- function(gender,
                                   .(seqn,
                                     loghctresid)]
     #get corresponding weights
-    w <- nhanes_mec_svy$variables[kde_centers_gr[, .(seqn)], ][, wtmec6yr]
+    w <- nhanes_mec_svy$variables[kde_centers_gr, on = "seqn"][, wtmec6yr]
     #sample centers according to these weights
-    centers_samp <- sample(kde_centers_gr$loghctresid,
+    centers_samp <- sample(x = kde_centers_gr$loghctresid,
                            size = n,
                            replace = TRUE,
                            prob = w/sum(w))
