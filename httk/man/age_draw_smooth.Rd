@@ -12,6 +12,10 @@ age_draw_smooth(gender, reth, nsamp, agelim_months, nhanes_mec_svy)
 \item{agelim_months}{Two-element numeric vector giving the minimum and
 maximum ages in months to include.}
 
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
+
 \item{g}{Gender. Either 'Male' or 'Female'.}
 
 \item{r}{Race/ethnicity. One of 'Mexican American', 'Other Hispanic',

@@ -9,6 +9,9 @@
 #' @param nsamp Number of ages to draw.
 #' @param agelim_months Two-element numeric vector giving the minimum and
 #' maximum ages in months to include.
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #' @return A named list with members 'ages_months' and 'ages_years', each
 #' numeric of length \code{nsamp}, giving the sampled ages in months and years.
 #' @author Caroline Ring
