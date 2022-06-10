@@ -354,7 +354,7 @@ save(list=c("bmiage",
             # "scr_spline"
             ),
      compress = "bzip2",
-     version = 2,
+     version = 3,
      file="../data/httkpop.RData")
 
 
@@ -362,5 +362,5 @@ save(list=c("bmiage",
 #' Now we have all the spline fits and residual KDEs used to generate 
 #' virtual populations using the virtual-individuals method.
 
-rm(list=ls())
+#rm(list=ls())
 
