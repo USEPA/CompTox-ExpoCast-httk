@@ -38,14 +38,14 @@
 #'@format A list with 10 elements, named for unique combinations of gender
 #'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
 #'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic". Each list element consists of an object of class
+#'  Hispanic"). Each list element consists of an object of class
 #'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
 #'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
 #'  predict natural-log hematocrit from age in months. The smoothing splines
 #'  were fitted to NHANES data for each combination of NHANES gender and
 #'  race/ethnicity categories: natural log hematocrit vs. age in months,
 #'  weighted using the NHANES sample weights.
-)
+
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -95,7 +95,7 @@
 #'  predict natural-log height from age in months. The smoothing splines
 #'  were fitted to NHANES data for each combination of NHANES gender and
 #'  race/ethnicity categories: natural-log height vs. age in months,
-#'  weighted using the NHANES sample weights.
+#'  weighted using the NHANES sample weights. Height is in cm.
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -106,21 +106,21 @@
 #'International 106 (2017): 105-118
 "height_spline"
 
-#'Smoothing splines for natural-log height vs. age, by race and gender.
+#'Smoothing splines for natural-log weight vs. age, by race and gender.
 #'
-#'#'Smoothing splines fitted to NHANES height and age data by race/ethnicity
+#'#'Smoothing splines fitted to NHANES weight and age data by race/ethnicity
 #'and gender.
 #'
 #'@format A list with 10 elements, named for unique combinations of gender
 #'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
 #'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic". Each list element consists of an object of class
+#'  Hispanic"). Each list element consists of an object of class
 #'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
 #'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
-#'  predict natural-log height from age in months. The smoothing splines
+#'  predict natural-log weight from age in months. The smoothing splines
 #'  were fitted to NHANES data for each combination of NHANES gender and
-#'  race/ethnicity categories: natural-log height vs. age in months,
-#'  weighted using the NHANES sample weights.
+#'  race/ethnicity categories: natural-log weight vs. age in months,
+#'  weighted using the NHANES sample weights. Weight is in kg.
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -130,6 +130,98 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment
 #'International 106 (2017): 105-118
 "weight_spline"
+
+#' Data points for kernel density estimation of residual variability of NHANES
+#' quantities
+#'
+#' In virtual-individuals mode, HTTK-Pop generates height, weight, serum
+#' creatinine, and hematocrit values for simulated individuals by first using
+#' the gender- and race/ethnicity-specific fitted smooothing splines for each of
+#' these quantities to predict a value based on age. Then, HTTK-Pop adds
+#' residual variability to the spline-predicted value. Residual variability is
+#' estimated using a kernel-density estimate (KDE), which is determined in the
+#' following way. First, the fitted splines are used to predict a value for each
+#' NHANES respondent. Then, residuals are calculated as the difference between
+#' the NHANES measured value and the spline-predicted value. Then, Gaussian
+#' kernel distributions are placed centered on each of these residuals. The
+#' Gaussian kernel's bandwidth (variance) is determined separately for each
+#' quantity using the plug-in estimator from \code{\link[ks]{Hpi}}.
+#'
+#' To sample from the resulting KDE for each quantity, the following algorithm
+#' is used. First, draw a random sample with replacement from the "kernel
+#' centers", i.e. the original vector of residuals. (Use the NHANES sample
+#' weights to determine the probability of choosing each center.) Then, for each
+#' sampled center, draw a random value from a normal distribution whose mean is
+#' the sampled center, and whose standard deviation is the optimal KDE
+#' bandwidth.
+#'
+#' This data table contains the "kernel centers" -- the original vector of
+#' residuals -- for each quantity whose residual variability is modeled using
+#' KDE. It is used to generate samples from the KDE for residual variability,
+#' along with the optimal bandwidth for each quantity (see \code{\link{hw_H}},
+#' \code{\link{hct_h}}, and \code{\link{scr_h}}). (The necessary NHANES sample
+#' weights are accessed by using column \code{seqn} to look up the sample
+#' weights in the NHANES data table \code{\link{nhanes_mec_svy}}. NA values are
+#' removed before sampling from each vector of centers.
+#'
+#' @format A data.table with 17494 rows and 7 columns: \describe{
+#'   \item{g}{Gender, "Male" or "Female".} \item{r}{NHANES race/ethnicity
+#'   category: "("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
+#'   "Other", and "Other Hispanic")} \item{seqn}{NHANES unique identifier
+#'   (five-digit integer code) identifying a unique NHANES respondent}
+#'   \item{logwresid}{Weight residuals: natural-log NHANES weight (\code{bmxwt})
+#'   - prediction of weight smoothing spline (\code{\link{weight_spline}}) for
+#'   the individual identified by \code{seqn}} \item{loghresid}{Height
+#'   residuals: natural-log NHANES height (\code{bmxwt}) - prediction of height
+#'   smoothing spline (\code{\link{height_spline}}) for the individual
+#'   identified by \code{seqn}} \item{loghctresid}{Hematocrit residuals:
+#'   natural-log NHANES hematocrit (\code{lbxhct}) - prediction of hematocrit
+#'   smoothing spline (\code{\link{hct_spline}}) for the individual identified
+#'   by \code{seqn}} \item{logscresid}{Serum creatinine residuals: natural-log
+#'   NHANES serum creatinine (\code{lbxscr}) - prediction of serum creatinine
+#'   smoothing spline (\code{\link{scr_spline}}) for the individual identified
+#'   by \code{seqn}} }
+#' @source Spline fits to the data in \code{\link{nhanes_mec_svy}
+#'   
+"kde_centers"
+
+#' Optimal bandwidth for kernel density estimate of joint weight/height residual
+#' variability
+#'
+#' In virtual-individuals mode, HTTK-Pop generates height and weight for
+#' simulated individuals, by first using the gender- and race/ethnicity-specific
+#' fitted smooothing splines for height and weight to predict values based on
+#' age. Then, HTTK-Pop adds residual variability to the spline-predicted values.
+#' Residual variability is estimated using a kernel-density estimate (KDE),
+#' which is determined in the following way. First, the fitted splines are used
+#' to predict (natural-log) weight and height values for each NHANES respondent.
+#' Then, residuals are calculated as the difference between the natural-log
+#' NHANES measured value and the spline-predicted value. Then, a 2-D Gaussian
+#' kernel distributions are placed centered on each pair of weight/height
+#' residuals. The 2-D Gaussian kernel's bandwidth (variance-covariance matrix)
+#' is determined separately for each quantity using the plug-in estimator from
+#' \code{\link[ks]{Hpi}}.
+#'
+#' To sample from the resulting KDE, the following algorithm is used. First,
+#' draw a random sample with replacement from the "kernel centers", i.e. the
+#' rows of the original matrix of residuals. (Use the NHANES sample weights to
+#' determine the probability of choosing each center.) Then, for each sampled
+#' center (pair of weight/height residuals), draw a random value from a 2-D
+#' normal distribution whose mean is the sampled pair of weight/height
+#' residuals, and whose variance-covariance matrix is the optimal KDE bandwidth.
+#'
+#' @format A list with 10 elements, named for unique combinations of NHANES
+#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
+#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
+#'   "Other", and "Other Hispanic"). Each list element is a 2x2 matrix giving
+#'   the variance-covariance matrix that is the optimal 2-D KDE bandwidth for
+#'   estimating the joint distribution of residual variability in (natural-log)
+#'   weight/height residuals.
+#' @source The output of \code{\link[ks]{Hpi}} called on the matrix of weight
+#'   and height residuals (in \link{kde_centers}, columns \code{logwresid} and
+#'   \code{loghresid}, with NAs removed)
+#'   
+"hw_H"
 
 #' A timestamp of table creation
 #'
