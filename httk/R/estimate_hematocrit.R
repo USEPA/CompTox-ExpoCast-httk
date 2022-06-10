@@ -44,7 +44,7 @@ estimate_hematocrit <- function(gender,
   g <- r <- loghctresid <- seqn <- wtmec6yr <- NULL
   #End R CMD CHECK appeasement.
   
-  hematocrit <- vector(mode = "numeric", length = length(age_months))
+  hematocrit <- rep(NA_real_, length(age_months))
   grname <- unique(paste(gender, reth))
   if (any(age_years>=1)){
     n <- sum(age_years>=1)
