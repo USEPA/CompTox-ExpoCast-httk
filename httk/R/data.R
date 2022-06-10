@@ -143,9 +143,12 @@
 #' following way. First, the fitted splines are used to predict a value for each
 #' NHANES respondent. Then, residuals are calculated as the difference between
 #' the NHANES measured value and the spline-predicted value. Then, Gaussian
-#' kernel distributions are placed centered on each of these residuals. The
-#' Gaussian kernel's bandwidth (variance) is determined separately for each
-#' quantity using the plug-in estimator from \code{\link[ks]{Hpi}}.
+#' kernel distributions are placed centered on each of these residuals. (To
+#' account for sample weights, centers are effectively repeated a number of
+#' times corresponding to their relative weight.) The Gaussian kernel's
+#' bandwidth (variance) is determined using the plug-in estimator from
+#' \code{\link[ks]{Hpi}}. The sum of all the kernel distributions approximates
+#' the 2-D distribution of residuals.
 #'
 #' To sample from the resulting KDE for each quantity, the following algorithm
 #' is used. First, draw a random sample with replacement from the "kernel
@@ -197,10 +200,12 @@
 #' to predict (natural-log) weight and height values for each NHANES respondent.
 #' Then, residuals are calculated as the difference between the natural-log
 #' NHANES measured value and the spline-predicted value. Then, a 2-D Gaussian
-#' kernel distributions are placed centered on each pair of weight/height
-#' residuals. The 2-D Gaussian kernel's bandwidth (variance-covariance matrix)
-#' is determined separately for each quantity using the plug-in estimator from
-#' \code{\link[ks]{Hpi}}.
+#' kernel distribution is placed centered on each pair of weight/height
+#' residuals. (To account for sample weights, centers are effectively repeated a
+#' number of times corresponding to their relative weight.) The 2-D Gaussian
+#' kernel's bandwidth (variance-covariance matrix) is determinedusing the
+#' plug-in estimator from \code{\link[ks]{Hpi}}. The sum of all the kernel
+#' distributions approximates the distribution of residuals.
 #'
 #' To sample from the resulting KDE, the following algorithm is used. First,
 #' draw a random sample with replacement from the "kernel centers", i.e. the
@@ -222,6 +227,84 @@
 #'   \code{loghresid}, with NAs removed)
 #'   
 "hw_H"
+
+#' Optimal bandwidth for kernel density estimate of hematocrit residual
+#' variability
+#'
+#' In virtual-individuals mode, HTTK-Pop generates hematocrit for simulated
+#' individuals, by first using the gender- and race/ethnicity-specific fitted
+#' smooothing splines for hematocrit to predict values based on age. Then,
+#' HTTK-Pop adds residual variability to the spline-predicted values. Residual
+#' variability is estimated using a kernel-density estimate (KDE), which is
+#' determined in the following way. First, the fitted splines are used to
+#' predict (natural-log) hematocrit values for each NHANES respondent. Then,
+#' residuals are calculated as the difference between the natural-log NHANES
+#' measured value and the spline-predicted value. Then, a Gaussian kernel
+#' distribution is placed centered on each residual. (To account for sample
+#' weights, centers are effectively repeated a number of times corresponding to
+#' their relative weight.) The Gaussian kernel's bandwidth (standard deviation)
+#' is determined using the plug-in estimator from \code{\link[ks]{hpi}}. The sum
+#' of all the kernel distributions approximates the distribution of residuals.
+#'
+#' To sample from the resulting KDE, the following algorithm is used. First,
+#' draw a random sample with replacement from the "kernel centers", i.e. the
+#' original vector of residuals. (Use the NHANES sample weights to determine the
+#' probability of choosing each center.) Then, for each sampled center
+#' (hematocrit residual), draw a random value from a normal distribution whose
+#' mean is the sampled hematocrit residual, and whose standard deviation is the
+#' optimal KDE bandwidth.
+#'
+#' @format A list with 10 elements, named for unique combinations of NHANES
+#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
+#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
+#'   "Other", and "Other Hispanic"). Each list element is a numeric scalar
+#'   giving the standard deviation that is the optimal KDE bandwidth for
+#'   estimating the distribution of residual variability in (natural-log)
+#'   hematocrit residuals.
+#' @source The output of \code{\link[ks]{hpi}} called on the vector of
+#'   hematocrit residuals (in \link{kde_centers}, column \code{loghctresid},
+#'   with NAs removed)
+#'   
+"hct_h"
+
+#' Optimal bandwidth for kernel density estimate of serum creatinine residual
+#' variability
+#'
+#' In virtual-individuals mode, HTTK-Pop generates serum creatinine for
+#' simulated individuals, by first using the gender- and race/ethnicity-specific
+#' fitted smooothing splines for serum creatinine to predict values based on
+#' age. Then, HTTK-Pop adds residual variability to the spline-predicted values.
+#' Residual variability is estimated using a kernel-density estimate (KDE),
+#' which is determined in the following way. First, the fitted splines are used
+#' to predict (natural-log) serum creatinine values for each NHANES respondent.
+#' Then, residuals are calculated as the difference between the natural-log
+#' NHANES measured value and the spline-predicted value. Then, a Gaussian kernel
+#' distribution is placed centered on each residual. (To account for sample
+#' weights, centers are effectively repeated a number of times corresponding to
+#' their relative weight.) The Gaussian kernel's bandwidth (standard deviation)
+#' is determined using the plug-in estimator from \code{\link[ks]{hpi}}. The sum
+#' of all the kernel distributions approximates the distribution of residuals.
+#'
+#' To sample from the resulting KDE, the following algorithm is used. First,
+#' draw a random sample with replacement from the "kernel centers", i.e. the
+#' original vector of residuals. (Use the NHANES sample weights to determine the
+#' probability of choosing each center.) Then, for each sampled center (serum
+#' creatinine residual), draw a random value from a normal distribution whose
+#' mean is the sampled serum creatinine residual, and whose standard deviation
+#' is the optimal KDE bandwidth.
+#'
+#' @format A list with 10 elements, named for unique combinations of NHANES
+#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
+#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
+#'   "Other", and "Other Hispanic"). Each list element is a numeric scalar
+#'   giving the standard deviation that is the optimal KDE bandwidth for
+#'   estimating the distribution of residual variability in (natural-log) serum
+#'   creatinine residuals.
+#' @source The output of \code{\link[ks]{hpi}} called on the vector of serum
+#'   creatinine residuals (in \link{kde_centers}, column \code{logscresid}, with
+#'   NAs removed)
+#'   
+"scr_h"
 
 #' A timestamp of table creation
 #'
