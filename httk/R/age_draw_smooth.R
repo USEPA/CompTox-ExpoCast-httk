@@ -26,14 +26,14 @@ age_draw_smooth <- function(gender, reth, nsamp, agelim_months){
   #this is pointless and annoying.
   g <- r <- x <- y <- NULL
   #End R CMD CHECK appeasement.
+  
+  grname <- paste(gender, reth)
 
   indiv_ages_m <- vector()
   indiv_ages_y <- vector()
   while(length(indiv_ages_m)<nsamp){
-    smooth_x <- DT_age[g==gender & r==reth,
-                           x]
-    smooth_y <- DT_age[g==gender & r==reth,
-                       y]
+    smooth_x <- age_smooth[[grname]][, "x"]
+    smooth_y <- age_smooth[[grname]][, "y"]
     age_dist <- approx(smooth_x,
                        smooth_y,
                        xout=0:959,
