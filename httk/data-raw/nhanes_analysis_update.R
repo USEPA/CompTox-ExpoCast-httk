@@ -28,7 +28,7 @@ source("make_bmiage_dt.R") #loads data.table called bmiage
 #usethis::use_data(bmiage, overwrite=TRUE)
 source("make_wfl.R") #loads data_table called wfl (weight for length)
 #usethis::use_data(wfl, overwrite=TRUE)
-source("get_weight_class.R")
+source("get_weight_class_init.R")
 source("nhanes_init_update.R")
 #For reproducibility, first set a seed!
 TeachingDemos::char2seed("Caroline Ring")
@@ -354,11 +354,13 @@ save(list=c("bmiage",
             # "scr_spline"
             ),
      compress = "bzip2",
-     version = 3,
+     version = 2,
      file="../data/httkpop.RData")
 
 
 #' 
 #' Now we have all the spline fits and residual KDEs used to generate 
 #' virtual populations using the virtual-individuals method.
+
+rm(list=ls())
 
