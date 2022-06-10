@@ -49,18 +49,20 @@ gen_serum_creatinine <- function(gender,
 
   if (any(age_years>=12)){
     n <- sum(age_years>=12)
-   log_serum_creat_pred <- predict(scr_spline[[grname]], 
-                                        x=age_months[age_years>=12])$y
+   
    
    #calculate NHANES residuals
    nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
                                   reth %in% reth &
                                   is.finite(lbxscr),
                                 .(ridexagm, lbxscr, wtmec6yr)]
-   logscresid <- log(nhanes_sub$lbxscr) -  predict(scr_spline[[grname]], 
-                         x=nhanes_sub$ridexagm)$y
    w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
-   
+   #fit smoothing spline
+   splinefit <- smooth.spline(x = nhanes_sub$ridexagm,
+                              y = log(nhanes_sub$lbxscr),
+                              w = w)
+   logscresid <- residuals(splinefit)
+
 
    #sample from centers
    centers_samp <- sample(x = logscresid,
@@ -75,6 +77,9 @@ gen_serum_creatinine <- function(gender,
    resids_samp <- rnorm(n =n,
                    mean = centers_samp,
                    sd = h)
+   #predicted values for sampled individuals
+   log_serum_creat_pred <- predict(splinefit, 
+                                   x=age_months[age_years>=12])$y
    
    serum_creat[age_years>=12] <- exp(log_serum_creat_pred + resids_samp)
   }

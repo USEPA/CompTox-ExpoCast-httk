@@ -57,8 +57,8 @@ age_smooth <- function(g, r, nhanes_mec_svy){
                     ridreth1==r)
   
   overall_smooth <- survey::svysmooth(~ridexagm, #smooth distribution of age in months
-                                      d.sub, 
-                                      ngrid=960)$ridexagm #evaluate at 0:959 months
+                                      d.sub,
+                                      range.x = c(0,959))$ridexagm #evaluate at 0:959 months
  #return the smoothed age density
   return(data.table(x = overall_smooth$x,
                    y = overall_smooth$y))
@@ -310,6 +310,15 @@ kde_centers <- DT_hw_kde_centers[
   DT_scr_kde_centers,
   on = c("g", "r", "seqn")]
 
+#split out DT_age into a list
+DT_age[, gr:=paste(g, r)]
+age_smooth <- split(DT_age,
+                    by = "gr")
+age_smooth <- sapply(age_smooth,
+                     function(DT) as.matrix(DT[, .(x, y)]),
+                     simplify = FALSE,
+                     USE.NAMES = TRUE)
+
 #remove extraneous variables from nhanes_mec_svy
 #Remove extraneous variables
 nhanes_mec_svy$variables[, bmxbmi:=NULL]
@@ -334,15 +343,16 @@ save(list=c("bmiage",
             "mcnally_dt",
             "nhanes_mec_svy",
             "wfl",
-            "DT_age",
+            "age_smooth"
             #"kde_centers",
             # "hw_H",
             # "hct_h",
             # "scr_h",
-            "height_spline",
-            "weight_spline",
-            "hct_spline",
-            "scr_spline"),
+            # "height_spline",
+            # "weight_spline",
+            # "hct_spline",
+            # "scr_spline"
+            ),
      compress = "bzip2",
      version = 3,
      file="../data/httkpop.RData")
