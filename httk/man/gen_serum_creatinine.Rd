@@ -4,7 +4,7 @@
 \alias{gen_serum_creatinine}
 \title{Generate serum creatinine values for a virtual population.}
 \usage{
-gen_serum_creatinine(gender, reth, age_years, age_months)
+gen_serum_creatinine(gender, reth, age_years, age_months, nhanes_mec_svy)
 }
 \arguments{
 \item{gender}{Gender for which to generate serum creatinine values ("Male" or

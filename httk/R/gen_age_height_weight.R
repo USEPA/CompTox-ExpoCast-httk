@@ -58,7 +58,8 @@ gen_age_height_weight <- function(nsamp=NULL,
                                   reths, 
                                   weight_category,
                                   agelim_years,
-                                  agelim_months){
+                                  agelim_months,
+                                  nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for 
   #each time a data.table column name is used without quotes. To appease R CMD 
@@ -210,14 +211,16 @@ gen_age_height_weight <- function(nsamp=NULL,
   gen_dt[, c('age_months','age_years'):= age_draw_smooth(gender=gender, 
                                                          reth=reth, 
                                                          nsamp=.N, 
-                                                         agelim_months=agelim_months), 
+                                                         agelim_months=agelim_months,
+                                                         nhanes_mec_svy), 
          by=list(gender,reth)]
   
   #Draw height and body weight
   gen_dt[, c("weight",
              "height"):=gen_height_weight(gender = gender,
                                           reth = reth,
-                                          age_months = age_months),
+                                          age_months = age_months,
+                                          nhanes_mec_svy),
          by = list(gender, reth)]
   
   if (length(setdiff(c('Underweight', 
@@ -241,7 +244,8 @@ gen_age_height_weight <- function(nsamp=NULL,
              c('age_months','age_years'):= age_draw_smooth(gender=gender, 
                                                            reth=reth, 
                                                            nsamp=.N, 
-                                                           agelim_months=agelim_months), 
+                                                           agelim_months=agelim_months,
+                                                           nhanes_mec_svy), 
              by=list(gender,reth)] #Now age will be updated, but weight_category isn't yet, so we can still use it
     
       #redraw height & weight for those not in selected weight classes
@@ -249,7 +253,8 @@ gen_age_height_weight <- function(nsamp=NULL,
              c("weight",
                "height"):=gen_height_weight(gender = gender,
                                             reth = reth,
-                                            age_months = age_months),
+                                            age_months = age_months,
+                                            nhanes_mec_svy),
              by = list(gender, reth)]
     
       #recalc BMI

@@ -54,10 +54,7 @@
 #'NHANES data on demographics, anthropometrics, and some laboratory measures,
 #'cleaned and combined into a single data set.
 #'
-#'@format An object of class \code{survey.design} (see
-#'  \code{\link[survey]{svydesign}}), including masked cluster and strata.
-#'  Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
-#'  \code{nhanes_mec_svy$variables} is a data.table with 23620 rows and 12
+#'@format A data.table with 23620 rows and 12
 #'  variables.  \describe{ \item{seqn}{NHANES unique identifier for individual
 #'  respondents.} \item{sddsrvyr}{NHANES two-year cycle: one of "NHANES
 #'  2013-2014", "NHANES 2015-2016", "NHANES 2017-2018".} \item{riagendr}{Gender:
@@ -87,28 +84,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
 #'  environmental chemicals by simulating toxicokinetic variability."
 #'  Environment International 106 (2017): 105-118
-"nhanes_mec_svy"
-
-#'Smoothed age distributions by race and gender.
-#'
-#'Distributions of ages in months, computed from NHANES data smoothed using
-#'\code{\link[survey]{svysmooth}}, for each combination of race/ethnicity and
-#'gender.
-#'
-#'@format A list of 10 elements named for unique combinations of NHANES gender
-#'  and race/ethnicity categories. Each list element is a matrix with 401 rows and 2 columns:
-#'  \describe{\item{\code{x}}{401 evenly-spaced grid
-#'  points between 0 and 959 months} \item{\code{y}}{Smoothed density values
-#'  evaluated at each \code{x} value} }
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
-"age_smooth"
+"mecdt"
 
 #'CDC BMI-for-age charts
 #'

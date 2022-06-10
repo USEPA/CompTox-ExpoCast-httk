@@ -33,7 +33,8 @@
 gen_serum_creatinine <- function(gender,
                                  reth,
                                  age_years,
-                                 age_months){
+                                 age_months,
+                                 nhanes_mec_svy){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
@@ -52,8 +53,8 @@ gen_serum_creatinine <- function(gender,
    
    
    #calculate NHANES residuals
-   nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
-                                  reth %in% reth &
+   nhanes_sub <- nhanes_mec_svy$variables[riagendr %in% gender &
+                                  ridreth1 %in% reth &
                                   is.finite(lbxscr),
                                 .(ridexagm, lbxscr, wtmec6yr)]
    w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
@@ -71,7 +72,7 @@ gen_serum_creatinine <- function(gender,
                         prob = w)
    
    #get optimal bandwidth
-   h <- ks::hpi(x = logscresid)
+   h <- scr_h[[grname]]
    
    #sample from normal distirbution with optimal bandwidth for this gender/reth
    resids_samp <- rnorm(n =n,

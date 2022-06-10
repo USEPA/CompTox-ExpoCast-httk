@@ -3,6 +3,9 @@ utils::globalVariables(c('tissue.data','physiology.data'))
 
 utils::globalVariables(c("bmiage",
                         "mcnally_dt",
-                        "nhanes_mec_svy",
+                        "mecdt",
+                        "hw_H",
+                        "scr_h",
+                        "hct_h",
                         "wfl",
                         "age_smooth"))

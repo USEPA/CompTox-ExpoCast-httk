@@ -202,3 +202,5 @@ model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
 model.list[["1compartment"]]$chem.class.filt <- c("PFAS")
+
+

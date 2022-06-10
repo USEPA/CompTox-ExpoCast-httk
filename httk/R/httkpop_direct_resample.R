@@ -65,7 +65,8 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             'Non-Hispanic Black',
                                             'Other'),
                                     gfr_resid_var = TRUE,
-                                    ckd_epi_race_coeff = FALSE){
+                                    ckd_epi_race_coeff = FALSE,
+                                    nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -86,7 +87,8 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             reths=reths,
                                             weight_category=weight_category,
                                             gfr_resid_var = gfr_resid_var,
-                                            ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                            ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                            nhanes_mec_svy)
   #Compute BMI
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
   #Assign weight class
@@ -131,7 +133,8 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                                reths=reths,
                                                weight_category=weight_category,
                                                gfr_resid_var = gfr_resid_var,
-                                               ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                               ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                               nhanes_mec_svy)
     #Recalculate BMI for the newly redrawn individuals
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Check on weight class
