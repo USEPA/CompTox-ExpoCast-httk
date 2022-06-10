@@ -21,8 +21,8 @@ library(ks)
 library(TeachingDemos)
 
 #Load McNally data
-load("mcnally_dt.Rdata")
-#' 
+mcnally_dt <- fread("McNally2014_data.csv")
+
 #' Pre-process the NHANES data.
 source("make_bmiage_dt.R") #loads data.table called bmiage
 #usethis::use_data(bmiage, overwrite=TRUE)
