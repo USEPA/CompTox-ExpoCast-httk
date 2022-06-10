@@ -334,20 +334,22 @@ nhanes_mec_svy$variables[, logbmxwt:=NULL]
 nhanes_mec_svy$variables[, logbmxhtlenavg:=NULL]
 nhanes_mec_svy$variables[, loglbxscr:=NULL]
 nhanes_mec_svy$variables[, loglbxhct:=NULL]
-nhanes_mec_svy$variables[, sdmvpsu:=NULL]
-nhanes_mec_svy$variables[, sdmvstra:=NULL]
+# nhanes_mec_svy$variables[, sdmvpsu:=NULL]
+# nhanes_mec_svy$variables[, sdmvstra:=NULL]
+
+mecdt <- nhanes_mec_svy$variables
 
 
 #save updated httkpop data
 save(list=c("bmiage",
             "mcnally_dt",
-            "nhanes_mec_svy",
+            "mecdt",
             "wfl",
-            "age_smooth"
+            #"age_smooth"
             #"kde_centers",
-            # "hw_H",
-            # "hct_h",
-            # "scr_h",
+            "hw_H",
+            "hct_h",
+            "scr_h"
             # "height_spline",
             # "weight_spline",
             # "hct_spline",

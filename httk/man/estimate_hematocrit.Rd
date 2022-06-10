@@ -4,7 +4,7 @@
 \alias{estimate_hematocrit}
 \title{Generate hematocrit values for a virtual population}
 \usage{
-estimate_hematocrit(gender, reth, age_years, age_months)
+estimate_hematocrit(gender, reth, age_years, age_months, nhanes_mec_svy)
 }
 \arguments{
 \item{gender}{Gender for which to generate hematocrit values ("Male" or

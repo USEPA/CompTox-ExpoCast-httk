@@ -14,7 +14,8 @@ httkpop_virtual_indiv(
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
     "Non-Hispanic Black", "Other"),
   gfr_resid_var = TRUE,
-  ckd_epi_race_coeff = FALSE
+  ckd_epi_race_coeff = FALSE,
+  nhanes_mec_svy
 )
 }
 \arguments{
