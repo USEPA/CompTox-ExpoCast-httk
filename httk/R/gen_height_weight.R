@@ -33,7 +33,8 @@
 #'  
 gen_height_weight <- function(gender,
                               reth,
-                              age_months){
+                              age_months,
+                              nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -53,8 +54,8 @@ gen_height_weight <- function(gender,
   
   #Draw log BW and log height residuals from the 2-d KDE
   #calculate NHANES residuals
-  nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
-                                           reth %in% reth &
+  nhanes_sub <- nhanes_mec_svy$variables[riagendr %in% gender &
+                                           ridreth1 %in% reth &
                                            is.finite(bmxwt) &
                                            is.finite(bmxhtlenavg),
                                          .(ridexagm, bmxwt, bmxhtlenavg, wtmec6yr)]
@@ -78,21 +79,31 @@ gen_height_weight <- function(gender,
                          size = n,
                          replace = TRUE,
                          prob = w)
-  centers_samp <- centers[centers_id, ]
+  centers_samp <- centers[centers_id_samp, ]
+  #handle the case where n=1
+  if(n==1){
+    centers_samp <- matrix(centers_samp,
+                           nrow = 1,
+                           ncol = 2)
+  }
   
   #get optimal bandwidth
-  H <- ks::Hpi(x = centers)
+  #H <- ks::Hpi(x = centers)
+  H <- hw_H[[grname]]
 
+  
   resids_samp <- t(apply(centers_samp,
                   1,
-                  function(x) rmvnorm(n = 1,
-                    mean = x,
-                    sigma = H)))
+                  function(this_center) rmvnorm(n = 1,
+                    mean = this_center,
+                    sigma = H)
+                  )
+                  )
   
   mean_logbw <- predict(weight_spline,
-                        age_months)
+                        age_months)$y
   mean_logh <- predict(height_spline,
-                       age_months)
+                       age_months)$y
   
    weight <- exp(mean_logbw + resids_samp[,1])
    height <- exp(mean_logh + resids_samp[,2])

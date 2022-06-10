@@ -4,7 +4,7 @@
 \alias{age_draw_smooth}
 \title{Draws ages from a smoothed distribution for a given gender/race combination}
 \usage{
-age_draw_smooth(gender, reth, nsamp, agelim_months)
+age_draw_smooth(gender, reth, nsamp, agelim_months, nhanes_mec_svy)
 }
 \arguments{
 \item{nsamp}{Number of ages to draw.}

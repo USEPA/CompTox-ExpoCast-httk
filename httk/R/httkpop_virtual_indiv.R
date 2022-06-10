@@ -63,7 +63,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                          'Non-Hispanic Black',
                                          'Other'),
                                  gfr_resid_var = TRUE,
-                                 ckd_epi_race_coeff = FALSE) {
+                                 ckd_epi_race_coeff = FALSE,
+                                 nhanes_mec_svy) {
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -81,7 +82,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                     agelim_months=agelim_months,
                                     agelim_years=agelim_years,
                                     weight_category=weight_category,
-                                    reths=reths)
+                                    reths=reths,
+                                    nhanes_mec_svy = nhanes_mec_svy)
   #Generate tissue masses and flows.
   indiv_dt <- tissue_masses_flows(tmf_dt=indiv_dt)
   
@@ -89,7 +91,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   indiv_dt <- indiv_dt[, serum_creat:=gen_serum_creatinine(gender = gender,
                                                            reth = reth,
                                                            age_years = age_years,
-                                                           age_months = age_months),
+                                                           age_months = age_months,
+                                                           nhanes_mec_svy = nhanes_mec_svy),
                        by = list(gender, reth)]
   #Estimate GFR
   indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
@@ -143,7 +146,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                      agelim_months=agelim_months,
                                      agelim_years=agelim_years,
                                      weight_category=weight_category,
-                                     reths=reths)
+                                     reths=reths,
+                                     nhanes_mec_svy = nhanes_mec_svy)
     #Recompute tissue masses and flows using the new age, height, and weight
     #values
     indiv_tmp<-tissue_masses_flows(tmf_dt=indiv_tmp)
@@ -151,7 +155,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
     indiv_tmp[, serum_creat:=gen_serum_creatinine(gender = gender,
                                                  reth = reth,
                                                  age_years = age_years,
-                                                 age_months = age_months),
+                                                 age_months = age_months,
+                                                 nhanes_mec_svy = nhanes_mec_svy),
              by = list(gender, reth)]
     #Recompute GFR using the new serum creatinine values
     indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp)
@@ -189,7 +194,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   indiv_dt[, hematocrit:=estimate_hematocrit(gender = gender,
                                              reth = reth,
                                              age_years = age_years,
-                                             age_months = age_months),
+                                             age_months = age_months,
+                                             nhanes_mec_svy = nhanes_mec_svy),
            by = list(gender, reth)]
   
   #Replace any spaces in column names with underscores,
