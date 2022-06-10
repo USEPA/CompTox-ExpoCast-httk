@@ -62,19 +62,9 @@
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' @param skin_depth skin_depth of skin, cm, used in calculating Kp.
-#' @param skin.pH pH of dermis/skin, used in calculating Kp and Kskin2media.
-#' @param vmax.km Whether or not to use Michaelis-Menten kinetics, returning
-#' Vmax and Km in parameters instead of Clmetabolismc and
-#' million.cells.per.gliver.
+#' @param parameterize.arg.list Additional parameterized passed to the model 
+#' parameterization function, "parameterize_dermal_pbtk".
 #' @param BW Body weight, kg.
-#' @param height Height in cm.
 #' @param Vmedia Volume of media applied to skin in L, defaults to 0.01 L.
 #' @param initial.dose Concentration
 #' @param dermal.dosing Matrix consisting of three columns named
@@ -82,7 +72,7 @@
 #' with the applied concentration, units/L, and the volume of the applied
 #' media, L.
 #' @param ... Additional arguments passed to the integrator.
-#' @return A matrix of class deSolve with a column for time(in days), each
+#' @return A matrix of class deSolve with a column for time (in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
@@ -108,7 +98,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     chem.cas = NULL, #solve_model
                     dtxsid = NULL,#solve_model
                     model.type = "dermal", #can also be "dermal_1subcomp"
-                    method.permeability = "Ficks-Law",
                     times=NULL, #solve_model
                     parameters=NULL, #solve_model
                     days=10, #solve_model
@@ -125,15 +114,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     recalc.clearance=FALSE, #solve_model
                     adjusted.Funbound.plasma=TRUE, #solve_model
                     minimum.Funbound.plasma=1e-4, #solve_model
-                    regression=TRUE, #pars
-                    default.to.human=FALSE, #pars
-                    restrictive.clearance = TRUE,
-                    clint.pvalue.threshold=0.05, #pars
-                    skin_depth=0.3, #pars
-                    skin.pH=7, #pars
-                    vmax.km=F, #pars
-                    height=175, #pars
-                    Kmedia2water=NULL, #pars
+                    parameterize.arg.list=NULL,
                     route = NULL, #DERMAL
                     Vmedia = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
@@ -236,16 +217,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     parameterize.arg.list = list(
       model.type = model.type,
-      method.permeability = method.permeability,
-      default.to.human = default.to.human,
-      regression = regression,
-      restrictive.clearance = restrictive.clearance,
-      clint.pvalue.threshold = clint.pvalue.threshold,
-      skin_depth = skin_depth,
-      skin.pH = skin.pH,
-      vmax.km = vmax.km,
-      height = height,
-      Kmedia2water = Kmedia2water
+      parameterize.arg.list
     ),
     ...)
   

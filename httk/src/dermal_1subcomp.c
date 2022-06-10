@@ -52,7 +52,7 @@
      Fskin_exposed = 0,
      totalSA = 0,
      SA_exposed = 0,
-     Kp = 0,
+     P = 0,
      Kskin2media = 0,
      BW = 70,
      Clmetabolismc = 0.0,
@@ -145,7 +145,7 @@ static double parms[52];
 #define Fskin_exposed parms[1]
 #define totalSA parms[2]
 #define SA_exposed parms[3]
-#define Kp parms[4]
+#define P parms[4]
 #define Kskin2media parms[5]
 #define BW parms[6]
 #define Clmetabolismc parms[7]
@@ -286,7 +286,7 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cmedia] = y[ID_Amedia] / Vmedia ;
 
-  Rin_dermal = ( y[ID_Amedia] ? Kp * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskin_exposed] / Kskin2media ) : 0.0 ) ;
+  Rin_dermal = ( y[ID_Amedia] ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskin_exposed] / Kskin2media ) : 0.0 ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
 

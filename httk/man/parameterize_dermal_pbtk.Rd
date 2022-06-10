@@ -9,7 +9,7 @@ parameterize_dermal_pbtk(
   chem.name = NULL,
   dtxsid = NULL,
   model.type = "dermal",
-  method.permeability = "Ficks-Law",
+  method.permeability = "Chen-Lian",
   species = "Human",
   default.to.human = F,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
@@ -43,9 +43,9 @@ model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
 or "dermal_1subcomp" for the model with 1 compartment for the skin.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
-the permeability coefficient, Kp, either "Potts-Guy" or "Ficks-Law". Default
-is "Ficks-Law" (Sawyer et al., 2016 and Chen and Han et al., 2015), which uses Fick's
-law of diffusion to calculate Kp. For "dermal" model, this parameter is ignored.}
+the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
+is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -75,9 +75,9 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{skin_depth}{skin_depth of skin, cm, used in calculating Kp.}
+\item{skin_depth}{skin_depth of skin, cm, used in calculating P.}
 
-\item{skin.pH}{pH of dermis/skin, used in calculating Kp and Kskin2media.}
+\item{skin.pH}{pH of dermis/skin, used in calculating P and Kskin2media.}
 
 \item{vmax.km}{Whether or not to use Michaelis-Menten kinetics, returning
 Vmax and Km in parameters instead of Clmetabolismc and
@@ -86,7 +86,8 @@ million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.}
 \item{height}{Height in cm, used in calculating totalSA.}
 
 \item{Kmedia2water}{Partition coefficient for the media (sometimes called the 
-vehicle) carrying the chemical to water. Default is NULL, which assumes the media is olive oil.}
+vehicle) carrying the chemical to water. Default is NULL, which assumes the media is water.
+Other optional inputs are "octanol" and "olive oil".}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -121,7 +122,6 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
-\item{Vmucc}{Volume of the ? per kg body weight, L/kg BW. (Not used in model?)}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 \item{Vskinc}{Volume of the skin per kg body weight, L/kg BW.}
@@ -131,7 +131,7 @@ model.type="dermal_1subcomp".}
 \item{Vviable_epidermisc}{Volume of the viable epidermis layer of the skin per 
 kg body weight, L/kg BW. This parameter does not appear when 
 model.type="dermal_1subcomp".}
-\item{Kp}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
+\item{P}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
 this parameter changes depending on method.permeability. When model.type="dermal",
 this parameter is replaced by Pmedia2sc and Psc2ve.} \item{Pmedia2sc}{Permeability
 of the stratum corneum (SC), cm/h. This parameter does not appear when 
@@ -164,6 +164,9 @@ method.permeability="Potts-Guy")
 
 }
 \references{
+Chen, L., Han, L., Saib, O. and Lian, G. (2015). In Silico Prediction of Percutaneous
+Absorption and Disposition Kinetics of Chemicals. Pharmaceutical Research 32, 1779-93, 10.1007/s11095-014-1575-0
+
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.

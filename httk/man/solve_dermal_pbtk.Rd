@@ -9,7 +9,6 @@ solve_dermal_pbtk(
   chem.cas = NULL,
   dtxsid = NULL,
   model.type = "dermal",
-  method.permeability = "Ficks-Law",
   times = NULL,
   parameters = NULL,
   days = 10,
@@ -25,15 +24,7 @@ solve_dermal_pbtk(
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  regression = TRUE,
-  default.to.human = FALSE,
-  restrictive.clearance = TRUE,
-  clint.pvalue.threshold = 0.05,
-  skin_depth = 0.3,
-  skin.pH = 7,
-  vmax.km = F,
-  height = 175,
-  Kmedia2water = NULL,
+  parameterize.arg.list = NULL,
   route = NULL,
   Vmedia = NULL,
   initial.dose = NULL,
@@ -93,24 +84,8 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
 
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
-
-\item{skin_depth}{skin_depth of skin, cm, used in calculating Kp.}
-
-\item{skin.pH}{pH of dermis/skin, used in calculating Kp and Kskin2media.}
-
-\item{vmax.km}{Whether or not to use Michaelis-Menten kinetics, returning
-Vmax and Km in parameters instead of Clmetabolismc and
-million.cells.per.gliver.}
-
-\item{height}{Height in cm.}
+\item{parameterize.arg.list}{Additional parameterized passed to the model 
+parameterization function, "parameterize_dermal_pbtk".}
 
 \item{Vmedia}{Volume of media applied to skin in L, defaults to 0.01 L.}
 
@@ -126,7 +101,7 @@ with the applied concentration, units/L, and the volume of the applied
 media, L.}
 }
 \value{
-A matrix of class deSolve with a column for time(in days), each
+A matrix of class deSolve with a column for time (in days), each
 compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
