@@ -40,14 +40,11 @@ gen_height_weight <- function(gender,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  mean_logh <- g <- gender <- r <- reth <- height_spline <- NULL
-  age_months <- mean_logbw <- weight_spline <- hw_kde <- nkde <- NULL
-  id <- weight <- NULL
-  logbw_resid <-   height <- logh_resid <- NULL
+  g <- r <- seqn <- logwresid <- loghresid <- wtmec6yr <- NULL
   #End R CMD CHECK appeasement.
   
    n <- length(age_months)
-   gr <- unique(paste(gender, reth))
+   grname <- unique(paste(gender, reth))
    
   #Get "mean" heights (cm) and bodyweights (kg) for each individual
   #Subset dt by gender and race/ethnicity,
@@ -93,11 +90,13 @@ gen_height_weight <- function(gender,
   H <- hw_H[[grname]] #KDE bandwidth for this gender & race combination
   
   resids <- centers[,
-                    c("logw_resid",
-                      "logh_resid"):=rmvnorm(n = 1,
+                    as.list(rmvnorm(n = 1,
                     mean = c(logwresid, loghresid),
-                    sigma = H),
+                    sigma = H)),
                     by = 1:nrow(centers)]
+  setnames(resids,
+           names(resids),
+           c("id", "logw_resid", "logh_resid"))
   
    weight <- exp(mean_logbw + resids$logw_resid)
    height <- exp(mean_logh + resids$logh_resid)
