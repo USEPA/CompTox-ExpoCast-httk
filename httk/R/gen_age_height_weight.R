@@ -31,7 +31,10 @@
 #'@param weight_category Optional: The weight categories to include in the
 #'  population. Default is \code{c('Underweight', 'Normal', 'Overweight',
 #'  'Obese')}. User-supplied vector must contain one or more of these strings.
-#'
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
+#'  
 #'@return A data.table containing variables \describe{
 #'  \item{\code{gender}}{Gender of each virtual individual}
 #'  \item{\code{reth}}{Race/ethnicity of each virtual individual}
@@ -51,7 +54,6 @@
 #'
 #'  importFrom survey svymean
 #'
-#'@export gen_age_height_weight
 
 gen_age_height_weight <- function(nsamp=NULL, 
                                   gendernum=NULL, 

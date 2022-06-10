@@ -19,6 +19,10 @@ hematocrit values (corresponding to age_months)}
 
 \item{age_months}{vector of ages in months for individuals for whom to
 generate hematocrit values (between 0-959 months)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A vector of numeric generated hematocrit values (blood percentage red

@@ -18,7 +18,9 @@
 #'  generate hematocrit values (between 0-959 months)
 #'@param age_years Vector of ages in years for individuals for whom to generate
 #'  hematocrit values (corresponding to age_months)
-#'
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'@return A vector of numeric generated hematocrit values (blood percentage red
 #'  blood cells by volume).
 #'
