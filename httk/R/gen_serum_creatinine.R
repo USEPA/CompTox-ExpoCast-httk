@@ -52,29 +52,31 @@ gen_serum_creatinine <- function(gender,
    log_serum_creat_pred <- predict(scr_spline[[grname]], 
                                         x=age_months[age_years>=12])$y
    
-   #centers for KDE sampling
-   kde_centers_gr <- kde_centers[g %in% gender &
-                                   r %in% reth &
-                                   is.finite(logscresid),
-                                 .(seqn,
-                                   logscresid)]
-   #merge in weights
-   kde_centers_gr <- nhanes_mec_svy$variables[kde_centers_gr, on = "seqn"][, .(seqn,
-                                                             wtmec6yr,
-                                                             logscresid)]
+   #calculate NHANES residuals
+   nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
+                                  reth %in% reth &
+                                  is.finite(lbxscr),
+                                .(ridexagm, lbxscr, wtmec6yr)]
+   logscresid <- log(nhanes_sub$lbxscr) -  predict(scr_spline[[grname]], 
+                         x=nhanes_sub$ridexagm)$y
+   w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
    
+
    #sample from centers
-   centers_samp <- sample(kde_centers_gr$logscresid,
+   centers_samp <- sample(x = logscresid,
                         size = n,
                         replace = TRUE,
-                        prob = kde_centers_gr$wtmec6yr/sum( kde_centers_gr$wtmec6yr))
+                        prob = w)
+   
+   #get optimal bandwidth
+   h <- ks::hpi(x = logscresid)
    
    #sample from normal distirbution with optimal bandwidth for this gender/reth
-   resids <- rnorm(n =n,
+   resids_samp <- rnorm(n =n,
                    mean = centers_samp,
-                   sd = scr_h[[grname]])
+                   sd = h)
    
-   serum_creat[age_years>=12] <- exp(log_serum_creat_pred + resids)
+   serum_creat[age_years>=12] <- exp(log_serum_creat_pred + resids_samp)
   }
  
   return(serum_creat)

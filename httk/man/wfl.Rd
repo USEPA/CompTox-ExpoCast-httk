@@ -5,17 +5,17 @@
 \alias{wfl}
 \title{WHO weight-for-length charts}
 \format{
-A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
- or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
- \code{S}}{LMS parameters; see
- \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
- \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
- \code{P95}, and \code{P97.7}}{weight percentiles} }
+a data.table with 262 rows and 4 variables:
+
+ \describe{ \item{Sex}{"Male" or "Female"} \item{Length}{Recumbent length in
+ cm} \item{P2.3}{The 2.3rd percentile weight in kg for the corresponding sex
+ and recumbent length} \item{P97.7}{The 97.7th percentile weight in kg for
+ the corresponding sex and recumbent length}}
 }
 \source{
+\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+and
 \url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
- and
- \url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
 }
 \usage{
 wfl
@@ -28,13 +28,4 @@ For infants under age 2, weight class depends on weight for length percentile.
 #'\describe{ \item{Underweight}{<2.3rd percentile} \item{Normal
 weight}{2.3rd-97.7th percentile} \item{Obese}{>=97.7th percentile} }
 }
-\references{
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability." Environment
-International 106 (2017): 105-118
-}
-\author{
-Caroline Ring
-}
-\keyword{data}
-\keyword{httk-pop}
+\keyword{datasets}
