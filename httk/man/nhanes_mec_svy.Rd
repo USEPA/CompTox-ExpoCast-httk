@@ -5,18 +5,28 @@
 \alias{nhanes_mec_svy}
 \title{Pre-processed NHANES data.}
 \format{
-A survey.design2 object, including masked cluster and strata.
+An object of class \code{survey.design} (see
+ \code{\link[survey]{svydesign}}), including masked cluster and strata.
  Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
- Variables are as described in NHANES Demographics and Examination
- documentation, with the exception of: \describe{
- \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
+ \code{nhanes_mec_svy$variables} is a data.table with 23620 rows and 12
+ variables.  \describe{ \item{seqn}{NHANES unique identifier for individual
+ respondents.} \item{sddsrvyr}{NHANES two-year cycle: one of "NHANES
+ 2013-2014", "NHANES 2015-2016", "NHANES 2017-2018".} \item{riagendr}{Gender:
+ "Male" or "Female"} \item{ridreth1}{Race/ethnicity category: one of "Mexican
+ American", "Non-Hispanic White", "Non-Hispanic Black", "Other", "Other
+ Hispanic".} \item{ridexagm}{Age in months at the time of examination (if not
+ recorded by NHANES, it was imputed based on age at the time of screening)}
+ \item{ridexagy}{Age in years at the time of examination (if not recorded by
+ NHANES, it was imputed based on age at the time of screening)}
+ \item{bmxwt}{Weight in kg} \item{lbxscr}{Serum creatinine, mg/dL}
+ \item{lbxhct}{Hematocrit, percent by volume of blood composed of red blood
+ cells} \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
  computed by dividing 2-year sample weights by 3.}
  \item{\code{bmxhtlenavg}}{Average of height and recumbent length if both
  were measured; if only one was measured, takes value of the one that was
- measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.}
- \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.}
- \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
- Assigned using methods in \code{get_weight_class}.} }
+ measured.} \item{\code{weight_class}}{One of Underweight, Normal,
+ Overweight, or Obese. Assigned using methods in
+ \code{\link{get_weight_class}}.} }
 }
 \source{
 \url{https://wwwn.cdc.gov/nchs/nhanes/Default.aspx}
@@ -30,8 +40,8 @@ cleaned and combined into a single data set.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability." Environment
-International 106 (2017): 105-118
+ environmental chemicals by simulating toxicokinetic variability."
+ Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring
