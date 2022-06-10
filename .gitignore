@@ -5,7 +5,6 @@ httk/src-i386/
 httk/src-x64/
 httk/build/
 httk.Rcheck/
-
 ###################
 # Or these R files
 ###################
@@ -13,11 +12,10 @@ httk.Rcheck/
 *.Rhistory
 *.Rproj
 .Rproj.user/
-
 *.com
 *.class
 *.dll
 *.exe
 *.o
 *.so
-
+*.tar.gz

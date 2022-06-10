@@ -131,181 +131,6 @@
 #'International 106 (2017): 105-118
 "weight_spline"
 
-#' Data points for kernel density estimation of residual variability of NHANES
-#' quantities
-#'
-#' In virtual-individuals mode, HTTK-Pop generates height, weight, serum
-#' creatinine, and hematocrit values for simulated individuals by first using
-#' the gender- and race/ethnicity-specific fitted smooothing splines for each of
-#' these quantities to predict a value based on age. Then, HTTK-Pop adds
-#' residual variability to the spline-predicted value. Residual variability is
-#' estimated using a kernel-density estimate (KDE), which is determined in the
-#' following way. First, the fitted splines are used to predict a value for each
-#' NHANES respondent. Then, residuals are calculated as the difference between
-#' the NHANES measured value and the spline-predicted value. Then, Gaussian
-#' kernel distributions are placed centered on each of these residuals. (To
-#' account for sample weights, centers are effectively repeated a number of
-#' times corresponding to their relative weight.) The Gaussian kernel's
-#' bandwidth (variance) is determined using the plug-in estimator from
-#' \code{\link[ks]{Hpi}}. The sum of all the kernel distributions approximates
-#' the 2-D distribution of residuals.
-#'
-#' To sample from the resulting KDE for each quantity, the following algorithm
-#' is used. First, draw a random sample with replacement from the "kernel
-#' centers", i.e. the original vector of residuals. (Use the NHANES sample
-#' weights to determine the probability of choosing each center.) Then, for each
-#' sampled center, draw a random value from a normal distribution whose mean is
-#' the sampled center, and whose standard deviation is the optimal KDE
-#' bandwidth.
-#'
-#' This data table contains the "kernel centers" -- the original vector of
-#' residuals -- for each quantity whose residual variability is modeled using
-#' KDE. It is used to generate samples from the KDE for residual variability,
-#' along with the optimal bandwidth for each quantity (see \code{\link{hw_H}},
-#' \code{\link{hct_h}}, and \code{\link{scr_h}}). (The necessary NHANES sample
-#' weights are accessed by using column \code{seqn} to look up the sample
-#' weights in the NHANES data table \code{\link{nhanes_mec_svy}}. NA values are
-#' removed before sampling from each vector of centers.
-#'
-#' @format A data.table with 17494 rows and 7 columns: \describe{
-#'   \item{g}{Gender, "Male" or "Female".} \item{r}{NHANES race/ethnicity
-#'   category: "("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
-#'   "Other", and "Other Hispanic")} \item{seqn}{NHANES unique identifier
-#'   (five-digit integer code) identifying a unique NHANES respondent}
-#'   \item{logwresid}{Weight residuals: natural-log NHANES weight (\code{bmxwt})
-#'   - prediction of weight smoothing spline (\code{\link{weight_spline}}) for
-#'   the individual identified by \code{seqn}} \item{loghresid}{Height
-#'   residuals: natural-log NHANES height (\code{bmxwt}) - prediction of height
-#'   smoothing spline (\code{\link{height_spline}}) for the individual
-#'   identified by \code{seqn}} \item{loghctresid}{Hematocrit residuals:
-#'   natural-log NHANES hematocrit (\code{lbxhct}) - prediction of hematocrit
-#'   smoothing spline (\code{\link{hct_spline}}) for the individual identified
-#'   by \code{seqn}} \item{logscresid}{Serum creatinine residuals: natural-log
-#'   NHANES serum creatinine (\code{lbxscr}) - prediction of serum creatinine
-#'   smoothing spline (\code{\link{scr_spline}}) for the individual identified
-#'   by \code{seqn}} }
-#' @source Spline fits to the data in \code{\link{nhanes_mec_svy}
-#'   
-"kde_centers"
-
-#' Optimal bandwidth for kernel density estimate of joint weight/height residual
-#' variability
-#'
-#' In virtual-individuals mode, HTTK-Pop generates height and weight for
-#' simulated individuals, by first using the gender- and race/ethnicity-specific
-#' fitted smooothing splines for height and weight to predict values based on
-#' age. Then, HTTK-Pop adds residual variability to the spline-predicted values.
-#' Residual variability is estimated using a kernel-density estimate (KDE),
-#' which is determined in the following way. First, the fitted splines are used
-#' to predict (natural-log) weight and height values for each NHANES respondent.
-#' Then, residuals are calculated as the difference between the natural-log
-#' NHANES measured value and the spline-predicted value. Then, a 2-D Gaussian
-#' kernel distribution is placed centered on each pair of weight/height
-#' residuals. (To account for sample weights, centers are effectively repeated a
-#' number of times corresponding to their relative weight.) The 2-D Gaussian
-#' kernel's bandwidth (variance-covariance matrix) is determinedusing the
-#' plug-in estimator from \code{\link[ks]{Hpi}}. The sum of all the kernel
-#' distributions approximates the distribution of residuals.
-#'
-#' To sample from the resulting KDE, the following algorithm is used. First,
-#' draw a random sample with replacement from the "kernel centers", i.e. the
-#' rows of the original matrix of residuals. (Use the NHANES sample weights to
-#' determine the probability of choosing each center.) Then, for each sampled
-#' center (pair of weight/height residuals), draw a random value from a 2-D
-#' normal distribution whose mean is the sampled pair of weight/height
-#' residuals, and whose variance-covariance matrix is the optimal KDE bandwidth.
-#'
-#' @format A list with 10 elements, named for unique combinations of NHANES
-#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
-#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
-#'   "Other", and "Other Hispanic"). Each list element is a 2x2 matrix giving
-#'   the variance-covariance matrix that is the optimal 2-D KDE bandwidth for
-#'   estimating the joint distribution of residual variability in (natural-log)
-#'   weight/height residuals.
-#' @source The output of \code{\link[ks]{Hpi}} called on the matrix of weight
-#'   and height residuals (in \link{kde_centers}, columns \code{logwresid} and
-#'   \code{loghresid}, with NAs removed)
-#'   
-"hw_H"
-
-#' Optimal bandwidth for kernel density estimate of hematocrit residual
-#' variability
-#'
-#' In virtual-individuals mode, HTTK-Pop generates hematocrit for simulated
-#' individuals, by first using the gender- and race/ethnicity-specific fitted
-#' smooothing splines for hematocrit to predict values based on age. Then,
-#' HTTK-Pop adds residual variability to the spline-predicted values. Residual
-#' variability is estimated using a kernel-density estimate (KDE), which is
-#' determined in the following way. First, the fitted splines are used to
-#' predict (natural-log) hematocrit values for each NHANES respondent. Then,
-#' residuals are calculated as the difference between the natural-log NHANES
-#' measured value and the spline-predicted value. Then, a Gaussian kernel
-#' distribution is placed centered on each residual. (To account for sample
-#' weights, centers are effectively repeated a number of times corresponding to
-#' their relative weight.) The Gaussian kernel's bandwidth (standard deviation)
-#' is determined using the plug-in estimator from \code{\link[ks]{hpi}}. The sum
-#' of all the kernel distributions approximates the distribution of residuals.
-#'
-#' To sample from the resulting KDE, the following algorithm is used. First,
-#' draw a random sample with replacement from the "kernel centers", i.e. the
-#' original vector of residuals. (Use the NHANES sample weights to determine the
-#' probability of choosing each center.) Then, for each sampled center
-#' (hematocrit residual), draw a random value from a normal distribution whose
-#' mean is the sampled hematocrit residual, and whose standard deviation is the
-#' optimal KDE bandwidth.
-#'
-#' @format A list with 10 elements, named for unique combinations of NHANES
-#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
-#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
-#'   "Other", and "Other Hispanic"). Each list element is a numeric scalar
-#'   giving the standard deviation that is the optimal KDE bandwidth for
-#'   estimating the distribution of residual variability in (natural-log)
-#'   hematocrit residuals.
-#' @source The output of \code{\link[ks]{hpi}} called on the vector of
-#'   hematocrit residuals (in \link{kde_centers}, column \code{loghctresid},
-#'   with NAs removed)
-#'   
-"hct_h"
-
-#' Optimal bandwidth for kernel density estimate of serum creatinine residual
-#' variability
-#'
-#' In virtual-individuals mode, HTTK-Pop generates serum creatinine for
-#' simulated individuals, by first using the gender- and race/ethnicity-specific
-#' fitted smooothing splines for serum creatinine to predict values based on
-#' age. Then, HTTK-Pop adds residual variability to the spline-predicted values.
-#' Residual variability is estimated using a kernel-density estimate (KDE),
-#' which is determined in the following way. First, the fitted splines are used
-#' to predict (natural-log) serum creatinine values for each NHANES respondent.
-#' Then, residuals are calculated as the difference between the natural-log
-#' NHANES measured value and the spline-predicted value. Then, a Gaussian kernel
-#' distribution is placed centered on each residual. (To account for sample
-#' weights, centers are effectively repeated a number of times corresponding to
-#' their relative weight.) The Gaussian kernel's bandwidth (standard deviation)
-#' is determined using the plug-in estimator from \code{\link[ks]{hpi}}. The sum
-#' of all the kernel distributions approximates the distribution of residuals.
-#'
-#' To sample from the resulting KDE, the following algorithm is used. First,
-#' draw a random sample with replacement from the "kernel centers", i.e. the
-#' original vector of residuals. (Use the NHANES sample weights to determine the
-#' probability of choosing each center.) Then, for each sampled center (serum
-#' creatinine residual), draw a random value from a normal distribution whose
-#' mean is the sampled serum creatinine residual, and whose standard deviation
-#' is the optimal KDE bandwidth.
-#'
-#' @format A list with 10 elements, named for unique combinations of NHANES
-#'   gender categories ("Male" and "Female") and NHANES race/ethnicity
-#'   categories ("Mexican American", "Non-Hispanic White", "Non-Hispanic Black",
-#'   "Other", and "Other Hispanic"). Each list element is a numeric scalar
-#'   giving the standard deviation that is the optimal KDE bandwidth for
-#'   estimating the distribution of residual variability in (natural-log) serum
-#'   creatinine residuals.
-#' @source The output of \code{\link[ks]{hpi}} called on the vector of serum
-#'   creatinine residuals (in \link{kde_centers}, column \code{logscresid}, with
-#'   NAs removed)
-#'   
-"scr_h"
-
 #' A timestamp of table creation
 #'
 #' The Tables.RData file is separately created as part of building a new
@@ -368,13 +193,13 @@
 #'Smoothed age distributions by race and gender.
 #'
 #'Distributions of ages in months, computed from NHANES data smoothed using
-#'survey::svysmooth(), for each combination of race/ethnicity and gender.
+#'\code{\link[survey]{svysmooth}}, for each combination of race/ethnicity and gender.
 #'
-#'@format A data.table object with three variables: \describe{
+#'@format A data.table object with 9600 rows and 4 variables: \describe{
 #'  \item{\code{gender}}{Gender: Male or Female}
-#'  \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of
-#'  \code{svysmooth} objects, each encoding a weighted smoothed distribution of
-#'  ages.}}
+#'  \item{\code{reth}}{Race/ethnicity} \item{\code{x}}{960 evenly-spaced grid points between 0 and 959 months}
+#'  \item{\code{y}}{Smoothed density values evaluated at each \code{x} value}
+#'  }
 #'@keywords data
 #'@keywords httk-pop
 #'
@@ -383,7 +208,7 @@
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
 #'environmental chemicals by simulating toxicokinetic variability." Environment
 #'International 106 (2017): 105-118
-"age_dist_smooth"
+"DT_age"
 
 #'CDC BMI-for-age charts
 #'

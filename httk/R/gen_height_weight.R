@@ -56,50 +56,38 @@ gen_height_weight <- function(gender,
                              x=age_months)$y
   
   #Draw log BW and log height residuals from the 2-d KDE
-  #Procedure: 
-  #for each individual of a gender/race combination,
-  #resample a center point from the KDE (one of the original data points),
-  #using the sample weights used to construct the KDE in the first place,
-  #and randomly draw a value from the 2-D distribution about that center point,
-  #using the optimal bandwidth matrix calculated when constructing the KDE.
-  kde_centers_gr <- kde_centers[g==gender &
-                                  r==reth &
-                                  is.finite(logwresid) &
-                                  is.finite(loghresid),
-                                .(seqn,
-                                  logwresid,
-                                  loghresid)]
-  #merge in wtmec6yr
-  kde_centers_gr <- nhanes_mec_svy$variables[kde_centers_gr,
-                           on = "seqn"][,
-                                        .(seqn,
-                                          logwresid,
-                                          loghresid,
-                                          wtmec6yr)]
+  #calculate NHANES residuals
+  nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
+                                           reth %in% reth &
+                                           is.finite(bmxwt) &
+                                           is.finite(bmxhtlenavg),
+                                         .(ridexagm, bmxwt, bmxhtlenavg, wtmec6yr)]
+  logw_resid <- log(nhanes_sub$bmxwt) -  predict(weight_spline[[grname]], 
+                                                  x=nhanes_sub$ridexagm)$y
+  logh_resid <- log(nhanes_sub$bmxhtlenavg) -  predict(height_spline[[grname]], 
+                                                 x=nhanes_sub$ridexagm)$y
+  centers <- cbind(logw_resid, logh_resid)
+  w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
   
-  #get residuals: draw from the multivariate normal dist 
-  #with centers randomly chosen from the original residuals,
-  #and the optimal bandwidth matrix
-  centers_id <- sample(nrow(kde_centers_gr),
-                       size = n,
-                       replace = TRUE,
-                       prob = kde_centers_gr$wtmec6yr/sum(kde_centers_gr$wtmec6yr))
-  centers <- kde_centers_gr[centers_id,
-                            .(logwresid,
-                              loghresid)]
-  H <- hw_H[[grname]] #KDE bandwidth for this gender & race combination
   
-  resids <- centers[,
-                    as.list(rmvnorm(n = 1,
-                    mean = c(logwresid, loghresid),
-                    sigma = H)),
-                    by = 1:nrow(centers)]
-  setnames(resids,
-           names(resids),
-           c("id", "logw_resid", "logh_resid"))
+  #sample from centers
+  centers_id_samp <- sample(x = nrow(centers),
+                         size = n,
+                         replace = TRUE,
+                         prob = w)
+  centers_samp <- centers[centers_id, ]
   
-   weight <- exp(mean_logbw + resids$logw_resid)
-   height <- exp(mean_logh + resids$logh_resid)
+  #get optimal bandwidth
+  H <- ks::Hpi(x = centers)
+
+  resids_samp <- t(apply(centers_samp,
+                  1,
+                  function(x) rmvnorm(n = 1,
+                    mean = x,
+                    sigma = H)))
+  
+   weight <- exp(mean_logbw + resids_samp[,1])
+   height <- exp(mean_logh + resids_samp[,2])
 
   return(list(weight=weight,
               height = height))
