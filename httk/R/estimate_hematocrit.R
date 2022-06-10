@@ -51,24 +51,29 @@ estimate_hematocrit <- function(gender,
     #predict conditional mean from age using spline
     log_hematocrit <- predict(hct_spline[[grname]],
                               x = age_months[age_years>=1])$y
-    #draw residuals from KDE
-    #first take the relevant centers
-    kde_centers_gr <- kde_centers[g %in% gender &
-                                    r %in% reth &
-                                    is.finite(loghctresid),
-                                  .(seqn,
-                                    loghctresid)]
-    #get corresponding weights
-    w <- nhanes_mec_svy$variables[kde_centers_gr, on = "seqn"][, wtmec6yr]
-    #sample centers according to these weights
-    centers_samp <- sample(x = kde_centers_gr$loghctresid,
+    #calculate NHANES residuals
+    nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
+                                             reth %in% reth &
+                                             is.finite(lbxhct),
+                                           .(ridexagm, lbxhct, wtmec6yr)]
+    loghctresid <- log(nhanes_sub$lbxhct) -  predict(shct_spline[[grname]], 
+                                                    x=nhanes_sub$ridexagm)$y
+    w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
+    
+    
+    #sample from centers
+    centers_samp <- sample(x = loghctresid,
                            size = n,
                            replace = TRUE,
-                           prob = w/sum(w))
+                           prob = w)
+    
+    #get optimal bandwidth
+    h <- ks::hpi(x = loghctresid)
+    
     #now sample from kernels around these centers
     resids_samp <- rnorm(n = n,
                          mean = centers_samp,
-                         sd = hct_h[[grname]])
+                         sd = h)
     
    hematocrit[age_years>=1] <- exp(log_hematocrit +
                                      resids_samp)
