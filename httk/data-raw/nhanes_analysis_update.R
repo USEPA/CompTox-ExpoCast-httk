@@ -154,16 +154,16 @@ hematocrit <- function(g, r, nhanes_mec_svy){
                                      keep.data = FALSE)$fit
   #Add predicted values and residuals to survey design object
   d.sub <- update(d.sub, 
-                  loghtcpred=predict(hematocrit_spline,
+                  loghctpred=predict(hematocrit_spline,
                                      x=ridexagm)$y)
   d.sub <- update(d.sub,
-                  loghtcresid=loglbxhct-loghtcpred)
+                  loghctresid=loglbxhct-loghctpred)
   #Fit 1-D KDE to residuals
-  hct_kde <- ks::kde(x=d.sub$variables[, loghtcresid],
+  hct_kde <- ks::kde(x=d.sub$variables[, loghctresid],
                      w=d.sub$variables[['wtmec6yr']])
   outDT <- data.table(hct_spline=list(hematocrit_spline),
                       seqn = d.sub$variables$seqn,
-                      loghtcresid=d.sub$variables[, loghtcresid], #kernel centers
+                      loghctresid=d.sub$variables[, loghctresid], #kernel centers
                   h=hct_kde$h) 
   
   return(outDT)
@@ -277,7 +277,7 @@ hct_spline <- DT_hct_spline[, hct_spline]
 names(hct_spline) <- DT_hct_spline[, paste(g, r)]
 
 #Pull out kde centers separately to save space
-DT_hct_kde_centers <- DT_hct[, .(g, r, seqn, loghtcresid)]
+DT_hct_kde_centers <- DT_hct[, .(g, r, seqn, loghctresid)]
 #Pull out kde bandwidth separately to save space
 DT_hct_kde_h <- unique(DT_hct[, .(g, r, h)])
 hct_h <- as.list(DT_hct_kde_h[, h])
