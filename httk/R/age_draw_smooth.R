@@ -18,22 +18,21 @@
 #' @keywords httk-pop
 #' @import stats
 #' @export age_draw_smooth
-age_draw_smooth <- function(g, r, nsamp, agelim_months){
+age_draw_smooth <- function(gender, reth, nsamp, agelim_months){
   #R CMD CHECK throws notes about "no visible binding for global variable", for 
   #each time a data.table column name is used without quotes. To appease R CMD 
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  gender <- reth <- smth <- NULL
-  physiology.data <- physiology.data
+  g <- r <- x <- y <- NULL
   #End R CMD CHECK appeasement.
 
   indiv_ages_m <- vector()
   indiv_ages_y <- vector()
   while(length(indiv_ages_m)<nsamp){
-    smooth_x <- DT_age[g==g & r==r,
+    smooth_x <- DT_age[g==gender & r==reth,
                            x]
-    smooth_y <- DT_age[g==g & r==r,
+    smooth_y <- DT_age[g==gender & r==reth,
                        y]
     age_dist <- approx(smooth_x,
                        smooth_y,

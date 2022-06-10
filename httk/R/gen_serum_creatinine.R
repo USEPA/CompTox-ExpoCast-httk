@@ -39,8 +39,7 @@ gen_serum_creatinine <- function(gender,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  id <- age_years <- log_serum_creat <- sc_spline <- age_months <- NULL
-  sc_kde <- serum_creat <- gfr_est <- gender <- reth <- BSA_adj <- NULL
+  g <- r <- seqn <- logscresid <- wtmec6yr <- NULL
   #End of R CMD CHECK appeasement.
   
 

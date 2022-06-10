@@ -207,8 +207,8 @@ gen_age_height_weight <- function(nsamp=NULL,
   #Draw ages from smoothed age distributions by gender and race.
   #Discard any that fall outside the user-specified age range.
   gen_dt[, ctcol:=1] #Add tmp variable to count items in each group
-  gen_dt[, c('age_months','age_years'):= age_draw_smooth(g=gender, 
-                                                         r=reth, 
+  gen_dt[, c('age_months','age_years'):= age_draw_smooth(gender=gender, 
+                                                         reth=reth, 
                                                          nsamp=.N, 
                                                          agelim_months=agelim_months), 
          by=list(gender,reth)]
@@ -238,8 +238,8 @@ gen_age_height_weight <- function(nsamp=NULL,
       #redraw age for those not in selected weight classes
       gen_dt[!(weight_class %in% 
                  weight_category),
-             c('age_months','age_years'):= age_draw_smooth(g=gender, 
-                                                           r=reth, 
+             c('age_months','age_years'):= age_draw_smooth(gender=gender, 
+                                                           reth=reth, 
                                                            nsamp=.N, 
                                                            agelim_months=agelim_months), 
              by=list(gender,reth)] #Now age will be updated, but weight_category isn't yet, so we can still use it
