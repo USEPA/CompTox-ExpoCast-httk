@@ -12,7 +12,8 @@ httkpop_direct_resample_inner(
   reths,
   weight_category,
   gfr_resid_var,
-  ckd_epi_race_coeff
+  ckd_epi_race_coeff,
+  nhanes_mec_svy
 )
 }
 \arguments{

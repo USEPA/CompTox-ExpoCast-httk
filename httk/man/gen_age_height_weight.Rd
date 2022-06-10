@@ -10,7 +10,8 @@ gen_age_height_weight(
   reths,
   weight_category,
   agelim_years,
-  agelim_months
+  agelim_months,
+  nhanes_mec_svy
 )
 }
 \arguments{

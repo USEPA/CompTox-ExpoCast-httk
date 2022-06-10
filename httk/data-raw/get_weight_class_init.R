@@ -14,7 +14,7 @@
 #'@return A character vector of weight classes. Each element will be one of
 #'  'Underweight', 'Normal', 'Overweight', or 'Obese'.
 
-get_weight_class <- function(age_years,
+get_weight_class_init <- function(age_years,
                              age_months,
                              bmi,
                              recumlen,

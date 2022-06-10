@@ -531,7 +531,7 @@ knitr::kable(addmargins(xtabs(~ridreth1+riagendr, mecdt), margin=c(1,2)))
 #If BMI is missing but height and weight data are there, 
 #then simply calculate BMI as weight/height^2
 mecdt[!is.finite(bmxbmi), bmxbmi:=bmxwt/((bmxhtlenavg/100)^2)]  
-mecdt[, weight_class:=get_weight_class(age_years=ridexagy,
+mecdt[, weight_class:=get_weight_class_init(age_years=ridexagy,
                                        age_months=ridexagm,
                                        bmi=bmxbmi,
                                        recumlen=bmxhtlenavg,

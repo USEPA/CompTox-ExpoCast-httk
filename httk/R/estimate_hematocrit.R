@@ -34,7 +34,8 @@
 estimate_hematocrit <- function(gender,
                                 reth,
                                 age_years,
-                                age_months){
+                                age_months,
+                                nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
@@ -49,8 +50,8 @@ estimate_hematocrit <- function(gender,
   if (any(age_years>=1)){
     n <- sum(age_years>=1)
     #calculate NHANES residuals
-    nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
-                                             reth %in% reth &
+    nhanes_sub <- nhanes_mec_svy$variables[riagendr %in% gender &
+                                             ridreth1 %in% reth &
                                              is.finite(lbxhct),
                                            .(ridexagm, lbxhct, wtmec6yr)]
     w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
@@ -67,7 +68,8 @@ estimate_hematocrit <- function(gender,
                            prob = w)
     
     #get optimal bandwidth
-    h <- ks::hpi(x = loghctresid)
+    #h <- ks::hpi(x = loghctresid)
+    h <- hct_h[[grname]]
     
     #now sample from kernels around these centers
     resids_samp <- rnorm(n = n,

@@ -4,7 +4,7 @@
 \alias{gen_height_weight}
 \title{Generate heights and weights for a virtual population.}
 \usage{
-gen_height_weight(gender, reth, age_months)
+gen_height_weight(gender, reth, age_months, nhanes_mec_svy)
 }
 \arguments{
 \item{gender}{Gender for which to calculate height/weight ("Male" or "Female")}
