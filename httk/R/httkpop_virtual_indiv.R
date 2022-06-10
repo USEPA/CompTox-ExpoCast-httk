@@ -189,7 +189,8 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   indiv_dt[, hematocrit:=estimate_hematocrit(gender = gender,
                                              reth = reth,
                                              age_years = age_years,
-                                             age_months = age_months)]
+                                             age_months = age_months),
+           by = list(gender, reth)]
   
   #Replace any spaces in column names with underscores,
   #for ease of use later
