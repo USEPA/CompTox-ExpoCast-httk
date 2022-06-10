@@ -15,6 +15,10 @@ White", "Other", or "Other Hispanic")}
 
 \item{age_months}{vector of ages in months for individuals for whom to
 calculate height/weight (between 0-959 months)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A list containing two named elements, \code{weight} and \code{height},

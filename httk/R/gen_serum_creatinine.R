@@ -18,7 +18,9 @@
 #'  generate serum creatinine values (between 0-959 months)
 #'@param age_years Vector of ages in years for individuals for whom to generate
 #'  serum creatinine values (corresponding to age_months)
-#'
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'@return A vector of numeric generated serum creatinine values (mg/dL).
 #'
 #'@keywords httk-pop

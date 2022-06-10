@@ -45,6 +45,10 @@ and maximum ages (in months) to include in the population. Default is c(0,
 959), equivalent to the default \code{agelim_years}. If \code{agelim_months}
 is provided and \code{agelim_years} is not, agelim_months will override the
 default values of \code{agelim_years}.}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A data.table containing variables \describe{
