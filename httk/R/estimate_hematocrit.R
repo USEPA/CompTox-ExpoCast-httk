@@ -48,18 +48,17 @@ estimate_hematocrit <- function(gender,
   grname <- unique(paste(gender, reth))
   if (any(age_years>=1)){
     n <- sum(age_years>=1)
-    #predict conditional mean from age using spline
-    log_hematocrit <- predict(hct_spline[[grname]],
-                              x = age_months[age_years>=1])$y
     #calculate NHANES residuals
     nhanes_sub <- nhanes_mec_svy$variables[gender %in% gender &
                                              reth %in% reth &
                                              is.finite(lbxhct),
                                            .(ridexagm, lbxhct, wtmec6yr)]
-    loghctresid <- log(nhanes_sub$lbxhct) -  predict(shct_spline[[grname]], 
-                                                    x=nhanes_sub$ridexagm)$y
     w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
-    
+    #fit smoothing spline
+    splinefit <- smooth.spline(x = nhanes_sub$ridexagm,
+                               y = log(nhanes_sub$lbxhct),
+                               w = w)
+    loghctresid <- residuals(splinefit)
     
     #sample from centers
     centers_samp <- sample(x = loghctresid,
@@ -75,7 +74,11 @@ estimate_hematocrit <- function(gender,
                          mean = centers_samp,
                          sd = h)
     
-   hematocrit[age_years>=1] <- exp(log_hematocrit +
+    #predicted values for sampled individuals
+    log_hematocrit_pred <- predict(splinefit, 
+                                    x=age_months[age_years>=1])$y
+    
+   hematocrit[age_years>=1] <- exp(log_hematocrit_pred +
                                      resids_samp)
 }
 

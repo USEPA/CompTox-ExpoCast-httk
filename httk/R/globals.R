@@ -5,12 +5,4 @@ utils::globalVariables(c("bmiage",
                         "mcnally_dt",
                         "nhanes_mec_svy",
                         "wfl",
-                        "DT_age",
-                        "kde_centers",
-                        "hw_H",
-                        "hct_h",
-                        "scr_h",
-                        "height_spline",
-                        "weight_spline",
-                        "hct_spline",
-                        "scr_spline"))
+                        "age_smooth"))

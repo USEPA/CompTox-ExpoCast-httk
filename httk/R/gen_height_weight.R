@@ -50,10 +50,6 @@ gen_height_weight <- function(gender,
   #Subset dt by gender and race/ethnicity,
   #then predict mean heights and BWs from ages
   #using the spline for that gender/race combination
- mean_logh <- predict(height_spline[[grname]], 
-                            x=age_months)$y
-  mean_logbw <- predict(weight_spline[[grname]], 
-                             x=age_months)$y
   
   #Draw log BW and log height residuals from the 2-d KDE
   #calculate NHANES residuals
@@ -62,12 +58,19 @@ gen_height_weight <- function(gender,
                                            is.finite(bmxwt) &
                                            is.finite(bmxhtlenavg),
                                          .(ridexagm, bmxwt, bmxhtlenavg, wtmec6yr)]
-  logw_resid <- log(nhanes_sub$bmxwt) -  predict(weight_spline[[grname]], 
-                                                  x=nhanes_sub$ridexagm)$y
-  logh_resid <- log(nhanes_sub$bmxhtlenavg) -  predict(height_spline[[grname]], 
-                                                 x=nhanes_sub$ridexagm)$y
-  centers <- cbind(logw_resid, logh_resid)
+  
   w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
+  #fit smoothing spline
+ height_spline <- smooth.spline(x = nhanes_sub$ridexagm,
+                             y = log(nhanes_sub$bmxhtlenavg),
+                             w = w)
+ weight_spline <- smooth.spline(x = nhanes_sub$ridexagm,
+                                y = log(nhanes_sub$bmxwt),
+                                w = w)
+ 
+  logw_resid <- resid(weight_spline)
+  logh_resid <- resid(height_spline)
+  centers <- cbind(logw_resid, logh_resid)
   
   
   #sample from centers
@@ -85,6 +88,11 @@ gen_height_weight <- function(gender,
                   function(x) rmvnorm(n = 1,
                     mean = x,
                     sigma = H)))
+  
+  mean_logbw <- predict(weight_spline,
+                        age_months)
+  mean_logh <- predict(height_spline,
+                       age_months)
   
    weight <- exp(mean_logbw + resids_samp[,1])
    height <- exp(mean_logh + resids_samp[,2])
