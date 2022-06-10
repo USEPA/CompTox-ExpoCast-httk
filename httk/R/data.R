@@ -30,107 +30,6 @@
 #'  Environment International 106 (2017): 105-118
 "mcnally_dt"
 
-#'Smoothing splines for log hematocrit vs. age in months
-#'
-#'Smoothing splines fitted to NHANES hematocrit and age data by race/ethnicity
-#'and gender.
-#'
-#'@format A list with 10 elements, named for unique combinations of gender
-#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
-#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic"). Each list element consists of an object of class
-#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
-#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
-#'  predict natural-log hematocrit from age in months. The smoothing splines
-#'  were fitted to NHANES data for each combination of NHANES gender and
-#'  race/ethnicity categories: natural log hematocrit vs. age in months,
-#'  weighted using the NHANES sample weights.
-
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"hct_spline"
-
-#'Smoothing splines for log serum creatinine vs. age in months, by race and gender.
-#'
-#'Smoothing splines fitted to NHANES serum creatinine and age data by race/ethnicity
-#'and gender.
-#'
-#'@format A list with 10 elements, named for unique combinations of gender
-#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
-#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic". Each list element consists of an object of class
-#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
-#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
-#'  predict natural-log serum creatinine from age in months. The smoothing splines
-#'  were fitted to NHANES data for each combination of NHANES gender and
-#'  race/ethnicity categories: natural-log serum creatinine vs. age in months,
-#'  weighted using the NHANES sample weights.
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"scr_spline"
-
-#'Smoothing splines for natural-log height vs. age, by race and gender.
-#'
-#'#'Smoothing splines fitted to NHANES height and age data by race/ethnicity
-#'and gender.
-#'
-#'@format A list with 10 elements, named for unique combinations of gender
-#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
-#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic". Each list element consists of an object of class
-#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
-#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
-#'  predict natural-log height from age in months. The smoothing splines
-#'  were fitted to NHANES data for each combination of NHANES gender and
-#'  race/ethnicity categories: natural-log height vs. age in months,
-#'  weighted using the NHANES sample weights. Height is in cm.
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"height_spline"
-
-#'Smoothing splines for natural-log weight vs. age, by race and gender.
-#'
-#'#'Smoothing splines fitted to NHANES weight and age data by race/ethnicity
-#'and gender.
-#'
-#'@format A list with 10 elements, named for unique combinations of gender
-#'  ("Male" and "Female") and NHANES race/ethnicity categories ("Mexican
-#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", and "Other
-#'  Hispanic"). Each list element consists of an object of class
-#'  \code{smooth.spline.fit} (output of \code{\link[stats]{smooth.spline}})
-#'  which can be used with method \code{\link[stats]{predict.smooth.spline}} to
-#'  predict natural-log weight from age in months. The smoothing splines
-#'  were fitted to NHANES data for each combination of NHANES gender and
-#'  race/ethnicity categories: natural-log weight vs. age in months,
-#'  weighted using the NHANES sample weights. Weight is in kg.
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"weight_spline"
-
 #' A timestamp of table creation
 #'
 #' The Tables.RData file is separately created as part of building a new
@@ -193,22 +92,23 @@
 #'Smoothed age distributions by race and gender.
 #'
 #'Distributions of ages in months, computed from NHANES data smoothed using
-#'\code{\link[survey]{svysmooth}}, for each combination of race/ethnicity and gender.
+#'\code{\link[survey]{svysmooth}}, for each combination of race/ethnicity and
+#'gender.
 #'
-#'@format A data.table object with 9600 rows and 4 variables: \describe{
-#'  \item{\code{gender}}{Gender: Male or Female}
-#'  \item{\code{reth}}{Race/ethnicity} \item{\code{x}}{960 evenly-spaced grid points between 0 and 959 months}
-#'  \item{\code{y}}{Smoothed density values evaluated at each \code{x} value}
-#'  }
+#'@format A list of 10 elements named for unique combinations of NHANES gender
+#'  and race/ethnicity categories. Each list element is a matrix with 401 rows and 2 columns:
+#'  \describe{\item{\code{x}}{401 evenly-spaced grid
+#'  points between 0 and 959 months} \item{\code{y}}{Smoothed density values
+#'  evaluated at each \code{x} value} }
 #'@keywords data
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"DT_age"
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"age_smooth"
 
 #'CDC BMI-for-age charts
 #'
