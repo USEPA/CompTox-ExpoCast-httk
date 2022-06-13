@@ -1,0 +1,154 @@
+---
+title: "Compare versions of httk"
+author: "Caroline Ring"
+date: '2022-06-13'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(data.table)
+library(ggplot2)
+```
+
+
+# Introduction
+
+I made some changes to the way HTTK-Pop works in order to reduce the size of the built httk package.
+
+Here I will compare the results of the most recent CRAN release, of the feature/uvupdate version (with Miyuki's updates), and my version (feature/uvupdate-kdefix). I will use this to make sure I have not introduced major bugs.
+
+
+# Run using the CRAN version
+
+```{r}
+detach(name = "package:httk", unload = TRUE, character.only = TRUE, force = TRUE) #unload any currently loaded version of httk
+library(httk) #load installed CRAN version of package
+set.seed(42)
+DT_cran_v <- httkpop_generate(nsamp = 1000, method = "v")
+DT_cran_d <- httkpop_generate(nsamp = 1000, method = "d")
+detach(name = "package:httk", unload = TRUE, character.only = TRUE, force = TRUE) #unload CRAN version of httk
+
+DT_cran <- rbindlist(list("v" = DT_cran_v,
+                          "d" = DT_cran_d),
+                     use.names = TRUE,
+                     fill = TRUE,
+                     idcol = "method")
+```
+
+
+# Run using the feature/uvupdate HEAD
+
+```{r}
+setwd("..") #go to httk working directory -- we are currently in 'work' subdir so go one level up
+system("git checkout feature/uvupdate") #checkout feature/uvupdate branch
+devtools::load_all("httk") #load development version of package
+set.seed(42)
+DT_b1_v <- httkpop_generate(nsamp = 1000, method = "v") #b1 for branch 1
+DT_b1_d <- httkpop_generate(nsamp = 1000, method = "d")
+
+DT_b1 <- rbindlist(list("v" = DT_b1_v,
+                          "d" = DT_b1_d),
+                   use.names = TRUE,
+                     fill = TRUE,
+                     idcol = "method")
+```
+
+
+# Run using the feature/uvupdate-kdefix version
+
+```{r}
+setwd("..") #go to httk working directory -- we are currently in 'work' subdir so go one level up
+system("git checkout feature/uvupdate-kdefix") #checkout feature/uvupdate branch
+devtools::load_all("httk") #load development version of package
+set.seed(42)
+DT_b2_v <- httkpop_generate(nsamp = 1000, method = "v") #b2 for branch 2
+DT_b2_d <- httkpop_generate(nsamp = 1000, method = "d")
+DT_b2 <- rbindlist(list("v" = DT_b2_v,
+                          "d" = DT_b2_d),
+                   use.names = TRUE,
+                     fill = TRUE,
+                     idcol = "method")
+```
+
+# Compare and contrast
+
+## Combine all into one data.table
+
+```{r}
+DT_all <- rbindlist(list("CRAN" = DT_cran,
+                         "feature/uvupdate" = DT_b1,
+                         "feature/uvupdate-kdefix" = DT_b2),
+                    use.names = TRUE,
+                    fill = TRUE,
+                    idcol = "version")
+```
+
+
+#Summmary stats of httkpop_generate() output columns
+
+```{r}
+DT_all[, idnum:=1:.N, by = .(version, method)]
+measurevars <- setdiff(names(DT_all),
+                                                      c("version", "method", "idnum"))
+        
+
+```
+
+## Gender breakdown
+
+```{r}
+DT_all[, as.list(summary(gender)), by = .(version, method)]
+```
+Obviously, the numbers are not identical. But they are also not super far off.
+
+## Age in months
+```{r}
+DT_all[, as.list(summary(age_months)), by = .(version, method)]
+```
+
+Median is a little bit higher for uvupdate-kdefix. Just an artifact?
+
+## Age in years
+```{r}
+DT_all[, as.list(summary(age_years)), by = .(version, method)]
+```
+Again, median is a little bit higher for uvupdate-kdefix. Maybe just an artifact?
+
+## Body weight
+
+```{r}
+DT_all[, as.list(summary(weight)), by = .(version, method)]
+```
+Median is fairly well in line with uvdpate and uvupdate-kdefix.
+
+## Height
+
+```{r}
+DT_all[, as.list(summary(height)), by = .(version, method)]
+```
+Again, height distributions agree fairly well
+
+## Serum creatinine
+```{r}
+DT_all[, as.list(summary(serum_creat)), by = .(version, method)]
+```
+Max is not consistent but that could very well be an artifact of sampling (it isn't consistent for method "d" either.) Other stats are fairly consistent.
+
+## Hematocrit
+```{r}
+DT_all[, as.list(summary(hematocrit)), by = .(version, method)]
+```
+ Stats are fairly consistent.
+ 
+ ## Estimated GFR
+ 
+```{r}
+DT_all[, as.list(summary(gfr_est)), by = .(version, method)]
+```
+ Again -- not too far off.
+ 
