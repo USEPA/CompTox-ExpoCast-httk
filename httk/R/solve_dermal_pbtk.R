@@ -114,7 +114,11 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     recalc.clearance=FALSE, #solve_model
                     adjusted.Funbound.plasma=TRUE, #solve_model
                     minimum.Funbound.plasma=1e-4, #solve_model
-                    parameterize.arg.list=NULL,
+                    parameterize.arg.list = list(
+                      default.to.human=FALSE,
+                      clint.pvalue.threshold=0.05,
+                      restrictive.clearance = TRUE,
+                      regression=TRUE),
                     route = NULL, #DERMAL
                     Vmedia = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
@@ -215,7 +219,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    parameterize.arg.list = list(
+    parameterize.arg.list = c(
       model.type = model.type,
       parameterize.arg.list
     ),

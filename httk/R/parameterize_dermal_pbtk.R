@@ -351,14 +351,14 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Ksc2w <- 0.9 * schmitt.params$Pow^0.69 #Equation 2, Chen, 2015 (0.9 = rho_lipid/rho_water = (0.9 g/cm^3)/(1 g/cm^3))
     if (is.numeric(Kmedia2water)){
       Km2w <- Kmedia2water
-    } else if (Kmedia2water=="octanol"){
-      Kmedia2water = schmitt.params$Pow
-    } else  if (Kmedia2water=="olive oil"){
-      Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
-    } else {
+    } else if (is.null(Kmedia2water)){
       Km2w <- 1 #media=water
       warning("Since parameter Kmedia2water is null, media containing chemical is assumed to be water.")
-    }
+    } else if (Kmedia2water=="octanol"){
+      Km2w <- schmitt.params$Pow
+    } else  if (Kmedia2water=="olive oil"){
+      Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
+    } else { stop('Kmedia2water must be numeric, "octanol", "olive oil", or NULL and default to water.')}
     Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
       ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
       fnon <- 1 - ionization$fraction_charged      
