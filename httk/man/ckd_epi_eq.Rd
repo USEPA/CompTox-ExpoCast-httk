@@ -4,22 +4,24 @@
 \alias{ckd_epi_eq}
 \title{CKD-EPI equation for GFR.}
 \usage{
-ckd_epi_eq(scr, gender, reth, age_years)
+ckd_epi_eq(scr, gender, reth, age_years, ckd_epi_race_coeff = FALSE)
 }
 \arguments{
 \item{scr}{Vector of serum creatinine values in mg/dL.}
 
 \item{gender}{Vector of genders (either 'Male' or 'Female').}
 
-\item{reth}{Vector of races/ethnicities.}
+\item{reth}{Vector of races/ethnicities. Not used unless ckd_epi_race_coeff is TRUE.}
 
 \item{age_years}{Vector of ages in years.}
+
+\item{ckd_epi_race_coeff}{Whether to use the "race coefficient" in the CKD-EPI equation. Default is FALSE.}
 }
 \value{
 Vector of GFR values in mL/min/1.73m^2.
 }
 \description{
-Predict GFR from serum creatinine, gender, race, and age.
+Predict GFR from serum creatinine, gender, and age.
 }
 \details{
 From Levey AS, Stevens LA, Schmid CH, Zhang YL, Castro AF, Feldman HI, et al. A new

@@ -36,6 +36,9 @@
 #' @param ckd_epi_race_coeff Logical value indicating whether or not to use the
 #' "race coefficient" from the CKD-EPI equation when estimating GFR values.
 #' (Default is FALSE.)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #' @return A data.table where each row represents an individual, and each
 #' column represents a demographic, anthropometric, or physiological parameter.
 #'
@@ -63,7 +66,10 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             'Other Hispanic',
                                             'Non-Hispanic White',
                                             'Non-Hispanic Black',
-                                            'Other')){
+                                            'Other'),
+                                    gfr_resid_var = TRUE,
+                                    ckd_epi_race_coeff = FALSE,
+                                    nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -82,7 +88,11 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             agelim_months=agelim_months,
                                             agelim_years=agelim_years,
                                             reths=reths,
-                                            weight_category=weight_category)
+                                            weight_category=weight_category,
+                                            gfr_resid_var = gfr_resid_var,
+                                            ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                            nhanes_mec_svy)
+
   #Compute BMI
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
   #Assign weight class
@@ -125,7 +135,10 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                                agelim_months=agelim_months,
                                                agelim_years=agelim_years,
                                                reths=reths,
-                                               weight_category=weight_category)
+                                               weight_category=weight_category,
+                                               gfr_resid_var = gfr_resid_var,
+                                               ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                               nhanes_mec_svy)
     #Recalculate BMI for the newly redrawn individuals
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Check on weight class
