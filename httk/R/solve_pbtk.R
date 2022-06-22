@@ -18,7 +18,7 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' Model Figure 
-#' \if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
+#' \if{html}{\figure{pbtk.jpg}{options: width="60\%" alt="Figure: PBTK Model
 #' Schematic"}}
 #' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
 #' Schematic"}}

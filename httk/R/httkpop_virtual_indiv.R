@@ -50,8 +50,8 @@
 #'@export httkpop_virtual_indiv
 httkpop_virtual_indiv<- function(nsamp=NULL,
                                  gendernum=NULL,
-                                 agelim_years=c(0,79), 
-                                 agelim_months=c(0,959),
+                                 agelim_years=NULL, 
+                                 agelim_months=NULL,
                                  weight_category=c('Underweight', 
                                                    'Normal',
                                                    'Overweight',
@@ -100,6 +100,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
                          gfr_resid_var = gfr_resid_var,
                          ckd_epi_race_coeff = ckd_epi_race_coeff)
+
   
   #Compute BMI using adjusted individual weights
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]

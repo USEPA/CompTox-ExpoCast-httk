@@ -53,8 +53,8 @@
 #' @export httkpop_direct_resample
 httkpop_direct_resample <- function(nsamp=NULL,
                                     gendernum=NULL,
-                                    agelim_years=c(0,79), 
-                                    agelim_months=c(0,959),
+                                    agelim_years=NULL, 
+                                    agelim_months=NULL,
                                     weight_category=c('Underweight',
                                                       'Normal',
                                                       'Overweight',
@@ -92,6 +92,7 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             gfr_resid_var = gfr_resid_var,
                                             ckd_epi_race_coeff = ckd_epi_race_coeff,
                                             nhanes_mec_svy)
+
   #Compute BMI
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
   #Assign weight class
