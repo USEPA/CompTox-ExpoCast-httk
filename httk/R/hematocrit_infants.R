@@ -25,7 +25,6 @@
 #'environmental chemicals by simulating toxicokinetic variability." Environment 
 #'International 106 (2017): 105-118
 #' @import stats
-#' @export hematocrit_infants
 
 hematocrit_infants <- function(age_months){
 

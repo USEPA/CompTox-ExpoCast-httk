@@ -31,6 +31,9 @@
 #' @param ckd_epi_race_coeff Logical value indicating whether or not to use the
 #' "race coefficient" from the CKD-EPI equation when estimating GFR values.
 #' (Default is FALSE, passed from 'httkpop_direct_resample'.)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'
 #'@return A data.table where each row represents an individual, and
 #'  each column represents a demographic, anthropometric, or physiological
@@ -52,7 +55,10 @@ httkpop_direct_resample_inner <- function(nsamp,
                                           agelim_months,
                                           agelim_years,
                                           reths,
-                                          weight_category){
+                                          weight_category,
+                                          gfr_resid_var,
+                                          ckd_epi_race_coeff,
+                                          nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
