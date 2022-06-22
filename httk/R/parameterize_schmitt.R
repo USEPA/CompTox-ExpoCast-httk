@@ -1,35 +1,49 @@
-#' Get the Parameters for Schmitt's Tissue Partition Coefficient Method
+#' Parameters for Schmitt's (2008) Tissue Partition Coefficient Method
 #' 
 #' This function provides the necessary parameters to run
-#' predict_partitioning_schmitt, excluding the data in tissue.data.
-#' 
+#' \code{\link{predict_partitioning_schmitt}}, excluding the data in table
+#' \code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
+#' for predicting tissue:plasma partition coefficients as modified by Pearce 
+#' et al. (2017). The modifications include approaches adapted from Peyret 
+#' et al. (2010).
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#' 
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Chemcial and physiological description parameters needed
 #' to run the Schmitt et al. (2008) model
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param default.to.human Substitutes missing fraction of unbound plasma with
 #' human values if true.
+#' 
 #' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
 #' When species is specified as rabbit, dog, or mouse, the human unbound
 #' fraction is substituted.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
 #' @return
-#' \item{Funbound.plasma}{corrected unbound fraction in plasma}
+#' \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
 #' if below limit of detection)} \item{Pow}{octanol:water partition coefficient
 #' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
@@ -42,7 +56,11 @@
 #'
 #' @keywords Parameter schmitt
 #'
-#' @references Schmitt, Walter. "General approach for the calculation of 
+#' @references 
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#' Schmitt, Walter. "General approach for the calculation of 
 #' tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 #' 457-467.
 #' 
@@ -71,6 +89,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                           species="Human",
                           default.to.human=FALSE,
                           force.human.fup=FALSE,
+                          adjusted.Funbound.plasma=TRUE,
                           suppress.messages=FALSE,
                           minimum.Funbound.plasma=0.0001)
 {

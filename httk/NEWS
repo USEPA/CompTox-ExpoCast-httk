@@ -1,5 +1,12 @@
 News for R package httk
 
+Changes in feature/uvupdate (April, 2022)
+  Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
+  Added internal function remd0non0u95 to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
+  Added logical arguments to invitro_mc to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
+  If fup measurment Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
+  Moved Kilford (2008) correction for fraction unbound in hepatocyte assay from calc_hep_clearance to the parameterize functions and invitro_mc -- can now be toggled with argument adjusted.Clint
+
 Changes in version 2.1.0 (March, 2022)
   This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
   New HT-PBTK model added as described by Kapraun et al. (submitted) including functions solve_fetal_pbtk() and parameterize_fetal_pbtk()
