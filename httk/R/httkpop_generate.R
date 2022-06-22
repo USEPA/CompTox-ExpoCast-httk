@@ -180,7 +180,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #'
 #' @export httkpop_generate
-httkpop_generate <- function(method="direct resampling",
+httkpop_generate <- function(method,
                              nsamp=NULL,
                              gendernum=NULL,
                              agelim_years=NULL, 
@@ -196,9 +196,7 @@ httkpop_generate <- function(method="direct resampling",
                                      'Other Hispanic',
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
-                                     'Other'),
-                             gfr_resid_var = TRUE,
-                             ckd_epi_race_coeff = FALSE){
+                                     'Other')){
 
 # Error checking:
   if (is.null(method)) stop(
@@ -380,9 +378,7 @@ resampling\" (\"dr\" or \"d\").")
                                       agelim_months=agelim_months,
                                       weight_category=weight_category, 
                                       gfr_category=gfr_category,
-                                      reths=reths,
-                                      gfr_resid_var = gfr_resid_var,
-                                      ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                      reths=reths)
   } else if (method == 'direct resampling'){
     indiv_dt <- httkpop_direct_resample(nsamp=nsamp,
                                         gendernum=gendernum,
@@ -390,9 +386,7 @@ resampling\" (\"dr\" or \"d\").")
                                         agelim_months=agelim_months,
                                         weight_category=weight_category, 
                                         gfr_category=gfr_category,
-                                        reths=reths,
-                                        gfr_resid_var = gfr_resid_var,
-                                        ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                        reths=reths)
   }
   return(indiv_dt)
 }

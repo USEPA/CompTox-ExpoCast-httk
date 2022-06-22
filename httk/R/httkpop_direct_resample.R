@@ -50,8 +50,8 @@
 #' @export httkpop_direct_resample
 httkpop_direct_resample <- function(nsamp=NULL,
                                     gendernum=NULL,
-                                    agelim_years=c(0,79), 
-                                    agelim_months=c(0,959),
+                                    agelim_years=NULL, 
+                                    agelim_months=NULL,
                                     weight_category=c('Underweight',
                                                       'Normal',
                                                       'Overweight',
@@ -63,9 +63,7 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             'Other Hispanic',
                                             'Non-Hispanic White',
                                             'Non-Hispanic Black',
-                                            'Other'),
-                                    gfr_resid_var = TRUE,
-                                    ckd_epi_race_coeff = FALSE){
+                                            'Other')){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -84,9 +82,7 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                             agelim_months=agelim_months,
                                             agelim_years=agelim_years,
                                             reths=reths,
-                                            weight_category=weight_category,
-                                            gfr_resid_var = gfr_resid_var,
-                                            ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                            weight_category=weight_category)
   #Compute BMI
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
   #Assign weight class
@@ -129,9 +125,7 @@ httkpop_direct_resample <- function(nsamp=NULL,
                                                agelim_months=agelim_months,
                                                agelim_years=agelim_years,
                                                reths=reths,
-                                               weight_category=weight_category,
-                                               gfr_resid_var = gfr_resid_var,
-                                               ckd_epi_race_coeff = ckd_epi_race_coeff)
+                                               weight_category=weight_category)
     #Recalculate BMI for the newly redrawn individuals
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Check on weight class

@@ -116,6 +116,7 @@ calc_tkstats <-function(
                       model=model)))
     {
       cat(paste(this.CAS,"\n"))
+
       stat <- calc_tkstats(chem.cas=this.CAS,
                 days=days,
                 stats=stats,
@@ -162,7 +163,7 @@ calc_tkstats <-function(
         dosing.matrix=NULL,
         daily.dose=daily.dose,
         doses.per.day=doses.per.day)
-        
+
     PKtimecourse <- solve_model(
                       chem.name=chem.name,
                       chem.cas=chem.cas,
@@ -175,6 +176,12 @@ calc_tkstats <-function(
                       dosing=dosing,
                       suppress.messages=TRUE,
                       output.units=output.units,
+                      parameterize.arg.list = list(
+                        default.to.human=default.to.human,
+                        clint.pvalue.threshold=0.05,
+                        restrictive.clearance = TRUE,
+                        regression=TRUE
+                      ),
                       ...)
     
     # For the 3-compartment model:  

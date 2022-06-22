@@ -1,4 +1,4 @@
-![HTTK logo](httk-logo.png)
+![HTTK logo](logo/httk-logo.png)
 
 # R Package "httk"
 
@@ -50,7 +50,7 @@ exposures via reverse dosimetry (also known as "RTK")
 Adapted from Breen et al. (2021) <https://doi.org/10.1080/17425255.2021.1935867>
 * Getting Started with R Package httk from the R command line
 ```
-install.packages(httk)
+install.packages("httk")
 ```
 * RStudio provides a menu ‘Install Packages’ under ‘Tools’ tab
 * Load the HTTK data, models, and functions
@@ -59,48 +59,61 @@ library(httk)
 ```
 * Check what version you are using 
 ```
-packageVersion(httk)
+packageVersion("httk")
 ```
+
+### Examples
+
 * List all CAS numbers for all chemicals with sufficient data to run httk 
 ```
 get_cheminfo()
 ```
-* List all information: 
+* List all information (If median.only=FALSE you will get medians, lower 95th,
+ and upper 95th for Fup, plus p-value for Clint, separated by commans, when
+ those statistics are available. Older data only have means for Clint and Fup.): 
 ```
-get_cheminfo(info = ‘all’)
+get_cheminfo(info = "all", median.only=TRUE)
 ```
 * Is a chemical with a specified CAS number available? 
 ```
-‘80–05-7’ %in% get_cheminfo()
+"80-05-7" %in% get_cheminfo()
 ```
-* All data on chemicals A, B, C 
+* All data on chemicals A, B, C (You need to specify the names instead of "A","B","C"...)
 ```
-subset(get_cheminfo(info = ‘all’),Compound%in%c(‘A’,”B”,”C”))
+subset(get_cheminfo(info = "all"), Compound %in% c("A","B","C"))
 ```
 * Administrated equivalent dose (mg/kg BW/day) to produce 0.1 uM plasma concentration, 0.95
 quantile, for a specified CAS number and species
 ```
-calc_mc_oral_equiv(0.1,chem.cas = ‘34,256–82-1’, species = ‘human’)
+calc_mc_oral_equiv(0.1,chem.cas = "34256-82-1",species = "human")
+calc_mc_oral_equiv(0.1,chem.cas = "99-71-8", species = "human")
 ```
 * Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
 default) for a specified CAS number and species
 ```
-calc_tkstats(chem.cas = ‘34,256–82-1’, species = ‘rat’)
+calc_tkstats(chem.cas = "34256-82-1",species = "rat")
+calc_tkstats(chem.cas = "962-58-3", species = "rat")
 ```
 * Using the PBTK solver for a specified chem name 
 ```
-solve_pbtk(chem.name = ‘bisphenol a’, plots = TRUE)
+solve_pbtk(chem.name = "bisphenol a", plots = TRUE)
 ```
 * Create data set, my_data, for all data on chemicals A, B, C, in R 
 ```
-my_data <- subset(get_cheminfo(info = ‘all’),Compound %in%c(‘A’,”B”,”C”))
+my_data <- subset(get_cheminfo(info = "all"), Compound %in% c("A","B","C"))
 ```
 * Export data set, my_data, from R to csv file called my_data.csv in the current working directory 
 ```
-write.csv(my_data, file = ‘my_data.csv’)
+write.csv(my_data, file = "my_data.csv")
 ```
+#### User Notes
 
-
+* When using the CAS number as a unique chemical identifier with 'httk'
+functions it is best to type these numbers directly (i.e. by hand) into the
+console, script, Rmarkdown, etc. to avoid unnecessary error messages. Webpages,
+word documents, and other sources of these CAS numbers may use a
+different character encoding that does not match those used in the 'httk' data
+sources.
 
 ## Help
 
@@ -114,12 +127,13 @@ help(package = httk)
 ```
 * List all vignettes for httk 
 ```
-vignette(package = httk)
+vignette(package = "httk")
 ```
 * Displays the vignette for a specified vignette 
 ```
-vignette(‘Frank2018’)
+vignette("Frank2018")
 ```
+
 
 
 ## Authors
