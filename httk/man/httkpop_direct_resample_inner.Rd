@@ -10,9 +10,7 @@ httkpop_direct_resample_inner(
   agelim_months,
   agelim_years,
   reths,
-  weight_category,
-  gfr_resid_var,
-  ckd_epi_race_coeff
+  weight_category
 )
 }
 \arguments{

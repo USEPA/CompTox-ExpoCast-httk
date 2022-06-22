@@ -5,7 +5,11 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3
 library(data.table)
 library(httk)
 library(ggplot2)
+<<<<<<< HEAD
+library(gdata)
+=======
 #library(gdata)
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 library(stringr)
 library(scales)
 library(grid)

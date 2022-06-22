@@ -5,6 +5,7 @@ httk/src-i386/
 httk/src-x64/
 httk/build/
 httk.Rcheck/
+work/
 
 ###################
 # Or these R files
@@ -13,6 +14,8 @@ httk.Rcheck/
 *.Rhistory
 *.Rproj
 .Rproj.user/
+
+httk/man/frechen2021.Rd
 
 *.com
 *.class
