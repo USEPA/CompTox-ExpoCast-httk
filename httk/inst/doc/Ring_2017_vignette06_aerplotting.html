@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Caroline Ring" />
+
+<<<<<<< HEAD
+<meta name="date" content="2021-05-07" />
+
+<title>Ring et al. (2017) AER plotting</title>
+=======
+<meta name="date" content="2022-02-24" />
+
+<title>Ring et al. (2017) Vignette 6: AER plotting</title>
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<<<<<<< HEAD
+<h1 class="title toc-ignore">Ring et al. (2017) AER plotting</h1>
+<h4 class="author">Caroline Ring</h4>
+<h4 class="date">2021-05-07</h4>
+=======
+<h1 class="title toc-ignore">Ring et al. (2017) Vignette 6: AER plotting</h1>
+<h4 class="author">Caroline Ring</h4>
+<h4 class="date">2022-02-24</h4>
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
+
+
+
+<p>This vignette contains the code necessary to create the AER (and OED, and exposure) heatmaps contained in the paper.</p>
+<p>First, let’s load some useful packages.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&#39;data.table&#39;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(<span class="st">&#39;gplots&#39;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(<span class="st">&#39;ggplot2&#39;</span>)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(<span class="st">&#39;httk&#39;</span>)</a></code></pre></div>
+<p>The vignette about model evaluations for subpopulations produced data files for each subpopulation, containing Css percentiles for each chemical in the HTTK data set. As described in the paper, for each chemical, an oral equivalent dose (OED) can be computed using the 95th percentile Css and a ToxCast AC50. The OED is an estimate of the dose that would induce bioactivity. Then, this OED can be compared to an estimate of exposure for the same chemical. The ratio of OED to exposure is called the activity-exposure ratio, or AER. if the AER is 1 or less, then exposure to this chemical may be high enough to induce bioactivity. if the AER is much more than 1, then there probably isn’t enough exposure to this chemical to cause bioactivity. The AER is thus an estimate of risk.</p>
+<div id="computing-oeds" class="section level1">
+<h1>Computing OEDs</h1>
+<p>The first step is to read in the Css percentile data. We’ll go ahead and do this for all 10 subpopulations.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co">#Set some basic parameters for which data set to use</span></a>
+<a class="sourceLine" id="cb2-2" title="2">poormetab &lt;-<span class="st"> </span><span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb2-3" title="3">fup.censored.dist &lt;-<span class="st"> </span><span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb2-4" title="4">model &lt;-<span class="st"> &#39;3compartmentss&#39;</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#List all the subpopulations</span></a>
+<a class="sourceLine" id="cb2-6" title="6">ExpoCast.groups &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Total&#39;</span>,</a>
+<a class="sourceLine" id="cb2-7" title="7">                     <span class="st">&#39;Age.6.11&#39;</span>,</a>
+<a class="sourceLine" id="cb2-8" title="8">                     <span class="st">&#39;Age.12.19&#39;</span>,</a>
+<a class="sourceLine" id="cb2-9" title="9">                     <span class="st">&#39;Age.20.65&#39;</span>,</a>
+<a class="sourceLine" id="cb2-10" title="10">                     <span class="st">&#39;Age.GT65&#39;</span>,</a>
+<a class="sourceLine" id="cb2-11" title="11">                     <span class="st">&#39;BMIgt30&#39;</span>,</a>
+<a class="sourceLine" id="cb2-12" title="12">                     <span class="st">&#39;BMIle30&#39;</span>,</a>
+<a class="sourceLine" id="cb2-13" title="13">                     <span class="st">&#39;Males&#39;</span>,</a>
+<a class="sourceLine" id="cb2-14" title="14">                     <span class="st">&#39;Females&#39;</span>,</a>
+<a class="sourceLine" id="cb2-15" title="15">                     <span class="st">&#39;ReproAgeFemale&#39;</span>)</a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="co">#Read in data from each subpop and bind it all together</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">#Use the direct-resampling data</span></a>
+<a class="sourceLine" id="cb2-18" title="18">dat &lt;-<span class="st"> </span><span class="kw">rbindlist</span>(<span class="kw">lapply</span>(ExpoCast.groups,</a>
+<a class="sourceLine" id="cb2-19" title="19">                        <span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb2-20" title="20">                          tmp &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">paste0</span>(<span class="st">&#39;data/&#39;</span>,</a>
+<a class="sourceLine" id="cb2-21" title="21">                                                <span class="kw">paste</span>(<span class="st">&#39;allchems&#39;</span>,</a>
+<a class="sourceLine" id="cb2-22" title="22">                                                      x,</a>
+<a class="sourceLine" id="cb2-23" title="23">                                                      <span class="st">&#39;dr&#39;</span>,</a>
+<a class="sourceLine" id="cb2-24" title="24">                                                      <span class="st">&#39;poormetab&#39;</span>,</a>
+<a class="sourceLine" id="cb2-25" title="25">                                                      poormetab,</a>
+<a class="sourceLine" id="cb2-26" title="26">                                                      <span class="st">&#39;fup.censored.dist&#39;</span>,</a>
+<a class="sourceLine" id="cb2-27" title="27">                                                      fup.censored.dist,</a>
+<a class="sourceLine" id="cb2-28" title="28">                                                      model,</a>
+<a class="sourceLine" id="cb2-29" title="29">                                                      <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb2-30" title="30">                                                      <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb2-31" title="31">                                                <span class="st">&#39;.Rdata&#39;</span>))</a>
+<a class="sourceLine" id="cb2-32" title="32">                          tmp[, ExpoCast.group<span class="op">:</span><span class="er">=</span>x]</a>
+<a class="sourceLine" id="cb2-33" title="33">                          <span class="kw">return</span>(tmp)</a>
+<a class="sourceLine" id="cb2-34" title="34">                          }))</a></code></pre></div>
+<p>Get the compound names that correspond to each CAS.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">chem.dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(httk<span class="op">::</span><span class="kw">get_cheminfo</span>(<span class="dt">info=</span><span class="kw">c</span>(<span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;Compound&#39;</span>),</a>
+<a class="sourceLine" id="cb3-2" title="2">                                            <span class="dt">exclude.fup.zero=</span><span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">setnames</span>(chem.dt, <span class="st">&#39;CAS&#39;</span>, <span class="st">&#39;chemcas&#39;</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4">dat &lt;-<span class="st"> </span><span class="kw">merge</span>(dat, chem.dt, <span class="dt">by=</span><span class="st">&#39;chemcas&#39;</span>)</a></code></pre></div>
+<p>Next, read in the ToxCast AC50 values.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co">#Column names are Assay Endpoint, CASRN, Activity Call, Q, AC50, Emax, Log AC50,</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#B, T, W, Data Type, Chemical Name.</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#Replace names containing spaces with names without spaces.</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#setnames(tc.dt, </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#         c(&#39;Assay Endpoint&#39;, &#39;AC 50&#39;, &#39;Chemical Name&#39;,&#39;Activity Call&#39;),</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#         c(&#39;Assay.Endpoint&#39;, &#39;AC50&#39;, &#39;Chemical.Name&#39;, &#39;Activity.Call&#39;))</span></a></code></pre></div>
+<p>Keep only the rows of ToxCast data where the chemical was judged “Active” in an assay. Note: this will remove some chemicals entirely (if they were “Inactive” in all assays).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co">#Keep only the rows with &quot;Active&quot; calls.</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">#tc.dt.sub &lt;- tc.dt[Activity.Call==&quot;Active&quot;, </span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#                   .(Chemical.Name, CASRN, Assay.Endpoint, Activity.Call, AC50)]</span></a></code></pre></div>
+<p>We summarize the distribution of AC50 values across all assays for each chemical by taking several percentiles.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">ac50pct &lt;-<span class="st"> </span>tc.dt.sub[, </a>
+<a class="sourceLine" id="cb6-2" title="2">                     <span class="kw">as.list</span>(<span class="kw">quantile</span>(AC50, </a>
+<a class="sourceLine" id="cb6-3" title="3">                                      <span class="dt">probs=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.05</span>,<span class="fl">0.1</span>,</a>
+<a class="sourceLine" id="cb6-4" title="4">                                              <span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,</a>
+<a class="sourceLine" id="cb6-5" title="5">                                              <span class="fl">0.9</span>,<span class="fl">0.95</span>,<span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb6-6" title="6">                                      <span class="dt">na.rm=</span><span class="ot">TRUE</span>)),</a>
+<a class="sourceLine" id="cb6-7" title="7">                     keyby=CASRN]</a></code></pre></div>
+<p>By default, the columns of <code>ac50pct</code> have names like “5%”, “10%”, etc. The “%” sign interferes with <code>data.table</code>’s syntax for referring to columns. So we replace names like “5%” with names like “AC50p5”, to indicate that the column contains AC50 values, percentile 5. To do this, use regular expressions.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">pctnames &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="kw">names</span>(ac50pct), <span class="dt">pattern=</span><span class="st">&#39;%&#39;</span>,<span class="dt">value=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">setnames</span>(ac50pct,</a>
+<a class="sourceLine" id="cb7-3" title="3">         pctnames,</a>
+<a class="sourceLine" id="cb7-4" title="4">         <span class="kw">gsub</span>(<span class="dt">x=</span>pctnames, </a>
+<a class="sourceLine" id="cb7-5" title="5">              <span class="dt">pattern=</span><span class="st">&#39;(</span><span class="ch">\\</span><span class="st">d{1,3})</span><span class="ch">\\</span><span class="st">%&#39;</span>, </a>
+<a class="sourceLine" id="cb7-6" title="6">              <span class="dt">replacement=</span><span class="st">&#39;AC50p</span><span class="ch">\\</span><span class="st">1&#39;</span>, </a>
+<a class="sourceLine" id="cb7-7" title="7">              <span class="dt">perl=</span><span class="ot">TRUE</span>) </a>
+<a class="sourceLine" id="cb7-8" title="8">         )</a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">#While we&#39;re at it, let&#39;s change the name of the CAS column to comport with its</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">#name in the Css data</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="kw">setnames</span>(ac50pct, <span class="st">&#39;CASRN&#39;</span>, <span class="st">&#39;chemcas&#39;</span>)</a></code></pre></div>
+<p>Now we are ready to compute OEDs. Let’s compute one OED corresponding to each ToxCast AC50, using the 95th percentile Css for all of them.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">#merge in the AC50 percentile data</span></a>
+<a class="sourceLine" id="cb8-2" title="2">m.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(dat,ac50pct,<span class="dt">by=</span><span class="st">&#39;chemcas&#39;</span>)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#find column names beginning with &quot;AC50&quot;</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">#to use for naming the OED columns</span></a>
+<a class="sourceLine" id="cb8-5" title="5">ac50names &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(m.tmp),</a>
+<a class="sourceLine" id="cb8-6" title="6">                  <span class="dt">pattern=</span><span class="st">&#39;^AC50&#39;</span>, </a>
+<a class="sourceLine" id="cb8-7" title="7">                  <span class="dt">value=</span><span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb8-8" title="8">                  <span class="dt">perl=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#Compute OEDs</span></a>
+<a class="sourceLine" id="cb8-10" title="10">m.tmp[, (<span class="kw">paste</span>(<span class="st">&#39;oed&#39;</span>, ac50names, <span class="dt">sep=</span><span class="st">&#39;.&#39;</span>))<span class="op">:</span><span class="er">=</span><span class="kw">lapply</span>(.SD,</a>
+<a class="sourceLine" id="cb8-11" title="11">                                                   <span class="cf">function</span>(x) x<span class="op">/</span>m.tmp[, css95]),</a>
+<a class="sourceLine" id="cb8-12" title="12">      .SDcols=ac50names]</a></code></pre></div>
+<p>For another view of the data, let’s compute one OED corresponding to each Css percentile, using the 10th percentile AC50 value for all of them.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co">#merge in the AC50 percentile data</span></a>
+<a class="sourceLine" id="cb9-2" title="2">m.css &lt;-<span class="st"> </span><span class="kw">merge</span>(dat,ac50pct,<span class="dt">by=</span><span class="st">&#39;chemcas&#39;</span>)</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">#find column names beginning with &quot;css&quot;</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">#to use for naming the OED columns</span></a>
+<a class="sourceLine" id="cb9-5" title="5">cssnames &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="dt">x=</span><span class="kw">names</span>(m.css),</a>
+<a class="sourceLine" id="cb9-6" title="6">                  <span class="dt">pattern=</span><span class="st">&#39;^css&#39;</span>, </a>
+<a class="sourceLine" id="cb9-7" title="7">                  <span class="dt">value=</span><span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb9-8" title="8">                  <span class="dt">perl=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="co">#Compute OEDs</span></a>
+<a class="sourceLine" id="cb9-10" title="10">m.css[, (<span class="kw">paste</span>(<span class="st">&#39;oed&#39;</span>, cssnames, <span class="dt">sep=</span><span class="st">&#39;.&#39;</span>))<span class="op">:</span><span class="er">=</span><span class="kw">lapply</span>(.SD,</a>
+<a class="sourceLine" id="cb9-11" title="11">                                                   <span class="cf">function</span>(x) m.css[, AC50p10]<span class="op">/</span>x),</a>
+<a class="sourceLine" id="cb9-12" title="12">      .SDcols=cssnames]</a></code></pre></div>
+</div>
+<div id="exposure-data" class="section level1">
+<h1>Exposure data</h1>
+<p>Bringing in the NHANES exposure inference data, onlyp, let’s compute the “worst-case” AER: using <code>oed.css95</code> (the OED based on the 95th percentile Css value and 10th percentile AC50) and <code>exposure.median.95CI.upper</code> (the upper bound of the 95% confidence interval on the median exposure estimate).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co">#Merge in the exposure data</span></a>
+<a class="sourceLine" id="cb10-2" title="2">m.tmp &lt;-<span class="st"> </span><span class="kw">merge</span>(m.tmp,onlyp,</a>
+<a class="sourceLine" id="cb10-3" title="3">               <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;chemcas&quot;</span>, <span class="st">&quot;ExpoCast.group&quot;</span>))</a>
+<a class="sourceLine" id="cb10-4" title="4">m.css &lt;-<span class="st"> </span><span class="kw">merge</span>(m.css,onlyp,</a>
+<a class="sourceLine" id="cb10-5" title="5">               <span class="dt">by=</span><span class="kw">c</span>(<span class="st">&quot;chemcas&quot;</span>, <span class="st">&quot;ExpoCast.group&quot;</span>))</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">#Compute AER</span></a>
+<a class="sourceLine" id="cb10-7" title="7">m.tmp[, aer<span class="op">:</span><span class="er">=</span>oed.AC50p10<span class="op">/</span>exposure.median<span class="fl">.95</span>CI.upper]</a>
+<a class="sourceLine" id="cb10-8" title="8">m.css[, aer<span class="op">:</span><span class="er">=</span>oed.css95<span class="op">/</span>exposure.median<span class="fl">.95</span>CI.upper]</a></code></pre></div>
+</div>
+<div id="plotting-oed-vs.-exposure-boxplots" class="section level1">
+<h1>Plotting OED vs. exposure boxplots</h1>
+<p>First, take care of some housekeeping. Replace a couple of very long chemical names with shorter names, for better display.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co">#Shorten a couple of compound names for display</span></a>
+<a class="sourceLine" id="cb11-2" title="2">m.tmp[Compound<span class="op">==</span><span class="st">&quot;O-ethyl o-(p-nitrophenyl) phenylphosphonothioate&quot;</span>,</a>
+<a class="sourceLine" id="cb11-3" title="3">      Compound<span class="op">:</span><span class="er">=</span><span class="st">&quot;Phosphonothioic acid&quot;</span>]</a>
+<a class="sourceLine" id="cb11-4" title="4">m.tmp[Compound<span class="op">==</span><span class="st">&quot;4-(1,1,3,3-tetramethylbutyl)phenol&quot;</span>,</a>
+<a class="sourceLine" id="cb11-5" title="5">      Compound<span class="op">:</span><span class="er">=</span><span class="st">&quot;p-tert-Octylphenol&quot;</span>]</a>
+<a class="sourceLine" id="cb11-6" title="6">m.css[Compound<span class="op">==</span><span class="st">&quot;O-ethyl o-(p-nitrophenyl) phenylphosphonothioate&quot;</span>,</a>
+<a class="sourceLine" id="cb11-7" title="7">      Compound<span class="op">:</span><span class="er">=</span><span class="st">&quot;Phosphonothioic acid&quot;</span>]</a>
+<a class="sourceLine" id="cb11-8" title="8">m.css[Compound<span class="op">==</span><span class="st">&quot;4-(1,1,3,3-tetramethylbutyl)phenol&quot;</span>,</a>
+<a class="sourceLine" id="cb11-9" title="9">      Compound<span class="op">:</span><span class="er">=</span><span class="st">&quot;p-tert-Octylphenol&quot;</span>]</a></code></pre></div>
+<p>For this plot, show only the total population.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">#Plot only for the total population</span></a>
+<a class="sourceLine" id="cb12-2" title="2">m.Total &lt;-<span class="st"> </span>m.tmp[ExpoCast.group<span class="op">==</span><span class="st">&#39;Total&#39;</span>,]</a>
+<a class="sourceLine" id="cb12-3" title="3">m.css.Total &lt;-<span class="st"> </span>m.css[ExpoCast.group<span class="op">==</span><span class="st">&#39;Total&#39;</span>,]</a></code></pre></div>
+<p>By default, <code>ggplot2</code> will plot the chemicals in alphabetical order. Instead, let’s order them from smallest to largest AER. To do this, we need to sort the data table, then create a chemical names <em>factor</em> variable, with levels given by the AER-sorted order.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">#Order the chemicals by AER</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">setorder</span>(m.Total, aer)</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">#Get a list of ordered chemical names so that ggplot2 will plot them in the </span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="co">#right order (as opposed to its default alphabetical order)</span></a>
+<a class="sourceLine" id="cb13-5" title="5">cpdlevels &lt;-<span class="st"> </span>m.Total[, Compound]</a>
+<a class="sourceLine" id="cb13-6" title="6">m.Total[, Compound.factor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(Compound, <span class="dt">levels=</span>cpdlevels)]</a>
+<a class="sourceLine" id="cb13-7" title="7">m.tmp[, Compound.factor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(Compound, <span class="dt">levels=</span>cpdlevels)]</a>
+<a class="sourceLine" id="cb13-8" title="8"></a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co">#Order the chemicals by AER</span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="kw">setorder</span>(m.css.Total, aer)</a>
+<a class="sourceLine" id="cb13-11" title="11"><span class="co">#Get a list of ordered chemical names so that ggplot2 will plot them in the </span></a>
+<a class="sourceLine" id="cb13-12" title="12"><span class="co">#right order (as opposed to its default alphabetical order)</span></a>
+<a class="sourceLine" id="cb13-13" title="13">cpdlevels &lt;-<span class="st"> </span>m.css.Total[, Compound]</a>
+<a class="sourceLine" id="cb13-14" title="14">m.css.Total[, Compound.factor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(Compound, <span class="dt">levels=</span>cpdlevels)]</a>
+<a class="sourceLine" id="cb13-15" title="15">m.css[, Compound.factor<span class="op">:</span><span class="er">=</span><span class="kw">factor</span>(Compound, <span class="dt">levels=</span>cpdlevels)]</a></code></pre></div>
+<p>Now, we’re ready to start the plot. First, make the OED boxes, ranging from 25th percentile AC50 to 75th percentile AC50, with a crossbar at median AC50.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">#Start the plot: first, make the OED boxes, ranging between 25th and 75th </span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="co">#percentile AC50, with a crossbar at median AC50.</span></a>
+<a class="sourceLine" id="cb14-3" title="3">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>m.Total) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="st">  </span><span class="kw">geom_crossbar</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,<span class="dt">y=</span>oed.AC50p50,</a>
+<a class="sourceLine" id="cb14-5" title="5">                    <span class="dt">ymin=</span>oed.AC50p25,<span class="dt">ymax=</span>oed.AC50p75))</a></code></pre></div>
+<p>Add the upper whisker (to OED for 90th percentile AC50) and the lower whisker (to OED for 10th percentile OED).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">p &lt;-<span class="st"> </span>p <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,</a>
+<a class="sourceLine" id="cb15-3" title="3">                     <span class="dt">ymin=</span>oed.AC50p75,</a>
+<a class="sourceLine" id="cb15-4" title="4">                     <span class="dt">ymax=</span>oed.AC50p90))<span class="op">+</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,</a>
+<a class="sourceLine" id="cb15-6" title="6">                     <span class="dt">ymin=</span>oed.AC50p10,</a>
+<a class="sourceLine" id="cb15-7" title="7">                     <span class="dt">ymax=</span>oed.AC50p25))  </a></code></pre></div>
+<p>And add points above and below the box-and-whisker plots, to represent OEDs for 95th percentile AC50 values, and for 5th percentile AC50 values.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">p &lt;-<span class="st"> </span>p <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>oed.AC50p95)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>oed.AC50p5))</a></code></pre></div>
+<p>Finally, add the exposure box plots, ranging between the upper and lower bounds on the 95% confidence interval for the median, with a crossbar at the median.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">p &lt;-<span class="st"> </span>p <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw">geom_crossbar</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>exposure.median,</a>
+<a class="sourceLine" id="cb17-3" title="3">                    <span class="dt">ymin=</span>exposure.median<span class="fl">.95</span>CI.lower,</a>
+<a class="sourceLine" id="cb17-4" title="4">                    <span class="dt">ymax=</span>exposure.median<span class="fl">.95</span>CI.upper),</a>
+<a class="sourceLine" id="cb17-5" title="5">                <span class="dt">color=</span><span class="st">&#39;#FC8D62&#39;</span>) </a></code></pre></div>
+<p>Set the OED/exposure axis (vertical axis) to a log scale, and do some tweaking of the plot labels to make things more readable.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">p &lt;-<span class="st"> </span>p <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">scale_y_log10</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>, <span class="dt">angle =</span> <span class="dv">60</span>, </a>
+<a class="sourceLine" id="cb18-5" title="5">                                   <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;grey50&quot;</span>),</a>
+<a class="sourceLine" id="cb18-6" title="6">        <span class="dt">axis.ticks.x =</span> <span class="kw">element_line</span>(<span class="dt">size=</span><span class="fl">0.01</span>, <span class="dt">color =</span> <span class="st">&#39;grey50&#39;</span>),</a>
+<a class="sourceLine" id="cb18-7" title="7">        <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(<span class="fl">1.2</span>)),</a>
+<a class="sourceLine" id="cb18-8" title="8">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(<span class="fl">1.2</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;Compound&#39;</span>,</a>
+<a class="sourceLine" id="cb18-10" title="10">       <span class="dt">y=</span><span class="st">&#39;OED or Inferred Exposure, </span><span class="ch">\n</span><span class="st"> mg/kg/day&#39;</span>)</a></code></pre></div>
+<p>Then save the plot.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">ggsave</span>(<span class="dt">plot=</span>p, <span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb19-2" title="2">                               <span class="kw">paste</span>(<span class="st">&#39;oed_exposure_plot&#39;</span>,model,</a>
+<a class="sourceLine" id="cb19-3" title="3">                                     <span class="st">&#39;poormetab&#39;</span>, poormetab,</a>
+<a class="sourceLine" id="cb19-4" title="4">                                     <span class="st">&#39;fupcensor&#39;</span>, fup.censored.dist,</a>
+<a class="sourceLine" id="cb19-5" title="5">                                     <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb19-6" title="6">                                     <span class="st">&#39;Total&#39;</span>, <span class="st">&#39;OEDdistoverAC50&#39;</span>, </a>
+<a class="sourceLine" id="cb19-7" title="7">                                     <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),<span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb19-8" title="8">       <span class="dt">width=</span><span class="dv">14</span>,<span class="dt">height=</span><span class="fl">8.5</span>)</a>
+<a class="sourceLine" id="cb19-9" title="9"><span class="kw">print</span>(p)</a></code></pre></div>
+<p>Then let’s do it again for the OEDs computed for different Css percentiles. Remember that the OEDs are inversely proportional to Css.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data=</span>m.css.Total) <span class="op">+</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">geom_crossbar</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,<span class="dt">y=</span>oed.css50,</a>
+<a class="sourceLine" id="cb20-3" title="3">                    <span class="dt">ymin=</span>oed.css75,</a>
+<a class="sourceLine" id="cb20-4" title="4">                    <span class="dt">ymax=</span>oed.css25))<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,</a>
+<a class="sourceLine" id="cb20-6" title="6">                     <span class="dt">ymin=</span>oed.css25,</a>
+<a class="sourceLine" id="cb20-7" title="7">                     <span class="dt">ymax=</span>oed.css10))<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="st">  </span><span class="kw">geom_linerange</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor,</a>
+<a class="sourceLine" id="cb20-9" title="9">                     <span class="dt">ymin=</span>oed.css90,</a>
+<a class="sourceLine" id="cb20-10" title="10">                     <span class="dt">ymax=</span>oed.css75)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb20-11" title="11"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>oed.css5)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb20-12" title="12"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>oed.css95))<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-13" title="13"><span class="st">  </span><span class="kw">geom_crossbar</span>(<span class="kw">aes</span>(<span class="dt">x=</span>Compound.factor, <span class="dt">y=</span>exposure.median,</a>
+<a class="sourceLine" id="cb20-14" title="14">                    <span class="dt">ymin=</span>exposure.median<span class="fl">.95</span>CI.lower,</a>
+<a class="sourceLine" id="cb20-15" title="15">                    <span class="dt">ymax=</span>exposure.median<span class="fl">.95</span>CI.upper),</a>
+<a class="sourceLine" id="cb20-16" title="16">                <span class="dt">color=</span><span class="st">&#39;#FC8D62&#39;</span>)<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-17" title="17"><span class="st">  </span><span class="kw">scale_y_log10</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-18" title="18"><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb20-19" title="19"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>, <span class="dt">angle =</span> <span class="dv">60</span>, </a>
+<a class="sourceLine" id="cb20-20" title="20">                                   <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">colour =</span> <span class="st">&quot;grey50&quot;</span>),</a>
+<a class="sourceLine" id="cb20-21" title="21">        <span class="dt">axis.ticks.x =</span> <span class="kw">element_line</span>(<span class="dt">size=</span><span class="fl">0.01</span>, <span class="dt">color =</span> <span class="st">&#39;grey50&#39;</span>),</a>
+<a class="sourceLine" id="cb20-22" title="22">        <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(<span class="fl">1.2</span>)),</a>
+<a class="sourceLine" id="cb20-23" title="23">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="kw">rel</span>(<span class="fl">1.2</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb20-24" title="24"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&#39;Compound&#39;</span>,</a>
+<a class="sourceLine" id="cb20-25" title="25">       <span class="dt">y=</span><span class="st">&#39;OED or Inferred Exposure, </span><span class="ch">\n</span><span class="st"> mg/kg/day&#39;</span>)</a>
+<a class="sourceLine" id="cb20-26" title="26"><span class="kw">ggsave</span>(<span class="dt">plot=</span>p, <span class="dt">filename=</span><span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb20-27" title="27">                               <span class="kw">paste</span>(<span class="st">&#39;oed_exposure_plot&#39;</span>,model,</a>
+<a class="sourceLine" id="cb20-28" title="28">                                     <span class="st">&#39;poormetab&#39;</span>, poormetab,</a>
+<a class="sourceLine" id="cb20-29" title="29">                                     <span class="st">&#39;fupcensor&#39;</span>, fup.censored.dist,</a>
+<a class="sourceLine" id="cb20-30" title="30">                                     <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb20-31" title="31">                                     <span class="st">&#39;Total&#39;</span>, <span class="st">&#39;OEDdistoverCss&#39;</span>, </a>
+<a class="sourceLine" id="cb20-32" title="32">                                     <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),<span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb20-33" title="33">       <span class="dt">width=</span><span class="dv">14</span>,<span class="dt">height=</span><span class="fl">8.5</span>)</a>
+<a class="sourceLine" id="cb20-34" title="34"><span class="kw">print</span>(p)</a></code></pre></div>
+<p>#Plotting heatmaps Heatmaps will let us visualize the magnitude of the difference in AER, OED, and exposure, between each subpopulation and the total population, for each chemical.</p>
+<div id="plotting-aer-heatmaps" class="section level2">
+<h2>Plotting AER heatmaps</h2>
+<p>To visualize the difference in AER from the total population for each group, it’s probably best to look at the order-of-magnitude differences. That is, if AER for the total population for a given chemical is 1e6, and AER for the same chemical for the Age.6.11 population is 1, then AER for Age.6.11 is 6 orders of magnitude less than AER for the total population.</p>
+<p>To compute this numerically, compute the difference in the log10 AERs between each subpopulation and the total population. In the example above, log10 AER for Age.6.11 is log10(1) = 0, and log10 AER for the total population is log10(1e6) = 6. So the difference is 0 - 6 = -6.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co">#Compute difference in log AERs:</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="co">#log AER group - log AER Total</span></a>
+<a class="sourceLine" id="cb21-3" title="3">m.tmp[, logAER.diff<span class="op">:</span><span class="er">=</span><span class="kw">log10</span>(aer)<span class="op">-</span></a>
+<a class="sourceLine" id="cb21-4" title="4"><span class="st">        </span>m.tmp[ExpoCast.group<span class="op">==</span><span class="st">&#39;Total&#39;</span>, <span class="kw">log10</span>(aer)],</a>
+<a class="sourceLine" id="cb21-5" title="5">      by=ExpoCast.group]</a>
+<a class="sourceLine" id="cb21-6" title="6"><span class="co">#if logAER.diff is positive, then log AER group &gt; log AER Total</span></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="co">#if logAER.diff is negative, then log AER group &lt; log AER Total</span></a></code></pre></div>
+<p>To create the heatmap, first cast the data table into matrix form.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co">#Cast into matrix</span></a>
+<a class="sourceLine" id="cb22-2" title="2">m.mat &lt;-<span class="st"> </span>reshape2<span class="op">::</span><span class="kw">acast</span>(m.tmp[,</a>
+<a class="sourceLine" id="cb22-3" title="3">                               .(Compound.factor, ExpoCast.group, logAER.diff)],</a>
+<a class="sourceLine" id="cb22-4" title="4">                         Compound.factor<span class="op">~</span>ExpoCast.group,</a>
+<a class="sourceLine" id="cb22-5" title="5">                         <span class="dt">value.var=</span><span class="st">&#39;logAER.diff&#39;</span>)</a></code></pre></div>
+<p>To visualize differences above and below some mean value, it’s usually best to use a diverging colormap, like those in <a href="https://colorbrewer2.org">ColorBrewer 2</a>. Unfortunately, <code>heatmap.2</code> — the function we’ll use to create the heatmap plots — doesn’t have a built-in way to properly interpolate the diverging color palettes provided by, e.g., <code>RColorBrewer</code>. So we have to set up a function to do the interpolation. This function is a minor adaptation of some code provided in <a href="https://stackoverflow.com/a/10986203">a Stack Overflow answer by Josh O’Brien</a>.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co">#Use a diverging color palette</span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="co">#Based on http://stackoverflow.com/a/10986203 by Josh O&#39;Brien</span></a>
+<a class="sourceLine" id="cb23-3" title="3">diverge.color &lt;-<span class="st"> </span><span class="cf">function</span>(data,<span class="dt">pal_choice=</span><span class="st">&quot;RdBu&quot;</span>,<span class="dt">Thresh=</span><span class="dv">0</span>){</a>
+<a class="sourceLine" id="cb23-4" title="4">  <span class="co">#use 100 colors total, and divide the data into 100 bins</span></a>
+<a class="sourceLine" id="cb23-5" title="5">  <span class="co">#meaning that the &quot;halfway&quot; color is bin 50</span></a>
+<a class="sourceLine" id="cb23-6" title="6">  nHalf&lt;-<span class="dv">50</span> </a>
+<a class="sourceLine" id="cb23-7" title="7">  Min &lt;-<span class="st"> </span><span class="kw">min</span>(data,<span class="dt">na.rm=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb23-8" title="8">  Max &lt;-<span class="st"> </span><span class="kw">max</span>(data,<span class="dt">na.rm=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb23-9" title="9">  pal&lt;-RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">n=</span><span class="dv">11</span>,pal_choice)</a>
+<a class="sourceLine" id="cb23-10" title="10">  <span class="co">#interpolate gradient between the first two colors</span></a>
+<a class="sourceLine" id="cb23-11" title="11">  rc1&lt;-<span class="kw">colorRampPalette</span>(<span class="dt">colors=</span><span class="kw">c</span>(pal[<span class="dv">1</span>],pal[<span class="dv">2</span>]), <span class="dt">space=</span><span class="st">&quot;Lab&quot;</span>)(<span class="dv">10</span>) </a>
+<a class="sourceLine" id="cb23-12" title="12">  <span class="co">#interpolate gradient between each succeeding pair of colors</span></a>
+<a class="sourceLine" id="cb23-13" title="13">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="dv">10</span>){</a>
+<a class="sourceLine" id="cb23-14" title="14">    tmp&lt;-<span class="kw">colorRampPalette</span>(<span class="dt">colors=</span><span class="kw">c</span>(pal[i],pal[i<span class="op">+</span><span class="dv">1</span>]), <span class="dt">space=</span><span class="st">&quot;Lab&quot;</span>)(<span class="dv">10</span>) </a>
+<a class="sourceLine" id="cb23-15" title="15">    rc1&lt;-<span class="kw">c</span>(rc1,tmp)</a>
+<a class="sourceLine" id="cb23-16" title="16">    }</a>
+<a class="sourceLine" id="cb23-17" title="17">  <span class="co">#calculate the data breaks</span></a>
+<a class="sourceLine" id="cb23-18" title="18">  rb1 &lt;-<span class="st"> </span><span class="kw">seq</span>(Min, Thresh, <span class="dt">length.out=</span>nHalf<span class="op">+</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb23-19" title="19">  rb2 &lt;-<span class="st"> </span><span class="kw">seq</span>(Thresh, Max, <span class="dt">length.out=</span>nHalf<span class="op">+</span><span class="dv">1</span>)[<span class="op">-</span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb23-20" title="20">  rampbreaks &lt;-<span class="st"> </span><span class="kw">c</span>(rb1, rb2)</a>
+<a class="sourceLine" id="cb23-21" title="21">  cuts &lt;-<span class="st"> </span>classInt<span class="op">::</span><span class="kw">classIntervals</span>(data, <span class="dt">style=</span><span class="st">&quot;fixed&quot;</span>, <span class="dt">fixedBreaks=</span>rampbreaks)</a>
+<a class="sourceLine" id="cb23-22" title="22">  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">cuts=</span>cuts,<span class="dt">rc1=</span>rc1))</a>
+<a class="sourceLine" id="cb23-23" title="23">  }</a></code></pre></div>
+<p>Then we use the <code>diverge.color</code> function to generate the appropriate colors and breaks for the AER data.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">brks &lt;-<span class="st"> </span><span class="kw">diverge.color</span>(<span class="dt">data=</span><span class="kw">c</span>(<span class="kw">as.vector</span>(m.mat), <span class="fl">-0.8</span>,<span class="fl">0.8</span>),<span class="dt">pal_choice=</span><span class="st">&#39;RdBu&#39;</span>)</a>
+<a class="sourceLine" id="cb24-2" title="2">breaksv &lt;-<span class="st"> </span>brks<span class="op">$</span>cuts[[<span class="st">&#39;brks&#39;</span>]]</a></code></pre></div>
+<p>Then we generate a matrix of character strings so that we can label the single cell with missing data for the AER and exposure heatmaps.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">notemat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="st">&quot;&quot;</span>, <span class="kw">length</span>(m.mat)), <span class="dt">nrow=</span><span class="kw">nrow</span>(m.mat), <span class="dt">ncol=</span><span class="kw">ncol</span>(m.mat))</a>
+<a class="sourceLine" id="cb25-2" title="2">notemat[<span class="kw">which</span>(<span class="kw">is.na</span>(m.mat), <span class="dt">arr.ind=</span><span class="ot">TRUE</span>)] &lt;-<span class="st"> &#39;NA&#39;</span></a></code></pre></div>
+<p>For ease of use later, define a list of plotting options to use for all the heatmap.2 calls.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">hm_args &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">Rowv=</span><span class="ot">FALSE</span>, <span class="co">#don&#39;t reorder rows</span></a>
+<a class="sourceLine" id="cb26-2" title="2">                 <span class="dt">dendrogram =</span> <span class="st">&#39;column&#39;</span>,</a>
+<a class="sourceLine" id="cb26-3" title="3">                 <span class="dt">col=</span>brks<span class="op">$</span>rc1,</a>
+<a class="sourceLine" id="cb26-4" title="4">                 <span class="dt">breaks=</span>breaksv,</a>
+<a class="sourceLine" id="cb26-5" title="5">                 <span class="dt">na.col =</span> <span class="st">&#39;#FFFF33&#39;</span>,</a>
+<a class="sourceLine" id="cb26-6" title="6">                 <span class="dt">trace=</span><span class="st">&#39;none&#39;</span>,</a>
+<a class="sourceLine" id="cb26-7" title="7">                 <span class="dt">margin=</span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">8</span>),</a>
+<a class="sourceLine" id="cb26-8" title="8">                 <span class="dt">key.xlab=</span><span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="st">&#39;log(AER), Group - Total&#39;</span>)),</a>
+<a class="sourceLine" id="cb26-9" title="9">                 <span class="dt">key.ylab=</span><span class="st">&quot;Count&quot;</span>,</a>
+<a class="sourceLine" id="cb26-10" title="10">                 <span class="dt">key.title=</span><span class="ot">NA</span>,</a>
+<a class="sourceLine" id="cb26-11" title="11">                 <span class="dt">srtCol=</span><span class="dv">40</span>,</a>
+<a class="sourceLine" id="cb26-12" title="12">                 <span class="dt">adjCol=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb26-13" title="13">                 <span class="dt">denscol=</span><span class="st">&#39;black&#39;</span>,</a>
+<a class="sourceLine" id="cb26-14" title="14">                 <span class="dt">cellnote =</span> notemat,</a>
+<a class="sourceLine" id="cb26-15" title="15">                 <span class="dt">notecex=</span><span class="fl">0.7</span>,</a>
+<a class="sourceLine" id="cb26-16" title="16">                 <span class="dt">notecol=</span><span class="st">&#39;black&#39;</span>,</a>
+<a class="sourceLine" id="cb26-17" title="17">                 <span class="dt">cexRow=</span><span class="fl">0.8</span>)</a></code></pre></div>
+<p>Finally, we actually plot the heatmap!</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">pdf</span>(<span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb27-2" title="2">           <span class="kw">paste</span>(<span class="st">&#39;deltaAERheatmap&#39;</span>,</a>
+<a class="sourceLine" id="cb27-3" title="3">                 <span class="st">&#39;model&#39;</span>,model,</a>
+<a class="sourceLine" id="cb27-4" title="4">                 <span class="st">&#39;poormetab&#39;</span>,poormetab,</a>
+<a class="sourceLine" id="cb27-5" title="5">                 <span class="st">&#39;fupcensor&#39;</span>,fup.censored.dist, </a>
+<a class="sourceLine" id="cb27-6" title="6">                 <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb27-7" title="7">                 <span class="st">&#39;test&#39;</span>,</a>
+<a class="sourceLine" id="cb27-8" title="8">                 <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>), <span class="st">&#39;.pdf&#39;</span>), <span class="dt">pointsize=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb27-9" title="9">hm1 &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb27-10" title="10">               <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat),</a>
+<a class="sourceLine" id="cb27-11" title="11">                      hm_args))</a>
+<a class="sourceLine" id="cb27-12" title="12"><span class="kw">dev.off</span>()</a>
+<a class="sourceLine" id="cb27-13" title="13">hm1 &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb27-14" title="14">               <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat),</a>
+<a class="sourceLine" id="cb27-15" title="15">                      hm_args))</a></code></pre></div>
+<p>We also want to plot a version with a colorbar to the left of the heatmap, illustrating the orders of magnitude of the AERs in the Total population.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">m.Total[, aer.ordermag<span class="op">:</span><span class="er">=</span><span class="kw">findInterval</span>(<span class="kw">log10</span>(aer), <span class="dv">0</span><span class="op">:</span><span class="dv">8</span>)]</a>
+<a class="sourceLine" id="cb28-2" title="2">cols &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dt">name=</span><span class="st">&#39;Set3&#39;</span>, <span class="dt">n=</span><span class="dv">9</span>)</a>
+<a class="sourceLine" id="cb28-3" title="3">colvect &lt;-<span class="st"> </span>cols[m.Total[,aer.ordermag<span class="op">+</span><span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb28-4" title="4"><span class="kw">pdf</span>(<span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb28-5" title="5">           <span class="kw">paste</span>(<span class="st">&#39;deltaAERheatmap&#39;</span>,</a>
+<a class="sourceLine" id="cb28-6" title="6">                 <span class="st">&#39;model&#39;</span>,model,</a>
+<a class="sourceLine" id="cb28-7" title="7">                 <span class="st">&#39;poormetab&#39;</span>,poormetab,</a>
+<a class="sourceLine" id="cb28-8" title="8">                 <span class="st">&#39;fupcensor&#39;</span>,fup.censored.dist, </a>
+<a class="sourceLine" id="cb28-9" title="9">                 <span class="st">&quot;FuptoFub&quot;</span>,</a>
+<a class="sourceLine" id="cb28-10" title="10">                 <span class="st">&#39;bigger&#39;</span>, <span class="st">&#39;annotated&#39;</span>,</a>
+<a class="sourceLine" id="cb28-11" title="11">                 <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>), <span class="st">&#39;.pdf&#39;</span>),</a>
+<a class="sourceLine" id="cb28-12" title="12">    <span class="dt">pointsize =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb28-13" title="13">hm1.ann &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb28-14" title="14">                   <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat,</a>
+<a class="sourceLine" id="cb28-15" title="15">                               <span class="dt">RowSideColors=</span>colvect),</a>
+<a class="sourceLine" id="cb28-16" title="16">                          hm_args))</a>
+<a class="sourceLine" id="cb28-17" title="17"><span class="kw">dev.off</span>()</a>
+<a class="sourceLine" id="cb28-18" title="18">hm1.ann &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb28-19" title="19">                   <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat,</a>
+<a class="sourceLine" id="cb28-20" title="20">                               <span class="dt">RowSideColors=</span>colvect),</a>
+<a class="sourceLine" id="cb28-21" title="21">                          hm_args))</a></code></pre></div>
+</div>
+<div id="plotting-oed-heatmap" class="section level2">
+<h2>Plotting OED heatmap</h2>
+<p>We follow a similar procedure for the OED heatmap. First, compute differences in the log10 OEDs for each subpopulation from the total population.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co">#Likewise, compute differences in log OEDs</span></a>
+<a class="sourceLine" id="cb29-2" title="2">m.tmp[, logOED.diff<span class="op">:</span><span class="er">=</span><span class="kw">log10</span>(oed.AC50p10)<span class="op">-</span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="st">        </span>m.tmp[ExpoCast.group<span class="op">==</span><span class="st">&#39;Total&#39;</span>, <span class="kw">log10</span>(oed.AC50p10)],</a>
+<a class="sourceLine" id="cb29-4" title="4">      by=ExpoCast.group]</a></code></pre></div>
+<p>Then construct the matrix in the same way.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">m.mat2 &lt;-<span class="st"> </span>reshape2<span class="op">::</span><span class="kw">acast</span>(m.tmp[,</a>
+<a class="sourceLine" id="cb30-2" title="2">                                .(Compound.factor, ExpoCast.group, logOED.diff)],</a>
+<a class="sourceLine" id="cb30-3" title="3">                          Compound.factor<span class="op">~</span>ExpoCast.group,</a>
+<a class="sourceLine" id="cb30-4" title="4">                          <span class="dt">value.var=</span><span class="st">&#39;logOED.diff&#39;</span>)</a></code></pre></div>
+<p>Generate the diverging colormap for the OED data.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">brks &lt;-<span class="st"> </span><span class="kw">diverge.color</span>(<span class="dt">data=</span><span class="kw">c</span>(<span class="kw">as.vector</span>(m.mat2), <span class="fl">-0.8</span>,<span class="fl">0.8</span>), <span class="dt">pal_choice=</span><span class="st">&#39;RdBu&#39;</span>)</a>
+<a class="sourceLine" id="cb31-2" title="2">breaksv &lt;-<span class="st"> </span>brks<span class="op">$</span>cuts[[<span class="st">&#39;brks&#39;</span>]]</a></code></pre></div>
+<p>Put the subpopulations in the same order as for the AER heatmap.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">m.mat2 &lt;-<span class="st"> </span>m.mat2[, hm1<span class="op">$</span>colInd]</a></code></pre></div>
+<p>And finally, plot the heatmap.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">hm_args_oed &lt;-<span class="st"> </span>hm_args</a>
+<a class="sourceLine" id="cb33-2" title="2">hm_args_oed<span class="op">$</span>col &lt;-<span class="st"> </span>brks<span class="op">$</span>rc1</a>
+<a class="sourceLine" id="cb33-3" title="3">hm_args_oed<span class="op">$</span>breaks &lt;-<span class="st"> </span>breaksv</a>
+<a class="sourceLine" id="cb33-4" title="4">hm_args_oed<span class="op">$</span>key.xlab&lt;-<span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="st">&#39;log(OED), Group - Total&#39;</span>))</a>
+<a class="sourceLine" id="cb33-5" title="5">hm_args_oed<span class="op">$</span>Colv &lt;-<span class="st"> </span><span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb33-6" title="6">hm_args_oed<span class="op">$</span>cellnote &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb33-7" title="7"><span class="kw">pdf</span>(<span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb33-8" title="8">           <span class="kw">paste</span>(<span class="st">&#39;deltaOEDheatmap&#39;</span>,</a>
+<a class="sourceLine" id="cb33-9" title="9">                 <span class="st">&#39;model&#39;</span>,model,</a>
+<a class="sourceLine" id="cb33-10" title="10">                 <span class="st">&#39;poormetab&#39;</span>,poormetab,</a>
+<a class="sourceLine" id="cb33-11" title="11">                 <span class="st">&#39;fupcensor&#39;</span>,fup.censored.dist,</a>
+<a class="sourceLine" id="cb33-12" title="12">                 <span class="st">&quot;FuptoFub&quot;</span>, </a>
+<a class="sourceLine" id="cb33-13" title="13">                 <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb33-14" title="14">           <span class="st">&#39;.pdf&#39;</span>), <span class="dt">pointsize=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb33-15" title="15"><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb33-16" title="16">        <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat2),</a>
+<a class="sourceLine" id="cb33-17" title="17">               hm_args_oed))</a>
+<a class="sourceLine" id="cb33-18" title="18"><span class="kw">dev.off</span>()</a>
+<a class="sourceLine" id="cb33-19" title="19"><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb33-20" title="20">        <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat2),</a>
+<a class="sourceLine" id="cb33-21" title="21">               hm_args_oed))</a></code></pre></div>
+</div>
+<div id="exposure-heatmap" class="section level2">
+<h2>Exposure heatmap</h2>
+<p>The procedure is the same for the exposure data.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="co">#And likewise, compute differences in log exposures</span></a>
+<a class="sourceLine" id="cb34-2" title="2">m.tmp[, logexposure.diff<span class="op">:</span><span class="er">=</span><span class="kw">log10</span>(exposure.median<span class="fl">.95</span>CI.upper)<span class="op">-</span></a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="st">        </span>m.tmp[ExpoCast.group<span class="op">==</span><span class="st">&#39;Total&#39;</span>, <span class="kw">log10</span>(exposure.median<span class="fl">.95</span>CI.upper)],</a>
+<a class="sourceLine" id="cb34-4" title="4">      by=ExpoCast.group]</a>
+<a class="sourceLine" id="cb34-5" title="5"><span class="co">#Cast into matrix</span></a>
+<a class="sourceLine" id="cb34-6" title="6">m.mat3 &lt;-<span class="st"> </span>reshape2<span class="op">::</span><span class="kw">acast</span>(m.tmp[,</a>
+<a class="sourceLine" id="cb34-7" title="7">                      .(Compound.factor, ExpoCast.group, logexposure.diff)],</a>
+<a class="sourceLine" id="cb34-8" title="8">                Compound.factor<span class="op">~</span>ExpoCast.group,</a>
+<a class="sourceLine" id="cb34-9" title="9">                <span class="dt">value.var=</span><span class="st">&#39;logexposure.diff&#39;</span>)</a>
+<a class="sourceLine" id="cb34-10" title="10"><span class="co">#Put columns in same order as for AER heatmap</span></a>
+<a class="sourceLine" id="cb34-11" title="11">m.mat3 &lt;-<span class="st"> </span>m.mat3[,hm1<span class="op">$</span>colInd]</a>
+<a class="sourceLine" id="cb34-12" title="12"><span class="co">#Make cell labeling matrix</span></a>
+<a class="sourceLine" id="cb34-13" title="13">notemat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="st">&quot;&quot;</span>, <span class="kw">length</span>(m.mat3)), <span class="dt">nrow=</span><span class="kw">nrow</span>(m.mat3), <span class="dt">ncol=</span><span class="kw">ncol</span>(m.mat3))</a>
+<a class="sourceLine" id="cb34-14" title="14">notemat[<span class="kw">which</span>(<span class="kw">is.na</span>(m.mat3), <span class="dt">arr.ind=</span><span class="ot">TRUE</span>)] &lt;-<span class="st"> &#39;NA&#39;</span></a>
+<a class="sourceLine" id="cb34-15" title="15"><span class="co">#Set up diverging colormap</span></a>
+<a class="sourceLine" id="cb34-16" title="16">brks &lt;-<span class="st"> </span><span class="kw">diverge.color</span>(<span class="dt">data=</span><span class="kw">c</span>(<span class="kw">as.vector</span>(m.mat3),<span class="op">-</span><span class="fl">0.8</span>,<span class="fl">0.8</span>), <span class="dt">pal_choice=</span><span class="st">&#39;RdBu&#39;</span>)</a>
+<a class="sourceLine" id="cb34-17" title="17">breaksv &lt;-<span class="st"> </span>brks<span class="op">$</span>cuts[[<span class="st">&#39;brks&#39;</span>]]</a>
+<a class="sourceLine" id="cb34-18" title="18"></a>
+<a class="sourceLine" id="cb34-19" title="19">hm_args_exp &lt;-<span class="st"> </span>hm_args</a>
+<a class="sourceLine" id="cb34-20" title="20">hm_args_exp<span class="op">$</span>col &lt;-<span class="st"> </span><span class="kw">rev</span>(brks<span class="op">$</span>rc1)</a>
+<a class="sourceLine" id="cb34-21" title="21">hm_args_exp<span class="op">$</span>breaks &lt;-<span class="st"> </span>breaksv</a>
+<a class="sourceLine" id="cb34-22" title="22">hm_args_exp<span class="op">$</span>key.xlab&lt;-<span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="st">&#39;log(exposure), Group - Total&#39;</span>))</a>
+<a class="sourceLine" id="cb34-23" title="23">hm_args_exp<span class="op">$</span>Colv &lt;-<span class="st"> </span><span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb34-24" title="24">hm_args_exp<span class="op">$</span>cellnote &lt;-<span class="st"> </span>notemat</a>
+<a class="sourceLine" id="cb34-25" title="25"><span class="co">#And make the plot</span></a>
+<a class="sourceLine" id="cb34-26" title="26"><span class="kw">pdf</span>(<span class="kw">paste0</span>(<span class="st">&#39;pdf_figures/&#39;</span>,</a>
+<a class="sourceLine" id="cb34-27" title="27">           <span class="kw">paste</span>(<span class="st">&#39;deltaexposureheatmap&#39;</span>,</a>
+<a class="sourceLine" id="cb34-28" title="28">                 <span class="st">&#39;model&#39;</span>, model,</a>
+<a class="sourceLine" id="cb34-29" title="29">                 <span class="st">&#39;poormetab&#39;</span>, poormetab,</a>
+<a class="sourceLine" id="cb34-30" title="30">                 <span class="st">&#39;fupcensor&#39;</span>, fup.censored.dist, </a>
+<a class="sourceLine" id="cb34-31" title="31">                 <span class="st">&quot;FuptoFub&quot;</span>, </a>
+<a class="sourceLine" id="cb34-32" title="32">                 <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>),</a>
+<a class="sourceLine" id="cb34-33" title="33">           <span class="st">&#39;.pdf&#39;</span>), <span class="dt">pointsize=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb34-34" title="34"><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb34-35" title="35">        <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat3),</a>
+<a class="sourceLine" id="cb34-36" title="36">               hm_args_exp))</a>
+<a class="sourceLine" id="cb34-37" title="37"><span class="kw">dev.off</span>()</a>
+<a class="sourceLine" id="cb34-38" title="38"><span class="kw">do.call</span>(<span class="dt">what=</span>heatmap<span class="fl">.2</span>,</a>
+<a class="sourceLine" id="cb34-39" title="39">        <span class="dt">args=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">x=</span>m.mat3),</a>
+<a class="sourceLine" id="cb34-40" title="40">               hm_args_exp))</a></code></pre></div>
+<p>Finally, write the OED, exposure, and AER data in tabular form.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">setorder</span>(m.tmp, ExpoCast.group, aer)</a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="kw">write.table</span>(m.tmp[, .(Compound, ExpoCast.group, css95, oed.AC50p10, exposure.median<span class="fl">.95</span>CI.upper, aer)], <span class="dt">file=</span><span class="st">&quot;data/aer_data_FuptoFub.txt&quot;</span>, <span class="dt">row.names=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
