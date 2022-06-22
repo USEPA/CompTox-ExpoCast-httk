@@ -34,7 +34,6 @@
 #' International 106 (2017): 105-118
 #'
 #'@import stats
-#'@export tissue_masses_flows
 
 tissue_masses_flows <- function(tmf_dt){
   

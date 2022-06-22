@@ -2,26 +2,47 @@
 % Please edit documentation in R/estimate_hematocrit.R
 \name{estimate_hematocrit}
 \alias{estimate_hematocrit}
-\title{Predict hematocrit using smoothing spline.}
+\title{Generate hematocrit values for a virtual population}
 \usage{
-estimate_hematocrit(hcttmp_dt)
+estimate_hematocrit(gender, reth, age_years, age_months, nhanes_mec_svy)
 }
 \arguments{
-\item{hcttmp_dt}{A data.table with columns \code{age_years},
-\code{age_months}, \code{gender}, \code{reth}.}
+\item{gender}{Gender for which to generate hematocrit values ("Male" or
+"Female")}
+
+\item{reth}{NHANES race/ethnicity category for which to generate serum
+creatinine values ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+White", "Other", or "Other Hispanic")}
+
+\item{age_years}{Vector of ages in years for individuals for whom to generate
+hematocrit values (corresponding to age_months)}
+
+\item{age_months}{vector of ages in months for individuals for whom to
+generate hematocrit values (between 0-959 months)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
-The same data.table with a \code{hematocrit} column added.
+A vector of numeric generated hematocrit values (blood percentage red
+ blood cells by volume).
 }
 \description{
-Using precalculated smoothing splines on NHANES log hematocrit vs. age in 
-months (and KDE residuals) by gender and race/ethnicity, generate hematocrit 
-values for individuals specified by age, gender, and race/ethnicity.
+Predict hematocrit from age using smoothing splines and kernel density
+estimates of residual variability fitted to NHANES data, for a given
+combination of gender and NHANES race/ethnicity category.
+}
+\details{
+This function should usually not be called directly by the user. It is used by
+\code{httkpop_generate()} in "virtual-individuals" mode, after drawing gender,
+NHANES race/ethnicity category, and age from their NHANES
+proportions/distributions.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to
+ environmental chemicals by simulating toxicokinetic variability."
+ Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring
