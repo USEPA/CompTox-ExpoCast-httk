@@ -57,7 +57,11 @@ and exposures.
 library(data.table)
 library(httk)
 library(ggplot2)
+<<<<<<< HEAD
 library(gdata)
+=======
+#library(gdata)
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 library(stringr)
 library(scales)
 library(grid)
@@ -910,7 +914,11 @@ print(Fig6)
 ```
 
 #Figure 7:
+<<<<<<< HEAD
 High throughput risk-based prioritization can be conducted by using doses predicted to cause bioactivity identified by high throughput screening. High throughput exposure estimates have large uncertainty, indicated by the triangles (median of distribution) and vertical bar (upper 95th percentile range). There are many in vitro activities identified for each chemical, the 80% interval of equivalent dose rates is indicated by the vertical red bar, with a horizontal slash indicating the median and the circle plot points indicating the 10th percentile of the bioactive concentration. Anywhere the entire exposure bar is below the bioactivity circle there is 95% probability that the median exposure will not cause a dose sufficient to cause the 10th percentile in vitro bioactivity. Chemicals are sorted from left-to-right by the margin between the 10th percentile bioactivity (small circle) and the upper 95th percentile limit on estimated median intake rate. In panel A, all chemicals for which Css could be calculated are shown using only variability. In panel B, the shaded region of panel A is shown, using both variability and uncertainty to calculate the bioactive dose. Arrows in panel B identify six chemicals where exposure and 10th percentile bioactivity potentially overlap that would have been missed as priority chemicals if uncertainty analysis was not performed. Two overlapping bars are shown for each chemical''s bioactive doses -- the upper one is for variability alone (as in Panel A), the lower is for uncertainty and variability together.
+=======
+High throughput risk-based prioritization can be conducted by using doses predicted to cause bioactivity identified by high-throughput screening. High throughput exposure estimates have large uncertainty, indicated by the triangles (median of distribution) and vertical bar (upper 95th percentile range). There are many in vitro activities identified for each chemical, the 80% interval of equivalent dose rates is indicated by the vertical red bar, with a horizontal slash indicating the median and the circle plot points indicating the 10th percentile of the bioactive concentration. Anywhere the entire exposure bar is below the bioactivity circle there is 95% probability that the median exposure will not cause a dose sufficient to cause the 10th percentile in vitro bioactivity. Chemicals are sorted from left-to-right by the margin between the 10th percentile bioactivity (small circle) and the upper 95th percentile limit on estimated median intake rate. In panel A, all chemicals for which Css could be calculated are shown using only variability. In panel B, the shaded region of panel A is shown, using both variability and uncertainty to calculate the bioactive dose. Arrows in panel B identify six chemicals where exposure and 10th percentile bioactivity potentially overlap that would have been missed as priority chemicals if uncertainty analysis was not performed. Two overlapping bars are shown for each chemical''s bioactive doses -- the upper one is for variability alone (as in Panel A), the lower is for uncertainty and variability together.
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ```{R Wambaugh2019.Fig7, eval=F}
 # Head to ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/ to get the ToxCast/Tox21 data:
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".

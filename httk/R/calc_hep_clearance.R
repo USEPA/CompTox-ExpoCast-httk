@@ -176,7 +176,6 @@ calc_hep_clearance <- function(chem.name=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   }
   
-             
   fu_hep <- get_param(
               "Fhep.assay.correction",
               parameters,

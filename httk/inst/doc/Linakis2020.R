@@ -15,6 +15,87 @@ rm(list=ls())
 ## ----data---------------------------------------------------------------------
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
+<<<<<<< HEAD
+=======
+conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
+conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
+# Not sure what to do with percent:
+conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
+# Rename this column:
+colnames(conc_data)[colnames(conc_data)=="ORIG_CONC_U"] <- "CONC_U"
+conc_data$ORIGINAL_CONC_U <- conc_data$CONC_U
+conc_data$ORIGINAL_CONC <- conc_data$CONCENTRATION
+
+
+
+## ----convert_to_ppmweight-----------------------------------------------------
+gas.media <- c("EB","MEB","EEB","EB (+W)")
+gas.units <- unique(subset(conc_data,
+  SAMPLING_MATRIX %in% gas.media)$CONC_U)
+target.unit <- "ppmv"
+for (this.unit in gas.units)
+  if (this.unit != target.unit)
+  {
+    these.chems <- unique(subset(conc_data,
+      SAMPLING_MATRIX %in% gas.media &
+      CONC_U==this.unit)$DTXSID)    
+    for (this.chem in these.chems)  
+    {
+      this.factor <- convert_units(
+        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
+      
+      # Scale the observation    
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% gas.media &
+                  conc_data$CONC_U==this.unit,"CONCENTRATION"] <-
+        this.factor * conc_data[
+          conc_data$DTXSID==this.chem &
+            conc_data$SAMPLING_MATRIX %in% gas.media &
+            conc_data$CONC_U==this.unit,"CONCENTRATION"]
+      # Change the reported unit
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% gas.media &
+                  conc_data$CONC_U==this.unit,"CONC_U"] <-
+        target.unit
+
+    }
+  }
+
+## ----normalize_other_units----------------------------------------------------
+tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
+tissue.units <- unique(subset(conc_data,
+  SAMPLING_MATRIX %in% tissue.media)$CONC_U)
+target.unit <- "uM"
+for (this.unit in tissue.units)
+  if (this.unit != target.unit)
+  {
+    these.chems <- unique(subset(conc_data,
+      SAMPLING_MATRIX %in% tissue.media &
+      CONC_U==this.unit)$DTXSID)    
+    for (this.chem in these.chems)  
+    {
+      this.factor <- convert_units(
+        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
+      
+      # Scale the observation    
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% tissue.media &
+                  conc_data$CONC_U==this.unit,"CONCENTRATION"] <-
+        this.factor * conc_data[
+          conc_data$DTXSID==this.chem &
+            conc_data$SAMPLING_MATRIX %in% tissue.media &
+            conc_data$CONC_U==this.unit,"CONCENTRATION"]
+      # Change the reported unit
+      conc_data[conc_data$DTXSID==this.chem &
+                  conc_data$SAMPLING_MATRIX %in% tissue.media &
+                  conc_data$CONC_U==this.unit,"CONC_U"] <-
+        target.unit
+
+    }
+  }
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----summary------------------------------------------------------------------
 # Small molecule chemicals
@@ -38,7 +119,10 @@ unique_scenarios <- conc_data[with(conc_data,
   distinct(DTXSID,DOSE,DOSE_U,EXP_LENGTH,CONC_SPECIES,SAMPLING_MATRIX, .keep_all = TRUE)
 
 ## ----runmodel-----------------------------------------------------------------
+<<<<<<< HEAD
 plist <- list()
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
@@ -49,6 +133,7 @@ for(i in 1:nrow(unique_scenarios)){
       conc_data$CONC_SPECIES == unique_scenarios$CONC_SPECIES[i] & 
       conc_data$SAMPLING_MATRIX == unique_scenarios$SAMPLING_MATRIX[i])
     obslist[[i]] <- relconc
+<<<<<<< HEAD
     name <- paste0("out",i)
     if(as.character(unique_scenarios$CONC_SPECIES[i]) == "Human"){
       solve <- suppressWarnings(assign(name, solve_gas_pbtk(
@@ -88,24 +173,98 @@ for(i in 1:nrow(unique_scenarios)){
     #browser()
     solve <- as.data.frame(solve)
     # Sets the output units appropriate for the sampling matrix
+=======
+    solve <- suppressWarnings(as.data.frame(solve_gas_pbtk(
+        chem.cas = unique_scenarios$CASRN[i], 
+        days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+# Make sure we get conc's at the observed times:
+        times=unique(c(0,signif(obslist[[i]]$TIME,4))), 
+        tsteps = 500,
+        input.units = unique_scenarios$DOSE_U[i],
+        exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
+        # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
+        exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
+        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
+        species = as.character(unique_scenarios$CONC_SPECIES[i]), 
+        monitor.vars = c(
+          "Cven", 
+          "Clung", 
+          "Cart", 
+          "Cplasma", 
+          "Calvppmv", 
+          "Cendexhppmv", 
+          "Cmixexhppmv", 
+          "Calv", 
+          "Cendexh", 
+          "Cmixexh", 
+          "Cmuc", 
+          "AUC"),
+        vmax.km = FALSE,
+        suppress.messages = TRUE)))
+
+    this.Rb2p <- suppressWarnings(available_rblood2plasma(
+      chem.cas=unique_scenarios$CASRN[i],
+      species=as.character(unique_scenarios$CONC_SPECIES[i])))
+    solve$Rb2p <- this.Rb2p
+    
+    # Sets the output appropriate for the sampling matrix
+    # BL : blood
+    # EEB : end-exhaled breath
+    # MEB : mixed exhaled breath
+    # VBL : venous blood
+    # ABL : arterial blood
+    # EB : unspecified exhaled breath sample (assumed to be EEB)
+    # PL: plasma
+    # +W with work/exercise
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     if (unique_scenarios$SAMPLING_MATRIX[i] == "VBL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)")
     {
+<<<<<<< HEAD
       solve$simconc <- solve$Cven
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
       solve$simconc <- solve$Cart
+=======
+      solve$simconc <- solve$Cven*this.Rb2p
+      solve$unit <- "uM"
+    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
+      solve$simconc <- solve$Cart*this.Rb2p
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "EB" |
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
+<<<<<<< HEAD
       solve$simconc <- solve$Cendexh * 24.45
       solve$unit <- "ppm"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
       solve$simconc <- solve$Cmixexh * 24.45
       solve$unit <- "ppm"
+=======
+      if (unique_scenarios[i,"CONC_U"] == "ppmv")
+      {
+        solve$simconc <- solve$Cendexhppmv
+        solve$unit <- "ppmv"
+      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
+        solve$simconc <- solve$Cendexh
+        solve$unit <- "uM"
+      } else if (unique_scenarios[i,"CONC_U"] == "ug/L") {
+        solve$simconc <- solve$Cendexh
+        solve$unit <- "uM"
+      }
+    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
+            if (unique_scenarios[i,"CONC_U"] == "ppmv")
+      {
+        solve$simconc <- solve$Cmixexhppmv
+        solve$unit <- "ppmv"
+      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
+        solve$simconc <- solve$Cmixexh
+        solve$unit <- "uM"
+      }
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -114,10 +273,24 @@ for(i in 1:nrow(unique_scenarios)){
       solve$unit <- NA
     }
     simlist[[i]] <- solve
+<<<<<<< HEAD
     plot.data <- solve
     name1 <- paste0("c.vs.t",i)
 #Right now this is only calculating real concentrations according to mg/L in blood
     plots <- assign(name1, ggplot(plot.data, aes(time*24, simconc)) + 
+=======
+}
+
+## ----Makestudyplots-----------------------------------------------------------
+cvtlist <- list()
+for(i in 1:nrow(unique_scenarios))
+{
+    plot.data <- simlist[[i]]
+    relconc <- obslist[[i]]
+
+#Right now this is only calculating real concentrations according to mg/L in blood
+    cvtlist[[i]] <- ggplot(plot.data, aes(time*24, simconc)) + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       geom_line() + 
       xlab("Time (h)") + 
       ylab(paste0("Simulated ", 
@@ -136,6 +309,7 @@ for(i in 1:nrow(unique_scenarios)){
         "h in ", 
         unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
       geom_point(data = relconc, aes(TIME*24,CONCENTRATION)) + 
+<<<<<<< HEAD
       theme(text = element_text(size=10))+
       theme_bw()) 
     plist[[i]] <- plots
@@ -143,6 +317,17 @@ for(i in 1:nrow(unique_scenarios)){
 }
 rm(list=ls(pattern='out'))
 rm(list=ls(pattern='c.vs.t'))
+=======
+      theme(plot.title = element_text(face = 'bold', size = 20),
+        axis.title.x = element_text(face = 'bold', size = 20), 
+        axis.text.x = element_text(size=16), 
+        axis.title.y = element_text(face = 'bold', size = 20), 
+        axis.text.y = element_text(size = 16),
+        legend.title = element_text(face = 'bold', size = 16),
+        legend.text = element_text(face = 'bold',size = 14))+
+      theme_bw() 
+}
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----init_dataset-------------------------------------------------------------
 # Creation of simulated vs. observed concentration dataset
@@ -192,8 +377,13 @@ for(i in 1:length(simlist))
       "AVERAGE_MASS"] <- 
       "mw"
     colnames(obsdata)[colnames(obsdata) ==
+<<<<<<< HEAD
       "ORIG_CONC_U"] <- 
       "orig_conc_u"
+=======
+      "CONC_U"] <- 
+      "CONC_U"
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     simobscomb <- suppressWarnings(merge(obsdata[,c(
       "time",
       "obstime",
@@ -204,7 +394,11 @@ for(i in 1:length(simlist))
       "species",
       "matrix",
       "mw",
+<<<<<<< HEAD
       "orig_conc_u"
+=======
+      "CONC_U"
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       )], simobscomb, by="time", all.x=TRUE))
 
 # Merge with met_data
@@ -239,6 +433,7 @@ for(i in 1:length(simlist))
   }
 }
 
+<<<<<<< HEAD
 ## ----match_matrix-------------------------------------------------------------
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
@@ -270,6 +465,8 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----time_quartile, eval=F----------------------------------------------------
 #  for(i in 1:length(simobslist))
 #    if (nrow(simobslist[[i]])>0)
@@ -355,12 +552,21 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 
+<<<<<<< HEAD
 ## ----make_plots---------------------------------------------------------------
+=======
+## ----combine_studies----------------------------------------------------------
+obsvpredlist <- list()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
     simobscomb <- simobslist[[i]]
+<<<<<<< HEAD
     obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+=======
+    obsvpredlist[[i]] <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       geom_point() + 
       geom_abline() + 
       xlab("Simulated Concentrations (uM)") + 
@@ -384,6 +590,7 @@ for(i in 1:length(simobslist))
         axis.text.y = element_text(size = 16),
         legend.title = element_text(face = 'bold', size = 16),
         legend.text = element_text(face = 'bold',size = 14))
+<<<<<<< HEAD
     obvpredlist[[i]] <- obvpredplot
   }
 
@@ -396,6 +603,23 @@ unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 for (i in 1:length(plist))
 {
   plist[[i]] <- plist[[i]] + 
+=======
+  }
+
+## ----obsvspredplots, eval = F-------------------------------------------------
+#  # Create pdfs of observed vs. predicted concentration plots
+#  dir.create("Linakis2020")
+#  pdf("Linakis2020/obvpredplots.pdf", width = 10, height = 10)
+#  for (i in 1:length(obvpredlist)) {
+#    print(obvpredlist[[i]])
+#  }
+#  dev.off()
+
+## ----annotate_study_stats-----------------------------------------------------
+for (i in 1:length(cvtlist))
+{
+  cvtlist[[i]] <- cvtlist[[i]] + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     geom_text(
       x = Inf, 
       y = Inf, 
@@ -417,6 +641,49 @@ for (i in 1:length(plist))
 #      legend.text = element_text(face = 'bold',size = 14))
 }
 
+<<<<<<< HEAD
+=======
+## ----cvtplots, eval = F-------------------------------------------------------
+#  # Create pdfs of simulated concentration-time plots against observed c-t values
+#  pdf("Linakis2020/simdataplots.pdf")
+#  for (i in 1:length(cvtlist)) {
+#    print(cvtlist[[i]])
+#  }
+#  dev.off()
+
+## ----combine_obs_vs_pred------------------------------------------------------
+simobsfull <- do.call("rbind",simobslist)
+simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
+simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
+unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
+
+## ----Standardize Units--------------------------------------------------------
+these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
+for (this.chem in these.chems)
+{
+  # Use HTTK unit conversion:
+  this.factor <- convert_units(
+    input.units="ppmv", output.units="um", chem.name=this.chem)
+      
+  # Scale the observation    
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","obsconc"] <-
+    this.factor * simobsfull[
+      simobsfull$chem==this.chem & 
+        simobsfull$unit=="ppmv","obsconc"]
+  # Scale the prediction    
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","simconc"] <-
+    this.factor * simobsfull[
+      simobsfull$chem==this.chem & 
+        simobsfull$unit=="ppmv","simconc"]
+  # Change the reported unit
+  simobsfull[simobsfull$chem==this.chem & 
+              simobsfull$unit=="ppmv","unit"] <-
+    "uM"
+}
+
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----regression---------------------------------------------------------------
 table(unique_scenarios$CONC_SPECIES)
 nrow(simobsfull) - nrow(simobsfull[
@@ -603,6 +870,7 @@ chemunderpred <- subset(simobsfull,
   simobsfull$simconc > 0)
 table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 
+<<<<<<< HEAD
 ## ----cvtplots, eval = F-------------------------------------------------------
 #  # Create pdfs of simulated concentration-time plots against observed c-t values
 #  pdf("simdataplots.pdf")
@@ -619,6 +887,8 @@ table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 #  }
 #  dev.off()
 
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----obspredFig2--------------------------------------------------------------
 fig2 <- ggplot(
   data = simobsfull[
@@ -679,9 +949,17 @@ fig2 <- ggplot(
 #    legend.title = element_text(face = 'bold', size = 16),
 #    legend.text = element_text(face = 'bold',size = 14))
 fig2 #Display plot in R
+<<<<<<< HEAD
 #pdf("Figure2.pdf", width = 10, height = 10)
 #print(fig2)
 #dev.off()
+=======
+
+## ----write_figure2, eval = F--------------------------------------------------
+#  pdf("Linakis2020/Figure2.pdf", width = 10, height = 10)
+#  print(fig2)
+#  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----calculations-------------------------------------------------------------
 # Create data and run calculations for populating plots
@@ -861,9 +1139,17 @@ aucp <- ggplot(
 #    legend.title = element_text(face = 'bold', size = 16),
 #    legend.text = element_text(face = 'bold',size = 14))
 aucp
+<<<<<<< HEAD
 #pdf("Figure4.pdf", width = 20, height = 10)
 #plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
 #dev.off()
+=======
+
+## ----write_figure4, eval = F--------------------------------------------------
+#  pdf("Linakis2020/Figure4.pdf", width = 20, height = 10)
+#  plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
+#  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----Fig3plot, eval=F---------------------------------------------------------
 #  simobsfull$aggscen <- as.factor(paste(simobsfull$chem,
@@ -903,9 +1189,17 @@ aucp
 #      axis.title.y = element_text(face = 'bold', size = 30),
 #      axis.text.y = element_text(face = 'bold',size = 25, color = 'black'))
 #  fig3
+<<<<<<< HEAD
 #  #pdf("Figure3.pdf", width = 40, height = 13)
 #  #print(fig3)
 #  #dev.off()
+=======
+
+## ----write_figure3, eval = F--------------------------------------------------
+#  pdf("Linakis2020/Figure3.pdf", width = 40, height = 13)
+#  print(fig3)
+#  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----FigS1, eval = FALSE------------------------------------------------------
 #  figs1a <- ggplot(
@@ -981,9 +1275,17 @@ aucp
 #      axis.title.y = element_text(face = 'bold', size = 20),
 #      axis.text.y = element_text(size = 20, face = 'bold'))
 #  figs1d
+<<<<<<< HEAD
 #  #pdf("FigureS1.pdf", width = 20, height = 20)
 #  plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
 #  #dev.off()
+=======
+
+## ----write_figures1, eval = F-------------------------------------------------
+#  pdf("Linakis2020/FigureS1.pdf", width = 20, height = 20)
+#  plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
+#  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----SupTable2, eval = FALSE--------------------------------------------------
 #  senschem <- list()
