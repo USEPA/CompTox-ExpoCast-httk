@@ -4,7 +4,7 @@
 \alias{estimate_gfr}
 \title{Predict GFR.}
 \usage{
-estimate_gfr(gfrtmp.dt, gfr_resid_var = TRUE, ckd_epi_race_coeff = FALSE)
+estimate_gfr(gfrtmp.dt)
 }
 \arguments{
 \item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth}, 
@@ -22,10 +22,8 @@ The same data.table with a \code{gfr_est} column added, containing
  estimated GFR values.
 }
 \description{
-Predict GFR using CKD-EPI equation (for adults) or BSA-based equation (for children).
-}
-\details{
-Add residual variability based on reported residuals for each equation.
+First predict serum creatinine using smoothing spline, then predict GFR using
+CKD-EPI equation.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to 

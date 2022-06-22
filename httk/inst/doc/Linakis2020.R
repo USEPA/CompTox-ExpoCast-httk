@@ -15,6 +15,8 @@ rm(list=ls())
 ## ----data---------------------------------------------------------------------
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
+<<<<<<< HEAD
+=======
 conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
 conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
 # Not sure what to do with percent:
@@ -93,6 +95,7 @@ for (this.unit in tissue.units)
 
     }
   }
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----summary------------------------------------------------------------------
 # Small molecule chemicals
@@ -116,6 +119,10 @@ unique_scenarios <- conc_data[with(conc_data,
   distinct(DTXSID,DOSE,DOSE_U,EXP_LENGTH,CONC_SPECIES,SAMPLING_MATRIX, .keep_all = TRUE)
 
 ## ----runmodel-----------------------------------------------------------------
+<<<<<<< HEAD
+plist <- list()
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
@@ -126,6 +133,47 @@ for(i in 1:nrow(unique_scenarios)){
       conc_data$CONC_SPECIES == unique_scenarios$CONC_SPECIES[i] & 
       conc_data$SAMPLING_MATRIX == unique_scenarios$SAMPLING_MATRIX[i])
     obslist[[i]] <- relconc
+<<<<<<< HEAD
+    name <- paste0("out",i)
+    if(as.character(unique_scenarios$CONC_SPECIES[i]) == "Human"){
+      solve <- suppressWarnings(assign(name, solve_gas_pbtk(
+        chem.cas = unique_scenarios$CASRN[i], 
+        days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+# Make sure we get conc's at the observed times:
+        times=signif(obslist[[i]]$TIME,4), 
+        tsteps = 500, 
+        exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
+        exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
+        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
+        species = as.character(unique_scenarios$CONC_SPECIES[i]), 
+        vmax.km = FALSE, 
+        vmax = met_data$VMAX[met_data$CASRN %in% unique_scenarios$CASRN[i] & 
+        met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]], 
+        km = met_data$KM[met_data$CASRN %in% unique_scenarios$CASRN[i] & 
+        met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]],
+        suppress.messages=TRUE)))
+    } else {
+      solve <- suppressWarnings(assign(name, solve_gas_pbtk(
+        chem.cas = unique_scenarios$CASRN[i], 
+        days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+# Make sure we get conc's at the observed times:
+        times=signif(obslist[[i]]$TIME,4),
+        tsteps = 500, 
+        exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/24450)/1e20, 
+        exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
+        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
+        species = as.character(unique_scenarios$CONC_SPECIES[i]), 
+        vmax.km = TRUE, 
+        vmax = met_data$VMAX[met_data$CASRN %in% unique_scenarios$CASRN[i] & 
+        met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]], 
+        km = met_data$KM[met_data$CASRN %in% unique_scenarios$CASRN[i] &
+        met_data$SPECIES == unique_scenarios$CONC_SPECIES[i]],
+        suppress.messages=TRUE)))
+    }
+    #browser()
+    solve <- as.data.frame(solve)
+    # Sets the output units appropriate for the sampling matrix
+=======
     solve <- suppressWarnings(as.data.frame(solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
@@ -168,19 +216,34 @@ for(i in 1:nrow(unique_scenarios)){
     # EB : unspecified exhaled breath sample (assumed to be EEB)
     # PL: plasma
     # +W with work/exercise
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     if (unique_scenarios$SAMPLING_MATRIX[i] == "VBL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)")
     {
+<<<<<<< HEAD
+      solve$simconc <- solve$Cven
+      solve$unit <- "uM"
+    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
+      solve$simconc <- solve$Cart
+=======
       solve$simconc <- solve$Cven*this.Rb2p
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
       solve$simconc <- solve$Cart*this.Rb2p
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "EB" |
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
+<<<<<<< HEAD
+      solve$simconc <- solve$Cendexh * 24.45
+      solve$unit <- "ppm"
+    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
+      solve$simconc <- solve$Cmixexh * 24.45
+      solve$unit <- "ppm"
+=======
       if (unique_scenarios[i,"CONC_U"] == "ppmv")
       {
         solve$simconc <- solve$Cendexhppmv
@@ -201,6 +264,7 @@ for(i in 1:nrow(unique_scenarios)){
         solve$simconc <- solve$Cmixexh
         solve$unit <- "uM"
       }
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -209,6 +273,12 @@ for(i in 1:nrow(unique_scenarios)){
       solve$unit <- NA
     }
     simlist[[i]] <- solve
+<<<<<<< HEAD
+    plot.data <- solve
+    name1 <- paste0("c.vs.t",i)
+#Right now this is only calculating real concentrations according to mg/L in blood
+    plots <- assign(name1, ggplot(plot.data, aes(time*24, simconc)) + 
+=======
 }
 
 ## ----Makestudyplots-----------------------------------------------------------
@@ -220,6 +290,7 @@ for(i in 1:nrow(unique_scenarios))
 
 #Right now this is only calculating real concentrations according to mg/L in blood
     cvtlist[[i]] <- ggplot(plot.data, aes(time*24, simconc)) + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       geom_line() + 
       xlab("Time (h)") + 
       ylab(paste0("Simulated ", 
@@ -238,6 +309,15 @@ for(i in 1:nrow(unique_scenarios))
         "h in ", 
         unique_scenarios$SAMPLING_MATRIX[i], ")")) + 
       geom_point(data = relconc, aes(TIME*24,CONCENTRATION)) + 
+<<<<<<< HEAD
+      theme(text = element_text(size=10))+
+      theme_bw()) 
+    plist[[i]] <- plots
+  #}, error = function(e){})
+}
+rm(list=ls(pattern='out'))
+rm(list=ls(pattern='c.vs.t'))
+=======
       theme(plot.title = element_text(face = 'bold', size = 20),
         axis.title.x = element_text(face = 'bold', size = 20), 
         axis.text.x = element_text(size=16), 
@@ -247,6 +327,7 @@ for(i in 1:nrow(unique_scenarios))
         legend.text = element_text(face = 'bold',size = 14))+
       theme_bw() 
 }
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----init_dataset-------------------------------------------------------------
 # Creation of simulated vs. observed concentration dataset
@@ -296,8 +377,13 @@ for(i in 1:length(simlist))
       "AVERAGE_MASS"] <- 
       "mw"
     colnames(obsdata)[colnames(obsdata) ==
+<<<<<<< HEAD
+      "ORIG_CONC_U"] <- 
+      "orig_conc_u"
+=======
       "CONC_U"] <- 
       "CONC_U"
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     simobscomb <- suppressWarnings(merge(obsdata[,c(
       "time",
       "obstime",
@@ -308,7 +394,11 @@ for(i in 1:length(simlist))
       "species",
       "matrix",
       "mw",
+<<<<<<< HEAD
+      "orig_conc_u"
+=======
       "CONC_U"
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       )], simobscomb, by="time", all.x=TRUE))
 
 # Merge with met_data
@@ -343,6 +433,40 @@ for(i in 1:length(simlist))
   }
 }
 
+<<<<<<< HEAD
+## ----match_matrix-------------------------------------------------------------
+for(i in 1:length(simobslist))
+  if (nrow(simobslist[[i]])>0)
+  {
+    simobscomb <- simobslist[[i]]
+  # Match the matrix for each observation:    
+    for (j in 1:nrow(simobscomb))
+      if(!is.na(simobscomb$matrix[j]))
+      {
+        if (simobscomb$matrix[j] == "VBL" | 
+            simobscomb$matrix[j] == "BL" | 
+            simobscomb$matrix[j] == "BL (+W)")
+        {
+          simobscomb$simconc[j] <- simobscomb$Cven[j]
+        } else if (simobscomb$matrix[j] == "ABL") {
+          simobscomb$simconc[j] <- simobscomb$Cart[j]
+        } else if (simobscomb$matrix[j] == "EB" | 
+                   simobscomb$matrix[j] == "EEB" | 
+                   simobscomb$matrix[j] == "EB (+W)") {
+          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+        } else if (simobscomb$matrix[j] == "MEB") {
+          simobscomb$simconc[j] <- simobscomb$Cendexh[j] * 24.45
+        } else if (simobscomb$matrix[j] == "PL") {
+          simobscomb$simconc[j] <- simobscomb$Cplasma[j]
+        } else {
+          simobscomb$simconc[j] <- NA
+        }
+      }
+    simobslist[[i]] <- simobscomb
+  }
+
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----time_quartile, eval=F----------------------------------------------------
 #  for(i in 1:length(simobslist))
 #    if (nrow(simobslist[[i]])>0)
@@ -428,13 +552,21 @@ for(i in 1:length(simobslist))
     simobslist[[i]] <- simobscomb
   }
 
+<<<<<<< HEAD
+## ----make_plots---------------------------------------------------------------
+=======
 ## ----combine_studies----------------------------------------------------------
 obsvpredlist <- list()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
     simobscomb <- simobslist[[i]]
+<<<<<<< HEAD
+    obvpredplot <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+=======
     obsvpredlist[[i]] <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
       geom_point() + 
       geom_abline() + 
       xlab("Simulated Concentrations (uM)") + 
@@ -458,6 +590,20 @@ for(i in 1:length(simobslist))
         axis.text.y = element_text(size = 16),
         legend.title = element_text(face = 'bold', size = 16),
         legend.text = element_text(face = 'bold',size = 14))
+<<<<<<< HEAD
+    obvpredlist[[i]] <- obvpredplot
+  }
+
+simobsfull <- do.call("rbind",simobslist)
+simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
+simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
+unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
+
+## ----simCvtplots--------------------------------------------------------------
+for (i in 1:length(plist))
+{
+  plist[[i]] <- plist[[i]] + 
+=======
   }
 
 ## ----obsvspredplots, eval = F-------------------------------------------------
@@ -473,6 +619,7 @@ for(i in 1:length(simobslist))
 for (i in 1:length(cvtlist))
 {
   cvtlist[[i]] <- cvtlist[[i]] + 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
     geom_text(
       x = Inf, 
       y = Inf, 
@@ -494,6 +641,8 @@ for (i in 1:length(cvtlist))
 #      legend.text = element_text(face = 'bold',size = 14))
 }
 
+<<<<<<< HEAD
+=======
 ## ----cvtplots, eval = F-------------------------------------------------------
 #  # Create pdfs of simulated concentration-time plots against observed c-t values
 #  pdf("Linakis2020/simdataplots.pdf")
@@ -534,6 +683,7 @@ for (this.chem in these.chems)
     "uM"
 }
 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----regression---------------------------------------------------------------
 table(unique_scenarios$CONC_SPECIES)
 nrow(simobsfull) - nrow(simobsfull[
@@ -720,6 +870,25 @@ chemunderpred <- subset(simobsfull,
   simobsfull$simconc > 0)
 table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 
+<<<<<<< HEAD
+## ----cvtplots, eval = F-------------------------------------------------------
+#  # Create pdfs of simulated concentration-time plots against observed c-t values
+#  pdf("simdataplots.pdf")
+#  for (i in 1:length(plist)) {
+#    print(plist[[i]])
+#  }
+#  dev.off()
+
+## ----obsvspredplots, eval = F-------------------------------------------------
+#  # Create pdfs of observed vs. predicted concentration plots
+#  pdf("obvpredplots.pdf", width = 10, height = 10)
+#  for (i in 1:length(obvpredlist)) {
+#    print(obvpredlist[[i]])
+#  }
+#  dev.off()
+
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 ## ----obspredFig2--------------------------------------------------------------
 fig2 <- ggplot(
   data = simobsfull[
@@ -780,11 +949,17 @@ fig2 <- ggplot(
 #    legend.title = element_text(face = 'bold', size = 16),
 #    legend.text = element_text(face = 'bold',size = 14))
 fig2 #Display plot in R
+<<<<<<< HEAD
+#pdf("Figure2.pdf", width = 10, height = 10)
+#print(fig2)
+#dev.off()
+=======
 
 ## ----write_figure2, eval = F--------------------------------------------------
 #  pdf("Linakis2020/Figure2.pdf", width = 10, height = 10)
 #  print(fig2)
 #  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----calculations-------------------------------------------------------------
 # Create data and run calculations for populating plots
@@ -964,11 +1139,17 @@ aucp <- ggplot(
 #    legend.title = element_text(face = 'bold', size = 16),
 #    legend.text = element_text(face = 'bold',size = 14))
 aucp
+<<<<<<< HEAD
+#pdf("Figure4.pdf", width = 20, height = 10)
+#plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
+#dev.off()
+=======
 
 ## ----write_figure4, eval = F--------------------------------------------------
 #  pdf("Linakis2020/Figure4.pdf", width = 20, height = 10)
 #  plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
 #  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----Fig3plot, eval=F---------------------------------------------------------
 #  simobsfull$aggscen <- as.factor(paste(simobsfull$chem,
@@ -1008,11 +1189,17 @@ aucp
 #      axis.title.y = element_text(face = 'bold', size = 30),
 #      axis.text.y = element_text(face = 'bold',size = 25, color = 'black'))
 #  fig3
+<<<<<<< HEAD
+#  #pdf("Figure3.pdf", width = 40, height = 13)
+#  #print(fig3)
+#  #dev.off()
+=======
 
 ## ----write_figure3, eval = F--------------------------------------------------
 #  pdf("Linakis2020/Figure3.pdf", width = 40, height = 13)
 #  print(fig3)
 #  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----FigS1, eval = FALSE------------------------------------------------------
 #  figs1a <- ggplot(
@@ -1088,11 +1275,17 @@ aucp
 #      axis.title.y = element_text(face = 'bold', size = 20),
 #      axis.text.y = element_text(size = 20, face = 'bold'))
 #  figs1d
+<<<<<<< HEAD
+#  #pdf("FigureS1.pdf", width = 20, height = 20)
+#  plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
+#  #dev.off()
+=======
 
 ## ----write_figures1, eval = F-------------------------------------------------
 #  pdf("Linakis2020/FigureS1.pdf", width = 20, height = 20)
 #  plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
 #  dev.off()
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----SupTable2, eval = FALSE--------------------------------------------------
 #  senschem <- list()

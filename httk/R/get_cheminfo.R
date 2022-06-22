@@ -529,7 +529,11 @@ get_cheminfo <- function(info="CAS",
       chem.physical_and_invitro.data[,necessary.params],
       1,
       function(x) all(!is.na(x)))
-      
+  # print a warning of exclusion criteria for compounds
+  #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+  if(!suppress.messages & any(good.chemicals.index==FALSE)){
+    warning("Excluding compounds that have one or more missing in necessary parameters.")
+  }
   # If we need fup:
     if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
       unique(tolower(c(necessary.params,info))))
@@ -551,7 +555,15 @@ get_cheminfo <- function(info="CAS",
         suppressWarnings(fup.values.numeric[fup.values==0] <- FALSE)
       }
       good.chemicals.index <- good.chemicals.index & fup.values.numeric
-      
+      # print a warning of exclusion criteria for compounds
+      #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+      if(!suppress.messages & any(fup.values.numeric==FALSE)){
+        if(exclude.fup.zero){
+          warning("Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.")
+        }else{
+          warning("Excluding compounds without a 'fup' value (i.e. fup value = NA).")
+        }
+      }
       # If we are excluding fups with uncertain ci intervals, then get rid of those:
       if(fup.ci.cutoff){
         # separate concatenated values
@@ -570,6 +582,11 @@ get_cheminfo <- function(info="CAS",
         fup.ci.cert <- unlist(fup.ci.diff)
         
         good.chemicals.index <- good.chemicals.index & fup.ci.cert
+        # print a warning of exclusion criteria for compounds
+        #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+        if(!suppress.messages & any(fup.ci.cert==FALSE)){
+          warning("Excluding compounds with uncertain 'fup' confidence/credible intervals.")
+        }
       }
     }
     
@@ -588,6 +605,11 @@ get_cheminfo <- function(info="CAS",
         (clint.values.numeric |
 # or four values separated by three commas:
         clint.values.dist)
+      # print a warning of exclusion criteria for compounds
+      #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+      if(!suppress.messages & any((clint.values.numeric|clint.values.dist)==FALSE)){
+        warning("Excluding compounds that do not have a clint value or distribution of clint values.")
+      }
     }
     
     # If we need to remove volatile compounds:
@@ -596,8 +618,14 @@ get_cheminfo <- function(info="CAS",
       log.henry.pass <- 
         chem.physical_and_invitro.data[,"logHenry"] < 
         log.henry.threshold|is.na(chem.physical_and_invitro.data[,"logHenry"])
+      
       # obtain the the chemical indexes to keep
       good.chemicals.index <- good.chemicals.index & log.henry.pass
+      # print a warning of exclusion criteria for compounds
+      #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+      if(!suppress.messages & any(log.henry.pass==FALSE)){
+        warning("Excluding volatile compounds defined as log.Henry >= ",log.henry.threshold,".")
+      }
     }
     # If we need to remove compounds belonging to a given chemical class:
     if(!is.null(chem.class.filt)){
@@ -611,6 +639,13 @@ get_cheminfo <- function(info="CAS",
         function(x)!(any(x%in%chem.class.filt)))
       # obtain the chemical indexes to keep
       good.chemicals.index <- good.chemicals.index & unlist(no.chem.class.index)
+      # print a warning of exclusion criteria for compounds
+      #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
+      if(!suppress.messages & any(unlist(no.chem.class.index)==FALSE)){
+        warning("Excluding compounds that are categorized in one or more of ",
+                "the following chemical classes: ",
+                paste(chem.class.filt,collapse = ", "),".")
+      }
     }
     
 # Kep just the chemicals we want:    
