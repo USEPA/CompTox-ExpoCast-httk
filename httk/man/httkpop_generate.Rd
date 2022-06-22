@@ -5,7 +5,7 @@
 \title{Generate a virtual population for PBTK}
 \usage{
 httkpop_generate(
-  method = "direct resampling",
+  method,
   nsamp = NULL,
   gendernum = NULL,
   agelim_years = NULL,
@@ -13,9 +13,7 @@ httkpop_generate(
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other"),
-  gfr_resid_var = TRUE,
-  ckd_epi_race_coeff = FALSE
+    "Non-Hispanic Black", "Other")
 )
 }
 \arguments{
