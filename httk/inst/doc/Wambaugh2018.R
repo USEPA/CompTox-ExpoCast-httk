@@ -5,8 +5,13 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3
 library(scales)
 library(ggplot2)
 library(data.table)
+<<<<<<< HEAD
+library(gdata)
+library(gtools)
+=======
 #library(gdata)
 #library(gtools)
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 library(httk)
 library(RColorBrewer)
 library(grid)
@@ -562,7 +567,12 @@ row.side.cols[sapply(chem.invivo.PK.aggregate.data$CAS,is.pharma)] <- "Grey"
 apply(physprop.matrix,2,function(x) mean(x,na.rm=TRUE))
 for (this.col in c(c(1,3,7,9:11),c(4:6,8,12))) physprop.matrix[,this.col] <- log10(10^-6+physprop.matrix[,this.col])
 
+<<<<<<< HEAD
+
+physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(TRUE))
+=======
 physprop.matrix <- apply(physprop.matrix,2,function(x) (x-mean(x,na.rm=TRUE))/sd(x,na.rm=TRUE))
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 
 ## ----PlotFigure3, eval = FALSE------------------------------------------------
 #  main_title="in vivo Toxicokinetic Parameters"
@@ -611,6 +621,10 @@ FitData.Fup$Vdist.1comp.pred.nocal <- sapply(FitData.Fup$CAS,
   default.to.human = TRUE,
   suppress.messages=TRUE)))
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 FigVdista.fit <- lm(log(SelectedVdist)~log(Vdist.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedVdist)&!is.na(Vdist.1comp.pred)))
 summary(FigVdista.fit)
 
@@ -699,7 +713,11 @@ FitData.Fup$SelectedCLtot.sd <- (FitData.Fup$Vdist.sd^2 +
 FitData.Fup$CLtot.1comp.pred <- sapply(FitData.Fup$CAS, 
   function(x) calc_total_clearance(chem.cas=x,
   species="Rat",
+<<<<<<< HEAD
+  default.to.human = T,
+=======
   default.to.human = TRUE,
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
   suppress.messages=TRUE))
 
 Fig.SelectedClearance.fit <- lm(log(SelectedCLtot)~log(CLtot.1comp.pred),data=subset(FitData.Fup,!is.na(SelectedCLtot.sd)))

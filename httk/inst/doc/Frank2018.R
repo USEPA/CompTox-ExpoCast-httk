@@ -1,7 +1,12 @@
 ## ----setup--------------------------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+<<<<<<< HEAD
+library(gdata)
+library(httk)
+=======
 library(httk)
 #library(gdata)
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 library(ggplot2)
 library(scales)
 
@@ -58,7 +63,10 @@ for (this.row in 1:dim(chem.table)[1])
            days=this.days,
            iv.dose=iv.dose,
            default.to.human=TRUE))
+<<<<<<< HEAD
+=======
 
+>>>>>>> 2ef7501b031b24a4a057d29f4e879e36c92caedf
 # Record the Cmax and the AUC:
   chem.table[this.row,"Cmax"] <- max(out[,"Cplasma"])
   chem.table[this.row,"AUC"] <- max(out[,"AUC"])
