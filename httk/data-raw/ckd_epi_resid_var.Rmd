@@ -1,0 +1,226 @@
+---
+title: "CKD-EPI residual variability"
+author: "Caroline Ring"
+date: "11/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+devtools::load_all()
+library(data.table)
+library(EnvStats)
+library(ggplot2)
+```
+
+```{r}
+set.seed(42)
+```
+
+We're going to try to back calculate the log-scale residual variability using the info on the natural scale residual variability given in the paper and the info on the eGFR distribution given in the paper.
+
+Here's the math.
+
+On the log scale, the log measured GFR (mGFR) is equal to the log of the CKD-EPI predicted estimated GFR (eGFR) plus some residual error $\epsilon$.
+
+$$\textrm{(1)} \quad \textrm{log mGFR} = \textrm{log eGFR} + \epsilon $$
+We can assume that $\epsilon$ obeys a zero-mean normal distribution with constant variance.
+
+On the natural scale, the measured GFR (mGFR) is equal to the CKD-EPI predicted estimated GFR (eGFR) plus some residual error $\delta$.
+
+
+
+$$\textrm{(2)} \quad  \textrm{mGFR} = \textrm{eGFR} + \delta $$
+It's clear from Figure 1 that $\delta$ does *not* obey a zero-mean normal distribution with constant variance. In particular, it seems that variance increases with eGFR.
+
+We can get the distribution of $\delta$ from the distribution of $\epsilon$ by deriving an equation for $\delta$ in terms of $\epsilon$. 
+
+Convert the log scale to the natural scale by exponentiating both sides of Equation 1:
+
+$$\textrm{(3)} \quad  \textrm{mGFR} = \exp \epsilon \times \textrm{eGFR} $$
+
+Combine (2) and (3):
+
+$$\textrm{(4)} \quad   \textrm{eGFR} + \delta = \exp \epsilon \times \textrm{eGFR} $$
+
+And solve for $\delta$
+
+$$\textrm{(5)} \quad  \delta = \exp \epsilon \times \textrm{eGFR} - \textrm{eGFR} = \textrm{eGFR} \times (\exp \epsilon - 1) $$
+That is,
+
+$$ \textrm{(6)} \quad \log (\delta + \textrm{eGFR}) = \epsilon + \log(\textrm{eGFR}) $$
+Now, if $\epsilon \sim \textrm{Normal} (\mu = 0, \sigma = \sigma)$, then
+
+$$ \epsilon + \log(\textrm{eGFR} \sim \textrm{Normal} (\mu = \log(\textrm{eGFR}), \sigma = \sigma) $$
+Which means that
+
+$$ \textrm{(7)} \quad  \log (\delta + \textrm{eGFR}) ~ \sim \textrm{Normal} (\mu = \log(\textrm{eGFR}), \sigma = \sigma) $$
+
+This implies a three-parameter log-normal distribution for $\delta$: log-scale mean equal to $\log(\textrm{eGFR})$; log-scale standard deviation equal to $\sigma$, and a shift parameter equal to $-\textrm{eGFR}$. The shift parameter just means that $\delta$ can't be less than $-\textrm{eGFR}$ -- which makes sense, because according to Equation 2, if $\delta$ were less than $-\textrm{eGFR}$, then $\textrm{mGFR}$ would be negative, which is not physically possible. 
+
+So, that means we just need to find the value of $\sigma$ that does the best job of reproducing the residual summary statistics provided in Levey et al. (2009), Appendix Table 6.
+
+However, since the distribution of $\delta$ depends on $\textrm{eGFR}$, that means we have to get the right distribution of $\textrm{eGFR}$ in order to get the right marginal distribution of $\delta$.
+
+Our only information about the distribution of $\textrm{eGFR}$ comes from Table 4 of Levey et al. (2009), in which they report percentiles of $\textrm{eGFR}$ predicted by the CKD-EPI equation in the "external validation" dataset.
+
+eGFR distribution from Levey et al. 2009, Table 4 (external validation dataset):
+
+eGFR | Percent | n
+|----|---------|---
+<15 | 3.7\% | 144
+15-29 | 12.1\% | 473
+30-59 | 33.2\% | 1295
+60-89 | 25.5\% | 992
+\>90 | 25.4\% | 989
+
+
+From Figure 1, the rough upper bound for eGFR looks to be around 150.
+
+This gives us a rough eCDF for eGFR if we compute the cumulative percent at or below each upper bound.
+
+```{r}
+egfr_pct <- data.table(eGFR = c(0, 15, 29, 59, 89, 150),
+                       pct_bin = c(0.0, 3.7, 12.1, 33.2, 25.5, 25.4),
+                       n = c(0, 144,473, 1295, 992, 989))
+egfr_pct[, pctile:=cumsum(pct_bin)/100]
+egfr_pct[, cumul_n:=cumsum(n)]
+knitr::kable(egfr_pct)
+```
+
+Now, this distribution is only for the external evaluation dataset, whereas the reported residual statistics are for the development dataset. However, I think it's reasonable to assume that the eGFR distribution is similar for the external evaluation dataset as for the development dataset.
+
+To sample from this distribution: draw from Uniform[0,1] and apply inverse CDF.
+
+Inverse CDF: numerically solve CDF for a given cumulative probability.
+
+CDF will be estimated by linear interpolation of the percentiles table above. Inverse CDF can likewise be estimated by linear interpolation, just swapping the independent and dependent variables.
+
+```{r}
+egfr_inv_cdf <- function(x, y_spec, x_in, y_in){
+  q <- approx(x = y_in,
+                         y = x_in ,
+                     xout = y_spec,
+                         method = "linear",
+                     rule = 2)$y
+  return(q)
+}
+```
+
+Let's try it. Randomly draw a set of samples from Uniform(0,1). (Actually, we use Uniform(0,0.999), because the percentages from Appendix Table 6 actually only add up to 0.999.) Then apply the inverse CDF function to them. This will give a sample from the estimated eGFR distribution. 
+
+We draw N = 5504 values to match the number of values in the development dataset.
+```{r}
+rvals <- runif(5504, min = 0, max=0.999)
+#back-convert using inverse CDF into draws from the approximated eGFR distribution
+eGFR_samp <-egfr_inv_cdf(y_spec = rvals,
+                          x_in = egfr_pct$eGFR,
+                          y_in = egfr_pct$pctile)
+```
+
+Here is what the example distribution of eGFR values looks like:
+
+```{r}
+ggplot(data.frame(eGFR = eGFR_samp),
+       aes(x=eGFR)) +
+  geom_histogram()
+```
+
+Next: set up a function to draw from the distribution of residuals.
+
+We need to find the log-scale SD that reproduces the residual statistics reported in Levey et al. (2009) Appendix Table 6 for the development dataset:  median and IQR of natural-scale residuals; percentage of eGFR values within 30% of measured GFR; and RMSE on the log-scale. (I believe RMSE is actually computed on the log scale because of the follow-up papers from May 2020 and August 2020, which report RMSE explicitly stated to be on the log scale that is of the same magnitude. It hardly makes sense for RMSE to be 0.2 if it is on the natural scale and residuals look like Levey et al. 2009 Figure 1 -- it would be a lot higher in that case.)
+
+Appendix Table 6 reports the following:
+
+Statistic | Value
+--------- | -----
+Median | 0.4
+IQR | 14.7
+P30 | 85.6%
+RMSE | 0.231
+
+```{r}
+resid_draw <- function(sigma, eGFR) {
+  #residuals = measured GFR - estimated GFR
+  epsilon <- rnorm(n=length(eGFR),
+                       mean = 0,
+                       sd = sigma)
+  delta <- eGFR * (exp(epsilon) - 1)
+  mGFR <- delta + eGFR
+  #compute: median, IQR, P30, RMSE
+  return(c("median" = median(delta),
+              "IQR" = iqr(delta),
+               "P30" = 100*sum(abs(delta)/mGFR <= 0.3)/length(delta),
+              "RMSE" = sqrt(mean(epsilon^2))))
+  
+}
+```
+
+Now, find a value of `sigma` that simultaneously optimizes for median, IQR, P30, and RMSE.
+
+Here is the function to be minimized.
+
+It first calls function `resid_draw()` to draw a set of residuals for a sample of eGFR values (trying to reproduce the development dataset), and compute the median, IQR, P30, and log-scale RMSE for that set of residuals. Then, it computes and returns the sum of squared errors in median, IQR, P30, and RMSE, compared to the values reported in Levey et al. (2009) Appendix Table 6 for the development dataset.
+
+This function draws 1000 different samples of eGFR values and draws a corresponding set of residuals for each one, so it computes 1000 different sums of squared errors. It then returns the average of these sums of squared errors. The idea is to average out variability that comes from randomly drawing eGFR values and residuals.
+
+```{r}
+#Here is the function to be minimized:
+optim_fun <- function(sigma, nrep = 1000, N = 5504) {
+  #do 1000 replicates and average,
+  #to "average out" variability in the randomly sampled residuals
+  foo <- t(replicate(nrep,
+                 {
+                   #randomly draw values on unif(0,1)
+# N = 5504 in development dataset
+rvals <- runif(N, min = 0, max=0.999)
+#back-convert using inverse CDF into draws from the approximated eGFR distribution
+eGFR_samp <- egfr_inv_cdf(y_spec = rvals,
+                          x_in = egfr_pct$eGFR,
+                          y_in = egfr_pct$pctile)
+
+
+    resid_stats <- resid_draw(sigma,
+                eGFR_samp)
+                 }
+))
+
+sqrt(sum((colMeans(foo) - c("median" = 0.4,
+                          "IQR" = 14.7,
+                          "P30" = 85.6,
+                          "RMSE" = 0.231))^2))
+}
+```
+
+Now, let's do the optimization.
+```{r}
+(optim_results <- optim(par = 0.2, #initial value for sigma
+      fn = optim_fun,
+      method = "L-BFGS-B",
+      lower = 1e-6,
+      upper = Inf))
+```
+
+What are the calculated residual stats for the selected sigma value?
+
+```{r}
+rbind(resid_draw(optim_results$par,
+           eGFR_samp),
+      c("median" = 0.4,
+                          "IQR" = 14.7,
+                          "P30" = 85.6,
+                          "RMSE" = 0.231))
+```
+So this process doesn't do a great job of reproducing the median residual, but it seems to do a mostly-OK job of reproducing the rest. It does slightly underestimate the RMSE.
+
+In any event, the best-fit standard deviation is 
+
+```{r}
+optim_results$par
+```
+
+
+
