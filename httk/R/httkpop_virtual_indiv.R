@@ -1,51 +1,53 @@
 #'Generate a virtual population by the virtual individuals method.
 #'
-#'@param nsamp The desired number of individuals in the virtual population. 
+#'@param nsamp The desired number of individuals in the virtual population.
 #'  \code{nsamp} need not be provided if \code{gendernum} is provided.
-#'@param gendernum Optional: A named list giving the numbers of male and female 
-#'  individuals to include in the population, e.g. \code{list(Male=100, 
-#'  Female=100)}. Default is NULL, meaning both males and females are included, 
-#'  in their proportions in the NHANES data. If both \code{nsamp} and 
+#'@param gendernum Optional: A named list giving the numbers of male and female
+#'  individuals to include in the population, e.g. \code{list(Male=100,
+#'  Female=100)}. Default is NULL, meaning both males and females are included,
+#'  in their proportions in the NHANES data. If both \code{nsamp} and
 #'  \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
 #'  the sum of \code{gendernum}).
-#'@param agelim_years Optional: A two-element numeric vector giving the minimum 
-#'  and maximum ages (in years) to include in the population. Default is 
+#'@param agelim_years Optional: A two-element numeric vector giving the minimum
+#'  and maximum ages (in years) to include in the population. Default is
 #'  c(0,79). If \code{agelim_years} is provided and \code{agelim_months} is not,
 #'  \code{agelim_years} will override the default value of \code{agelim_months}.
 #'@param agelim_months Optional: A two-element numeric vector giving the minimum
-#'  and maximum ages (in months) to include in the population. Default is c(0, 
+#'  and maximum ages (in months) to include in the population. Default is c(0,
 #'  959), equivalent to the default \code{agelim_years}. If \code{agelim_months}
-#'  is provided and \code{agelim_years} is not, agelim_months will override the 
+#'  is provided and \code{agelim_years} is not, agelim_months will override the
 #'  default values of \code{agelim_years}.
-#'@param reths Optional: a character vector giving the races/ethnicities to 
-#'  include in the population. Default is \code{c('Mexican American','Other 
-#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include 
-#'  all races and ethnicities in their proportions in the NHANES data. 
+#'@param reths Optional: a character vector giving the races/ethnicities to
+#'  include in the population. Default is \code{c('Mexican American','Other
+#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#'  all races and ethnicities in their proportions in the NHANES data.
 #'  User-supplied vector must contain one or more of these strings.
-#'@param weight_category Optional: The weight categories to include in the 
-#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight', 
+#'@param weight_category Optional: The weight categories to include in the
+#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight',
 #'  'Obese')}. User-supplied vector must contain one or more of these strings.
-#'@param gfr_category The kidney function categories to include in the 
+#'@param gfr_category The kidney function categories to include in the
 #'  population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
 #'  to include all kidney function levels.
-#' @param gfr_resid_var Logical value indicating whether or not to include
-#' residual variability when generating GFR values. (Default is TRUE.)
-#' @param ckd_epi_race_coeff Logical value indicating whether or not to use the
-#' "race coefficient" from the CKD-EPI equation when estimating GFR values.
-#' (Default is FALSE.)
-#' 
-#'@return A data.table where each row represents an individual, and
-#'  each column represents a demographic, anthropometric, or physiological
-#'  parameter.
+#'@param gfr_resid_var Logical value indicating whether or not to include
+#'  residual variability when generating GFR values. (Default is TRUE.)
+#'@param ckd_epi_race_coeff Logical value indicating whether or not to use the
+#'  "race coefficient" from the CKD-EPI equation when estimating GFR values.
+#'  (Default is FALSE.)
+#'@param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}}, which calls this function)
 #'
-#' @keywords httk-pop monte-carlo
+#'@return A data.table where each row represents an individual, and each column
+#'  represents a demographic, anthropometric, or physiological parameter.
+#'
+#'@keywords httk-pop monte-carlo
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#' @export httkpop_virtual_indiv
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+#'@export httkpop_virtual_indiv
 httkpop_virtual_indiv<- function(nsamp=NULL,
                                  gendernum=NULL,
                                  agelim_years=NULL, 
@@ -61,7 +63,10 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                          'Other Hispanic',
                                          'Non-Hispanic White',
                                          'Non-Hispanic Black',
-                                         'Other')) {
+                                         'Other'),
+                                 gfr_resid_var = TRUE,
+                                 ckd_epi_race_coeff = FALSE,
+                                 nhanes_mec_svy) {
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -79,12 +84,23 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                     agelim_months=agelim_months,
                                     agelim_years=agelim_years,
                                     weight_category=weight_category,
-                                    reths=reths)
+                                    reths=reths,
+                                    nhanes_mec_svy = nhanes_mec_svy)
   #Generate tissue masses and flows.
   indiv_dt <- tissue_masses_flows(tmf_dt=indiv_dt)
   
-  #Estimate GFR (including draw individual values of serum creatinine)
-  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt)
+  #Generate serum creatinine levels
+  indiv_dt <- indiv_dt[, serum_creat:=gen_serum_creatinine(gender = gender,
+                                                           reth = reth,
+                                                           age_years = age_years,
+                                                           age_months = age_months,
+                                                           nhanes_mec_svy = nhanes_mec_svy),
+                       by = list(gender, reth)]
+  #Estimate GFR
+  indiv_dt<-estimate_gfr(gfrtmp.dt=indiv_dt,
+                         gfr_resid_var = gfr_resid_var,
+                         ckd_epi_race_coeff = ckd_epi_race_coeff)
+
   
   #Compute BMI using adjusted individual weights
   indiv_dt[, bmi_adj:=weight_adj/((height/100)^2)]
@@ -133,11 +149,19 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                      agelim_months=agelim_months,
                                      agelim_years=agelim_years,
                                      weight_category=weight_category,
-                                     reths=reths)
+                                     reths=reths,
+                                     nhanes_mec_svy = nhanes_mec_svy)
     #Recompute tissue masses and flows using the new age, height, and weight
     #values
     indiv_tmp<-tissue_masses_flows(tmf_dt=indiv_tmp)
-    #Recompute GFR using the new age values
+    #Recompute serum creatinine levels
+    indiv_tmp[, serum_creat:=gen_serum_creatinine(gender = gender,
+                                                 reth = reth,
+                                                 age_years = age_years,
+                                                 age_months = age_months,
+                                                 nhanes_mec_svy = nhanes_mec_svy),
+             by = list(gender, reth)]
+    #Recompute GFR using the new serum creatinine values
     indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp)
     #Recompute BMI using the new height, adjusted weight values
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
@@ -170,7 +194,12 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   
   #Once rejection sampling is completed,
   #draw hematocrit values
-  indiv_dt <- estimate_hematocrit(hcttmp_dt=indiv_dt)
+  indiv_dt[, hematocrit:=estimate_hematocrit(gender = gender,
+                                             reth = reth,
+                                             age_years = age_years,
+                                             age_months = age_months,
+                                             nhanes_mec_svy = nhanes_mec_svy),
+           by = list(gender, reth)]
   
   #Replace any spaces in column names with underscores,
   #for ease of use later

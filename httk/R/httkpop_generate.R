@@ -1,16 +1,3 @@
-#declare names of data variables as global
-#Effectively they are global anyway, but R CMD CHECK wants it explicit
-
-if (getRversion() >= "2.15.1") {
-  utils::globalVariables(c('age_dist_smooth', 'bmiage', 'spline_heightweight',
-                  'nhanes_mec_svy', 'spline_hematocrit', 'mcnally_dt', 
-                  'spline_serumcreat', 'wfl'))
-}
-
-
-
-
-
 #' Generate a virtual population for PBTK
 #'
 #' Generate a virtual population characterized by demographic, anthropometric, and physiological parameters relevant to PBTK.
@@ -370,6 +357,13 @@ resampling\" (\"dr\" or \"d\").")
   if (tolower(method)=='d' | tolower(method)=='dr') method <- 'direct resampling'
   if (tolower(method)=='v' | tolower(method)=='vi') method <- 'virtual individuals'
   
+  #Create survey::svydesign object
+  nhanes_mec_svy <- survey::svydesign(data = mecdt, #referring to mecdt data set
+                                      strata=~sdmvstra, #masked stratification variable name
+                                      id=~sdmvpsu, #masked PSU (cluster) variable name
+                                      weights=~wtmec6yr, #use examination sample weights
+                                      nest=TRUE) #nest means masked PSUs are reused within each stratum.
+  
   #Now actually do the generating.
   if (method == 'virtual individuals'){
     indiv_dt <- httkpop_virtual_indiv(nsamp=nsamp,
@@ -378,7 +372,10 @@ resampling\" (\"dr\" or \"d\").")
                                       agelim_months=agelim_months,
                                       weight_category=weight_category, 
                                       gfr_category=gfr_category,
-                                      reths=reths)
+                                      reths=reths,
+                                      gfr_resid_var = gfr_resid_var,
+                                      ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                      nhanes_mec_svy = nhanes_mec_svy)
   } else if (method == 'direct resampling'){
     indiv_dt <- httkpop_direct_resample(nsamp=nsamp,
                                         gendernum=gendernum,
@@ -386,7 +383,10 @@ resampling\" (\"dr\" or \"d\").")
                                         agelim_months=agelim_months,
                                         weight_category=weight_category, 
                                         gfr_category=gfr_category,
-                                        reths=reths)
+                                        reths=reths,
+                                        gfr_resid_var = gfr_resid_var,
+                                        ckd_epi_race_coeff = ckd_epi_race_coeff,
+                                        nhanes_mec_svy = nhanes_mec_svy)
   }
   return(indiv_dt)
 }

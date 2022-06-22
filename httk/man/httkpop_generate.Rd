@@ -61,8 +61,6 @@ include in the population. Default is \code{c('Mexican American','Other
 Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
-<<<<<<< HEAD
-=======
 
 \item{gfr_resid_var}{TRUE to add residual variability to GFR predicted from
 serum creatinine; FALSE to not add residual variability}
@@ -70,7 +68,6 @@ serum creatinine; FALSE to not add residual variability}
 \item{ckd_epi_race_coeff}{TRUE to use the CKD-EPI equation as originally
 published (with a coefficient changing predicted GFR for individuals
 identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
->>>>>>> 2a60395902dd7b1a880f271498bba2e4471b2f6f
 }
 \value{
 A data.table where each row represents an individual, and each column
