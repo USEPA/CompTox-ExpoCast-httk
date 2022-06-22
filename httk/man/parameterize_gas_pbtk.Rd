@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_gas_pbtk.R
 \name{parameterize_gas_pbtk}
 \alias{parameterize_gas_pbtk}
-\title{Parameterize_gas_pbtk}
+\title{Parameters for a generic gas inhalation physiologically-based toxicokinetic model}
 \usage{
 parameterize_gas_pbtk(
   chem.cas = NULL,
@@ -15,6 +15,7 @@ parameterize_gas_pbtk(
   force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   regression = TRUE,
   vmax = 0,
   km = 1,
@@ -54,8 +55,11 @@ intrinsic clearance and fraction of unbound plasma if true.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -149,7 +153,12 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
-This function initializes the parameters needed in the function solve_gas_pbtk
+This function initializes the parameters needed for the model 'gas_pbtk', for
+example \code{\link{solve_gas_pbtk}}. Chemical- and species-specific model 
+parameters are generated. These include tissue:plasma partition coefficients 
+via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
+and flows are retrieved from table \code{\link{physiology.data}}). This model
+was first described by Linakis et al. (2020).
 }
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
@@ -168,8 +177,16 @@ parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRU
 
 }
 \references{
-Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
-Inhalation Model for Organic Chemicals", submitted
+Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
+inhalation model for organic chemicals." Journal of exposure science & 
+environmental epidemiology 30.5 (2020): 866-877.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
