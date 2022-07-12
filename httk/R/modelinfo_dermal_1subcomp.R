@@ -226,14 +226,14 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "AUC"="uM*days")
 
 model.list[["dermal_1subcomp"]]$routes <- list( 
-  "oral" = list( # not used? -AEM, March 2022
+  "oral" = list( 
     # We need to know which compartment gets the dose
     "entry.compartment" = "Agutlumen",
     # desolve events can take the values "add" to add dose C1 <- C1 + dose,
     # "replace" to change the value C1 <- dose
     # or "multiply" to change the value to C1 <- C1*dose
     "dose.type" = "add"),
-  "iv" = list( # not used? -AEM, March 2022
+  "iv" = list( 
     "entry.compartment" = "Aven",
     "dose.type" = "add"),
   "dermal" = list(

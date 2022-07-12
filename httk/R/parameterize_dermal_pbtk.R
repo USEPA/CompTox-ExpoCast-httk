@@ -149,7 +149,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               regression=T,
                               suppress.messages=F,
                               minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
-                              skin_depth=0.3,
+                              skin_depth=0.12,
                               skin.pH=7,
                               vmax.km=F,
                               height = 175,
@@ -348,17 +348,23 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   # Calculation of dermal partition coefficient (Sawyer, 2016 and Chen, 2015):
     
     # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ve = viable epidermis and dermis layers)
-    Ksc2w <- 0.9 * schmitt.params$Pow^0.69 #Equation 2, Chen, 2015 (0.9 = rho_lipid/rho_water = (0.9 g/cm^3)/(1 g/cm^3))
+    
+    rho_lip = 0.9; rho_w = 1; rho_pro = 1.37 #bulk density of lipid, water, and protein, respectively (g/cm^3) (Nitsche et al. 2006)
+    phi_lip = 0.125*0.45; phi_w = 0.55; phi_pro = 0.875*0.45; #volume fractions of lipid, water, and protein phases in SC, respectively
+        # Table III, Chen 2010
+    Ksc2w <- phi_lip * (rho_lip/rho_w) * Pow^0.69 + phi_pro * (rho_pro/rho_w) * 4.23 * Pow^0.31 #Equation 10, Wang, Chen, Lian, Han, 2010
+    
     if (is.numeric(Kmedia2water)){
       Km2w <- Kmedia2water
     } else if (is.null(Kmedia2water)){
       Km2w <- 1 #media=water
       warning("Since parameter Kmedia2water is null, media containing chemical is assumed to be water.")
     } else if (Kmedia2water=="octanol"){
-      Km2w <- schmitt.params$Pow
+      Km2w <- Pow
     } else  if (Kmedia2water=="olive oil"){
-      Km2w <- 4.62 * schmitt.params$Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
+      Km2w <- 4.62 * Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
     } else { stop('Kmedia2water must be numeric, "octanol", "olive oil", or NULL and default to water.')}
+    
     Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
       ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
       fnon <- 1 - ionization$fraction_charged      
@@ -378,6 +384,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     # Permeability coefficient from m to ve
     if (model.type=="dermal_1subcomp") {
     if (method.permeability=="Chen-Lian"){
+      skin_depth = skin_depth - 0.002
       P <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
     } else if (method.permeability=="Potts-Guy"){
       P <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
