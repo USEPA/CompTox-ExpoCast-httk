@@ -27,7 +27,7 @@
      AUC = 0.0,
      Askin_exposed = 0.0,
      Askin_unexposed = 0.0,
-     Amedia = 0.0,
+     Avehicle = 0.0,
      Ain = 0.0,
 
    12 Outputs:
@@ -42,10 +42,10 @@
     "Aplasma",
     "Cskin_exposed",
     "Cskin_unexposed",
-    "Cmedia",
+    "Cvehicle",
 
    1 Input:
-     Vmedia (forcing function)
+     Vvehicle (forcing function)
 
    52 Parameters:
      skin_depth = 0,
@@ -53,7 +53,7 @@
      totalSA = 0,
      SA_exposed = 0,
      P = 0,
-     Kskin2media = 0,
+     Kskin2vehicle = 0,
      BW = 70,
      Clmetabolismc = 0.0,
      hematocrit = 0.0,
@@ -121,7 +121,7 @@
 #define ID_AUC 0x0000a
 #define ID_Askin_exposed 0x0000b
 #define ID_Askin_unexposed 0x0000c
-#define ID_Amedia 0x0000d
+#define ID_Avehicle 0x0000d
 #define ID_Ain 0x0000e
 
 /* Model variables: Outputs */
@@ -136,7 +136,7 @@
 #define ID_Aplasma 0x00008
 #define ID_Cskin_exposed 0x00009
 #define ID_Cskin_unexposed 0x0000a
-#define ID_Cmedia 0x0000b
+#define ID_Cvehicle 0x0000b
 
 /* Parameters */
 static double parms[52];
@@ -146,7 +146,7 @@ static double parms[52];
 #define totalSA parms[2]
 #define SA_exposed parms[3]
 #define P parms[4]
-#define Kskin2media parms[5]
+#define Kskin2vehicle parms[5]
 #define BW parms[6]
 #define Clmetabolismc parms[7]
 #define hematocrit parms[8]
@@ -197,7 +197,7 @@ static double parms[52];
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Vmedia forc[0]
+#define Vvehicle forc[0]
 
 /*----- Initializers */
 void initmod_dermal_1subcomp (void (* odeparms)(int *, double *))
@@ -284,13 +284,13 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cskin_exposed] = y[ID_Askin_exposed] / Vskin_exposed ;
 
-  yout[ID_Cmedia] = y[ID_Amedia] / Vmedia ;
+  yout[ID_Cvehicle] = y[ID_Avehicle] / Vvehicle ;
 
-  Rin_dermal = ( y[ID_Amedia] ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskin_exposed] / Kskin2media ) : 0.0 ) ;
+  Rin_dermal = ( y[ID_Avehicle] ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0 ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Amedia] = - Rin_dermal ;
+  ydot[ID_Avehicle] = - Rin_dermal ;
 
   ydot[ID_Ain] = Rin_dermal + Rin_oral;
 

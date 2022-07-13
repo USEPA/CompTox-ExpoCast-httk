@@ -42,7 +42,7 @@ model.list[["dermal_1subcomp"]]$Rtosolvermap <- list(
   Fskin_exposed = "Fskin_exposed",
   totalSA = "totalSA",
   P = "P",
-  Kskin2media = "Kskin2media",
+  Kskin2vehicle = "Kskin2vehicle",
   BW = "BW",
   Clmetabolismc = "Clmetabolismc",
   hematocrit = "hematocrit",
@@ -83,7 +83,7 @@ model.list[["dermal_1subcomp"]]$compiled.param.names <- c(
   "totalSA",
   "SA_exposed",
   "P",
-  "Kskin2media",
+  "Kskin2vehicle",
   "BW",
   "Clmetabolismc",
   "hematocrit",
@@ -142,7 +142,7 @@ model.list[["dermal_1subcomp"]]$derivative.func <- "derivs_dermal_1subcomp" #in 
 # This is the ORDERED list of input variables given to the C code by the solver
 # (from Forcing (Input) functions -- forc):
 model.list[["dermal_1subcomp"]]$input.var.names <- c(
-  "Vmedia"
+  "Vvehicle"
 )
 
 # This is the ORDERED list of variables returned by the derivative function
@@ -159,7 +159,7 @@ model.list[["dermal_1subcomp"]]$derivative.output.names <- c(
   "Aplasma",
   "Cskin_exposed",
   "Cskin_unexposed",
-  "Cmedia"
+  "Cvehicle"
   )
 
 model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
@@ -174,7 +174,7 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
   "Aplasma",
   "Cskin_exposed",
   "Cskin_unexposed",
-  "Cmedia",
+  "Cvehicle",
   "Ain",
   "Atubules",
   "Ametabolized",
@@ -209,7 +209,7 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Ametabolized"="umol",
   "Askin_exposed"="umol",
   "Askin_unexposed"="umol",
-  "Amedia"="umol",
+  "Avehicle"="umol",
   "Ain"="umol",
   "Cgut"="uM",
   "Cliver"="uM",
@@ -222,7 +222,7 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Aplasma"="umol",
   "Cskin_exposed"="uM",
   "Cskin_unexposed"="uM",
-  "Cmedia"="uM",
+  "Cvehicle"="uM",
   "AUC"="uM*days")
 
 model.list[["dermal_1subcomp"]]$routes <- list( 
@@ -237,7 +237,7 @@ model.list[["dermal_1subcomp"]]$routes <- list(
     "entry.compartment" = "Aven",
     "dose.type" = "add"),
   "dermal" = list(
-    "entry.compartment" = "Amedia",
+    "entry.compartment" = "Avehicle",
     "dose.type" = "replace")   
 )
 
@@ -267,7 +267,7 @@ model.list[["dermal_1subcomp"]]$state.vars <- c(
   "AUC",
   "Askin_exposed",
   "Askin_unexposed",
-  "Amedia",
+  "Avehicle",
   "Ain"
 ) 
 

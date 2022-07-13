@@ -27,7 +27,7 @@ solve_dermal_pbtk(
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
     restrictive.clearance = TRUE, regression = TRUE),
   route = NULL,
-  Vmedia = NULL,
+  Vvehicle = NULL,
   initial.dose = NULL,
   input.units = "mg/kg",
   dosing.dermal = NULL,
@@ -88,7 +88,7 @@ TRUE along with partition coefficients calculated with this value.}
 \item{parameterize.arg.list}{Additional parameterized passed to the model 
 parameterization function, "parameterize_dermal_pbtk".}
 
-\item{Vmedia}{Volume of media applied to skin in L, defaults to 0.01 L.}
+\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L.}
 
 \item{initial.dose}{Concentration}
 
@@ -97,9 +97,9 @@ parameterization function, "parameterize_dermal_pbtk".}
 \item{BW}{Body weight, kg.}
 
 \item{dermal.dosing}{Matrix consisting of three columns named
-"concentration", "Vmedia", and "time" containing the dosing times, days,
+"concentration", "Vvehicle", and "time" containing the dosing times, days,
 with the applied concentration, units/L, and the volume of the applied
-media, L.}
+vehicle, L.}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -112,11 +112,11 @@ different tissues as functions of time based on the dose and dosing
 frequency.
 }
 \details{
-Model units are the same as media concentration, units/L or units when
+Model units are the same as vehicle concentration, units/L or units when
 use.amounts=T.
 
 New doses replace rather than add to previous doses. A concentration of 0 in
-dosing.matrix switches off the dosing/diffusion between the media and
+dosing.matrix switches off the dosing/diffusion between the vehicle and
 exposed skin.
 
 Note that the model parameters have units of hours while the model output is
@@ -126,7 +126,7 @@ Default NULL value for doses.per.day solves for a single dose.
 
 The compartments used in this model are the gutlumen, gut, liver, kidneys,
 veins, arteries, lungs, unexposed stratum corneum and viable epidermis, exposed 
-stratum corneum and viable epidermis, media, and the rest of the body. When model.type 
+stratum corneum and viable epidermis, vehicle, and the rest of the body. When model.type 
 = "dermal_1subcomp", the stratum corneum and viable epidermis are replaced with 
 one compartment: skin.
 
@@ -141,15 +141,15 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-Vmedia <- c(.1,.2,.3)
+Vvehicle <- c(.1,.2,.3)
 time <- c(0,.5,3)
 concentration <- c(2,0,3)
-dermal.dosing <- cbind(time,concentration,Vmedia)
+dermal.dosing <- cbind(time,concentration,Vvehicle)
 out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 parameters$Fskin_exposed <- 0.25
-parameters$Vmedia <- 1
+parameters$Vvehicle <- 1
 out <- solve_dermal_pbtk(parameters=parameters,plots=T)
 
 }

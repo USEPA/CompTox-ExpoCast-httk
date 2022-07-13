@@ -4,11 +4,11 @@
 #' different tissues as functions of time based on the dose and dosing
 #' frequency. 
 #' 
-#' Model units are the same as media concentration, units/L or units when
+#' Model units are the same as vehicle concentration, units/L or units when
 #' use.amounts=T.
 #' 
 #' New doses replace rather than add to previous doses. A concentration of 0 in
-#' dosing.matrix switches off the dosing/diffusion between the media and
+#' dosing.matrix switches off the dosing/diffusion between the vehicle and
 #' exposed skin.
 #' 
 #' Note that the model parameters have units of hours while the model output is
@@ -18,7 +18,7 @@
 #' 
 #' The compartments used in this model are the gutlumen, gut, liver, kidneys,
 #' veins, arteries, lungs, unexposed stratum corneum and viable epidermis, exposed 
-#' stratum corneum and viable epidermis, media, and the rest of the body. When model.type 
+#' stratum corneum and viable epidermis, vehicle, and the rest of the body. When model.type 
 #' = "dermal_1subcomp", the stratum corneum and viable epidermis are replaced with 
 #' one compartment: skin.
 #' 
@@ -65,12 +65,12 @@
 #' @param parameterize.arg.list Additional parameterized passed to the model 
 #' parameterization function, "parameterize_dermal_pbtk".
 #' @param BW Body weight, kg.
-#' @param Vmedia Volume of media applied to skin in L, defaults to 0.01 L.
+#' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L.
 #' @param initial.dose Concentration
 #' @param dermal.dosing Matrix consisting of three columns named
-#' "concentration", "Vmedia", and "time" containing the dosing times, days,
+#' "concentration", "Vvehicle", and "time" containing the dosing times, days,
 #' with the applied concentration, units/L, and the volume of the applied
-#' media, L.
+#' vehicle, L.
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time (in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -80,15 +80,15 @@
 #' @keywords Solve
 #' @examples
 #' 
-#' Vmedia <- c(.1,.2,.3)
+#' Vvehicle <- c(.1,.2,.3)
 #' time <- c(0,.5,3)
 #' concentration <- c(2,0,3)
-#' dermal.dosing <- cbind(time,concentration,Vmedia)
+#' dermal.dosing <- cbind(time,concentration,Vvehicle)
 #' out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 #' 
 #' parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 #' parameters$Fskin_exposed <- 0.25
-#' parameters$Vmedia <- 1
+#' parameters$Vvehicle <- 1
 #' out <- solve_dermal_pbtk(parameters=parameters,plots=T)
 #' 
 #' @export solve_dermal_pbtk
@@ -120,7 +120,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                       restrictive.clearance = TRUE,
                       regression=TRUE),
                     route = NULL, #DERMAL
-                    Vmedia = NULL, #DERMAL
+                    Vvehicle = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
                     input.units="mg/kg", #DERMAL - DOSING
                     dosing.dermal = NULL, #DERMAL
@@ -139,21 +139,21 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   if (is.null(route)) { route <- 'dermal'; warning(
     "If route is not chosen, it is set to dermal by default.")}
   
-  # Create forcing function for Vmedia - single value
+  # Create forcing function for Vvehicle - single value
   if (is.null(dosing.dermal)) {
-    if (is.null(Vmedia)) {
-      Vmedia <- 0.1; #only affects model if route=dermal
-      if (route=='dermal') warning(paste("Vmedia not specified, so set to", Vmedia, "L."))
+    if (is.null(Vvehicle)) {
+      Vvehicle <- 0.1; #only affects model if route=dermal
+      if (route=='dermal') warning(paste("Vvehicle not specified, so set to", Vvehicle, "L."))
       if (is.null(initial.dose)){ initial.dose = 1; warning(paste(
         "Initial dose not specified, so automatrically set to 1 mg/kg BW."))}
     } 
-    if (length(Vmedia)!=1) stop(
-      "Vmedia input must be one value. To change the volume of the media over time, 
+    if (length(Vvehicle)!=1) stop(
+      "Vvehicle input must be one value. To change the volume of the vehicle over time, 
       use the dosing.dermal input.") 
-    if ((Vmedia<=0) & (route=="dermal")) { stop(
-      "Vmedia must be positive and non-zero if the initial dose is dermal.")
+    if ((Vvehicle<=0) & (route=="dermal")) { stop(
+      "Vvehicle must be positive and non-zero if the initial dose is dermal.")
     }
-    forcings = cbind(times = start.time, forcing_values = Vmedia)
+    forcings = cbind(times = start.time, forcing_values = Vvehicle)
   }
   
   # Account for dosing.dermal
@@ -166,14 +166,14 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       "Dosing matrix dosing.dermal cannot contain NA values.")
     if (dim(dosing.dermal)[2]!=3) stop( #check for dimensions
     "dosing.dermal should be matrix with three named columns: time (days), 
-    concentration (uM), and Vmedia (L).")
+    concentration (uM), and Vvehicle (L).")
     
     dose.times <- dosing.dermal[,"time"]
-    dose.Vmedia <- dosing.dermal[,"Vmedia"]
+    dose.Vvehicle <- dosing.dermal[,"Vvehicle"]
     dose.conc <- dosing.dermal[,"concentration"]
     
     # Set dosing.matrix based on amount
-    dose.vec <- dose.Vmedia*dose.conc #Amedia inputs
+    dose.vec <- dose.Vvehicle*dose.conc #Avehicle inputs
     dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
     if (dose.times[1]==start.time){ #if dermal.dosing starts at beginning of time
       initial.dose <- dose.vec[1];
@@ -182,8 +182,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     }
     dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
     
-    #Reset forcing function for Vmedia
-    forcings = cbind(times = dose.times, forcing_values = dose.Vmedia)
+    #Reset forcing function for Vvehicle
+    forcings = cbind(times = dose.times, forcing_values = dose.Vvehicle)
   }
   
   if (model.type=="dermal"){

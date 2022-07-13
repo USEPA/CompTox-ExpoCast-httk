@@ -39,18 +39,18 @@ model.list[["dermal"]]$tissuelist=list(
 # code for the solver: (must match ORDER under "parameters" in C code)
 model.list[["dermal"]]$Rtosolvermap <- list(
   skin_depth = "skin_depth",
-  Fskin_depth_sc = "Fskin_depth_sc",
-  Pmedia2sc = "Pmedia2sc",
-  Psc2ve = "Psc2ve",
+  Fskin_depth_top = "Fskin_depth_top",
+  Pvehicle2top = "Pvehicle2top",
+  Ptop2bottom = "Ptop2bottom",
   Fskin_exposed = "Fskin_exposed",
   totalSA = "totalSA",
   BW = "BW",
   Clmetabolismc = "Clmetabolismc",
   hematocrit = "hematocrit",
   kgutabs = "kgutabs",
-  Ksc2media = "Ksc2media",
-  Ksc2ve = "Ksc2ve",
-  Kve2pu = "Kve2pu",
+  Ktop2vehicle = "Ktop2vehicle",
+  Ktop2bottom = "Ktop2bottom",
+  Kbottom2pu = "Kbottom2pu",
   Kkidney2pu = "Kkidney2pu",
   Kliver2pu = "Kliver2pu",
   Krest2pu = "Krest2pu",
@@ -70,7 +70,7 @@ model.list[["dermal"]]$Rtosolvermap <- list(
   Vrestc = "Vrestc",
   Vvenc = "Vvenc",
   Vskinc = "Vskinc",
-  Vstratum_corneumc = "Vstratum_corneumc", # usually set to = Vskinc*Fskin_depth_sc in parameterize function
+  Vskin_topc = "Vskin_topc", # usually set to = Vskinc*Fskin_depth_top in parameterize function
   Fraction_unbound_plasma = "Funbound.plasma", #different to match R httk code
   Rblood2plasma = "Rblood2plasma"
 )
@@ -83,10 +83,10 @@ model.list[["dermal"]]$compiled.parameters.init <- "getParms_dermal" #in .c file
 # calculate the derivative of the system of equations describing the model 
 model.list[["dermal"]]$compiled.param.names <- c(
   "skin_depth",
-  "Fskin_depth_sc",
-  "Fskin_depth_ve",
-  "Pmedia2sc",
-  "Psc2ve",
+  "Fskin_depth_top",
+  "Fskin_depth_bottom",
+  "Pvehicle2top",
+  "Ptop2bottom",
   "Fskin_exposed",
   "totalSA",
   "SA_exposed",
@@ -94,9 +94,9 @@ model.list[["dermal"]]$compiled.param.names <- c(
   "Clmetabolismc",
   "hematocrit",
   "kgutabs",
-  "Ksc2media",
-  "Ksc2ve",
-  "Kve2pu",
+  "Ktop2vehicle",
+  "Ktop2bottom",
+  "Kbottom2pu",
   "Kkidney2pu",
   "Kliver2pu",
   "Krest2pu",
@@ -116,8 +116,8 @@ model.list[["dermal"]]$compiled.param.names <- c(
   "Vrestc",
   "Vvenc",
   "Vskinc",
-  "Vstratum_corneumc",
-  "Vviable_epidermisc",
+  "Vskin_topc",
+  "Vskin_bottomc",
   "Fraction_unbound_plasma",
   "Rblood2plasma",
   "Clmetabolism",
@@ -140,12 +140,12 @@ model.list[["dermal"]]$compiled.param.names <- c(
   "Vskin",
   "Vskin_exposed",
   "Vskin_unexposed",
-  "Vstratum_corneum",
-  "Vstratum_corneum_exposed",
-  "Vstratum_corneum_unexposed",
-  "Vviable_epidermis",
-  "Vviable_epidermis_exposed",
-  "Vviable_epidermis_unexposed"
+  "Vskin_top",
+  "Vskin_top_exposed",
+  "Vskin_top_unexposed",
+  "Vskin_bottom",
+  "Vskin_bottom_exposed",
+  "Vskin_bottom_unexposed"
 )
 
 # This function initializes the state vector for the compiled model:
@@ -158,7 +158,7 @@ model.list[["dermal"]]$derivative.func <- "derivs_dermal" #in .c file
 # This is the ORDERED list of input variables given to the C code by the solver
 # (from Forcing (Input) functions -- forc):
 model.list[["dermal"]]$input.var.names <- c(
-  "Vmedia"
+  "Vvehicle"
 )
 
 # This is the ORDERED list of variables returned by the derivative function
@@ -173,11 +173,11 @@ model.list[["dermal"]]$derivative.output.names <- c(
   "Ckidney",
   "Cplasma",
   "Aplasma",
-  "Cstratum_corneum_exposed",
-  "Cstratum_corneum_unexposed",
-  "Cviable_epidermis_exposed",
-  "Cviable_epidermis_unexposed",
-  "Cmedia"
+  "Cskin_top_exposed",
+  "Cskin_top_unexposed",
+  "Cskin_bottom_exposed",
+  "Cskin_bottom_unexposed",
+  "Cvehicle"
   )
 
 model.list[["dermal"]]$default.monitor.vars <- c(
@@ -190,11 +190,11 @@ model.list[["dermal"]]$default.monitor.vars <- c(
   "Ckidney",
   "Cplasma",
   "Aplasma",
-  "Cstratum_corneum_exposed",
-  "Cstratum_corneum_unexposed",
-  "Cviable_epidermis_exposed",
-  "Cviable_epidermis_unexposed",
-  "Cmedia",
+  "Cskin_top_exposed",
+  "Cskin_top_unexposed",
+  "Cskin_bottom_exposed",
+  "Cskin_bottom_unexposed",
+  "Cvehicle",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -226,11 +226,11 @@ model.list[["dermal"]]$compartment.units <- c(
   "Akidney"="umol",
   "Atubules"="umol",
   "Ametabolized"="umol",
-  "Astratum_corneum_exposed"="umol",
-  "Astratum_corneum_unexposed"="umol",
-  "Aviable_epidermis_exposed"="umol",
-  "Aviable_epidermis_unexposed"="umol",
-  "Amedia"="umol",
+  "Askin_top_exposed"="umol",
+  "Askin_top_unexposed"="umol",
+  "Askin_bottom_exposed"="umol",
+  "Askin_bottom_unexposed"="umol",
+  "Avehicle"="umol",
   "Ain"="umol",
   "Cgut"="uM",
   "Cliver"="uM",
@@ -241,11 +241,11 @@ model.list[["dermal"]]$compartment.units <- c(
   "Ckidney"="uM",
   "Cplasma"="uM",
   "Aplasma"="umol",
-  "Cstratum_corneum_exposed"="uM",
-  "Cstratum_corneum_unexposed"="uM",
-  "Cviable_epidermis_exposed"="uM",
-  "Cviable_epidermis_unexposed"="uM",
-  "Cmedia"="uM",
+  "Cskin_top_exposed"="uM",
+  "Cskin_top_unexposed"="uM",
+  "Cskin_bottom_exposed"="uM",
+  "Cskin_bottom_unexposed"="uM",
+  "Cvehicle"="uM",
   "AUC"="uM*days")
   #"forcing", #forcing function in "Inputs"
   #"switch") #forcing function in "Inputs"
@@ -262,7 +262,7 @@ model.list[["dermal"]]$routes <- list(
     "entry.compartment" = "Aven",
     "dose.type" = "add"),
   "dermal" = list(
-    "entry.compartment" = "Amedia",
+    "entry.compartment" = "Avehicle",
     "dose.type" = "replace")   
 )
 
@@ -286,11 +286,11 @@ model.list[["dermal"]]$state.vars <- c(
   "Atubules",
   "Ametabolized",
   "AUC",
-  "Astratum_corneum_exposed",
-  "Astratum_corneum_unexposed",
-  "Aviable_epidermis_exposed",
-  "Aviable_epidermis_unexposed",
-  "Amedia",
+  "Askin_top_exposed",
+  "Askin_top_unexposed",
+  "Askin_bottom_exposed",
+  "Askin_bottom_unexposed",
+  "Avehicle",
   "Ain"
 ) 
 
