@@ -202,15 +202,17 @@ model.list[["dermal"]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[["dermal"]]$allowed.units.input <- list(
-  "oral" = c('umol','mg','mg/kg'), # not used? - AEM, March 2022
-  "iv" = c('umol','mg','mg/kg'), # not used? - AEM, March 2022
-  "dermal" = c('mg/L','uM','umol','mg'))
+  "oral" = c('umol','mg','mg/kg'), 
+  "iv" = c('umol','mg','mg/kg'), 
+  "dermal" = c('mg/L','uM','umol','mg'), 
+  "dermal.washoff" = c('mg/L','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal"]]$allowed.units.output <- list(
-  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? - AEM, March 2022
-  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), # not used? - AEM, March 2022
-  "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
+  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
+  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "dermal.washoff" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored
@@ -247,8 +249,6 @@ model.list[["dermal"]]$compartment.units <- c(
   "Cskin_bottom_unexposed"="uM",
   "Cvehicle"="uM",
   "AUC"="uM*days")
-  #"forcing", #forcing function in "Inputs"
-  #"switch") #forcing function in "Inputs"
 
 model.list[["dermal"]]$routes <- list( 
   "oral" = list( # not used? - AEM, March 2022
@@ -263,7 +263,10 @@ model.list[["dermal"]]$routes <- list(
     "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Avehicle",
-    "dose.type" = "replace")   
+    "dose.type" = "add"),
+  "dermal.washoff" = list(
+    "entry.compartment" = "Avehicle",
+    "dose.type" = "replace")  
 )
 
 # These parameters specify the exposure scenario simulated by the model:

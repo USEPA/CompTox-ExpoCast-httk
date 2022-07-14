@@ -185,13 +185,15 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
 model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
   "oral" = c('umol','mg','mg/kg'), 
   "iv" = c('umol','mg','mg/kg'), 
-  "dermal" = c('mg/L','uM','umol','mg'))
+  "dermal" = c('mg/L','uM','umol','mg'), 
+  "dermal.washoff" = c('mg/L','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
   "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
-  "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
+  "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "dermal.washoff" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored
@@ -238,7 +240,10 @@ model.list[["dermal_1subcomp"]]$routes <- list(
     "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Avehicle",
-    "dose.type" = "replace")   
+    "dose.type" = "add") ,  
+  "dermal.washoff" = list( 
+    "entry.compartment" = "Avehicle",
+    "dose.type" = "replace")  
 )
 
 

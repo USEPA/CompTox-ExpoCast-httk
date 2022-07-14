@@ -329,9 +329,9 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   yout[ID_Cskin_bottom_exposed] = y[ID_Askin_bottom_exposed] / Vskin_bottom_exposed ;
 
-  yout[ID_Cvehicle] = y[ID_Avehicle] / Vvehicle ;
+  yout[ID_Cvehicle] = (Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ;
 
-  Rin_dermal = ( y[ID_Avehicle] ? Pvehicle2top * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_top_exposed] / Ktop2vehicle ) : 0.0 ) ;
+  Rin_dermal = ( Vvehicle ? Pvehicle2top * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_top_exposed] / Ktop2vehicle ) : 0.0 ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
 

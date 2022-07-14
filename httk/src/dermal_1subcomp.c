@@ -44,7 +44,7 @@
     "Cskin_unexposed",
     "Cvehicle",
 
-   1 Input:
+   1 Inputs:
      Vvehicle (forcing function)
 
    52 Parameters:
@@ -284,9 +284,9 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cskin_exposed] = y[ID_Askin_exposed] / Vskin_exposed ;
 
-  yout[ID_Cvehicle] = y[ID_Avehicle] / Vvehicle ;
+  yout[ID_Cvehicle] = ( Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ;
 
-  Rin_dermal = ( y[ID_Avehicle] ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0 ) ;
+  Rin_dermal = ( Vvehicle ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
 

@@ -32,6 +32,7 @@ solve_dermal_pbtk(
   input.units = "mg/kg",
   dosing.dermal = NULL,
   dosing.matrix = NULL,
+  washoff = FALSE,
   ...
 )
 }
@@ -91,6 +92,10 @@ parameterization function, "parameterize_dermal_pbtk".}
 \item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L.}
 
 \item{initial.dose}{Concentration}
+
+\item{washoff}{This parameter only matters if dermal.dosing is being used. If 
+TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
+FALSE (default), any chemical left on the skin is added to the new dose.}
 
 \item{...}{Additional arguments passed to the integrator.}
 

@@ -71,6 +71,9 @@
 #' "concentration", "Vvehicle", and "time" containing the dosing times, days,
 #' with the applied concentration, units/L, and the volume of the applied
 #' vehicle, L.
+#' @param washoff This parameter only matters if dermal.dosing is being used. If 
+#' TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
+#' FALSE (default), any chemical left on the skin is added to the new dose.
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time (in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -127,17 +130,25 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     #doses.per.day = NULL,
                     #daily.dose = NULL,
                     dosing.matrix = NULL, #DERMAL - DOSING
+                    washoff = FALSE,
                     ...)
 {
+
+# DON'T LET MODEL-SPECIFIC THINGS MAKE AN ERROR IN SOLVE_MODEL (put stop in solve_dermal_pbtk)
+  
   # DOSING
   # Set start.time for dosing
   if (is.null(times)) {
     start.time = 0
     } else {start.time = times[1]}
   
-  # Check for exposure route
+  # Check for exposure route 
+  #check that it is iv OR dermal OR oral (if dermal.washoff, put ERROR stop())
   if (is.null(route)) { route <- 'dermal'; warning(
     "If route is not chosen, it is set to dermal by default.")}
+  if (!(route %in% c("iv","oral","dermal"))){ stop(
+    'route must either be "iv", "oral", or "dermal". To allow wash off to occur,
+    set route="dermal" and washoff=TRUE.')}
   
   # Create forcing function for Vvehicle - single value
   if (is.null(dosing.dermal)) {
@@ -150,7 +161,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if (length(Vvehicle)!=1) stop(
       "Vvehicle input must be one value. To change the volume of the vehicle over time, 
       use the dosing.dermal input.") 
-    if ((Vvehicle<=0) & (route=="dermal")) { stop(
+    if ((Vvehicle<0) & (route=="dermal")) { stop(
       "Vvehicle must be positive and non-zero if the initial dose is dermal.")
     }
     forcings = cbind(times = start.time, forcing_values = Vvehicle)
@@ -191,6 +202,14 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   } else if (model.type=="dermal_1subcomp"){
     model.forsolver="dermal_1subcomp"
   } else { stop("Input of model.type is incorrect. Must either by 'dermal' (default) or 'dermal_1subcomp'.")}
+  
+  # Change model.list component for washoff
+  if (washoff){
+    route="dermal.washoff"
+    if ((!is.null(dosing.matrix))|(!is.null(dosing.dermal))){
+      warning("Wash-off is assumed to occur at the time of new doses.")
+    }
+  }
   
   out <- solve_model(
     chem.name = chem.name,
