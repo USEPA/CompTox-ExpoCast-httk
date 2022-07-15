@@ -205,10 +205,14 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   
   # Change model.list component for washoff
   if (washoff){
-    route="dermal.washoff"
-    if ((!is.null(dosing.matrix))|(!is.null(dosing.dermal))){
-      warning("Wash-off is assumed to occur at the time of new doses.")
-    }
+    if (route=="dermal"){
+      route="dermal.washoff"
+      if ((!is.null(dosing.matrix))|(!is.null(dosing.dermal))){
+        warning("Wash-off is assumed to occur at the time of new doses.")
+      }
+    } else { warning(
+      paste0('Since route is ',route,'washoff does not apply and is ignored.')
+    )}
   }
   
   out <- solve_model(
