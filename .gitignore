@@ -6,6 +6,7 @@ httk/src-x64/
 httk/build/
 httk.Rcheck/
 work/
+httk/data-raw/ckd_epi_resid_var_files/
 ###################
 # Or these R files
 ###################
@@ -13,13 +14,11 @@ work/
 *.Rhistory
 *.Rproj
 .Rproj.user/
-
 httk/man/frechen2021.Rd
-
 *.com
 *.class
 *.dll
 *.exe
 *.o
 *.so
-
+*.pdf
