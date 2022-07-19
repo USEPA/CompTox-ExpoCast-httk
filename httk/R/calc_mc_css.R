@@ -91,9 +91,17 @@
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
 #'
-#' @param tissue Desired steady state tissue concentration.
+#' @param tissue Desired steady state tissue concentration. Default is of NULL
+#' typically gives whole body plasma concentration.
 #'
-#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
+#' @param concentration Desired concentration type: 'blood','tissue', or default 
+#' 'plasma'. In the case that the concentration is for plasma, selecting "blood"
+#' will use the blood:plasma ratio to estimate blood concentration. In the case
+#' that the argument 'tissue' specifies a particular tissue of the body, 
+#' concentration defaults to 'tissue' -- that is, the concentration in the 
+#' If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+#' specific tissue then the value returned is for the plasma or blood in that
+#' specific tissue.
 #'
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #'
@@ -306,7 +314,6 @@ calc_mc_css <- function(chem.cas=NULL,
   {
     stop("Concentration must be one of blood, tissue, or plasma")
   }
-
     
 #
 #
@@ -349,6 +356,8 @@ calc_mc_css <- function(chem.cas=NULL,
                               chem.cas=chem.cas,
                               chem.name=chem.name,
                               dtxsid=dtxsid,
+                              tissue=tissue,
+                              concentration=concentration,
                               output.units=output.units,
                               clint.pvalue.threshold=
                                 parameterize.arg.list$clint.pvalue.threshold),
@@ -392,51 +401,7 @@ calc_mc_css <- function(chem.cas=NULL,
         "units.\n") 
     }
   }
-  
-  ### MODEL PARAMETERS FOR R
-  
-  # Make sure we have all the parameters necessary to describe the chemical (we don't
-  # necessarily need all parameters associated with a given model to do this:)
-  if (is.null(parameters))
-  {
-    # Look up the chemical name/CAS/dtxsid, depending on what was provided:
-    out.chem <- get_chem_id(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid)
-    chem.cas <- out.chem$chem.cas
-    chem.name <- out.chem$chem.name                                
-    dtxsid <- out.chem$dtxsid  
-    
-    
-    parameterize.args <- c(parameterize.args,list(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      species=species,
-      suppress.messages=suppress.messages))
-    # Make sure all the arguments are used by the function:
-    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
-                                             methods::formalArgs(parameterize_function)]
-    parameters <- do.call(parameterize_function, parameterize.args) 
-  } else {
-    model_param_names <- model.list[[model]]$param.names 
-    if (!all(model_param_names %in% names(parameters)))
-    {
-      stop(paste("Missing parameters:",
-                 paste(model_param_names[which(!model_param_names %in% 
-                                                 names(parameters))],collapse=', '),
-                 ". Use parameters from",parameterize_function,".",sep="")) 
-    }
-  }
-  
-  # Retrieve the molecular weight:
-  MW <- parameters[['MW']]
-  
-  if (tolower(output.units)=='um')
-  { 
-    out <- out * 1e3 * MW / 1e6 
-  }
-
+ 
 # Cannot guarantee arbitrary precision:
   out <- set_httk_precision(out)
   
