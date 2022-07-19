@@ -30,39 +30,63 @@
 #' used by this function.
 #' 
 #' @param conc Bioactive in vitro concentration in units of uM. 
+#'
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
+#'
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
+#'
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#'
 #' @param suppress.messages Suppress text messages. 
+#'
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
+#'
 #' @param output.units Units of dose, default of 'mgpkgpday' for mg/kg BW/ day or
 #' 'umolpkgpday' for umol/ kg BW/ day.
+#'
 #' @param which.quantile Which quantile from Monte Carlo steady-state
 #' simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
 #' concentration quantile is the same population as the 5th dose quantile. 
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  
+#'
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#'
 #' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#'
 #' @param tissue Desired steady state tissue conentration.
+#'
 #' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
+#'
 #' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
 #' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
 #' See Details below for more information.
+#'
 #' @param ... Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 #' variance of parameters.
+#'
+#' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#' 'pbtk' for the multiple compartment model,
+#' '3compartment' for the three compartment model, '3compartmentss' for 
+#' the three compartment steady state model, and '1compartment' for one 
+#' compartment model. This only applies when httkpop=TRUE and species="Human",
+#' otherwise '3compartmentss' is used.
+#'
 #' @return Equivalent dose in specified units, default of mg/kg BW/day.
+#'
 #' @author John Wambaugh
 #'
 #' @references Wetmore, Barbara A., et al. "Incorporating high-throughput 
@@ -100,14 +124,16 @@ calc_mc_oral_equiv <- function(conc,
                                output.units='mgpkgpday',
                                suppress.messages=FALSE,
                                return.samples=FALSE,
-                               concentration = "plasma",
                                restrictive.clearance=TRUE,
                                bioactive.free.invivo = FALSE,
                                tissue=NULL,
+                               concentration = "plasma",
                                IVIVE=NULL,
+                               model='3compartmentss',
                                ...)
 {
-  if(!(tolower(input.units) %in% c('um','mg/l'))) stop("Input units can only be uM or mg/L.")
+  if (!(tolower(input.units) %in% c('um','mg/l'))) 
+    stop("Input units can only be uM or mg/L.")
   
   if (!is.null(IVIVE)) 
   {
@@ -118,17 +144,46 @@ calc_mc_oral_equiv <- function(conc,
     concentration <- out[["concentration"]]
   }
   
-  if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
-     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
-  ){
+  if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma"))
+  {
     stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
          Ctissue * Funbound.plasma is not a relevant concentration.\n
          Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
   }
+ 
+  # We need to know model-specific information (from modelinfo_[MODEL].R]) 
+  # to set up the solver:
+  model <- tolower(model)
+  if (!(model %in% names(model.list)))            
+  {
+    stop(paste("Model",model,"not available. Please select from:",
+      paste(names(model.list),collapse=", ")))
+  } 
   
-  if(!is.null(tissue) & tolower(concentration) != "tissue"){
+  # Error handling for tissue argument:
+  if (!is.null(tissue))
+  {
+    if (is.null(model.list[[model]]$alltissues))
+    {
+      stop(paste("Tissues are not available for model", model))
+    }
+    if (!(tissue %in% model.list[[model]]$alltissues))
+    {
+      stop(paste("Tissue", tissue, "not available for model", model))
+    }
+  }  
+  
+  # Error handling for concentration arugment:
+  if (!(concentration %in% c("blood","tissue","plasma")))
+  {
+    stop("Concentration must be one of blood, tissue, or plasma")
+  }
+    
+  if (!is.null(tissue) & tolower(concentration) != "tissue"){
     concentration <- "tissue"
-    warning("Tissue selected. Overwriting option for concentration with \"tissue\".")
+    warning(
+      "Tissue selected. Overwriting option for concentration with \"tissue\".")
   }
   
   
@@ -140,22 +195,24 @@ calc_mc_oral_equiv <- function(conc,
   well.stirred.correction <- adjusted.Funbound.plasma <- NULL
   #End R CMD CHECK appeasement.
   
-  Css <- try(calc_mc_css(chem.name=chem.name,
-                         chem.cas=chem.cas,
-                         dtxsid=dtxsid,
-                         which.quantile=which.quantile,
-                         species=species,
-                         output.units=input.units,
-                         suppress.messages=TRUE, 
-                         calc.analytic.css.arg.list=
-                           list(concentration = concentration,
-                           restrictive.clearance=restrictive.clearance,
-                           bioactive.free.invivo = bioactive.free.invivo,
-                           tissue = tissue,IVIVE=IVIVE,
-                           well.stirred.correction=well.stirred.correction,
-                           adjusted.Funbound.plasma=adjusted.Funbound.plasma),
-                         return.samples=return.samples,
-                         ...))
+  Css <- try(do.call(calc_mc_css,
+                            args=c(list(
+                              chem.name=chem.name,
+                              chem.cas=chem.cas,
+                              dtxsid=dtxsid,
+                              which.quantile=which.quantile,
+                              species=species,
+                              output.units=input.units,
+                              suppress.messages=TRUE, 
+                              calc.analytic.css.arg.list=
+                               list(concentration = concentration,
+                               restrictive.clearance=restrictive.clearance,
+                               bioactive.free.invivo = bioactive.free.invivo,
+                               tissue = tissue,IVIVE=IVIVE,
+                               well.stirred.correction=well.stirred.correction,
+                               adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+                              return.samples=return.samples,
+                              ...))))
                          
   if (is(Css,"try-error"))
   {
@@ -169,13 +226,23 @@ calc_mc_oral_equiv <- function(conc,
   #
   dose <- conc/Css  
 
-  if(tolower(output.units) == 'umolpkgpday'){
-    if(is.null(chem.cas)) chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
+  if (tolower(output.units) == 'umolpkgpday')
+  {
+    if (is.null(chem.cas)) chem.cas <- 
+      get_chem_id(chem.name=chem.name)[['chem.cas']]
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
     dose <- dose /1000 / MW * 1000000 
-  }else if(tolower(output.units) != 'mgpkgpday') stop("Output units can only be in mgpkgpday or mol.")
-  if(!suppress.messages & !return.samples){
-    cat(input.units,"concentration converted to",output.units,"dose for",which.quantile,"quantile.\n")
+  } else if (tolower(output.units) != 'mgpkgpday') 
+    stop("Output units can only be in mgpkgpday or mol.")
+  
+  if (!suppress.messages & !return.samples)
+  {
+    cat(input.units,
+      "concentration converted to",
+      output.units,
+      "dose for",
+      which.quantile,
+      "quantile.\n")
   }
 
   return(set_httk_precision(dose))
