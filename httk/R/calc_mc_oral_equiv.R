@@ -65,9 +65,17 @@
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #'
-#' @param tissue Desired steady state tissue conentration.
+#' @param tissue Desired steady state tissue concentration. Default is of NULL
+#' typically gives whole body plasma concentration.
 #'
-#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
+#' @param concentration Desired concentration type: 'blood','tissue', or default 
+#' 'plasma'. In the case that the concentration is for plasma, selecting "blood"
+#' will use the blood:plasma ratio to estimate blood concentration. In the case
+#' that the argument 'tissue' specifies a particular tissue of the body, 
+#' concentration defaults to 'tissue' -- that is, the concentration in the 
+#' If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+#' specific tissue then the value returned is for the plasma or blood in that
+#' specific tissue.
 #'
 #' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
@@ -196,23 +204,24 @@ calc_mc_oral_equiv <- function(conc,
   #End R CMD CHECK appeasement.
   
   Css <- try(do.call(calc_mc_css,
-                            args=c(list(
-                              chem.name=chem.name,
-                              chem.cas=chem.cas,
-                              dtxsid=dtxsid,
-                              which.quantile=which.quantile,
-                              species=species,
-                              output.units=input.units,
-                              suppress.messages=TRUE, 
-                              calc.analytic.css.arg.list=
-                               list(concentration = concentration,
-                               restrictive.clearance=restrictive.clearance,
-                               bioactive.free.invivo = bioactive.free.invivo,
-                               tissue = tissue,IVIVE=IVIVE,
-                               well.stirred.correction=well.stirred.correction,
-                               adjusted.Funbound.plasma=adjusted.Funbound.plasma),
-                              return.samples=return.samples,
-                              ...))))
+                        args=c(list(
+                          chem.name=chem.name,
+                          chem.cas=chem.cas,
+                          dtxsid=dtxsid,
+                          which.quantile=which.quantile,
+                          species=species,
+                          output.units=input.units,
+                          suppress.messages=TRUE,
+                          tissue=tissue,
+                          concentration=concentration,
+                          calc.analytic.css.arg.list=list( 
+                            restrictive.clearance = restrictive.clearance,
+                            bioactive.free.invivo = bioactive.free.invivo,
+                            IVIVE = IVIVE,
+                            well.stirred.correction=well.stirred.correction,
+                            adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+                          return.samples=return.samples,
+                          ...))))
                          
   if (is(Css,"try-error"))
   {
@@ -220,7 +229,7 @@ calc_mc_oral_equiv <- function(conc,
   }
   
   #
-  # The super-impressive, and complimacated reverse dosimetry IVIVE calculation: 
+  # The super-impressive and complimacated reverse dosimetry IVIVE calculation: 
   #
   # uM to mg/kg/day:
   #
