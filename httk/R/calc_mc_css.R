@@ -31,33 +31,45 @@
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
+#'
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
+#'
 #' @param samples Number of samples generated in calculating quantiles.
+#'
 #' @param which.quantile Which quantile from Monte Carlo simulation is
 #' requested. Can be a vector.
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model.
+#'
 #' @param suppress.messages Whether or not to suppress output message.
+#'
 #' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
 #' 'pbtk' for the multiple compartment model,
 #' '3compartment' for the three compartment model, '3compartmentss' for 
 #' the three compartment steady state model, and '1compartment' for one 
 #' compartment model. This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
+#'
 #' @param httkpop Whether or not to use population generator and sampler from
 #' httkpop.  This is overwrites censored.params and vary.params and is only for
 #' human physiology.  Species must also be set to 'Human'.
+#'
 #' @param invitrouv Logical to indicate whether to include in vitro parameters
 #' in uncertainty and variability analysis
+#'
 #' @param calcrb2p Logical determining whether or not to recalculate the 
 #' chemical ratio of blood to plasma
+#'
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
 #' of detection (specified separately for each parameter). This argument should
@@ -68,26 +80,38 @@
 #' deviation equal to the mean times the CV.  Censored values are sampled on a
 #' uniform distribution between 0 and the limit of detection. Not used with
 #' httkpop model.
+#'
 #' @param vary.params The parameters listed in vary.params are sampled from a
 #' normal distribution that is truncated at zero. This argument should be a
 #' list of coefficients of variation (CV) for the normal distribution. Each
 #' entry in the list is named for a parameter in "parameters". New values are
 #' sampled with mean equal to the value in "parameters" and standard deviation
 #' equal to the mean times the CV. Not used with httkpop model.
+#'
 #' @param return.samples Whether or not to return the vector containing the
 #' samples from the simulation instead of the selected quantile.
+#'
 #' @param tissue Desired steady state tissue concentration.
+#'
+#' @param concentration Desired concentration type, 'blood','tissue', or default 'plasma'.
+#'
 #' @param output.units Plasma concentration units, either uM or default mg/L.
+#'
 #' @param invitro.mc.arg.list List of additional parameters passed to 
 #' \code{\link{invitro_mc}}
+#'
 #' @param httkpop.generate.arg.list Additional parameters passed to 
 #' \code{\link{httkpop_generate}}.
+#'
 #' @param convert.httkpop.arg.list Additional parameters passed to the 
 #' convert_httkpop_* function for the model.
+#'
 #' @param parameterize.arg.list Additional parameters passed to the 
 #' parameterize_* function for the model.
+#'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #' \code{\link{calc_analytic_css}}.
+#'
 #' @param parameterize.args A list of arguments to be passed to the model
 #' parameterization function (that is, parameterize_MODEL) corresponding to
 #' argument "model". (Defaults to NULL.)  
@@ -197,6 +221,7 @@ calc_mc_css <- function(chem.cas=NULL,
                         vary.params=list(),
                         return.samples=FALSE,
                         tissue=NULL,
+                        concentration = "plasma",
                         output.units="mg/L",
                         invitro.mc.arg.list=list(
                           adjusted.Funbound.plasma=TRUE,
@@ -233,14 +258,7 @@ calc_mc_css <- function(chem.cas=NULL,
                           clint.pvalue.threshold=0.05,
                           restrictive.clearance = TRUE,
                           regression=TRUE),
-                        calc.analytic.css.arg.list=list(
-                          well.stirred.correction=TRUE,
-                          adjusted.Funbound.plasma=TRUE,
-                          regression=TRUE,
-                          IVIVE = NULL,
-                          tissue=tissue,
-                          restrictive.clearance = TRUE,
-                          bioactive.free.invivo = FALSE),
+                        calc.analytic.css.arg.list=list(),
                         parameterize.args = list(
                           default.to.human=F,
                           adjusted.Funbound.plasma=T,
@@ -260,15 +278,35 @@ calc_mc_css <- function(chem.cas=NULL,
   #Appease R CMD check --as-cran variable binding:
   Css <- NULL
   
-  
-# We need to know model-specific information (from modelinfo_[MODEL].R]) 
-# to set up the solver:
+  # We need to know model-specific information (from modelinfo_[MODEL].R]) 
+  # to set up the solver:
   model <- tolower(model)
   if (!(model %in% names(model.list)))            
   {
     stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
+               paste(names(model.list),collapse=", ")))
   } 
+  parameterize_function <- model.list[[model]]$parameterize.func
+
+  # Error handling for tissue argument:
+  if (!is.null(tissue))
+  {
+    if (is.null(model.list[[model]]$alltissues))
+    {
+      stop(paste("Tissues are not available for model", model))
+    }
+    if (!(tissue %in% model.list[[model]]$alltissues))
+    {
+      stop(paste("Tissue", tissue, "not available for model", model))
+    }
+  }  
+  
+  # Error handling for concentration arugment:
+  if (!(concentration %in% c("blood","tissue","plasma")))
+  {
+    stop("Concentration must be one of blood, tissue, or plasma")
+  }
+
     
 #
 #
@@ -276,25 +314,26 @@ calc_mc_css <- function(chem.cas=NULL,
 # VALUES FOR WHICH Css SHOULD BE CALCULATED
 #
 #
-  parameter.dt <- create_mc_samples(
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid = dtxsid,
-                        parameters=parameters,
-                        samples=samples,
-                        species=species,
-                        suppress.messages=suppress.messages,
-                        model=model,
-                        httkpop=httkpop,
-                        invitrouv=invitrouv,
-                        calcrb2p=calcrb2p,
-                        censored.params=censored.params,
-                        vary.params=vary.params,
-                        return.samples=FALSE,
-                        invitro.mc.arg.list=invitro.mc.arg.list,
-                        httkpop.generate.arg.list=httkpop.generate.arg.list,
-                        convert.httkpop.arg.list=convert.httkpop.arg.list,
-                        parameterize.arg.list=parameterize.arg.list)
+  parameter.dt <- do.call(create_mc_samples,
+                            args=c(list(
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid = dtxsid,
+                              parameters=parameters,
+                              samples=samples,
+                              species=species,
+                              suppress.messages=suppress.messages,
+                              model=model,
+                              httkpop=httkpop,
+                              invitrouv=invitrouv,
+                              calcrb2p=calcrb2p,
+                              censored.params=censored.params,
+                              vary.params=vary.params,
+                              return.samples=FALSE,
+                              invitro.mc.arg.list=invitro.mc.arg.list,
+                              httkpop.generate.arg.list=httkpop.generate.arg.list,
+                              convert.httkpop.arg.list=convert.httkpop.arg.list,
+                              parameterize.arg.list=parameterize.arg.list)))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
@@ -353,16 +392,6 @@ calc_mc_css <- function(chem.cas=NULL,
         "units.\n") 
     }
   }
-  
-  # We need to know model-specific information (from modelinfo_[MODEL].R]) 
-  # to set up the solver:
-  model <- tolower(model)
-  if (!(model %in% names(model.list)))            
-  {
-    stop(paste("Model",model,"not available. Please select from:",
-               paste(names(model.list),collapse=", ")))
-  } 
-  parameterize_function <- model.list[[model]]$parameterize.func
   
   ### MODEL PARAMETERS FOR R
   
