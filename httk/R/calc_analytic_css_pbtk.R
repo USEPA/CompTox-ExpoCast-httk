@@ -34,6 +34,7 @@
 #'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'
 #'@keywords pbtk
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
