@@ -15,11 +15,12 @@ calc_mc_oral_equiv(
   output.units = "mgpkgpday",
   suppress.messages = FALSE,
   return.samples = FALSE,
-  concentration = "plasma",
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   tissue = NULL,
+  concentration = "plasma",
   IVIVE = NULL,
+  model = "3compartmentss",
   ...
 )
 }
@@ -53,8 +54,6 @@ be mg/L.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
-
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
@@ -62,13 +61,30 @@ samples from the simulation instead of the selected quantile.}
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
-\item{tissue}{Desired steady state tissue conentration.}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
+
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
 See Details below for more information.}
+
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model. This only applies when httkpop=TRUE and species="Human",
+otherwise '3compartmentss' is used.}
 
 \item{...}{Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 variance of parameters.}
