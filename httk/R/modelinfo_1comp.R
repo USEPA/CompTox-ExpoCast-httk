@@ -11,7 +11,7 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 model.list[["1compartment"]]$steady.state.compartment <- "compartment"
 
 # What units does the analytic function return:
-model.list[["1compartment"]]$steady.state.units <- "uM"
+model.list[["1compartment"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
