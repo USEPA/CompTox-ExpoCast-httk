@@ -153,11 +153,7 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance = TRUE,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
-                              parameterize.args = list(
-                                default.to.human=FALSE,
-                                adjusted.Funbound.plasma=TRUE,
-                                regression=TRUE,
-                                minimum.Funbound.plasma=1e-4),
+                              parameterize.args = list(),
                               ...)
 {  
   if (is.null(model)) stop("Model must be specified.")
@@ -212,17 +208,17 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
     
-    
-    parameterize.args <- c(parameterize.args,list(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid,
-      species=species,
-      suppress.messages=suppress.messages))
-# Make sure all the arguments are used by the function:
-    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
-      methods::formalArgs(parameterize_function)]
-    parameters <- do.call(parameterize_function, parameterize.args) 
+  # pass chemical information plus formal argument parameterize.args to the
+  # parameterization function specified by the appropriate modelinfo file:
+    parameters <- do.call(what=parameterize_function, 
+      args=c(list(
+        chem.cas=chem.cas,
+        chem.name=chem.name,
+        dtxsid=dtxsid,
+        species=species,
+        suppress.messages=suppress.messages),
+      parameterize.args))
+ 
   } else {
     model_param_names <- model.list[[model]]$param.names 
     if (!all(model_param_names %in% names(parameters)))
