@@ -21,6 +21,7 @@ calc_mc_css(
   vary.params = list(),
   return.samples = FALSE,
   tissue = NULL,
+  concentration = "plasma",
   output.units = "mg/L",
   invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
     fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
@@ -33,9 +34,7 @@ calc_mc_css(
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
     restrictive.clearance = TRUE, regression = TRUE),
-  calc.analytic.css.arg.list = list(well.stirred.correction = TRUE,
-    adjusted.Funbound.plasma = TRUE, regression = TRUE, IVIVE = NULL, tissue = tissue,
-    restrictive.clearance = TRUE, bioactive.free.invivo = FALSE),
+  calc.analytic.css.arg.list = list(),
   parameterize.args = list(default.to.human = F, adjusted.Funbound.plasma = T,
     regression = T, minimum.Funbound.plasma = 1e-04)
 )
@@ -104,7 +103,17 @@ equal to the mean times the CV. Not used with httkpop model.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{tissue}{Desired steady state tissue concentration.}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
+
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 

@@ -23,8 +23,7 @@ calc_analytic_css(
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
-  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
-    regression = TRUE, minimum.Funbound.plasma = 1e-04),
+  parameterize.args = list(),
   ...
 )
 }
@@ -69,12 +68,19 @@ series 'forcings' argument, specified in hours}
 the three compartment steady state model, and '1compartment' for one 
 compartment model.}
 
-\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{tissue}{Desired tissue concentration (defaults to whole body 
-concentration.)}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
 
 \item{restrictive.clearance}{If TRUE (default), then only the fraction of
 chemical not bound to protein is available for metabolism in the liver. If 
