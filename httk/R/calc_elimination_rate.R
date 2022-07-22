@@ -128,6 +128,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                     minimum.Funbound.plasma=minimum.Funbound.plasma)
     Vd <- calc_vdist(chem.cas=chem.cas,
                      chem.name=chem.name,
+                     dtxsid=dtxsid,
                      species=species,
                      suppress.messages=suppress.messages,
                      default.to.human=default.to.human,
