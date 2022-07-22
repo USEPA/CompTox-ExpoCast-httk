@@ -70,6 +70,14 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   }   
   if(tolower(input.units) == 'mg/l'){
     conc <- conc / 1000 / MW * 1000000
+    # !!need to verify the units that should be going into the calculation!!
+    # conc <- conc * convert_units( 
+    #   input.units = input.units,
+    #   output.units = 'um',
+    #   chem.cas = chem.cas,
+    #   chem.name = chem.name,
+    #   dtxsid = dtxsid
+    # )
   }else if(tolower(input.units)!='um') stop('Input units can only be in mg/L or uM.')
   if(is.null(clearance.assay.conc)){
     this.data <- subset(Wetmore.data,Wetmore.data[,"CAS"]==chem.cas&toupper(Wetmore.data[,"Species"])==toupper(species))
@@ -81,6 +89,15 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   dose <- conc / Css
   if(tolower(output.units) == 'mol'){
     dose <- dose /1000 / MW * 1000000 
+    # !!need to verify the units that come out of the calculation!!
+    # specified above as 'um' but what does that make the dose units?
+    # dose <- dose * convert_units(
+    #   input.units = 'mg',
+    #   output.units = output.units,
+    #   chem.cas = chem.cas,
+    #   chem.name = chem.name,
+    #   dtxsid = dtxsid
+    # )
   }else if(tolower(output.units) != 'mg') stop("Output units can only be in mg or uM.")
    if (!suppress.messages){
     cat(paste("Retrieving Css from literature based on ",this.conc," uM intrinsic clearance data for the ",which.quantile," quantile in ",species,".\n",sep=""))
