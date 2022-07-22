@@ -241,8 +241,16 @@ calc_mc_oral_equiv <- function(conc,
       get_chem_id(chem.name=chem.name)[['chem.cas']]
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
     dose <- dose /1000 / MW * 1000000 
+    # dose <- dose * convert_units(
+    #   input.units = 'mgpkgpday', ## not sure about this... would need to update convert_units ##
+        # may be able to do 'mg' for input then 'umol' for output #
+    #   output.units = 'umolpkgpday', ## not sure about this... would need to update convert_units ##
+    #   chem.cas = chem.cas,
+    #   chem.name = chem.name,
+    #   dtxsid = dtxsid
+    # )
   } else if (tolower(output.units) != 'mgpkgpday') 
-    stop("Output units can only be in mgpkgpday or mol.")
+    stop("Output units can only be in mgpkgpday or mol.") # may need to update the error message - does not really seem to match what is currently coded up
   
   if (!suppress.messages & !return.samples)
   {
