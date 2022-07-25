@@ -71,7 +71,6 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   # if the user provided concentration is in 'mg/L' units,
   # then convert the concentration from 'mg/L' to 'uM'
   if(tolower(input.units) == 'mg/l'){
-    # conc <- conc / 1000 / MW * 1000000 # old code
     # output units are in 'uM' for 'conc'
     conc <- conc * convert_units(
       input.units = input.units,
