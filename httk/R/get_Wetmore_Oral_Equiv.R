@@ -68,16 +68,18 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   if(tolower(input.units) =='mg/l' | tolower(output.units) == 'mol'){
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
   }   
+  # if the user provided concentration is in 'mg/L' units,
+  # then convert the concentration from 'mg/L' to 'uM'
   if(tolower(input.units) == 'mg/l'){
-    conc <- conc / 1000 / MW * 1000000
-    # !!need to verify the units that should be going into the calculation!!
-    # conc <- conc * convert_units( 
-    #   input.units = input.units,
-    #   output.units = 'um',
-    #   chem.cas = chem.cas,
-    #   chem.name = chem.name,
-    #   dtxsid = dtxsid
-    # )
+    # conc <- conc / 1000 / MW * 1000000 # old code
+    # output units are in 'uM' for 'conc'
+    conc <- conc * convert_units(
+      input.units = input.units,
+      output.units = 'um',
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid
+    )
   }else if(tolower(input.units)!='um') stop('Input units can only be in mg/L or uM.')
   if(is.null(clearance.assay.conc)){
     this.data <- subset(Wetmore.data,Wetmore.data[,"CAS"]==chem.cas&toupper(Wetmore.data[,"Species"])==toupper(species))
@@ -85,21 +87,24 @@ get_lit_oral_equiv <- function(conc,chem.name=NULL,chem.cas=NULL,suppress.messag
   }else{
     this.conc <- clearance.assay.conc
   }
+  # output units are 'uM/mg/kg/day' for 'Css'
   Css <- try(get_lit_css(daily.dose=1,chem.cas=chem.cas,which.quantile=which.quantile,species=species,clearance.assay.conc=this.conc,suppress.messages=TRUE,output.units='uM',...))
-  dose <- conc / Css
-  if(tolower(output.units) == 'mol'){
-    dose <- dose /1000 / MW * 1000000 
-    # !!need to verify the units that come out of the calculation!!
-    # specified above as 'um' but what does that make the dose units?
-    # dose <- dose * convert_units(
-    #   input.units = 'mg',
-    #   output.units = output.units,
-    #   chem.cas = chem.cas,
-    #   chem.name = chem.name,
-    #   dtxsid = dtxsid
-    # )
-  }else if(tolower(output.units) != 'mg') stop("Output units can only be in mg or uM.")
-   if (!suppress.messages){
+  # output units are 'mg/kg/day'
+  dose <- conc / Css # conc (uM) / Css (uM/mg/kg/day) = dose (mg/kg/day)
+  
+  # if the user wants the dose returned in 'umol/kg/day' units,
+  # then convert the dose from 'mg/kg/day' to 'umol/kg/day'
+  if(tolower(output.units) == 'umol'){
+    # output units are 'umol/kg/day' for 'dose'
+    dose <- dose * convert_units(
+      input.units = 'mg',
+      output.units = output.units,
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid
+    )
+  }else if(tolower(output.units) != 'mg') stop("Output units can only be in mg or umol.")
+  if (!suppress.messages){
     cat(paste("Retrieving Css from literature based on ",this.conc," uM intrinsic clearance data for the ",which.quantile," quantile in ",species,".\n",sep=""))
     cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),input.units,"concentration converted to",output.units,"/kg bw/day dose.\n")
    }
