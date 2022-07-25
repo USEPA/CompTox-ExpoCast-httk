@@ -140,8 +140,27 @@ calc_mc_oral_equiv <- function(conc,
                                model='3compartmentss',
                                ...)
 {
+  # check if the input units are in concentration units - output error if TRUE
   if (!(tolower(input.units) %in% c('um','mg/l'))) 
     stop("Input units can only be uM or mg/L.")
+  # check if the output units are in "amount / kg / day" - output error if TRUE
+  if(grepl(output.units,pattern = "pkgpday$")==FALSE){
+    stop("Output units can only be umolpkgpday or mgpkgpday.")
+  }else{
+    # if the output units contain 'pkgpday' (i.e. '/kg/day'),
+    # then remove this string from the output.units
+    tmp.output.units <- gsub(x = output.units,
+                             pattern = "pkgpday",
+                             replacement = "")
+    # check the output units are in acceptable amount units
+    # if TRUE, then output error message
+    if(!(tolower(tmp.output.units) %in% c('umol','mg'))){
+      stop("Output units can only be umolpkgpday or mgpkgpday.")
+    }
+    # if the above logical check is FALSE, then use 'tmp.output.units'
+    # for 'dose' unit conversions later in the function
+  }
+    
   
   if (!is.null(IVIVE)) 
   {
@@ -203,6 +222,8 @@ calc_mc_oral_equiv <- function(conc,
   well.stirred.correction <- adjusted.Funbound.plasma <- NULL
   #End R CMD CHECK appeasement.
   
+  # output units are in '<input.units>/mg/kg/day' for 'Css'
+  # (i.e. 'mg/L / kg/day' or 'uM / kg/day')
   Css <- try(do.call(calc_mc_css,
                         args=c(list(
                           chem.name=chem.name,
@@ -233,24 +254,26 @@ calc_mc_oral_equiv <- function(conc,
   #
   # uM to mg/kg/day:
   #
-  dose <- conc/Css  
+  # output units here are in 'mg/kg/day' for 'dose'
+  # either 'uM / uM/mg/kg/day' or 'mg/L / (mg/L)/kg/day'
+  dose <- conc/Css  # conc (input.units) / Css (input.units/kg/day)
 
-  if (tolower(output.units) == 'umolpkgpday')
+  if (tolower(tmp.output.units) == 'umol')
   {
-    if (is.null(chem.cas)) chem.cas <- 
-      get_chem_id(chem.name=chem.name)[['chem.cas']]
+    if (is.null(chem.cas)){
+      chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
+    } 
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
-    dose <- dose /1000 / MW * 1000000 
-    # dose <- dose * convert_units(
-    #   input.units = 'mgpkgpday', ## not sure about this... would need to update convert_units ##
-        # may be able to do 'mg' for input then 'umol' for output #
-    #   output.units = 'umolpkgpday', ## not sure about this... would need to update convert_units ##
-    #   chem.cas = chem.cas,
-    #   chem.name = chem.name,
-    #   dtxsid = dtxsid
-    # )
-  } else if (tolower(output.units) != 'mgpkgpday') 
-    stop("Output units can only be in mgpkgpday or mol.") # may need to update the error message - does not really seem to match what is currently coded up
+    # output units are in 'umol/kg/day' for 'dose'
+    dose <- dose * convert_units(
+      input.units = 'mg',
+      output.units = tmp.output.units,
+      chem.cas = chem.cas,
+      chem.name = chem.name,
+      dtxsid = dtxsid
+    )
+  } else if (tolower(tmp.output.units) != 'mg') 
+    stop("Output units can only be in mgpkgpday or umolpkgpday.")
   
   if (!suppress.messages & !return.samples)
   {
