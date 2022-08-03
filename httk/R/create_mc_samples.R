@@ -189,12 +189,16 @@ create_mc_samples <- function(chem.cas=NULL,
       methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=parameterize.args)
-    pschmitt <- parameterize_schmitt(
-                  chem.cas=chem.cas,
-                  chem.name,
-                  dtxsid=dtxsid,
-                  species=species,
-                  suppress.messages=TRUE)
+    
+    # Pass all 'parameterize.args' arguments and the 'suppress.messages'
+    # arguments to the 'parameterize_schmitt' function.
+    args.schmitt <- parameterize.args[which(
+      names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
+    )]
+    print(args.schmitt)
+    pschmitt <- do.call(parameterize_schmitt,
+                        args = c(args.schmitt,suppress.messages=TRUE))
+    
 # The Schmitt parameters are useful if we need to redo partitioning later:
     pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
     parameters.mean <- c(parameters.mean, pschmitt)
