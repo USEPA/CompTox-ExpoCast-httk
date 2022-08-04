@@ -195,7 +195,6 @@ create_mc_samples <- function(chem.cas=NULL,
     args.schmitt <- parameterize.args[which(
       names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
     )]
-    print(args.schmitt)
     pschmitt <- do.call(parameterize_schmitt,
                         args = c(args.schmitt,suppress.messages=TRUE))
     
