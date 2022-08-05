@@ -268,9 +268,9 @@ calc_mc_css <- function(chem.cas=NULL,
                           regression=TRUE),
                         calc.analytic.css.arg.list=list(),
                         parameterize.args = list(
-                          default.to.human=F,
-                          adjusted.Funbound.plasma=T,
-                          regression=T,
+                          default.to.human=FALSE,
+                          adjusted.Funbound.plasma=TRUE,
+                          regression=TRUE,
                           minimum.Funbound.plasma=1e-4)
                         ) 
 {
