@@ -160,7 +160,7 @@ calc_rblood2plasma <- function(
       hematocrit + 
       hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
   }
-  warning("Rblood2plasma has been recalculated.")
+  if (!suppress.messages) warning("Rblood2plasma has been recalculated.")
     
   return(set_httk_precision(as.numeric(Rblood2plasma)))
 }
