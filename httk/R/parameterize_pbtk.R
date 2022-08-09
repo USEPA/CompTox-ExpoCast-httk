@@ -253,7 +253,7 @@ parameterize_pbtk <- function(
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
   
   # Restrict the value of fup:
@@ -342,7 +342,8 @@ parameterize_pbtk <- function(
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      suppress.messages=suppress.messages))
 
   outlist <- c(
     outlist,
