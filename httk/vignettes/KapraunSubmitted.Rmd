@@ -37,6 +37,7 @@ library(gridExtra)
 library(cowplot)
 ```
 
+### Prepare custom functions
 ```{r load_code, eval = TRUE}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
@@ -56,7 +57,7 @@ RMSE <- function(x)
 The number of chemicals with in vitro TK data ($Cl_{int}$ and $f_{up}$) that are
 also non-volatile and non-PFAS can be found using:
 ```{r chem_numbers, eval=TRUE}
-length(get_cheminfo(model="fetal_pbtk"))
+length(get_cheminfo(model="fetal_pbtk",suppress.messages=TRUE))
 ```
 
 Data sets were curated from the literature to allow evaluation of the gestational PBTK model. In all cases chemical identities from the original publications were mapped onto DTXSID’s from the CompTox Chemicals Dashboard (https://comptox.epa.gov/dashboard) [Williams et al., 2017](https://doi.org/10.1186/s13321-017-0247-6). Statistical testing for correlation between predictions and observations was performed using R function "lm" and p-values were calculated according to an F-distribution.
@@ -75,7 +76,9 @@ cat(paste("summarized data from over 100 studies covering ",
   " unique chemicals structures\n",sep=""))
   
 # We don't want to exclude the volatiles and PFAS at this point:
-MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(info="DTXSID"))
+MFdata.httk <- subset(MFdata,DTXSID %in% get_cheminfo(
+  info="DTXSID",
+  suppress.messages=TRUE))
 MFdata.httk[MFdata.httk$Chemical.Category=="bromodiphenylethers",
   "Chemical.Category"] <- "Bromodiphenylethers"  
 MFdata.httk[MFdata.httk$Chemical.Category=="organochlorine Pesticides",
@@ -148,16 +151,17 @@ times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
 # For each chemical with maternal-fetal ratio data and HTTK in vitro data:  
 for (this.id in unique(MFdata.httk$DTXSID))
 {
-  p <- suppressWarnings(parameterize_steadystate(dtxsid=this.id,
-                        suppress.messages=TRUE))
+  print(this.id)
+  p <- parameterize_steadystate(dtxsid=this.id,
+                        suppress.messages=TRUE)
   # skip chemicals where Fup is 0:  
   if (p$Funbound.plasma>1e-4)
   {
 
     # Load the chemical-specifc paramaters:
-    p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
+    p <- parameterize_fetal_pbtk(dtxsid=this.id,
                                                   fetal_fup_adjustment =TRUE,
-                                                  suppress.messages=TRUE))
+                                                  suppress.messages=TRUE)
     # Skip chemicals where the 95% credible interval for Fup spans more than 0.1 to
     # 0.9 (that is, Fup is effectively unknown):
     if (!is.na(p$Funbound.plasma.dist))
@@ -173,14 +177,14 @@ for (this.id in unique(MFdata.httk$DTXSID))
     {
       # Solve the PBTK equations for the full simulation time assuming 1 total daily
       # dose of 1 mg/kg/day spread out over three evenly spaces exposures:
-      out <- suppressWarnings(solve_fetal_pbtk(
+      out <- solve_fetal_pbtk(
         parameters=p,
         dose=0,
         times=times,
         daily.dose=1,
         doses.per.day=3,
         output.units = "uM",
-        suppress.messages=TRUE))
+        suppress.messages=TRUE)
       # Identify the concentrations from the final (279th) day:
       last.row <- which(out[,"time"]>279)
       last.row <- last.row[!duplicated(out[last.row,"time"])]
@@ -191,10 +195,10 @@ for (this.id in unique(MFdata.httk$DTXSID))
         mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
       
       # Repeat the analysis without the adjustment to fetal Fup:
-      p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
+      p <- parameterize_fetal_pbtk(dtxsid=this.id,
                                                     fetal_fup_adjustment =FALSE,
-                                                    suppress.messages = TRUE))
-      out <- suppressWarnings(solve_fetal_pbtk(
+                                                    suppress.messages = TRUE)
+      out <- solve_fetal_pbtk(
         parameters=p,
         dose=0,
         times=times,
@@ -202,7 +206,7 @@ for (this.id in unique(MFdata.httk$DTXSID))
         doses.per.day=3,
         output.units = "uM",
         maxsteps=1e7,
-        suppress.messages = TRUE))
+        suppress.messages = TRUE)
       
       last.row <- which(out[,"time"]>279) # The whole final day
       last.row <- last.row[!duplicated(out[last.row,"time"])]
@@ -605,7 +609,10 @@ TKstats <- httk::pregnonpregaucs
 
 
 ids <- unique(TKstats$DTXSID)
-cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+cat(paste(sum(ids %in% get_cheminfo(
+  model="fetal_pbtk",
+  info="dtxsid",
+  suppress.messages=TRUE)),
           "chemicals for which the model fetal_pbtk can run that are in the Dallmann data set."))
 
 
@@ -613,7 +620,10 @@ TKstats.Cmax <- subset(TKstats,DTXSID!="" & Parameter=="Cmax")
 TKstats <- subset(TKstats,DTXSID!="" & Parameter %in% c("AUCinf","AUClast"))
 
 ids <- unique(TKstats$DTXSID)
-cat(paste(sum(ids %in% get_cheminfo(model="fetal_pbtk",info="dtxsid")),
+cat(paste(sum(ids %in% get_cheminfo(
+  model="fetal_pbtk",
+  info="dtxsid",
+  suppress.messages=TRUE)),
           "chemicals for which the model fetal_pbtk can run that have AUCs in the Dallmann data set."))
 
 
@@ -638,16 +648,19 @@ for (this.id in unique(TKstats$DTXSID))
   if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"Dose Units"])!=-1))
   {
   }  
-  if (this.id %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
+  if (this.id %in% get_cheminfo(
+    info="DTXSID",
+    model="fetal_pbtk",
+    suppress.messages=TRUE))
   {
     this.subset <- subset(TKstats,DTXSID==this.id)
-    p <- suppressWarnings(parameterize_pbtk(
+    p <- parameterize_pbtk(
       dtxsid=this.id,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE)
     p$hematocrit <- 0.39412 # Kapraun 2019 (unitless)
-    p$Rblood2plasma <- suppressWarnings(calc_rblood2plasma(
+    p$Rblood2plasma <- calc_rblood2plasma(
       parameters=p,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE)
     p$BW <- BW.nonpreg 
     p$Qcardiacc <- 301.78 / p$BW^(3/4) # Kapraun 2019 (L/h/kg^3/4)
     for (this.route in unique(this.subset$Dose.Route))
@@ -657,7 +670,7 @@ for (this.id in unique(TKstats$DTXSID))
       {
         this.dose <- this.route.subset$Dose
         # Non-pregnant PBPK:
-        out.nonpreg <- suppressWarnings(solve_pbtk(
+        out.nonpreg <- solve_pbtk(
           parameters=p,
           times = seq(0, this.route.subset[1,"NonPreg.Duration.Days"],
                       this.route.subset[1,"NonPreg.Duration.Days"]/100),
@@ -665,11 +678,11 @@ for (this.id in unique(TKstats$DTXSID))
           daily.dose=NULL,
           iv.dose=(this.route=="iv"),
           output.units="uM",
-          suppress.messages=TRUE))
+          suppress.messages=TRUE)
         # Pregnant PBPK:
         BW.preg <- suppressWarnings(calc_maternal_bw(
           week=this.route.subset[1,"Gestational.Age.Weeks"]))
-        out.preg <- suppressWarnings(solve_fetal_pbtk(
+        out.preg <- solve_fetal_pbtk(
           dtxsid=this.id,
           times = seq(
             this.route.subset[1,"Gestational.Age.Weeks"]*7, 
@@ -680,7 +693,7 @@ for (this.id in unique(TKstats$DTXSID))
           iv.dose=(this.route=="iv"),
           daily.dose=NULL,
           output.units="uM",
-          suppress.messages=TRUE))
+          suppress.messages=TRUE)
         if (any(regexpr("AUC",this.subset$Parameter)!=-1))
         {
           TKstats[TKstats$DTXSID==this.id &
@@ -964,42 +977,46 @@ write.csv(Curley.pcs,"PCs-table.csv",row.names=FALSE)
 ## Predict partition coefficients
 ```{r curley1969_makepreds, eval = TRUE}
 Curley.pcs <- httk::fetalpcs
+dtxsid.list <- get_cheminfo(
+  info="DTXSID",
+  model="fetal_pbtk",
+  suppress.messages=TRUE)
 
 suppressWarnings(load_sipes2017())
 for (this.chemical in unique(Curley.pcs$DTXSID))
-  if (this.chemical %in% get_cheminfo(info="DTXSID",model="fetal_pbtk"))
+  if (this.chemical %in% dtxsid.list)
   {
     this.subset <- subset(Curley.pcs,DTXSID==this.chemical)
-    p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.chemical,
+    p <- parameterize_fetal_pbtk(dtxsid=this.chemical,
       fetal_fup_adjustment = FALSE,
       suppress.messages=TRUE,
-      minimum.Funbound.plasma = 1e-16))
+      minimum.Funbound.plasma = 1e-16)
     fetal.blood.pH <- 7.26   
     Fup <- p$Fraction_unbound_plasma_fetus
-    fetal_schmitt_parms <- suppressWarnings(
-      parameterize_schmitt(dtxsid=this.chemical,
-        suppress.messages=TRUE,
-      minimum.Funbound.plasma = 1e-16))
+    fetal_schmitt_parms <- parameterize_schmitt(
+      dtxsid=this.chemical,
+      suppress.messages=TRUE,
+      minimum.Funbound.plasma = 1e-16)
     fetal_schmitt_parms$plasma.pH <- fetal.blood.pH
     fetal_schmitt_parms$Funbound.plasma <- Fup
     Curley.pcs[Curley.pcs$DTXSID==this.chemical,"Fup"] <- Fup
     # httk gives tissue:fup (unbound chemical in plasma) PC's:
-    fetal_pcs <- suppressWarnings(
-      predict_partitioning_schmitt(parameters = fetal_schmitt_parms,
-        suppress.messages=TRUE,
-        model="fetal_pbtk",
-        minimum.Funbound.plasma = 1e-16))
-    fetal_pcs.nocal <- suppressWarnings(predict_partitioning_schmitt(
+    fetal_pcs <- predict_partitioning_schmitt(
+      parameters = fetal_schmitt_parms,
+      suppress.messages=TRUE,
+      model="fetal_pbtk",
+      minimum.Funbound.plasma = 1e-16)
+    fetal_pcs.nocal <- predict_partitioning_schmitt(
       parameters = fetal_schmitt_parms,
       regression=FALSE,
       suppress.messages=TRUE,
       model="fetal_pbtk",
-      minimum.Funbound.plasma = 1e-16))
-    out <- suppressWarnings(solve_fetal_pbtk(
+      minimum.Funbound.plasma = 1e-16)
+    out <- solve_fetal_pbtk(
       dtxsid = this.chemical,
       fetal_fup_adjustment =FALSE,
       suppress.messages=TRUE,
-      minimum.Funbound.plasma = 1e-16))
+      minimum.Funbound.plasma = 1e-16)
     Rb2p <- out[dim(out)[1],"Rfblood2plasma"]
     Curley.pcs[Curley.pcs$DTXSID==this.chemical,"Rb2p"] <- Rb2p
     # Convert to tissue:blood PC's:
@@ -1113,11 +1130,11 @@ pksim.pcs <- as.data.frame(read_excel("PartitionCoefficients.xlsx"))
 dim(pksim.pcs)
 for (this.id in unique(pksim.pcs$DTXSID))
 {
-  httk.PCs <- suppressWarnings(predict_partitioning_schmitt(dtxsid=this.id,
-                                           suppress.messages = TRUE))
+  httk.PCs <- predict_partitioning_schmitt(dtxsid=this.id,
+                                           suppress.messages = TRUE)
   p <- 
-    suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id, 
-    suppress.messages = TRUE))
+    parameterize_fetal_pbtk(dtxsid=this.id, 
+    suppress.messages = TRUE)
   httk.PCs[["Kplacenta2pu"]] <- p[["Kplacenta2pu"]] 
   httk.PCs[["Fup"]] <- p[["Funbound.plasma"]]
   lapply(httk.PCs,as.numeric)
@@ -1147,7 +1164,6 @@ pksim.pcs[,"PKSim.pred"] <- as.numeric(
   pksim.pcs[,"PKSim.pred"])
 
 ```
-
 ```{r compare_pksim_pcs, eval = FALSE}
 pksim.pcs <- httk::pksim.pcs
 
@@ -1164,11 +1180,18 @@ summary(pksim.fit2)
 
 
 
+
+
+
+
+
 # Chemical Prioritization on the Basis of Fetal Brain Concentration
 ```{r wang2018_loaddata, eval = TRUE}
 #Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
 Wangchems <- httk::wang2018
-maternal.list <- Wangchems$CASRN[Wangchems$CASRN%in%get_cheminfo(model="fetal_pbtk")]
+maternal.list <- Wangchems$CASRN[Wangchems$CASRN %in% 
+  get_cheminfo(model="fetal_pbtk",
+  suppress.messages=TRUE)]
 nonvols <- subset(chem.physical_and_invitro.data,logHenry < -4.5)$CAS
 nonfluoros <- chem.physical_and_invitro.data$CAS[
   regexpr("fluoro",tolower(chem.physical_and_invitro.data$Compound))==-1]
@@ -1184,15 +1207,19 @@ them together at the end.
 ## Make predictions for fetal:maternal plasma ratio using three daily doses from week 13 to full term
 ```{r wang2018_makepreds, eval = TRUE}
 
-pred.table1 <- subset(suppressWarnings(get_cheminfo(
+pred.table1 <- subset(get_cheminfo(
   info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
-  model="fetal_pbtk")),
-  CAS %in% maternal.list)
+  model="fetal_pbtk"),
+  CAS %in% maternal.list,
+  suppress.messages=TRUE)
 pred.table1$Compound <- gsub("\"","",pred.table1$Compound)    
 
 for (this.cas in maternal.list)
 {
-  Fup <- suppressWarnings(subset(get_cheminfo(info="all"),CAS==this.cas)$Human.Funbound.plasma)
+  Fup <- subset(get_cheminfo(
+    info="all",
+    suppress.messages=TRUE),
+    CAS==this.cas)$Human.Funbound.plasma
   # Check if Fup is provided as a distribution:
   if (regexpr(",",Fup)!=-1)
   {
@@ -1220,14 +1247,15 @@ for (this.cas in maternal.list)
   
   # Only run the simulation if we have the necessary parameters:
   if (!skip)
-  {  
-    out <- suppressWarnings(solve_fetal_pbtk(
+  { 
+    print(this.cas)
+    out <- solve_fetal_pbtk(
       chem.cas=this.cas,
       dose=0,
       daily.dose=1,
       doses.per.day=3,
-      fetal_fup_adjustenment=FALSE,
-      suppress.messages=TRUE))
+      fetal_fup_adjustenment=TRUE,
+      suppress.messages=TRUE)
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
     pred.table1[pred.table1$CAS==this.cas,"fup"] <- signif(Fup,3)
@@ -1270,11 +1298,12 @@ pred.table4 <- pred.table1
 pred.table4$Uncertainty <- "Fetal Brain Partitioning"
 for (this.cas in maternal.list)
 {
-  p <- suppressWarnings(parameterize_fetal_pbtk(chem.cas=this.cas,
-      fetal_fup_adjustment=FALSE,
-      suppress.messages=TRUE))
+  print(this.cas)
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=TRUE,
+      suppress.messages=TRUE)
   Kbrain2pu <- p$Kfbrain2pu
-  fup <- PC.table[PC.table$CAS==this.cas,"fup"]
+  fup <- pred.table4[pred.table4$CAS==this.cas,"fup"]
   pred.table4[pred.table4$CAS==this.cas,"Ratio.pred"] <- signif(
      PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]*
     Kbrain2pu * fup, 3)
@@ -1291,12 +1320,12 @@ pred.table5 <- pred.table1
 pred.table5$Uncertainty <- "Brain Partitioning Error (Pearce et al., 2017)"
 for (this.cas in maternal.list)
 {                                             
-  p <- suppressWarnings(parameterize_fetal_pbtk(chem.cas=this.cas,
-      fetal_fup_adjustment=FALSE,
-      suppress.messages=TRUE))
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=TRUE,
+      suppress.messages=TRUE)
   Kbrain2pu <- p$Kfbrain2pu
 
-  fup <- PC.table[PC.table$CAS==this.cas,"fup"]
+  fup <- pred.table5[pred.table5$CAS==this.cas,"fup"]
   sigma.fup <- pred.table5[pred.table5$CAS==this.cas,"fup.sigma"]
   Rmatfet <- 1/PC.table[PC.table$CAS==this.cas,"R.plasma.FtoM"]
   Rbrain2matblood <- Kbrain2pu * fup / Rmatfet
@@ -1430,12 +1459,206 @@ PC.table <- PC.table[,c(
   "R.brain.FtoM",
   "Kbrain2pu.upper",
   "R.brain.FtoM.upper")]
-  
+
 write.csv(PC.table,
   file="WangTable.txt",
   row.names=FALSE)   
 ```
+
+## Evaluate any value added by PBPK model over just using partition coefficients:
+```{r impact_of_model, eval = TRUE}
+MFbrainfit <- lm(R.brain.FtoM.upper~Kbrain2pu.upper,data=PC.table)
+summary(MFbrainfit)
+
+cat(paste("As expected, the predicted fetal brain to maternal blood ratio was strongly correlated with the predicted brain partition coefficient (R2 = ",
+  signif(summary(MFbrainfit)$adj.r.square,2),
+  ", p-value ",
+  signif(summary(MFbrainfit)$coefficients[2,4],2),
+  "). However, the PBTK simulation impacted the plasma and tissue concentrations such that ",
+  dim(subset(PC.table, rank(R.brain.FtoM.upper) <  rank(Kbrain2pu.upper)))[1],
+  " chemicals were ranked higher than they would have been using partitioning alone.",
+  sep=""))
+```
+
+# Repeat analysis without fetal protein binding change:
+
+## Make predictions for fetal:maternal plasma ratio using three daily doses from week 13 to full term
+```{r wang2018_makepreds_nofup, eval = TRUE}
+
+pred.table1.nofup <- subset(get_cheminfo(
+  info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
+  model="fetal_pbtk",
+  suppress.messages=TRUE),
+  CAS %in% maternal.list)
+pred.table1.nofup$Compound <- gsub("\"","",pred.table1.nofup$Compound)    
+
+for (this.cas in maternal.list)
+{
+  Fup <- subset(get_cheminfo(
+    info="all",
+    suppress.messages=TRUE),
+    CAS==this.cas)$Human.Funbound.plasma
+  # Check if Fup is provided as a distribution:
+  if (regexpr(",",Fup)!=-1)
+  {
+    if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
+      (as.numeric(strsplit(Fup,",")[[1]][3])>0.9 & 
+      as.numeric(strsplit(Fup,",")[[1]][2])<0.11))
+    {
+      skip <- TRUE
+    } else skip <- FALSE
+    Fup.upper <- as.numeric(strsplit(Fup,",")[[1]][3])
+    Fup <- as.numeric(strsplit(Fup,",")[[1]][1])
+    # These results are actually from a Bayesian posterior, but we can approximate that
+    # they are normally distributed about the median to estimate a standard deviation:
+    Fup.sigma <- (Fup.upper - Fup)/1.96
+  # If it's not a distribution use defaults (see Wambaugh et al. 2019)
+  } else if (as.numeric(Fup)== 0) 
+  {
+    skip <- TRUE
+  } else {
+    skip <- FALSE
+    Fup <- as.numeric(Fup)
+    Fup.sigma <- Fup*0.4
+    Fup.upper  <- min(1,(1+1.96*0.4)*Fup)
+  }
   
+  # Only run the simulation if we have the necessary parameters:
+  if (!skip)
+  {  
+    out <- solve_fetal_pbtk(
+      chem.cas=this.cas,
+      dose=0,
+      daily.dose=1,
+      doses.per.day=3,
+      fetal_fup_adjustenment=FALSE,
+      suppress.messages=TRUE)
+    last.row <- which(out[,"time"]>279)
+    last.row <- last.row[!duplicated(out[last.row,"time"])]
+    pred.table1.nofup[pred.table1.nofup$CAS==this.cas,"fup"] <- signif(Fup,3)
+    pred.table1.nofup[pred.table1.nofup$CAS==this.cas,"fup.sigma"] <- signif(Fup.sigma,3)
+    pred.table1.nofup[pred.table1.nofup$CAS==this.cas,"fup.upper"] <- signif(Fup.upper,3)
+    pred.table1.nofup[pred.table1.nofup$CAS==this.cas,"Ratio.pred"] <- 
+      signif(mean(out[last.row,"Cfplasma"])/mean(out[last.row,"Cplasma"]),3)
+  }
+}
+```
+
+
+## Create final table holding all predictions for paper:
+```{r brain_uncertainty_prop_table_nofup, eval = TRUE}
+PC.table.nofup <- pred.table1.nofup
+colnames(PC.table.nofup)[colnames(PC.table.nofup)=="Ratio.pred"] <- "R.plasma.FtoM"
+pred.table1.nofup$Uncertainty <- "Predicted F:M Plasma Ratio"
+```
+
+### Error in fetal:maternal ratio (inverse of maternal:fetal ratio):
+```{r Rfetmat_uncertainty_nofup, eval = TRUE}
+pred.table3.nofup <- pred.table1.nofup
+pred.table3.nofup$Uncertainty <- "Plasma Error (Fig. 4)"
+empirical.error <- RMSE(fit2sub)
+for (this.cas in maternal.list)
+{
+
+  pred.table3.nofup[pred.table3.nofup$CAS==this.cas,"Ratio.pred"] <- signif(
+    1/((1/pred.table1.nofup[pred.table3.nofup$CAS==this.cas,"Ratio.pred"])*
+         (1-1.96*empirical.error)), 3)
+}
+# Update final table for paper:
+PC.table.nofup$RMSE <- signif(RMSE(fit2sub),3)
+PC.table.nofup$R.plasma.FtoM.upper <- pred.table3.nofup$Ratio.pred
+```
+
+### brain:plasma partitioning
+```{r Rfetbrain_nofup, eval = TRUE}
+pred.table4.nofup <- pred.table1.nofup
+pred.table4.nofup$Uncertainty <- "Fetal Brain Partitioning"
+for (this.cas in maternal.list)
+{
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=FALSE,
+      suppress.messages=TRUE)
+  Kbrain2pu <- p$Kfbrain2pu
+  fup <- pred.table4.nofup[pred.table4.nofup$CAS==this.cas,"fup"]
+  pred.table4.nofup[pred.table4.nofup$CAS==this.cas,"Ratio.pred"] <- signif(
+     PC.table.nofup[PC.table.nofup$CAS==this.cas,"R.plasma.FtoM"]*
+    Kbrain2pu * fup, 3)
+  PC.table.nofup[PC.table.nofup$CAS==this.cas,"Kbrain2pu"] <- Kbrain2pu
+  PC.table.nofup[PC.table.nofup$CAS==this.cas,"R.brain.FtoM"] <- 
+    pred.table4.nofup[pred.table4.nofup$CAS==this.cas,"Ratio.pred"]
+}
+```
+
+### brain:plasma uncertainty partitioning
+```{r Rfetbrain_uncertainty_nofup, eval = TRUE}
+
+pred.table5.nofup <- pred.table1.nofup
+pred.table5.nofup$Uncertainty <- "Brain Partitioning Error (Pearce et al., 2017)"
+for (this.cas in maternal.list)
+{                                             
+  p <- parameterize_fetal_pbtk(chem.cas=this.cas,
+      fetal_fup_adjustment=FALSE,
+      suppress.messages=TRUE)
+  Kbrain2pu <- p$Kfbrain2pu
+
+  fup <- pred.table5.nofup[pred.table5.nofup$CAS==this.cas,"fup"]
+  sigma.fup <- pred.table5.nofup[pred.table5.nofup$CAS==this.cas,"fup.sigma"]
+  Rmatfet <- 1/PC.table[PC.table.nofup$CAS==this.cas,"R.plasma.FtoM"]
+  Rbrain2matblood <- Kbrain2pu * fup / Rmatfet
+
+# From Pearce et al. (2017) PC paper:
+  sigma.logKbrain <- 0.647
+  Kbrain2pu.upper <- signif(10^(log10(Kbrain2pu)+1.96*sigma.logKbrain),3)
+
+  error.Rmatfet <- PC.table.nofup [PC.table.nofup $CAS==this.cas,"RMSE"]
+  sigma.Rbrain2matblood <- Rbrain2matblood * 
+    (log(10)^2*sigma.logKbrain^2 +
+    sigma.fup^2/fup^2 +
+    error.Rmatfet^2/Rmatfet^2)^(1/2)
+  Rbrain2matblood.upper <- Rbrain2matblood * 
+    (1 + 1.96*(log(10)^2*sigma.logKbrain^2 +
+    sigma.fup^2/fup^2 +
+    error.Rmatfet^2/Rmatfet^2)^(1/2))
+  pred.table5.nofup [pred.table5.nofup $CAS==this.cas,"Ratio.pred"] <- 
+    signif(Rbrain2matblood.upper,3)
+  PC.table.nofup [PC.table.nofup $CAS==this.cas,"sigma.logKbrain"] <- 
+    signif(sigma.logKbrain, 3)
+  PC.table.nofup [PC.table.nofup $CAS==this.cas,"Kbrain2pu.upper"] <- 
+    signif(Kbrain2pu.upper, 3)
+  PC.table.nofup [PC.table.nofup $CAS==this.cas,"sigma.Rbrain2matblood"] <- 
+    signif(sigma.Rbrain2matblood, 3)
+  PC.table.nofup [PC.table.nofup $CAS==this.cas,"R.brain.FtoM.upper"] <- 
+    pred.table5.nofup [pred.table5.nofup $CAS==this.cas,"Ratio.pred"]
+}
+```
+
+
+```{r compare_fup_correction_case_study,eval=TRUE}
+case.study.fup.correct.table <- merge(PC.table,PC.table.nofup,by=c("Compound","CAS","DTXSID"))
+
+MFbrainfit.fup <- lm(R.brain.FtoM.upper.x~R.brain.FtoM.upper.y,
+                     data=case.study.fup.correct.table)
+summary(MFbrainfit.fup)
+
+cat(paste("The predictions for fetal brain to maternal blood ratio with or without the fetal plasma binding correction (Eqn. 1) were strongly correlated (R2 = ",
+  signif(summary(MFbrainfit.fup)$adj.r.square,2),
+  "). There were ",
+  dim(subset(case.study.fup.correct.table, 
+             rank(R.brain.FtoM.upper.x) > rank(R.brain.FtoM.upper.y)))[1],
+  " chemicals that were ranked higher with the correction than without, with an average increase of ",
+  signif(mean(
+    case.study.fup.correct.table$R.brain.FtoM.upper.y /
+      case.study.fup.correct.table$R.brain.FtoM.upper.x),2),
+  " times when the plasma binding change was included.\n",
+  sep=""))
+
+```
+
+
+
+
+
+
 
 The next two figures take a long time to generate and so are disabled by default.
 
@@ -1451,15 +1674,17 @@ in which the maternal fraction unbound, $f_{up}^m$, is assumed to be equal to th
 
 ```{r fup_table, eval = FALSE}
 fup.table <- NULL
-all.chems <- suppressWarnings(get_cheminfo(model="fetal_pbtk",info="all")) 
+all.chems <- get_cheminfo(
+  model="fetal_pbtk",
+  info="all",
+  suppress.messages=TRUE) 
 # Get rid of median fup 0:
 all.chems <- subset(all.chems,
   as.numeric(unlist(lapply(strsplit(
     all.chems$Human.Funbound.plasma,","),function(x) x[[1]])))!=0)
 for (this.chem in all.chems[,"CAS"])
 {
-  temp <- suppressWarnings(
-    parameterize_fetal_pbtk(chem.cas=this.chem,suppress.messages = TRUE))
+  temp <- parameterize_fetal_pbtk(chem.cas=this.chem,suppress.messages = TRUE)
   state <- calc_ionization(
       pH=7.26,
       pKa_Donor=temp$pKa_Donor,
@@ -1513,7 +1738,10 @@ print(FigA)
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
   
 MFratio.pred <- NULL
-all.chems <- get_cheminfo(model="fetal_pbtk", info=c("Compound","DTXSID","CAS","Funbound.plasma"))
+all.chems <- get_cheminfo(
+  model="fetal_pbtk", 
+  info=c("Compound","DTXSID","CAS","Funbound.plasma"),
+  suppress.messages=TRUE)
 for (this.cas in all.chems$CAS)
   if ((this.cas %in% nonvols) & 
     !(this.cas %in% fluoros))
@@ -1535,18 +1763,17 @@ for (this.cas in all.chems$CAS)
   
   if (!skip)
   {  
-    p <- suppressWarnings(parameterize_fetal_pbtk(dtxsid=this.id,
+    p <- parameterize_fetal_pbtk(dtxsid=this.id,
     fetal_fup_adjustment =TRUE,
-    suppress.messages=TRUE))
-    out <- suppressWarnings(solve_fetal_pbtk(
+    suppress.messages=TRUE)
+    out <- solve_fetal_pbtk(
       parameters=p,
-      fetal_fup_adjustment =FALSE,
       dose=0,
       times=times,
       daily.dose=1,
       doses.per.day=3,
       output.units = "uM",
-      suppress.messages=TRUE))
+      suppress.messages=TRUE)
     last.row <- which(out[,"time"]>279)
     last.row <- last.row[!duplicated(out[last.row,"time"])]
     new.row <- data.frame(
@@ -1600,12 +1827,122 @@ cat(paste("We observe a median ratio of ",
   
 # Check out phys-chem > 1.6, < 1:
 highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred>1.6)$DTXSID)
+
+cat(paste("There are",
+  dim(highratio)[1],
+  "chemicals with ratios greater than 1.6, indicating a tendency to have higher concentrations"))
+
+# all highly bound
+highratio$Compound
+suppressWarnings(apply(highratio,2,function(x) mean(as.numeric(x),na.rm=TRUE)))
+
+
+lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
+# No obvious pattern
+```
+## Examine Maternal-Fetal ratio Predictions without fetaul Fup correction:
+```{r MFratio_allhttk_preds_nofup, eval = FALSE}
+times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
+  
+MFratio.pred.nofup <- NULL
+all.chems <- get_cheminfo(
+  model="fetal_pbtk", 
+  info=c("Compound","DTXSID","CAS","Funbound.plasma"),
+  suppress.messages=TRUE)
+for (this.cas in all.chems$CAS)
+  if ((this.cas %in% nonvols) & 
+    !(this.cas %in% fluoros))
+{
+  this.id <- all.chems[all.chems$CAS==this.cas,"DTXSID"]
+  Fup <- subset(all.chems,DTXSID==this.id)$Human.Funbound.plasma 
+  if (regexpr(",",Fup)!=-1)
+  {
+    if (as.numeric(strsplit(Fup,",")[[1]][1])==0 |
+      (as.numeric(strsplit(Fup,",")[[1]][3])>0.9 & 
+      as.numeric(strsplit(Fup,",")[[1]][2])<0.1))
+    {
+      skip <- TRUE
+    } else skip <- FALSE
+  } else if (Fup== 0) 
+  {
+    skip <- TRUE
+  } else skip <- FALSE
+  
+  if (!skip)
+  {  
+    p <- parameterize_fetal_pbtk(dtxsid=this.id,
+    fetal_fup_adjustment =FALSE,
+    suppress.messages=TRUE))
+    out <- suppressWarnings(solve_fetal_pbtk(
+      parameters=p,
+      dose=0,
+      times=times,
+      daily.dose=1,
+      doses.per.day=3,
+      output.units = "uM",
+      suppress.messages=TRUE)
+    last.row <- which(out[,"time"]>279)
+    last.row <- last.row[!duplicated(out[last.row,"time"])]
+    new.row <- data.frame(
+      Chemical = all.chems[all.chems$DTXSID==this.id,"Compound"],
+      DTXSID = this.id,
+      Mat.pred = mean(out[last.row,"Cplasma"]),
+      Fet.pred = mean(out[last.row,"Cfplasma"]),
+      MFratio.pred = mean(out[last.row,"Cplasma"])/mean(out[last.row,"Cfplasma"])
+      )
+    MFratio.pred.nofup <- rbind(MFratio.pred.nofup,new.row)
+  }
+  }
+```
+## Supplemental Histogram of maternal-fetal ratio without Fup correction
+```{r MFratio_allhttk_figure, eval = FALSE}
+FigSupD <- ggplot(data=MFratio.pred.nofup)+
+   geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
+  xlab("Maternal:Fetal Plasma Concentration Ratio (No Fup Corr.)") +
+  ylab("Number of chemicals")+
+    theme_bw()+
+    theme( text  = element_text(size=14))
+    
+
+print(FigSupD)
+```
+## Statistics on maternal-fetal ratio for full HTTK library without Fup correction
+```{r MFratio_allhttk_stats, eval = FALSE}
+max.chem <- MFratio.pred.nofup[which(
+  MFratio.pred.nofup$MFratio.pred==max(MFratio.pred.nofup$MFratio.pred,na.rm=TRUE)),]
+min.chem <- MFratio.pred.nofup[which(
+  MFratio.pred.nofup$MFratio.pred==min(MFratio.pred.nofup$MFratio.pred,na.rm=TRUE)),]
+cat(paste("In Figure X we examine the ratios predicted for the ",
+  dim(MFratio.pred)[1],
+  " appropriate (non-volatile or PFAS) chemicals with measured HTTK data.\n",
+  sep=""))
+
+
+cat(paste("We observe a median ratio of ",
+  signif(median(MFratio.pred.nofup$MFratio.pred,na.rm=TRUE),3),
+  ", with values ranging from ",
+  signif(min.chem[,"MFratio.pred"],3),
+  " for ",
+  min.chem[,"DTXSID"],
+  " to ",
+  signif(max.chem[,"MFratio.pred"],3),
+  " for ",
+  max.chem[,"DTXSID"],
+  ".\n",sep=""))
+  
+# Check out phys-chem > 1.6, < 1:
+highratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred.nofup,MFratio.pred>1.6)$DTXSID)
+
+cat(paste("There are",
+  dim(highratio)[1],
+  "chemicals with ratios greater than 1.6, indicating a tendency to have higher concentrations"))
+
 # all highly bound
 highratio$Compound
 suppressWarnings(apply(highratio,2,function(x) mean(as.numeric(x),na.rm=2)))
 
 
-lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred,MFratio.pred<0.9)$DTXSID)
+lowratio <- subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFratio.pred.nofup,MFratio.pred<0.9)$DTXSID)
 # No obvious pattern
 ```
 
