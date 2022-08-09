@@ -1895,7 +1895,7 @@ for (this.cas in all.chems$CAS)
   }
 ```
 ## Supplemental Histogram of maternal-fetal ratio without Fup correction
-```{r MFratio_allhttk_figure, eval = FALSE}
+```{r MFratio_allhttk_figure_nofup, eval = FALSE}
 FigSupD <- ggplot(data=MFratio.pred.nofup)+
    geom_histogram(binwidth = 0.05,fill="Red",aes(MFratio.pred))+ 
   xlab("Maternal:Fetal Plasma Concentration Ratio (No Fup Corr.)") +
@@ -1907,7 +1907,7 @@ FigSupD <- ggplot(data=MFratio.pred.nofup)+
 print(FigSupD)
 ```
 ## Statistics on maternal-fetal ratio for full HTTK library without Fup correction
-```{r MFratio_allhttk_stats, eval = FALSE}
+```{r MFratio_allhttk_stats_nofup, eval = FALSE}
 max.chem <- MFratio.pred.nofup[which(
   MFratio.pred.nofup$MFratio.pred==max(MFratio.pred.nofup$MFratio.pred,na.rm=TRUE)),]
 min.chem <- MFratio.pred.nofup[which(
