@@ -24,7 +24,8 @@ parameterize_dermal_pbtk(
   skin.pH = 7,
   vmax.km = F,
   height = 175,
-  Kvehicle2water = NULL,
+  Kvehicle2water = "water",
+  restrictive.clearance = TRUE,
   ...
 )
 }
@@ -88,7 +89,7 @@ million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.}
 \item{height}{Height in cm, used in calculating totalSA.}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
-vehicle) carrying the chemical to water. Default is NULL, which assumes the vehicle is water.
+vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
 Other optional inputs are "octanol" and "olive oil".}
 }
 \value{

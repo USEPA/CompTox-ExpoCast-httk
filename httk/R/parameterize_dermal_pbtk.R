@@ -45,7 +45,7 @@
 #' million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.
 #' @param height Height in cm, used in calculating totalSA.
 #' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
-#' vehicle) carrying the chemical to water. Default is NULL, which assumes the vehicle is water.
+#' vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
 #' Other optional inputs are "octanol" and "olive oil".
 #' @return
 #' 
@@ -155,7 +155,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               skin.pH=7,
                               vmax.km=F,
                               height = 175,
-                              Kvehicle2water = NULL,
+                              Kvehicle2water = "water",
+                              restrictive.clearance = TRUE,
                               ...) 
 {
   physiology.data <- physiology.data
@@ -358,14 +359,14 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     
     if (is.numeric(Kvehicle2water)){
       Km2w <- Kvehicle2water
-    } else if (is.null(Kvehicle2water)){
+    } else if (Kvehicle2water=="water"){
       Km2w <- 1 #vehicle=water
       warning("Since parameter Kvehicle2water is null, vehicle containing chemical is assumed to be water.")
     } else if (Kvehicle2water=="octanol"){
       Km2w <- Pow
     } else  if (Kvehicle2water=="olive oil"){
       Km2w <- 4.62 * Pow^0.55 #Figure 2, R^2=0.95, Chen, 2015
-    } else { stop('Kvehicle2water must be numeric, "octanol", "olive oil", or NULL and default to water.')}
+    } else { stop('Kvehicle2water must be numeric, "octanol", "olive oil", or "water" and default to vehicle being water.')}
     
     Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
       ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)

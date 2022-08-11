@@ -9,6 +9,8 @@ solve_dermal_pbtk(
   chem.cas = NULL,
   dtxsid = NULL,
   model.type = "dermal",
+  method.permeability = "Chen-Lian",
+  Kvehicle2water = NULL,
   times = NULL,
   parameters = NULL,
   days = 10,
@@ -47,8 +49,19 @@ be specified.}
 the chemical must be identified by either CAS, name, or DTXSIDs.}
 
 \item{model.type}{Choice of dermal model, either the default "dermal" for the 
-model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
-or "dermal_1subcomp" for the model with 1 compartment for the skin.}
+model with 2 sub compartments (a top and bottom layer) for skin which defaults 
+to the top layer being the stratum corneum and the bottom layer being the combined
+viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
+for the skin.}
+
+\item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
+the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
+is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
+
+\item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
+vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
+Other optional inputs are "octanol" and "olive oil".}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
 sequence begins at the beginning of times.}
@@ -87,7 +100,8 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 TRUE along with partition coefficients calculated with this value.}
 
 \item{parameterize.arg.list}{Additional parameterized passed to the model 
-parameterization function, "parameterize_dermal_pbtk".}
+parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
+"method.permeability", and "Kvehicle2water" are not passed through this.}
 
 \item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L.}
 
@@ -102,9 +116,9 @@ FALSE (default), any chemical left on the skin is added to the new dose.}
 \item{BW}{Body weight, kg.}
 
 \item{dermal.dosing}{Matrix consisting of three columns named
-"concentration", "Vvehicle", and "time" containing the dosing times, days,
-with the applied concentration, units/L, and the volume of the applied
-vehicle, L.}
+"Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
+with the applied amount in the vehicle, and the volume of the applied
+vehicle, L. Note that the units of Cvehicle are controlled by input.units.}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -148,8 +162,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 Vvehicle <- c(.1,.2,.3)
 time <- c(0,.5,3)
-concentration <- c(2,0,3)
-dermal.dosing <- cbind(time,concentration,Vvehicle)
+Cvehicle <- c(2,0,3)
+dermal.dosing <- cbind(time,Cvehicle,Vvehicle)
 out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)

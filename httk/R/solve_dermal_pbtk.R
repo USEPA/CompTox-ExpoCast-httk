@@ -38,8 +38,17 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs.
 #' @param model.type Choice of dermal model, either the default "dermal" for the 
-#' model with 2 sub compartments (stratum corneum and viable epidermis) for skin,
-#' or "dermal_1subcomp" for the model with 1 compartment for the skin.
+#' model with 2 sub compartments (a top and bottom layer) for skin which defaults 
+#' to the top layer being the stratum corneum and the bottom layer being the combined
+#' viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
+#' for the skin.
+#' @param method.permeability For "dermal_1subcomp" model, method of calculating 
+#' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
+#' is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' law of diffusion to calculate P. For "dermal" model, this parameter is ignored.
+#' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
+#' vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
+#' Other optional inputs are "octanol" and "olive oil".
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_dermal_pbtk function,
@@ -63,14 +72,15 @@
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' @param parameterize.arg.list Additional parameterized passed to the model 
-#' parameterization function, "parameterize_dermal_pbtk".
+#' parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
+#' "method.permeability", and "Kvehicle2water" are not passed through this.
 #' @param BW Body weight, kg.
 #' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L.
 #' @param initial.dose Concentration
 #' @param dermal.dosing Matrix consisting of three columns named
-#' "concentration", "Vvehicle", and "time" containing the dosing times, days,
-#' with the applied concentration, units/L, and the volume of the applied
-#' vehicle, L.
+#' "Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
+#' with the applied amount in the vehicle, and the volume of the applied
+#' vehicle, L. Note that the units of Cvehicle are controlled by input.units.
 #' @param washoff This parameter only matters if dermal.dosing is being used. If 
 #' TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
 #' FALSE (default), any chemical left on the skin is added to the new dose.
@@ -85,8 +95,8 @@
 #' 
 #' Vvehicle <- c(.1,.2,.3)
 #' time <- c(0,.5,3)
-#' concentration <- c(2,0,3)
-#' dermal.dosing <- cbind(time,concentration,Vvehicle)
+#' Cvehicle <- c(2,0,3)
+#' dermal.dosing <- cbind(time,Cvehicle,Vvehicle)
 #' out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
 #' 
 #' parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
@@ -101,6 +111,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     chem.cas = NULL, #solve_model
                     dtxsid = NULL,#solve_model
                     model.type = "dermal", #can also be "dermal_1subcomp"
+                    method.permeability = "Chen-Lian",
+                    Kvehicle2water = NULL,
                     times=NULL, #solve_model
                     parameters=NULL, #solve_model
                     days=10, #solve_model
@@ -117,7 +129,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     recalc.clearance=FALSE, #solve_model
                     adjusted.Funbound.plasma=TRUE, #solve_model
                     minimum.Funbound.plasma=1e-4, #solve_model
-                    parameterize.arg.list = list(
+                    parameterize.arg.list = list( 
                       default.to.human=FALSE,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = TRUE,
@@ -177,18 +189,17 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       "Dosing matrix dosing.dermal cannot contain NA values.")
     if (dim(dosing.dermal)[2]!=3) stop( #check for dimensions
     "dosing.dermal should be matrix with three named columns: time (days), 
-    concentration (uM), and Vvehicle (L).")
+    Cvehicle (uM), and Vvehicle (L).")
     
     dose.times <- dosing.dermal[,"time"]
     dose.Vvehicle <- dosing.dermal[,"Vvehicle"]
-    dose.conc <- dosing.dermal[,"concentration"]
+    dose.Cvehicle <- dosing.dermal[,"Cvehicle"]
     
     # Set dosing.matrix based on amount
-    dose.vec <- dose.Vvehicle*dose.conc #Avehicle inputs
+    dose.vec <- dose.Vvehicle*dose.Cvehicle #Cvehicle inputs
     dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
     if (dose.times[1]==start.time){ #if dermal.dosing starts at beginning of time
       initial.dose <- dose.vec[1];
-      input.units <- "umol";
       dosing.matrix <- dosing.matrix[-1,];
     }
     dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
@@ -213,6 +224,27 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     } else { warning(
       paste0('Since route is ',route,'washoff does not apply and is ignored.')
     )}
+  }
+  
+  # Check that parameterize.arg.list contains restrictive.clearance for solve_model
+  if (!("restrictive.clearance" %in% names(parameterize.arg.list))){
+    paramterize.arg.list <- c(parameterize.arg.list,
+                              restrictive.clearance = TRUE)
+  }
+  # par.arg.requirements <- list(default.to.human=FALSE,
+  #                              clint.pvalue.threshold=0.05,
+  #                              restrictive.clearance = TRUE,
+  #                              regression=TRUE)
+  # update.these <- !(names(par.arg.requirements) %in% names(parameterize.arg.list))
+  # parameterize.arg.list <- c(parameterlize.arg.list,
+  #                            par.arg.requirements[update.these])
+  
+  # Check that model.type, method.permeability, and Kvehicle2water is not in parameterize.arg.list
+  outside.par.list <- c("method.permeability","model.type","Kvehicle2water")
+  if (any(outside.par.list %in% names(parameterize.arg.list))){
+    stop("model.type, method.permeability, and Kvehicle2water cannot appear in 
+         parameterize.arg.list for solve_dermal_pbtk(). To change these options,
+         assign them directly in the solve_dermal_pbtk function.")
   }
   
   out <- solve_model(
@@ -244,6 +276,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     parameterize.arg.list = c(
       model.type = model.type,
+      method.permeability = method.permeability,
+      Kvehicle2water = Kvehicle2water,
       parameterize.arg.list
     ),
     ...)
