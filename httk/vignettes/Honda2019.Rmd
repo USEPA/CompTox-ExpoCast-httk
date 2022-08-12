@@ -56,6 +56,14 @@ for predicting in vivo toxicity in humans.
 
 This produces an updated version of the top panel of Figure 3 from the paper Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 2014, 48, 9770-9779.
 
+If you get the message "Error in library(X) : there is no package called ‘X’"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
 ```{r InitialPrep}
 library(data.table)
 library(magrittr)

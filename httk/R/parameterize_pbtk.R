@@ -247,7 +247,11 @@ parameterize_pbtk <- function(
     suppress.messages=suppress.messages)
        
   if (schmitt.params$unadjusted.Funbound.plasma == 0)
-    stop("Fraction unbound = 0, can't predict partitioning.")
+    if (tolower(species) == "human" | default.to.human) {
+      stop("Fraction unbound = 0, cannot predict partitioning.")
+    } else {
+      stop("Fraction unbound = 0, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
+    }
   
   # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)

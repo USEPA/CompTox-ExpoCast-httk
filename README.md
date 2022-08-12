@@ -16,9 +16,9 @@ files, documentation, and other information can be obtained from
 
 ## Description
 
-Generic models and chemical-specific data for simulation and
-statistical analysis of chemical toxicokinetics ("TK") as
-described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
+Generic models and chemical-specific data for chemical toxicokinetics ("TK") 
+and in vitro-in vivo extrapolation ("IVIVE") in bioinformatics, 
+as described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
 Chemical-specific in vitro data have been obtained from relatively
 high-throughput experiments. Both physiologically-based ("PBTK")
 and empirical (for example, one compartment) "TK" models can be
@@ -33,27 +33,37 @@ included for predicting tissue:plasma partition coefficients and
 volume of distribution
 (Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
 These functions and data provide a set of tools for
-in vitro-in vivo extrapolation ("IVIVE") of high-throughput
-screening data (for example, Tox21, ToxCast) to real-world
+IVIVE of high-throughput screening data (for example, Tox21, ToxCast) to real-world
 exposures via reverse dosimetry (also known as "RTK")
 (Wetmore et al., 2015 <https://doi.org/10.1093/toxsci/kfv171>).
 
 ## Getting Started
 
+For an introduction R, see Irizarry (2022) "Introduction to Data Science": 
+<https://rafalab.github.io/dsbook/getting-started.html<
+
+For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
+<https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
+
 ### Dependencies
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
 * Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* If you get the message "Error in library(X) : there is no package called ‘X’" then you will need to install that package: 
+	From the R command prompt:
+```
+install.packages("X")
+```
+Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
 
-### Installing
+### Installing R package "httk"
 
 Adapted from Breen et al. (2021) <https://doi.org/10.1080/17425255.2021.1935867>
 * Getting Started with R Package httk from the R command line
 ```
 install.packages("httk")
 ```
-* RStudio provides a menu ‘Install Packages’ under ‘Tools’ tab
-* Load the HTTK data, models, and functions
+Load the HTTK data, models, and functions
 ```
 library(httk)
 ```
