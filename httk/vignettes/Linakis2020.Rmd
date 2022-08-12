@@ -33,14 +33,14 @@ high-throughput estimates of inhalation chemical exposures.
 
 ## Prepare for session
 ### Load the relevant libraries
-If you get the message "Error in library(X) : there is no package called ‘X’"
+If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
 From the R command prompt:
 
 install.packages("X")
 
-Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 ```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 library(httk)
