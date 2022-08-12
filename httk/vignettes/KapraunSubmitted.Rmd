@@ -21,6 +21,14 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ### Load the relevant libraries
+If you get the message "Error in library(X) : there is no package called ‘X’"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
 ```{r load_packages, eval = TRUE}
 # Clear the memory:
 rm(list=ls()) 
