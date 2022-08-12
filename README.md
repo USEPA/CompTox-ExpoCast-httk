@@ -39,8 +39,8 @@ exposures via reverse dosimetry (also known as "RTK")
 
 ## Getting Started
 
-For an introduction R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html<
+For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
+<https://rafalab.github.io/dsbook/getting-started.html>
 
 For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
