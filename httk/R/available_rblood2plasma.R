@@ -90,8 +90,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
       {
         out <- get_chem_id(chem.cas=chem.cas,
                            chem.name=chem.name,
-                           dtxsid=dtxsid,
-                           suppress.messages=TRUE)
+                           dtxsid=dtxsid)
         chem.cas <- out$chem.cas
       }
       if (chem.cas %in% get_cheminfo(species=species,model='schmitt',
