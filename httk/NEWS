@@ -1,6 +1,7 @@
 News for R package httk
 
 Changes in feature/uvupdate (April, 2022)
+  Added wrapper functions (get_wetmore...) for backward compatibility (Thanks Jim Sluka)
   Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
   Added internal function remd0non0u95 to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
   Added logical arguments to invitro_mc to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
