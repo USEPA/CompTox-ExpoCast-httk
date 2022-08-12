@@ -1,10 +1,10 @@
 ---
 title: "Kapraun et al. (submitted): Generic Human Gestational Model"
-author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, André Dallmann, Richard Judson, and John F. Wambaugh"
+author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, Andre Dallmann, Richard Judson, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{generic_fetal}
+  %\VignetteIndexEntry{Kapraun et al. (submitted): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,33 @@ wambaugh.john@epa.gov
 
 ## Abstract
 
-Chemical risk assessment considers potentially susceptible populations including pregnant women and developing fetuses. Humans encounter thousands of chemicals in their environments, few of which have been fully characterized in terms of internal human dosimetry and mode-of-action. Toxicokinetic (TK) information is needed to relate chemical exposure to potentially bioactive tissue concentrations. Observational data describing human gestational exposures are unavailable for most chemicals, but physiologically based TK (PBTK) models estimate such exposures. However, development of chemical-specific PBTK models themselves requires considerable time and resources. As an alternative, generic PBTK approaches describe a standardized physiology and characterize chemicals with a set of standard physical and TK descriptors – primarily plasma protein binding and hepatic clearance. Here we report and evaluate a generic PBTK model of a human mother and developing fetus. We used a previously published set of formulas describing the major anatomical and physiological changes that occur during pregnancy to augment the High-Throughput Toxicokinetics (httk) software package. We performed simulations to estimate the ratio of concentrations in maternal and fetal plasma and compared these estimates to literature in vivo measurements. We evaluated the model with literature in vivo time-course measurements of maternal plasma concentrations in pregnant and non-pregnant women. Finally, we demonstrated conceptual prioritization of chemicals measured in maternal serum based on predicted fetal brain concentrations. This new generic model can be used for TK simulations of any of the 859 chemicals with existing human-specific in vitro data that were found to be within the domain of the model, as well as any new chemicals for which such data become available. With sufficient evaluation, this gestational model may allow for in vitro to in vivo extrapolation of point of departure doses relevant to reproductive and developmental toxicity.
+Chemical risk assessment considers potentially susceptible populations 
+including pregnant women and developing fetuses. Humans encounter thousands of 
+chemicals in their environments, few of which have been fully characterized in 
+terms of internal human dosimetry and mode-of-action. Toxicokinetic (TK) 
+information is needed to relate chemical exposure to potentially bioactive 
+tissue concentrations. Observational data describing human gestational 
+exposures are unavailable for most chemicals, but physiologically based TK 
+(PBTK) models estimate such exposures. However, development of chemical-specific
+PBTK models themselves requires considerable time and resources. As an 
+alternative, generic PBTK approaches describe a standardized physiology and 
+characterize chemicals with a set of standard physical and TK descriptors --
+primarily plasma protein binding and hepatic clearance. Here we report and 
+evaluate a generic PBTK model of a human mother and developing fetus. We used a
+previously published set of formulas describing the major anatomical and 
+physiological changes that occur during pregnancy to augment the High-Throughput
+Toxicokinetics (httk) software package. We performed simulations to estimate the
+ratio of concentrations in maternal and fetal plasma and compared these 
+estimatesto literature in vivo measurements. We evaluated the model with 
+literature in vivo time-course measurements of maternal plasma concentrations 
+in pregnant and non-pregnant women. Finally, we demonstrated conceptual 
+prioritization of chemicals measured in maternal serum based on predicted fetal
+brain concentrations. This new generic model can be used for TK simulations of 
+any of the 856 chemicals with existing human-specific in vitro data that were 
+found to be within the domain of the model, as well as any new chemicals for 
+which such data become available. With sufficient evaluation, this gestational 
+model may allow for in vitro to in vivo extrapolation of point of departure 
+doses relevant to reproductive and developmental toxicity.
 
 ## Prepare for session
 ```{r}
@@ -21,14 +47,14 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ### Load the relevant libraries
-If you get the message "Error in library(X) : there is no package called ‘X’"
+If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
 From the R command prompt:
 
 install.packages("X")
 
-Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 ```{r load_packages, eval = TRUE}
 # Clear the memory:
 rm(list=ls()) 
@@ -68,7 +94,13 @@ also non-volatile and non-PFAS can be found using:
 length(get_cheminfo(model="fetal_pbtk",suppress.messages=TRUE))
 ```
 
-Data sets were curated from the literature to allow evaluation of the gestational PBTK model. In all cases chemical identities from the original publications were mapped onto DTXSID’s from the CompTox Chemicals Dashboard (https://comptox.epa.gov/dashboard) [Williams et al., 2017](https://doi.org/10.1186/s13321-017-0247-6). Statistical testing for correlation between predictions and observations was performed using R function "lm" and p-values were calculated according to an F-distribution.
+Data sets were curated from the literature to allow evaluation of the 
+gestational PBTK model. In all cases chemical identities from the original 
+publications were mapped onto DTXSID's from the CompTox Chemicals Dashboard 
+(https://comptox.epa.gov/dashboard) [Williams et al., 2017]
+(https://doi.org/10.1186/s13321-017-0247-6). Statistical testing for 
+correlation between predictions and observations was performed using R 
+function "lm" and p-values were calculated according to an F-distribution.
 
 # Aylward cord-blood data 
 
@@ -1675,10 +1707,29 @@ The next two figures take a long time to generate and so are disabled by default
 The fetal fraction unbound (f_{up}^f i) is calculated from the maternal fraction unbound and the serum protein concentration ratio in infants vs. mothers based on Equation 6 of [McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104),
 
 $$
-	f_{up}^f =(f_{up}^m )/(f_{up}^m +(P^f ⁄P^m  )×(1-f_{up}^m  ) )
+	f_{up}^f =(f_{up}^m )/(f_{up}^m +(P^f /P^m  )*(1-f_{up}^m  ) )
 $$
 
-in which the maternal fraction unbound, $f_{up}^m$, is assumed to be equal to the in vitro measured value for fraction unbound in plasma, and the ratio of protein concentrations $P^f ⁄P^m$ depends on the identity of the dominant binding protein for the chemical (assumed to be either albumin or AAG). Lacking data to model the gestational kinetics of albumin and AAG concentrations, we used the concentrations at birth ([McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104)) to calculate a constant fetal $f_{up}$, using $P^f⁄P^m  =0.777$ for albumin and $P^f⁄P^m = 0.456$ for AAG ([McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104)). We determine the charge state of a compound separately for maternal and fetal plasma as a function of plasma pH (7.38 for maternal and 7.28 for fetal ([K.H. Lee, 1972](http://dx.doi.org/10.1136/pgmj.48.561.405)) and chemical-specific predictions for ionization affinity (that is, pKa ([Strope et al., 2018](http://dx.doi.org/10.1016/j.scitotenv.2017.09.033)) using the “httk” function “calc_ionization” ([Pearce et al.,  2017](http://dx.doi.org/10.1007/s10928-017-9548-7)). If the fraction of a chemical that is predicted to be in positive ionic form is greater than 50%, we treat the chemical as a base (which is in its conjugate acid form) and use only the maternal-to-infant ratio of AAG concentrations. Otherwise, we assume the chemical is neutral or an acid and use the ratio of albumin concentrations. 
+in which the maternal fraction unbound, $f_{up}^m$, is assumed to be equal to 
+the in vitro measured value for fraction unbound in plasma, and the ratio of 
+protein concentrations $P^f /P^m$ depends on the identity of the dominant 
+binding protein for the chemical (assumed to be either albumin or AAG). Lacking 
+data to model the gestational kinetics of albumin and AAG concentrations, we 
+used the concentrations at birth ([McNamara et al., 2019]
+(http://dx.doi.org/10.1208/ps040104)) to calculate a constant fetal $f_{up}$, 
+using $P^f/P^m  =0.777$ for albumin and $P^f/P^m = 0.456$ for AAG 
+([McNamara et al., 2019](http://dx.doi.org/10.1208/ps040104)). We determine the 
+charge state of a compound separately for maternal and fetal plasma as a 
+function of plasma pH (7.38 for maternal and 7.28 for fetal ([K.H. Lee, 1972]
+(http://dx.doi.org/10.1136/pgmj.48.561.405)) and chemical-specific predictions 
+for ionization affinity (that is, pKa ([Strope et al., 2018]
+(http://dx.doi.org/10.1016/j.scitotenv.2017.09.033)) using the "httk" function 
+"calc_ionization" ([Pearce et al.,  2017]
+(http://dx.doi.org/10.1007/s10928-017-9548-7)). If the fraction of a chemical 
+that is predicted to be in positive ionic form is greater than 50%, we treat 
+the chemical as a base (which is in its conjugate acid form) and use only the 
+maternal-to-infant ratio of AAG concentrations. Otherwise, we assume the 
+chemical is neutral or an acid and use the ratio of albumin concentrations. 
 
 ```{r fup_table, eval = FALSE}
 fup.table <- NULL

@@ -189,7 +189,7 @@ compound data.table/data.frame or list.')
   # Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
   # conditions, according to the Environmental Science and Technology Briefs for 
   # Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
-  # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 °C. 
+  # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 degrees C. 
   # MW has units of g/mol or ug/umol
   # So MW/24.45 has units of g/L
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L

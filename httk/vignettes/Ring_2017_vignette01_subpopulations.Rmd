@@ -15,14 +15,14 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 This vignette provides the code used to generate the virtual populations for the ten subpopulations of interest, plus a non-obese adult subpopulation.
 
 To use the code in this vignette, you'll first need to load a few packages.
-If you get the message "Error in library(X) : there is no package called ‘X’"
+If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
 From the R command prompt:
 
 install.packages("X")
 
-Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 ```{r load_packages, eval = FALSE}
 library("httk")
 library("data.table")
