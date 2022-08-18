@@ -1,60 +1,91 @@
-#'Predict GFR.
+#' Generate serum creatinine values for a virtual population.
 #'
-#'Predict serum creatinine using smoothing splines and kernel density estimates of residual variability
+#' Predict serum creatinine from age using smoothing splines and kernel density
+#'estimates of residual variability fitted to NHANES data,, for a given
+#'combination of gender and NHANES race/ethnicity category.
 #'
-#'@param serumcreat.dt A data.table with columns \code{gender}, \code{reth}, 
-#'  \code{age_years}, \code{age_months}, \code{BSA_adj}.
-#'  
-#'@return The same data.table with a \code{serum_creat} column added, containing 
-#' spline-interpolated serum creatinine values.
+#' This function should usually not be called directly by the user. It is used
+#' by \code{httkpop_generate()} in "virtual-individuals" mode, after drawing
+#' gender, NHANES race/ethnicity category, and age from their NHANES
+#' proportions/distributions.
+#'
+#'@param gender Gender for which to generate serum creatinine values ("Male" or
+#'  "Female")
+#'@param reth NHANES race/ethnicity category for which to generate serum
+#'  creatinine values ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+#'  White", "Other", or "Other Hispanic")
+#'@param age_months vector of ages in months for individuals for whom to
+#'  generate serum creatinine values (between 0-959 months)
+#'@param age_years Vector of ages in years for individuals for whom to generate
+#'  serum creatinine values (corresponding to age_months)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
+#'@return A vector of numeric generated serum creatinine values (mg/dL).
 #'
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#' @import stats
-#' @export gen_serum_creatinine
-gen_serum_creatinine <- function(serumcreat.dt){
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+#'@import stats
+
+gen_serum_creatinine <- function(gender,
+                                 reth,
+                                 age_years,
+                                 age_months,
+                                 nhanes_mec_svy){
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  id <- age_years <- log_serum_creat <- sc_spline <- age_months <- NULL
-  sc_kde <- serum_creat <- gfr_est <- gender <- reth <- BSA_adj <- NULL
+ riagendr <- ridreth1 <- lbxscr <- ridexagm <- wtmec6yr <- NULL
   #End of R CMD CHECK appeasement.
   
-  serumcreat.dt <- data.table::copy(serumcreat.dt) #to avoid altering the original item
-  #Take a list of sample individuals with gender, race, age_years, height, BSA in cm^2
-  #Draw their serum creatinine levels from the appropriate KDE distribution
-  serumcreat.dt[, id:=1:nrow(serumcreat.dt)]
   
-  serumcreat.tmp <- merge(serumcreat.dt, 
-                      spline_serumcreat,
-                      by=c('gender', 'reth'))
+  #initialize serum creatinine vector
+  serum_creat <- rep(NA_real_, length(age_months))
+  grname <- unique(paste(gender, reth))
   
-  if (serumcreat.tmp[, any(age_years>=12)]){
-    serumcreat.tmp[age_years>=12, 
-               log_serum_creat:=predict(sc_spline[[1]], #spline
-                                        x=age_months)$y + 
-                 rfun(n=sum(age_years>=12), #residual variability KDE
-                      fhat=sc_kde[[1]]),
-               by=list(gender, reth)] #Note: separate spline for each gender and reth
+  if (any(age_years>=12)){
+    n <- sum(age_years>=12)
     
-    serumcreat.dt <- merge(serumcreat.dt,
-                       serumcreat.tmp[, list(id, log_serum_creat)],
-                       by='id')
-    serumcreat.dt[, id:=NULL]
     
-    serumcreat.dt[age_years>=12, 
-              serum_creat:=exp(log_serum_creat)]
-  }else{ #if no one over age 12, don't assign any serum creatinine values
-    serumcreat.dt[age_years<12, 
-                  serum_creat:=NA_real_]
+    #calculate NHANES residuals
+    nhanes_sub <- nhanes_mec_svy$variables[riagendr %in% gender &
+                                             ridreth1 %in% reth &
+                                             is.finite(lbxscr),
+                                           .(ridexagm, lbxscr, wtmec6yr)]
+    w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
+    #fit smoothing spline
+    splinefit <- smooth.spline(x = nhanes_sub$ridexagm,
+                               y = log(nhanes_sub$lbxscr),
+                               w = w)
+    logscresid <- residuals(splinefit)
+    
+    
+    #sample from centers
+    centers_samp <- sample(x = logscresid,
+                           size = n,
+                           replace = TRUE,
+                           prob = w)
+    
+    #get optimal bandwidth
+    h <- scr_h[[grname]]
+    
+    #sample from normal distirbution with optimal bandwidth for this gender/reth
+    resids_samp <- rnorm(n =n,
+                         mean = centers_samp,
+                         sd = h)
+    #predicted values for sampled individuals
+    log_serum_creat_pred <- predict(splinefit, 
+                                    x=age_months[age_years>=12])$y
+    
+    serum_creat[age_years>=12] <- exp(log_serum_creat_pred + resids_samp)
   }
   
-  return(serumcreat.dt)
+  return(serum_creat)
 }
