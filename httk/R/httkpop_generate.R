@@ -183,7 +183,9 @@ httkpop_generate <- function(method,
                                      'Other Hispanic',
                                      'Non-Hispanic White',
                                      'Non-Hispanic Black',
-                                     'Other')){
+                                     'Other'),
+                             gfr_resid_var = TRUE,
+                             ckd_epi_race_coeff = FALSE){
 
 # Error checking:
   if (is.null(method)) stop(
