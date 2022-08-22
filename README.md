@@ -49,12 +49,15 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
 * Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
-* If you get the message "Error in library(X) : there is no package called ‘X’" then you will need to install that package: 
-	From the R command prompt:
+* If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 ```
 install.packages("X")
 ```
 Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
+* Note that R does not recognize fancy versions of quotation marks ‘, ’, “, or ”. 
+If you are cutting and pasting from software like Word or Outlook you may need 
+to replace the quotation marks that curve toward each other with ones typed by 
+the keyboard.
 
 ### Installing R package "httk"
 
@@ -141,7 +144,7 @@ vignette(package = "httk")
 ```
 * Displays the vignette for a specified vignette 
 ```
-vignette("Frank2018")
+vignette("IntroToHTTK")
 ```
 
 
