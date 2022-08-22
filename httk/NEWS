@@ -1,6 +1,7 @@
 News for R package httk
 
 Changes in version 2.2.0 (August, 2022)
+  Added new vingette "IntroToHTTK" based on examples from Breen et al. (2021)
   Added suggestion to set default.to.human=TRUE when rat Fup is 0 (Thanks Jim Sluka)
   Added wrapper functions (get_wetmore...) for backward compatibility (Thanks Jim Sluka)
   Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
