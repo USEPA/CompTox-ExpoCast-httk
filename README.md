@@ -54,7 +54,7 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 install.packages("X")
 ```
 Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
-* Note that R does not recognize fancy versions of quotation marks ‘, ’, “, or ”. 
+* Note that R does not recognize fancy versions of quotation marks ‘,$~$’,$~$“, or$~$”. 
 If you are cutting and pasting from software like Word or Outlook you may need 
 to replace the quotation marks that curve toward each other with ones typed by 
 the keyboard.
