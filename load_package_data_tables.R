@@ -907,7 +907,7 @@ length(unique(chem.prop$CAS))==dim(chem.prop)[1]
 
 chem.physical_and_invitro.data <- chem.prop
 
-if (unique(chem.physical_and_invitro.data$CAS) < 
+if (length(unique(chem.physical_and_invitro.data$CAS)) < 
   dim(chem.physical_and_invitro.data)[1]) 
   stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
 if (any(sapply(chem.physical_and_invitro.data$CAS,
