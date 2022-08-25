@@ -3,7 +3,7 @@ library(httk)
 
 #calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 calc_analytic_css(chem.cas="80-05-7",model="1compartment")
-calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
+calc_analytic_css(chem.cas="80-05-7",parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
 #calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
 calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 
