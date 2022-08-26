@@ -193,7 +193,10 @@ calc_css <- function(chem.name=NULL,
   
   # We need to find out what concentrations (roughly) we should reach before
   # stopping:
-  css <- calc_analytic_css(
+  analyticcss_params <- list(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    dtxsid = dtxsid,
     parameters=parameters,
     daily.dose=daily.dose,
     concentration='plasma',
@@ -203,7 +206,9 @@ calc_css <- function(chem.name=NULL,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     well.stirred.correction=well.stirred.correction,
-    restrictive.clearance=restrictive.clearance) 
+    restrictive.clearance=restrictive.clearance
+  )
+  css <- do.call("calc_analytic_css",args = analyticcss_params)
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:
