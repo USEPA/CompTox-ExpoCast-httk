@@ -152,7 +152,7 @@ calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 
 params <- parameterize_pbtk(chem.cas="80-05-7") 
 
-calc_analytic_css(parameters=params,model="pbtk")
+calc_analytic_css(chem.cas = "80-05-7",parameters=params,model="pbtk")
 
 }
 \references{
