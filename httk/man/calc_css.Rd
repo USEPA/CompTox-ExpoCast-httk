@@ -115,7 +115,7 @@ calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
-calc_css(parameters=parms,model='3compartment')
+calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
 
 out <- solve_pbtk(chem.name = "Bisphenol A",
   days = 50,                                   
