@@ -37,6 +37,8 @@
 #' hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
 #'
 #' @keywords httk-pop
+#' 
+#' @export rmed0non0u95
 rmed0non0u95 <- function(
   n, # Number of samples to draw,
   x.u95, # Non-zero upper 95th percentile
