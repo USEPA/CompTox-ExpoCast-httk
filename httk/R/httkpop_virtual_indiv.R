@@ -162,7 +162,9 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                                  nhanes_mec_svy = nhanes_mec_svy),
              by = list(gender, reth)]
     #Recompute GFR using the new serum creatinine values
-    indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp)
+    indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp,
+                            gfr_resid_var = gfr_resid_var,
+                            ckd_epi_race_coeff = ckd_epi_race_coeff)
     #Recompute BMI using the new height, adjusted weight values
     indiv_tmp[, bmi_adj:=weight_adj/((height/100)^2)]
     #Recompute weight class using the new values
