@@ -1,6 +1,16 @@
 News for R package httk
 
-Changes in version 2.2.0 (August, 2022)
+Changes in version 2.2.0 (September, 2022)
+  This version accompanies the submission of the Breen et al. manuscript "Simulating Toxicokinetic Variability to Identify Susceptible and Highly Exposed Populations"
+  HTTK-Pop population simulator:
+    Replaced 3 NHANES cycles (2007-2012) with most recent 3 NHANES cycles (2013-2018) in HTTK-Pop  
+    Reduced data table size (No longer storing nhanes_mec_svy surveydesign object)
+    Removed "race factor" from equation used to estimate GFR from demographics & serum creatinine to reflect recent changes in clinical practice (NKF-ASN recommendations 2022)
+    Added residual variability in estimated GFR
+  PBTK model equations:
+    Revised renal clearance to be GFR x [Unbound conc in arterial plasma] (previously it was GFR x [Unbound conc in kidney tissue])
+  Phys-chem properties:
+    Replaced pKa values from the Strope et al. (2018) with most recent OPERA predictions
   Added suggestion to set default.to.human=TRUE when rat Fup is 0 (Thanks Jim Sluka)
   Added wrapper functions (get_wetmore...) for backward compatibility (Thanks Jim Sluka)
   Updated invitro_mc to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
