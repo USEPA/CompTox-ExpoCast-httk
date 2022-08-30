@@ -24,7 +24,7 @@ devtools::load_all(path = "../httk")
 Path for saving output files (e.g. figures). This is currently set to a local folder on my machine that is *not* tracked by git or on Bitbucket. It doesn't need to be tracked, because the code in this document is sufficient to reproduce the output at any time.
 
 ```{r}
-out_path <- "C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk/gfr_changes_output/"
+out_path <- "C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk/gfr_changes_output/HTTK108_test/"
 ```
 
 # Introduction
@@ -60,14 +60,14 @@ To get a good sampling, we'll simulate 10000 individuals.
 ```{r}
 set.seed(42)
 DT_orig <- httkpop_generate(method = "d", #direct resampling
-                                     nsamp = 10000, #5000 individuals
+                                     nsamp = 10000, #number of individuals
                                      agelim_years = c(18,79), #adults 18-79
                                      reths = "Non-Hispanic Black", #non-Hispanic Black individuals
                                      gfr_resid_var = TRUE,
                                      ckd_epi_race_coeff = FALSE)
 
 #use data.table syntax to efficiently loop over rows of par
-#recalculate GFR for the same poplation for each set of conditions -- this controls for random variation in other things (such as age, sex, etc.)
+#recalculate GFR for the same population for each set of conditions -- this controls for random variation in other things (such as age, sex, etc.)
 DT <- par[,
           .(gfr_est={
             tmp <- estimate_gfr(gfrtmp.dt = DT_orig,
@@ -362,7 +362,7 @@ First, do this for the new default: no race coefficient, add residual variabilit
 
 Note that this is a big simulation job, and will likely take several minutes to run.
 
-```{r, eval = FALSE}
+```{r}
 set.seed(42)
 system.time(
   suppressWarnings(
@@ -400,7 +400,7 @@ saveRDS(css_list_new,
 
 Now, repeat the simulations for the old status quo (using the race coefficient, not adding residual variability).
 
-```{r, eval = FALSE}
+```{r}
 set.seed(42)
 DT_old <- copy(DT_orig)
 DT_old[, gfr_est:=DT[label %in% "Race coeff, no resid var\n(old status quo)", gfr_est]]
@@ -568,89 +568,6 @@ ggplot(css_cast[Percentile %in% "P95"]) +
   ggsave(paste0(out_path, "css_old_vs_new_P95.png"))
    ggsave(paste0(out_path, "css_old_vs_new_P95.pdf"))
 ```
-
-## Very low Css?
-
-What is that one down in the lower left corner?
-
-```{r}
-css_cast[Percentile %in% "P95" & old < 1e-6]
-```
-
-What are these names?
-
-```{r}
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS %in% css_cast[Percentile %in% "P95" & old < 1e-6, CASRN], c("Compound", "CAS")]
-```
-
-Why are the percentiles zero?
-
-```{r}
-css_list[CASRN %in% c("129453-61-8", "103-24-2")]
-```
-
-What happens if we just run analytical Css for these CASRNs?
-
-```{r}
-calc_analytic_css(chem.cas = "103-24-2", suppress.messages = TRUE)
-```
-
-OK, small, but not zero.
-
-What does `calc_mc_css()` do?
-
-```{r}
-calc_mc_css(chem.cas = "103-24-2", suppress.messages = TRUE, which.quantile = c(0.05, 0.25, 0.5, 0.75, 0.95))
-```
-
-OK, that is just not right. Something is very strange here.
-
-What about the other one?
-
-```{r}
-calc_analytic_css(chem.cas = "129453-61-8", suppress.messages = TRUE)
-```
-
-Well, that's absolutely not small. What the heck?
-
-What does `calc_mc_css()` do?
-
-```{r}
-calc_mc_css(chem.cas = "129453-61-8", suppress.messages = TRUE, which.quantile = c(0.05, 0.25, 0.5, 0.75, 0.95))
-```
-
-Hmmm, OK, that is funky. Something is plain old wrong.
-
-### Checking parameters
-
-
-```{r}
-parameterize_steadystate(chem.cas = "103-24-2")
-```
-
-I notice that Clint is large (392600) and Funbound.plasma is small (1e-04).
-
-```{r}
-parameterize_steadystate(chem.cas = "129453-61-8")
-```
-
-Clint is zero but seems to have an non-zero distribution. Similarly, Funbound.plasma is 1e-04 but seems to have a different distirbution?
-
-What does `chem.physical_and_invitro_data` say?
-
-```{r}
-tmp <- get_cheminfo(info = c("CAS", "Compound", "Clint", "Clint.pValue", "Funbound.plasma"))
-tmp[tmp$CAS %in% c("103-24-2", "129453-61-8"), ]
-```
-
-OK -- curiouser and curiouser. So that is not the same Clint distribution that gets returned by `parameterize_steadystate()` for CAS 129453-61-8.
-
-```{r}
-parameterize_pbtk(chem.cas = "129453-61-8")
-```
-
-
-
 
 # Difference between new and old Css
 
@@ -914,142 +831,5 @@ ggsave(paste0(out_path, "Clint_hist_by_AED_pct.png"),
 
 
 ```
-
-
-
-<!-- # Beyond this is some more exploratory analysis -->
-
-<!-- We see an increasingly bimodal distribution as the Css percentile increases. I'm guessing those are chemicals primarily cleared via urine, vs. primarily cleared via hepatic metabolism? Let's plot against CLint. -->
-
-<!-- ```{r} -->
-<!-- css_cast[, c("Clint", -->
-<!--              "Funbound.plasma", -->
-<!--              "Funbound.plasma.adjustment"):=suppressWarnings(parameterize_steadystate(chem.cas = unique(CASRN), -->
-<!--                                                                                       suppress.messages = TRUE)[c("Clint", -->
-<!--                                                                                         "Funbound.plasma", -->
-<!--                                                                                         "Funbound.plasma.adjustment")]), -->
-<!--                                                                                         by = CASRN] -->
-
-<!-- css_cast[, Cl_hep:=suppressWarnings(calc_hep_clearance(chem.cas = unique(CASRN), -->
-<!--                                                                         suppress.messages = TRUE)), -->
-<!--          by = CASRN] -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- css_cast[, Percentile_label:=paste0(gsub(x = Percentile, -->
-<!--                                          pattern = "P", -->
-<!--                                          replacement = ""), -->
-<!--                                     "th percentile Css")] -->
-
-<!-- css_cast[, Percentile_label:=factor(Percentile_label, -->
-<!--                                     levels = c("5th percentile Css", -->
-<!--                                                "50th percentile Css", -->
-<!--                                                "95th percentile Css"))] -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- css_cast[, Clint_plot:=Clint] -->
-<!-- css_cast[Clint==0, Clint_plot:=1e-5] -->
-
-<!-- css_cast[, Clhep_plot:=Cl_hep] -->
-<!-- css_cast[Cl_hep==0, Clhep_plot:=1e-7] -->
-<!-- ``` -->
-
-
-
-<!-- ```{r} -->
-<!-- ggplot(css_cast) + -->
-<!--   geom_point(aes(x = Clint_plot, -->
-<!--                  y=(1/ratio_new_old) - 1)) + -->
-<!--   facet_wrap(vars(Percentile_label), -->
-<!--              nrow = 3, -->
-<!--              ncol = 1) + -->
-<!--   ylab("Percent change in equiv. dose with new eGFR defaults") + -->
-<!--   xlab("Clint, uL/min/10^6 hepatocytes") + -->
-<!--   scale_x_log10() + -->
-<!--   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + -->
-<!--   annotation_logticks(sides = "b") + -->
-<!--   theme_bw() + -->
-<!--   theme(axis.text = element_text(size= 12), -->
-<!--         axis.title = element_text(size = 14), -->
-<!--         strip.background = element_blank(), -->
-<!--         legend.position = "top") -->
-<!-- ``` -->
-
-<!-- OK, that's very interesting. Almost all of the lower mode (below -10% change) is coming from Clint = 0 chemicals. -->
-
-<!-- Let's try a hex plot? -->
-
-<!-- ```{r} -->
-<!-- ggplot(css_cast) + -->
-<!--   geom_hex(aes(x = Clint_plot, -->
-<!--                  y=(1/ratio_new_old) - 1)) + -->
-<!--   facet_wrap(vars(Percentile_label), -->
-<!--              nrow = 2, -->
-<!--              ncol = 2) + -->
-<!--   scale_fill_viridis_c() + -->
-<!--   ylab("Percent change in equiv. dose with new eGFR defaults") + -->
-<!--   xlab("Clint, uL/min/10^6 hepatocytes") + -->
-<!--   scale_x_log10(breaks = 10^c(-5, seq(-4,4, by = 2)), -->
-<!--                 labels = c(0, paste0("1e", -->
-<!--                 seq(-4,5, by = 2) -->
-<!--                 ) -->
-<!--                 ) -->
-<!--                 )+ -->
-<!--   scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + -->
-<!--   annotation_logticks(sides = "b") + -->
-<!--   theme_bw() + -->
-<!--   theme(axis.text = element_text(size= 12), -->
-<!--         axis.title = element_text(size = 14), -->
-<!--         strip.background = element_blank(), -->
-<!--         legend.position = "top") -->
-
-<!-- ggsave(paste0(out_path, -->
-<!--               "hex_plot_css_changs_vs_Clint.png"), -->
-<!--        height = 7, -->
-<!--        width = 7, -->
-<!--        units = "in") -->
-
-<!-- ggsave(paste0(out_path, -->
-<!--               "hex_plot_css_changs_vs_Clint.pdf"), -->
-<!--        height = 7, width = 7, -->
-<!--        units = "in") -->
-<!-- ``` -->
-
-<!-- Clearly, those chemicals where these changes to the CKD-EPI equation & residual variability would result in a lower equivalent dose are the chemicals that do not get cleared by the liver very fast, so the passive renal clearance is more important. -->
-
-<!-- Now, why there are chemicals where Clint is 0 and where the CKD-EPI revisions do not reduce equivalent dose, or even increase it? -->
-
-<!-- I suspect these are chemicals where the measured Clint of 0 actually has some uncertainty and may not be zero.  -->
-
-<!-- ```{r} -->
-<!-- tmp <- unique(css_cast[Clint==0, .(CASRN, Clint)]) -->
-<!-- foo <- as.data.table(chem.physical_and_invitro.data) -->
-<!-- footmp <- foo[tmp, on = c("CAS" = "CASRN")][, .(Compound, CAS, Clint, Human.Clint, Human.Clint.pValue, Human.Funbound.plasma)] -->
-<!-- head(footmp) -->
-
-<!-- ``` -->
-
-<!-- Find the Clint upper bound by splitting the string for the ones with comma-separated distribution.s -->
-
-<!-- ```{r} -->
-<!-- footmp[grepl(x = Human.Clint, -->
-<!--              pattern = ","), -->
-<!--        Clint.ub := tstrsplit(Human.Clint, split = ",", keep = 3) ] -->
-<!-- footmp[, Clint.ub:=as.numeric(Clint.ub)] -->
-<!-- ``` -->
-
-<!-- What are the range of those upper bounds? -->
-
-<!-- ```{r} -->
-<!-- footmp[, range(Clint.ub, na.rm = TRUE)] -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- ggplot(footmp) + geom_histogram(aes(x = Clint.ub)) + scale_x_log10() -->
-<!-- ``` -->
-
-<!-- Does that explain it? Shouldn't the effective population distribution of Clint center around the median anyway, though? And wouldn't the Css95 be on the low end of Clint for a given chemical, not the high end?  -->
-
 
 
