@@ -28,6 +28,7 @@ age_draw_smooth <- function(gender, reth, nsamp, agelim_months, nhanes_mec_svy){
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   g <- r <- x <- y <- NULL
+  riagendr <- ridreth1 <- NULL
   #End R CMD CHECK appeasement.
   nhanes_sub <- subset(nhanes_mec_svy,
                        riagendr %in% gender &
