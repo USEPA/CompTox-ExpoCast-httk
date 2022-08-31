@@ -3,7 +3,8 @@ model.list <- list()
 
 #'Calculate the analytic steady state plasma concentration.
 #'
-#'This function calculates the analytic steady state plasma or venous blood 
+#' @description
+#' This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing for the three compartment and 
 #'multiple compartment PBTK models.
 #'
