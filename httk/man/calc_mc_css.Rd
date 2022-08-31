@@ -194,7 +194,9 @@ provided. Otherwise, the tissue-specific partition coefficient is used to
 estimate the concentration from the plasma. 
 
 The six sets of plausible IVIVE
-assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
+assumptions identified by 
+\href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019)} 
+are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
