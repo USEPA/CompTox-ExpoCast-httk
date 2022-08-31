@@ -7,14 +7,14 @@
 rmed0non0u95(n, x.u95, x.min = 0, x.LOD = 0.005)
 }
 \arguments{
+\item{n}{Number of samples to draw}
+
 \item{x.u95}{The upper limit on the 95th confidence/credible intervale (this
 is the 97.5 percentile)}
 
 \item{x.min}{The minimum allowed value (defaults to 0)}
 
 \item{x.LOD}{The limit of detection (defaults to 0.005)}
-
-\item{N}{Number of samples to draw}
 }
 \value{
 A vector of N samples where the 50th and 97.5th quantiles approximate

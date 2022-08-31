@@ -64,7 +64,10 @@ which distribution will be censored if fup.censored.dist is TRUE. Default 0.01.}
 \item{fup.censored.dist}{Logical. Whether to draw \code{Funbound.plasma} from a
 censored distribution or not.}
 
-\item{adjusted.Funbound.plasma}{Uses Kilford et al. (2008) hepatocyte incubation
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
 binding adjustment for Clint when set to TRUE (Default).}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
