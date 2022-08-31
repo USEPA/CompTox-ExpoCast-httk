@@ -42,10 +42,9 @@ estimate_hematocrit <- function(gender,
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  g <- r <- loghctresid <- seqn <- wtmec6yr <- NULL
-  riagendr <- ridreth1 <- lbxhct <- ridexagm <- NULL
+  #NULL. Note that within the data.table, these variables will not be NULL! 
+ riagendr <- ridreth1 <- lbxhct <- wtmec6yr <- NULL
+
   #End R CMD CHECK appeasement.
   
   hematocrit <- rep(NA_real_, length(age_months))
@@ -70,8 +69,6 @@ estimate_hematocrit <- function(gender,
                            replace = TRUE,
                            prob = w)
     
-    #get optimal bandwidth
-    #h <- ks::hpi(x = loghctresid)
     h <- hct_h[[grname]]
     
     #now sample from kernels around these centers
