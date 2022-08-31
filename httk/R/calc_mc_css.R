@@ -156,8 +156,13 @@
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
 #'                           
+#'  # The following example should result in an error since we do not 
+#'  # estimate tissue partitioning with '3compartmentss'.                         
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+#'  try(calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart'))
+#'  
+#'  set.seed(1234)
+#'  calc_mc_css(chem.name='2,4-d',model='pbtk',which.quantile=.9,httkpop=FALSE,tissue='heart')
 #' 
 #'  set.seed(1234)
 #'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
