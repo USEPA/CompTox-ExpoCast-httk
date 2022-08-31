@@ -13,7 +13,9 @@ httkpop_generate(
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other")
+    "Non-Hispanic Black", "Other"),
+  gfr_resid_var = TRUE,
+  ckd_epi_race_coeff = FALSE
 )
 }
 \arguments{
