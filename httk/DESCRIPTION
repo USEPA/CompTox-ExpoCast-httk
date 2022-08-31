@@ -21,7 +21,7 @@ Description: Pre-made models that can be rapidly tailored to various chemicals
              included for simulating human biological variability
              (Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>)
              and propagating parameter uncertainty 
-             (Wambaugh et al., 2019 <https://doi.org/10.1093/toxsci/kfz205>). 
+             (Wambaugh et al., 2019 <doi:10.1093/toxsci/kfz205>). 
              Empirically calibrated methods are included for predicting 
              tissue:plasma partition coefficients and volume of distribution  
              (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>).
