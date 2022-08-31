@@ -15,6 +15,7 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
   * Add residual variability to GFR estimated using CKD-EPI equation, by default. (Control whether to add residual variability using `httkpop_generate()` argument "gfr_resid_var") 
 * Phys-chem properties:
   * Replaced pKa values from Strope et al. (2018) (<https://doi.org/10.1016/j.scitotenv.2017.09.033>) with most recent OPERA (v2.7) predictions (<https://github.com/kmansouri/OPERA>)
+    * This may slightly change all predictions chemicals that are ionized in tissue.
 * PBTK model equations:
   * Revised renal clearance to be GFR x [Unbound conc in arterial plasma] (previously it was GFR x [Unbound conc in kidney plasma])
 * Miscellaneous:
@@ -28,7 +29,7 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
 * New vignette "Introduction to HTTK" added including material from Breen et al. (2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
 
 ## Bug Fixes 
-* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected
+* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv`. 
 
 # version 2.1.0 (March, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
@@ -331,7 +332,7 @@ Nutrition Examination Survey.
 
 ## Bug Fixes 
 * Corrected minor bug for `get_cheminfo`
-* Corrected bug in `monte_carlo`: Upper bound placed at limit of detection for censored params truncated normal distribution.  However, this has no impact on the default case where the limit of detection is .01 the mean .005 because of the small standard deviation size (.0015). Only large coefficients of variation or "Funbound.plasma"" values close to the limit of detection would be affected.
+* Corrected bug in `monte_carlo`: Upper bound placed at limit of detection for censored params truncated normal distribution.  However, this has no impact on the default case where the limit of detection is .01 the mean .005 because of the small standard deviation size (.0015). Only large coefficients of variation or `Funbound.plasma` values close to the limit of detection would be affected.
 
 # version: 1.4 (February 3, 2016)
 This revision incorporates changes suggested by the reviewers of Pearce et al. "httk: R Package for High-Throughput Toxicokinetics", which was accepted, pending minor revision, in the Journal of Statistical Software (now included in vignettes). 
