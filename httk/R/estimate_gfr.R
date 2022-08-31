@@ -32,8 +32,7 @@ estimate_gfr <- function(gfrtmp.dt,
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL!
-  id <- age_years <- log_serum_creat <- sc_spline <- age_months <- NULL
-  sc_kde <- serum_creat <- gfr_est <- gender <- reth <- BSA_adj <- NULL
+  age_years <- serum_creat <- gfr_est <- gender <- reth <- BSA_adj <- NULL
   #End of R CMD CHECK appeasement.
 
   gfrtmp.dt <- data.table::copy(gfrtmp.dt) #to avoid altering the original item
