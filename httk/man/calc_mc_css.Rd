@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_mc_css.R
 \name{calc_mc_css}
 \alias{calc_mc_css}
-\title{Find the monte carlo steady state concentration.}
+\title{Distribution of chemical steady state concentration with uncertainty and variability}
 \usage{
 calc_mc_css(
   chem.cas = NULL,
@@ -141,23 +141,56 @@ Quantiles (specified by which.quantile) of the distribution of plasma
 steady-stae concentration (Css) from the Monte Carlo simulation
 }
 \description{
-This function finds the analytical steady state plasma concentration(from
-calc_analytic_css) using a monte carlo simulation (monte_carlo).
+For a given chemical and fixed dose rate this, this function determines a 
+distribution of steady-state concentrations reflecting measurment uncertainty
+an population variability. Uncertainty and variability are simulated via the
+Monte Carlo method -- many sets of model parameters are drawn according to
+probability distributions described in Ring et al. (2017)
+(<https://doi.org/10.1016/j.envint.2017.06.004>) for human variability and
+Wambaugh et al. (2019) (https://doi.org/10.1093/toxsci/kfz205) 
+for measurment uncertainty. To allow rapid application of the Monte Carlo 
+method we make use of analytical solutions for the steady-state concentration
+for a particular model via a given route (when available) as opposed to
+solving the model numerically (that is, using differential equations).
+For each sample of the Monte Carlo method (as specified by argument
+"samples") the parameters for the analytical solution are varied. An
+ensemble of steady-state predictions are produced, though by default only
+the quantiles specified by argument "which.quantile" are provided. If the
+full set of predicted values are desired use set the argument 
+"return.samples" to TRUE.
 }
 \details{
-All arguments after httkpop only apply if httkpop is set to TRUE and species
-to "Human".
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
 
-When species is specified as rabbit, dog, or mouse, the function uses the
+The chemical-specific steady-state concentration for a dose rate of 
+1 mg/kg body weight/day can be used for in \emph{in vitro-in vivo}
+extrapolation (IVIVE) of
+a bioactive \emph{in vitro} concentration by dividing the \emph{in vitro}
+concentration
+by the steady-state concentration to predict a dose rate (mg/kg/day) that
+would produce that concentration in plasma. Using quantiles of the 
+distribution (such as the upper 95th percentile) allow incorporation of 
+uncertainty and variability into IVIVE.
+
+httk-pop is used only for humans. For Non-human species biological 
+variability is simulated by drawing parameters from uncorellated log-normal
+distributions. 
+
+Chemical-specific httk data are available primarily for human and for a few
+hundred chemicals in rat. All in silico predictions are for human. Thus, 
+when species is specified as rabbit, dog, or mouse, the user can choose
+to set the argument "default.to.human" to TRUE so that this function uses the
 appropriate physiological data (volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
-Tissue concentrations are calculated for the pbtk model with a default oral
-infusion dosing. All tissues other than gut, liver, and lung are the product
-of the steady state plasma concentration and the tissue to plasma partition
-coefficient.
+If the argument "tissue" is used, the steady-state concentration in that
+tissue, if available, is provided. If that tissue is included in the model
+used (specified by arguement "model") then the actual tissue concentration is
+provided. Otherwise, the tissue-specific partition coefficient is used to
+estimate the concentration from the plasma. 
 
-The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
+The six sets of plausible IVIVE
 assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -180,8 +213,13 @@ used by this function.
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
                           
+ # The following example should result in an error since we do not 
+ # estimate tissue partitioning with '3compartmentss'.                         
  set.seed(1234)
- calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+ try(calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart'))
+ 
+ set.seed(1234)
+ calc_mc_css(chem.name='2,4-d',model='pbtk',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
  set.seed(1234)
  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
