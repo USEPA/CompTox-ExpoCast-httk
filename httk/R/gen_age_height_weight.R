@@ -14,6 +14,14 @@
 #'  in their proportions in the NHANES data. If both \code{nsamp} and
 #'  \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
 #'  the sum of \code{gendernum}).
+#'@param reths Optional: a character vector giving the races/ethnicities to
+#'  include in the population. Default is \code{c('Mexican American','Other
+#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#'  all races and ethnicities in their proportions in the NHANES data.
+#'  User-supplied vector must contain one or more of these strings.
+#'@param weight_category Optional: The weight categories to include in the
+#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#'  'Obese')}. User-supplied vector must contain one or more of these strings.
 #'@param agelim_years Optional: A two-element numeric vector giving the minimum
 #'  and maximum ages (in years) to include in the population. Default is
 #'  c(0,79). If \code{agelim_years} is provided and \code{agelim_months} is not,
@@ -23,14 +31,6 @@
 #'  959), equivalent to the default \code{agelim_years}. If \code{agelim_months}
 #'  is provided and \code{agelim_years} is not, agelim_months will override the
 #'  default values of \code{agelim_years}.
-#'@param reths Optional: a character vector giving the races/ethnicities to
-#'  include in the population. Default is \code{c('Mexican American','Other
-#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-#'  all races and ethnicities in their proportions in the NHANES data.
-#'  User-supplied vector must contain one or more of these strings.
-#'@param weight_category Optional: The weight categories to include in the
-#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-#'  'Obese')}. User-supplied vector must contain one or more of these strings.
 #' @param nhanes_mec_svy \code{surveydesign} object created from
 #'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
 #'  \code{\link{httkpop_generate}})
