@@ -71,8 +71,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
+  #NULL. Note that within the data.table, these variables will not be NULL! 
   bmi_adj <- weight_adj <- height <- weight_class <- NULL
   age_years <- age_months <- gender <- reth <- gfr_class <- gfr_est <- NULL
   Adipose_mass <- org_flow_check <- NULL
@@ -139,7 +138,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   while(sum(reject_cond)>0){ #while any individuals meet rejection conditions
     #Redraw age, height, and weight for these individuals
     #(keep their genders the same)
-    indiv_tmp<-gen_age_height_weight(nsamp=sum(reject_cond),
+    indiv_tmp <- gen_age_height_weight(nsamp=sum(reject_cond),
                                      gendernum=list(
                                        Male=nrow(indiv_dt[gender=='Male' &
                                                             reject_cond,]),
@@ -153,7 +152,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                      nhanes_mec_svy = nhanes_mec_svy)
     #Recompute tissue masses and flows using the new age, height, and weight
     #values
-    indiv_tmp<-tissue_masses_flows(tmf_dt=indiv_tmp)
+    indiv_tmp <- tissue_masses_flows(tmf_dt=indiv_tmp)
     #Recompute serum creatinine levels
     indiv_tmp[, serum_creat:=gen_serum_creatinine(gender = gender,
                                                  reth = reth,
@@ -162,7 +161,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
                                                  nhanes_mec_svy = nhanes_mec_svy),
              by = list(gender, reth)]
     #Recompute GFR using the new serum creatinine values
-    indiv_tmp<-estimate_gfr(gfrtmp.dt=indiv_tmp,
+    indiv_tmp <- estimate_gfr(gfrtmp.dt=indiv_tmp,
                             gfr_resid_var = gfr_resid_var,
                             ckd_epi_race_coeff = ckd_epi_race_coeff)
     #Recompute BMI using the new height, adjusted weight values
