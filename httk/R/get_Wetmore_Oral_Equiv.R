@@ -12,6 +12,8 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param input.units Units of given concentration, default of uM but can also
 #' be mg/L.
 #' @param output.units Units of dose, default of 'mg' for mg/kg BW/ day or
@@ -65,6 +67,7 @@ get_lit_oral_equiv <- function(
                                conc,
                                chem.name=NULL,
                                chem.cas=NULL,
+                               dtxsid=NULL,
                                suppress.messages=FALSE,
                                which.quantile=0.95,
                                species="Human",
@@ -74,8 +77,18 @@ get_lit_oral_equiv <- function(
                                ...)
 {
   Wetmore.data <- Wetmore.data
-  if (is.null(chem.cas)) chem.cas <- 
-    get_chem_id(chem.name=chem.name)[['chem.cas']]
+  if (is.null(chem.cas)){
+    if(!is.null(chem.name)){
+      chem.cas <- 
+        get_chem_id(chem.name=chem.name)[['chem.cas']]
+    }else if(!is.null(dtxsid)){
+      chem.cas <- 
+        get_chem_id(dtxsid=dtxsid)[['chem.cas']]
+    }else{
+      stop("Provide at least one chemical identifier either 'chem.cas',
+           'chem.name', or 'dtxsid'.")
+    }
+  } 
   if (tolower(input.units) =='mg/l' | tolower(output.units) == 'mol') {
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
   }   
