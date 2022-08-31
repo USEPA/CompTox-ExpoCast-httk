@@ -44,6 +44,7 @@ estimate_hematocrit <- function(gender,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! 
  riagendr <- ridreth1 <- lbxhct <- wtmec6yr <- NULL
+
   #End R CMD CHECK appeasement.
   
   hematocrit <- rep(NA_real_, length(age_months))
