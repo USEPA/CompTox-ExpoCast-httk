@@ -6,7 +6,7 @@
 #' that values above x.u95 are uniformly distributed between x.u95 and x.u95 +
 #' (x.u95 - x.LOD)
 #' 
-#' @param N Number of samples to draw
+#' @param n Number of samples to draw
 #' 
 #' @param x.u95 The upper limit on the 95th confidence/credible intervale (this
 #'   is the 97.5 percentile)
