@@ -1,8 +1,10 @@
 #' Conduct multiple TK simulations using Monte Carlo
 #' 
+#' @description
 #' This function finds the analytical steady state plasma concentration(from
 #' calc_analytic_css) using a monte carlo simulation (monte_carlo).
 #' 
+#' @details
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
 #' 

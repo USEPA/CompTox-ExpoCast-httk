@@ -1,5 +1,6 @@
 #' Find the steady state concentration and the day it is reached.
 #' 
+#' @description
 #' This function finds the day a chemical comes within the specified range of
 #' the analytical steady state venous blood or plasma concentration(from
 #' calc_analytic_css) for the multiple compartment, three compartment, and one
