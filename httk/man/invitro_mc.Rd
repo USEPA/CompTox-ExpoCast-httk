@@ -93,6 +93,10 @@ user specifications on the assumed distributions of Funbound.plasma and
 Clint, draw "individual" values of Funbound.plasma and Clint from those
 distributions.
 }
+\details{
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+}
 \examples{
 #Simply generate a virtual population of 100 individuals,
 #using the direct-resampling method

@@ -93,8 +93,55 @@ variance of parameters.}
 Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
-This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from \code{\link{calc_mc_css}}.
+This function converts a chemical plasma concetration to an oral equivalent
+dose using a concentration obtained from \code{\link{calc_mc_css}}.  
+For reverse dosimetry-based \emph{in vitro-in vivo} extrapolation (IVIVE) for HT 
+risk screening, this allows the user to input the
+chemical and \emph{in vitro} bioactive concentration, select the TK
+model, and then automatically obtain the \emph{in vivo} equivalent
+dose which would produce a body concentration equal to
+the \emph{in vitro} bioactive concentration. This approach relies on the 
+linearity
+of the models to calculate a scaling factor to relate in vitro
+concentrations (uM) with AED. The scaling factor is the
+inverse of the steady-state plasma concentration (Css) predicted
+for a 1 mg/kg/day exposure dose rate
+where \emph{in vitro} concentration [X] and Css must be in the same
+units. Note that it is typical for \emph{in vitro} concentrations to be
+reported in units of uM and Css in units of mg/L, in which case
+one must be converted to the other.
+}
+\details{
+The chemical-specific steady-state concentration for a dose rate of 
+1 mg/kg body weight/day can be used for in IVIVE of
+a bioactive \emph{in vitro} concentration by dividing the \emph{in vitro}
+concentration
+by the steady-state concentration to predict a dose rate (mg/kg/day) that
+would produce that concentration in plasma. Using quantiles of the 
+distribution (such as the upper 95th percentile) allow incorporation of 
+uncertainty and variability into IVIVE.
+
+Reverse Dosimetry Toxicodynamic IVIVE
+
+\if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+\if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+
+Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 
+reverse dosimetry toxicodynamic IVIVE. Equivalent external dose is
+determined by solving the TK model in reverse by deriving the external dose
+(that is, TK model input) that produces a specified internal concentration 
+(that is, TK model output). Reverse dosimetry and IVIVE using HTTK relies on 
+the linearity of the models. We calculate a scaling factor to relate 
+\emph{in vitro} 
+concentrations (uM) to administered equivalent doses (AED). The scaling 
+factor is the inverse of the steady state plasma concentration (Css) 
+predicted for a 1 mg/kg/day exposure dose rate. We use Monte Carlo to 
+simulate variability and propagate uncertainty; for example, to calculate an 
+upper 95th percentile Css,95 for individuals who get higher plasma 
+concentrations from the same exposure.
+
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
 
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
@@ -108,9 +155,9 @@ dosing.  All tissues other than gut, liver, and lung are the product of the
 steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
-assumptions identified by 
-\href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019)} 
+The six sets of plausible IVIVE
+assumptions identified by Honda et al. (2019) 
+(\doi{10.1371/journal.pone.0217564}) 
 are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -124,7 +171,15 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
-
+# Basic in vitro - in vivo extrapolation with httk, convert 0.5 uM in vitro
+# concentration of chemical Surinabant to mg/kg/day:
+set.seed(1234)
+0.5/calc_mc_css(chem.name="Surinabant",samples=10,output.units="uM")
+# The significant digits should give the same answer as:
+set.seed(1234)
+calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=10)  
+# Note that we use set.seed to get the same sequence of random numbers for
+# the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
 \donttest{
 # The following example should result in an error since we do not 
