@@ -45,6 +45,7 @@ gen_height_weight <- function(gender,
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   g <- r <- seqn <- logwresid <- loghresid <- wtmec6yr <- NULL
+  riagendr <- ridreth1 <- bmxwt <- bmxhtlenavg <- ridexagm <- NULL
   #End R CMD CHECK appeasement.
   
    n <- length(age_months)
