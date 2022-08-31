@@ -11,10 +11,11 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
 * HTTK-Pop population simulator:
   * Replaced HTTK-Pop data from NHANES cycles 2007-2012 with data from most recent 3 NHANES cycles (2013-2018)  
   * Reduced size of data file httkpop.RData. NHANES data now stored as object `mecdt` of class `data.table`, rather than as object `nhanes_mec_svy` of class `survey.design2`. Also, no longer storing pre-calculated spline fits for serum creatinine and hematocrit vs. age, or pre-calculated age distributions (used by HTTK-Pop in virtual-individuals mode); these are now calculated "on the fly".
-  * In CKD-EPI equation used to estimate GFR for simulated adults based on serum creatinine, age, sex, and race (black/non-black): set "race factor" to 1 by default (that is, treat all simulated adults as "non-black" for purposes of GFR estimation), to reflect recent changes in clinical practice. (Control this behavior with `httkpop_generate()` argument "ckd_epi_race_factor")
+  * In CKD-EPI equation used to estimate GFR for simulated adults based on serum creatinine, age, sex, and race (black/non-black): set "race factor" to 1 by default (i.e., treat all simulated adults as "non-black" for purposes of GFR estimation), to reflect recent changes in clinical practice. (Control this behavior with `httkpop_generate()` argument "ckd_epi_race_factor")
   * Add residual variability to GFR estimated using CKD-EPI equation, by default. (Control whether to add residual variability using `httkpop_generate()` argument "gfr_resid_var") 
 * Phys-chem properties:
   * Replaced pKa values from Strope et al. (2018) (<https://doi.org/10.1016/j.scitotenv.2017.09.033>) with most recent OPERA (v2.7) predictions (<https://github.com/kmansouri/OPERA>)
+    * This may slightly change all predictions chemicals that are ionized in tissue.
 * PBTK model equations:
   * Revised renal clearance to be GFR x [Unbound conc in arterial plasma] (previously it was GFR x [Unbound conc in kidney plasma])
 * Miscellaneous:
@@ -23,11 +24,12 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
   * Updated `invitro_mc` to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
   * Added internal function `remd0non0u95` to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
 * Added logical arguments to `invitro_mc` to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
-* If fup measurment Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
+* If fup measurement (that is, uncertainty) Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
 * Moved Kilford (2008) correction for fraction unbound in hepatocyte assay from `calc_hep_clearance` to the parameterize functions and `invitro_mc` -- can now be toggled with argument adjusted.Clint
+* New vignette "Introduction to HTTK" added including material from Breen et al. (2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
 
 ## Bug Fixes 
-* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected
+* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv`. 
 
 # version 2.1.0 (March, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
@@ -56,7 +58,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
   * the volume of headspace calculated as in Armitage et al. 2014.
   * the volume of medium calculated as in Armitage et al. 2014.
   * f_ratio calculated as in Armitage et al. 2014
-  * kow added in the denominator of cwat, that is kowP_domf_oc*Vdom
+  * kow added in the denominator of cwat, i.e. kowP_domf_oc*Vdom
 * Corrected major bug introduced in 2.0.0 (vectorization of `calc_ionization`) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
 * Corrected monkey cardiac output (thank you Peter Egeghy)
 * Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
@@ -171,31 +173,31 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
 # version 1.10.0 (July 9, 2019)
 This version is consistent with the submitted manuscript Wambaugh et al. 
 "Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization". 
-Major enhancements were made to allow propagation of measurment-specific uncertainty
-and population variability into IVIVE predicitons.
+Major enhancements were made to allow propagation of measurement-specific uncertainty
+and population variability into IVIVE predictions.
 
 ## New Features
 * New human experimental measurements of fup and Clint are reported for 418 and 467 chemicals, respectively.
   * Data on both fup and Clint are jointly available for 389 of those chemicals.
-* Clint and fup values can now be either numeric values (as before) or distributions characterized by as "MEDIAN,LOWER95TH,UPPER95TH,PVALUE" for Clint and "MEDIAN,LOWER95TH,UPPER95TH" for fup. The code has been substantially revised to accomodate this.
+* Clint and fup values can now be either numeric values (as before) or distributions characterized by as "MEDIAN,LOWER95TH,UPPER95TH,PVALUE" for Clint and "MEDIAN,LOWER95TH,UPPER95TH" for fup. The code has been substantially revised to accommodate this.
 
 ## Enhancements
 * Added a minimum.Funbound.plasma since some of the Bayesian estimates are very low and at some point the values seem implausible. A value of 0.0001 was selected since it half the lowest reported measured value. Setting minimum.Funbound.plasma=0 removes this restriction.
 * Monte Carlo coefficient of variation for Clint and fup has been divided into separate values for uncertainty (from measurement) and variability (population/genetic). Default values for coefficients of variation are fup.meas.cv=0.4, 
-clint.meas.cv=0.3, fup.pop.cv=0.3, clint.pop.cv=0.3, (from Wambaugh et al, submitted). Note that most of the new fup mesurements have a lower CV than 0.3.
+clint.meas.cv=0.3, fup.pop.cv=0.3, clint.pop.cv=0.3, (from Wambaugh et al, submitted). Note that most of the new fup measurements have a lower CV than 0.3.
 * All documentation converted to roxygen2 format.
 * Vignette names have been updated to make the related publication clear.
 * All references to "fub" have been converted to "fup" where appropriate.
-* Rewrote calc_analytic_css to handle all models in the same manner.
+* Rewrote `calc_analytic_css` to handle all models in the same manner.
 * Changed arguments "mg" and "mol" for output.units in calc_mc_oral_equivalent to "mgpkgpday" and "umolpkgpday". (idea from Katie Paul-Friedman)
 * Changed httk-pop argument "fup.censor" to "fup.censored.dist".
 * Armitage et al. (2014) (<https://doi.org/10.1021/es501955g>) model functions now work with input of vectors (to work well with data.table) or input of data.table
 * Added the physchem parameters needed to run Armitage et al. model 
 * Updated honda.ivive, reduced to 4 options as in Honda et al. (2019) (<https://doi.org/10.1371/journal.pone.0217564>) Figure 8 panels a-d, changed "plasma.binding" to "bioactive.free.invivo", and exported function to allow user to call help file
 * Added concentration as an option set by honda.ivive
-* Added concentration = "tissue" as an option to calc_css functions
-* Added bioactive.free.invivo as an option to calc_analytic_css functions, and calc_mc functions
-* Function get_physchem_param: exported and now works with vectors of CAS and/or parameters
+* Added concentration = "tissue" as an option to `calc_css` functions
+* Added bioactive.free.invivo as an option to `calc_analytic_css` functions, and `calc_mc...` functions
+* Function `get_physchem_param`: exported and now works with vectors of CAS and/or parameters
 
 ## Bug Fixes 
 * Corrected error where non-human species were using the incorrect p-value for Clint when default.to.human=TRUE (human p-value is now used). (thank you Jason Phillips and Shyam Patel for bug report).
@@ -210,7 +212,7 @@ clint.meas.cv=0.3, fup.pop.cv=0.3, clint.pop.cv=0.3, (from Wambaugh et al, submi
 # version 1.9.1 (April 15, 2019)
 
 ## Bug Fixes 
-* Fixed significant errors in calc_analytic_css that was causing Css to be over-estimated roughly 10x, therefore reducing the oral equivalent dose 10x (thank you Nisha Sipes for bug report).
+* Fixed significant errors in `calc_analytic_css` that were causing Css to be over-estimated roughly 10x, therefore reducing the oral equivalent dose 10x (thank you Nisha Sipes for bug report).
    
 # version 1.9 (February 4, 2019)
 This version is consistent with the submitted version of Honda et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions"
@@ -218,21 +220,21 @@ This version is consistent with the submitted version of Honda et al. "Using the
 ## New Features
 * New rat-specific in vitro TK data provided for 65 chemicals. 
 * New functions for calculating in vitro disposition according to the Armitage et al. model (<https://doi.org/10.1021/es501955g>) (thank you James Armitage)
-  * armitage_eval
-  * armitage_estimate_sarea 
+  * `armitage_eval`
+  * `armitage_estimate_sarea` 
 
 ## Enhancements
 * Mark Sfeir is new lead HTTK software engineer (thank you Robert Pearce!)
 * Moved code base to Bitbucket internally (thank you Sean Watford and Jeremy Dunne)
-* Added arguments to IVIVE functions (for example, calc_mc_css) to use sets of assumptions identified by Honda et al. (for example, IVIVE="Honda1")(thank you Katie Paul-Friedman)
+* Added arguments to IVIVE functions (for example, `calc_mc_css`) to use sets of assumptions identified by Honda et al. (for example, IVIVE="Honda1")(thank you Katie Paul-Friedman)
 * Changed all model parameter sets to include physico-chemical properties to better facilitate Monte Carlo analysis
-* Updated load_sipes2017 to be much faster by loading an image by default
-* Updated help files for Sipes2017 and load_sipes2017.
-* get_wetmore functions changed to get_lit
+* Updated `load_sipes2017` to be much faster by loading an image by default
+* Updated help files for Sipes2017 and `load_sipes2017`.
+* `get_wetmore` functions changed to `get_lit`
 * httkpop_bio exported to user functions (fx name since changed to 'httkpop_biotophys_default')
 * For time point after first dose: bug now corrected when not starting at time 0(thank you Xiaoqing Chang)
-* Added figures to help files of solve functions
-* Added hematocrit argument to calc_rblood2plasma
+* Added figures to help files of `solve_[MODEL]` functions
+* Added `hematocrit` argument to `calc_rblood2plasma`
 * Made amounts in 1comp model not scaled by body weight, adding BW to parameters for that model thank you Tom Moxon)
 * Converted all phys-chem properties except pKa to values predicted by OPERA (Mansouri et al., 2018)
 * Added missing logP and MW for some chemicals from OPERA
@@ -240,7 +242,7 @@ This version is consistent with the submitted version of Honda et al. "Using the
 
 ## Bug Fixes 
 * Corrected mistake in `get_cheminfo` help file: exlude.fub.zero defaults to FALSE for 3compartmentss and TRUE for others
-* Corrected (thank you Jason Phillips), updated, and added pKa values from Strope et al., 2018
+* Corrected (thank you Jason Phillips), updated, and added pKa values from Strope et al. (2018) (<https://doi.org/10.1016/j.scitotenv.2017.09.033>)
 * Corrected calc_mc_css bug: species passed to monte_carlo function
 
 
@@ -296,12 +298,12 @@ chem.physical_and_invitro.data
 * New tissue.data table with Ruark 2014 that contains different formatting with human and rat specific data
 * parameterize_schmitt: added force.human.fub argument
 * added plasma protein and neutral lipid volume fractions to physiology.data for use in package
-* calc_mc_css: defaults to direct resampling. no longer coerces species to human when httkpop=TRUE. When another species is entered, a warning is thrown and the function behaves as if httkpop=FALSE.
+* calc_mc_css: defaults to direct resampling. no longer coerces species to human when `httkpop=TRUE`. When another species is entered, a warning is thrown and the function behaves as if httkpop=FALSE.
 * updated help file references and examples
-* removed temperature from schmitt parameters
-* overwrite 0 values for Fubound.plasma when overwrite=FALSE in add_chemtable
+* removed temperature from Schmitt parameters
+* overwrite 0 values for `Fubound.plasma when overwrite=FALSE` in add_chemtable
 * added vignette for generating partition coefficient plots
-* added dsstox info: new columns: "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type".  overwrote: MW and SMILES
+* added DSSTOX info, new columns: "DSSTox_Substance_Id","Structure_Formula", or "Substance_Type".  overwrote: MW and SMILES
 * added pc.data and obach2008 tables
 * httkpop option in calc_mc_css: well-stirred correction and new Funbound.plasma used by default. New partition coefficients used with other models by default.
 
@@ -309,23 +311,28 @@ chem.physical_and_invitro.data
 * corrected parameterize_3comp default.to.human bug: always set to false
 
 # version 1.5 (March 3, 2017)
-This version is consistent with  Ring et al. "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability", which is accepted for publication at Environment International. Revisions include models, data, and vignettes for "httk-pop" functionality. "httk-pop" allows Monte Carlo simulation of physiological variability using data from the National Health and Nutrition Examination Survey. 
+This version is consistent with  Ring et al. "Identifying populations sensitive 
+to environmental chemicals by simulating toxicokinetic variability", which is 
+accepted for publication at Environment International. Revisions include models, 
+data, and vignettes for "httk-pop" functionality. "httk-pop" allows Monte Carlo 
+simulation of physiological variability using data from the National Health and 
+Nutrition Examination Survey. 
 
 ## New Features
-* httk-pop Monte Carlo human variability functionality is the new default, although the previous approach is available (set httkpop=FALSE).
+* httk-pop Monte Carlo human variability functionality is the new default, although the previous approach is available (set `httkpop=FALSE`).
 
 ## Enhancements
-* "default.to.human" argument added to `calc_hepatic_clearance` and `calc_stats`.
+* `default.to.human` argument added to `calc_hepatic_clearance` and `calc_stats`.
 * `calc_hepatic_clearance` and calc_total_clearance do not necessarily require all parameters.
 * Argument "tissue" added to `calc_analytic_css`, `calc_mc_css`, and 
 `calc_mc_oral_equiv`, enabling tissue specific calculations in addition to plasma.
-* `calc_dow`: fraction neutral argument changed to fraction charged, thus treating zwitterions as neutrals
+* `calc_dow`: fraction neutral argument changed to fraction charged, thus treating Zwitter ions as neutrals
 * Multiple iv doses enabled in `solve_*` functions.
 * `get_rblood2plasma` function added to retrieve in vivo Rblood2plasma from "chem.physical_and_invitro.data".
 
 ## Bug Fixes 
 * Corrected minor bug for `get_cheminfo`
-* Corrected bug in `monte_carlo`: Upper bound placed at limit of detection for censored params truncated normal distribution.  However, this has no impact on the default case where the limit of detection is .01 the mean .005 because of the small standard deviation size (.0015). Only large coefficients of variation or "Funbound.plasma" values close to the limit of detection would be affected.
+* Corrected bug in `monte_carlo`: Upper bound placed at limit of detection for censored params truncated normal distribution.  However, this has no impact on the default case where the limit of detection is .01 the mean .005 because of the small standard deviation size (.0015). Only large coefficients of variation or `Funbound.plasma` values close to the limit of detection would be affected.
 
 # version: 1.4 (February 3, 2016)
 This revision incorporates changes suggested by the reviewers of Pearce et al. "httk: R Package for High-Throughput Toxicokinetics", which was accepted, pending minor revision, in the Journal of Statistical Software (now included in vignettes). 
