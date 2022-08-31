@@ -95,8 +95,7 @@ Equivalent dose in specified units, default of mg/kg BW/day.
 \description{
 This functions converts a chemical plasma concetration to an oral equivalent
 dose using a concentration obtained from \code{\link{calc_mc_css}}.
-}
-\details{
+
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
