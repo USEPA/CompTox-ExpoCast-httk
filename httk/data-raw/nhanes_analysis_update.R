@@ -1,8 +1,5 @@
 ### Miyuki Breen
 ### update Caroline Ring's nhanes_analysis.r to get NHANES 2017-2018, 2015-2016, 2013-2014
-### devtools::use_data has been deprecated and transferred to the usethis package 
-### using usethis::use_data instead of devtools:use_data 
-### June 30, 2020
 
 #' NHANES analysis
 #' ========================================================
@@ -25,17 +22,23 @@ mcnally_dt <- fread("McNally2014_data.csv")
 
 #' Pre-process the NHANES data.
 source("make_bmiage_dt.R") #loads data.table called bmiage
-#usethis::use_data(bmiage, overwrite=TRUE)
 source("make_wfl.R") #loads data_table called wfl (weight for length)
-#usethis::use_data(wfl, overwrite=TRUE)
 source("get_weight_class_init.R")
 source("nhanes_init_update.R")
 #For reproducibility, first set a seed!
 TeachingDemos::char2seed("Caroline Ring")
 #Now read in and process the NHANES data.
 nhanes_mec_svy <- nhanes_init_update(bmiage, wfl)
-#Add the data to the package.
-#' 
+
+#' Need to pre-calculate KDE bandwidths for height/weight, hematocrit, serum
+#' creatinine vs. age spline residuals.
+#'
+#' To save space, we no longer store pre-calculated spline fits, pre-calculated
+#' residuals, or pre-calculated KDE fits. Instead we fit splines to NHANES data
+#' "on the fly" when httkpop_generate() is called with method = "v" (virtual
+#' individuals mode). But calculating optimal (plug-in) KDE bandwidths is too
+#' slow to do "on the fly", so we pre-calculate the bandwidths here.
+#'
 #' Since everything is done by gender and race/ethnicity, we'll write a function
 #' for each item that takes gender and race/ethnicity as input arguments. Then
 #' we'll loop over the genders and races/ethnicities only once, calling each
@@ -55,6 +58,7 @@ nhanes_mec_svy <- nhanes_init_update(bmiage, wfl)
 #' the residuals between NHANES and spline-predicted values.
 #' 4. Fit a two-dimensional KDE to the (log weight residual, log height residual)
 #'  data.
+#'  5. Return optimal KDE bandwidth as calculated by ks::kde.
 #' 
 ## ----heightweight--------------------------------------------------------
 heightweight <- function(g, r, nhanes_mec_svy){
@@ -111,6 +115,7 @@ heightweight <- function(g, r, nhanes_mec_svy){
 #' the spline fit is only valid for ages 12 months and above.
 #' 3. Get the residuals between NHANES and spline-predicted log hematocrit data.
 #' 4. Fit a one-dimensional KDE to the residuals.
+#' 5. Return optimal KDE bandwidth as calculated by ks::kde
 #' 
 ## ----hematocrit----------------------------------------------------------
 hematocrit <- function(g, r, nhanes_mec_svy){
@@ -152,6 +157,7 @@ hematocrit <- function(g, r, nhanes_mec_svy){
 #' 3. Get the residuals between NHANES and spline-predicted log serum creatinine 
 #' data.
 #' 4. Fit a one-dimensional KDE to the residuals.
+#' 5. Return optimal KDE bandwidth as calculated by ks::kde
 #' 
 ## ----serumcreat----------------------------------------------------------
 serumcreat <- function(g, r, nhanes_mec_svy){
@@ -204,7 +210,7 @@ DT_hw_kde_H <- mapply(heightweight,
                   SIMPLIFY =  FALSE)
 names(hw_H) <- paste(gr_all$g, gr_all$r)
 
-# Hematocrit
+# Hematocrit KDE bandwidth
 hct_h <- mapply(hematocrit,
                 g = gr_all$g,
                 r = gr_all$r,
@@ -212,7 +218,7 @@ hct_h <- mapply(hematocrit,
                 SIMPLIFY = FALSE)
 names(hct_h) <- paste(gr_all$g, gr_all$r)
 
-#Serum creatinine
+#Serum creatinine KDE bandwidth
 scr_h <- mapply(serumcreat,
                 g = gr_all$g,
                 r = gr_all$r,
@@ -249,7 +255,7 @@ save(list=c("bmiage",
             "scr_h"
             ),
      compress = "bzip2",
-     version = 3,
+     version = 2,
      file="../data/httkpop.RData")
 
 

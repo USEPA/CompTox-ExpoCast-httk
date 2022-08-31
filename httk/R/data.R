@@ -145,6 +145,110 @@
 #'International 106 (2017): 105-118
 "wfl"
 
+#'KDE bandwidth for residual variability in height/weight
+#'
+#'Bandwidths used for a two-dimensional kernel density estimation of the joint
+#'distribution of residual errors around smoothing spline fits of height vs. age
+#'and weight vs. age for NHANES respondents in each of ten combinations of sex
+#'and race/ethnicity categories.
+#'
+#'Each matrix is a variance-covariance matrix for a two-dimensional normal
+#'distribution: this is the bandwidth to be used for a two-dimensional kernel
+#'density estimation (KDE) (using a two-dimensional normal kernel) of the joint
+#'distribution of residual errors around smoothing spline fits of height vs. age
+#'and weight vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{Hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{gen_height_weight}}.
+#'
+#'@format A named list with 10 elements, each a matrix with 2 rows and 2
+#'  columns. Each list element corresponds to, and is named for, one combination
+#'  of NHANES sex categories (Male and Female) and NHANES race/ethnicity
+#'  categories (Mexican American, Other Hispanic, Non-Hispanic White,
+#'  Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"hw_H" 
+
+#'KDE bandwidths for residual variability in hematocrit
+#'
+#'Bandwidths used for a one-dimensional kernel density estimation of the
+#'distribution of residual errors around smoothing spline fits of hematocrit vs.
+#'age  for NHANES respondents in each of ten combinations of sex and
+#'race/ethnicity categories.
+#'
+#'Each matrix is the standard deviation for a normal distribution: this is the
+#'bandwidth to be used for a kernel density estimation (KDE) (using a normal
+#'kernel) of the distribution of residual errors around smoothing spline fits of
+#'hematocrit vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{estimate_hematocrit}}.
+#'
+#'@format A named list with 10 elements, each a numeric value. Each list element
+#'  corresponds to, and is named for, one combination of NHANES sex categories
+#'  (Male and Female) and NHANES race/ethnicity categories (Mexican American,
+#'  Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"hct_h" 
+
+#'KDE bandwidths for residual variability in serum creatinine
+#'
+#'Bandwidths used for a one-dimensional kernel density estimation of the
+#'distribution of residual errors around smoothing spline fits of serum
+#'creatinine vs. age  for NHANES respondents in each of ten combinations of sex
+#'and race/ethnicity categories.
+#'
+#'Each matrix is the standard deviation for a normal distribution: this is the
+#'bandwidth to be used for a kernel density estimation (KDE) (using a normal
+#'kernel) of the distribution of residual errors around smoothing spline fits of
+#'serum creatinine vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{gen_serum_creatinine}}.
+#'
+#'@format A named list with 10 elements, each a numeric value. Each list element
+#'  corresponds to, and is named for, one combination of NHANES sex categories
+#'  (Male and Female) and NHANES race/ethnicity categories (Mexican American,
+#'  Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"scr_h" 
+
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
 #'
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
