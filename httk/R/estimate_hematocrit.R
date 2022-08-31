@@ -45,6 +45,7 @@ estimate_hematocrit <- function(gender,
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   g <- r <- loghctresid <- seqn <- wtmec6yr <- NULL
+  riagendr <- ridreth1 <- lbxhct <- ridexagm <- NULL
   #End R CMD CHECK appeasement.
   
   hematocrit <- rep(NA_real_, length(age_months))
