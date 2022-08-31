@@ -1,9 +1,10 @@
 #' Calculate Monte Carlo Oral Equivalent Dose
 #' 
+#' @description
 #' This functions converts a chemical plasma concetration to an oral equivalent
 #' dose using a concentration obtained from \code{\link{calc_mc_css}}.  
 #' 
-#' 
+#' @description
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
 #' 
