@@ -1,6 +1,6 @@
-![HTTK logo](httk/logo/httk-logo.png)
+![HTTK logo](logo/httk-logo.png)
 
-# Git Repository for R Package "httk"
+# R Package "httk"
 
 <!-- badges: start -->
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/httk)](https://cran.r-project.org/package=httk)
