@@ -47,7 +47,7 @@ gen_height_weight <- function(gender,
   riagendr <- ridreth1 <- bmxwt <- bmxhtlenavg <- wtmec6yr <- NULL
   
   #End R CMD CHECK appeasement
-  
+
    n <- length(age_months)
    grname <- unique(paste(gender, reth))
    
