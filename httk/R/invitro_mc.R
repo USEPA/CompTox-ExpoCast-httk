@@ -1,9 +1,14 @@
 #' Draw in vitro TK parameters including uncertainty and variability.
 #' 
+#' @description
 #' Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
 #' user specifications on the assumed distributions of Funbound.plasma and
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions.
+#'
+#' @details
+#' The Monte Carlo methods used here were recently updated and described by
+#' Breen et al. (submitted).
 #' 
 #' @param parameters.dt A data table of physiological and chemical-specific parameters
 #' 

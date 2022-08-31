@@ -6,9 +6,9 @@
 #' an population variability. Uncertainty and variability are simulated via the
 #' Monte Carlo method -- many sets of model parameters are drawn according to
 #' probability distributions described in 
-#' \href{https://doi.org/10.1016/j.envint.2017.06.004}{Ring et al. (2017)}
-#' for human variability and
-#' \href{https://doi.org/10.1093/toxsci/kfz205}{Wambaugh et al. (2019)} 
+#' Ring et al. (2017) (\doi{10.1016/j.envint.2017.06.004})
+#' for human variability and Wambaugh et al. (2019) 
+#' (\doi{10.1093/toxsci/kfz205}) 
 #' for measurement uncertainty. To allow rapid application of the Monte Carlo 
 #' method we make use of analytical solutions for the steady-state concentration
 #' for a particular model via a given route (when available) as opposed to
@@ -19,13 +19,11 @@
 #' the quantiles specified by argument \code{which.quantile} are provided. If 
 #' the full set of predicted values are desired use set the argument 
 #' \code{return.samples} to \code{TRUE}.
+
 #'
 #' @details
-#' The Monte Carlo methods used here were recently updated and described by
-#' Breen et al. (submitted).
-#'
 #' The chemical-specific steady-state concentration for a dose rate of 
-#' 1 mg/kg body weight/day can be used for in \emph{in vitro-in vivo}
+#' 1 mg/kg body weight/day can be used for in \emph{in vitro-in vivo} 
 #' extrapolation (IVIVE) of
 #' a bioactive \emph{in vitro} concentration by dividing the \emph{in vitro}
 #' concentration
@@ -33,6 +31,29 @@
 #' would produce that concentration in plasma. Using quantiles of the 
 #' distribution (such as the upper 95th percentile) allow incorporation of 
 #' uncertainty and variability into IVIVE.
+#' 
+#' Reverse Dosimetry Toxicodynamic IVIVE
+#' 
+#' \if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+#' \if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+#' 
+#' Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 
+#' reverse dosimetry toxicodynamic IVIVE. Equivalent external dose is
+#' determined by solving the TK model in reverse by deriving the external dose
+#' (that is, TK model input) that produces a specified internal concentration 
+#' (that is, TK model output). Reverse dosimetry and IVIVE using HTTK relies on 
+#' the linearity of the models. We calculate a scaling factor to relate 
+#' \emph{in vitro} 
+#' concentrations (uM) to administered equivalent doses (AED). The scaling 
+#' factor is the inverse of the steady state plasma concentration (Css) 
+#' predicted for a 1 mg/kg/day exposure dose rate. We use Monte Carlo to 
+#' simulate variability and propagate uncertainty; for example, to calculate an 
+#' upper 95th percentile Css,95 for individuals who get higher plasma 
+#' concentrations from the same exposure.
+#'
+#' The Monte Carlo methods used here were recently updated and described by
+#' Breen et al. (submitted).
+#'
 #' 
 #' httk-pop is used only for humans. For non-human species biological 
 #' variability is simulated by drawing parameters from uncorellated log-normal
@@ -54,8 +75,8 @@
 #' estimate the concentration from the plasma. 
 #' 
 #' The six sets of plausible IVIVE
-#' assumptions identified by 
-#' \href{https://doi.org/10.1371/journal.pone.0217564}{Honda et al. (2019)} 
+#' assumptions identified by Honda et al. (2019) 
+#' (\doi{10.1371/journal.pone.0217564}) 
 #' are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
@@ -187,7 +208,14 @@
 #' steady-stae concentration (Css) from the Monte Carlo simulation
 #'
 #' @examples
-#' 
+#' # Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
+#' # concentration of chemical with CAS 2451-62-9 to mg/kg/day:
+#' set.seed(1234)
+#' 3/calc_mc_css(chem.cas="2451-62-9",samples=10,output.units="uM")
+#' # The significant digits should give the same answer as:
+#' set.seed(1234)
+#' calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)  
+#'
 #' \donttest{
 #'  set.seed(1234)
 #'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
