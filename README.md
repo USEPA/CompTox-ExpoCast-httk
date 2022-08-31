@@ -1,4 +1,4 @@
-![HTTK logo](logo/httk-logo.png)
+![HTTK logo](httk/logo/httk-logo.png)
 
 # R Package "httk"
 
@@ -16,25 +16,33 @@ files, documentation, and other information can be obtained from
 
 ## Description
 
-Generic models and chemical-specific data for chemical toxicokinetics ("TK") 
-and in vitro-in vivo extrapolation ("IVIVE") in bioinformatics, 
-as described by Pearce et al. (2017) <https://doi.org/10.18637/jss.v079.i04>.
-Chemical-specific in vitro data have been obtained from relatively
-high-throughput experiments. Both physiologically-based ("PBTK")
-and empirical (for example, one compartment) "TK" models can be
-parameterized with the data provided for thousands of chemicals,
-multiple exposure routes, and various species. The models consist
-of systems of ordinary differential equations which are solved
+Pre-made models that can be rapidly tailored to various chemicals
+and species using chemical-specific in vitro data and physiological 
+information. These tools allow incorporation of chemical 
+toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
+into bioinformatics, as described by Pearce et al. (2017) 
+(<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
+in vitro data characterizing toxicokinetics can be been obtained 
+from relatively high-throughput experiments. The 
+chemical-independent
+("generic") physiologically-based ("PBTK") and empirical 
+(for example, one compartment) "TK" models included here can be 
+parameterized with in vitro data or in silico predictions which are 
+provided for thousands of chemicals, multiple exposure routes, 
+and various species. The models are systems of ordinary 
+differential equations that are solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
-included, which allows for simulating human biological variability
+included for simulating human biological variability
 (Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)
-and propagating parameter uncertainty. Calibrated methods are
-included for predicting tissue:plasma partition coefficients and
-volume of distribution
+and propagating parameter uncertainty 
+(Wambaugh et al., 2019 <https://doi.org/10.1093/toxsci/kfz205>). 
+Empirically calibrated methods are included for predicting 
+tissue:plasma partition coefficients and volume of distribution  
 (Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
-These functions and data provide a set of tools for
-IVIVE of high-throughput screening data (for example, Tox21, ToxCast) to real-world
-exposures via reverse dosimetry (also known as "RTK")
+These functions and data provide a set of tools for using IVIVE to
+convert concentrations from high-throughput screening experiments
+(for example, Tox21, ToxCast) to real-world exposures via reverse 
+dosimetry (also known as "RTK")
 (Wetmore et al., 2015 <https://doi.org/10.1093/toxsci/kfv171>).
 
 ## Getting Started
