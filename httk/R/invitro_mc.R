@@ -50,7 +50,7 @@
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
 #' for Funbound.plasma when set to TRUE (Default).
 #' 
-#' @param adjusted.Funbound.plasma Uses Kilford et al. (2008) hepatocyte incubation
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
 #' binding adjustment for Clint when set to TRUE (Default).
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
