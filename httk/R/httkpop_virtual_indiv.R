@@ -74,7 +74,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
   bmi_adj <- weight_adj <- height <- weight_class <- NULL
-  age_years <- age_months <- gender <- gfr_class <- gfr_est <- NULL
+  age_years <- age_months <- gender <- reth <- gfr_class <- gfr_est <- NULL
   Adipose_mass <- org_flow_check <- NULL
   #End R CMD CHECK appeasement.
   
