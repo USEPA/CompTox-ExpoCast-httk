@@ -75,6 +75,7 @@ httkpop_virtual_indiv<- function(nsamp=NULL,
   bmi_adj <- weight_adj <- height <- weight_class <- NULL
   age_years <- age_months <- gender <- reth <- gfr_class <- gfr_est <- NULL
   Adipose_mass <- org_flow_check <- NULL
+  serum_creat <- hematocrit <- NULL
   #End R CMD CHECK appeasement.
   
   #Generate age, height, and weight.

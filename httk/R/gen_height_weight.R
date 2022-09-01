@@ -44,7 +44,7 @@ gen_height_weight <- function(gender,
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! 
   
-  riagendr <- ridreth1 <- bmxwt <- bmxhtlenavg <- wtmec6yr <- NULL
+  riagendr <- ridexagm <- ridreth1 <- bmxwt <- bmxhtlenavg <- wtmec6yr <- NULL
   
   #End R CMD CHECK appeasement
 
