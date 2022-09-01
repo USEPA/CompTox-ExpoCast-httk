@@ -110,7 +110,7 @@ are present in the entries of the associated modelinfo file's \"alltissues.\"")
   #Check to make sure the tissuelist is a list of character vectors.
   if (!(is.null(tissuelist)))
   {
-    if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors, or 
+    if (!is.list(tissuelist)) stop("tissuelist must be a list of vectors, or 
 NULL if the model is a 1 compartment model where no lumping is necessary.") 
   }
     

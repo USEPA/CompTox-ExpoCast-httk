@@ -145,7 +145,7 @@ convert_solve_x <- function(model.output.mat,
                     ...)
     )
     # check if the conversion factor from 'convert_units' is not a 'try-error'
-    if(class(cf.tmp)!="try-error"){
+    if(!is(cf.tmp,"try-error")){
       cf[this.compartment] <- cf.tmp
     }else{
       # print a warning
