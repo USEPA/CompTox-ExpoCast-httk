@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -25,12 +25,45 @@ Type 'q()' to quit R.
 > 
 > # Check if the number of chemicals has changed:
 > Css.list <- get_cheminfo()
+Warning messages:
+1: In get_cheminfo() :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo() :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo() :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo() :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo() :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > pbpk.list <- get_cheminfo(model='pbtk')
+Warning messages:
+1: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "pbtk") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "pbtk") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo(model = "pbtk") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > rat.list <- get_cheminfo(species="rat")
+Warning messages:
+1: In get_cheminfo(species = "rat") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(species = "rat") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo(species = "rat") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+4: In get_cheminfo(species = "rat") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > length(Css.list)
-[1] 943
+[1] 941
 > length(pbpk.list)
-[1] 859
+[1] 857
 > length(rat.list)
 [1] 190
 >                                                  
@@ -50,13 +83,57 @@ Type 'q()' to quit R.
 >   
 > # Check if the requirements for diffrent models has changed:
 > length(get_cheminfo())
-[1] 943
+[1] 941
+Warning messages:
+1: In get_cheminfo() :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo() :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo() :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo() :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo() :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > length(get_cheminfo(species="rat"))
 [1] 190
+Warning messages:
+1: In get_cheminfo(species = "rat") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(species = "rat") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo(species = "rat") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+4: In get_cheminfo(species = "rat") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > length(get_cheminfo(model="pbtk"))
-[1] 859
+[1] 857
+Warning messages:
+1: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "pbtk") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "pbtk") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo(model = "pbtk") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo(model = "pbtk") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="pbtk",species="rat"))
 [1] 160
+Warning messages:
+1: In get_cheminfo(model = "pbtk", species = "rat") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "pbtk", species = "rat") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "pbtk", species = "rat") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+4: In get_cheminfo(model = "pbtk", species = "rat") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+5: In get_cheminfo(model = "pbtk", species = "rat") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(info="all"))
 [1] 11
 Warning messages:
@@ -64,14 +141,64 @@ Warning messages:
   Clint values with a pvalue > 0.05 were set to 0.
 2: In get_cheminfo(info = "all") :
   Clint values with a pvalue > 0.05 were set to 0.
+3: In get_cheminfo(info = "all") :
+  Excluding compounds that have one or more missing in necessary parameters.
+4: In get_cheminfo(info = "all") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+5: In get_cheminfo(info = "all") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+6: In get_cheminfo(info = "all") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+7: In get_cheminfo(info = "all") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > length(get_cheminfo(model="schmitt"))
-[1] 1550
+[1] 1618
+Warning messages:
+1: In get_cheminfo(model = "schmitt") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "schmitt") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "schmitt") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo(model = "schmitt") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 263
+[1] 298
+Warning messages:
+1: In get_cheminfo(model = "schmitt", species = "rat") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "schmitt", species = "rat") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "schmitt", species = "rat") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="1compartment"))
-[1] 859
+[1] 857
+Warning messages:
+1: In get_cheminfo(model = "1compartment") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "1compartment") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "1compartment") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo(model = "1compartment") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo(model = "1compartment") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo(model = "1compartment") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="1compartment",species="rat"))
 [1] 160
+Warning messages:
+1: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA) or a 'fup' value of 0.
+3: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+4: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+5: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 >   
 > # Check to see if the paramerer values have changed:
 > print(subset(get_cheminfo(info="all"), CAS %in% c(
@@ -81,18 +208,18 @@ Warning messages:
 +   "2921-88-2",	
 +   "117-81-7")),
 +   row.names=FALSE)
-                      Compound       CAS        DTXSID  logP    MW pKa_Accept
-                      Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       1.22
-                   Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3       None
- Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6       None
-        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.106 414.1       None
-                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6      -2.86
-  pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
-       None                0            0.05366                0.1237
- 9.78,10.39 19.9,10.2,29.8,0            0.00000  0.0385,0.0334,0.0456
-       None                0            0.19370                 0.005
-       -4.2                0            0.06358              0.004779
-       None              2.6                 NA              0.007932
+                      Compound       CAS        DTXSID logP    MW pKa_Accept
+                      Atrazine 1912-24-9 DTXSID9020112 2.61 215.7       3.79
+                   Bisphenol-a   80-05-7 DTXSID7020182 3.32 228.3       None
+ Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.52 390.6       None
+        Perfluorooctanoic acid  335-67-1 DTXSID8031865 3.11 414.1       None
+                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.96 350.6       2.03
+ pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
+      None                0            0.05366                0.1237
+      9.46 19.9,10.2,29.8,0            0.00000  0.0385,0.0334,0.0456
+      None                0            0.19370                 0.005
+      0.34                0            0.06358              0.004779
+      None              2.6                 NA              0.007932
  Human.Rblood2plasma
                   NA
               0.7949
@@ -104,5 +231,15 @@ Warning messages:
   Clint values with a pvalue > 0.05 were set to 0.
 2: In get_cheminfo(info = "all") :
   Clint values with a pvalue > 0.05 were set to 0.
+3: In get_cheminfo(info = "all") :
+  Excluding compounds that have one or more missing in necessary parameters.
+4: In get_cheminfo(info = "all") :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+5: In get_cheminfo(info = "all") :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+6: In get_cheminfo(info = "all") :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+7: In get_cheminfo(info = "all") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > 
 > quit("no")
