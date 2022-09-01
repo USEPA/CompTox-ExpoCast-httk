@@ -241,7 +241,6 @@ exp.duration = 6, exercise = TRUE)
                   
 params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
-}
 
 # Oral dose with exhalation as a route of elimination:
 out <- solve_gas_pbtk(chem.name = 'bisphenol a', exp.conc = 0, dose=100,
@@ -254,6 +253,7 @@ head(solve_gas_pbtk(chem.name="lindane"))
 head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
 # Convert just the plasma to mg/L:
 head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
+}
 
 }
 \references{

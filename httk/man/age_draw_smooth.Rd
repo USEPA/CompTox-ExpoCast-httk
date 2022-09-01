@@ -26,9 +26,6 @@ A named list with members 'ages_months' and 'ages_years', each
 numeric of length \code{nsamp}, giving the sampled ages in months and years.
 }
 \description{
-Draws ages from a smoothed distribution for a given gender/race combination
-}
-\details{
 This function should usually not be called directly by the user. It is used by
 \code{httkpop_generate()} in "virtual-individuals" mode.
 }

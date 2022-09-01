@@ -159,7 +159,7 @@ This gestational model is only parameterized for humans.
 \examples{
 
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
-doses.per.day = 3, plots = TRUE)
+doses.per.day = 3)
 
 }
 \author{
