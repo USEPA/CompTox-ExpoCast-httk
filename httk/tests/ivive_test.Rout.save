@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -55,20 +55,14 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
-  Rblood2plasma has been recalculated.
-5: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Clint is provided as a distribution.
-6: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Fraction unbound is provided as a distribution.
-7: In parameterize_steadystate(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-  95% 
-2.918 
+   95% 
+0.8242 
 Warning messages:
 1: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Clint is provided as a distribution.
@@ -76,8 +70,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
-4: In calc_rblood2plasma(hematocrit = parameters.dt$hematocrit, Krbc2pu = parameters.dt$Krbc2pu,  :
-  Rblood2plasma has been recalculated.
+4: In (function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > params <- parameterize_steadystate(chem.name="bisphenol a")
 Warning messages:
 1: In parameterize_steadystate(chem.name = "bisphenol a") :
@@ -86,10 +80,12 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In parameterize_steadystate(chem.name = "bisphenol a") :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In parameterize_steadystate(chem.name = "bisphenol a") :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
-  95% 
-2.918 
+   95% 
+0.8242 
 > 
 > ## Honda1:
 > #set.seed(12345)
