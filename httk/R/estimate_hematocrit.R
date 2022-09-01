@@ -43,7 +43,7 @@ estimate_hematocrit <- function(gender,
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! 
- riagendr <- ridreth1 <- lbxhct <- wtmec6yr <- NULL
+  riagendr <- ridexagm <- ridreth1 <- lbxhct <- wtmec6yr <- NULL
 
   #End R CMD CHECK appeasement.
   
