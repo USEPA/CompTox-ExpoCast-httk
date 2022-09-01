@@ -91,7 +91,8 @@ hepatocyte assay.
 Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
 user specifications on the assumed distributions of Funbound.plasma and
 Clint, draw "individual" values of Funbound.plasma and Clint from those
-distributions.
+distributions. The methodology for this function was developed and described
+by Wambaugh et al. (2019) (\doi{10.1093/toxsci/kfz205}).
 }
 \details{
 The Monte Carlo methods used here were recently updated and described by
