@@ -319,11 +319,7 @@ calc_analytic_css <- function(chem.name=NULL,
                  chem.cas = chem.cas,
                  chem.name = chem.name,
                  dtxsid=dtxsid,
-<<<<<<< HEAD
-                 parameters=parameters)
-=======
                  parameters = parameters)
->>>>>>> e95bbd80a9e8e1da11a02f9bf4c80b02cbd41e15
 
 #User message:
   if (!suppress.messages)
