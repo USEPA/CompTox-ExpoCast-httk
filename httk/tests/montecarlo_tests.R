@@ -20,7 +20,11 @@ calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 # Now test Monte Carlo for a variety of chemicals:
 # Clint and Fup are distributions, clint is zero:
 set.seed(1234)
-calc_mc_css(chem.cas="50594-66-6",samples=NSAMP)
+uM <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="uM")
+set.seed(1234)
+mgpL <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="mg/L")
+# Test unit conversions, molecular weight of Acifluorfen is 361.66:
+signif(mgpL/uM*1000,4)
 # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 set.seed(1234)
 calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
@@ -93,8 +97,11 @@ calc_mc_css(chem.cas="90-43-7",
 # well-behaved chemical with a measured Rblood2plasma:
 # lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 
-set.seed(1234)    
 # make sure the oral equivalent function works:
+set.seed(1234)
 calc_mc_oral_equiv(chem.name="bisphenol a",conc=10,samples=NSAMP)
+set.seed(1234)
+# Do the calculation manually to make sure units are correct:
+signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 
 quit("no")
