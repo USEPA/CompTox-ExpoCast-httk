@@ -126,11 +126,7 @@ the parameters must include an entry 'MW' (molecular weight).")
       } else {
         #Support parameters objects of the different classes currently employed
         #by httk, namely compound data.table/data.frame objects and lists.
-<<<<<<< HEAD
-          if (is.data.tables(parameters)){
-=======
-          if (any(class(parameters) == 'data.table')){
->>>>>>> e95bbd80a9e8e1da11a02f9bf4c80b02cbd41e15
+          if (is.data.table(parameters)){
             MW <- parameters[1, MW] #should be same MW value in each row
             #of data.table of parameters from Monte Carlo functions
           } else if (is(parameters,'list')){
