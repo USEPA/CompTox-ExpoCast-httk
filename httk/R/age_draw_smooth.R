@@ -1,7 +1,5 @@
 #' Draws ages from a smoothed distribution for a given gender/race combination
 #' 
-#' Draws ages from a smoothed distribution for a given gender/race combination
-#' 
 #' This function should usually not be called directly by the user. It is used by
 #'\code{httkpop_generate()} in "virtual-individuals" mode.
 #' 
@@ -24,7 +22,14 @@
 #' @import stats
 #' @export age_draw_smooth
 age_draw_smooth <- function(gender, reth, nsamp, agelim_months, nhanes_mec_svy){
-
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  riagendr <- ridreth1 <- NULL
+  #End R CMD CHECK appeasement.
+  
   nhanes_sub <- subset(nhanes_mec_svy,
                        riagendr %in% gender &
                          ridreth1 %in% reth)
