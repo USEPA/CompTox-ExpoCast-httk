@@ -267,7 +267,7 @@ augment.table <- function(
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
     # Otherwise force it to be a character:
-        if (class(this.table[,this.property])!='character')
+        if (!is.character(this.table[,this.property]))
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
