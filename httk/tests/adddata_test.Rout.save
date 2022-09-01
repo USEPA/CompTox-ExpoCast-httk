@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-02-20 r81781 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -22,6 +22,17 @@ Type 'q()' to quit R.
 > 
 > # Number of chemicals distributed with the package:
 > num.chems <- length(get_cheminfo())
+Warning messages:
+1: In get_cheminfo() :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo() :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo() :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo() :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo() :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > 
 > fake <- data.frame(Compound="Tester",
 +                    CASRN="222-11-1",
@@ -49,27 +60,29 @@ Type 'q()' to quit R.
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 50.94
+[1] 45.3
 
 $frac
-[1] 0.9708
+[1] 0.973
 
 $max
-[1] 51.51
+[1] 45.87
 
 $the.day
-[1] 28
+[1] 25
 
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
+1: In parameterize_pbtk(chem.cas = NULL, chem.name = "Tester", dtxsid = NULL,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+2: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
-2: In parameterize_pbtk(chem.cas = NULL, chem.name = "Tester", dtxsid = NULL,  :
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "Tester", dtxsid = NULL,  :
   Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
-3: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+4: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
   Rblood2plasma has been recalculated.
-4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-5: In solve_model(parameters = parameters, model = model, initial.values = Final_Conc[state.vars],  :
+6: In solve_model(parameters = parameters, model = model, initial.values = Final_Conc[state.vars],  :
   No units were specified for the provided initial values. Assume initial values are in default model units:
     Agutlumen = umol
     Agut = umol
@@ -98,5 +111,16 @@ Warning messages:
 > # We should be back to our original number:
 > num.chems == length(get_cheminfo())
 [1] TRUE
+Warning messages:
+1: In get_cheminfo() :
+  Excluding compounds that have one or more missing in necessary parameters.
+2: In get_cheminfo() :
+  Excluding compounds without a 'fup' value (i.e. fup value = NA).
+3: In get_cheminfo() :
+  Excluding compounds with uncertain 'fup' confidence/credible intervals.
+4: In get_cheminfo() :
+  Excluding compounds that do not have a clint value or distribution of clint values.
+5: In get_cheminfo() :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
 > 
 > quit("no")
