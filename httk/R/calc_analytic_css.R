@@ -125,7 +125,7 @@ model.list <- list()
 #' 
 #'params <- parameterize_pbtk(chem.cas="80-05-7") 
 #' 
-#'calc_analytic_css(chem.cas = "80-05-7",parameters=params,model="pbtk")
+#'calc_analytic_css(parameters=params,model="pbtk")
 #'
 #'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
@@ -318,7 +318,8 @@ calc_analytic_css <- function(chem.name=NULL,
                  output.units, 
                  chem.cas = chem.cas,
                  chem.name = chem.name,
-                 dtxsid=dtxsid)
+                 dtxsid=dtxsid,
+                 parameters = parameters)
 
 #User message:
   if (!suppress.messages)
