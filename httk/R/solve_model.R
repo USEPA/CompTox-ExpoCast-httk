@@ -407,7 +407,7 @@ specification in compartment_units for model ", model)
     }
     
     # Check if 'initial.values' is a numeric vector
-    if(class(initial.values)!="numeric"){
+    if(!is.numeric(initial.values)){
       stop("The initial.values argument is of class '",class(initial.values),
            "' and should be 'numeric'.")
     }
@@ -467,7 +467,7 @@ specification in compartment_units for model ", model)
       }
       
       #Check if 'initial.value.units' is a "character" vector
-      if(class(initial.value.units)!="character"){
+      if(!is.character(initial.value.units)){
         stop("The initial.value.units argument is of class '",
              class(initial.value.units),
              "' and should be 'character'.")
