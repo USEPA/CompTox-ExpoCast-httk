@@ -1,7 +1,13 @@
-#' Monte Carlo for pharmacokinetic models
+#' Monte Carlo for toxicokinetic model parameters
 #' 
-#' This function performs Monte Carlo to assess uncertainty and variability for
-#' toxicokinetic models. 
+#' This function performs basic, uncorrelated Monte Carlo to simulate
+#' uncertainty and/or variability for parameters of 
+#' toxicokinetic models. Parameters can be varied according to either a
+#' normal distribution that is truncated at zero 
+#' (using argument \code{cv.params}) or from a normal distribution that is 
+#' censored for values less than the limit of detection 
+#' (\code{censored.params}). Coefficient of variation (cv) and limit of
+#' of detectin can be specified separately for each parameter.
 #' 
 #' @param parameters These parameters that are also listed in either
 #' cv.params or censored.params are sampled using Monte Carlo.

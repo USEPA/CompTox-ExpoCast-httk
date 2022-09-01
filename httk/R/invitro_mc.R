@@ -1,4 +1,4 @@
-#' Draw in vitro TK parameters including uncertainty and variability.
+#' Monte Carlo for in vitro toxicokinetic parameters including uncertainty and variability.
 #' 
 #' @description
 #' Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some

@@ -2,7 +2,7 @@
 % Please edit documentation in R/invitro_mc.R
 \name{invitro_mc}
 \alias{invitro_mc}
-\title{Draw in vitro TK parameters including uncertainty and variability.}
+\title{Monte Carlo for in vitro toxicokinetic parameters including uncertainty and variability.}
 \usage{
 invitro_mc(
   parameters.dt = NULL,

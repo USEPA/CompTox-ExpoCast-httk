@@ -2,7 +2,7 @@
 % Please edit documentation in R/monte_carlo.R
 \name{monte_carlo}
 \alias{monte_carlo}
-\title{Monte Carlo for pharmacokinetic models}
+\title{Monte Carlo for toxicokinetic model parameters}
 \usage{
 monte_carlo(
   parameters,
@@ -40,8 +40,14 @@ A data.table with a row for each individual in the sample and a column for
 each parater in the model.
 }
 \description{
-This function performs Monte Carlo to assess uncertainty and variability for
-toxicokinetic models.
+This function performs basic, uncorrelated Monte Carlo to simulate
+uncertainty and/or variability for parameters of 
+toxicokinetic models. Parameters can be varied according to either a
+normal distribution that is truncated at zero 
+(using argument \code{cv.params}) or from a normal distribution that is 
+censored for values less than the limit of detection 
+(\code{censored.params}). Coefficient of variation (cv) and limit of
+of detectin can be specified separately for each parameter.
 }
 \examples{
 
