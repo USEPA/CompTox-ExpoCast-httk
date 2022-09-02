@@ -93,23 +93,21 @@ variance of parameters.}
 Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
-This function converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from \code{\link{calc_mc_css}}.  
-For reverse dosimetry-based \emph{in vitro-in vivo} extrapolation (IVIVE) for HT 
-risk screening, this allows the user to input the
+This function converts a chemical plasma concetration to an oral adminstered
+equivalent
+dose (AED) using a concentration obtained from \code{\link{calc_mc_css}}.  
+This function uses reverse dosimetry-based 
+'\emph{in vitro-in vivo} extrapolation (IVIVE) 
+for high throughput risk screening.  The user can input the
 chemical and \emph{in vitro} bioactive concentration, select the TK
-model, and then automatically obtain the \emph{in vivo} equivalent
-dose which would produce a body concentration equal to
-the \emph{in vitro} bioactive concentration. This approach relies on the 
-linearity
-of the models to calculate a scaling factor to relate in vitro
-concentrations (uM) with AED. The scaling factor is the
-inverse of the steady-state plasma concentration (Css) predicted
-for a 1 mg/kg/day exposure dose rate
-where \emph{in vitro} concentration [X] and Css must be in the same
-units. Note that it is typical for \emph{in vitro} concentrations to be
-reported in units of uM and Css in units of mg/L, in which case
-one must be converted to the other.
+model, and then automatically predict the \emph{in vivo} AED
+which would produce a body concentration equal to
+the \emph{in vitro} bioactive concentration. This function relies on the
+Monte Carlo method (via funcion \code{\link{create_mc_samples}} to simulate
+both uncertainty and variability so that the result is a distribution of
+equivalent doses, from which we provide specific quantiles
+(specified by \code{which.quantile}), though the full set of predictions can
+be obtained by setting \code{return.samples} to \code{TRUE}.
 }
 \details{
 The chemical-specific steady-state concentration for a dose rate of 
@@ -120,6 +118,16 @@ by the steady-state concentration to predict a dose rate (mg/kg/day) that
 would produce that concentration in plasma. Using quantiles of the 
 distribution (such as the upper 95th percentile) allow incorporation of 
 uncertainty and variability into IVIVE.
+
+This approach relies on thelinearity
+of the models to calculate a scaling factor to relate in vitro
+concentrations (uM) with AED. The scaling factor is the
+inverse of the steady-state plasma concentration (Css) predicted
+for a 1 mg/kg/day exposure dose rate
+where \emph{in vitro} concentration [X] and Css must be in the same
+units. Note that it is typical for \emph{in vitro} concentrations to be
+reported in units of uM and Css in units of mg/L, in which case
+one must be converted to the other. 
 
 Reverse Dosimetry Toxicodynamic IVIVE
 
@@ -133,8 +141,8 @@ determined by solving the TK model in reverse by deriving the external dose
 (that is, TK model output). Reverse dosimetry and IVIVE using HTTK relies on 
 the linearity of the models. We calculate a scaling factor to relate 
 \emph{in vitro} 
-concentrations (uM) to administered equivalent doses (AED). The scaling 
-factor is the inverse of the steady state plasma concentration (Css) 
+concentrations (uM) to AEDs. The scaling 
+factor is the inverse of the Css 
 predicted for a 1 mg/kg/day exposure dose rate. We use Monte Carlo to 
 simulate variability and propagate uncertainty; for example, to calculate an 
 upper 95th percentile Css,95 for individuals who get higher plasma 

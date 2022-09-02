@@ -29,7 +29,9 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
 * New vignette "Introduction to HTTK" added including material from Breen et al. (2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
 
 ## Bug Fixes 
-* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv`. 
+* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv` (Thank you Marc Beal!)
+* Error causing calc_half_life not to return value with dtxsid has been fixed
+* Error in create_mc_samples related to default.to.human argument not being based to parameterize_schmitt has been fixed
 
 # version 2.1.0 (March, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
