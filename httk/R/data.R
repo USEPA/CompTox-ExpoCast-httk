@@ -103,7 +103,7 @@
 #'   percentile BMI for the corresponding sex and age} \item{P85}{The 85th
 #'   percentile BMI for the corresponding sex and age} \item{P95}{The 95th
 #'   percentile BMI for the corresponding sex and age} }
-#' @source \url{http://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv}
+#' @source \url{https://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv}
 #'
 #'@keywords data
 #'@keywords httk-pop
