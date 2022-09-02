@@ -23,15 +23,17 @@ This version accompanies the submission of the Breen et al. manuscript "Simulati
   * Added wrapper functions (`get_wetmore...`) for backward compatibility (Thanks Jim Sluka)
   * Updated `invitro_mc` to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
   * Added internal function `remd0non0u95` to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
-* Added logical arguments to `invitro_mc` to directly allow user to turn uncetainty and variability off (previously this was done by seeting CV to NULL)
+  * Revised and expanded documentation for `calc_mc_css` and `calc_mc_oral_equiv`
+* Added logical arguments to `invitro_mc` to directly allow user to turn uncertainty and variability off (previously this was done by setting CV to NULL)
 * If fup measurement (that is, uncertainty) Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
-* Moved Kilford (2008) correction for fraction unbound in hepatocyte assay from `calc_hep_clearance` to the parameterize functions and `invitro_mc` -- can now be toggled with argument adjusted.Clint
+* Moved Kilford (2008) (<https://doi.org/110.1124/dmd.108.020834>) correction for fraction unbound in hepatocyte assay from `calc_hep_clearance` to the parameterize functions and `invitro_mc` -- can now be toggled with argument "adjusted.Clint"
 * New vignette "Introduction to HTTK" added including material from Breen et al. (2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
 
 ## Bug Fixes 
-* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0, mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv` (Thank you Marc Beal!)
-* Error causing calc_half_life not to return value with dtxsid has been fixed
-* Error in create_mc_samples related to default.to.human argument not being based to parameterize_schmitt has been fixed
+* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0 (only), mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv` (Thank you Marc Beal!)
+* User provided DTXSID chemical identifiers were not passed appropriately in the `calc_half_life` and prohibited the ability to obtain steady state parameters.
+* Error fixed in `create_mc_samples` related to default.to.human argument not being based to `parameterize_schmitt`
+
 
 # version 2.1.0 (March, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
