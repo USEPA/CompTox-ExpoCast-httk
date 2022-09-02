@@ -12,7 +12,7 @@ A data.table with 434 rows and 5 variables: \describe{
   percentile BMI for the corresponding sex and age} }
 }
 \source{
-\url{http://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv}
+\url{https://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv}
 }
 \usage{
 bmiage
