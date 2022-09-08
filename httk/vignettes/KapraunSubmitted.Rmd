@@ -55,7 +55,7 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
-```{r load_packages, eval = TRUE}
+```{r load_packages, eval = FALSE}
 # Clear the memory:
 rm(list=ls()) 
 #
@@ -72,7 +72,7 @@ library(cowplot)
 ```
 
 ### Prepare custom functions
-```{r load_code, eval = TRUE}
+```{r load_code, eval = FALSE}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -90,7 +90,7 @@ RMSE <- function(x)
 
 The number of chemicals with in vitro TK data ($Cl_{int}$ and $f_{up}$) that are
 also non-volatile and non-PFAS can be found using:
-```{r chem_numbers, eval=TRUE}
+```{r chem_numbers, eval=FALSE}
 length(get_cheminfo(model="fetal_pbtk",suppress.messages=TRUE))
 ```
 
@@ -107,7 +107,7 @@ function "lm" and p-values were calculated according to an F-distribution.
 [Aylward et al., 2014](http://dx.doi.org/10.1080/10937404.2014.884956) compiled measurements of the ratio of maternal to fetal cord blood chemical concentrations at birth for a range of chemicals with environmental routes of exposure, including bromodiphenyl ethers, fluorinated compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke components, and vitamins. The PBTK model does not have an explicit cord blood compartment, so the ratio between maternal and fetal venous plasma concentrations was used as a surrogate when making comparisons of model predictions to these data.. For each chemical three daily oral doses (every eight hours) total 1 mg/kg/day were simulated starting from the 13th week of gestation until full term (40 weeks). Simulations were made both with and without the correction to $f_{up}^f$.
 
 ## Load/format the data
-```{r load_aylward_data, eval = TRUE}
+```{r load_aylward_data, eval = FALSE}
 #MFdata <- read_excel("Aylward-MatFet.xlsx")
 MFdata <- httk::aylward2014
 
@@ -152,7 +152,7 @@ MFdata.httk$AVERAGE_MASS <- as.numeric(MFdata.httk$AVERAGE_MASS)
 ```
 
 ## Convert the units:
-```{r process_aylward_data, eval = TRUE}
+```{r process_aylward_data, eval = FALSE}
 convert1.units <- c("ng/ml","ng/mL","ug/L","ug/l","ng/mL serum","ng/g",
   "ng/g wet wt.","ppb")
 
@@ -184,7 +184,7 @@ MFdata.httk[MFdata.httk$obs.units%in%convert2.units,"obs.units"] <- "uM"
  use the plasma ratio at full term (40 weeks) resulting from a 1 mg/kg/day
  exposure rate starting in week 13.
  
-```{r make_aylward_preds, eval = TRUE}
+```{r make_aylward_preds, eval = FALSE}
 # Simulate starting from the 13th week of gestation until full term (40 weeks):
 times <- sort(unique(c(seq(13 * 7, 40 * 7, 0.25),seq(278,280,.1))))
 
@@ -281,7 +281,7 @@ cat(paste("The minimum observed ratio was ",
 
 ## Aylward Ratio figures:
 ### Clean up repeated observations:
-```{r cleanup_repeated_aylward_figure, eval = TRUE}
+```{r cleanup_repeated_aylward_figure, eval = FALSE}
 MFdata.main <- NULL
 MFdata.outliers <- NULL
 for (this.id in unique(MFdata.httk$DTXSID))
@@ -301,7 +301,7 @@ for (this.id in unique(MFdata.httk$DTXSID))
 ```
 
 ### Cord Blood Ratio Predictions without Fup Adjustement:
-```{r aylward_figure_no_fup, eval = TRUE}
+```{r aylward_figure_no_fup, eval = FALSE}
 FigCa  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred.nofup,
@@ -346,7 +346,7 @@ print(FigCa)
 ```
 
 ### Generate text for results section:
-```{r aylward_analysis_text, eval = TRUE}
+```{r aylward_analysis_text, eval = FALSE}
 
 cat(paste("In Figure 4 we compare predictions made with our high-throughput \
 human gestational PBTK model with experimental observations on a per chemical \
@@ -407,7 +407,7 @@ RMSE(fit1sub)
 
 
 ### Cord Blood Ratio Predictions with Fup Adjustement:
-```{r aylward_figure_with_fup, eval = TRUE}
+```{r aylward_figure_with_fup, eval = FALSE}
 FigCb  <- ggplot(data=MFdata.main) +
   geom_segment(color="grey",aes(
     x=MFratio.pred,
@@ -453,7 +453,7 @@ print(FigCb)
 ```
 
 ### Examine performance when excluding certain chemical classes:
-```{r voc_analysis, eval = TRUE}
+```{r voc_analysis, eval = FALSE}
 # Mean logHenry's law constant for PAH's:
 mean(subset(chem.physical_and_invitro.data,DTXSID%in%subset(MFdata.main,Chemical.Category=="Polyaromatic Hydrocarbons")$DTXSID)$logHenry)
 
@@ -643,7 +643,7 @@ write.csv(Fig4.table[1:6,],file="Fig4Table.csv")
 
 [Dallmann et al., 2018](http://dx.doi.org/10.1007/s40262-017-0594-5) includes descriptions of toxicokinetics summary statistics, including time-integrated plasma concentrations (area under the curve or AUC) for six drugs administered to a sample of subjects including both pregnant and non-pregnant women. Additional data from X and Y for two chemicals among the httk library were collected from the literature. 
 
-```{r dallmann2018_data, eval = TRUE}
+```{r dallmann2018_data, eval = FALSE}
 #TKstats <- as.data.frame(read_excel("MaternalFetalAUCData.xlsx"))
 TKstats <- httk::pregnonpregaucs
 
@@ -682,7 +682,7 @@ colnames(TKstats)[colnames(TKstats)=="Dose Route"] <- "Dose.Route"
 ## Predict AUC
 The circumstances of the dosing varied slightly between drugs and pregnancy status required variation in simulated dose regimen as summarized in Table 12. The function solve_fetal_pbtk was used to determine the time-integrated plasma concentration (area under the curve, or AUC) for the mothers both when pregnant and non-pregnant.
 
-```{r dallmann2018_preds, eval = TRUE}
+```{r dallmann2018_preds, eval = FALSE}
 for (this.id in unique(TKstats$DTXSID))
 {
   if (any(regexpr("ng",TKstats[TKstats$DTXSID==this.id,"Dose Units"])!=-1))
@@ -769,7 +769,7 @@ write.csv(TKstats,file="Table-Dallmann2018.csv",row.names=FALSE)
 ```
 
 ## Generate AUC Predicted vs. Observed Figure
-```{r dallmann2018_figure, eval = TRUE}
+```{r dallmann2018_figure, eval = FALSE}
 FigEa  <- ggplot(data=TKstats) +
   geom_point(aes(
     y=Observed.Non.Pregnant2,
@@ -1015,7 +1015,7 @@ write.csv(Curley.pcs,"PCs-table.csv",row.names=FALSE)
 ```
 
 ## Predict partition coefficients
-```{r curley1969_makepreds, eval = TRUE}
+```{r curley1969_makepreds, eval = FALSE}
 Curley.pcs <- httk::fetalpcs
 dtxsid.list <- get_cheminfo(
   info="DTXSID",
@@ -1098,7 +1098,7 @@ cat(paste(
 
 ## Create Observed vs. Predicted Plot
 ### First indicate compound:
-```{r curley1969_figure_compounds, eval = TRUE}
+```{r curley1969_figure_compounds, eval = FALSE}
 FigFa  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred.nocal))) +
   geom_point(size=2,aes(
     y=Weijs2013,
@@ -1134,7 +1134,7 @@ RMSE(fitFb)
 ```
 
 ### Then indicate tissues:
-```{r curley1969_figure_tissues, eval = TRUE}
+```{r curley1969_figure_tissues, eval = FALSE}
 FigFb  <- ggplot(data=subset(Curley.pcs,!is.na(HTTK.pred))) +
   geom_point(size=2,aes(
     y=Weijs2013,
@@ -1226,7 +1226,7 @@ summary(pksim.fit2)
 
 
 # Chemical Prioritization on the Basis of Fetal Brain Concentration
-```{r wang2018_loaddata, eval = TRUE}
+```{r wang2018_loaddata, eval = FALSE}
 #Wangchems <- read_excel("Wang2018.xlsx",sheet=3,skip=2)
 Wangchems <- httk::wang2018
 maternal.list <- Wangchems$CASRN[Wangchems$CASRN %in% 
@@ -1245,7 +1245,7 @@ We build this plot by making multiple versions of pred.table and concatonating
 them together at the end.
 
 ## Make predictions for fetal:maternal plasma ratio using three daily doses from week 13 to full term
-```{r wang2018_makepreds, eval = TRUE}
+```{r wang2018_makepreds, eval = FALSE}
 
 pred.table1 <- subset(get_cheminfo(
   info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
@@ -1309,14 +1309,14 @@ for (this.cas in maternal.list)
 
 
 ## Create final table holding all predictions for paper:
-```{r brain_uncertainty_prop_table, eval = TRUE}
+```{r brain_uncertainty_prop_table, eval = FALSE}
 PC.table <- pred.table1
 colnames(PC.table)[colnames(PC.table)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1$Uncertainty <- "Predicted F:M Plasma Ratio"
 ```
 
 ### Error in fetal:maternal ratio (inverse of maternal:fetal ratio):
-```{r Rfetmat_uncertainty, eval = TRUE}
+```{r Rfetmat_uncertainty, eval = FALSE}
 pred.table3 <- pred.table1
 pred.table3$Uncertainty <- "Plasma Error (Fig. 4)"
 empirical.error <- RMSE(fit2sub)
@@ -1333,7 +1333,7 @@ PC.table$R.plasma.FtoM.upper <- pred.table3$Ratio.pred
 ```
 
 ### brain:plasma partitioning
-```{r Rfetbrain, eval = TRUE}
+```{r Rfetbrain, eval = FALSE}
 pred.table4 <- pred.table1
 pred.table4$Uncertainty <- "Fetal Brain Partitioning"
 for (this.cas in maternal.list)
@@ -1354,7 +1354,7 @@ for (this.cas in maternal.list)
 ```
 
 ### brain:plasma uncertainty partitioning
-```{r Rfetbrain_uncertainty, eval = TRUE}
+```{r Rfetbrain_uncertainty, eval = FALSE}
 
 pred.table5 <- pred.table1
 pred.table5$Uncertainty <- "Brain Partitioning Error (Pearce et al., 2017)"
@@ -1397,7 +1397,7 @@ for (this.cas in maternal.list)
 ```
 
 ### Combine different ratio predicitons together for figure
-```{r Wang_Uncertainty_Propagation, eval = TRUE}
+```{r Wang_Uncertainty_Propagation, eval = FALSE}
 
 pred.levels <- pred.table5$Compound[order(pred.table5$Ratio.pred)]
 
@@ -1419,7 +1419,7 @@ pred.table$Uncertainty <- factor(pred.table$Uncertainty,
 ```
 
 ## Make prioritization figure:
-```{r wang2018_figure, eval = TRUE}
+```{r wang2018_figure, eval = FALSE}
 #Wang 2018 confirmed 6 chemical identities:
 confirmed.chemicals <- c(
   "2,4-Di-tert-butylphenol",
@@ -1463,7 +1463,7 @@ print(FigG)
 ```
 
 ## Look at ionization state:
-```{r wang2018_details, eval = TRUE}
+```{r wang2018_details, eval = FALSE}
 
 for (this.col in 7:14)
   PC.table[,this.col] <- signif(PC.table[,this.col],3)
@@ -1506,7 +1506,7 @@ write.csv(PC.table,
 ```
 
 ## Evaluate any value added by PBPK model over just using partition coefficients:
-```{r impact_of_model, eval = TRUE}
+```{r impact_of_model, eval = FALSE}
 MFbrainfit <- lm(R.brain.FtoM.upper~Kbrain2pu.upper,data=PC.table)
 summary(MFbrainfit)
 
@@ -1523,7 +1523,7 @@ cat(paste("As expected, the predicted fetal brain to maternal blood ratio was st
 # Repeat analysis without fetal protein binding change:
 
 ## Make predictions for fetal:maternal plasma ratio using three daily doses from week 13 to full term
-```{r wang2018_makepreds_nofup, eval = TRUE}
+```{r wang2018_makepreds_nofup, eval = FALSE}
 
 pred.table1.nofup <- subset(get_cheminfo(
   info=c("Compound","CAS","DTXSID","logP","pka_accept","pka_donor"),
@@ -1586,14 +1586,14 @@ for (this.cas in maternal.list)
 
 
 ## Create final table holding all predictions for paper:
-```{r brain_uncertainty_prop_table_nofup, eval = TRUE}
+```{r brain_uncertainty_prop_table_nofup, eval = FALSE}
 PC.table.nofup <- pred.table1.nofup
 colnames(PC.table.nofup)[colnames(PC.table.nofup)=="Ratio.pred"] <- "R.plasma.FtoM"
 pred.table1.nofup$Uncertainty <- "Predicted F:M Plasma Ratio"
 ```
 
 ### Error in fetal:maternal ratio (inverse of maternal:fetal ratio):
-```{r Rfetmat_uncertainty_nofup, eval = TRUE}
+```{r Rfetmat_uncertainty_nofup, eval = FALSE}
 pred.table3.nofup <- pred.table1.nofup
 pred.table3.nofup$Uncertainty <- "Plasma Error (Fig. 4)"
 empirical.error <- RMSE(fit2sub)
@@ -1610,7 +1610,7 @@ PC.table.nofup$R.plasma.FtoM.upper <- pred.table3.nofup$Ratio.pred
 ```
 
 ### brain:plasma partitioning
-```{r Rfetbrain_nofup, eval = TRUE}
+```{r Rfetbrain_nofup, eval = FALSE}
 pred.table4.nofup <- pred.table1.nofup
 pred.table4.nofup$Uncertainty <- "Fetal Brain Partitioning"
 for (this.cas in maternal.list)
@@ -1630,7 +1630,7 @@ for (this.cas in maternal.list)
 ```
 
 ### brain:plasma uncertainty partitioning
-```{r Rfetbrain_uncertainty_nofup, eval = TRUE}
+```{r Rfetbrain_uncertainty_nofup, eval = FALSE}
 
 pred.table5.nofup <- pred.table1.nofup
 pred.table5.nofup$Uncertainty <- "Brain Partitioning Error (Pearce et al., 2017)"
@@ -1673,7 +1673,7 @@ for (this.cas in maternal.list)
 ```
 
 
-```{r compare_fup_correction_case_study,eval=TRUE}
+```{r compare_fup_correction_case_study,eval=FALSE}
 case.study.fup.correct.table <- merge(PC.table,PC.table.nofup,by=c("Compound","CAS","DTXSID"))
 
 MFbrainfit.fup <- lm(R.brain.FtoM.upper.x~R.brain.FtoM.upper.y,
