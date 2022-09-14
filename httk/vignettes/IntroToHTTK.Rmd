@@ -50,7 +50,7 @@ properties, TK parameters, or IVIVE values. Functions are also
 available to perform forward dosimetry using the various
 models. As functions are typed at the RStudio command line,
 available arguments are displayed, with additional help available
-through the ‘?’ operator. Vignettes for the various available
+through the "?" operator. Vignettes for the various available
 packages in httk are provided to give an overview of their
 respective capabilities. The aim of httk is to provide a readily
 accessible platform for working with HTTK models.
@@ -73,7 +73,8 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 	From the R command prompt: install.packages("X") 
   Or, if using RStudio, look for 'Install Packages' under the 'Tools' tab.
-* Note that R does not recognize fancy versions of quotation marks ‘, ’, “, or ”. 
+* Note that R does not recognize fancy versions of quotation marks that curve
+toward each other. 
 If you are cutting and pasting from software like Word or Outlook you may need 
 to replace the quotation marks that curve toward each other with ones typed by 
 the keyboard.
