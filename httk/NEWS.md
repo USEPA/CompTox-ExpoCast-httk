@@ -1,8 +1,12 @@
 ---
 title: "News for R package httk"
-date: "August 31, 2022"
+date: "September 14, 2022"
 output: html_document
 ---
+
+# version 2.2.1 (September, 2022)
+
+This version removes UTF-8 characters from the package.
 
 # version 2.2.0 (September, 2022)
 This version accompanies the submission of the Breen et al. manuscript "Simulating Toxicokinetic Variability to Identify Susceptible and Highly Exposed Populations"

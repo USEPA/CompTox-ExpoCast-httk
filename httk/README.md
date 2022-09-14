@@ -1,4 +1,4 @@
-![HTTK logo](logo/httk-logo.png)
+![HTTK logo](man/figures/httk-logo.png)
 
 # R Package "httk"
 
@@ -67,7 +67,8 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 install.packages("X")
 ```
 Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’ tab.
-* Note that R does not recognize fancy versions of quotation marks ‘,$~$’,$~$“, or$~$”. 
+* Note that R does not recognize fancy versions of quotation marks that curve
+toward each other. 
 If you are cutting and pasting from software like Word or Outlook you may need 
 to replace the quotation marks that curve toward each other with ones typed by 
 the keyboard.
@@ -75,6 +76,7 @@ the keyboard.
 ### Installing R package "httk"
 
 Adapted from Breen et al. (2021) <https://doi.org/10.1080/17425255.2021.1935867>
+
 * Getting Started with R Package httk from the R command line
 ```
 install.packages("httk")
