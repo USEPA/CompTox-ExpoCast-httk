@@ -6,37 +6,73 @@ output: html_document
 
 # version 2.2.1 (September, 2022)
 
-This version removes UTF-8 characters from the package.
+This minor update removes UTF-8 characters from the package.
 
 # version 2.2.0 (September, 2022)
-This version accompanies the submission of the Breen et al. manuscript "Simulating Toxicokinetic Variability to Identify Susceptible and Highly Exposed Populations"
+This version accompanies the submission of the Breen et al. manuscript 
+"Simulating Toxicokinetic Variability to Identify Susceptible and Highly 
+Exposed Populations"
 
 ## Enhancements
 * HTTK-Pop population simulator:
-  * Replaced HTTK-Pop data from NHANES cycles 2007-2012 with data from most recent 3 NHANES cycles (2013-2018)  
-  * Reduced size of data file httkpop.RData. NHANES data now stored as object `mecdt` of class `data.table`, rather than as object `nhanes_mec_svy` of class `survey.design2`. Also, no longer storing pre-calculated spline fits for serum creatinine and hematocrit vs. age, or pre-calculated age distributions (used by HTTK-Pop in virtual-individuals mode); these are now calculated "on the fly".
-  * In CKD-EPI equation used to estimate GFR for simulated adults based on serum creatinine, age, sex, and race (black/non-black): set "race factor" to 1 by default (i.e., treat all simulated adults as "non-black" for purposes of GFR estimation), to reflect recent changes in clinical practice. (Control this behavior with `httkpop_generate()` argument "ckd_epi_race_factor")
-  * Add residual variability to GFR estimated using CKD-EPI equation, by default. (Control whether to add residual variability using `httkpop_generate()` argument "gfr_resid_var") 
+  * Replaced HTTK-Pop data from NHANES cycles 2007-2012 with data from most 
+  recent 3 NHANES cycles (2013-2018)  
+  * Reduced size of data file httkpop.RData. NHANES data now stored as object 
+  `mecdt` of class `data.table`, rather than as object `nhanes_mec_svy` of 
+  class `survey.design2`. Also, no longer storing pre-calculated spline fits 
+  for serum creatinine and hematocrit vs. age, or pre-calculated age 
+  distributions (used by HTTK-Pop in virtual-individuals mode); these are now 
+  calculated "on the fly".
+  * In CKD-EPI equation used to estimate GFR for simulated adults based on serum 
+  creatinine, age, sex, and race (black/non-black): set "race factor" to 1 by 
+  default (i.e., treat all simulated adults as "non-black" for purposes of GFR 
+  estimation), to reflect recent changes in clinical practice. (Control this 
+  behavior with `httkpop_generate()` argument "ckd_epi_race_factor")
+  * Add residual variability to GFR estimated using CKD-EPI equation, by 
+  default. (Control whether to add residual variability using 
+  `httkpop_generate()` argument "gfr_resid_var") 
 * Phys-chem properties:
-  * Replaced pKa values from Strope et al. (2018) (<https://doi.org/10.1016/j.scitotenv.2017.09.033>) with most recent OPERA (v2.7) predictions (<https://github.com/kmansouri/OPERA>)
-    * This may slightly change all predictions chemicals that are ionized in tissue.
+  * Replaced pKa values from Strope et al. (2018) 
+  (<https://doi.org/10.1016/j.scitotenv.2017.09.033>) with OPERA 
+  (v2.7) predictions (<https://github.com/kmansouri/OPERA>)
+    * This may slightly change all predictions chemicals that are ionized in 
+    tissue.
 * PBTK model equations:
-  * Revised renal clearance to be GFR x [Unbound conc in arterial plasma] (previously it was GFR x [Unbound conc in kidney plasma])
+  * Revised renal clearance to be GFR x [Unbound conc in arterial plasma] 
+  (previously it was GFR x [Unbound conc in kidney plasma])
 * Miscellaneous:
-  * Added suggestion message to set default.to.human=TRUE when rat Fup is 0 (Thanks Jim Sluka)
-  * Added wrapper functions (`get_wetmore...`) for backward compatibility (Thanks Jim Sluka)
-  * Updated `invitro_mc` to remove inconsistencies and correct handling of fup where median is zero but upper 95th is non-zero
-  * Added internal function `remd0non0u95` to draw random numbers such that the median is zero and the upper 97.5th quantile is non-zero, taking limit of detection into account
-  * Revised and expanded documentation for `calc_mc_css` and `calc_mc_oral_equiv`
-* Added logical arguments to `invitro_mc` to directly allow user to turn uncertainty and variability off (previously this was done by setting CV to NULL)
-* If fup measurement (that is, uncertainty) Monte Carlo is turned off user may choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from their own methods
-* Moved Kilford (2008) (<https://doi.org/10.1124/dmd.108.020834>) correction for fraction unbound in hepatocyte assay from `calc_hep_clearance` to the parameterize functions and `invitro_mc` -- can now be toggled with argument "adjusted.Clint"
-* New vignette "Introduction to HTTK" added including material from Breen et al. (2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
+  * Added suggestion message to set default.to.human=TRUE when rat Fup is 0 
+  (Thanks Jim Sluka)
+  * Added wrapper functions (`get_wetmore...`) for backward compatibility 
+  (Thanks Jim Sluka)
+  * Updated `invitro_mc` to remove inconsistencies and correct handling of fup 
+  where median is zero but upper 95th is non-zero
+  * Added internal function `remd0non0u95` to draw random numbers such that the 
+  median is zero and the upper 97.5th quantile is non-zero, taking limit of 
+  detection into account
+  * Revised and expanded documentation for `calc_mc_css` and 
+  `calc_mc_oral_equiv`
+* Added logical arguments to `invitro_mc` to directly allow user to turn 
+uncertainty and variability off (previously this was done by setting CV to 
+NULL)
+* If fup measurement (that is, uncertainty) Monte Carlo is turned off user may 
+choose to provide columns for "unadjusted.Funbound.plasma" or  "fup.mean" from 
+their own methods
+* Moved Kilford (2008) (<https://doi.org/10.1124/dmd.108.020834>) correction 
+for fraction unbound in hepatocyte assay from `calc_hep_clearance` to the 
+parameterize functions and `invitro_mc` -- can now be toggled with argument 
+"adjusted.Clint"
+* New vignette "Introduction to HTTK" added including material from Breen et al. 
+(2021) (<https://doi.org/10.1080/17425255.2021.1935867>)
 
 ## Bug Fixes 
-* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0 (only), mg/L units unaffected, but this will have impaced equivalent doses calculated with `calc_mc_oralequiv` (Thank you Marc Beal!)
-* User provided DTXSID chemical identifiers were not passed appropriately in the `calc_half_life` and prohibited the ability to obtain steady state parameters.
-* Error fixed in `create_mc_samples` related to default.to.human argument not being based to `parameterize_schmitt`
+* uM units on `calc_mc_css` were incorrectly calculated in v2.1.0 (only), mg/L 
+units unaffected, but this will have impacted equivalent doses calculated with 
+`calc_mc_oralequiv` (Thank you Marc Beal!)
+* User provided DTXSID chemical identifiers were not passed appropriately in the 
+`calc_half_life` and prohibited the ability to obtain steady state parameters.
+* Error fixed in `create_mc_samples` related to default.to.human argument not 
+being based to `parameterize_schmitt`
 
 
 # version 2.1.0 (March, 2022)
