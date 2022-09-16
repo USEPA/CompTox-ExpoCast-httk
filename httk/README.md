@@ -42,8 +42,8 @@ included for simulating human biological variability
 and propagating parameter uncertainty 
 (Wambaugh et al., 2019 <https://doi.org/10.1093/toxsci/kfz205>). 
 Empirically calibrated methods are included for predicting 
-tissue:plasma partition coefficients and volume of distribution  
-(Pearce et al., 2017 <https://doi.org/10.1007/s10928-017-9548-7>).
+tissue:plasma partition coefficients and volume of distribution (Pearce et al., 
+2017 <https://doi.org/10.1007/s10928-017-9548-7>).
 These functions and data provide a set of tools for using IVIVE to
 convert concentrations from high-throughput screening experiments
 (for example, Tox21, ToxCast) to real-world exposures via reverse 
