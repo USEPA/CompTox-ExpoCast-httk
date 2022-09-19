@@ -4,7 +4,7 @@ author: "John Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (2018): Creating All Figures}
+  %\VignetteIndexEntry{c) Wambaugh et al. (2018): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

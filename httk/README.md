@@ -29,8 +29,7 @@ into bioinformatics, as described by Pearce et al. (2017)
 (<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
 in vitro data characterizing toxicokinetics can be been obtained 
 from relatively high-throughput experiments. The 
-chemical-independent
-("generic") physiologically-based ("PBTK") and empirical 
+chemical-independent ("generic") physiologically-based ("PBTK") and empirical 
 (for example, one compartment) "TK" models included here can be 
 parameterized with in vitro data or in silico predictions which are 
 provided for thousands of chemicals, multiple exposure routes, 

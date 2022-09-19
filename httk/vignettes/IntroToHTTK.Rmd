@@ -4,7 +4,7 @@ author: "Miyuki Breen, Anna Kreutz, and John Wambaugh"
 date: "June 15, 2021"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{Introduction to HTTK}
+ %\VignetteIndexEntry{1) Introduction to HTTK}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---

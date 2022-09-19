@@ -4,11 +4,22 @@ author: "Matt Linakis"
 date: "January 30, 2020"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{Linakis et al. (2020): Analysis and Figure Generation}
+ %\VignetteIndexEntry{e) Linakis et al. (2020): Analysis and Figure Generation}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
 mlinak01@gmail.com
+
+from "Development and evaluation of a high throughput inhalation model for 
+organic chemicals"
+
+Matthew W. Linakis, Risa R. Sayre, Robert G. Pearce, Mark A. Sfeir, 
+Nisha S. Sipes, Heather A. Pangburn, Jeffery M. Gearhart, and John F. Wambaugh 
+
+Journal of Exposure Science & Environmental Epidemiology volume 30, 
+pages 866–877 (2020)
+
+https://doi.org/10.1038/s41370-020-0238-y
 
 ## Abstract
 
