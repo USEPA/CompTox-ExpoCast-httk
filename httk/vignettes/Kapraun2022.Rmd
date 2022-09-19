@@ -1,14 +1,24 @@
 ---
-title: "Kapraun et al. (submitted): Generic Human Gestational Model"
+title: "Kapraun et al. (2022): Generic Human Gestational Model"
 author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, Andre Dallmann, Richard Judson, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Kapraun et al. (submitted): Creating All Figures}
+  %\VignetteIndexEntry{f) Kapraun et al. (2022): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 wambaugh.john@epa.gov
+
+from "Evaluation of a Rapid, Generic Human Gestational Dose Model"
+
+Dustin F.Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lumen, 
+Andre Dallmann, Richard Judson, John F.Wambaugh
+
+Reproductive Toxicology, 2022
+
+https://doi.org/10.1016/j.reprotox.2022.09.004
+
 
 ## Abstract
 

@@ -4,7 +4,7 @@ author: "Gregory S. Honda"
 date: "July 13, 2018"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Honda et al. (2019): Updated Armitage et al. (2014) Model}
+  %\VignetteIndexEntry{d) Honda et al. (2019): Updated Armitage et al. (2014) Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
