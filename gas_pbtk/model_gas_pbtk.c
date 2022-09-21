@@ -289,7 +289,7 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
   Vrest = Vrestc * BW ;
   Vven = Vvenc * BW ;
   Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
-  kUrt = fmin ( kUrtc , Qalv / 24 / pow ( BW , 0.75 ) ) * pow ( BW , 0.75 ) * 24 ;
+  kUrt = fmin ( kUrtc , Qalvc ) * pow ( BW , 0.75 ) * 24 ;
   Vmuc = Vmucc * BW ;
   Vmax = vmax * 60 * 24 ;
   Km = km ;
