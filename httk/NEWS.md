@@ -6,7 +6,9 @@ output: html_document
 
 # version 2.2.1 (September, 2022)
 
-This minor update removes UTF-8 characters from the package.
+This minor update removes UTF-8 characters from the package and changes the
+calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerabiltiy
+to machine precision errors.
 
 # version 2.2.0 (September, 2022)
 This version accompanies the submission of the Breen et al. manuscript 
