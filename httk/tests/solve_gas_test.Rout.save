@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
+R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -20,7 +20,7 @@ Type 'q()' to quit R.
 > #R CMD BATCH --no-timing --no-restore --no-save solve_gas_test.R solve_gas_test.Rout
 > library(httk)
 > 
-> signif(head(solve_gas_pbtk(chem.name="pyrene")),3)
+> signif(head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05)))[,-11],3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -30,27 +30,16 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-        time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0.00000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 0.00001 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 0.01040 2.93e-01 1.48e-02 6.03e-03 9.02e-02 0.029500 1.88e-02 7.59e-01
-[4,] 0.02080 5.06e-01 2.30e-02 9.00e-03 1.76e-01 0.033700 4.12e-02 1.02e+00
-[5,] 0.03120 6.53e-01 2.86e-02 1.11e-02 2.50e-01 0.036800 6.49e-02 1.16e+00
-[6,] 0.04170 7.60e-01 3.28e-02 1.29e-02 3.12e-01 0.039700 8.94e-02 1.26e+00
-      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
-[1,] 0.00e+00  0.0e+00    0.00e+00      0.0123    0.000 0.00e+00     0.00e+00
-[2,] 2.00e-09  1.0e-09    1.04e-06      0.0123    0.373 0.00e+00     6.00e-09
-[3,] 8.01e-03  3.0e-08    9.63e-04      0.0129  374.000 5.59e-05     1.96e-01
-[4,] 1.19e-02  3.5e-08    1.86e-03      0.0136  718.000 1.71e-04     6.23e-01
-[5,] 1.47e-02  3.8e-08    2.63e-03      0.0141 1040.000 3.10e-04     1.20e+00
-[6,] 1.71e-02  4.1e-08    3.38e-03      0.0146 1330.000 4.63e-04     1.89e+00
-          AUC
-[1,] 0.00e+00
-[2,] 0.00e+00
-[3,] 4.54e-05
-[4,] 1.51e-04
-[5,] 2.90e-04
-[6,] 4.56e-04
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
+[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
+[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
+[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
+      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
+[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
+[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
+[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
+[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
 Warning messages:
 1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
@@ -58,7 +47,7 @@ Warning messages:
   Clint adjusted for in vitro partioning (Kilford, 2008).
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-> signif(head(solve_gas_pbtk(chem.cas="129-00-0")),3)
+> signif(head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05)))[,-11],3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -68,27 +57,16 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-        time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0.00000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 0.00001 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 0.01040 2.93e-01 1.48e-02 6.03e-03 9.02e-02 0.029500 1.88e-02 7.59e-01
-[4,] 0.02080 5.06e-01 2.30e-02 9.00e-03 1.76e-01 0.033700 4.12e-02 1.02e+00
-[5,] 0.03120 6.53e-01 2.86e-02 1.11e-02 2.50e-01 0.036800 6.49e-02 1.16e+00
-[6,] 0.04170 7.60e-01 3.28e-02 1.29e-02 3.12e-01 0.039700 8.94e-02 1.26e+00
-      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
-[1,] 0.00e+00  0.0e+00    0.00e+00      0.0123    0.000 0.00e+00     0.00e+00
-[2,] 2.00e-09  1.0e-09    1.04e-06      0.0123    0.373 0.00e+00     6.00e-09
-[3,] 8.01e-03  3.0e-08    9.63e-04      0.0129  374.000 5.59e-05     1.96e-01
-[4,] 1.19e-02  3.5e-08    1.86e-03      0.0136  718.000 1.71e-04     6.23e-01
-[5,] 1.47e-02  3.8e-08    2.63e-03      0.0141 1040.000 3.10e-04     1.20e+00
-[6,] 1.71e-02  4.1e-08    3.38e-03      0.0146 1330.000 4.63e-04     1.89e+00
-          AUC
-[1,] 0.00e+00
-[2,] 0.00e+00
-[3,] 4.54e-05
-[4,] 1.51e-04
-[5,] 2.90e-04
-[6,] 4.56e-04
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
+[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
+[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
+[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
+      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
+[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
+[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
+[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
+[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
 Warning messages:
 1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
@@ -97,7 +75,8 @@ Warning messages:
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 > signif(head(solve_gas_pbtk(
-+   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"))),3)
++   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
++   times=c(0,0.1,0.05)))[,-11],3)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -107,27 +86,16 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-        time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0.00000 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 0.00001 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 0.01040 2.93e-01 1.48e-02 6.03e-03 9.02e-02 0.029500 1.88e-02 7.59e-01
-[4,] 0.02080 5.06e-01 2.30e-02 9.00e-03 1.76e-01 0.033700 4.12e-02 1.02e+00
-[5,] 0.03120 6.53e-01 2.86e-02 1.11e-02 2.50e-01 0.036800 6.49e-02 1.16e+00
-[6,] 0.04170 7.60e-01 3.28e-02 1.29e-02 3.12e-01 0.039700 8.94e-02 1.26e+00
-      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
-[1,] 0.00e+00  0.0e+00    0.00e+00      0.0123    0.000 0.00e+00     0.00e+00
-[2,] 2.00e-09  1.0e-09    1.04e-06      0.0123    0.373 0.00e+00     6.00e-09
-[3,] 8.01e-03  3.0e-08    9.63e-04      0.0129  374.000 5.59e-05     1.96e-01
-[4,] 1.19e-02  3.5e-08    1.86e-03      0.0136  718.000 1.71e-04     6.23e-01
-[5,] 1.47e-02  3.8e-08    2.63e-03      0.0141 1040.000 3.10e-04     1.20e+00
-[6,] 1.71e-02  4.1e-08    3.38e-03      0.0146 1330.000 4.63e-04     1.89e+00
-          AUC
-[1,] 0.00e+00
-[2,] 0.00e+00
-[3,] 4.54e-05
-[4,] 1.51e-04
-[5,] 2.90e-04
-[6,] 4.56e-04
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
+[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
+[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
+[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
+      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
+[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
+[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
+[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
+[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
 Warning messages:
 1: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
