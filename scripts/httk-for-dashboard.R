@@ -22,7 +22,7 @@ SPECIES.LIST <- c("Human","Rat")
 MODELS.LIST <- c("3compartmentss","PBTK")
 
 # How many processors are available for parallel computing:
-NUM.CPU <- 2
+NUM.CPU <- 6
  
 # Add the in silico predictions:
 load_sipes2017()
@@ -43,7 +43,7 @@ for (this.species in SPECIES.LIST)
     median.only=TRUE,
     species=this.species)
 # Create a master list of the chemical DTXSID's:
-  all.ids <- unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID))
+  all.ids <- sort(unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID)))
 }
 
 # We want one parameter per line, but the code is pretty different wrt how we
@@ -81,7 +81,7 @@ make.ccd.table <- function(
   print(paste(this.id,"-",which(this.id==all.ids),"of",num.chems))
   for (this.species in species.list) {
   print(this.species)
-    if (this.id %in% HTTK.data.list[[this.species]]) {
+    if (this.id %in% HTTK.data.list[[this.species]]$DTXSID) {
       HTTK.data <- HTTK.data.list[[this.species]]
       default.to.human=FALSE
     } else {
@@ -102,7 +102,8 @@ make.ccd.table <- function(
           Reference=NA,
           Percentile=NA,
           Species=this.species,
-          Data.Source.Species=ifelse(default.to.human,"Human","Rat"))
+          Data.Source.Species=ifelse(this.species=="Human" |
+                                     default.to.human,"Human","Rat"))
   # Clint:
         if (this.param == "Clint") {
           clint.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
@@ -257,13 +258,15 @@ stopCluster(cl)
 # Combine all the individual tables into a single table:
 dashboard.table <- rbindlist(dashboard.list)
 
+Css.units <- "mgL"
+httk.version <- sessionInfo()$otherPkgs$httk$Version
+output.date <- Sys.Date()
+
+save(Css.units,httk.version,output.date,file="Dashboard-HTTK-stamp.RData")
 write.table(
   dashboard.table,
   file=paste(
-    "Dashboard-HTTK-v",
-    sessionInfo()$otherPkgs$httk$Version,
-    "-mgL-",Sys.Date(),
-    ".txt",sep=""),
+    "Dashboard-HTTK-CssunitsmgpL.txt",sep=""),
   row.names=F,
   quote=F,
   sep="\t")
