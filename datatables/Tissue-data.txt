@@ -1,0 +1,407 @@
+"Tissue"	"Species"	"Reference"	"variable"	"value"
+"adipose"	"Human"	"Schmitt 2008"	"Fcell"	0.86
+"adipose"	"Rat"	"Ruark 2014"	"Fcell"	0.86
+"bone"	"Human"	"Schmitt 2008"	"Fcell"	0.9
+"bone"	"Rat"	"Ruark 2014"	"Fcell"	0.9
+"brain"	"Rat"	"Ruark 2014"	"Fcell"	0.838
+"brain"	"Human"	"Schmitt 2008"	"Fcell"	0.995
+"gut"	"Rat"	"Ruark 2014"	"Fcell"	0.9
+"gut"	"Human"	"Schmitt 2008"	"Fcell"	0.9
+"heart"	"Human"	"Schmitt 2008"	"Fcell"	0.75
+"heart"	"Rat"	"Ruark 2014"	"Fcell"	0.86
+"kidney"	"Human"	"Schmitt 2008"	"Fcell"	0.835
+"kidney"	"Rat"	"Ruark 2014"	"Fcell"	0.854
+"liver"	"Rat"	"Ruark 2014"	"Fcell"	0.873
+"liver"	"Human"	"Schmitt 2008"	"Fcell"	0.77
+"lung"	"Rat"	"Ruark 2014"	"Fcell"	0.675
+"lung"	"Human"	"Schmitt 2008"	"Fcell"	0.8
+"muscle"	"Human"	"Schmitt 2008"	"Fcell"	0.85
+"muscle"	"Rat"	"Ruark 2014"	"Fcell"	0.876
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"Fcell"	0.724
+"red blood cells"	"Rat"	"Ruark 2014"	"Fcell"	1
+"red blood cells"	"Human"	"Schmitt 2008"	"Fcell"	1
+"skin"	"Human"	"Schmitt 2008"	"Fcell"	0.4
+"skin"	"Rat"	"Ruark 2014"	"Fcell"	0.681
+"spleen"	"Rat"	"Ruark 2014"	"Fcell"	0.745
+"spleen"	"Human"	"Schmitt 2008"	"Fcell"	0.745
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"Fcell"	0.86
+"adipose"	"Human"	"Schmitt 2008"	"Fint"	0.14
+"adipose"	"Rat"	"Ruark 2014"	"Fint"	0.14
+"bone"	"Human"	"Schmitt 2008"	"Fint"	0.1
+"bone"	"Rat"	"Ruark 2014"	"Fint"	0.1
+"brain"	"Rat"	"Ruark 2014"	"Fint"	0.162
+"brain"	"Human"	"Schmitt 2008"	"Fint"	0.005
+"gut"	"Rat"	"Ruark 2014"	"Fint"	0.096
+"gut"	"Human"	"Schmitt 2008"	"Fint"	0.096
+"heart"	"Human"	"Schmitt 2008"	"Fint"	0.25
+"heart"	"Rat"	"Ruark 2014"	"Fint"	0.14
+"kidney"	"Human"	"Schmitt 2008"	"Fint"	0.165
+"kidney"	"Rat"	"Ruark 2014"	"Fint"	0.146
+"liver"	"Rat"	"Ruark 2014"	"Fint"	0.127
+"liver"	"Human"	"Schmitt 2008"	"Fint"	0.23
+"lung"	"Rat"	"Ruark 2014"	"Fint"	0.325
+"lung"	"Human"	"Schmitt 2008"	"Fint"	0.2
+"muscle"	"Human"	"Schmitt 2008"	"Fint"	0.15
+"muscle"	"Rat"	"Ruark 2014"	"Fint"	0.124
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"Fint"	0.276
+"red blood cells"	"Rat"	"Ruark 2014"	"Fint"	0
+"red blood cells"	"Human"	"Schmitt 2008"	"Fint"	0
+"skin"	"Human"	"Schmitt 2008"	"Fint"	0.6
+"skin"	"Rat"	"Ruark 2014"	"Fint"	0.319
+"spleen"	"Rat"	"Ruark 2014"	"Fint"	0.255
+"spleen"	"Human"	"Schmitt 2008"	"Fint"	0.255
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"Fint"	0.14
+"adipose"	"Human"	"Schmitt 2008"	"FWc"	0.02002
+"adipose"	"Rat"	"Ruark 2014"	"FWc"	0.02888
+"bone"	"Human"	"Schmitt 2008"	"FWc"	0.26
+"bone"	"Rat"	"Ruark 2014"	"FWc"	0.26
+"brain"	"Rat"	"Ruark 2014"	"FWc"	0.8029
+"brain"	"Human"	"Schmitt 2008"	"FWc"	0.8043
+"gut"	"Rat"	"Ruark 2014"	"FWc"	0.78
+"gut"	"Human"	"Schmitt 2008"	"FWc"	0.78
+"heart"	"Human"	"Schmitt 2008"	"FWc"	0.6957
+"heart"	"Rat"	"Ruark 2014"	"FWc"	0.764
+"kidney"	"Human"	"Schmitt 2008"	"FWc"	0.7661
+"kidney"	"Rat"	"Ruark 2014"	"FWc"	0.7536
+"liver"	"Rat"	"Ruark 2014"	"FWc"	0.6818
+"liver"	"Human"	"Schmitt 2008"	"FWc"	0.7244
+"lung"	"Rat"	"Ruark 2014"	"FWc"	0.7554
+"lung"	"Human"	"Schmitt 2008"	"FWc"	0.8038
+"muscle"	"Human"	"Schmitt 2008"	"FWc"	0.7991
+"muscle"	"Rat"	"Ruark 2014"	"FWc"	0.7768
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"FWc"	0.793
+"red blood cells"	"Rat"	"Ruark 2014"	"FWc"	0.664
+"red blood cells"	"Human"	"Schmitt 2008"	"FWc"	0.6643
+"skin"	"Human"	"Schmitt 2008"	"FWc"	0.427
+"skin"	"Rat"	"Ruark 2014"	"FWc"	0.522
+"spleen"	"Rat"	"Ruark 2014"	"FWc"	0.645
+"spleen"	"Human"	"Schmitt 2008"	"FWc"	0.7699
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"FWc"	0.69
+"adipose"	"Human"	"Schmitt 2008"	"FLc"	0.934
+"adipose"	"Rat"	"Ruark 2014"	"FLc"	0.9192
+"bone"	"Human"	"Schmitt 2008"	"FLc"	0.02
+"bone"	"Rat"	"Ruark 2014"	"FLc"	0.02
+"brain"	"Rat"	"Ruark 2014"	"FLc"	0.1154
+"brain"	"Human"	"Schmitt 2008"	"FLc"	0.1123
+"gut"	"Rat"	"Ruark 2014"	"FLc"	0.07
+"gut"	"Human"	"Schmitt 2008"	"FLc"	0.07
+"heart"	"Human"	"Schmitt 2008"	"FLc"	0.1375
+"heart"	"Rat"	"Ruark 2014"	"FLc"	0.03288
+"kidney"	"Human"	"Schmitt 2008"	"FLc"	0.06407
+"kidney"	"Rat"	"Ruark 2014"	"FLc"	0.05266
+"liver"	"Rat"	"Ruark 2014"	"FLc"	0.0622
+"liver"	"Human"	"Schmitt 2008"	"FLc"	0.09231
+"lung"	"Rat"	"Ruark 2014"	"FLc"	0.0833
+"lung"	"Human"	"Schmitt 2008"	"FLc"	0.01316
+"muscle"	"Human"	"Schmitt 2008"	"FLc"	0.02387
+"muscle"	"Rat"	"Ruark 2014"	"FLc"	0.02319
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"FLc"	0.0083
+"red blood cells"	"Rat"	"Ruark 2014"	"FLc"	0.005015
+"red blood cells"	"Human"	"Schmitt 2008"	"FLc"	0.00501
+"skin"	"Human"	"Schmitt 2008"	"FLc"	0.2831
+"skin"	"Rat"	"Ruark 2014"	"FLc"	0.06383
+"spleen"	"Rat"	"Ruark 2014"	"FLc"	0.03957
+"spleen"	"Human"	"Schmitt 2008"	"FLc"	0.03946
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"FLc"	0.05
+"adipose"	"Human"	"Schmitt 2008"	"FPc"	0.04601
+"adipose"	"Rat"	"Ruark 2014"	"FPc"	0.05194
+"bone"	"Human"	"Schmitt 2008"	"FPc"	0.21
+"bone"	"Rat"	"Ruark 2014"	"FPc"	0.21
+"brain"	"Rat"	"Ruark 2014"	"FPc"	0.08173
+"brain"	"Human"	"Schmitt 2008"	"FPc"	0.08341
+"gut"	"Rat"	"Ruark 2014"	"FPc"	0.15
+"gut"	"Human"	"Schmitt 2008"	"FPc"	0.15
+"heart"	"Human"	"Schmitt 2008"	"FPc"	0.1668
+"heart"	"Rat"	"Ruark 2014"	"FPc"	0.2031
+"kidney"	"Human"	"Schmitt 2008"	"FPc"	0.1698
+"kidney"	"Rat"	"Ruark 2014"	"FPc"	0.1937
+"liver"	"Rat"	"Ruark 2014"	"FPc"	0.256
+"liver"	"Human"	"Schmitt 2008"	"FPc"	0.1833
+"lung"	"Rat"	"Ruark 2014"	"FPc"	0.1613
+"lung"	"Human"	"Schmitt 2008"	"FPc"	0.183
+"muscle"	"Human"	"Schmitt 2008"	"FPc"	0.177
+"muscle"	"Rat"	"Ruark 2014"	"FPc"	0.2
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"FPc"	0.1535
+"red blood cells"	"Rat"	"Ruark 2014"	"FPc"	0.331
+"red blood cells"	"Human"	"Schmitt 2008"	"FPc"	0.3307
+"skin"	"Human"	"Schmitt 2008"	"FPc"	0.2898
+"skin"	"Rat"	"Ruark 2014"	"FPc"	0.4142
+"spleen"	"Rat"	"Ruark 2014"	"FPc"	0.3154
+"spleen"	"Human"	"Schmitt 2008"	"FPc"	0.1907
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"FPc"	0.16
+"adipose"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.9361
+"adipose"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.9977
+"bone"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.85
+"bone"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.85
+"brain"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.9535
+"brain"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.3734
+"gut"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.69
+"gut"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.69
+"heart"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.8901
+"heart"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.5214
+"kidney"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.6375
+"kidney"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.2925
+"liver"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.3305
+"liver"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.7244
+"lung"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.5758
+"lung"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.3
+"muscle"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.5394
+"muscle"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.5339
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"Fn_Lc"	0.6273
+"red blood cells"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.2273
+"red blood cells"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.4
+"skin"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.3599
+"skin"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.8075
+"spleen"	"Rat"	"Ruark 2014"	"Fn_Lc"	0.3656
+"spleen"	"Human"	"Schmitt 2008"	"Fn_Lc"	0.5341
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"Fn_Lc"	0.92
+"adipose"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.05607
+"adipose"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.001871
+"bone"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.11
+"bone"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.11
+"brain"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.03667
+"brain"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.4588
+"gut"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.26
+"gut"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.26
+"heart"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.07901
+"heart"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.3948
+"kidney"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.294
+"kidney"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.5849
+"liver"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.5619
+"liver"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.2251
+"lung"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.3219
+"lung"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.56
+"muscle"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.3817
+"muscle"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.3844
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"Fn_PLc"	0.2987
+"red blood cells"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.6591
+"red blood cells"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.5
+"skin"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.5019
+"skin"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.148
+"spleen"	"Rat"	"Ruark 2014"	"Fn_PLc"	0.489
+"spleen"	"Human"	"Schmitt 2008"	"Fn_PLc"	0.393
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"Fn_PLc"	0.064
+"adipose"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.007859
+"adipose"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.0004678
+"bone"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.04
+"bone"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.04
+"brain"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.00978
+"brain"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.1678
+"gut"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.05
+"gut"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.05
+"heart"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.0309
+"heart"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.0838
+"kidney"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.06853
+"kidney"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.1226
+"liver"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.1076
+"liver"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.05051
+"lung"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.1023
+"lung"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.14
+"muscle"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.07884
+"muscle"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.08169
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"Fa_PLc"	0.0738
+"red blood cells"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.1136
+"red blood cells"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.1
+"skin"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.1382
+"skin"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.04441
+"spleen"	"Rat"	"Ruark 2014"	"Fa_PLc"	0.1453
+"spleen"	"Human"	"Schmitt 2008"	"Fa_PLc"	0.07287
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"Fa_PLc"	0.014
+"adipose"	"Human"	"Schmitt 2008"	"pH"	7.1
+"adipose"	"Rat"	"Ruark 2014"	"pH"	7.1
+"bone"	"Human"	"Schmitt 2008"	"pH"	7
+"bone"	"Rat"	"Ruark 2014"	"pH"	7
+"brain"	"Rat"	"Ruark 2014"	"pH"	7.1
+"brain"	"Human"	"Schmitt 2008"	"pH"	7.1
+"gut"	"Rat"	"Ruark 2014"	"pH"	7
+"gut"	"Human"	"Schmitt 2008"	"pH"	7
+"heart"	"Human"	"Schmitt 2008"	"pH"	7.1
+"heart"	"Rat"	"Ruark 2014"	"pH"	7.1
+"kidney"	"Human"	"Schmitt 2008"	"pH"	7.22
+"kidney"	"Rat"	"Ruark 2014"	"pH"	7.22
+"liver"	"Rat"	"Ruark 2014"	"pH"	7.23
+"liver"	"Human"	"Schmitt 2008"	"pH"	7.23
+"lung"	"Rat"	"Ruark 2014"	"pH"	6.6
+"lung"	"Human"	"Schmitt 2008"	"pH"	6.6
+"muscle"	"Human"	"Schmitt 2008"	"pH"	6.81
+"muscle"	"Rat"	"Ruark 2014"	"pH"	6.81
+"placenta"	"Human"	"Httk estimate, various references needed; Lee 1972"	"pH"	7.32
+"red blood cells"	"Rat"	"Ruark 2014"	"pH"	7.2
+"red blood cells"	"Human"	"Schmitt 2008"	"pH"	7.2
+"skin"	"Human"	"Schmitt 2008"	"pH"	7
+"skin"	"Rat"	"Ruark 2014"	"pH"	7
+"spleen"	"Rat"	"Ruark 2014"	"pH"	7
+"spleen"	"Human"	"Schmitt 2008"	"pH"	7
+"thyroid"	"Human"	"Pilari et al. 2017; Chow et al. 1982"	"pH"	7.3
+"adipose"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	0.916
+"adipose"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	0.916
+"bone"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.976
+"bone"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.976
+"brain"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.035
+"brain"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.035
+"gut"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.044
+"gut"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.044
+"heart"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.03
+"heart"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.03
+"kidney"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"kidney"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"liver"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"liver"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"lung"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"lung"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.05
+"muscle"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.041
+"muscle"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.041
+"placenta"	"Human"	"Del Nero (2002)"	"Density (g/cm^3)"	1.02
+"red blood cells"	"Rat"	"Sun and Sethu (2017)"	"Density (g/cm^3)"	1.08
+"red blood cells"	"Human"	"Sun and Sethu (2017)"	"Density (g/cm^3)"	1.08
+"skin"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.117
+"skin"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.117
+"spleen"	"Rat"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.054
+"spleen"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.054
+"thyroid"	"Human"	"EPA, Physiological Parameters Database for PBPK Modeling"	"Density (g/cm^3)"	1.051
+"adipose"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.2086
+"bone"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.07231
+"brain"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.01931
+"gut"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0158
+"heart"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.004563
+"kidney"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.00419
+"liver"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.02448
+"lung"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.007235
+"muscle"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.3842
+"skin"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0332
+"spleen"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.002467
+"thyroid"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	3e-04
+"rest"	"Human"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.05182
+"adipose"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0726
+"bone"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.03694
+"brain"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.005505
+"gut"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.02585
+"heart"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.003204
+"kidney"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.006952
+"liver"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.03486
+"lung"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.00476
+"muscle"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.3884
+"skin"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.1703
+"spleen"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.001898
+"rest"	"Rat"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0524
+"adipose"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.07317
+"bone"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0543
+"brain"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.01593
+"gut"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.04041
+"heart"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.004854
+"kidney"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0159
+"liver"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.05229
+"lung"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.006949
+"muscle"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.3689
+"skin"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.1479
+"spleen"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.001047
+"rest"	"Mouse"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.02542
+"adipose"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.0473
+"bone"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.04099
+"brain"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.007533
+"gut"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.03522
+"heart"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.007573
+"kidney"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.005238
+"liver"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.03133
+"lung"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.007806
+"muscle"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.4385
+"skin"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.1701
+"spleen"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.002562
+"rest"	"Dog"	"ILSI-RSI 1994"	"Vol (L/kg)"	0.002365
+"adipose"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.048
+"bone"	"Rabbit"	"Pearce 2017"	"Vol (L/kg)"	0.0369
+"brain"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.0055
+"gut"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.048
+"heart"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.0024
+"kidney"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.006
+"liver"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.04
+"lung"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.0068
+"muscle"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.54
+"skin"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.044
+"spleen"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	4e-04
+"rest"	"Rabbit"	"Davies 1993"	"Vol (L/kg)"	0.02566
+"adipose"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.027
+"bone"	"Monkey"	NA	"Vol (L/kg)"	0.07231
+"brain"	"Monkey"	NA	"Vol (L/kg)"	0.01931
+"gut"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.046
+"heart"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.0034
+"kidney"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.006
+"liver"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.027
+"lung"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.007235
+"muscle"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.5
+"skin"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.1
+"spleen"	"Monkey"	"Davies 1993"	"Vol (L/kg)"	0.002467
+"rest"	"Monkey"	NA	"Vol (L/kg)"	0.01753
+"adipose"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	10.74
+"bone"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	9.719
+"brain"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	28.93
+"gut"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	47.52
+"heart"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	9.917
+"kidney"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	51.24
+"liver"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	59.92
+"lung"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	5.785
+"muscle"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	30.99
+"skin"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	12.4
+"spleen"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	3.182
+"thyroid"	"Human"	"ILSI-RSI 1994"	"Flow (mL/min/kg^(3/4))"	3.7
+"rest"	"Human"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	4.19
+"adipose"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	1.131
+"bone"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	25.54
+"brain"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	3.677
+"gut"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	27.72
+"heart"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	11.03
+"kidney"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	26.02
+"liver"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	33.38
+"lung"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	4.395
+"muscle"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	21.21
+"skin"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	16.4
+"spleen"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	2.878
+"rest"	"Rat"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	59.66
+"adipose"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	4.061
+"bone"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	8.766
+"brain"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	4.964
+"gut"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	27.26
+"heart"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	5.265
+"kidney"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	24.44
+"liver"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	33.85
+"lung"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	0.7521
+"muscle"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	17.11
+"skin"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	7.709
+"spleen"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	2.068
+"rest"	"Mouse"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	38.63
+"adipose"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	6.224
+"bone"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	2.312
+"brain"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	8.002
+"gut"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	40.9
+"heart"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	9.603
+"kidney"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	38.41
+"liver"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	54.95
+"lung"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	18.78
+"muscle"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	44.46
+"skin"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	17.78
+"spleen"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	2.934
+"rest"	"Dog"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	6.099
+"adipose"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	16.1
+"bone"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	15.54
+"brain"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	14.2
+"gut"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	55.83
+"heart"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	8.048
+"kidney"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	40.24
+"liver"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	89.03
+"lung"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	9.264
+"muscle"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	77.96
+"skin"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	17.76
+"spleen"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	4.527
+"rest"	"Rabbit"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	0
+"adipose"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	5.981
+"bone"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	0.3486
+"brain"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	21.53
+"gut"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	37.38
+"heart"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	17.94
+"kidney"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	41.27
+"liver"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	65.2
+"lung"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	11.29
+"muscle"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	26.92
+"skin"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	16.15
+"spleen"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	6.28
+"rest"	"Monkey"	"Davies and Morris 1993"	"Flow (mL/min/kg^(3/4))"	99.8
