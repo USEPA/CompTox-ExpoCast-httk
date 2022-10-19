@@ -21,7 +21,7 @@
 #' specified. 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
@@ -30,6 +30,10 @@
 #' @param suppress.messages Whether or not to display relevant warning messages
 #' to user.
 #' 
+#' @return
+#' The blood to plasma chemical concentration ratio -- measured if available,
+#' calculated if not.
+#'
 #' @author Robert Pearce
 #' 
 #' @keywords Parameter
@@ -44,8 +48,8 @@ available_rblood2plasma <- function(chem.cas=NULL,
                                     chem.name=NULL,
                                     dtxsid=NULL,
                                     species='Human',
-                                    adjusted.Funbound.plasma=T,
-                                    suppress.messages=F)
+                                    adjusted.Funbound.plasma=TRUE,
+                                    suppress.messages=FALSE)
 
 {
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
@@ -84,10 +88,13 @@ available_rblood2plasma <- function(chem.cas=NULL,
     } else {
       if (is.null(chem.cas)) 
       {
-        out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
+        out <- get_chem_id(chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid)
         chem.cas <- out$chem.cas
       }
-      if (chem.cas %in% get_cheminfo(species=species,model='schmitt'))
+      if (chem.cas %in% get_cheminfo(species=species,model='schmitt',
+                                     suppress.messages=TRUE))
       {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
           species=species,
@@ -97,11 +104,14 @@ available_rblood2plasma <- function(chem.cas=NULL,
           warning(paste(toupper(substr(species, 1, 1)), 
             substr(species, 2, nchar(species)),
             ' Rblood2plasma calculated with calc_rblood2plasma.',sep="")) 
-      } else if (chem.cas %in% get_cheminfo(species='Human',model='schmitt')) 
+      } else if (chem.cas %in% get_cheminfo(
+                                            species='Human',
+                                            model='schmitt',
+                                            suppress.messages=TRUE)) 
       {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
           species="Human",
-          default.to.human=T,
+          default.to.human=TRUE,
           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
           suppress.messages=suppress.messages)
         if (!suppress.messages) 

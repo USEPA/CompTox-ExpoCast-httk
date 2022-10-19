@@ -2,24 +2,33 @@
 % Please edit documentation in R/parameterize_pbtk.R
 \name{parameterize_pbtk}
 \alias{parameterize_pbtk}
-\title{Parameterize_PBTK}
+\title{Parameters for a generic physiologically-based toxicokinetic model}
 \usage{
 parameterize_pbtk(
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
     c("gut")),
-  force.human.clint.fup = F,
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
+<<<<<<< HEAD
   adjusted.Funbound.plasma = T,
   regression = T,
   suppress.messages = F,
   restrictive.clearance = T,
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = list()
+=======
+  adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
+  regression = TRUE,
+  suppress.messages = FALSE,
+  restrictive.clearance = TRUE,
+  minimum.Funbound.plasma = 1e-04
+>>>>>>> feature/otherrepos
 )
 }
 \arguments{
@@ -29,7 +38,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -40,7 +49,7 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{tissuelist}{Specifies compartment names and tissues groupings.
 Remaining tissues in tissue.data are lumped in the rest of the body.
-However, solve_pbtk only works with the default parameters.}
+However, \code{\link{solve_pbtk}} only works with the default parameters.}
 
 \item{force.human.clint.fup}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
@@ -49,8 +58,11 @@ intrinsic clearance and fraction of unbound plasma if true.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -77,28 +89,28 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut wit
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
 \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
 the dose that enters the gutlumen.} 
-\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
-\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
-assay using the method of Kilford et al. (2008)} 
+\item{Funbound.plasma}{Fraction of plasma that is not bound.}
+\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
+assay using the method of Kilford et al. (2008)}
 \item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-concentration in plasma.} 
-\item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 
-\item{Kkidney2pu}{Ratio of concentration of chemical in
-kidney tissue to unbound concentration in plasma.} 
-\item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to 
+concentration in plasma.}
+\item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
+\item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
+unbound concentration in plasma.}
+\item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to
 unbound concentration in plasma.} 
 \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
 to unbound concentration in plasma.} 
-\item{Krbc2pu}{Ratio of concentration
-of chemical in red blood cells to unbound concentration in plasma.}
+\item{Krbc2pu}{Ratio of concentration of chemical in red blood cells to
+unbound concentration in plasma.}
 \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-unbound concentration in plasma.} 
-\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
+unbound concentration in plasma.}
+\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.}
 \item{MW}{Molecular Weight, g/mol.}
-\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} 
-\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid 
-filtered from kidney and excreted.} 
+\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.}
+\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
+filtered from kidney and excreted.}
 \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
@@ -113,10 +125,19 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
-This function initializes the parameters needed in the functions solve_pbtk,
-calc_css, and others using the multiple compartment model.
+Generate a chemical- and species-specific set of model parameters, 
+including tissue:plasma partition coefficients (via Schmitt (2008)'s method
+as modified by Pearce et al. (2017)) and organ volumes and flows 
+(from table \code{\link{physiology.data}}) for an arbitrary tissue lumping 
+scheme (tissues  must be described in table \code{\link{tissue.data}}).
+}
+\details{
+By default, this function initializes the parameters needed in the functions 
+\code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
+default generic PBTK model (for oral and intravenous dosing only).
 }
 \examples{
+
 
  parameters <- parameterize_pbtk(chem.cas='80-05-7')
 
@@ -127,11 +148,20 @@ calc_css, and others using the multiple compartment model.
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
+ 
+ 
 
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in

@@ -1,4 +1,3 @@
-
 #' Get physico-chemical parameters from chem.physical_and_invitro.data
 #'
 #' This function retrieves physico-chemical properties ("param") for the chemical specified 
@@ -7,7 +6,7 @@
 #' @param param The desired parameters, a vector or single value.
 #' @param chem.name The chemical names that you want parameters for, a vector or single value
 #' @param chem.cas The chemical CAS numbers that you want parameters for, a vector or single value
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @return The parameters, either a single value, a named list for a single chemical, or a list of lists
@@ -41,7 +40,7 @@ get_physchem_param <- function(
       is.null(dtxsid) ) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
     
-  # Look up the chemical name/CAS, depending on what was provide:
+  # Look up the chemical name/CAS, depending on what was provided:
   if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(

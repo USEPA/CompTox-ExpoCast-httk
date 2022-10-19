@@ -1,4 +1,5 @@
 Package: httk
+<<<<<<< HEAD
 Version: 99.3.4
 Date: 2020-07-17
 Title: High-Throughput Toxicokinetics
@@ -20,58 +21,116 @@ Description: Functions and data tables for simulation and statistical analysis
              in vitro-in vivo extrapolation ("IVIVE") of high throughput 
              screening data (for example, Tox21, ToxCast) to real-world exposures via 
              reverse dosimetry (also known as "RTK") 
+=======
+Version: 2.2.1
+Date: 2022-09-16
+Title: High-Throughput Toxicokinetics
+Description: Pre-made models that can be rapidly tailored to various chemicals
+             and species using chemical-specific in vitro data and physiological 
+             information. These tools allow incorporation of chemical 
+             toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
+             into bioinformatics, as described by Pearce et al. (2017) 
+             (<doi:10.18637/jss.v079.i04>). Chemical-specific 
+             in vitro data characterizing toxicokinetics can be been obtained 
+             from relatively high-throughput experiments. The 
+             chemical-independent
+             ("generic") physiologically-based ("PBTK") and empirical 
+             (for example, one compartment) "TK" models included here can be 
+             parameterized with in vitro data or in silico predictions which are 
+             provided for thousands of chemicals, multiple exposure routes, 
+             and various species. The models are systems of ordinary 
+             differential equations that are solved
+             using compiled (C-based) code for speed. A Monte Carlo sampler is
+             included for simulating human biological variability
+             (Ring et al., 2017 <doi:10.1016/j.envint.2017.06.004>)
+             and propagating parameter uncertainty 
+             (Wambaugh et al., 2019 <doi:10.1093/toxsci/kfz205>). 
+             Empirically calibrated methods are included for predicting 
+             tissue:plasma partition coefficients and volume of distribution  
+             (Pearce et al., 2017 <doi:10.1007/s10928-017-9548-7>).
+             These functions and data provide a set of tools for using IVIVE to
+             convert concentrations from high-throughput screening experiments
+             (for example, Tox21, ToxCast) to real-world exposures via reverse 
+             dosimetry (also known as "RTK")
+>>>>>>> feature/otherrepos
              (Wetmore et al., 2015 <doi:10.1093/toxsci/kfv171>).
 Authors@R: c(
            person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
              role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4024-534X")), 
+           person("Sarah", "Davidson", email = "davidson.sarah.e@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
            person("Robert", "Pearce", role = c("aut"),
              comment = c(ORCID = "0000-0003-3168-4049")), 
-           person("Caroline", "Ring", email = "cring@toxstrategies.com", 
+           person("Caroline", "Ring", email = "Ring.Caroline@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0002-0463-1251")), 
            person("Greg", "Honda", email = "honda.gregory@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0001-7713-9850")), 
-           person("Mark", "Sfeir", email = "sfeir.mark@epa.gov", 
+           person("Mark", "Sfeir", 
              role = c("aut")), 
-           person("Matt", "Linakis", email = "matthew.linakis.1@us.af.mil", 
+           person("Matt", "Linakis", email = "MLINAKIS@ramboll.com", 
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
+           person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
+             role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
+           person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
+             role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
+           person("Shannon", "Bell", email="Shannon.bell@inotivco.com",
+             role = c("ctb"), comment = c(ORCID= "0000-0002-5754-6085")), 
+           person("Xiaoqing", "Chang", email="Xiaoqing.chang@inotivco.com",
+             role = c("ctb"), comment = c(ORCID = "0000-0003-0752-1848")), 
+           person("Todor", "Antonijevic", email="tantonijevic@toxstrategies.com",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-0248-8412")),
            person("Jimena", "Davis", role = c("ctb")), 
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
-           person("Nisha", "Sipes", email = "nisha.sipes@nih.gov", 
+           person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
-             role = c("ctb")), 
-           person("Woodrow", "Setzer", role = c("ctb"),
-             comment = c(ORCID = "0000-0002-6709-9186"))
+             role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")), 
+           person("Woodrow", "Setzer", email = "setzer.woodrow@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-6709-9186"))
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods
+        graphics, utils, magrittr, purrr, methods, Rdpack
+RdMacros: Rdpack
 Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
-        stringr, reshape, reshape2, gdata, viridis, CensRegMod,
-        gmodels, colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gtools, 
-        gridExtra
+        stringr, reshape, reshape2, viridis, gmodels,
+        colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
+        testthat
 License: GPL-3
 LazyData: true
+LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
-Packaged: 2019-07-25 18:56:22 UTC; jwambaug
+Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
+  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>),  
   Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
-  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>), 
+  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
   Mark Sfeir [aut], 
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
+<<<<<<< HEAD
+=======
+  Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>), 
+  Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
+  Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
+  Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
+  Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
+>>>>>>> feature/otherrepos
   Jimena Davis [ctb], 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
-  Barbara Wetmore [ctb], 
+  Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
+Copyright: This package is primarily developed by employees of the U.S.
+        Federal government as part of their official duties and is
+        therefore public domain.

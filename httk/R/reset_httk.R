@@ -14,7 +14,7 @@
 #' 
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' chem.physical_and_invitro.data <- load_sipes2017()
 #' reset_httk()
 #' }                        

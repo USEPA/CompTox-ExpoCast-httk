@@ -9,7 +9,7 @@ get_rblood2plasma(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F
+  default.to.human = FALSE
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -27,6 +27,10 @@ default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+}
+\value{
+A numeric value for the steady-state ratio of chemical concentration in blood
+to plasma
 }
 \description{
 This function attempts to retrieve a measured species- and chemical-specific 

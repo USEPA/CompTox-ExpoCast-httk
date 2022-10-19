@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_schmitt.R
 \name{parameterize_schmitt}
 \alias{parameterize_schmitt}
-\title{Get the Parameters for Schmitt's Tissue Partition Coefficient Method}
+\title{Parameters for Schmitt's (2008) Tissue Partition Coefficient Method}
 \usage{
 parameterize_schmitt(
   chem.cas = NULL,
@@ -10,9 +10,10 @@ parameterize_schmitt(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  default.to.human = F,
-  force.human.fup = F,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  force.human.fup = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04
 )
 }
@@ -25,7 +26,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -43,6 +44,9 @@ calculation for rats if true.
 When species is specified as rabbit, dog, or mouse, the human unbound
 fraction is substituted.}
 
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
@@ -50,18 +54,22 @@ equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 }
 \value{
-\item{Funbound.plasma}{corrected unbound fraction in plasma}
+\item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
 \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
-if below limit of detection)} \item{Pow}{octonol:water partition coefficient
-(not log transformed)} \item{pKa_Donor}{compound H dissociation equilibirum
-constant(s)} \item{pKa_Accept}{compound H association equilibirum
+if below limit of detection)} \item{Pow}{octanol:water partition coefficient
+(not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
+constant(s)} \item{pKa_Accept}{compound H association equilibrium
 constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
 affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 \item{plasma.pH}{pH of the plasma}
 }
 \description{
 This function provides the necessary parameters to run
-predict_partitioning_schmitt, excluding the data in tissue.data.
+\code{\link{predict_partitioning_schmitt}}, excluding the data in table
+\code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
+for predicting tissue:plasma partition coefficients as modified by Pearce 
+et al. (2017). The modifications include approaches adapted from Peyret 
+et al. (2010).
 }
 \examples{
 
@@ -69,6 +77,9 @@ parameterize_schmitt(chem.name='bisphenola')
 
 }
 \references{
+Pearce, Robert G., et al. "Httk: R package for high-throughput 
+toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
 Schmitt, Walter. "General approach for the calculation of 
 tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 457-467.

@@ -9,8 +9,8 @@ calc_hep_bioavailability(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  restrictive.clearance = T,
-  flow.34 = T
+  restrictive.clearance = TRUE,
+  flow.34 = TRUE
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -42,7 +42,8 @@ A data.table whose columns are the parameters of the HTTK model
 For models that don't described first pass blood flow from the gut, need to
 cacluate a hepatic bioavailability, that is, the fraction of chemical 
 systemically available after metabolism during the first pass through the 
-liver (Rowland, 1973).
+liver (Rowland, 1973 Equaation 29, where k21 is blood flow through the liver
+and k23 is clearance from the liver in Figure 1).
 }
 \references{
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 

@@ -4,19 +4,28 @@
 \alias{estimate_gfr}
 \title{Predict GFR.}
 \usage{
-estimate_gfr(gfrtmp.dt)
+estimate_gfr(gfrtmp.dt, gfr_resid_var = TRUE, ckd_epi_race_coeff = FALSE)
 }
 \arguments{
 \item{gfrtmp.dt}{A data.table with columns \code{gender}, \code{reth}, 
 \code{age_years}, \code{age_months}, \code{BSA_adj}, \code{serum_creat}.}
+
+\item{gfr_resid_var}{Logical value indicating whether or not to include
+residual variability when generating GFR values. (Default is TRUE.)}
+
+\item{ckd_epi_race_coeff}{Logical value indicating whether or not to use the
+"race coefficient" from the CKD-EPI equation when estimating GFR values.
+(Default is FALSE.)}
 }
 \value{
 The same data.table with a \code{gfr_est} column added, containing 
  estimated GFR values.
 }
 \description{
-First predict serum creatinine using smoothing spline, then predict GFR using
-CKD-EPI equation.
+Predict GFR using CKD-EPI equation (for adults) or BSA-based equation (for children).
+}
+\details{
+Add residual variability based on reported residuals for each equation.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to 

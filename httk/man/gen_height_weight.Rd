@@ -4,25 +4,43 @@
 \alias{gen_height_weight}
 \title{Generate heights and weights for a virtual population.}
 \usage{
-gen_height_weight(hbw_dt)
+gen_height_weight(gender, reth, age_months, nhanes_mec_svy)
 }
 \arguments{
-\item{hbw_dt}{A data.table describing the virtual population by race,
-gender, and age (in years and months). Must have variables \code{gender},
-\code{reth}, \code{age}, and \code{age.years}.}
+\item{gender}{Gender for which to calculate height/weight ("Male" or "Female")}
+
+\item{reth}{NHANES race/ethnicity category for which to calculate
+height/weight ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+White", "Other", or "Other Hispanic")}
+
+\item{age_months}{vector of ages in months for individuals for whom to
+calculate height/weight (between 0-959 months)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
-The same data.table with two new variables added: \code{weight} and
-\code{height}. Respectively, these give individual body weights in kg, and
-individual heights in cm.
+A list containing two named elements, \code{weight} and \code{height},
+ each of which is a numeric vector. \code{weight} gives individual body
+ weights in kg, and \code{height} gives individual heights in cm,
+ corresponding to each item in the input \code{age_months}.
 }
 \description{
-Generate heights and weights for a virtual population.
+Predict height and weight from age using smoothing splines, and then add
+residual variability from a 2-D KDE, both fitted to NHANES data, for a given
+combination of gender and NHANES race/ethnicity category.
+}
+\details{
+This function should usually not be called directly by the user. It is used by
+\code{httkpop_generate()} in "virtual-individuals" mode, after drawing gender,
+NHANES race/ethnicity category, and age from their NHANES
+proportions/distributions.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+ environmental chemicals by simulating toxicokinetic variability."
+ Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

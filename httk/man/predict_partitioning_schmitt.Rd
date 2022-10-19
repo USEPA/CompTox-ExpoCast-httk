@@ -9,16 +9,17 @@ predict_partitioning_schmitt(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
+  model = "pbtk",
+  default.to.human = FALSE,
   parameters = NULL,
   alpha = 0.001,
-  adjusted.Funbound.plasma = T,
-  regression = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
   regression.list = c("brain", "adipose", "gut", "heart", "kidney", "liver", "lung",
     "muscle", "skin", "spleen", "bone"),
   tissues = NULL,
   minimum.Funbound.plasma = 1e-04,
-  suppress.messages = F
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -28,11 +29,14 @@ specified.}
 \item{chem.cas}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{model}{Model for which partition coefficients are neeeded (for example,
+"pbtk", "3compartment")}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_analytic_css.R
 \name{calc_analytic_css}
 \alias{calc_analytic_css}
-\title{Calculate the analytic steady state concentration.}
+\title{Calculate the analytic steady state plasma concentration.}
 \usage{
 calc_analytic_css(
   chem.name = NULL,
@@ -11,15 +11,22 @@ calc_analytic_css(
   parameters = NULL,
   species = "human",
   daily.dose = 1,
+  route = "oral",
+  exp.conc = 1,
+  period = 24,
+  exp.duration = 24,
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   tissue = NULL,
-  restrictive.clearance = T,
-  bioactive.free.invivo = F,
+  restrictive.clearance = TRUE,
+  bioactive.free.invivo = FALSE,
   IVIVE = NULL,
+<<<<<<< HEAD
   Caco2.options = list(),
+=======
+>>>>>>> feature/otherrepos
   parameterize.args = list(),
   ...
 )
@@ -31,12 +38,12 @@ be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
-parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -44,20 +51,40 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
+default "oral").}
+
+\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
+'forcings' data series argument for integrator. Defaults to uM/L}
+
+\item{period}{For use in assembling forcing function data series 'forcings'
+argument, specified in hours}
+
+\item{exp.duration}{For use in assembling forcing function data 
+series 'forcings' argument, specified in hours}
+
 \item{output.units}{Units for returned concentrations, defaults to uM 
 (specify units = "uM") but can also be mg/L.}
 
-\item{model}{Model used in calculation, 'pbtk' for the multiple compartment 
-model,'3compartment' for the three compartment model, '3compartmentss' for 
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
 the three compartment steady state model, and '1compartment' for one 
 compartment model.}
 
-\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{tissue}{Desired tissue conentration (defaults to whole body 
-concentration.)}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
 
 \item{restrictive.clearance}{If TRUE (default), then only the fraction of
 chemical not bound to protein is available for metabolism in the liver. If 
@@ -97,7 +124,7 @@ the lowest measured Fup in our dataset).}
 parameters is NULL.}
 }
 \value{
-Steady state concentration
+Steady state plasma concentration in specified units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 
@@ -155,6 +182,6 @@ Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
 }
 \author{
-Robert Pearce, John Wambaugh, and Greg Honda
+Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 }
 \keyword{Solve}

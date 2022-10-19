@@ -16,21 +16,22 @@ solve_1comp(
   dose = NULL,
   doses.per.day = NULL,
   initial.values = NULL,
-  plots = F,
-  suppress.messages = F,
+  plots = FALSE,
+  suppress.messages = FALSE,
   species = "Human",
-  iv.dose = F,
-  output.units = "uM",
+  iv.dose = FALSE,
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
+  default.to.human = FALSE,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
   dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
@@ -44,7 +45,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.}
@@ -56,9 +57,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, default is mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, default is mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -75,8 +76,12 @@ output.units.  Defaults are zero.}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+"mg/kg" BW.}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -95,7 +100,7 @@ rate.}
 
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
-mg/kg BW, of each dose.}
+mg/kg BW by default, of each dose.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with volume of distribution calculated with this value.}
@@ -140,7 +145,7 @@ in days.
 Default value of NULL for doses.per.day solves for a single dose.
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 AUC is area under plasma concentration curve.

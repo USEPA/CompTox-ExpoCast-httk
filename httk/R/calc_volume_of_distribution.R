@@ -18,7 +18,7 @@
 #' specified when Funbound.plasma is not given in parameter list. 
 #' @param chem.cas Either the CAS number or the chemical name must be specified
 #' when Funbound.plasma is not given in parameter list. 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
 #' predict_partitioning_schmitt.
@@ -53,11 +53,11 @@ calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       dtxsid=NULL,
                       parameters=NULL,
-                      default.to.human=F,
+                      default.to.human=FALSE,
                       species="Human",
-                      suppress.messages=F,
-                      adjusted.Funbound.plasma=T,
-                      regression=T,
+                      suppress.messages=FALSE,
+                      adjusted.Funbound.plasma=TRUE,
+                      regression=TRUE,
                       minimum.Funbound.plasma=0.0001)
 {
   physiology.data <- physiology.data
@@ -93,8 +93,10 @@ calc_vdist<- function(chem.cas=NULL,
                     regression=regression,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                     minimum.Funbound.plasma=minimum.Funbound.plasma))
-    if (adjusted.Funbound.plasma) parameters <- c(parameters,schmitt.parameters['Funbound.plasma'])
-    else parameters <- c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
+    if (adjusted.Funbound.plasma) parameters <- 
+      c(parameters,schmitt.parameters['Funbound.plasma'])
+    else parameters <- 
+      c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
   if(any(names(parameters) %in% schmitt.specific.names) &
@@ -114,37 +116,44 @@ calc_vdist<- function(chem.cas=NULL,
       out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name)
       chem.cas <- out$chem.cas
     }
-    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=T)
-    if (class(fup) == "try-error" & default.to.human) 
+    fup <- try(get_invitroPK_param("Funbound.plasma",species,chem.cas=chem.cas),silent=TRUE)
+    if (is(fup,"try-error") & default.to.human) 
     {
-      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=T)
+      fup <- try(get_invitroPK_param("Funbound.plasma","Human",chem.cas=chem.cas),silent=TRUE)
       warning(paste(species,"coerced to Human for protein binding data."))
     }
-    if (class(fup) == "try-error") stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+    if (is(fup,"try-error")) stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
     if (fup == 0)
     {
       fup <- 0.005
       warning("Fraction unbound = 0, changed to 0.005.")
     }
     if(adjusted.Funbound.plasma){
-      Flipid <- subset(physiology.data,Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,which(tolower(colnames(physiology.data)) == tolower(species))]
-      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas))
-      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
+      Flipid <- subset(physiology.data,
+        Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+          which(tolower(colnames(physiology.data)) == tolower(species))]
+      pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",
+                                                       chem.cas=chem.cas))
+      pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",
+                                                        chem.cas=chem.cas))
       Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
       ion <- calc_ionization(pH=7.4,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
-      dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + ion$fraction_zwitter)
+      dow <- Pow * (ion$fraction_neutral + 0.001 * ion$fraction_charged + 
+                      ion$fraction_zwitter)
       fup <- 1 / ((dow) * Flipid + 1 / fup)
     }
     parameters <- c(parameters,Funbound.plasma=fup)  
   }
   
   
-# Check the species argument for capitalization problems and whether or not it is in the table:  
+# Check the species argument for capitalization problems and whether or not it 
+# is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      phys.species <- colnames(physiology.data)[toupper(colnames(physiology.data))==toupper(species)]
+      phys.species <- colnames(physiology.data)[
+        toupper(colnames(physiology.data))==toupper(species)]
     } else stop(paste("Physiological PK data for",species,"not found."))
   } else phys.species <- species
 
@@ -165,12 +174,16 @@ calc_vdist<- function(chem.cas=NULL,
     #partition coefficients to lump_tissues()
     if (is.data.table(parameters))
     {
-      PCs <- parameters[,PC.names,with=F]
+      PCs <- parameters[,PC.names,with=FALSE]
     } else {
       PCs <- subset(parameters,names(parameters) %in% PC.names)
     }
    # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
-    lumped_params <- lump_tissues(PCs,tissuelist=NULL,species=species)
+    lumped_params <- lump_tissues(
+      PCs,
+      tissuelist=NULL,
+      species=species,
+      model="1compartment")
  
    vol.dist <- plasma.vol +
       RBC.vol*lumped_params$Krbc2pu*parameters$Funbound.plasma+
@@ -185,18 +198,32 @@ calc_vdist<- function(chem.cas=NULL,
       RBC.vol*parameters[["Krbc2pu"]]*parameters$Funbound.plasma
     lastchar <- function(x){substr(x, nchar(x), nchar(x))}
     firstchar <- function(x){substr(x, 1,1)}
-    scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V"&lastchar(names(parameters))=="c"]
+    scaled.volumes <- names(parameters)[firstchar(names(parameters))=="V" &
+                                          lastchar(names(parameters))=="c"]
     PCs <- names(parameters)[firstchar(names(parameters))=="K"]
-    comps <- intersect(substr(scaled.volumes,2,nchar(scaled.volumes)-1),substr(PCs,2,nchar(PCs)-3)) 
+    comps <- intersect(substr(scaled.volumes,2,nchar(scaled.volumes)-1), 
+                       substr(PCs,2,nchar(PCs)-3)) 
     comps <-  comps[!(comps %in% c('art','ven'))]        
     for(this.comp in comps){
-      eval(parse(text=paste('vol.dist <- vol.dist + ', parameters[[scaled.volumes[grep(this.comp,scaled.volumes)]]],'*', parameters[[PCs[grep(this.comp,PCs)]]],'*',parameters$Funbound.plasma))) # L 
+      eval(parse(text=paste('vol.dist <- vol.dist + ', 
+        parameters[[scaled.volumes[grep(this.comp,scaled.volumes)]]],
+        '*', 
+        parameters[[PCs[grep(this.comp,PCs)]]],
+        '*',
+        parameters$Funbound.plasma))) # L 
     }
   }
     
-  if(!suppress.messages){
-    if(is.null(chem.name) & is.null(chem.cas)) cat("Volume of distribution returned in units of L/kg BW.\n")
-    else cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"volume of distribution returned in units of L/kg BW.\n")
+  if (!suppress.messages)
+  {
+    if (is.null(chem.name) & is.null(chem.cas)) 
+    {
+      cat("Volume of distribution returned in units of L/kg BW.\n")
+    }
+    else cat(paste(toupper(substr(species,1,1)),
+                   substr(species,2,nchar(species)),
+                   sep=''),
+             "volume of distribution returned in units of L/kg BW.\n")
   }
   return(set_httk_precision(as.numeric(vol.dist)))
 }

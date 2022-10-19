@@ -10,7 +10,10 @@ add_chemtable(
   current.table = NULL,
   reference = NULL,
   species = NULL,
-  overwrite = F
+  overwrite = FALSE,
+  sig.fig = 4,
+  clint.pvalue.overwrite = TRUE,
+  allow.na = FALSE
 )
 }
 \arguments{
@@ -39,6 +42,15 @@ replaced by any data in new.table that is for the same chemical and
 property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored.  Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
+
+\item{sig.fig}{Sets the number of significant figures stored (defaults to 4)}
+
+\item{clint.pvalue.overwrite}{If TRUE then the Cl_int p-value is set to NA 
+when the Cl_int value is changed unless a new p-value is provided. (defaults
+to TRUE)}
+
+\item{allow.na}{If TRUE (default is FALSE) then NA values are written to the
+table, otherwise they are ignored.}
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in
@@ -53,8 +65,10 @@ modeled.
 }
 \examples{
 
+library(httk)
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
-my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+my.new.data <- cbind(my.new.data,as.data.frame(c(
+                     "111-11-2","222-22-0","333-33-5"),
                      stringsAsFactors=FALSE))
 my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
                     stringsAsFactors=FALSE))
@@ -65,7 +79,8 @@ my.new.data <- cbind(my.new.data,as.data.frame(c(0,10,100)))
 colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 
 chem.physical_and_invitro.data <- add_chemtable(my.new.data,
-                                  current.table=chem.physical_and_invitro.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
                                   data.list=list(
                                   Compound="Name",
                                   CAS="CASRN",
@@ -78,6 +93,41 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                   reference="MyPaper 2015")
 parameterize_steadystate(chem.name="C")  
 calc_css(chem.name="B")                                
+
+# Initialize a column describing proton donors ("acids")
+my.new.data$pka.a <- NA 
+# set chemical C to an acid (pKa_donor = 5):
+my.new.data[my.new.data$Name=="C","pka.a"] <- "5"
+chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
+                                 data.list=list(
+                                 Compound="Name",
+                                 CAS="CASRN",
+                                 DTXSID="DTXSID",
+                                 pKa_Donor="pka.a"),
+                                 species="Human",
+                                 reference="MyPaper 2015") 
+
+# Note Rblood2plasma and hepatic bioavailability change (relative to above):
+parameterize_steadystate(chem.name="C")  
+
+# Initialize a column describing proton acceptors ("bases")
+my.new.data$pka.b <- NA 
+# set chemical B to a base with multiple pka's (pKa_accept = 7 and 8):
+my.new.data[my.new.data$Name=="B","pka.b"] <- "7;8"
+chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+                                  current.table=
+                                    chem.physical_and_invitro.data,
+                                 data.list=list(
+                                 Compound="Name",
+                                 CAS="CASRN",
+                                 DTXSID="DTXSID",
+                                 pKa_Accept="pka.b"),
+                                 species="Human",
+                                 reference="MyPaper 2015") 
+# Note that average and max change (relative to above):
+calc_css(chem.name="B")     
 
 }
 \author{

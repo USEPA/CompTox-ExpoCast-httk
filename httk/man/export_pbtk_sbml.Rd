@@ -27,6 +27,9 @@ export_pbtk_sbml(
 
 \item{digits}{Desired number of decimal places to round the parameters.}
 }
+\value{
+Text describing the PBTK model in SBML.
+}
 \description{
 This function exports the multiple compartment PBTK model to an sbml file.
 }
@@ -40,7 +43,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-\dontrun{
+\donttest{
 export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
 }
 

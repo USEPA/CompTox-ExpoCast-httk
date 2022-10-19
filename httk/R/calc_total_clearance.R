@@ -1,6 +1,7 @@
-#' Calculate the total clearance.
+#' Calculate the total plasma clearance.
 #' 
 #' This function calculates the total clearance rate for a one compartment model
+#' for plasma
 #' where clearance is entirely due to metablism by the liver and glomerular
 #' filtration in the kidneys, identical to clearance of three compartment
 #' steady state model.
@@ -10,7 +11,7 @@
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
@@ -43,11 +44,11 @@ calc_total_clearance<- function(chem.cas=NULL,
                                 dtxsid=NULL,
                                 parameters=NULL,
                                 species="Human",
-                                suppress.messages=F,
-                                default.to.human=F,
-                                well.stirred.correction=T,
-                                restrictive.clearance=T,
-                                adjusted.Funbound.plasma=T,
+                                suppress.messages=FALSE,
+                                default.to.human=FALSE,
+                                well.stirred.correction=TRUE,
+                                restrictive.clearance=TRUE,
+                                adjusted.Funbound.plasma=TRUE,
                                 ...)
 
 {
@@ -72,7 +73,7 @@ calc_total_clearance<- function(chem.cas=NULL,
                      dtxsid=dtxsid,
                      species=species,
                      parameters=parameters,
-                     suppress.messages=T,
+                     suppress.messages=TRUE,
                      well.stirred.correction=well.stirred.correction,
                      restrictive.clearance=restrictive.clearance,
                      adjusted.Funbound.plasma=

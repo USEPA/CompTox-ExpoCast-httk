@@ -16,22 +16,29 @@ solve_3comp(
   dose = NULL,
   doses.per.day = NULL,
   initial.values = NULL,
-  plots = F,
-  suppress.messages = F,
+  plots = FALSE,
+  suppress.messages = FALSE,
   species = "Human",
-  iv.dose = F,
-  output.units = "uM",
+  iv.dose = FALSE,
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
+<<<<<<< HEAD
   clint.pvalue.threshold = 0.05,
   default.to.human = F,
   recalc.blood2plasma = F,
   recalc.clearance = F,
+=======
+  default.to.human = FALSE,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
+>>>>>>> feature/otherrepos
   dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = list(),
   monitor.vars = NULL,
@@ -45,7 +52,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  The
@@ -77,8 +84,12 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing,
+defaults to mg/kg BW}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -147,7 +158,7 @@ The compartments used in this model are the gutlumen, gut, liver, and
 rest-of-body, with the plasma equivalent to the liver plasma.
 
 Model Figure 
-\if{html}{\figure{3comp.png}{options: width="60\%" alt="Figure: Three
+\if{html}{\figure{3comp.jpg}{options: width="60\%" alt="Figure: Three
 Compartment Model Schematic"}} 
 \if{latex}{\figure{3comp.pdf}{options: width=12cm alt="Figure: Three Compartment
 Model Schematic"}}

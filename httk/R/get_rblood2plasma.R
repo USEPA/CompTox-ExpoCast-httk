@@ -11,7 +11,7 @@
 #' specified. 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified. 
-#' @param dtxsid EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)  
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
@@ -21,6 +21,10 @@
 #' @author Robert Pearce
 #'
 #' @keywords Parameter
+#'
+#' @return
+#' A numeric value for the steady-state ratio of chemical concentration in blood
+#' to plasma
 #'
 #' @examples
 #' 
@@ -35,7 +39,7 @@ get_rblood2plasma <- function(
                        chem.cas=NULL,
                        dtxsid=NULL,
                        species='Human',
-                       default.to.human=F)
+                       default.to.human=FALSE)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD

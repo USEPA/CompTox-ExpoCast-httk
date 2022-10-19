@@ -1,3 +1,4 @@
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
 #' Parameterize_gas_pbtk
 #' 
 #' This function initializes the parameters needed in the function solve_gas_pbtk
@@ -34,14 +35,84 @@
 #' in desired output concentration units. 
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
+=======
+#' Parameters for a generic gas inhalation physiologically-based toxicokinetic model
+#' 
+#' This function initializes the parameters needed for the model 'gas_pbtk', for
+#' example \code{\link{solve_gas_pbtk}}. Chemical- and species-specific model 
+#' parameters are generated. These include tissue:plasma partition coefficients 
+#' via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
+#' and flows are retrieved from table \code{\link{physiology.data}}). This model
+#' was first described by Linakis et al. (2020).
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' 
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
+#' @param tissuelist Specifies compartment names and tissues groupings.
+#' Remaining tissues in tissue.data are lumped in the rest of the body.
+#' However, solve_pbtk only works with the default parameters.
+#' 
+#' @param force.human.clint.fup Forces use of human values for hepatic
+#' intrinsic clearance and fraction of unbound plasma if true.
+#' 
+#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
+#' vitro clearance assay result has a p-values greater than the threshold are
+#' set to zero.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
+#' @param regression Whether or not to use the regressions in calculating
+#' partition coefficients.
+#' 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#' 
+#' @param vmax Michaelis-Menten vmax value in reactions/min
+#' 
+#' @param km Michaelis-Menten concentration of half-maximal reaction velocity
+#' in desired output concentration units. 
+#' 
+#' @param exercise Logical indicator of whether to simulate an exercise-induced
+#' heightened respiration rate
+#' 
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
 #' @param fR Respiratory frequency (breaths/minute), used especially to adjust
 #' breathing rate in the case of exercise. This parameter, along with VT and VD
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
+=======
+#' 
+#' @param VT Tidal volume (L), to be modulated especially as part of simulating
+#' the state of exercise
+#' 
+#' @param VD Anatomical dead space (L), to be modulated especially as part of
+#' simulating the state of exercise
+#' 
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
 #' @param ... Other parameters
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
@@ -49,7 +120,11 @@
 #' \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 #' (median, lower 95th, upper 95th, p value)} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
 #' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
+=======
+#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
 #' dose that enters the gut lumen.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 #' assay using the method of Kilford et al. (2008)} 
@@ -107,8 +182,21 @@
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
 #' @references 
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
 #' Linakis, Matthew W., et al. "Development and Evaluation of a High Throughput 
 #' Inhalation Model for Organic Chemicals", submitted
+=======
+#' Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
+#' inhalation model for organic chemicals." Journal of exposure science & 
+#' environmental epidemiology 30.5 (2020): 866-877.
+#'
+#' Schmitt, Walter. "General approach for the calculation of tissue 
+#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
 #'
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -137,12 +225,17 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               species="Human",
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
                               default.to.human=F,
+=======
+                              default.to.human=FALSE,
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
                               tissuelist=list(
                                 liver=c("liver"),
                                 kidney=c("kidney"),
                                 lung=c("lung"),
                                 gut=c("gut")),
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
                               force.human.clint.fup = F,
                               clint.pvalue.threshold=0.05,
                               adjusted.Funbound.plasma=T,
@@ -154,6 +247,20 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               VT = 0.75,
                               VD = 0.15,
                               suppress.messages=F,
+=======
+                              force.human.clint.fup = FALSE,
+                              clint.pvalue.threshold=0.05,
+                              adjusted.Funbound.plasma=TRUE,
+                              adjusted.Clint=TRUE,
+                              regression=TRUE,
+                              vmax = 0,
+                              km = 1,
+                              exercise = FALSE,
+                              fR = 12,
+                              VT = 0.75,
+                              VD = 0.15,
+                              suppress.messages=FALSE,
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
                               minimum.Funbound.plasma=0.0001,
                               ...)
 {
@@ -174,6 +281,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
    
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
   if (class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=T)
@@ -187,6 +295,21 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   if (class(Clint.db) == "try-error") 
+=======
+  if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
+  # Clint has units of uL/min/10^6 cells
+  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=TRUE)
+  # Check that the trend in the CLint assay was significant:
+  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=TRUE)
+  if ((is(Clint.db,"try-error") & default.to.human) || force.human.clint.fup) 
+  {
+    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=TRUE)
+    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=TRUE)
+    if (!suppress.messages)
+      warning(paste(species,"coerced to Human for metabolic clearance data."))
+  }
+  if (is(Clint.db,"try-error")) 
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
     stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
@@ -207,7 +330,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                                          species=species,
                                          default.to.human=default.to.human,
                                          force.human.fup=force.human.clint.fup,
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
                                          suppress.messages=T,
+=======
+                                         suppress.messages=TRUE,
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                       species=species,
@@ -226,11 +353,32 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fabsgut <- try(get_invitroPK_param("Fabsgut",species,chem.cas=chem.cas),silent=T)
   if (class(Fabsgut) == "try-error") Fabsgut <- 1
+=======
+  # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+  # clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
+                "Pow","pKa_Donor","pKa_Accept")])  # fraction
+  if (adjusted.Clint) 
+  {
+    Clint <- Clint / Fu_hep
+    if (!suppress.messages) 
+    {
+      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
+    }
+  }
+
+# Restrict the value of fup:
+  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
+
+  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=TRUE)
+  if (is(Fgutabs,"try-error")) Fgutabs <- 1
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
@@ -321,10 +469,17 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Dn=0.17,BW=BW,
           Vliverc=lumped_params$Vliverc, #L/kg
           Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
         suppress.messages=T)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
       Fabsgut=Fabsgut)) #L/h/kg BW
+=======
+        suppress.messages=TRUE)), #L/h/kg BW
+      million.cells.per.gliver=110, # 10^6 cells/g-liver
+      liver.density=1.05, # g/mL
+      Fgutabs=Fgutabs)) #L/h/kg BW
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
   } else {
     outlist <- c(outlist,list(
       vmax=vmax,km=km,
@@ -333,7 +488,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Clmetabolismc=0,                       
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05, # g/mL
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
       Fabsgut=Fabsgut))#ML added Km = km 9-19-19
+=======
+      Fgutabs=Fgutabs))#ML added Km = km 9-19-19
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
   }
  
  
@@ -346,7 +505,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
         species=species,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
         suppress.messages=T))
+=======
+        suppress.messages=TRUE))
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
     
     #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
     #henry's law in atm * m^3 / mol, converted atm to Pa
@@ -371,5 +534,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
         
+<<<<<<< HEAD:httk/R/parameterize_gas_pbtk.R
   return(lapply(outlist[sort(names(outlist))],set_httk_precision))
+=======
+  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
+>>>>>>> feature/otherrepos:httk/R/Parameterize_gas_PBTK.R
 }

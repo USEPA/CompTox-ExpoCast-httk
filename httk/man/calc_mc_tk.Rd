@@ -12,23 +12,37 @@ calc_mc_tk(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "pbtk",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
   output.units = "mg/L",
   solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
+<<<<<<< HEAD
   oral.pathway = T,
   Caco2.options = list(),
   invitro.mc.arg.list = list(),
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(),
+=======
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
+    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
+    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
+    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
+    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
+    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
+    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  convert.httkpop.arg.list = list(),
+  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = TRUE, regression = TRUE),
+>>>>>>> feature/otherrepos
   return.all.sims = FALSE
 )
 }
@@ -39,7 +53,7 @@ be specified.}
 \item{chem.name}{Either the chemical parameters, name, or the CAS number
 must be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Parameters from parameterize_steadystate. Not used with
@@ -73,7 +87,7 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
+of detection (specified separately for each parameter). This argument should
 be a list of sub-lists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New
@@ -114,11 +128,26 @@ parameterize_* function for the model.}
 \item{return.all.sims}{Logical indicating whether to return the results
 of all simulations, in addition to the default toxicokinetic statistics}
 }
+\value{
+If return.all.sims == FALSE (default) a list with:
+\item{means}{The mean concentration for each model compartment as a function
+of time across the Monte Carlo simulation}
+\item{sds}{The standard deviation for each model compartment as a function
+of time across the Monte Carlo simulation}
+
+If return.all.sums == TRUE then a list is returned with:
+\item{stats}{The list of means and sds from return.all.sums=FALSE}
+\item{sims}{The concentration vs. time results for each compartment for 
+every (samples) set of parameters in the Monte Carlo simulation}
+}
 \description{
 This function finds the analytical steady state plasma concentration(from
 calc_analytic_css) using a monte carlo simulation (monte_carlo).
 }
 \details{
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
@@ -132,7 +161,9 @@ steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
 The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
+assumptions identified by Honda et al. (2019) 
+(\doi{10.1371/journal.pone.0217564}) 
+are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -146,7 +177,8 @@ used by this function.
 }
 \examples{
 
-\dontrun{
+\donttest{
+NSAMP <- 50
 chemname="Abamectin"
 times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
 age.ranges <- seq(6,80,by=10)

@@ -13,10 +13,10 @@ calc_rblood2plasma(
   hematocrit = NULL,
   Krbc2pu = NULL,
   Funbound.plasma = NULL,
-  default.to.human = F,
+  default.to.human = FALSE,
   species = "Human",
-  adjusted.Funbound.plasma = T,
-  suppress.messages = T
+  adjusted.Funbound.plasma = TRUE,
+  suppress.messages = TRUE
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Parameters from \code{\link{parameterize_schmitt}}}
@@ -52,6 +52,9 @@ adjustment.}
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}
 }
+\value{
+The blood to plasma chemical concentration ratio
+}
 \description{
 This function calculates the constant ratio of the blood concentration to
 the plasma concentration.
@@ -63,7 +66,7 @@ equation: 1 - hematocrit + hematocrit * Krbc2pu * Funbound.plasma, summing
 the red blood cell to plasma and plasma:plasma (equal to 1) partition
 coefficients multiplied by their respective fractional volumes. When
 species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data (hematocrit and temperature), but substitues
+appropriate physiological data (hematocrit and temperature), but substitutes
 human fraction unbound and tissue volumes.
 }
 \examples{

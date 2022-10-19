@@ -1,32 +1,59 @@
-#' Parameterize_1comp
+#' Parameters for a one compartment (empirical) toxicokinetic model
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
-#' 
+#' Volume of distribution is estimated by using a modified Schmitt (2008) method
+#' to predict tissue particition coefficients (Pearce et al., 2017) and then
+#' lumping the compartments weighted by tissue volume:
+#'
+#' \if{latex}{
+#' \eqn{V_{d,steady-state} = \Sigma_{i\in tissues}K_{i}V_{i} + V_{plasma}}
+#' }
+#' \if{html}{
+#' V_d,steady-state = Sum over all tissues (K_i * V_i) + V_plasma
+#' }
+#'
+#' where K_i is the tissue:unbound plasma concentration partition coefficient
+#' for tissue i.
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with volume of distribution calculated with this value.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients in volume of distribution calculation.
+#' 
 #' @param restrictive.clearance In calculating elimination rate and hepatic
 #' bioavailability, protein binding is not taken into account (set to 1) in
 #' liver clearance if FALSE.
+#' 
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for well-stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
 #' with plasma concentration.
+#' 
 #' @param suppress.messages Whether or not to suppress messages.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-value greater than the threshold are
 #' set to zero.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
@@ -60,8 +87,16 @@
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput 
+#' @references 
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#' Schmitt, Walter. "General approach for the calculation of tissue 
+#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
 #'
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
@@ -69,6 +104,7 @@
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
 #' @keywords Parameter 1compartment
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
@@ -77,19 +113,20 @@
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
 #'  out <- solve_1comp(parameters=parameters)
-#' 
+#'
 #' @export parameterize_1comp
 parameterize_1comp <- function(
                         chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         species='Human',
-                        default.to.human=F,
-                        adjusted.Funbound.plasma=T,
-                        regression=T,
-                        restrictive.clearance=T,
-                        well.stirred.correction=T,
-                        suppress.messages=F,
+                        default.to.human=FALSE,
+                        adjusted.Funbound.plasma=TRUE,
+                        adjusted.Clint=TRUE,
+                        regression=TRUE,
+                        restrictive.clearance=TRUE,
+                        well.stirred.correction=TRUE,
+                        suppress.messages=FALSE,
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001,
                         Caco2.options = list()
@@ -127,7 +164,7 @@ parameterize_1comp <- function(
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
-                         suppress.messages=F)
+                         suppress.messages=suppress.messages)
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -137,6 +174,7 @@ parameterize_1comp <- function(
                                   default.to.human=default.to.human,
                                   adjusted.Funbound.plasma=
                                     adjusted.Funbound.plasma,
+                                  adjusted.Clint=adjusted.Clint,
                                   restrictive.clearance=restrictive.clearance,
                                   clint.pvalue.threshold=clint.pvalue.threshold,
                                   minimum.Funbound.plasma=
@@ -149,9 +187,10 @@ parameterize_1comp <- function(
                          chem.name=chem.name,
                          dtxsid=dtxsid,
                          species=species,
-                         suppress.messages=T,
+                         suppress.messages=TRUE,
                          default.to.human=default.to.human,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                         adjusted.Clint=adjusted.Clint,
                          regression=regression,
                          restrictive.clearance=restrictive.clearance,
                          well.stirred.correction=well.stirred.correction,
@@ -203,6 +242,7 @@ parameterize_1comp <- function(
   params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
+<<<<<<< HEAD
   params[['Fabsgut']] <- ss.params[['Fabsgut']]
   params[['Fabs']] <- ss.params[['Fabs']]
   params[['Fgut']] <- ss.params[['Fgut']]
@@ -214,6 +254,21 @@ parameterize_1comp <- function(
 
   params[['BW']] <- this.phys.data[["Average BW"]]
 
+=======
+    Fgutabs <- try(
+                 get_invitroPK_param(
+                   "Fgutabs",
+                   species,
+                   chem.cas=chem.cas),
+                 silent=TRUE)
+
+    if (is(Fgutabs,"try-error")) Fgutabs <- 1
+    
+    params[['Fgutabs']] <- Fgutabs
+    params[['hepatic.bioavailability']] <- 
+      ss.params[['hepatic.bioavailability']]  
+    params[['BW']] <- this.phys.data[["Average BW"]]
+>>>>>>> feature/otherrepos
   
-  return(lapply(params,set_httk_precision))
+  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
 }

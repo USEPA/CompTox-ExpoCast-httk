@@ -5,7 +5,59 @@
 \alias{chem.physical_and_invitro.data}
 \title{Physico-chemical properties and in vitro measurements for toxicokinetics}
 \format{
-A data.frame containing 565 rows and 33 columns.
+A data.frame containing 9411 rows and 54 columns.
+\tabular{lll}{
+\strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+ Compound \tab The preferred name of the chemical compound \tab none \cr                      
+ CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
+ CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
+ DTXSID \tab DSSTox Structure ID 
+(\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+ Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
+ SMILES.desalt \tab The simplified molecular-input line-entry system
+structure \tab none \cr                 
+ All.Compound.Names \tab All names of the chemical as they occured in the
+data \tab none \cr              
+ logHenry \tab The log10 Henry's law constant \tab 
+log10(atmosphers*m^3/mole) \cr                 
+ logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
+ logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
+ logP.Reference \tab Reference for logPow \tab \cr               
+ logPwa \tab The log10 water:air PC \tab log10 unitless ratio \cr                 
+ logPwa.Reference \tab Reference for logPwa \tab \cr             
+ logMA \tab The log10 phospholipid:water PC or
+"Membrane affinity" \tab unitless ratio \cr                
+ logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+ logWSol.Reference \tab Reference for logWsol \tab \cr              
+ MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
+ MP.Reference \tab Reference for melting point \tab \cr                   
+ MW \tab The chemical compound molecular weight \tab g/mol \cr                
+ MW.Reference \tab Reference for molecular weight \tab \cr                 
+ pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
+ \tab logarithm \cr              
+ pKa_Accept.Reference \tab Reference for pKa_Accept \tab \cr           
+ pKa_Donor \tab The hydrogen acceptor equilibria concentrations 
+\tab logarithm \cr               
+ pKa_Donor.Reference \tab Reference for pKa_Donor \tab \cr             
+ All.Species \tab All species for which data were available \tab none \cr                
+ DTXSID.Reference \tab Reference for DTXSID \tab \cr               
+ Formula.Reference \tab Reference for chemical formulat \tab \cr             
+ [SPECIES].Clint \tab (Primary hepatocyte suspension) 
+intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
+ [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+ [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
+ [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
+ [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
+gut \tab unitless fraction \cr           
+ [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+ [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
+plasma proteins \tab unitless fraction \cr         
+ [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
+ [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
+ [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
+ SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+ Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
+}
 }
 \source{
 Wambaugh, John F., et al. "Toxicokinetic triage for environmental
@@ -22,14 +74,51 @@ intrinsic clearance(uL/min/10^6 cells), and pKa. These data have been
 compiled from multiple sources, and can be used to parameterize a variety of
 toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 }
-\references{
-DSStox database (http:// www.epa.gov/ncct/dsstox
+\details{
+In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+fails to yield detectable concentrations for the free fraction of chemical. 
+In those cases we assume the compound is highly bound (that is, Fup approaches
+zero). For some calculations (for example, steady-state plasma concentration)
+there is precendent (Rotroff et al., 2010) for using half the average limit 
+of detection, that is 0.005. We do not recomend using other models where 
+quantities like partition coefficients must be predicted using Fup. We also
+do not recomend including the value 0.005 in training sets for Fup predictive
+models. 
 
-EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+\strong{Note} that in some cases the \strong{Funbound.plasma} and the 
+\strong{intrinsic clearance} are
+\emph{provided as a series of numbers separated by commas}. These values are the 
+result of Bayesian analysis and characterize a distribution: the first value
+is the median of the distribution, while the second and third values are the 
+lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+For intrinsic clearance a fourth value indicating a p-value for a decrease is
+provided. Typically 4000 samples were used for the Bayesian analusis, such
+that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
+for more details.
+
+Any one chemical compound \emph{may have multiple ionization equilibria} 
+(see Strope et al., 2018) may both for donating or accepting a proton (and
+therefore changing charge state). If there are multiple equlibria of the same
+type (donor/accept])the are concatonated by commas.
+
+All species-specific information is initially from experimental measurements.
+The functions \code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}}, 
+and \code{\link{load_dawson2021}} may be used to add in silico, structure-based
+predictions for many thousands of additional compounds to this table.
+}
+\references{
+CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
+
+EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 
 Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
+
+Honda, G. S., Pearce, R. G., Pham, L. L., Setzer, R. W., Wetmore, B. A., 
+Sipes, N. S., ... & Wambaugh, J. F. (2019). Using the concordance of in 
+vitro and in vivo data to evaluate extrapolation assumptions. PloS one, 
+14(5), e0217564.
 
 Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
 predicting drug clearance using in vitro kinetic data from hepatic
@@ -43,6 +132,15 @@ Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
 Development of a novel in vitro model to predict hepatic clearance using
 fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
 Disposition 30(12), 1446-54.
+
+Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
+Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
+a high-throughput inhalation model for organic chemicals. Journal of 
+Exposure Science & Environmental Epidemiology, 1-12.
+
+Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
+database of intravenous pharmacokinetic parameters in humans for 1352 drug 
+compounds. Drug Metabolism and Disposition, 46(11), 1466-1477.
 
 McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
 Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
@@ -59,10 +157,11 @@ hepatic microsomal intrinsic clearance data: An examination of in vitro
 half-life approach and nonspecific binding to microsomes. Drug Metabolism
 and Disposition 27(11), 1350-9.
 
-Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
-database of intravenous pharmacokinetic parameters in humans for 670 drug
-compounds. Drug Metabolism and Disposition 36(7), 1385-405,
-10.1124/dmd.108.020479.
+Paini, Alicia; Cole, Thomas; Meinero, Maria; Carpi, Donatella; Deceuninck, 
+Pierre; Macko, Peter; Palosaari, Taina; Sund, Jukka; Worth, Andrew; Whelan, 
+Maurice (2020):  EURL ECVAM in vitro hepatocyte clearance and blood plasma 
+protein binding dataset for 77 chemicals. European Commission, Joint Research 
+Centre (JRC) [Dataset] PID: https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
 
 Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
 oral bioavailability by using in vitro and in silico drug related parameters
@@ -91,6 +190,11 @@ toxicokinetic model. Archives of Toxicology 86(3), 393-403,
 Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
 concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
 286-297.
+
+Wambaugh, J. F., Wetmore, B. A., Ring, C. L., Nicolas, C. I., Pearce, R. G., 
+Honda, G. S., ... & Badrinarayanan, A. (2019). Assessing Toxicokinetic 
+Uncertainty and Variability in Risk Prioritization. Toxicological Sciences, 
+172(2), 235-251.
 
 Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
 D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,

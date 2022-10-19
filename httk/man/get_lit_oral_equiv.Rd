@@ -8,7 +8,8 @@ get_lit_oral_equiv(
   conc,
   chem.name = NULL,
   chem.cas = NULL,
-  suppress.messages = F,
+  dtxsid = NULL,
+  suppress.messages = FALSE,
   which.quantile = 0.95,
   species = "Human",
   input.units = "uM",
@@ -26,6 +27,9 @@ specified.}
 
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{suppress.messages}{Suppress output messages.}
 

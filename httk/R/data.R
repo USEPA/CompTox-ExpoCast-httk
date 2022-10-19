@@ -2,109 +2,33 @@
 #sets included in the package.
 
 
-#' Reference tissue masses and flows from tables in McNally et al. 2014.
+#'Reference tissue masses and flows from tables in McNally et al. 2014.
 #'
-#' Reference tissue masses, flows, and marginal distributions from McNally et
-#' al. 2014.
+#'Reference tissue masses, flows, and residual variance distributions from
+#'Tables 1, 4, and 5 of McNally et al. 2014.
 #'
-#' @format A data.table with variables: \describe{\item{\code{tissue}}{Body
-#'   tissue} \item{\code{gender}}{Gender: Male or Female}
-#'   \item{\code{mass_ref}}{Reference mass in kg, from Reference Man}
-#'   \item{\code{mass_cv}}{Coefficient of variation for mass}
-#'   \item{\code{mass_dist}}{Distribution for mass: Normal or Log-normal}
-#'   \item{\code{flow_ref}}{Reference flow in L/h, from Reference Man}
-#'   \item{\code{flow_cv}}{Coefficient of variation for flow (all normally
-#'   distributed)} \item{\code{height_ref}}{Reference heights (by gender)}
-#'   \item{\code{CO_ref}}{Reference cardiac output by gender}
-#'   \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
-#'   \code{flow_ref}/\code{CO_ref}}}
-#' @source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
-#'   population generator." Toxicology 315, 70-85, 2004.
+#'@format A data.table with variables: \describe{\item{\code{tissue}}{Body
+#'  tissue} \item{\code{gender}}{Gender: Male or Female}
+#'  \item{\code{mass_ref}}{Reference mass in kg, from Reference Man}
+#'  \item{\code{mass_cv}}{Coefficient of variation for mass}
+#'  \item{\code{mass_dist}}{Distribution for mass: Normal or Log-normal}
+#'  \item{\code{flow_ref}}{Reference flow in L/h, from Reference Man}
+#'  \item{\code{flow_cv}}{Coefficient of variation for flow (all normally
+#'  distributed)} \item{\code{height_ref}}{Reference heights (by gender)}
+#'  \item{\code{CO_ref}}{Reference cardiac output by gender}
+#'  \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
+#'  \code{flow_ref}/\code{CO_ref}}}
+#'@source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
+#'  population generator." Toxicology 315, 70-85, 2004.
 #'@keywords data
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
 "mcnally_dt"
-
-#'Smoothing splines for log hematocrit vs. age in months, and KDE residuals, by
-#'race and gender.
-#'
-#'Smoothing splines and KDE residuals pre-calculated from NHANES hematocrit and
-#'age data by race/ethnicity and gender.
-#'
-#'@format A data.table with 6 variables: \describe{ \item{\code{gender}}{Gender:
-#'  Male or Female} \item{\code{reth}}{Race/ethnicity: Mexican American, Other
-#'  Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
-#'  \item{\code{hct_spline}}{A list of smooth.spline objects, each giving a
-#'  smoothed relationship between log hematocrit and age in months}
-#'  \item{\code{hct_kde}}{A list of kde objects; each is a KDE of the
-#'  distribution of residuals about the smoothing spline.}}
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"spline_hematocrit"
-
-#'Smoothing splines for log serum creatinine vs. age in months, along with KDE
-#'residuals, by race and gender.
-#'
-#'#'Smoothing splines and KDE residuals pre-calculated from NHANES serum creatinine and
-#'age data by race/ethnicity and gender.
-#'
-#'@format A data.table with 6 variables: \describe{
-#'\item{\code{gender}}{Gender:
-#'  Male or Female}
-#'  \item{\code{reth}}{Race/ethnicity: Mexican American, Other
-#'  Hispanic, Non-Hispanic White, Non-Hispanic Black, Other}
-#'  \item{\code{sc_spline}}{A list of smooth.spline objects, each giving a
-#'  smoothed relationship between log serum creatinine and age in months}
-#'  \item{\code{sc_kde}}{A list of kde
-#'  objects; each is a KDE of the distribution of residuals about the smoothing
-#'  spline.}
-#'   }
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"spline_serumcreat"
-
-#'Smoothing splines for log height vs. age and log body weight vs. age, along
-#'with 2-D KDE residuals, by race and gender.
-#'
-#'#'Smoothing splines and KDE fits to joint distribution of height and weight
-#'residuals pre-calculated from NHANES height, weight, and age data by
-#'race/ethnicity and gender.
-#'
-#'@format A data.table with 6 variables: \describe{ \item{\code{g}}{Gender: Male
-#'  or Female} \item{\code{r}}{Race/ethnicity: Mexican American, Other Hispanic,
-#'  Non-Hispanic White, Non-Hispanic Black, Other} \item{\code{height_spline}}{A
-#'  list of smooth.spline objects, each giving a smoothed relationship between
-#'  log height in cm and age in months} \item{\code{weight_spline}}{A list of
-#'  smooth.spline objects, each giving a smoothed relationship between log body
-#'  weight in kg and age in months} \item{\code{hw_kde}}{A list of kde objects;
-#'  each is a 2-D KDE of the distribution of log height and log body weight
-#'  residuals about the smoothing splines.} }
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"spline_heightweight"
 
 #' A timestamp of table creation
 #'
@@ -130,20 +54,27 @@
 #'NHANES data on demographics, anthropometrics, and some laboratory measures,
 #'cleaned and combined into a single data set.
 #'
-#'@format A survey.design2 object, including masked cluster and strata.
-#'  Variables are available as a data.table by \code{nhanes_mec_svy$variables}.
-#'  Variables are as described in NHANES Demographics and Examination
-#'  documentation, with the exception of: \describe{
-#'  \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
+#'@format A data.table with 23620 rows and 12
+#'  variables.  \describe{ \item{seqn}{NHANES unique identifier for individual
+#'  respondents.} \item{sddsrvyr}{NHANES two-year cycle: one of "NHANES
+#'  2013-2014", "NHANES 2015-2016", "NHANES 2017-2018".} \item{riagendr}{Gender:
+#'  "Male" or "Female"} \item{ridreth1}{Race/ethnicity category: one of "Mexican
+#'  American", "Non-Hispanic White", "Non-Hispanic Black", "Other", "Other
+#'  Hispanic".} \item{ridexagm}{Age in months at the time of examination (if not
+#'  recorded by NHANES, it was imputed based on age at the time of screening)}
+#'  \item{ridexagy}{Age in years at the time of examination (if not recorded by
+#'  NHANES, it was imputed based on age at the time of screening)}
+#'  \item{bmxwt}{Weight in kg} \item{lbxscr}{Serum creatinine, mg/dL}
+#'  \item{lbxhct}{Hematocrit, percent by volume of blood composed of red blood
+#'  cells} \item{\code{wtmec6yr}}{6-year sample weights for combining 3 cycles,
 #'  computed by dividing 2-year sample weights by 3.}
 #'  \item{\code{bmxhtlenavg}}{Average of height and recumbent length if both
 #'  were measured; if only one was measured, takes value of the one that was
-#'  measured.} \item{\code{logbmxwt}}{Natural log of measured body weight.}
-#'  \item{\code{logbmxhtlenavg}}{Natural log of \code{bmxhtlenavg}.}
-#'  \item{\code{weight_class}}{One of Underweight, Normal, Overweight, or Obese.
-#'  Assigned using methods in \code{get_weight_class}.} }
+#'  measured.} \item{\code{weight_class}}{One of Underweight, Normal,
+#'  Overweight, or Obese. Assigned using methods in
+#'  \code{\link{get_weight_class}}.} }
 #'
-#'@source \url{http://www.cdc.gov/nhanes/nhanes_questionnaires.htm}
+#'@source \url{https://wwwn.cdc.gov/nchs/nhanes/Default.aspx}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -151,29 +82,9 @@
 #'@author Caroline Ring
 #'
 #'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"nhanes_mec_svy"
-
-#'Smoothed age distributions by race and gender.
-#'
-#'Distributions of ages in months, computed from NHANES data smoothed using
-#'survey::svysmooth(), for each combination of race/ethnicity and gender.
-#'
-#'@format A data.table object with three variables: \describe{
-#'  \item{\code{gender}}{Gender: Male or Female}
-#'  \item{\code{reth}}{Race/ethnicity} \item{\code{smth}}{A list of
-#'  \code{svysmooth} objects, each encoding a weighted smoothed distribution of
-#'  ages.}}
-#'@keywords data
-#'@keywords httk-pop
-#'
-#'@author Caroline Ring
-#'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
-"age_dist_smooth"
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"mecdt"
 
 #'CDC BMI-for-age charts
 #'
@@ -187,18 +98,12 @@
 #'\item{Obese}{>=95th percentile}
 #'}
 #'
-#'@format A data.table object with variables \describe{
-#'\item{\code{Sex}}{'Male' or 'Female'}
-#'  \item{\code{Agemos}}{Age in months}
-#'  \item{\code{L},
-#'  \code{M}, \code{S}}{LMS parameters; see
-#'  \url{https://www.cdc.gov/growthcharts/percentile_data_files.htm}}
-#'  \item{\code{P3},
-#'  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P85},
-#'  \code{P90}, \code{P95}, and \code{P97}}{BMI percentiles}}
-#'
-#'
-#'@source \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}
+#' @format A data.table with 434 rows and 5 variables: \describe{
+#'   \item{Sex}{Female or Male} \item{Agemos}{Age in months} \item{P5}{The 5th
+#'   percentile BMI for the corresponding sex and age} \item{P85}{The 85th
+#'   percentile BMI for the corresponding sex and age} \item{P95}{The 95th
+#'   percentile BMI for the corresponding sex and age} }
+#' @source \url{https://www.cdc.gov/growthcharts/data/zscore/bmiagerev.csv}
 #'
 #'@keywords data
 #'@keywords httk-pop
@@ -218,17 +123,18 @@
 #'#'\describe{ \item{Underweight}{<2.3rd percentile} \item{Normal
 #'weight}{2.3rd-97.7th percentile} \item{Obese}{>=97.7th percentile} }
 #'
-#'@format A data.table object with variables \describe{ \item{\code{Sex}}{'Male'
-#'  or 'Female'} \item{\code{Length}}{length in cm} \item{\code{L}, \code{M},
-#'  \code{S}}{LMS parameters; see
-#'  \url{http://www.cdc.gov/growthcharts/percentile_data_files.htm}} \item{\code{P2.3},
-#'  \code{P5}, \code{P10}, \code{P25}, \code{P50}, \code{P75}, \code{P90},
-#'  \code{P95}, and \code{P97.7}}{weight percentiles} }
+#'@format a data.table with 262 rows and 4 variables:
+#'
+#'  \describe{ \item{Sex}{"Male" or "Female"} \item{Length}{Recumbent length in
+#'  cm} \item{P2.3}{The 2.3rd percentile weight in kg for the corresponding sex
+#'  and recumbent length} \item{P97.7}{The 97.7th percentile weight in kg for
+#'  the corresponding sex and recumbent length}}
 #'
 #'@source
-#'  \url{http://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
-#'  and
-#'  \url{http://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+#'\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
+#'and
+#'\url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+"wfl"
 #'@keywords data
 #'
 #'@author Caroline Ring
@@ -239,30 +145,136 @@
 #'International 106 (2017): 105-118
 "wfl"
 
+#'KDE bandwidth for residual variability in height/weight
+#'
+#'Bandwidths used for a two-dimensional kernel density estimation of the joint
+#'distribution of residual errors around smoothing spline fits of height vs. age
+#'and weight vs. age for NHANES respondents in each of ten combinations of sex
+#'and race/ethnicity categories.
+#'
+#'Each matrix is a variance-covariance matrix for a two-dimensional normal
+#'distribution: this is the bandwidth to be used for a two-dimensional kernel
+#'density estimation (KDE) (using a two-dimensional normal kernel) of the joint
+#'distribution of residual errors around smoothing spline fits of height vs. age
+#'and weight vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{Hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{gen_height_weight}}.
+#'
+#'@format A named list with 10 elements, each a matrix with 2 rows and 2
+#'  columns. Each list element corresponds to, and is named for, one combination
+#'  of NHANES sex categories (Male and Female) and NHANES race/ethnicity
+#'  categories (Mexican American, Other Hispanic, Non-Hispanic White,
+#'  Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"hw_H" 
+
+#'KDE bandwidths for residual variability in hematocrit
+#'
+#'Bandwidths used for a one-dimensional kernel density estimation of the
+#'distribution of residual errors around smoothing spline fits of hematocrit vs.
+#'age  for NHANES respondents in each of ten combinations of sex and
+#'race/ethnicity categories.
+#'
+#'Each matrix is the standard deviation for a normal distribution: this is the
+#'bandwidth to be used for a kernel density estimation (KDE) (using a normal
+#'kernel) of the distribution of residual errors around smoothing spline fits of
+#'hematocrit vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{estimate_hematocrit}}.
+#'
+#'@format A named list with 10 elements, each a numeric value. Each list element
+#'  corresponds to, and is named for, one combination of NHANES sex categories
+#'  (Male and Female) and NHANES race/ethnicity categories (Mexican American,
+#'  Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"hct_h" 
+
+#'KDE bandwidths for residual variability in serum creatinine
+#'
+#'Bandwidths used for a one-dimensional kernel density estimation of the
+#'distribution of residual errors around smoothing spline fits of serum
+#'creatinine vs. age  for NHANES respondents in each of ten combinations of sex
+#'and race/ethnicity categories.
+#'
+#'Each matrix is the standard deviation for a normal distribution: this is the
+#'bandwidth to be used for a kernel density estimation (KDE) (using a normal
+#'kernel) of the distribution of residual errors around smoothing spline fits of
+#'serum creatinine vs. age for NHANES respondents in the specified sex and
+#'race/ethnicity category. Optimal bandwidths were pre-calculated by doing the
+#'smoothing spline fits, getting the residuals, then calling
+#'\code{\link[ks]{kde}} on the residuals (which calls \code{\link[ks]{hpi}} to
+#'compute the plug-in bandwidth).
+#'
+#'Used by HTTK-Pop only in "virtual individuals" mode (i.e.
+#'\code{\link{httkpop_generate}} with \code{method = "v"}), in
+#'\code{\link{gen_serum_creatinine}}.
+#'
+#'@format A named list with 10 elements, each a numeric value. Each list element
+#'  corresponds to, and is named for, one combination of NHANES sex categories
+#'  (Male and Female) and NHANES race/ethnicity categories (Mexican American,
+#'  Other Hispanic, Non-Hispanic White, Non-Hispanic Black, and Other).
+#'
+#'@keywords data
+#'
+#'@author Caroline Ring
+#'@keywords httk-pop
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+"scr_h" 
+
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
 #'
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
 #' Honda et al. (2019)
 #'
-#' @format A data frame with 53940 rows and 10 variables:
+#' @format A data frame / data table with 11 rows and 8 variables:
 #' \describe{
-#'   \item{area_bottom}{}
-#'   \item{cell_yield}{}
-#'   \item{diam}{}
-#'   \item{sysID}{}
-#'   \item{v_total}{}
-#'   \item{v_working}{}
-#'   \item{well_desc}{}
-#'   \item{well_number}{}
+#'   \item{sysID}{Identifier for each multi-well plate system}
+#'   \item{well_desc}{Well description}
+#'   \item{well_number}{Number of wells on plate}
+#'   \item{area_bottom}{Area of well bottom in mm^2}
+#'   \item{cell_yield}{Number of cells}
+#'   \item{diam}{Diameter of well in mm}
+#'   \item{v_total}{Total volume of well in uL)}
+#'   \item{v_working}{Working volume of well in uL}
 #' }
-#' @source \url{http://www.diamondse.info/}
-#'@keywords data
-#'@keywords httk-pop
 #'
-#'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
+#' @source \url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
+#'
+#' @keywords data
+#'
+#' @author Greg Honda
+#'
+#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
+#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
 #'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
 "well_param"
 
@@ -278,7 +290,7 @@
 #'   \item{gkow}{}
 #'   \item{gswat}{}
 #' }
-#' @source \url{http://www.diamondse.info/}
+#' @source \url{https://www.diamondse.info/}
 #'
 #'@keywords data
 #'
@@ -768,37 +780,6 @@
 "chem.invivo.PK.aggregate.data"
 
 
-#' Chemical membership in different research projects
-#'
-#' A static list of lists identifying chemical membership in different research
-#' projects. While it is our intent to keep these lists up-to-date, the
-#' information here is only for convenience and should not be considered to be
-#' definitive.
-#'
-#'
-#' @docType data
-#' @format A list containing ten lists.
-#' @author John Wambaugh
-#' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
-#' Alignment. Environ Health Perspect 116(1).
-#'
-#' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
-#' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
-#' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
-#' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
-#' Perspectives 118(4), 485-492.
-#'
-#' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
-#' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
-#' Human Exposure to Environmental Chemicals. Environmental Science &
-#' Technology, 10.1021/es503583j.
-#'
-#' CDC (2014). National Health and Nutrition Examination Survey. Available at:
-#' http://www.cdc.gov/nchs/nhanes.htm.
-#' @keywords data
-"chem.lists"
-
-
 #' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)
 #'
 #' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
@@ -953,16 +934,105 @@
 #' compiled from multiple sources, and can be used to parameterize a variety of
 #' toxicokinetic models. See variable EPA.ref for information on the reference EPA.
 #'
-#' @docType data
-#' @format A data.frame containing 565 rows and 33 columns.
-#' @author John Wambaugh
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+#' fails to yield detectable concentrations for the free fraction of chemical. 
+#' In those cases we assume the compound is highly bound (that is, Fup approaches
+#' zero). For some calculations (for example, steady-state plasma concentration)
+#' there is precendent (Rotroff et al., 2010) for using half the average limit 
+#' of detection, that is 0.005. We do not recomend using other models where 
+#' quantities like partition coefficients must be predicted using Fup. We also
+#' do not recomend including the value 0.005 in training sets for Fup predictive
+#' models. 
 #'
-#' EPI Suite, http://www.epa.gov/opptintr/exposure/pubs/episuite.htm
+#' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
+#' \strong{intrinsic clearance} are
+#' \emph{provided as a series of numbers separated by commas}. These values are the 
+#' result of Bayesian analysis and characterize a distribution: the first value
+#' is the median of the distribution, while the second and third values are the 
+#' lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+#' For intrinsic clearance a fourth value indicating a p-value for a decrease is
+#' provided. Typically 4000 samples were used for the Bayesian analusis, such
+#' that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
+#' for more details.
+#'
+#' Any one chemical compound \emph{may have multiple ionization equilibria} 
+#' (see Strope et al., 2018) may both for donating or accepting a proton (and
+#' therefore changing charge state). If there are multiple equlibria of the same
+#' type (donor/accept])the are concatonated by commas.
+#'
+#' All species-specific information is initially from experimental measurements.
+#' The functions \code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}}, 
+#' and \code{\link{load_dawson2021}} may be used to add in silico, structure-based
+#' predictions for many thousands of additional compounds to this table.
+#'
+#' @docType data
+#' @format A data.frame containing 9411 rows and 54 columns.
+#' \tabular{lll}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#'  Compound \tab The preferred name of the chemical compound \tab none \cr                      
+#'  CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
+#'  CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
+#'  DTXSID \tab DSSTox Structure ID 
+#' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+#'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
+#'  SMILES.desalt \tab The simplified molecular-input line-entry system
+#' structure \tab none \cr                 
+#'  All.Compound.Names \tab All names of the chemical as they occured in the
+#' data \tab none \cr              
+#'  logHenry \tab The log10 Henry's law constant \tab 
+#' log10(atmosphers*m^3/mole) \cr                 
+#'  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
+#'  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
+#'  logP.Reference \tab Reference for logPow \tab \cr               
+#'  logPwa \tab The log10 water:air PC \tab log10 unitless ratio \cr                 
+#'  logPwa.Reference \tab Reference for logPwa \tab \cr             
+#'  logMA \tab The log10 phospholipid:water PC or
+#' "Membrane affinity" \tab unitless ratio \cr                
+#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+#'  logWSol.Reference \tab Reference for logWsol \tab \cr              
+#'  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
+#'  MP.Reference \tab Reference for melting point \tab \cr                   
+#'  MW \tab The chemical compound molecular weight \tab g/mol \cr                
+#'  MW.Reference \tab Reference for molecular weight \tab \cr                 
+#'  pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
+#'  \tab logarithm \cr              
+#'  pKa_Accept.Reference \tab Reference for pKa_Accept \tab \cr           
+#'  pKa_Donor \tab The hydrogen acceptor equilibria concentrations 
+#' \tab logarithm \cr               
+#'  pKa_Donor.Reference \tab Reference for pKa_Donor \tab \cr             
+#'  All.Species \tab All species for which data were available \tab none \cr                
+#'  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
+#'  Formula.Reference \tab Reference for chemical formulat \tab \cr             
+#'  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
+#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
+#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+#'  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
+#'  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
+#'  [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
+#' gut \tab unitless fraction \cr           
+#'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+#'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
+#' plasma proteins \tab unitless fraction \cr         
+#'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
+#'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
+#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
+#'  SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+#'  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
+#' }
+#' @author John Wambaugh
+#'
+#' @references CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
+#'
+#' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
 #' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 #' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 #' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
+#' 
+#' Honda, G. S., Pearce, R. G., Pham, L. L., Setzer, R. W., Wetmore, B. A., 
+#' Sipes, N. S., ... & Wambaugh, J. F. (2019). Using the concordance of in 
+#' vitro and in vivo data to evaluate extrapolation assumptions. PloS one, 
+#' 14(5), e0217564.
 #'
 #' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
 #' predicting drug clearance using in vitro kinetic data from hepatic
@@ -976,6 +1046,15 @@
 #' Development of a novel in vitro model to predict hepatic clearance using
 #' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
 #' Disposition 30(12), 1446-54.
+#'
+#' Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
+#' Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
+#' a high-throughput inhalation model for organic chemicals. Journal of 
+#' Exposure Science & Environmental Epidemiology, 1-12.
+#' 
+#' Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
+#' database of intravenous pharmacokinetic parameters in humans for 1352 drug 
+#' compounds. Drug Metabolism and Disposition, 46(11), 1466-1477.
 #'
 #' McGinnity, D. F., Soars, M. G., Urbanowicz, R. A. and Riley, R. J. (2004).
 #' Evaluation of fresh and cryopreserved hepatocytes as in vitro drug
@@ -992,11 +1071,12 @@
 #' half-life approach and nonspecific binding to microsomes. Drug Metabolism
 #' and Disposition 27(11), 1350-9.
 #'
-#' Obach, R. S., Lombardo, F. and Waters, N. J. (2008). Trend analysis of a
-#' database of intravenous pharmacokinetic parameters in humans for 670 drug
-#' compounds. Drug Metabolism and Disposition 36(7), 1385-405,
-#' 10.1124/dmd.108.020479.
-#'
+#' Paini, Alicia; Cole, Thomas; Meinero, Maria; Carpi, Donatella; Deceuninck, 
+#' Pierre; Macko, Peter; Palosaari, Taina; Sund, Jukka; Worth, Andrew; Whelan, 
+#' Maurice (2020):  EURL ECVAM in vitro hepatocyte clearance and blood plasma 
+#' protein binding dataset for 77 chemicals. European Commission, Joint Research 
+#' Centre (JRC) [Dataset] PID: https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee
+#' 
 #' Paixao, P., Gouveia, L. F., & Morais, J. A. (2012). Prediction of the human
 #' oral bioavailability by using in vitro and in silico drug related parameters
 #' in a physiologically based absorption model. International journal of
@@ -1025,6 +1105,11 @@
 #' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
 #' 286-297.
 #'
+#' Wambaugh, J. F., Wetmore, B. A., Ring, C. L., Nicolas, C. I., Pearce, R. G., 
+#' Honda, G. S., ... & Badrinarayanan, A. (2019). Assessing Toxicokinetic 
+#' Uncertainty and Variability in Risk Prioritization. Toxicological Sciences, 
+#' 172(2), 235-251.
+#' 
 #' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
 #' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
 #' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
@@ -1052,31 +1137,9 @@
 "chem.physical_and_invitro.data"
 
 
-#' Sipes et al. 2017 data
-#'
-#' This table includes in silico predicted chemical-specifc plasma protein 
-#' unbound fraction (fup) and intrinsic hepatic clearance values for the entire
-#' Tox21 library 
-#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
-#' Predictions were made with Simulations Plus ADMET predictor,
-#' as reported in Sipes et al. (2017). 
-#'
-#' @name sipes2017
-#' @aliases Sipes2017
-#' @docType data
-#' @format data.frame
-#' @author Nisha Sipes
-#' @references Sipes, Nisha S., et al. "An Intuitive Approach for Predicting
-#' Potential Human Health Risk with the Tox21 10k Library." Environmental
-#' Science & Technology 51.18 (2017): 10786-10796.
-#' @source ADMET, Simulations Plus
-#' @keywords data
-"sipes2017"
-
-
 #' Tox21 2015 Active Hit Calls (EPA)
 #'
-#' The ToxCast and Tox21 research programs employ batteries of high throughput
+#' The ToxCast and Tox21 research programs employ batteries of high-throughput
 #' assays to assess chemical bioactivity in vitro. Not every chemical is tested
 #' through every assay. Most assays are conducted in concentration response,
 #' and each corresponding assay endpoint is analyzed statistically to determine
@@ -1093,7 +1156,7 @@
 #' @format A data.table with 401 rows and 6 columns
 #' @author John Wambaugh
 #' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program:
-#' providing high throughput decision support tools for chemical risk
+#' providing high-throughput decision support tools for chemical risk
 #' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
 #'
 #' Tice, Raymond R., et al. "Improving the human hazard characterization of
@@ -1306,47 +1369,6 @@
 #' @keywords data
 "tissue.data"
 
-
-
-#' Published toxicokinetic predictions based on in vitro data
-#'
-#' This data set gives the chemical specific predictions for serum
-#' concentration at steady state resulting from constant infusion exposure, as
-#' published in a series of papers from Barbara Wetmore's group at the Hamner
-#' Institutes for Life Sciences. Predictions include the median and 90\%
-#' interval in uM and mg/L. Calculations were made using the 1 and 10 uM in
-#' vitro measured clearances.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing 577 rows and 20 columns.
-#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-#' 157-174 (2012)
-#'
-#' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
-#' Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
-#' Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
-#' Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
-#' Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
-#' Toxicological Sciences, 132:327-346 (2013).
-#'
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-#' @keywords data
-"Wetmore.data"
-
-
-
 #' Published toxicokinetic predictions based on in vitro data from Wetmore et
 #' al. 2012.
 #'
@@ -1371,7 +1393,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1383,7 +1405,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1395,7 +1417,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1407,7 +1429,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (http:// www.epa.gov/ncct/dsstox
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1438,3 +1460,177 @@
 #'
 #' @keywords data
 "Frank2018invivo"
+
+#' Pearce et al. 2017 data
+#'
+#' This table includes the adjusted and unadjusted regression parameter
+#' estimates for the chemical-specifc plasma
+#' protein unbound fraction (fup) in 12 different tissue types.
+#'
+#' Predictions were made with regression models, 
+#' as reported in Pearce et al. (2017). 
+#'
+#' @name pearce2017regression
+#' @aliases Pearce2017Regression
+#' @docType data
+#' @format data.frame
+#' @author Robert G. Pearce
+#' @references Pearce, Robert G., et al. "Evaluation and calibration of 
+#' high-throughput predictions of chemical distribution to tissues."
+#' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @source Pearce et al. 2017 Regression Models
+#' @keywords data
+"pearce2017regression"
+
+#' Dawson et al. 2021 data
+#'
+#' This table includes QSAR (Random Forest) model predicted values for unbound
+#' fraction plasma protein (fup) and intrinsic hepatic clearance (clint) for a
+#' subset of chemicals in the Tox21 library
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}).
+#'
+#' Predictions were made with a set of Random Forest QSAR models,
+#' as reported in Dawson et al. (2021). 
+#'
+#' @name dawson2021
+#' @aliases Dawson2021
+#' @docType data
+#' @format data.frame
+#' @author Daniel E. Dawson
+#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
+#' of high-throughput toxicokinetic models using open-source descriptors."
+#' Environmental Science & Technology____. (2021):______.
+#' @source Dawson et al. 2021 Random Forest QSAR Model
+#' @keywords data
+"dawson2021"
+
+#' Kapraun et al. 2019 data
+#' 
+#' A list object containing time-varying parameters for the human maternal-fetal
+#' HTTK model. List elements contain scalar coefficients for the polynomial,
+#' logistic, Gompertz, and other functions of time describing blood flow rates,
+#' tissue volumes, hematocrits, and other anatomical/physiological quantities
+#' that change in the human mother and her fetus during pregnancy and gestation.
+#' 
+#' @name kapraun2019
+#' @aliases Kapraun2019
+#' @docType data
+#' @format list
+#' @author Dustin F. Kapraun
+#' @references
+#' \insertRef{kapraun2019empirical}{httk}
+#' @source Kapraun et al. 2019 Fetal PBTK Model
+#' @keywords data
+"kapraun2019"
+
+#' Pradeep et al. 2020
+#' 
+#' This table includes Support Vector Machine and Random Forest model predicted
+#' values for unbound fraction plasma protein (fup) and intrinsic hepatic
+#' clearance (clint) values for a subset of chemicals in the Tox21 library
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}).
+#'
+#' Prediction were made with Support Vector Machine and Random Forest models,
+#' as reported in Pradeep et al. (2020).
+#' 
+#' @name pradeep2020
+#' @aliases Pradeep2020
+#' @docType data
+#' @format data.frame
+#' @references 
+#' \insertRef{pradeep2020chemstr}{httk}
+#' @source Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
+#' @keywords data
+"pradeep2020"
+
+#' Aylward et al. 2014
+#' 
+#' Aylward et al. (2014) compiled measurements of the ratio of maternal to fetal 
+#' cord blood chemical concentrations at birth for a range of chemicals with 
+#' environmental routes of exposure, including bromodiphenyl ethers, fluorinated 
+#' compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke 
+#' components, and vitamins.
+#' 
+#' @name aylward2014
+#' @aliases Aylward2014
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Aylward2014matfet}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"aylward2014"
+
+#' AUCs for Pregnant and Non-Pregnant Women
+#' 
+#' Dallmann et al. (2018) includes compiled literature descriptions of 
+#' toxicokinetic summary statistics, including time-integrated plasma 
+#' concentrations (area under the curve or AUC) for drugs administered to a 
+#' sample of subjects including both pregnant and non-pregnant women. The 
+#' circumstances of the dosing varied slightly between drugs and are summarized 
+#' in the table.
+#' 
+#' @name pregnonpregaucs
+#' @aliases pregnonpregaucs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{dallmann2018pregpbtk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"pregnonpregaucs"  
+
+#' Partition Coefficients from PK-Sim
+#' 
+#' Dallmann et al. (2018) made use of PK-Sim to predict chemical- and tissue-
+#' specific partition coefficients. The methods include both the default
+#' PK-Sim approach and PK-Sim Standard and Rodgers & Rowland (2006).
+#' 
+#' @name pksim.pcs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{dallmann2018pregpbtk}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"pksim.pcs"  
+
+#' Fetal Partition Coefficients
+#' 
+#' Partition coefficients were measured for tissues, including placenta, in 
+#' vitro by Csanady et al. (2002) for Bisphenol A and Diadzen. Curley et al. 
+#' (1969) measured the concentration of a variety of pesticides in the cord 
+#' blood of newborns and in the tissues of infants that were stillborn. 
+#' 
+#' Three of the chemicals studied by Curley et al. (1969) were modeled by 
+#' Weijs et al. (2013) using the same partition coefficients for mother and 
+#' fetus. The values used represented "prior knowledge" summarizing the 
+#' available literature. 
+#' 
+#' @name fetalpcs
+#' @aliases fetalPCs
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Csanady2002fetalpc}{httk}
+#' \insertRef{Curley1969fetalpc}{httk}
+#' \insertRef{Weijs2013fetalpc}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"fetalpcs"
+
+#' Wang et al. 2018
+#' Wang et al. (2018) screened the blood of 75 pregnant women for the presence 
+#' of environmental organic acids (EOAs) and identified mass spectral features 
+#' corresponding to 453 chemical formulae of which 48 could be mapped to likely 
+#' structures. Of the 48 with tentative structures the identity of six were 
+#' confirmed with available chemical standards. 
+#' @name wang2018
+#' @aliases Wang2018
+#' @docType data
+#' @format data.frame
+#' @references
+#' \insertRef{Wang2018matbloodnta}{httk}
+#' @source Kapraun et al. 2021 (submitted)
+#' @keywords data
+"wang2018"

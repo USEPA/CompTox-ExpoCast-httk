@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -19,78 +19,172 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save pbtk_test.R pbtk_test.Rout
 > library(httk)
-> options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 0.7898
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="80-05-7",model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 0.7898
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.173
+[1] 0.7898
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
-Tissue concentration for liver returned in uM units.
-[1] 21.96
+Plasma concentration for liver returned in uM units.
+[1] 15.1
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
-Tissue concentration for brain returned in uM units.
-[1] 6.759
+Plasma concentration for brain returned in uM units.
+[1] 4.608
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > 
 > head(solve_pbtk(chem.name="bisphenol a"))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Agutlumen, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
+	uM*days: AUC
+
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.40  0.1449 4.396e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.1100 2.355e+01 2.832e-01 2.328 0.2470 0.06557   3.114
+[4,] 0.02083    103.10 73.1000 4.810e+01 6.656e-01 5.800 0.6386 0.40840  12.160
+[5,] 0.03125     59.77 59.1300 5.708e+01 8.689e-01 7.710 0.8583 0.95880  19.110
+[6,] 0.04167     34.66 45.0300 5.524e+01 9.140e-01 8.174 0.9143 1.56000  21.910
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[1,] 0.000e+00   0.0000    0.000e+00 0.000000
+[2,] 6.000e-09   0.0000    2.000e-09 0.000000
+[3,] 3.562e-01   0.1567    1.627e+00 0.001382
+[4,] 8.373e-01   1.0040    8.021e+00 0.007743
+[5,] 1.093e+00   2.4380    1.729e+01 0.018010
+[6,] 1.150e+00   4.1190    2.709e+01 0.029820
+Warning messages:
+1: In parameterize_pbtk(chem.cas = NULL, chem.name = "bisphenol a",  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = NULL, chem.name = "bisphenol a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = NULL, chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > head(solve_pbtk(chem.cas="80-05-7"))
-Human amounts returned in umol and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Agutlumen, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
+	uM*days: AUC
+
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.40  0.1449 4.396e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.1100 2.355e+01 2.832e-01 2.328 0.2470 0.06557   3.114
+[4,] 0.02083    103.10 73.1000 4.810e+01 6.656e-01 5.800 0.6386 0.40840  12.160
+[5,] 0.03125     59.77 59.1300 5.708e+01 8.689e-01 7.710 0.8583 0.95880  19.110
+[6,] 0.04167     34.66 45.0300 5.524e+01 9.140e-01 8.174 0.9143 1.56000  21.910
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[1,] 0.000e+00   0.0000    0.000e+00 0.000000
+[2,] 6.000e-09   0.0000    2.000e-09 0.000000
+[3,] 3.562e-01   0.1567    1.627e+00 0.001382
+[4,] 8.373e-01   1.0040    8.021e+00 0.007743
+[5,] 1.093e+00   2.4380    1.729e+01 0.018010
+[6,] 1.150e+00   4.1190    2.709e+01 0.029820
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = NULL, dtxsid = NULL,  :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = NULL, dtxsid = NULL,  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7", chem.name = NULL, dtxsid = NULL,  :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
 > head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
-Amounts returned in umol  and concentration returned in uM units.
-AUC is area under plasma concentration in uM * days units with 
-Rblood2plasma = 0.79.
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Agutlumen, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
+	uM*days: AUC
+
         time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
 [1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
-[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
-[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
-[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
-[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
-[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+[2,] 0.00001    306.40  0.1449 4.396e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 72.1100 2.355e+01 2.832e-01 2.328 0.2470 0.06557   3.114
+[4,] 0.02083    103.10 73.1000 4.810e+01 6.656e-01 5.800 0.6386 0.40840  12.160
+[5,] 0.03125     59.77 59.1300 5.708e+01 8.689e-01 7.710 0.8583 0.95880  19.110
+[6,] 0.04167     34.66 45.0300 5.524e+01 9.140e-01 8.174 0.9143 1.56000  21.910
        Cplasma Atubules Ametabolized      AUC
-[1,] 0.000e+00 0.000000    0.000e+00 0.000000
-[2,] 6.000e-09 0.000000    2.000e-09 0.000000
-[3,] 3.666e-01 0.001966    1.106e+00 0.001417
-[4,] 8.771e-01 0.019810    5.487e+00 0.008027
-[5,] 1.170e+00 0.058150    1.191e+01 0.018900
-[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+[1,] 0.000e+00   0.0000    0.000e+00 0.000000
+[2,] 6.000e-09   0.0000    2.000e-09 0.000000
+[3,] 3.562e-01   0.1567    1.627e+00 0.001382
+[4,] 8.373e-01   1.0040    8.021e+00 0.007743
+[5,] 1.093e+00   2.4380    1.729e+01 0.018010
+[6,] 1.150e+00   4.1190    2.709e+01 0.029820
+Warning messages:
+1: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Clint is provided as a distribution.
+2: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
+3: In parameterize_pbtk(chem.cas = "80-05-7") :
+  Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+5: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
+  Rblood2plasma not recalculated. 
+Set recalc.blood2plasma to TRUE if desired.
+6: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
+  Clearance not recalculated. 
+Set recalc.clearance to TRUE if desired.
+> 
+> #parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

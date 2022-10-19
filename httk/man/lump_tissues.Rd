@@ -10,7 +10,9 @@ lump_tissues(
   tissuelist = NULL,
   species = "Human",
   tissue.vols = NULL,
-  tissue.flows = NULL
+  tissue.flows = NULL,
+  model = "pbtk",
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -20,8 +22,10 @@ predict_partitioning_schmitt.}
 \item{parameters}{A list of physiological parameters including flows and
 volumes for tissues in \code{tissuelist}}
 
-\item{tissuelist}{Specifies compartment names and tissues groupings.
-Remaining tissues in tissue.data are lumped in the rest of the body.}
+\item{tissuelist}{Manually specifies compartment names and tissues, which
+override the standard compartment names and tissues that are usually
+specified in a model's associated modelinfo file. Remaining tissues in the
+model's associated \code{alltissues} listing are lumped in the rest of the body.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -29,6 +33,11 @@ default "Human").}
 \item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}}
 
 \item{tissue.flows}{A list of flows for tissues in \code{tissuelist}}
+
+\item{model}{Specify which model (and therefore which tissues) are being 
+considered}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
@@ -53,10 +62,12 @@ This function returns the flows, volumes, and partition coefficients for the
 lumped tissues specified in tissue list Ktissue2plasma -- tissue to free
 plasma concentration partition coefficients for every tissue specified by 
 Schmitt (2008) (the tissue.data table) tissuelist -- a list of character 
-vectors, the name of each entry in the list is a lumped tissue, the words in
-the vector are the Schmitt (2008) tissues that are to be lumped, for
-example: tissuelist<-list(Rapid=c("Brain","Kidney")) species specifies the
-flow.col and vol.col in the tissuedata.table
+vectors, the name of each entry in the list is its own compartment.
+The tissues in the alltissues vector are the Schmitt (2008) tissues that are
+to be considered in the lumping process. The tissuelist can also be manually
+specified for alternate lumping schemes: for example,
+tissuelist<-list(Rapid=c("Brain","Kidney")) specifies the flow.col and
+vol.col in the tissuedata.table.
 }
 \examples{
 

@@ -1,8 +1,14 @@
 #' Conduct multiple TK simulations using Monte Carlo
 #' 
+#' @description
 #' This function finds the analytical steady state plasma concentration(from
 #' calc_analytic_css) using a monte carlo simulation (monte_carlo).
 #' 
+#' @details
+#'
+#' The Monte Carlo methods used here were recently updated and described by
+#' Breen et al. (submitted).
+#'
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
 #' 
@@ -16,7 +22,9 @@
 #' coefficient.
 #' 
 #' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-#' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
+#' assumptions identified by Honda et al. (2019) 
+#' (\doi{10.1371/journal.pone.0217564}) 
+#' are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 #' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -32,7 +40,7 @@
 #' be specified. 
 #' @param chem.name Either the chemical parameters, name, or the CAS number
 #' must be specified. 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.
@@ -56,7 +64,7 @@
 #' chemical ratio of blood to plasma
 #' @param censored.params The parameters listed in censored.params are sampled
 #' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each paramter). This argument should
+#' of detection (specified separately for each parameter). This argument should
 #' be a list of sub-lists. Each sublist is named for a parameter in
 #' "parameters" and contains two elements: "CV" (coefficient of variation) and
 #' "LOD" (limit of detection, below which parameter values are censored. New
@@ -91,9 +99,22 @@
 #'
 #' @keywords Monte-Carlo dynamic simulation
 #'
+#' @return
+#' If return.all.sims == FALSE (default) a list with:
+#' \item{means}{The mean concentration for each model compartment as a function
+#' of time across the Monte Carlo simulation}
+#' \item{sds}{The standard deviation for each model compartment as a function
+#' of time across the Monte Carlo simulation}
+#'
+#' If return.all.sums == TRUE then a list is returned with:
+#' \item{stats}{The list of means and sds from return.all.sums=FALSE}
+#' \item{sims}{The concentration vs. time results for each compartment for 
+#' every (samples) set of parameters in the Monte Carlo simulation}
+#'
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
+#' NSAMP <- 50
 #' chemname="Abamectin"
 #' times<- c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)
 #' age.ranges <- seq(6,80,by=10)
@@ -122,25 +143,45 @@ calc_mc_tk<- function(chem.cas=NULL,
                         samples=1000,
                         which.quantile=0.95,
                         species="Human",
-                        suppress.messages=F,
+                        suppress.messages=FALSE,
                         model="pbtk",
-                        httkpop=T,
-                        invitrouv=T,
-                        calcrb2p=T,
+                        httkpop=TRUE,
+                        invitrouv=TRUE,
+                        calcrb2p=TRUE,
                         censored.params=list(),
                         vary.params=list(),
-                        return.samples=F,
+                        return.samples=FALSE,
                         tissue=NULL,
                         output.units="mg/L",
                         solvemodel.arg.list=list(
                           times=c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)),
+<<<<<<< HEAD
                         oral.pathway=T,
                         Caco2.options=list(),
                         invitro.mc.arg.list=list(),
+=======
+                        invitro.mc.arg.list=list(
+                          adjusted.Funbound.plasma=TRUE,
+                          poormetab=TRUE,
+                          fup.censored.dist=FALSE,
+                          fup.lod=0.01,
+                          fup.meas.cv=0.4,
+                          clint.meas.cv=0.3,
+                          fup.pop.cv=0.3,
+                          clint.pop.cv=0.3),
+>>>>>>> feature/otherrepos
                         httkpop.generate.arg.list=list(
                           method='direct resampling'),
                         convert.httkpop.arg.list=list(),
+<<<<<<< HEAD
                         parameterize.arg.list=list(),
+=======
+                        parameterize.arg.list=list(
+                          default.to.human=FALSE,
+                          clint.pvalue.threshold=0.05,
+                          restrictive.clearance = TRUE,
+                          regression=TRUE),
+>>>>>>> feature/otherrepos
                         return.all.sims=FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -183,7 +224,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         censored.params=censored.params,
                         Caco2.options = Caco2.options,
                         vary.params=vary.params,
-                        return.samples=F,
+                        return.samples=FALSE,
                         invitro.mc.arg.list=invitro.mc.arg.list,
                         httkpop.generate.arg.list=httkpop.generate.arg.list,
                         convert.httkpop.arg.list=convert.httkpop.arg.list,
@@ -196,7 +237,7 @@ calc_mc_tk<- function(chem.cas=NULL,
   for (i in 1:nrow(parameter.dt)) 
    model.out[[i]] <- do.call(model.list[[model]]$solve.func,args=c(list(
      parameters=as.list(parameter.dt[i,])),
-     suppress.messages=T,
+     suppress.messages=TRUE,
      solvemodel.arg.list))
 
   means <- set_httk_precision(Reduce("+",model.out)/length(model.out))

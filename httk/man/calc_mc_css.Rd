@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_mc_css.R
 \name{calc_mc_css}
 \alias{calc_mc_css}
-\title{Find the monte carlo steady state concentration.}
+\title{Distribution of chemical steady state concentration with uncertainty and variability}
 \usage{
 calc_mc_css(
   chem.cas = NULL,
@@ -12,16 +12,18 @@ calc_mc_css(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "3compartmentss",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
+  concentration = "plasma",
   output.units = "mg/L",
+<<<<<<< HEAD
   oral.pathway = T,
   Caco2.options = list(),
   invitro.mc.arg.list = list(),
@@ -29,6 +31,22 @@ calc_mc_css(
   convert.httkpop.arg.list = list(),
   parameterize.arg.list = list(),
   calc.analytic.css.arg.list = list()
+=======
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
+    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
+    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
+    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
+    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
+    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
+    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  convert.httkpop.arg.list = list(),
+  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
+    restrictive.clearance = TRUE, regression = TRUE),
+  calc.analytic.css.arg.list = list(),
+  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
+    regression = TRUE, minimum.Funbound.plasma = 1e-04)
+>>>>>>> feature/otherrepos
 )
 }
 \arguments{
@@ -40,7 +58,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -57,10 +75,11 @@ default "Human").  Species must be set to "Human" to run httkpop model.}
 
 \item{suppress.messages}{Whether or not to suppress output message.}
 
-\item{model}{Model used in calculation: 'pbtk' for the multiple compartment
-model,'3compartment' for the three compartment model, '3compartmentss' for
-the three compartment steady state model, and '1compartment' for one
-compartment model.  This only applies when httkpop=TRUE and species="Human",
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model. This only applies when httkpop=TRUE and species="Human",
 otherwise '3compartmentss' is used.}
 
 \item{httkpop}{Whether or not to use population generator and sampler from
@@ -94,7 +113,17 @@ equal to the mean times the CV. Not used with httkpop model.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{tissue}{Desired steady state tissue concentration.}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
+
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{output.units}{Plasma concentration units, either uM or default mg/L.}
 
@@ -112,19 +141,84 @@ parameterize_* function for the model.}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
+
+\item{parameterize.args}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
+}
+\value{
+Quantiles (specified by which.quantile) of the distribution of plasma
+steady-stae concentration (Css) from the Monte Carlo simulation
 }
 \description{
-This function finds the analytical steady state plasma concentration(from
-calc_analytic_css) using a monte carlo simulation (monte_carlo).
+For a given chemical and fixed dose rate this function determines a 
+distribution of steady-state concentrations reflecting measurment uncertainty
+an population variability. Uncertainty and variability are simulated via the
+Monte Carlo method -- many sets of model parameters are drawn according to
+probability distributions described in 
+Ring et al. (2017) (\doi{10.1016/j.envint.2017.06.004})
+for human variability and Wambaugh et al. (2019) 
+(\doi{10.1093/toxsci/kfz205}) 
+for measurement uncertainty. Monte Carlo samples are generated by the 
+function \code{\link{create_mc_samples}}. To allow rapid application of the 
+Monte Carlo 
+method we make use of analytical solutions for the steady-state concentration
+for a particular model via a given route (when available) as opposed to
+solving the model numerically (that is, using differential equations).
+For each sample of the Monte Carlo method (as specified by argument
+\code{samples}) the parameters for the analytical solution are varied. An
+ensemble of steady-state predictions are produced, though by default only
+the quantiles specified by argument \code{which.quantile} are provided. If 
+the full set of predicted values are desired use set the argument 
+\code{return.samples} to \code{TRUE}.
 }
 \details{
-All arguments after httkpop only apply if httkpop is set to TRUE and species
-to "Human".
+The chemical-specific steady-state concentration for a dose rate of 
+1 mg/kg body weight/day can be used for in \emph{in vitro-in vivo} 
+extrapolation (IVIVE) of
+a bioactive \emph{in vitro} concentration by dividing the \emph{in vitro}
+concentration
+by the steady-state concentration to predict a dose rate (mg/kg/day) that
+would produce that concentration in plasma. Using quantiles of the 
+distribution (such as the upper 95th percentile) allow incorporation of 
+uncertainty and variability into IVIVE.
 
-When species is specified as rabbit, dog, or mouse, the function uses the
+Reverse Dosimetry Toxicodynamic IVIVE
+
+\if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+\if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+
+Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 
+reverse dosimetry toxicodynamic IVIVE. Equivalent external dose is
+determined by solving the TK model in reverse by deriving the external dose
+(that is, TK model input) that produces a specified internal concentration 
+(that is, TK model output). Reverse dosimetry and IVIVE using HTTK relies on 
+the linearity of the models. We calculate a scaling factor to relate 
+\emph{in vitro} 
+concentrations (uM) to administered equivalent doses (AED). The scaling 
+factor is the inverse of the steady state plasma concentration (Css) 
+predicted for a 1 mg/kg/day exposure dose rate. We use Monte Carlo to 
+simulate variability and propagate uncertainty; for example, to calculate an 
+upper 95th percentile Css,95 for individuals who get higher plasma 
+concentrations from the same exposure.
+
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+
+
+httk-pop is used only for humans. For non-human species biological 
+variability is simulated by drawing parameters from uncorellated log-normal
+distributions. 
+
+Chemical-specific httk data are available primarily for human and for a few
+hundred chemicals in rat. All in silico predictions are for human. Thus, 
+when species is specified as rabbit, dog, or mouse, the user can choose
+to set the argument \code{default.to.human} to \code{TRUE} so that this 
+function uses the
 appropriate physiological data (volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
+<<<<<<< HEAD
 Tissue concentrations are calculated for the pbtk model with a default oral
 infusion dosing. All tissues other than gut, liver, and lung are the product
 of the steady state plasma concentration and the tissue to plasma partition
@@ -149,16 +243,54 @@ unbound invivo concentration as bioactive. For IVIVE, any input nominal
 concentration in vitro should be converted to cfree.invitro using 
 \code{\link{armitage_eval}}, otherwise performance will be the same as 
 "Honda2".
+=======
+If the argument \code{tissue} is used, the steady-state concentration in that
+tissue, if available, is provided. If that tissue is included in the model
+used (specified by arguement \code{model}) then the actual tissue 
+concentration is
+provided. Otherwise, the tissue-specific partition coefficient is used to
+estimate the concentration from the plasma. 
+
+The six sets of plausible IVIVE
+assumptions identified by Honda et al. (2019) 
+(\doi{10.1371/journal.pone.0217564}) 
+are: \tabular{lrrrr}{
+\tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
+Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
+Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
+Restrictive \tab Free \tab Max Conc. \cr Honda3 \tab Veinous \tab
+Non-restrictive \tab Total \tab Mean Conc. \cr Honda4 \tab Veinous \tab
+Non-restrictive \tab Total \tab Max Conc. \cr Honda5 \tab Target Tissue \tab
+Non-restrictive \tab Total \tab Mean Conc. \cr Honda6 \tab Target Tissue
+\tab Non-restrictive \tab Total \tab Max Conc. \cr } *Assumption is
+currently ignored because analytical steady-state solutions are currently
+used by this function.
+>>>>>>> feature/otherrepos
 }
 \examples{
+# Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
+# concentration of chemical with CAS 2451-62-9 to mg/kg/day:
+set.seed(1234)
+3/calc_mc_css(chem.cas="2451-62-9",samples=10,output.units="uM")
+# The significant digits should give the same answer as:
+set.seed(1234)
+calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)  
 
-\dontrun{
+\donttest{
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
              samples=100,return.samples=TRUE)
-             
+
  set.seed(1234)
- calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart')
+ calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+                          
+ # The following example should result in an error since we do not 
+ # estimate tissue partitioning with '3compartmentss'.                         
+ set.seed(1234)
+ try(calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart'))
+ 
+ set.seed(1234)
+ calc_mc_css(chem.name='2,4-d',model='pbtk',which.quantile=.9,httkpop=FALSE,tissue='heart')
 
  set.seed(1234)
  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
@@ -170,7 +302,9 @@ concentration in vitro should be converted to cfree.invitro using
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)
  calc_mc_css(parameters=params,model="pbtk")
+}
 
+\donttest{
  set.seed(1234)
  # Standard HTTK Monte Carlo:
  NSAMP = 500
@@ -179,8 +313,9 @@ concentration in vitro should be converted to cfree.invitro using
  calc_mc_css(chem.cas="90-43-7",
  model="pbtk",
  samples=NSAMP,
- invitro.mc.arg.list = list(adjusted.Funbound.plasma = T,
-   poormetab = T, 
+ invitro.mc.arg.list = list(
+   adjusted.Funbound.plasma = TRUE,
+   poormetab = TRUE, 
    fup.censored.dist = FALSE, 
    fup.lod = 0.01, 
    fup.meas.cv = 0.0, 
@@ -189,13 +324,13 @@ concentration in vitro should be converted to cfree.invitro using
    clint.pop.cv = 0.3))
  set.seed(1234)
  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
  set.seed(1234)
  # HTTK Monte Carlo with no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
  set.seed(1234)
  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=F,invitrouv=F)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
  # Should be the same as the mean result:
  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
  set.seed(1234)
@@ -203,8 +338,8 @@ concentration in vitro should be converted to cfree.invitro using
  calc_mc_css(chem.cas="90-43-7",
  model="pbtk",
  samples=NSAMP,
- httkpop=F,
- invitrouv=F,
+ httkpop=FALSE,
+ invitrouv=FALSE,
  vary.params=list(Pow=0.3))
 }
 
@@ -224,7 +359,11 @@ Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
 \author{
+<<<<<<< HEAD
 Caroline Ring, Robert Pearce, John Wambaugh, and Greg Honda
+=======
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+>>>>>>> feature/otherrepos
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}

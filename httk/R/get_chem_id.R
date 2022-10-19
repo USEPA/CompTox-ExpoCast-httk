@@ -4,11 +4,21 @@
 #' or DTXSID (DSStox Substance Identifier \url{https://comptox.epa.gov/dashboard}) this
 #' function checks if the chemical is available and, if so, returns all three
 #' pieces of information.
+#' 
 #' @author John Wambaugh and Robert Pearce
+#' 
 #' @keywords cheminformatics
+#' 
 #' @param chem.cas CAS regstry number
 #' @param chem.name Chemical name
 #' @param dtxsid DSSTox Substance identifier
+#'
+#' @return 
+#' A list containing the following chemical identifiers:
+#' \item{chem.cas}{CAS registry number}
+#' \item{chem.name}{Name}
+#' \item{dtxsid}{DTXSID}
+#' 
 #' @export get_chem_id
 get_chem_id <- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -19,7 +29,7 @@ get_chem_id <- function(chem.cas=NULL,
     stop("Must specify compound name, CAS, or DTXSID.\n")
   } 
   
-  num.chems <- max(length(chem.cas),length(chem.name),length(dtxsid),na.rm=T)
+  num.chems <- max(length(chem.cas),length(chem.name),length(dtxsid),na.rm=TRUE)
   
   chem.cas.out <- NULL
   chem.name.out <- NULL

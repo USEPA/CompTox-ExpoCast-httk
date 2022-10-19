@@ -2,20 +2,21 @@
 % Please edit documentation in R/parameterize_3comp.R
 \name{parameterize_3comp}
 \alias{parameterize_3comp}
-\title{Parameterize_3comp}
+\title{Parameters for a three-compartment toxicokinetic model (dynamic)}
 \usage{
 parameterize_3comp(
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  force.human.clint.fup = F,
+  default.to.human = FALSE,
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  suppress.messages = F,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
+  regression = TRUE,
+  suppress.messages = FALSE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }
@@ -26,7 +27,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -41,8 +42,11 @@ intrinsic clearance and fraction of unbound plasma if true.}
 \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
 having p-values greater than the threshold are set to zero.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -87,7 +91,12 @@ of the chemical in the blood to the concentration in the plasma.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 }
 \description{
-This function initializes the parameters needed in the function solve_3comp.
+This function generates the chemical- and species-specific parameters needed 
+for model '3compartment', for example \code{\link{solve_3comp}}. A call is 
+masde to \code{\link{parameterize_pbtk}} to use Schmitt (2008)'s method
+as modified by Pearce et al. (2017) to predict partition coefficients based
+on descriptions in \code{\link{tissue.data}}. Organ volumes and flows are
+retrieved from table \code{\link{physiology.data}}.
 }
 \examples{
 
@@ -100,6 +109,13 @@ This function initializes the parameters needed in the function solve_3comp.
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in

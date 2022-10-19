@@ -15,7 +15,6 @@
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' 
 #' @param chem.cas Either the chemical name or CAS number must be specified.
 #' @param chem.name Either the chemical name or CAS number must be specified.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
@@ -23,11 +22,17 @@
 #' @param initial.amounts Must specify initial amounts in units of choice.
 #' @param filename The name of the jarnac file containing the model.
 #' @param digits Desired number of decimal places to round the parameters.
+#' 
 #' @author Robert Pearce
+#' 
+#' @return
+#' Text describing the PBTK model in SBML. 
+#' 
 #' @keywords Export
+#' 
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' export_pbtk_sbml(chem.name='Nicotine',initial.amounts=list(Agutlumen=1),filename='PBTKmodel.xml')
 #' }
 #' 
@@ -56,7 +61,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
   chem.name <- out$chem.name
   
   cat("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<sbml xmlns = \"http://www.sbml.org/sbml/level2/version4\" level = \"2\" version = \"4\">
+<sbml xmlns = \"https://www.sbml.org/sbml/level2/version4\" level = \"2\" version = \"4\">
    <model id = \"cell\">
       <listOfCompartments>
          <compartment id = \"compartment\" size = \"1\"/>
@@ -106,7 +111,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Agut\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -133,7 +138,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Agut\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <times/>
                      <ci>
@@ -155,7 +160,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aart\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -200,7 +205,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Alung\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -227,7 +232,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Arest\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -254,7 +259,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aven\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -299,7 +304,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aliver\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -326,7 +331,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Ametabolized\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -359,7 +364,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aliver\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -404,7 +409,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aven\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -455,7 +460,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Akidney\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -482,7 +487,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Atubules\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>
@@ -515,7 +520,7 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                <speciesReference species = \"Aven\" stoichiometry = \"1\"/>
             </listOfProducts>
             <kineticLaw>
-               <math xmlns = \"http://www.w3.org/1998/Math/MathML\">
+               <math xmlns = \"https://www.w3.org/1998/Math/MathML\">
                   <apply>
                      <divide/>
                      <apply>

@@ -13,6 +13,12 @@ get_chem_id(chem.cas = NULL, chem.name = NULL, dtxsid = NULL)
 
 \item{dtxsid}{DSSTox Substance identifier}
 }
+\value{
+A list containing the following chemical identifiers:
+\item{chem.cas}{CAS registry number}
+\item{chem.name}{Name}
+\item{dtxsid}{DTXSID}
+}
 \description{
 Given one of chem.name, chem.cas (Chemical Abstract Service Registry Number),
 or DTXSID (DSStox Substance Identifier \url{https://comptox.epa.gov/dashboard}) this

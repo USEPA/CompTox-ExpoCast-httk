@@ -1,6 +1,5 @@
 #R CMD BATCH --no-timing --no-restore --no-save 3comp_test.R 3comp_test.Rout
 library(httk)
-options(warn=-1)
 
 calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 calc_analytic_css(chem.cas="80-05-7",model="3compartment")
@@ -48,6 +47,7 @@ head(initial_nondefault_dose)
 initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
 head(initial_nondefault_dose_intestine)
 
+#parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 
 script.args <- commandArgs(TRUE)
 if (length(script.args) > 0) 

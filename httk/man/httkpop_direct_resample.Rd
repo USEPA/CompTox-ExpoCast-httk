@@ -12,7 +12,10 @@ httkpop_direct_resample(
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other")
+    "Non-Hispanic Black", "Other"),
+  gfr_resid_var = TRUE,
+  ckd_epi_race_coeff = FALSE,
+  nhanes_mec_svy
 )
 }
 \arguments{
@@ -50,6 +53,17 @@ include in the population. Default is \code{c('Mexican American','Other
 Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
+
+\item{gfr_resid_var}{Logical value indicating whether or not to include
+residual variability when generating GFR values. (Default is TRUE.)}
+
+\item{ckd_epi_race_coeff}{Logical value indicating whether or not to use the
+"race coefficient" from the CKD-EPI equation when estimating GFR values.
+(Default is FALSE.)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A data.table where each row represents an individual, and each

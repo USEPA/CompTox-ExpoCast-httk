@@ -10,12 +10,12 @@ calc_hepatic_clearance(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   hepatic.model = "well-stirred",
-  suppress.messages = F,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
+  suppress.messages = FALSE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }
@@ -26,7 +26,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate

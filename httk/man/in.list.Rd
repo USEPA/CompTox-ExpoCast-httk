@@ -62,6 +62,7 @@ individuals. (CDC, 2014)
 }
 \examples{
 
+\donttest{
 httk.table <- get_cheminfo(info=c("CAS","Compound"))
 httk.table[,"Rat"] <- ""
 httk.table[,"NHANES"] <- ""
@@ -69,10 +70,10 @@ httk.table[,"Tox21"] <- ""
 httk.table[,"ToxCast"] <- ""
 httk.table[,"ExpoCast"] <- ""
 httk.table[,"PBTK"] <- ""
-# To make this example run quickly, this loop is only over the first ten 
+# To make this example run quickly, this loop is only over the first five 
 # chemicals. To build a table with all available chemicals use:
 # for (this.cas in httk.table$CAS)
-for (this.cas in httk.table$CAS[1:10])
+for (this.cas in httk.table$CAS[1:5])
 {
   this.index <- httk.table$CAS==this.cas
   if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"
@@ -81,6 +82,7 @@ for (this.cas in httk.table$CAS[1:10])
   if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+}
 }
 
 }
@@ -100,7 +102,7 @@ Human Exposure to Environmental Chemicals. Environmental Science &
 Technology, 10.1021/es503583j.
 
 CDC (2014). National Health and Nutrition Examination Survey. Available at:
-http://www.cdc.gov/nchs/nhanes.htm.
+https://www.cdc.gov/nchs/nhanes.htm.
 }
 \seealso{
 \code{\link{is.httk}} for determining inclusion in httk project

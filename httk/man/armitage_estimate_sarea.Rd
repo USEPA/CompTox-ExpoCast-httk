@@ -16,7 +16,7 @@ armitage_estimate_sarea(
 optionally include v_working, sarea, option.bottom, and option.plastic}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==T}
+if is.na(tcdata)==TRUE}
 
 \item{this.cell_yield}{For single value, optionally supply cell_yield,
 otherwise estimated based on well number}
@@ -25,15 +25,28 @@ otherwise estimated based on well number}
 otherwise estimated based on well number (m^3)}
 }
 \value{
-tcdata, A data table with well_number, sarea (surface area, m^2),
-cell_yield (# cells), v_working (m^3), v_total (m^3) per well
+A data table composed of any input data.table \emph{tcdata}
+with only the following columns either created or altered by this function:  
+\tabular{ccc}{
+\strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+well_number \tab number of wells on plate \tab \cr
+sarea \tab surface area \tab m^2 \cr
+cell_yield \tab number of cells \tab cells \cr 
+v_working \tab working (filled) volume of each well \tab uL \cr
+v_total \tab total volume of each well \tab uL \cr
+}
 }
 \description{
 Estimate geometry surface area of plastic in well plate based on well plate
-format suggested values from Corning.  option.plastic == T (default) give
-nonzero surface area (sarea, m^2) option.bottom == T (default) includes
+format suggested values from Corning.  option.plastic == TRUE (default) give
+nonzero surface area (sarea, m^2) option.bottom == TRUE (default) includes
 surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
+}
+\references{
+Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
+and evaluation of a mechanistic bioconcentration model for ionogenic organic 
+chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
 }
 \author{
 Greg Honda

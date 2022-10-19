@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_total_clearance.R
 \name{calc_total_clearance}
 \alias{calc_total_clearance}
-\title{Calculate the total clearance.}
+\title{Calculate the total plasma clearance.}
 \usage{
 calc_total_clearance(
   chem.cas = NULL,
@@ -10,11 +10,11 @@ calc_total_clearance(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  suppress.messages = F,
-  default.to.human = F,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
+  suppress.messages = FALSE,
+  default.to.human = FALSE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }
@@ -25,7 +25,7 @@ be specified.}
 \item{chem.name}{Either the chemical name, CAS number, or the parameters
 must be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (http://comptox.epa.gov/dashboard)
+\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate
@@ -58,6 +58,7 @@ parameters is NULL.}
 }
 \description{
 This function calculates the total clearance rate for a one compartment model
+for plasma
 where clearance is entirely due to metablism by the liver and glomerular
 filtration in the kidneys, identical to clearance of three compartment
 steady state model.

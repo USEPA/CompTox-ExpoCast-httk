@@ -11,12 +11,17 @@ calc_analytic_css_1comp(
   parameters = NULL,
   hourly.dose = 1/24,
   concentration = "plasma",
-  suppress.messages = F,
-  recalc.blood2plasma = F,
+  suppress.messages = FALSE,
+  recalc.blood2plasma = FALSE,
   tissue = NULL,
+<<<<<<< HEAD
   restrictive.clearance = T,
   bioactive.free.invivo = F,
   Caco2.options = list(),
+=======
+  restrictive.clearance = TRUE,
+  bioactive.free.invivo = FALSE,
+>>>>>>> feature/otherrepos
   ...
 )
 }
@@ -27,12 +32,12 @@ be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must 
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
-parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
@@ -61,7 +66,7 @@ bioactive in vivo. Only works with tissue = NULL in current implementation.}
 parameters is NULL.}
 }
 \value{
-Steady state concentration in uM units
+Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state plasma or venous blood 

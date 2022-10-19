@@ -25,6 +25,15 @@
 #'@param weight_category Optional: The weight categories to include in the 
 #'  population. Default is \code{c('Underweight', 'Normal', 'Overweight', 
 #'  'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @param gfr_resid_var Logical value indicating whether or not to include
+#' residual variability when generating GFR values. (Default is TRUE, passed from
+#' 'httkpop_direct_resample'.)
+#' @param ckd_epi_race_coeff Logical value indicating whether or not to use the
+#' "race coefficient" from the CKD-EPI equation when estimating GFR values.
+#' (Default is FALSE, passed from 'httkpop_direct_resample'.)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'
 #'@return A data.table where each row represents an individual, and
 #'  each column represents a demographic, anthropometric, or physiological
@@ -46,7 +55,10 @@ httkpop_direct_resample_inner <- function(nsamp,
                                           agelim_months,
                                           agelim_years,
                                           reths,
-                                          weight_category){
+                                          weight_category,
+                                          gfr_resid_var,
+                                          ckd_epi_race_coeff,
+                                          nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -223,18 +235,9 @@ httkpop_direct_resample_inner <- function(nsamp,
   #Compute tissue masses and flows
   inner_dt <- tissue_masses_flows(tmf_dt=inner_dt)
   #Calculate GFR:
-  #for people over 18,
-  #Estimate GFR from serum creatinine using CKD-EPI equation
-  inner_dt[age_years>=18, 
-           gfr_est:=ckd_epi_eq(scr=serum_creat, 
-                               gender=gender, 
-                               reth=reth, 
-                               age_years=age_years)]
-  #For children, estimate GFR from BSA
-  #(because serum creatinine was not measured under age 12)
-  #(and CKD-EPI equation is not validated in anyone under 18)
-  inner_dt[age_years<18, 
-           gfr_est:=estimate_gfr_ped(BSA=BSA_adj/(100^2))]
+  inner_dt <- estimate_gfr(gfrtmp.dt=inner_dt,
+               gfr_resid_var = gfr_resid_var,
+               ckd_epi_race_coeff = ckd_epi_race_coeff)
   
   #Hematocrit: was not measured for infants < 1 year old;
   #instead, sample hematocrit from log-normal distributions

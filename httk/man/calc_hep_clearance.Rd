@@ -10,12 +10,12 @@ calc_hep_clearance(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   hepatic.model = "well-stirred",
-  suppress.messages = F,
-  well.stirred.correction = T,
-  restrictive.clearance = T,
-  adjusted.Funbound.plasma = T,
+  suppress.messages = FALSE,
+  well.stirred.correction = TRUE,
+  restrictive.clearance = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }
@@ -26,7 +26,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_steadystate
@@ -61,8 +61,10 @@ parameters is NULL.}
 \item{Hepatic Clearance}{Units of L/h/kg BW.}
 }
 \description{
-This function calculates the hepatic clearance in plasma for a well-stirred model
-or other type if specified. Based on  Ito and Houston (2004)
+This function calculates the hepatic clearance in plasma for using the
+Houston (2004) are also available. In vitro measured hepatic clearace is 
+corrected for the free fraction in the assay using the model of Kilford et 
+al. (2008).
 }
 \examples{
 
@@ -75,6 +77,11 @@ calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
 predicting drug clearance using in vitro kinetic data from hepatic microsomes 
 and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
+
+Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+(2008). Hepatocellular binding of drugs: correction for unbound fraction in
+hepatocyte incubations using microsomal binding or drug lipophilicity data.
+Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
 \author{
 John Wambaugh and Robert Pearce

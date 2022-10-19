@@ -1,4 +1,4 @@
-#'Calculate the analytic steady state concentration for model pbtk.
+#'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing.
@@ -7,11 +7,11 @@
 #' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #' be specified.
-#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})    
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})    
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #' 'pbtk'), parameterize_3comp (for model = '3compartment), 
-#' parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #' (for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
 #'@param concentration Desired concentration type, 'blood', 'tissue', or default 'plasma'.
@@ -31,9 +31,10 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'
 #'@keywords pbtk
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
@@ -41,12 +42,17 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
-                                   suppress.messages=F,
-                                   recalc.blood2plasma=F,
+                                   suppress.messages=FALSE,
+                                   recalc.blood2plasma=FALSE,
                                    tissue=NULL,
+<<<<<<< HEAD
                                    restrictive.clearance=T,
                                    bioactive.free.invivo = F,
                                    Caco2.options = list(),
+=======
+                                   restrictive.clearance=TRUE,
+                                   bioactive.free.invivo = FALSE,
+>>>>>>> feature/otherrepos
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -136,7 +142,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       pcs <- predict_partitioning_schmitt(parameters =
         parameters[, param.names.schmitt[param.names.schmitt %in% 
         names(parameters)], with = F])
-    }else if (class(parameters) == "list") {
+    }else if (is(parameters,"list")) {
       pcs <- predict_partitioning_schmitt(parameters =
         parameters[param.names.schmitt[param.names.schmitt %in% 
         names(parameters)]])

@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R Under development (unstable) (2022-07-15 r82598 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -19,17 +19,43 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save 3compss_test.R 3compss_test.Rout
 > library(httk)
-> options(warn=-1)
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 0.9934
+Warning messages:
+1: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint is provided as a distribution.
+2: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Fraction unbound is provided as a distribution.
+3: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 0.9934
+Warning messages:
+1: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Clint is provided as a distribution.
+2: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Fraction unbound is provided as a distribution.
+3: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In parameterize_steadystate(chem.cas = "80-05-7", chem.name = "Bisphenol-a",  :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 1.484
+[1] 0.9934
+Warning messages:
+1: In parameterize_steadystate(chem.cas = "80-05-7") :
+  Clint is provided as a distribution.
+2: In parameterize_steadystate(chem.cas = "80-05-7") :
+  Fraction unbound is provided as a distribution.
+3: In parameterize_steadystate(chem.cas = "80-05-7") :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).
+4: In parameterize_steadystate(chem.cas = "80-05-7") :
+  Clint adjusted for in vitro partioning (Kilford, 2008).
 > 
 > script.args <- commandArgs(TRUE)
 > if (length(script.args) > 0) 

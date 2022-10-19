@@ -16,21 +16,22 @@ solve_pbtk(
   dose = NULL,
   doses.per.day = NULL,
   initial.values = NULL,
-  plots = F,
-  suppress.messages = F,
+  plots = FALSE,
+  suppress.messages = FALSE,
   species = "Human",
-  iv.dose = F,
-  output.units = "uM",
+  iv.dose = FALSE,
+  input.units = "mg/kg",
+  output.units = NULL,
   method = "lsoda",
   rtol = 1e-08,
   atol = 1e-12,
-  default.to.human = F,
-  recalc.blood2plasma = F,
-  recalc.clearance = F,
+  default.to.human = FALSE,
+  recalc.blood2plasma = FALSE,
+  recalc.clearance = FALSE,
   dosing.matrix = NULL,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
+  adjusted.Funbound.plasma = TRUE,
+  regression = TRUE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = list(),
   monitor.vars = NULL,
@@ -44,7 +45,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
@@ -57,9 +58,9 @@ overrides chem.name and chem.cas.}
 
 \item{tsteps}{The number of time steps per hour.}
 
-\item{daily.dose}{Total daily dose, mg/kg BW.}
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -76,8 +77,12 @@ default "Human").}
 
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
-\item{output.units}{Desired units (either "mg/L", "mg", "umol", or default
-"uM").}
+\item{input.units}{Input units of interest assigned to dosing, defaults to
+mg/kg BW}
+
+\item{output.units}{A named vector of output units expected for the model
+results. Default, NULL, returns model results in units specified in the
+'modelinfo' file. See table below for details.}
 
 \item{method}{Method used by integrator (deSolve).}
 
@@ -151,7 +156,7 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 Model Figure 
-\if{html}{\figure{pbtk.png}{options: width="60\%" alt="Figure: PBTK Model
+\if{html}{\figure{pbtk.jpg}{options: width="60\%" alt="Figure: PBTK Model
 Schematic"}}
 \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
 Schematic"}}
@@ -162,28 +167,51 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_pbtk(chem.name='Bisphenol-A',daily.dose=.5,days=1,doses.per.day=2,tsteps=2)
+# Multiple doses per day:
+head(solve_pbtk(
+  chem.name='Bisphenol-A',
+  daily.dose=.5,
+  days=5,
+  doses.per.day=2,
+  tsteps=2))
 
-out <- solve_pbtk(chem.name='bisphenola',dose=0,output.units="mg/L", 
-                  initial.values=c(Agut=200))
+# Starting with an initial concentration:
+out <- solve_pbtk(
+  chem.name='bisphenola',
+  dose=0,
+  output.units="mg/L", 
+  initial.values=c(Agut=200))
 
+# Working with parameters (rather than having solve_pbtk retrieve them):
 params <- parameterize_pbtk(chem.cas="80-05-7")
-solve_pbtk(parameters=params)
+head(solve_pbtk(parameters=params))
                   
-\dontrun{
-parameters <- parameterize_pbtk(chem.name = "triclosan", species = "rat")
-parameters["Funbound.plasma"] <- 0.1
-out <- solve_pbtk(parameters=parameters)
+# We can change the parameters given to us by parameterize_pbtk:
+params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
+params["Funbound.plasma"] <- 0.1
+out <- solve_pbtk(parameters=params)
 
-library("ggplot2")
-out <- solve_pbtk(chem.name = "Bisphenol A", days = 50, doses.per.day = 3)
+\donttest{
+# A fifty day simulation:
+out <- solve_pbtk(
+  chem.name = "Bisphenol A", 
+  days = 50, 
+  daily.dose=1,
+  doses.per.day = 3)
 plot.data <- as.data.frame(out)
 css <- calc_analytic_css(chem.name = "Bisphenol A")
-c.vs.t <- ggplot(plot.data,aes(time, Cplasma)) + geom_line() +
-geom_hline(yintercept = css) + ylab("Plasma Concentration (uM)") +
-xlab("Day") + theme(axis.text = element_text(size = 16), axis.title =
-element_text(size = 16), plot.title = element_text(size = 17)) +
-ggtitle("Bisphenol A")
+
+library("ggplot2")
+c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) + 
+  geom_line() +
+  geom_hline(yintercept = css) + 
+  ylab("Plasma Concentration (uM)") +
+  xlab("Day") + 
+  theme(
+    axis.text = element_text(size = 16), 
+    axis.title = element_text(size = 16), 
+    plot.title = element_text(size = 17)) +
+  ggtitle("Bisphenol A")
 print(c.vs.t)
 }
 

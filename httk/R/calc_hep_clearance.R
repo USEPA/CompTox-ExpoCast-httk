@@ -1,14 +1,16 @@
 #' Calculate the hepatic clearance.
 #' 
-#' This function calculates the hepatic clearance in plasma for a well-stirred model
-#' or other type if specified. Based on  Ito and Houston (2004)
-#' 
+#' This function calculates the hepatic clearance in plasma for using the
+#  "well-stirred" model by default. Other scaling options from Ito and 
+#' Houston (2004) are also available. In vitro measured hepatic clearace is 
+#' corrected for the free fraction in the assay using the model of Kilford et 
+#' al. (2008).
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
@@ -41,6 +43,11 @@
 #' predicting drug clearance using in vitro kinetic data from hepatic microsomes 
 #' and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
 #'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
+#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
+#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @examples
 #' 
 #' calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
@@ -53,12 +60,12 @@ calc_hep_clearance <- function(chem.name=NULL,
                                dtxsid = NULL,
                                parameters=NULL,
                                species='Human',
-                               default.to.human=F,
+                               default.to.human=FALSE,
                                hepatic.model='well-stirred',
-                               suppress.messages=F,
-                               well.stirred.correction=T,
-                               restrictive.clearance=T,
-                               adjusted.Funbound.plasma=T,
+                               suppress.messages=FALSE,
+                               well.stirred.correction=TRUE,
+                               restrictive.clearance=TRUE,
+                               adjusted.Funbound.plasma=TRUE,
                                ...)
 {
   model <- hepatic.model
@@ -169,13 +176,13 @@ calc_hep_clearance <- function(chem.name=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   }
   
-             
   fu_hep <- get_param(
               "Fhep.assay.correction",
               parameters,
               "calc_hep_clearance") 
               
-# Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+# Correct for fraction of chemical unbound in in vitro hepatocyte assay ad in
+# Kilford et al. (2008) (and used by Wetmore et al. (2015):
   Clint <- Clint / fu_hep
 
   fup <- get_param(
@@ -272,7 +279,7 @@ calc_hep_clearance <- function(chem.name=NULL,
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
@@ -317,14 +324,15 @@ calc_hepatic_clearance <- function(chem.name=NULL,
                                dtxsid = NULL,
                                parameters=NULL,
                                species='Human',
-                               default.to.human=F,
+                               default.to.human=FALSE,
                                hepatic.model='well-stirred',
-                               suppress.messages=F,
-                               well.stirred.correction=T,
-                               restrictive.clearance=T,
-                               adjusted.Funbound.plasma=T,
+                               suppress.messages=FALSE,
+                               well.stirred.correction=TRUE,
+                               restrictive.clearance=TRUE,
+                               adjusted.Funbound.plasma=TRUE,
                                ...)
 {
+  warning("Function \"calc_hepatic_clearance\" has been renamed to \"calc_hep_clearance\".")
   return(calc_hep_clearance(chem.name=chem.name,
                                chem.cas=chem.cas,
                                dtxsid = dtxsid,

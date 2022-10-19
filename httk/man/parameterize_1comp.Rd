@@ -2,19 +2,20 @@
 % Please edit documentation in R/parameterize_1comp.R
 \name{parameterize_1comp}
 \alias{parameterize_1comp}
-\title{Parameterize_1comp}
+\title{Parameters for a one compartment (empirical) toxicokinetic model}
 \usage{
 parameterize_1comp(
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  restrictive.clearance = T,
-  well.stirred.correction = T,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
+  regression = TRUE,
+  restrictive.clearance = TRUE,
+  well.stirred.correction = TRUE,
+  suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = list()
@@ -27,7 +28,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -36,8 +37,11 @@ default "Human").}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with volume of distribution calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients in volume of distribution calculation.}
@@ -92,6 +96,20 @@ first pass clearance, calculated from the corrected well-stirred model.}
 }
 \description{
 This function initializes the parameters needed in the function solve_1comp.
+Volume of distribution is estimated by using a modified Schmitt (2008) method
+to predict tissue particition coefficients (Pearce et al., 2017) and then
+lumping the compartments weighted by tissue volume:
+}
+\details{
+\if{latex}{
+\eqn{V_{d,steady-state} = \Sigma_{i\in tissues}K_{i}V_{i} + V_{plasma}}
+}
+\if{html}{
+V_d,steady-state = Sum over all tissues (K_i * V_i) + V_plasma
+}
+
+where K_i is the tissue:unbound plasma concentration partition coefficient
+for tissue i.
 }
 \examples{
 
@@ -106,6 +124,13 @@ This function initializes the parameters needed in the function solve_1comp.
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+
+Schmitt, Walter. "General approach for the calculation of tissue 
+to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in

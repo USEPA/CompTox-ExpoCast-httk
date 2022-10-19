@@ -41,7 +41,7 @@ propagate_invitrouv_3comp<- function(
             Vliverc=Vliverc, #L/kg
             Qtotal.liverc=
               ((Qgutf+Qliverf)*as.numeric(Qcardiacc))/1000*60),
-          suppress.messages=T,
+          suppress.messages=TRUE,
           ...))]
 
   return(parameters.dt)

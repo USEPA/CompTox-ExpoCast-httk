@@ -8,11 +8,11 @@
 #' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #' be specified.
-#' @param dtxsid EPA's 'DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})   
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #' 'pbtk'), parameterize_3comp (for model = '3compartment), 
-#' parmeterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #' (for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
 #'@param concentration Desired concentration type, 'blood' or default 'plasma'.
@@ -32,7 +32,7 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
-#'@return Steady state concentration in uM units
+#'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords 3compss
@@ -42,12 +42,17 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
                                    concentration='plasma',
-                                   suppress.messages=F,
-                                   recalc.blood2plasma=F,
+                                   suppress.messages=FALSE,
+                                   recalc.blood2plasma=FALSE,
                                    tissue=NULL,
+<<<<<<< HEAD
                                    restrictive.clearance=T,
                                    bioactive.free.invivo = F,
                                    Caco2.options = list(),
+=======
+                                   restrictive.clearance=TRUE,
+                                   bioactive.free.invivo = FALSE,
+>>>>>>> feature/otherrepos
                                    ...)
 {
 
@@ -61,6 +66,22 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       is.null(parameters)) 
     stop('parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
+<<<<<<< HEAD
+=======
+# Expand on any provided chemical identifiers if possible (if any but not
+# all chemical descriptors are NULL):
+  chem_id_list  = list(chem.cas, chem.name, dtxsid)
+  if (any(unlist(lapply(chem_id_list, is.null))) &
+      !all(unlist(lapply(chem_id_list, is.null)))){
+  out <- get_chem_id(
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid)
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name                                
+  dtxsid <- out$dtxsid  
+  }
+>>>>>>> feature/otherrepos
   
 # Fetch some parameters using parameterize_steadstate, if needed:
   if (is.null(parameters))
@@ -118,7 +139,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Scale up from in vitro Clint to a whole liver clearance:
   cl <- calc_hep_clearance(parameters=parameters,
           hepatic.model='unscaled',
-          suppress.messages=T)#L/h/kg body weight
+          suppress.messages=TRUE)#L/h/kg body weight
   if (!restrictive.clearance) cl <- cl*Fup
 
 # Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:
@@ -155,7 +176,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       pcs <- predict_partitioning_schmitt(parameters =
           parameters[, param.names.schmitt[param.names.schmitt %in% 
           names(parameters)], with = F])
-    }else if (class(parameters) == "list") {
+    }else if (is(parameters,"list")) {
       pcs <- predict_partitioning_schmitt(parameters =
           parameters[param.names.schmitt[param.names.schmitt %in% 
           names(parameters)]])
@@ -177,7 +198,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     {
       Css <- Css * Rb2p
       
-    }else if(bioactive.free.invivo == T & tolower(concentration) == 'plasma'){
+    }else if(bioactive.free.invivo == TRUE & tolower(concentration) == 'plasma'){
       
       Css <- Css * parameters[['Funbound.plasma']]
       

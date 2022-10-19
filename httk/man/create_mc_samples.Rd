@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_mc_samples.R
 \name{create_mc_samples}
 \alias{create_mc_samples}
-\title{Create a data table of draws of parameter values for Monte Carlo}
+\title{Create a table of parameter values for Monte Carlo}
 \usage{
 create_mc_samples(
   chem.cas = NULL,
@@ -11,22 +11,37 @@ create_mc_samples(
   parameters = NULL,
   samples = 1000,
   species = "Human",
-  suppress.messages = F,
+  suppress.messages = FALSE,
   model = "3compartmentss",
-  httkpop = T,
-  invitrouv = T,
-  calcrb2p = T,
+  httkpop = TRUE,
+  invitrouv = TRUE,
+  calcrb2p = TRUE,
   censored.params = list(),
   vary.params = list(),
-  return.samples = F,
+  return.samples = FALSE,
   tissue = NULL,
   httkpop.dt = NULL,
+<<<<<<< HEAD
   invitro.mc.arg.list = list(),
   Caco2.options = list(),
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = list(),
   propagate.invitrouv.arg.list = list(),
   parameterize.arg.list = list()
+=======
+  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
+    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
+    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
+  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
+    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
+    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
+    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
+    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
+  convert.httkpop.arg.list = list(),
+  propagate.invitrouv.arg.list = list(),
+  parameterize.arg.list = list(restrictive.clearance = TRUE, default.to.human = FALSE,
+    clint.pvalue.threshold = 0.05, regression = TRUE)
+>>>>>>> feature/otherrepos
 )
 }
 \arguments{
@@ -38,7 +53,7 @@ CAS, name, or DTXISD}
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
@@ -70,7 +85,7 @@ chemical ratio of blood to plasma}
 
 \item{censored.params}{The parameters listed in censored.params are sampled
 from a normal distribution that is censored for values less than the limit
-of detection (specified separately for each paramter). This argument should
+of detection (specified separately for each parameter). This argument should
 be a list of sub-lists. Each sublist is named for a parameter in
 "parameters" and contains two elements: "CV" (coefficient of variation) and
 "LOD" (limit of detection, below which parameter values are censored. New
@@ -110,13 +125,49 @@ associated in vitro uncertainty and variability propagation function}
 \item{parameterize.arg.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
 }
+\value{
+A data table where each column corresponds to parameters needed for the 
+specified model and each row represents a different Monte Carlo sample of
+parameter values.
+}
 \description{
-This function creates a data table of draws of parameter values for use with 
-Monte Carlo methods
+This is the HTTK master function for creating a data table for use with 
+Monte Carlo methods to simulate parameter uncertainty and variabilit.
+Each column of the output table corresponds to an HTTK model parameter and 
+each row corresponds
+to a different random draw (for example, different individuals when 
+considering biological variability). This function call three different key
+functions to simulate parameter parameter uncertainty and/or variability in
+one of three ways. First parameters can be varied in an uncorrelated manner
+using truncated normal distributions by the function 
+\code{\link{monte_carlo}}. Then,
+physiological parameters can be varied in a correlated manner according to
+the Ring et al. (2017) (\doi{10.1016/j.envint.2017.06.004}) \emph{httk-pop} 
+approach by the function \code{\link{httkpop_mc}}. Next, both uncertainty
+and variability of in vitro HTTK parameters can be simulated by the function
+\code{\link{invitro_mc}} as described by Wambaugh et al. (2019) 
+(\doi{10.1093/toxsci/kfz205}). Finally, tissue-specific partition 
+coefficients are predicted for each draw using the Schmitt (2008)
+(\doi{10.1016/j.tiv.2007.09.010}) method as calibrated to \emph{in vivo}
+data by Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}) and 
+implemented in \code{\link{predict_partitioning_schmitt}}.
+}
+\details{
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+
+We aim to make any function that uses chemical identifiers 
+(name, CAS, DTXSID) 
+also work if passed a complete vector of parameters (that is, a row from the
+table generated by this function). This allows the
+use of Monte Carlo to vary the parameters and therefore vary the function
+output. Depending on the type of parameters (for example, physiological vs. 
+in vitro measurements) we vary the parameters in different ways with 
+different functions.
 }
 \examples{
 
-\dontrun{
+\donttest{
 sample_set = create_mc_samples(chem.name = 'bisphenol a')
 }
 

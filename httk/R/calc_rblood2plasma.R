@@ -10,14 +10,14 @@
 #' the red blood cell to plasma and plasma:plasma (equal to 1) partition
 #' coefficients multiplied by their respective fractional volumes. When
 #' species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data (hematocrit and temperature), but substitues
+#' appropriate physiological data (hematocrit and temperature), but substitutes
 #' human fraction unbound and tissue volumes. 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param parameters Parameters from \code{\link{parameterize_schmitt}}
 #' @param hematocrit Overwrites default hematocrit value in calculating
@@ -34,6 +34,9 @@
 #' adjustment.
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
+#'
+#' @return
+#' The blood to plasma chemical concentration ratio
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
@@ -65,10 +68,10 @@ calc_rblood2plasma <- function(
                         hematocrit=NULL,
                         Krbc2pu=NULL,
                         Funbound.plasma=NULL,
-                        default.to.human=F,
+                        default.to.human=FALSE,
                         species="Human",
-                        adjusted.Funbound.plasma=T,
-                        suppress.messages=T)
+                        adjusted.Funbound.plasma=TRUE,
+                        suppress.messages=TRUE)
 {
   physiology.data <- physiology.data
 
@@ -138,7 +141,7 @@ calc_rblood2plasma <- function(
            species=species,
            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
            tissues='red blood cells',
-           suppress.messages=T)  
+           suppress.messages=TRUE)  
     parameters$Krbc2pu <- PCs$Krbc2pu
   } else if (!is.null(Krbc2pu))
   {
@@ -157,7 +160,7 @@ calc_rblood2plasma <- function(
       hematocrit + 
       hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
   }
-  warning("Rblood2plasma has been recalculated.")
+  if (!suppress.messages) warning("Rblood2plasma has been recalculated.")
     
   return(set_httk_precision(as.numeric(Rblood2plasma)))
 }

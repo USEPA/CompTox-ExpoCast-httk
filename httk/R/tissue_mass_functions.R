@@ -162,7 +162,6 @@ body_surface_area <- function(BW, H, age_years) {
 #'
 #' @keywords httk-pop
 #'
-#' @export bone_mass_age
 bone_mass_age <- function(age_years, age_months, height, weight, gender){
   #From data in Baxter-Jones et al. 2011: for males, bone mineral content in kg
   #obeys the following logistic equation: bone mass (kg) = 0.89983 + (2.99019 -
@@ -240,7 +239,6 @@ bone_mass_age <- function(age_years, age_months, height, weight, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export brain_mass
 brain_mass <- function(gender, age_years){
   B<- rep(NA, length(gender))
   B[gender=='Male'] <- 0.405 #kg; brain mass at birth
@@ -273,7 +271,6 @@ brain_mass <- function(gender, age_years){
 #'
 #' @keywords httk-pop
 #'
-#' @export kidney_mass_children
 kidney_mass_children <- function(weight, height, gender){
   km <- rep(NA, length(weight))
   #equations from Ogiu et al. 1997
@@ -319,7 +316,6 @@ kidney_mass_children <- function(weight, height, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export liver_mass_children
 liver_mass_children <- function(height, weight, gender){
   #equations from Ogiu et al. 1997
   #see also Price et al. 2003 (P3M paper)
@@ -361,7 +357,6 @@ liver_mass_children <- function(height, weight, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export lung_mass_children
 lung_mass_children <- function(height, weight, gender){
   #equations from Ogiu et al. 1997
   #see also Price et al. 2003 (P3M paper)
@@ -408,7 +403,6 @@ lung_mass_children <- function(height, weight, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export pancreas_mass_children
 pancreas_mass_children <- function(height, weight, gender){
   
   #equations from Ogiu et al. 1997
@@ -447,7 +441,6 @@ pancreas_mass_children <- function(height, weight, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export skin_mass_bosgra
 skin_mass_bosgra <- function(BSA){
   wskin <- exp(1.64*(BSA/100^2)-1.93)
   return(wskin)
@@ -520,7 +513,6 @@ spleen_mass_children <- function(height, weight, gender){
 #'
 #' @keywords httk-pop
 #'
-#' @export skeletal_muscle_mass_children
 skeletal_muscle_mass_children <- function(gender, age_years){
   #Equation from Webber and Barr (2012)
   if (gender=='Male'){
@@ -571,7 +563,6 @@ skeletal_muscle_mass_children <- function(gender, age_years){
 #'
 #' @keywords httk-pop
 #'
-#' @export skeletal_muscle_mass
 skeletal_muscle_mass <- function(smm, age_years, height, gender){
   #Age-related decrease in skeletal muscle mass
   #Janssen et al. 2000 (see Figure 2)
