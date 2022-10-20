@@ -75,15 +75,20 @@
 #' parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
 #' "method.permeability", and "Kvehicle2water" are not passed through this.
 #' @param BW Body weight, kg.
-#' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L.
+#' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L. If InfiniteDose
+#' is TRUE, this parameter is ignored and set = 1.
 #' @param initial.dose Concentration
-#' @param dermal.dosing Matrix consisting of three columns named
+#' @param dosing.dermal Matrix consisting of three columns named
 #' "Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
 #' with the applied amount in the vehicle, and the volume of the applied
-#' vehicle, L. Note that the units of Cvehicle are controlled by input.units.
-#' @param washoff This parameter only matters if dermal.dosing is being used. If 
+#' vehicle, L. Note that the units of Cvehicle are controlled by input.units. ***If
+#' InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.
+#' @param washoff This parameter only matters if dosing.dermal is being used. If 
 #' TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
 #' FALSE (default), any chemical left on the skin is added to the new dose.
+#' @param InitialDose If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
+#' of chemical in the vehicle is considered) and Cvehicle is a constant. If
+#' FALSE (default), dosing is finite and Cvehicle changes over time.
 #' @param ... Additional arguments passed to the integrator.
 #' @return A matrix of class deSolve with a column for time (in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -96,8 +101,8 @@
 #' Vvehicle <- c(.1,.2,.3)
 #' time <- c(0,.5,3)
 #' Cvehicle <- c(2,0,3)
-#' dermal.dosing <- cbind(time,Cvehicle,Vvehicle)
-#' out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
+#' dosing.dermal <- cbind(time,Cvehicle,Vvehicle)
+#' out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.dermal=dosing.dermal,plots=T)
 #' 
 #' parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 #' parameters$Fskin_exposed <- 0.25
@@ -117,8 +122,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     parameters=NULL, #solve_model
                     days=10, #solve_model
                     tsteps = 4, # solve_model
-                    #initial.values=NULL, #solve_model
-                    #initial.value.units=NULL, #solve_model
                     plots = FALSE, #solve_model
                     monitor.vars=NULL, #solve_model
                     suppress.messages=F, #solve_model
@@ -137,18 +140,20 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     route = NULL, #DERMAL
                     Vvehicle = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
-                    input.units="mg/kg", #DERMAL - DOSING
+                    input.units=NULL, #DERMAL - DOSING
+                    dose.duration = NULL,
+                    dose.duration.units = NULL,
                     dosing.dermal = NULL, #DERMAL
                     #doses.per.day = NULL,
                     #daily.dose = NULL,
                     dosing.matrix = NULL, #DERMAL - DOSING
                     washoff = FALSE,
+                    InfiniteDose = FALSE,
                     ...)
 {
 
 # DON'T LET MODEL-SPECIFIC THINGS MAKE AN ERROR IN SOLVE_MODEL (put stop in solve_dermal_pbtk)
   
-  # DOSING
   # Set start.time for dosing
   if (is.null(times)) {
     start.time = 0
@@ -160,70 +165,155 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     "If route is not chosen, it is set to dermal by default.")}
   if (!(route %in% c("iv","oral","dermal"))){ stop(
     'route must either be "iv", "oral", or "dermal". To allow wash off to occur,
-    set route="dermal" and washoff=TRUE.')}
+    set route="dermal" and washoff=TRUE. To allow infinite dosing, set route="dermal"
+    and InfiniteDose=TRUE.')}
   
-  # Create forcing function for Vvehicle - single value
-  if (is.null(dosing.dermal)) {
-    if (is.null(Vvehicle)) {
-      Vvehicle <- 0.1; #only affects model if route=dermal
-      if (route=='dermal') warning(paste("Vvehicle not specified, so set to", Vvehicle, "L."))
-      if (is.null(initial.dose)){ initial.dose = 1; warning(paste(
-        "Initial dose not specified, so automatrically set to 1 mg/kg BW."))}
+  # Check InfiniteDose is logical or = 1 or 0
+  if (InfiniteDose==1) {
+    InfiniteDose=TRUE
+  } else if (InfiniteDose==0){
+    InfiniteDose=FALSE
+  # } else if (typeof(InfiniteDose)!="logical"){
+    stop("InfiniteDose must be either be equal to FALSE (i.e., 0) (default) or TRUE (i.e., 1).")
+  }  
+  # Check InfiniteDose in parameters
+  if (!is.null(parameters)){
+    InfiniteDose = parameters$InfiniteDose
+    warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
+  }
+  
+  # ROUTE - IV or ORAL -------------------------------------------------
+  if (route %in% c("iv","oral")){
+    if (!all(simplify2array(lapply(list(Vvehicle,
+                                       dosing.dermal,
+                                       dose.duration,
+                                       dose.duration.units),is.null))) | washoff | InfiniteDose){
+      warning("When route is not set to 'dermal', inputs Vvehicle, dosing.dermal,
+              dose.duration, dose.duration.units, washoff, and InfiniteDose are ignored.
+              Vvehicle is set to 0.")
+    }
+    forcings = cbind(times = start.time, forcing_values = 0)
+  }
+  
+  # ROUTE - DERMAL -------------------------------------------------------
+  if (route=="dermal"){
+    
+    # INFINITE DOSING
+    if (InfiniteDose){
+      #Vvehicle and forcings set
+      if (!is.null(Vvehicle) | washoff){
+        warning("When InfiniteDose = T, washoff is ignored, and Vvehicle is set to 0 L and ignored.")
+      }
+      forcings = cbind(times=start.time, forcing_values = 0)
+      
+      # DOSING.DERMAL
+      if (!is.null(dosing.dermal)){
+        if (!is.null(dosing.matrix) | !is.null(dose.duration)) stop("Either dosing.matrix, dose.duration, or dosing.dermal can be used. Only one cannot be null.")
+        if (any(is.na(dosing.dermal))) stop("Dosing matrix dosing.dermal cannot contain NA values.")
+        if (dim(dosing.dermal)[2]==3){ warning("Vvehicle column of dosing.dermal ignored for when InfiniteDose=TRUE.")
+        } else if (dim(dosing.dermal)[2]!=2){ stop("dosing.dermal should be matrix with two named columns: time (days), 
+                                           Cvehicle (same units as input.units).")
+        }
+        dose.times <- dosing.dermal[,"time"]
+        dose.Cvehicle <- dosing.dermal[,"Cvehicle"]
+        # Set dosing.matrix based on amount
+        dose.vec <- dose.Cvehicle
+        dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
+        # Check if start.time is in dosing.dermal and account for initial.dose
+        if (start.time %in% dose.times){
+          if (!is.null(initial.dose)) {stop("Initial dose is specified in both initial.dose and dosing.dermal.")}
+          initial.dose <- dose.vec[1];
+          dosing.matrix <- dosing.matrix[-1,];
+        }
+        dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
+      }
+      
+      # INITIAL.DOSE and DOSE.UNITS
+      if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
+        initial.dose <- 1; input.units <- "mg/L" 
+        warning("initial.dose automatically set to 1 mg/L.")
+      }
+      
+    # FINITE DOSING
+    } else {
+      # Set Vvehicle and Forcings
+      if (is.null(Vvehicle)) {
+        Vvehicle <- 0.1; #only affects model if route=dermal
+        if (is.null(dosing.dermal)) warning(paste("Vvehicle not specified, so set to", Vvehicle, "L."))
+      }
+      if (length(Vvehicle)!=1) stop("Vvehicle input must be one value. 
+                                    To change the volume of the vehicle over time, use the dosing.dermal input.") 
+      if ((Vvehicle<0)) stop("Vvehicle must be positive and non-zero if the route is dermal.")
+      forcings = cbind(times = start.time, forcing_values = Vvehicle)
+      
+      # DOSING.DERMAL
+      if (!is.null(dosing.dermal)){
+        if (!is.null(dosing.matrix) | !is.null(dose.duration)) stop("Either dosing.matrix, dose.duration, or dosing.dermal can be used. Only one cannot be null.")
+        if (any(is.na(dosing.dermal))) stop("Dosing matrix dosing.dermal cannot contain NA values.")
+        if (dim(dosing.dermal)[2]!=3) stop("dosing.dermal should be matrix with three named columns: time (days), 
+                                           Cvehicle (same units as input.units / L, e.g., if input.units = 'mg/kg', then
+                                           Cvehicle will be in 'mg/kg/L'), and Vvehicle (L).")
+        dose.times <- dosing.dermal[,"time"]
+        dose.Vvehicle <- dosing.dermal[,"Vvehicle"]
+        dose.Cvehicle <- dosing.dermal[,"Cvehicle"]
+        # Set dosing.matrix based on amount
+        dose.vec <- dose.Vvehicle*dose.Cvehicle #Cvehicle inputs
+        dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
+        # Set forcings
+        forcings = cbind(times = c(start.time,dose.times), forcing_values = c(Vvehicle,dose.Vvehicle))
+        # Check if start.time is in dosing.dermal and account for initial.dose
+        if (start.time %in% dose.times){
+          if (!is.null(initial.dose)) {stop("Initial dose is specified in both initial.dose and dosing.dermal.")}
+          initial.dose <- dose.vec[1];
+          dosing.matrix <- dosing.matrix[-1,];
+          #Reset forcings
+          forcings = cbind(times = dose.times, forcing_values = dose.Vvehicle)
+        }
+        dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
+      }
+      
+      # INITIAL.DOSE and DOSE.UNITS
+      if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
+        initial.dose <- 1; input.units <- "mg/kg" 
+        warning("initial.dose automatically set to 1 mg/kg.")
+      }
+    }
+    
+    # DOSE.DURATION
+    if(!is.null(dose.duration)){
+      if (length(dose.duration)!=1 | length(dose.duration.units)!=1){ stop("dose.duration and dose.duration.units should only be one input. 
+                                                                             For multiple dosing changes over time, use dosing.dermal.")}
+      if (is.null(dose.duration.units) | (tolower(dose.duration.units) %in% c("days","day","d"))){
+        dose.duration.days <- dose.duration;
+      } else if (tolower(dose.duration.units) %in% c("hr","hours","h","hour")){
+        dose.duration.days <- dose.duration/24
+      } else if (tolower(dose.duration.units) %in% c("min","mins")){
+        dose.duration.days <- dose.duration/24/60
+      } else stop("dose.duration.units not in recognizable format. Set equal to 'hours' or 'mins' or 'days'.")
+      
+      dosing.matrix <- matrix(c(dose.duration.days,0),ncol=2,dimnames=list(NULL,c("time","dose")))
     } 
-    if (length(Vvehicle)!=1) stop(
-      "Vvehicle input must be one value. To change the volume of the vehicle over time, 
-      use the dosing.dermal input.") 
-    if ((Vvehicle<0) & (route=="dermal")) { stop(
-      "Vvehicle must be positive and non-zero if the initial dose is dermal.")
-    }
-    forcings = cbind(times = start.time, forcing_values = Vvehicle)
   }
   
-  # Account for dosing.dermal
-  if (!is.null(dosing.dermal)){ 
-    if (!is.null(dosing.matrix)) stop(
-      "Either dosing.matrix or dosing.dermal can be used, but not both. One must be null.")
-    if (route!='dermal') stop(
-      "Route must be set to dermal in order to use dosing.dermal input.")
-    if (any(is.na(dosing.dermal))) stop(#check for NaNs
-      "Dosing matrix dosing.dermal cannot contain NA values.")
-    if (dim(dosing.dermal)[2]!=3) stop( #check for dimensions
-    "dosing.dermal should be matrix with three named columns: time (days), 
-    Cvehicle (uM), and Vvehicle (L).")
-    
-    dose.times <- dosing.dermal[,"time"]
-    dose.Vvehicle <- dosing.dermal[,"Vvehicle"]
-    dose.Cvehicle <- dosing.dermal[,"Cvehicle"]
-    
-    # Set dosing.matrix based on amount
-    dose.vec <- dose.Vvehicle*dose.Cvehicle #Cvehicle inputs
-    dosing.matrix <- cbind(time=dose.times, dose=dose.vec)
-    if (dose.times[1]==start.time){ #if dermal.dosing starts at beginning of time
-      initial.dose <- dose.vec[1];
-      dosing.matrix <- dosing.matrix[-1,];
-    }
-    dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
-    
-    #Reset forcing function for Vvehicle
-    forcings = cbind(times = dose.times, forcing_values = dose.Vvehicle)
-  }
-  
+
   if (model.type=="dermal"){
     model.forsolver="dermal"
+    #DERMAL DOES NOT WORK RIGHT NOW
+    stop('model.type="dermal" does not work right now. Please set model.type="dermal_1subcomp".')
   } else if (model.type=="dermal_1subcomp"){
     model.forsolver="dermal_1subcomp"
   } else { stop("Input of model.type is incorrect. Must either by 'dermal' (default) or 'dermal_1subcomp'.")}
   
-  # Change model.list component for washoff
+  # WASHOFF 
   if (washoff){
-    if (route=="dermal"){
+    if (route=="dermal" & InfiniteDose==F){
       route="dermal.washoff"
-      if ((!is.null(dosing.matrix))|(!is.null(dosing.dermal))){
-        warning("Wash-off is assumed to occur at the time of new doses.")
-      }
-    } else { warning(
-      paste0('Since route is ',route,'washoff does not apply and is ignored.')
-    )}
+    } else warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
+  }
+  
+  #INFINITEDOSE
+  if(InfiniteDose){
+    route="dermal.InfiniteDose"
   }
   
   # Check that parameterize.arg.list contains restrictive.clearance for solve_model
@@ -240,13 +330,14 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   #                            par.arg.requirements[update.these])
   
   # Check that model.type, method.permeability, and Kvehicle2water is not in parameterize.arg.list
-  outside.par.list <- c("method.permeability","model.type","Kvehicle2water")
+  outside.par.list <- c("method.permeability","model.type","Kvehicle2water","InfiniteDose")
   if (any(outside.par.list %in% names(parameterize.arg.list))){
-    stop("model.type, method.permeability, and Kvehicle2water cannot appear in 
+    stop("model.type, method.permeability, Kvehicle2water, and InfiniteDose cannot appear in 
          parameterize.arg.list for solve_dermal_pbtk(). To change these options,
          assign them directly in the solve_dermal_pbtk function.")
   }
   
+  print(route)
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
@@ -278,6 +369,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       model.type = model.type,
       method.permeability = method.permeability,
       Kvehicle2water = Kvehicle2water,
+      InfiniteDose = InfiniteDose,
       parameterize.arg.list
     ),
     ...)

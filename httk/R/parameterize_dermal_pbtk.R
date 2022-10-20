@@ -47,6 +47,9 @@
 #' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
 #' vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
 #' Other optional inputs are "octanol" and "olive oil".
+#' @param InfiniteDose If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
+#' of chemical in the vehicle is considered) and Cvehicle is a constant. If
+#' FALSE (default), dosing is finite and Cvehicle changes over time.
 #' @return
 #' 
 #' \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -103,7 +106,9 @@
 #' SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
 #' cm^2.} \item{Vvehicle}{Volume of vehicle, L.} \item{skin_depth}{Skin skin_depth, cm.}
 #' \item{Fdermabs}{Fraction of vehicle concentration available for absorption.}
-#' \item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
+#' \item{Fskin_exposed}{Fraction of skin exposed.} \item{InfiniteDose}{If InfiniteDose=1, 
+#' infinite dosing is assumed; if InfiniteDose=0, finite dosing is assumed. When InfiniteDose=1,
+#' the state variable Avehicle does not have meaning.} \item{Vmax}{units/hr, with
 #' units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{units same as dosing
 #' concentration. CURRENTLY NOT IN USE.} 
 #' @author Annabel Meade, John Wambaugh, and Robert Pearce
@@ -155,8 +160,10 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               skin.pH=7,
                               vmax.km=F,
                               height = 175,
+                              totalSA = NULL,
                               Kvehicle2water = "water",
                               restrictive.clearance = TRUE,
+                              InfiniteDose = 0,
                               ...) 
 {
   physiology.data <- physiology.data
@@ -346,8 +353,9 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   #Skin parameters
   Fskin_depth_top = 11/560;
   Fskin_depth_bottom = 1 - Fskin_depth_top;
-  totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
-  
+  if (is.null(totalSA)){
+    totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
+  }
   # Calculation of dermal partition coefficient (Sawyer, 2016 and Chen, 2015):
     
     # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ve = viable epidermis and dermis layers)
@@ -421,7 +429,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                    #Fdermabs=1,
                    Fskin_exposed=0.1,
                    P = P,
-                   Kskin2vehicle = Kve2m) 
+                   Kskin2vehicle = Kve2m,
+                   InfiniteDose = InfiniteDose) 
     }
     
 

@@ -13,7 +13,7 @@
 
    Model calculations for compartmental model:
 
-   15 States:
+   16 States:
      Agutlumen = 0.0,
      Agut = 0.0,
      Aliver = 0.0,
@@ -29,6 +29,7 @@
      Askin_unexposed = 0.0,
      Avehicle = 0.0,
      Ain = 0.0,
+     Cvehicle_infinite = 0.0,
 
    12 Outputs:
     "Cgut",
@@ -47,8 +48,9 @@
    1 Inputs:
      Vvehicle (forcing function)
 
-   52 Parameters:
+   53 Parameters:
      skin_depth = 0,
+     InfiniteDose = 0,
      Fskin_exposed = 0,
      totalSA = 0,
      SA_exposed = 0,
@@ -123,6 +125,7 @@
 #define ID_Askin_unexposed 0x0000c
 #define ID_Avehicle 0x0000d
 #define ID_Ain 0x0000e
+#define ID_Cvehicle_infinite 0x0000f
 
 /* Model variables: Outputs */
 #define ID_Cgut 0x00000
@@ -139,60 +142,61 @@
 #define ID_Cvehicle 0x0000b
 
 /* Parameters */
-static double parms[52];
+static double parms[53];
 
 #define skin_depth parms[0]
-#define Fskin_exposed parms[1]
-#define totalSA parms[2]
-#define SA_exposed parms[3]
-#define P parms[4]
-#define Kskin2vehicle parms[5]
-#define BW parms[6]
-#define Clmetabolismc parms[7]
-#define hematocrit parms[8]
-#define kgutabs parms[9]
-#define Kkidney2pu parms[10]
-#define Kliver2pu parms[11]
-#define Krest2pu parms[12]
-#define Kgut2pu parms[13]
-#define Klung2pu parms[14]
-#define Kskin2pu parms[15]
-#define Qcardiacc parms[16]
-#define Qgfrc parms[17]
-#define Qskinf parms[18]
-#define Qgutf parms[19]
-#define Qkidneyf parms[20]
-#define Qliverf parms[21]
-#define Vartc parms[22]
-#define Vgutc parms[23]
-#define Vkidneyc parms[24]
-#define Vliverc parms[25]
-#define Vlungc parms[26]
-#define Vrestc parms[27]
-#define Vvenc parms[28]
-#define Vskinc parms[29]
-#define Fraction_unbound_plasma parms[30]
-#define Rblood2plasma parms[31]
-#define Clmetabolism parms[32]
-#define Qcardiac parms[33]
-#define Qgfr parms[34]
-#define Qskin parms[35]
-#define Qskin_exposed parms[36]
-#define Qskin_unexposed parms[37]
-#define Qgut parms[38]
-#define Qkidney parms[39]
-#define Qliver parms[40]
-#define Qrest parms[41]
-#define Vart parms[42]
-#define Vgut parms[43]
-#define Vkidney parms[44]
-#define Vliver parms[45]
-#define Vlung parms[46]
-#define Vrest parms[47]
-#define Vven parms[48]
-#define Vskin parms[49]
-#define Vskin_exposed parms[50]
-#define Vskin_unexposed parms[51]
+#define InfiniteDose parms[1]
+#define Fskin_exposed parms[2]
+#define totalSA parms[3]
+#define SA_exposed parms[4]
+#define P parms[5]
+#define Kskin2vehicle parms[6]
+#define BW parms[7]
+#define Clmetabolismc parms[8]
+#define hematocrit parms[9]
+#define kgutabs parms[10]
+#define Kkidney2pu parms[11]
+#define Kliver2pu parms[12]
+#define Krest2pu parms[13]
+#define Kgut2pu parms[14]
+#define Klung2pu parms[15]
+#define Kskin2pu parms[16]
+#define Qcardiacc parms[17]
+#define Qgfrc parms[18]
+#define Qskinf parms[19]
+#define Qgutf parms[20]
+#define Qkidneyf parms[21]
+#define Qliverf parms[22]
+#define Vartc parms[23]
+#define Vgutc parms[24]
+#define Vkidneyc parms[25]
+#define Vliverc parms[26]
+#define Vlungc parms[27]
+#define Vrestc parms[28]
+#define Vvenc parms[29]
+#define Vskinc parms[30]
+#define Fraction_unbound_plasma parms[31]
+#define Rblood2plasma parms[32]
+#define Clmetabolism parms[33]
+#define Qcardiac parms[34]
+#define Qgfr parms[35]
+#define Qskin parms[36]
+#define Qskin_exposed parms[37]
+#define Qskin_unexposed parms[38]
+#define Qgut parms[39]
+#define Qkidney parms[40]
+#define Qliver parms[41]
+#define Qrest parms[42]
+#define Vart parms[43]
+#define Vgut parms[44]
+#define Vkidney parms[45]
+#define Vliver parms[46]
+#define Vlung parms[47]
+#define Vrest parms[48]
+#define Vven parms[49]
+#define Vskin parms[50]
+#define Vskin_exposed parms[51]
+#define Vskin_unexposed parms[52]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -202,7 +206,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_dermal_1subcomp (void (* odeparms)(int *, double *))
 {
-  int N=52;
+  int N=53;
   odeparms(&N, parms);
 }
 
@@ -284,13 +288,13 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cskin_exposed] = y[ID_Askin_exposed] / Vskin_exposed ;
 
-  yout[ID_Cvehicle] = ( Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ;
+  yout[ID_Cvehicle] = (InfiniteDose ? y[ID_Cvehicle_infinite] : ( Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ) ;
 
-  Rin_dermal = ( Vvehicle ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0) ;
+  Rin_dermal = (InfiniteDose ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : (Vvehicle ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0 ) ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Avehicle] = - Rin_dermal ;
+  ydot[ID_Avehicle] = -Rin_dermal * (1 - InfiniteDose) ;
 
   ydot[ID_Ain] = Rin_dermal + Rin_oral;
 

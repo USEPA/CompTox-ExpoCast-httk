@@ -31,10 +31,11 @@ solve_dermal_pbtk(
   route = NULL,
   Vvehicle = NULL,
   initial.dose = NULL,
-  input.units = "mg/kg",
+  input.units = NULL,
   dosing.dermal = NULL,
   dosing.matrix = NULL,
   washoff = FALSE,
+  InfiniteDose = FALSE,
   ...
 )
 }
@@ -103,11 +104,18 @@ TRUE along with partition coefficients calculated with this value.}
 parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
 "method.permeability", and "Kvehicle2water" are not passed through this.}
 
-\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L.}
+\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L. If InfiniteDose
+is TRUE, this parameter is ignored and set = 1.}
 
 \item{initial.dose}{Concentration}
 
-\item{washoff}{This parameter only matters if dermal.dosing is being used. If 
+\item{dosing.dermal}{Matrix consisting of three columns named
+"Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
+with the applied amount in the vehicle, and the volume of the applied
+vehicle, L. Note that the units of Cvehicle are controlled by input.units. ***If
+InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.}
+
+\item{washoff}{This parameter only matters if dosing.dermal is being used. If 
 TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
 FALSE (default), any chemical left on the skin is added to the new dose.}
 
@@ -115,10 +123,9 @@ FALSE (default), any chemical left on the skin is added to the new dose.}
 
 \item{BW}{Body weight, kg.}
 
-\item{dermal.dosing}{Matrix consisting of three columns named
-"Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
-with the applied amount in the vehicle, and the volume of the applied
-vehicle, L. Note that the units of Cvehicle are controlled by input.units.}
+\item{InitialDose}{If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
+of chemical in the vehicle is considered) and Cvehicle is a constant. If
+FALSE (default), dosing is finite and Cvehicle changes over time.}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -163,8 +170,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 Vvehicle <- c(.1,.2,.3)
 time <- c(0,.5,3)
 Cvehicle <- c(2,0,3)
-dermal.dosing <- cbind(time,Cvehicle,Vvehicle)
-out <- solve_dermal_pbtk(chem.name='bisphenola',dermal.dosing=dermal.dosing,plots=T)
+dosing.dermal <- cbind(time,Cvehicle,Vvehicle)
+out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.dermal=dosing.dermal,plots=T)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 parameters$Fskin_exposed <- 0.25

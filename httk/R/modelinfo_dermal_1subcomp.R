@@ -39,6 +39,7 @@ model.list[["dermal_1subcomp"]]$tissuelist=list(
 # code for the solver: (must match ORDER under "parameters" in C code)
 model.list[["dermal_1subcomp"]]$Rtosolvermap <- list( 
   skin_depth = "skin_depth",
+  InfiniteDose = "InfiniteDose",
   Fskin_exposed = "Fskin_exposed",
   totalSA = "totalSA",
   P = "P",
@@ -79,6 +80,7 @@ model.list[["dermal_1subcomp"]]$compiled.parameters.init <- "getParms_dermal_1su
 # calculate the derivative of the system of equations describing the model 
 model.list[["dermal_1subcomp"]]$compiled.param.names <- c( 
   "skin_depth",
+  "InfiniteDose",
   "Fskin_exposed",
   "totalSA",
   "SA_exposed",
@@ -185,15 +187,17 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
 model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
   "oral" = c('umol','mg','mg/kg'), 
   "iv" = c('umol','mg','mg/kg'), 
-  "dermal" = c('mg/L','uM','umol','mg'), 
-  "dermal.washoff" = c('mg/L','uM','umol','mg'))
+  "dermal" = c('umol','mg','mg/kg'), 
+  "dermal.washoff" = c('umol','mg','mg/kg'), 
+  "dermal.InitialDose" = c('mg/L','uM','ppm'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
   "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
   "dermal" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
-  "dermal.washoff" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
+  "dermal.washoff" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "dermal.InfiniteDose" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
 
 # Default set of units assigned to correspond to each of the "outputs" of 
 # the model system, and possibly to other state variables to be monitored
@@ -213,6 +217,7 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Askin_unexposed"="umol",
   "Avehicle"="umol",
   "Ain"="umol",
+  "Cvehicle_infinite"="uM",
   "Cgut"="uM",
   "Cliver"="uM",
   "Cven"="uM",
@@ -240,9 +245,12 @@ model.list[["dermal_1subcomp"]]$routes <- list(
     "dose.type" = "add"),
   "dermal" = list(
     "entry.compartment" = "Avehicle",
-    "dose.type" = "add") ,  
-  "dermal.washoff" = list( 
+    "dose.type" = "add") ,
+  "dermal.washoff" = list(
     "entry.compartment" = "Avehicle",
+    "dose.type" = "replace") ,
+  "dermal.InfiniteDose" = list( 
+    "entry.compartment" = "Cvehicle_infinite",
     "dose.type" = "replace")  
 )
 
@@ -273,7 +281,8 @@ model.list[["dermal_1subcomp"]]$state.vars <- c(
   "Askin_exposed",
   "Askin_unexposed",
   "Avehicle",
-  "Ain"
+  "Ain",
+  "Cvehicle_infinite"
 ) 
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
