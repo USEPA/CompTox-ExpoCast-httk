@@ -12,7 +12,7 @@
 #' 
 #' This function implements the method from Schmitt (2008) in predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
-#' in the tissue.data table.
+#' in the \code{\link{tissue.data}} table.
 #' 
 #' A separate regression is used when adjusted.Funbound.plasma is FALSE.
 #' 
@@ -56,6 +56,8 @@
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'
+#' @seealso \code{\link{tissue.data}}
+#' 
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
 #'
