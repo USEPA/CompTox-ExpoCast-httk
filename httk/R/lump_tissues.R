@@ -1,21 +1,28 @@
 #' Lump tissue parameters
-#' 
-#' This function takes the parameters from predict_partitioning_schmitt and 
+#'                                               
+#' This function takes the parameters from 
+#' \code{\link{predict_partitioning_schmitt}} and 
 #' lumps the partition coefficients along with the volumes and flows based on 
 #' the given tissue list. It is useful in Monte Carlo simulation of individual
 #' partition coefficients when calculating the rest of body partition
 #' coefficient.
 #' 
 #' This function returns the flows, volumes, and partition coefficients for the
-#' lumped tissues specified in tissue list Ktissue2plasma -- tissue to free
-#' plasma concentration partition coefficients for every tissue specified by 
-#' Schmitt (2008) (the tissue.data table) tissuelist -- a list of character 
-#' vectors, the name of each entry in the list is its own compartment.
-#' The tissues in the alltissues vector are the Schmitt (2008) tissues that are
+#' lumped tissues specified in tissue list. Tissues are aggregated from table
+#' \code{\link{tissue.data}}.
+#' 
+#' The name of each entry in the list is its own compartment.
+#' The tissues in the alltissues vector are the tissues that are
 #' to be considered in the lumping process. The tissuelist can also be manually
 #' specified for alternate lumping schemes: for example,
 #' tissuelist<-list(Rapid=c("Brain","Kidney")) specifies the flow.col and
 #' vol.col in the tissuedata.table. 
+#' 
+#' The tissues contained in tissue.data that are unused in each of these models 
+#' are aggregated into a single compartment termed
+#' “rest”, whose partition coefficient is calculated by averaging the remaining 
+#' partition coefficients,
+#' weighted by their species-specific tissue volumes.
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
 #' predict_partitioning_schmitt.
@@ -32,6 +39,8 @@
 #' @param model Specify which model (and therefore which tissues) are being 
 #' considered
 #' @param suppress.messages Whether or not the output message is suppressed.
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}},  \code{\link{tissue.data}}
 #'
 #' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
 #' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration
