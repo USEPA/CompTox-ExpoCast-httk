@@ -67,7 +67,7 @@ will not run for non-human species (default "Human").}
 dosing times or with two columns (or rows) correspondingly named "dose" and
 "time" containing the time and amount, in mg/kg BW, of each dose.}
 
-\item{daily.dose}{Total daily dose, mg.}
+\item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
