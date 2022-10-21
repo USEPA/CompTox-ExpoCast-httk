@@ -4,6 +4,11 @@ date: "September 14, 2022"
 output: html_document
 ---
 
+# version 2.2.2 (November, 2022)
+
+* `get_cheminfo` now lists required parameters when chemicals are excluded (Thanks Ben Savage)
+
+
 # version 2.2.1 (September, 2022)
 
 This minor update removes UTF-8 characters from the package and changes the

@@ -1343,7 +1343,8 @@
 #' each tissue with its density (both from ICRP), lumping the remaining tissues
 #' into the rest-of-body, excluding the mass of the gastrointestinal contents
 #'
-#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#' 
 #' @docType data
 #' @format A data.frame containing 13 rows and 20 columns.
 #' @author John Wambaugh, Robert Pearce, and Nisha Sipes
