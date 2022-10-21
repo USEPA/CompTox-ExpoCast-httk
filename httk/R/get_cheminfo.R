@@ -543,8 +543,12 @@ get_cheminfo <- function(info="CAS",
       function(x) all(!is.na(x)))
   # print a warning of exclusion criteria for compounds
   #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
-  if(!suppress.messages & any(good.chemicals.index==FALSE)){
-    warning("Excluding compounds that have one or more missing in necessary parameters.")
+  if (!suppress.messages & any(good.chemicals.index==FALSE))
+  {
+    warning(paste(
+      "Excluding compounds that have one or more needed parameter missing in chem.physical_and_invitro.table.\n
+For model ", model, " each chemical must have non-NA values for:",
+      paste(necessary.params,collapse=", "), sep=""))
   }
   # If we need fup:
     if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
