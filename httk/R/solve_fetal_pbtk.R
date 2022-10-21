@@ -43,7 +43,7 @@
 #' @param species Included for compatibility with other functions, but the model
 #' will not run for non-human species (default "Human").
 #' @param tsteps The number time steps per hour. Default of 4. 
-#' @param daily.dose Total daily dose, mg.
+#' @param daily.dose Total daily dose, mg/kg BW.
 #' @param dose Amount of a single dose, mg/kg BW.  
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
