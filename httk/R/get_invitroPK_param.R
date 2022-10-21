@@ -1,8 +1,13 @@
-#' Retrieve data from chem.physical_and_invitro.data table
+#' Retrieve species-specific in vitro data from chem.physical_and_invitro.data table
 #'
-#; This function retrieves in vitro PK data (e.g. intrinsic metabolic clearance 
+#; This function retrieves in vitro PK data (for example intrinsic metabolic clearance 
 #' or fraction unbound in plasma) from the main HTTK data. This function looks
 #' for species-specific values.
+#'
+#' Note that this function works with a local version of the 
+#' get.physical_and_invitro.data table to allow users to add/modify chemical
+#' data (for example, via \code{\link{add_chemtabke}} or 
+#' \code{\link{load_sipes2017}).
 #'
 #' @param param The in vitro pharmacokinetic parameter needed.
 #' @param chem.name Either the chemical name, CAS number, or the parameters
@@ -14,12 +19,14 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
 #'
+#' @seealso \code{\link{get_physchem_param}} 
+#'
 #' @return The value of the parameter, if found
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @import utils
-
+#' @export get_invitroPK_param 
 get_invitroPK_param <- function(
                     param,
                     species,
