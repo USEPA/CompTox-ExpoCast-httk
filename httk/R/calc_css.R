@@ -114,8 +114,8 @@ calc_css <- function(chem.name=NULL,
                     parameters=NULL,
                     species='Human',
                     f = .01,
-                    daily.dose=1, # ORAL
-                    doses.per.day=3, # ORAL
+                    daily.dose=1,
+                    doses.per.day=3,
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
@@ -128,12 +128,6 @@ calc_css <- function(chem.name=NULL,
                     well.stirred.correction=TRUE,
                     restrictive.clearance=TRUE,
                     dosing=NULL,
-                    forcings = NULL, 
-                    # To use inhalation route set exp.conc > 0 and set doses.per.day=NULL
-                    exp.start.time = 0, # INHALATION: default starting time in specifying forcing exposure
-                    exp.conc = 0, # INHALATION: default exposure concentration for forcing data series
-                    period = 24, # INHALATION:
-                    exp.duration = 12, # INHALATION:
                     ...)
 {
   # We need to describe the chemical to be simulated one way or another:
@@ -188,83 +182,13 @@ calc_css <- function(chem.name=NULL,
       regression=regression)) 
   }
 
-  # Obtain the appropriate route for compound exposure/dosing.
-  if (exp.conc!=0 | is.null(forcings)==FALSE)
-  {
-    route <- "inhalation"
-    
-    #Screen against error in user's specification of forcing function timing
-    if (exp.duration > period)
-    {
-    stop("Argument 'exp.duration' should be smaller than its subsuming argument,
-         'period', which together are set to specify a simple cyclic pattern of 
-         inhalation exposure and rest in the default case.")
-    }
-    
-    # Screen whether exposure and dosing are both indicated to occur
-    if((exp.conc!=0 | is.null(forcings)==FALSE) & 
-       (is.null(dose)==FALSE | is.null(daily.dose)==FALSE))
-    {
-      stop("Currently, 'httk' only evaluates the model using the exposure or dose",
-           " route but not both simultaneously. If exposure is the goal, then",
-           " set dose and/or daily.dose to NULL.  If dose is the goal, then",
-           " set exp.conc to 0.")
-    }
-  } else if (is.null(dose)==FALSE | is.null(daily.dose)==FALSE)
-  {
-    route <- ifelse(iv.dose, yes = "iv", no = "oral")
-    
-    if (input.units=="ppmv")
-    {
-      stop("The 'ppmv' units are not appropriate for the dosing routes. ",
-           "Review input units for doses and update argument. ",
-           "Several suggestions 'umol', 'mg', or an alternative input.")
-    }
-  }
-
-  #Only generate the forcings if other dosing metrics are null; they're not
-  #designed to work together in a very meaningful way
-  if (is.null(doses.per.day) & is.null(forcings))
-  {
-    if (route == "inhalation")
-    {
-      if (exp.duration > period){
-        stop('If not specifying \'dose.matrix\' data series explicitly, 
-        additional arguments are needed to generate a \'dose.matrix\' argument
-        with a cyclic exposure pattern across the simulation:
-        exp.conc, period, exp.start.time, exp.duration, and days simulated.')
-      }
-      period <- period/24 #convert time period in hours to days
-      exp.duration <- exp.duration/24 #convert exposure duration in hours to days
-      
-      #Assemble function for initializing 'forcings' argument data series with
-      #certain periodicity and exposure concentration in default case, used if 
-      #the 'forcings' argument is not otherwise specified.
-      forcings_gen <- function(exp.conc, period, exp.start.time, exp.duration, days) {
-        #Provide for case in which forcing functionality is effectively turned off
-        if (exp.conc == 0) {
-          conc.matrix = NULL
-        } else {
-        Nrep <- ceiling((days - exp.start.time)/period) 
-        times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-        forcing_values  <- rep(c(exp.conc,0), Nrep)
-        conc.matrix = cbind(times,forcing_values)
-        }
-        return(conc.matrix)
-      }
-  
-      forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
-    }
-  }
-
   if (is.null(dosing))
   {
     dosing <- list(
       initial.dose=0,
       dosing.matrix=NULL,
       daily.dose=daily.dose,
-      doses.per.day=doses.per.day,
-      forcings
+      doses.per.day=doses.per.day
     )
   }
   
@@ -298,8 +222,7 @@ calc_css <- function(chem.name=NULL,
   
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
   out <- solve_model(parameters=parameters,
-    model=model,
-    route=route,
+    model=model, 
     dosing=dosing,
     suppress.messages=TRUE,
     days=days,
