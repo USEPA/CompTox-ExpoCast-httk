@@ -20,7 +20,7 @@
 #' 
 #' The tissues contained in tissue.data that are unused in each of these models 
 #' are aggregated into a single compartment termed
-#' “rest”, whose partition coefficient is calculated by averaging the remaining 
+#' "rest", whose partition coefficient is calculated by averaging the remaining 
 #' partition coefficients,
 #' weighted by their species-specific tissue volumes.
 #' 
@@ -40,7 +40,8 @@
 #' considered
 #' @param suppress.messages Whether or not the output message is suppressed.
 #'
-#' @seealso \code{\link{predict_partitioning_schmitt}},  \code{\link{tissue.data}}
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#' @seealso \code{\link{tissue.data}}
 #'
 #' @return \item{Krbc2pu}{Ratio of concentration of chemical in red blood cells
 #' to unbound concentration in plasma.} \item{Krest2pu}{Ratio of concentration

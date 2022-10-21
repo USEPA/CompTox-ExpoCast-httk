@@ -6,7 +6,7 @@
 #' Note that this function works with a local version of the 
 #' get.physical_and_invitro.data table to allow users to add/modify chemical
 #' data (for example, via \code{\link{add_chemtabke}} or 
-#' \code{\link{load_sipes2017}).
+#' \code{\link{load_sipes2017}}).
 #'
 #' @param param The desired parameters, a vector or single value.
 #' @param chem.name The chemical names that you want parameters for, a vector or single value

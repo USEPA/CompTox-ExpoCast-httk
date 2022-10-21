@@ -4,7 +4,7 @@
 #' tissue to unbound plasma partition coefficients for the tissues contained 
 #' in the \code{\link{tissue.data}} table.
 #' 
-#' In Schmitt’s model, each tissue is composed of cells and
+#' In Schmitt's model, each tissue is composed of cells and
 #' interstitium, with each cell consisting of neutral lipid,
 #' neutral phospholipid, water, protein, and acidic phospholipid.
 #' Each tissue cell is defined as the sum of separate
@@ -16,7 +16,7 @@
 #' and pKa (neutral lipid and acidic phospholipid partitioning).
 #' For a given compound the partitioning into each
 #' component is identical across tissues. Thus the differences
-#' among tissues are driven by their composition, i.e., the
+#' among tissues are driven by their composition, that is, the
 #' varying volumes of components such as neutral lipid.
 #' However, pH differences across tissues also determine
 #' small differences in partitioning between cell and plasma
@@ -35,7 +35,7 @@
 #' 
 #' The red blood cell regression can be used but is not by default because of
 #' the span of the data used for evaluation, reducing confidence in the 
-$' regression for higher and lower predicted values.
+#' regression for higher and lower predicted values.
 #' 
 #' Human tissue volumes are used for species other than Rat.
 #' 
@@ -99,7 +99,6 @@ $' regression for higher and lower predicted values.
 #' @import magrittr
 #'
 #' @export predict_partitioning_schmitt
-#'
 predict_partitioning_schmitt <- function(
   chem.name=NULL,
   chem.cas=NULL,
