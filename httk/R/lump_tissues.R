@@ -1,43 +1,65 @@
-#' Lump tissue parameters
+#' Lump tissue parameters into model compartments
 #'                                               
 #' This function takes the parameters from 
 #' \code{\link{predict_partitioning_schmitt}} and 
 #' lumps the partition coefficients along with the volumes and flows based on 
-#' the given tissue list. It is useful in Monte Carlo simulation of individual
-#' partition coefficients when calculating the rest of body partition
-#' coefficient.
+#' the given model scheme of tissue comparments.
 #' 
-#' This function returns the flows, volumes, and partition coefficients for the
-#' lumped tissues specified in tissue list. Tissues are aggregated from table
-#' \code{\link{tissue.data}}.
+#' \code{\link{predict_partitioning_schmitt}} makes tissue-specific predictions
+#' drawing from those tissues described in \code{\link{tissue.data}}. Since
+#' different physiologically-based toxicokinetic (PBTK) models use diffeent 
+#' schemes for rganizing the
+#' tissues of the body into differing compartments (for example, "rapidly
+#' perfused tissues"), this function aggregates (or "lumps") tissues into
+#' compartments as specified by the argument 'tissuelist'. Aggregate  flows, 
+#' volumes, and partition coefficients are provided for the
+#' lumped tissue compartments. Flows and volumes are summed while
+#' partition coefficients is calculated using averaging weighted by 
+#' species-specific tissue volumes.
+#'
+#' The name of each entry in 'tissuelist' is its own compartment. The
+#' modelinfo_MODEL.R file corresponding to the model specified by argument
+#' 'model' includes both a 'tissuelist' describing to the model's 
+#' compartmentallumping schme as well as a vector of 'tissuenames' specifying 
+#' all tissues to be lumped into those compartments.
+#'
+#' Alternatively the 'tissuelist' and 'tissuenames' can also be manually
+#' specified for alternate lumping schemes not necessarily related to a
+#' pre-made httk model. For example,
+#' tissuelist<-list(Rapid=c("Brain","Kidney")).
 #' 
-#' The name of each entry in the list is its own compartment.
-#' The tissues in the alltissues vector are the tissues that are
-#' to be considered in the lumping process. The tissuelist can also be manually
-#' specified for alternate lumping schemes: for example,
-#' tissuelist<-list(Rapid=c("Brain","Kidney")) specifies the flow.col and
-#' vol.col in the tissuedata.table. 
-#' 
-#' The tissues contained in tissue.data that are unused in each of these models 
+#' The tissues contained in 'tissuenames' that are unused in 'tissuelist' 
 #' are aggregated into a single compartment termed
-#' "rest", whose partition coefficient is calculated by averaging the remaining 
-#' partition coefficients,
-#' weighted by their species-specific tissue volumes.
+#' "rest".
+#'
+#' NOTE: The partition coefficients of lumped compartments vary according to
+#' individual and species differences since the volumes of the consitutent 
+#' tissues may vary.
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
 #' predict_partitioning_schmitt.
+#'
 #' @param parameters A list of physiological parameters including flows and
 #' volumes for tissues in \code{tissuelist}
+#'
 #' @param tissuelist Manually specifies compartment names and tissues, which
 #' override the standard compartment names and tissues that are usually
 #' specified in a model's associated modelinfo file. Remaining tissues in the
 #' model's associated \code{alltissues} listing are lumped in the rest of the body.
+#'
+#' @param tissuelist Manually specifies tissues from \code\link{{tissue.data}} 
+#' that should be lumped.
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#'
 #' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
+#'
 #' @param tissue.flows A list of flows for tissues in \code{tissuelist}
+#'
 #' @param model Specify which model (and therefore which tissues) are being 
 #' considered
+#'
 #' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
@@ -59,7 +81,7 @@
 #' high-throughput predictions of chemical distribution to tissues." Journal of
 #' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 #'
-#' @keywords Parameter
+#' @keywords Parameter, pbtk
 #' 
 #' @examples
 #' 
@@ -91,24 +113,27 @@ lump_tissues <- function(Ktissue2pu.in,
     stop('The "model" variable must be specified if a complete set of
           "parameters" is not otherwise provided.')
   
-  if (is.null(model)) stop("Model must be specified.")
-  model <- tolower(model)
-  if (!(model %in% names(model.list)))            
+  if (is.null(model) & is.null(tissue.names)) stop("Model or tissue.names must be specified.")
+  if (is.null(tissue.names))
   {
-    stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
-  } else {
-    #Before using tissuelist, make sure it is initialized with the tissuelist
-    #entry from the modelinfo file of interest. If tissuelist is already manually
-    #specified, it takes priority.
-    if (is.null(tissuelist)){
-      tissuelist <- model.list[[model]]$tissuelist
+    model <- tolower(model)
+    if (!(model %in% names(model.list)))            
+    {
+      stop(paste("Model",model,"not available. Please select from:",
+        paste(names(model.list),collapse=", ")))
+    } else {
+      #Before using tissuelist, make sure it is initialized with the tissuelist
+      #entry from the modelinfo file of interest. If tissuelist is already manually
+      #specified, it takes priority.
+      if (is.null(tissuelist)){
+        tissuelist <- model.list[[model]]$tissuelist
+      }
+      
+      # List all tissues/compartments for which a model needs partitioning
+      # information, regardless of whether the tissue/compartment is to be lumped 
+      # or not.  
+      tissuenames <- sort(unique(model.list[[model]]$alltissues))
     }
-    
-    # List all tissues/compartments for which a model needs partitioning
-    # information, regardless of whether the tissue/compartment is to be lumped 
-    # or not.  
-    tissuenames <- sort(unique(model.list[[model]]$alltissues))
   }
 
   if (!all(unlist(tissuelist) %in% tissuenames))
