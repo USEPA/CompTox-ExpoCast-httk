@@ -1,17 +1,17 @@
 #' Lump tissue parameters into model compartments
 #'                                               
-#' This function takes the parameters from 
-#' \code{\link{predict_partitioning_schmitt}} and 
-#' lumps the partition coefficients along with the volumes and flows based on 
-#' the given model scheme of tissue comparments.
+#' This function takes the tissue:plasma partition coefficients from 
+#' \code{\link{predict_partitioning_schmitt}} along with the tissue-specific
+#' volumes and flows and aggregates (or "lumps") them
+#' according to the needed scheme of toxicokinetic model tissue comparments.
 #' 
 #' \code{\link{predict_partitioning_schmitt}} makes tissue-specific predictions
 #' drawing from those tissues described in \code{\link{tissue.data}}. Since
 #' different physiologically-based toxicokinetic (PBTK) models use diffeent 
 #' schemes for rganizing the
 #' tissues of the body into differing compartments (for example, "rapidly
-#' perfused tissues"), this function aggregates (or "lumps") tissues into
-#' compartments as specified by the argument 'tissuelist'. Aggregate  flows, 
+#' perfused tissues"), this function lumps tissues into
+#' compartments as specified by the argument 'tissuelist'. Aggregate flows, 
 #' volumes, and partition coefficients are provided for the
 #' lumped tissue compartments. Flows and volumes are summed while
 #' partition coefficients is calculated using averaging weighted by 
