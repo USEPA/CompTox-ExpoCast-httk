@@ -263,6 +263,69 @@ httk.version <- sessionInfo()$otherPkgs$httk$Version
 output.date <- Sys.Date()
 
 save(Css.units,httk.version,output.date,file="Dashboard-HTTK-stamp.RData")
+
+# Replace references with DOI:
+dashboard.table[is.na(dashboard.table[,"Reference"]), 
+                "Reference"] <- "temp"
+dashboard.table[dashboard.table[,"Reference"]=="Sipes 2017", 
+                "Reference"] <- "https://doi.org/10.1021/acs.est.7b00650"
+dashboard.table[dashboard.table[,"Reference"]=="Wambaugh 2019", 
+                "Reference"] <- "https://doi.org/10.1093/toxsci/kfz205"
+dashboard.table[dashboard.table[,"Reference"]=="Wetmore 2013", 
+                "Reference"] <- "https://doi.org/10.1093/toxsci/kft012"
+dashboard.table[dashboard.table[,"Reference"]=="Lombardo 2018", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.118.082966"
+dashboard.table[dashboard.table[,"Reference"]=="Paini 2020", 
+                "Reference"] <- "https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee"
+dashboard.table[dashboard.table[,"Reference"]=="Wood 2017", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.117.077040"
+dashboard.table[dashboard.table[,"Reference"]=="Honda 2019", 
+                "Reference"] <- "https://doi.org/10.1371/journal.pone.0217564"
+dashboard.table[dashboard.table[,"Reference"]=="Wetmore 2015", 
+                "Reference"] <- "https://doi.org/10.1093/toxsci/kfv171"
+dashboard.table[dashboard.table[,"Reference"]=="Wetmore 2012", 
+                "Reference"] <- "https://doi.org/10.1093/toxsci/kfr254"
+dashboard.table[dashboard.table[,"Reference"]=="Paixao 2012", 
+                "Reference"] <- "https://doi.org/10.1016/j.ijpharm.2012.03.019"
+dashboard.table[dashboard.table[,"Reference"]=="Tonnelier 2012", 
+                "Reference"] <- "https://doi.org/10.1007/s00204-011-0768-0"
+dashboard.table[dashboard.table[,"Reference"]=="Ito 2004", 
+                "Reference"] <- "https://doi.org/10.1023/B:PHAM.0000026429.12114.7d"
+dashboard.table[dashboard.table[,"Reference"]=="Dawson 2021", 
+                "Reference"] <- "https://doi.org/10.1021/acs.est.0c06117"
+dashboard.table[dashboard.table[,"Reference"]=="Obach 1999", 
+                "Reference"] <- "Obach, R. S. (1999) Drug Metabolism and Disposition 27(11), 1350-9"
+dashboard.table[dashboard.table[,"Reference"]=="Pearce 2017", 
+                "Reference"] <- "https://doi.org/10.18637%2Fjss.v079.i04"
+dashboard.table[dashboard.table[,"Reference"]=="Uchimura 2010", 
+                "Reference"] <- "https://doi.org/10.1002/bdd.711"
+dashboard.table[dashboard.table[,"Reference"]=="Gulden 2002", 
+                "Reference"] <- "https://doi.org/10.1016/S0300-483X(02)00085-9"
+dashboard.table[dashboard.table[,"Reference"]=="ECVAM", 
+                "Reference"] <- "https://data.europa.eu/89h/a2ff867f-db80-4acf-8e5c-e45502713bee"
+dashboard.table[dashboard.table[,"Reference"]=="Shibata 2002", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.30.8.892"
+dashboard.table[dashboard.table[,"Reference"]=="McGinnity 2004", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.104.000026"
+dashboard.table[dashboard.table[,"Reference"]=="Linakis 2020", 
+                "Reference"] <- "https://doi.org/10.1038/s41370-020-0238-y"
+dashboard.table[dashboard.table[,"Reference"]=="Lau2002", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.30.12.1446"
+dashboard.table[dashboard.table[,"Reference"]=="Naritomi 2003", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.31.5.580"
+dashboard.table[dashboard.table[,"Reference"]=="Brown 2007", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.106.011569"
+dashboard.table[dashboard.table[,"Reference"]=="Ito/Riley", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.105.0042595"
+dashboard.table[dashboard.table[,"Reference"]=="Sternbeck 2012", 
+                "Reference"] <- "https://doi.org/10.3109/00498254.2012.669080"
+dashboard.table[dashboard.table[,"Reference"]=="Pirovano 2016", 
+                "Reference"] <- "https://doi.org/10.1016/j.etap.2016.01.017"
+dashboard.table[dashboard.table[,"Reference"]=="Jones 2017", 
+                "Reference"] <- "https://doi.org/10.1124/dmd.117.077396"
+dashboard.table[dashboard.table[,"Reference"]=="temp", 
+                "Reference"] <- NA
+
 write.table(
   dashboard.table,
   file=paste(
