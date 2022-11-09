@@ -9,6 +9,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## HTTK Version
+
+This vignette was created with httk v1.5. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of httk
+and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
 ```{r, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
