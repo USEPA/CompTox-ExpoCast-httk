@@ -42,6 +42,13 @@ molecules. Ultimately this paper details a generalized inhalation component that
 integrates with the httk physiologically-based toxicokinetic model to provide 
 high-throughput estimates of inhalation chemical exposures.
 
+## HTTK Version
+
+This vignette was created with httk v2.0.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of httk
+and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
 ## Prepare for session
 ### Load the relevant libraries
 If you get the message "Error in library(X) : there is no package called 'X'"

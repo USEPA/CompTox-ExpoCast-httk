@@ -50,6 +50,13 @@ which such data become available. With sufficient evaluation, this gestational
 model may allow for in vitro to in vivo extrapolation of point of departure 
 doses relevant to reproductive and developmental toxicity.
 
+## HTTK Version
+
+This vignette was created with httk v2.1.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of httk
+and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
 ## Prepare for session
 ```{r}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
