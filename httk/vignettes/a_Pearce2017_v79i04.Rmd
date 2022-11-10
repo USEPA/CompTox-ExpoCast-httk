@@ -157,7 +157,9 @@ print(c.vs.t)
 
 ## TK Study Summary Statistics
 To calculate the peak statistics for all chemicals simulated for 10
-days at 1 mg/kg BW/day with 3 doses per day:
+days at 1 mg/kg BW/day with 3 doses per day.
+Note that the function calc_stats was renamed calc_tk_stats in a later release
+of "httk".
 ```{r stats_example1, eval = FALSE}
 all.peak.stats <- calc_stats(days = 10, doses.per.day = 3, stats = "peak")
 ```
@@ -169,45 +171,119 @@ triclosan.stats <- calc_stats(days = 10, chem.name = "triclosan")
 ```
 
 ## Steady-state Plasma Concentration
-Below are examples of these two functions, comparing the medians of
+Below are examples of two functions,comparing the medians of
 the Wetmore data in humans for 1 mg/kg BW/day of Bisphenol A with
 the calc_mc_css simulation with probability distributions
 containing a third of the standard deviation, half the limit of
-detection for fub, and double the number of samples of the
-parameters used in Wetmore et al. (2012):
+detection for $$f_{up}$$, and the same number of samples of the
+parameters used in [Wetmore et al. (2012)](https://doi.org/10.1093/toxsci/kfr254). 
+We use make use of the default
+Monte Carlo sampler by setting httkpop=FALSE to turn off
+httk-pop ([Ring et al., 2017](https://doi.org/10.1016/j.envint.2017.06.004)) and 
+invitrouv=FALSE to turn off uncertainty/variability
+for the *in vitro* parameters ([Wambaugh et al., 2019](https://doi.org/10.1093/toxsci/kfz205)). 
+We use set.seed to get the same 
+random sequence of numbers for the Monte Carlo sampler every time.
+Note that the function get_wetmore_css was renamed get_lit_css in a later release
+of "httk".
 ```{r css_examples, eval = TRUE}
 get_wetmore_css(chem.cas = "80-05-7", daily.dose = 1,
                 which.quantile = 0.5, output.units = "uM")
+set.seed(654321)
 calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
             censored.params = list(Funbound.plasma = list(cv = 0.1, lod = 0.005)),
             vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
                                Qtotal.liverc = 0.15, million.cells.per.gliver = 0.15,
                                Clint = 0.15),
-            output.units = "uM", samples = 2000,httkpop=FALSE)
+            output.units = "uM", 
+            samples = 1000,
+            httkpop=FALSE,
+            invitrouv=FALSE)
+```
+Both httk-pop and *in vitro* uncertainty/variability simulation are on by
+default:
+```{r css_examples2, eval = TRUE}
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000)
+```
+Simple "reverse dosimetry" *in vitro-in vivo* extrapolation (IVIVE) determines
+an oral equivalent dose by taking an *in vitro* concentration $$C_{in vitro}$$
+(50 uM in the example below) and dividing it by the steady-state plasma 
+concentration $$C_{ss}$$ produced by a dose rate of 1 mg/kg bw/day:
+
+$$ OED = C_{in vitro} / C_{ss}$$
+
+We can also calculate the OED using literature values or new httk sampling:
+```{r literature_oral_equivalent_example, eval = TRUE}
 get_wetmore_oral_equiv(50, chem.cas = "80-05-7")
+set.seed(654321)
+calc_mc_oral_equiv(50, chem.cas = "80-05-7")
 ```
 
-## To perform a Monte Carlo simulation on zoxamide (Figure 5) with the
-## model pbtk with the same limit of detection and coefficients of
-## variation of two thirds the size of those used in calc mc css, we
-## have:
+## Monte Carlo Simulation of Css
+To perform a Monte Carlo simulation on Zoxamide with the
+model pbtk with the same limit of detection and coefficients of
+variation (cv) of two thirds the size of those used in calc mc css, we
+have.
+Note, the function "monte_carlo" was renamed "calc_mc_tk", while a new
+"monte_carlo" was created to complement "httkpop_mc" and "invitro_mc".
+```{r monte_carlo_css_example, eval = TRUE}
 vary.params <- NULL
 params <- parameterize_pbtk(chem.name = "Zoxamide")
 for (this.param in names(subset(params, names(params) != "Funbound.plasma")))
-    vary.params[this.param] <- 0.2
+  # Only want to vary numerical parameters:
+  if (is.numeric(params[[this.param]])) 
+      vary.params[this.param] <- 0.2
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 set.seed(1)
-out <- monte_carlo(params, cv.params = vary.params,
-                   censored.params = censored.params,
-                   return.samples = TRUE, model = "pbtk",
-                   suppress.messages = TRUE)
-zoxamide <- ggplot(as.data.frame(out), aes(out)) +
+# Solve the full time-course:
+out <- calc_mc_tk(parameters=params, 
+                  vary.params = vary.params,
+                  censored.params = censored.params,
+                  return.samples = TRUE, 
+                  model = "pbtk",
+                  suppress.messages = TRUE,
+                  httkpop = FALSE,
+                  invitrouv = FALSE,
+                  samples = 50)
+# Make a table with confidence intervals:
+zoxtable <- cbind(out[["means"]][,"time"],
+                  out[["means"]][,"Cplasma"],
+                  out[["means"]][,"Cplasma"] - 1.96*out[["sds"]][,"Cplasma"],
+                  out[["means"]][,"Cplasma"] + 1.96*out[["sds"]][,"Cplasma"])
+colnames(zoxtable) <- c("time","Cplasma","lcl","ucl")
+zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
+    geom_line(color = "dark blue",size=2) +
+      geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
+                  fill = "light blue", color="black", linetype="dotted")+
+    ylab("Plasma concentration") +
+    xlab("Time (days)") +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(zoxamide1)
+
+# Just Css time-course:
+out <- calc_mc_css(parameters=params, 
+                  vary.params = vary.params,
+                  censored.params = censored.params,
+                  return.samples = TRUE, 
+                  model = "pbtk",
+                  suppress.messages = TRUE,
+                  httkpop = FALSE,
+                  invitrouv = FALSE,
+                  samples = 50)
+
+zoxamide2 <- ggplot(as.data.frame(out), aes(out)) +
     geom_histogram(fill = "blue", binwidth = 1/6) +
     scale_x_log10() + ylab("Number of Samples") +
     xlab("Steady State Concentration (uM)") +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
-zoxamide
+print(zoxamide2)
+```
+```{r remaining_code, eval = FALSE}
 
 ## We can add thyroid to the tissue data by making a row containing
 ## its data, subtracting the volumes and flows from the rest, and
@@ -265,4 +341,4 @@ avg.vs.max <- ggplot(avg.max.data, aes(avg, max)) +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
 avg.vs.max
-
+```
