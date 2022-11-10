@@ -4,15 +4,16 @@
 # Pearce, Robert G., et al. "Httk: R package for high-throughput 
 # toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
-#Analytic expression for steady-state plasma concentration.
+# Analytic expression for steady-state plasma concentration to be used by
+# calc_analytic_css:
 model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
-# When calculating steady-state, which compartment do we test? 
+# What units does the analytic function return in calc_analytic_css:
+model.list[["pbtk"]]$steady.state.units <- "mg/L"
+
+# When calculating steady-state with calc_css, which compartment do we test? 
 # ("C" is preprended):
 model.list[["pbtk"]]$steady.state.compartment <- "plasma"
-
-# What units does the analytic function return:
-model.list[["pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"

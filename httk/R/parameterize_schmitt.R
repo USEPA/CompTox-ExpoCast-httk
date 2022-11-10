@@ -109,8 +109,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-# Look up the chemical name/CAS, depending on what was provide:
-  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+# Look up the chemical name/CAS, depending on what was provided:
+  if (is.null(parameters))
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
     out <- get_chem_id(
             chem.cas=chem.cas,
@@ -142,83 +143,161 @@ parameterize_schmitt <- function(chem.cas=NULL,
 #        paste(required.params[!(required.params%in%names(parameters))],
 #          collapse=", "),
 #        "in parameterize_schmitt")
-        
-  # unitless fraction of chemical unbound with plasma
-  fup.db <- try(
-              get_invitroPK_param(
-                "Funbound.plasma",
-                species,
-                chem.cas=chem.cas,
-                chem.name=chem.name,
-                dtxsid=dtxsid),
-              silent=TRUE)
-  if ((is(fup.db,"try-error") & default.to.human) || force.human.fup) 
+
+  # Check to see if these parameters have been provided:
+  if (!is.null(parameters))
   {
-    fup.db <- try(
-                get_invitroPK_param(
-                  "Funbound.plasma",
-                  "Human",
-                  chem.cas=chem.cas,
-                  chem.name=chem.name,
-                  dtxsid=dtxsid),
-                silent=TRUE)
-    if (!suppress.messages) 
-      warning(paste(species,"coerced to Human for protein binding data."))
-  }
-  if (is(fup.db,"try-error")) 
-    stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-  if (!is.null(parameters))
-    if ("Fraction_unbound_plasma" %in% names(parameters))
-      fup.db <- parameters$Fraction_unbound_plasma
-  
-  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
-  if (!is.null(parameters))
+    if ("Funbound.plasma.dist" %in% names(parameters))
+    {
+      fup.db <- parameters$Funbound.plasma.dist
+    } else {
+      fup.db <- NA
+    }
+    if ("Funbound.plasma" %in% names(parameters))
+    {
+      fup <- parameters$Funbound.plasma
+    } else {
+      fup <- NA
+    }
     if ("Pow" %in% names(parameters))
+    {
       Pow <- parameters$Pow
-        
-  pKa_Donor <- suppressWarnings(get_physchem_param(
+    } else {
+      Pow <- NA
+    }
+    if ("pKa_Donor" %in% names(parameters))
+    {
+      pKa_Donor <- parameters$pKa_Donor
+    } else {
+      pKa_Donor <- -999
+    }
+    if ("pKa_Accept" %in% names(parameters))
+    {
+      pKa_Accept <- parameters$pKa_Accept
+    } else {
+      pKa_Accept <- -999
+    }
+    if ("MA" %in% names(parameters))
+    {
+      MA <- parameters$MA
+    } else {
+      MA <- NA
+    }
+    if ("Fprotein.plasma" %in% names(parameters))
+    {
+      Fprotein <- parameters$Fprotein.plasma
+    } else {
+      Fprotein <- NA
+    }
+    if ("plasma.pH" %in% names(parameters))
+    {
+      plasma.pH <- parameters$plasma.pH
+    } else {
+      plasma.pH <- NA
+    }
+    if ("alpha" %in% names(parameters))
+    {
+      alpha <- parameters$alpha
+    } else {
+      alpha <- NA
+    }
+# If not, mark them incomplete and try to retrieve them.
+# (Note that "NA" is an acceptable value for pKa's, so use -999)
+  } else {
+    fup.db <- NA
+    fup <- NA
+    Pow <- NA
+    pKa_Donor <- -999
+    pKa_Accept <- -999
+    MA <- NA
+    Fprotein <- NA
+    plasma.pH <- NA
+    alpha <- NA
+  }
+    
+  if (is.na(fup.db))
+  {
+    # unitless fraction of chemical unbound with plasma
+    fup.db <- try(
+      get_invitroPK_param(
+        "Funbound.plasma",
+        species,
+        chem.cas=chem.cas,
+        chem.name=chem.name,
+        dtxsid=dtxsid),
+      silent=TRUE)
+    if ((is(fup.db,"try-error") & default.to.human) || force.human.fup) 
+    {
+      fup.db <- try(
+        get_invitroPK_param(
+          "Funbound.plasma",
+          "Human",
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid),
+        silent=TRUE)
+      if (!suppress.messages) 
+        warning(paste(species,"coerced to Human for protein binding data."))
+    }
+    # If we couldn't retrieve fup.db and fup wasn't provided as a parameter:
+    if (is(fup.db,"try-error") & is.na(fup)) 
+      stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
+    if (is(fup.db,"try-error")) fup.db <- fup
+  }
+  
+  if (is.na(Pow))
+  {
+    Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+  }   
+
+  if (pKa_Donor == -999)
+  {
+    pKa_Donor <- suppressWarnings(get_physchem_param(
                                     "pKa_Donor",
                                     chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     dtxsid=dtxsid))
-  if (!is.null(parameters))
-    if ("pKa_Donor" %in% names(parameters))
-      pKa_Donor <- parameters$pKa_Donor
-        
-  pKa_Accept <- suppressWarnings(get_physchem_param(
+  }
+  
+  if (pKa_Accept == -999)
+  {    
+    pKa_Accept <- suppressWarnings(get_physchem_param(
                                      "pKa_Accept",
                                      chem.cas=chem.cas,
                                      chem.name=chem.name,
                                      dtxsid=dtxsid))
-  if (!is.null(parameters))
-    if ("pKa_Accept" %in% names(parameters))
-      pKa_Accept <- parameters$pKa_Accept
+  }
+
+  if (is.na(MA))
+  {
+    if (any(!is.null(chem.cas),!is.null(chem.name),!is.null(dtxsid)))
+      MA <- suppressWarnings(10^(get_physchem_param("logMA",
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid))) 
+  }
   
-  MA <- suppressWarnings(10^(get_physchem_param("logMA",
-          chem.cas=chem.cas,
-          chem.name=chem.name,
-          dtxsid=dtxsid))) 
-  if (!is.null(parameters))
-    if ("MA" %in% names(parameters))
-      MA <- parameters$MA
+  # If we don't have a measured value for membrane affintity, 
+  # use Yun & Edgington (2013):
+  if (is.na(MA))
+  {
+    if (!suppress.messages) warning(
+      "Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
+    MA <- 
+      10^(1.294 + 0.304 * log10(Pow))
+  }   
   
-  Fprotein <- physiology.data[
+  if (is.na(Fprotein))
+  {
+    Fprotein <- physiology.data[
                 which(physiology.data[,'Parameter'] ==
                   'Plasma Protein Volume Fraction'),
                 which(tolower(colnames(physiology.data)) == tolower(species))]
-  if (!is.null(parameters))
-    if ("Fprotein.plasma" %in% names(parameters))
-      Fprotein <- parameters$Fprotein.plasma
+  }
   
-  plasma.pH <- 7.4
-  if (!is.null(parameters))
-    if ("plasma.pH" %in% names(parameters))
-      plasma.pH <- parameters$plasma.pH
+  if (is.na(plasma.pH)) plasma.pH <- 7.4
 
-  alpha <- 0.001
-  if (!is.null(parameters))
-    if ("alpha" %in% names(parameters))
-      alpha <- parameters$alpha
+  if (is.na(alpha)) alpha <- 0.001
 
 # Check if fup is a point value or a distribution, if a distribution, use the median:
   if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
@@ -231,7 +310,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.point <- fup.db
     fup.dist <- NA 
   }
-
+  
 # If species-specific fup is 0 try the human value:  
   if (fup.point == 0 & tolower(species)!="human" & default.to.human) 
   {
