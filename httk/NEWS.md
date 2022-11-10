@@ -6,13 +6,19 @@ output: html_document
 
 # version 2.2.2 (November, 2022)
 
-* `get_cheminfo` now lists required parameters when chemicals are excluded (Thanks Ben Savage)
-
+* `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
+* added 'daily.dose' argument back to 'calc_mc_css' (still defaults to 1 mg/kg/day)
+* simplified arguments to 'calc_mc_css' since now using 'do.call'
+* FIX GAS MODEL (thanks Cecilia Tan)
+* Added updated vignette from Pearce et al. (2017): v79i04.R
+* Added new vignette on "Introduction to IVIVE"
+* Reduced number of arguments needed for 'calc_mc_css' and 'calc_mc_tk'
+* Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 
 # version 2.2.1 (September, 2022)
 
 This minor update removes UTF-8 characters from the package and changes the
-calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerabiltiy
+calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerability
 to machine precision errors.
 
 # version 2.2.0 (September, 2022)

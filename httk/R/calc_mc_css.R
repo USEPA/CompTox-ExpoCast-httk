@@ -287,66 +287,34 @@
 #' }
 #'
 #' @import stats
+#' @importFrom purrr compact 
 #' @export calc_mc_css
-calc_mc_css <- function(chem.cas=NULL,
-                        chem.name=NULL,
+calc_mc_css <- function(chem.cas = NULL,
+                        chem.name = NULL,
                         dtxsid = NULL,
-                        parameters=NULL,
-                        samples=1000,
-                        which.quantile=0.95,
-                        species="Human",
-                        suppress.messages=FALSE,
-                        model='3compartmentss',
-                        httkpop=TRUE,
-                        invitrouv=TRUE,
-                        calcrb2p=TRUE,
-                        censored.params=list(),
-                        vary.params=list(),
-                        return.samples=FALSE,
-                        tissue=NULL,
+                        parameters = NULL,
+                        samples = 1000,
+                        which.quantile = 0.95,
+                        species = "Human",
+                        daily.dose = 1,
+                        suppress.messages = FALSE,
+                        model = '3compartmentss',
+                        httkpop = TRUE,
+                        invitrouv = TRUE,
+                        calcrb2p = TRUE,
+                        censored.params = list(),
+                        vary.params = list(),
+                        return.samples = FALSE,
+                        tissue = NULL,
                         concentration = "plasma",
-                        output.units="mg/L",
-                        invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=TRUE,
-                          poormetab=TRUE,
-                          fup.censored.dist=FALSE,
-                          fup.lod=0.01,
-                          fup.meas.cv=0.4,
-                          clint.meas.cv=0.3,
-                          fup.pop.cv=0.3,
-                          clint.pop.cv=0.3),
-                        httkpop.generate.arg.list=list(
-                          method='direct resampling',
-                          gendernum=NULL,
-                          agelim_years=NULL,
-                          agelim_months=NULL,
-                          weight_category =  c(
-                            "Underweight", 
-                            "Normal", 
-                            "Overweight", 
-                            "Obese"),
-                          gfr_category = c(
-                            "Normal", 
-                            "Kidney Disease", 
-                            "Kidney Failure"),
-                          reths = c(
-                            "Mexican American", 
-                            "Other Hispanic", 
-                            "Non-Hispanic White",
-                            "Non-Hispanic Black", 
-                            "Other")),
-                        convert.httkpop.arg.list=list(),
-                        parameterize.arg.list=list(
-                          default.to.human=FALSE,
-                          clint.pvalue.threshold=0.05,
-                          restrictive.clearance = TRUE,
-                          regression=TRUE),
-                        calc.analytic.css.arg.list=list(),
-                        parameterize.args = list(
-                          default.to.human=FALSE,
-                          adjusted.Funbound.plasma=TRUE,
-                          regression=TRUE,
-                          minimum.Funbound.plasma=1e-4)
+                        output.units = "mg/L",
+                        invitro.mc.arg.list = NULL,
+                        httkpop.generate.arg.list = 
+                          list(method = "direct resampling"),
+                        convert.httkpop.arg.list = NULL,
+                        parameterize.arg.list = NULL,
+                        calc.analytic.css.arg.list = NULL,
+                        parameterize.args = NULL
                         ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -397,7 +365,8 @@ calc_mc_css <- function(chem.cas=NULL,
 #
 #
   parameter.dt <- do.call(create_mc_samples,
-                            args=c(list(
+# we use purrr::compact to drop NULL values from arguments list:
+                          args=purrr::compact(c(list(
                               chem.cas=chem.cas,
                               chem.name=chem.name,
                               dtxsid = dtxsid,
@@ -415,7 +384,7 @@ calc_mc_css <- function(chem.cas=NULL,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterize.arg.list=parameterize.arg.list)))
+                              parameterize.arg.list=parameterize.arg.list))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
@@ -425,7 +394,8 @@ calc_mc_css <- function(chem.cas=NULL,
 #
 
   parameter.dt[,Css:= do.call(calc_analytic_css,
-                            args=c(list(parameters=.SD,
+# we use purrr::compact to drop NULL values from arguments list:
+                              args=purrr::compact(c(list(parameters=.SD,
                               model=model,
                               suppress.messages=TRUE,
                               chem.cas=chem.cas,
@@ -434,9 +404,10 @@ calc_mc_css <- function(chem.cas=NULL,
                               tissue=tissue,
                               concentration=concentration,
                               output.units=output.units,
+                              daily.dose=daily.dose,
                               clint.pvalue.threshold=
                                 parameterize.arg.list$clint.pvalue.threshold),
-                              calc.analytic.css.arg.list))]
+                              calc.analytic.css.arg.list)))]
 
   css.list <- parameter.dt$Css 
   

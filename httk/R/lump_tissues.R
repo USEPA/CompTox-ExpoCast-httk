@@ -97,6 +97,7 @@ lump_tissues <- function(Ktissue2pu.in,
                          species="Human",
                          tissue.vols=NULL,
                          tissue.flows=NULL,
+                         tissue.names=NULL,
                          model="pbtk",
                          suppress.messages=FALSE)
 {
