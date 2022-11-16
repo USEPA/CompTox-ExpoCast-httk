@@ -242,7 +242,8 @@ create_mc_samples <- function(chem.cas=NULL,
   parameters.dt <- monte_carlo(parameters.mean,
                      censored.params=censored.params,
                      cv.params=vary.params,
-                     samples=samples)
+                     samples=samples,
+                     suppress.messages=suppress.messages)
                       
 #
 #
