@@ -117,7 +117,7 @@ models without partition coefficients by using the default option of
 "3compartmentss" or setting exclude.fup.zero to false, and $f_{up}$
 would then automatically be set to 0.005.
 ```{r make_Css_table, eval = TRUE}
-table <- NULL
+css.table <- NULL
 # Make up a list of chemicals with both literature Css values and HTTK data:
 chem.list <- intersect(get_cheminfo(model = "pbtk", 
                                     suppress.messages = TRUE)[seq(
@@ -139,9 +139,11 @@ for (this.cas in chem.list)
                       as.data.frame(calc_mc_css(chem.cas = this.cas,
                                                 which.quantile = 0.50,
                                                       suppress.messages=TRUE)))
-    table <- rbind(table, this.row)
+    css.table <- rbind(css.table, this.row)
 }
-colnames(table) <- c("CAS", "PBTK", "Wetmore", "MC")
+colnames(css.table) <- c("CAS", "PBTK", "Wetmore", "MC")
+knitr::kable(css.table, caption = "Literature and HTTK Plasma Css", 
+             floating.environment="sidewaystable")
 ```
 
 ## Plotting example
@@ -252,16 +254,26 @@ a normal distribution with given mean and coefficient of variation or according
 to a censored distribution with an additional limit of detection parameter.
 Note that we again turn off httkpop and invitrouv to replicate the 2017 version
 of Monte Carlo.
-```{r monte_carlo_css_example, eval = TRUE}
+
+First we create a list of parameters and then assign a coefficient of variation
+to each parameter we wish to vary:
+```{r monte_carlo_css_example_1, eval = TRUE}
 vary.params <- NULL
 params <- parameterize_pbtk(chem.name = "Zoxamide")
 for (this.param in names(subset(params, names(params) != "Funbound.plasma")))
   # Only want to vary numerical parameters:
   if (is.numeric(params[[this.param]])) 
       vary.params[this.param] <- 0.2
+```
+
+We can draw $f_{up}$ from a censored distribution with a limit of dextion (LOD)
+of 0.01:
+```{r monte_carlo_css_example_2, eval = TRUE}
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
+```
+### Solve the full TK time-course
+```{r monte_carlo_css_example_3, eval = TRUE}
 set.seed(1)
-# Solve the full time-course:
 out <- calc_mc_tk(parameters=params, 
                   vary.params = vary.params,
                   censored.params = censored.params,
@@ -271,12 +283,20 @@ out <- calc_mc_tk(parameters=params,
                   httkpop = FALSE,
                   invitrouv = FALSE,
                   samples = 50)
-# Make a table with confidence intervals:
+```
+
+Make a table of concentration vs. time with confidence intervals:
+```{r monte_carlo_css_example_4, eval = TRUE}
 zoxtable <- cbind(out[["means"]][,"time"],
                   out[["means"]][,"Cplasma"],
                   out[["means"]][,"Cplasma"] - 1.96*out[["sds"]][,"Cplasma"],
                   out[["means"]][,"Cplasma"] + 1.96*out[["sds"]][,"Cplasma"])
 colnames(zoxtable) <- c("time","Cplasma","lcl","ucl")
+knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time", floating.environment="sidewaystable")
+```
+
+Plot Monte Carlo analysis of concentration vs. time:
+```{r monte_carlo_css_example_5, eval = TRUE}
 zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
     geom_line(color = "dark blue",size=2) +
       geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
@@ -286,8 +306,10 @@ zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
 print(zoxamide1)
+```
 
-# Just Css time-course:
+### Examine $C_{ss}$
+```{r monte_carlo_css_example_6, eval = TRUE}
 out <- calc_mc_css(parameters=params, 
                   vary.params = vary.params,
                   censored.params = censored.params,
