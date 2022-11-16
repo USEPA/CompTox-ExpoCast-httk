@@ -146,8 +146,13 @@ get_lit_cheminfo <- function(info="CAS",species="Human")
 #' get_lit_cheminfo(info=c('CAS','MW'))
 #' 
 #' @export get_wetmore_cheminfo
-get_wetmore_cheminfo <- function(info="CAS",species="Human")
+get_wetmore_cheminfo <- function(
+    info="CAS",
+    species="Human",
+    suppress.messages=FALSE)
 {
-  warning("Function \"get_wetmore_cheminfo\" has been renamed to \"get_lit_cheminfo\".")
-  return(do.call(get_lit_cheminfo, list(info = info, species=species)))
+  if (!suppress.messages) warning(
+    "Function \"get_wetmore_cheminfo\" has been renamed to \"get_lit_cheminfo\".")
+
+    return(do.call(get_lit_cheminfo, list(info = info, species=species)))
 }
