@@ -203,10 +203,13 @@ create_mc_samples <- function(chem.cas=NULL,
   args.schmitt <- parameterize.args[which(
     names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
     )]
+  # The Schmitt parameters are useful if we need to redo partitioning later:
   pschmitt <- do.call(parameterize_schmitt,
                       args = c(args.schmitt,suppress.messages=TRUE))
-  # The Schmitt parameters are useful if we need to redo partitioning later:
+  # But we don't want to overwrite any Schmitt params provided by the
+  # argument parameters:
   pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
+  # Add in the Schmitt parameters:
   parameters.mean <- c(parameters.mean, pschmitt)
   parameter.names <- names(parameters.mean)
     
