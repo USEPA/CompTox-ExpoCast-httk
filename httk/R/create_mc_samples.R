@@ -183,7 +183,8 @@ create_mc_samples <- function(chem.cas=NULL,
                                              chem.name=chem.name,
                                              dtxsid=dtxsid,
                                              species=species,
-                                        parameters=parameters),
+                                        parameters=parameters,
+                                        suppress.messages=suppress.messages),
                                         parameterize.arg.list))
   # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
@@ -203,9 +204,10 @@ create_mc_samples <- function(chem.cas=NULL,
   args.schmitt <- parameterize.args[which(
     names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
     )]
+  args.schmitt$suppress.messages <- TRUE
   # The Schmitt parameters are useful if we need to redo partitioning later:
   pschmitt <- do.call(parameterize_schmitt,
-                      args = c(args.schmitt,suppress.messages=TRUE))
+                      args = args.schmitt)
   # But we don't want to overwrite any Schmitt params provided by the
   # argument parameters:
   pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]

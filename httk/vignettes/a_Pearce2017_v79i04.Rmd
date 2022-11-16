@@ -79,7 +79,12 @@ library(httk)
 ## To check if the version installed is 1.7:
 packageVersion("httk")  >= "1.7"
 ```
-
+To speed up how fast this runs, we only simulate every Nth chemical
+(currently 15) -- to get all chemicals set SKIP.CHEMS to 1:
+```{r chemical_thinng, eval = TRUE}
+NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
+SKIP.CHEMS <- 15
+```
 
 ## Examples
 To get a list of parameters for the pbtk model of triclosan in a rat:
@@ -97,7 +102,7 @@ human value of 0.003044 and use it in a simulation of the PBTK model for
 a single dose of 1 mg/kg BW of Triclosan in a rat:
 ```{r use)pbtk_parameters, eval = TRUE}
 parameters["Funbound.plasma"] <- 0.1
-out <- solve_pbtk(parameters = parameters)
+out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
 ```
 
 
@@ -111,9 +116,15 @@ $f_{up}$. However, we could include all chemicals that work with the
 models without partition coefficients by using the default option of
 "3compartmentss" or setting exclude.fup.zero to false, and $f_{up}$
 would then automatically be set to 0.005.
-```{r make_Css_table, eval = FALSE}
+```{r make_Css_table, eval = TRUE}
 table <- NULL
-for (this.cas in intersect(get_cheminfo(model = "pbtk"), get_wetmore_cheminfo())) {
+# Make up a list of chemicals with both literature Css values and HTTK data:
+chem.list <- intersect(get_cheminfo(model = "pbtk", 
+                                    suppress.messages = TRUE)[seq(
+                                      1, NUM.CHEMS, SKIP.CHEMS)],
+                       get_wetmore_cheminfo())
+for (this.cas in chem.list)
+{
     this.row <- as.data.frame(this.cas)
     this.row <- cbind(this.row,
                       as.data.frame(calc_analytic_css(chem.cas = this.cas,
@@ -199,15 +210,19 @@ calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
             output.units = "uM", 
             samples = 1000,
             httkpop=FALSE,
-            invitrouv=FALSE)
+            invitrouv=FALSE,
+            suppress.messages = TRUE)
 ```
 Both httk-pop and *in vitro* uncertainty/variability simulation are on by
 default:
 ```{r css_examples2, eval = TRUE}
 set.seed(654321)
-calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000)
+            samples = 1000,
+            suppress.messages = TRUE)
 ```
 Simple "reverse dosimetry" *in vitro-in vivo* extrapolation (IVIVE) determines
 an administered equivalent dose (AED) by taking an *in vitro* concentration $C_{\text{in vitro}}$
@@ -357,17 +372,10 @@ avg or max
 for days.
 
 ```{r figure3, eval=TRUE}
-library("httk")
-library("ggplot2")
-
-NUM.CHEMS <- length(get_cheminfo(model="pbtk"))
-# To speed up how fast this runs, we only simulate every Nth chemical
-# (currently 15) -- to get all chemicals set SKIP.CHEMS to 1:
-SKIP.CHEMS <- 15
-
 css.data <- data.frame()
-for (this.cas in get_cheminfo(model='pbtk')[seq(
-  1, NUM.CHEMS, SKIP.CHEMS)]) {
+chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
+  1, NUM.CHEMS, SKIP.CHEMS)]
+for (this.cas in chem.list) {
     css.info <- calc_css(chem.cas = this.cas,
                          doses.per.day = 1,
                          suppress.messages = TRUE)
@@ -377,7 +385,7 @@ for (this.cas in get_cheminfo(model='pbtk')[seq(
 }
 
 hist <- ggplot(css.data, aes(days+0.1)) +
-    geom_histogram(fill = "blue", binwidth = 1/4) +
+    geom_histogram(fill = "blue", bins=5) +
     scale_x_log10() + ylab("Number of Chemicals") + xlab("Days") +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
@@ -399,8 +407,8 @@ slope of 1 (Pearce et al. (2017) Figure 4).
 avg.vs.max <- ggplot(css.data, aes(avg, max)) +
     geom_point() + geom_abline() +
     scale_x_log10() + scale_y_log10() +
-    xlab("Average Concentration at Steady State (uM)") +
-    ylab("Max Concentration at Steady State (uM)") +
+    xlab("Avg. Conc. at Steady State (uM)") +
+    ylab("Max Conc. at Steady State (uM)") +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
 avg.vs.max
