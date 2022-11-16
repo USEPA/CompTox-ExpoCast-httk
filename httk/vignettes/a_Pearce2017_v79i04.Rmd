@@ -8,8 +8,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-wambaugh.john@epa.gov
-
 from "httk: R Package for High-Throughput Toxicokinetics"
 
 Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wambaugh
@@ -17,6 +15,8 @@ Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wamb
 Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
 
 https://doi.org/10.18637%2Fjss.v079.i04
+
+Please send questions to wambaugh.john@epa.gov
 
 ## Abstract
 
@@ -86,12 +86,15 @@ NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
 SKIP.CHEMS <- 15
 ```
 
-## Examples
-To get a list of parameters for the pbtk model of triclosan in a rat:
-```{r pbtk_parameters, eval = TRUE}
+# Examples
+To get a list of parameters for the pbtk model of Triclosan in a rat:
+```{r rat_pbtk_parameters, eval = TRUE}
 # Don't have all the parameters we need for triclosan in the rat:
 parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
-# So we use "default.to.human = TRUE":
+```
+We do not have a full set of *in vitro* parameters for rat for Triclosan,
+so we fill in the *in vitro* measured values with human-derived measurments and use rat physiological parameters by setting "default.to.human = TRUE":
+```{r rat_pbtk_parameters2, eval = TRUE}
 parameters <- parameterize_pbtk(chem.name = "triclosan", 
                                 species = "rat", 
                                 default.to.human = TRUE)
@@ -106,7 +109,7 @@ out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
 ```
 
 
-## Table making example: 
+## Table making example
 
 In the example below, setting model to "pbtk"
 in "get_cheminfo" removes the chemicals from the list with $f_{up}$ below
@@ -116,13 +119,18 @@ $f_{up}$. However, we could include all chemicals that work with the
 models without partition coefficients by using the default option of
 "3compartmentss" or setting exclude.fup.zero to false, and $f_{up}$
 would then automatically be set to 0.005.
-```{r make_Css_table, eval = TRUE}
-css.table <- NULL
-# Make up a list of chemicals with both literature Css values and HTTK data:
+
+First we make up a list of chemicals with both literature $C_{ss}$ values and HTTK data for making new $C_{ss}$ predictions:
+```{r select_Chemicals, eval=TRUE}
 chem.list <- intersect(get_cheminfo(model = "pbtk", 
                                     suppress.messages = TRUE)[seq(
                                       1, NUM.CHEMS, SKIP.CHEMS)],
                        get_wetmore_cheminfo())
+```
+
+Then we initialize a NULL table and build it up one row at a time:
+```{r make_Css_table, eval = TRUE}
+css.table <- NULL
 for (this.cas in chem.list)
 {
     this.row <- as.data.frame(this.cas)
@@ -142,8 +150,20 @@ for (this.cas in chem.list)
     css.table <- rbind(css.table, this.row)
 }
 colnames(css.table) <- c("CAS", "PBTK", "Wetmore", "MC")
+```
+Now display the table and plot two columns against each other:
+```{r display_Css_table, eval = TRUE}
 knitr::kable(css.table, caption = "Literature and HTTK Plasma Css", 
              floating.environment="sidewaystable")
+
+litvshttkcss <- ggplot(css.table, aes(Wetmore, MC)) +
+    geom_point() + geom_abline() +
+    scale_x_log10() + scale_y_log10() +
+    xlab(bquote("Literature"~C[ss]~"("*mu*"M)")) +
+    ylab(bquote("HTTK"~C[ss]~"("*mu*"M)")) +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(litvshttkcss)
 ```
 
 ## Plotting example
@@ -161,7 +181,8 @@ plot.data <- as.data.frame(out)
 css <- calc_analytic_css(chem.name = "Bisphenol A")
 c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) +
     geom_line() + geom_hline(yintercept = css) +
-    ylab("Plasma Concentration (uM)") + xlab("Day") +
+    ylab(bquote("Plasma Concentration ("*mu*"M)")) +
+    xlab("Day") +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16),
           plot.title = element_text(size = 17, hjust=0.5)) +
@@ -322,7 +343,7 @@ out <- calc_mc_css(parameters=params,
 zoxamide2 <- ggplot(as.data.frame(out), aes(out)) +
     geom_histogram(fill = "blue", binwidth = 1/6) +
     scale_x_log10() + ylab("Number of Samples") +
-    xlab("Steady State Concentration (uM)") +
+    xlab(bquote(C[ss]~"("*mu*"M)")) +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
 print(zoxamide2)
@@ -429,9 +450,9 @@ slope of 1 (Pearce et al. (2017) Figure 4).
 avg.vs.max <- ggplot(css.data, aes(avg, max)) +
     geom_point() + geom_abline() +
     scale_x_log10() + scale_y_log10() +
-    xlab("Avg. Conc. at Steady State (uM)") +
-    ylab("Max Conc. at Steady State (uM)") +
+    xlab(bquote("Avg. Conc. at Steady State ("*mu*"M)")) +
+    ylab(bquote("Max. Conc. at Steady State ("*mu*"M)")) +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16))
-avg.vs.max
+print(avg.vs.max)
 ```
