@@ -34,6 +34,10 @@
 #'@return Steady state plasma concentration in mg/L units
 #'
 #'@author Robert Pearce and John Wambaugh
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
 #'@keywords 3compartment
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,

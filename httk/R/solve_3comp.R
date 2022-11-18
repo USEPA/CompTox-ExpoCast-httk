@@ -97,6 +97,8 @@
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
+#' @seealso calc_analytic_css_3comp
+#'
 #' @export solve_3comp
 #' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
