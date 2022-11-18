@@ -90,7 +90,7 @@
 #' params <- parameterize_1comp(chem.cas="80-05-7")
 #' solve_1comp(parameters=params)
 #'
-#' @seealso calc_analytic_css_1comp
+#' @seealso \code{\link{calc_analytic_css_1comp}}
 #'
 #' @export solve_1comp
 #' @useDynLib httk

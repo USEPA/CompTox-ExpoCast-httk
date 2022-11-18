@@ -2,14 +2,12 @@
 % Please edit documentation in R/lump_tissues.R
 \name{lump_tissues}
 \alias{lump_tissues}
-\title{Lump tissue parameters
+\title{Lump tissue parameters into model compartments
                                               
-This function takes the parameters from 
-\code{\link{predict_partitioning_schmitt}} and 
-lumps the partition coefficients along with the volumes and flows based on 
-the given tissue list. It is useful in Monte Carlo simulation of individual
-partition coefficients when calculating the rest of body partition
-coefficient.}
+This function takes the tissue:plasma partition coefficients from 
+\code{\link{predict_partitioning_schmitt}} along with the tissue-specific
+volumes and flows and aggregates (or "lumps") them
+according to the needed scheme of toxicokinetic model tissue comparments.}
 \usage{
 lump_tissues(
   Ktissue2pu.in,
@@ -18,6 +16,7 @@ lump_tissues(
   species = "Human",
   tissue.vols = NULL,
   tissue.flows = NULL,
+  tissue.names = NULL,
   model = "pbtk",
   suppress.messages = FALSE
 )
@@ -29,10 +28,8 @@ predict_partitioning_schmitt.}
 \item{parameters}{A list of physiological parameters including flows and
 volumes for tissues in \code{tissuelist}}
 
-\item{tissuelist}{Manually specifies compartment names and tissues, which
-override the standard compartment names and tissues that are usually
-specified in a model's associated modelinfo file. Remaining tissues in the
-model's associated \code{alltissues} listing are lumped in the rest of the body.}
+\item{tissuelist}{Manually specifies tissues from \code{\link{tissue.data}} 
+that should be lumped.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -58,23 +55,37 @@ flowing to the gut.} \item{Qkidneyf}{Fraction of cardiac output flowing to
 the kidneys.}
 }
 \description{
-This function returns the flows, volumes, and partition coefficients for the
-lumped tissues specified in tissue list. Tissues are aggregated from table
-\code{\link{tissue.data}}.
+\code{\link{predict_partitioning_schmitt}} makes tissue-specific predictions
+drawing from those tissues described in \code{\link{tissue.data}}. Since
+different physiologically-based toxicokinetic (PBTK) models use diffeent 
+schemes for rganizing the
+tissues of the body into differing compartments (for example, "rapidly
+perfused tissues"), this function lumps tissues into
+compartments as specified by the argument 'tissuelist'. Aggregate flows, 
+volumes, and partition coefficients are provided for the
+lumped tissue compartments. Flows and volumes are summed while
+partition coefficients is calculated using averaging weighted by 
+species-specific tissue volumes.
 }
 \details{
-The name of each entry in the list is its own compartment.
-The tissues in the alltissues vector are the tissues that are
-to be considered in the lumping process. The tissuelist can also be manually
-specified for alternate lumping schemes: for example,
-tissuelist<-list(Rapid=c("Brain","Kidney")) specifies the flow.col and
-vol.col in the tissuedata.table. 
+The name of each entry in 'tissuelist' is its own compartment. The
+modelinfo_MODEL.R file corresponding to the model specified by argument
+'model' includes both a 'tissuelist' describing to the model's 
+compartmentallumping schme as well as a vector of 'tissuenames' specifying 
+all tissues to be lumped into those compartments.
 
-The tissues contained in tissue.data that are unused in each of these models 
+Alternatively the 'tissuelist' and 'tissuenames' can also be manually
+specified for alternate lumping schemes not necessarily related to a
+pre-made httk model. For example,
+tissuelist<-list(Rapid=c("Brain","Kidney")).
+
+The tissues contained in 'tissuenames' that are unused in 'tissuelist' 
 are aggregated into a single compartment termed
-"rest", whose partition coefficient is calculated by averaging the remaining 
-partition coefficients,
-weighted by their species-specific tissue volumes.
+"rest".
+
+NOTE: The partition coefficients of lumped compartments vary according to
+individual and species differences since the volumes of the consitutent 
+tissues may vary.
 }
 \examples{
 
@@ -97,4 +108,5 @@ pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 \author{
 John Wambaugh and Robert Pearce
 }
-\keyword{Parameter}
+\keyword{Parameter,}
+\keyword{pbtk}

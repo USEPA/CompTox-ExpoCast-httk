@@ -47,7 +47,7 @@
 #' specified in a model's associated modelinfo file. Remaining tissues in the
 #' model's associated \code{alltissues} listing are lumped in the rest of the body.
 #'
-#' @param tissuelist Manually specifies tissues from \code\link{{tissue.data}} 
+#' @param tissuelist Manually specifies tissues from \code{\link{tissue.data}} 
 #' that should be lumped.
 #'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
