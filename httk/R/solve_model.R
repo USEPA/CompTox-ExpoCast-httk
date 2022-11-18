@@ -123,6 +123,7 @@
 #' @useDynLib httk
 #'
 #' @importFrom deSolve ode
+#' @importFrom purrr compact 
 solve_model <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
@@ -146,11 +147,7 @@ solve_model <- function(chem.name = NULL,
                     recalc.clearance=FALSE,
                     adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
-                    parameterize.arg.list=list(
-                      default.to.human=FALSE,
-                      clint.pvalue.threshold=0.05,
-                      restrictive.clearance = TRUE,
-                      regression=TRUE),
+                    parameterize.arg.list=list(),
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -317,14 +314,14 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,c(list(
+    parameters <- do.call(parameterize_function,args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
       species=species,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list)) 
+      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list))) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {
@@ -427,7 +424,8 @@ specification in compartment_units for model ", model)
     non.state.vars <- which(!(names(initial.values)%in%state.vars))
     # Check if there are any non.state.vars
     if(length(non.state.vars)!=0){
-      warning("Additional unnecessary elements were included in the ",
+      if (!suppress.messages)
+        warning("Additional unnecessary elements were included in the ",
               "initial.values -- namely ",
               paste(names(initial.values)[non.state.vars],collapse = ", "),
               ".\n    ",
@@ -447,7 +445,8 @@ specification in compartment_units for model ", model)
       initial.value.units <- compartment_units[names(initial.values)]
       
       #provide warning of assumption
-      warning("No units were specified for the provided initial values. ",
+      if (!suppress.messages)
+        warning("No units were specified for the provided initial values. ",
               "Assume initial values are in default model units:\n    ",
               paste(paste(
                 names(initial.value.units),
@@ -490,7 +489,8 @@ specification in compartment_units for model ", model)
         
         #Check if there are any non.state.vars
         if(length(non.state.vars)!=0){
-          warning("Additional unnecessary elements were included in the",
+          if (!suppress.messages)
+             warning("Additional unnecessary elements were included in the",
                   "initial.values -- namely ",
                   paste(names(initial.value.units)[non.state.vars],collapse = ", "),
                   ".\n    ",
@@ -791,7 +791,6 @@ specification in compartment_units for model ", model)
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
- 
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
 # If only a parameter vector is given it's good to warn people that they

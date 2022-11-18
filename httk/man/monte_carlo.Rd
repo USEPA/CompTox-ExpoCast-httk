@@ -8,7 +8,8 @@ monte_carlo(
   parameters,
   cv.params = NULL,
   censored.params = NULL,
-  samples = 1000
+  samples = 1000,
+  suppress.messages = TRUE
 )
 }
 \arguments{

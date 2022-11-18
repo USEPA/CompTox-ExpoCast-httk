@@ -4,7 +4,11 @@
 \alias{get_wetmore_cheminfo}
 \title{Get literature Chemical Information. (deprecated).}
 \usage{
-get_wetmore_cheminfo(info = "CAS", species = "Human")
+get_wetmore_cheminfo(
+  info = "CAS",
+  species = "Human",
+  suppress.messages = FALSE
+)
 }
 \arguments{
 \item{info}{A single character vector (or collection of character vectors)
