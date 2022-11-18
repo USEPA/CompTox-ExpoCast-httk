@@ -16,7 +16,7 @@ Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
 
 https://doi.org/10.18637%2Fjss.v079.i04
 
-Please send questions to wambaugh.john@epa.gov
+*Please send questions to wambaugh.john@epa.gov*
 
 ## Abstract
 
@@ -43,7 +43,7 @@ high-throughput screening.
 
 ## HTTK Version
 
-This vignette was crated for the 2017 paper with **httk** v1.7. However, it was 
+This vignette was created for the 2017 paper with **httk** v1.7. However, it was 
 updated to **httk** v2.2.2 in 2022. Although we attempt to maintain 
 backward compatibility, if you encounter issues with the latest release of **httk**
 and cannot easily address the changes, historical versions of **httk** are 
@@ -55,8 +55,19 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+
+### Clear the memory
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
 ### Load the relevant libraries
-If you get the message "Error in library(X) : there is no package called 'X'"
+```{r load_packages, eval = TRUE}
+library(ggplot2)
+library(httk)
+```
+
+If you get the message *"Error in library(X) : there is no package called 'X'"*
 then you will need to install that package: 
 
 From the R command prompt:
@@ -64,23 +75,16 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
-```{r load_packages, eval = TRUE}
-# Clear the memory:
-rm(list=ls()) 
-#
-#
-# Setup
-#
-#
-#library(readxl)
-library(ggplot2)
-library(httk)
 
-## To check if the version installed is 1.7:
-packageVersion("httk")  >= "1.7"
+Check what version is installed
+
+```{r version_check, eval = TRUE}
+packageVersion("httk")
 ```
-To speed up how fast this runs, we only simulate every Nth chemical
-(currently 15) -- to get all chemicals set SKIP.CHEMS to 1:
+
+### Control run speed
+To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
+(currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
 ```{r chemical_thinng, eval = TRUE}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
 SKIP.CHEMS <- 15
@@ -89,7 +93,6 @@ SKIP.CHEMS <- 15
 # Examples
 To get a list of parameters for the pbtk model of Triclosan in a rat:
 ```{r rat_pbtk_parameters, eval = TRUE}
-# Don't have all the parameters we need for triclosan in the rat:
 parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
 ```
 We do not have a full set of *in vitro* parameters for rat for Triclosan,
@@ -109,7 +112,7 @@ out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
 ```
 
 
-## Table making example
+## Making a table
 
 In the example below, setting model to "pbtk"
 in "get_cheminfo" removes the chemicals from the list with $f_{up}$ below
@@ -133,7 +136,10 @@ Then we initialize a NULL table and build it up one row at a time:
 css.table <- NULL
 for (this.cas in chem.list)
 {
-    this.row <- as.data.frame(this.cas)
+    ids <- get_chem_id(chem.cas=this.cas)
+    this.row <- data.frame(Compound=ids$chem.name,
+                              DTXSID=ids$dtxsid,
+                              CAS=this.cas)
     this.row <- cbind(this.row,
                       as.data.frame(calc_analytic_css(chem.cas = this.cas,
                                                       model = "pbtk",
@@ -149,13 +155,15 @@ for (this.cas in chem.list)
                                                       suppress.messages=TRUE)))
     css.table <- rbind(css.table, this.row)
 }
-colnames(css.table) <- c("CAS", "PBTK", "Wetmore", "MC")
+colnames(css.table) <- c("Compound","DTXSID","CAS", "PBTK", "Wetmore", "MC")
 ```
+
 Now display the table and plot two columns against each other:
 ```{r display_Css_table, eval = TRUE}
 knitr::kable(css.table, caption = "Literature and HTTK Plasma Css", 
-             floating.environment="sidewaystable")
-
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
 litvshttkcss <- ggplot(css.table, aes(Wetmore, MC)) +
     geom_point() + geom_abline() +
     scale_x_log10() + scale_y_log10() +
@@ -176,9 +184,13 @@ $C_{ss}$ for oral infusion dosing (Figure 2 in Pearce et al., 2017).
 out <- solve_pbtk(chem.name = "Bisphenol A", 
                   days = 50, 
                   doses.per.day = 3,
-                  daily.dose=1)
+                  daily.dose=1,
+                  output.units = "uM")
 plot.data <- as.data.frame(out)
-css <- calc_analytic_css(chem.name = "Bisphenol A")
+
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  output.units = "uM")
+
 c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) +
     geom_line() + geom_hline(yintercept = css) +
     ylab(bquote("Plasma Concentration ("*mu*"M)")) +
@@ -189,6 +201,28 @@ c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) +
     ggtitle("Bisphenol A")
 print(c.vs.t)
 ```
+
+### Suppressing Messages
+Note that since *in vitro-in vivo* extrapolation (IVIVE) is built upon
+many, many assumptions, *httk** attempts to give many warning messages 
+by default. These messages do not usually mean something is wrong, but 
+are rather intended to make the user aware of the assumptions involved.
+However, they quickly grow annoying and can be turned off with the
+"suppress.messages=TRUE" argument. Proceed with caution...
+
+```{r suppress_messages, eval = TRUE}
+out <- solve_pbtk(chem.name = "Bisphenol A", 
+                  days = 50, 
+                  doses.per.day = 3,
+                  daily.dose=1,
+                  output.units = "uM",
+                  suppress.messages = TRUE)
+
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  output.units = "uM",
+                  suppress.messages = TRUE)
+```
+
 
 ## TK Study Summary Statistics
 To calculate the peak statistics for all chemicals simulated for 10
@@ -212,32 +246,43 @@ the "calc_mc_css" simulation with probability distributions
 containing a third of the standard deviation, half the limit of
 detection for $f_{up}$, and the same number of samples of the
 parameters used in [Wetmore et al. (2012)](https://doi.org/10.1093/toxsci/kfr254). 
+
 We use make use of the default
-Monte Carlo sampler by setting httkpop=FALSE to turn off
+Monte Carlo sampler by setting argument "httkpop=FALSE" to turn off
 httk-pop ([Ring et al., 2017](https://doi.org/10.1016/j.envint.2017.06.004)) and 
-invitrouv=FALSE to turn off uncertainty/variability
+"invitrouv=FALSE" to turn off uncertainty/variability
 for the *in vitro* parameters ([Wambaugh et al., 2019](https://doi.org/10.1093/toxsci/kfz205)). 
-We use set.seed to get the same 
-random sequence of numbers for the Monte Carlo sampler every time.
+
 Note that the function "get_wetmore_css" was renamed "get_lit_css" in a later release
 of **httk**.
 ```{r css_examples, eval = TRUE}
 get_wetmore_css(chem.cas = "80-05-7", daily.dose = 1,
                 which.quantile = 0.5, output.units = "uM")
+
 set.seed(654321)
-calc_mc_css(chem.cas = "80-05-7", daily.dose = 1, which.quantile = 0.5,
-            censored.params = list(Funbound.plasma = list(cv = 0.1, lod = 0.005)),
-            vary.params = list(BW = 0.15, Vliverc = 0.15, Qgfrc = 0.15,
-                               Qtotal.liverc = 0.15, million.cells.per.gliver = 0.15,
-                               Clint = 0.15),
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            censored.params = list(
+              Funbound.plasma = list(cv = 0.1, lod = 0.005)),
+            vary.params = list(
+              BW = 0.15, 
+              Vliverc = 0.15, 
+              Qgfrc = 0.15,
+              Qtotal.liverc = 0.15, 
+              million.cells.per.gliver = 0.15,
+              Clint = 0.15),
             output.units = "uM", 
             samples = 1000,
             httkpop=FALSE,
             invitrouv=FALSE,
             suppress.messages = TRUE)
 ```
-Both httk-pop and *in vitro* uncertainty/variability simulation are on by
-default:
+
+### Using more sophisticated Monte Carlo
+
+Both httk-pop and *in vitro* uncertainty/variability simulation, introduced
+in later versions of **httk**, are on by default:
 ```{r css_examples2, eval = TRUE}
 set.seed(654321)
 calc_mc_css(chem.cas = "80-05-7", 
@@ -247,6 +292,77 @@ calc_mc_css(chem.cas = "80-05-7",
             samples = 1000,
             suppress.messages = TRUE)
 ```
+
+### Controlling the random number generator
+
+Any of the Monte Carlo functions in **httk**, often indicated by the 
+inclusion of "mc" in the function name, make use of random draws from
+distributions to simulate uncertainty and variability. The random number
+generator in any computer is actually a pseudo-random number generator
+that creates a sequence of nearly uncorrelated numbers, but that sequence
+can be recreated at any time if we set a random number generator "seed".
+In R we control the seed with the function "set.seed", which allows us
+to get the same Monte Carlo output again and again (and in many cases
+on different computers). The seed can take any value, and if you use the
+same seed followed by the same functions called in the same order with the
+same arguments, you will get the same answer again and again:
+```{r set_seed_example, eval=TRUE}
+# Random number generator seed 1:
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+
+# Continuing to draw random numbers without resetting the seed:
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+
+# Random number generator seed 2:
+set.seed(123456)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+
+# Continuing to draw random numbers without resetting the seed:
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+
+# Random number generator seed 2 gives the same answer as it did above:
+set.seed(123456)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+
+# Random number generator seed 1 gives the same answer as it did above:
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = 1000,
+            suppress.messages = TRUE)
+```
+
+
+## IVIVE with HTTK
+
 Simple "reverse dosimetry" *in vitro-in vivo* extrapolation (IVIVE) determines
 an administered equivalent dose (AED) by taking an *in vitro* concentration $C_{\text{in vitro}}$
 (50 uM in the example below) and dividing it by the steady-state plasma 
@@ -261,7 +377,7 @@ set.seed(654321)
 calc_mc_oral_equiv(50, chem.cas = "80-05-7")
 ```
 
-## Monte Carlo Simulation of $C_{ss}$
+### Monte Carlo Simulation of $C_{ss}$
 We can perform a Monte Carlo simulation on Zoxamide with the
 model pbtk with the same limit of detection and coefficients of
 variation (cv).
@@ -313,7 +429,8 @@ zoxtable <- cbind(out[["means"]][,"time"],
                   out[["means"]][,"Cplasma"] - 1.96*out[["sds"]][,"Cplasma"],
                   out[["means"]][,"Cplasma"] + 1.96*out[["sds"]][,"Cplasma"])
 colnames(zoxtable) <- c("time","Cplasma","lcl","ucl")
-knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time", floating.environment="sidewaystable")
+knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time",
+             floating.environment="sidewaystable")
 ```
 
 Plot Monte Carlo analysis of concentration vs. time:

@@ -6,13 +6,13 @@ output: html_document
 
 # version 2.2.2 (November, 2022)
 
+* Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
 * `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
-* added 'daily.dose' argument back to 'calc_mc_css' (still defaults to 1 mg/kg/day)
-* simplified arguments to 'calc_mc_css' since now using 'do.call'
+* Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
 * FIX GAS MODEL (thanks Cecilia Tan)
 * Added updated vignette from Pearce et al. (2017): v79i04.R
 * Added new vignette on "Introduction to IVIVE"
-* Reduced number of arguments needed for 'calc_mc_css' and 'calc_mc_tk'
+* Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now using 'do.call'
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 
 # version 2.2.1 (September, 2022)

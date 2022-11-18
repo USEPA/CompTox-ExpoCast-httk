@@ -1,8 +1,27 @@
 #'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
-#'This function calculates the analytic steady state plasma or venous blood 
-#'concentrations as a result of infusion dosing.
-#'
+#' This function calculates the analytic steady state concentration (mg/L) as a result
+#' of inusion dosing. Concentrations are returned for plasma by default, but various
+#' tissues or blood concentrations can also be given as specified.
+#' 
+#' The analytic steady-state equation was found by solving the system of
+#' ordinary differential equations describing the PBTK model (Pearce et al., 2017)
+#' to zero -- thus determining the concentration at which there is no change
+#' over time as the result of a fixed infusion dose rate. The solution is:
+#' \deqn{C^{ss}_{ven} = \frac{\text{dose rate} * \frac{Q_{liver} + Q_{gut}}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})}}{Q_{cardiac} - \frac{(Q_{liver} + Q_{gut})^2}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism}#'  + (Q_{liver}+Q_{gut})} - \frac{(Q_{kidney})^2}{\frac{f_{up}}{R_{b:p}}*Q_{GFR}+Q_{kideny}}-Q_{rest}}}{%
+#' C_ven_ss =(dose rate * (Q_liver + Q_gut) / (f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)))/(Q_cardiac - (Q_liver + Qgut)^2/(f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)) - (Q_kidney)^2/(f_up/Rb2p*Q_gfr + Q_kidney) - Q_rest)#' }
+#' \deqn{C^{ss}_{plasma} = \frac{C^{ss}_{ven}}{R_{b:p}}{%
+#'       C_ss = C_ven_ss/Rb2p}
+#' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}{%
+#'       C_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
+#' where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
+#' rate in the kidney, other Q's indicate blood flows to various tissues, 
+#' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
+#' f_up is the chemical-specific fraction unbound n plasma, R_b2p is the 
+#' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
+#' is the chemical- and tissue-specufic equilibrium partition coefficient
+#' and dose rate has  units of mg/kg/day. 
+#' 
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
@@ -117,11 +136,12 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   hourly.dose <- hourly.dose * parameters$Fgutabs
   
 # Calculate steady-state plasma Css:
-  Css <- (hourly.dose * (Qliver + Qgut) / 
+  Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
          (Qcardiac - (Qliver + Qgut)**2 /
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
          Qkidney**2 / (Qgfr * fup / Rblood2plasma + Qkidney) - Qrest)
+  Css <- Cven.ss / Rblood2plasma
 
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
