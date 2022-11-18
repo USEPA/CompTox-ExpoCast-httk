@@ -1,46 +1,52 @@
 ---
-title: "Introduction to In Vitro-In Vivo Extrapolation (IVIVE) with R Package httk"
+title: "Introduction to *In Vitro-In Vivo* Extrapolation (IVIVE) with R Package httk"
 author: "John Wambaugh"
-date: "August, 2022"
+date: "November, 2022"
 output: rmarkdown::html_vignette
 vignette: >
  %\VignetteIndexEntry{Introduction to IVIVE}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
-wambaugh.john@epa.gov
-
-# Introduction
+*Please send questions to wambaugh.john@epa.gov*
 
 Chemical risk assessment depends on knowledge of inherent chemical hazard,
-the dose-response relationship, and the extent of exposure that occurs (<https://doi.org/10.17226/24635>).
-High throughput screening (HTS) for in vitro bioactivity allows 
+the dose-response relationship, and the extent of exposure that occurs ([NASEM 2017](<https://doi.org/10.17226/24635>)).
+High throughput screening (HTS) for *in vitro* bioactivity allows 
 characterization of potential hazard for thousands of chemicals for which no other testing has occurred
-(<https://doi.org/10.1289/ehp.0800168>).
+([Judson et al., 2009](<https://doi.org/10.1289/ehp.0800168>)).
 
 Toxicokinetics (TK) describes the Absorption, Distribution, Metabolism, and Excretion (ADME) of a chemical by the body. TK relates external exposures to internal tissue concentrations of chemical and
-therefore informs the chemical dose-response relationship (<https://doi.org/10.1016/j.tiv.2012.06.012>).
-Most chemicals do not have TK data, so one approach is to use in vitro methods adapted from the pharmaceutical industry to fill gaps
-(<https://doi.org/10.3390/toxics10050232>).
-High(er) throughput toxicokinetics (HTTK) involves the combination of chemical-specific in vitro toxicokinetic data  and chemical-independent ("generic") toxicokinetic models to predict TK (<https://doi.org/10.1080/17425255.2021.1935867>).
+therefore informs the chemical dose-response relationship ([Coecke et al., 2013](<https://doi.org/10.1016/j.tiv.2012.06.012>)). TK requires chemical-specific information that is traditionally obtained *in vivo*.
+However, most chemicals do not have TK data, so a new approach methodology (NAM) uses *in vitro* TK methods adapted from the pharmaceutical industry to provide the necessary chemical-specific information
+([Wambaugh et al., 2019](https://doi.org/10.1016/j.cotox.2019.07.001), [Chang et al., 2022](<https://doi.org/10.3390/toxics10050232>)).
+High(er) throughput toxicokinetics (HTTK) involves the combination of chemical-specific *in vitro* TK data  and chemical-independent ("generic") TK models to predict TK ([Breen et al., 2021](<https://doi.org/10.1080/17425255.2021.1935867>)).
 
-The primary goal of HTTK is to provide a human dose context for bioactive in vitro concentrations from HTS (that is, in vitro-in vivo extrapolation, or IVIVE) (<https://doi.org/10.1016/j.tox.2014.05.012>).
-IVIVE is Utilization of in vitro experimental data to predict phenomena in vivo.
-In pharmaceutical development, HTTK methods allow IVIVE to estimate therapeutic doses for clinical studies – predicted concentrations are typically on the order of values measured in clinical trials (<https://doi.org/10.1124/dmd.110.032177>).
-High throughput screening + in vitro-in vivo extrapolation (IVIVE) can predict a dose (mg/kg bw/day) that might be adverse (<https://doi.org/10.1093/toxsci/kfz201>).
+The primary goal of HTTK is to provide a human dose context for bioactive *in vitro* concentrations from HTS (that is, *in vitro-in vivo* extrapolation, or IVIVE) ([Wetmore, 2015](<https://doi.org/10.1016/j.tox.2014.05.012>)).
+IVIVE is Utilization of *in vitro* experimental data to predict phenomena in vivo.
+In pharmaceutical development, HTTK methods allow IVIVE to estimate therapeutic doses for clinical studies – predicted concentrations are typically on the order of values measured in clinical trials ([Wang, 2010](<https://doi.org/10.1124/dmd.110.032177>)).
+High throughput screening + IVIVE can predict a daily chemical dose rate (mg/kg bw/day) that might be adverse ([Paul Friedman et al., 2019](<https://doi.org/10.1093/toxsci/kfz201>)).
 
-A secondary goal is to provide open source data and models for evaluation and use by the broader scientific community (<https://doi.org/10.18637%2Fjss.v079.i04>).
+A secondary goal is to provide open source data and models for evaluation and use by the scientific community ([Pearce et al., 2017](<https://doi.org/10.18637%2Fjss.v079.i04>)).
 
 The following material is from a lecture taught as part of the course
 "Computational Methods in Chemical Risk Assessment"
 at Rutgers University in September, 2019.
+
+## HTTK Version
+
+This vignette was created using **httk** v2.2.2 in 2022. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of **httk**
+and cannot easily address the changes, historical versions of **httk** are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
 
 # Getting Started
 
 For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
 <https://rafalab.github.io/dsbook/getting-started.html>
 
-For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
+For an introduction to toxicokinetics, with examples in **httk**, see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
 
 ## Files and Folders
@@ -146,7 +152,9 @@ library(httk)
 library(readxl)
 ```
 
-# In Vitro Screening Data
+# *In Vitro* Screening Data
+
+**ToxCast pargraph from paper**
 
 Load ToxCast Data for Specific Chemicals from the CompTox Dashboard:
 
