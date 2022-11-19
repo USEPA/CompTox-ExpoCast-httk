@@ -221,15 +221,18 @@ calc_css <- function(chem.name=NULL,
   monitor.vars <- unique(c(state.vars, target))
   
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
-  out <- solve_model(parameters=parameters,
+  out <- do.call(solve_model,
+# we use purrr::compact to drop NULL values from arguments list:
+      args=purrr::compact(c(list(    
+      parameters=parameters,
     model=model, 
     dosing=dosing,
     suppress.messages=TRUE,
     days=days,
     output.units = output.units,
     restrictive.clearance=restrictive.clearance,
-    monitor.vars=monitor.vars,
-    ...)
+    monitor.vars=monitor.vars),
+    ...)))
     
 # Make sure we have the compartment we need: 
   if (!(target %in% colnames(out))) stop(paste(
@@ -256,8 +259,11 @@ calc_css <- function(chem.name=NULL,
     #  additional.days <- additional.days * 3
     #}
     total.days <- total.days + additional.days
-    
-    out <- solve_model(parameters=parameters,
+
+  out <- do.call(solve_model,
+# we use purrr::compact to drop NULL values from arguments list:
+      args=purrr::compact(c(list(    
+      parameters=parameters,
       model=model,
       initial.values = Final_Conc[state.vars],  
       dosing=dosing,
@@ -267,7 +273,7 @@ calc_css <- function(chem.name=NULL,
       monitor.vars=monitor.vars,    
       suppress.messages=TRUE,
       restrictive.clearance=restrictive.clearance,
-      ...)
+      ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
     if(total.days > 36500) break 
