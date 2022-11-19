@@ -272,7 +272,6 @@ calc_css <- function(chem.name=NULL,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,    
       suppress.messages=TRUE,
-      restrictive.clearance=restrictive.clearance,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
