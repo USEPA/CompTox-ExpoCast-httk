@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wambaugh" />
+
+<meta name="date" content="2022-11-19" />
+
+<title>Pearce et al. (2017): Updated v79i04.R Examples</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Pearce et al. (2017): Updated v79i04.R
+Examples</h1>
+<h4 class="author">Robert G Pearce, R Woodrow Setzer, Cory L Strope,
+Nisha S Sipes, and John F Wambaugh</h4>
+<h4 class="date">2022-11-19</h4>
+
+
+
+<p>from “httk: R Package for High-Throughput Toxicokinetics”</p>
+<p>Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and
+John F Wambaugh</p>
+<p>Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.</p>
+<p><a href="https://doi.org/10.18637%2Fjss.v079.i04" class="uri">https://doi.org/10.18637%2Fjss.v079.i04</a></p>
+<p><em>Please send questions to <a href="mailto:wambaugh.john@epa.gov" class="email">wambaugh.john@epa.gov</a></em></p>
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
+<p>Thousands of chemicals have been profiled by high-throughput
+screening programs such as ToxCast and Tox21; these chemicals are tested
+in part because most of them have limited or no data on hazard,
+exposure, or toxicokinetics. Toxicokinetic models aid in predicting
+tissue concentrations resulting from chemical exposure, and a “reverse
+dosimetry” approach can be used to predict exposure doses sufficient to
+cause tissue concentrations that have been identified as bioactive by
+high-throughput screening. We have created four toxicokinetic models
+within the R software package <strong>httk</strong>. These models are
+designed to be parameterized using high-throughput <em>in vitro</em>
+data (plasma protein binding and hepatic clearance), as well as
+structure-derived physicochemical properties and species-specific
+physiological data. The package contains tools for Monte Carlo sampling
+and reverse dosimetry along with functions for the analysis of
+concentration vs. time simulations. The package can currently use human
+<em>in vitro</em> data to make predictions for 553 chemicals in humans,
+rats, mice, dogs, and rabbits, including 94 pharmaceuticals and 415
+ToxCast chemicals. For 67 of these chemicals, the package includes
+rat-specific <em>in vitro</em> data. This package is structured to be
+augmented with additional chemical data as they become available.
+Package <strong>httk</strong> enables the inclusion of toxicokinetics in
+the statistical analysis of chemicals undergoing high-throughput
+screening.</p>
+</div>
+<div id="httk-version" class="section level2">
+<h2>HTTK Version</h2>
+<p>This vignette was created for the 2017 paper with
+<strong>httk</strong> v1.7. However, it was updated to
+<strong>httk</strong> v2.2.2 in 2022. Although we attempt to maintain
+backward compatibility, if you encounter issues with the latest release
+of <strong>httk</strong> and cannot easily address the changes,
+historical versions of <strong>httk</strong> are available from: <a href="https://cran.r-project.org/src/contrib/Archive/httk/" class="uri">https://cran.r-project.org/src/contrib/Archive/httk/</a></p>
+</div>
+<div id="prepare-for-session" class="section level2">
+<h2>Prepare for session</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">collapse =</span> <span class="cn">TRUE</span>, <span class="at">comment =</span> <span class="st">&#39;#&gt;&#39;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rmarkdown.html_vignette.check_title =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div id="clear-the-memory" class="section level3">
+<h3>Clear the memory</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>()) </span></code></pre></div>
+</div>
+<div id="load-the-relevant-libraries" class="section level3">
+<h3>Load the relevant libraries</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span></code></pre></div>
+<p>If you get the message <em>“Error in library(X) : there is no package
+called ‘X’”</em> then you will need to install that package:</p>
+<p>From the R command prompt:</p>
+<p>install.packages(“X”)</p>
+<p>Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’
+tab.</p>
+<p>Check what version is installed</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;httk&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &#39;2.2.2&#39;</span></span></code></pre></div>
+</div>
+<div id="control-run-speed" class="section level3">
+<h3>Control run speed</h3>
+<p>To speed up how fast these examples run, we only simulate every <span class="math inline">\(N^{th}\)</span> chemical (currently 15) – to get
+all chemicals with data set SKIP.CHEMS to 1:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>NUM.CHEMS <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">get_cheminfo</span>(<span class="at">model=</span><span class="st">&quot;pbtk&quot;</span>, <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>SKIP.CHEMS <span class="ot">&lt;-</span> <span class="dv">15</span></span></code></pre></div>
+</div>
+</div>
+<div id="examples" class="section level1">
+<h1>Examples</h1>
+<p>To get a list of parameters for the pbtk model of Triclosan in a
+rat:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">try</span>(<span class="fu">parameterize_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;triclosan&quot;</span>, <span class="at">species =</span> <span class="st">&quot;rat&quot;</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;triclosan&quot;, species = &quot;rat&quot;): Clint</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; adjusted for in vitro partioning (Kilford, 2008).</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in parameterize_pbtk(chem.name = &quot;triclosan&quot;, species = &quot;rat&quot;) : </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Fraction unbound = 0, cannot predict partitioning. Perhaps try default.to.human=TRUE.</span></span></code></pre></div>
+<p>We do not have a full set of <em>in vitro</em> parameters for rat for
+Triclosan, so we fill in the <em>in vitro</em> measured values with
+human-derived measurments and use rat physiological parameters by
+setting “default.to.human = TRUE”:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">parameterize_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;triclosan&quot;</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">species =</span> <span class="st">&quot;rat&quot;</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">default.to.human =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;triclosan&quot;, species = &quot;rat&quot;,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; default.to.human = TRUE): Clint adjusted for in vitro partioning (Kilford,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2008).</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;triclosan&quot;, species = &quot;rat&quot;,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; default.to.human = TRUE): Funbound.plasma adjusted for in vitro partioning</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Pearce, 2017).</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in available_rblood2plasma(chem.cas = chem.cas, species = species, :</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human in vivo measured Rblood2plasma substituted.</span></span></code></pre></div>
+<p>To change the <span class="math inline">\(f_{up}\)</span> in the
+previous parameters list to 0.001 from the human value of 0.003044 and
+use it in a simulation of the PBTK model for a single dose of 1 mg/kg BW
+of Triclosan in a rat:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>parameters[<span class="st">&quot;Funbound.plasma&quot;</span>] <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">solve_pbtk</span>(<span class="at">parameters =</span> parameters, <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div id="making-a-table" class="section level2">
+<h2>Making a table</h2>
+<p>In the example below, setting model to “pbtk” in “get_cheminfo”
+removes the chemicals from the list with <span class="math inline">\(f_{up}\)</span> below the limit of detection which
+have been set to zero because the model uses partition coefficients that
+are calculated with <span class="math inline">\(f_{up}\)</span>.
+However, we could include all chemicals that work with the models
+without partition coefficients by using the default option of
+“3compartmentss” or setting exclude.fup.zero to false, and <span class="math inline">\(f_{up}\)</span> would then automatically be set to
+0.005.</p>
+<p>First we make up a list of chemicals with both literature <span class="math inline">\(C_{ss}\)</span> values and HTTK data for making
+new <span class="math inline">\(C_{ss}\)</span> predictions:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chem.list <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">get_cheminfo</span>(<span class="at">model =</span> <span class="st">&quot;pbtk&quot;</span>, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)[<span class="fu">seq</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="dv">1</span>, NUM.CHEMS, SKIP.CHEMS)],</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">get_wetmore_cheminfo</span>())</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in get_wetmore_cheminfo(): Function &quot;get_wetmore_cheminfo&quot; has been</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; renamed to &quot;get_lit_cheminfo&quot;.</span></span></code></pre></div>
+<p>Then we initialize a NULL table and build it up one row at a
+time:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>css.table <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.cas <span class="cf">in</span> chem.list)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    ids <span class="ot">&lt;-</span> <span class="fu">get_chem_id</span>(<span class="at">chem.cas=</span>this.cas)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    this.row <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Compound=</span>ids<span class="sc">$</span>chem.name,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">DTXSID=</span>ids<span class="sc">$</span>dtxsid,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                              <span class="at">CAS=</span>this.cas)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    this.row <span class="ot">&lt;-</span> <span class="fu">cbind</span>(this.row,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.data.frame</span>(<span class="fu">calc_analytic_css</span>(<span class="at">chem.cas =</span> this.cas,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">model =</span> <span class="st">&quot;pbtk&quot;</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">output.units =</span> <span class="st">&quot;mg/L&quot;</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">suppress.messages=</span><span class="cn">TRUE</span>)))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    this.row <span class="ot">&lt;-</span> <span class="fu">cbind</span>(this.row,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.data.frame</span>(<span class="fu">get_wetmore_css</span>(<span class="at">chem.cas =</span> this.cas,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">which.quantile =</span> <span class="fl">0.50</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">suppress.messages=</span><span class="cn">TRUE</span>)))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    this.row <span class="ot">&lt;-</span> <span class="fu">cbind</span>(this.row,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.data.frame</span>(<span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> this.cas,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">which.quantile =</span> <span class="fl">0.50</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">suppress.messages=</span><span class="cn">TRUE</span>)))</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    css.table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(css.table, this.row)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(css.table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Compound&quot;</span>,<span class="st">&quot;DTXSID&quot;</span>,<span class="st">&quot;CAS&quot;</span>, <span class="st">&quot;PBTK&quot;</span>, <span class="st">&quot;Wetmore&quot;</span>, <span class="st">&quot;MC&quot;</span>)</span></code></pre></div>
+<p>Now display the table and plot two columns against each other:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(css.table, <span class="at">caption =</span> <span class="st">&quot;Literature and HTTK Plasma Css&quot;</span>, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">row.names=</span><span class="cn">FALSE</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">digits=</span><span class="dv">3</span>)</span></code></pre></div>
+<table>
+<caption>Literature and HTTK Plasma Css</caption>
+<colgroup>
+<col width="45%" />
+<col width="15%" />
+<col width="13%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Compound</th>
+<th align="left">DTXSID</th>
+<th align="left">CAS</th>
+<th align="right">PBTK</th>
+<th align="right">Wetmore</th>
+<th align="right">MC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2,4-d</td>
+<td align="left">DTXSID0020442</td>
+<td align="left">94-75-7</td>
+<td align="right">9.741</td>
+<td align="right">9.576</td>
+<td align="right">9.650</td>
+</tr>
+<tr class="even">
+<td align="left">Azoxystrobin</td>
+<td align="left">DTXSID0032520</td>
+<td align="left">131860-33-8</td>
+<td align="right">0.122</td>
+<td align="right">0.170</td>
+<td align="right">0.334</td>
+</tr>
+<tr class="odd">
+<td align="left">Chloridazon</td>
+<td align="left">DTXSID3034872</td>
+<td align="left">1698-60-8</td>
+<td align="right">0.995</td>
+<td align="right">0.920</td>
+<td align="right">1.603</td>
+</tr>
+<tr class="even">
+<td align="left">Dicamba</td>
+<td align="left">DTXSID4024018</td>
+<td align="left">1918-00-9</td>
+<td align="right">2.215</td>
+<td align="right">2.183</td>
+<td align="right">0.029</td>
+</tr>
+<tr class="odd">
+<td align="left">Emamectin benzoate</td>
+<td align="left">DTXSID0034566</td>
+<td align="left">155569-91-8</td>
+<td align="right">287.300</td>
+<td align="right">76.630</td>
+<td align="right">403.600</td>
+</tr>
+<tr class="even">
+<td align="left">Flufenacet</td>
+<td align="left">DTXSID2032552</td>
+<td align="left">142459-58-3</td>
+<td align="right">0.078</td>
+<td align="right">0.065</td>
+<td align="right">0.222</td>
+</tr>
+<tr class="odd">
+<td align="left">Icaridin</td>
+<td align="left">DTXSID0034227</td>
+<td align="left">119515-38-7</td>
+<td align="right">0.046</td>
+<td align="right">0.070</td>
+<td align="right">0.004</td>
+</tr>
+<tr class="even">
+<td align="left">Mcpa</td>
+<td align="left">DTXSID4024195</td>
+<td align="left">94-74-6</td>
+<td align="right">21.670</td>
+<td align="right">21.890</td>
+<td align="right">33.560</td>
+</tr>
+<tr class="odd">
+<td align="left">Oryzalin</td>
+<td align="left">DTXSID8024238</td>
+<td align="left">19044-88-3</td>
+<td align="right">1.999</td>
+<td align="right">2.568</td>
+<td align="right">4.393</td>
+</tr>
+<tr class="even">
+<td align="left">Prochloraz</td>
+<td align="left">DTXSID4024270</td>
+<td align="left">67747-09-5</td>
+<td align="right">0.344</td>
+<td align="right">0.707</td>
+<td align="right">0.683</td>
+</tr>
+<tr class="odd">
+<td align="left">Rotenone</td>
+<td align="left">DTXSID6021248</td>
+<td align="left">83-79-4</td>
+<td align="right">0.565</td>
+<td align="right">0.723</td>
+<td align="right">0.596</td>
+</tr>
+<tr class="even">
+<td align="left">Thiobencarb</td>
+<td align="left">DTXSID6024337</td>
+<td align="left">28249-77-6</td>
+<td align="right">4.457</td>
+<td align="right">2.854</td>
+<td align="right">5.171</td>
+</tr>
+<tr class="odd">
+<td align="left">“4,4’-methylenebis(n,n-dimethylaniline)”</td>
+<td align="left">DTXSID5020869</td>
+<td align="left">101-61-1</td>
+<td align="right">3.510</td>
+<td align="right">0.383</td>
+<td align="right">6.385</td>
+</tr>
+<tr class="even">
+<td align="left">Tebuconazole</td>
+<td align="left">DTXSID9032113</td>
+<td align="left">107534-96-3</td>
+<td align="right">0.714</td>
+<td align="right">0.074</td>
+<td align="right">1.936</td>
+</tr>
+<tr class="odd">
+<td align="left">P-cresidine</td>
+<td align="left">DTXSID1020350</td>
+<td align="left">120-71-8</td>
+<td align="right">0.028</td>
+<td align="right">0.024</td>
+<td align="right">0.058</td>
+</tr>
+<tr class="even">
+<td align="left">“4-(1,1,3,3-tetramethylbutyl)phenol”</td>
+<td align="left">DTXSID9022360</td>
+<td align="left">140-66-9</td>
+<td align="right">0.147</td>
+<td align="right">0.027</td>
+<td align="right">0.043</td>
+</tr>
+<tr class="odd">
+<td align="left">“1,5-diaminonaphthalene”</td>
+<td align="left">DTXSID3020916</td>
+<td align="left">2243-62-1</td>
+<td align="right">0.682</td>
+<td align="right">0.605</td>
+<td align="right">1.152</td>
+</tr>
+<tr class="even">
+<td align="left">Reserpine</td>
+<td align="left">DTXSID7021237</td>
+<td align="left">50-55-5</td>
+<td align="right">65.540</td>
+<td align="right">0.299</td>
+<td align="right">200.800</td>
+</tr>
+<tr class="odd">
+<td align="left">Progesterone</td>
+<td align="left">DTXSID3022370</td>
+<td align="left">57-83-0</td>
+<td align="right">0.173</td>
+<td align="right">0.032</td>
+<td align="right">0.385</td>
+</tr>
+<tr class="even">
+<td align="left">Phenolphthalein</td>
+<td align="left">DTXSID0021125</td>
+<td align="left">77-09-8</td>
+<td align="right">0.116</td>
+<td align="right">0.069</td>
+<td align="right">0.335</td>
+</tr>
+<tr class="odd">
+<td align="left">Ethoxyquin</td>
+<td align="left">DTXSID9020582</td>
+<td align="left">91-53-2</td>
+<td align="right">0.862</td>
+<td align="right">0.136</td>
+<td align="right">2.075</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>litvshttkcss <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(css.table, <span class="fu">aes</span>(Wetmore, MC)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="fu">bquote</span>(<span class="st">&quot;Literature&quot;</span><span class="sc">~</span>C[ss]<span class="sc">~</span><span class="st">&quot;(&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">bquote</span>(<span class="st">&quot;HTTK&quot;</span><span class="sc">~</span>C[ss]<span class="sc">~</span><span class="st">&quot;(&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(litvshttkcss)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAABXFBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZpAAZrYzMzM6AAA6ADo6AGY6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kLY6kNtNTU1NTW5NTY5Nbm5Nbo5NbqtNjshmAABmADpmAGZmOgBmOjpmOpBmZgBmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv9uTU1ubk1ujshuq+SOTU2Obk2Oq8iOyOSOyP+QOgCQOmaQZgCQZjqQZmaQkGaQkLaQtraQttuQ2/+rbk2ryOSr5P+2ZgC2Zjq2Zma2kDq2kGa2tpC2tra2ttu225C229u22/+2/7a2///Ijk3Ijm7Iq27I5OTI5P/I///bkDrbkGbbkJDbtmbbtpDbtrbbttvb25Db27bb29vb2//b///kq27kyI7kyKvk5OTk5P/k/+Tk///r6+v/tmb/yI7/25D/27b/29v/5Kv/5Mj/5OT//7b//8j//9v//+T///8AphZOAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAQQ0lEQVR4nO2d+X8TxxXAR2Bq1NhclluCU5PGKcGUmIJbKIE0InWhoUCbqgVaCNCm2AhIxLL//+fTOfaY+9id0aykeT9Yq6c3I81XM2+OfXoGeRKtgNgfoOuSABkkATJIAmSQBMggCZBBpgNonxHuqVe1t8oTIIM6ATKoEyCDOgEyqBMggzoBMqgTIIM6AZKrAQD7CZBaDQAmlACp1AmQQZ0AmdTJB9mqpwtohiX1IIU6ATKoEyCDOgEyqBMgg3pWAJF1iX3TFg1QsbK1b1oCZKgkATJUsmiAkg/yrU6ADOoEyKCOCOj5z/6uN/jPpcHg9B/w5Y8PLgwGP7+8UIBeDAyAng+wfA4vf9gh12cWB9D7vw4MgN5eGFxGGNe/yvP7g4vfw+sLgyuLAujtpcHpS1JA778s1M9x38EP73Y+fEmuyy4Upg3hanEGdH/9N/8rSWBfU/mXEtD7L1HXQR2JwCHXCwPovy/proLlIg+IPL7bqTta0almEhAowVg76ZLAq8Hpv0E3fKnwLzUY0nMqjqgDkcujR4/avklnBEiuDFK2/D4ZSu92zkDVoJD1r0RAb2sfPXM9CDSY5ouW11A+fKkF9ALParMJCDRZBxUtf7dTQmF9D+eD3j8YrF+pC/tvQ0hAoNFCsepB7Gwvn8Vg3zr9LWXlvQ0hATW89Vz5oMEVmZpeByE+F1/SVr7boFa3rqXxred6Flu/jFfWZ1hA9Eq6nt9nDhAo1UpA2dOnT59pAOUPaBdESb0Xq/1UuWj02gatumUtoFLLAb2+2seHnL0Td5WA8he/htMWO4SwVLv5V4NZBQRqtQzQo03IZnVra2sVPi59I+lGTcVjGwzqVrUASi0Cym6Bw+fKwfVmrw9OykbaPAMCtFoANNldusE06tHmkXuLBIi+OyADlN0RmvXYWxfy1AYLdeNaAKcWAAUVP22wUTetBfDqBIhRA0GdANFq/uak1AftbdHyqb8prPuAhJu30h40BLQc8jaDdRJQeUc732enr9paBDQCS188reQ7n3w6B6iKicgl3WdftVBEC+kTPtfPMwFIGhuhctLZ3kowRp0SDIhcGU2552iP4Z9RgK7ixwepY2tUgPJiS+9xI9ZFQEQAUFtrAEFEv5v3WQwL0FmrAeEO1Ds3/z0IaK0VgDCdw+f8TvLdBATk6tJaBgjTWbrute90FhCQqytrEdABpHPsRgA6nQQE5OraWgQ0BL2F2YsBIFXT1gKgbHdx9mJArmasRUCPb9NyZ457EJCrWWsBECPZ1+d98ukWICBXc9Z6QPnkF3M7xPjDZ4W1HNDk7CqRvuiDXMKAefs2TfYMSDh8VlgrAG0UPrr3Gd98lzBgwb5Nk70C4g/Hmg6xCT/Lu4UBC/ZtmuwTkOxsVWGtB5QfsD3ILQxYtG/TZI+ApGerCmsDoMnHTBdyDQNm7DsDSHL40xjQ+APGSbuGAdP2XQCEz8cUh8+KSuSAsmtko/FJ/wi/UHQNA64BxQ8DBvURq3tZ5lk1i4He6ipgILmGAXepBzn/sFM9xN5U932e7J09Rb/iGgY8p4DU4hYG3C1Azr98bQHILgy4Y4C0h88KtQBo8hG/P33IzGQuYcAdA6Q/fFaoBUD5wz4dYpY9XOkxxFzCgH0Dko0Qe0CGw2eFWgSUv74KwLHrd6CDfryH7kKzga4OYcC+AUl9rC0gYDp8VqglgCCis9WJ4jE+DtghDLhLgMxnqwq1FBCUx7+H68RfifGK7cT2U8nVLQABudrio6gAhRHbT6VQW/sgwN1Mtjl8VqhnCpCtmu9qVofPCvUCAAJ2h88K9RwCKqaX6mm7yucPUMGn1FufrSrUcwqo0ksCe90qn3NADofPCrUW0GRje7Lh8+6zVxIqdZXI1+3wWaHWAhou56ND90bLswWo0svONrwCgh0o213OD/x1oZYf1kG9rw7sdVMbAE021nwCmqZ49qqy6rLdtYPeTTTQfEnLb9NBrQnsdVPrAOXjPljOh8KNjVkApAnsdVNrAXmXlh/WXg28VT6XgECTw2eFWgso4jpIPNmwb1qzs1WFWgso3jpIcjZmv1BsRkKh1gGa9jqo/u1WG0DGwF43tQGQ53WQ9lOVUNoBanz4rFDrAE15HUQDauyDmh8+K9Q6QFNeBzGALNvAcaSezeM0T/kgyzZwI7HV2apC3SVA7mru8Nlv5ftKQNkejkwc98XsQV0G1PLwWaGWABpvAuyWHwIAXbQgTnHSXMx0yw8ripJPQEBw7XyE9JzslmQV7RQnzd2nD7jVaLHw1qtFQCOwXE1bQ7DGtt4tTpqP9PAGiOo4RO3hbFWhFgBlu9S4OmDjE13jpPlYIV+AaNdDVk0eSCjUAqDJBjWsmCe5a5y0mDrZUxt4QG6BvW5qN0BucdJi6mRPbeAA+Tl8VqgFQMwQG7eKk+YiXj3GSTPRztNZwtG/WV2rrkdA2Ic5xEmLqZMDfMnucatuahHQuF91IbgX21YAsomTngYg1dlzyIXiqMi3kO31xQ7kEicdzAfVojx7DrrVGCEfiLJw8qsgpgeZ46SDzWKVqM+ew25W36D8QWBVmrfDJU461DoICZrHNIcj8XbzLnHSwVbSbHItPyQU6saArOKkw+3FZgCQVZx0sN18FWY3dUAZkxIn+21HfzcfD9DkI+oMaCz53XwnAAHTCXbIvVi91YDzvccTe4+AEJloPmhUniOiPDB+c7x526yarQOvpBEhuM/o+U1t4gkQsDmcD7yShoTQ8PJ9Zi/42SZtsDt7DjvNQ0Ir0n2GT0DKX9jq22B59hx4HQS7z5LkhkYHADX+QV1TtRxQ/lB6xycsoPJpLmhqdZufZDZTKwBBQoe8eyC9DxI3DyxCpLY/nA+4ki6yUqyQZHjTy4JnBiQdkREWioCW6cVIk9/oaDTTOXtWSQey4Bl8kNvZc7zdfDhAerVj4HNAQG98Z7j1Asg18DmkDwrodjSfiruZzIp74PPcAaJmLPHDNgh8XihATQKfFwlQo8DnoAdmX8SY5pU+qFng84wuFBt82IaBz0F70PHuJNxuHPg8dz5Irm4e+LwYgFoEPi8EoDaBz7EB6YKlfeWTbhX4HPI8yMIv64KlfeWTbhf4HHWzqg2W9pRP2joXVweHmDpYGomffNKtA59jAlIHS+e+8km3D3yOCUgdLJ17yiftIfA58iymCJbO/eSTjnv4rBC3zaokWLoQD+mSvQQ+R96sSoKlX+HHK60B6f6dnoM68mZVEixdAGqbT9pXUolu+CA+WDpvnU+6UUZjD+ahnDQXLI2kVT5pf1k3OgKIC5ZG0iaftMesGx0BJAuWtsgnrQgv9Jl1I/JmVRssbcwnLQ9Qtfh3eg7qgJvVkELeVgrIc1KJkD1oayvwmbQMUJuMxn5IKNQCoGnc1RB9kPesGwF7EA5/+VO/2HAEui8G2Lvt/rNuhPZBgU6myzcmg6zuUP6bNk+AgiSVmCNA7TMa+yGhUMcBRPmgQFk3Zh1Q9alCZd2YF0DBsm7MKCBOmv47PW2VgfYE3Er6k35xbBYyuiNAUok6DmumV9JFY3y1ga4zPKCpBZL7y2hMVxoeUFChm+KvDbRoYmWbqWMB8nb4HGkWCwzIOeWms3q2AXkeBeFqiQTId0bjcLXEAeQ9o3G4WqIA8p/ROFwtMQD5PnyeM0Dt/p2eg3pGAYXJaByuluaALMOAf3xwgYnQC9OGcLU0BmQZBvxDER5T3bkP04ZwtTQEZB0GfH9w8Xt4faGKAQnThnC1NANkHQZcRps9r7pQmDaEq6UZIIcw4ILohcUC5BAGnBdGARJNGtSRnbRDGDDqQOTSY7rkCNIMkEUYMPLaFb4wX3K4Wtr2IJsw4Bd4VltQQOYw4PcPButUnGeYNoSrpX0PMoQBwy52+lvq1TBtCFdLaydtCAOGfNjwxTBtCFeLh1lMGwZcz++LCkgfBly7qFAZydXqrgDShgG/GiwsoKYSpg3hakmAzOoEyKBOgAzqBMigToAM6g4B8hrZM4eAxFyubZqWABnUCZBBPYeAkg+abelAD/KqntEeFKYN4WpJgMzqBMigToAM6gTIoJ4uICtxu0HteDu7ceUJkME6ATJYdwhQNyUBMkgCZJAEyCAJkEEiA+JyUBPRRatzr0nLs4aiCaOR2lHXcQHx/xMaiy5anXtNWp41FE0YjdSOvo4KSPiv4rk+Wp1/TVaeMxRNaI3cjikTFZDwf+n10erCa5LyvKFoQmkUdkyZmIBkwed8Jmpa+Ndk5TlD0YTWyO3YMnEBicHnfCZqWvjXZOU5Q9GE1sjt2DIxAUmCzyVPGWFeU5SnDUUTTiOxYy0SoASINZklQAofYg1I6YNyvv0KHyS3644PUsxCDoAUs1hONVw3i8ntujOLKdYx1oCU6yDKULsOUth1Zh2kWAnbA1KupGtD/UpabtedlTS96Xm3I03VzUntH7C1ei/G//Tvc0UhmR1TpjO7+UaA1Lv5uhLxLehCMjumTDoPMkgCZJAEyCAJkEESIIMkQAZJgAySABkkATLI9ACN+8vV9QFYg39fX7coZmVUmF7tA3D4nDYL7QGbxXd0+NO7ZelrK9tQwWf5jQiIVliVMsitIpHxkiaR8bi/zTwfAXCEAM12AdhGD9z7xQEkV1iVUsoI9M7Dtj7ZLJsskyH3GgTUu1m8EQYEvzsW4dwAGvcPkcECu8K22oh7aQSO99fI1aFf4nLZLssw3hAboeGAPtyjTeg5zpMP+ZdNANv5+uoKfO3Y3bw0GuKvGddQ2lDFsAxxXbjyYzdUn2HIe5gROEWAwKE1JGBHLN/4gEbEc5zMybcIBwjq7UggFRkgbEMXQ5LtFkNFJ5ON5fLdC1gjsDYq6t4uAHF9NrqTPgBL38ApZBN9uhFxCENwCn6przdqIxoQsaGLIZlsaDwP87Y8oDEeY3D2KgBxNUUHRNpOvtxRNUyQjBSAsA1djFxYACpGDwsIOx00eRWAuL4YGxCaXYngYVP0h+zJ7WtngQIQcaVUMSRW/++ioMoCwlrkvQtApVUhsQHV/4wBft4CUHa1UK0pATHFcBnqe/+Xqi/JAaGJHa0Puwko26W++QLQEPS2rt/+TjXESA8S56O16o1Uo00OCA5TvDzsJqDqYyEpe0cx8fJGI7BMQeRWNON+0a6yHMALv/KRqp8HBK/+jNZHHfRBP3mGLntwMZP9EVDDp3cDT1C10Qi5mkd9ChBdjAic3s6RlTRs+finN/HUXT5SbysCOgCr6Dr+LFa6je0SEEZwq/YlVe8oZLk0ImWP10OMKUYkK/diaBU5/oDoy0ci1TroyLPs683ezX/ew4CgQ6P6csR1EAco/wfuEvlDuGzunUTfWumkb+Fd+b+xLyFG403Q+2xMA6KKlfLkbL2bHwLSt8pHImQlfXC4D07chZ9njfSgYnNSrqTZFef8ngfBfoFxlI9IyKLwQLe9i7cXm75MNraZx7zYzY90gOLt5qcq+FwMeujysdQjf833EUYingdNVw7IZrd6rPRoRajpQRFPFGdUEiCDJEAGSYAMkgAZJAEySAJkkATIIAmQQRIggyRABvk/Gs9+OS7E0RMAAAAASUVORK5CYII=" /><!-- --></p>
+</div>
+<div id="plotting-example" class="section level2">
+<h2>Plotting example</h2>
+<p>To see how <span class="math inline">\(C_{ss}\)</span> resulting from
+discrete dosing deviates from the average steady state concentration, we
+can make a plot with <strong>ggplot2</strong> that includes a horizontal
+line through the <span class="math inline">\(y\)</span>-axis at the
+predicted <span class="math inline">\(C_{ss}\)</span> for oral infusion
+dosing (Figure 2 in Pearce et al., 2017).</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">solve_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">days =</span> <span class="dv">50</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">doses.per.day =</span> <span class="dv">3</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">daily.dose=</span><span class="dv">1</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;Bisphenol A&quot;, species = &quot;Human&quot;, :</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Clint is provided as a distribution.</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;Bisphenol A&quot;, species = &quot;Human&quot;, :</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Clint adjusted for in vitro partioning (Kilford, 2008).</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;Bisphenol A&quot;, species = &quot;Human&quot;, :</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in available_rblood2plasma(chem.cas = chem.cas, species = species, :</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human in vivo measured Rblood2plasma used.</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The model outputs are provided in the following units:</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  umol: Agutlumen, Atubules, Ametabolized</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  uM*days: AUC</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>plot.data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(out)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="fu">calc_analytic_css</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.cas = &quot;80-05-7&quot;, chem.name = &quot;Bisphenol A&quot;, :</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Clint is provided as a distribution.</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.cas = &quot;80-05-7&quot;, chem.name = &quot;Bisphenol A&quot;, :</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Clint adjusted for in vitro partioning (Kilford, 2008).</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.cas = &quot;80-05-7&quot;, chem.name = &quot;Bisphenol A&quot;, :</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in available_rblood2plasma(chem.cas = chem.cas, species = species, :</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human in vivo measured Rblood2plasma used.</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Plasma concentration returned in uM units.</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>c.vs.t <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(plot.data, <span class="fu">aes</span>(time, Cplasma)) <span class="sc">+</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> css) <span class="sc">+</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">bquote</span>(<span class="st">&quot;Plasma Concentration (&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Day&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">17</span>, <span class="at">hjust=</span><span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Bisphenol A&quot;</span>)</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(c.vs.t)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div id="suppressing-messages" class="section level3">
+<h3>Suppressing Messages</h3>
+<p>Note that since <em>in vitro-in vivo</em> extrapolation (IVIVE) is
+built upon many, many assumptions, *httk** attempts to give many warning
+messages by default. These messages do not usually mean something is
+wrong, but are rather intended to make the user aware of the assumptions
+involved. However, they quickly grow annoying and can be turned off with
+the “suppress.messages=TRUE” argument. Proceed with caution…</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">solve_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">days =</span> <span class="dv">50</span>, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">doses.per.day =</span> <span class="dv">3</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">daily.dose=</span><span class="dv">1</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="fu">calc_analytic_css</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="tk-study-summary-statistics" class="section level2">
+<h2>TK Study Summary Statistics</h2>
+<p>To calculate the peak statistics for all chemicals simulated for 10
+days at 1 mg/kg BW/day with 3 doses per day. Note that the function
+“calc_stats” was renamed “calc_tk_stats” in a later release of
+<strong>httk</strong>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all.peak.stats <span class="ot">&lt;-</span> <span class="fu">calc_stats</span>(<span class="at">days =</span> <span class="dv">10</span>, <span class="at">doses.per.day =</span> <span class="dv">3</span>, <span class="at">stats =</span> <span class="st">&quot;peak&quot;</span>)</span></code></pre></div>
+<p>A list containing the AUC, peak, and mean for a single 1 mg dose of
+Triclosan over 10 days, we have:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>triclosan.stats <span class="ot">&lt;-</span> <span class="fu">calc_stats</span>(<span class="at">days =</span> <span class="dv">10</span>, <span class="at">chem.name =</span> <span class="st">&quot;triclosan&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in calc_stats(days = 10, chem.name = &quot;triclosan&quot;): Function &quot;calc_stats&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; has been renamed to &quot;calc_tkstats&quot;.</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human plasma concentrations returned in uM units.</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.6436 .</span></span></code></pre></div>
+</div>
+<div id="steady-state-plasma-concentration" class="section level2">
+<h2>Steady-state Plasma Concentration</h2>
+<p>Below are examples of two functions,comparing the medians of the
+Wetmore data in humans for 1 mg/kg BW/day of Bisphenol A with the
+“calc_mc_css” simulation with probability distributions containing a
+third of the standard deviation, half the limit of detection for <span class="math inline">\(f_{up}\)</span>, and the same number of samples of
+the parameters used in <a href="https://doi.org/10.1093/toxsci/kfr254">Wetmore et
+al. (2012)</a>.</p>
+<p>We use make use of the default Monte Carlo sampler by setting
+argument “httkpop=FALSE” to turn off httk-pop (<a href="https://doi.org/10.1016/j.envint.2017.06.004">Ring et al.,
+2017</a>) and “invitrouv=FALSE” to turn off uncertainty/variability for
+the <em>in vitro</em> parameters (<a href="https://doi.org/10.1093/toxsci/kfz205">Wambaugh et al.,
+2019</a>).</p>
+<p>Note that the function “get_wetmore_css” was renamed “get_lit_css” in
+a later release of <strong>httk</strong>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_wetmore_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, <span class="at">daily.dose =</span> <span class="dv">1</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">which.quantile =</span> <span class="fl">0.5</span>, <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in get_wetmore_css(chem.cas = &quot;80-05-7&quot;, daily.dose = 1, which.quantile</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; = 0.5, : Function &quot;get_wetmore_css&quot; has been renamed to &quot;get_lit_cheminfo&quot;.</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human plasma concentrations returned in uM units.</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Retrieving Css from literature based on 1 uM intrinsic clearance data for the 0.5 quantile in Human.</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.8569</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">654321</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">censored.params =</span> <span class="fu">list</span>(</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">Funbound.plasma =</span> <span class="fu">list</span>(<span class="at">cv =</span> <span class="fl">0.1</span>, <span class="at">lod =</span> <span class="fl">0.005</span>)),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">vary.params =</span> <span class="fu">list</span>(</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">BW =</span> <span class="fl">0.15</span>, </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">Vliverc =</span> <span class="fl">0.15</span>, </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>              <span class="at">Qgfrc =</span> <span class="fl">0.15</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">Qtotal.liverc =</span> <span class="fl">0.15</span>, </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">million.cells.per.gliver =</span> <span class="fl">0.15</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">Clint =</span> <span class="fl">0.15</span>),</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>            <span class="at">httkpop=</span><span class="cn">FALSE</span>,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">invitrouv=</span><span class="cn">FALSE</span>,</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50% </span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.258</span></span></code></pre></div>
+<div id="using-more-sophisticated-monte-carlo" class="section level3">
+<h3>Using more sophisticated Monte Carlo</h3>
+<p>Both httk-pop and <em>in vitro</em> uncertainty/variability
+simulation, introduced in later versions of <strong>httk</strong>, are
+on by default:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">654321</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  50% </span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.72</span></span></code></pre></div>
+</div>
+<div id="controlling-the-random-number-generator" class="section level3">
+<h3>Controlling the random number generator</h3>
+<p>Any of the Monte Carlo functions in <strong>httk</strong>, often
+indicated by the inclusion of “mc” in the function name, make use of
+random draws from distributions to simulate uncertainty and variability.
+The random number generator in any computer is actually a pseudo-random
+number generator that creates a sequence of nearly uncorrelated numbers,
+but that sequence can be recreated at any time if we set a random number
+generator “seed”. In R we control the seed with the function “set.seed”,
+which allows us to get the same Monte Carlo output again and again (and
+in many cases on different computers). The seed can take any value, and
+if you use the same seed followed by the same functions called in the
+same order with the same arguments, you will get the same answer again
+and again:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random number generator seed 1:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">654321</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  50% </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.72</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Continuing to draw random numbers without resetting the seed:</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50% </span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.863</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Random number generator seed 2:</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50% </span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.808</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Continuing to draw random numbers without resetting the seed:</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50% </span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.854</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Random number generator seed 2 gives the same answer as it did above:</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   50% </span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.808</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Random number generator seed 1 gives the same answer as it did above:</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">654321</span>)</span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_css</span>(<span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>, </span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>            <span class="at">which.quantile =</span> <span class="fl">0.5</span>,</span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">output.units =</span> <span class="st">&quot;uM&quot;</span>, </span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">samples =</span> <span class="dv">1000</span>,</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>            <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  50% </span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.72</span></span></code></pre></div>
+</div>
+</div>
+<div id="ivive-with-httk" class="section level2">
+<h2>IVIVE with HTTK</h2>
+<p>Simple “reverse dosimetry” <em>in vitro-in vivo</em> extrapolation
+(IVIVE) determines an administered equivalent dose (AED) by taking an
+<em>in vitro</em> concentration <span class="math inline">\(C_{\text{in
+vitro}}\)</span> (50 uM in the example below) and dividing it by the
+steady-state plasma concentration <span class="math inline">\(C_{ss}\)</span> produced by a dose rate of 1 mg/kg
+bw/day:</p>
+<p><span class="math display">\[ AED = \frac{C_{\text{in
+vitro}}}{C_{ss}}\]</span></p>
+<p>We can also calculate the AED using literature values or sampling
+with <strong>httk</strong>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_wetmore_oral_equiv</span>(<span class="dv">50</span>, <span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in get_wetmore_oral_equiv(50, chem.cas = &quot;80-05-7&quot;): Function</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &quot;get_wetmore_oral_equiv&quot; has been renamed to &quot;get_lit_oral_equiv&quot;.</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Retrieving Css from literature based on 10 uM intrinsic clearance data for the 0.95 quantile in Human.</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human uM concentration converted to mg/kg bw/day dose.</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 37.06</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">654321</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_oral_equiv</span>(<span class="dv">50</span>, <span class="at">chem.cas =</span> <span class="st">&quot;80-05-7&quot;</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; uM concentration converted to mgpkgpday dose for 0.95 quantile.</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   95% </span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4.013</span></span></code></pre></div>
+<div id="monte-carlo-simulation-of-c_ss" class="section level3">
+<h3>Monte Carlo Simulation of <span class="math inline">\(C_{ss}\)</span></h3>
+<p>We can perform a Monte Carlo simulation on Zoxamide with the model
+pbtk with the same limit of detection and coefficients of variation
+(cv). Note, the function “monte_carlo” was replaced with a similar
+function “calc_mc_tk” for simulation concentration timecourses, while
+arguments were added to “calc_mc_css” that allowed the functionality
+seen in the 2017 paper. Separately, a new function “monte_carlo” was
+created to complement “httkpop_mc” and “invitro_mc” as part of
+“create_mc_samples”. “monte_carlo” varies parameters according to a
+normal distribution with given mean and coefficient of variation or
+according to a censored distribution with an additional limit of
+detection parameter. Note that we again turn off httkpop and invitrouv
+to replicate the 2017 version of Monte Carlo.</p>
+<p>First we create a list of parameters and then assign a coefficient of
+variation to each parameter we wish to vary:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>vary.params <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">parameterize_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;Zoxamide&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;Zoxamide&quot;): Clint adjusted for in</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; vitro partioning (Kilford, 2008).</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in parameterize_pbtk(chem.name = &quot;Zoxamide&quot;): Funbound.plasma adjusted</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; for in vitro partioning (Pearce, 2017).</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in available_rblood2plasma(chem.cas = chem.cas, species = species, :</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Human in vivo measured Rblood2plasma used.</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.param <span class="cf">in</span> <span class="fu">names</span>(<span class="fu">subset</span>(params, <span class="fu">names</span>(params) <span class="sc">!=</span> <span class="st">&quot;Funbound.plasma&quot;</span>)))</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Only want to vary numerical parameters:</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.numeric</span>(params[[this.param]])) </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>      vary.params[this.param] <span class="ot">&lt;-</span> <span class="fl">0.2</span></span></code></pre></div>
+<p>We can draw <span class="math inline">\(f_{up}\)</span> from a
+censored distribution with a limit of dextion (LOD) of 0.01:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>censored.params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">Funbound.plasma =</span> <span class="fu">list</span>(<span class="at">cv =</span> <span class="fl">0.2</span>, <span class="at">lod =</span> <span class="fl">0.01</span>))</span></code></pre></div>
+</div>
+<div id="solve-the-full-tk-time-course" class="section level3">
+<h3>Solve the full TK time-course</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">calc_mc_tk</span>(<span class="at">parameters=</span>params, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">vary.params =</span> vary.params,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">censored.params =</span> censored.params,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">return.samples =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">model =</span> <span class="st">&quot;pbtk&quot;</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">httkpop =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">invitrouv =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">samples =</span> <span class="dv">50</span>)</span></code></pre></div>
+<p>Make a table of concentration vs. time with confidence intervals:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>zoxtable <span class="ot">&lt;-</span> <span class="fu">cbind</span>(out[[<span class="st">&quot;means&quot;</span>]][,<span class="st">&quot;time&quot;</span>],</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                  out[[<span class="st">&quot;means&quot;</span>]][,<span class="st">&quot;Cplasma&quot;</span>],</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                  out[[<span class="st">&quot;means&quot;</span>]][,<span class="st">&quot;Cplasma&quot;</span>] <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>out[[<span class="st">&quot;sds&quot;</span>]][,<span class="st">&quot;Cplasma&quot;</span>],</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                  out[[<span class="st">&quot;means&quot;</span>]][,<span class="st">&quot;Cplasma&quot;</span>] <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>out[[<span class="st">&quot;sds&quot;</span>]][,<span class="st">&quot;Cplasma&quot;</span>])</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(zoxtable) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>,<span class="st">&quot;Cplasma&quot;</span>,<span class="st">&quot;lcl&quot;</span>,<span class="st">&quot;ucl&quot;</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(zoxtable, <span class="at">caption =</span> <span class="st">&quot;Zoxamide plasma concentration vs. time&quot;</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Zoxamide plasma concentration vs. time</caption>
+<thead>
+<tr class="header">
+<th align="right">time</th>
+<th align="right">Cplasma</th>
+<th align="right">lcl</th>
+<th align="right">ucl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="right">0.00001</td>
+<td align="right">0.0000004</td>
+<td align="right">0.0000003</td>
+<td align="right">0.0000005</td>
+</tr>
+<tr class="odd">
+<td align="right">0.25000</td>
+<td align="right">2.1830000</td>
+<td align="right">1.7478800</td>
+<td align="right">2.6181200</td>
+</tr>
+<tr class="even">
+<td align="right">0.50000</td>
+<td align="right">2.1810000</td>
+<td align="right">1.7462720</td>
+<td align="right">2.6157280</td>
+</tr>
+<tr class="odd">
+<td align="right">0.75000</td>
+<td align="right">2.1790000</td>
+<td align="right">1.7444680</td>
+<td align="right">2.6135320</td>
+</tr>
+<tr class="even">
+<td align="right">1.00000</td>
+<td align="right">2.1770000</td>
+<td align="right">1.7428600</td>
+<td align="right">2.6111400</td>
+</tr>
+<tr class="odd">
+<td align="right">1.50000</td>
+<td align="right">2.1740000</td>
+<td align="right">1.7402520</td>
+<td align="right">2.6077480</td>
+</tr>
+<tr class="even">
+<td align="right">2.00000</td>
+<td align="right">2.1700000</td>
+<td align="right">1.7368400</td>
+<td align="right">2.6031600</td>
+</tr>
+<tr class="odd">
+<td align="right">2.50000</td>
+<td align="right">2.1670000</td>
+<td align="right">1.7342320</td>
+<td align="right">2.5997680</td>
+</tr>
+<tr class="even">
+<td align="right">3.00000</td>
+<td align="right">2.1640000</td>
+<td align="right">1.7316240</td>
+<td align="right">2.5963760</td>
+</tr>
+<tr class="odd">
+<td align="right">4.00000</td>
+<td align="right">2.1570000</td>
+<td align="right">1.7256040</td>
+<td align="right">2.5883960</td>
+</tr>
+<tr class="even">
+<td align="right">5.00000</td>
+<td align="right">2.1500000</td>
+<td align="right">1.7195840</td>
+<td align="right">2.5804160</td>
+</tr>
+</tbody>
+</table>
+<p>Plot Monte Carlo analysis of concentration vs. time:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>zoxamide1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">as.data.frame</span>(zoxtable), <span class="fu">aes</span>(<span class="at">x=</span>time,<span class="at">y=</span>Cplasma)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;dark blue&quot;</span>,<span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>lcl, <span class="at">ymax=</span>ucl), <span class="at">alpha =</span> <span class="fl">0.3</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill =</span> <span class="st">&quot;light blue&quot;</span>, <span class="at">color=</span><span class="st">&quot;black&quot;</span>, <span class="at">linetype=</span><span class="st">&quot;dotted&quot;</span>)<span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Plasma concentration&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Time (days)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>))</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zoxamide1)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="examine-c_ss" class="section level3">
+<h3>Examine <span class="math inline">\(C_{ss}\)</span></h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">calc_mc_css</span>(<span class="at">parameters=</span>params, </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">vary.params =</span> vary.params,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">censored.params =</span> censored.params,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">return.samples =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">model =</span> <span class="st">&quot;pbtk&quot;</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">httkpop =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">invitrouv =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>zoxamide2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">as.data.frame</span>(out), <span class="fu">aes</span>(out)) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">binwidth =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;Number of Samples&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="fu">bquote</span>(C[ss]<span class="sc">~</span><span class="st">&quot;(&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>))</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zoxamide2)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="adding-a-tissue" class="section level2">
+<h2>Adding a tissue</h2>
+<p>We can add mammary to the tissue data by making a row containing its
+data, subtracting the volumes and flows from the rest, and binding the
+row to tissue.data.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>new.tissue <span class="ot">&lt;-</span> <span class="fu">subset</span>(tissue.data,Tissue <span class="sc">==</span> <span class="st">&quot;adipose&quot;</span> <span class="sc">&amp;</span> Species <span class="sc">==</span><span class="st">&quot;Human&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>new.tissue[, <span class="st">&quot;Tissue&quot;</span>] <span class="ot">&lt;-</span> <span class="st">&quot;mammary&quot;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>new.tissue[new.tissue<span class="sc">$</span>variable<span class="sc">==</span><span class="st">&quot;Vol (L/kg)&quot;</span>,<span class="st">&quot;value&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">320</span><span class="sc">/</span><span class="dv">1000</span><span class="sc">/</span><span class="dv">60</span> <span class="co"># Itsukage et al. (2017) PMID: 29308107</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>new.tissue[new.tissue<span class="sc">$</span>variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;Flow (mL/min/kg^(3/4))&#39;</span>),<span class="st">&#39;value&#39;</span>] <span class="ot">&lt;-</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>   new.tissue[new.tissue<span class="sc">$</span>variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;Flow (mL/min/kg^(3/4))&#39;</span>),<span class="st">&#39;value&#39;</span>]<span class="sc">/</span><span class="dv">10</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>tissue.data[tissue.data<span class="sc">$</span>Tissue <span class="sc">==</span> <span class="st">&quot;rest&quot;</span>, <span class="st">&#39;value&#39;</span>] <span class="ot">&lt;-</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    tissue.data[tissue.data<span class="sc">$</span>Tissue <span class="sc">==</span> <span class="st">&quot;rest&quot;</span>, <span class="st">&#39;value&#39;</span>] <span class="sc">-</span> new.tissue[new.tissue<span class="sc">$</span>variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;Vol (L/kg)&#39;</span>,<span class="st">&#39;Flow (mL/min/kg^(3/4))&#39;</span>),<span class="st">&#39;value&#39;</span>]</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>tissue.data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(tissue.data, new.tissue)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">subset</span>(tissue.data,Tissue<span class="sc">==</span><span class="st">&quot;mammary&quot;</span>))</span></code></pre></div>
+<p>To generate the parameters for a model with kidneys, thyroid, brain,
+breast, a liver compartment combining the liver and gut, and a rest of
+body compartment:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>compartments <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">liver =</span> <span class="fu">c</span>(<span class="st">&quot;liver&quot;</span>, <span class="st">&quot;gut&quot;</span>), <span class="at">kidney =</span> <span class="st">&quot;kidney&quot;</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">breast =</span> <span class="st">&quot;mammary&quot;</span>, <span class="at">brain =</span> <span class="st">&quot;brain&quot;</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">thyroid =</span> <span class="st">&quot;thyroid&quot;</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>Kp <span class="ot">&lt;-</span> <span class="fu">predict_partitioning_schmitt</span>(<span class="at">chem.name =</span> <span class="st">&quot;Nicotine&quot;</span>, <span class="at">tissues =</span> <span class="fu">unique</span>(tissue.data<span class="sc">$</span>Tissue))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lump_tissues</span>(Kp, <span class="at">tissuelist=</span>compartments, <span class="at">model=</span><span class="cn">NA</span>)</span></code></pre></div>
+</div>
+<div id="export-functions" class="section level2">
+<h2>Export functions</h2>
+<p>Jarnac <a href="http://academic.sun.ac.za/natural/biochem/btk/book/Sauro.pdf">(Sauro
+and Fell 2000)</a> and SBML <a href="https://doi.org/10.1093/bioinformatics/btg015">(Hucka et
+al. 2003)</a> are commonly used languages for systems biology models of
+cellular and physiological processes. In the event that a modeler wishes
+to couple such a model to a toxicokinetic model, we provide functions to
+export model equations and chemical-specific parameters to these
+languages. The two functions, “export_pbtk_sbml” and
+“export_pbtk_jarnac”, have the same arguments and only differ in the
+file extension names (.xml and .jan) entered into the filename argument.
+Both use liters as the units for volume, but the amounts are unitless
+and to be determined by the user. If we suppose that we enter an initial
+amount of 1 mg in the gut lumen, then all the other compartments will
+contain amounts in mg.</p>
+<p>Below is a call of an export function for a dose of 1 given to a
+rat:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">export_pbtk_sbml</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>, <span class="at">species =</span> <span class="st">&quot;Rat&quot;</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">initial.amounts =</span> <span class="fu">list</span>(<span class="at">Agutlumen =</span> <span class="dv">1</span>),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">filename =</span> <span class="st">&quot;PBTKmodel.xml&quot;</span>)</span></code></pre></div>
+</div>
+<div id="days-to-steady-state-histogram" class="section level2">
+<h2>Days to steady state histogram</h2>
+<p>Creating histograms can allow us to visualize how a given value
+varies across all the chemicals contained within the package. To create
+a histogram using <strong>ggplot2</strong> of the number of days to
+steady state, we must first set up a for loop with “get_cheminfo” and
+“calc_css” to generate a vector containing the data. Vectors containing
+the average and maximum concentrations at steady state are also
+generated in this example, avg and max. The data contained in the days
+vector are then plotted as a histogram (Pearce et al., (2017) Figure 3).
+We can just as easily create a histogram containing the average or
+maximum steady state concentrations by substituting avg or max for
+days.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>css.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>chem.list <span class="ot">&lt;-</span> <span class="fu">get_cheminfo</span>(<span class="at">model=</span><span class="st">&#39;pbtk&#39;</span>, <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)[<span class="fu">seq</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, NUM.CHEMS, SKIP.CHEMS)]</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.cas <span class="cf">in</span> chem.list) {</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    css.info <span class="ot">&lt;-</span> <span class="fu">calc_css</span>(<span class="at">chem.cas =</span> this.cas,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">doses.per.day =</span> <span class="dv">1</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    css.data[this.cas,<span class="st">&quot;days&quot;</span>] <span class="ot">&lt;-</span> css.info[[<span class="st">&quot;the.day&quot;</span>]]</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    css.data[this.cas,<span class="st">&quot;avg&quot;</span>] <span class="ot">&lt;-</span> css.info[[<span class="st">&quot;avg&quot;</span>]]</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    css.data[this.cas,<span class="st">&quot;max&quot;</span>] <span class="ot">&lt;-</span> css.info[[<span class="st">&quot;max&quot;</span>]]</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(css.data, <span class="fu">aes</span>(days<span class="fl">+0.1</span>)) <span class="sc">+</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">bins=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;Number of Chemicals&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Days&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>))</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(hist)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="average-vs.-maximum-concentration" class="section level2">
+<h2>Average vs. maximum concentration</h2>
+<p>We can compare the average and maximum concentrations at steady state
+using the average and maximum concentration at steady state vectors, avg
+and max, from the previous example. The vectors are bound into a data
+frame and plotted with a line through the origin with a slope of 1
+(Pearce et al. (2017) Figure 4).</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>avg.vs.max <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(css.data, <span class="fu">aes</span>(avg, max)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="fu">bquote</span>(<span class="st">&quot;Avg. Conc. at Steady State (&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">bquote</span>(<span class="st">&quot;Max. Conc. at Steady State (&quot;</span><span class="sc">*</span>mu<span class="sc">*</span><span class="st">&quot;M)&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>))</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(avg.vs.max)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
