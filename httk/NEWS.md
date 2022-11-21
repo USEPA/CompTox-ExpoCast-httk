@@ -15,6 +15,7 @@ output: html_document
 * Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now using 'do.call'
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Revised restrictive.clearance argument for function 'solve_model'
+* Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 
 # version 2.2.1 (September, 2022)
 

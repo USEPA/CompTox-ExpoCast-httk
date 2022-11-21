@@ -96,7 +96,8 @@ To get a list of parameters for the pbtk model of Triclosan in a rat:
 parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
 ```
 We do not have a full set of *in vitro* parameters for rat for Triclosan,
-so we fill in the *in vitro* measured values with human-derived measurments and use rat physiological parameters by setting "default.to.human = TRUE":
+so we fill in the *in vitro* measured values with human-derived measurements and 
+use rat physiological parameters by setting "default.to.human = TRUE":
 ```{r rat_pbtk_parameters2, eval = TRUE}
 parameters <- parameterize_pbtk(chem.name = "triclosan", 
                                 species = "rat", 

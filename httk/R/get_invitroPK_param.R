@@ -62,20 +62,20 @@ get_invitroPK_param <- function(
     which(chem.physical_and_invitro.data$Compound == chem.name)
 
   this.col.name <- tolower(paste(species,param,sep="."))
-  if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))
-  {
-    warning(paste("No in vitro ",param," data for ",chem.name," in ",species,".",sep=""))
-    for (alternate.species in c("Human","Rat","Mouse","Dog","Monkey","Rabbit"))
-    {
-      this.col.name <- tolower(paste(alternate.species,param,sep="."))
-      if (this.col.name %in% tolower(colnames(chem.physical_and_invitro.data)))
-      {
-        warning(paste("Substituting ",alternate.species," in vitro ",
-          param," data for ",chem.name," ",species,".",sep=""))
-        break()
-      }
-    }
-  }
+#  if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))
+#  {
+#    warning(paste("No in vitro ",param," data for ",chem.name," in ",species,".",sep=""))
+#    for (alternate.species in c("Human","Rat","Mouse","Dog","Monkey","Rabbit"))
+#    {
+#      this.col.name <- tolower(paste(alternate.species,param,sep="."))
+#      if (this.col.name %in% tolower(colnames(chem.physical_and_invitro.data)))
+#      {
+#        warning(paste("Substituting ",alternate.species," in vitro ",
+#          param," data for ",chem.name," ",species,".",sep=""))
+#        break()
+#      }
+#    }
+ # }
   if (this.col.name %in% tolower(colnames(chem.physical_and_invitro.data)))
   {
     this.col.index <- which(tolower(colnames(chem.physical_and_invitro.data))==this.col.name)
