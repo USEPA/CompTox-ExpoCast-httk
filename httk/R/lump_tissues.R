@@ -459,5 +459,5 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
   names(flow)[names(flow) == 'liver'] <- 'total.liver'
   names(flow) <- paste('Q',names(flow),'f',sep='')
     
- 	return(sapply(c(Ktissue2pu.out,vol,flow),set_httk_precision))
+ 	return(lapply(c(Ktissue2pu.out,vol,flow),set_httk_precision))
 }
