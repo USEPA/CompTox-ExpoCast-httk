@@ -155,7 +155,7 @@ dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma /
 dt (Atubules) = Qgfr * Ckidney / Kkidney2pu;
 dt (Ametabolized) = Clmetabolism * Cliver / Kliver2pu/ Fraction_unbound_plasma * Rblood2plasma + Vmax * Cliver / Kliver2pu / (Km + Cliver / Kliver2pu) ;
 dt (AUC) = Cven / Rblood2plasma;
-dt (Ainh) = (Qalv * (Calv - Cinh)) + kUrt * ((Cmuc/Kmuc2air) - Calv);
+dt (Ainh) = (Qalv * (Cinh - Calv)) + kUrt * ((Cmuc/Kmuc2air) - Cinh);
 dt (Aexh) = (Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv);
 dt (Amuc) = (kUrt * (Cinh - (Cmuc/Kmuc2air))) - (kUrt * ((Cmuc/Kmuc2air) - Calv));
 
