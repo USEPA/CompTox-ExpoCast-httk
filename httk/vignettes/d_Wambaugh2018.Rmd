@@ -4,10 +4,11 @@ author: "John Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{c) Wambaugh et al. (2018): Creating All Figures}
+  %\VignetteIndexEntry{d) Wambaugh (2018): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+*Please send questions to wambaugh.john@epa.gov*
 
 ```{r knitrPRrep, include=FALSE, eval = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
