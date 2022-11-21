@@ -9,7 +9,7 @@ output: html_document
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
 * `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
 * Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
-* FIX GAS MODEL (thanks Cecilia Tan)
+* Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
 * Added updated vignette from Pearce et al. (2017): v79i04.R
 * Added new vignette on "Introduction to IVIVE"
 * Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now using 'do.call'

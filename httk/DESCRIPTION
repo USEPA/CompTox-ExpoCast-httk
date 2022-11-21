@@ -8,7 +8,7 @@ Description: Pre-made models that can be rapidly tailored to various chemicals
              toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
              into bioinformatics, as described by Pearce et al. (2017) 
              (<doi:10.18637/jss.v079.i04>). Chemical-specific 
-             in vitro data characterizing toxicokinetics can be been obtained 
+             in vitro data characterizing toxicokinetics have been obtained 
              from relatively high-throughput experiments. The 
              chemical-independent
              ("generic") physiologically-based ("PBTK") and empirical 

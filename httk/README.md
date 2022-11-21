@@ -1,4 +1,4 @@
-![HTTK logo](man/figures/httk-logo.png)
+<img src="man/figures/httk-logo.png" align="center" width="240" />
 
 # R Package "httk"
 
@@ -10,7 +10,7 @@
 This R package provides data and models for prediction toxicokinetics (chemical 
 absorption, distribution, metabolism, and excretion by the body). 
 The models are design to be parameterized with chemical-specific in vitro 
-(animal free) measurments. The predictions can be used for traditional
+(animal free) measurements. The predictions can be used for traditional
 dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro 
 bioactivity testing data (for example, ToxCast). See Breen et al. 
 (2021, <https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
@@ -27,7 +27,7 @@ information. These tools allow incorporation of chemical
 toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
 into bioinformatics, as described by Pearce et al. (2017) 
 (<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
-in vitro data characterizing toxicokinetics can be been obtained 
+in vitro data characterizing toxicokinetics have been obtained 
 from relatively high-throughput experiments. The 
 chemical-independent ("generic") physiologically-based ("PBTK") and empirical 
 (for example, one compartment) "TK" models included here can be 

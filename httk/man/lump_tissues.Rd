@@ -23,23 +23,27 @@ lump_tissues(
 }
 \arguments{
 \item{Ktissue2pu.in}{List of partition coefficients from
-predict_partitioning_schmitt.}
+\code{predict_partitioning_schmitt}. The tissues named in this list are 
+lumped into the compartments specified by \code{tissuelist} unless they are
+not present the specified \code{model}'s associated \code{alltissues}.}
 
 \item{parameters}{A list of physiological parameters including flows and
-volumes for tissues in \code{tissuelist}}
+volumes for tissues named in \code{Ktissue2pu.in}}
 
-\item{tissuelist}{Manually specifies tissues from \code{\link{tissue.data}} 
-that should be lumped.}
+\item{tissuelist}{Manually specifies compartment names and tissues, which
+override the standard compartment names and tissues that are usually
+specified in a model's associated modelinfo file. Remaining tissues in the
+model's associated \code{alltissues} listing are lumped in the rest of the body.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}}
+\item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}.}
 
-\item{tissue.flows}{A list of flows for tissues in \code{tissuelist}}
+\item{tissue.flows}{A list of flows for tissues in \code{tissuelist}.}
 
 \item{model}{Specify which model (and therefore which tissues) are being 
-considered}
+considered.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 }
@@ -89,10 +93,13 @@ tissues may vary.
 }
 \examples{
 
-pcs <- predict_partitioning_schmitt(chem.name='bisphenola')
-tissuelist <- list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")
-,muscle.bone=c('muscle','bone'))
-lump_tissues(pcs,tissuelist=tissuelist)
+ pcs <- predict_partitioning_schmitt(chem.name='bisphenola')
+ tissuelist <- list(
+   liver=c("liver"),
+   rapid=c("lung","kidney","muscle","brain"),
+   fat=c("adipose"),
+   slow=c('bone'))
+ lump_tissues(pcs,tissuelist=tissuelist)
 
 }
 \references{
