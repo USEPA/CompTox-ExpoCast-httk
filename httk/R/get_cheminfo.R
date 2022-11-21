@@ -434,17 +434,6 @@ get_cheminfo <- function(info="CAS",
   {
     # Identify the appropriate column for Funbound (if needed):
     species.fup <- paste0(species,'.Funbound.plasma')
-    # Turn triples with confidence intervals into single values: 
-    temp.fup <- strsplit(as.character(
-      chem.physical_and_invitro.data[,species.fup]),",")
-    if (any(unlist(lapply(temp.fup,length))>1)) 
-    {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(
-        temp.fup, 
-        function(x) x[[1]]))))
-    } else {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
-    }    # Check to see if we will use human data where species data is missing:
     if (default.to.human)
     {
       # Check to see if this is a column that already has data:
@@ -453,7 +442,17 @@ get_cheminfo <- function(info="CAS",
         # Identify values to replace with human:
         if (exclude.fup.zero) 
         {
-          # Replace all the zeros if that will impact the model:
+          # Turn triples with confidence intervals into single values: 
+          temp.fup <- strsplit(as.character(
+            chem.physical_and_invitro.data[,species.fup]),",")
+          if (any(unlist(lapply(temp.fup,length))>1)) 
+          {
+            temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(
+              temp.fup, 
+              function(x) x[[1]]))))
+          } else {
+            temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
+          }    # Check to see if we will use human data where species data is missing:          # Replace all the zeros if that will impact the model:
           replace.index <- (temp.fup==0)
           # Comparisons with NA's will produce NA's
           replace.index[is.na(replace.index)] <- TRUE

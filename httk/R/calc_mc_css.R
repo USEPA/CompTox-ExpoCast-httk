@@ -177,16 +177,13 @@
 #' @param convert.httkpop.arg.list Additional parameters passed to the 
 #' convert_httkpop_* function for the model.
 #'
-#' @param parameterize.arg.list Additional parameters passed to the 
-#' parameterize_* function for the model.
+#' @param parameterize.arg.list A list of arguments to be passed to the model
+#' parameterization function (that is, parameterize_MODEL) corresponding to
+#' argument "model". (Defaults to NULL.)  
 #'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #' \code{\link{calc_analytic_css}}.
 #'
-#' @param parameterize.args A list of arguments to be passed to the model
-#' parameterization function (that is, parameterize_MODEL) corresponding to
-#' argument "model". (Defaults to NULL.)  
-#' 
 #' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 #'
 #' @references 
@@ -313,8 +310,7 @@ calc_mc_css <- function(chem.cas = NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list = NULL,
                         parameterize.arg.list = NULL,
-                        calc.analytic.css.arg.list = NULL,
-                        parameterize.args = NULL
+                        calc.analytic.css.arg.list = NULL
                         ) 
 {
 # We need to describe the chemical to be simulated one way or another:

@@ -68,7 +68,7 @@
 #' 
 #' @param dosing The dosing object for more complicated scenarios. Defaults to
 #' repeated \code{daily.dose} spread out over \code{doses.per.day}
-#' 
+#'
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
 #'
@@ -107,6 +107,7 @@
 #'
 #' print(c.vs.t)
 #' 
+#' @importFrom purrr compact 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,
                     chem.cas=NULL, 
@@ -171,7 +172,8 @@ calc_css <- function(chem.name=NULL,
   # We only want to call the parameterize function once:
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,list(
+    parameters <- do.call(parameterize_function,
+                          args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
@@ -179,7 +181,7 @@ calc_css <- function(chem.name=NULL,
       default.to.human=default.to.human,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      regression=regression)) 
+      regression=regression))))
   }
 
   if (is.null(dosing))
