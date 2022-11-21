@@ -182,61 +182,61 @@ mychems <- read.xls("mychems.xls",stringsAsFactors=F)
 ```
 
 Take a look at the first few rows of your table:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose1, eval = FALSE}
 head(mychems)
 ```
 
 Get the ToxCast data for only the chemicals of interest:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose2, eval = FALSE}
 my.tox <- subset(toxcast,CAS%in%mychems$CASRN)
 ```
 
 How many chemicals covered by ToxCast (dim gives number of rows and columns):
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose3, eval = FALSE}
 dim(my.tox)
 ```
 
 Out of how many chemicals of interest:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose4, eval = FALSE}
 dim(mychems)  
 ```
 
 Mark the columns with ToxCast AC50s:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose5, eval = FALSE}
 toxcast.start <- 2
 toxcast.end <- 1474
 ```
 
 Find the tenth percentile AC50 for each chemical:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose6, eval = FALSE}
 my.tox$tenth <- apply(my.tox[,toxcast.start:toxcast.end],
                   1,
                   function(x) quantile(x,0.1,na.rm=T))
 ```
 
 Get rid of chemicals where there is no hit (1,000,000 or 1e6 denotes no hit):
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose7, eval = FALSE}
 my.tox <- subset(my.tox,tenth<1e6)
 ```
 
 Reduce to just the tneth percentile concentration (uM):
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose8, eval = FALSE}
 my.tox <- my.tox[,c("CAS","tenth")]
 ```
 
 Add the other chemical information:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose9, eval = FALSE}
 my.tox <- merge(my.tox,mychems,by.x="CAS",by.y="CASRN")
 ```
 
 # STEP TWO
 Perform steady-state reverse dosimetry in vitro-in vivo extrapolation (IVIVE):
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose10, eval = FALSE}
 library(httk)
 ```
 For each chemical in your subset of ToxCast, add the HTTK plasma steady-state 
 concentration if it is available:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose11, eval = FALSE}
 for (this.cas in my.tox$CAS)
 {
 # get_cheminfo() gives a list of all the CAS numbers for which HTTK will work:
@@ -256,18 +256,18 @@ for (this.cas in my.tox$CAS)
 
 Let's look at just the relevant columns from our table. Any NA's indicate that
 we don't currently have in vitro TK data for those chemicals:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose12, eval = FALSE}
 my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
 ```
 
 # STEP THREE
 Load the table of quantitative structure-property relationship (QSPR) model 
 predictions from the Sipes et al. (2017) supplemental material:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r load_qspr, eval = FALSE}
 load_sipes2017()
 ```
 Now go through the list of chemicals again:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose13, eval = FALSE}
 for (this.cas in my.tox$CAS)
 {
 # But only calculate if we didn't already have a value (NOTE: load_sipes2017
@@ -288,11 +288,11 @@ for (this.cas in my.tox$CAS)
 ```
 
 Take another look at our table many of the gaps are filled in:
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose14, eval = FALSE}
 my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
 ```
 
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose15, eval = FALSE}
 par(mar = c(3, 2, 2,2))
 plot(x=1:14,
      y=my.tox$BER,
@@ -306,7 +306,7 @@ axis(1, at=1:14,
 # STEP FOUR
 Calculate the equivalent steady-state dose to produce plasma cocnentration 
 equal to tenth percentile Toxcast AC50
-```{r calc_equivalent_dose, eval = FALSE}
+```{r calc_equivalent_dose16, eval = FALSE}
 my.tox$EquivDose <- my.tox$tenth / my.tox$Css
 ```
 Look at the table again:

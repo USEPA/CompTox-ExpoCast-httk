@@ -28,8 +28,7 @@ calc_mc_css(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   parameterize.arg.list = NULL,
-  calc.analytic.css.arg.list = NULL,
-  parameterize.args = NULL
+  calc.analytic.css.arg.list = NULL
 )
 }
 \arguments{
@@ -119,15 +118,12 @@ specific tissue.}
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
-\item{parameterize.arg.list}{Additional parameters passed to the 
-parameterize_* function for the model.}
+\item{parameterize.arg.list}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
-
-\item{parameterize.args}{A list of arguments to be passed to the model
-parameterization function (that is, parameterize_MODEL) corresponding to
-argument "model". (Defaults to NULL.)}
 }
 \value{
 Quantiles (specified by which.quantile) of the distribution of plasma

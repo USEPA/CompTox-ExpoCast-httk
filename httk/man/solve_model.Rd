@@ -28,6 +28,7 @@ solve_model(
   atol = 1e-12,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
+  restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
@@ -110,6 +111,9 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{recalc.clearance}{Recalculates the the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
 
+\item{restrictive.clearance}{Protein binding not taken into account (set to
+1) in liver clearance if FALSE.}
+
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
 
@@ -127,9 +131,6 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
