@@ -14,6 +14,7 @@ output: html_document
 * Added new vignette on "Introduction to IVIVE"
 * Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now using 'do.call'
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
+* Revised restrictive.clearance argument for function 'solve_model'
 
 # version 2.2.1 (September, 2022)
 
