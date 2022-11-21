@@ -4,10 +4,23 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{a) Ring et al. (2017) Vignette 1: Generating subpopulations}
+  %\VignetteIndexEntry{b) Ring (2017) Vignette 1: Generating subpopulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+*Please send questions to ring.caroline@epa.gov*
+
+from "Identifying populations sensitive to environmental chemicals by simulating toxicokinetic variability"
+
+Caroline L.Ring, Robert G.Pearce, R. Woodrow Setzer, Barbara A.Wetmore, and 
+John F.Wambaugh
+
+Environment International, Volume 106, September 2017, Pages 105-118
+
+https://doi.org/10.1016/j.envint.2017.06.004
+
+## Abstract
+The thousands of chemicals present in the environment ([USGAO, 2013](https://www.gao.gov/products/gao-13-249)) must be triaged to identify priority chemicals for human health risk research. Most chemicals have little of the toxicokinetic (TK) data that are necessary for relating exposures to tissue concentrations that are believed to be toxic. Ongoing efforts have collected limited, in vitro TK data for a few hundred chemicals. These data have been combined with biomonitoring data to estimate an approximate margin between potential hazard and exposure. The most “at risk” 95th percentile of adults have been identified from simulated populations that are generated either using standard “average” adult human parameters or very specific cohorts such as Northern Europeans. To better reflect the modern U.S. population, we developed a population simulation using physiologies based on distributions of demographic and anthropometric quantities from the most recent U.S. Centers for Disease Control and Prevention National Health and Nutrition Examination Survey (NHANES) data. This allowed incorporation of inter-individual variability, including variability across relevant demographic subgroups. Variability was analyzed with a Monte Carlo approach that accounted for the correlation structure in physiological parameters. To identify portions of the U.S. population that are more at risk for specific chemicals, physiologic variability was incorporated within an open-source high-throughput (HT) TK modeling framework. We prioritized 50 chemicals based on estimates of both potential hazard and exposure. Potential hazard was estimated from in vitro HT screening assays (i.e., the Tox21 and ToxCast programs). Bioactive in vitro concentrations were extrapolated to doses that produce equivalent concentrations in body tissues using a reverse dosimetry approach in which generic TK models are parameterized with: 1) chemical-specific parameters derived from in vitro measurements and predicted from chemical structure; and 2) with physiological parameters for a virtual population. For risk-based prioritization of chemicals, predicted bioactive equivalent doses were compared to demographic-specific inferences of exposure rates that were based on NHANES urinary analyte biomonitoring data. The inclusion of NHANES-derived inter-individual variability decreased predicted bioactive equivalent doses by 12% on average for the total population when compared to previous methods. However, for some combinations of chemical and demographic groups the margin was reduced by as much as three quarters. This TK modeling framework allows targeted risk prioritization of chemicals for demographic groups of interest, including potentially sensitive life stages and subpopulations.
 
 ## HTTK Version
 

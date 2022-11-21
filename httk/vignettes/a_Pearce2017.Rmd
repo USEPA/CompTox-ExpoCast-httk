@@ -4,7 +4,7 @@ author: "Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and Jo
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{f) Kapraun et al. (2022): Creating All Figures}
+  %\VignetteIndexEntry{a) Pearce (2017)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -41,11 +41,20 @@ chemical data as they become available. Package **httk** enables the inclusion o
 toxicokinetics in the statistical analysis of chemicals undergoing
 high-throughput screening.
 
+This vignette was created from the 
+[R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
+for the 
+[2017 paper that introduced **httk**](https://doi.org/10.18637%2Fjss.v079.i04).
+
 ## HTTK Version
 
-This vignette was created for the 2017 paper with **httk** v1.7. However, it was 
-updated to **httk** v2.2.2 in 2022. Although we attempt to maintain 
-backward compatibility, if you encounter issues with the latest release of **httk**
+The 
+[R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
+was created with **httk** v1.7. It was 
+updated to a vignette using **httk** v2.2.2 in 2022. Although we attempt to 
+maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
 and cannot easily address the changes, historical versions of **httk** are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
@@ -87,7 +96,7 @@ To speed up how fast these examples run, we only simulate every $N^{th}$ chemica
 (currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
 ```{r chemical_thinng, eval = TRUE}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
-SKIP.CHEMS <- 15
+SKIP.CHEMS <- 25
 ```
 
 # Examples
@@ -520,25 +529,39 @@ lumped.params <- lump_tissues(Kp, tissuelist=compartments)
 ## Adding a species
 The **httk** package contains a data.frame called physiology.data that describes 
 the species-specific aspects of physiology necessary to parameterize a PBTK 
-model. We can add a new species (for example, ferrets) to the tissue data by 
+model. We can add a new species (for example, wolverines) to the physiology.data by 
 replicating the data from another species and adjusting as appropriate.
 
-```{r add_a_species, eval = TRUE}
+```{r add_a_species1, eval = TRUE}
 new.species <- physiology.data[,"Rabbit"]
-
-new.tissue[, "Tissue"] <- "mammary"
-new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 
-  320/1000/60 # Itsukage et al. (2017) PMID: 29308107
-new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value'] <-
-# We'll arbitrarily set flow to a tenth of total adipose:
-  new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value']/10
+names(new.species) <- physiology.data[,"Parameter"]
+rabbit.BW <- new.species["Average BW"] 
+new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
+new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
 
 physiology.data <- cbind(physiology.data, new.species)
-knitr::kable(physiology.data[,c("Parameter","Units","Ferret")], 
-             caption = "Approximate Ferret Physiological Parameters", 
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+
+knitr::kable(physiology.data[,c("Parameter","Units","Wolverine")], 
+             caption = "Approximate Wolverine Physiological Parameters", 
              floating.environment="sidewaystable",
              row.names=FALSE,
              digits=3)
+```
+
+The tissue volumes and flows are stored separately in tissue.data
+```{r add_a_species2, eval = TRUE}
+new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+new.tissue.data$Species <- "Wolverine"
+
+tissue.data <- rbind(tissue.data,new.tissue.data)
+```
+
+Now we can make predictions for wolverines!
+```{r add_a_species3, eval = TRUE}
+calc_mc_css(chem.cas="80-05-7",species="wolverine",
+            parameterize.arg.list=list(default.to.human=TRUE),
+            suppress.messages=TRUE)
 ```
 
 ## Export functions

@@ -4,11 +4,11 @@ author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lum
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{f) Kapraun et al. (2022): Creating All Figures}
+  %\VignetteIndexEntry{g) Kapraun (2022): Creating All Figures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-wambaugh.john@epa.gov
+*Please send questions to wambaugh.john@epa.gov*
 
 from "Evaluation of a Rapid, Generic Human Gestational Dose Model"
 

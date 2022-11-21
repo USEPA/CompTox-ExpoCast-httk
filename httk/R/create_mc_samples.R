@@ -283,15 +283,17 @@ Set species=\"Human\" to run httkpop model.')
          parameters.dt[,eval(this.name):=subset(these.vols,Name==this.name)$value]
      these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
      these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
+     # We don't use httk::physiology.data because we want the user to be able to
+     # edit the data, so we grab physiology data from the interactive environment
      these.flows$value <- these.flows$value/
-       as.numeric(subset(httk::physiology.data,Parameter=="Cardiac Output")[
-       tolower(colnames(httk::physiology.data))==tolower(species)])
+       as.numeric(subset(physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(physiology.data))==tolower(species)])
      for (this.name in these.flows$Name)
        if (!(this.name %in% names(parameters.dt)))
          parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
      parameters.dt[, hematocrit:=
-       as.numeric(subset(httk::physiology.data,Parameter=="Hematocrit")[
-       tolower(colnames(httk::physiology.data))==tolower(species)])]
+       as.numeric(subset(physiology.data,Parameter=="Hematocrit")[
+       tolower(colnames(physiology.data))==tolower(species)])]
   }
 #
 #
