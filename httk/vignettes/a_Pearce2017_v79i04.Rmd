@@ -468,9 +468,12 @@ print(zoxamide2)
 ```
 
 ## Adding a tissue
-We can add mammary to the tissue data by making a row containing
-its data, subtracting the volumes and flows from the rest, and
-binding the row to tissue.data.
+The **httk** package contains a data.frame called tissue.data that describes the
+composition of various tissues in terms of the 
+[Schmitt (2008)](https://doi.org/10.1016/j.tiv.2007.09.010) 
+model. We can add 
+a new tissue (for example, mammary) to the tissue data by replicating the data
+from another tissue and adjusting as appropriate.
 ```{r add_a_tissue, eval = TRUE}
 new.tissue <- subset(tissue.data,Tissue == "adipose" & Species =="Human")
 new.tissue[, "Tissue"] <- "mammary"
@@ -512,6 +515,30 @@ Kp <- predict_partitioning_schmitt(
   tissues = tissues.to.include,
   suppress.messages = TRUE)
 lumped.params <- lump_tissues(Kp, tissuelist=compartments)
+```
+
+## Adding a species
+The **httk** package contains a data.frame called physiology.data that describes 
+the species-specific aspects of physiology necessary to parameterize a PBTK 
+model. We can add a new species (for example, ferrets) to the tissue data by 
+replicating the data from another species and adjusting as appropriate.
+
+```{r add_a_species, eval = TRUE}
+new.species <- physiology.data[,"Rabbit"]
+
+new.tissue[, "Tissue"] <- "mammary"
+new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 
+  320/1000/60 # Itsukage et al. (2017) PMID: 29308107
+new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value'] <-
+# We'll arbitrarily set flow to a tenth of total adipose:
+  new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value']/10
+
+physiology.data <- cbind(physiology.data, new.species)
+knitr::kable(physiology.data[,c("Parameter","Units","Ferret")], 
+             caption = "Approximate Ferret Physiological Parameters", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
 ```
 
 ## Export functions
