@@ -37,28 +37,27 @@
 #' tissues may vary.
 #' 
 #' @param Ktissue2pu.in List of partition coefficients from
-#' predict_partitioning_schmitt.
+#' \code{predict_partitioning_schmitt}. The tissues named in this list are 
+#' lumped into the compartments specified by \code{tissuelist} unless they are
+#' not present the specified \code{model}'s associated \code{alltissues}.
 #'
 #' @param parameters A list of physiological parameters including flows and
-#' volumes for tissues in \code{tissuelist}
+#' volumes for tissues named in \code{Ktissue2pu.in}
 #'
 #' @param tissuelist Manually specifies compartment names and tissues, which
 #' override the standard compartment names and tissues that are usually
 #' specified in a model's associated modelinfo file. Remaining tissues in the
 #' model's associated \code{alltissues} listing are lumped in the rest of the body.
 #'
-#' @param tissuelist Manually specifies tissues from \code{\link{tissue.data}} 
-#' that should be lumped.
-#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #'
-#' @param tissue.vols A list of volumes for tissues in \code{tissuelist}
+#' @param tissue.vols A list of volumes for tissues in \code{tissuelist}.
 #'
-#' @param tissue.flows A list of flows for tissues in \code{tissuelist}
+#' @param tissue.flows A list of flows for tissues in \code{tissuelist}.
 #'
 #' @param model Specify which model (and therefore which tissues) are being 
-#' considered
+#' considered.
 #'
 #' @param suppress.messages Whether or not the output message is suppressed.
 #'
@@ -85,10 +84,13 @@
 #' 
 #' @examples
 #' 
-#' pcs <- predict_partitioning_schmitt(chem.name='bisphenola')
-#' tissuelist <- list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut")
-#' ,muscle.bone=c('muscle','bone'))
-#' lump_tissues(pcs,tissuelist=tissuelist)
+#'  pcs <- predict_partitioning_schmitt(chem.name='bisphenola')
+#'  tissuelist <- list(
+#'    liver=c("liver"),
+#'    rapid=c("lung","kidney","muscle","brain"),
+#'    fat=c("adipose"),
+#'    slow=c('bone'))
+#'  lump_tissues(pcs,tissuelist=tissuelist)
 #' 
 #' @export lump_tissues
 lump_tissues <- function(Ktissue2pu.in,
@@ -109,13 +111,14 @@ lump_tissues <- function(Ktissue2pu.in,
   Tissue <- Species <- varable <- Parameter <- variable <- NULL
 #End R CMD CHECK appeasement.
 
-  #run some basic checks for naming consistency and completeness on input: 
-  if ((is.null(model)) & is.null(parameters))
-    stop('The "model" variable must be specified if a complete set of
-          "parameters" is not otherwise provided.')
+#  #run some basic checks for naming consistency and completeness on input: 
+#  if ((is.null(model)) & is.null(parameters))
+#    stop('The "model" variable must be specified if a complete set of
+#          "parameters" is not otherwise provided.')
   
-  if (is.null(model) & is.null(tissue.names)) stop("Model or tissue.names must be specified.")
-  if (is.null(tissue.names))
+  if (is.null(model) & is.null(tissuelist)) 
+    stop("Model or tissuelist must be specified.")
+  if (is.null(tissuelist))
   {
     model <- tolower(model)
     if (!(model %in% names(model.list)))            
@@ -123,9 +126,9 @@ lump_tissues <- function(Ktissue2pu.in,
       stop(paste("Model",model,"not available. Please select from:",
         paste(names(model.list),collapse=", ")))
     } else {
-      #Before using tissuelist, make sure it is initialized with the tissuelist
-      #entry from the modelinfo file of interest. If tissuelist is already manually
-      #specified, it takes priority.
+      # Before using tissuelist, make sure it is initialized with the tissuelist
+      # entry from the relevant modelinfo file. If tissuelist is already manually
+      # specified, it takes priority.
       if (is.null(tissuelist)){
         tissuelist <- model.list[[model]]$tissuelist
       }
@@ -135,12 +138,19 @@ lump_tissues <- function(Ktissue2pu.in,
       # or not.  
       tissuenames <- sort(unique(model.list[[model]]$alltissues))
     }
+  } else {
+    # get the list of tissues for which we have partition coefficients (names 
+    # are expected to be in the form of "K[TISSUE]2pu"):
+    tissuenames <- 
+      lapply(names(Ktissue2pu.in),
+             function(x) strsplit(strsplit(x,"K")[[1]][2],"2pu")[[1]][1])
+    if ("rbc" %in% tissuenames) tissuenames[tissuenames=="rbc"] <- 
+        "red blood cells"
   }
 
   if (!all(unlist(tissuelist) %in% tissuenames))
   {
-    stop("Not all of the tissues/compartments specified in \"tissuelist\" 
-are present in the entries of the associated modelinfo file's \"alltissues.\"")
+    stop("Some of the tissues/compartments specified in \"tissuelist\" are missing either from Ktissue2pu.in or the specified model's associated modelinfo file's \"alltissues.\"")
   }
   
   #Check to make sure the tissuelist is a list of character vectors.
@@ -330,7 +340,8 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
       	
       		#if this.flow or this.vol still NULL after checking all sources
       	if (!suppress.messages & 
-          ((length(this.flow) == 0) | (length(this.vol)==0)))
+          ((length(this.flow) == 0) | (length(this.vol)==0) |
+           !is.numeric(this.flow) | !is.numeric(this.vol)))
         {
       	  warning("A flow or volume associated with the ",this.tissue," and 
       	passed to lump_tissues is undefined. You may need to check to make
@@ -362,7 +373,19 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
   		}
 # Add the flow for this tissue to the lumped tissue:                             
   		flow[[this.lumped.tissue]] <- flow[[this.lumped.tissue]] + this.flow 
-		}
+  		#if check if we messed up flow or vol:
+  		if (!suppress.messages & 
+  		    ((length(flow[[this.lumped.tissue]]) == 0) | 
+  		     (length(vol[[this.lumped.tissue]])==0) |
+  		     !is.numeric(flow[[this.lumped.tissue]]) | 
+  		     !is.numeric(vol[[this.lumped.tissue]])))
+  		{
+  		  warning("A flow or volume associated with the ",this.tissue," and 
+      	passed to lump_tissues is undefined. You may need to check to make
+      	sure the input tissue information, if no tissue volume or flow is
+      	intended to be left out.")
+  		}		
+  	}
 #Calculate the average partition coefficient by dividing by the total volume of
 #the lumped tissue
 	  if (length(vol[[this.lumped.tissue]]) > 0){
@@ -436,5 +459,5 @@ NULL if the model is a 1 compartment model where no lumping is necessary.")
   names(flow)[names(flow) == 'liver'] <- 'total.liver'
   names(flow) <- paste('Q',names(flow),'f',sep='')
     
- 	return(c(Ktissue2pu.out,vol,flow))
+ 	return(sapply(c(Ktissue2pu.out,vol,flow),set_httk_precision))
 }

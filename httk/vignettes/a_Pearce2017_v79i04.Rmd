@@ -470,26 +470,47 @@ print(zoxamide2)
 We can add mammary to the tissue data by making a row containing
 its data, subtracting the volumes and flows from the rest, and
 binding the row to tissue.data.
-```{r add_a_tissue, eval = FALSE}
+```{r add_a_tissue, eval = TRUE}
 new.tissue <- subset(tissue.data,Tissue == "adipose" & Species =="Human")
 new.tissue[, "Tissue"] <- "mammary"
-new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 320/1000/60 # Itsukage et al. (2017) PMID: 29308107
-new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value'] <- 
-   new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value']/10
-tissue.data[tissue.data$Tissue == "rest", 'value'] <-
-    tissue.data[tissue.data$Tissue == "rest", 'value'] - new.tissue[new.tissue$variable %in% c('Vol (L/kg)','Flow (mL/min/kg^(3/4))'),'value']
+new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 
+  320/1000/60 # Itsukage et al. (2017) PMID: 29308107
+new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value'] <-
+# We'll arbitrarily set flow to a tenth of total adipose:
+  new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value']/10
 tissue.data <- rbind(tissue.data, new.tissue)
-print(subset(tissue.data,Tissue=="mammary"))
+knitr::kable(subset(tissue.data,Tissue=="mammary"), 
+             caption = "Approximate Mamary Tissue Parameters", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
 ```
-To generate the parameters for a model with kidneys, thyroid, brain, breast, a
-liver compartment combining the liver and gut, and a rest of body
-compartment:
+If we thought this tissue had been included in the rest of body total
+previously we could consider removing it from those volumes and flows, but
+we won't do that here (Note eval=FALSE):
 ```{r add_a_tissue2, eval = FALSE}
+# If we thought this tissue was included in the rest of the bod
+tissue.data[tissue.data$Tissue == "rest", 'value'] <-
+  tissue.data[tissue.data$Tissue == "rest", 'value'] -
+  new.tissue[new.tissue$variable %in% c(
+    'Vol (L/kg)',
+    'Flow (mL/min/kg^(3/4))'),
+    'value']
+```
+To generate the parameters for a model with kidneys, thyroid, brain, 
+breast, liver compartment combining the liver and gut, and a rest of body
+compartment:
+```{r add_a_tissue3, eval = TRUE}
 compartments <- list(liver = c("liver", "gut"), kidney = "kidney",
                      breast = "mammary", brain = "brain",
                      thyroid = "thyroid")
-Kp <- predict_partitioning_schmitt(chem.name = "Nicotine", tissues = unique(tissue.data$Tissue))
-lump_tissues(Kp, tissuelist=compartments, model=NA)
+tissues.to.include <- unique(tissue.data$Tissue)
+tissues.to.include <- tissues.to.include[!(tissues.to.include=="placenta")]
+Kp <- predict_partitioning_schmitt(
+  chem.name = "Nicotine", 
+  tissues = tissues.to.include,
+  suppress.messages = TRUE)
+lumped.params <- lump_tissues(Kp, tissuelist=compartments)
 ```
 
 ## Export functions
