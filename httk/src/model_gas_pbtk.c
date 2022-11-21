@@ -360,8 +360,8 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Ainh] = ( Qalv * ( yout[ID_Calv] - Cinh ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
-
+  ydot[ID_Ainh] = ( Qalv * (  Cinh - yout[ID_Calv] ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Cinh ) ;
+  
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;

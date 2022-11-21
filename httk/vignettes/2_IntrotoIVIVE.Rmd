@@ -181,40 +181,62 @@ Download a list of chemicals from the CompTox Chemicals Dashbaord and save as "m
 mychems <- read.xls("mychems.xls",stringsAsFactors=F)
 ```
 
-## Take a look at the first few rows of your table:
+Take a look at the first few rows of your table:
+```{r calc_equivalent_dose, eval = FALSE}
 head(mychems)
+```
 
-## Get the ToxCast data for only the chemicals of interest:
+Get the ToxCast data for only the chemicals of interest:
+```{r calc_equivalent_dose, eval = FALSE}
 my.tox <- subset(toxcast,CAS%in%mychems$CASRN)
+```
 
-## How many chemicals covered by ToxCast (dim gives number of rows and columns):
+How many chemicals covered by ToxCast (dim gives number of rows and columns):
+```{r calc_equivalent_dose, eval = FALSE}
 dim(my.tox)
-## Out of how many chemicals of interest:
+```
+
+Out of how many chemicals of interest:
+```{r calc_equivalent_dose, eval = FALSE}
 dim(mychems)  
-  
-## Mark the columns with ToxCast AC50s:
+```
+
+Mark the columns with ToxCast AC50s:
+```{r calc_equivalent_dose, eval = FALSE}
 toxcast.start <- 2
 toxcast.end <- 1474
+```
 
-## Find the tenth percentile AC50 for each chemical:
+Find the tenth percentile AC50 for each chemical:
+```{r calc_equivalent_dose, eval = FALSE}
 my.tox$tenth <- apply(my.tox[,toxcast.start:toxcast.end],
                   1,
                   function(x) quantile(x,0.1,na.rm=T))
+```
 
-## Get rid of chemicals where there is no hit (1,000,000 or 1e6 denotes no hit):
+Get rid of chemicals where there is no hit (1,000,000 or 1e6 denotes no hit):
+```{r calc_equivalent_dose, eval = FALSE}
 my.tox <- subset(my.tox,tenth<1e6)
-## Reduce to just the tneth percentile concentration (uM):
-my.tox <- my.tox[,c("CAS","tenth")]
-## Add the other chemical information:
-my.tox <- merge(my.tox,mychems,by.x="CAS",by.y="CASRN")
+```
 
+Reduce to just the tneth percentile concentration (uM):
+```{r calc_equivalent_dose, eval = FALSE}
+my.tox <- my.tox[,c("CAS","tenth")]
+```
+
+Add the other chemical information:
+```{r calc_equivalent_dose, eval = FALSE}
+my.tox <- merge(my.tox,mychems,by.x="CAS",by.y="CASRN")
+```
 
 # STEP TWO
-# Perform steady-state reverse dosimetry in vitro-in vivo extrapolation (IVIVE):
-
+Perform steady-state reverse dosimetry in vitro-in vivo extrapolation (IVIVE):
+```{r calc_equivalent_dose, eval = FALSE}
 library(httk)
-# For each chemical in your subset of ToxCast, add the HTTK plasma steady-state 
-# concentration if it is available:
+```
+For each chemical in your subset of ToxCast, add the HTTK plasma steady-state 
+concentration if it is available:
+```{r calc_equivalent_dose, eval = FALSE}
 for (this.cas in my.tox$CAS)
 {
 # get_cheminfo() gives a list of all the CAS numbers for which HTTK will work:
@@ -230,16 +252,22 @@ for (this.cas in my.tox$CAS)
     my.tox[my.tox$CAS==this.cas,"Css.Type"] <- "in vitro"
   }
 }
-# Let's look at just the relevant columns from our table. Any NA's indicate that
-# we don't currently have in vitro TK data for those chemicals:
-my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+```
 
+Let's look at just the relevant columns from our table. Any NA's indicate that
+we don't currently have in vitro TK data for those chemicals:
+```{r calc_equivalent_dose, eval = FALSE}
+my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+```
 
 # STEP THREE
-# Load the table of quantitative structure-property relationship (QSPR) model
-# predictions from the Sipes et al. (2017) supplemental material:
+Load the table of quantitative structure-property relationship (QSPR) model 
+predictions from the Sipes et al. (2017) supplemental material:
+```{r calc_equivalent_dose, eval = FALSE}
 load_sipes2017()
-# Now go through the list of chemicals again:
+```
+Now go through the list of chemicals again:
+```{r calc_equivalent_dose, eval = FALSE}
 for (this.cas in my.tox$CAS)
 {
 # But only calculate if we didn't already have a value (NOTE: load_sipes2017
@@ -257,9 +285,14 @@ for (this.cas in my.tox$CAS)
     my.tox[my.tox$CAS==this.cas,"Css.Type"] <- "in silico"
   }
 }
-# Take another look at our table many of the gaps are filled in:
-my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+```
 
+Take another look at our table many of the gaps are filled in:
+```{r calc_equivalent_dose, eval = FALSE}
+my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+```
+
+```{r calc_equivalent_dose, eval = FALSE}
 par(mar = c(3, 2, 2,2))
 plot(x=1:14,
      y=my.tox$BER,
@@ -268,37 +301,51 @@ plot(x=1:14,
      xlab="")
 axis(1, at=1:14,
      labels=substr(my.tox$PREFERRED_NAME,1,10),las=2)
-
-
+```
 
 # STEP FOUR
-# Calculate the equivalent steady-state dose to produce plasma cocnentration 
-# equal to tenth percentile Toxcast AC50
+Calculate the equivalent steady-state dose to produce plasma cocnentration 
+equal to tenth percentile Toxcast AC50
+```{r calc_equivalent_dose, eval = FALSE}
 my.tox$EquivDose <- my.tox$tenth / my.tox$Css
-# Look at the table again:
+```
+Look at the table again:
+```{r display_table2, eval = FALSE}
 my.tox[,c("PREFERRED_NAME","tenth","EquivDose")]          
-    
+```    
                   
 # STEP FIVE
-# Find the appropriate SEEM3 consensus exposure predictions to prioritize these
-# chemicals on the basis of putative risk
+Find the appropriate SEEM3 consensus exposure predictions to prioritize these
+chemicals on the basis of putative risk
 
-# Load the supplemental information from Ring et al. (2018):
+Load the supplemental information from Ring et al. (2018):
+```{r load_seem3, eval = FALSE}
 SEEM3 <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
+```
 
-# Merge the consensus model predictions with your table:
+Merge the consensus model predictions with your table:
+```{r mergetoxexposure, eval = FALSE}
 my.tox <- merge(my.tox,SEEM3[,c("CAS","seem3","seem3.l95","seem3.u95","Pathway","AD")])
+```
 
-# Calulate a bioactivity:exposure ratio:
+Calulate a bioactivity:exposure ratio:
+```{r calc_ber, eval = FALSE}
 my.tox$BER <- my.tox$EquivDose/my.tox$seem3.u95
- 
-# Reorder your table by BER:
-my.tox <- my.tox[order(my.tox$BER),]
+``` 
 
-# Make a plot:
-# Change the plot margins:
+Reorder your table by BER:
+```{r sort_by_ber, eval = FALSE}
+my.tox <- my.tox[order(my.tox$BER),]
+```
+
+## Make a BER plot
+Change the plot margins:
+```{r ber_plot_margins, eval = FALSE}
 par(mar = c(7, 5, 4,2))
-# Convert the chemical names into factors for plotting:
+```
+
+Convert the chemical names into factors for plotting:
+```{r ber_plot, eval = FALSE}
 plot(x=factor(my.tox$PREFERRED_NAME,levels=my.tox$PREFERRED_NAME),
      y=my.tox$BER,
 # Use a log scale on the y-axis:
@@ -310,7 +357,7 @@ plot(x=factor(my.tox$PREFERRED_NAME,levels=my.tox$PREFERRED_NAME),
 # Plot the first 15 characters of each chemical name on the horizontal eaxis:
 axis(1, at=factor(my.tox$PREFERRED_NAME,levels=my.tox$PREFERRED_NAME),
      labels=substr(my.tox$PREFERRED_NAME,1,15),las=2)
-
+```
 
 
 
