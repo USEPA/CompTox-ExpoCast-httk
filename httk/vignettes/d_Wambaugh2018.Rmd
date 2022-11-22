@@ -1,10 +1,10 @@
 ---
-title: "Wambaugh et al. (2018): Creating All Figures"
+title: "Wambaugh et al. (2018): Evaluating In Vitro-In Vivo Extrapolation"
 author: "John Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{d) Wambaugh (2018): Creating All Figures}
+  %\VignetteIndexEntry{Wambaugh (2018): Evaluating In Vitro-In Vivo Extrapolation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -4,7 +4,7 @@ author: "Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and Jo
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{a) Pearce (2017)}
+  %\VignetteIndexEntry{Pearce (2017): HTTK Basics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -58,7 +58,7 @@ backward compatibility, if you encounter issues with the latest release of
 and cannot easily address the changes, historical versions of **httk** are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
-## Prepare for session
+## Prepare R to run the vignette
 ```{r}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
