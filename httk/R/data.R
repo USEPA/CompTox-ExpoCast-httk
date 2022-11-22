@@ -1688,3 +1688,37 @@
 #' @source Kapraun et al. 2021 (submitted)
 #' @keywords data
 "wang2018"
+
+#' ToxCast Example Data
+#' The main page for the ToxCast data is here:
+#' https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
+#' Most useful to us is a single file containing all the hits across all chemcials
+#' and assays:
+#' https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
+#' 
+#' As of November, 2022 the most recent version was 3.5 and was available as an
+#' .Rdata file (invitrodb_3_5_mc5.Rdata)
+#' 
+#'  Unfortunately for this vignette there are too many ToxCast data to fit into a
+#' 5mb R package. So we will subset to just the shemicals for the 
+#' "Intro to IVIVE" vignette and distribute
+#' only those data. In addition, out of 78 columns in the data, we will keep only 
+#' eight.
+#' @name example.toxcast
+#' @docType data
+#' @format data.frame
+#' @keywords data
+"example.toxcast"
+
+#' SEEM Example Data
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+#' Download the file Ring2018Preds.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Intro to IVIVE" example chemicals
+#' @name example.seem
+#' @docType data
+#' @format data.frame
+#' @keywords data
+"example.seem"

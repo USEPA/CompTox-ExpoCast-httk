@@ -1,10 +1,10 @@
 ---
-title: "Linakis et al. (2020): Analysis and Figure Generation"
+title: "Linakis et al. (2020): High Throughput Inhalation Model"
 author: "Matt Linakis"
 date: "January 30, 2020"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{f) Linakis (2020): Analysis and Figure Generation}
+ %\VignetteIndexEntry{Linakis (2020): High Throughput Inhalation Model}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---

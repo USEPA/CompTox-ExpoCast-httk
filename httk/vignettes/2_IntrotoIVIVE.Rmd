@@ -4,60 +4,96 @@ author: "John Wambaugh"
 date: "November, 2022"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{2) Introduction to IVIVE}
+ %\VignetteIndexEntry{Introduction to IVIVE}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
 *Please send questions to wambaugh.john@epa.gov*
 
+# Introduction
 Chemical risk assessment depends on knowledge of inherent chemical hazard,
-the dose-response relationship, and the extent of exposure that occurs ([NASEM 2017](<https://doi.org/10.17226/24635>)).
+the dose-response relationship, and the extent of exposure that occurs 
+([NASEM 2017](<https://doi.org/10.17226/24635>)).
 High throughput screening (HTS) for *in vitro* bioactivity allows 
-characterization of potential hazard for thousands of chemicals for which no other testing has occurred
+characterization of potential hazard for thousands of chemicals for which no 
+other testing has occurred
 ([Judson et al., 2009](<https://doi.org/10.1289/ehp.0800168>)).
 
-Toxicokinetics (TK) describes the Absorption, Distribution, Metabolism, and Excretion (ADME) of a chemical by the body. TK relates external exposures to internal tissue concentrations of chemical and
-therefore informs the chemical dose-response relationship ([Coecke et al., 2013](<https://doi.org/10.1016/j.tiv.2012.06.012>)). TK requires chemical-specific information that is traditionally obtained *in vivo*.
-However, most chemicals do not have TK data, so a new approach methodology (NAM) uses *in vitro* TK methods adapted from the pharmaceutical industry to provide the necessary chemical-specific information
-([Wambaugh et al., 2019](https://doi.org/10.1016/j.cotox.2019.07.001), [Chang et al., 2022](<https://doi.org/10.3390/toxics10050232>)).
-High(er) throughput toxicokinetics (HTTK) involves the combination of chemical-specific *in vitro* TK data  and chemical-independent ("generic") TK models to predict TK ([Breen et al., 2021](<https://doi.org/10.1080/17425255.2021.1935867>)).
+Toxicokinetics (TK) describes the Absorption, Distribution, Metabolism, and 
+Excretion (ADME) of a chemical by the body. TK relates external exposures to 
+internal tissue concentrations of chemical and
+therefore informs the chemical dose-response relationship 
+([Coecke et al., 2013](<https://doi.org/10.1016/j.tiv.2012.06.012>)). TK 
+requires chemical-specific information that is traditionally obtained *in vivo*.
+However, most chemicals do not have TK data, so a new approach methodology 
+(NAM) uses *in vitro* TK methods adapted from the pharmaceutical industry to 
+provide the necessary chemical-specific information
+([Wambaugh et al., 2019](https://doi.org/10.1016/j.cotox.2019.07.001), 
+[Chang et al., 2022](<https://doi.org/10.3390/toxics10050232>)).
+High(er) throughput toxicokinetics (HTTK) involves the combination of 
+chemical-specific *in vitro* TK data  and chemical-independent ("generic") TK 
+models to predict TK 
+([Breen et al., 2021](<https://doi.org/10.1080/17425255.2021.1935867>)).
 
-The primary goal of HTTK is to provide a human dose context for bioactive *in vitro* concentrations from HTS (that is, *in vitro-in vivo* extrapolation, or IVIVE) ([Wetmore, 2015](<https://doi.org/10.1016/j.tox.2014.05.012>)).
-IVIVE is Utilization of *in vitro* experimental data to predict phenomena in vivo.
-In pharmaceutical development, HTTK methods allow IVIVE to estimate therapeutic doses for clinical studies – predicted concentrations are typically on the order of values measured in clinical trials ([Wang, 2010](<https://doi.org/10.1124/dmd.110.032177>)).
-High throughput screening + IVIVE can predict a daily chemical dose rate (mg/kg bw/day) that might be adverse ([Paul Friedman et al., 2019](<https://doi.org/10.1093/toxsci/kfz201>)).
+The primary goal of HTTK is to provide a human dose context for bioactive 
+*in vitro* concentrations from HTS (that is, *in vitro-in vivo* extrapolation, 
+or IVIVE) ([Wetmore, 2015](<https://doi.org/10.1016/j.tox.2014.05.012>)).
+IVIVE is Utilization of *in vitro* experimental data to predict phenomena 
+*in vivo*.
+In pharmaceutical development, HTTK methods allow IVIVE to estimate therapeutic 
+doses for clinical studies – predicted concentrations are typically on the 
+order of values measured in clinical trials 
+([Wang, 2010](<https://doi.org/10.1124/dmd.110.032177>)).
+High throughput screening + IVIVE can predict a daily chemical dose rate 
+(mg/kg bw/day) that might be adverse 
+([Paul Friedman et al., 2019](<https://doi.org/10.1093/toxsci/kfz201>)).
 
-A secondary goal is to provide open source data and models for evaluation and use by the scientific community ([Pearce et al., 2017](<https://doi.org/10.18637%2Fjss.v079.i04>)).
+A secondary goal is to provide open source data and models for evaluation and 
+use by the scientific community 
+([Pearce et al., 2017](<https://doi.org/10.18637%2Fjss.v079.i04>)).
 
-The following material is from a lecture taught as part of the course
-"Computational Methods in Chemical Risk Assessment"
-at Rutgers University in September, 2019.
+*The following material is from a lecture taught as part of the course "Computational Methods in Chemical Risk Assessment" at Rutgers University in September, 2019.*
+
+## Prepare R to run the vignette
+```{r}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+
+### Clear the memory
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
 
 ## HTTK Version
 
-This vignette was created using **httk** v2.2.2 in 2022. Although we attempt to maintain 
-backward compatibility, if you encounter issues with the latest release of **httk**
-and cannot easily address the changes, historical versions of **httk** are 
-available from: https://cran.r-project.org/src/contrib/Archive/httk/
+This vignette was created using **httk** v2.2.2 in 2022. Although we attempt to 
+maintain backward compatibility, if you encounter issues with the latest 
+release of **httk** and cannot easily address the changes, historical versions 
+of **httk** are available from: 
+https://cran.r-project.org/src/contrib/Archive/httk/
 
 
-# Getting Started
+# Background
 
-For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html>
-
-For an introduction to toxicokinetics, with examples in **httk**, see Ring (2021) in the "TAME Toolkit":
-<https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
+If you are familiar with computer files and R you might want to skip directly 
+to "Step 1: Loading In Vitro Bioactivity Data".
 
 ## Files and Folders
 
-R (or any computer program) needs to know where to look to find particular information (such as data generated by a panel of in vitro assays). 
-We describe a chunk of information as a "file". Files range in size and can be small (even 0 bytes) or very large (several GB).
-A file my physically be located on a disk drive inside your computing device or, increasingly, it might be located somewhere in a cloud storage network.
+R (or any computer program) needs to know where to look to find particular 
+information (such as data generated by a panel of in vitro assays). 
+We describe a chunk of information as a "file". Files range in size and can be 
+small (even 0 bytes) or very large (several GB).
+A file my physically be located on a disk drive inside your computing device 
+or, increasingly, it might be located somewhere in a cloud storage network.
 Regardless, most computers will treat a file as if it has a specific location.
-Each file has a name, although multiple files can have the same name as long as those files are stored in different "folders".
+Each file has a name, although multiple files can have the same name as long as 
+those files are stored in different "folders".
 
-Files for all the operating systems with R are organized using a folder (also called a "directory") and sub-folder structure. 
+Files for all the operating systems with R are organized using a folder (also 
+called a "directory") and sub-folder structure. 
 A sub-folder is a folder within another folder. They can be well organized:
 
 /animals/cats/tabbies/
@@ -66,7 +102,8 @@ Or not:
 
 /animals/gradschoolfiles/photosfromchildhood
 
-The sequence of folders and sub-folders leading to a particular file is referred to as a "path". 
+The sequence of folders and sub-folders leading to a particular file is 
+referred to as a "path". 
 For information on how folder structures work, please check out these sites:
 
 * <https://en.wikipedia.org/wiki/Directory_structure>
@@ -75,16 +112,19 @@ For information on how folder structures work, please check out these sites:
 
 Within the command shell you use the "cd" command to "change directories".
 
-One complication to watch out for is the direction of the symbol that separates folder names in the path.
+One complication to watch out for is the direction of the symbol that separates 
+folder names in the path.
 On Windows the path is separated by "back-slashes": \\
 
 \\animals\\cats\\black
 
-On Unix-based operating systems (including Linux and MacOS) the path is separated by "forward slashes": /
+On Unix-based operating systems (including Linux and MacOS) the path is 
+separated by "forward slashes": /
 
 /animals/cats/black
 
-R always uses Unix forward slashes, even on a Windows machine, so if you know that the path is:
+R always uses Unix forward slashes, even on a Windows machine, so if you know 
+that the path is:
 
 c:\\users\\USERNAME\\Downloads\\
 
@@ -92,14 +132,19 @@ You need to tell R that you want:
 
 c:/users/USERNAME/Downloads/
 
-Finally, the bit at the front of the path (such as "C:\\" or "L:\\" tells the computer which "drive" to look in to find your folders.
-Often "C drive" (c:\\) is physically inside your machine while other letters might indicate network (or cloud) drives.
+Finally, the bit at the front of the path (such as "C:\\" or "L:\\" tells the 
+computer which "drive" to look in to find your folders.
+Often "C drive" (c:\\) is physically inside your machine while other letters 
+might indicate network (or cloud) drives.
 
 ### Home Directory
 Whether you are on Linux or Windows you have a home directory. 
-Often you will only be able to write and edit files within your home directory and its sub-directories. However, you may be able to read and copy from most other folders.
+Often you will only be able to write and edit files within your home directory 
+and its sub-directories. However, you may be able to read and copy from most 
+other folders.
 
-On Windows your home directory will be a sub-directory of "C:\\users\\". For example, "C:\\users\\jwambaug".
+On Windows your home directory will be a sub-directory of "C:\\users\\". For 
+example, "C:\\users\\jwambaug".
 
 ### Common and Important Directories
 You will want to create a directory for your R packages locally on your machine:
@@ -112,7 +157,11 @@ Many web browsers put their files in a default directory such as
 C:\\users\\USERNAME\\Downloads
 
 ### Temporary (or "Swap") Space
-On Windows the path "c:\\" refers to the physical hard drive inside your computer. Therefore the only copy of "c:\\users\\USERNAME\\" is on your computer and if that drive or the whole computer is damaged or destroyed you have lost those files. For this reason we call this "temporary" space. You don't want to keep the only copies of your files there.
+On Windows the path "c:\\" refers to the physical hard drive inside your 
+computer. Therefore the only copy of "c:\\users\\USERNAME\\" is on your 
+computer and if that drive or the whole computer is damaged or destroyed you 
+have lost those files. For this reason we call this "temporary" space. You 
+don't want to keep the only copies of your files there.
 
 ## Installing Necessary Software
 
@@ -136,228 +185,433 @@ install.packages("httk")
 install.packages("readxl")
 ```
 
-## Set vignette options
-```{r setup_vignette, eval = TRUE}
-knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
-```
-
-## Delete all objects from memory:
-```{r clear_memory, eval = TRUE}
-rm(list=ls())
+### Installing R package "readxl"
+```{r install_ggplot2, eval = FALSE}
+install.packages("ggplot2")
 ```
 
 ## Load the necessary packages:
 ```{r load_packages, eval = TRUE}
 library(httk)
 library(readxl)
+library(ggplot2)
 ```
 
-# *In Vitro* Screening Data
 
-**ToxCast pargraph from paper**
+# Step One: Loading *In Vitro* Screening Data
 
-Load ToxCast Data for Specific Chemicals from the CompTox Dashboard:
+The [ToxCast](https://doi.org/10.1021/tx3000939) and 
+[Tox21](https://doi.org/10.1289/ehp.1205784) research programs
+employ batteries of high-throughput assays to assess
+chemical bioactivity *in vitro*.
+Not every chemical is tested through every assay 
+([Richard et al., 2016](https://doi.org/10.1289/ehp.1205784)). 
+Most assays are conducted in concentration response,
+and each corresponding assay endpoint is analyzed statistically
+to determine if there is a concentration-dependent response or
+“hit” using the ToxCast Pipeline 
+([Filer et al., 2017](https://doi.org/10.1093/bioinformatics/btw680)). 
+Most assay
+endpoint-chemical combinations are nonresponsive. Here, only
+the hits are treated as potential indicators of bioactivity.
 
-Download the ToxCast data: 
-<https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data>
+*In vitro* bioactivity does not necessarily indicate adversity or hazard.
+Biological models can be used to make predictions of
+toxicity based on *in vitro* data (for example, 
+[Sipes et al., 2011](https://doi.org/10.1093/toxsci/kfr220), [Browne et al., 2015](https://doi.org/10.1021/acs.est.5b02641) and [Kleinstreuer et al., 2017](https://doi.org/10.1021/acs.chemrestox.6b00347)).
+However, here we make a more 
+conservative, precautionary assumption that concentrations too low to cause 
+*in vitro* bioactivity are more likely to be safe
+([Paul Friedman et al., 2019](<https://doi.org/10.1093/toxsci/kfz201>)).
+Among all of the assay hits for each chemical, we choose to use the lower 10th 
+percentile
+of the $\mu M$ potencies (50% active concentration or $AC_{50}$). We are 
+assuming that the
+10th percentile represents a low concentration for activating
+multiple assays (assuming 10 or more bioactive assays were observed
+for a given chemical). However, this bioactivity does not necessarily
+have a direct toxicological interpretation. 
 
-* Go to “Download ToxCast Summary Information”
-* Download INVITRODB_V3_2_SUMMARY.zip and place it in your R working folder
-* Unzip the file ac50_Matrix_190708.csv so that it is in your R working folder
+## Downloading ToxCast Data
 
-Don't forget to use "setwd(FOLDERPATH)" to change to your R working folde
+The main page for the data is here:
+https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
 
-Load the matrix of ToxCast fifty percent activation concentrations (AC50's) 
-given in uM by assay. "NA" indicates that the assay was not run for that
-chemical.
+Most useful to us is a single file containing all the hits across all chemcials
+and assays:
+https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
 
-```{r load_hts, eval = FALSE}
-toxcast <- read.csv("ac50_Matrix_190708.csv",stringsAsFactors=F)
+As of November, 2022 the most recent version was 3.5 and was available as an
+.Rdata file (invitrodb_3_5_mc5.Rdata), which we can download and place in our 
+working directory (FOLDERPATH).
+
+## Loading the Data into R
+
+Don't forget to use "setwd(FOLDERPATH)" to change to your R working folder:
+```{r change_directory, eval = FALSE}
+setwd("FOLDERPATH")
 ```
 
-Download a list of chemicals from the CompTox Chemicals Dashbaord and save as "mychems.xls"
-<http://comptox.epa.gov/dashboard/>
-```{r load_mychems, eval = FALSE}
-mychems <- read.xls("mychems.xls",stringsAsFactors=F)
+Then load the file:
+```{r load_toxcast, eval = FALSE}
+load("invitrodb_3_5_mc5.Rdata")
+```
+We now have a file "mc5" in our woking environment. It's absolutely huge, so
+lets shrink it down to contain only the chemicals we care about.
+
+This list could be chemicals with HTTK data (note, this step
+cuts things down to chemicals with human HTTK data, you could change species to
+rat and get something different).
+
+```{r subset_toxcast1, eval = FALSE}
+toxcast.httk <- subset(mc5, dsstox_substance_id %in% get_cheminfo(
+         info="DTXSID",
+         suppress.messages=TRUE))
 ```
 
-Take a look at the first few rows of your table:
-```{r calc_equivalent_dose1, eval = FALSE}
-head(mychems)
+# Critical Step: Select your chemicals of interest
+We might have chemicals we are interested in for one reason or another --
+you could type any chemical ID's you want into the following my.chems vector,
+or even load it from a file. 
+
+Here we'll pick 50 chemicals at random from among 
+the ToxCast chemicals:
+```{r subset_toxcast2, eval = FALSE}
+set.seed(1234)
+my.chems <- sample(mc5$dsstox_substance_id,50)
+example.toxcast <- as.data.frame(mc5[mc5$dsstox_substance_id %in% my.chems,])
+```
+Unfortunately for this vignette there are too many ToxCast data to fit into a
+5mb R package. So we will subset to just the selected chemicals and distribute
+only those data. In addition, out of 78 columns in the data, we will keep only 
+eight. Download the full data following the instructions above.
+```{r subset_toxcast3, eval = FALSE}
+example.toxcast <- example.toxcast[, c("chnm",
+              "dsstox_substance_id",
+              "spid",
+              "hitc",
+              "modl",
+              "aeid",
+              "modl_ga",
+              "modl_ac10",
+              "modl_acc")]
+# reduce precision to decrease space:
+cols <- c("modl_ga", "modl_ac10", "modl_acc")
+for (this.col in cols)
+  example.toxcast[, this.col] = signif(example.toxcast[, this.col], 3)
+save(example.toxcast,file="introtoivive-toxcast.Rdata",version=2)
 ```
 
-Get the ToxCast data for only the chemicals of interest:
-```{r calc_equivalent_dose2, eval = FALSE}
-my.tox <- subset(toxcast,CAS%in%mychems$CASRN)
+## Interpreting the Assay Information
+
+In the mc5 table, "aenm" gives the assay name while "dsstox_substance_id" is the
+chemical identity from the 
+[CompTox Chemicals Dashboard](https://comptox.epa.gov/dashboard). 
+Since both names and CAS-RN can be subject to variations, we track chemical 
+identities with the DSSTox Substance ID’s or “DTXSIDs” 
+([Grulke et al., 2019](https://doi.org/10.1016/j.comtox.2019.100096)).
+
+The column "hitc" is 1 (that is, "TRUE") if there was a statistically-signficant
+systematic concentration-response observed (this is a "hit"). "hitc" is 0 
+(FALSE) if there was no hit. The column "mc6_flags" indicates features of the
+hit that might be of interest for further examination but are not necessarily
+disqualifying.
+
+The column "modl" indicates the type of concentration-response modl that was 
+selected (based on 
+[Akaike Information Criterion](https://doi.org/10.1002/wics.1460))
+to best describe the data. The possibilities are constant ("cnst" -- no 
+concentation response), 
+[Hill equation](https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)) 
+("hill"),
+or gain-loss model ("gnls" -- the product of an increasing and decreasing Hill
+equations). "gnls" is often interpreted as being caused
+by cytotoxicity.
+
+The column "modl_ga" indicates the log10 uM concentration at which the chemical 
+caused 50% activity. This is also called the chemical-assay “potency” or 
+“$AC_{50}$”.
+
+Each chemical might have multiple assays for which there is a hit. Each chemical 
+may have been run multiple times (experimental replicates), so that there may be 
+multiple samples from the same chemical for the same assay. Different samples 
+are indicated by the column “spid” (sample id).
+
+```{r display_toxcast, eval = TRUE}
+example.toxcast <- httk::example.toxcast
+knitr::kable(head(example.toxcast), caption = "ToxCast In Vitro Bioactivity Data",
+             floating.environment="sidewaystable")
 ```
 
-How many chemicals covered by ToxCast (dim gives number of rows and columns):
-```{r calc_equivalent_dose3, eval = FALSE}
-dim(my.tox)
+## Find the concentrations of interest
+
+Then we can build a table summarizing the *in vitro* data. For a "hit", the 
+"AC50" indicates the 50%
+activation concentration from the best curve-fit, "AC10" indicates the concentration
+estimated to cause 10%, and "ACC" is the "activity concentration at cutoff" are 
+which is the concentration that first causes statistically significant activity.
+See [Filer et al. (2017)](https://doi.org/10.1093/bioinformatics/btw680) figure 
+three for additional discussion.
+```{r toxcast_summary.table, eval = TRUE}
+toxcast.table <- NULL
+for (this.id in unique(example.toxcast$dsstox_substance_id))
+{
+  this.subset <- subset(example.toxcast, dsstox_substance_id == this.id)
+  these.hits <- subset(this.subset, hitc==1)
+  if (dim(these.hits)[1]>0){
+      this.row <- data.frame(Compound=as.character(this.subset[1,"chnm"]),
+                         DTXSID=this.id,
+                         Total.Assays = dim(this.subset)[1],
+                         Unique.Assays = length(unique(this.subset$aeid)),
+                         Total.Hits = dim(these.hits)[1],
+                         Unique.Hits = length(unique(these.hits$aeid)),
+                         Low.AC50 = signif(min(these.hits$modl_ga),3),
+                         Low.AC10 = signif(min(these.hits$modl_ac10),3),
+                         Low.ACC = signif(min(these.hits$modl_acc),3),
+                         Q10.AC50 = signif(quantile(these.hits$modl_ga,probs=0.1),3),
+                         Q10.AC10 = signif(quantile(these.hits$modl_ac10,probs=0.1),3),
+                         Q10.ACC = signif(quantile(these.hits$modl_acc,probs=0.1),3),
+                         Med.AC50 = signif(median(these.hits$modl_ga),3),
+                         Med.AC10 = signif(median(these.hits$modl_ac10),3),
+                         Med.ACC = signif(median(these.hits$modl_acc),3),
+                         Q90.AC50 = signif(quantile(these.hits$modl_ga,probs=0.9),3),
+                         Q90.AC10 = signif(quantile(these.hits$modl_ac10,probs=0.9),3),
+                         Q90.ACC = signif(quantile(these.hits$modl_acc,probs=0.9),3)
+                         )
+    toxcast.table <- rbind(toxcast.table, this.row)
+  }
+}
+rownames(toxcast.table) <- seq(1,dim(toxcast.table)[1])
+knitr::kable(head(toxcast.table[,1:6]), caption = "Summarized ToxCast Data",
+             floating.environment="sidewaystable")
 ```
 
-Out of how many chemicals of interest:
-```{r calc_equivalent_dose4, eval = FALSE}
-dim(mychems)  
-```
 
-Mark the columns with ToxCast AC50s:
-```{r calc_equivalent_dose5, eval = FALSE}
-toxcast.start <- 2
-toxcast.end <- 1474
-```
+# Step Two: High Throughput Toxicokinetics from *In Vitro* Data
 
-Find the tenth percentile AC50 for each chemical:
-```{r calc_equivalent_dose6, eval = FALSE}
-my.tox$tenth <- apply(my.tox[,toxcast.start:toxcast.end],
-                  1,
-                  function(x) quantile(x,0.1,na.rm=T))
-```
-
-Get rid of chemicals where there is no hit (1,000,000 or 1e6 denotes no hit):
-```{r calc_equivalent_dose7, eval = FALSE}
-my.tox <- subset(my.tox,tenth<1e6)
-```
-
-Reduce to just the tneth percentile concentration (uM):
-```{r calc_equivalent_dose8, eval = FALSE}
-my.tox <- my.tox[,c("CAS","tenth")]
-```
-
-Add the other chemical information:
-```{r calc_equivalent_dose9, eval = FALSE}
-my.tox <- merge(my.tox,mychems,by.x="CAS",by.y="CASRN")
-```
-
-# STEP TWO
-Perform steady-state reverse dosimetry in vitro-in vivo extrapolation (IVIVE):
-```{r calc_equivalent_dose10, eval = FALSE}
-library(httk)
-```
 For each chemical in your subset of ToxCast, add the HTTK plasma steady-state 
-concentration if it is available:
-```{r calc_equivalent_dose11, eval = FALSE}
-for (this.cas in my.tox$CAS)
+concentration if it is available. calc_mc_css() gives us the predicted 
+steady-state plasma concentration resulting from an ongoing 1 mg/kg/day
+exposure.
+
+## Steady State Plasma Concentration $C_{ss}$
+```{r calc_css1, eval = TRUE}
+for (this.id in unique(toxcast.table$DTXSID))
 {
 # get_cheminfo() gives a list of all the CAS numbers for which HTTK will work:
-  if (this.cas %in% get_cheminfo())
+  if (this.id %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE))
   {
 # Set a random number generator seed so that the Monte Carlo will always give
 # the same random sequence:
     set.seed(12345)
-# calc_mc_css gives us the predicted plasma concentration for a 1 mg/kg/day 
-# dose at steady-state:
-    my.tox[my.tox$CAS==this.cas,"Css"] <- 
-      calc_mc_css(chem.cas=this.cas,output.units="uM")
-    my.tox[my.tox$CAS==this.cas,"Css.Type"] <- "in vitro"
+    toxcast.table[toxcast.table$DTXSID==this.id,"Css"] <- 
+      calc_mc_css(dtxsid=this.id,
+                  output.units="uM",
+                  suppress.messages=TRUE)
+    toxcast.table[toxcast.table$DTXSID==this.id,"Css.Type"] <- "in vitro"
   }
 }
 ```
 
-Let's look at just the relevant columns from our table. Any NA's indicate that
-we don't currently have in vitro TK data for those chemicals:
-```{r calc_equivalent_dose12, eval = FALSE}
-my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+Let's look at just the relevant columns from our table. Any Css values of "NA" 
+(not a number) indicate that we don't currently have *in vitro* TK data for 
+those chemicals:
+```{r css_table1, eval = TRUE}
+knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")], 
+                                caption = "Summarized ToxCast Data",
+             floating.environment="sidewaystable")
 ```
 
-# STEP THREE
+
+# Step Three: High Throughput Toxicokinetics with QSPR Predictions
 Load the table of quantitative structure-property relationship (QSPR) model 
-predictions from the Sipes et al. (2017) supplemental material:
-```{r load_qspr, eval = FALSE}
+predictions from the 
+[Sipes et al. (2017)](https://doi.org/10.1021/acs.est.7b00650) 
+supplemental material:
+```{r load_qspr, eval = TRUE}
 load_sipes2017()
 ```
-Now go through the list of chemicals again:
-```{r calc_equivalent_dose13, eval = FALSE}
-for (this.cas in my.tox$CAS)
+Now go through the list of chemicals again but only calculate if we didn't 
+already have a value (NOTE: load_sipes2017 will not overwrite the *in vitro*
+data by default, so you'll still get the same answer if you use the same random 
+number seed, but you would also be wasting time):
+```{r calc_css2, eval = TRUE}
+for (this.id in unique(toxcast.table$DTXSID))
 {
-# But only calculate if we didn't already have a value (NOTE: load_sipes2017
-# will not overwrite the in vitro data by default, so you'll still get the same
-# answer if you use the same random number seed, but you would also be wasting
-# time):
-  if (this.cas %in% get_cheminfo() &
-    is.na(my.tox[my.tox$CAS==this.cas,"Css"]))
+  if (this.id %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE) &
+    is.na(toxcast.table[toxcast.table$DTXSID==this.id,"Css"]))
   {
+# Set a random number generator seed so that the Monte Carlo will always give
+# the same random sequence:
     set.seed(12345)
-# This gives us the predicted plasma concentration for a 1 mg/kg/day dose at 
-# steady-state:
-    my.tox[my.tox$CAS==this.cas,"Css"] <- 
-      calc_mc_css(chem.cas=this.cas,output.units="uM")
-    my.tox[my.tox$CAS==this.cas,"Css.Type"] <- "in silico"
+    toxcast.table[toxcast.table$DTXSID==this.id,"Css"] <- 
+      calc_mc_css(dtxsid=this.id,
+                  output.units="uM",
+                  suppress.messages=TRUE)
+    toxcast.table[toxcast.table$DTXSID==this.id,"Css.Type"] <- "in silico"
   }
 }
 ```
-
-Take another look at our table many of the gaps are filled in:
-```{r calc_equivalent_dose14, eval = FALSE}
-my.tox[,c("PREFERRED_NAME","tenth","Css","Css.Type")]
+Take another look at our table -- many of the gaps are now filled in. 
+Any Css values of "NA" 
+(not a number) indicate that we don't currently have *in vitro* TK data or 
+*in silico* predictions from 
+[Sipes et al. (2017)](https://doi.org/10.1021/acs.est.7b00650)
+for those chemicals (note that there are also predictions available from
+[Pradeep et al. (2020)](https://doi.org/10.1016/j.comtox.2020.100136) 
+(load_pradeep2020) and 
+[Dawson et al. (2021)](https://doi.org/10.1021/acs.est.0c06117) 
+(load_dawson2021):
+```{r css_table2, eval = TRUE}
+knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")], 
+                                caption = "Summarized ToxCast Data",
+             floating.environment="sidewaystable")
 ```
 
-```{r calc_equivalent_dose15, eval = FALSE}
-par(mar = c(3, 2, 2,2))
-plot(x=1:14,
-     y=my.tox$BER,
-     log="y",
-     xaxt="n", 
-     xlab="")
-axis(1, at=1:14,
-     labels=substr(my.tox$PREFERRED_NAME,1,10),las=2)
-```
 
-# STEP FOUR
-Calculate the equivalent steady-state dose to produce plasma cocnentration 
-equal to tenth percentile Toxcast AC50
-```{r calc_equivalent_dose16, eval = FALSE}
-my.tox$EquivDose <- my.tox$tenth / my.tox$Css
+# Step Four: Reverse Dosimetry *In Vitro-In Vivo* Extrapolation
+Calculate the equivalent steady-state dose to produce a plasma concentration 
+equal to tenth percentile ToxCast $AC_{50}$, we find the administered equivalent
+dose by dividing the *in vitro* concentration by the $C_{ss}$ from 1 mg/kg/day,
+ending up with a dose rate with units of mg/kd/day that will product the
+*in vitro* concentration:
+$$AED = \frac{AC_{50}}{C_{ss}}$$
+Don't forget the ToxCast concentrations are given on the log-10 scale:
+```{r calc_equivalent_dose16, eval = TRUE}
+toxcast.table$EquivDose <- signif(10^toxcast.table$Q10.AC50 / toxcast.table$Css,
+                                  3)
 ```
 Look at the table again:
-```{r display_table2, eval = FALSE}
-my.tox[,c("PREFERRED_NAME","tenth","EquivDose")]          
+```{r display_table2, eval = TRUE}
+knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","EquivDose")], 
+                                 caption = "Summarized ToxCast Data",
+              floating.environment="sidewaystable")          
 ```    
+
                   
-# STEP FIVE
-Find the appropriate SEEM3 consensus exposure predictions to prioritize these
-chemicals on the basis of putative risk
+# Step Five: Compare with Estimated Exposure Rates
+To prioritize these
+chemicals on the basis of putative risk we need some estimate of human exposure.
+Because most chemicals lack measured
+data characterizing population intake rates (mg/kg body weight/
+day) ([Egeghy, 2012](https://doi.org/10.1016/j.scitotenv.2011.10.046)), a 
+consensus prediction from EPA's Systematic Empirical Evaluation of Models (SEEM)
+is often the only option available for exposures. 
+The SEEM consensus prediction is composed of multiple exposure predictors 
+aggregated on the basis of likely exposure pathways 
+([Ring, 2018](https://doi.org/10.1021/acs.est.8b04056)). The individual
+exposure predictors are weighted based upon their ability to predict intake 
+rates that could be inferred from biomonitoring data ([Ring,
+2017](https://doi.org/10.1016/j.envint.2017.06.004); 
+[Wambaugh, 2014](https://doi.org/10.1021/es503583j)).  
+The SEEM exposure forecasts are uncertain, and the upper boundary of
+the 95% credible interval is used here. Although a 95% credible
+interval is calculated, this reflects uncertainty but not variability --
+the [(Ring, 2018)](https://doi.org/10.1021/acs.est.8b04056) model predicts 
+population median exposure rates for the U.S. population.
 
-Load the supplemental information from Ring et al. (2018):
+If you can access the journal article online, we can load the SEEM predictions
+from [Supplemental Table 1](https://pubs.acs.org/doi/suppl/10.1021/acs.est.8b04056/suppl_file/es8b04056_si_002.zip)
+of the Supporting Information for 
+[Ring et al. (2018)](https://doi.org/10.1021/acs.est.8b04056). Don't forget that
+you have to "unzip" a file that ends in ".zip" and place the ".txt" file in 
+your working directory with your other files.
+```{r load_seem1, eval = FALSE}
+SEEM <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
+```
+
+If you want, you can also download the predictions for specific chemcials from
+the [Comptox Chemicals Dashboard](https://ccte-ccd.epa.gov/dashboard/). Be
+sure to use Batch Search and select the option for "NHANES/Predicted Exposure".
+You can download the file in a "comma separated values" or ".CSV" format, in 
+which case you use "read.csv". Or you can download an Excel ".xls" file which
+requires load the package *readXL*. 
+```{r load_seem2, eval = FALSE}
+SEEM <- read_excel("CCD-Batch-Search_DATE.xlsx",sheet=2)
+```
+
+Perhaps most easily we can grab SEEM predictions already in RData format from https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+Download the file Ring2018Preds.RData and load it:
 ```{r load_seem3, eval = FALSE}
-SEEM3 <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
+load("Ring2018Preds.RData")
+SEEM <- Ring2018.preds
 ```
 
+Again we do not have the space to distribute all the SEEM predictions within
+this R package, but we can give you our example chemicals:
+```{r save_seem, eval = FALSE}
+example.seem <- as.data.frame(subset(SEEM, 
+                              dsstox_substance_id %in% toxcast.table$DTXSID))
+for (this.col in 4:36) 
+  example.seem[,this.col] <- signif(example.seem[,this.col],4)
+save(example.seem,file="introtoivive-seem.Rdata",version=2)
+```
 Merge the consensus model predictions with your table:
-```{r mergetoxexposure, eval = FALSE}
-my.tox <- merge(my.tox,SEEM3[,c("CAS","seem3","seem3.l95","seem3.u95","Pathway","AD")])
+```{r mergetoxexposure, eval = TRUE}
+example.seem <- httk::example.seem
+toxcast.table <- merge(toxcast.table,
+                       example.seem[,c(
+                         "dsstox_substance_id",
+                         "seem3",
+                         "seem3.l95",
+                         "seem3.u95",
+                         "Pathway",
+                         "AD")],
+                       by.x="DTXSID",
+                       by.y="dsstox_substance_id",
+                       all.x = TRUE)
 ```
 
-Calulate a bioactivity:exposure ratio:
-```{r calc_ber, eval = FALSE}
-my.tox$BER <- my.tox$EquivDose/my.tox$seem3.u95
+Now we can calculate a bioactivity:exposure ratio (BER), which is a risk-like 
+metric since it takes hazard, dose-response, and exposure into account
+([Wetmore, 2015](https://doi.org/10.1093/toxsci/kfv171)):
+```{r calc_ber, eval = TRUE}
+toxcast.table$BER <- signif(toxcast.table$EquivDose/toxcast.table$seem3.u95, 3)
 ``` 
 
 Reorder your table by BER:
-```{r sort_by_ber, eval = FALSE}
-my.tox <- my.tox[order(my.tox$BER),]
+```{r sort_by_ber, eval = TRUE}
+toxcast.table <- toxcast.table[order(toxcast.table$BER),]
+knitr::kable(toxcast.table[1:10,c("Compound","EquivDose","seem3.u95","Pathway","BER")], 
+                                 caption = "Bioactivity:Exposure Ratios",
+              floating.environment="sidewaystable")  
 ```
 
 ## Make a BER plot
-Change the plot margins:
-```{r ber_plot_margins, eval = FALSE}
-par(mar = c(7, 5, 4,2))
-```
-
 Convert the chemical names into factors for plotting:
-```{r ber_plot, eval = FALSE}
-plot(x=factor(my.tox$PREFERRED_NAME,levels=my.tox$PREFERRED_NAME),
-     y=my.tox$BER,
-# Use a log scale on the y-axis:
-     log="y",
-     xaxt="n", 
-     xlab="",
-     ylab="Bioactivity:Exposure Ratio",
-     cex.lab=1.5)
-# Plot the first 15 characters of each chemical name on the horizontal eaxis:
-axis(1, at=factor(my.tox$PREFERRED_NAME,levels=my.tox$PREFERRED_NAME),
-     labels=substr(my.tox$PREFERRED_NAME,1,15),las=2)
+```{r ber_plot, eval = TRUE}
+toxcast.table$Compound <- factor(toxcast.table$Compound,
+                                    levels=toxcast.table$Compound)
+
+BER.plot <- ggplot(data=toxcast.table) +
+  geom_segment(aes(x=Compound,
+                   xend=Compound,
+                   y=(10^Q10.AC50)/Css,
+                   yend=(10^Q90.AC50)/Css),
+               size=1,
+               color="red",
+               alpha=0.5) + 
+  geom_segment(aes(x=Compound,
+                   xend=Compound,
+                   y=seem3.l95,
+                   yend=seem3.u95),
+               size=1,
+               color="blue",
+               alpha=0.5) +   
+  geom_point(aes(x=Compound,y=(10^Med.AC50)/Css),shape=3,color="red") +
+  geom_point(aes(x=Compound,y=seem3),shape=3,color="blue") +
+  theme_bw() +
+  theme(axis.title.x = element_text(size=8)) + 
+  theme(axis.title.y = element_text(size=8)) + 
+  scale_y_log10() + 
+  theme(axis.text.x = element_text(
+    face = "bold", 
+    hjust = 1, 
+    vjust = 1, 
+    size = 4, 
+    angle = 45)) +
+  ylab("Bioactive Dose & Exposure\nmg/kg BW/day") + 
+  xlab("Chemicals Ranked By BER")
+print(BER.plot)
 ```
-
-
 
