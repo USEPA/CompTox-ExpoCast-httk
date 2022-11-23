@@ -4,7 +4,7 @@ author: "John Wambaugh"
 date: "November, 2022"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{Introduction to IVIVE}
+ %\VignetteIndexEntry{2) Introduction to IVIVE}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---

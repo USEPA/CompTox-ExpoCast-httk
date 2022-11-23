@@ -4,7 +4,7 @@ author: "Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and Jo
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Pearce (2017): HTTK Basics}
+  %\VignetteIndexEntry{a) Pearce (2017): HTTK Basics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
