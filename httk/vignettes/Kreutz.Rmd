@@ -1,0 +1,141 @@
+---
+title: "Kreutz et al. (2022): Analysis of Plasma Binding Measured by GC"
+author: "Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Kreutz (2022): PFAS Plasma Binding}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  *Please send questions to wambaugh.john@epa.gov*
+  
+  from "Category-Based Toxicokinetic Evaluations of Data-Poor Per and Polyfluoroalkyl Substances (PFAS) by Gas Chromatography Coupled with Mass Spectrometry"
+
+Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore
+
+## Abstract
+
+Concern over per- and polyfluoroalkyl substances (PFAS) has increased significantly as more is learned about their widespread environmental presence, persistence, and bioaccumulative potential. The limited measurement, monitoring, toxicokinetic (TK), and toxicologic data currently available is inadequate to inform risk evaluations across this diverse domain. In this study, 73 PFAS were selected for *in vitro* TK evaluation to expand our knowledge across lesser studied PFAS that include alcohol, amide, and acrylate functional groups. Targeted analytical methods were developed using gas chromatography coupled with tandem mass spectrometry (GC-MS/MS); ultracentrifugation was used to measure human plasma protein binding and human hepatocyte suspensions were used in a substrate depletion approach to measure in vitro clearance (Clint). Method development was successful in plasma for 43 PFAS, with fraction unbound in plasma ($f_{up}$) values ranging from 0.004 for 1,6-dibromododecafluorohexane and 1 for 2-aminohexafluoropropan-2-ol, With a median $f_{up}$ of 0.09 (i.e., 91% bound), these PFAS are highly bound, but exhibit 10-fold lower binding than that recently reported for legacy perfluoroalkyl acids (Smeltz et al., 2022). Physico-chemical property trends analyses revealed that increased binding was associated with increases in mass, van der Waals volumes, and values of Log Pow and Log D at pH 7.4. Thirty of the PFAS evaluated in the hepatocyte assay showed abiotic loss, with many exceeding 60% loss within 60 min of media addition. Metabolic clearance was noted for 11 of the 13 successfully evaluated, with rates up to 49.9 l/min/million cells for 1H,1H,10H,10H-Perfluorodecane-1,10-diol. The Chemical Transformation Simulator revealed potential metabolites and other transformation products to consider during *in vitro* assay data interpretation. This integration of quantitative analytic methods with *in vitro* toxicokinetics has provided critical learnings as New Approach Methods are considered to evaluate PFAS for which volatility, metabolism, and other routes of transformation are likely to modulate their environmental fate. 
+
+## HTTK Version
+
+This vignette was created with **httk** v2.3.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
+  and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+  
+  ## Prepare for session
+```{r}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Load the relevant libraries
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+  
+  From the R command prompt:
+  
+  install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+```{r load_packages, eval = TRUE}
+# Clear the memory:
+rm(list=ls()) 
+#
+#
+# Setup
+#
+#
+library(ggplot2)
+library(httk)
+```
+
+# Analysis of Kreutz et al. (2022) $f_{up}$ data
+
+Create lists of non-PFAS chemicals and the chemicals measured by Kreutz:
+```{r create_lists, eval = TRUE}
+non.pfas <- chem.physical_and_invitro.data[regexpr("PFAS",
+               chem.physical_and_invitro.data$Chemical.Class)==-1,]
+kreutz <- chem.physical_and_invitro.data[regexpr("Kreutz",
+               chem.physical_and_invitro.data$Human.Funbound.plasma.Reference)!=-1,]
+
+```
+
+Create a subset of httk data where we know $f_{up}$. We drop the $f_{up}$ measurements of "0" since those
+are < limit of detection in earlier studies (
+[Wetmore, 2012](https://doi.org/10.1093/toxsci/kfr254), 
+[Wetmore, 2015](https://doi.org/10.1093/toxsci/kfv171)). We don't have quantitative values for analysis of thsoe chemicals.
+```{r subset_chems, eval = TRUE}
+fup.subset <- subset(chem.physical_and_invitro.data,
+                     !is.na(Human.Funbound.plasma))
+fup.subset <- subset(fup.subset, Human.Funbound.plasma != "0")
+fup.subset$Human.Funbound.plasma <- sapply(
+  fup.subset$Human.Funbound.plasma, function(x) 
+    as.numeric(strsplit(x,",")[[1]][1]))
+```
+
+Group the chemicals.
+```{r group_chems, eval = TRUE}
+non.pfas <- fup.subset[regexpr("PFAS",
+               fup.subset$Chemical.Class)== -1,]
+kreutz <- fup.subset[
+               !is.na(fup.subset$Human.Funbound.plasma.Reference),]
+kreutz <- kreutz[regexpr("Kreutz",
+               kreutz$Human.Funbound.plasma.Reference)!=-1,]
+pfas <- fup.subset[regexpr("PFAS",
+               fup.subset$Chemical.Class)!= -1,]
+dim(non.pfas)
+dim(kreutz)
+dim(pfas)
+```
+
+Summary statistics for $f_{up}$. Let's see what the median and lower 2.5% quantiles are for both non-PFAS and PFAS.
+```{r fup_stats, eval = TRUE}
+median(non.pfas$Human.Funbound.plasma)
+quantile(non.pfas$Human.Funbound.plasma,0.025)
+median(pfas$Human.Funbound.plasma)
+quantile(pfas$Human.Funbound.plasma,0.025)
+median(kreutz$Human.Funbound.plasma)
+quantile(kreutz$Human.Funbound.plasma,0.025)
+```
+```{r setup_physchem_analysis, eval = TRUE}
+physchem <- rbind(non.pfas,kreutz)
+physchem$PFAS <- 0
+physchem[physchem$DTXSID %in% kreutz$DTXSID,"PFAS"] <- 1
+physchem$PFAS <- factor(physchem$PFAS)
+```
+### Dependence on hydrophobicity (log P):
+```{r logp, eval = TRUE}
+fit.logp <- lm(data=physchem,Human.Funbound.plasma ~ logP*PFAS)
+summary(fit.logp)
+```
+$f_{up}$ decreases with logP for all chemicals, but more so for the
+GC PFAS (significance 0.00936).
+
+### Dependence on water solubility (logWSol):
+```{r logwsol, eval = TRUE}
+fit.logwsol <- lm(data=physchem,Human.Funbound.plasma ~ logWSol*PFAS)
+summary(fit.logwsol)
+```
+$f_{up}$ decreases with logWSol for all chemicals, but more so for the
+GC PFAS (significance 0.00391).
+
+### Dependence on molecular weight (MW):
+```{r MW, eval = TRUE}
+fit.mw <- lm(data=physchem,Human.Funbound.plasma ~ MW*PFAS)
+summary(fit.mw)
+```
+$f_{up}$ decreases with molecular weight for all chemicals, 
+but there is no statistically significant difference for GC PFAS.
+
+### Dependence on Henry's law constant (logHenry):
+```{r henry, eval = TRUE}
+fit.henry <- lm(data=physchem,Human.Funbound.plasma ~ logHenry*PFAS)
+summary(fit.henry)
+```
+$f_{up}$ decreases with the Henry's law constant for all chemicals, 
+but there is no statistically significant difference for GC PFAS.
