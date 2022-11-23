@@ -44,8 +44,9 @@ high-throughput estimates of inhalation chemical exposures.
 
 ## HTTK Version
 
-This vignette was created with httk v2.0.0. Although we attempt to maintain 
-backward compatibility, if you encounter issues with the latest release of httk
+This vignette was created with **httk** v2.0.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
 and cannot easily address the changes, historical versions of httk are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 

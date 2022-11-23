@@ -28,10 +28,10 @@ https://doi.org/10.1093/toxsci/kfy020
 ## Abstract
 Prioritizing the risk posed by thousands of chemicals potentially present in the 
 environment requires exposure, toxicity, and toxicokinetic (TK) data, which are 
-often unavailable. Relatively high-throughput, in vitro TK (HTTK) assays and in 
-vitro-to-in vivo extrapolation (IVIVE) methods have been developed to predict TK, 
+often unavailable. Relatively high-throughput, in vitro TK (HTTK) assays and *in 
+vitro-to-in vivo* extrapolation (IVIVE) methods have been developed to predict TK, 
 but most of the in vivo TK data available to benchmark these methods are from 
-pharmaceuticals. Here we report on new, in vivo rat TK experiments for 26 
+pharmaceuticals. Here we report on new, *in vivo* rat TK experiments for 26 
 non-pharmaceutical chemicals with environmental relevance. Both intravenous and 
 oral dosing were used to calculate bioavailability. These chemicals, and an 
 additional 19 chemicals (including some pharmaceuticals) from previously published 
@@ -48,14 +48,15 @@ steady-state, peak, and time-integrated plasma concentrations of
 non-pharmaceuticals were predicted with reasonable accuracy. The plasma 
 concentration predictions improved when experimental measurements of 
 bioavailability were incorporated. In summary, HTTK and IVIVE methods are 
-adequately robust to be applied to high-throughput in vitro toxicity 
+adequately robust to be applied to high-throughput *in vitro* toxicity 
 screening data of environmentally relevant chemicals for prioritizing based 
 on human health risks.
 
 ## HTTK Version
 
-This vignette was created with httk v1.8. Although we attempt to maintain 
-backward compatibility, if you encounter issues with the latest release of httk
+This vignette was created with **httk** v1.8. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
 and cannot easily address the changes, historical versions of httk are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
@@ -83,11 +84,12 @@ library(grid)
 library(gplots)
 ```
 
-The data we analyze were originally generated with the R package invivoPKfit (https://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
-of that analysis are provided with httk >v1.8.
+The data we analyze were originally generated with the 
+[R package invivoPKfit](https://github.com/USEPA/CompTox-ExpoCast-invivoPKfit), but all the outputs 
+of that analysis are provided with **httk** >v1.8.
 
 # Plot functions
-These functions, which have been cobbled togethe from the internet, are reused in multiple figure to make things look nice.
+These functions, which have been cobbled together from the internet, are reused in multiple figure to make things look nice.
 ```{r plot_funcs}
 # Multiple plot function
 #

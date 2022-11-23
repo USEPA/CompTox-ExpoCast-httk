@@ -19,32 +19,54 @@ Toxicology and Applied Pharmacology 354 (2018) 81-93
 https://doi.org/10.1016/j.taap.2018.01.017
 
 ## Abstract
-Measuring electrical activity of neural networks by microelectrode array (MEA) has recently 
-shown promise for screening level assessments of chemical toxicity on network development 
-and function. Important aspects of interneuronal communication can be quantified from a 
-single MEA recording, including individual firing rates, coordinated bursting, and measures 
-of network synchrony, providing rich datasets to evaluate chemical effects. Further, 
-multiple recordings can be made from the same network, including during the formation of 
-these networks in vitro. The ability to perform multiple recording sessions over the in 
-vitro development of network activity may provide further insight into developmental 
-effects of neurotoxicants. In the current study, a recently described MEA-based screen of 
-86 compounds in primary rat cortical cultures over 12 days in vitro was revisited to 
-establish a framework that integrates all available primary measures of electrical 
-activity from MEA recordings into a composite metric for deviation from normal activity 
-(total scalar perturbation). Examining scalar perturbations over time and increasing 
-concentration of compound allowed for definition of critical concentrations or "tipping 
-points" at which the neural networks switched from recovery to non-recovery trajectories
-for 42 compounds. These tipping point concentrations occurred at predominantly lower 
-concentrations than those causing overt cell viability loss or disrupting individual 
-network parameters, suggesting tipping points may be a more sensitive measure of network 
-functional loss. Comparing tipping points for six compounds with plasma concentrations 
-known to cause developmental neurotoxicity in vivo demonstrated strong concordance and
-suggests there is potential for using tipping points for chemical prioritization.
+Measuring electrical activity of neural networks by microelectrode array (MEA) 
+has recently 
+shown promise for screening level assessments of chemical toxicity on network 
+development 
+and function. Important aspects of interneuronal communication can be quantified 
+from a 
+single MEA recording, including individual firing rates, coordinated bursting, 
+and measures 
+of network synchrony, providing rich datasets to evaluate chemical effects. 
+Further, 
+multiple recordings can be made from the same network, including during the 
+formation of 
+these networks *in vitro*. The ability to perform multiple recording sessions 
+over the in 
+vitro development of network activity may provide further insight into 
+developmental 
+effects of neurotoxicants. In the current study, a recently described MEA-based 
+screen of 
+86 compounds in primary rat cortical cultures over 12 days in vitro was 
+revisited to 
+establish a framework that integrates all available primary measures of 
+electrical 
+activity from MEA recordings into a composite metric for deviation from normal 
+activity 
+(total scalar perturbation). Examining scalar perturbations over time and 
+increasing 
+concentration of compound allowed for definition of critical concentrations or 
+"tipping 
+points" at which the neural networks switched from recovery to non-recovery 
+trajectories
+for 42 compounds. These tipping point concentrations occurred at predominantly 
+lower 
+concentrations than those causing overt cell viability loss or disrupting 
+individual 
+network parameters, suggesting tipping points may be a more sensitive measure 
+of network 
+functional loss. Comparing tipping points for six compounds with plasma 
+concentrations 
+known to cause developmental neurotoxicity *in vivo* demonstrated strong 
+concordance and
+suggests there is potential for using tipping points for chemical 
+prioritization.
 
 ## HTTK Version
 
-This vignette was created with httk v1.8. Although we attempt to maintain 
-backward compatibility, if you encounter issues with the latest release of httk
+This vignette was created with **httk** v1.8. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
 and cannot easily address the changes, historical versions of httk are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
