@@ -4,7 +4,7 @@ author: "Caroline Ring"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Ring (2017) HTTK-Pop: Generating subpopulations}
+  %\VignetteIndexEntry{b) Ring (2017) HTTK-Pop: Generating subpopulations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
