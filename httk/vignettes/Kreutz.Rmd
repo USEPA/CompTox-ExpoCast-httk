@@ -76,6 +76,7 @@ fup.subset <- subset(fup.subset, Human.Funbound.plasma != "0")
 fup.subset$Human.Funbound.plasma <- sapply(
   fup.subset$Human.Funbound.plasma, function(x) 
     as.numeric(strsplit(x,",")[[1]][1]))
+fup.subset <- subset(fup.subset, Human.Funbound.plasma < 1)
 ```
 
 Group the chemicals.
@@ -139,3 +140,69 @@ summary(fit.henry)
 ```
 $f_{up}$ decreases with the Henry's law constant for all chemicals, 
 but there is no statistically significant difference for GC PFAS.
+
+```{r fig_logP, eval = TRUE}
+fig.logp  <- ggplot(data=kreutz) +
+  geom_point(aes(
+    x=logP,
+    y=Human.Funbound.plasma),
+    size=3,
+    color="Blue") +
+  geom_abline(slope=fit.logp$coefficients[2], 
+              intercept=fit.logp$coefficients[1]) + 
+  ylab("Fraction unbound in plasma") + 
+  xlab("Hydrophobicity (LogP)") +
+  theme_bw()  +
+  theme( text  = element_text(size=14))
+
+print(fig.logp)
+```
+
+```{r fig_mw, eval = TRUE}
+fig.mw <- ggplot(data=kreutz) +
+  geom_point(aes(
+    x=MW,
+    y=Human.Funbound.plasma),
+    size=3,
+    color="Blue") +
+  geom_abline(slope=fit.mw$coefficients[2], 
+              intercept=fit.mw$coefficients[1]) + 
+  ylab("Fraction unbound in plasma") + 
+  xlab("Molecular Weight (Daltons)") +
+  theme_bw()  +
+  theme( text  = element_text(size=14))
+
+print(fig.mw)
+```
+```{r fig_wsol, eval = TRUE}
+fig.wsol  <- ggplot(data=kreutz) +
+  geom_point(aes(
+    x=logWSol,
+    y=Human.Funbound.plasma),
+    size=3,
+    color="Blue") +
+  geom_abline(slope=fit.logwsol$coefficients[2], 
+              intercept=fit.logwsol$coefficients[1]) + 
+  ylab("Fraction unbound in plasma") + 
+  xlab("Water Solubility (LogWSol)") +
+  theme_bw()  +
+  theme( text  = element_text(size=14))
+
+print(fig.wsol)
+```
+```{r fig_henry, eval = TRUE}
+fig.henry  <- ggplot(data=kreutz) +
+  geom_point(aes(
+    x=logHenry,
+    y=Human.Funbound.plasma),
+    size=3,
+    color="Blue") +
+  geom_abline(slope=fit.henry$coefficients[2], 
+              intercept=fit.henry$coefficients[1]) + 
+  ylab("Fraction unbound in plasma") + 
+  xlab("Henry's Law Constant (logHenry)") +
+  theme_bw()  +
+  theme( text  = element_text(size=14))
+
+print(fig.henry)
+```
