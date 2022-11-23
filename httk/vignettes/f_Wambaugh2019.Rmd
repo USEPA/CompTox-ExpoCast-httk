@@ -1,10 +1,10 @@
 ---
-title: "Wambaugh et al. (2019): Creating Figures for the Manuscript"
+title: "Wambaugh et al. (2019): Uncertainty Monte Carlo"
 author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (2019): Creating Figures for the Manuscript}
+  %\VignetteIndexEntry{Wambaugh (2019): Uncertainty Monte Carlo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
