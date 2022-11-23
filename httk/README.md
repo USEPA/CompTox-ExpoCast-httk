@@ -33,8 +33,12 @@ chemical-independent ("generic") physiologically-based ("PBTK") and empirical
 (for example, one compartment) "TK" models included here can be 
 parameterized with in vitro data or in silico predictions which are 
 provided for thousands of chemicals, multiple exposure routes, 
-and various species. The models are systems of ordinary 
-differential equations that are solved
+and various species. High throughput toxicokinetics ("HTTK") is the 
+combination of in vitro data and generic models. We establish the
+expected accuracy of HTTK for chemicals without in vivo data 
+through statistical evaluation of HTTK predictions for chemicals
+where in vivo data do exist. The models are systems of ordinary 
+differential equations that are developed in MCSim and solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
 included for simulating human biological variability
 (Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)
