@@ -4,7 +4,7 @@ author: "John Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh (2018): Evaluating In Vitro-In Vivo Extrapolation}
+  %\VignetteIndexEntry{d) Wambaugh (2018): Evaluating In Vitro-In Vivo Extrapolation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
