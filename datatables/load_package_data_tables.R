@@ -1407,6 +1407,7 @@ PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
 
 Smeltz2022PPBBayes <- read.csv("Smeltz2022/SmeltzPFAS-PPB-UC-Level4.tsv",
                                sep="\t")
+length(unique(Smeltz2022PPBBayes$DTXSID))
 # Add CASRN:
 Smeltz2022PPBBayes <- merge(Smeltz2022PPBBayes,
                             PFAS[,c("DTXSID","CASRN")],
@@ -1504,11 +1505,23 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2022ClintManual,
   reference="Smeltz 2022 Manual",
   species="Human",
   overwrite=TRUE)
+#
+#
+#
+#
 
 Kreutz2022PPBBayes <- as.data.frame(
   read.csv("Kreutz2022/KreutzPFAS-PPB-UC-Level4.tsv",sep="\t"))
 length(unique(Kreutz2022PPBBayes$DTXSID))
-
+Kreutz2022PPBBayes <- merge(Kreutz2022PPBBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+# Add reference chemical n-butylparaben:
+Kreutz2022PPBBayes[Kreutz2022PPBBayes$DTXSID=="DTXSID5023792",
+                   "CASRN"] <-"99-99-0"
+Kreutz2022PPBBayes[Kreutz2022PPBBayes$DTXSID=="DTXSID30395037",
+                   "CASRN"] <-"58244-27-2"                   
+                                               
 Kreutz2022PPBBayes$Human.Funbound.plasma <- paste(
   signif(Kreutz2022PPBBayes$Fup.Med ,3),
   signif(Kreutz2022PPBBayes$Fup.Low ,3),
@@ -1572,6 +1585,7 @@ Crizer2022ClintManual <- subset(Crizer2022ClintManual,
   !is.na(Crizer2022ClintManual$Clint))
 # We don't want bad Clint's:
 Crizer2022ClintManual[Crizer2022ClintManual$Clint < 0, "pValue"] <- 1
+length(unique(Crizer2022ClintManual$DTXSID))
 
 chem.physical_and_invitro.data <- add_chemtable(Crizer2022ClintManual,
   current.table=chem.physical_and_invitro.data,
