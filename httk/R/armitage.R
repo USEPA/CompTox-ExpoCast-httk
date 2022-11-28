@@ -345,8 +345,11 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           this.f_oc = 1, # everything assumed to be like proteins
                           this.conc_ser_alb = 24, # g/L mass concentration of albumin in serum.
                           this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum.
-                          this.Vdom = 0 # ml the volume of dissolved organic matter (DOM)
-){
+                          this.Vdom = 0, # ml the volume of dissolved organic matter (DOM)
+                          this.pH = 7.0, # pH of cell culture
+                          neutral.only = FALSE # Should we restrict the partitioning concentration to neutral only?
+                          )
+{
   # this.Tsys <- 37
   # this.Tref <- 298.15
   # this.option.kbsa2 <- F
@@ -430,12 +433,30 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     
   }
   
+  # Check if required phys-chem parameters are provided:
   if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
+  # If not, pull them:
     tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
              get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
                                 chem.cas = casrn)]
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3)
+  
+  # Check if considering charge:
+  if (neutral.only)
+  {
+    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
+    {
+    # If not, pull them from:
+      tcdata[, c("pKa_Donor","pKa_Accept") := 
+               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn)]
+    }
+    # Calculate the fraction neutral:
+    tcdata[, Fneutral := calc_ionization(pH=this.pH,
+                   pKa_Donor=pKa_Donor,
+                   pKa_Accept=pKa_Accept)[["fraction_neutral"]]] 
+  } else tcdata[, Fneutral := 1]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                             option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
@@ -515,15 +536,17 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
 
   tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
+  # Change partition coefficients to account for only "neutral" chemical 
+  # (could be 100% depending on value of "neutral.only"):
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
     .[,s1.GSE:=s1.GSE*10^(-1*ksalt*csalt)] %>%
     .[MP>298.15,ss.GSE:=ss.GSE*10^(-1*ksalt*csalt)] %>%
     .[,swat_L:=swat/F_ratio] %>%
-    .[,kow:=kow/(10^(-1*ksalt*csalt))] %>%
+    .[,kow:=Fneutral*kow/(10^(-1*ksalt*csalt))] %>%
     .[,kaw:=kaw/(10^(-1*ksalt*csalt))] %>%
-    .[,kcw:=kcw/(10^(-1*ksalt*csalt))] %>%
-    .[,kbsa:=kbsa/(10^(-1*ksalt*csalt))]
+    .[,kcw:=Fneutral*kcw/(10^(-1*ksalt*csalt))] %>%
+    .[,kbsa:=Fneutral*kbsa/(10^(-1*ksalt*csalt))]
 
   tcdata[option.swat2==TRUE & MP>298.15,swat:=ss.GSE] %>%
     .[option.swat2==TRUE & MP>298.15,swat_L:=s1.GSE] %>%  # double check this
