@@ -310,6 +310,11 @@ In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
 }
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{create_mc_samples}}
+}
 \author{
 Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
 }
