@@ -53,7 +53,7 @@
 #'
 #' @keywords Parameter
 #' 
-#' @seealso \link{\code{calc_ionization}}
+#' @seealso \code{\link{calc_ionization}}
 #' 
 #' @export calc_dow
 calc_dow <- function(Pow=NULL,
@@ -92,28 +92,32 @@ calc_dow <- function(Pow=NULL,
 
 # Check to see if fraction_charged was provided:
   if (is.null(fraction_charged))
-# If not, same as above:
   {
-    if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid))) 
+    # If not, see if they gave us pKa_Accept and pKa_Donor:
+    if (is.null(pKa_Donor) | is.null(pKa_Accept))
     {
-      if (is.null(dtxsid))
+      if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid))) 
       {
-        out <- get_chem_id(
-               chem.cas=chem.cas,
-               chem.name=chem.name,
-               dtxsid=dtxsid)
-        dtxsid <- out$dtxsid
-      }
-      pKa_Donor <- 
-        suppressWarnings(get_physchem_param("pKa_Donor", dtxsid=dtxsid))
-      pKa_Accept <- 
-        suppressWarnings(get_physchem_param("pKa_Accept", dtxsid=dtxsid))
-    } else if (!all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
-# If not see if "parameters" was provided
-    {
-      pKa_Donor <- parameters$pKa_Donor
-      pKa_Accept <- parameters$pKa_Accept
-    } else stop("Must provide chemical descriptors or identifiers for calc_dow")  
+        if (is.null(dtxsid))
+        {
+          out <- get_chem_id(
+                 chem.cas=chem.cas,
+                 chem.name=chem.name,
+                 dtxsid=dtxsid)
+          dtxsid <- out$dtxsid
+        }
+        pKa_Donor <- 
+          suppressWarnings(get_physchem_param("pKa_Donor", dtxsid=dtxsid))
+        pKa_Accept <- 
+          suppressWarnings(get_physchem_param("pKa_Accept", dtxsid=dtxsid))
+      } else if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
+  # If not see if "parameters" was provided
+      {
+        pKa_Donor <- parameters$pKa_Donor
+        pKa_Accept <- parameters$pKa_Accept
+      } else stop("Must provide chemical descriptors or identifiers for calc_dow")  
+    }
+ 
     if (is.null(pH)) stop("pH or fraction_charged must be specified in calc_dow.")
     ionization <- calc_ionization(pH=pH,
                                   pKa_Donor=pKa_Donor,
