@@ -30,7 +30,9 @@ armitage_eval(
   this.f_oc = 1,
   this.conc_ser_alb = 24,
   this.conc_ser_lip = 1.9,
-  this.Vdom = 0
+  this.Vdom = 0,
+  this.pH = 7,
+  neutral.only = FALSE
 )
 }
 \arguments{

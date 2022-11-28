@@ -152,6 +152,10 @@
 #'
 #' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #'
+#' @seealso \code{\link{calc_mc_css}}
+#'
+#' @seealso \code{\link{create_mc_samples}}
+#'
 #' @author John Wambaugh
 #'
 #' @references Wetmore, Barbara A., et al. "Incorporating high-throughput 
