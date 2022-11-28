@@ -53,7 +53,7 @@
 #'
 #' @keywords Parameter
 #' 
-#' @seealso \link{\code{calc_ionization}}
+#' @seealso \code{\link{calc_ionization}}
 #' 
 #' @export calc_dow
 calc_dow <- function(Pow=NULL,

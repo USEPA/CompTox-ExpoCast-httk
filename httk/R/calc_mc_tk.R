@@ -93,6 +93,8 @@
 #' @param return.all.sims Logical indicating whether to return the results
 #' of all simulations, in addition to the default toxicokinetic statistics
 #' 
+#' @seealso \code{\link{create_mc_samples}}
+#'
 #' @author  John Wambaugh
 #'
 #' @keywords Monte-Carlo dynamic simulation

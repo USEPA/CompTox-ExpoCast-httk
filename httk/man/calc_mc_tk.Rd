@@ -179,6 +179,9 @@ for (age.lower in age.ranges)
 
 }
 }
+\seealso{
+\code{\link{create_mc_samples}}
+}
 \author{
 John Wambaugh
 }
