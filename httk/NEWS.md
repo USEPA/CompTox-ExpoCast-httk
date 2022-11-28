@@ -16,6 +16,7 @@ output: html_document
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Revised restrictive.clearance argument for function 'solve_model'
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
+* We now export function 'calc_dow' for the distribution coefficient
 
 # version 2.2.1 (September, 2022)
 
