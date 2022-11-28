@@ -83,8 +83,6 @@
 #' 
 #' @keywords Retrieval
 #' 
-#'@references 
-#'
 #' @examples
 #'
 #' library(httk)

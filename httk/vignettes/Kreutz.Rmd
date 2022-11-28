@@ -52,18 +52,77 @@ rm(list=ls())
 #
 library(ggplot2)
 library(httk)
+library(grid)
+```
+
+
+### Multiple plot function
+From http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
+ ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+ - cols:   Number of columns in layout
+ - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+
+ If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+ then plot 1 will go in the upper left, 2 will go in the upper right, and
+ 3 will go all the way across the bottom.
+```{r multi.plot, eval = TRUE}
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, heights=NULL, widths=unit(rep_len(1, cols), "null")) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    if (!is.null(heights))
+    {
+      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout),heights=heights,widths=widths)))
+    } else {
+      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout),widths=widths)))
+    }
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+### Distribution coefficient
+```{r calc_dow, eval = TRUE}
+calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,alpha=0.001) 
+{
+  # Octanol:water distribution coefficient,
+  if (is.null(fraction_charged))
+  {
+    if (is.na(pH)) stop("pH or fraction_charged must be specified in calc_dow.")
+    ionization <- calc_ionization(pH=pH,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
+    fraction_charged  <- ionization[["fraction_charged"]]
+  }
+  
+  Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
+  return(Dow)
+}
 ```
 
 # Analysis of Kreutz et al. (2022) $f_{up}$ data
-
-Create lists of non-PFAS chemicals and the chemicals measured by Kreutz:
-```{r create_lists, eval = TRUE}
-non.pfas <- chem.physical_and_invitro.data[regexpr("PFAS",
-               chem.physical_and_invitro.data$Chemical.Class)==-1,]
-kreutz <- chem.physical_and_invitro.data[regexpr("Kreutz",
-               chem.physical_and_invitro.data$Human.Funbound.plasma.Reference)!=-1,]
-
-```
 
 Create a subset of httk data where we know $f_{up}$. We drop the $f_{up}$ measurements of "0" since those
 are < limit of detection in earlier studies (
@@ -77,6 +136,15 @@ fup.subset$Human.Funbound.plasma <- sapply(
   fup.subset$Human.Funbound.plasma, function(x) 
     as.numeric(strsplit(x,",")[[1]][1]))
 fup.subset <- subset(fup.subset, Human.Funbound.plasma < 1)
+```
+
+Calculate Log D in plasma (pH=7.4)
+```{r calc_logd, eval = TRUE}
+fup.subset$logD74 <- apply(fup.subset, 1, function(x) log10(calc_dow(
+  Pow=10^as.numeric(x[["logP"]]), 
+  pKa_Accept = x[["pKa_Accept"]], 
+  pKa_Donor = x[["pKa_Donor"]],
+  pH = 7.4)))
 ```
 
 Group the chemicals.
@@ -103,106 +171,225 @@ quantile(pfas$Human.Funbound.plasma,0.025)
 median(kreutz$Human.Funbound.plasma)
 quantile(kreutz$Human.Funbound.plasma,0.025)
 ```
-```{r setup_physchem_analysis, eval = TRUE}
-physchem <- rbind(non.pfas,kreutz)
+```{r make_physchemtable, eval = TRUE}
+physchem <- rbind(non.pfas,pfas)
 physchem$PFAS <- 0
-physchem[physchem$DTXSID %in% kreutz$DTXSID,"PFAS"] <- 1
+physchem$GCPFAS <- 0
+physchem[physchem$DTXSID %in% pfas$DTXSID,"PFAS"] <- 1
+physchem[physchem$DTXSID %in% kreutz$DTXSID,"GCPFAS"] <- 1
 physchem$PFAS <- factor(physchem$PFAS)
+physchem$GCPFAS <- factor(physchem$GCPFAS)
 ```
+## Test for differences between chemical sets
+
+We consider three sets of chemicals: 1) 1681 non-PFAS chemicals with $f_{up}$ 
+collected from the literature by R package "httk", 2) 114 PFAS with $f_up$ 
+measurements, and 3) the 44 chemicals measured by GC here, which
+are a subset of the 114. For each set we examine the dependence of $f_{up}$ on
+physico-chemical properties and test for differences between the three sets.
+
 ### Dependence on hydrophobicity (log P):
 ```{r logp, eval = TRUE}
-fit.logp <- lm(data=physchem,Human.Funbound.plasma ~ logP*PFAS)
+fit.logp <- lm(data=physchem,Human.Funbound.plasma ~ logP*PFAS*GCPFAS)
 summary(fit.logp)
 ```
+```{r logp.best.model, eval = TRUE}
+fit.logp.best <- lm(data=physchem,Human.Funbound.plasma ~ logP*PFAS)
+summary(fit.logp.best)
+```
 $f_{up}$ decreases with logP for all chemicals, but more so for the
-GC PFAS (significance 0.00936).
+PFAS (significance 0.00011). The PFAS measured by GC are not significantly 
+different from other PFAS.
+
+### Dependence on hydrophobicity (log P):
+```{r logd, eval = TRUE}
+fit.logd <- lm(data=physchem,Human.Funbound.plasma ~ logD74*PFAS*GCPFAS)
+summary(fit.logd)
+```
+```{r logd.best.model, eval = TRUE}
+fit.logd.best <- lm(data=physchem,Human.Funbound.plasma ~ logD74*PFAS)
+summary(fit.logd.best)
+```
+$f_{up}$ decreases with logP for all chemicals, but more so for the
+PFAS (significance 3.11e-07). The PFAS measured by GC are not significantly 
+different from other PFAS..
+
 
 ### Dependence on water solubility (logWSol):
 ```{r logwsol, eval = TRUE}
-fit.logwsol <- lm(data=physchem,Human.Funbound.plasma ~ logWSol*PFAS)
+fit.logwsol <- lm(data=physchem,Human.Funbound.plasma ~ logWSol*PFAS*GCPFAS)
 summary(fit.logwsol)
 ```
-$f_{up}$ decreases with logWSol for all chemicals, but more so for the
-GC PFAS (significance 0.00391).
+```{r logwsol.best.model, eval = TRUE}
+fit.logwsol.best <- lm(data=physchem,Human.Funbound.plasma ~ logWSol*PFAS)
+summary(fit.logwsol.best)
+```
+$f_{up}$ increases with logWSol for all chemicals, but decreases for the
+PFAS (significance 2.98e-13). The PFAS measured by GC are not significantly 
+different from other PFAS..
 
 ### Dependence on molecular weight (MW):
 ```{r MW, eval = TRUE}
-fit.mw <- lm(data=physchem,Human.Funbound.plasma ~ MW*PFAS)
+fit.mw <- lm(data=physchem,Human.Funbound.plasma ~ MW*PFAS*GCPFAS)
 summary(fit.mw)
 ```
+```{r MW.best, eval = TRUE}
+fit.mw.best <- lm(data=physchem,Human.Funbound.plasma ~ MW)
+summary(fit.mw.best)
+```
 $f_{up}$ decreases with molecular weight for all chemicals, 
-but there is no statistically significant difference for GC PFAS.
+but there is no statistically significant difference for PFAS.
 
 ### Dependence on Henry's law constant (logHenry):
 ```{r henry, eval = TRUE}
-fit.henry <- lm(data=physchem,Human.Funbound.plasma ~ logHenry*PFAS)
+fit.henry <- lm(data=physchem,Human.Funbound.plasma ~ logHenry*PFAS*GCPFAS)
 summary(fit.henry)
 ```
+```{r henry.best, eval = TRUE}
+fit.henry.best <- lm(data=physchem,Human.Funbound.plasma ~ logHenry)
+summary(fit.henry.best)
+```
 $f_{up}$ decreases with the Henry's law constant for all chemicals, 
-but there is no statistically significant difference for GC PFAS.
+but there is no statistically significant difference for PFAS.
 
 ```{r fig_logP, eval = TRUE}
+FONT.SIZE <- 9
+kreutz$PFAS<-0
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logPfit1 <- predict(fit.logp.best,kreutz)
+kreutz$PFAS<-1
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logPfit2 <- predict(fit.logp.best,kreutz)
 fig.logp  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logP,
     y=Human.Funbound.plasma),
     size=3,
     color="Blue") +
-  geom_abline(slope=fit.logp$coefficients[2], 
-              intercept=fit.logp$coefficients[1]) + 
-  ylab("Fraction unbound in plasma") + 
+  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+  geom_line(aes(x=logP,y=logPfit2),color="blue") +
+   #ylab("Fraction unbound in plasma") + 
+  ylab("") +
   xlab("Hydrophobicity (LogP)") +
   theme_bw()  +
-  theme( text  = element_text(size=14))
+  theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.logp)
 ```
+```{r fig_logD, eval = TRUE}
+kreutz$PFAS<-0
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logDfit1 <- predict(fit.logd.best,kreutz)
+kreutz$PFAS<-1
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logDfit2 <- predict(fit.logd.best,kreutz)
+fig.logd  <- ggplot(data=kreutz) +
+  geom_point(aes(
+    x=logD74,
+    y=Human.Funbound.plasma),
+    size=3,
+    color="Blue") +
+  geom_line(aes(x=logD74,y=logDfit1),color="black") + 
+  geom_line(aes(x=logD74,y=logDfit2),color="blue") +
+  ylab("Fraction unbound in plasma") + 
+  xlab("Distribution Coefficient in Plasma (LogD74)") +
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.logd)
+```
 
 ```{r fig_mw, eval = TRUE}
+kreutz$PFAS<-0
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$MWfit <- predict(fit.mw.best,kreutz)
 fig.mw <- ggplot(data=kreutz) +
   geom_point(aes(
     x=MW,
     y=Human.Funbound.plasma),
     size=3,
     color="Blue") +
-  geom_abline(slope=fit.mw$coefficients[2], 
-              intercept=fit.mw$coefficients[1]) + 
-  ylab("Fraction unbound in plasma") + 
+  geom_line(aes(x=MW,y=MWfit),color="black") + 
+   #ylab("Fraction unbound in plasma") + 
+  ylab("") +
   xlab("Molecular Weight (Daltons)") +
   theme_bw()  +
-  theme( text  = element_text(size=14))
+  theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.mw)
 ```
+
+
 ```{r fig_wsol, eval = TRUE}
+kreutz$PFAS<-0
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logWSolfit1 <- predict(fit.logwsol.best,kreutz)
+kreutz$PFAS<-1
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$logWSolfit2 <- predict(fit.logwsol.best,kreutz)
 fig.wsol  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logWSol,
     y=Human.Funbound.plasma),
     size=3,
     color="Blue") +
-  geom_abline(slope=fit.logwsol$coefficients[2], 
-              intercept=fit.logwsol$coefficients[1]) + 
-  ylab("Fraction unbound in plasma") + 
+  geom_line(aes(x=logWSol,y=logWSolfit1),color="black") + 
+  geom_line(aes(x=logWSol,y=logWSolfit2),color="blue") + 
+  #ylab("Fraction unbound in plasma") + 
+  ylab("") +
   xlab("Water Solubility (LogWSol)") +
   theme_bw()  +
-  theme( text  = element_text(size=14))
+  theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.wsol)
 ```
+
+
 ```{r fig_henry, eval = TRUE}
+kreutz$PFAS<-0
+kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
+kreutz$Henryfit <- predict(fit.henry.best,kreutz)
 fig.henry  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logHenry,
     y=Human.Funbound.plasma),
     size=3,
     color="Blue") +
-  geom_abline(slope=fit.henry$coefficients[2], 
-              intercept=fit.henry$coefficients[1]) + 
-  ylab("Fraction unbound in plasma") + 
+  geom_line(aes(x=logHenry,y=Henryfit),color="black") + 
+  #ylab("Fraction unbound in plasma") + 
+  ylab("") +
   xlab("Henry's Law Constant (logHenry)") +
   theme_bw()  +
-  theme( text  = element_text(size=14))
+  theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.henry)
+```
+
+```{r fig_legend, eval = TRUE}
+kreutz$Chemical.Class <- sample(c("PFAS","Non-PFAS"),
+                                  dim(kreutz)[1],
+                                  replace=TRUE)
+fig.legend <- ggplot(data=kreutz) +
+  geom_line(aes(x=logWSol,y=logWSolfit1,color=Chemical.Class)) +
+  #ylab("Fraction unbound in plasma") + 
+  scale_color_manual(values=c("black","blue"),name = "") +
+  ylab("") +
+  xlab("") +
+    theme_bw()  +
+    geom_line(aes(x=logWSol,y=logWSolfit1),color="white",size=3) +
+  theme(
+    panel.grid = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+    panel.border = element_blank(),
+        panel.background = element_blank())+
+   theme(legend.key.height= unit(1.5, 'cm'),
+        legend.key.width= unit(6, 'cm'))+
+  theme( text  = element_text(size=FONT.SIZE)) 
+
+print(fig.legend)
+```
+```{r fig_combined, eval = TRUE}
+multiplot(fig.logp,fig.logd,fig.mw,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
 ```

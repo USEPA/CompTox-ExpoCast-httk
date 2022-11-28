@@ -12,7 +12,7 @@
 
 <meta name="author" content="Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore" />
 
-<meta name="date" content="2022-11-23" />
+<meta name="date" content="2022-11-28" />
 
 <title>Kreutz et al. (2022): Analysis of Plasma Binding Measured by GC</title>
 
@@ -343,7 +343,7 @@ Binding Measured by GC</h1>
 <h4 class="author">Anna Kreutz, Matthew Scott Clifton, W. Matthew
 Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A.
 Wetmore</h4>
-<h4 class="date">2022-11-23</h4>
+<h4 class="date">2022-11-28</h4>
 
 
 
@@ -414,177 +414,614 @@ tab.</p>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span></code></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span></code></pre></div>
+</div>
+<div id="multiple-plot-function" class="section level3">
+<h3>Multiple plot function</h3>
+<p>From <a href="http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/" class="uri">http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/</a>
+ggplot objects can be passed in …, or to plotlist (as a list of ggplot
+objects) - cols: Number of columns in layout - layout: A matrix
+specifying the layout. If present, ‘cols’ is ignored.</p>
+<p>If the layout is something like matrix(c(1,2,3,3), nrow=2,
+byrow=TRUE), then plot 1 will go in the upper left, 2 will go in the
+upper right, and 3 will go all the way across the bottom.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>multiplot <span class="ot">&lt;-</span> <span class="cf">function</span>(..., <span class="at">plotlist=</span><span class="cn">NULL</span>, file, <span class="at">cols=</span><span class="dv">1</span>, <span class="at">layout=</span><span class="cn">NULL</span>, <span class="at">heights=</span><span class="cn">NULL</span>, <span class="at">widths=</span><span class="fu">unit</span>(<span class="fu">rep_len</span>(<span class="dv">1</span>, cols), <span class="st">&quot;null&quot;</span>)) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make a list from the ... arguments and plotlist</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  plots <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">list</span>(...), plotlist)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  numPlots <span class="ot">=</span> <span class="fu">length</span>(plots)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># If layout is NULL, then use &#39;cols&#39; to determine layout</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(layout)) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the panel</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ncol: Number of columns of plots</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># nrow: Number of rows needed, calculated from # of cols</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    layout <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">seq</span>(<span class="dv">1</span>, cols <span class="sc">*</span> <span class="fu">ceiling</span>(numPlots<span class="sc">/</span>cols)),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ncol =</span> cols, <span class="at">nrow =</span> <span class="fu">ceiling</span>(numPlots<span class="sc">/</span>cols))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a> <span class="cf">if</span> (numPlots<span class="sc">==</span><span class="dv">1</span>) {</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(plots[[<span class="dv">1</span>]])</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set up the page</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid.newpage</span>()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(heights))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pushViewport</span>(<span class="fu">viewport</span>(<span class="at">layout =</span> <span class="fu">grid.layout</span>(<span class="fu">nrow</span>(layout), <span class="fu">ncol</span>(layout),<span class="at">heights=</span>heights,<span class="at">widths=</span>widths)))</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pushViewport</span>(<span class="fu">viewport</span>(<span class="at">layout =</span> <span class="fu">grid.layout</span>(<span class="fu">nrow</span>(layout), <span class="fu">ncol</span>(layout),<span class="at">widths=</span>widths)))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make each plot, in the correct location</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>numPlots) {</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Get the i,j matrix positions of the regions that contain this subplot</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      matchidx <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">which</span>(layout <span class="sc">==</span> i, <span class="at">arr.ind =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">print</span>(plots[[i]], <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">layout.pos.row =</span> matchidx<span class="sc">$</span>row,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">layout.pos.col =</span> matchidx<span class="sc">$</span>col))</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="distribution-coefficient" class="section level3">
+<h3>Distribution coefficient</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>calc_dow <span class="ot">&lt;-</span> <span class="cf">function</span>(Pow,<span class="at">pH=</span><span class="cn">NA</span>,<span class="at">pKa_Donor=</span><span class="cn">NA</span>,<span class="at">pKa_Accept=</span><span class="cn">NA</span>,<span class="at">fraction_charged=</span><span class="cn">NULL</span>,<span class="at">alpha=</span><span class="fl">0.001</span>) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Octanol:water distribution coefficient,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(fraction_charged))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.na</span>(pH)) <span class="fu">stop</span>(<span class="st">&quot;pH or fraction_charged must be specified in calc_dow.&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ionization <span class="ot">&lt;-</span> <span class="fu">calc_ionization</span>(<span class="at">pH=</span>pH,<span class="at">pKa_Donor=</span>pKa_Donor,<span class="at">pKa_Accept=</span>pKa_Accept)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    fraction_charged  <span class="ot">&lt;-</span> ionization[[<span class="st">&quot;fraction_charged&quot;</span>]]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  Dow <span class="ot">&lt;-</span> Pow<span class="sc">*</span>(<span class="dv">1</span> <span class="sc">+</span> (alpha <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span>fraction_charged)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(Dow)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 </div>
 <div id="analysis-of-kreutz-et-al.-2022-f_up-data" class="section level1">
 <h1>Analysis of Kreutz et al. (2022) <span class="math inline">\(f_{up}\)</span> data</h1>
-<p>Create lists of non-PFAS chemicals and the chemicals measured by
-Kreutz:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>non.pfas <span class="ot">&lt;-</span> chem.physical_and_invitro.data[<span class="fu">regexpr</span>(<span class="st">&quot;PFAS&quot;</span>,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>               chem.physical_and_invitro.data<span class="sc">$</span>Chemical.Class)<span class="sc">==-</span><span class="dv">1</span>,]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>kreutz <span class="ot">&lt;-</span> chem.physical_and_invitro.data[<span class="fu">regexpr</span>(<span class="st">&quot;Kreutz&quot;</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               chem.physical_and_invitro.data<span class="sc">$</span>Human.Funbound.plasma.Reference)<span class="sc">!=-</span><span class="dv">1</span>,]</span></code></pre></div>
 <p>Create a subset of httk data where we know <span class="math inline">\(f_{up}\)</span>. We drop the <span class="math inline">\(f_{up}\)</span> measurements of “0” since those
 are &lt; limit of detection in earlier studies ( <a href="https://doi.org/10.1093/toxsci/kfr254">Wetmore, 2012</a>, <a href="https://doi.org/10.1093/toxsci/kfv171">Wetmore, 2015</a>). We
 don’t have quantitative values for analysis of thsoe chemicals.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fup.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(chem.physical_and_invitro.data,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">!</span><span class="fu">is.na</span>(Human.Funbound.plasma))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fup.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(fup.subset, Human.Funbound.plasma <span class="sc">!=</span> <span class="st">&quot;0&quot;</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>fup.subset<span class="sc">$</span>Human.Funbound.plasma <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  fup.subset<span class="sc">$</span>Human.Funbound.plasma, <span class="cf">function</span>(x) </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(<span class="fu">strsplit</span>(x,<span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fup.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(chem.physical_and_invitro.data,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">!</span><span class="fu">is.na</span>(Human.Funbound.plasma))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fup.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(fup.subset, Human.Funbound.plasma <span class="sc">!=</span> <span class="st">&quot;0&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>fup.subset<span class="sc">$</span>Human.Funbound.plasma <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  fup.subset<span class="sc">$</span>Human.Funbound.plasma, <span class="cf">function</span>(x) </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>(<span class="fu">strsplit</span>(x,<span class="st">&quot;,&quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>fup.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(fup.subset, Human.Funbound.plasma <span class="sc">&lt;</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Calculate Log D in plasma (pH=7.4)</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fup.subset<span class="sc">$</span>logD74 <span class="ot">&lt;-</span> <span class="fu">apply</span>(fup.subset, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">log10</span>(<span class="fu">calc_dow</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pow=</span><span class="dv">10</span><span class="sc">^</span><span class="fu">as.numeric</span>(x[[<span class="st">&quot;logP&quot;</span>]]), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pKa_Accept =</span> x[[<span class="st">&quot;pKa_Accept&quot;</span>]], </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pKa_Donor =</span> x[[<span class="st">&quot;pKa_Donor&quot;</span>]],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH =</span> <span class="fl">7.4</span>)))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in sort(as.numeric(unlist(strsplit(this.pKa_Donor, &quot;,&quot;)))): NAs</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; introduced by coercion</span></span></code></pre></div>
 <p>Group the chemicals.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>non.pfas <span class="ot">&lt;-</span> fup.subset[<span class="fu">regexpr</span>(<span class="st">&quot;PFAS&quot;</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>               fup.subset<span class="sc">$</span>Chemical.Class)<span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span>,]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>kreutz <span class="ot">&lt;-</span> fup.subset[</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>               <span class="sc">!</span><span class="fu">is.na</span>(fup.subset<span class="sc">$</span>Human.Funbound.plasma.Reference),]</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>kreutz <span class="ot">&lt;-</span> kreutz[<span class="fu">regexpr</span>(<span class="st">&quot;Kreutz&quot;</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>               kreutz<span class="sc">$</span>Human.Funbound.plasma.Reference)<span class="sc">!=-</span><span class="dv">1</span>,]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>pfas <span class="ot">&lt;-</span> fup.subset[<span class="fu">regexpr</span>(<span class="st">&quot;PFAS&quot;</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>               fup.subset<span class="sc">$</span>Chemical.Class)<span class="sc">!=</span> <span class="sc">-</span><span class="dv">1</span>,]</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(non.pfas)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1746   54</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(kreutz)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 45 54</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfas)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 115  54</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>non.pfas <span class="ot">&lt;-</span> fup.subset[<span class="fu">regexpr</span>(<span class="st">&quot;PFAS&quot;</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>               fup.subset<span class="sc">$</span>Chemical.Class)<span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>kreutz <span class="ot">&lt;-</span> fup.subset[</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>               <span class="sc">!</span><span class="fu">is.na</span>(fup.subset<span class="sc">$</span>Human.Funbound.plasma.Reference),]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>kreutz <span class="ot">&lt;-</span> kreutz[<span class="fu">regexpr</span>(<span class="st">&quot;Kreutz&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>               kreutz<span class="sc">$</span>Human.Funbound.plasma.Reference)<span class="sc">!=-</span><span class="dv">1</span>,]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>pfas <span class="ot">&lt;-</span> fup.subset[<span class="fu">regexpr</span>(<span class="st">&quot;PFAS&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>               fup.subset<span class="sc">$</span>Chemical.Class)<span class="sc">!=</span> <span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(non.pfas)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1681   55</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(kreutz)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 44 55</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pfas)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 114  55</span></span></code></pre></div>
 <p>Summary statistics for <span class="math inline">\(f_{up}\)</span>.
 Let’s see what the median and lower 2.5% quantiles are for both non-PFAS
 and PFAS.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(non.pfas<span class="sc">$</span>Human.Funbound.plasma)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1279</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(non.pfas<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      2.5% </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4.035e-08</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(pfas<span class="sc">$</span>Human.Funbound.plasma)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0109</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(pfas<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      2.5% </span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.417e-09</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(kreutz<span class="sc">$</span>Human.Funbound.plasma)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0297</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(kreutz<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      2.5% </span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.275e-09</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>physchem <span class="ot">&lt;-</span> <span class="fu">rbind</span>(non.pfas,kreutz)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>physchem[physchem<span class="sc">$</span>DTXSID <span class="sc">%in%</span> kreutz<span class="sc">$</span>DTXSID,<span class="st">&quot;PFAS&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(physchem<span class="sc">$</span>PFAS)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(non.pfas<span class="sc">$</span>Human.Funbound.plasma)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.11</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(non.pfas<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     2.5% </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3.85e-08</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(pfas<span class="sc">$</span>Human.Funbound.plasma)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0109</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(pfas<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       2.5% </span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.4115e-09</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(kreutz<span class="sc">$</span>Human.Funbound.plasma)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.02965</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(kreutz<span class="sc">$</span>Human.Funbound.plasma,<span class="fl">0.025</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        2.5% </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.26375e-09</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>physchem <span class="ot">&lt;-</span> <span class="fu">rbind</span>(non.pfas,pfas)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>GCPFAS <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>physchem[physchem<span class="sc">$</span>DTXSID <span class="sc">%in%</span> pfas<span class="sc">$</span>DTXSID,<span class="st">&quot;PFAS&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>physchem[physchem<span class="sc">$</span>DTXSID <span class="sc">%in%</span> kreutz<span class="sc">$</span>DTXSID,<span class="st">&quot;GCPFAS&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(physchem<span class="sc">$</span>PFAS)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>physchem<span class="sc">$</span>GCPFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(physchem<span class="sc">$</span>GCPFAS)</span></code></pre></div>
+<div id="test-for-differences-between-chemical-sets" class="section level2">
+<h2>Test for differences between chemical sets</h2>
+<p>We consider three sets of chemicals: 1) 1681 non-PFAS chemicals with
+<span class="math inline">\(f_{up}\)</span> collected from the
+literature by R package “httk”, 2) 114 PFAS with <span class="math inline">\(f_up\)</span> measurements, and 3) the 44
+chemicals measured by GC here, which are a subset of the 114. For each
+set we examine the dependence of <span class="math inline">\(f_{up}\)</span> on physico-chemical properties and
+test for differences between the three sets.</p>
 <div id="dependence-on-hydrophobicity-log-p" class="section level3">
 <h3>Dependence on hydrophobicity (log P):</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit.logp <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logP<span class="sc">*</span>PFAS)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logp)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logP * PFAS, data = physchem)</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -1.00894 -0.16750 -0.05598  0.15568  1.39221 </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.535750   0.010093  53.082  &lt; 2e-16 ***</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP        -0.103712   0.003318 -31.256  &lt; 2e-16 ***</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1       -0.264376   0.101629  -2.601  0.00936 ** </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP:PFAS1   0.063157   0.026980   2.341  0.01935 *  </span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2636 on 1709 degrees of freedom</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (78 observations deleted due to missingness)</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3683, Adjusted R-squared:  0.3672 </span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 332.1 on 3 and 1709 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<p><span class="math inline">\(f_{up}\)</span> decreases with logP for
-all chemicals, but more so for the GC PFAS (significance 0.00936).</p>
-</div>
-<div id="dependence-on-water-solubility-logwsol" class="section level3">
-<h3>Dependence on water solubility (logWSol):</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit.logwsol <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logWSol<span class="sc">*</span>PFAS)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logwsol)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logWSol * PFAS, data = physchem)</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.76249 -0.19420 -0.05915  0.16434  1.37863 </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)    0.640803   0.014578  43.958  &lt; 2e-16 ***</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol        0.108754   0.004002  27.173  &lt; 2e-16 ***</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1         -0.391320   0.090324  -4.332 1.56e-05 ***</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol:PFAS1 -0.071858   0.024872  -2.889  0.00391 ** </span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2732 on 1648 degrees of freedom</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (139 observations deleted due to missingness)</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3145, Adjusted R-squared:  0.3133 </span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic:   252 on 3 and 1648 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
-<p><span class="math inline">\(f_{up}\)</span> decreases with logWSol
-for all chemicals, but more so for the GC PFAS (significance
-0.00391).</p>
-</div>
-<div id="dependence-on-molecular-weight-mw" class="section level3">
-<h3>Dependence on molecular weight (MW):</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit.mw <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> MW<span class="sc">*</span>PFAS)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.mw)</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit.logp <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logP<span class="sc">*</span>PFAS<span class="sc">*</span>GCPFAS)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logp)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ MW * PFAS, data = physchem)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logP * PFAS * GCPFAS, data = physchem)</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.3229 -0.2671 -0.1535  0.2270  1.3587 </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.93495 -0.15668 -0.05082  0.13719  0.96702 </span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  3.313e-01  1.210e-02  27.382  &lt; 2e-16 ***</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW          -1.110e-04  2.525e-05  -4.396 1.17e-05 ***</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1       -9.696e-02  1.528e-01  -0.634    0.526    </span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW:PFAS1    -1.876e-04  4.140e-04  -0.453    0.651    </span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3279 on 1785 degrees of freedom</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (2 observations deleted due to missingness)</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.01688,    Adjusted R-squared:  0.01522 </span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 10.21 on 3 and 1785 DF,  p-value: 1.144e-06</span></span></code></pre></div>
-<p><span class="math inline">\(f_{up}\)</span> decreases with molecular
-weight for all chemicals, but there is no statistically significant
-difference for GC PFAS.</p>
-</div>
-<div id="dependence-on-henrys-law-constant-loghenry" class="section level3">
-<h3>Dependence on Henry’s law constant (logHenry):</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit.henry <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logHenry<span class="sc">*</span>PFAS)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.henry)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                     Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)         0.499250   0.009905  50.403  &lt; 2e-16 ***</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP               -0.096062   0.003222 -29.815  &lt; 2e-16 ***</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1              -0.327650   0.064828  -5.054 4.79e-07 ***</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GCPFAS1            -0.118615   0.253972  -0.467  0.64053    </span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP:PFAS1          0.065908   0.017005   3.876  0.00011 ***</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP:GCPFAS1       -0.042502   0.030511  -1.393  0.16380    </span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1:GCPFAS1       0.303916   0.250226   1.215  0.22470    </span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP:PFAS1:GCPFAS1        NA         NA      NA       NA    </span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2434 on 1713 degrees of freedom</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (75 observations deleted due to missingness)</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3598, Adjusted R-squared:  0.3576 </span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 160.5 on 6 and 1713 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit.logp.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logP<span class="sc">*</span>PFAS)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logp.best)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logHenry * PFAS, data = physchem)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logP * PFAS, data = physchem)</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.4009 -0.2615 -0.1516  0.2251  1.1788 </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.93480 -0.15636 -0.05293  0.13854  0.96715 </span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)     0.164295   0.030150   5.449 5.80e-08 ***</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry       -0.015433   0.003504  -4.404 1.13e-05 ***</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1           0.151419   0.128389   1.179   0.2384    </span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry:PFAS1  0.041333   0.016423   2.517   0.0119 *  </span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.499108   0.009905  50.390  &lt; 2e-16 ***</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP        -0.096060   0.003222 -29.811  &lt; 2e-16 ***</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1       -0.270504   0.054254  -4.986 6.79e-07 ***</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logP:PFAS1   0.053408   0.014340   3.724 0.000202 ***</span></span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3277 on 1700 degrees of freedom</span></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (87 observations deleted due to missingness)</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.01903,    Adjusted R-squared:  0.0173 </span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 10.99 on 3 and 1700 DF,  p-value: 3.774e-07</span></span></code></pre></div>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2434 on 1716 degrees of freedom</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (75 observations deleted due to missingness)</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3585, Adjusted R-squared:  0.3574 </span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 319.7 on 3 and 1716 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p><span class="math inline">\(f_{up}\)</span> decreases with logP for
+all chemicals, but more so for the PFAS (significance 0.00011). The PFAS
+measured by GC are not significantly different from other PFAS.</p>
+</div>
+<div id="dependence-on-hydrophobicity-log-p-1" class="section level3">
+<h3>Dependence on hydrophobicity (log P):</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit.logd <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logD74<span class="sc">*</span>PFAS<span class="sc">*</span>GCPFAS)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logd)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logD74 * PFAS * GCPFAS, </span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = physchem)</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.71407 -0.15074 -0.05774  0.13908  0.94817 </span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                       Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)           0.391711   0.008258  47.435  &lt; 2e-16 ***</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74               -0.071145   0.002915 -24.407  &lt; 2e-16 ***</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1                -0.284294   0.052748  -5.390 8.04e-08 ***</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GCPFAS1              -0.056182   0.268127  -0.210    0.834    </span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74:PFAS1          0.057944   0.014511   3.993 6.80e-05 ***</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74:GCPFAS1       -0.048395   0.029781  -1.625    0.104    </span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1:GCPFAS1         0.258422   0.264833   0.976    0.329    </span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74:PFAS1:GCPFAS1        NA         NA      NA       NA    </span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2586 on 1713 degrees of freedom</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (75 observations deleted due to missingness)</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.2773, Adjusted R-squared:  0.2748 </span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 109.6 on 6 and 1713 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit.logd.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logD74<span class="sc">*</span>PFAS)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logd.best)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logD74 * PFAS, data = physchem)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.7140 -0.1512 -0.0591  0.1366  0.9483 </span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)   0.391628   0.008259  47.419  &lt; 2e-16 ***</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74       -0.071158   0.002916 -24.406  &lt; 2e-16 ***</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1        -0.238224   0.046373  -5.137 3.11e-07 ***</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logD74:PFAS1  0.048007   0.012772   3.759 0.000176 ***</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2586 on 1716 degrees of freedom</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (75 observations deleted due to missingness)</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.2757, Adjusted R-squared:  0.2745 </span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 217.7 on 3 and 1716 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p><span class="math inline">\(f_{up}\)</span> decreases with logP for
+all chemicals, but more so for the PFAS (significance 3.11e-07). The
+PFAS measured by GC are not significantly different from other
+PFAS..</p>
+</div>
+<div id="dependence-on-water-solubility-logwsol" class="section level3">
+<h3>Dependence on water solubility (logWSol):</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fit.logwsol <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logWSol<span class="sc">*</span>PFAS<span class="sc">*</span>GCPFAS)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logwsol)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logWSol * PFAS * GCPFAS, </span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = physchem)</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.70967 -0.17348 -0.05574  0.13627  1.01759 </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)            0.596287   0.013939  42.780  &lt; 2e-16 ***</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol                0.101334   0.003786  26.763  &lt; 2e-16 ***</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1                 -0.452718   0.067941  -6.663 3.63e-11 ***</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GCPFAS1               -0.206394   0.260218  -0.793    0.428    </span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol:PFAS1         -0.077611   0.019148  -4.053 5.29e-05 ***</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol:GCPFAS1        0.034380   0.029530   1.164    0.244    </span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1:GCPFAS1          0.353745   0.255125   1.387    0.166    </span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol:PFAS1:GCPFAS1        NA         NA      NA       NA    </span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2495 on 1656 degrees of freedom</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (132 observations deleted due to missingness)</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3209, Adjusted R-squared:  0.3184 </span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 130.4 on 6 and 1656 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fit.logwsol.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logWSol<span class="sc">*</span>PFAS)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.logwsol.best)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logWSol * PFAS, data = physchem)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.70925 -0.17354 -0.05421  0.13667  1.01759 </span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)    0.595924   0.013936  42.760  &lt; 2e-16 ***</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol        0.101281   0.003786  26.748  &lt; 2e-16 ***</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1         -0.394993   0.053703  -7.355 2.98e-13 ***</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logWSol:PFAS1 -0.063875   0.014976  -4.265 2.11e-05 ***</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2495 on 1659 degrees of freedom</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (132 observations deleted due to missingness)</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.3195, Adjusted R-squared:  0.3183 </span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 259.7 on 3 and 1659 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p><span class="math inline">\(f_{up}\)</span> increases with logWSol
+for all chemicals, but decreases for the PFAS (significance 2.98e-13).
+The PFAS measured by GC are not significantly different from other
+PFAS..</p>
+</div>
+<div id="dependence-on-molecular-weight-mw" class="section level3">
+<h3>Dependence on molecular weight (MW):</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fit.mw <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> MW<span class="sc">*</span>PFAS<span class="sc">*</span>GCPFAS)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.mw)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ MW * PFAS * GCPFAS, data = physchem)</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.3016 -0.2395 -0.1275  0.1799  0.7837 </span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)       3.117e-01  1.119e-02  27.860  &lt; 2e-16 ***</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW               -1.333e-04  2.355e-05  -5.659 1.77e-08 ***</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1             9.036e-03  1.126e-01   0.080   0.9360    </span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GCPFAS1          -2.195e-01  3.038e-01  -0.723   0.4700    </span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW:PFAS1         -4.942e-04  2.655e-04  -1.862   0.0628 .  </span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW:GCPFAS1       -1.592e-04  4.897e-04  -0.325   0.7451    </span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1:GCPFAS1     2.819e-01  3.227e-01   0.874   0.3824    </span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW:PFAS1:GCPFAS1         NA         NA      NA       NA    </span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2961 on 1786 degrees of freedom</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (2 observations deleted due to missingness)</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.04412,    Adjusted R-squared:  0.04091 </span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 13.74 on 6 and 1786 DF,  p-value: 2.59e-15</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fit.mw.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> MW)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.mw.best)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ MW, data = physchem)</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.2925 -0.2322 -0.1479  0.1903  0.7989 </span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  3.033e-01  1.115e-02   27.21  &lt; 2e-16 ***</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MW          -1.418e-04  2.367e-05   -5.99 2.53e-09 ***</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2995 on 1791 degrees of freedom</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (2 observations deleted due to missingness)</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.01964,    Adjusted R-squared:  0.01909 </span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 35.88 on 1 and 1791 DF,  p-value: 2.527e-09</span></span></code></pre></div>
+<p><span class="math inline">\(f_{up}\)</span> decreases with molecular
+weight for all chemicals, but there is no statistically significant
+difference for PFAS.</p>
+</div>
+<div id="dependence-on-henrys-law-constant-loghenry" class="section level3">
+<h3>Dependence on Henry’s law constant (logHenry):</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fit.henry <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logHenry<span class="sc">*</span>PFAS<span class="sc">*</span>GCPFAS)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.henry)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logHenry * PFAS * GCPFAS, </span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = physchem)</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.3616 -0.2346 -0.1280  0.1825  0.7797 </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients: (1 not defined because of singularities)</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                         Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)             0.153070   0.027948   5.477 4.97e-08 ***</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry               -0.013610   0.003255  -4.182 3.04e-05 ***</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1                   0.094284   0.110066   0.857  0.39178    </span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GCPFAS1                -0.233571   0.316047  -0.739  0.45998    </span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry:PFAS1          0.035681   0.012797   2.788  0.00536 ** </span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry:GCPFAS1       -0.011695   0.019687  -0.594  0.55255    </span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PFAS1:GCPFAS1           0.165839   0.308076   0.538  0.59044    </span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry:PFAS1:GCPFAS1        NA         NA      NA       NA    </span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.2985 on 1706 degrees of freedom</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (82 observations deleted due to missingness)</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.03534,    Adjusted R-squared:  0.03195 </span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 10.42 on 6 and 1706 DF,  p-value: 2.276e-11</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit.henry.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>physchem,Human.Funbound.plasma <span class="sc">~</span> logHenry)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.henry.best)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = Human.Funbound.plasma ~ logHenry, data = physchem)</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.3328 -0.2308 -0.1508  0.1883  0.7839 </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.160333   0.026701   6.005 2.34e-09 ***</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logHenry    -0.011278   0.003116  -3.620 0.000303 ***</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3023 on 1711 degrees of freedom</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   (82 observations deleted due to missingness)</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.0076, Adjusted R-squared:  0.00702 </span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic:  13.1 on 1 and 1711 DF,  p-value: 0.0003034</span></span></code></pre></div>
 <p><span class="math inline">\(f_{up}\)</span> decreases with the
 Henry’s law constant for all chemicals, but there is no statistically
-significant difference for GC PFAS.</p>
+significant difference for PFAS.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>FONT.SIZE <span class="ot">&lt;-</span> <span class="dv">9</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logPfit1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logp.best,kreutz)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">1</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logPfit2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logp.best,kreutz)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>fig.logp  <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>logP,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Human.Funbound.plasma),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span><span class="st">&quot;Blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logP,<span class="at">y=</span>logPfit1),<span class="at">color=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logP,<span class="at">y=</span>logPfit2),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>   <span class="co">#ylab(&quot;Fraction unbound in plasma&quot;) + </span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Hydrophobicity (LogP)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE))</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.logp)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logDfit1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logd.best,kreutz)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">1</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logDfit2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logd.best,kreutz)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>fig.logd  <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>logD74,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Human.Funbound.plasma),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span>,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span><span class="st">&quot;Blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logD74,<span class="at">y=</span>logDfit1),<span class="at">color=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logD74,<span class="at">y=</span>logDfit2),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Fraction unbound in plasma&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Distribution Coefficient in Plasma (LogD74)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE))</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.logd)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>MWfit <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.mw.best,kreutz)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>fig.mw <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>MW,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Human.Funbound.plasma),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span><span class="st">&quot;Blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>MW,<span class="at">y=</span>MWfit),<span class="at">color=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>   <span class="co">#ylab(&quot;Fraction unbound in plasma&quot;) + </span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Molecular Weight (Daltons)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE))</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.mw)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logWSolfit1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logwsol.best,kreutz)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">1</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>logWSolfit2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.logwsol.best,kreutz)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>fig.wsol  <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>logWSol,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Human.Funbound.plasma),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span>,</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span><span class="st">&quot;Blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logWSol,<span class="at">y=</span>logWSolfit1),<span class="at">color=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logWSol,<span class="at">y=</span>logWSolfit2),<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ylab(&quot;Fraction unbound in plasma&quot;) + </span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Water Solubility (LogWSol)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE))</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.wsol)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>PFAS <span class="ot">&lt;-</span> <span class="fu">factor</span>(kreutz<span class="sc">$</span>PFAS,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>Henryfit <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit.henry.best,kreutz)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>fig.henry  <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span>logHenry,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y=</span>Human.Funbound.plasma),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">size=</span><span class="dv">3</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color=</span><span class="st">&quot;Blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logHenry,<span class="at">y=</span>Henryfit),<span class="at">color=</span><span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ylab(&quot;Fraction unbound in plasma&quot;) + </span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Henry&#39;s Law Constant (logHenry)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE))</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.henry)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>kreutz<span class="sc">$</span>Chemical.Class <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;PFAS&quot;</span>,<span class="st">&quot;Non-PFAS&quot;</span>),</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">dim</span>(kreutz)[<span class="dv">1</span>],</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>fig.legend <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>kreutz) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logWSol,<span class="at">y=</span>logWSolfit1,<span class="at">color=</span>Chemical.Class)) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ylab(&quot;Fraction unbound in plasma&quot;) + </span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;blue&quot;</span>),<span class="at">name =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()  <span class="sc">+</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>logWSol,<span class="at">y=</span>logWSolfit1),<span class="at">color=</span><span class="st">&quot;white&quot;</span>,<span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background =</span> <span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">legend.key.height=</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">&#39;cm&#39;</span>),</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.width=</span> <span class="fu">unit</span>(<span class="dv">6</span>, <span class="st">&#39;cm&#39;</span>))<span class="sc">+</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">text  =</span> <span class="fu">element_text</span>(<span class="at">size=</span>FONT.SIZE)) </span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fig.legend)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAWlBMVEUAAAAAAGYAAP8AOpAAZrY6AAA6ADo6AGY6Ojo6OpA6ZrY6kNtmAABmAGZmOpBmZmZmtv+QOjqQ2/+2ZgC2Zjq2///bkDrb/7bb////tmb/25D//7b//9v///9o/1LyAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADL0lEQVR4nO3c204TURiA0VGKh4KK1FYKzvu/ptMCGmjDB1cKs740aeZwMVnZu72afxj1ZMO/foD/PUARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGK5gl0/XE9jquLx2dPh2E4udp/nd3dNFegT8tjQJ+vxnFzdr28PVx92yk9A2h4lT0NtNxc7IBWw7CYtE6ndXMAdPP155f1s4DeYNfLmy/r1cV2sVtHk8uv75fjgy32bj1OhNNnrltsOW4Xq4sdwHa/Yn5crobFfgXtL07dnO+15gs0ba/7FbQHGu+22D3Q7tp0cTtfoJvz+9+gY0C3m257cjVPoBcEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKJon0NERApvp4PGr9LMFOjZCYDp3+6bqg54B9P5V9gKguxECHw5wngn0Bjs6QmD3pvzi4NaZAh0bIbBrdfb4VkB/RgjsjA4GngD6O0Jgc/uX9qh5Ar0gQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARb8BbUZ+E3Dc54gAAAAASUVORK5CYII=" /><!-- --></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">multiplot</span>(fig.logp,fig.logd,fig.mw,fig.wsol,fig.henry,fig.legend,<span class="at">cols=</span><span class="dv">2</span>,<span class="at">widths=</span><span class="fu">c</span>(<span class="fl">1.75</span>,<span class="fl">1.75</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
 </div>
 </div>
 

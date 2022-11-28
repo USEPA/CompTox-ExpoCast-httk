@@ -1,15 +1,129 @@
-# alpha: Ratio of Distribution coefficient D of totally charged species and that of the neutral form
-calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,alpha=0.001) 
+#' Calculate the distribution coefficient
+#' 
+#' This function estimates the ratio of the equilibrium concentrations of
+#' a compound in octanol and water, taking into account the charge of the
+#' compound. Given the pH, we assume the neutral (uncharged) fraction of
+#' compound partitions according to the hydrophobicity (Pow). We assume that
+#' only a fraction alpha (defaults to 0.001 -- Schmitt (2008)) of the charged
+#' compound partitions into lipid (octanol). Fractions charged are calculated
+#' according to hydrogen ionization equilibria (pKa_Donor, pKa_Accept) using
+#' \code{\link{calc_ionization}}.
+#' 
+#' @param Pow Octanol:water partition coefficient (ratio of concentrations)
+#' 
+#' @param fraction_charged Fraction of chemical charged at the given pH
+#' 
+#' @param alpha Ratio of Distribution coefficient D of totally charged species and that of the neutral form
+#' 
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified. 
+#' 
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified. 
+#' 
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
+#' @param parameters Chemical parameters from a parameterize_MODEL function,
+#' overrides chem.name and chem.cas.
+#' 
+#' @param pH pH where ionization is evaluated.
+#' 
+#' @param pKa_Donor Compound H dissociation equilibirum constant(s).
+#' Overwrites chem.name and chem.cas.
+#' 
+#' @param pKa_Accept Compound H association equilibirum constant(s).
+#' Overwrites chem.name and chem.cas.
+#' 
+#' @return Distribution coefficient (numeric)
+#' 
+#' @author Robert Pearce and John Wambaugh
+#'
+#' @references 
+#' Schmitt, Walter. "General approach for the calculation of tissue to plasma 
+#' partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of
+#' high-throughput predictions of chemical distribution to tissues." Journal of
+#' Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+#'
+#' Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
+#' equilibria for pharmacokinetic modeling." Science of The Total Environment 
+#' 615 (2018): 150-160.
+#'
+#' @keywords Parameter
+#' 
+#' @seealso \link{\code{calc_ionization}}
+#' 
+#' @export calc_dow
+calc_dow <- function(Pow=NULL,
+                     chem.cas=NULL,
+                     chem.name=NULL,
+                     dtxsid=NULL,
+                     parameters=NULL,
+                     pH=NULL,
+                     pKa_Donor=NULL,
+                     pKa_Accept=NULL,
+                     fraction_charged=NULL,
+                     alpha=0.001) 
 {
-  # Octanol:water distribution coefficient,
-  if (is.null(fraction_charged))
+# Check to see if Pow was provided:
+  if (is.null(Pow))
+# If not, see if we have chem id's:
   {
-    if (is.na(pH)) stop("pH or fraction_charged must be specified in calc_dow.")
-    ionization <- calc_ionization(pH=pH,pKa_Donor=pKa_Donor,pKa_Accept=pKa_Accept)
+    if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid))) 
+    {
+      if (is.null(dtxsid))
+      {
+        out <- get_chem_id(
+               chem.cas=chem.cas,
+               chem.name=chem.name,
+               dtxsid=dtxsid)
+        dtxsid <- out$dtxsid
+      }
+      Pow <- 
+        suppressWarnings(10^get_physchem_param("LogP", dtxsid=dtxsid))
+    } else if (!all(c("Pow") %in% names(parameters)))
+# If not see if "parameters" was provided
+    {
+      Pow <- parameters$Pow
+    } else stop("Must provide chemical descriptors or identifiers for calc_dow")  
+  }
+
+# Check to see if fraction_charged was provided:
+  if (is.null(fraction_charged))
+# If not, same as above:
+  {
+    if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid))) 
+    {
+      if (is.null(dtxsid))
+      {
+        out <- get_chem_id(
+               chem.cas=chem.cas,
+               chem.name=chem.name,
+               dtxsid=dtxsid)
+        dtxsid <- out$dtxsid
+      }
+      pKa_Donor <- 
+        suppressWarnings(get_physchem_param("pKa_Donor", dtxsid=dtxsid))
+      pKa_Accept <- 
+        suppressWarnings(get_physchem_param("pKa_Accept", dtxsid=dtxsid))
+    } else if (!all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
+# If not see if "parameters" was provided
+    {
+      pKa_Donor <- parameters$pKa_Donor
+      pKa_Accept <- parameters$pKa_Accept
+    } else stop("Must provide chemical descriptors or identifiers for calc_dow")  
+    if (is.null(pH)) stop("pH or fraction_charged must be specified in calc_dow.")
+    ionization <- calc_ionization(pH=pH,
+                                  pKa_Donor=pKa_Donor,
+                                  pKa_Accept=pKa_Accept)
     fraction_charged  <- ionization[["fraction_charged"]]
   }
   
+# Calculate Dow:
   Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
+  
   return(Dow)
 }
 
@@ -199,7 +313,8 @@ calc_ionization <- function(
       if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
       {
         if (regexpr(",",this.pKa_Donor)!=-1)
-          sort(as.numeric(unlist(strsplit(this.pKa_Donor, ","))))
+          suppressWarnings(
+            sort(as.numeric(unlist(strsplit(this.pKa_Donor, ",")))))
         else this.pKa_Donor <- suppressWarnings(as.numeric(this.pKa_Donor))
       }
     }
@@ -209,7 +324,8 @@ calc_ionization <- function(
       if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
       {
         if (regexpr(",",this.pKa_Accept)!=-1)
-          sort(as.numeric(unlist(strsplit(this.pKa_Accept, ","))))
+          suppressWarnings(
+            sort(as.numeric(unlist(strsplit(this.pKa_Accept, ",")))))
         else this.pKa_Accept <- suppressWarnings(as.numeric(this.pKa_Accept))
       }
     }

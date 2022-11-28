@@ -1831,7 +1831,8 @@ chem.physical_and_invitro.data[
   "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
-
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID=="DTXSID30395037",
+                   "Chemical.Class"] <-"PFAS"
 
 #Remove chemicals with no DTXSID:
 if (any(is.na(chem.physical_and_invitro.data$DTXSID)))
