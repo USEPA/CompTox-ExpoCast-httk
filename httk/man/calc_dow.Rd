@@ -70,7 +70,7 @@ equilibria for pharmacokinetic modeling." Science of The Total Environment
 615 (2018): 150-160.
 }
 \seealso{
-\link{\code{calc_ionization}}
+\code{\link{calc_ionization}}
 }
 \author{
 Robert Pearce and John Wambaugh
