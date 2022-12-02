@@ -83,6 +83,8 @@
 #'
 #' @keywords Parameter 3compss
 #'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
@@ -300,21 +302,21 @@ Set default.to.human to true to substitute human value.")
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
     
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept,
     suppress.messages=suppress.messages)) # fraction 
-  if (adjusted.Clint) 
-  {
-    Clint.point <- Clint.point/Fu_hep
-    if (!suppress.messages) 
-    {
-      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
-    }
-  }
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjust.Clint) Clint <- apply_clint_adjustment(
+                               Clint,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
+                        
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
                         chem.cas=chem.cas,
