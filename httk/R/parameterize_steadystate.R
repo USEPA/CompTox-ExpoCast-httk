@@ -81,9 +81,13 @@
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
-#' @keywords Parameter 3compss
+#' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
 #' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 

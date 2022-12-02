@@ -186,7 +186,9 @@
 #'
 #' @keywords Solve
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_gas_pbtk}}
 #'
 #' @examples
 #' 
@@ -216,10 +218,6 @@
 #' }
 #' 
 #' @export solve_gas_pbtk
-#' 
-#' @useDynLib httk
-#' 
-#' @import deSolve
 #' 
 #' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,

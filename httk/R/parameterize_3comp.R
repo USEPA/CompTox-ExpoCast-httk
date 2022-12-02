@@ -96,7 +96,17 @@
 #'
 #' @keywords Parameter 3compartment
 #'
+#' @seealso \code{\link{solve_3comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_3comp}}
+#'
+#' @seealso \code{\link{parameterize_pbtk}}
+#'
 #' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 

@@ -107,7 +107,19 @@ McNamara PJ, Alcorn J. Protein binding predictions in infants.
 AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 }
 \seealso{
+\code{\link{solve_fetal_pbtk}}
+
+\code{\link{parameterize_pbtk}}
+
+\code{\link{predict_partioning_schmitt}}
+
 \code{\link{adjust_clint}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
+
+\code{\link{kapraun2019}}
 }
 \author{
 Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun

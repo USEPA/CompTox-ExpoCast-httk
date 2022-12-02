@@ -66,6 +66,11 @@ Steady state plasma concentration in mg/L units
 This function calculates the analytic steady state plasma or venous blood 
 concentrations as a result of infusion dosing.
 }
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{parameterize_1comp}}
+}
 \author{
 Robert Pearce and John Wambaugh
 }

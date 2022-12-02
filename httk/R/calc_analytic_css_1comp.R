@@ -33,6 +33,10 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_1comp}}
+#'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords 1compartment
 calc_analytic_css_1comp <- function(chem.name=NULL,

@@ -112,7 +112,17 @@
 #'
 #' @keywords Parameter pbtk
 #'
+#' @seealso \code{\link{solve_pbtk}}
+#'
+#' @seealso \code{\link{calc_analytic_css_pbtk}}
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
 #' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 
