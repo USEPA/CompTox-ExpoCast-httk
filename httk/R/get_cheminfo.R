@@ -1,10 +1,22 @@
-#' Retrieve chemical information from HTTK package
+#' Retrieve chemical information available from HTTK package
 #' 
-#' This function provides the information specified in "info=" (can be single entry
-#' or vector) for all chemicals for which a toxicokinetic model can be
-#' parameterized for a given species. Since different models have different 
+#' This function lists information on all the chemicals within HTTK for which 
+#' there are sufficient data for the specified model and species. 
+#' By default the function returns only CAS (that is, info="CAS"). 
+#' The type of information available includes chemical identifiers 
+#' ("Compound", "CASRN", "DTXSID"), in vitro
+#' measurements ("Clint", "Clint.pvalue", "Funbound plasma", "Rblood2plasma"), 
+#' and physico-chemical information ("Formula", "logMA", "logP", "MW",
+#' "pKa_Accept", "pKa_Donor"). The argument "info" can be a single type of 
+#' information, "all" information, or a vector of specific types of information.
+#' The argument "model" defaults to 
+#' "3compartmentss" and the argument "species" defaults to "human".  
+#' Since different models have different 
 #' requirements and not all chemicals have complete data, this function will 
-#' return different number of chemicals depending on the model specififed.
+#' return different numbers of chemicals depending on the model specified. If
+#' a chemical is not listed by get_cheminfo then either the in vitro or
+#' physico-chemical data needed are currently missing (but could potentially
+#' be added using \code{\link{add_chemtable}}.
 #' 
 #' When default.to.human is set to TRUE, and the species-specific data,
 #' Funbound.plasma and Clint, are missing from 

@@ -64,7 +64,7 @@ Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state concentration (mg/L) as a result
-of infusion dosing. Concentrations are returned for plasma by default, but various
+of oral infusion dosing. Concentrations are returned for plasma by default, but various
 tissues or blood concentrations can also be given as specified.
 }
 \details{
