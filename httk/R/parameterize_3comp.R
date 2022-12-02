@@ -96,6 +96,8 @@
 #'
 #' @keywords Parameter 3compartment
 #'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')

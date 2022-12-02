@@ -186,6 +186,8 @@
 #'
 #' @keywords Solve
 #'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @examples
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)

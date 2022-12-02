@@ -8,27 +8,35 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#'
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#'
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
+#'
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#'
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
+#'
 #' @param hepatic.model Model used in calculating hepatic clearance, unscaled,
 #' parallel tube, dispersion, or default well-stirred.
+#'
 #' @param suppress.messages Whether or not to suppress the output message.
+#'
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for well-stirred model if TRUE for hepatic.model well-stirred.
 #' This assumes clearance relative to amount unbound in whole blood instead of
 #' plasma, but converted to use with plasma concentration.
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE.
+#'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.
 #'
@@ -53,19 +61,17 @@
 #' calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
 #' calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 #' 
+#' @importFrom purrr compact 
 #' 
 #' @export calc_hep_clearance
 calc_hep_clearance <- function(chem.name=NULL,
                                chem.cas=NULL,
                                dtxsid = NULL,
                                parameters=NULL,
-                               species='Human',
-                               default.to.human=FALSE,
                                hepatic.model='well-stirred',
                                suppress.messages=FALSE,
                                well.stirred.correction=TRUE,
                                restrictive.clearance=TRUE,
-                               adjusted.Funbound.plasma=TRUE,
                                ...)
 {
   model <- hepatic.model
@@ -108,17 +114,16 @@ calc_hep_clearance <- function(chem.name=NULL,
         (parameters[["Qgutf"]]+parameters[["Qliverf"]])
     }
   }
-  if(is.null(parameters))
+  
+  if (is.null(parameters))
   {
-    parameters <- parameterize_steadystate(
+    parameters <- do.call(parameterize_steadystate,
+                          args=purrr::compact(c(list(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid,
-                    species=species,
-                    default.to.human=default.to.human,
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    suppress.messages=suppress.messages,
-                    ...)
+                    suppress.messages=suppress.messages),
+                    ...)))
     Qtotal.liverc <- get_param(
                        "Qtotal.liverc",
                        parameters,
@@ -147,15 +152,13 @@ calc_hep_clearance <- function(chem.name=NULL,
   {
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)) stop(
 'chem.cas, chem.name, or dtxsid must be specified when not including all necessary 3compartmentss parameters.')
-    params <- parameterize_steadystate(
-                chem.cas=chem.cas,
-                chem.name=chem.name,
-                dtxsid=dtxsid,
-                species=species,
-                default.to.human=default.to.human,
-                adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                suppress.messages=suppress.messages,
-                ...)
+    parameters <- do.call(parameterize_steadystate,
+                          args=purrr::compact(c(list(
+                    chem.cas=chem.cas,
+                    chem.name=chem.name,
+                    dtxsid=dtxsid,
+                    suppress.messages=suppress.messages),
+                    ...)))
     parameters <- c(parameters,params[
                       name.list[!(name.list %in% names(parameters))]])
   }
@@ -176,15 +179,6 @@ calc_hep_clearance <- function(chem.name=NULL,
     if (!suppress.messages) warning("Clint is provided as a distribution.")
   }
   
-  fu_hep <- get_param(
-              "Fhep.assay.correction",
-              parameters,
-              "calc_hep_clearance") 
-              
-# Correct for fraction of chemical unbound in in vitro hepatocyte assay ad in
-# Kilford et al. (2008) (and used by Wetmore et al. (2015):
-  Clint <- Clint / fu_hep
-
   fup <- get_param(
            "Funbound.plasma",
            parameters,
@@ -277,27 +271,35 @@ calc_hep_clearance <- function(chem.name=NULL,
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#'
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#'
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
+#'
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#'
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
+#'
 #' @param hepatic.model Model used in calculating hepatic clearance, unscaled,
 #' parallel tube, dispersion, or default well-stirred.
+#'
 #' @param suppress.messages Whether or not to suppress the output message.
+#'
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for well-stirred model if TRUE for hepatic.model well-stirred.
 #' This assumes clearance relative to amount unbound in whole blood instead of
 #' plasma, but converted to use with plasma concentration.
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE.
+#'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.
 #'

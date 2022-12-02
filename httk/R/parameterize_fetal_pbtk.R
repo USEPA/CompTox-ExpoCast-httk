@@ -76,6 +76,8 @@
 #'
 #' @keywords Parameter
 #'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @examples
 #' 
 #' 

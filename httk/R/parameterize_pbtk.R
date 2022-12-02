@@ -109,7 +109,11 @@
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter pbtk
+#'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @examples
 #' 
 #' 
@@ -216,18 +220,6 @@ parameterize_pbtk <- function(
                       suppress.messages=TRUE,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
 
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
-  Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
-                "Pow","pKa_Donor","pKa_Accept")])  # fraction
-  if (adjusted.Clint) 
-  {
-    Clint <- Clint / Fu_hep
-    if (!suppress.messages) 
-    {
-      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
-    }
-  }
 
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
@@ -300,6 +292,21 @@ parameterize_pbtk <- function(
   Pow <- 10^get_physchem_param(
     "logP",
     chem.cas=chem.cas) 
+    
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=list(
+    Pow=Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    suppress.messages=suppress.messages)) # fraction 
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjust.Clint) Clint <- apply_clint_adjustment(
+                               Clint,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
   
   outlist <- list()
   # Begin flows:
