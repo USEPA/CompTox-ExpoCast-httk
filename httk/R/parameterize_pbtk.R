@@ -303,7 +303,7 @@ parameterize_pbtk <- function(
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  if (adjust.Clint) Clint <- apply_clint_adjustment(
+  if (adjusted.Clint) Clint <- apply_clint_adjustment(
                                Clint,
                                Fu_hep=Fu_hep,
                                suppress.messages=suppress.messages)

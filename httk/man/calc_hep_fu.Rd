@@ -50,6 +50,9 @@ Wetmore, Barbara A., et al. "Incorporating high-throughput exposure
 predictions with dosimetry-adjusted in vitro bioactivity to inform chemical 
 toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
 }
+\seealso{
+\code{\link{adjust_clint}}
+}
 \author{
 John Wambaugh and Robert Pearce
 }

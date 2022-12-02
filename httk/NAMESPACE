@@ -3,6 +3,7 @@
 export(CAS.checksum)
 export(add_chemtable)
 export(age_draw_smooth)
+export(apply_clint_adjustment)
 export(armitage_estimate_sarea)
 export(armitage_eval)
 export(available_rblood2plasma)
