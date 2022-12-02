@@ -261,6 +261,9 @@ head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
 
 \insertRef{pearce2017httk}{httk}
 }
+\seealso{
+\code{\link{adjust_clint}}
+}
 \author{
 Matt Linakis, John Wambaugh, Mark Sfeir, Miyuki Breen
 }

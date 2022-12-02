@@ -312,8 +312,8 @@ Set default.to.human to true to substitute human value.")
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  if (adjust.Clint) Clint <- apply_clint_adjustment(
-                               Clint,
+  if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
+                               Clint.point,
                                Fu_hep=Fu_hep,
                                suppress.messages=suppress.messages)
                         
