@@ -1,7 +1,7 @@
 #'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #' This function calculates the analytic steady state concentration (mg/L) as a result
-#' of infusion dosing. Concentrations are returned for plasma by default, but various
+#' of oral infusion dosing. Concentrations are returned for plasma by default, but various
 #' tissues or blood concentrations can also be given as specified.
 #' 
 #' The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
