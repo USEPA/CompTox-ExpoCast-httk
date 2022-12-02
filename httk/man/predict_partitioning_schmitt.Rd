@@ -131,6 +131,8 @@ tissue-to-plasma partition coefficients using readily available input
 parameters." Xenobiotica 43.10 (2013): 839-852.
 }
 \seealso{
+\code{\link{parameterize_schmitt}}
+
 \code{\link{tissue.data}}
 }
 \author{

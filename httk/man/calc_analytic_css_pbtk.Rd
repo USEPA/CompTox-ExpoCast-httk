@@ -95,6 +95,11 @@ and dose rate has  units of mg/kg/day.
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{parameterize_pbtk}}
+}
 \author{
 Robert Pearce and John Wambaugh
 }

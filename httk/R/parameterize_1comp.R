@@ -96,7 +96,19 @@
 #'
 #' @keywords Parameter 1compartment
 #'
+#' @seealso \code{\link{solve_1comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_1comp}}
+#'
+#' @seealso \code{\link{calc_vdist}}
+#'
+#' @seealso \code{\link{parameterize_steadystate}}
+#'
 #' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 

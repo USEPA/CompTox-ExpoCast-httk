@@ -57,6 +57,10 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_pbtk}}
+#'
 #'@author Robert Pearce and John Wambaugh
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput

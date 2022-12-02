@@ -162,6 +162,11 @@ out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
 }
+\seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_fetal_pbtk}}
+}
 \author{
 John Wambaugh, Mark Sfeir, and Dustin Kapraun
 }

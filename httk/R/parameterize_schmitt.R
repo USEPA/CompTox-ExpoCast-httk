@@ -56,6 +56,10 @@
 #'
 #' @keywords Parameter schmitt
 #'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -81,7 +85,6 @@
 #' parameterize_schmitt(chem.name='bisphenola')
 #' 
 #' @export parameterize_schmitt
-
 parameterize_schmitt <- function(chem.cas=NULL,
                           chem.name=NULL,
                           dtxsid = NULL,

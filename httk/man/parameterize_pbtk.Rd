@@ -152,7 +152,17 @@ hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
 \seealso{
+\code{\link{solve_pbtk}}
+
+\code{\link{calc_analytic_css_pbtk}}
+
+\code{\link{predict_partitioning_schmitt}}
+
 \code{\link{adjust_clint}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
 }
 \author{
 John Wambaugh and Robert Pearce

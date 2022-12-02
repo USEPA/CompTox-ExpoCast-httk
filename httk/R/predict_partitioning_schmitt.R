@@ -67,6 +67,8 @@
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'
+#' @seealso \code{\link{parameterize_schmitt}}
+#'
 #' @seealso \code{\link{tissue.data}}
 #' 
 #' @return Returns tissue to unbound plasma partition coefficients for each

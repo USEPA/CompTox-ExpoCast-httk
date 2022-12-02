@@ -150,7 +150,15 @@
 #'
 #' @keywords Parameter
 #'
+#' @seealso \code{\link{solve_gas_pbtk}}
+#'
 #' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
