@@ -158,12 +158,17 @@ solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,daily.dose=.5,days=1,tsteps=
 params <-parameterize_3comp(chem.cas="80-05-7")
 solve_3comp(parameters=params)
 
+
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 }
 \seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_3comp}}
+
 \code{\link{calc_analytic_css_3comp}}
 }
 \author{

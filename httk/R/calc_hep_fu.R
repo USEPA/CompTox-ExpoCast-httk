@@ -33,6 +33,8 @@
 #'
 #' @keywords in-vitro
 #'
+#' @seealso \code{\link{adjust_clint}}
+#'
 #' @import utils
 #'
 #' @export calc_hep_fu

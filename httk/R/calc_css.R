@@ -79,6 +79,8 @@
 #' \item{the.day}{The day the average concentration comes within 100 * p
 #' percent of the true steady state concentration.}
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
 #' @author Robert Pearce, John Wambaugh
 #'
 #' @keywords Steady-State

@@ -1,12 +1,13 @@
 ---
 title: "News for R package httk"
-date: "September 14, 2022"
+date: "December 2, 2022"
 output: html_document
 ---
 
-# version 2.2.2 (November, 2022)
+# version 2.2.2 (December, 2022)
 
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
+* Removed inappropriate second adjustment for binding in intrinsic hepatic clearance assay from 'cal_hep_clearance' -- adjustment now only occurs in parameterization functions. Added new function 'apply_clint_adjustment' to standardize implementation of adjustment (thanks Todor Antonijevic)
 * `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
 * Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
 * Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
@@ -17,6 +18,7 @@ output: html_document
 * Revised restrictive.clearance argument for function 'solve_model'
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * We now export function 'calc_dow' for the distribution coefficient
+* Updated various function documentation
 
 # version 2.2.1 (September, 2022)
 

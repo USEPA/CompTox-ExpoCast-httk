@@ -127,6 +127,8 @@ model.list <- list()
 #' 
 #'calc_analytic_css(parameters=params,model="pbtk")
 #'
+#' @seealso \code{\link{calc_css}}
+#'
 #'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
 #'@keywords Solve

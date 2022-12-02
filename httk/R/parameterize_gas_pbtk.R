@@ -150,6 +150,16 @@
 #'
 #' @keywords Parameter
 #'
+#' @seealso \code{\link{solve_gas_pbtk}}
+#'
+#' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
+#'
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 #' 
@@ -260,19 +270,6 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 'Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
 
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-  # clearance assay (Kilford et al., 2008)
-  Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
-                "Pow","pKa_Donor","pKa_Accept")])  # fraction
-  if (adjusted.Clint) 
-  {
-    Clint <- Clint / Fu_hep
-    if (!suppress.messages) 
-    {
-      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
-    }
-  }
-
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
@@ -297,6 +294,20 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
   Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
 
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=list(
+    Pow=Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept,
+    suppress.messages=suppress.messages)) # fraction 
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjusted.Clint) Clint <- apply_clint_adjustment(
+                               Clint,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
   outlist <- list()
    # Begin flows:
   #mL/min/kgBW converted to L/h/kgBW:
