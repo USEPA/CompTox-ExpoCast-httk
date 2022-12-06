@@ -173,7 +173,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     InfiniteDose=TRUE
   } else if (InfiniteDose==0){
     InfiniteDose=FALSE
-  # } else if (typeof(InfiniteDose)!="logical"){
+  } else if (typeof(InfiniteDose)!="logical"){
     stop("InfiniteDose must be either be equal to FALSE (i.e., 0) (default) or TRUE (i.e., 1).")
   }  
   # Check InfiniteDose in parameters
