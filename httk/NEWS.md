@@ -19,6 +19,7 @@ output: html_document
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * We now export function 'calc_dow' for the distribution coefficient
 * Updated various function documentation
+* Added option class.exclude to 'get_cheminfo' -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 
 # version 2.2.1 (September, 2022)
 
