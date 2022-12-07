@@ -8,7 +8,7 @@ parameterize_dermal_pbtk(
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
-  model.type = "dermal",
+  model.type = "dermal_1subcomp",
   method.permeability = "Chen-Lian",
   species = "Human",
   default.to.human = F,
@@ -24,8 +24,10 @@ parameterize_dermal_pbtk(
   skin.pH = 7,
   vmax.km = F,
   height = 175,
+  totalSA = NULL,
   Kvehicle2water = "water",
   restrictive.clearance = TRUE,
+  InfiniteDose = 0,
   ...
 )
 }
@@ -37,17 +39,17 @@ specified.}
 specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
+the chemical must be identified by either CAS, name, or DTXSIDs.}
 
-\item{model.type}{Choice of dermal model, either the default "dermal" for the 
+\item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
+the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
 model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 to the top layer being the stratum corneum and the bottom layer being the combined
-viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
-for the skin.}
+viable epidermis and dermis.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
-the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
-is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". 
+Default is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -90,7 +92,11 @@ million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
 vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
-Other optional inputs are "octanol" and "olive oil".}
+Other optional inputs are "octanol", "olive oil", or a numeric value.}
+
+\item{InfiniteDose}{If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
+of chemical in the vehicle is considered) and Cvehicle is a constant. If
+FALSE (default), dosing is finite and Cvehicle changes over time.}
 }
 \value{
 \item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
@@ -147,7 +153,9 @@ model.type="dermal_1subcomp".} \item{Kbottom2vehicle}{Partition coefficient betw
 SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
 cm^2.} \item{Vvehicle}{Volume of vehicle, L.} \item{skin_depth}{Skin skin_depth, cm.}
 \item{Fdermabs}{Fraction of vehicle concentration available for absorption.}
-\item{Fskin_exposed}{Fraction of skin exposed.} \item{Vmax}{units/hr, with
+\item{Fskin_exposed}{Fraction of skin exposed.} \item{InfiniteDose}{If InfiniteDose=1, 
+infinite dosing is assumed; if InfiniteDose=0, finite dosing is assumed. When InfiniteDose=1,
+the state variable Avehicle does not have meaning.} \item{Vmax}{units/hr, with
 units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{units same as dosing
 concentration. CURRENTLY NOT IN USE.}
 }

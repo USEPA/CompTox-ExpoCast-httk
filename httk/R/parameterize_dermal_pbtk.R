@@ -9,15 +9,15 @@
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
-#' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param model.type Choice of dermal model, either the default "dermal" for the 
+#' the chemical must be identified by either CAS, name, or DTXSIDs.
+#' @param model.type Choice of dermal model, either the default "dermal_1subcomp" for
+#' the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
 #' model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 #' to the top layer being the stratum corneum and the bottom layer being the combined
-#' viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
-#' for the skin.
+#' viable epidermis and dermis.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
-#' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
-#' is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". 
+#' Default is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 #' law of diffusion to calculate P. For "dermal" model, this parameter is ignored.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -46,7 +46,7 @@
 #' @param height Height in cm, used in calculating totalSA.
 #' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
 #' vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
-#' Other optional inputs are "octanol" and "olive oil".
+#' Other optional inputs are "octanol", "olive oil", or a numeric value.
 #' @param InfiniteDose If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
 #' of chemical in the vehicle is considered) and Cvehicle is a constant. If
 #' FALSE (default), dosing is finite and Cvehicle changes over time.
@@ -145,7 +145,7 @@
 parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
-                              model.type="dermal", #can also be "dermal_1subcomp"
+                              model.type="dermal_1subcomp", #can also be "dermal"
                               method.permeability = "Chen-Lian",
                               species="Human",
                               default.to.human=F,

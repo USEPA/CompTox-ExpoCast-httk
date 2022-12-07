@@ -96,7 +96,7 @@ LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes

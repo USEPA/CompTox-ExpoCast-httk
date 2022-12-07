@@ -8,7 +8,7 @@ solve_dermal_pbtk(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
-  model.type = "dermal",
+  model.type = "dermal_1subcomp",
   method.permeability = "Chen-Lian",
   Kvehicle2water = NULL,
   times = NULL,
@@ -32,6 +32,8 @@ solve_dermal_pbtk(
   Vvehicle = NULL,
   initial.dose = NULL,
   input.units = NULL,
+  dose.duration = NULL,
+  dose.duration.units = NULL,
   dosing.dermal = NULL,
   dosing.matrix = NULL,
   washoff = FALSE,
@@ -49,11 +51,11 @@ be specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs.}
 
-\item{model.type}{Choice of dermal model, either the default "dermal" for the 
+\item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
+the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
 model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 to the top layer being the stratum corneum and the bottom layer being the combined
-viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
-for the skin.}
+viable epidermis and dermis.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
 the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default

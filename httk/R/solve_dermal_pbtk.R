@@ -37,11 +37,11 @@
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs.
-#' @param model.type Choice of dermal model, either the default "dermal" for the 
+#' @param model.type Choice of dermal model, either the default "dermal_1subcomp" for
+#' the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
 #' model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 #' to the top layer being the stratum corneum and the bottom layer being the combined
-#' viable epidermis and dermis; or "dermal_1subcomp" for the model with 1 compartment 
-#' for the skin.
+#' viable epidermis and dermis.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
 #' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
 #' is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
@@ -115,7 +115,7 @@
 solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     chem.cas = NULL, #solve_model
                     dtxsid = NULL,#solve_model
-                    model.type = "dermal", #can also be "dermal_1subcomp"
+                    model.type = "dermal_1subcomp", #can also be "dermal"
                     method.permeability = "Chen-Lian",
                     Kvehicle2water = NULL,
                     times=NULL, #solve_model
