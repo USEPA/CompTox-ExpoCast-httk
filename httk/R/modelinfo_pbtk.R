@@ -11,6 +11,9 @@ model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
 # ("C" is preprended):
 model.list[["pbtk"]]$steady.state.compartment <- "plasma"
 
+# What units does the analytic function return:
+model.list[["pbtk"]]$steady.state.units <- "mg/L"
+
 # Function used for generating model parameters:
 model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
 

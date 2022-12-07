@@ -7,14 +7,15 @@
 httkpop_direct_resample(
   nsamp = NULL,
   gendernum = NULL,
-  agelim_years = c(0, 79),
-  agelim_months = c(0, 959),
+  agelim_years = NULL,
+  agelim_months = NULL,
   weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
   gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
   reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
     "Non-Hispanic Black", "Other"),
   gfr_resid_var = TRUE,
-  ckd_epi_race_coeff = FALSE
+  ckd_epi_race_coeff = FALSE,
+  nhanes_mec_svy
 )
 }
 \arguments{
@@ -59,6 +60,10 @@ residual variability when generating GFR values. (Default is TRUE.)}
 \item{ckd_epi_race_coeff}{Logical value indicating whether or not to use the
 "race coefficient" from the CKD-EPI equation when estimating GFR values.
 (Default is FALSE.)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A data.table where each row represents an individual, and each

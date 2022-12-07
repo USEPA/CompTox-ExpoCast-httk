@@ -149,6 +149,18 @@ httk.TPO.rat.table <- subset(get_cheminfo(info="all",species="rat"),
  
 httk.TPO.human.table <- subset(get_cheminfo(info="all",species="human"),
  CAS \%in\% TPO.cas)
+ 
+# create a data.frame with all the Fup values, we ask for model="schmitt" since
+# that model only needs fup, we ask for "median.only" because we don't care
+# about uncertainty intervals here:
+fup.tab <- get_cheminfo(info="all",median.only=TRUE,model="schmitt")
+# calculate the median, making sure to convert to numeric values:
+median(as.numeric(fup.tab$Human.Funbound.plasma),na.rm=TRUE)
+# calculate the mean:
+mean(as.numeric(fup.tab$Human.Funbound.plasma),na.rm=TRUE)
+# count how many non-NA values we have (should be the same as the number of 
+# rows in the table but just in case we ask for non NA values:
+sum(!is.na(fup.tab$Human.Funbound.plasma))
 }
 
 }

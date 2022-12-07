@@ -209,7 +209,7 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 Model Figure from \insertCite{linakis2020development}{httk}:
-\if{html}{\figure{gaspbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
+\if{html}{\figure{gaspbtk.jpg}{options: width="100\%" alt="Figure: Gas PBTK 
 Model Schematic"}}
 \if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
 Model Schematic"}}
@@ -241,7 +241,10 @@ exp.duration = 6, exercise = TRUE)
                   
 params <- parameterize_gas_pbtk(chem.cas="80-05-7")
 solve_gas_pbtk(parameters=params)
-}
+
+# Oral dose with exhalation as a route of elimination:
+out <- solve_gas_pbtk(chem.name = 'bisphenol a', exp.conc = 0, dose=100,
+input.units="mg/kg")
 
 # Note that different model compartments for this model have different units 
 # and that the final units can be controlled with the output.units argument:
@@ -250,6 +253,7 @@ head(solve_gas_pbtk(chem.name="lindane"))
 head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
 # Convert just the plasma to mg/L:
 head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
+}
 
 }
 \references{

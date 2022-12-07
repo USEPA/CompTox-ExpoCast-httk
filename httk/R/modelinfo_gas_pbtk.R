@@ -5,6 +5,9 @@
 # ("C" is preprended):
 model.list[["gas_pbtk"]]$steady.state.compartment <- "plasma"
 
+# What units does the analytic function return:
+model.list[["gas_pbtk"]]$steady.state.units <- "mg/L"
+
 # The is the R function for generating model parameters:
 model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
 

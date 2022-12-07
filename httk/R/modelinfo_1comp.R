@@ -10,6 +10,9 @@ model.list[["1compartment"]]$analytic.css.func <- "calc_analytic_css_1comp"
 # ("C" is preprended):
 model.list[["1compartment"]]$steady.state.compartment <- "compartment"
 
+# What units does the analytic function return:
+model.list[["1compartment"]]$steady.state.units <- "mg/L"
+
 # Function used for generating model parameters:
 model.list[["1compartment"]]$parameterize.func <- "parameterize_1comp"
 
@@ -202,3 +205,5 @@ model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
 model.list[["1compartment"]]$chem.class.filt <- c("PFAS")
+
+

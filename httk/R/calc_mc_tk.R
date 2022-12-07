@@ -1,8 +1,14 @@
 #' Conduct multiple TK simulations using Monte Carlo
 #' 
+#' @description
 #' This function finds the analytical steady state plasma concentration(from
 #' calc_analytic_css) using a monte carlo simulation (monte_carlo).
 #' 
+#' @details
+#'
+#' The Monte Carlo methods used here were recently updated and described by
+#' Breen et al. (submitted).
+#'
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
 #' 
@@ -16,7 +22,9 @@
 #' coefficient.
 #' 
 #' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-#' assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
+#' assumptions identified by Honda et al. (2019) 
+#' (\doi{10.1371/journal.pone.0217564}) 
+#' are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 #' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 #' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab

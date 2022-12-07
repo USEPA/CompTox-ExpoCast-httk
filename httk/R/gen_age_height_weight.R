@@ -1,59 +1,67 @@
-#'Generate ages, heights, and weights for a virtual population using the 
-#'virtual-individuals method.
+#' Generate demographic parameters for a virtual population
 #'
-#'@param nsamp The desired number of individuals in the virtual population. 
+#' Generate gender, NHANES race/ethnicity category, ages, heights, and weights
+#'for a virtual population, based on NHANES data.
+#'
+#' This function should usually not be called directly by the user. It is used by
+#'\code{httkpop_generate()} in "virtual-individuals" mode.
+#'
+#'@param nsamp The desired number of individuals in the virtual population.
 #'  \code{nsamp} need not be provided if \code{gendernum} is provided.
-#'@param gendernum Optional: A named list giving the numbers of male and female 
-#'  individuals to include in the population, e.g. \code{list(Male=100, 
-#'  Female=100)}. Default is NULL, meaning both males and females are included, 
-#'  in their proportions in the NHANES data. If both \code{nsamp} and 
+#'@param gendernum Optional: A named list giving the numbers of male and female
+#'  individuals to include in the population, e.g. \code{list(Male=100,
+#'  Female=100)}. Default is NULL, meaning both males and females are included,
+#'  in their proportions in the NHANES data. If both \code{nsamp} and
 #'  \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
 #'  the sum of \code{gendernum}).
-#'@param agelim_years Optional: A two-element numeric vector giving the minimum 
-#'  and maximum ages (in years) to include in the population. Default is 
+#'@param reths Optional: a character vector giving the races/ethnicities to
+#'  include in the population. Default is \code{c('Mexican American','Other
+#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
+#'  all races and ethnicities in their proportions in the NHANES data.
+#'  User-supplied vector must contain one or more of these strings.
+#'@param weight_category Optional: The weight categories to include in the
+#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight',
+#'  'Obese')}. User-supplied vector must contain one or more of these strings.
+#'@param agelim_years Optional: A two-element numeric vector giving the minimum
+#'  and maximum ages (in years) to include in the population. Default is
 #'  c(0,79). If \code{agelim_years} is provided and \code{agelim_months} is not,
 #'  \code{agelim_years} will override the default value of \code{agelim_months}.
 #'@param agelim_months Optional: A two-element numeric vector giving the minimum
-#'  and maximum ages (in months) to include in the population. Default is c(0, 
+#'  and maximum ages (in months) to include in the population. Default is c(0,
 #'  959), equivalent to the default \code{agelim_years}. If \code{agelim_months}
-#'  is provided and \code{agelim_years} is not, agelim_months will override the 
+#'  is provided and \code{agelim_years} is not, agelim_months will override the
 #'  default values of \code{agelim_years}.
-#'@param reths Optional: a character vector giving the races/ethnicities to 
-#'  include in the population. Default is \code{c('Mexican American','Other 
-#'  Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include 
-#'  all races and ethnicities in their proportions in the NHANES data. 
-#'  User-supplied vector must contain one or more of these strings.
-#'@param weight_category Optional: The weight categories to include in the 
-#'  population. Default is \code{c('Underweight', 'Normal', 'Overweight', 
-#'  'Obese')}. User-supplied vector must contain one or more of these strings.
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
 #'  
-#'@return A data.table containing variables \describe{ 
-#'  \item{\code{gender}}{Gender of each virtual individual} 
-#'  \item{\code{reth}}{Race/ethnicity of each virtual individual} 
-#'  \item{\code{age_months}}{Age in months of each virtual individual} 
-#'  \item{\code{age_years}}{Age in years of each virtual individual} 
-#'  \item{\code{weight}}{Body weight in kg of each virtual individual} 
+#'@return A data.table containing variables \describe{
+#'  \item{\code{gender}}{Gender of each virtual individual}
+#'  \item{\code{reth}}{Race/ethnicity of each virtual individual}
+#'  \item{\code{age_months}}{Age in months of each virtual individual}
+#'  \item{\code{age_years}}{Age in years of each virtual individual}
+#'  \item{\code{weight}}{Body weight in kg of each virtual individual}
 #'  \item{\code{height}}{Height in cm of each virtual individual} }
-#'  
+#'
 #'
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#' 
-#'importFrom survey svymean
-#' 
-#'@export gen_age_height_weight
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+#'
+#'  importFrom survey svymean
+#'
 
 gen_age_height_weight <- function(nsamp=NULL, 
                                   gendernum=NULL, 
                                   reths, 
                                   weight_category,
                                   agelim_years,
-                                  agelim_months){
+                                  agelim_months,
+                                  nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for 
   #each time a data.table column name is used without quotes. To appease R CMD 
@@ -202,14 +210,20 @@ gen_age_height_weight <- function(nsamp=NULL,
   #Draw ages from smoothed age distributions by gender and race.
   #Discard any that fall outside the user-specified age range.
   gen_dt[, ctcol:=1] #Add tmp variable to count items in each group
-  gen_dt[, c('age_months','age_years'):= age_draw_smooth(g=gender, 
-                                                         r=reth, 
-                                                         nsamp=length(ctcol), 
-                                                         agelim_months=agelim_months), 
+  gen_dt[, c('age_months','age_years'):= age_draw_smooth(gender=gender, 
+                                                         reth=reth, 
+                                                         nsamp=.N, 
+                                                         agelim_months=agelim_months,
+                                                         nhanes_mec_svy), 
          by=list(gender,reth)]
   
   #Draw height and body weight
-  gen_dt <- gen_height_weight(hbw_dt=gen_dt)
+  gen_dt[, c("weight",
+             "height"):=gen_height_weight(gender = gender,
+                                          reth = reth,
+                                          age_months = age_months,
+                                          nhanes_mec_svy),
+         by = list(gender, reth)]
   
   if (length(setdiff(c('Underweight', 
                        'Normal',
@@ -226,22 +240,29 @@ gen_age_height_weight <- function(nsamp=NULL,
     rct <- 1
     while(nrow(gen_dt[!(weight_class %in% weight_category),])>0){
       #If not in the right weight class, then redraw age, height, and body weight
+      #redraw age for those not in selected weight classes
       gen_dt[!(weight_class %in% 
                  weight_category),
-             c('age_months','age_years'):= age_draw_smooth(g=gender, 
-                                                           r=reth, 
-                                                           nsamp=length(ctcol), 
-                                                           agelim_months=agelim_months), 
+             c('age_months','age_years'):= age_draw_smooth(gender=gender, 
+                                                           reth=reth, 
+                                                           nsamp=.N, 
+                                                           agelim_months=agelim_months,
+                                                           nhanes_mec_svy), 
              by=list(gender,reth)] #Now age will be updated, but weight_category isn't yet, so we can still use it
-      tmp <- gen_height_weight(hbw_dt=gen_dt[!(weight_class %in% 
-                                                 weight_category),]) #redraw heights, weights based on new ages
-      tmp.h <- tmp[,height]
-      tmp.bw <- tmp[, weight]
+    
+      #redraw height & weight for those not in selected weight classes
       gen_dt[!(weight_class %in% weight_category),
-             height:=tmp.h]
-      gen_dt[!(weight_class %in% weight_category),
-             weight:=tmp.bw]
+             c("weight",
+               "height"):=gen_height_weight(gender = gender,
+                                            reth = reth,
+                                            age_months = age_months,
+                                            nhanes_mec_svy),
+             by = list(gender, reth)]
+    
+      #recalc BMI
       gen_dt[, bmi:=weight/((height/100)^2)]
+      
+      #recalc weight class
       gen_dt[, weight_class:=get_weight_class(age_years=age_years,
                                               age_months=age_months,
                                               bmi=bmi,

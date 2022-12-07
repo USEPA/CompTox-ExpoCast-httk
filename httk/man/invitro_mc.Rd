@@ -2,11 +2,15 @@
 % Please edit documentation in R/invitro_mc.R
 \name{invitro_mc}
 \alias{invitro_mc}
-\title{Draw in vitro TK parameters including uncertainty and variability.}
+\title{Monte Carlo for in vitro toxicokinetic parameters including uncertainty and variability.}
 \usage{
 invitro_mc(
   parameters.dt = NULL,
   samples,
+  fup.meas.mc = TRUE,
+  fup.pop.mc = TRUE,
+  clint.meas.mc = TRUE,
+  clint.pop.mc = TRUE,
   fup.meas.cv = 0.4,
   clint.meas.cv = 0.3,
   fup.pop.cv = 0.3,
@@ -15,14 +19,29 @@ invitro_mc(
   fup.lod = 0.01,
   fup.censored.dist = FALSE,
   adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04
 )
 }
 \arguments{
-\item{parameters.dt}{A data table of physiological parameters}
+\item{parameters.dt}{A data table of physiological and chemical-specific parameters}
 
 \item{samples}{The number of samples to draw.}
+
+\item{fup.meas.mc}{Logical -- should we perform measurment (uncertainty)
+Monte Carlo for \code{Funbound.plasma} values (Default TRUE). If FALSE, 
+the user may choose to provide columns for "unadjusted.Funbound.plasma" or
+"fup.mean" from their own methods.}
+
+\item{fup.pop.mc}{Logical -- should we perform population (variability)
+Monte Carlo for \code{Funbound.plasma} values (Default TRUE)}
+
+\item{clint.meas.mc}{Logical -- should we perform measurment (uncertainty)
+Monte Carlo for \code{Clint} values (Default TRUE)}
+
+\item{clint.pop.mc}{Logical -- should we perform population (variability)
+Monte Carlo for \code{Clint} values (Default TRUE)}
 
 \item{fup.meas.cv}{Coefficient of variation of distribution of measured
 \code{Funbound.plasma} values.}
@@ -45,8 +64,11 @@ which distribution will be censored if fup.censored.dist is TRUE. Default 0.01.}
 \item{fup.censored.dist}{Logical. Whether to draw \code{Funbound.plasma} from a
 censored distribution or not.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
@@ -69,11 +91,40 @@ hepatocyte assay.
 Given a CAS in the HTTK data set, a virtual population from HTTK-Pop, some
 user specifications on the assumed distributions of Funbound.plasma and
 Clint, draw "individual" values of Funbound.plasma and Clint from those
-distributions.
+distributions. The methodology for this function was developed and described
+by Wambaugh et al. (2019) (\doi{10.1093/toxsci/kfz205}).
+}
+\details{
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+}
+\examples{
+#Simply generate a virtual population of 100 individuals,
+#using the direct-resampling method
+set.seed(42)
+# Pull mean vchemical=specific values:
+chem.props <- parameterize_pbtk(chem.name="bisphenolaf")
+# Convert to data.table with one row per sample:
+parameters.dt <- monte_carlo(chem.props,samples=100)
+# Use httk-pop to generate a population:
+pop <- httkpop_generate(method='direct resampling', nsamp=100)
+# Overwrite parameters specified by httk-pop:
+parameters.dt[,names(pop):=pop]
+# Vary in vitro parameters:
+parameters.dt <- invitro_mc(parameters.dt,samples=100)
+
 }
 \references{
 Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
 Variability in Risk Prioritization." Toxicological Sciences (2019).
+
+Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
+unbound fraction in hepatocyte incubations using microsomal binding or drug 
+lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
+
+Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+and pharmacodynamics 44.6 (2017): 549-565.
 }
 \author{
 Caroline Ring and John Wambaugh

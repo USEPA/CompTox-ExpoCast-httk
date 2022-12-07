@@ -12,7 +12,8 @@ httkpop_direct_resample_inner(
   reths,
   weight_category,
   gfr_resid_var,
-  ckd_epi_race_coeff
+  ckd_epi_race_coeff,
+  nhanes_mec_svy
 )
 }
 \arguments{
@@ -54,6 +55,10 @@ residual variability when generating GFR values. (Default is TRUE, passed from
 \item{ckd_epi_race_coeff}{Logical value indicating whether or not to use the
 "race coefficient" from the CKD-EPI equation when estimating GFR values.
 (Default is FALSE, passed from 'httkpop_direct_resample'.)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A data.table where each row represents an individual, and

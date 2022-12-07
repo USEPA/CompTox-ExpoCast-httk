@@ -6,32 +6,32 @@
 \title{Reference tissue masses and flows from tables in McNally et al. 2014.}
 \format{
 A data.table with variables: \describe{\item{\code{tissue}}{Body
-  tissue} \item{\code{gender}}{Gender: Male or Female}
-  \item{\code{mass_ref}}{Reference mass in kg, from Reference Man}
-  \item{\code{mass_cv}}{Coefficient of variation for mass}
-  \item{\code{mass_dist}}{Distribution for mass: Normal or Log-normal}
-  \item{\code{flow_ref}}{Reference flow in L/h, from Reference Man}
-  \item{\code{flow_cv}}{Coefficient of variation for flow (all normally
-  distributed)} \item{\code{height_ref}}{Reference heights (by gender)}
-  \item{\code{CO_ref}}{Reference cardiac output by gender}
-  \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
-  \code{flow_ref}/\code{CO_ref}}}
+ tissue} \item{\code{gender}}{Gender: Male or Female}
+ \item{\code{mass_ref}}{Reference mass in kg, from Reference Man}
+ \item{\code{mass_cv}}{Coefficient of variation for mass}
+ \item{\code{mass_dist}}{Distribution for mass: Normal or Log-normal}
+ \item{\code{flow_ref}}{Reference flow in L/h, from Reference Man}
+ \item{\code{flow_cv}}{Coefficient of variation for flow (all normally
+ distributed)} \item{\code{height_ref}}{Reference heights (by gender)}
+ \item{\code{CO_ref}}{Reference cardiac output by gender}
+ \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
+ \code{flow_ref}/\code{CO_ref}}}
 }
 \source{
 McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
-  population generator." Toxicology 315, 70-85, 2004.
+ population generator." Toxicology 315, 70-85, 2004.
 }
 \usage{
 mcnally_dt
 }
 \description{
-Reference tissue masses, flows, and marginal distributions from McNally et
-al. 2014.
+Reference tissue masses, flows, and residual variance distributions from
+Tables 1, 4, and 5 of McNally et al. 2014.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability." Environment
-International 106 (2017): 105-118
+ environmental chemicals by simulating toxicokinetic variability."
+ Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

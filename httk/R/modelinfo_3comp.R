@@ -10,6 +10,9 @@ model.list[["3compartment"]]$analytic.css.func <- "calc_analytic_css_3comp"
 # ("C" is preprended):
 model.list[["3compartment"]]$steady.state.compartment <- "syscomp"
 
+# What units does the analytic function return:
+model.list[["3compartment"]]$steady.state.units <- "mg/L"
+
 # Function used for generating model parameters:
 model.list[["3compartment"]]$parameterize.func <- "parameterize_3comp"
 

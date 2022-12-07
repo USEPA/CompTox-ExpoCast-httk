@@ -2,10 +2,10 @@
 % Please edit documentation in R/httkpop_generate.R
 \name{httkpop_generate}
 \alias{httkpop_generate}
-\title{Generate a virtual population}
+\title{Generate a virtual population for PBTK}
 \usage{
 httkpop_generate(
-  method = "direct resampling",
+  method,
   nsamp = NULL,
   gendernum = NULL,
   agelim_years = NULL,
@@ -26,15 +26,15 @@ for "direct resampling", and "v" or "vi" for "virtual individuals".}
 \item{nsamp}{The desired number of individuals in the virtual population.
 \code{nsamp} need not be provided if \code{gendernum} is provided.}
 
-\item{gendernum}{Optional: A named list giving the numbers of male and
-female individuals to include in the population, e.g. \code{list(Male=100,
+\item{gendernum}{Optional: A named list giving the numbers of male and female
+individuals to include in the population, e.g. \code{list(Male=100,
 Female=100)}. Default is NULL, meaning both males and females are included,
 in their proportions in the NHANES data. If both \code{nsamp} and
 \code{gendernum} are provided, they must agree (i.e., \code{nsamp} must be
 the sum of \code{gendernum}).}
 
-\item{agelim_years}{Optional: A two-element numeric vector giving the
-minimum and maximum ages (in years) to include in the population. Default is
+\item{agelim_years}{Optional: A two-element numeric vector giving the minimum
+and maximum ages (in years) to include in the population. Default is
 c(0,79). If only a single value is provided, both minimum and maximum ages
 will be set to that value; e.g. \code{agelim_years=3} is equivalent to
 \code{agelim_years=c(3,3)}. If \code{agelim_years} is provided and
@@ -55,8 +55,8 @@ population. Default is \code{c('Underweight', 'Normal', 'Overweight',
 'Obese')}. User-supplied vector must contain one or more of these strings.}
 
 \item{gfr_category}{The kidney function categories to include in the
-population. Default is \code{c('Normal','Kidney Disease', 'Kidney Failure')}
-to include all kidney function levels.}
+population. Default is \code{c('Normal','Kidney Disease', 'Kidney
+Failure')} to include all kidney function levels.}
 
 \item{reths}{Optional: a character vector giving the races/ethnicities to
 include in the population. Default is \code{c('Mexican American','Other
@@ -64,17 +64,116 @@ Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
 all races and ethnicities in their proportions in the NHANES data.
 User-supplied vector must contain one or more of these strings.}
 
-\item{gfr_resid_var}{TRUE to add residual variability to GFR predicted from serum creatinine; FALSE to not add residual variability}
+\item{gfr_resid_var}{TRUE to add residual variability to GFR predicted from
+serum creatinine; FALSE to not add residual variability}
 
-\item{ckd_epi_race_coeff}{TRUE to use the CKD-EPI equation as originally published (with a coefficient changing predicted GFR for individuals identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
+\item{ckd_epi_race_coeff}{TRUE to use the CKD-EPI equation as originally
+published (with a coefficient changing predicted GFR for individuals
+identified as "Non-Hispanic Black"); FALSE to set this coefficient to 1.}
 }
 \value{
-A data.table where each row represents an individual, and each
-column represents a demographic, anthropometric, or physiological parameter.
+A data.table where each row represents an individual, and each column
+  represents a demographic, anthropometric, or physiological parameter.
+  Details of the parameters returned and their units are in the following tables.
 }
 \description{
-Generate a virtual population
+Generate a virtual population characterized by demographic, anthropometric, and physiological parameters relevant to PBTK.
 }
+\details{
+Demographic and anthropometric (body measures) variables, along with serum creatinine and hematocrit,
+are generated from survey data from the Centers for Disease Control's National Health and Nutrition Examination Survey (NHANES).
+Those data are stored in the object \code{nhanes_mec_svy} (a \code{survey.design} object, see package \code{survey}).
+With \code{method = "d"}, these variables will be sampled with replacement directly from NHANES data. Each NHANES respondent's likelihood of being sampled is given by their sample weight.
+With \code{method = "v"}, these variables will be sampled from distributions fitted to NHANES data.
+Tissue masses and flows are generated based on demographic, body measures, and serum creatinine values, using regression equations from the literature and/or allometric scaling based on height. 
+Extensive details about how each of these parameters are generated are available in the supplemental material of Ring et al. (2017) (see References for full citation).
+}
+\section{Demographic variables}{
+
+  \tabular{rrr}{
+  \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+  \code{seqn} \tab NHANES unique identifier (only included if \code{method = "direct resampling"}) \tab NA \cr
+  \code{gender} \tab Sex: "Male" or "Female" \tab NA \cr
+  \code{reth} \tab Race/ethnicity: "Non-Hispanic Black", "Non-Hispanic white", "Mexican American", "Other Hispanic", or "Other". \tab NA \cr
+  \code{age_years} \tab Age (0-79 years) \tab years \cr
+  \code{age_months} \tab Age (0-959 months) \tab months
+  }
+}
+
+\section{Body measures and laboratory measurements}{
+
+  \tabular{rrr}{
+   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+  \code{height} \tab Height \tab cm \cr
+  \code{weight} \tab Body weight \tab kg \cr
+  \code{serum_creat} \tab Serum creatinine \tab mg/dL \cr
+  \code{hematocrit} \tab Hematocrit (percentage by volume of red blood cells in blood) \tab \% 
+  }
+}
+
+\section{Tissue masses}{
+
+  \tabular{rrr}{
+   \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+  \code{Blood_mass} \tab Mass of blood \tab kg \cr
+  \code{Brain_mass} \tab Mass of brain \tab kg \cr
+  \code{Gonads_mass} \tab Mass of gonads \tab kg \cr
+  \code{Heart_mass} \tab Mass of heart \tab kg \cr
+  \code{Kidneys_mass} \tab Mass of kidneys \tab kg \cr
+  \code{Large_intestine_mass} \tab Mass of large intestine \tab kg \cr
+  \code{Liver_mass} \tab Mass of liver \tab kg \cr
+  \code{Lung_mass} \tab Mass of lungs \tab kg \cr
+  \code{Muscle_mass} \tab Mass of skeletal muscle \tab kg \cr
+  \code{Pancreas_mass} \tab Mass of pancreas \tab kg \cr
+  \code{Skeleton_mass} \tab Mass of skeleton (including bone, red and yellow marrow, cartilage, periarticular tissue) \tab kg \cr
+  \code{Skin_mass} \tab Mass of skin \tab kg \cr
+  \code{Small_intestine_mass} \tab Mass of small intestine \tab kg \cr
+  \code{Spleen_mass} \tab Mass of spleen \tab kg \cr
+  \code{Stomach_mass} \tab Mass of stomach tissue \tab kg \cr
+  \code{Other_mass} \tab Mass of GI tract contents (1.4\% of body weight) and tissues not otherwise enumerated (3.3\% of body weight). \tab kg \cr
+  \code{org_mass_sum} \tab Sum of the above tissue masses.  A check to ensure this is less than body weight. \tab kg \cr
+  \code{Adipose_mass} \tab Mass of adipose tissue. Assigned as \code{weight - org_mass_sum}. \tab kg
+  }
+}
+
+\section{Tissue flows}{
+
+\tabular{rrr}{
+ \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+  \code{Adipose_flow} \tab Blood flow to adipose tissue \tab L/h \cr
+  \code{Brain_flow} \tab Blood flow to brain tissue \tab L/h \cr
+  \code{CO} \tab Cardiac output \tab L/h \cr
+  \code{Gonads_flow} \tab Blood flow to gonads tissue \tab L/h \cr
+  \code{Heart_flow} \tab Blood flow to heart tissue \tab L/h \cr
+  \code{Kidneys_flow} \tab Blood flow to kidneys tissue (not for glomerular filtration!) \tab L/h \cr
+  \code{Large_intestine_flow} \tab Blood flow to large intestine tissue \tab L/h \cr
+  \code{Liver_flow} \tab Blood flow to liver tissue \tab L/h \cr
+  \code{Lung_flow} \tab Blood flow to lung tissue \tab L/h \cr
+  \code{Muscle_flow} \tab Blood flow to skeletal muscle tissue \tab L/h \cr
+  \code{Pancreas_flow} \tab Blood flow to pancreas tissue \tab L/h \cr
+  \code{Skeleton_flow} \tab Blood flow to skeleton \tab L/h \cr
+  \code{Skin_flow} \tab Blood flow to skin \tab L/h \cr
+  \code{Small_intestine_flow} \tab Blood flow to small intestine \tab L/h \cr
+  \code{Spleen_flow} \tab Blood flow to spleen \tab L/h \cr
+  \code{Stomach_flow} \tab Blood flow to stomach \tab L/h \cr
+  \code{org_flow_check} \tab Sum of blood flows as a fraction of cardiac output (CO). A check to make sure this is less than 1. \tab Unitless fraction
+  }
+}
+
+\section{Adjusted variables}{
+
+\tabular{rrr}{
+ \strong{Name} \tab \strong{Definition} \tab \strong{Units} \cr
+  \code{weight_adj} \tab Adjusted body weight: Sum of all tissue masses. \tab kg \cr
+  \code{BSA_adj} \tab Adjusted body surface area, based on \code{height} and \code{weight_adj}. \tab cm^2 \cr
+  \code{million.cells.per.gliver} \tab Hepatocellularity \tab 1e6 cells/g liver \cr
+  \code{gfr_est} \tab Glomerular filtration rate (GFR) estimated using either the CKD-EPI equation (for adults) or a body-surface-area-based equation (for children). \tab mL/min/1.73 m^2 body surface area \cr
+  \code{bmi_adj} \tab Body mass index (BMI), adjusted to match \code{weight_adj} and \code{height}. \tab kg/m^2 \cr
+  \code{weight_class} \tab Weight category based on \code{bmi_adj}: "Underweight" (BMI < 18.5), "Normal" (18.5 < BMI < 24.9), "Overweight" (25.0 < BMI < 29.9), or "Obese" (BMI >= 30) \tab Unitless category \cr
+  \code{gfr_class} \tab Kidney function category based on GFR: "Normal" (GFR >=60 mL/min/1.73 m^2), "Kidney Disease" (15 <= GFR <= 60), or "Kidney Failure" (GFR < 15). \tab Unitless category
+  }
+}
+
 \examples{
 
 \donttest{
@@ -85,14 +184,14 @@ httkpop_generate(method='direct resampling', nsamp=100)
 #Generate a population using the virtual-individuals method,
 #including 80 females and 20 males,
 #including only ages 20-65,
-#including only Mexican American and 
+#including only Mexican American and
  #Non-Hispanic Black individuals,
  #including only non-obese individuals
 httkpop_generate(method = 'virtual individuals',
-gendernum=list(Female=80, 
+gendernum=list(Female=80,
 Male=20),
-agelim_years=c(20,65), 
-reths=c('Mexican American', 
+agelim_years=c(20,65),
+reths=c('Mexican American',
 'Non-Hispanic Black'),
 weight_category=c('Underweight',
 'Normal',
@@ -104,8 +203,8 @@ weight_category=c('Underweight',
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+  environmental chemicals by simulating toxicokinetic variability."
+  Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

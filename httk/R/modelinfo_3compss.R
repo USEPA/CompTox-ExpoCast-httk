@@ -7,6 +7,9 @@
 #Analytic expression for steady-state plasma concentration.
 model.list[["3compartmentss"]]$analytic.css.func <- "calc_analytic_css_3compss"
 
+# What units does the analytic function return:
+model.list[["3compartmentss"]]$steady.state.units <- "mg/L"
+
 # Function used for generating model parameters:
 model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"  
 

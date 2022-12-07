@@ -1,67 +1,92 @@
-#' Predict hematocrit using smoothing spline.
-#' 
-#' Using precalculated smoothing splines on NHANES log hematocrit vs. age in 
-#' months (and KDE residuals) by gender and race/ethnicity, generate hematocrit 
-#' values for individuals specified by age, gender, and race/ethnicity.
-#' 
-#' @param hcttmp_dt A data.table with columns \code{age_years},
-#'   \code{age_months}, \code{gender}, \code{reth}.
-#'   
-#' @return The same data.table with a \code{hematocrit} column added.
+#'Generate hematocrit values for a virtual population
 #'
-#' @keywords httk-pop
+#'Predict hematocrit from age using smoothing splines and kernel density
+#'estimates of residual variability fitted to NHANES data, for a given
+#'combination of gender and NHANES race/ethnicity category.
 #'
-#' @author Caroline Ring
+#'This function should usually not be called directly by the user. It is used by
+#'\code{httkpop_generate()} in "virtual-individuals" mode, after drawing gender,
+#'NHANES race/ethnicity category, and age from their NHANES
+#'proportions/distributions.
 #'
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to 
-#'environmental chemicals by simulating toxicokinetic variability." Environment 
-#'International 106 (2017): 105-118
-#' @import stats
-#' @export estimate_hematocrit
+#'@param gender Gender for which to generate hematocrit values ("Male" or
+#'  "Female")
+#'@param reth NHANES race/ethnicity category for which to generate serum
+#'  creatinine values ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+#'  White", "Other", or "Other Hispanic")
+#'@param age_months vector of ages in months for individuals for whom to
+#'  generate hematocrit values (between 0-959 months)
+#'@param age_years Vector of ages in years for individuals for whom to generate
+#'  hematocrit values (corresponding to age_months)
+#' @param nhanes_mec_svy \code{surveydesign} object created from
+#'  \code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+#'  \code{\link{httkpop_generate}})
+#'@return A vector of numeric generated hematocrit values (blood percentage red
+#'  blood cells by volume).
+#'
+#'@keywords httk-pop
+#'
+#'@author Caroline Ring
+#'
+#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
+#'  environmental chemicals by simulating toxicokinetic variability."
+#'  Environment International 106 (2017): 105-118
+#'@import stats
 
-estimate_hematocrit <- function(hcttmp_dt){
+estimate_hematocrit <- function(gender,
+                                reth,
+                                age_years,
+                                age_months,
+                                nhanes_mec_svy){
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data. table column name is used without quotes. To appease R CMD
   #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  id <- age_years <- log_hematocrit <- hct_spline <- age_months <- NULL
-  hct_kde <- hematocrit <- gender <- reth <- NULL
+  #NULL. Note that within the data.table, these variables will not be NULL! 
+  riagendr <- ridexagm <- ridreth1 <- lbxhct <- wtmec6yr <- NULL
+
   #End R CMD CHECK appeasement.
   
-  hcttmp_dt <- data.table::copy(hcttmp_dt) #to avoid altering original object
-  
-  hcttmp_dt[, id:=1:nrow(hcttmp_dt)]
-  
-  hcttmp_tmp <- merge(hcttmp_dt, 
-                      spline_hematocrit,
-                      by=c('gender', 'reth'))
-  
-  if (hcttmp_tmp[, any(age_years>=1)]){
-    hcttmp_tmp[age_years>=1, 
-               log_hematocrit:=predict(hct_spline[[1]], #Hct value predicted from age...
-                                       x=age_months)$y + 
-                 rfun(n=sum(age_years>=1), #...plus residual predicted from KDE of NHANES resids
-                      fhat=hct_kde[[1]]),
-               by=list(gender, reth)]
-  
-  hcttmp_dt <- merge(hcttmp_dt,
-                     hcttmp_tmp[, list(id, log_hematocrit)],
-                     by='id')
-  hcttmp_dt[, id:=NULL]
-  
-  hcttmp_dt[age_years>=1, hematocrit:=exp(log_hematocrit)]
+  hematocrit <- rep(NA_real_, length(age_months))
+  grname <- unique(paste(gender, reth))
+  if (any(age_years>=1)){
+    n <- sum(age_years>=1)
+    #calculate NHANES residuals
+    nhanes_sub <- nhanes_mec_svy$variables[riagendr %in% gender &
+                                             ridreth1 %in% reth &
+                                             is.finite(lbxhct),
+                                           .(ridexagm, lbxhct, wtmec6yr)]
+    w <- nhanes_sub[, wtmec6yr/sum(wtmec6yr)]
+    #fit smoothing spline
+    splinefit <- smooth.spline(x = nhanes_sub$ridexagm,
+                               y = log(nhanes_sub$lbxhct),
+                               w = w)
+    loghctresid <- residuals(splinefit)
+    
+    #sample from centers
+    centers_samp <- sample(x = loghctresid,
+                           size = n,
+                           replace = TRUE,
+                           prob = w)
+    
+    h <- hct_h[[grname]]
+    
+    #now sample from kernels around these centers
+    resids_samp <- rnorm(n = n,
+                         mean = centers_samp,
+                         sd = h)
+    
+    #predicted values for sampled individuals
+    log_hematocrit_pred <- predict(splinefit, 
+                                    x=age_months[age_years>=1])$y
+    
+   hematocrit[age_years>=1] <- exp(log_hematocrit_pred +
+                                     resids_samp)
 }
 
 #For infants under 1 year, sample hematocrit from log-normal distributions
 #based on reference ranges by age
-if (nrow(hcttmp_dt[age_years<1,])>0) {
-  hcttmp_dt[age_years<1,
-            hematocrit:=hematocrit_infants(age_months=age_months)]
-}
+  hematocrit[age_years<1] <- hematocrit_infants(age_months=age_months[age_years<1])
 
-hcttmp_dt[, log_hematocrit:=NULL] #Remove the temp log hematocrit variable
-
-return(hcttmp_dt)
+return(hematocrit)
 }

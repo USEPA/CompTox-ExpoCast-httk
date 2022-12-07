@@ -10,6 +10,9 @@
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):
 model.list[["fetal_pbtk"]]$steady.state.compartment <- "plasma"
+                                              
+# What units does the analytic function return:
+model.list[["fetal_pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"

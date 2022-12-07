@@ -2,14 +2,12 @@
 % Please edit documentation in R/get_weight_class.R
 \name{get_weight_class}
 \alias{get_weight_class}
-\title{Given vectors of age, BMI, recumbent length, weight, and gender,
-categorizes weight classes using CDC and WHO categories.}
+\title{Assign weight class (underweight, normal, overweight, obese)}
 \usage{
 get_weight_class(age_years, age_months, bmi, recumlen, weight, gender)
 }
 \arguments{
-\item{age_years}{A vector of
-ages in years.}
+\item{age_years}{A vector of ages in years.}
 
 \item{age_months}{A vector of ages in months.}
 
@@ -26,13 +24,42 @@ A character vector of weight classes. Each element will be one of
  'Underweight', 'Normal', 'Overweight', or 'Obese'.
 }
 \description{
-Given vectors of age, BMI, recumbent length, weight, and gender,
-categorizes weight classes using CDC and WHO categories.
+Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
+weight classes using CDC and WHO categories.
+}
+\details{
+According to the CDC
+(\url{https://www.cdc.gov/obesity/basics/adult-defining.html}), adult weight
+classes are defined using BMI as follows: \describe{ \item{Underweight}{BMI
+less than 18.5} \item{Normal}{BMI between 18.5 and 25} \item{Overweight}{BMI
+between 25 and 30} \item{Obese}{BMI greater than 30} }
+
+For children ages 2 years and older, weight classes are defined using
+percentiles of sex-specific BMI for age, as follows (Barlow et al., 2007):
+\describe{ \item{Underweight}{Below 5th percentile BMI for age}
+\item{Normal}{5th-85th percentile BMI for age} \item{Overweight}{85th-95th
+percentile BMI for age} \item{Obese}{Above 95th percentile BMI for age} }
+
+For children birth to age 2, weight classes are defined using percentiles of
+sex-specific weight-for-length (Grummer-Strawn et al., 2009). Weight above the
+97.7th percentile, or below the 2.3rd percentile, of weight-for-length is
+considered potentially indicative of adverse health conditions. Here, weight
+below the 2.3rd percentile is categorized as "Underweight" and weight above
+the 97.7th percentile is categorized as "Obese."
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to environmental
+chemicals by simulating toxicokinetic variability." Environment International
+106 (2017): 105-118
+
+Barlow SE. Expert committee recommendations regarding the prevention,
+assessment, and treatment of child and adolescent overweight and obesity:
+summary report. Pediatrics. 2007;120 Suppl 4. doi:10.1542/peds.2007-2329C
+
+Grummer-Strawn LM, Reinold C, Krebs NF. Use of World Health Organization and
+CDC growth charts for children Aged 0-59 months in the United States. Morb
+Mortal Wkly Rep. 2009;59(RR-9).
+https://www.cdc.gov/mmwr/preview/mmwrhtml/rr5909a1.htm
 }
 \author{
 Caroline Ring

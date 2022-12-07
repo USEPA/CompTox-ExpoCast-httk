@@ -43,7 +43,7 @@ A numeric vector with the literature steady-state plasma
 concentration (1 mg/kg/day) for the requested quantiles
 }
 \description{
-This function retrives a steady-state plasma concentration as a result of
+This function retrieves a steady-state plasma concentration as a result of
 infusion dosing from the Wetmore et al. (2012) and (2013) publications and
 other literature.
 }

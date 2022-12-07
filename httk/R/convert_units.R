@@ -126,11 +126,11 @@ the parameters must include an entry 'MW' (molecular weight).")
       } else {
         #Support parameters objects of the different classes currently employed
         #by httk, namely compound data.table/data.frame objects and lists.
-          if (any(class(parameters)) == 'data.table'){
+          if (is.data.table(parameters)){
             MW <- parameters[1, MW] #should be same MW value in each row
             #of data.table of parameters from Monte Carlo functions
-          } else if (class(parameters) == 'list'){
-            MW <- parameters['MW']
+          } else if (is(parameters,'list')){
+            MW <- parameters[['MW']]
           } else stop('httk only supports parameters objects of class
 compound data.table/data.frame or list.')
         } 
@@ -189,7 +189,7 @@ compound data.table/data.frame or list.')
   # Where 24.45 L is the volume of an ideal gas under standardized temp/pressure
   # conditions, according to the Environmental Science and Technology Briefs for 
   # Citizens Issue 2 in 2006 from the Center for Hazardous Substances Research.
-  # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 °C. 
+  # So an ideal gas will occupy 24.45 L/mol at 1 atm and 25 degrees C. 
   # MW has units of g/mol or ug/umol
   # So MW/24.45 has units of g/L
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L

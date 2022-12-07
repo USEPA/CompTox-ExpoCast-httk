@@ -88,10 +88,13 @@ available_rblood2plasma <- function(chem.cas=NULL,
     } else {
       if (is.null(chem.cas)) 
       {
-        out <- get_chem_id(chem.cas=chem.cas,chem.name=chem.name,dtxsid=dtxsid)
+        out <- get_chem_id(chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid)
         chem.cas <- out$chem.cas
       }
-      if (chem.cas %in% get_cheminfo(species=species,model='schmitt'))
+      if (chem.cas %in% get_cheminfo(species=species,model='schmitt',
+                                     suppress.messages=TRUE))
       {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
           species=species,
@@ -101,7 +104,10 @@ available_rblood2plasma <- function(chem.cas=NULL,
           warning(paste(toupper(substr(species, 1, 1)), 
             substr(species, 2, nchar(species)),
             ' Rblood2plasma calculated with calc_rblood2plasma.',sep="")) 
-      } else if (chem.cas %in% get_cheminfo(species='Human',model='schmitt')) 
+      } else if (chem.cas %in% get_cheminfo(
+                                            species='Human',
+                                            model='schmitt',
+                                            suppress.messages=TRUE)) 
       {
         Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
           species="Human",

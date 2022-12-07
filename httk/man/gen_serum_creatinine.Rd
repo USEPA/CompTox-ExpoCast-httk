@@ -2,25 +2,46 @@
 % Please edit documentation in R/gen_serum_creatinine.R
 \name{gen_serum_creatinine}
 \alias{gen_serum_creatinine}
-\title{Predict GFR.}
+\title{Generate serum creatinine values for a virtual population.}
 \usage{
-gen_serum_creatinine(serumcreat.dt)
+gen_serum_creatinine(gender, reth, age_years, age_months, nhanes_mec_svy)
 }
 \arguments{
-\item{serumcreat.dt}{A data.table with columns \code{gender}, \code{reth}, 
-\code{age_years}, \code{age_months}, \code{BSA_adj}.}
+\item{gender}{Gender for which to generate serum creatinine values ("Male" or
+"Female")}
+
+\item{reth}{NHANES race/ethnicity category for which to generate serum
+creatinine values ("Mexican American", "Non-Hispanic Black", "Non-Hispanic
+White", "Other", or "Other Hispanic")}
+
+\item{age_years}{Vector of ages in years for individuals for whom to generate
+serum creatinine values (corresponding to age_months)}
+
+\item{age_months}{vector of ages in months for individuals for whom to
+generate serum creatinine values (between 0-959 months)}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
-The same data.table with a \code{serum_creat} column added, containing 
-spline-interpolated serum creatinine values.
+A vector of numeric generated serum creatinine values (mg/dL).
 }
 \description{
-Predict serum creatinine using smoothing splines and kernel density estimates of residual variability
+Predict serum creatinine from age using smoothing splines and kernel density
+estimates of residual variability fitted to NHANES data,, for a given
+combination of gender and NHANES race/ethnicity category.
+}
+\details{
+This function should usually not be called directly by the user. It is used
+by \code{httkpop_generate()} in "virtual-individuals" mode, after drawing
+gender, NHANES race/ethnicity category, and age from their NHANES
+proportions/distributions.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+Ring, Caroline L., et al. "Identifying populations sensitive to
+ environmental chemicals by simulating toxicokinetic variability."
+ Environment International 106 (2017): 105-118
 }
 \author{
 Caroline Ring

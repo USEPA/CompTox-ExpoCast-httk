@@ -4,25 +4,30 @@
 \alias{age_draw_smooth}
 \title{Draws ages from a smoothed distribution for a given gender/race combination}
 \usage{
-age_draw_smooth(g, r, nsamp, agelim_months)
+age_draw_smooth(gender, reth, nsamp, agelim_months, nhanes_mec_svy)
 }
 \arguments{
-\item{g}{Gender. Either 'Male' or 'Female'.}
+\item{gender}{Gender. Either 'Male' or 'Female'.}
 
-\item{r}{Race/ethnicity. One of 'Mexican American', 'Other Hispanic',
+\item{reth}{Race/ethnicity. One of 'Mexican American', 'Other Hispanic',
 'Non-Hispanic Black', 'Non-Hispanic White', 'Other'.}
 
 \item{nsamp}{Number of ages to draw.}
 
 \item{agelim_months}{Two-element numeric vector giving the minimum and
 maximum ages in months to include.}
+
+\item{nhanes_mec_svy}{\code{surveydesign} object created from
+\code{\link{mecdt}} using \code{\link[survey]{svydesign}} (this is done in
+\code{\link{httkpop_generate}})}
 }
 \value{
 A named list with members 'ages_months' and 'ages_years', each
 numeric of length \code{nsamp}, giving the sampled ages in months and years.
 }
 \description{
-Draws ages from a smoothed distribution for a given gender/race combination
+This function should usually not be called directly by the user. It is used by
+\code{httkpop_generate()} in "virtual-individuals" mode.
 }
 \references{
 Ring, Caroline L., et al. "Identifying populations sensitive to

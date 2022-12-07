@@ -1,5 +1,6 @@
 #' Find the steady state concentration and the day it is reached.
 #' 
+#' @description
 #' This function finds the day a chemical comes within the specified range of
 #' the analytical steady state venous blood or plasma concentration(from
 #' calc_analytic_css) for the multiple compartment, three compartment, and one
@@ -9,45 +10,65 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or parameters must be
 #' specified. 
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or parameters must be
 #' specified. 
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param f Fractional distance from the final steady state concentration that
 #' the average concentration must come within to be considered at steady state.
+#' 
 #' @param daily.dose Total daily dose, mg/kg BW.
+#' 
 #' @param doses.per.day Number of doses per day.
+#' 
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
+#' 
 #' @param output.units Units for returned concentrations, defaults to uM
 #' (specify units = "uM") but can also be mg/L.
+#' 
 #' @param suppress.messages Whether or not to suppress messages.
+#' 
 #' @param tissue Desired tissue concentration (default value is NULL, will
 #' depend on model -- see \code{steady.state.compartment} in model.info file for
 #' further details.)
+#' 
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, and '1compartment' for
 #' the one compartment model.
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
 #' @param f.change Fractional change of daily steady state concentration
 #' reached to stop calculating.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for well-stirred model if TRUE for model 1compartment elimination
 #' rate.  This assumes clearance relative to amount unbound in whole blood
 #' instead of plasma, but converted to use with plasma concentration.
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
 #' @param dosing The dosing object for more complicated scenarios. Defaults to
 #' repeated \code{daily.dose} spread out over \code{doses.per.day}
+#' 
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
 #'
@@ -68,7 +89,7 @@
 #' 
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
-#' calc_css(parameters=parms,model='3compartment')
+#' calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
 #' 
 #' out <- solve_pbtk(chem.name = "Bisphenol A",
 #'   days = 50,                                   
@@ -145,13 +166,6 @@ calc_css <- function(chem.name=NULL,
       ss.compartment <- model.list[[model]]$steady.state.compartment
     # Otherwise plasma:
     } else ss.compartment <- "plasma"
-# Not sure why we have this, commenting out for now:
-#     state.vars <- state.vars[!(state.vars %in% c(
-#      "Atubules",
-#      "Ametabolized",
-#      "AUC",
-#      "Cplasma"))]
-    
   }   
 
   # We only want to call the parameterize function once:
@@ -180,7 +194,10 @@ calc_css <- function(chem.name=NULL,
   
   # We need to find out what concentrations (roughly) we should reach before
   # stopping:
-  css <- calc_analytic_css(
+  analyticcss_params <- list(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    dtxsid = dtxsid,
     parameters=parameters,
     daily.dose=daily.dose,
     concentration='plasma',
@@ -190,7 +207,9 @@ calc_css <- function(chem.name=NULL,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     well.stirred.correction=well.stirred.correction,
-    restrictive.clearance=restrictive.clearance) 
+    restrictive.clearance=restrictive.clearance
+  )
+  css <- do.call("calc_analytic_css",args = analyticcss_params)
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:

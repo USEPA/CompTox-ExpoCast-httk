@@ -1,15 +1,15 @@
-/* modelpbtk.c for R deSolve package
+/* vLiverPBPK.c for R deSolve package
    ___________________________________________________
 
    Model File:  vLiverPBPK.model
 
-   Date:  Fri Dec 18 12:22:16 2020
+   Date:  Tue Nov 28 10:57:11 2017
 
-   Created by:  "mod v5.6.5"
+   Created by:  "mod v5.5.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
-   Copyright (c) 1993-2015 Free Software Foundation, Inc.
+   Copyright (c) 1993-2013 Free Software Foundation, Inc.
 
    Model calculations for compartmental model:
 
@@ -82,28 +82,28 @@
 #include <R.h>
 
 /* Model variables: States */
-#define ID_Agutlumen 0x00000
-#define ID_Agut 0x00001
-#define ID_Aliver 0x00002
-#define ID_Aven 0x00003
-#define ID_Alung 0x00004
-#define ID_Aart 0x00005
-#define ID_Arest 0x00006
-#define ID_Akidney 0x00007
-#define ID_Atubules 0x00008
-#define ID_Ametabolized 0x00009
-#define ID_AUC 0x0000a
+#define ID_Agutlumen 0x0000
+#define ID_Agut 0x0001
+#define ID_Aliver 0x0002
+#define ID_Aven 0x0003
+#define ID_Alung 0x0004
+#define ID_Aart 0x0005
+#define ID_Arest 0x0006
+#define ID_Akidney 0x0007
+#define ID_Atubules 0x0008
+#define ID_Ametabolized 0x0009
+#define ID_AUC 0x000a
 
 /* Model variables: Outputs */
-#define ID_Cgut 0x00000
-#define ID_Cliver 0x00001
-#define ID_Cven 0x00002
-#define ID_Clung 0x00003
-#define ID_Cart 0x00004
-#define ID_Crest 0x00005
-#define ID_Ckidney 0x00006
-#define ID_Cplasma 0x00007
-#define ID_Aplasma 0x00008
+#define ID_Cgut 0x0000
+#define ID_Cliver 0x0001
+#define ID_Cven 0x0002
+#define ID_Clung 0x0003
+#define ID_Cart 0x0004
+#define ID_Crest 0x0005
+#define ID_Ckidney 0x0006
+#define ID_Cplasma 0x0007
+#define ID_Aplasma 0x0008
 
 /* Parameters */
 static double parms[37];
@@ -146,8 +146,6 @@ static double parms[37];
 #define Vrest parms[35]
 #define Vven parms[36]
 
-/* Forcing (Input) functions */
-static double forc[0];
 
 
 /*----- Initializers */
@@ -157,11 +155,6 @@ void initmodpbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-void initforcpbtk (void (* odeforcs)(int *, double *))
-{
-  int N=0;
-  odeforcs(&N, forc);
-}
 
 
 void getParmspbtk (double *inParms, double *out, int *nout) {
@@ -233,7 +226,7 @@ void derivspbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_Akidney] = Qkidney * y[ID_Aart] / Vart - Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * y[ID_Aart] / Vart / Rblood2plasma * Fraction_unbound_plasma ;
 
-  ydot[ID_Atubules] = Qgfr * y[ID_Aart] / Vart / Rblood2plasma * Fraction_unbound_plasma ;
+  ydot[ID_Atubules] = Qgfr * y[ID_Aart] / Vart ;
 
   ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 

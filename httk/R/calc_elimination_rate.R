@@ -1,4 +1,4 @@
-#' Calculate the elimination rate for a one compartment model. 
+#' Calculate the elimination rate for a one compartment model
 #' 
 #' This function calculates an elimination rate from the three compartment
 #' steady state model where elimination is entirely due to metablism by the
@@ -10,39 +10,70 @@
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' 
 #' @param chem.cas Either the cas number or the chemical name must be
 #' specified. 
+#' 
 #' @param chem.name Either the chemical name or the cas number must be
 #' specified. 
+#' 
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#' 
 #' @param restrictive.clearance In calculating elimination rate, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param well.stirred.correction Uses correction in calculation of hepatic
 #' clearance for -stirred model if TRUE.  This assumes clearance relative
 #' to amount unbound in whole blood instead of plasma, but converted to use
 #' with plasma concentration.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @return \item{Elimination rate}{Units of 1/h.}
+#' 
 #' @author John Wambaugh
+#' 
+#' @references 
+#' Schmitt, Walter. "General approach for the calculation of tissue 
+#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
+#'
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
+#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
+#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#'
 #' @keywords Parameter  1compartment
+#' 
 #' @examples
 #' 
 #' calc_elimination_rate(chem.name="Bisphenol A")
@@ -59,6 +90,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   default.to.human=FALSE,
                                   restrictive.clearance=TRUE,
                                   adjusted.Funbound.plasma=TRUE,
+                                  adjusted.Clint=TRUE,
                                   regression=TRUE,
                                   well.stirred.correction=TRUE,
                                   clint.pvalue.threshold=0.05,
@@ -96,6 +128,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                     minimum.Funbound.plasma=minimum.Funbound.plasma)
     Vd <- calc_vdist(chem.cas=chem.cas,
                      chem.name=chem.name,
+                     dtxsid=dtxsid,
                      species=species,
                      suppress.messages=suppress.messages,
                      default.to.human=default.to.human,

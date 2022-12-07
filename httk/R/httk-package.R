@@ -325,7 +325,7 @@ NULL
 #' @author John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
 #' Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
 #' @seealso
-#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk-r}{
+#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
 #' PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 #' 
 #' \doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 

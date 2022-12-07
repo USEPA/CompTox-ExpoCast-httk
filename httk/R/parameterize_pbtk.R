@@ -1,33 +1,55 @@
-#' Parameterize_PBTK
+#' Parameters for a generic physiologically-based toxicokinetic model
 #' 
-#' This function initializes the parameters needed in the functions solve_pbtk,
-#' calc_css, and others using the multiple compartment model.
+#' Generate a chemical- and species-specific set of model parameters, 
+#' including tissue:plasma partition coefficients (via Schmitt (2008)'s method
+#' as modified by Pearce et al. (2017)) and organ volumes and flows 
+#' (from table \code{\link{physiology.data}}) for an arbitrary tissue lumping 
+#' scheme (tissues  must be described in table \code{\link{tissue.data}}).
+#'
+#' By default, this function initializes the parameters needed in the functions 
+#' \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
+#' default generic PBTK model (for oral and intravenous dosing only).
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
-#' However, solve_pbtk only works with the default parameters.
+#' However, \code{\link{solve_pbtk}} only works with the default parameters.
+#' 
 #' @param force.human.clint.fup Forces use of human values for hepatic
 #' intrinsic clearance and fraction of unbound plasma if true.
+#' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
-#' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
-#' TRUE along with parition coefficients calculated with this value.
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
@@ -71,9 +93,18 @@
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
 #' @author John Wambaugh and Robert Pearce
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#'
+#' @references 
+#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
-#' 
+#'
+#' Schmitt, Walter. "General approach for the calculation of tissue 
+#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#'
+#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
+#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
+#' and pharmacodynamics 44.6 (2017): 549-565.
+#'
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
@@ -109,6 +140,7 @@ parameterize_pbtk <- function(
                        force.human.clint.fup = FALSE,
                        clint.pvalue.threshold=0.05,
                        adjusted.Funbound.plasma=TRUE,
+                       adjusted.Clint=TRUE,
                        regression=TRUE,
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,
@@ -143,7 +175,7 @@ parameterize_pbtk <- function(
                         species,
                         chem.cas=chem.cas),
                     silent=TRUE)
-  if ((class(Clint.db) == "try-error" & default.to.human) || 
+  if ((is(Clint.db,"try-error") & default.to.human) || 
       force.human.clint.fup) 
   {
     Clint.db <- try(get_invitroPK_param(
@@ -159,7 +191,7 @@ parameterize_pbtk <- function(
 
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (class(Clint.db) == "try-error") 
+  if (is(Clint.db,"try-error")) 
     stop("Missing metabolic clearance data for given species. \n\
          Set default.to.human to true to substitute human value.")
   # Check if clint is a point value or a distribution, if a distribution, use the median:
@@ -174,9 +206,8 @@ parameterize_pbtk <- function(
     Clint.dist <- NA
   }
   if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
-  
-  
-  # Predict the PCs for all tissues in the tissue.data table:
+
+# Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
                       chem.cas=chem.cas,
                       species=species,
@@ -184,6 +215,19 @@ parameterize_pbtk <- function(
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=TRUE,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
+                "Pow","pKa_Donor","pKa_Accept")])  # fraction
+  if (adjusted.Clint) 
+  {
+    Clint <- Clint / Fu_hep
+    if (!suppress.messages) 
+    {
+      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
+    }
+  }
 
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
@@ -203,13 +247,17 @@ parameterize_pbtk <- function(
     suppress.messages=suppress.messages)
        
   if (schmitt.params$unadjusted.Funbound.plasma == 0)
-    stop("Fraction unbound = 0, can't predict partitioning.")
+    if (tolower(species) == "human" | default.to.human) {
+      stop("Fraction unbound = 0, cannot predict partitioning.")
+    } else {
+      stop("Fraction unbound = 0, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
+    }
   
   # Check to see if we should use the in vitro fup assay correction:  
   if (adjusted.Funbound.plasma)
   {
     fup <- schmitt.params$Funbound.plasma
-    warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
+    if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
   } else fup <- schmitt.params$unadjusted.Funbound.plasma
   
   # Restrict the value of fup:
@@ -221,7 +269,7 @@ parameterize_pbtk <- function(
                    chem.cas=chem.cas),
                silent=TRUE)
 
-  if (class(Fgutabs) == "try-error") Fgutabs <- 1
+  if (is(Fgutabs,"try-error")) Fgutabs <- 1
   
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
@@ -295,34 +343,23 @@ parameterize_pbtk <- function(
                             pKa_Accept=pKa_Accept,
                             MA=schmitt.params[["MA"]]))
   
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic
-  #clearance assay (Kilford et al., 2008)
-  outlist <- c(outlist,
-               Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
-                 "Pow","pKa_Donor","pKa_Accept")])) #fraction
-  
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
- outlist <- c(outlist, 
-              Fhep.assay.correction=calc_hep_fu(parameters=schmitt.params[c(
-                "Pow","pKa_Donor","pKa_Accept")]))  # fraction 
-
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma))
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      suppress.messages=suppress.messages))
 
   outlist <- c(
     outlist,
     list(Clint=Clint,
          Clint.dist = Clint.dist,
-         Clmetabolismc = as.numeric(calc_hep_clearance(
+         Fhep.assay.correction=Fu_hep,  # fraction 
+         Clmetabolismc= as.numeric(calc_hep_clearance(
            hepatic.model="unscaled",
            parameters=list(
              Clint=Clint, #uL/min/10^6 cells
              Funbound.plasma=fup, # unitless fraction
-             Fhep.assay.correction=
-               outlist$Fhep.assay.correction,
+             Fhep.assay.correction=Fu_hep,
              Rblood2plasma = outlist$Rblood2plasma, 
              million.cells.per.gliver= 110, # 10^6 cells/g-liver
              liver.density= 1.05, # g/mL
@@ -344,6 +381,8 @@ parameterize_pbtk <- function(
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
 
-        
-  return(lapply(outlist[sort(names(outlist))],set_httk_precision))
+  # alphabetize:
+  outlist <- outlist[order(tolower(names(outlist)))]
+  
+  return(lapply(outlist, set_httk_precision))
 }

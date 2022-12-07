@@ -15,11 +15,12 @@ calc_mc_oral_equiv(
   output.units = "mgpkgpday",
   suppress.messages = FALSE,
   return.samples = FALSE,
-  concentration = "plasma",
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   tissue = NULL,
+  concentration = "plasma",
   IVIVE = NULL,
+  model = "3compartmentss",
   ...
 )
 }
@@ -53,8 +54,6 @@ be mg/L.}
 \item{return.samples}{Whether or not to return the vector containing the
 samples from the simulation instead of the selected quantile.}
 
-\item{concentration}{Desired concentration type, 'blood','tissue', or default 'plasma'.}
-
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
@@ -62,13 +61,30 @@ samples from the simulation instead of the selected quantile.}
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
-\item{tissue}{Desired steady state tissue conentration.}
+\item{tissue}{Desired steady state tissue concentration. Default is of NULL
+typically gives whole body plasma concentration.}
+
+\item{concentration}{Desired concentration type: 'blood','tissue', or default 
+'plasma'. In the case that the concentration is for plasma, selecting "blood"
+will use the blood:plasma ratio to estimate blood concentration. In the case
+that the argument 'tissue' specifies a particular tissue of the body, 
+concentration defaults to 'tissue' -- that is, the concentration in the 
+If cocentration is set to 'blood' or 'plasma' and 'tissue' specifies a
+specific tissue then the value returned is for the plasma or blood in that
+specific tissue.}
 
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
 overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
 See Details below for more information.}
+
+\item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+'pbtk' for the multiple compartment model,
+'3compartment' for the three compartment model, '3compartmentss' for 
+the three compartment steady state model, and '1compartment' for one 
+compartment model. This only applies when httkpop=TRUE and species="Human",
+otherwise '3compartmentss' is used.}
 
 \item{...}{Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 variance of parameters.}
@@ -77,10 +93,64 @@ variance of parameters.}
 Equivalent dose in specified units, default of mg/kg BW/day.
 }
 \description{
-This functions converts a chemical plasma concetration to an oral equivalent
-dose using a concentration obtained from \code{\link{calc_mc_css}}.
+This function converts a chemical plasma concetration to an oral adminstered
+equivalent
+dose (AED) using a concentration obtained from \code{\link{calc_mc_css}}.  
+This function uses reverse dosimetry-based 
+'\emph{in vitro-in vivo} extrapolation (IVIVE) 
+for high throughput risk screening.  The user can input the
+chemical and \emph{in vitro} bioactive concentration, select the TK
+model, and then automatically predict the \emph{in vivo} AED
+which would produce a body concentration equal to
+the \emph{in vitro} bioactive concentration. This function relies on the
+Monte Carlo method (via funcion \code{\link{create_mc_samples}} to simulate
+both uncertainty and variability so that the result is a distribution of
+equivalent doses, from which we provide specific quantiles
+(specified by \code{which.quantile}), though the full set of predictions can
+be obtained by setting \code{return.samples} to \code{TRUE}.
 }
 \details{
+The chemical-specific steady-state concentration for a dose rate of 
+1 mg/kg body weight/day can be used for in IVIVE of
+a bioactive \emph{in vitro} concentration by dividing the \emph{in vitro}
+concentration
+by the steady-state concentration to predict a dose rate (mg/kg/day) that
+would produce that concentration in plasma. Using quantiles of the 
+distribution (such as the upper 95th percentile) allow incorporation of 
+uncertainty and variability into IVIVE.
+
+This approach relies on thelinearity
+of the models to calculate a scaling factor to relate in vitro
+concentrations (uM) with AED. The scaling factor is the
+inverse of the steady-state plasma concentration (Css) predicted
+for a 1 mg/kg/day exposure dose rate
+where \emph{in vitro} concentration [X] and Css must be in the same
+units. Note that it is typical for \emph{in vitro} concentrations to be
+reported in units of uM and Css in units of mg/L, in which case
+one must be converted to the other. 
+
+Reverse Dosimetry Toxicodynamic IVIVE
+
+\if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+\if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+
+Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 
+reverse dosimetry toxicodynamic IVIVE. Equivalent external dose is
+determined by solving the TK model in reverse by deriving the external dose
+(that is, TK model input) that produces a specified internal concentration 
+(that is, TK model output). Reverse dosimetry and IVIVE using HTTK relies on 
+the linearity of the models. We calculate a scaling factor to relate 
+\emph{in vitro} 
+concentrations (uM) to AEDs. The scaling 
+factor is the inverse of the Css 
+predicted for a 1 mg/kg/day exposure dose rate. We use Monte Carlo to 
+simulate variability and propagate uncertainty; for example, to calculate an 
+upper 95th percentile Css,95 for individuals who get higher plasma 
+concentrations from the same exposure.
+
+The Monte Carlo methods used here were recently updated and described by
+Breen et al. (submitted).
+
 All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
@@ -93,8 +163,10 @@ dosing.  All tissues other than gut, liver, and lung are the product of the
 steady state plasma concentration and the tissue to plasma partition
 coefficient.
 
-The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
-assumptions identified by Honda et al. (2019) are: \tabular{lrrrr}{
+The six sets of plausible IVIVE
+assumptions identified by Honda et al. (2019) 
+(\doi{10.1371/journal.pone.0217564}) 
+are: \tabular{lrrrr}{
 \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
 Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
 Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
@@ -107,11 +179,27 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
-
+# Basic in vitro - in vivo extrapolation with httk, convert 0.5 uM in vitro
+# concentration of chemical Surinabant to mg/kg/day:
+set.seed(1234)
+0.5/calc_mc_css(chem.name="Surinabant",samples=10,output.units="uM")
+# The significant digits should give the same answer as:
+set.seed(1234)
+calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=10)  
+# Note that we use set.seed to get the same sequence of random numbers for
+# the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
 \donttest{
-calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
-       tissue='brain')
+# The following example should result in an error since we do not 
+# estimate tissue partitioning with '3compartmentss'. 
+set.seed(1234)                        
+try(calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
+                       tissue='brain'))
+       
+set.seed(1234)
+calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",model='pbtk',
+                   which.quantile=c(0.05,0.5,0.95),tissue='brain')
+ 
 }
 
 }
