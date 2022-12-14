@@ -93,6 +93,12 @@
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_gas_pbtk}}
+#'
+#' @seealso \code{\link{calc_analytic_css_pbtk}} 
+#'
 #' @keywords Solve pbtk
 #'
 #' @examples

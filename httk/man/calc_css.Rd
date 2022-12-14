@@ -134,6 +134,9 @@ ggtitle("Bisphenol A")
 print(c.vs.t)
 
 }
+\seealso{
+\code{\link{calc_analytic_css}}
+}
 \author{
 Robert Pearce, John Wambaugh
 }

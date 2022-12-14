@@ -1,30 +1,41 @@
-# This predicts the coefficient of tissue to FREE plasma fraction via Schmitt's method (2008):  
-# fupl: unbound fraction in plasma
-# Pow: octanol:water partition coefficient (not log transformed)
-# pKa_Donor: compound H dissociation equilibrium constant(s)
-# pKa_Accept: compound H association equilibrium constant(s)   
-# MA: phospholipid:water distribution coefficient
-# KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
-# Fprotein.plasma: protein fraction in plasma - from Gardner 1980
-
-
 #' Predict partition coefficients using the method from Schmitt (2008).
 #' 
-#' This function implements the method from Schmitt (2008) in predicting the 
+#' This function implements the method from Schmitt (2008) for predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
-#' in the tissue.data table.
+#' in the \code{\link{tissue.data}} table.
 #' 
-#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' In Schmitt's model, each tissue is composed of cells and
+#' interstitium, with each cell consisting of neutral lipid,
+#' neutral phospholipid, water, protein, and acidic phospholipid.
+#' Each tissue cell is defined as the sum of separate
+#' compartments for each constituent, all of which partition
+#' with a shared water compartment. The partitioning between
+#' the cell components and cell water is compound specific
+#' and determined by log Pow (in neutral lipid partitioning),
+#' membrane affinity (phospholipid and protein partitioning),
+#' and pKa (neutral lipid and acidic phospholipid partitioning).
+#' For a given compound the partitioning into each
+#' component is identical across tissues. Thus the differences
+#' among tissues are driven by their composition, that is, the
+#' varying volumes of components such as neutral lipid.
+#' However, pH differences across tissues also determine
+#' small differences in partitioning between cell and plasma
+#' water. The fup is used as the plasma water to total plasma
+#' partition coefficient and to approximate the partitioning
+#' between interstitial protein and water.
 #' 
-#' A regression is used for membrane affinity when not provided.  The
+#' A regression is used to predict membrane affinity when measured values are 
+#' not available.  The
 #' regressions for correcting each tissue are performed on tissue plasma
 #' partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
 #' corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
 #' Thus the regressions should be used with the corrected Funbound.plasma.
 #' 
+#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' 
 #' The red blood cell regression can be used but is not by default because of
-#' the span of the data used, reducing confidence in the regression for higher
-#' and lower predicted values.
+#' the span of the data used for evaluation, reducing confidence in the 
+#' regression for higher and lower predicted values.
 #' 
 #' Human tissue volumes are used for species other than Rat.
 #' 
@@ -56,6 +67,10 @@
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'
+#' @seealso \code{\link{parameterize_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#' 
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
 #'
@@ -86,7 +101,6 @@
 #' @import magrittr
 #'
 #' @export predict_partitioning_schmitt
-#'
 predict_partitioning_schmitt <- function(
   chem.name=NULL,
   chem.cas=NULL,
@@ -150,10 +164,10 @@ predict_partitioning_schmitt <- function(
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
-      parameters$Fprotein.plasma <-  httk::physiology.data[
-      which(httk::physiology.data[,'Parameter'] == 
+      parameters$Fprotein.plasma <-  physiology.data[
+      which(physiology.data[,'Parameter'] == 
         'Plasma Protein Volume Fraction'),
-      which(tolower(colnames(httk::physiology.data)) == tolower(species))]
+      which(tolower(colnames(physiology.data)) == tolower(species))]
   }
   
   if (!adjusted.Funbound.plasma & user.params == FALSE) 

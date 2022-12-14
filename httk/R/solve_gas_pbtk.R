@@ -186,6 +186,10 @@
 #'
 #' @keywords Solve
 #'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_gas_pbtk}}
+#'
 #' @examples
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
@@ -214,10 +218,6 @@
 #' }
 #' 
 #' @export solve_gas_pbtk
-#' 
-#' @useDynLib httk
-#' 
-#' @import deSolve
 #' 
 #' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,

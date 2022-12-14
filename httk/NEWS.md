@@ -1,13 +1,30 @@
 ---
 title: "News for R package httk"
-date: "September 14, 2022"
+date: "December 2, 2022"
 output: html_document
 ---
+
+# version 2.2.2 (December, 2022)
+
+* Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
+* Removed inappropriate second adjustment for binding in intrinsic hepatic clearance assay from 'cal_hep_clearance' -- adjustment now only occurs in parameterization functions. Added new function 'apply_clint_adjustment' to standardize implementation of adjustment (thanks Todor Antonijevic)
+* `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
+* Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
+* Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
+* Added updated vignette from Pearce et al. (2017): v79i04.R
+* Added new vignette on "Introduction to IVIVE"
+* Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now using 'do.call'
+* Fixed bugs that prevented using Monte Carlo with phys-chem parameters
+* Revised restrictive.clearance argument for function 'solve_model'
+* Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
+* We now export function 'calc_dow' for the distribution coefficient
+* Updated various function documentation
+* Added option class.exclude to 'get_cheminfo' -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 
 # version 2.2.1 (September, 2022)
 
 This minor update removes UTF-8 characters from the package and changes the
-calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerabiltiy
+calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerability
 to machine precision errors.
 
 # version 2.2.0 (September, 2022)

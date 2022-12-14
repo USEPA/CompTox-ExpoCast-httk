@@ -1,0 +1,37 @@
+"DTXSID"	"CASRN"	"PREFERRED_NAME"	"Clint"	"PPB"	"Failed"
+"DTXSID1047576"	"486-56-6"	"Cotinine"	1	1	0
+"DTXSID0022519"	"59-30-3"	"Folic acid"	0	0	1
+"DTXSID3023556"	"68-26-8"	"Retinol"	0	0	1
+"DTXSID6024254"	"85-01-8"	"Phenanthrene"	0	0	1
+"DTXSID8030760"	"83905-01-5"	"Azithromycin"	1	1	0
+"DTXSID2032180"	"35065-27-1"	"2,2',4,4',5,5'-Hexachlorobiphenyl"	0	0	1
+"DTXSID5022774"	"55268-75-2"	"Cefuroxime"	1	1	0
+"DTXSID4020878"	"91-57-6"	"2-Methylnaphthalene"	0	0	1
+"DTXSID7031797"	"129618-40-2"	"Nevirapine"	1	1	0
+"DTXSID0029187"	"581-42-0"	"2,6-Dimethylnaphthalene"	0	0	1
+"DTXSID90868151"	"72629-94-8"	"Perfluorotridecanoic acid"	1	1	0
+"DTXSID2022836"	"18323-44-9"	"Clindamycin"	1	1	0
+"DTXSID0023589"	"3930-20-9"	"Sotalol"	1	0	0
+"DTXSID9046029"	"154598-52-4"	"Efavirenz"	1	1	0
+"DTXSID9020877"	"90-12-0"	"1-Methylnaphthalene"	0	0	1
+"DTXSID9022524"	"50-35-1"	"Thalidomide"	0	0	1
+"DTXSID2044268"	"83881-52-1"	"Cetirizine hydrochloride (1:2)"	0	0	1
+"DTXSID9025293"	"149-57-5"	"2-Ethylhexanoic acid"	0	0	1
+"DTXSID5021708"	"54-21-7"	"Sodium salicylate"	0	0	1
+"DTXSID9036646"	"1117-86-8"	"1,2-Octanediol"	0	0	1
+"DTXSID2020929"	"98-92-0"	"Niacinamide"	0	0	1
+"DTXSID3022405"	"131-57-7"	"2-Hydroxy-4-methoxybenzophenone"	0	0	1
+"DTXSID8023688"	"97240-79-4"	"Topiramate"	0	0	1
+"DTXSID8036732"	"4478-93-7"	"Sulforaphane"	0	0	1
+"DTXSID2020216"	"128-37-0"	"Butylated hydroxytoluene"	0	0	1
+"DTXSID1044645"	"304-20-1"	"Hydralazine hydrochloride"	0	0	1
+"DTXSID6024888"	"6055-19-2"	"Cyclophosphamide monohydrate"	0	0	1
+"DTXSID7037131"	"122320-73-4"	"Rosiglitazone"	0	0	1
+"DTXSID3020384"	"50-02-2"	"Dexamethasone"	0	0	1
+"DTXSID2034095"	"152-11-4"	"Verapamil hydrochloride"	0	0	1
+"DTXSID101278928"	"569646-79-3"	"4-(3-Ethoxy-4-hydroxyphenyl)-2-butanone"	0	0	1
+"DTXSID2021236"	"2871-01-4"	"HC Red 3"	0	0	1
+"DTXSID001044510"	"75365-73-0"	"Methyl viologen dichloride hydrate (Paraquat Dichloride)"	0	0	1
+"DTXSID0020107"	"22839-47-0"	"Aspartame"	0	0	1
+"DTXSID0037237"	"10238-21-8"	"Glybenclamide"	0	0	1
+"DTXSID6023733"	"99-66-1"	"Valproic acid"	0	0	1

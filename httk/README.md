@@ -1,4 +1,4 @@
-<img src="man/figures/httk-logo.png" align="right" width="50%"/>
+<img src="man/figures/httk-logo.png" align="center" width="240" />
 
 # R Package "httk"
 
@@ -10,7 +10,7 @@
 This R package provides data and models for prediction toxicokinetics (chemical 
 absorption, distribution, metabolism, and excretion by the body). 
 The models are design to be parameterized with chemical-specific in vitro 
-(animal free) measurments. The predictions can be used for traditional
+(animal free) measurements. The predictions can be used for traditional
 dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro 
 bioactivity testing data (for example, ToxCast). See Breen et al. 
 (2021, <https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
@@ -27,14 +27,18 @@ information. These tools allow incorporation of chemical
 toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
 into bioinformatics, as described by Pearce et al. (2017) 
 (<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
-in vitro data characterizing toxicokinetics can be been obtained 
+in vitro data characterizing toxicokinetics have been obtained 
 from relatively high-throughput experiments. The 
 chemical-independent ("generic") physiologically-based ("PBTK") and empirical 
 (for example, one compartment) "TK" models included here can be 
 parameterized with in vitro data or in silico predictions which are 
 provided for thousands of chemicals, multiple exposure routes, 
-and various species. The models are systems of ordinary 
-differential equations that are solved
+and various species. High throughput toxicokinetics ("HTTK") is the 
+combination of in vitro data and generic models. We establish the
+expected accuracy of HTTK for chemicals without in vivo data 
+through statistical evaluation of HTTK predictions for chemicals
+where in vivo data do exist. The models are systems of ordinary 
+differential equations that are developed in MCSim and solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
 included for simulating human biological variability
 (Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)

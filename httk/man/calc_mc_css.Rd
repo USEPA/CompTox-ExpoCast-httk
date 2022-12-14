@@ -12,6 +12,7 @@ calc_mc_css(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
+  daily.dose = 1,
   suppress.messages = FALSE,
   model = "3compartmentss",
   httkpop = TRUE,
@@ -23,20 +24,11 @@ calc_mc_css(
   tissue = NULL,
   concentration = "plasma",
   output.units = "mg/L",
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
-    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
-  convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = TRUE, regression = TRUE),
-  calc.analytic.css.arg.list = list(),
-  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
-    regression = TRUE, minimum.Funbound.plasma = 1e-04)
+  invitro.mc.arg.list = NULL,
+  httkpop.generate.arg.list = list(method = "direct resampling"),
+  convert.httkpop.arg.list = NULL,
+  parameterize.arg.list = NULL,
+  calc.analytic.css.arg.list = NULL
 )
 }
 \arguments{
@@ -126,15 +118,12 @@ specific tissue.}
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
-\item{parameterize.arg.list}{Additional parameters passed to the 
-parameterize_* function for the model.}
+\item{parameterize.arg.list}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
-
-\item{parameterize.args}{A list of arguments to be passed to the model
-parameterization function (that is, parameterize_MODEL) corresponding to
-argument "model". (Defaults to NULL.)}
 }
 \value{
 Quantiles (specified by which.quantile) of the distribution of plasma
@@ -320,6 +309,11 @@ In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217
 
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+}
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{create_mc_samples}}
 }
 \author{
 Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen

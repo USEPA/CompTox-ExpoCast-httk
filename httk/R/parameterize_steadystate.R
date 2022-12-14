@@ -81,7 +81,13 @@
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
-#' @keywords Parameter 3compss
+#' @seealso \code{\link{calc_analytic_css_3compss}}
+#'
+#' @seealso \code{\link{adjust_clint}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 
@@ -300,21 +306,21 @@ Set default.to.human to true to substitute human value.")
   if (fup.adjusted < minimum.Funbound.plasma) 
     fup.adjusted <- minimum.Funbound.plasma
     
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept,
     suppress.messages=suppress.messages)) # fraction 
-  if (adjusted.Clint) 
-  {
-    Clint.point <- Clint.point/Fu_hep
-    if (!suppress.messages) 
-    {
-      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
-    }
-  }
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
+                               Clint.point,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
+                        
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
                         chem.cas=chem.cas,

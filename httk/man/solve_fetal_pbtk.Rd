@@ -67,7 +67,7 @@ will not run for non-human species (default "Human").}
 dosing times or with two columns (or rows) correspondingly named "dose" and
 "time" containing the time and amount, in mg/kg BW, of each dose.}
 
-\item{daily.dose}{Total daily dose, mg.}
+\item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -161,6 +161,11 @@ This gestational model is only parameterized for humans.
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
+}
+\seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_fetal_pbtk}}
 }
 \author{
 John Wambaugh, Mark Sfeir, and Dustin Kapraun
