@@ -158,7 +158,11 @@ parameterize_pbtk <- function(
                        regression=TRUE,
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,
-                       minimum.Funbound.plasma=0.0001)
+                       minimum.Funbound.plasma=0.0001,
+                       million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
+                       liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
+                       kgutabs = 2.18 # 1/h, Wambaugh et al. (2018)
+                       )
 {
   #Give a binding to the physiology.data
   physiology.data <- physiology.data
@@ -350,7 +354,7 @@ parameterize_pbtk <- function(
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-                            kgutabs = 2.18, # 1/h
+                            kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -378,8 +382,8 @@ parameterize_pbtk <- function(
              Funbound.plasma=fup, # unitless fraction
              Fhep.assay.correction=Fu_hep,
              Rblood2plasma = outlist$Rblood2plasma, 
-             million.cells.per.gliver= 110, # 10^6 cells/g-liver
-             liver.density= 1.05, # g/mL
+             million.cells.per.gliver = million.cells.per.gliver=, # 10^6 cells/g-liver
+             liver.density = liver.density, # g/mL
              Dn=0.17,
              BW=BW,
              Vliverc=lumped_params$Vliverc, #L/kg
@@ -387,8 +391,8 @@ parameterize_pbtk <- function(
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
            suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
-         million.cells.per.gliver=110, # 10^6 cells/g-liver
-         liver.density=1.05, # g/mL
+         million.cells.per.gliver  =million.cells.per.gliver, # 10^6 cells/g-liver
+         liver.density = liver.density, # g/mL
          Fgutabs=Fgutabs)) 
   
   if (adjusted.Funbound.plasma) 
