@@ -192,6 +192,13 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
               dose.duration, dose.duration.units, washoff, and InfiniteDose are ignored.
               Vvehicle is set to 0.")
     }
+    
+    # INITIAL.DOSE and DOSE.UNITS
+    if (is.null(initial.dose) | is.null(input.units)){
+      initial.dose <- 1; input.units <- "mg/kg" 
+      warning("The initial dose is automatically set to 1 mg/kg, since at least 
+              one of initial.dose and input.units is NULL.")
+    }
     forcings = cbind(times = start.time, forcing_values = 0)
   }
   
@@ -229,9 +236,12 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       }
       
       # INITIAL.DOSE and DOSE.UNITS
-      if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
-        initial.dose <- 1; input.units <- "mg/L" 
-        warning("initial.dose automatically set to 1 mg/L.")
+      if (is.null(input.units)){
+        input.units <- "mg/L"
+        if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
+          initial.dose <- 1;  
+          warning("initial.dose automatically set to 1 mg/L.")
+        }
       }
       
     # FINITE DOSING
@@ -243,7 +253,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       }
       if (length(Vvehicle)!=1) stop("Vvehicle input must be one value. 
                                     To change the volume of the vehicle over time, use the dosing.dermal input.") 
-      if ((Vvehicle<0)) stop("Vvehicle must be positive and non-zero if the route is dermal.")
+      if ((Vvehicle<=0)) stop("Vvehicle must be positive and non-zero if the route is dermal.")
       forcings = cbind(times = start.time, forcing_values = Vvehicle)
       
       # DOSING.DERMAL
@@ -273,9 +283,12 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       }
       
       # INITIAL.DOSE and DOSE.UNITS
-      if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
-        initial.dose <- 1; input.units <- "mg/kg" 
-        warning("initial.dose automatically set to 1 mg/kg.")
+      if (is.null(input.units)){
+        input.units <- "mg/kg"
+        if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
+          initial.dose <- 1;  
+          warning("initial.dose automatically set to 1 mg/kg.")
+        }
       }
     }
     
