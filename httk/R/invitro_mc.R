@@ -288,9 +288,11 @@ invitro_mc <- function(parameters.dt=NULL,
   if (adjusted.Clint)
   {
     # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
-    parameters.dt[, Clint := Clint / Fhep.assay.correction]
+    parameters.dt[, Clint := apply_clint_adjustment(
+                               Clint,
+                               Fu_hep=Fhep.assay.correction,
+                               suppress.messages=suppress.messages)]
   }
-
   #
   #
   #
