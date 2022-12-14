@@ -53,6 +53,12 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#'
+#' @param million.cells.per.gliver Hepatocellularity (defaults to 110 10^6 cells/g-liver, from arlile et al. (1997))
+#'
+#' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
+#'
+#' @param kgutabs Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -110,6 +116,17 @@
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
+#' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
+#' to relate drug metabolic clearance in hepatic microsomes, isolated 
+#' hepatocytes, and the intact liver: studies with induced livers involving 
+#' diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+#' 
+#' International Commission on Radiological Protection. Report of the task 
+#' group on reference man. Vol. 23. Pergamon, Oxford. 1975.
+#' 
+#' Wambaugh JF, Hughes MF, Ring CL, et al., Evaluating in vitro-in vivo 
+#' extrapolation of toxicokinetics. Toxicol Sci. 2018;163 (1): 152–169.
+#' 
 #' @keywords Parameter pbtk
 #'
 #' @seealso \code{\link{solve_pbtk}}
