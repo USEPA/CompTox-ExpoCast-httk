@@ -56,7 +56,7 @@ apply_clint_adjustment <- function(Clint,
 {
   if (is.null(Fu_hep))
   {
-    Fu_hep <- calc_hep_fu(parameters=list(parameters=list(Pow = Pow,
+    Fu_hep <- calc_hep_fu(parameters=list(Pow = Pow,
                                           pKa_Donor = pKa_Donor,
                                           pKa_Accept = pKa_Accept))
   }
