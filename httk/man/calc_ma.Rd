@@ -38,7 +38,7 @@ from neutral phospholipids (\ifelse{html}{\out{K<sub>nPL</sub>}}{\eqn{K_{nPL}}})
 Pearce et al. (2017) compared five different methods for predicting 
 membrane affinity using measured data for 59 compounds. The method of
 Yun and Edgington (2013) was identified as the best: 
-\ifelse{html}{\out{10^(1.294 + 0.304 * log<sub>10</sub>(P<sub>ow</sub>)}}{\deqn{MA = 10^(1.294 + 0.304 * log_{10}(P_{ow}))}}
+\ifelse{html}{\out{MA = 10^(1.294 + 0.304 * log<sub>10</sub>(P<sub>ow</sub>)}}{\deqn{MA = 10^(1.294 + 0.304 * log_{10}(P_{ow}))}}
 }
 \references{
 Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
