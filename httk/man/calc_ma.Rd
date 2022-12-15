@@ -27,21 +27,18 @@ either CAS, name, or DTXSIDs}
 
 \item{parameters}{Parameters from the appropriate parameterization function
 for the model indicated by argument model}
-
-\item{Vr}{Rratio of cell volume to incubation volume. Default is taken from}
-
-\item{pH}{pH of the incupation medium.}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
 }
 \description{
-Membrane affinity chacterizes chemical partitioning into membranes formed
-from neutral phospholipids (\eqn{K_{nPL}}). 
+Membrane affinity (MA) is the membrane:water partition coefficient. MA
+chacterizes chemical partitioning into membranes formed
+from neutral phospholipids (\ifelse{html}{\out{K<sub>nPL</sub>}}{\eqn{K_{nPL}}}). 
 Pearce et al. (2017) compared five different methods for predicting 
 membrane affinity using measured data for 59 compounds. The method of
 Yun and Edgington (2013) was identified as the best: 
-\deqn{MA = 10^(1.294 + 0.304 * log_{10}(P_{ow}))}
+\ifelse{html}{\out{10^(1.294 + 0.304 * log<sub>10</sub>(P<sub>ow</sub>)}}{\deqn{MA = 10^(1.294 + 0.304 * log_{10}(P_{ow}))}}
 }
 \references{
 Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 

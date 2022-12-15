@@ -331,8 +331,7 @@ parameterize_pbtk <- function(
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept,
-    suppress.messages=suppress.messages)) # fraction 
+    pKa_Accept=pKa_Accept)) # fraction 
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
