@@ -1,12 +1,12 @@
 #' Calculate the correction for lipid binding in plasma binding assay
-
+#' 
 #' Pearce et al. (2017) compared predicted and observed partition coefficients
 #' for a range of compounds. Based on observed discrepancies they 
 #' argued that there should be greater lipid binding in plasma (in vivo) 
 #' for some lipophilic un-ionized compounds than is observed in vitro.
 #' Following Schmitt (2008), the lipid binding in tissue is assumed to follow
 #' the distribution coefficient 
-#' \deqn{D = K_{nL} = P_{ow}(F_{neutral} + \alpha*F_{charged})}
+#' \deqn{D = K_{nL} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}
 #' and the fractional volume of lipid in
 #' plasma. The error in \eqn{K_{tissue:plasma}} prediction for these compounds
 #' has been hypothesized to be lower due to insufficient lipid
@@ -18,7 +18,7 @@
 #' partition coefficient (\eqn{1/f_{up}}) to account for neutral lipid
 #' binding in plasma, assuming that some lipid is absent from
 #' the in vitro assay:
-#' \deqn{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}
+#' \deqn{f^{corrected}_{up} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either

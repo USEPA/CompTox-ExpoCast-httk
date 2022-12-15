@@ -13,6 +13,7 @@ get_cheminfo(
   median.only = FALSE,
   fup.ci.cutoff = TRUE,
   clint.pvalue.threshold = 0.05,
+  class.exclude = TRUE,
   suppress.messages = FALSE
 )
 }
@@ -47,7 +48,11 @@ This value should be between (0,1). Default is `NULL` specifying no filtering.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
-\item{suppress.messages}{Whether or not the output messages are suppressed.}
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{suppress.messages}{Whether or not the output messages are suppressed 
+(default FALSE).}
 }
 \value{
 \item{vector/data.table}{Table (if info has multiple entries) or 
