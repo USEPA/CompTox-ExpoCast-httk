@@ -291,7 +291,7 @@ invitro_mc <- function(parameters.dt=NULL,
     parameters.dt[, Clint := apply_clint_adjustment(
                                Clint,
                                Fu_hep=Fhep.assay.correction,
-                               suppress.messages=suppress.messages)]
+                               suppress.messages=TRUE)]
   }
   #
   #

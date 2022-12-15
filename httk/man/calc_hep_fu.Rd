@@ -29,7 +29,7 @@ either CAS, name, or DTXSIDs}
 \item{parameters}{Parameters from the appropriate parameterization function
 for the model indicated by argument model}
 
-\item{Vr}{Rratio of cell volume to incubation volume. Default is taken from}
+\item{Vr}{Ratio of cell volume to incubation volume. Default is taken from}
 
 \item{pH}{pH of the incupation medium.}
 }
