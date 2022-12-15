@@ -60,6 +60,10 @@
 #'
 #' @seealso \code{\link{tissue.data}}
 #'
+#' @seealso \code{\link{calc_ma}}
+#'
+#' @seealso \code{\link{adjust_fup}}
+#'
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
@@ -278,17 +282,16 @@ parameterize_schmitt <- function(chem.cas=NULL,
             chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid))) 
+    # If we don't have a measured value for membrane affintity, 
+    # use Yun & Edgington (2013):
+    if (is.na(MA))
+    {
+      MA <- calc_ma( chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid,
+            suppress.messages=suppress.messages)
+    }
   }
-  
-  # If we don't have a measured value for membrane affintity, 
-  # use Yun & Edgington (2013):
-  if (is.na(MA))
-  {
-    if (!suppress.messages) warning(
-      "Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
-    MA <- 
-      10^(1.294 + 0.304 * log10(Pow))
-  }   
   
   if (is.na(Fprotein))
   {

@@ -50,9 +50,8 @@
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
+#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
+#' this value (default is 0.0001).
 #'
 #' @param million.cells.per.gliver Hepatocellularity (defaults to 110 10^6 cells/g-liver, from arlile et al. (1997))
 #'

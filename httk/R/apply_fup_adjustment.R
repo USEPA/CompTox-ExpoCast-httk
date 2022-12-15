@@ -26,14 +26,16 @@
 #' concatenated with commas. Can be "NA" if none exist.
 #'
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
+#' this value (default is 0.0001).
 #'
-#' @return Intrinsic hepatic clearance increased to take into account binding
+#' @return Fraction unbound in plasma adjusted to take into account binding
 #' in the in vitro assay
 #'
 #' @author John Wambaugh
 #'
-#' @references 
-#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
+#' @references Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
 #' correction for unbound fraction in hepatocyte incubations using microsomal 
 #' binding or drug lipophilicity data." Drug Metabolism and Disposition 36.7 
 #' (2008): 1194-1197.
@@ -46,26 +48,29 @@
 #'
 #' @seealso \code{\link{calc_help_fu}}
 #'
-#' @export apply_clint_adjustment
-apply_clint_adjustment <- function(Clint, 
-                         Fu_hep=NULL,
+#' @export apply_fup_adjustment
+apply_fup_adjustment <- function(fup, 
+                         fup.correction=NULL,
                          Pow = NULL, 
                          pKa_Donor=NULL, 
                          pKa_Accept=NULL,
-                         suppress.messages=FALSE)
+                         suppress.messages=FALSE,
+                         minimum.Funbound.plasma=0.0001)
 {
-  if (is.null(Fu_hep))
+  if (is.null(fup.correction))
   {
-    Fu_hep <- calc_hep_fu(parameters=list(parameters=list(Pow = Pow,
+    fup.correction <- calc_fup_correction(parameters=list(Pow = Pow,
                                           pKa_Donor = pKa_Donor,
                                           pKa_Accept = pKa_Accept))
   }
-  Clint <- Clint / Fu_hep
+  fup.corrected <- max(fup * fup.correction,
+                   minimum.Funbound.plasma) # Enforcing a sanity check on 
+                                             # plasma binding
   
   if (!suppress.messages) 
   {
-    warning('Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.')
+    warning('Fup adjusted for in vitro partitioning (Pearce, 2017), see calc_fup_correction.')
   }
   
-  return(set_httk_precision(Clint))
+  return(set_httk_precision(fup.corrected))
 }
