@@ -452,8 +452,13 @@ invitro_mc <- function(parameters.dt=NULL,
                Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
                which(colnames(httk::physiology.data) == 'Human')]
 
-    parameters.dt[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
-      1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
+    if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
+        ("Dow74" %in% names(parameters.dt)))
+    {
+      parameters.dt[, Funbound.plasma.adjustment:=
+        calc_fup_correction(
+          parameters = parameters.dt)]
+    } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
   } else {
     parameters.dt[, Funbound.plasma.adjustment:=1]
   }

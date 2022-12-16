@@ -257,7 +257,6 @@ Set default.to.human to true to substitute human value.")
 
   # Get the Pearce et al. (2017) lipid binding correction:       
   fup.adjustment <- calc_fup_correction(fup.point,
-                                        parameters=parameters,
                                         dtxsid=dtxsid,
                                         chem.name=chem.name,
                                         chem.cas=chem.cas,

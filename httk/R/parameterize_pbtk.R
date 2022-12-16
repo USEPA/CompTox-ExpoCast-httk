@@ -254,7 +254,7 @@ parameterize_pbtk <- function(
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
        
   fup <- schmitt.params$Funbound.plasma
-
+  
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
