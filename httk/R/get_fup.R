@@ -110,11 +110,12 @@ get_fup <- function(chem.cas=NULL,
     fup.dist <- NA 
   }
   
-# If species-specific fup is 0 try the human value:  
+  # "0" is a special value that indicates a below limit of detection measurment
+  # If species-specific fup is 0 try the human value:  
   if (fup.point == 0 & tolower(species)!="human" & default.to.human) 
   {
     if (!suppress.messages) 
-      warning(paste("Fraction unbound of zero for ",species,"replaced with human value."))
+      warning(paste("Fraction unbound below limit of detection for",species,"replaced with human value."))
      fup.db <- try(
                 get_invitroPK_param(
                   "Funbound.plasma",
@@ -136,15 +137,16 @@ get_fup <- function(chem.cas=NULL,
     }
   }
 
-# We need a non-zero fup to make predictions:
-  if (fup.point == 0 & !suppress.messages)
+  # Check if still 0:
+  if (fup.point == 0)
   {
-    if (tolower(species)!="human" & !default.to.human) 
-    {
-      warning("Fraction unbound = 0, cannot predict tissue partitioning (try default.to.human=TRUE?).")
-    } else warning("Fraction unbound = 0, cannot predict tissue partitioning.")
+    if (!suppress.messages) 
+      warning("Fraction unbound below limit of detection.")
+  } else if (fup.point < minimum.Funbound.plasma) { 
+   # Restrict the value of fup:
+   fup.point <- minimum.Funbound.plasma
   }
   
-  return(list(Funbound.plasma.point = fup.point,
-              Funbound.plasma.dist = fup.dist))
+  return(list(Funbound.plasma.point = set_httk_precision(fup.point),
+              Funbound.plasma.dist = set_httk_precision(fup.dist)))
 }

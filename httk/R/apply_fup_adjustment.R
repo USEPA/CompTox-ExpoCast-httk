@@ -64,7 +64,7 @@ apply_fup_adjustment <- function(fup,
   
   if (!suppress.messages) 
   {
-    warning('Fup adjusted for in vitro partitioning (Pearce, 2017), see calc_fup_correction.')
+    warning('Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.')
   }
   
   return(set_httk_precision(fup.corrected))
