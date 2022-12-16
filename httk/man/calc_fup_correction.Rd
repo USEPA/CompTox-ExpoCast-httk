@@ -5,15 +5,23 @@
 \title{Calculate the correction for lipid binding in plasma binding assay}
 \usage{
 calc_fup_correction(
+  fup = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
   Flipid = NULL,
-  plasma.pH = 7.4
+  plasma.pH = 7.4,
+  species = "Human",
+  default.to.human = FALSE,
+  force.human.fup = FALSE,
+  suppress.messages = FALSE
 )
 }
 \arguments{
+\item{fup}{Fraction unbound in plasma, if provided this argument overides
+values from argument parameters and \code{\link{chem.phys_and_invitro.data}}}
+
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
 parameters is not specified then the chemical must be identified by either
 CAS, name, or DTXISD}
@@ -32,6 +40,17 @@ for the model indicated by argument model}
 \item{Flipid}{The fractional volume of lipid in plasma (from \code{\link{physiology.data}})}
 
 \item{plasma.pH}{pH of plasma (default 7.4)}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
+\item{default.to.human}{Substitutes missing fraction of unbound plasma with
+human values if true.}
+
+\item{force.human.fup}{Returns human fraction of unbound plasma in
+calculation for rats if true.
+When species is specified as rabbit, dog, or mouse, the human unbound
+fraction is substituted.}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
