@@ -44,7 +44,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{calc_help_fu}}
+#' @seealso \code{\link{calc_hep_fu}}
 #'
 #' @export apply_clint_adjustment
 apply_clint_adjustment <- function(Clint, 

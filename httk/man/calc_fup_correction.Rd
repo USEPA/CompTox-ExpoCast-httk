@@ -29,51 +29,72 @@ either CAS, name, or DTXSIDs}
 \item{parameters}{Parameters from the appropriate parameterization function
 for the model indicated by argument model}
 
-\item{Vr}{Rratio of cell volume to incubation volume. Default is taken from}
+\item{Flipid}{The fractional volume of lipid in plasma (from \code{\link{physiology.data}})}
 
-\item{pH}{pH of the incupation medium.}
+\item{plasma.pH}{pH of plasma (default 7.4)}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
 }
 \description{
-Pearce et al. (2017) compared predicted and observed partition coefficients
-for a range of compounds. Based on observed discrepancies they 
-argued that there should be greater lipid binding in plasma (in vivo) 
-for some lipophilic un-ionized compounds than is observed in vitro.
-Following Schmitt (2008), the lipid binding in tissue is assumed to follow
-the distribution coefficient 
-\deqn{D = K_{nL} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}
+Poulin and Haddad (2012) observed "...that for
+a highly lipophilic compound, the calculated 
+\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}} is by
+far [less than] the experimental values observed under
+in vitro conditions." Pearce et al. (2017) hypothesized that there was additional lipid
+binding in vivo that acted as a sink for lipophilic compounds, reducing the
+effective \ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}} in vivo. It is 
+possible that this is due to the binding of lipophilic compounds on the non
+plasma-side of the rapid equilibrium dialysis plates (Waters et al., 2008).
+ Pearce et al. (2017) compared predicted and observed 
+ tissue partition coefficients
+for a range of compounds. They showed that predictions were improved by 
+adding additional binding proportional to the distribution coefficient 
+\ifelse{html}{\out{D<sub>ow</sub>}}{\eqn{D_{ow}}} 
+(\code{\link{calc_dow}})
 and the fractional volume of lipid in
-plasma. The error in \eqn{K_{tissue:plasma}} prediction for these compounds
-has been hypothesized to be lower due to insufficient lipid
-binding in the in vitro protein binding assay (Poulin and Haddad (2012)).
-This deficiency in the assay leads to a much higher
-unbound concentration relative to the bound concentration
-for lipophilic compounds and thus an overestimation of \eqn{f_up}
-and \eqn{K_{tissue:plasma}}. To adjust for this we recalculated the plasma:water
-partition coefficient (\eqn{1/f_{up}}) to account for neutral lipid
-binding in plasma, assuming that some lipid is absent from
-the in vitro assay:
-\deqn{f^{corrected}_{up} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}
+plasma (\ifelse{html}{\out{F<sub>lipid</sub>}}{\eqn{F_{lipid}}}). 
+We calculate
+\ifelse{html}{\out{F<sub>lipid</sub>}}{\eqn{F_{lipid}}} as the     
+sum of the physiological plasma neutral lipid fractional volume and 30 percent of 
+the plasma neutral phospholipid fractional volume. We use values
+from Peyret et al. (2010) for rats and Poulin and Haddad (2012)
+for humans. The estimate of 30 percent of the
+neutral phospholipid volume as neutral lipid was used for simplictity's sake in
+place of our membrane affinity predictor. To account for additional binding to lipid, 
+plasma to water partitioning
+(\ifelse{html}{\out{K<sub>plasma:water</sub> = 1/f<sub>up</sub>}}{\eqn{K_{plasma:water} = \frac{1}{f_{up}}}})
+is increased as such:
+\ifelse{html}{\out{K<sup>corrected</sup><sub>plasma:water</sub> = 1/f<sup>corrected</sup><sub>up</sub> = 1/f<sup>in vitro</sup><sub>up</sub> + D<sub>ow</sub>*F<sub>lipid</sub>}}{\deqn{f^{corrected}_{up} = \frac{1}{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}}
 }
 \references{
 Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
 predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 and pharmacodynamics 44.6 (2017): 549-565.
 
+Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
+for predicting partition coefficients for PBPK modeling of drugs and 
+environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
+197-207.
+
 Poulin, Patrick, and Sami Haddad. "Advancing prediction of tissue 
 distribution and volume of distribution of highly lipophilic compounds from 
 a simplified tissue-composition-based model as a mechanistic animal 
 alternative method." Journal of pharmaceutical sciences 101.6 (2012): 
 2250-2261.
-
+       
 Schmitt, Walter. "General approach for the calculation of 
 tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 457-467.
+
+Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis 
+approach for the measurement of plasma protein binding." Journal of 
+pharmaceutical sciences 97.10 (2008): 4586-4595.
 }
 \seealso{
 \code{\link{adjust_fup}}
+
+\code{\link{calc_dow}}
 }
 \author{
 John Wambaugh
