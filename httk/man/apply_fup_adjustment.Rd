@@ -2,7 +2,7 @@
 % Please edit documentation in R/apply_fup_adjustment.R
 \name{apply_fup_adjustment}
 \alias{apply_fup_adjustment}
-\title{Correct the measured intrinsive hepatic clearance for fraction free}
+\title{Correct the measured fraction unbound in plasma for lipid binding}
 \usage{
 apply_fup_adjustment(
   fup,
@@ -15,6 +15,11 @@ apply_fup_adjustment(
 )
 }
 \arguments{
+\item{fup}{In vitro measured fraction unbound in plasma
+
+#param fup.correction Estimated correction to account for additional lipid
+binding in vivo (Pearce et al., 2017) from \code{\link{calc_fup_correction}}}
+
 \item{Pow}{The octanal:water equilibrium partition coefficient}
 
 \item{pKa_Donor}{A string containing hydrogen donor ionization equilibria, 
@@ -25,30 +30,19 @@ concatenated with commas. Can be "NA" if none exist.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{minimum.Funbound.plasma}{\eqn{f_{up}} is not allowed to drop below
-this value (default is 0.0001).}
-
-\item{Clint}{In vitro measured intrinsic hepatic clearance in units of
-(ul/min/million hepatocytes).
-
-#param Fu_hep Estimated fraction of chemical free for metabolism in the 
-in vitro assay, estimated by default from the method of Kilford et al. (2008)
-using \code{\link{calc_hep_fu}}}
+\item{minimum.Funbound.plasma}{\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}
+is not allowed to drop below this value (default is 0.0001).}
 }
 \value{
 Fraction unbound in plasma adjusted to take into account binding
 in the in vitro assay
 }
 \description{
-This function uses the free fraction estimated from Kilford et al. (2008) 
-to increase the in vitro measure intrinsic hepatic clearance. The assumption
-that chemical that is bound in vitro is not available to be metabolized and
-therefore the actual rate of clearance is actually faster. Note that in most
-high throughput TK models included in the package this increase is offset by
-the assumption of "restrictive clearance" -- that is, the rate of hepatic
-metabolism is slowed to account for the free fraction of chemical in plasma.
-This adjustment was made starting in Wetmore et al. (2015) in order to better
-predict plasma concentrations.
+This function uses the lipid binding correction estimated by Pearce
+et al. (2017) to decrease the fraction unbound in plasma
+(\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}). This correction
+assumes that there is additional in vivo binding to lipid, which
+has a greater impact on neutral lipophilic compounds.
 }
 \references{
 Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
@@ -61,7 +55,7 @@ predictions with dosimetry-adjusted in vitro bioactivity to inform chemical
 toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
 }
 \seealso{
-\code{\link{calc_help_fu}}
+\code{\link{calc_fup_correction}}
 }
 \author{
 John Wambaugh

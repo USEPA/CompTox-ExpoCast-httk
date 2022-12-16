@@ -3,9 +3,12 @@
 #' This function estimates the ratio of the equilibrium concentrations of
 #' a compound in octanol and water, taking into account the charge of the
 #' compound. Given the pH, we assume the neutral (uncharged) fraction of
-#' compound partitions according to the hydrophobicity (Pow). We assume that
+#' compound partitions according to the hydrophobicity 
+#' (\ifelse{html}{\out{P<sub>ow</sub>}}{\eqn{P_{ow}}}). We assume that
 #' only a fraction alpha (defaults to 0.001 -- Schmitt (2008)) of the charged
-#' compound partitions into lipid (octanol). Fractions charged are calculated
+#' compound partitions into lipid (octanol):
+#' \ifelse{html}{\out{D<sub>ow</sub> = P<sub>ow</sub>*(F<sub>neutral</sub> + alpha*F<sub>charged</sub>)}}{\deqn{D_{ow} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}}
+#' Fractions charged are calculated
 #' according to hydrogen ionization equilibria (pKa_Donor, pKa_Accept) using
 #' \code{\link{calc_ionization}}.
 #' 
@@ -125,7 +128,8 @@ calc_dow <- function(Pow=NULL,
     fraction_charged  <- ionization[["fraction_charged"]]
   }
   
-# Calculate Dow:
+# Calculate Dow (this form captures fraction neutral and zwitterions, that is
+# 1 - fraction_charged = fraction_neutral + fraction_zwitter):
   Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
   
   return(Dow)

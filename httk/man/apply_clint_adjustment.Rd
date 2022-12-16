@@ -57,7 +57,7 @@ predictions with dosimetry-adjusted in vitro bioactivity to inform chemical
 toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
 }
 \seealso{
-\code{\link{calc_help_fu}}
+\code{\link{calc_hep_fu}}
 }
 \author{
 John Wambaugh

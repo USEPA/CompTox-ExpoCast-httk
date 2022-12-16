@@ -1,24 +1,37 @@
 #' Calculate the correction for lipid binding in plasma binding assay
 #' 
-#' Pearce et al. (2017) compared predicted and observed partition coefficients
-#' for a range of compounds. Based on observed discrepancies they 
-#' argued that there should be greater lipid binding in plasma (in vivo) 
-#' for some lipophilic un-ionized compounds than is observed in vitro.
-#' Following Schmitt (2008), the lipid binding in tissue is assumed to follow
-#' the distribution coefficient 
-#' \deqn{D = K_{nL} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}
+#' Poulin and Haddad (2012) observed "...that for
+#' a highly lipophilic compound, the calculated 
+#' \ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}} is by
+#' far [less than] the experimental values observed under
+#' in vitro conditions." Pearce et al. (2017) hypothesized that there was additional lipid
+#' binding in vivo that acted as a sink for lipophilic compounds, reducing the
+#' effective \ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}} in vivo. It is 
+#' possible that this is due to the binding of lipophilic compounds on the non
+#' plasma-side of the rapid equilibrium dialysis plates (Waters et al., 2008).
+#'  Pearce et al. (2017) compared predicted and observed 
+#'  tissue partition coefficients
+#' for a range of compounds. They showed that predictions were improved by 
+#' adding additional binding proportional to the distribution coefficient 
+#' \ifelse{html}{\out{D<sub>ow</sub>}}{\eqn{D_{ow}}} 
+#' (\code{\link{calc_dow}})
 #' and the fractional volume of lipid in
-#' plasma. The error in \eqn{K_{tissue:plasma}} prediction for these compounds
-#' has been hypothesized to be lower due to insufficient lipid
-#' binding in the in vitro protein binding assay (Poulin and Haddad (2012)).
-#' This deficiency in the assay leads to a much higher
-#' unbound concentration relative to the bound concentration
-#' for lipophilic compounds and thus an overestimation of \eqn{f_up}
-#' and \eqn{K_{tissue:plasma}}. To adjust for this we recalculated the plasma:water
-#' partition coefficient (\eqn{1/f_{up}}) to account for neutral lipid
-#' binding in plasma, assuming that some lipid is absent from
-#' the in vitro assay:
-#' \deqn{f^{corrected}_{up} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}
+#' plasma (\ifelse{html}{\out{F<sub>lipid</sub>}}{\eqn{F_{lipid}}}). 
+#' We calculate
+#' \ifelse{html}{\out{F<sub>lipid</sub>}}{\eqn{F_{lipid}}} as the     
+#' sum of the physiological plasma neutral lipid fractional volume and 30 percent of 
+#' the plasma neutral phospholipid fractional volume. We use values
+#' from Peyret et al. (2010) for rats and Poulin and Haddad (2012)
+#' for humans. The estimate of 30 percent of the
+#' neutral phospholipid volume as neutral lipid was used for simplictity's sake in
+#' place of our membrane affinity predictor. To account for additional binding to lipid, 
+#' plasma to water partitioning
+#' (\ifelse{html}{\out{K<sub>plasma:water</sub> = 1/f<sub>up</sub>}}{\eqn{K_{plasma:water} = \frac{1}{f_{up}}}})
+#' is increased as such:
+#' \ifelse{html}{\out{K<sup>corrected</sup><sub>plasma:water</sub> = 1/f<sup>corrected</sup><sub>up</sub> = 1/f<sup>in vitro</sup><sub>up</sub> + D<sub>ow</sub>*F<sub>lipid</sub>}}{\deqn{f^{corrected}_{up} = \frac{1}{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}}
+#' 
+#' @param fup Fraction unbound in plasma, if provided this argument overides
+#' values from argument parameters and \code{\link{chem.phys_and_invitro.data}} 
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -35,11 +48,21 @@
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
 #' 
-#' @param Vr Rratio of cell volume to incubation volume. Default is taken from 
-#  Wetmore et al. (2015)
+#' @param Flipid The fractional volume of lipid in plasma (from \code{\link{physiology.data}})
 #' 
-#' @param pH pH of the incupation medium.
+#' @param plasma.pH pH of plasma (default 7.4)
 #'
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' 
+#' @param default.to.human Substitutes missing fraction of unbound plasma with
+#' human values if true.
+#' 
+#' @param force.human.fup Returns human fraction of unbound plasma in
+#' calculation for rats if true.
+#' When species is specified as rabbit, dog, or mouse, the human unbound
+#' fraction is substituted.
+#' 
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'
 #' @author John Wambaugh 
@@ -49,29 +72,45 @@
 #' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 #' and pharmacodynamics 44.6 (2017): 549-565.
 #' 
+#' Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
+#' for predicting partition coefficients for PBPK modeling of drugs and 
+#' environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
+#' 197-207.
+#' 
 #' Poulin, Patrick, and Sami Haddad. "Advancing prediction of tissue 
 #' distribution and volume of distribution of highly lipophilic compounds from 
 #' a simplified tissue-composition-based model as a mechanistic animal 
 #' alternative method." Journal of pharmaceutical sciences 101.6 (2012): 
 #' 2250-2261.
-#'
+#'        
 #' Schmitt, Walter. "General approach for the calculation of 
 #' tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
 #' 457-467.
+#' 
+#' Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis 
+#' approach for the measurement of plasma protein binding." Journal of 
+#' pharmaceutical sciences 97.10 (2008): 4586-4595.
 #'
 #' @keywords in-vitro
 #'
 #' @seealso \code{\link{adjust_fup}}
 #'
+#' @seealso \code{\link{calc_dow}}
+#'
 #' @export calc_fup_correction
 #'
 calc_fup_correction <- function(
+                 fup=NULL,
                  chem.cas=NULL,
                  chem.name=NULL,
                  dtxsid = NULL,
                  parameters=NULL,
                  Flipid = NULL,
-                 plasma.pH = 7.4
+                 plasma.pH = 7.4,                          
+                 species="Human",
+                 default.to.human=FALSE,
+                 force.human.fup=FALSE,
+                 suppress.messages=FALSE
                  ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -83,50 +122,80 @@ calc_fup_correction <- function(
 
   if (is.null(parameters))
   {
-    parameters <- parameterize_pbtk(
-                    chem.cas=chem.cas,
-                    chem.name=chem.name,
-                    dtxsid=dtxsid)
+    # Look up the chemical name/CAS, depending on what was provided:
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
+      out <- get_chem_id(
+              chem.cas=chem.cas,
+              chem.name=chem.name,
+              dtxsid=dtxsid)
+      chem.cas <- out$chem.cas
+      chem.name <- out$chem.name                                
+      dtxsid <- out$dtxsid
+    }
+    # acid dissociation constants
+    pKa_Donor <- suppressWarnings(get_physchem_param(
+      "pKa_Donor",
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas)) 
+    # basic association cosntants
+    pKa_Accept <- suppressWarnings(get_physchem_param(
+      "pKa_Accept",
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas)) 
+    # Octanol:water partition coefficient
+    Pow <- 10^get_physchem_param(
+      "logP",
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas)
+    # Fraction unbound in plasma measured in vitro:
+    if (is.null(fup)) fup <- get_fup(
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas,
+      species=species,
+      default.to.human=default.to.human,
+      force.human.fup=force.human.fup,
+      suppress.messages=suppress.messages)$Funbound.plasma.point 
+  } else {
+    if (!all(c("Funbound.plasma","Pow","pKa_Donor","pKa_Accept") 
+      %in% names(parameters))) 
+      stop("Missing parameters needed in calc_fup_correction.")            
+
+    if (is.null(fup)) fup <- parameters$Funbound.plasma
+    Pow <- parameters$Pow
+    pKa_Donor <- parameters$pKa_Donor
+    pKa_Accept <- parameters$pKa_Accept
   }
   
-  if (!all(c("Pow","pKa_Donor","pKa_Accept") 
-    %in% names(parameters))) 
-    stop("Missing parameters needed in calc_hep_fu.")            
-                 
-  Pow <- parameters$Pow
-  pKa_Donor <- parameters$pKa_Donor
-  pKa_Accept <- parameters$pKa_Accept
-  if (!is_base(pH=pH, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept))
-  {
-    logPD <- log10(calc_dow(
-               Pow, 
-               pH=pH,
-               pKa_Donor=pKa_Donor,
-               pKa_Accept=pKa_Accept)) 
-  } else logPD <- log10(Pow)
-  
-# Calculate Pearce (2017) in vitro plasma binding correction:
-  if (force.human.fup) 
-    Flipid <- subset(
-                physiology.data,
-                Parameter == 'Plasma Effective Neutral Lipid Volume Fraction')[,
-                  which(colnames(physiology.data) == 'Human')]
-  else Flipid <- subset(
-                   physiology.data,
-                   Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-                     which(tolower(colnames(physiology.data)) == tolower(species))]
+  # Grab the fraction of in vivo plasma that is lipid:
   if (!is.null(parameters))
     if ("Flipid" %in% names(parameters))
       Flipid <- parameters$Flipid
+
+  if (is.null(Flipid))
+  {
+    if (force.human.fup) 
+      Flipid <- subset(
+                  physiology.data,
+                  Parameter == 'Plasma Effective Neutral Lipid Volume Fraction')[,
+                    which(colnames(physiology.data) == 'Human')]
+    else Flipid <- subset(
+                     physiology.data,
+                     Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+                       which(tolower(colnames(physiology.data)) == tolower(species))]
+  }
         
-  
-  ion <- calc_ionization(
-           pH=plasma.pH,
-           pKa_Donor=pKa_Donor,
-           pKa_Accept=pKa_Accept)
-  dow <- Pow * (ion$fraction_neutral + 
-                alpha * ion$fraction_charged + 
-                ion$fraction_zwitter)
+ # Calculate Pearce (2017) in vitro plasma binding correction: 
+  dow <- calc_dow(Pow=Pow,
+                  pH=plasma.pH,
+                  pKa_Donor=pKa_Donor,
+                  pKa_Accept=pKa_Accept
+                  ) 
+ 
   fup.corrected <- 1 / ((dow) * Flipid + 1 / fup)
   fup.correction <- fup.corrected/fup
   

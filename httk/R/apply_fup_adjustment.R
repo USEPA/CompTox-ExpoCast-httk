@@ -1,21 +1,15 @@
-#' Correct the measured intrinsive hepatic clearance for fraction free
+#' Correct the measured fraction unbound in plasma for lipid binding
 #'
-#' This function uses the free fraction estimated from Kilford et al. (2008) 
-#' to increase the in vitro measure intrinsic hepatic clearance. The assumption
-#' that chemical that is bound in vitro is not available to be metabolized and
-#' therefore the actual rate of clearance is actually faster. Note that in most
-#' high throughput TK models included in the package this increase is offset by
-#' the assumption of "restrictive clearance" -- that is, the rate of hepatic
-#' metabolism is slowed to account for the free fraction of chemical in plasma.
-#' This adjustment was made starting in Wetmore et al. (2015) in order to better
-#' predict plasma concentrations.
+#' This function uses the lipid binding correction estimated by Pearce
+#' et al. (2017) to decrease the fraction unbound in plasma
+#' (\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}). This correction
+#' assumes that there is additional in vivo binding to lipid, which
+#' has a greater impact on neutral lipophilic compounds. 
 #'
-#' @param Clint In vitro measured intrinsic hepatic clearance in units of
-#' (ul/min/million hepatocytes).
+#' @param fup In vitro measured fraction unbound in plasma
 #'
-#' #param Fu_hep Estimated fraction of chemical free for metabolism in the 
-#' in vitro assay, estimated by default from the method of Kilford et al. (2008)
-#' using \code{\link{calc_hep_fu}}
+#' #param fup.correction Estimated correction to account for additional lipid
+#' binding in vivo (Pearce et al., 2017) from \code{\link{calc_fup_correction}}
 #'
 #' @param Pow The octanal:water equilibrium partition coefficient
 #'
@@ -27,8 +21,8 @@
 #'
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
-#' this value (default is 0.0001).
+#' @param minimum.Funbound.plasma \ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}
+#' is not allowed to drop below this value (default is 0.0001).
 #'
 #' @return Fraction unbound in plasma adjusted to take into account binding
 #' in the in vitro assay
@@ -46,7 +40,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{calc_help_fu}}
+#' @seealso \code{\link{calc_fup_correction}}
 #'
 #' @export apply_fup_adjustment
 apply_fup_adjustment <- function(fup, 
@@ -64,7 +58,8 @@ apply_fup_adjustment <- function(fup,
                                           pKa_Accept = pKa_Accept))
   }
   fup.corrected <- max(fup * fup.correction,
-                   minimum.Funbound.plasma) # Enforcing a sanity check on 
+                   minimum.Funbound.plasma,
+                   na.rm = TRUE) # Enforcing a sanity check on 
                                              # plasma binding
   
   if (!suppress.messages) 

@@ -162,9 +162,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
     }
     if ("Funbound.plasma" %in% names(parameters))
     {
-      fup <- parameters$Funbound.plasma
+      fup.point <- parameters$Funbound.plasma
     } else {
-      fup <- NA
+      fup.point <- NA
     }
     if ("Pow" %in% names(parameters))
     {
@@ -212,7 +212,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
 # (Note that "NA" is an acceptable value for pKa's, so use -999)
   } else {
     fup.db <- NA
-    fup <- NA
+    fup.point <- NA
     Pow <- NA
     pKa_Donor <- -999
     pKa_Accept <- -999
@@ -222,36 +222,6 @@ parameterize_schmitt <- function(chem.cas=NULL,
     alpha <- NA
   }
     
-  if (is.na(fup.db))
-  {
-    # unitless fraction of chemical unbound with plasma
-    fup.db <- try(
-      get_invitroPK_param(
-        "Funbound.plasma",
-        species,
-        chem.cas=chem.cas,
-        chem.name=chem.name,
-        dtxsid=dtxsid),
-      silent=TRUE)
-    if ((is(fup.db,"try-error") & default.to.human) || force.human.fup) 
-    {
-      fup.db <- try(
-        get_invitroPK_param(
-          "Funbound.plasma",
-          "Human",
-          chem.cas=chem.cas,
-          chem.name=chem.name,
-          dtxsid=dtxsid),
-        silent=TRUE)
-      if (!suppress.messages) 
-        warning(paste(species,"coerced to Human for protein binding data."))
-    }
-    # If we couldn't retrieve fup.db and fup wasn't provided as a parameter:
-    if (is(fup.db,"try-error") & is.na(fup)) 
-      stop("Missing protein binding data for given species. Set default.to.human to true to substitute human value.")
-    if (is(fup.db,"try-error")) fup.db <- fup
-  }
-  
   if (is.na(Pow))
   {
     Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
@@ -305,83 +275,48 @@ parameterize_schmitt <- function(chem.cas=NULL,
 
   if (is.na(alpha)) alpha <- 0.001
 
-# Check if fup is a point value or a distribution, if a distribution, use the median:
-  if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
+  # Get the central tendency (point estimate) and potentially the distribution
+  # quantiles for the fraction unbound in plasma (fup):
+  if (is.na(fup.point))
   {
-    fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
-    fup.dist <- fup.db
-    if (!suppress.messages) 
-      warning("Fraction unbound is provided as a distribution.")
+    fup.list <- get_fup(
+        dtxsid=dtxsid,
+        chem.name=chem.name,
+        chem.cas=chem.cas,
+        species=species,
+        default.to.human=default.to.human,
+        force.human.fup=force.human.fup,
+        suppress.messages=suppress.messages) 
+    fup.point <- fup.list$Funbound.plasma.point
+    fup.dist <- fup.list$Funbound.plasma.dist 
+  }
+ 
+  # Get the Pearce et al. (2017) lipid binding correction:       
+  fup.adjustment <- calc_fup_correction(fup.point,
+                                        dtxsid=dtxsid,
+                                        chem.name=chem.name,
+                                        chem.cas=chem.cas,
+                                        default.to.human=default.to.human,
+                                        force.human.fup=force.human.fup,
+                                        suppress.messages=suppress.messages)
+
+  # Apply the correction if requested:
+  if (adjusted.Funbound.plasma)
+  { 
+    fup.corrected <- apply_fup_adjustment(
+                       fup.point,
+                       fup.correction=fup.adjustment,
+                       suppress.messages=suppress.messages,
+                       minimum.Funbound.plasma=minimum.Funbound.plasma
+                       )
   } else {
-    fup.point <- fup.db
-    fup.dist <- NA 
-  }
-  
-# If species-specific fup is 0 try the human value:  
-  if (fup.point == 0 & tolower(species)!="human" & default.to.human) 
-  {
-    if (!suppress.messages) 
-      warning(paste("Fraction unbound of zero for ",species,"replaced with human value."))
-     fup.db <- try(
-                get_invitroPK_param(
-                  "Funbound.plasma",
-                  "Human",
-                  chem.cas=chem.cas,
-                  chem.name=chem.name,
-                  dtxsid=dtxsid),
-                silent=TRUE)
-  # Check if fup is a point value or a distribution, if a distribution, use the median:
-    if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
-    {
-      fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
-      fup.dist <- fup.db
-      if (!suppress.messages) 
-        warning("Fraction unbound is provided as a distribution.")
-    } else {
-      fup.point <- fup.db
-      fup.dist <- NA 
-    }
-  }
-
-# We need a non-zero fup to make predictions:
-  if (fup.point == 0 & !suppress.messages)
-  {
-    if (tolower(species)!="human" & !default.to.human) 
-    {
-      warning("Fraction unbound = 0, cannot predict tissue partitioning (try default.to.human=TRUE?).")
-    } else warning("Fraction unbound = 0, cannot predict tissue partitioning.")
-  }
-  
-# Calculate Pearce (2017) in vitro plasma binding correction:
-  if (force.human.fup) 
-    Flipid <- subset(
-                physiology.data,
-                Parameter == 'Plasma Effective Neutral Lipid Volume Fraction')[,
-                  which(colnames(physiology.data) == 'Human')]
-  else Flipid <- subset(
-                   physiology.data,
-                   Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-                     which(tolower(colnames(physiology.data)) == tolower(species))]
-  if (!is.null(parameters))
-    if ("Flipid" %in% names(parameters))
-      Flipid <- parameters$Flipid
-
-  ion <- calc_ionization(
-           pH=plasma.pH,
-           pKa_Donor=pKa_Donor,
-           pKa_Accept=pKa_Accept)
-  dow <- Pow * (ion$fraction_neutral + 
-                alpha * ion$fraction_charged + 
-                ion$fraction_zwitter)
-  fup.corrected <- max(
-                     1 / ((dow) * Flipid + 1 / fup.point),
-                     minimum.Funbound.plasma) # Enforcing a sanity check on 
-                                               # plasma binding
-  
+    fup.corrected <- fup.point
+  } 
+   
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
                   Funbound.plasma.dist=fup.dist,
-                  Funbound.plasma.adjustment=fup.corrected/fup.point,
+                  Funbound.plasma.adjustment=fup.adjustment,
                   Pow=Pow,
                   pKa_Donor=pKa_Donor,
                   pKa_Accept=pKa_Accept,
