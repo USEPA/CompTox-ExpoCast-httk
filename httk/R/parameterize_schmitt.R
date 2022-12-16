@@ -291,6 +291,14 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.dist <- fup.list$Funbound.plasma.dist 
   }
  
+  if (fup.point == 0)
+    if (tolower(species) == "human" | default.to.human) {
+      stop("Fraction unbound below limit of detection, cannot predict partitioning.")
+    } else {
+      stop("\
+Fraction unbound for species below limit of detection, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
+    }
+ 
   # Get the Pearce et al. (2017) lipid binding correction:       
   fup.adjustment <- calc_fup_correction(fup.point,
                                         parameters=parameters,

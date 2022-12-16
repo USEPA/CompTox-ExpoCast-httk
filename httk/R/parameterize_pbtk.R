@@ -249,9 +249,11 @@ parameterize_pbtk <- function(
                       species=species,
                       default.to.human=default.to.human,
                       force.human.fup=force.human.clint.fup,
-                      suppress.messages=TRUE,
+                      suppress.messages=suppress.messages,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
-
+       
+  fup <- schmitt.params$Funbound.plasma
 
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
@@ -269,24 +271,6 @@ parameterize_pbtk <- function(
     species=species,
     model="pbtk",
     suppress.messages=suppress.messages)
-       
-  if (schmitt.params$unadjusted.Funbound.plasma == 0)
-    if (tolower(species) == "human" | default.to.human) {
-      stop("Fraction unbound = 0, cannot predict partitioning.")
-    } else {
-      stop("Fraction unbound = 0, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
-    }
-  
-  # Check to see if we should use the in vitro fup assay correction:  
-  if (adjusted.Funbound.plasma)
-  {
-    fup <- schmitt.params$Funbound.plasma
-    if (!suppress.messages) warning(
-        'Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
-  } else fup <- schmitt.params$unadjusted.Funbound.plasma
-  
-  # Restrict the value of fup:
-  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param(
                    "Fgutabs",
