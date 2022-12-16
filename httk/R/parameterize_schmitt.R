@@ -156,9 +156,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
   {
     if ("Funbound.plasma.dist" %in% names(parameters))
     {
-      fup.db <- parameters$Funbound.plasma.dist
+      fup.dist <- parameters$Funbound.plasma.dist
     } else {
-      fup.db <- NA
+      fup.dist <- NA
     }
     if ("Funbound.plasma" %in% names(parameters))
     {
@@ -211,8 +211,8 @@ parameterize_schmitt <- function(chem.cas=NULL,
 # If not, mark them incomplete and try to retrieve them.
 # (Note that "NA" is an acceptable value for pKa's, so use -999)
   } else {
-    fup.db <- NA
     fup.point <- NA
+    fup.dist <-NA
     Pow <- NA
     pKa_Donor <- -999
     pKa_Accept <- -999
@@ -293,6 +293,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
  
   # Get the Pearce et al. (2017) lipid binding correction:       
   fup.adjustment <- calc_fup_correction(fup.point,
+                                        parameters=parameters,
                                         dtxsid=dtxsid,
                                         chem.name=chem.name,
                                         chem.cas=chem.cas,

@@ -1,10 +1,10 @@
 #' Retrieve and parse fraction unbound in plasma
 #' 
 #' This function retrieves the chemical- and species-specific fraction
-#' unbound in plasma (\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}) 
+#' unbound in plasma (\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}) 
 #' from \code{\link{chem.phys_and_invitro.data}}. 
-#' If that parameter is described by a distribution (
-#' that is, a median, lower-, and upper-95th percentile separated by commas) this 
+#' If that parameter is described by a distribution (that is, a median, 
+#' lower-, and upper-95th percentile separated by commas) this 
 #' function splits those quantiles into separate values.
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
@@ -35,29 +35,15 @@
 #' @param minimum.Funbound.plasma \ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}
 #' is not allowed to drop below this value (default is 0.0001).
 #' 
-#' @return
-#' \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
-#' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
-#' if below limit of detection)} \item{Pow}{octanol:water partition coefficient
-#' (not log transformed)} \item{pKa_Donor}{compound H dissociation equilibrium
-#' constant(s)} \item{pKa_Accept}{compound H association equilibrium
-#' constant(s)} \item{MA}{phospholipid:water distribution coefficient, membrane
-#' affinity} \item{Fprotein.plasma}{protein fraction in plasma}
-#' \item{plasma.pH}{pH of the plasma}
+#' @return list containing:
+#' \item{Funbound.plasma.point}{Point estimate (central tendency of the Unbound fraction in plasma}
+#' \item{Funbound.plasma.dist}{Quantiles of a distribution (median, lower and upper 95th percentiles) for the unbound fraction}
 #'
-#' @author Robert Pearce and John Wambaugh
+#' @author John Wambaugh
 #'
-#' @keywords Parameter schmitt
+#' @keywords Parameter in-vitro
 #'
-#' @seealso \code{\link{predict_partitioning_schmitt}}
-#'
-#' @seealso \code{\link{tissue.data}}
-#'
-#' @seealso \code{\link{calc_ma}}
-#'
-#' @seealso \code{\link{adjust_fup}}
-#'
-#' @export get_fup
+#' @seealso \code{\link{chem.phys_and_invitro.data}}
 get_fup <- function(chem.cas=NULL,
                     chem.name=NULL,
                     dtxsid = NULL,
