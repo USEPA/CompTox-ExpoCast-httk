@@ -100,13 +100,14 @@
 #' @export calc_fup_correction
 #'
 calc_fup_correction <- function(
-                 fup=NULL,
-                 chem.cas=NULL,
-                 chem.name=NULL,
+                 fup = NULL,
+                 chem.cas = NULL,
+                 chem.name = NULL,
                  dtxsid = NULL,
                  parameters=NULL,
                  Flipid = NULL,
-                 plasma.pH = 7.4,                          
+                 plasma.pH = 7.4,
+                 dow74 = NULL,                          
                  species="Human",
                  default.to.human=FALSE,
                  force.human.fup=FALSE,
@@ -161,14 +162,19 @@ calc_fup_correction <- function(
       force.human.fup=force.human.fup,
       suppress.messages=suppress.messages)$Funbound.plasma.point 
   } else {
-    if (!all(c("Funbound.plasma","Pow","pKa_Donor","pKa_Accept") 
-      %in% names(parameters))) 
-      stop("Missing parameters needed in calc_fup_correction.")            
-
-    if (is.null(fup)) fup <- parameters$Funbound.plasma
-    Pow <- parameters$Pow
-    pKa_Donor <- parameters$pKa_Donor
-    pKa_Accept <- parameters$pKa_Accept
+    if ("Funbound.plasma" %in% names(parameters))
+    {
+      if (is.null(fup)) fup <- parameters$Funbound.plasma 
+    }
+    if (all(c("Pow","pKa_Donor","pKa_Accept") 
+      %in% names(parameters)))
+    {
+      Pow <- parameters$Pow
+      pKa_Donor <- parameters$pKa_Donor
+      pKa_Accept <- parameters$pKa_Accept
+    } else if ("Dow74" %in% names(parameters)) {
+      if (is.null(dow74)) dow74 <- parameters$Dow74
+    } else stop("Missing parameters needed in calc_fup_correction.")  
   }
   
   # Grab the fraction of in vivo plasma that is lipid:
@@ -190,12 +196,15 @@ calc_fup_correction <- function(
   }
         
  # Calculate Pearce (2017) in vitro plasma binding correction: 
-  dow <- calc_dow(Pow=Pow,
+  if (is.null(dow74))
+  {  
+    dow <- calc_dow(Pow=Pow,
                   pH=plasma.pH,
                   pKa_Donor=pKa_Donor,
                   pKa_Accept=pKa_Accept
                   ) 
- 
+  } else dow <- dow74
+  
   fup.corrected <- 1 / ((dow) * Flipid + 1 / fup)
   fup.correction <- fup.corrected/fup
   

@@ -172,7 +172,16 @@ predict_partitioning_schmitt <- function(
   
   if (!adjusted.Funbound.plasma & user.params == FALSE) 
     parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+
+  if (any(parameters$Funbound.plasma == 0))
+    if (tolower(species) == "human" | default.to.human) {
+      stop("Fraction unbound below limit of detection, cannot predict partitioning.")
+    } else {
+      stop("\
+Fraction unbound for species below limit of detection, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
+    }
     
+        
 # If we don't have a measured value, use Yun & Edgington (2013):
   if (any(is.na(parameters$MA)))
   {

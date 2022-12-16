@@ -291,37 +291,34 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.dist <- fup.list$Funbound.plasma.dist 
   }
  
-  if (fup.point == 0)
-    if (tolower(species) == "human" | default.to.human) {
-      stop("Fraction unbound below limit of detection, cannot predict partitioning.")
+  if (fup.point > 0)
+  {     
+    # Get the Pearce et al. (2017) lipid binding correction:       
+    fup.adjustment <- calc_fup_correction(fup.point,
+                                          parameters=parameters,
+                                          dtxsid=dtxsid,
+                                          chem.name=chem.name,
+                                          chem.cas=chem.cas,
+                                          default.to.human=default.to.human,
+                                          force.human.fup=force.human.fup,
+                                          suppress.messages=suppress.messages)
+  
+    # Apply the correction if requested:
+    if (adjusted.Funbound.plasma)
+    { 
+      fup.corrected <- apply_fup_adjustment(
+                         fup.point,
+                         fup.correction=fup.adjustment,
+                         suppress.messages=suppress.messages,
+                         minimum.Funbound.plasma=minimum.Funbound.plasma
+                         )
     } else {
-      stop("\
-Fraction unbound for species below limit of detection, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
-    }
- 
-  # Get the Pearce et al. (2017) lipid binding correction:       
-  fup.adjustment <- calc_fup_correction(fup.point,
-                                        parameters=parameters,
-                                        dtxsid=dtxsid,
-                                        chem.name=chem.name,
-                                        chem.cas=chem.cas,
-                                        default.to.human=default.to.human,
-                                        force.human.fup=force.human.fup,
-                                        suppress.messages=suppress.messages)
-
-  # Apply the correction if requested:
-  if (adjusted.Funbound.plasma)
-  { 
-    fup.corrected <- apply_fup_adjustment(
-                       fup.point,
-                       fup.correction=fup.adjustment,
-                       suppress.messages=suppress.messages,
-                       minimum.Funbound.plasma=minimum.Funbound.plasma
-                       )
+      fup.corrected <- fup.point
+    } 
   } else {
-    fup.corrected <- fup.point
+    fup.adjustment <- NA
+    fup.corrected <- NA
   } 
-   
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
                   Funbound.plasma.dist=fup.dist,
