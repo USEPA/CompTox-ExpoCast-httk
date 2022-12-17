@@ -159,7 +159,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                     dtxsid=dtxsid,
                     suppress.messages=suppress.messages),
                     ...)))
-    parameters <- c(parameters,params[
+    parameters <- c(parameters, parameters[
                       name.list[!(name.list %in% names(parameters))]])
   }
 
