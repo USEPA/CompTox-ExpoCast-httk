@@ -83,6 +83,18 @@ library(httk)
 
 This produces an updated version of the top panel of Figure 3 from the paper 
 [Armitage, 2014](https://doi.org/10.1021/es501955g)
+
+#### eval = FALSE
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = FALSE"
+at the beginning. This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R or pressing "play" (the green arrow) on
+each chunk in RStudio.
+
 ```{r MakeTable, eval = FALSE}
 armitage.dt <- copy(armitage_input)
 armitage.dt[,well_number:=384] %>% 

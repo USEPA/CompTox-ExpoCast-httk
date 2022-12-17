@@ -44,6 +44,17 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+#### eval = FALSE
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = FALSE"
+at the beginning. This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R or pressing "play" (the green arrow) on
+each chunk in RStudio.
 ```{r load_packages, eval = FALSE}
 library("httk")
 library("data.table")
