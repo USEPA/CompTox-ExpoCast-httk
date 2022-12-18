@@ -455,6 +455,8 @@ invitro_mc <- function(parameters.dt=NULL,
     if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
         ("Dow74" %in% names(parameters.dt)))
     {
+      # put the unadjusted fup where calc_fup_correction will look for it:
+      parameters.dt[, Funbound.plasma:=unadjusted.Funbound.plasma]
       parameters.dt[, Funbound.plasma.adjustment:=
         calc_fup_correction(
           parameters = parameters.dt)]
@@ -546,6 +548,10 @@ invitro_mc <- function(parameters.dt=NULL,
   #Enforce a minimum Funbound.plasma :
   parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
+
+# set precision:
+  cols <- colnames(parameters.dt)
+  parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
   
   return(parameters.dt)
 }

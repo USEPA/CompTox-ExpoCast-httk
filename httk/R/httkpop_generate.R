@@ -390,5 +390,10 @@ resampling\" (\"dr\" or \"d\").")
                                         ckd_epi_race_coeff = ckd_epi_race_coeff,
                                         nhanes_mec_svy = nhanes_mec_svy)
   }
+  
+  # set precision:
+  cols <- colnames(indiv_dt)
+  indiv_dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
+  
   return(indiv_dt)
 }
