@@ -449,6 +449,10 @@ Set species=\"Human\" to run httkpop model.')
                        parameters.dt=parameters.dt),
                        propagate.invitrouv.arg.list))
   
+# set precision:
+  cols <- colnames(parameters.dt)
+  parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
+  
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
   return(parameters.dt[,model.list[[model]]$param.names,with=FALSE])

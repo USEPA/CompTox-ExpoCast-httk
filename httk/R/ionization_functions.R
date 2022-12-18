@@ -132,7 +132,7 @@ calc_dow <- function(Pow=NULL,
 # 1 - fraction_charged = fraction_neutral + fraction_zwitter):
   Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
   
-  return(Dow)
+  return(set_httk_precision(Dow))
 }
 
 #' Calculate the ionization.
