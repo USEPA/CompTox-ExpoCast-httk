@@ -2,8 +2,13 @@
 #' 
 #' This function implements the method from Schmitt (2008) for predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
-#' in the \code{\link{tissue.data}} table.
+#' in the \code{\link{tissue.data}} table. The method has been modifed
+#' by Pearce et al. (2017) based on an evalaution using in vivo measured 
+#' partition coefficients.
 #' 
+#' To understand this method, it is 
+#' important to recognize that in  a given media the fraction unbound in that 
+#' media is inverse of the media:water partition coefficient. 
 #' In Schmitt's model, each tissue is composed of cells and
 #' interstitium, with each cell consisting of neutral lipid,
 #' neutral phospholipid, water, protein, and acidic phospholipid.
@@ -25,7 +30,7 @@
 #' between interstitial protein and water.
 #' 
 #' A regression is used to predict membrane affinity when measured values are 
-#' not available.  The
+#' not available (\code{\link{calc_ma}}).  The
 #' regressions for correcting each tissue are performed on tissue plasma
 #' partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
 #' corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
@@ -323,13 +328,18 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
       as.numeric(subset(this.subset,variable=='Fa_PLc')[,'value'])
 		if (is.na(Fa_PL)) Fa_PL <- 0
 		
-		# tissue pH
+		# tissue-specific pH
 		pH <- as.numeric(subset(this.subset,variable=='pH')[,'value'])
 
 		# neutral phospholipid:water partition coefficient:
 	  Kn_PL <- parameters$MA
+
+# Schmitt Schmitt (2008) section 2.5: Partition coefficients for tissue components:
     
-    # Need to calculate the amount of un-ionized parent:
+# First, calc_ionization handles the Hendersen–Hasselbalch relation for 
+# arbitrary pKa's.
+# We need to calculate the distribution of charged and uncharged molecules at
+# the pH of the tissue:
     ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
     fraction_charged <- ionization[["fraction_charged"]]
@@ -337,26 +347,41 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
     fraction_positive <- ionization[["fraction_positive"]]
     fraction_zwitter <- ionization[["fraction_zwitter"]]
 
-		# neutral lipid:water partition coefficient
+# Schmitt (2008) section 2.5.1: neutral lipid:water partition coefficient
+# This is a generalized version of Schmitt (2008) equations 13 and 14:
 		Kn_L <- parameters$Pow * (fraction_neutral + 
       fraction_zwitter + parameters$alpha * fraction_charged)
 
-		# protein:water partition coefficient:
+# Schmitt (2008) section 2.5.3: protein:water partition coefficient 
+# Schmitt (2008) equation 19:
 		KP <- 0.163 + 0.0221*Kn_PL
 		
-		# acidic phospholipid:water partition coefficient:
+# Schmitt (2008) section 2.5.2: acidic phospholipid:water partition coefficient:
+# This is a generalized version of Schmitt (2008) equations 17 and 18:
 		Ka_PL <- Kn_PL * (fraction_neutral + fraction_zwitter + 
       20*fraction_positive + 0.05*fraction_negative)
 
+# Schmitt (2008) section 2.2: Unbound fraction in interstitial space
+# It is important to recognize that in a given media the fraction unbound in
+# that media is one over the media:water partition coefficient.
+# Schmitt (2008) Equation 4: 
   	Kint <- (FWint + FPint/parameters$Fprotein.plasma*
       (1/parameters$Funbound.plasma - FWpl))
 		
+# Schmitt (2008) section 2.3: Unbound fraction in cellular space
+# It is important to recognize that in a given media the fraction unbound in
+# that media is one over the media:water partition coefficient.
+# Schmitt (2008) Equation 7: 
 		Kcell <- (FW + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
-		
+
+# The following is our attempt to calculate the parameter kappa in general. 
+# We run calc_ionization a second time for the plasma pH.
     plasma <- calc_ionization(pH=parameters$plasma.pH,parameters=parameters)
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
+# We then calculate the pH gradient infuence (Schmitt (2008) section 2.4) 
+# as a sort  of generalized version of Schmitt (2008) equations 10 and 11:	
     KAPPAcell2pu <- (fraction_neutral_plasma + 
                      fraction_zwitter_plasma + 
                      parameters$alpha * fraction_charged_plasma) /
