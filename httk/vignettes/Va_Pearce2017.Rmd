@@ -431,7 +431,9 @@ out <- calc_mc_tk(parameters=params,
                   suppress.messages = TRUE,
                   httkpop = FALSE,
                   invitrouv = FALSE,
-                  samples = 50)
+                  samples = 50,
+                  solvemodel.arg.list = list(times = seq(0,1,0.025))
+                  )
 ```
 
 Make a table of concentration vs. time with confidence intervals:
