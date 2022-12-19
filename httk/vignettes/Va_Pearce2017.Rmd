@@ -432,7 +432,7 @@ out <- calc_mc_tk(parameters=params,
                   httkpop = FALSE,
                   invitrouv = FALSE,
                   samples = 50,
-                  solvemodel.arg.list = list(times = seq(0,1,0.025))
+                  solvemodel.arg.list = list(times = seq(0,0.5,0.025))
                   )
 ```
 
