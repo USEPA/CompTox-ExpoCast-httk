@@ -408,8 +408,8 @@ Set species=\"Human\" to run httkpop model.')
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
-                                      hematocrit=parameters.dt$hematocrit,
-                                      Krbc2pu=parameters.dt$Krbc2pu,
+                                      hematocrit=hematocrit,
+                                      Krbc2pu=Krbc2pu,
                                       Funbound.plasma=Funbound.plasma)]
   }
   

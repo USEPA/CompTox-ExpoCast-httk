@@ -153,15 +153,17 @@ for (this.cas in chem.list)
     this.row <- cbind(this.row,
                       as.data.frame(calc_analytic_css(chem.cas = this.cas,
                                                       model = "pbtk",
-                                                      output.units = "mg/L",
+                                                      output.units = "uM",
                                                       suppress.messages=TRUE)))
     this.row <- cbind(this.row,
                       as.data.frame(get_wetmore_css(chem.cas = this.cas,
                                                     which.quantile = 0.50,
+                                                    output.units = "uM",
                                                       suppress.messages=TRUE)))
     this.row <- cbind(this.row,
                       as.data.frame(calc_mc_css(chem.cas = this.cas,
                                                 which.quantile = 0.50,
+                                                output.units = "uM",
                                                       suppress.messages=TRUE)))
     css.table <- rbind(css.table, this.row)
 }
