@@ -106,7 +106,7 @@ calc_rblood2plasma <- function(
                     species=species,
                     suppress.messages=suppress.messages)
   } else if (is.null(parameters))
-  {
+  {                                                                                 
     parameters <- list(
                     hematocrit=hematocrit,
                     Krbc2pu=Krbc2pu,
@@ -152,11 +152,11 @@ calc_rblood2plasma <- function(
   
   if (adjusted.Funbound.plasma) 
   {
-    Rblood2plasma = 1 - 
+    Rblood2plasma <- 1 - 
       hematocrit + 
       hematocrit * parameters$Krbc2pu * parameters$Funbound.plasma
   } else { 
-    Rblood2plasma = 1 - 
+    Rblood2plasma <- 1 - 
       hematocrit + 
       hematocrit * parameters$Krbc2pu * parameters$unadjusted.Funbound.plasma
   }

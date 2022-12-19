@@ -357,9 +357,12 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
-    KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + 
-      parameters$alpha * fraction_charged_plasma)/(fraction_neutral + 
-      fraction_zwitter + parameters$alpha * fraction_charged)
+    KAPPAcell2pu <- (fraction_neutral_plasma + 
+                     fraction_zwitter_plasma + 
+                     parameters$alpha * fraction_charged_plasma) /
+                     (fraction_neutral + 
+                     fraction_zwitter + 
+                     parameters$alpha * fraction_charged)
     
     
     if (this.tissue == 'red blood cells') 

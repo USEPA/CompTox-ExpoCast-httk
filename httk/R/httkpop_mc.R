@@ -72,6 +72,9 @@ httkpop_mc <- function(model,
   if (model.list[[model]]$calc.standard.httkpop2httk)
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
   
+  # set precision:
+  cols <- colnames(physiology.dt)
+  physiology.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
 
   return(physiology.dt)
 }
