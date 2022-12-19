@@ -349,8 +349,9 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
 
 # Schmitt (2008) section 2.5.1: neutral lipid:water partition coefficient
 # This is a generalized version of Schmitt (2008) equations 13 and 14:
-		Kn_L <- parameters$Pow * (fraction_neutral + 
-      fraction_zwitter + parameters$alpha * fraction_charged)
+		Kn_L <- calc_dow(Pow = parameters$Pow,
+                     fraction_charged = fraction_charged,
+                     alpha = parameters$alpha)
 
 # Schmitt (2008) section 2.5.3: protein:water partition coefficient 
 # Schmitt (2008) equation 19:

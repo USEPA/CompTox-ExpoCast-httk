@@ -128,7 +128,10 @@ calc_dow <- function(Pow=NULL,
     fraction_charged  <- ionization[["fraction_charged"]]
   }
   
-# Calculate Dow (this form captures fraction neutral and zwitterions, that is
+# Schmitt (2008) section 2.5.1: neutral lipid:water partition coefficient
+# This is a generalized version of Schmitt (2008) equations 13 and 14 to
+# calculate Dow. 
+# Note that this form captures fraction neutral and zwitterions, that is
 # 1 - fraction_charged = fraction_neutral + fraction_zwitter):
   Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
   
