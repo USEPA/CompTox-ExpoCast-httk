@@ -22,6 +22,7 @@ output: html_document
 * We now export function 'calc_dow' for the distribution coefficient
 * New function 'calc_ma' separates membrane affinity calculation from `parameterize_schmitt`
 * Updated various function documentation
+* Added inline code comments to 'predict_partitioning_schmitt' identifying corresponding equations in Schmitt (2008)
 * Added option class.exclude to 'get_cheminfo' -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 
 # version 2.2.1 (September, 2022)
