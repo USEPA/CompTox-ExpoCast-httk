@@ -42,7 +42,7 @@
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, defaults to mg/kg BW.
-#' @param dose Amount of a single dose, defaults to mg/kg BW. 
+#' @param dose Amount of a single, initial oral dose in mg/kg BW. 
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to

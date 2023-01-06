@@ -552,10 +552,13 @@ specification in compartment_units for model ", model)
   
 ### SIMULATION TIME
 
-# Small time delta for plotting changes:
+  # Save the requested times so that we only return those:
+  requested.times <- times
+
+  # Small time delta for plotting changes:
   SMALL.TIME <- 1e-5  
   
-# We need to let the solver know which time points we want:
+  # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   times <- sort(times)
   start.time <- times[1]
@@ -726,6 +729,9 @@ specification in compartment_units for model ", model)
     forcings = forcings,
     fcontrol = fcontrol,
     ...)
+
+# only give the requested times:
+ if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
 
 # Cannot guarantee arbitrary precision for deSolve:
   out <- set_httk_precision(out)
