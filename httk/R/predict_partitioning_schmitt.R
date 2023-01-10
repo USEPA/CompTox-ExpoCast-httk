@@ -1,6 +1,5 @@
 #' Predict partition coefficients using the method from Schmitt (2008).
-#' 
-#' This function implements the method from Schmitt (2008) for predicting the 
+#'                                                                                                                        #' This function implements the method from Schmitt (2008) for predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
 #' in the \code{\link{tissue.data}} table. The method has been modifed
 #' by Pearce et al. (2017) based on an evalaution using in vivo measured 
@@ -102,7 +101,7 @@
 #' @examples
 #' 
 #' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
-#' 
+#'
 #' @import magrittr
 #'
 #' @export predict_partitioning_schmitt
@@ -335,9 +334,7 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
 	  Kn_PL <- parameters$MA
 
 # Schmitt Schmitt (2008) section 2.5: Partition coefficients for tissue components:
-    
-# First, calc_ionization handles the Hendersen–Hasselbalch relation for 
-# arbitrary pKa's.
+# First, calc_ionization handles the Hendersen-Hasselbalch relation for arbitrary pKa''s.
 # We need to calculate the distribution of charged and uncharged molecules at
 # the pH of the tissue:
     ionization <- calc_ionization(pH=pH,parameters=parameters)

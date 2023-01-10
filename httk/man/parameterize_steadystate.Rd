@@ -36,8 +36,8 @@ default "Human").}
 \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
 having p-values greater than the threshold are set to zero.}
 
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
+\item{default.to.human}{Substitutes missing species-specific values with human values if
+TRUE (default is FALSE).}
 
 \item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}

@@ -61,7 +61,7 @@ will not run for non-human species (default "Human").}
 
 \item{tsteps}{The number time steps per hour. Default of 4.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single, initial oral dose in mg/kg BW.}
 
 \item{dosing.matrix}{A matrix of either one column (or row) with a set of
 dosing times or with two columns (or rows) correspondingly named "dose" and

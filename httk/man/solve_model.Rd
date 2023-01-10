@@ -177,6 +177,12 @@ When species is specified but chemical-specific in vitro data are not
 available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+ 
+For both plotting purposes and helping the numerical equation solver, it is
+helpful to specify that time points shortly before and after dosing are 
+included. This function automatically add these points, and they are returned
+to the user unless the times argument is used, in which case only the time
+points specified by that argument are provided.
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput

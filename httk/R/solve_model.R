@@ -39,6 +39,12 @@
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
+#' For both plotting purposes and helping the numerical equation solver, it is
+#' helpful to specify that time points shortly before and after dosing are 
+#' included. This function automatically add these points, and they are returned
+#' to the user unless the times argument is used, in which case only the time
+#' points specified by that argument are provided.
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -556,7 +562,7 @@ specification in compartment_units for model ", model)
   requested.times <- times
 
   # Small time delta for plotting changes:
-  SMALL.TIME <- 1e-5  
+  SMALL.TIME <- 1e-3  
   
   # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
@@ -677,6 +683,7 @@ specification in compartment_units for model ", model)
     #Update our times vector to include times of provided dosing events, as well as
     #the times of dosing events incremented by SMALL.TIME for visualization.
     times <- sort(unique(c(times,
+      sapply(eventdata$time-SMALL.TIME, function(x) max(x,0)),
       eventdata$time,
       eventdata$time+SMALL.TIME)))
   }  

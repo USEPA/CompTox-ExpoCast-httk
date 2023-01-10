@@ -12,6 +12,7 @@ calc_fup_correction(
   parameters = NULL,
   Flipid = NULL,
   plasma.pH = 7.4,
+  dow74 = NULL,
   species = "Human",
   default.to.human = FALSE,
   force.human.fup = FALSE,
