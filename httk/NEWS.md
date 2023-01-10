@@ -21,9 +21,10 @@ output: html_document
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * We now export function 'calc_dow' for the distribution coefficient
 * New function 'calc_ma' separates membrane affinity calculation from 'parameterize_schmitt'
-* Updated various function documentation
+* New function 'calc_kair' separates calculation of blood:air, water:air, and mucus:air partition coefficients from 'parameterize_gas_pbtk'
 * Added inline code comments to 'predict_partitioning_schmitt' identifying corresponding equations in Schmitt (2008)
 * Added option class.exclude to 'get_cheminfo' -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
+* Updated various function documentation
 * Fixed bug where 'solve_model' returned other than requested times when argument times was specified (thanks to Kimberly Truong)
 
 # version 2.2.1 (September, 2022)

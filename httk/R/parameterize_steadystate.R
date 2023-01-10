@@ -27,8 +27,8 @@
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
 #' having p-values greater than the threshold are set to zero.
 #' 
-#' @param default.to.human Substitutes missing rat values with human values if
-#' true.
+#' @param default.to.human Substitutes missing species-specific values with human values if
+#' TRUE (default is FALSE).
 #' 
 #' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
@@ -235,7 +235,10 @@ Set default.to.human to true to substitute human value.")
   if (fup.point == 0)
   {
     fup.point <- fup.lod.default
-    if (!suppress.messages) warning("Fraction unbound = 0, changed to 0.005.")
+    if (!suppress.messages) warning(paste0(
+        "Fraction unbound = 0, changed to ",
+        fup.lod.default,
+        "."))
   }
 
 # acid dissociation constants

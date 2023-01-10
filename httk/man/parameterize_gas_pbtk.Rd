@@ -83,7 +83,7 @@ the state of exercise}
 \item{VD}{Anatomical dead space (L), to be modulated especially as part of
 simulating the state of exercise}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our

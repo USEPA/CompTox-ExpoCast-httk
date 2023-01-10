@@ -42,7 +42,7 @@
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
 #' 
-#' @param suppress.messages Whether or not the output message is suppressed.
+#' @param suppress.messages Whether or not the output messages are suppressed.
 #' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -406,18 +406,19 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
         suppress.messages=TRUE))
     
-    #alveolar ventilation: 15 L/h/kg^.75 from campbell 2007
-    #henry's law in atm * m^3 / mol, converted atm to Pa
-    #human body temperature of 310 Kelvin
-    logHenry = get_physchem_param(param = 'logHenry', chem.cas=chem.cas) #for log base 10 compiled Henry's law values
-    hl <- 10^logHenry #Henry's constant in atm*m^3 / mol 
-    #Gas constant 8.314 in units of J/(mol*K), body temperature 
-    body_temp = as.numeric(this.phys.data['Average Body Temperature']) + 273.15 #C -> K
-    Kwater2air <- 8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
-    Kblood2air <- Kwater2air * outlist$Rblood2plasma / outlist$Funbound.plasma
-    lKair2muc <- log10(1/Kwater2air) - (log10(Pow) - 1) * 0.524 #If no value is added for logP, it's assumed Kmuc2air = Kwater2air
-    Kair2muc <- 10^(lKair2muc)
-    Kmuc2air <- 1/Kair2muc
+# Get the blood:air and mucus:air partition coefficients:
+    Kx2air <- calc_kair(chem.name=chem.name,
+                        chem.cas=chem.cas,
+                        dtxsid=dtxsid,
+                        species=species,
+                        default.to.human=default.to.human,
+                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                        suppress.messages=suppress.messages)
+    
+    Kwater2air <- Kx2air$Kwater2air
+    Kblood2air <- Kx2air$Kblood2air
+    Kmuc2air <- Kx2air$Kmuc2air
+        
     if(exercise){
       Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
       #Added 4-30-19 to allow user-input respiratory and/or work values,
