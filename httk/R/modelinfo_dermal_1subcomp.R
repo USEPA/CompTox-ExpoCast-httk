@@ -178,6 +178,7 @@ model.list[["dermal_1subcomp"]]$default.monitor.vars <- c(
   "Cskin_unexposed",
   "Cvehicle",
   "Ain",
+  "Aexhaled",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -217,6 +218,7 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Askin_unexposed"="umol",
   "Avehicle"="umol",
   "Ain"="umol",
+  "Aexhaled"="umol",
   "Cvehicle_infinite"="uM",
   "Cgut"="uM",
   "Cliver"="uM",
@@ -282,6 +284,7 @@ model.list[["dermal_1subcomp"]]$state.vars <- c(
   "Askin_unexposed",
   "Avehicle",
   "Ain",
+  "Aexhaled",
   "Cvehicle_infinite"
 ) 
 

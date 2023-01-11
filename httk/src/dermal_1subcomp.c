@@ -13,7 +13,7 @@
 
    Model calculations for compartmental model:
 
-   16 States:
+   17 States:
      Agutlumen = 0.0,
      Agut = 0.0,
      Aliver = 0.0,
@@ -29,6 +29,7 @@
      Askin_unexposed = 0.0,
      Avehicle = 0.0,
      Ain = 0.0,
+     Aexhaled = 0.0,
      Cvehicle_infinite = 0.0,
 
    12 Outputs:
@@ -125,7 +126,8 @@
 #define ID_Askin_unexposed 0x0000c
 #define ID_Avehicle 0x0000d
 #define ID_Ain 0x0000e
-#define ID_Cvehicle_infinite 0x0000f
+#define ID_Aexhaled 0x0000f
+#define ID_Cvehicle_infinite 0x00010
 
 /* Model variables: Outputs */
 #define ID_Cgut 0x00000
@@ -265,6 +267,7 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 {
   /* local */ double Rin_dermal;
   /* local */ double Rin_oral;
+  /* local */ double Rout_exhaled;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -293,10 +296,14 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
   Rin_dermal = (InfiniteDose ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : (Vvehicle ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0 ) ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
+  
+  Rout_exhaled = 24 * 425 * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma ) ;
 
   ydot[ID_Avehicle] = -Rin_dermal * (1 - InfiniteDose) ;
 
   ydot[ID_Ain] = Rin_dermal + Rin_oral;
+  
+  ydot[ID_Aexhaled] = Rout_exhaled ;
 
   ydot[ID_Askin_exposed] = Qskin_exposed * ( yout[ID_Cart] - yout[ID_Cskin_exposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) + Rin_dermal ;
 
@@ -310,7 +317,7 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qskin_unexposed * yout[ID_Cskin_unexposed] / Kskin2pu + Qskin_exposed * yout[ID_Cskin_exposed] / Kskin2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
-  ydot[ID_Alung] = Qcardiac * ( yout[ID_Cven] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Alung] = Qcardiac * ( yout[ID_Cven] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) - Rout_exhaled ;
 
   ydot[ID_Aart] = Qcardiac * ( y[ID_Alung] / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - y[ID_Aart] / Vart ) ;
 
