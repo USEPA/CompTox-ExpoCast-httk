@@ -32,7 +32,8 @@
 #'
 #' @author John Wambaugh
 #'
-#' @references Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
+#' @references 
+#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
 #' correction for unbound fraction in hepatocyte incubations using microsomal 
 #' binding or drug lipophilicity data." Drug Metabolism and Disposition 36.7 
 #' (2008): 1194-1197.
@@ -43,7 +44,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{calc_help_fu}}
+#' @seealso \code{\link{calc_hep_fu}}
 #'
 #' @export apply_clint_adjustment
 apply_clint_adjustment <- function(Clint, 
@@ -55,14 +56,16 @@ apply_clint_adjustment <- function(Clint,
 {
   if (is.null(Fu_hep))
   {
-    Fu_hep <- calc_hep_fu(parameters=schmitt.params[c(
-      "Pow","pKa_Donor","pKa_Accept")])  # fraction
+    Fu_hep <- calc_hep_fu(parameters=list(Pow = Pow,
+                                          pKa_Donor = pKa_Donor,
+                                          pKa_Accept = pKa_Accept))
   }
   Clint <- Clint / Fu_hep
+  
   if (!suppress.messages) 
   {
-    warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
+    warning('Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.')
   }
   
-  return (Clint)
+  return(set_httk_precision(Clint))
 }

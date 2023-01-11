@@ -100,6 +100,10 @@ and pharmacodynamics 44.6 (2017): 549-565.
 \code{\link{predict_partitioning_schmitt}}
 
 \code{\link{tissue.data}}
+
+\code{\link{calc_ma}}
+
+\code{\link{adjust_fup}}
 }
 \author{
 Robert Pearce and John Wambaugh

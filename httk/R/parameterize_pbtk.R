@@ -1,10 +1,14 @@
 #' Parameters for a generic physiologically-based toxicokinetic model
 #' 
-#' Generate a chemical- and species-specific set of model parameters, 
-#' including tissue:plasma partition coefficients (via Schmitt (2008)'s method
-#' as modified by Pearce et al. (2017)) and organ volumes and flows 
-#' (from table \code{\link{physiology.data}}) for an arbitrary tissue lumping 
-#' scheme (tissues  must be described in table \code{\link{tissue.data}}).
+#' Generate a chemical- and species-specific set of PBPK model parameters.
+#' Parameters include 
+#' tissue:plasma partition coefficients, organ volumes, and flows 
+#' for the tissue lumping scheme specified by argument tissuelist.
+#' Tissure:(fraction unbound in) plasma partitition coefficients are predicted
+#' via Schmitt (2008)'s method as modified by Pearce et al. (2017) using
+#' \code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
+#' retrieved from table \code{\link{physiology.data}}.
+#' Tissues must be described in table \code{\link{tissue.data}}. 
 #'
 #' By default, this function initializes the parameters needed in the functions 
 #' \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
@@ -18,6 +22,7 @@
 #' 
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -50,9 +55,14 @@
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
+#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
+#' this value (default is 0.0001).                                
+#'                                                                                             
+#' @param million.cells.per.gliver Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))
+#'
+#' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
+#'
+#' @param kgutabs Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -92,6 +102,7 @@
 #' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#'
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
@@ -110,6 +121,17 @@
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
+#' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
+#' to relate drug metabolic clearance in hepatic microsomes, isolated 
+#' hepatocytes, and the intact liver: studies with induced livers involving 
+#' diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+#' 
+#' International Commission on Radiological Protection. Report of the task 
+#' group on reference man. Vol. 23. Pergamon, Oxford. 1975.
+#'
+#' Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
+#' toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
+#' 
 #' @keywords Parameter pbtk
 #'
 #' @seealso \code{\link{solve_pbtk}}
@@ -126,7 +148,6 @@
 #'
 #' @examples
 #' 
-#' 
 #'  parameters <- parameterize_pbtk(chem.cas='80-05-7')
 #' 
 #'  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
@@ -136,9 +157,6 @@
 #'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 #'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
 #'                    tissuelist=compartments) 
-#'  
-#'  
-#' 
 #' @export parameterize_pbtk
 parameterize_pbtk <- function(
                        chem.cas=NULL,
@@ -158,7 +176,11 @@ parameterize_pbtk <- function(
                        regression=TRUE,
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,
-                       minimum.Funbound.plasma=0.0001)
+                       minimum.Funbound.plasma=0.0001,
+                       million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
+                       liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
+                       kgutabs = 2.18 # 1/h, Wambaugh et al. (2018)
+                       )
 {
   #Give a binding to the physiology.data
   physiology.data <- physiology.data
@@ -227,10 +249,12 @@ parameterize_pbtk <- function(
                       species=species,
                       default.to.human=default.to.human,
                       force.human.fup=force.human.clint.fup,
-                      suppress.messages=TRUE,
+                      suppress.messages=suppress.messages,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                       minimum.Funbound.plasma=minimum.Funbound.plasma)
-
-
+       
+  fup <- schmitt.params$Funbound.plasma
+  
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
@@ -247,23 +271,6 @@ parameterize_pbtk <- function(
     species=species,
     model="pbtk",
     suppress.messages=suppress.messages)
-       
-  if (schmitt.params$unadjusted.Funbound.plasma == 0)
-    if (tolower(species) == "human" | default.to.human) {
-      stop("Fraction unbound = 0, cannot predict partitioning.")
-    } else {
-      stop("Fraction unbound = 0, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
-    }
-  
-  # Check to see if we should use the in vitro fup assay correction:  
-  if (adjusted.Funbound.plasma)
-  {
-    fup <- schmitt.params$Funbound.plasma
-    if (!suppress.messages) warning('Funbound.plasma adjusted for in vitro partioning (Pearce, 2017).')
-  } else fup <- schmitt.params$unadjusted.Funbound.plasma
-  
-  # Restrict the value of fup:
-  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
   Fgutabs <- try(get_invitroPK_param(
                    "Fgutabs",
@@ -308,8 +315,7 @@ parameterize_pbtk <- function(
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept,
-    suppress.messages=suppress.messages)) # fraction 
+    pKa_Accept=pKa_Accept)) # fraction 
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
@@ -350,7 +356,7 @@ parameterize_pbtk <- function(
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-                            kgutabs = 2.18, # 1/h
+                            kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -378,8 +384,8 @@ parameterize_pbtk <- function(
              Funbound.plasma=fup, # unitless fraction
              Fhep.assay.correction=Fu_hep,
              Rblood2plasma = outlist$Rblood2plasma, 
-             million.cells.per.gliver= 110, # 10^6 cells/g-liver
-             liver.density= 1.05, # g/mL
+             million.cells.per.gliver = million.cells.per.gliver, # 10^6 cells/g-liver
+             liver.density = liver.density, # g/mL
              Dn=0.17,
              BW=BW,
              Vliverc=lumped_params$Vliverc, #L/kg
@@ -387,8 +393,8 @@ parameterize_pbtk <- function(
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
            suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
-         million.cells.per.gliver=110, # 10^6 cells/g-liver
-         liver.density=1.05, # g/mL
+         million.cells.per.gliver = million.cells.per.gliver, # 10^6 cells/g-liver
+         liver.density = liver.density, # g/mL
          Fgutabs=Fgutabs)) 
   
   if (adjusted.Funbound.plasma) 
@@ -397,7 +403,6 @@ parameterize_pbtk <- function(
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
-
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
   

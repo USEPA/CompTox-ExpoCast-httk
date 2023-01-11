@@ -60,6 +60,17 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+#### eval = FALSE
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = FALSE"
+at the beginning. This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R or pressing "play" (the green arrow) on
+each chunk in RStudio.
 ```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 library(httk)
@@ -74,7 +85,7 @@ library(smatr)
 # Delete all objects from memory:
 rm(list=ls())
 ```
-###Get metabolism and concentration data 
+### Get metabolism and concentration data 
 ```{r data, eval = FALSE}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
@@ -574,8 +585,8 @@ for(i in 1:length(simobslist))
 # Create pdfs of observed vs. predicted concentration plots
 dir.create("Linakis2020")
 pdf("Linakis2020/obvpredplots.pdf", width = 10, height = 10)
-for (i in 1:length(obvpredlist)) {
-  print(obvpredlist[[i]])
+for (i in 1:length(obsvpredlist)) {
+  print(obsvpredlist[[i]])
 }
 dev.off()
 ```
@@ -1254,14 +1265,14 @@ for (i in 1:nrow(simobsfull))
     log10(simobsfullsens$obsconc[
       !is.na(simobsfullsens$simconc) & 
       simobsfullsens$simconc > 0 & 
-      simobsfullsens$obsconc > 0]) 
+      simobsfullsens$obsconc > 0]) ~ 
     log10(simobsfullsens$simconc[
       !is.na(simobsfullsens$simconc) & 
       simobsfullsens$simconc >0 & 
       simobsfullsens$obsconc > 0]))
   sensslope[i] <- round(summary(senslm)$coef[2,1],digits = 2)
   sensrsq[i] <- round(summary(senslm)$r.squared,digits = 2)
-  sensregrmse[i] <- round(sqrt(mean(lm$residuals^2)),digits = 2)
+  sensregrmse[i] <- round(sqrt(mean(senslm$residuals^2)),digits = 2)
   senstotalrmse[i] <- round(sqrt(mean((
     log10(simobsfullsens$simconc[
       !is.na(simobsfullsens$simconc) & 

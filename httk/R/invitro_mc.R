@@ -288,9 +288,11 @@ invitro_mc <- function(parameters.dt=NULL,
   if (adjusted.Clint)
   {
     # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
-    parameters.dt[, Clint := Clint / Fhep.assay.correction]
+    parameters.dt[, Clint := apply_clint_adjustment(
+                               Clint,
+                               Fu_hep=Fhep.assay.correction,
+                               suppress.messages=TRUE)]
   }
-
   #
   #
   #
@@ -450,8 +452,15 @@ invitro_mc <- function(parameters.dt=NULL,
                Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
                which(colnames(httk::physiology.data) == 'Human')]
 
-    parameters.dt[, Funbound.plasma.adjustment:=1 / (Dow74 * Flipid + 
-      1 / unadjusted.Funbound.plasma)/unadjusted.Funbound.plasma]
+    if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
+        ("Dow74" %in% names(parameters.dt)))
+    {
+      # put the unadjusted fup where calc_fup_correction will look for it:
+      parameters.dt[, Funbound.plasma:=unadjusted.Funbound.plasma]
+      parameters.dt[, Funbound.plasma.adjustment:=
+        calc_fup_correction(
+          parameters = parameters.dt)]
+    } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
   } else {
     parameters.dt[, Funbound.plasma.adjustment:=1]
   }
@@ -539,6 +548,10 @@ invitro_mc <- function(parameters.dt=NULL,
   #Enforce a minimum Funbound.plasma :
   parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
+
+# set precision:
+  cols <- colnames(parameters.dt)
+  parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
   
   return(parameters.dt)
 }

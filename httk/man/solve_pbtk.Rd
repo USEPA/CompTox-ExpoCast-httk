@@ -59,7 +59,7 @@ overrides chem.name and chem.cas.}
 
 \item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
+\item{dose}{Amount of a single, initial oral dose in mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 

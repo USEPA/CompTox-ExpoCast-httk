@@ -408,8 +408,8 @@ Set species=\"Human\" to run httkpop model.')
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
-                                      hematocrit=parameters.dt$hematocrit,
-                                      Krbc2pu=parameters.dt$Krbc2pu,
+                                      hematocrit=hematocrit,
+                                      Krbc2pu=Krbc2pu,
                                       Funbound.plasma=Funbound.plasma)]
   }
   
@@ -448,6 +448,10 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt <- do.call(propagateuvfun, args=c(list(
                        parameters.dt=parameters.dt),
                        propagate.invitrouv.arg.list))
+  
+# set precision:
+  cols <- colnames(parameters.dt)
+  parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.
