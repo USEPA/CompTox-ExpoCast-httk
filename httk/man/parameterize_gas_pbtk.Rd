@@ -200,6 +200,10 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 
 \code{\link{predict_partitioning_schmitt}}
 
+\code{\link{available_rblood2plasma}}
+
+\code{\link{calc_kair}}
+
 \code{\link{tissue.data}}
 
 \code{\link{physiology.data}}
