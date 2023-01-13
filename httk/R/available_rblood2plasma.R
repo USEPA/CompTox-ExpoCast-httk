@@ -38,6 +38,8 @@
 #' 
 #' @keywords Parameter
 #' 
+#' @seealso \code{\link{calc_rblood2plasma}}
+#'
 #' @examples
 #' 
 #' available_rblood2plasma(chem.name="Bisphenol A",adjusted.Funbound.plasma=FALSE)
