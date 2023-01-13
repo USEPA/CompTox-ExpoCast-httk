@@ -53,6 +53,8 @@
 #' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
 #'
 #' @keywords Parameter
+#' 
+#' @seealso \code{\link{available_rblood2plasma}}
 #'
 #' @examples
 #' 

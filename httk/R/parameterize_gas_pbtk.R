@@ -156,6 +156,10 @@
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
 #'
+#' @seealso \code{\link{available_rblood2plasma}}
+#'
+#' @seealso \code{\link{calc_kair}}
+#'
 #' @seealso \code{\link{tissue.data}}
 #'
 #' @seealso \code{\link{physiology.data}}
