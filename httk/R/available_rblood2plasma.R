@@ -15,7 +15,7 @@
 #' with \code{\link{calc_rblood2plasma}} for the given species. If Funbound.plasma is
 #' unvailable for the given species, the human Funbound.plasma is substituted.
 #' If none of these are available, the mean human Rblood2plasma from
-#' \code{\link{chem.physical_and_invitro.data|| is returned.  %% ~~ If necessary, more
+#' \code{\link{chem.physical_and_invitro.data}} is returned.  %% ~~ If necessary, more
 #' details than the description above ~~
 #' 
 #' @param chem.cas Either the CAS number or the chemical name must be
