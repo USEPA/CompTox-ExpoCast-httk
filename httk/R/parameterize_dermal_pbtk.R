@@ -69,6 +69,8 @@
 #' \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
 #' unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
 #' cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
+#' \item{Kblood2air}{Ratio of concentration of chemical in blood to air, calculated
+#' using calc_kair.} \item{Qalvc}{Unscaled alveolar ventilation rate, L/h/kg BW^3/4.}
 #' \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
 #' Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
 #' excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
@@ -349,6 +351,24 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                                                              species=species,
                                                              adjusted.Funbound.plasma=adjusted.Funbound.plasma),
                Fgutabs=Fgutabs)
+  
+  # Get the blood:air partition coefficient:
+  Kx2air <- calc_kair(chem.name=chem.name,
+                      chem.cas=chem.cas,
+                      dtxsid=dtxsid,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  Kblood2air <- Kx2air$Kblood2air
+  
+  # Get unscaled alveolar ventilation rate (L/h/kg BW^(3/4))
+  Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+  Qalvc <- Vdot * (0.67) #L/h/kg^0.75
+  
+  outlist <- c(outlist,
+               Kblood2air = Kblood2air,
+               Qalvc = unname(Qalvc))
   
   #Skin parameters
   Fskin_depth_top = 11/560;

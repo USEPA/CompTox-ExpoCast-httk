@@ -67,6 +67,8 @@
      Kgut2pu = 0,
      Klung2pu = 0,
      Kskin2pu = 0,
+     Kblood2air = 0,
+     Qalvc = 0,
      Qcardiacc = 0,
      Qgfrc = 0,
      Qskinf = 0,
@@ -84,6 +86,7 @@
      Fraction_unbound_plasma = 0.0,
      Rblood2plasma = 0.0,
      Clmetabolism = 0.0,
+     Qalv = 0.0,
      Qcardiac = 0.0,
      Qgfr = 0.0,
      Qskin = 0.0,
@@ -144,7 +147,7 @@
 #define ID_Cvehicle 0x0000b
 
 /* Parameters */
-static double parms[53];
+static double parms[56];
 
 #define skin_depth parms[0]
 #define InfiniteDose parms[1]
@@ -163,42 +166,45 @@ static double parms[53];
 #define Kgut2pu parms[14]
 #define Klung2pu parms[15]
 #define Kskin2pu parms[16]
-#define Qcardiacc parms[17]
-#define Qgfrc parms[18]
-#define Qskinf parms[19]
-#define Qgutf parms[20]
-#define Qkidneyf parms[21]
-#define Qliverf parms[22]
-#define Vartc parms[23]
-#define Vgutc parms[24]
-#define Vkidneyc parms[25]
-#define Vliverc parms[26]
-#define Vlungc parms[27]
-#define Vrestc parms[28]
-#define Vvenc parms[29]
-#define Vskinc parms[30]
-#define Fraction_unbound_plasma parms[31]
-#define Rblood2plasma parms[32]
-#define Clmetabolism parms[33]
-#define Qcardiac parms[34]
-#define Qgfr parms[35]
-#define Qskin parms[36]
-#define Qskin_exposed parms[37]
-#define Qskin_unexposed parms[38]
-#define Qgut parms[39]
-#define Qkidney parms[40]
-#define Qliver parms[41]
-#define Qrest parms[42]
-#define Vart parms[43]
-#define Vgut parms[44]
-#define Vkidney parms[45]
-#define Vliver parms[46]
-#define Vlung parms[47]
-#define Vrest parms[48]
-#define Vven parms[49]
-#define Vskin parms[50]
-#define Vskin_exposed parms[51]
-#define Vskin_unexposed parms[52]
+#define Kblood2air parms[17]
+#define Qalvc parms[18]
+#define Qcardiacc parms[19]
+#define Qgfrc parms[20]
+#define Qskinf parms[21]
+#define Qgutf parms[22]
+#define Qkidneyf parms[23]
+#define Qliverf parms[24]
+#define Vartc parms[25]
+#define Vgutc parms[26]
+#define Vkidneyc parms[27]
+#define Vliverc parms[28]
+#define Vlungc parms[29]
+#define Vrestc parms[30]
+#define Vvenc parms[31]
+#define Vskinc parms[32]
+#define Fraction_unbound_plasma parms[33]
+#define Rblood2plasma parms[34]
+#define Clmetabolism parms[35]
+#define Qalv parms[36]
+#define Qcardiac parms[37]
+#define Qgfr parms[38]
+#define Qskin parms[39]
+#define Qskin_exposed parms[40]
+#define Qskin_unexposed parms[41]
+#define Qgut parms[42]
+#define Qkidney parms[43]
+#define Qliver parms[44]
+#define Qrest parms[45]
+#define Vart parms[46]
+#define Vgut parms[47]
+#define Vkidney parms[48]
+#define Vliver parms[49]
+#define Vlung parms[50]
+#define Vrest parms[51]
+#define Vven parms[52]
+#define Vskin parms[53]
+#define Vskin_exposed parms[54]
+#define Vskin_unexposed parms[55]
 
 /* Forcing (Input) functions */
 static double forc[1];
@@ -208,7 +214,7 @@ static double forc[1];
 /*----- Initializers */
 void initmod_dermal_1subcomp (void (* odeparms)(int *, double *))
 {
-  int N=53;
+  int N=56;
   odeparms(&N, parms);
 }
 
@@ -231,6 +237,7 @@ void getParms_dermal_1subcomp (double *inParms, double *out, int *nout) {
 
   kgutabs = kgutabs * 24 ;
   Clmetabolism = Clmetabolismc * 24 * BW ;
+  Qalv = Qalvc * 24 * pow ( BW , 0.75 ) ;
   Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
   Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
 
@@ -297,7 +304,7 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
   
-  Rout_exhaled = 24 * 425 * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma ) ;
+  Rout_exhaled = Qalv * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma * Kblood2air ) ;
 
   ydot[ID_Avehicle] = -Rin_dermal * (1 - InfiniteDose) ;
 

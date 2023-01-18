@@ -116,6 +116,8 @@ of chemical in red blood cells to unbound concentration in plasma.}
 \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
 unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
 cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
+\item{Kblood2air}{Ratio of concentration of chemical in blood to air, calculated
+using calc_kair.} \item{Qalvc}{Unscaled alveolar ventilation rate, L/h/kg BW^3/4.}
 \item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
 Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
 excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
