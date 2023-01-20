@@ -15,6 +15,11 @@
 #' Kilford et al. (2008) calculates
 #' \ifelse{html}{\out{fu<sub>hep</sub> = 1/(1 + 125*V<sub>R</sub>*10^(0.072*logP/D<sup>2</sup> + 0.067*logP/D-1.126))}}{\deqn{fu_{hep} = \frac{1}{1+125*V_{R}*10^{0.072*logP*D^2 + 0.067*logP/D - 1.126}}}}
 #'
+#' Note that octanal:water partitioning above 1:1,000,000 
+#' (\ifelse{html}{\out{LogP<sub>ow</sub> > 6}}{\eqn{LogP_{ow} > 6}})
+#' are truncated at 1:1,000,000 because greater partitioning would
+#' likely take longer than hepatocyte assay itself.
+#'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
@@ -50,7 +55,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @import utils
 #'
