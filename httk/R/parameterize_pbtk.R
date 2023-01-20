@@ -382,7 +382,6 @@ parameterize_pbtk <- function(
            parameters=list(
              Clint=Clint, #uL/min/10^6 cells
              Funbound.plasma=fup, # unitless fraction
-             Fhep.assay.correction=Fu_hep,
              Rblood2plasma = outlist$Rblood2plasma, 
              million.cells.per.gliver = million.cells.per.gliver, # 10^6 cells/g-liver
              liver.density = liver.density, # g/mL

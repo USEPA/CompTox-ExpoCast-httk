@@ -184,6 +184,8 @@ create_mc_samples <- function(chem.cas=NULL,
                                              dtxsid=dtxsid,
                                              species=species,
                                         parameters=parameters,
+                                        adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
+                                        adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
                                         parameterize.arg.list))
   # Check to see if we need to call the parameterize_MODEL function:

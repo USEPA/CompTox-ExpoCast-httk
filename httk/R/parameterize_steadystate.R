@@ -201,10 +201,10 @@ parameterize_steadystate <- function(
                       silent=TRUE)
     warning(paste(species,"coerced to Human for metabolic clerance data."))
   }
-  if (is(Clint.db,"try-error") & tolower(species=="human")) 
+  if (is(Clint.db,"try-error") & tolower(species)=="human") 
     stop("Missing metabolic clearance data for requested species.\n\
 Set default.to.human to true to substitute human value.")
-  else if (is(Clint.db,"try-error") stop("
+  else if (is(Clint.db,"try-error")) stop("
 Missing metabolic clearance data for requested species.")
 # Check if clintis a point value or a distribution, if a distribution, 
 #use the median:
