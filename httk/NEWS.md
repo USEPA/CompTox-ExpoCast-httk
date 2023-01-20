@@ -12,7 +12,7 @@ output: html_document
 * Added functions 'calc_fup_correction' and 'apply_fup_adjustment' to consolidate and make uniform application of the Pearce (2017) lipid binding adjustment to in vitro measured fup
 * Added cutoff of logKow/logDow no greater than 6 for 'calc_fup_correction' and 'calc_hep_fu' based on the idea that the in vitro assays are not long enough to reach concentration ratios greater than 1,000,000 to 1
 * Updaed 'calc_analytic_css_pbtk' to reflect Breen et al. (2022) modifcation to glomerular filtration in the kidney
-* `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
+* 'get_cheminfo' now lists required parameters when chemicals are excluded (thanks Ben Savage)
 * Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
 * Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
 * Added updated vignette from Pearce et al. (2017): v79i04.R
