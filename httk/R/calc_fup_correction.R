@@ -177,6 +177,8 @@ calc_fup_correction <- function(
     } else stop("Missing parameters needed in calc_fup_correction.")  
   }
   
+  Pow <- min(Pow,1e6) # Octanal:water partitioning above 1:1000000 would likely take longer than hepatocyte assay
+  
   # Grab the fraction of in vivo plasma that is lipid:
   if (!is.null(parameters))
     if ("Flipid" %in% names(parameters))
@@ -204,6 +206,8 @@ calc_fup_correction <- function(
                   pKa_Accept=pKa_Accept
                   ) 
   } else dow <- dow74
+  
+  dow <- min(dow,1e6) # Octanal:water partitioning above 1:1000000 would likely take longer than hepatocyte assay
   
   fup.corrected <- 1 / ((dow) * Flipid + 1 / fup)
   fup.correction <- fup.corrected/fup

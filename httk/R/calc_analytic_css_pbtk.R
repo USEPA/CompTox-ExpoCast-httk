@@ -66,7 +66,7 @@
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#'@keywords pbtk
+#'@keywords pbtk                           
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
@@ -147,12 +147,16 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   
-# Calculate steady-state plasma Css:
+# Css for venous blood:
   Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
-         (Qcardiac - (Qliver + Qgut)**2 /
-         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
-         Qkidney**2 / (Qgfr * fup / Rblood2plasma + Qkidney) - Qrest)
+         (Qcardiac - 
+         (Qliver + Qgut)**2 /
+         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) + 
+         Qkidney -
+         Qgfr * fup / Rblood2plasma  + 
+         Qrest)
+# Calculate steady-state plasma Css:
   Css <- Cven.ss / Rblood2plasma
 
 # Check to see if a specific tissue was asked for:

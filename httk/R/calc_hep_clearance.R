@@ -81,8 +81,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                  "million.cells.per.gliver",
                  "Vliverc",
                  "BW",
-                 "liver.density",
-                 'Fhep.assay.correction')
+                 "liver.density")
                  
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
