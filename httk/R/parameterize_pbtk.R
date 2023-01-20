@@ -326,7 +326,7 @@ parameterize_pbtk <- function(
   
   outlist <- list()
   # Begin flows:
-  #mL/min/kgBW converted to L/h/kgBW:
+  #mL/min/kgBW^(3/4) converted to L/h/kgBW^(3/4):
   QGFRc <- this.phys.data["GFR"]/1000*60 
   Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
