@@ -30,6 +30,11 @@
 #' is increased as such:
 #' \ifelse{html}{\out{K<sup>corrected</sup><sub>plasma:water</sub> = 1/f<sup>corrected</sup><sub>up</sub> = 1/f<sup>in vitro</sup><sub>up</sub> + D<sub>ow</sub>*F<sub>lipid</sub>}}{\deqn{f^{corrected}_{up} = \frac{1}{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}}
 #' 
+#' Note that octanal:water partitioning above 1:1,000,000 
+#' (\ifelse{html}{\out{LogD<sub>ow</sub> > 6}}{\eqn{LogD_{ow} > 6}})
+#' are truncated at 1:1,000,000 because greater partitioning would
+#' likely take longer than protein binding assay itself.
+#'
 #' @param fup Fraction unbound in plasma, if provided this argument overides
 #' values from argument parameters and \code{\link{chem.phys_and_invitro.data}} 
 #' 
@@ -93,7 +98,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{adjust_fup}}
+#' @seealso \code{\link{apply_fup_adjustment}}
 #'
 #' @seealso \code{\link{calc_dow}}
 #'
