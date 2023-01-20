@@ -10,6 +10,8 @@ output: html_document
 * Removed inappropriate second adjustment for binding in intrinsic hepatic clearance assay from 'cal_hep_clearance' -- Kilford (2008) adjustment now only occurs in parameterization functions. Added new function 'apply_clint_adjustment' to standardize implementation of adjustment (thanks Todor Antonijevic)
 * Fixed major bug in 'calc_ionization' that caused error when argument pH was a vector -- impacts monte carlo for ionized compounds
 * Added functions 'calc_fup_correction' and 'apply_fup_adjustment' to consolidate and make uniform application of the Pearce (2017) lipid binding adjustment to in vitro measured fup
+* Added cutoff of logKow/logDow no greater than 6 for hepatic clearance and protein binding assays based on the idea that they are not long enough to reach concentration ratios greater than 1,000,000 to 1
+* Updaed 'calc_analytic_css_pbtk' to reflect Breen et al. (2022) modifcation to glomerular filtration in the kidney
 * `get_cheminfo` now lists required parameters when chemicals are excluded (thanks Ben Savage)
 * Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
 * Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
