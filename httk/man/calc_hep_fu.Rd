@@ -52,6 +52,12 @@ Here we denote the appropriate partition coefficient as "logP/D".
 Kilford et al. (2008) calculates
 \ifelse{html}{\out{fu<sub>hep</sub> = 1/(1 + 125*V<sub>R</sub>*10^(0.072*logP/D<sup>2</sup> + 0.067*logP/D-1.126))}}{\deqn{fu_{hep} = \frac{1}{1+125*V_{R}*10^{0.072*logP*D^2 + 0.067*logP/D - 1.126}}}}
 }
+\details{
+Note that octanal:water partitioning above 1:1,000,000 
+(\ifelse{html}{\out{LogP<sub>ow</sub> > 6}}{\eqn{LogP_{ow} > 6}})
+are truncated at 1:1,000,000 because greater partitioning would
+likely take longer than hepatocyte assay itself.
+}
 \references{
 Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
 correction for unbound fraction in hepatocyte incubations using microsomal 
@@ -63,7 +69,7 @@ predictions with dosimetry-adjusted in vitro bioactivity to inform chemical
 toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
 }
 \seealso{
-\code{\link{adjust_clint}}
+\code{\link{apply_clint_adjustment}}
 }
 \author{
 John Wambaugh and Robert Pearce
