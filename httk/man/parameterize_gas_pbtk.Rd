@@ -207,6 +207,12 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 \code{\link{tissue.data}}
 
 \code{\link{physiology.data}}
+
+\code{\link{get_clint}}
+
+\code{\link{get_fup}}
+
+\code{\link{get_physchem_param}}
 }
 \author{
 Matt Linakis, Robert Pearce, John Wambaugh

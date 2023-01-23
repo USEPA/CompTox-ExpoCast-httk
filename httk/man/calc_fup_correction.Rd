@@ -87,6 +87,12 @@ plasma to water partitioning
 is increased as such:
 \ifelse{html}{\out{K<sup>corrected</sup><sub>plasma:water</sub> = 1/f<sup>corrected</sup><sub>up</sub> = 1/f<sup>in vitro</sup><sub>up</sub> + D<sub>ow</sub>*F<sub>lipid</sub>}}{\deqn{f^{corrected}_{up} = \frac{1}{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}}
 }
+\details{
+Note that octanal:water partitioning above 1:1,000,000 
+(\ifelse{html}{\out{LogD<sub>ow</sub> > 6}}{\eqn{LogD_{ow} > 6}})
+are truncated at 1:1,000,000 because greater partitioning would
+likely take longer than protein binding assay itself.
+}
 \references{
 Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
 predictions of chemical distribution to tissues." Journal of pharmacokinetics 
@@ -112,7 +118,7 @@ approach for the measurement of plasma protein binding." Journal of
 pharmaceutical sciences 97.10 (2008): 4586-4595.
 }
 \seealso{
-\code{\link{adjust_fup}}
+\code{\link{apply_fup_adjustment}}
 
 \code{\link{calc_dow}}
 }

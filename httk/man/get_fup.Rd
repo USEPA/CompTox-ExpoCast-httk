@@ -34,10 +34,9 @@ default "Human").}
 \item{default.to.human}{Substitutes missing fraction of unbound plasma with
 human values if true.}
 
-\item{force.human.fup}{Returns human fraction of unbound plasma in
-calculation for rats if true.
-When species is specified as rabbit, dog, or mouse, the human unbound
-fraction is substituted.}
+\item{force.human.fup}{If a non-human species value (matching argument
+species) is available, it is ignored and the human fraction unbound is
+returned}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
@@ -46,7 +45,7 @@ is not allowed to drop below this value (default is 0.0001).}
 }
 \value{
 list containing:
-\item{Funbound.plasma.point}{Point estimate (central tendency of the Unbound fraction in plasma}
+\item{Funbound.plasma.point}{Point estimate (central tendency) of the Unbound fraction in plasma}
 \item{Funbound.plasma.dist}{Quantiles of a distribution (median, lower and upper 95th percentiles) for the unbound fraction}
 }
 \description{

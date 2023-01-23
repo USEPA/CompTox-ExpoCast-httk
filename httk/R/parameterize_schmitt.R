@@ -286,6 +286,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
         species=species,
         default.to.human=default.to.human,
         force.human.fup=force.human.fup,
+        minimum.Funbound.plasma=minimum.Funbound.plasma,
         suppress.messages=suppress.messages) 
     fup.point <- fup.list$Funbound.plasma.point
     fup.dist <- fup.list$Funbound.plasma.dist 
