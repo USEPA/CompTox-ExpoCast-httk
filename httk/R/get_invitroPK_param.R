@@ -60,6 +60,12 @@ get_invitroPK_param <- function(
     which(chem.physical_and_invitro.data$CAS == chem.cas)
   else chem.physical_and_invitro.data.index <- 
     which(chem.physical_and_invitro.data$Compound == chem.name)
+  
+  # Check that there is only one chemical (potential errors in in vitro data table)
+  if (length(chem.physical_and_invitro.data.index)>1){
+    chem.physical_and_invitro.data.index <- chem.physical_and_invitro.data.index[1]
+    warning("There is more than one chemical listed for ", dtxsid,", so only \nfirst entry is used. Check chem.physical_and_invitro.data.\n")
+  }
 
   this.col.name <- tolower(paste(species,param,sep="."))
 #  if (!(this.col.name %in% tolower(colnames(chem.physical_and_invitro.data))))

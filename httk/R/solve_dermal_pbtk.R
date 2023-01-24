@@ -177,7 +177,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     stop("InfiniteDose must be either be equal to FALSE (i.e., 0) (default) or TRUE (i.e., 1).")
   }  
   # Check InfiniteDose in parameters
-  if (!is.null(parameters)){
+  if (!is.null(parameters) & InfiniteDose!=parameters$InfiniteDose){
     InfiniteDose = parameters$InfiniteDose
     warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
   }
@@ -294,11 +294,13 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     
     # DOSE.DURATION
     if(!is.null(dose.duration)){
+      if(is.null(dose.duration.units)){ dose.duration.units="days"; warning("dose.duration.units automatically set to \"days\". 
+                                                To change units, set dose.duration.units= \"hours\", \"mins\", or \"days\".")}
       if (length(dose.duration)!=1 | length(dose.duration.units)!=1){ stop("dose.duration and dose.duration.units should only be one input. 
                                                                              For multiple dosing changes over time, use dosing.dermal.")}
       if (is.null(dose.duration.units) | (tolower(dose.duration.units) %in% c("days","day","d"))){
         dose.duration.days <- dose.duration;
-      } else if (tolower(dose.duration.units) %in% c("hr","hours","h","hour")){
+      } else if (tolower(dose.duration.units) %in% c("hr","hrs","hours","h","hour")){
         dose.duration.days <- dose.duration/24
       } else if (tolower(dose.duration.units) %in% c("min","mins")){
         dose.duration.days <- dose.duration/24/60
@@ -311,8 +313,10 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
 
   if (model.type=="dermal"){
     model.forsolver="dermal"
+    
     #DERMAL DOES NOT WORK RIGHT NOW
-    stop('model.type="dermal" does not work right now. Please set model.type="dermal_1subcomp".')
+    stop('model.type="dermal" does not work right now. Please set model.type="dermal_1subcomp" or leave model.type blank.')
+    
   } else if (model.type=="dermal_1subcomp"){
     model.forsolver="dermal_1subcomp"
   } else { stop("Input of model.type is incorrect. Must either by 'dermal' (default) or 'dermal_1subcomp'.")}
@@ -322,6 +326,14 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if (route=="dermal" & InfiniteDose==F){
       route="dermal.washoff"
     } else warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
+  }
+  
+  #Check for ppm
+  if(input.units=="ppm"){
+    input.units="ppmw"
+    if (!(is.null(Kvehicle2water) || Kvehicle2water==1 || Kvehicle2water=="water")){
+      warning("It is assumed that the dosing units are in ppm for water so that 1ppm = 1 mg/L.\n For concentrations in ppm in air assuming 25 degrees C, set input.units=\"ppmv\" or see help file for convert_units.")
+    }
   }
   
   #INFINITEDOSE
@@ -349,8 +361,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
          parameterize.arg.list for solve_dermal_pbtk(). To change these options,
          assign them directly in the solve_dermal_pbtk function.")
   }
-  
-  print(route)
+
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,

@@ -195,7 +195,7 @@ model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
   "iv" = c('umol','mg','mg/kg'), 
   "dermal" = c('umol','mg','mg/kg'), 
   "dermal.washoff" = c('umol','mg','mg/kg'), 
-  "dermal.InitialDose" = c('mg/L','uM','ppm'))
+  "dermal.InifiniteDose" = c('mg/L','uM','ppm','ppmv','ppmw'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(
@@ -300,7 +300,8 @@ model.list[["dermal_1subcomp"]]$required.params <- c(
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
-  "MW"
+  "MW",
+  "logHenry" # for exhalation
 )
 
 # Do we ignore the Fups where the value was below the limit of detection?

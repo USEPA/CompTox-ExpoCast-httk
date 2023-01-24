@@ -5,7 +5,7 @@
 #' function checks if the chemical is available and, if so, returns all three
 #' pieces of information.
 #' 
-#' @author John Wambaugh and Robert Pearce
+#' @author John Wambaugh, Robert Pearce, and Annabel Meade
 #' 
 #' @keywords cheminformatics
 #' 
@@ -143,9 +143,11 @@ get_chem_id <- function(chem.cas=NULL,
     if (is.null(this.chem.name)) this.chem.name <- found.chem.name
     if (is.null(this.dtxsid)) this.dtxsid <- found.dtxsid
     
-    chem.cas.out <- c(chem.cas.out, this.chem.cas)
-    chem.name.out <- c(chem.name.out, this.chem.name)
-    dtxsid.out <- c(dtxsid.out, this.dtxsid)
+    chem.cas.out <- c(chem.cas.out, this.chem.cas[1])
+    chem.name.out <- c(chem.name.out, this.chem.name[1])
+    dtxsid.out <- c(dtxsid.out, this.dtxsid[1])
+    if( (length(this.dtxsid)>1) || (length(this.chem.cas)>1) || (length(this.chem.name)>1))
+      cat("There is more than one chemical listed for ", this.dtxsid,", so only \nfirst entry is used. Check chem.physical_and_invitro.data.\n")
   }
   
   return(list(chem.cas=chem.cas.out,chem.name=chem.name.out,dtxsid=dtxsid.out)

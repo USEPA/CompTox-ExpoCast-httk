@@ -9,24 +9,30 @@ get_rblood2plasma(
   chem.cas = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE
+  default.to.human = FALSE,
+  suppress.messages = FALSE
 )
 }
 \arguments{
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{Chemical name (spaces and capitalization ignored) --  if
+parameters is not specified then the chemical must be identified by either
+CAS, name, or DTXISD}
 
-\item{chem.cas}{Either the CAS number or the chemical name must be
-specified.}
+\item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
+parameters is not specified then the chemical must be identified by either
+CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)
-the chemical must be identified by either CAS, name, or DTXSIDs}
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+ -- if parameters is not specified then the chemical must be identified by 
+either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 A numeric value for the steady-state ratio of chemical concentration in blood
@@ -34,12 +40,8 @@ to plasma
 }
 \description{
 This function attempts to retrieve a measured species- and chemical-specific 
-blood:plasma concentration ratio.
-}
-\details{
-A value of NA is returned when the requested value is unavailable.  Values
-are retrieved from chem.physical_and_invitro.data. %% ~~ If necessary, more
-details than the description above ~~
+blood:plasma concentration ratio from \code{\link{chem.phys_and_invitro.data}}.
+If not available, Rblood2plasma is returned as NA.
 }
 \examples{
 
@@ -47,7 +49,11 @@ get_rblood2plasma(chem.name="Bisphenol A")
 get_rblood2plasma(chem.name="Bisphenol A",species="Rat")
 
 }
+\seealso{
+\code{\link{chem.phys_and_invitro.data}}
+}
 \author{
-Robert Pearce
+Robert Pearce, Annabel Meade
 }
 \keyword{Parameter}
+\keyword{in-vitro}
