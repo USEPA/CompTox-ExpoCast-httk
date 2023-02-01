@@ -89,7 +89,7 @@ install.packages("httk")
 ```
 
 ### “Write Privileges” On Your Personal Computer.
-```{r install_httk, eval = FALSE}
+```{r write_privileges, eval = FALSE}
  Depending on the account you are using and where you want to install the package on that computer, you may need “permission” from your local file system to install the package. See this help here:
 
 <https://stackoverflow.com/questions/42807247/installing-package-cannot-open-file-permission-denied>

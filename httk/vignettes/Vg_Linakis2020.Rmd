@@ -221,7 +221,7 @@ simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
 #for(i in 50){
-  #tryCatch({
+#  tryCatch({
     relconc <- subset(conc_data,conc_data$DTXSID == unique_scenarios$DTXSID[i] & 
       conc_data$DOSE == unique_scenarios$DOSE[i] & 
       conc_data$EXP_LENGTH == unique_scenarios$EXP_LENGTH[i] & 
@@ -239,7 +239,12 @@ for(i in 1:nrow(unique_scenarios)){
         # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
-        species = as.character(unique_scenarios$CONC_SPECIES[i]), 
+        species = as.character(unique_scenarios$CONC_SPECIES[i]),
+        output.units = c(
+          "Calvppmv" = "uM", 
+          "Cendexhppmv" = "uM", 
+          "Cmixexhppmv" = "uM"
+          ),
         monitor.vars = c(
           "Cven", 
           "Clung", 
