@@ -195,7 +195,7 @@ model.list[["dermal_1subcomp"]]$allowed.units.input <- list(
   "iv" = c('umol','mg','mg/kg'), 
   "dermal" = c('umol','mg','mg/kg'), 
   "dermal.washoff" = c('umol','mg','mg/kg'), 
-  "dermal.InifiniteDose" = c('mg/L','uM','ppm','ppmv','ppmw'))
+  "dermal.InfiniteDose" = c('mg/L','uM','ppm','ppmv','ppmw'))
 
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["dermal_1subcomp"]]$allowed.units.output <- list(

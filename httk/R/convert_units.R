@@ -214,6 +214,7 @@ compound data.table/data.frame or list.')
   conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*volidealgas
   conc_units_conversion_frame["ug/g","um"] <- 10^3/MW 
   conc_units_conversion_frame["ug/g","ppmw"] <- 1
+  conc_units_conversion_frame["ppmw","um"] <- 10^3/MW 
   # Weight conversiond depends on state of matter:
   if (state == "gas")
   {

@@ -177,10 +177,13 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     stop("InfiniteDose must be either be equal to FALSE (i.e., 0) (default) or TRUE (i.e., 1).")
   }  
   # Check InfiniteDose in parameters
-  if (!is.null(parameters) & InfiniteDose!=parameters$InfiniteDose){
-    InfiniteDose = parameters$InfiniteDose
-    warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
+  if (!is.null(parameters)){
+    if(InfiniteDose!=parameters$InfiniteDose){
+      InfiniteDose = parameters$InfiniteDose
+      warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
+    }
   }
+
   
   # ROUTE - IV or ORAL -------------------------------------------------
   if (route %in% c("iv","oral")){
@@ -191,13 +194,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       warning("When route is not set to 'dermal', inputs Vvehicle, dosing.dermal,
               dose.duration, dose.duration.units, washoff, and InfiniteDose are ignored.
               Vvehicle is set to 0.")
-    }
-    
-    # INITIAL.DOSE and DOSE.UNITS
-    if (is.null(initial.dose) | is.null(input.units)){
-      initial.dose <- 1; input.units <- "mg/kg" 
-      warning("The initial dose is automatically set to 1 mg/kg, since at least 
-              one of initial.dose and input.units is NULL.")
     }
     forcings = cbind(times = start.time, forcing_values = 0)
   }
@@ -233,15 +229,6 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
           dosing.matrix <- dosing.matrix[-1,];
         }
         dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
-      }
-      
-      # INITIAL.DOSE and DOSE.UNITS
-      if (is.null(input.units)){
-        input.units <- "mg/L"
-        if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
-          initial.dose <- 1;  
-          warning("initial.dose automatically set to 1 mg/L.")
-        }
       }
       
     # FINITE DOSING
@@ -281,23 +268,12 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
         }
         dosing.matrix<-matrix(dosing.matrix,ncol=2,dimnames=list(NULL,c("time","dose"))) #if only one dose
       }
-      
-      # INITIAL.DOSE and DOSE.UNITS
-      if (is.null(input.units)){
-        input.units <- "mg/kg"
-        if (is.null(initial.dose) & is.null(dosing.dermal) & is.null(dosing.matrix)){
-          initial.dose <- 1;  
-          warning("initial.dose automatically set to 1 mg/kg.")
-        }
-      }
     }
     
     # DOSE.DURATION
     if(!is.null(dose.duration)){
-      if(is.null(dose.duration.units)){ dose.duration.units="days"; warning("dose.duration.units automatically set to \"days\". 
-                                                To change units, set dose.duration.units= \"hours\", \"mins\", or \"days\".")}
-      if (length(dose.duration)!=1 | length(dose.duration.units)!=1){ stop("dose.duration and dose.duration.units should only be one input. 
-                                                                             For multiple dosing changes over time, use dosing.dermal.")}
+      if(is.null(dose.duration.units)){ dose.duration.units="days"; warning("The dose.duration.units are automatically set to \"days\".\nTo change units, set dose.duration.units= \"hours\", \"mins\", or \"days\".")}
+      if (length(dose.duration)!=1 | length(dose.duration.units)!=1){ stop("The dose.duration and dose.duration.units should only be one input. \nFor multiple dosing changes over time, use dosing.dermal.")}
       if (is.null(dose.duration.units) | (tolower(dose.duration.units) %in% c("days","day","d"))){
         dose.duration.days <- dose.duration;
       } else if (tolower(dose.duration.units) %in% c("hr","hrs","hours","h","hour")){
@@ -310,6 +286,22 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     } 
   }
   
+  # INITIAL.DOSE and DOSE.UNITS
+  if (is.null(dosing.dermal)){
+    if (InfiniteDose){input.units.default="mg/kg/L"} else {input.units.default="mg/kg"}
+    
+    if (is.null(input.units)){
+      input.units <- input.units.default
+      if (is.null(initial.dose)){
+        initial.dose <- 1;  
+        warning(paste0("The initial.dose is automatically set to 1", input.units.default,"."))
+      } else {
+        warning(paste0("The input.units are not specified, so initial dose is set automatically to ",initial.dose," ",input.units.default,"."))
+      }
+    } else {
+      if(is.null(initial.dose)){ stop("The initial.dose must be specified along with input.units.")}
+    }
+  }
 
   if (model.type=="dermal"){
     model.forsolver="dermal"
@@ -323,7 +315,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   
   # WASHOFF 
   if (washoff){
-    if (route=="dermal" & InfiniteDose==F){
+    if (route=="dermal"){
       route="dermal.washoff"
     } else warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
   }
