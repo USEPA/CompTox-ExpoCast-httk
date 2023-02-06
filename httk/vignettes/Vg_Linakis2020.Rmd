@@ -88,7 +88,11 @@ rm(list=ls())
 ### Get metabolism and concentration data 
 ```{r data, eval = TRUE}
 met_data <- metabolism_data_Linakis2020
-conc_data <- concentration_data_Linakis2020
+conc_data <- subset(concentration_data_Linakis2020, !(SAMPLING_MATRIX %in%
+                      c("EEB","MEB","EB")))
+#conc_data <- concentration_data_Linakis2020
+#  subset(concentration_data_Linakis2020, !(SOURCE_CVT %in% c(
+#  "11453305")))
 conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
 conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
 # Not sure what to do with percent:
@@ -240,11 +244,6 @@ for(i in 1:nrow(unique_scenarios)){
         exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
         species = as.character(unique_scenarios$CONC_SPECIES[i]),
-        output.units = c(
-          "Calvppmv" = "uM", 
-          "Cendexhppmv" = "uM", 
-          "Cmixexhppmv" = "uM"
-          ),
         monitor.vars = c(
           "Cven", 
           "Clung", 
@@ -295,12 +294,9 @@ for(i in 1:nrow(unique_scenarios)){
       } else if (unique_scenarios[i,"CONC_U"] == "uM") {
         solve$simconc <- solve$Cendexh
         solve$unit <- "uM"
-      } else if (unique_scenarios[i,"CONC_U"] == "ug/L") {
-        solve$simconc <- solve$Cendexh
-        solve$unit <- "uM"
       }
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-            if (unique_scenarios[i,"CONC_U"] == "ppmv")
+      if (unique_scenarios[i,"CONC_U"] == "ppmv")
       {
         solve$simconc <- solve$Cmixexhppmv
         solve$unit <- "ppmv"
@@ -422,7 +418,8 @@ for(i in 1:length(simlist))
       "species",
       "matrix",
       "mw",
-      "CONC_U"
+      "CONC_U",
+      "ORIGINAL_CONC_U"
       )], simobscomb, by="time", all.x=TRUE))
 
 # Merge with met_data
