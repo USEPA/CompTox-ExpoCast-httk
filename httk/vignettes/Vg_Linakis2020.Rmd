@@ -71,7 +71,7 @@ extensive computing time and the checks on CRAN limit how long we can spend
 building the package. If you want this vignette to work, you must run all code,
 either by cutting and pasting it into R or pressing "play" (the green arrow) on
 each chunk in RStudio.
-```{r setup, eval = TRUE}
+```{r setup, eval = FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 library(httk)
 library(ggplot2)
@@ -86,7 +86,7 @@ library(smatr)
 rm(list=ls())
 ```
 ### Get metabolism and concentration data 
-```{r data, eval = TRUE}
+```{r data, eval = FALSE}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
 #conc_data <- subset(concentration_data_Linakis2020, !(SAMPLING_MATRIX %in%
@@ -117,7 +117,7 @@ Sets the units based on the sampling matrix (gas/liquid):
   +W with work/exercise
     
 Normalize units for gaseous samples to ppmv:
-```{r convert_to_ppmweight, eval = TRUE}
+```{r convert_to_ppmweight, eval = FALSE}
 gas.media <- c("EB","MEB","EEB","EB (+W)")
 gas.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% gas.media)$CONC_U)
@@ -153,7 +153,7 @@ for (this.unit in gas.units)
 ```
 
 Normalize the units for tissue samples to uM:
-```{r normalize_other_units, eval = TRUE}
+```{r normalize_other_units, eval = FALSE}
 tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
 tissue.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% tissue.media)$CONC_U)
@@ -194,7 +194,7 @@ Identify chemicals currently in our metabolism data that we don't have good
 concentration/time data for and remove them from our training dataset
 
 ### Data summary for chemical properties
-```{r summary, eval = TRUE}
+```{r summary, eval = FALSE}
 # Small molecule chemicals
 summary(met_data$AVERAGE_MASS)
 # Generally more lipophilic chemicals
@@ -208,7 +208,7 @@ table(conc_data$SAMPLING_MATRIX)/nrow(conc_data)*100
 ```
 
 ### Exposure scenarios
-```{r scenarios, eval = TRUE}
+```{r scenarios, eval = FALSE}
 # Create a dataframe with 1 row for each unique external exposure scenario
 unique_scenarios <- conc_data[with(conc_data,                             
   order(PREFERRED_NAME,
@@ -221,7 +221,7 @@ unique_scenarios <- conc_data[with(conc_data,
 ### Observations and Predictions
 Create a list of dataframes of observed and predicted concentrations
 for each unique external exposure scenario (corresponding to 142 studies)
-```{r runmodel, eval = TRUE}
+```{r runmodel, eval = FALSE}
 simlist <- list()
 obslist <- list()
 for(i in 1:nrow(unique_scenarios)){
@@ -318,7 +318,7 @@ for(i in 1:nrow(unique_scenarios)){
 
 
 Create a predicted vs. observed plot for each study:
-```{r Makestudyplots, eval = TRUE}
+```{r Makestudyplots, eval = FALSE}
 cvtlist <- list()
 for(i in 1:nrow(unique_scenarios))
 {
@@ -357,7 +357,7 @@ for(i in 1:nrow(unique_scenarios))
 ```
 
 Create a list to hold the combined observations and predictions for each scenario:
-```{r init_dataset, eval = TRUE}
+```{r init_dataset, eval = FALSE}
 # Creation of simulated vs. observed concentration dataset
 unique_scenarios$RSQD <- 0
 unique_scenarios$RMSE <- 0
@@ -367,7 +367,7 @@ obvpredlist <- list()
 ```
 
 Merge the simulations and observations on the basis of simulation time:
-```{r merge_datasets, eval = TRUE}
+```{r merge_datasets, eval = FALSE}
 for(i in 1:length(simlist))
 {
   obsdata <- as.data.frame(obslist[[i]])
@@ -458,7 +458,7 @@ for(i in 1:length(simlist))
 
 Identify which quartile each observation occurred in with respect to the latest (maximum)
 observed time
-```{r time_quartile, eval = TRUE}
+```{r time_quartile, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -481,7 +481,7 @@ for(i in 1:length(simobslist))
 ```
 
 Calculate the area under the curve (AUC)
-```{r calc_AUC, eval = TRUE}
+```{r calc_AUC, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -527,7 +527,7 @@ for(i in 1:length(simobslist))
 ```
 
 Calculate performance statistics
-```{r calc_error, eval = TRUE}
+```{r calc_error, eval = FALSE}
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
   {
@@ -549,7 +549,7 @@ for(i in 1:length(simobslist))
 ```
 
 Combine individual studies into single table
-```{r combine_studies, eval = TRUE}
+```{r combine_studies, eval = FALSE}
 obsvpredlist <- list()
 for(i in 1:length(simobslist))
   if (nrow(simobslist[[i]])>0)
@@ -585,7 +585,7 @@ for(i in 1:length(simobslist))
 
 ### Write out the study-level figures:
 
-```{r obsvspredplots, eval = TRUE}
+```{r obsvspredplots, eval = FALSE}
 # Create pdfs of observed vs. predicted concentration plots
 dir.create("Linakis2020")
 pdf("Linakis2020/obvpredplots.pdf", width = 10, height = 10)
@@ -596,7 +596,7 @@ dev.off()
 ```
 
 ### Finish simulated concentration/time plots
-```{r annotate_study_stats, eval = TRUE}
+```{r annotate_study_stats, eval = FALSE}
 for (i in 1:length(cvtlist))
 {
   cvtlist[[i]] <- cvtlist[[i]] + 
@@ -622,7 +622,7 @@ for (i in 1:length(cvtlist))
 }
 ```
 
-```{r cvtplots, eval = TRUE}
+```{r cvtplots, eval = FALSE}
 # Create pdfs of simulated concentration-time plots against observed c-t values
 pdf("Linakis2020/simdataplots.pdf")
 for (i in 1:length(cvtlist)) {
@@ -632,7 +632,7 @@ dev.off()
 ```
 
 Combine obs. vs. pred. into single table:
-```{r combine_obs_vs_pred, eval = TRUE}
+```{r combine_obs_vs_pred, eval = FALSE}
 simobsfull <- do.call("rbind",simobslist)
 simobsfullrat <- subset(simobsfull, simobsfull$species == "Rat")
 simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
@@ -640,7 +640,7 @@ unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
 The observations in simobsfull are in both uM and ppmv -- standardize to uM
-```{r Standardize Units, eval = TRUE}
+```{r Standardize Units, eval = FALSE}
 these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
 for (this.chem in these.chems)
 {
@@ -670,7 +670,7 @@ for (this.chem in these.chems)
 
 ### Regressions
 Other analytics including linear regression on overall concentration vs. time observed vs. predicted
-```{r regression, eval = TRUE}
+```{r regression, eval = FALSE}
 table(unique_scenarios$CONC_SPECIES)
 nrow(simobsfull) - nrow(simobsfull[
   !is.na(simobsfull$simconc) & 
@@ -859,7 +859,7 @@ table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 ## TABLE AND PLOT GENERATION
 
 ### Figure 2: overall observed vs. predicted plot
-```{r obspredFig2, eval = TRUE}
+```{r obspredFig2, eval = FALSE}
 fig2 <- ggplot(
   data = simobsfull[
     simobsfull$simconc > 0 & 
@@ -922,14 +922,14 @@ fig2 <- ggplot(
 fig2 #Display plot in R
 ```
 
-```{r write_figure2, eval = TRUE}
+```{r write_figure2, eval = FALSE}
 pdf("Linakis2020/Figure2.pdf", width = 10, height = 10)
 print(fig2)
 dev.off()
 ```
 
 ### Create and read out plots of overall cvt, cmax, and auc observed vs. pred
-```{r calculations, eval = TRUE}
+```{r calculations, eval = FALSE}
 # Create data and run calculations for populating plots
 cmaxfull <- subset(simobsfull, !duplicated(simobsfull$AUCobs) & simobsfull$Cmaxobs != 0)
 cmaxobs <- cmaxfull$Cmaxobs
@@ -994,10 +994,10 @@ aucmisschem <- table(aucfull[
 ```
 
 ### Figure 4: Cmax and AUC observed vs. Predicted Values
-```{r Fig4plot, eval = TRUE}
+```{r Fig4plot, eval = FALSE}
 cmaxp <- ggplot(data = cmaxfull, aes(x = log10(Cmaxsim), y = log10(Cmaxobs))) +
   geom_point(color = 
-    ifelse(abs(log10(cmaxfull$Cmaxsim)  -log10(cmaxfull$Cmaxobs))>=1, "red","black"))  +
+    ifelse(abs(log10(cmaxfull$Cmaxsim)  -log10(cmaxfull$Cmaxobs))>=2, "red","black"))  +
   geom_abline()  + 
   xlab("Log(Simulated Max Concentration)") + 
   ylab("Log(Observed Max Concentration)") + 
@@ -1015,7 +1015,7 @@ cmaxp <- ggplot(data = cmaxfull, aes(x = log10(Cmaxsim), y = log10(Cmaxobs))) +
       round(summary(cmaxlm)$r.squared,digits = 2))) +
   geom_text_repel(
     data = cmaxfull[
-      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))>=1 & 
+      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))>=2 & 
       log10(cmaxfull$Cmaxsim) > 2,], 
     aes(label = paste(chem,species,matrix)), 
     force = 2, 
@@ -1028,7 +1028,7 @@ cmaxp <- ggplot(data = cmaxfull, aes(x = log10(Cmaxsim), y = log10(Cmaxobs))) +
   scale_x_continuous(lim = c(-1,5)) + 
   geom_text_repel(
     data = cmaxfull[
-      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))>=1 &
+      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))>=2 &
       log10(cmaxfull$Cmaxsim) <= 2,], 
     aes(label = paste(chem,species,matrix)), 
     nudge_x = 0.0,
@@ -1041,7 +1041,7 @@ cmaxp <- ggplot(data = cmaxfull, aes(x = log10(Cmaxsim), y = log10(Cmaxobs))) +
     vjust = 0.5) + 
   geom_text(
     data = cmaxfull[
-      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))<=-1,], 
+      (log10(cmaxfull$Cmaxsim)-log10(cmaxfull$Cmaxobs))<=-2,], 
     aes(label = paste(chem,species,matrix)), 
 #    size = 5.3, 
     fontface = 'bold', 
@@ -1063,7 +1063,7 @@ aucp <- ggplot(
   data = aucfull, 
   aes(x = log10(AUCsim), y = log10(AUCobs))) + 
   geom_point(color = 
-    ifelse(abs(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))>=1, "red","black"))  +
+    ifelse(abs(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))>=2, "red","black"))  +
   geom_abline()  + 
   xlab("Log(Simulated AUC)") + 
   ylab("Log(Observed AUC)") + 
@@ -1082,7 +1082,7 @@ aucp <- ggplot(
       "\nRegression R^2: ", 
       round(summary(auclm)$r.squared,digits = 2))) + 
   geom_text_repel(
-    data = aucfull[(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))>=1,], 
+    data = aucfull[(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))>=2,], 
     aes(label = paste(chem,species,matrix)), 
 #    size = 5.3, 
     fontface = 'bold', 
@@ -1092,7 +1092,7 @@ aucp <- ggplot(
   scale_y_continuous(lim = c (-2,4)) + 
   scale_x_continuous(lim = c(-2,4)) + 
   geom_text(
-    data = aucfull[(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))<=-1,], 
+    data = aucfull[(log10(aucfull$AUCsim)-log10(aucfull$AUCobs))<=-2,], 
     aes(label = paste(chem,species,matrix)), 
 #    size = 5.3, 
     fontface = 'bold', 
@@ -1111,14 +1111,14 @@ aucp <- ggplot(
 aucp
 ```
 
-```{r write_figure4, eval = TRUE}
+```{r write_figure4, eval = FALSE}
 pdf("Linakis2020/Figure4.pdf", width = 20, height = 10)
 plot_grid(cmaxp,aucp,nrow = 1, labels = c('A','B'), label_size = 30)
 dev.off()
 ```
 
 ### Figure 3: Separation by chemical class
-```{r Fig3plot, eval = TRUE}
+```{r Fig3plot, eval = FALSE}
 simobsfull$aggscen <- as.factor(paste(simobsfull$chem, 
   simobsfull$species, 
   simobsfull$matrix))
@@ -1158,14 +1158,14 @@ fig3 <- ggplot(
 fig3
 ```
 
-```{r write_figure3, eval = TRUE}
+```{r write_figure3, eval = FALSE}
 pdf("Linakis2020/Figure3.pdf", width = 40, height = 13)
 print(fig3)
 dev.off()
 ```
 
 ### Figures S1A-S1D: Separation by time quartile and physicochemical properties
-```{r FigS1, eval = TRUE}
+```{r FigS1, eval = FALSE}
 figs1a <- ggplot(
     data = simobsfull[simobsfull$simconc >0 & simobsfull$obsconc > 0,], 
     aes(x = tquart, y = log10(simconc)-log10(obsconc))) +
@@ -1241,14 +1241,14 @@ figs1d <- ggplot(
 figs1d
 ```
 
-```{r write_figures1, eval = TRUE}
+```{r write_figures1, eval = FALSE}
 pdf("Linakis2020/FigureS1.pdf", width = 20, height = 20)
 plot_grid(figs1a,figs1b,figs1c,figs1d,nrow = 2, labels = c('A','B','C','D'), label_size = 30)
 dev.off()
 ```
 
 ### Supplemental Table 2: Leave-one-out Chemical Sensitivity Analysis
-```{r SupTable2, eval = TRUE}
+```{r SupTable2, eval = FALSE}
 senschem <- list()
 sensslope <- list()
 sensrsq <- list()
@@ -1336,7 +1336,7 @@ write.csv(sensitivitydf, 'supptab2.csv',row.names = FALSE)
 ```
 
 ### Supplemental Table 1
-```{r SupTable1, eval = TRUE}
+```{r SupTable1, eval = FALSE}
 supptab1 <- subset(unique_scenarios, !duplicated(unique_scenarios$PREFERRED_NAME) | !duplicated(unique_scenarios$SOURCE_CVT) | !duplicated(unique_scenarios$CONC_SPECIES))
 for(i in 1:nrow(supptab1)){
   tryCatch({
