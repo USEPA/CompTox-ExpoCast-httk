@@ -88,8 +88,9 @@ rm(list=ls())
 ### Get metabolism and concentration data 
 ```{r data, eval = TRUE}
 met_data <- metabolism_data_Linakis2020
-conc_data <- subset(concentration_data_Linakis2020, !(SAMPLING_MATRIX %in%
-                      c("EEB","MEB","EB")))
+conc_data <- concentration_data_Linakis2020
+#conc_data <- subset(concentration_data_Linakis2020, !(SAMPLING_MATRIX %in%
+#                      c("EEB","MEB","EB")))
 #conc_data <- concentration_data_Linakis2020
 #  subset(concentration_data_Linakis2020, !(SOURCE_CVT %in% c(
 #  "11453305")))
