@@ -23,6 +23,8 @@
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
 #'
+#' @param suppress.messages Whether or not the output message is suppressed.
+#'
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'
 #' @author John Wambaugh 

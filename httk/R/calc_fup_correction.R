@@ -68,6 +68,8 @@
 #' When species is specified as rabbit, dog, or mouse, the human unbound
 #' fraction is substituted.
 #' 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'
 #' @author John Wambaugh 
