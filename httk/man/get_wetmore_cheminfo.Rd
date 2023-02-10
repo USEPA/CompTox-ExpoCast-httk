@@ -22,6 +22,8 @@ from
 and "Species".}
 
 \item{species}{Species desired (either "Rat" or default "Human").}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for
