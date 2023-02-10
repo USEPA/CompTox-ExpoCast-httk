@@ -11,7 +11,7 @@ parameterize_steadystate(
   species = "Human",
   clint.pvalue.threshold = 0.05,
   default.to.human = FALSE,
-  human.clint.fup = FALSE,
+  force.human.clint.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   adjusted.Clint = TRUE,
   restrictive.clearance = TRUE,
@@ -39,7 +39,7 @@ having p-values greater than the threshold are set to zero.}
 \item{default.to.human}{Substitutes missing species-specific values with human values if
 TRUE (default is FALSE).}
 
-\item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
+\item{force.human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}
 
 \item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
