@@ -52,6 +52,8 @@ human values if true.}
 calculation for rats if true.
 When species is specified as rabbit, dog, or mouse, the human unbound
 fraction is substituted.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
