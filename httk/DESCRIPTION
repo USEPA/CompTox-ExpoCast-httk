@@ -77,7 +77,7 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        testthat
+        testthat, readxl
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
