@@ -16,7 +16,7 @@ lump_tissues(
   species = "Human",
   tissue.vols = NULL,
   tissue.flows = NULL,
-  tissue.names = NULL,
+  tissuenames = NULL,
   model = "pbtk",
   suppress.messages = FALSE
 )
@@ -41,6 +41,8 @@ default "Human").}
 \item{tissue.vols}{A list of volumes for tissues in \code{tissuelist}.}
 
 \item{tissue.flows}{A list of flows for tissues in \code{tissuelist}.}
+
+\item{tissuenames}{A list of tissue names in \code{tissuenames}.}
 
 \item{model}{Specify which model (and therefore which tissues) are being 
 considered.}

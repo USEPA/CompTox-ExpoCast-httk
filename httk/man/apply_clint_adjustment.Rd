@@ -15,9 +15,9 @@ apply_clint_adjustment(
 }
 \arguments{
 \item{Clint}{In vitro measured intrinsic hepatic clearance in units of
-(ul/min/million hepatocytes).
+(ul/min/million hepatocytes).}
 
-#param Fu_hep Estimated fraction of chemical free for metabolism in the 
+\item{Fu_hep}{Estimated fraction of chemical free for metabolism in the 
 in vitro assay, estimated by default from the method of Kilford et al. (2008)
 using \code{\link{calc_hep_fu}}}
 

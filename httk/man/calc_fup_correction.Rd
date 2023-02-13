@@ -42,6 +42,8 @@ for the model indicated by argument model}
 
 \item{plasma.pH}{pH of plasma (default 7.4)}
 
+\item{dow74}{The octanol-water distribution ratio (DOW).}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
