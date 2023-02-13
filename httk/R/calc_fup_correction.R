@@ -57,6 +57,8 @@
 #' 
 #' @param plasma.pH pH of plasma (default 7.4)
 #'
+#' @param dow74 The octanol-water distribution ratio (DOW).
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 

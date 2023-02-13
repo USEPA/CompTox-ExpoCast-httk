@@ -114,6 +114,8 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model.
 #'
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' 
 #' @param suppress.messages Whether or not to suppress output message.
 #'
 #' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 

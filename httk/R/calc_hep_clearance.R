@@ -15,12 +15,6 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). 
-#'
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true.
-#'
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #'
@@ -298,6 +292,9 @@ calc_hep_clearance <- function(chem.name=NULL,
 #'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
+#' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
+#' adjustment if calculating Rblood2plasma.
 #'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.

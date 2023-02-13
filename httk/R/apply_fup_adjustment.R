@@ -8,7 +8,7 @@
 #'
 #' @param fup In vitro measured fraction unbound in plasma
 #'
-#' #param fup.correction Estimated correction to account for additional lipid
+#' @param fup.correction Estimated correction to account for additional lipid
 #' binding in vivo (Pearce et al., 2017) from \code{\link{calc_fup_correction}}
 #'
 #' @param Pow The octanal:water equilibrium partition coefficient
