@@ -55,6 +55,8 @@ requested. Can be a vector.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").  Species must be set to "Human" to run httkpop model.}
 
+\item{daily.dose}{Total daily dose, mg/kg BW.}
+
 \item{suppress.messages}{Whether or not to suppress output message.}
 
 \item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
