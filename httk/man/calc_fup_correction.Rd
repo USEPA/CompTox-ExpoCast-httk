@@ -21,7 +21,7 @@ calc_fup_correction(
 }
 \arguments{
 \item{fup}{Fraction unbound in plasma, if provided this argument overides
-values from argument parameters and \code{\link{chem.phys_and_invitro.data}}}
+values from argument parameters and \code{\link{chem.physical_and_invitro.data}}}
 
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- if
 parameters is not specified then the chemical must be identified by either
