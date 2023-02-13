@@ -196,7 +196,7 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 \seealso{
 \code{\link{solve_gas_pbtk}}
 
-\code{\link{adjust_clint}}
+\code{\link{apply_clint_adjustment}}
 
 \code{\link{predict_partitioning_schmitt}}
 

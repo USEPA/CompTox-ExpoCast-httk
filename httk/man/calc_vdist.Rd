@@ -53,7 +53,7 @@ dataset).}
 }
 \description{
 This function predicts partition coefficients for all tissues using
-\code{\link{predict_partioning_schmitt}}, then lumps them
+\code{\link{predict_partitioning_schmitt}}, then lumps them
 into a single compartment.
 }
 \details{
