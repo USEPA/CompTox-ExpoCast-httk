@@ -140,7 +140,7 @@
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{tissue.data}}
 #'

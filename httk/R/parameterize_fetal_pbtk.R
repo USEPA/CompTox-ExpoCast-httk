@@ -80,9 +80,9 @@
 #'
 #' @seealso \code{\link{parameterize_pbtk}}
 #'
-#' @seealso \code{\link{predict_partioning_schmitt}}
+#' @seealso \code{\link{predict_partitioning_schmitt}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{tissue.data}}
 #'

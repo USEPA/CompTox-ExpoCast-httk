@@ -152,7 +152,7 @@
 #'
 #' @seealso \code{\link{solve_gas_pbtk}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
 #'
