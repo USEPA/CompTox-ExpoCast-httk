@@ -36,7 +36,7 @@
 #' likely take longer than protein binding assay itself.
 #'
 #' @param fup Fraction unbound in plasma, if provided this argument overides
-#' values from argument parameters and \code{\link{chem.phys_and_invitro.data}} 
+#' values from argument parameters and \code{\link{chem.physical_and_invitro.data}} 
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either

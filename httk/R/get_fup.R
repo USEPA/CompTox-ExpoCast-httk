@@ -2,7 +2,7 @@
 #' 
 #' This function retrieves the chemical- and species-specific fraction
 #' unbound in plasma (\ifelse{html}{\out{f<sub>up</sub>}}{\eqn{f_{up}}}) 
-#' from \code{\link{chem.phys_and_invitro.data}}. 
+#' from \code{\link{chem.physical_and_invitro.data}}. 
 #' If that parameter is described by a distribution (that is, a median, 
 #' lower-, and upper-95th percentile separated by commas) this 
 #' function splits those quantiles into separate values.
@@ -42,7 +42,7 @@
 #'
 #' @keywords Parameter in-vitro
 #'
-#' @seealso \code{\link{chem.phys_and_invitro.data}}
+#' @seealso \code{\link{chem.physical_and_invitro.data}}
 get_fup <- function(chem.cas=NULL,
                     chem.name=NULL,
                     dtxsid = NULL,
