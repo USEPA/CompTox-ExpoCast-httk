@@ -183,6 +183,8 @@ calc_fup_correction <- function(
       pKa_Accept <- parameters$pKa_Accept
     } else if ("Dow74" %in% names(parameters)) {
       if (is.null(dow74)) dow74 <- parameters$Dow74
+      if ("Pow" %in% names(parameters)) Pow <- parameters$Pow
+      else Pow <- NA
     } else stop("Missing parameters needed in calc_fup_correction.")  
   }
   
