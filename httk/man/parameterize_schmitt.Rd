@@ -103,7 +103,7 @@ and pharmacodynamics 44.6 (2017): 549-565.
 
 \code{\link{calc_ma}}
 
-\code{\link{adjust_fup}}
+\code{\link{apply_fup_adjustment}}
 }
 \author{
 Robert Pearce and John Wambaugh

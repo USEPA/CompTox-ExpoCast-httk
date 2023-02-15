@@ -15,9 +15,9 @@ apply_fup_adjustment(
 )
 }
 \arguments{
-\item{fup}{In vitro measured fraction unbound in plasma
+\item{fup}{In vitro measured fraction unbound in plasma}
 
-#param fup.correction Estimated correction to account for additional lipid
+\item{fup.correction}{Estimated correction to account for additional lipid
 binding in vivo (Pearce et al., 2017) from \code{\link{calc_fup_correction}}}
 
 \item{Pow}{The octanal:water equilibrium partition coefficient}

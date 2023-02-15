@@ -1,7 +1,7 @@
 #' Calculate the volume of distribution for a one compartment model.
 #'
 #' This function predicts partition coefficients for all tissues using
-#' \code{\link{predict_partioning_schmitt}}, then lumps them
+#' \code{\link{predict_partitioning_schmitt}}, then lumps them
 #' into a single compartment.
 #' 
 #' The effective volume of distribution is calculated by summing each tissues

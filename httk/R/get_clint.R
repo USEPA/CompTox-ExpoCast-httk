@@ -3,7 +3,7 @@
 #' This function retrieves the chemical- and species-specific intinsic
 #' hepatic clearance (\ifelse{html}{\out{Cl<sub>int</sub>}}{\eqn{Cl_{int}}},
 #' inits of uL/min/million hepatocytes)  
-#' from \code{\link{chem.phys_and_invitro.data}}. 
+#' from \code{\link{chem.physical_and_invitro.data}}. 
 #' If that parameter is described by a distribution (that is, a median, 
 #' lower-, upper-95th percentile and p-value separated by commas) this 
 #' function splits those quantiles into separate values. Most 
@@ -50,7 +50,7 @@
 #'
 #' @keywords Parameter in-vitro
 #'
-#' @seealso \code{\link{chem.phys_and_invitro.data}}
+#' @seealso \code{\link{chem.physical_and_invitro.data}}
 get_clint <- function(chem.cas=NULL,
                     chem.name=NULL,
                     dtxsid = NULL,

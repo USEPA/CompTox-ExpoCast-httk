@@ -83,7 +83,7 @@
 #'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{tissue.data}}
 #'

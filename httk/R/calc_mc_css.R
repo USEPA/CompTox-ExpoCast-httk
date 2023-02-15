@@ -114,6 +114,8 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model.
 #'
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' 
 #' @param suppress.messages Whether or not to suppress output message.
 #'
 #' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
@@ -239,8 +241,8 @@
 #'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
 #'              output.units = "uM", samples = 2000,
 #'              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
-#'              agelim_years=NULL, agelim_months=NULL, weight_category = 
-#'              c("Underweight", "Normal", "Overweight", "Obese")))
+#'              agelim_years=NULL, agelim_months=NULL,
+#'              weight_category = "Underweight"))
 #' 
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  set.seed(1234)

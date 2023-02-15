@@ -177,7 +177,7 @@ toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
 
 \code{\link{predict_partitioning_schmitt}}
 
-\code{\link{adjust_clint}}
+\code{\link{apply_clint_adjustment}}
 
 \code{\link{tissue.data}}
 

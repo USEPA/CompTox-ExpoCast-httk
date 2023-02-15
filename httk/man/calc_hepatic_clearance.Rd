@@ -51,6 +51,9 @@ plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
+\item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
+adjustment if calculating Rblood2plasma.}
+
 \item{...}{Additional parameters passed to parameterize_steadystate if
 parameters is NULL.}
 }
