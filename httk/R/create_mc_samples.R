@@ -210,7 +210,8 @@ create_mc_samples <- function(chem.cas=NULL,
   # The Schmitt parameters are useful if we need to redo partitioning later, though
   # some models don't include partitioning so the function might fail:
   pschmitt <- try(do.call(parameterize_schmitt,
-                      args = args.schmitt))
+                      args = args.schmitt),
+                      silent=TRUE)
   if (is(pschmitt,"try-error")) pschmitt <- NULL
   
   # But we don't want to overwrite any Schmitt params provided by the
