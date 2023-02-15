@@ -54,7 +54,7 @@ list containing:
 This function retrieves the chemical- and species-specific intinsic
 hepatic clearance (\ifelse{html}{\out{Cl<sub>int</sub>}}{\eqn{Cl_{int}}},
 inits of uL/min/million hepatocytes)  
-from \code{\link{chem.phys_and_invitro.data}}. 
+from \code{\link{chem.physical_and_invitro.data}}. 
 If that parameter is described by a distribution (that is, a median, 
 lower-, upper-95th percentile and p-value separated by commas) this 
 function splits those quantiles into separate values. Most 
@@ -65,7 +65,7 @@ set to zero (no clearance). Some values extracted from the literature do not
 have a p-value.
 }
 \seealso{
-\code{\link{chem.phys_and_invitro.data}}
+\code{\link{chem.physical_and_invitro.data}}
 }
 \author{
 John Wambaugh

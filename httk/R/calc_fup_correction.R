@@ -36,7 +36,7 @@
 #' likely take longer than protein binding assay itself.
 #'
 #' @param fup Fraction unbound in plasma, if provided this argument overides
-#' values from argument parameters and \code{\link{chem.phys_and_invitro.data}} 
+#' values from argument parameters and \code{\link{chem.physical_and_invitro.data}} 
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -57,6 +57,8 @@
 #' 
 #' @param plasma.pH pH of plasma (default 7.4)
 #'
+#' @param dow74 The octanol-water distribution ratio (DOW).
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
@@ -67,6 +69,8 @@
 #' calculation for rats if true.
 #' When species is specified as rabbit, dog, or mouse, the human unbound
 #' fraction is substituted.
+#' 
+#' @param suppress.messages Whether or not the output message is suppressed.
 #' 
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'

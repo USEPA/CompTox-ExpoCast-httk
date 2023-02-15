@@ -41,9 +41,6 @@ for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Def
 TRUE (default is FALSE).}
 
 \item{suppress.messages}{Whether or not the output messages are suppressed.}
-
-\item{human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
-of unbound plasma in calculation of partition coefficients for rats if true.}
 }
 \value{
 A named list containing the blood:air, water:air, and mucus:air 

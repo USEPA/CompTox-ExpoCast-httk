@@ -62,7 +62,7 @@
 #'
 #' @seealso \code{\link{calc_ma}}
 #'
-#' @seealso \code{\link{adjust_fup}}
+#' @seealso \code{\link{apply_fup_adjustment}}
 #'
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 

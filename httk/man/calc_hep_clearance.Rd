@@ -44,12 +44,6 @@ plasma, but converted to use with plasma concentration.}
 
 \item{...}{Additional parameters passed to parameterize_steadystate if
 parameters is NULL.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
 }
 \value{
 \item{Hepatic Clearance}{Units of L/h/kg BW.}
