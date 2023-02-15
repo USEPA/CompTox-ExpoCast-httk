@@ -320,6 +320,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.adjustment <- NA
     fup.corrected <- NA
   } 
+  
+  if (is.na(fup.corrected)) stop(
+"fup is NA, Schmitt's method for tissue partition cannot be used.")
+
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
                   Funbound.plasma.dist=fup.dist,
