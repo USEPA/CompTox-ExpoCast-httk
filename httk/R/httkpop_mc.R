@@ -65,10 +65,7 @@ httkpop_mc <- function(model,
   if (is.null(httkpop.dt))
     httkpop.dt <- do.call(
                         httkpop_generate,
-                        args=c(
-                          list(nsamp=samples),
-                          list(...)))
-
+                        args=list(nsamp=samples,...))
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
   if (model.list[[model]]$calc.standard.httkpop2httk)
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)

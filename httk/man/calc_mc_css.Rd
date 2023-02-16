@@ -251,7 +251,7 @@ calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)
              output.units = "uM", samples = 2000,
              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
              agelim_years=NULL, agelim_months=NULL,
-             weight_category = "Underweight"))
+             weight_category = c("Underweight","Normal","Overweight","Obese")))
 
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)

@@ -125,12 +125,6 @@ dataset)}
 parameterization function.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -177,6 +171,8 @@ When species is specified but chemical-specific in vitro data are not
 available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+(NOTE: The 'default.to.human' specification should be included as part of the
+arguments listed in 'parameterize.arg.list'.)
  
 For both plotting purposes and helping the numerical equation solver, it is
 helpful to specify that time points shortly before and after dosing are 
