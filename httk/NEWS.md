@@ -209,7 +209,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
   * 41 in rat
  
 ## Enhancements
-* Rewrote underlying code to allow more easy integration of new models. (goodbye, spaghetti code!)
+* Rewrote underlying code to allow more easy integration of new models. (goodbye spaghetti code!)
   * Rewritten functions include:
     * `calc_analytic_css`
     * `calc_mc_css`

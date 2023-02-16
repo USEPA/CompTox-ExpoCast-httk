@@ -324,7 +324,7 @@ Set species=\"Human\" to run httkpop model.')
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
 #  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
 #  {
-#    suppressWarnings(parameters.dt[c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+#    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
 #  }
 
 #
@@ -411,12 +411,24 @@ Set species=\"Human\" to run httkpop model.')
                                             parameters.mean$Funbound.plasma,
                                             parameters.mean$hematocrit)]
     } 
-# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
+# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)]
+                                      Funbound.plasma=Funbound.plasma)] 
+                                      
+    if (any(is.na(parameters.dt$Rblood2plasma)))
+    {
+      parameters.dt[is.na(Rblood2plasma),
+                          Rblood2plasma := available_rblood2plasma(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            species=species,
+                            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                            suppress.messages=suppress.messages)]
+    }
   }
   
   if (firstpass)
