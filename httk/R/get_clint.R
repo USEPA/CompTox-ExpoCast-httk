@@ -120,7 +120,9 @@ get_clint <- function(chem.cas=NULL,
     Clint.point  <- Clint.db
     Clint.dist <- NA
   }
-  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
+  
+  # Check for significant pvalue:
+  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint.point <- 0
   
   return(list(Clint.point = set_httk_precision(Clint.point),
               Clint.dist = set_httk_precision(Clint.dist),
