@@ -203,7 +203,7 @@ parameterize_steadystate <- function(
 
 # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
-  if (adjusted.Clint) Clint <- apply_clint_adjustment(
+  if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
                                Clint.point,
                                Fu_hep=Fu_hep,
                                suppress.messages=suppress.messages)
@@ -238,6 +238,7 @@ parameterize_steadystate <- function(
                                         dtxsid=dtxsid,
                                         chem.name=chem.name,
                                         chem.cas=chem.cas,
+                                        species=species,
                                         default.to.human=default.to.human,
                                         force.human.fup=force.human.clint.fup,
                                         suppress.messages=suppress.messages)
