@@ -114,7 +114,6 @@ For information on how folder structures work, please check out these sites:
 
 * <https://en.wikipedia.org/wiki/Directory_structure>
 * <https://www.geeksforgeeks.org/structures-of-directory-in-operating-system/>
-* <https://www2.westsussex.gov.uk/LearningandDevelopment/IT%20Learning%20Guides/Microsoft%20Windows%207/05%20Working%20with%20folders.pdf>
 
 Within the command shell you use the "cd" command to "change directories".
 
