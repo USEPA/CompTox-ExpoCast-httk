@@ -55,6 +55,9 @@ use by the scientific community
 *The following material is from a lecture taught as part of the course "Computational Methods in Chemical Risk Assessment" at Rutgers University in September, 2019.*
 
 ## Prepare R to run the vignette
+R package **knitr** generate html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
 ```{r}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
@@ -62,6 +65,9 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 
 ### Clear the memory
+
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
 ```{r clear_memory, eval = TRUE}
 rm(list=ls()) 
 ```
