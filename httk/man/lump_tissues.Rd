@@ -117,5 +117,5 @@ pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 \author{
 John Wambaugh and Robert Pearce
 }
-\keyword{Parameter,}
+\keyword{Parameter}
 \keyword{pbtk}

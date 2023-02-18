@@ -114,7 +114,7 @@ For information on how folder structures work, please check out these sites:
 
 * <https://en.wikipedia.org/wiki/Directory_structure>
 * <https://www.geeksforgeeks.org/structures-of-directory-in-operating-system/>
-* <https://www.westga.edu/its/assets-its/docs/understanding_directory_structure_windows.pdf>
+* <https://www2.westsussex.gov.uk/LearningandDevelopment/IT%20Learning%20Guides/Microsoft%20Windows%207/05%20Working%20with%20folders.pdf>
 
 Within the command shell you use the "cd" command to "change directories".
 
@@ -512,7 +512,8 @@ knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","EquivDose")],
 # Step Five: Compare with Estimated Exposure Rates
 The U.S. National Academy of Sciences, Engineering, and Medicine advises 
 calculating chemical risk posed to the public health on the basis of hazard,
-the dose-response relationship, and exposure. We can use *in vitro* bioactivity as
+the dose-response relationship, and exposure 
+[(NRC, 1983)](https://doi.org/10.17226/366). We can use *in vitro* bioactivity as
 a surrogate for hazard and **httk** as a surrogate for the dose-reponse relationship.
 However, to prioritize
 chemicals on the basis of putative risk we need some estimate of human exposure.

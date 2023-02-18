@@ -426,7 +426,7 @@ Set species=\"Human\" to run httkpop model.')
                             chem.name=chem.name,
                             dtxsid=dtxsid,
                             species=species,
-                            adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                            adjusted.Funbound.plasma=TRUE,
                             suppress.messages=suppress.messages)]
     }
   }
