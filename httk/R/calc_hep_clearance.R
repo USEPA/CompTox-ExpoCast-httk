@@ -73,7 +73,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                                well.stirred.correction=TRUE,
                                restrictive.clearance=TRUE,
                                species="Human",
-                               adjusted.funbound.plasma=TRUE,
+                               adjusted.Funbound.plasma=TRUE,
                                ...)
 {
   model <- hepatic.model

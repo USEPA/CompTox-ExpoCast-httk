@@ -14,7 +14,7 @@ calc_hep_clearance(
   well.stirred.correction = TRUE,
   restrictive.clearance = TRUE,
   species = "Human",
-  adjusted.funbound.plasma = TRUE,
+  adjusted.Funbound.plasma = TRUE,
   ...
 )
 }
@@ -47,11 +47,11 @@ plasma, but converted to use with plasma concentration.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{...}{Additional parameters passed to parameterize_steadystate if
-parameters is NULL.}
-
 \item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
 for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{...}{Additional parameters passed to parameterize_steadystate if
+parameters is NULL.}
 }
 \value{
 \item{Hepatic Clearance}{Units of L/h/kg BW.}
