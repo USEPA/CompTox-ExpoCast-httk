@@ -117,7 +117,7 @@ To change the $f_{up}$ in the previous parameters list to 0.001 from the
 human value of 0.003044 and use it in a simulation of the PBTK model for
 a single dose of 1 mg/kg BW of Triclosan in a rat:
 ```{r use)pbtk_parameters, eval = TRUE}
-parameters["Funbound.plasma"] <- 0.1
+parameters["Funbound.plasma"] <- 0.001
 out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
 ```
 
@@ -237,16 +237,18 @@ css <- calc_analytic_css(chem.name = "Bisphenol A",
 
 
 ## TK Study Summary Statistics
-To calculate the peak statistics for all chemicals simulated for 10
-days at 1 mg/kg BW/day with 3 doses per day.
+"calc_tk_stats" allows summary TK statistics to be calculated for a specific
+study design (including dose regiment, duration, and species).
+The following code calculates the peak plasma concentration for all chemicals in 
+**httk** simulated for 10 days at 1 mg/kg BW/day with 3 doses per day.
 Note that the function "calc_stats" was renamed "calc_tk_stats" in a later release
 of **httk**.
 ```{r stats_example1, eval = FALSE}
 all.peak.stats <- calc_stats(days = 10, doses.per.day = 3, stats = "peak")
 ```
-A list containing
+The same function can be used for a single chemical. For example, 
 the AUC, peak, and mean for a single 1 mg dose of Triclosan over 10
-days, we have:
+day:
 ```{r stats_example2, eval = TRUE}
 triclosan.stats <- calc_stats(days = 10, chem.name = "triclosan")
 ```
@@ -293,8 +295,18 @@ calc_mc_css(chem.cas = "80-05-7",
 
 ### Using more sophisticated Monte Carlo
 
-Both httk-pop and *in vitro* uncertainty/variability simulation, introduced
-in later versions of **httk**, are on by default:
+**httk** uses Monte Carlo to simulate population variability and propagate 
+parameter uncertainty. The algorithm for population variability, "httk-pop" 
+[(Ring et al., 2017)](https://doi.org/10.1016/j.envint.2017.06.004) 
+simulates population variability in TK by
+predicting distributions of physiological parameters based on
+distributions of demographic and biometric quantities from the
+National Health and Nutrition Examination Survey (NHANES),
+conducted by the U.S. Centers for Disease Control and Prevention
+(CDC). MEthods for propagating uncertainty in *in vitro* measurements were
+described by [Wambaugh et al. (2019)](https://doi.org/10.1093/toxsci/kfz205).
+
+Both httk-pop and *in vitro* uncertainty/variability simulation, are on by default:
 ```{r css_examples2, eval = TRUE}
 set.seed(654321)
 calc_mc_css(chem.cas = "80-05-7", 
@@ -484,7 +496,9 @@ print(zoxamide2)
 The **httk** package contains a data.frame called tissue.data that describes the
 composition of various tissues in terms of the 
 [Schmitt (2008)](https://doi.org/10.1016/j.tiv.2007.09.010) 
-model. We can add 
+mechanistic model for deriving tissue:plasma partition coefficients. Once described,
+these tissues are available for use as compartments in new models or to be lumped
+into the rest of body in existing models (using function "lump_tissues"). We can add 
 a new tissue (for example, mammary) to the tissue data by replicating the data
 from another tissue and adjusting as appropriate.
 ```{r add_a_tissue, eval = TRUE}
@@ -528,6 +542,11 @@ Kp <- predict_partitioning_schmitt(
   tissues = tissues.to.include,
   suppress.messages = TRUE)
 lumped.params <- lump_tissues(Kp, tissuelist=compartments)
+knitr::kable(as.data.frame(lumped.params), 
+             caption = "PCs, Volumes, and Flows for Lumped Tissues", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
 ```
 
 ## Adding a species

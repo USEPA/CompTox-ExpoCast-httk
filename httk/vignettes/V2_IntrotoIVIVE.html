@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="John Wambaugh and Elaina Kenyon" />
+
+
+<title>Introduction to In Vitro-In Vivo Extrapolation (IVIVE) with R Package httk</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to <em>In Vitro-In Vivo</em>
+Extrapolation (IVIVE) with R Package httk</h1>
+<h4 class="author">John Wambaugh and Elaina Kenyon</h4>
+<h4 class="date">November, 2022</h4>
+
+
+
+<p><em>Please send questions to <a href="mailto:wambaugh.john@epa.gov" class="email">wambaugh.john@epa.gov</a></em></p>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Chemical risk assessment depends on knowledge of inherent chemical
+hazard, the dose-response relationship, and the extent of exposure that
+occurs (<a href="https://doi.org/10.17226/24635">NASEM 2017</a>). High
+throughput screening (HTS) for <em>in vitro</em> bioactivity allows
+characterization of potential hazard for thousands of chemicals for
+which no other testing has occurred (<a href="https://doi.org/10.1289/ehp.0800168">Judson et al., 2009</a>).</p>
+<p>Toxicokinetics (TK) describes the Absorption, Distribution,
+Metabolism, and Excretion (ADME) of a chemical by the body. TK relates
+external exposures to internal tissue concentrations of chemical and
+therefore informs the chemical dose-response relationship (<a href="https://doi.org/10.1016/j.tiv.2012.06.012">Coecke et al.,
+2013</a>). TK requires chemical-specific information that is
+traditionally obtained <em>in vivo</em>. However, most chemicals do not
+have TK data, so a new approach methodology (NAM) uses <em>in vitro</em>
+TK methods adapted from the pharmaceutical industry to provide the
+necessary chemical-specific information (<a href="https://doi.org/10.1016/j.cotox.2019.07.001">Wambaugh et al.,
+2019</a>, <a href="https://doi.org/10.3390/toxics10050232">Chang et al.,
+2022</a>). High(er) throughput toxicokinetics (HTTK) involves the
+combination of chemical-specific <em>in vitro</em> TK data and
+chemical-independent (“generic”) TK models to predict TK (<a href="https://doi.org/10.1080/17425255.2021.1935867">Breen et al.,
+2021</a>).</p>
+<p>The primary goal of HTTK is to provide a human dose context for
+bioactive <em>in vitro</em> concentrations from HTS (that is, <em>in
+vitro-in vivo</em> extrapolation, or IVIVE) (<a href="https://doi.org/10.1016/j.tox.2014.05.012">Wetmore, 2015</a>).
+IVIVE is Utilization of <em>in vitro</em> experimental data to predict
+phenomena <em>in vivo</em>. In pharmaceutical development, HTTK methods
+allow IVIVE to estimate therapeutic doses for clinical studies –
+predicted concentrations are typically on the order of values measured
+in clinical trials (<a href="https://doi.org/10.1124/dmd.110.032177">Wang, 2010</a>). High
+throughput screening + IVIVE can predict a daily chemical dose rate
+(mg/kg bw/day) that might be adverse (<a href="https://doi.org/10.1093/toxsci/kfz201">Paul Friedman et al.,
+2019</a>).</p>
+<p>A secondary goal is to provide open source data and models for
+evaluation and use by the scientific community (<a href="https://doi.org/10.18637%2Fjss.v079.i04">Pearce et al.,
+2017</a>).</p>
+<p><em>The following material is from a lecture taught as part of the
+course “Computational Methods in Chemical Risk Assessment” at Rutgers
+University in September, 2019.</em></p>
+<div id="prepare-r-to-run-the-vignette" class="section level2">
+<h2>Prepare R to run the vignette</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">collapse =</span> <span class="cn">TRUE</span>, <span class="at">comment =</span> <span class="st">&#39;#&gt;&#39;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">rmarkdown.html_vignette.check_title =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div id="clear-the-memory" class="section level3">
+<h3>Clear the memory</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>()) </span></code></pre></div>
+</div>
+</div>
+<div id="httk-version" class="section level2">
+<h2>HTTK Version</h2>
+<p>This vignette was created using <strong>httk</strong> v2.2.2 in 2022.
+Although we attempt to maintain backward compatibility, if you encounter
+issues with the latest release of <strong>httk</strong> and cannot
+easily address the changes, historical versions of <strong>httk</strong>
+are available from: <a href="https://cran.r-project.org/src/contrib/Archive/httk/" class="uri">https://cran.r-project.org/src/contrib/Archive/httk/</a></p>
+</div>
+</div>
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>If you are familiar with computer files and R you might want to skip
+directly to “Step 1: Loading In Vitro Bioactivity Data”.</p>
+<div id="files-and-folders" class="section level2">
+<h2>Files and Folders</h2>
+<p>R (or any computer program) needs to know where to look to find
+particular information (such as data generated by a panel of in vitro
+assays). We describe a chunk of information as a “file”. Files range in
+size and can be small (even 0 bytes) or very large (several GB). A file
+my physically be located on a disk drive inside your computing device
+or, increasingly, it might be located somewhere in a cloud storage
+network. Regardless, most computers will treat a file as if it has a
+specific location. Each file has a name, although multiple files can
+have the same name as long as those files are stored in different
+“folders”.</p>
+<p>Files for all the operating systems with R are organized using a
+folder (also called a “directory”) and sub-folder structure. A
+sub-folder is a folder within another folder. They can be well
+organized:</p>
+<p>/animals/cats/tabbies/</p>
+<p>Or not:</p>
+<p>/animals/gradschoolfiles/photosfromchildhood</p>
+<p>The sequence of folders and sub-folders leading to a particular file
+is referred to as a “path”. For information on how folder structures
+work, please check out these sites:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Directory_structure" class="uri">https://en.wikipedia.org/wiki/Directory_structure</a></li>
+<li><a href="https://www.geeksforgeeks.org/structures-of-directory-in-operating-system/" class="uri">https://www.geeksforgeeks.org/structures-of-directory-in-operating-system/</a></li>
+<li><a href="https://www.westga.edu/its/assets-its/docs/understanding_directory_structure_windows.pdf" class="uri">https://www.westga.edu/its/assets-its/docs/understanding_directory_structure_windows.pdf</a></li>
+</ul>
+<p>Within the command shell you use the “cd” command to “change
+directories”.</p>
+<p>One complication to watch out for is the direction of the symbol that
+separates folder names in the path. On Windows the path is separated by
+“back-slashes”: \</p>
+<p>\animals\cats\black</p>
+<p>On Unix-based operating systems (including Linux and MacOS) the path
+is separated by “forward slashes”: /</p>
+<p>/animals/cats/black</p>
+<p>R always uses Unix forward slashes, even on a Windows machine, so if
+you know that the path is:</p>
+<p>c:\users\USERNAME\Downloads\</p>
+<p>You need to tell R that you want:</p>
+<p>c:/users/USERNAME/Downloads/</p>
+<p>Finally, the bit at the front of the path (such as “C:\” or “L:\”
+tells the computer which “drive” to look in to find your folders. Often
+“C drive” (c:\) is physically inside your machine while other letters
+might indicate network (or cloud) drives.</p>
+<div id="home-directory" class="section level3">
+<h3>Home Directory</h3>
+<p>Whether you are on Linux or Windows you have a home directory. Often
+you will only be able to write and edit files within your home directory
+and its sub-directories. However, you may be able to read and copy from
+most other folders.</p>
+<p>On Windows your home directory will be a sub-directory of
+“C:\users\”. For example, “C:\users\jwambaug”.</p>
+</div>
+<div id="common-and-important-directories" class="section level3">
+<h3>Common and Important Directories</h3>
+<p>You will want to create a directory for your R packages locally on
+your machine:</p>
+<p>C:\users\USERNAME\AppData\Loca\R</p>
+</div>
+<div id="download-folders" class="section level3">
+<h3>Download Folders</h3>
+<p>Many web browsers put their files in a default directory such as</p>
+<p>C:\users\USERNAME\Downloads</p>
+</div>
+<div id="temporary-or-swap-space" class="section level3">
+<h3>Temporary (or “Swap”) Space</h3>
+<p>On Windows the path “c:\” refers to the physical hard drive inside
+your computer. Therefore the only copy of “c:\users\USERNAME\” is on
+your computer and if that drive or the whole computer is damaged or
+destroyed you have lost those files. For this reason we call this
+“temporary” space. You don’t want to keep the only copies of your files
+there.</p>
+</div>
+</div>
+<div id="installing-necessary-software" class="section level2">
+<h2>Installing Necessary Software</h2>
+<ul>
+<li>Users will need the freely available R statistical computing
+language: <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a></li>
+<li>Users will likely want a development environment like RStudio: <a href="https://www.rstudio.com/products/rstudio/download/" class="uri">https://www.rstudio.com/products/rstudio/download/</a></li>
+<li>If you get the message “Error in library(X) : there is no package
+called ‘X’” then you will need to install that package: From the R
+command prompt: install.packages(“X”) Or, if using RStudio, look for
+‘Install Packages’ under the ‘Tools’ tab.</li>
+<li>Note that R does not recognize fancy versions of quotation marks
+‘,<span class="math inline">\(~\)</span>’,<span class="math inline">\(~\)</span>“, or<span class="math inline">\(~\)</span>”. If you are cutting and pasting from
+software like Word or Outlook you may need to replace the quotation
+marks that curve toward each other with ones typed by the keyboard.</li>
+</ul>
+<div id="installing-r-package-httk" class="section level3">
+<h3>Installing R package “httk”</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;httk&quot;</span>)</span></code></pre></div>
+</div>
+<div id="installing-r-package-readxl" class="section level3">
+<h3>Installing R package “readxl”</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;readxl&quot;</span>)</span></code></pre></div>
+</div>
+<div id="installing-r-package-ggplot2" class="section level3">
+<h3>Installing R package “ggplot2”</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="load-the-necessary-packages" class="section level2">
+<h2>Load the necessary packages:</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+</div>
+</div>
+<div id="step-one-loading-in-vitro-screening-data" class="section level1">
+<h1>Step One: Loading <em>In Vitro</em> Screening Data</h1>
+<p>The <a href="https://doi.org/10.1021/tx3000939">ToxCast</a> and <a href="https://doi.org/10.1289/ehp.1205784">Tox21</a> research programs
+employ batteries of high-throughput assays to assess chemical
+bioactivity <em>in vitro</em>. Not every chemical is tested through
+every assay (<a href="https://doi.org/10.1289/ehp.1205784">Richard et
+al., 2016</a>). Most assays are conducted in concentration response, and
+each corresponding assay endpoint is analyzed statistically to determine
+if there is a concentration-dependent response or “hit” using the
+ToxCast Pipeline (<a href="https://doi.org/10.1093/bioinformatics/btw680">Filer et al.,
+2017</a>). Most assay endpoint-chemical combinations are nonresponsive.
+Here, only the hits are treated as potential indicators of
+bioactivity.</p>
+<p><em>In vitro</em> bioactivity does not necessarily indicate adversity
+or hazard. Biological models can be used to make predictions of toxicity
+based on <em>in vitro</em> data (for example, <a href="https://doi.org/10.1093/toxsci/kfr220">Sipes et al., 2011</a>, <a href="https://doi.org/10.1021/acs.est.5b02641">Browne et al., 2015</a>
+and <a href="https://doi.org/10.1021/acs.chemrestox.6b00347">Kleinstreuer et
+al., 2017</a>). However, here we make a more conservative, precautionary
+assumption that concentrations too low to cause <em>in vitro</em>
+bioactivity are more likely to be safe (<a href="https://doi.org/10.1093/toxsci/kfz201">Paul Friedman et al.,
+2019</a>). Among all of the assay hits for each chemical, we choose to
+use the lower 10th percentile of the <span class="math inline">\(\mu
+M\)</span> potencies (50% active concentration or <span class="math inline">\(AC_{50}\)</span>). We are assuming that the 10th
+percentile represents a low concentration for activating multiple assays
+(assuming 10 or more bioactive assays were observed for a given
+chemical). However, this bioactivity does not necessarily have a direct
+toxicological interpretation.</p>
+<div id="downloading-toxcast-data" class="section level2">
+<h2>Downloading ToxCast Data</h2>
+<p>The main page for the data is here: <a href="https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data" class="uri">https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data</a></p>
+<p>Most useful to us is a single file containing all the hits across all
+chemcials and assays: <a href="https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef" class="uri">https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef</a></p>
+<p>As of November, 2022 the most recent version was 3.5 and was
+available as an .Rdata file (invitrodb_3_5_mc5.Rdata), which we can
+download and place in our working directory (FOLDERPATH).</p>
+</div>
+<div id="loading-the-data-into-r" class="section level2">
+<h2>Loading the Data into R</h2>
+<p>Don’t forget to use “setwd(FOLDERPATH)” to change to your R working
+folder:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;FOLDERPATH&quot;</span>)</span></code></pre></div>
+<p>Then load the file:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;invitrodb_3_5_mc5.Rdata&quot;</span>)</span></code></pre></div>
+<p>We now have a file “mc5” in our woking environment. It’s absolutely
+huge, so lets shrink it down to contain only the chemicals we care
+about.</p>
+<p>This list could be chemicals with HTTK data (note, this step cuts
+things down to chemicals with human HTTK data, you could change species
+to rat and get something different).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>toxcast.httk <span class="ot">&lt;-</span> <span class="fu">subset</span>(mc5, dsstox_substance_id <span class="sc">%in%</span> <span class="fu">get_cheminfo</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">info=</span><span class="st">&quot;DTXSID&quot;</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">suppress.messages=</span><span class="cn">TRUE</span>))</span></code></pre></div>
+</div>
+</div>
+<div id="critical-step-select-your-chemicals-of-interest" class="section level1">
+<h1>Critical Step: Select your chemicals of interest</h1>
+<p>We might have chemicals we are interested in for one reason or
+another – you could type any chemical ID’s you want into the following
+my.chems vector, or even load it from a file.</p>
+<p>Here we’ll pick 50 chemicals at random from among the ToxCast
+chemicals:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>my.chems <span class="ot">&lt;-</span> <span class="fu">sample</span>(mc5<span class="sc">$</span>dsstox_substance_id,<span class="dv">50</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>example.toxcast <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(mc5[mc5<span class="sc">$</span>dsstox_substance_id <span class="sc">%in%</span> my.chems,])</span></code></pre></div>
+<p>Unfortunately for this vignette there are too many ToxCast data to
+fit into a 5mb R package. So we will subset to just the selected
+chemicals and distribute only those data. In addition, out of 78 columns
+in the data, we will keep only eight. Download the full data following
+the instructions above.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>example.toxcast <span class="ot">&lt;-</span> example.toxcast[, <span class="fu">c</span>(<span class="st">&quot;chnm&quot;</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;dsstox_substance_id&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;spid&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;hitc&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;modl&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;aeid&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;modl_ga&quot;</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;modl_ac10&quot;</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;modl_acc&quot;</span>)]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># reduce precision to decrease space:</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;modl_ga&quot;</span>, <span class="st">&quot;modl_ac10&quot;</span>, <span class="st">&quot;modl_acc&quot;</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.col <span class="cf">in</span> cols)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  example.toxcast[, this.col] <span class="ot">=</span> <span class="fu">signif</span>(example.toxcast[, this.col], <span class="dv">3</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(example.toxcast,<span class="at">file=</span><span class="st">&quot;introtoivive-toxcast.Rdata&quot;</span>,<span class="at">version=</span><span class="dv">2</span>)</span></code></pre></div>
+<div id="interpreting-the-assay-information" class="section level2">
+<h2>Interpreting the Assay Information</h2>
+<p>In the mc5 table, “aenm” gives the assay name while
+“dsstox_substance_id” is the chemical identity from the <a href="https://comptox.epa.gov/dashboard">CompTox Chemicals
+Dashboard</a>. Since both names and CAS-RN can be subject to variations,
+we track chemical identities with the DSSTox Substance ID’s or “DTXSIDs”
+(<a href="https://doi.org/10.1016/j.comtox.2019.100096">Grulke et al.,
+2019</a>).</p>
+<p>The column “hitc” is 1 (that is, “TRUE”) if there was a
+statistically-signficant systematic concentration-response observed
+(this is a “hit”). “hitc” is 0 (FALSE) if there was no hit. The column
+“mc6_flags” indicates features of the hit that might be of interest for
+further examination but are not necessarily disqualifying.</p>
+<p>The column “modl” indicates the type of concentration-response modl
+that was selected (based on <a href="https://doi.org/10.1002/wics.1460">Akaike Information
+Criterion</a>) to best describe the data. The possibilities are constant
+(“cnst” – no concentation response), <a href="https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)">Hill
+equation</a> (“hill”), or gain-loss model (“gnls” – the product of an
+increasing and decreasing Hill equations). “gnls” is often interpreted
+as being caused by cytotoxicity.</p>
+<p>The column “modl_ga” indicates the log10 uM concentration at which
+the chemical caused 50% activity. This is also called the chemical-assay
+“potency” or “<span class="math inline">\(AC_{50}\)</span>”.</p>
+<p>Each chemical might have multiple assays for which there is a hit.
+Each chemical may have been run multiple times (experimental
+replicates), so that there may be multiple samples from the same
+chemical for the same assay. Different samples are indicated by the
+column “spid” (sample id).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>example.toxcast <span class="ot">&lt;-</span> httk<span class="sc">::</span>example.toxcast</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(example.toxcast), <span class="at">caption =</span> <span class="st">&quot;ToxCast In Vitro Bioactivity Data&quot;</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)</span></code></pre></div>
+<table>
+<caption>ToxCast In Vitro Bioactivity Data</caption>
+<colgroup>
+<col width="45%" />
+<col width="15%" />
+<col width="6%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="7%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">chnm</th>
+<th align="left">dsstox_substance_id</th>
+<th align="left">spid</th>
+<th align="right">hitc</th>
+<th align="left">modl</th>
+<th align="right">aeid</th>
+<th align="right">modl_ga</th>
+<th align="right">modl_ac10</th>
+<th align="right">modl_acc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">0</td>
+<td align="left">cnst</td>
+<td align="right">63</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">1</td>
+<td align="left">hill</td>
+<td align="right">64</td>
+<td align="right">1.390</td>
+<td align="right">-0.282</td>
+<td align="right">1.86</td>
+</tr>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">0</td>
+<td align="left">cnst</td>
+<td align="right">65</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">0</td>
+<td align="left">hill</td>
+<td align="right">66</td>
+<td align="right">1.460</td>
+<td align="right">-0.526</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">0</td>
+<td align="left">gnls</td>
+<td align="right">67</td>
+<td align="right">0.293</td>
+<td align="right">-1.670</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="left">01504168</td>
+<td align="right">0</td>
+<td align="left">cnst</td>
+<td align="right">68</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="find-the-concentrations-of-interest" class="section level2">
+<h2>Find the concentrations of interest</h2>
+<p>Then we can build a table summarizing the <em>in vitro</em> data. For
+a “hit”, the “AC50” indicates the 50% activation concentration from the
+best curve-fit, “AC10” indicates the concentration estimated to cause
+10%, and “ACC” is the “activity concentration at cutoff” are which is
+the concentration that first causes statistically significant activity.
+See <a href="https://doi.org/10.1093/bioinformatics/btw680">Filer et
+al. (2017)</a> figure three for additional discussion.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>toxcast.table <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.id <span class="cf">in</span> <span class="fu">unique</span>(example.toxcast<span class="sc">$</span>dsstox_substance_id))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  this.subset <span class="ot">&lt;-</span> <span class="fu">subset</span>(example.toxcast, dsstox_substance_id <span class="sc">==</span> this.id)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  these.hits <span class="ot">&lt;-</span> <span class="fu">subset</span>(this.subset, hitc<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">dim</span>(these.hits)[<span class="dv">1</span>]<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      this.row <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Compound=</span><span class="fu">as.character</span>(this.subset[<span class="dv">1</span>,<span class="st">&quot;chnm&quot;</span>]),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">DTXSID=</span>this.id,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Total.Assays =</span> <span class="fu">dim</span>(this.subset)[<span class="dv">1</span>],</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Unique.Assays =</span> <span class="fu">length</span>(<span class="fu">unique</span>(this.subset<span class="sc">$</span>aeid)),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Total.Hits =</span> <span class="fu">dim</span>(these.hits)[<span class="dv">1</span>],</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Unique.Hits =</span> <span class="fu">length</span>(<span class="fu">unique</span>(these.hits<span class="sc">$</span>aeid)),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Low.AC50 =</span> <span class="fu">signif</span>(<span class="fu">min</span>(these.hits<span class="sc">$</span>modl_ga),<span class="dv">3</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Low.AC10 =</span> <span class="fu">signif</span>(<span class="fu">min</span>(these.hits<span class="sc">$</span>modl_ac10),<span class="dv">3</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Low.ACC =</span> <span class="fu">signif</span>(<span class="fu">min</span>(these.hits<span class="sc">$</span>modl_acc),<span class="dv">3</span>),</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q10.AC50 =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_ga,<span class="at">probs=</span><span class="fl">0.1</span>),<span class="dv">3</span>),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q10.AC10 =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_ac10,<span class="at">probs=</span><span class="fl">0.1</span>),<span class="dv">3</span>),</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q10.ACC =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_acc,<span class="at">probs=</span><span class="fl">0.1</span>),<span class="dv">3</span>),</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Med.AC50 =</span> <span class="fu">signif</span>(<span class="fu">median</span>(these.hits<span class="sc">$</span>modl_ga),<span class="dv">3</span>),</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Med.AC10 =</span> <span class="fu">signif</span>(<span class="fu">median</span>(these.hits<span class="sc">$</span>modl_ac10),<span class="dv">3</span>),</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Med.ACC =</span> <span class="fu">signif</span>(<span class="fu">median</span>(these.hits<span class="sc">$</span>modl_acc),<span class="dv">3</span>),</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q90.AC50 =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_ga,<span class="at">probs=</span><span class="fl">0.9</span>),<span class="dv">3</span>),</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q90.AC10 =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_ac10,<span class="at">probs=</span><span class="fl">0.9</span>),<span class="dv">3</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Q90.ACC =</span> <span class="fu">signif</span>(<span class="fu">quantile</span>(these.hits<span class="sc">$</span>modl_acc,<span class="at">probs=</span><span class="fl">0.9</span>),<span class="dv">3</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>                         )</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    toxcast.table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(toxcast.table, this.row)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(toxcast.table) <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="fu">dim</span>(toxcast.table)[<span class="dv">1</span>])</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(toxcast.table[,<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]), <span class="at">caption =</span> <span class="st">&quot;Summarized ToxCast Data&quot;</span>,</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Summarized ToxCast Data</caption>
+<colgroup>
+<col width="47%" />
+<col width="12%" />
+<col width="10%" />
+<col width="11%" />
+<col width="8%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Compound</th>
+<th align="left">DTXSID</th>
+<th align="right">Total.Assays</th>
+<th align="right">Unique.Assays</th>
+<th align="right">Total.Hits</th>
+<th align="right">Unique.Hits</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="left">DTXSID8044969</td>
+<td align="right">1087</td>
+<td align="right">467</td>
+<td align="right">80</td>
+<td align="right">49</td>
+</tr>
+<tr class="even">
+<td align="left">Nonafluoropentanamide</td>
+<td align="left">DTXSID60400587</td>
+<td align="right">792</td>
+<td align="right">496</td>
+<td align="right">7</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Bisphenol A</td>
+<td align="left">DTXSID7020182</td>
+<td align="right">4304</td>
+<td align="right">1414</td>
+<td align="right">814</td>
+<td align="right">375</td>
+</tr>
+<tr class="even">
+<td align="left">Tris(2-ethylhexyl) trimellitate</td>
+<td align="left">DTXSID9026265</td>
+<td align="right">1241</td>
+<td align="right">941</td>
+<td align="right">46</td>
+<td align="right">40</td>
+</tr>
+<tr class="odd">
+<td align="left">1-Octen-3-ol</td>
+<td align="left">DTXSID3035214</td>
+<td align="right">427</td>
+<td align="right">427</td>
+<td align="right">19</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">Thalidomide</td>
+<td align="left">DTXSID9022524</td>
+<td align="right">1161</td>
+<td align="right">922</td>
+<td align="right">6</td>
+<td align="right">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="step-two-high-throughput-toxicokinetics-from-in-vitro-data" class="section level1">
+<h1>Step Two: High Throughput Toxicokinetics from <em>In Vitro</em>
+Data</h1>
+<p>For each chemical in your subset of ToxCast, add the HTTK plasma
+steady-state concentration if it is available. calc_mc_css() gives us
+the predicted steady-state plasma concentration resulting from an
+ongoing 1 mg/kg/day exposure.</p>
+<div id="steady-state-plasma-concentration-c_ss" class="section level2">
+<h2>Steady State Plasma Concentration <span class="math inline">\(C_{ss}\)</span></h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.id <span class="cf">in</span> <span class="fu">unique</span>(toxcast.table<span class="sc">$</span>DTXSID))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get_cheminfo() gives a list of all the CAS numbers for which HTTK will work:</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (this.id <span class="sc">%in%</span> <span class="fu">get_cheminfo</span>(<span class="at">info=</span><span class="st">&quot;dtxsid&quot;</span>, <span class="at">suppress.messages=</span><span class="cn">TRUE</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a random number generator seed so that the Monte Carlo will always give</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the same random sequence:</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    toxcast.table[toxcast.table<span class="sc">$</span>DTXSID<span class="sc">==</span>this.id,<span class="st">&quot;Css&quot;</span>] <span class="ot">&lt;-</span> </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">calc_mc_css</span>(<span class="at">dtxsid=</span>this.id,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units=</span><span class="st">&quot;uM&quot;</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages=</span><span class="cn">TRUE</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    toxcast.table[toxcast.table<span class="sc">$</span>DTXSID<span class="sc">==</span>this.id,<span class="st">&quot;Css.Type&quot;</span>] <span class="ot">&lt;-</span> <span class="st">&quot;in vitro&quot;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Let’s look at just the relevant columns from our table. Any Css
+values of “NA” (not a number) indicate that we don’t currently have
+<em>in vitro</em> TK data for those chemicals:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(toxcast.table[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="st">&quot;Compound&quot;</span>,<span class="st">&quot;Q10.AC50&quot;</span>,<span class="st">&quot;Css&quot;</span>,<span class="st">&quot;Css.Type&quot;</span>)], </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">caption =</span> <span class="st">&quot;Summarized ToxCast Data&quot;</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<caption>Summarized ToxCast Data</caption>
+<colgroup>
+<col width="69%" />
+<col width="10%" />
+<col width="9%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Compound</th>
+<th align="right">Q10.AC50</th>
+<th align="right">Css</th>
+<th align="left">Css.Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="right">-0.435</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Nonafluoropentanamide</td>
+<td align="right">1.110</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Bisphenol A</td>
+<td align="right">-0.196</td>
+<td align="right">21.92</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="even">
+<td align="left">Tris(2-ethylhexyl) trimellitate</td>
+<td align="right">-0.532</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">1-Octen-3-ol</td>
+<td align="right">1.220</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Thalidomide</td>
+<td align="right">-0.761</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Tributyl phosphate</td>
+<td align="right">0.605</td>
+<td align="right">1014.00</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="even">
+<td align="left">Monocrotophos</td>
+<td align="right">-3.490</td>
+<td align="right">3.49</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="odd">
+<td align="left">N-Butyl-p-toluenesulfonamide</td>
+<td align="right">-0.762</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Anilazine</td>
+<td align="right">0.508</td>
+<td align="right">80.87</td>
+<td align="left">in vitro</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="step-three-high-throughput-toxicokinetics-with-qspr-predictions" class="section level1">
+<h1>Step Three: High Throughput Toxicokinetics with QSPR
+Predictions</h1>
+<p>For chemicals where no <em>in vitro</em> toxicokinetic data are
+available, we can sometimes load predictions from <em>in silico</em>
+models. We do not provide <em>in silico</em> models for <span class="math inline">\(f_{up}\)</span> and <span class="math inline">\(Cl_{int}\)</span> themselves (in many cases those
+models are much larger in terms of file size than the whole
+<strong>httk</strong> package). However we do have tables of pre-made
+predictions form a variety of models. For example, you can load the
+table of quantitative structure-property relationship (QSPR) model
+predictions from the <a href="https://doi.org/10.1021/acs.est.7b00650">Sipes et al. (2017)</a>
+supplemental material:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_sipes2017</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loading predictions from Sipes et al. (2017) for 8758 chemicals.</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Existing data are not being overwritten.</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Please wait...</span></span></code></pre></div>
+<p>Now go through the list of chemicals again but only calculate if we
+didn’t already have a value (NOTE: load_sipes2017 will not overwrite the
+<em>in vitro</em> data by default, so you’ll still get the same answer
+if you use the same random number seed, but you would also be wasting
+time):</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.id <span class="cf">in</span> <span class="fu">unique</span>(toxcast.table<span class="sc">$</span>DTXSID))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (this.id <span class="sc">%in%</span> <span class="fu">get_cheminfo</span>(<span class="at">info=</span><span class="st">&quot;dtxsid&quot;</span>, <span class="at">suppress.messages=</span><span class="cn">TRUE</span>) <span class="sc">&amp;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(toxcast.table[toxcast.table<span class="sc">$</span>DTXSID<span class="sc">==</span>this.id,<span class="st">&quot;Css&quot;</span>]))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set a random number generator seed so that the Monte Carlo will always give</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the same random sequence:</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    toxcast.table[toxcast.table<span class="sc">$</span>DTXSID<span class="sc">==</span>this.id,<span class="st">&quot;Css&quot;</span>] <span class="ot">&lt;-</span> </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">calc_mc_css</span>(<span class="at">dtxsid=</span>this.id,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">output.units=</span><span class="st">&quot;uM&quot;</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages=</span><span class="cn">TRUE</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    toxcast.table[toxcast.table<span class="sc">$</span>DTXSID<span class="sc">==</span>this.id,<span class="st">&quot;Css.Type&quot;</span>] <span class="ot">&lt;-</span> <span class="st">&quot;in silico&quot;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Take another look at our table – many of the gaps are now filled in.
+Any Css values of “NA” (not a number) indicate that we don’t currently
+have <em>in vitro</em> TK data or <em>in silico</em> predictions from <a href="https://doi.org/10.1021/acs.est.7b00650">Sipes et al. (2017)</a>
+for those chemicals (note that there are also predictions available from
+<a href="https://doi.org/10.1016/j.comtox.2020.100136">Pradeep et
+al. (2020)</a> (load_pradeep2020) and <a href="https://doi.org/10.1021/acs.est.0c06117">Dawson et al. (2021)</a>
+(load_dawson2021):</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(toxcast.table[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="st">&quot;Compound&quot;</span>,<span class="st">&quot;Q10.AC50&quot;</span>,<span class="st">&quot;Css&quot;</span>,<span class="st">&quot;Css.Type&quot;</span>)], </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">caption =</span> <span class="st">&quot;Summarized ToxCast Data&quot;</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Summarized ToxCast Data</caption>
+<colgroup>
+<col width="67%" />
+<col width="10%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Compound</th>
+<th align="right">Q10.AC50</th>
+<th align="right">Css</th>
+<th align="left">Css.Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="right">-0.435</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Nonafluoropentanamide</td>
+<td align="right">1.110</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Bisphenol A</td>
+<td align="right">-0.196</td>
+<td align="right">21.9200</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="even">
+<td align="left">Tris(2-ethylhexyl) trimellitate</td>
+<td align="right">-0.532</td>
+<td align="right">0.2435</td>
+<td align="left">in silico</td>
+</tr>
+<tr class="odd">
+<td align="left">1-Octen-3-ol</td>
+<td align="right">1.220</td>
+<td align="right">73.2600</td>
+<td align="left">in silico</td>
+</tr>
+<tr class="even">
+<td align="left">Thalidomide</td>
+<td align="right">-0.761</td>
+<td align="right">2.3860</td>
+<td align="left">in silico</td>
+</tr>
+<tr class="odd">
+<td align="left">Tributyl phosphate</td>
+<td align="right">0.605</td>
+<td align="right">1014.0000</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="even">
+<td align="left">Monocrotophos</td>
+<td align="right">-3.490</td>
+<td align="right">3.4900</td>
+<td align="left">in vitro</td>
+</tr>
+<tr class="odd">
+<td align="left">N-Butyl-p-toluenesulfonamide</td>
+<td align="right">-0.762</td>
+<td align="right">19.8000</td>
+<td align="left">in silico</td>
+</tr>
+<tr class="even">
+<td align="left">Anilazine</td>
+<td align="right">0.508</td>
+<td align="right">80.8700</td>
+<td align="left">in vitro</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="step-four-reverse-dosimetry-in-vitro-in-vivo-extrapolation" class="section level1">
+<h1>Step Four: Reverse Dosimetry <em>In Vitro-In Vivo</em>
+Extrapolation</h1>
+<p>Using toxicokinetics to predict tissue concentrations resulting from
+a known dose is known as “forward dosimetry”. Using toxicokinetics to
+estimate the dose that might have led to a known tissue cocentration is
+known as “reverse dosimetry” <a href="https://doi.org/10.1016/j.taap.2008.04.021">(Clewell, et al.,
+2008)</a>. <strong>httk</strong> allows the use of reverse dosimetry to
+calculate the equivalent steady-state dose to produce a plasma
+concentration equal to a bioactive concentration identified <em>in
+vitro</em> <a href="https://doi.org/10.1080/17425255.2021.1935867">(Breen et al.,
+2021)</a>. For example, we can start from the tenth percentile ToxCast
+<span class="math inline">\(AC_{50}\)</span> and find the administered
+equivalent dose that would cause that concentration in the plasma. We do
+this by dividing the <em>in vitro</em> concentration by the <span class="math inline">\(C_{ss}\)</span> from 1 mg/kg/day, ending up with a
+dose rate with units of mg/kd/day that will product the <em>in
+vitro</em> concentration: <span class="math display">\[AED =
+\frac{AC_{50}}{C_{ss}}\]</span> Don’t forget the ToxCast concentrations
+are given on the log-10 scale:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>toxcast.table<span class="sc">$</span>EquivDose <span class="ot">&lt;-</span> <span class="fu">signif</span>(<span class="dv">10</span><span class="sc">^</span>toxcast.table<span class="sc">$</span>Q10.AC50 <span class="sc">/</span> toxcast.table<span class="sc">$</span>Css,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="dv">3</span>)</span></code></pre></div>
+<p>Look at the table again:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(toxcast.table[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="st">&quot;Compound&quot;</span>,<span class="st">&quot;Q10.AC50&quot;</span>,<span class="st">&quot;Css&quot;</span>,<span class="st">&quot;EquivDose&quot;</span>)], </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">caption =</span> <span class="st">&quot;Summarized ToxCast Data&quot;</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)          </span></code></pre></div>
+<table>
+<caption>Summarized ToxCast Data</caption>
+<colgroup>
+<col width="67%" />
+<col width="10%" />
+<col width="11%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Compound</th>
+<th align="right">Q10.AC50</th>
+<th align="right">Css</th>
+<th align="right">EquivDose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Methyl
+perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)</td>
+<td align="right">-0.435</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Nonafluoropentanamide</td>
+<td align="right">1.110</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Bisphenol A</td>
+<td align="right">-0.196</td>
+<td align="right">21.9200</td>
+<td align="right">2.91e-02</td>
+</tr>
+<tr class="even">
+<td align="left">Tris(2-ethylhexyl) trimellitate</td>
+<td align="right">-0.532</td>
+<td align="right">0.2435</td>
+<td align="right">1.21e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">1-Octen-3-ol</td>
+<td align="right">1.220</td>
+<td align="right">73.2600</td>
+<td align="right">2.27e-01</td>
+</tr>
+<tr class="even">
+<td align="left">Thalidomide</td>
+<td align="right">-0.761</td>
+<td align="right">2.3860</td>
+<td align="right">7.27e-02</td>
+</tr>
+<tr class="odd">
+<td align="left">Tributyl phosphate</td>
+<td align="right">0.605</td>
+<td align="right">1014.0000</td>
+<td align="right">3.97e-03</td>
+</tr>
+<tr class="even">
+<td align="left">Monocrotophos</td>
+<td align="right">-3.490</td>
+<td align="right">3.4900</td>
+<td align="right">9.27e-05</td>
+</tr>
+<tr class="odd">
+<td align="left">N-Butyl-p-toluenesulfonamide</td>
+<td align="right">-0.762</td>
+<td align="right">19.8000</td>
+<td align="right">8.74e-03</td>
+</tr>
+<tr class="even">
+<td align="left">Anilazine</td>
+<td align="right">0.508</td>
+<td align="right">80.8700</td>
+<td align="right">3.98e-02</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="step-five-compare-with-estimated-exposure-rates" class="section level1">
+<h1>Step Five: Compare with Estimated Exposure Rates</h1>
+<p>The U.S. National Academy of Sciences, Engineering, and Medicine
+advises calculating chemical risk posed to the public health on the
+basis of hazard, the dose-response relationship, and exposure. We can
+use <em>in vitro</em> bioactivity as a surrogate for hazard and
+<strong>httk</strong> as a surrogate for the dose-reponse relationship.
+However, to prioritize chemicals on the basis of putative risk we need
+some estimate of human exposure. Because most chemicals lack measured
+data characterizing population intake rates (mg/kg body weight/ day) (<a href="https://doi.org/10.1016/j.scitotenv.2011.10.046">Egeghy,
+2012</a>), a consensus prediction from EPA’s Systematic Empirical
+Evaluation of Models (SEEM) is often the only option available for
+exposures. The SEEM consensus prediction is composed of multiple
+exposure predictors aggregated on the basis of likely exposure pathways
+(<a href="https://doi.org/10.1021/acs.est.8b04056">Ring, 2018</a>). The
+individual exposure predictors are weighted based upon their ability to
+predict intake rates that could be inferred from biomonitoring data (<a href="https://doi.org/10.1016/j.envint.2017.06.004">Ring, 2017</a>; <a href="https://doi.org/10.1021/es503583j">Wambaugh, 2014</a>).<br />
+The SEEM exposure forecasts are uncertain, and the upper boundary of the
+95% credible interval is used here. Although a 95% credible interval is
+calculated, this reflects uncertainty but not variability – the <a href="https://doi.org/10.1021/acs.est.8b04056">(Ring, 2018)</a> model
+predicts population median exposure rates for the U.S. population.</p>
+<p>There are three ways to access the SEEM predictions. If you can
+access the journal article online, we can load the SEEM predictions from
+<a href="https://pubs.acs.org/doi/suppl/10.1021/acs.est.8b04056/suppl_file/es8b04056_si_002.zip">Supplemental
+Table 1</a> of the Supporting Information for <a href="https://doi.org/10.1021/acs.est.8b04056">Ring et al. (2018)</a>.
+Don’t forget that you have to “unzip” a file that ends in “.zip” and
+place the “.txt” file in your working directory with your other
+files.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SEEM <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;SupTable-all.chem.preds-2018-11-28.txt&quot;</span>,<span class="at">stringsAsFactors=</span>F)</span></code></pre></div>
+<p>If you want, you can also download the predictions for specific
+chemcials from the <a href="https://ccte-ccd.epa.gov/dashboard/">Comptox
+Chemicals Dashboard</a>. Be sure to use Batch Search and select the
+option for “NHANES/Predicted Exposure”. You can download the file in a
+“comma separated values” or “.CSV” format, in which case you use
+“read.csv”. Or you can download an Excel “.xls” file which requires load
+the package <em>readXL</em>.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>SEEM <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;CCD-Batch-Search_DATE.xlsx&quot;</span>,<span class="at">sheet=</span><span class="dv">2</span>)</span></code></pre></div>
+<p>Perhaps most easily we can grab SEEM predictions already in RData
+format from <a href="https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data" class="uri">https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data</a>
+Download the file Ring2018Preds.RData and load it:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;Ring2018Preds.RData&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>SEEM <span class="ot">&lt;-</span> Ring2018.preds</span></code></pre></div>
+<p>Again we do not have the space to distribute all the SEEM predictions
+within this R package, but we can give you our example chemicals:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>example.seem <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">subset</span>(SEEM, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                              dsstox_substance_id <span class="sc">%in%</span> toxcast.table<span class="sc">$</span>DTXSID))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (this.col <span class="cf">in</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">36</span>) </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  example.seem[,this.col] <span class="ot">&lt;-</span> <span class="fu">signif</span>(example.seem[,this.col],<span class="dv">4</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(example.seem,<span class="at">file=</span><span class="st">&quot;introtoivive-seem.Rdata&quot;</span>,<span class="at">version=</span><span class="dv">2</span>)</span></code></pre></div>
+<p>Merge the consensus model predictions with your table:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>example.seem <span class="ot">&lt;-</span> httk<span class="sc">::</span>example.seem</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>toxcast.table <span class="ot">&lt;-</span> <span class="fu">merge</span>(toxcast.table,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                       example.seem[,<span class="fu">c</span>(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;dsstox_substance_id&quot;</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;seem3&quot;</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;seem3.l95&quot;</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;seem3.u95&quot;</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;Pathway&quot;</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;AD&quot;</span>)],</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">by.x=</span><span class="st">&quot;DTXSID&quot;</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">by.y=</span><span class="st">&quot;dsstox_substance_id&quot;</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Now we can calculate a bioactivity:exposure ratio (BER), which is a
+risk-like metric since it takes hazard, dose-response, and exposure into
+account (<a href="https://doi.org/10.1093/toxsci/kfv171">Wetmore,
+2015</a>):</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>toxcast.table<span class="sc">$</span>BER <span class="ot">&lt;-</span> <span class="fu">signif</span>(toxcast.table<span class="sc">$</span>EquivDose<span class="sc">/</span>toxcast.table<span class="sc">$</span>seem3.u95, <span class="dv">3</span>)</span></code></pre></div>
+<p>Reorder your table by BER:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>toxcast.table <span class="ot">&lt;-</span> toxcast.table[<span class="fu">order</span>(toxcast.table<span class="sc">$</span>BER),]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(toxcast.table[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="st">&quot;Compound&quot;</span>,<span class="st">&quot;EquivDose&quot;</span>,<span class="st">&quot;seem3.u95&quot;</span>,<span class="st">&quot;Pathway&quot;</span>,<span class="st">&quot;BER&quot;</span>)], </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">caption =</span> <span class="st">&quot;Bioactivity:Exposure Ratios&quot;</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">floating.environment=</span><span class="st">&quot;sidewaystable&quot;</span>)  </span></code></pre></div>
+<table>
+<caption>Bioactivity:Exposure Ratios</caption>
+<colgroup>
+<col width="3%" />
+<col width="40%" />
+<col width="11%" />
+<col width="11%" />
+<col width="24%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Compound</th>
+<th align="right">EquivDose</th>
+<th align="right">seem3.u95</th>
+<th align="left">Pathway</th>
+<th align="right">BER</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">4-(2-Hydroxyethyl)morpholine</td>
+<td align="right">9.63e-03</td>
+<td align="right">4.793e-01</td>
+<td align="left">Industrial</td>
+<td align="right">0.0201</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">4-Biphenylamine hydrochloride</td>
+<td align="right">3.50e-04</td>
+<td align="right">2.661e-03</td>
+<td align="left">Unknown</td>
+<td align="right">0.1320</td>
+</tr>
+<tr class="odd">
+<td align="left">37</td>
+<td align="left">Di(ethylene glycol) dimethacrylate</td>
+<td align="right">1.99e+00</td>
+<td align="right">1.252e+01</td>
+<td align="left">Dietary, Industrial</td>
+<td align="right">0.1590</td>
+</tr>
+<tr class="even">
+<td align="left">48</td>
+<td align="left">Methyl 3-methylorsellinate</td>
+<td align="right">3.45e+00</td>
+<td align="right">1.642e+01</td>
+<td align="left">Unknown</td>
+<td align="right">0.2100</td>
+</tr>
+<tr class="odd">
+<td align="left">14</td>
+<td align="left">Tributyl phosphate</td>
+<td align="right">3.97e-03</td>
+<td align="right">1.240e-02</td>
+<td align="left">Dietary, Industrial</td>
+<td align="right">0.3200</td>
+</tr>
+<tr class="even">
+<td align="left">47</td>
+<td align="left">Monocrotophos</td>
+<td align="right">9.27e-05</td>
+<td align="right">1.949e-04</td>
+<td align="left">Unknown</td>
+<td align="right">0.4760</td>
+</tr>
+<tr class="odd">
+<td align="left">46</td>
+<td align="left">Clopyralid</td>
+<td align="right">8.24e-05</td>
+<td align="right">1.342e-04</td>
+<td align="left">Unknown</td>
+<td align="right">0.6140</td>
+</tr>
+<tr class="even">
+<td align="left">45</td>
+<td align="left">Dihexyl hexanedioate</td>
+<td align="right">1.04e-02</td>
+<td align="right">1.343e-02</td>
+<td align="left">Dietary, Industrial</td>
+<td align="right">0.7740</td>
+</tr>
+<tr class="odd">
+<td align="left">30</td>
+<td align="left">Bisphenol A</td>
+<td align="right">2.91e-02</td>
+<td align="right">3.493e-02</td>
+<td align="left">Dietary, Residential</td>
+<td align="right">0.8330</td>
+</tr>
+<tr class="even">
+<td align="left">44</td>
+<td align="left">Tris(2-ethylhexyl) trimellitate</td>
+<td align="right">1.21e+00</td>
+<td align="right">6.368e-01</td>
+<td align="left">Industrial</td>
+<td align="right">1.9000</td>
+</tr>
+</tbody>
+</table>
+<div id="make-a-ber-plot" class="section level2">
+<h2>Make a BER plot</h2>
+<p>Convert the chemical names into factors for plotting:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>toxcast.table<span class="sc">$</span>Compound <span class="ot">&lt;-</span> <span class="fu">factor</span>(toxcast.table<span class="sc">$</span>Compound,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">levels=</span>toxcast.table<span class="sc">$</span>Compound)</span></code></pre></div>
+<p>Then we can create a plot where the BER for each chemical is shown by
+the margin between putative hazard (in red) and estimated exposure (in
+blue). The wider the margin, the lesser the risk. Chemicals are arranged
+from left-to-right by increasing margin (that is, decreasing risk).</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>BER.plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>toxcast.table) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>Compound,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend=</span>Compound,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y=</span>(<span class="dv">10</span><span class="sc">^</span>Q10.AC50)<span class="sc">/</span>Css,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend=</span>(<span class="dv">10</span><span class="sc">^</span>Q90.AC50)<span class="sc">/</span>Css),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">size=</span><span class="dv">1</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&quot;red&quot;</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>Compound,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xend=</span>Compound,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y=</span>seem3.l95,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">yend=</span>seem3.u95),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">size=</span><span class="dv">1</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span>   </span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>Compound,<span class="at">y=</span>(<span class="dv">10</span><span class="sc">^</span>Med.AC50)<span class="sc">/</span>Css),<span class="at">shape=</span><span class="dv">3</span>,<span class="at">color=</span><span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>Compound,<span class="at">y=</span>seem3),<span class="at">shape=</span><span class="dv">3</span>,<span class="at">color=</span><span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>)) <span class="sc">+</span> </span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>)) <span class="sc">+</span> </span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>, </span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">1</span>, </span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="dv">1</span>, </span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>, </span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">angle =</span> <span class="dv">45</span>)) <span class="sc">+</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Bioactive Dose &amp; Exposure</span><span class="sc">\n</span><span class="st">mg/kg BW/day&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Chemicals Ranked By BER&quot;</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; i Please use `linewidth` instead.</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(BER.plot)</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 11 rows containing missing values (`geom_segment()`).</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 12 rows containing missing values (`geom_segment()`).</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 11 rows containing missing values (`geom_point()`).</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 5 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAIAAACb4TnXAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nOy9e1wTV/rAfTI12kU3wYBUJeEmaAkEwUshXFKsP5GkFK1lWYRWu9UFrW3R5Qe0r9LC64WVdJdi+Sm4y26bukAJ+mLaQKJVwSyQuAISTECBEkmmUgHFSRN00fL+MUkIEEK4ycX5fvhjZpgzOXN5znnOc57nObj+/n6AgYExNUDTXQEMjLkMJmAYGFMIJmAYGFMIJmAYGFMIJmAYGFMIJmAYGFPIvOmuwJSzbt266a4CxnPB9evXTRztn+usXbu2v7+/s7PTcMR428y/Jlhk6q6M1X8GVgb9zIaDqYgYGFMIJmAYGFMIJmAYGFMIJmAYGFOIJQJWFofD4XC4uLKWrICArJYprxPGbCU11XbJkumuxMxiVAFryQpggdL+0lgAgGv815FFOzERw8CwlFEFrFleFbuVqd9zXelZJW+e2iphYMwdRhUwN6r/6ZIy/V5ZyWl/qtvUVgljtoHD6f7S0gbtYlggYK7xlaWAhWOdBqdZOBwLlFbGuz6LimHMHvr7dX+ffTZoF8MCV6myOFzJ1v7+3GdRGQyMuQZmpp8yUlOtMjKmuxIY08yoAsbcGms0BsMYC1Zs9nRXAWOaGVXAykrQ0dcAcZi4YZgmNbWrs3O6KzGzGHUMxszFBmAYGONl9B4sDjcErAfDwLAUXP+YzKllcQG3E2eXoX7dunUCgeCZ/dxIvkKY7vQMsF2yZLqec2ho6KQEXJbGgtjSMZaZXqYt4PKzz/qNHu8MjBGcRZWxqMjgB/6MKzNJAZctt29OirxjTADMoXYWYclEM+u00b7/F83MEU/GmHpSU6e7BjMPY7cs4+0ZoJaPPg+WO7jLm10DMIw5j+2SJaYdtWaGr5YFKmJZHC6uzCgqbOorNV1MdjiTNjFxEq+GYYIZ359bEA925OYXicyWrCOnY0v7m7+4eQSLB5smTHqsT53TumWuXjNoQDgjhc2SeDDPla6gWV7lT3Wb2/FgqeXB010Fs8xgRQhjJEY1crhR/QEaBxbZ7Apa+Df9qZjegzG9DO02pzH2LDXVSqsFI3f1FsSDHQIsHOu0f+TrrmVxbkWRX88pK0dqKrBdsgTVtVIrNgAwoH0NvMXZ4xc/VQrbSKPTadLKujo7TfbnM3A23wIjB2pHrIx3BczcuWhETErUoK8n9dUrAJh+W5hf/FCe8YBw1jKGrFJz3og4WxjROPks+xNsQGgZlmaV0lEKWHMucVsGe+F0V2GGYsVmY8k2JsgYs0oxt8bOXSsiAOCg/4VB+yMoQqaHZFM3VDN7ZcMYckg9Jz4e0yYmzvRkGzM+Au15zCo14pcXHNwXEDDoiMnPC92dCkYWJDODwFk04p8spnfybUy/bmlWKR1zIKvUVA5UptkWMtKtWeihMi5HlufOW2WM348lRg5jd8TcCXn6wsXx4ZmS8ZSUZIaHh4eHh8cXw6MctAy9HpWahjPs6rbHhIVq4UinDTs+uoimpmqTkiyv4FQwg7w3ZjxjtCJOxMIhyQzfy2kbT0m4OP4oOMjj8XingkR7dRJq8qDF6PWo1M/6Dbu67TEy7RZ84899HGqhGWkxvrXp76mGTAbMEovLGK2Ih+Ru45IxSWZ4+FHFjoM7nIcdDg8PDx/arUkyBx1RKds2+PsCAIA9Pcj5SpVkxINmMWUJsLDXGvJ5WSRUg7uaccihRdaLCWq8Ey4+Rd1pairIyLAadGjIZMCzt7iYtHilpZl/s6O6Sg2zIrJKmgEY6zDM9wCPdwAAuFhkdFCSeVSx4xQvwh4ujt+bKeEd8DVdGFYqnCmR6LY9xQmIlDDwBaYO2utKDFmXuaurC+hbd6uMDCs229DSZ2RYZbAXoidotVaGk40LWmm1xsettForo39ZAXPxSManjXTloc2wftdQySF1RssPr4zxlU1UZuSKjXiaqSdglZFh7hdH/teYioz0LlBsJ3Dl8Rcx9f3odgdfwZjRs0ptjWUdyUpkoqaNspLTsVsHJ5kqi8Oxbn7RPHbbh6TqinPQKXsAgH1E9IbwKskBX19JZvjRK+i/r4RfAQA47ziVRVG2AcrQ0ipTB/UYZ0dYt26dra1tV1eXra0tAABYWQEAdNu6Pd2ulRXQarWGfxkXMT6uu8JImpVxmzrCjw658kCR1FSQljawO2pxs//q6urSXWrIZVFjBrqL3r/hX8M0LuPbNG6qB92+0S0PqYBuOzVVq9UaRpuD6j9CkRHfhaECI9zyqFeeaJHBD3zo7jAsyotYtd9Nb0U0JEk0uHQwc/v7vwY7xzVGa+PsRVXEo1eAQgmjPR2Pxzu4AWw4yOPxeLysCHtApjgPL2ry4LhIStSMp9hwy/hg872xl6OZidpxDuFGXW9hVOvLSMVHSDQ/MBkwWEObw5MBk8KYI5pNmhNd4yvRowZJs8ylSidFBlEyjT3FqU2pQrdhpQI4UexHODgCqcHlmVvqLKmQOUx+0+j2CBi8HId8rJNghZv4egujFp+R4VUo0y/Vwz+GEbAgL+IgWWnJCjAlO3pD407wtd6lalQR8/XfcCUfNbBLMgeb2n0PDBqQkSnOujPhapHetGHyoEWM0yBm8pse3GtZdOVxfbiTYMSzoIGY/g93NjDg4GL8MYyABT3Y1hKd6lcWh8O5yQ8NmQori8PhcCVbB2fsYOZaMGPme+CgE6ojHlXsSBqxAwPAPiJLd+ZeUdApneiZPDjrmSJruOlvYrxeKZgcWs6oRg5USWzJCsDhPEtNZdEeS25t+4gsnvG+zrhoASbPtLw4OFoVAsCUmHS1iYlWo581jJEMd2MVMNSAMTV0dXaOOHh/tgxYZWYbFkw0t2QF4Nzkh/r7DV3Z8P8/Z7m1x9nPjDRsM+nlaLHj0kj9yYD5xOxs1fTPIM9MLHbdNv8ALRiD7QRfozYNnb1wiPyUsfeDL5r1KX9LY4HRtBmGAdOe6VPnN4wxYSbFR8eC1VUqh9gLh+uDnitdgRvV/+btFhC/NZZVUpbLxGRsJjNOtfbZMwMziqamaru6LH96FozBRkEnWcyVnlUlMzRSbCDZBgAAACsAzGQpecZM7rc+UjYYW2DO0jVzMZ4BHzyDPy3VGQdmVERdwtFBW8abOlzjD3nu35nVwkz84iYLh2Pd/CJxpnVfg5JtfPaZhcb0qUsgY8YKZzqIeDSHNwNjjg2bAb75s5vRHuDEezAAmLn9TAAAiK/sj5+Eyz3XaBMTdWPrwf5NXV1dqEEvNRUYeR1hTDKTrgJMZBH04WvzPS9WRIy5yqSHh0+kB9PNgJXF4Uq26ueVy+JwJTPRinjQ/8LRKf6J1PLgvr4+078yxpHx1DKjKmMZM2dGbqyYF7DTLJx+6aLThq3YrYPOGexgz5zdVsQM9kJgPNgZk10kOLgPDT+ZGUyvqRBTZVHMqIgWufnOsaw4pt1zLbSLWIaJUMIRwKaAp5dJef4TN3K4xleWxuH0Tb3/eCLD5jxYcz77mCRFeiIChi5+GVvanzsGd8S5hblx1/QyCwdac5KJGznK4nA4lu5IbOkE005NDX19fWCE+H/j0HTj7cyLAcD/woERUgYMFHnlFZPFzVzZeNvMlcEHHwAAtBbE0ht2MzKsALBKSpq0WHoLTzNZxMxtWvIrWq0Vmz3ivYy1MpP+ZMwUGYKlAoYmBvjCc/9+MESIjL3pUWGbcWKG37RJq9Xa2loBMDT+3zg03Xgbj8f39fWNlDLAZJEhUe4j/WvQaUOunJExasj6kF8x868JxtJbeNpIRczcpoUpA8BIWRImWJmpzDIwHHPzYHo3+bgydJmwqv1FN/1jqW56f3p0Hsx41gu1i8ws6cLAmEbMuUqx93uW9vf3N1OP4HBu+z1L+/srKw+BIr7+BFSctpZgU8wYozHt2SOni9FVxBZ+URUAsaX6fqlKPjht2yxQEcfDDJvUek5YsmSQrmXkQG87G32VwSjzYKWAhcO5FUU2G9Y+H2maS6dNsk7HlmIq4qRj+dTZbKezs8tkMp7OzlnjPj8Esz2YUedUeQid6/L/ojnXqPtCLfUA+H/R3N8/K6a/ZpZhHTOmz3UsNtObSL2BOiE+pzNgM4SZPIU9kt/ZbA1OGxcT8aZn5g5YODDzBsZQRkoL+VwlpZqIgAEjf0W9pM25BWYxpovExLlgZJqggBlg5vb39zd/4V+132229WZs9kwcBD0/ho25zRjWB4sra8kKMNFDDcRduskPYRPNE2AOC9VzGxlg6fpgpbEAANf4ryOLdmYN9uQwZPXFRGvMzGGJwkAZVcAGrw/mutKzSq7PHcXMbf7CH4DTLLRzmwuDsJmpLmLMXkYVMDPxlC1ZO4sim1FnKjd0q7/ZuIubuYx9pZRZDNZPgulrOkcVMNf4ylLA0i8MxgKlA/GUzfIqz5WuAADXlZ4A3Rrcxc1IgoP7AgImbyEEDAxzWGLkMM4dgI2yhoJplRhmsEDAdLlGDbbEyfhZuDh+6MLn5tEvlz5oGbFxXms4JtVFg+Sklgcfrdw0oR+YDWCa5FRggRXxyM0vEpktWUdOx5b2G7x+dejWkx1YWRZ1TTSPJDN8L6dtDJWEi+OPgoM8Ho93Kki0d7AwwcUZY7rWcBITtSbVxXFMdGK92YxiyRLb0VbwnXIssSJ6rnQFzfIqf6rbUCuiRWmnBiHJDA8/qthxcIfzsMPh4eHhprsilVK/gqU9Pcj5StXAOXBxhshpw2St1mwZz0mHNgcYyTf/WTKqs68b1R+g1sPIZlfQwr/pT53IlKFuzTy4WGR0UJJ5VLHjFC/CHi6O35sp4Q1ZrhJWKpwpkei2PcUJiJQw8LUHqHgFJSWBjCvKwb+ybt06412tcRaNUTJnWJnIomGUeAMA0NfXd6xq07ER1v0YU06OcaTxsLCIcWXMpPEwc5rleSxMFpl4To6xFjFzmvGbtbDIOH7FJKMKmGv8IYDDsYD/F82uZXG4osjmyskOS5FUXXEOOmUPALCPiN4QXiU54DtIwlTKNkAZXgwVryx7UDzsX9evXzdsr1u3zmqELBpgWLYMoM8DYSbZBn7TpsQALTpcMU4gj26PKSfHONJ4WFgEWJbGw8xpxrupqUCr1RpGaCMlqLAw9YiFOTnGWsTMaWYyfEx1Tg4Ll5DVhaToVnmYfNo4e8M5um1nCgxAUfjRKwAAADYc5EVSTOiABvECw6weEyAxUYum8R0Tk7Uc7LNhJke4PGMsfBQTeWKWxIPpoyoBMJWYzfi/Bsaaf3TDwSF64eDVl53aqlQA2AMAYKUCOPnbA7hY1NbWNiCVR8MVO05lmVlIfeyw2ZY+U+MezKDip6YC45wDll9tUngGn84MZ8itja/pnDiW+iLqKAWsob5QzK3o4rG6E2JBbOkY/Tl8/TdcyUfN75JMU4Z4MsVZdwJcLULtHfYRWTwdp3Y4gw0Heeala+rse3MjqsJyxmPNf45XIRujLyJza+xQR42yktODTzhdUjZGfw7fAwedOHvDw8PDjyp2JA0XFPuILN0Je0VBp4aYQDCMwOYJZhqWWBFPDyyXUlZyeqgV0dQJLbdHMTbaR2TxjPd9B6uEwzFzwtBrYWDMHCywIhqv7QBiS/uHjK2GL/7wOj/ADUQ2z5wcOIZ5Rj0jjjrY7EEJ/CwpYswQRX+kq1lo/HjGwzaMqWBSfBGNTqiMdwWu8ZX9M2qJFcs9eifRq8PM1SbIED2QzbYy7+qFMY1MVsoAjGljchsFjMllFAEzxFGOnDuqLC4ga+Rs9RhjYxzd0azuqea8h7E5ASuLw+njKFGaqUeGRywzc78GO3UCiGYPmCMhLdPSA5jRKk36rc7VINE5g7nFH0pOx5YOGku5xleWeu5nD+2gXOMr+/ubv/CfkgpOEomJ2un9QCcurib9Vqc3SHTq+p/UVJCUNBdU3ImMwQbSSeFwOLf9VfrolRmqIs7AD3TSwcZdM42JGzkGvDiwqGcLMR41jW8ENStyiszqweFkYV7A9FGUAxi7HWLrg43CxL+wkaQIyynyjBn3qzS7fJFF8ZTGp6HCNtPFbLboUZj9fQ4wufNg2BKyE2W2q1UmpxlwuKEr6z0/TFzABpk69Mzu9KNTwUgTXGDCJs0Z1aGZ7HWf2Qp64xDjibdo5n/U4vXBRoS5NRaArfpuC10zLPF2wM6s12eMu9RYUgZMNLB/SE4VI/9DLWp3zsiwYrOt0A/OeNuwa/LKiYmgq0s71fVnswdyBIzvyoYrWBilbz41wNgD+23HnkzBaqQrm1nPdnB7YTvkCsaMIeAytrSZemQn+HqI3JSVnI7daliEj7k1llVSlrvVs6pk8FLO04nlKQMsjNJPS9PN/ww/zTjg0jibgFYLhoevo9tDXqRhNzFx0rIMGCps/jQAJpryYMitjRpybyY1gPE2DjcoWY2ZAP6xJlMwLjLkap2dXYaMCcahtMNzBJhJGTCRxR9QTOXWbrl90+RSzhimwEyCE8Q4H5tJfXsap60nsviD7hCaW1vHEWpz5ev8nftB5OszpPuaFCbX9jCjRk1gypywjG9zSo0cxvnYjFsrM2/N5C1bnjJxSBEzBSey+IOBmR6uMl1YIkjTImxDZrpH8nGxcEL82c96T1xcTd6y5SkThxQxU9DSgEsWAOA07rSJgMvnhZGtF8++LpYyUrqrSQSVT5Thw84J8gzqbyHjzpkzCQGXw+z0M32ieXyMOlKaFEV/cju02e5+aVL3e8apeYczpv5z1B6sLA7HumkuCVtZyenhudzmCDOnBZ2NjJx/wXYShWTJkoGrdXZ24XCmbeudnaaLTzydW2dnFwDjtyIyc/v7BwK+THROzK2xN2/P0WnlWd0DDBk1mRkpmTFyTCQZgWHSeUgXNL5J5+F2BZNmCZOKxjR2ehZ5crjGVxo5Gw4VMjcq2O8291VEk8yisCUzKq6xl6Mlp4GRZXKKbDaGZRyGi+szw6R4j6rXWCRgA4kDSrYOG4aVsfd7Do5YmU3q4vgkZKbZ2Udl0is8q/v28TG+AaGlY7D+/pHGYMytsUdutwDm82lbfJ6YyIjU/EBl8iozaHQ3XemyjbFoDGZ2Uqus5HTVnFcRZ0uXNY6cOZbf2sxxNzHWGMGER3dTirmcHHG4uDITzvJD5Gd42NhsUhHnGBaGkFkoVManzZYmZqZhRkVkoosVMQ2LF2FMNqmpqI/8LI4Bmwlq2DNmTOruqCqibgn0EXYxMDDMYUbAUNuh0frmaE6OSXGTh4vjTS/HPBL6RZyNFzeCi+PNrez8vDOJSt0QW+uMUhdn4LjLGDMChs5+lcYOyRs1cTdeSWb4Xk7bGArAxfFHwUEej8c7FSTaq5MmSeZeUdApdIEwxVETq4qZZlpmrsbxo7Nohm2CzPYsCeaxwIpoWHSvJStgwrkAJJnh4UcVOw7ucB52eOS+SKVEV90DwJ4e5HylSgLQldGD6PYAoCs7tylVE6rXXOD5kclZxKjzYC1ZR25+8XWuKwDANb6yGUwwF4BunS+4WGR0UJJ5VLHjFC/CHi6O35spGbKaLICVCmdKJLptT3ECIiUMfO0pTm351XBEhD2Ai/OvOAdFGpVYt26d8QW0lq1yP1KQ+QcfoOfovt0huyNd2WyYuukiI13Zwvj/cRR5Nlce7SmNnllgyLbFVx7ltOHnWHiamSJDGFXAmuVVnlsN8uS6cgpyAUiqrjgHnbIHaF8UXiU54DtIwlTKNkAZVsr3AA9khoeHAwCchy7PfP36dcP2unXrrCxb5d6SIPPhu2MNhh/HlS1MGTBSkYyMEStm/K9xXNnC/AXmnxKwILPAJD5/M+/CwtPMVGY4E1/hclJo4wysZ+5MgQEoCj96BQAAwIaDvEiK8/AScHE8OgazRxXMzKHLqD8fzFJD/0jBdSP5vM9eJr7C5aSwYah4DF4x1qmtSgWAPQAAViqAk789ABJlm3NQEtpt+fpvAPlKGPiaWwYdY2xMqeiajNEEAIysas1WLMkqxcyd2rlmX/8NR/OLI30j7IEkMzyfMkTfA4BMcb6CngBXi9o2RPuix9pE6BgMSKquAKeDkypdM6pnmNzKjHS1GXXLzwYLb3kiT2Z0AWvJCnDbX2V0YPLDK30PHKwKR3VE5x2nDgyTFPuIrINK9ATnHaeyfIccMzqKgTGzGN2bnr0ffNHcv5KNK9nanwvicCVbJ0G67COyeMb7voNVwuGYOmHUQs8x09Idje9Hp8jZaoZ0yJbEg3mudAVuVP+bt1sAc2usUY4pDAwM81hiRbx5uwUwdfb5WckMacwwnkMssCIe8sTtzHq9MvGLI244HPD/onmuOtdjcjhWsCc2KhZYEXVhKyC+sj9+qquDMePBhGpMWDIGM465xGJVMCwCc4xEsXTxBx0Gx18MDAwLGOPiD8ytsUMXf8DAwBiRSVn8AQMDwzQzxBfxOQIzEjxXzARfRAyMOcvE07ZhYGCMCJa2bZaBaZizC7NGDn1O+rgyQ3Z6zEhvKdhEEAYAANc/Yvr6lqyAneDrynjXlqwAt6LI5sp414Fjz7SSE2LdunUCgWC6a4FhmowMKwDmQksUGhpqnKhigKF5rwcYSNhmlLptWBa3Gc/atWv7+/s7OzsNR4y3zfxrgkWm7spzqf6ffdafmKiZvfU37KKf2XAsWr4IAwNjfFhipsfAmCrmvM3GvICdZuFO6zcNW7Fbp7RGGBhzCPNmesxAj4ExIbAxGAbGFIIJGAbGFIIJGAbGFPJcWBGHrAWBgfHsMDk7NvcwngccMic40r8mWGTqrozVf8ZWZjiYioiBMYVgAoaBMYWYcfbFwMCYKFgPhoExhWAChoExhWAChoExhWACNm4kmfHF8LhLwxLJ+AtP8dXM/Az8LH7GMkZ4/hN/FHBxfHx85gTerTHPlYDBkuJMowdnvGvJNrpbrH9/ZP8g0V7dO4YlxZmZ/yg19W5NXw2uzj+6N1MCox8ELMk0fqemi0gy4+MHfVJGp9mDqoz44cUlmfHhaBlYMqxuFt3y4B9VVWXo73jiDxOGjaTV6F8jHR+6q3/+xlIPSyTA+FFYXBnDLlwcnwGSsqKBqBoedHxY2wJLBv3woKsN8EJqaurwo3MTSR6X6E+RyeSQQsiudyBVC4j+FFm18EE//X4p19y2TA4RqWQCXJwnAEQl5695P69d25ohoGSdYIr/9HHdWttaAdGfeOmr4h/by3lnmzQkByqZAGAJrCY3Fg1cAR7Y9vOA8DaesmPvi70ZypxkJYuTxoSFGcJLAniFrmJGRa4JcgXfqF/+JC1KlZIi92ISGwdd+ZGae0bU01Zx5pJY9F8vW11x4XfZnIXv8NJowhTug19EJS2woLBQXzfjpzGoYgPbDxTC77OVlKSBHy0WKKEYmvTLM3d/XnS3tmqp7jS1lRu5Eb2aIPcfjV4v1Zp9sDI5RKTiLmQWqRC+UO0FcVPEDoZbfiAWXu1E+EK1F51MGOGVXRMIf3FwqM8QULJOrBGnnOxcBJVnCyEvOpyXUgVgJTGWpcxgw15MKsHkbRpXcsjHIJMTXRwbeAWCBuvoKCLO6CETn1QnJ6SL8QwmlQAAgIszixAgq5Y7QELj+kNE9OkaeC4ETJIZzy7UeDGJ/GS+IwNSIp7+jrzk7DqFSLWa8Yv4XNGlPucejshxxG1IidhCwj/nnK+r6yatD3PrrRQ9DVwrzRdqIFXr7avXHjn3cEQrX/2NTOka6vQbhKiUyR3oVBU3JblQ7dzDEUG4mkuifr837fjJfEfv7toWx40hi4Qf54OD+yhKvGeggzI/VwxDgPZqsL5iJOMiG/HdLY3XKuT4sISEACKBMHBlRwaklMmV/ulpTLxY+8RpnjS7SKoQqUikGjnp8OeUnBQhLS0tws1OI5ARg6whhKgsz/2GJ+hFn4ZxxQZVktFb271s0+MfOOf1P4p+akolYC29yztXC+l/vc9WWZAN02jSo3xHBr770a1/FknNPVhv5bni8qvdKpp/FMUaUVaXtOLa/lkkVYhukbwXIJCTP7FPBhGV3E+/PPuLvjKDX9lGfOvlG+jzb6oX1C1869MPI5gQN4VrxaLVZEt7kMoGWlK0MuNYoanbHFzJIR8DpER8dyUEaASVCM1RmYM+5MuQ92Ok5S6IeZfRkH1MgN/uRYQBTsbnS3usHeHL1bi2ooGredCpz5WAwZLMPLauGc4ASfvdmx9vDOs7KaBknYjGi/m90NPOJSs+pClEkM+SVmmn08vDt50QYuQBSimXkpYWjReLWx82/Ljm4DZlDp+WtKWXV7XQ6UOaQgStXNj62/07f3NO5p92IIROp6olmTlK6300haib1Hln8f9+naRNyQBJ+xfz/k1as1AohHYfSGTSyWS1/M/5SFRa1GOxKixyga5il/g1Wp///ftH2pQMsHlla16NOvTghyQ57zzssj2EYLiyrm6ezelHv+vAP8HfuzOfeRK9L2ubtpvX+DZ7OFG20sZf3cj2VJI4V7aKBX4ULaR9gj6NzcGtTb/54ORH2pSjyiUvdz60++DkR9qUDJCUHoXDQfd/yBHRdvggFedhoouMw1VaKzgiR0ZvLb9xiZvhybzqrzwr6mmr4N312XNo2Y+lva+dNPdgV+Iu1Xqxvz4UADUVfC1bvtETL62oIR4uSLYR8aXSJuuYPZ7KAtl8R/Gd/pfdVv+Wf26BqVf200K/9Qhf5LgaX/fL+v1rfmCf6yK9Grem6rMzTn/nvKURVLZ3y2sXrj84/DY3/ykWLzVUshui/yESvbKH+Oz1zrZ67dIwBp1sT2X2i09ygT1af4JcUqdZurKHI3IM90EqqgWdL0LNfKmj00IVWDjvRxXxcEGyjZgPOYZF7goZusD4nBYwWCIBZIrszEAzvGrpo++LZJ406ddnmnqf4JfNn7/pDSDKlwZF+yI/9rK2Dd1evc7Vab33jyfZnLo6VQceutvd3rnktdeQAj4lKRr5m/BBmK4Iy2fJ/R84gBWEKB9BxF9xF4oEniwgypcGbV6Na79WzcOHheCE4igAACAASURBVEHlKo/dHk8frInwhMWA7gDDBLIaFp7hnefjwz70rC2SedKk+UINdBchgdtXSvBhhwNvZ2cu3Mk75i1MqfJPinFGyES5/sqrN/s6bdyxRVXMblq5z5dS303c7C3NF2ogpJc0f/6mGGeV6HwlPu69pdwUNuzFDPHQiNts/ZES/dN4dL+Wd/ZKeYf3HhblyQrk8tkrd3RPyR7AXI7Seh9NykeCFuMQRO2ffiDiQVPromW9asNTYnnSI4ilXEoa2nla19ywYq0f8cEKssq0uN84hL32qLKaxAzxfSD4p+ipurvbebVGLmr6pcsmOIhB9ZEdO4rsS/au//bsdZgRnzHoleULNRACrZwPAo4c8FDA0NMFC97++MNXccSXFt27elFY/SLdqel78X/xCBQYu+lFMYdzBh922Og2D6eFLbhfWtrtr3tKUNgf/G+gVz4jqHmyIuFvmYne8LHPhMvCHSq/l72C1n+za6t04Qp9g4JbxQqGfqxBXjmSRiv/5pb61xc812nktRoIgcIO7PIlDP8G57SAEWBuSg6I3TfQ9kuAbwRRyObTPnmt9YyYtu+Ip4Cr7FMopFYxx+KJX51UBlGtJWU1netpahmRRXO0I3aUfC6ipWftsRFXIu6L5/dufAPw+Yqg1VBB2a1HS60blJRoR6i8TFTbz0piyb4sAhu9lSeT+Y7JLJkAsGiOPzd0eG9jzFNxZMtjvCuTc633JPgRYHFh/jcXGkSXTonVMfsW1Yku8quc/xftFWMpzTfue29lzFNxSs/N25KbDNiomkcm4NTCjByptXWDkrIZ137jheWNtWqvCCJ0Voi89dEeopDNt17SKa5xOXDsfSKXC1iM1TQX/fBM3NEJUd7YFhLi0iHmnS/pYFDvCCgnTjA60k/+S+USs3uXd4eYd/72ExefQNyFPEPr4FrbNH/hUiASw5omcfXV9vWH0PuCyq+B/wmjEuDCHGFT5aU6RR/j023KnBEeLPekqMsuKC7hfyPWEkkaWX6uuKkJJr4g636E++nnoKSg1jPnOx1XQ5yizj37l1ecbdn8Lto6bI+kDLyypC29vB+0OBsgEosri8+3hx5OWAsA3NjYeuOH0k6/jdBl6ZpPYik4jwhQxCWyGPNUHBlpO/HfXPQ28xtdHFfrLxXbyyvh14qdY1nKHD5tJ7VCUL0xejtVfSG3oKX5+tme9477C7iARVssa3iwydCgWClbtPRVnsttlH878hdBZ98i3zDrukpaUiwF5xFhSrrAnBYwWJKZI+ppqzijYqTvW42Q1fKMfCSASXWnM0nyCys//NhF+HGq6Neunvkf5CZoU1LkzA+s+SfO9QQfz4pS5WZLu1WtLQ39rKQYdUEOHBAVuMh2Q+Q26KuTyiA/GtKGBB9PY8KFlYij+j6y6XgaE2b/82fWR2uVJysp0Ycc+RnlPzVfX/DewU2PCpP5jgynBUrxz2uzTzDlKR8L+9dTnj58bMc6npZIynv/aNvKDTvee1WZc8M/yVeWkaecv1TBuQw5L3WmvQb42UhUVpQHjkAgAEkel5Km+9HlqwOXQTKICGS5MuJmaxEHfomGPJQoeuNOovcS66mSeRh6mEvXa37q1Fqtet0BRw6JJHY0iLOLpApVB95a87Tv8W1BAZ6RuCvgScc9D0ptoSz0gOegz0ukCPJ1R7qgxe/SpDky655qUau27xHkyHQgUB3hbzj4OF4m2seykOqVH37sIkxhK61/UjzRP9jYFfILdZQ3t1MJoJGbC2KjcbJ6wmsnTzA1gsrWbvkvSyjv0mqKWl/zAOUip/3pngK0daCrxQOvTPxXVF8Q3Fgc9Ooq8uaVlWwhiUknGHW2oLrgth0zjEqAC5P5EK6zS/Fbvzft+DlnBKIu0jJlw4sM9FLClC/59jt5aTRhSpX/Tut/Zb2YmbDsWHJ6gRxZ7PPu3z9fL05hA5avMl94qwdtQ2mOT54QrbRKkYivpi2XnqtYGHbqUz/43C3/JBZSTQgZphkamLsCpvsc8WIt5Ii4UJQn86VtbRX1HURv+n1BLuLBJCIQw0ldXlHXeAcflhB4Ozvn4m+iP0XFKSEQ/939lQfTohBuBhKZFVj91y9Fi5lMaiO38NbDtod2wS9L84VNlZeae6jvfWTPzxFqfmnt/u3L988JKUlblTk5yJK+Ow9fpIVudyBQI8NeqqmWP3lxqUIk1kAIxIhc9e9q4L8CyReKJee6bKI2za+51klPS4sgN34vph05EAE1Sark1u8c28WgM0nyCzhcdZHYgY52FxoIgRwjd0U8EefKPGOX/cwXV0if/O7TrUgD3hPh86p1al5jUQ5fCnkxifwcoQa6i9zte+GuqkclroS8vOQc2drsE9F4cSUS6D7/vtcbusY+xEb81RkQy1JmsJV9P129bBd3PJ7I5aL98I/umyhKJWAFelLWrFU3NNS19ajEF+TfPX7tZPJ8dopwOYu10RcR5CIeTKo7ndkvLqyoayzv8D6cxiQS7NcGv9Ir3PtxeoFYxdgcWF3yw5X2OlEH3gaB7GwW+gVTlErwhpd1dbtDwlZlBhuwWEBpS5Ghr0yOZzCpBLJPMAPicgFrrZVcaLX9UIgf0wvm5tVcU3qnH4iA5Rrr+bWtXQaxx39X+xv9kDIrYNGDGxcVLyxur9R4MdUX2MrA7AG9YJnD0/JzBQ34TfsOfai+WALC36K705kkObcSYenbUAinhCGgFCG0IPjq6faX/Vbi6i+20tPSIsgEMpVquu9CmXMCBkskahycl6IbNf3S2v3iHz501TfkjXWyi7BLdLA1R6BgUG5klFCS9pHkvPNVl+et+dQgTqoLuJAYF3FujhiGAC00RC0ofNHbSVQAezE98eVF7Vqkod1pdadm6eGsuM6UDJCUFUqxW644V0JJilZm5IMl2hvNvnGsThFfUAl5MXGllynBFCVwZM2v5eL/sPdVdzokZPMpSVuWSS9U1NW/8umZKI97jXl/5iqtUWWs9U5rW115h8t2OpmsFqbkK3oM3UVJjffeRD8CDKsDInzrv/12cdLJ3Y9SU8td33lbp/7BLi5IThUxKS1KlXJUufmTSIq8uXPjG9YiUd3i4H3QOQHipBCJNdDdbmjFy6uIoqN8R4YTiUin61r3fLBaq/hlb24S2vksq84RIvOXKjgiR0a38F9P1yy9VeXJQq+2f+k1DqdAG8bxRTIz/9bhEu1vzREovOlujd+LaSdOeDSkc++4dJxjFzZpAjyJ9Q9WHv88Gfc9l5KW5nHrbFMHcW3sATpSiBotq3ABe/xkGfmUneuUDat3uRpGd70Qv1Cs8aZTCWSHB8JvG8Dq9UiBEPJyQKr5Ir6sTtSBxytrRTV3+l6LDmoX8QWV0Eu0e7yzV8rxYYcTAojqCyevumadYGoEle0Q9BJFWcLhFNjs4ej0ArhRHcBU87/iX7j8H+/fv3GrjcikEgCZ6nBP15wtfjV0sw2CeER4wmJiaNBPvB+uKVa+dyaWjiMQzIkWypwTMALMTUk2jJoCd266fy4HpumNB3fa7vXAKrmqor1OeV215mC0MiOfkhRFkrdeEYg7tBCghYZQCWphBrtQzUpiKfkisBiC1nhaFyChWYHyv37ZsjYbVWz6/gvqrhSgr5BAAI0XBEpHGlLAB6u1igd7c5O07GMVMK6n28p7Ox0U6mzN6ze5CpNzNQxmSAiTJP6rEEYHGxd6w168JfBkAZFIEcSKsvpR4XvqBKMjPR92acrNVwSh380F+XeP3Q4eiValpMi9IomCFDbsu7ZFWN1UeemOBizSqX8ueBhPBPUczhn8+rDANVY3TnJ+3ZnmKeCCGIazuq3FfysQiXqCWO7KH3sptkq+qMcnOtCTHhECJMV57+eC5Cx32fnWulqe7tZUV9FOVdNhTfEMWLNUeFREY6hlxBjG6gVtMm+0no2bf3NNpFCgD/bRnY4HL1Ok+ULNcm3HzauPtqFTfEho9jZ8Xp6YQpF+fVrQBq3wf20FfFVODE2IDlBU3+h1s1cW8BVBQY4PiMg1DkzTGaKsH/cB1vEDIY3FxTAVd0PsFky5JkPcKECYx12482Cys1xLdMfV9K48mBalYh+rAOHpSaBU4BmjH8X5EYganagEpkUihbp/lfeGMV4lECTFKVXESA+KgidS/NfucXdFW0XFZbxfOJVAoDKZDkQiUVZ7B5HxRcQAJlFW+LevxE5ZxTHa9Hw4LtLPku9xzgkYINOZLk25ObBrYKC3Cyg9I+oB7Q3tQUmx9PvNCt8TJ6LxpyoXHwx+LHrgtKhSREmKRv5W+dhzvTNScaVO4fxmGL29CB3qpKZytWC565o3bK7mZNdV3OmY98KLNjo1z85moZ9Bs3LXz2YiRNZipObnuloefv3q9hbnI3+PtxHLiB4Rkev7awy2Zqb8T3uOC64u/cPxPUQuV2n98KHd1h27tkHcr5Su2p6G5QE+RH6+UGMNnqpr7rt9ov9u9r9r16ATG29bpNBwX1uW3W6+29qOqn9MqjtVXagb4t9ZzrhzC1X5AIsFlB4xu8IgLhewHKHysu6F6wEC/FmOamBLkZ1kp59Rh504wZSn/Oky/vfvbJyn4sj6Ues8EInhu7W1L277n8do/cV/zb65wDl6F+NRYY5QYw1I0H2l/6kT0fhTlY689NU8xXxIJKYlxdIpr7h28zmcgo7Op51u2970sSfTISGbT/tkc295aWfnbwO32F77538WbA/Z4LBAXI34+0I/dvu8cu+s7tY+iV4mumMVvALJPye++yOy4FW6B1KYzHfc2Ce+0Oj6zqa7IhkEIRDRZ9WCBp3NMIzB9LMnUOkQauNZ0JTbvILp58dkOtScKZHX9gYk7CJyucCXhNwjQuXlaq+IkEg6WZLHpZw4EY0/xZduCA3te+Fe5VnYy4tIINgTCLC4UOaZxvrxyJ+r7dfb2dn33arVWAOSYyjdrGZoYO4ImCQznl3YRPKikwlkOpMkr+yW8T4X0dKzoiBBZWt3pUjx1AaIxDCEkKD7Sieq/UMbylZHIPOI2bJEXI34s1bPm7ey84cMnta5RyRukl/qIsSf3P/CZY6KnpYQRxTnNbn6AS0UtGq+RCwvl9aJVKsZTk+ll7MEF/C6aVZIKbsPXtvGmKfi3HEPV1cWCCohfHd5yVmezcr5lzlIYJA0X9gkv9Tlcjw3VoWaIhDExUp6FvZihnjcKfxbZVv7dbnznqwEDyLRY/l/UVvznsD163cvqtCLzYJ5FSf199XeK/8J2bzVWiSqW+SzL9pDpxuLVCRcZ5fCLuL42uqUfEpSNPLtxQVbwqgEQHaAxN/WPw7bBkR8hbUjjUKnI6UCT5a1SHRFJLh8XbPc44mcU+vOWLFA2f7za1t1nWowbXltKWorb5L/+87Lhz/fZQ8IVCZzgeJcRfd8OyASiysvdfXgyJ4+NF9WRCRJfoFAURWh3cUVrYfHz3zYi0lFX82FlXsS47xIsOzfre3z+mrrFniF+IY4qOEnVvd/0L2ysyXVVeW3qP/7hjKHT0kKuvvt+Z+cw5h+fkyGlxr3yt4PXFBjIJ0SEoIrNNgMGYjgApFOVUtgWyv+4bwK+XwfBHJgUhuLU24t0/nBMGM9VW2kwFcCiNaIsjr7TCFfqkY/jLtP77VeEzf5/PFEmrf47cS/FBR0bN8eQfeC2Skl9mRtpcQ++f99L5LpQCSGhPhZJF1grggYnBn/tpKWnhaFcDPkDkwqAeDUQo6SFm4tKoADEqJ+qVNsNFjDnqxaay/KFNM29tbypS3tHaSAiAgPNYzYUpRltdLFQNHjFI4Hqrab9eUFcpJzUGgIlQDUTYIiuevGPvG50s7g41l7bMR8CHrafM1+Jy92wZkvW1c7PLwsfXHNlpelR0sg76XOdqGoQ8Bdu74euxVAWmMd5CTlS4OSYj1feumRiAO7BgZ62yKlZ/jS5bFZgaoL99SqRrVVjLNCVFfPF+PDInEGW/PjeRUn9X4bS55KGxcGbUXvKyHAixEeBnG5IIax2nuZLCcN1Y0H5qlTkNiswOqUr289amyHXboufdXsEx0TztD1Y73uEaxVuvY+hrGa4fCktlwOu237+Pe9l35oQXQGNKi8hF9uzYydz/tSZL/0vlzZ9eAmangAcHHhVR8WEIlki39auCo+K+4F7kmEHkklADKVShjoSWihu3Y7ClOOifu96W7uqFWAQCYSHzSXL347y1OQwoWYIWSYq3tl4tvtsiW/42XShSlV/km+sozv56/4kCbNEWo0EMXP150AYBgKWC7LyONX3tbQKNKjfEfGko7zhd/WKxCtC8mju+pkTo/PwX3OPE5dvdaFQZGd4Zzn49fvSdhMIdi7U6luZDKBTFQrqq7XLN2yRFGjCGJtQH7s3Pius0p05fotcQMlPJyE1F851frExWc7E+Jfczp8KqYzJUXuxfSzt1S4AJgbAiYpThE5hluLCnQ2CarOon0gRA1r1EDl4BeDqka0xbIG2M5eN/CY/+P94ONpTJhdpCARV/qCUi4lLW1j01ktbevCLmXAqROMjgLeFecF8sKzGq/3drm2fsetIe0+/K66IAd2DYS0lwHrZDJgp1Qvt1df1P7uzLHwe8IcEJvuUX7mfKdrGJNqT2WS7j2A2rvtgqwhhAisHR2Rgm9FDf2sJF9ZZZtSmCOipWdtEOxJ6Hwv5I6A6E9pqkLeCF3/SNkibfvvmhXod/NU2qhzFvFxQpC+hazjBzxqxL/MJ9Y25vI7vZhUdwdImFMiRWcUOH8RE99J3/VSE/8sHJCQEPCoMe+MqGdFdJCzWPxd+8PHC1xfd8ABd9uW3DPXelYwUcc6sgMkl3lEhASuWOvS3y25p3moDTiCGtAgVQ1YjbpEdFi/IP3J7vjJfTYd8nYE8qIPiJDjAnlN5VVde0QUprALNagnINkBkguuiYAPk+oOaUq+q3N/M3gZ+ta+Sf0rwnpteYGMuHtXAMy9oJDJVqUdCFGLJZcVv01LX8FJES5nxW4kV1+VBb4BBCfLtDYOVgtF/FYvJpVAgLkpmSD6TBoTFuaA2PQoXPONR2++y1CJKurqbl+323fyLbgwH8RyDnt3fFNQrmX90VklOv8Dv6DHezudDGCJRE0mA9z9l4LXKK8q+xQKac/a3Yco6PSAt59jA0/U3uPk44Or5PMqGmxC/BtLqjUQAgXuCiGP7eOcAwIGw8IzvPP1zvv2AZGIEhWg1qlJHfje2trHrFfunWQXapixy6oFlPcjncQ/yGyDHB/WlNVWNtapOvAQ0q0U177IYD7h/+X/vql88ORJa8uS0PVS3SioV+t68POdqj99ePx+QNrn7zzSmRkr8Z69PA5HbLMnK8rjKREu53AKCuSkRaCmvJJ84OAeqCBDqNFAxJCQtT4kca7Of0pdLqYdSWPC7CLE+tY5RdAOJ1EBvHRpV1VzpUrdw2twXP/w/JmLL/2xQC+rUbjmG/eDjx+IgOUaaH7rTfm1xjpRB97mzvlvryGM+KzA6hQ23A/xux0/QU2grwa3nr/cVl4ptQ5yQlQOdFwp14rFckXyf3y8cc1H77iK+XxB5S93BcJzbW1IT70cz2BS1RJJtZIvUnkxiapGwhsRARCsEpWUayAEcnzV/zGPc57f4X04jenAiPRuKswR3+7udIvedO8k6t6JPHiC3LiNbNK3R85ypd2Af3BensAzMti6QEZkEhH5tQuCEjxjO5UASlP/ePOVBK+rOdl1FVoXBvEal3v+5k1RBx7f1Hqr7XYd32YPJ8qjWZCRxndMZl3LFc1/2fHxtWrNsnAnaUGe4O5Lu9/f7SJms3VNqp892fZeYTIfctEqHm0uOExISUFis9yri9X0Nfa2ATspZz8X4bxd3Lzfo/zAFpKYIYCbwoYDIkPcCXDjP0S/fJCb8AL3qNDKf1Vf97qIkFVUppdGUImw0tISXTqunj3PQ8LTzc0mm2H2Cxg6QmV0pOcjMZtDiT+XVq1KS4vuvdT54jsRVMU5VKdX/en/Ofdw/ZbX/dzpK1q+zTmnee24zswYFflyawHvPF/cEX7k6/cC3CKDV90uyJcGJcXSKR7L4W/PCvj4sD0bnogLv0XNjD5E9fKQkFVkus4mHqf3FSgQ3fDYlJYWpUrJUEVlRRHVFF93AgCAvKDpu383SsX/daAAPjp7pnA68Gk8xDl1Sa1uwUdvclY70nraEafuNnzoK/B5jrjjTtN/Ottv1IjVK+wA/5K46UcEUWs3HU+Lxos7lb1d9EOHqGeOHSuY5+zD8lmF1HM4lagJdBt9QTlsG2QNtUr/c036H/x675qvvqqCf1YrehatcvGgWMPQ4p56QlJWmFaswi1uq4BdXGRHj55HwsOhvx//182lG1+n2pPdfJjoSANXqHu2WTkFN2rwXrt3RfaLW+YvrM/RPdUPT910iUkM1Vs7SKG293/gl/J1018ElTidw+GL6nvqtU+0ShdU4+1vTU84f1dz97fejMg1DIq16KJQzco6Ft17qfPFkPlqVE87X9nrDcFKKIYmzZHZaZqbZdBvQU+bol7Rs/itKHF2QkEHIzmNhjRaeQYvhfNS2HzHpPQNP4svydub9KbdJ+KvDhfCjxuyP+fBD3Dkd7M+YZGpTC+Ym6emH9jtKExhw15exNpvedXlBXKSnW2z9Jf+dim/SUNyoLr7MUkwfE/NPaOkhTsjFedh78QI93F8nrNYwCSZ8e8XCvCoCd4aPFXfrF3M3L0OKcwRaiBVa/XVa1a70hK8m3K/FN9WaR/fbRfJO1oFhRfn/+6gbjY5IcCBrCriUk6ciO49dfaCTcAOP3vQyC20jo0G1QSKqkiwbP2iDvlFgXyeVzBqZsQtKG+YH8akEgDAQSSKM1hJ9UAKc4Qaa83TvsfXBAbDvT3ZELawDJIW/u1KnUjuvCfasaRpMTp7porK9mkubX9hibpdcaUC2pce67J8QVW2dLHz4ra6n17JOnMkkukF5xadb7v9xPuPR7a8UJgj1PzSUFO7Mul/A6qrcYf3LL10zfuD+f8WABpaN8aeOKo9lSTOLe/suWn/R95xbyFb9kYcVf6TB8thHkJUypDQAzGuGkFBgaDBOjorjdkh5lsx0zZrxbzzFYqFyx7dreB3uGynk2GJBLi7EwAOLswRNjX8R7EwmpflK0zhQl6rlOf+hva94tvt6FPFhyUkRDoQiSEhxO8vr0AbO3h7JEWSmaN03sfA3ep4orl5dxGurNaR4URC2ufHnEp2FvPPi0V8voocHP2areiM7pXJvVBXLMbqBW0yl2D91PaW+A/ivEh4m3lIvfM+zq4N27e7dKQfze5gHH7fSjcrE6X6+P/h/frOvpUq0flKvAtcwC60jk2iV56+upBB35Z8wuVSXK6GwaQSCGpxodKDSSVApEWIoEzmr+t7tXeRuzhGuBOkD4ZwJ4oLBZ4swOcrgsLDiR7mJ5RHYrYKmCQz/iiI5qXRhGwZKynSg0JUXJL3tFdqAhISIhcoxJ3Q4hhazV/O/Gy3yfuBCDmQtdfmUmONdv77WR/9qp9NvqeuPqlTJm0ekxxWIee+KhQIGmjRUaoqFT3Ez48Off/d/V/nk3w3v9jRh5oZ++7Ib4v4eAZDmLdXBHYlRKDGNAeiolnhZWS4HwSZznQRF4jakPoH3aq6q3y9EK7dGG7bVCiiRe8Lo5AJMtQIrhFUdpP6XnR8hUEmENRNgnneNtKSEnzY4YRIB6JdwG9rzhVUwoFREWR725dqBDJPf0SGmkDDPD3IZAKAGwv//cKnhkAV8jIf2xq9jkolAEDQ6T/LNYUcYlLSuuoLyK6EaJcn8lvz0zkx2vT8xo6mv4hAGJNKAAQqSfNNk/s/Di3PThHS0tLo8AWBEoqh1RSJX+hULPjw7/sd0PEYJMxI5g80diTHULri/75a9XlyhFQokIKFdI8+RZ+H/d3GO511jXWqDhvHnnpk/cHwx7xvf3D+/eGESAci8c2YjQxNQYbMurNa1LZAN7UNKRF6RIg9QI0iDpFxRG682IFJdadvJzak/x9HhNv2ia65TNzotUAgACwGSX1ZSUEjBrpXE7pe8N27Yy1B3SRukJafO5X793mMcKlKoSkoQd5KQPte6E7Hg/+JSHyzuyS7wm59zBthlOoMdqFGZ9Nn0RyJujqMg1kpYJLi+CrPLCMvWAKBgIM0lbx2QIK86OrS7+38KUoleMP+Lk+0MNC//TKvqfeJndtr1rfO6g0h7lR1oS4CRUuMCg0NefVVOpPJZHo1fZycXa9AOjvOFaY3ubxBc3J9LBZSWIFE4BEREbjRm4Gv53MK7ix6cu+2iI+OKAAgEKxg1OeQRKQPmiGRFMez5V7MkMjtLr2SO/dXbvPovY5OgAIAACDTmSS5mBwSYm80H3okbX3N+8mFYrGg9uFjm9dOnmB0fJwsZmwPsScQqF79TeXi2oYLPB5sHeuvzMnX182dTAAAwHB5cdkV/oCnAgBkB41YRjSqFYHKJMH3bR0beDpZJRDIthoBv1pjDUiOTkB6va5Cd2tkqm1NNlvnD6kLCasS/Yxzs757u/5OhxYCtFh/ZYZRY/fqkx8qahph0uLO78+IHjbU1C2NcOqpUbzmP7/mopFmnhYNfSWgZJ3waPg4TcpwQTJy5F6Rfn5ML6il9XHwcf3Udqjuy4YlEjVBsPftdBHOpxt+4E13a/xe6hG1jQHyS5+wrBv4VWRm+CqyAySX2XoS0QnD1RBwf3+ntZhTgLabWYHaVufkGORYdl19U0fPvSp932vneO9aTk39vOh9zqLC/zyQF9XS0rMMNn2Zx7ilC8w+AZNkFsP0kBCSmM0e8IIFAC5OEVCyYjoKOT9c6g1YfwudlULCDn3sgvrO3/22ZkX0R7siSeJCESUqkkoAqP6jgRCIGBrip3+CkjwxI4bRJqpohN6J/v3TM0Ipsjw2ultQ9T9vR9gDAACBQH191ZMGhcPvD61u43MKOlyIYna9g36KeGeavgAAIABJREFUxvhlwJnhb4sZh9OWn/k484H36yGvBm9cdPl71I1VF/cKSyRqX92kiprIjPRQqz0ifBuL2cowTtpuJvN12n91w5uwAzr7FeG++AK/c3V61tuIEO2KxWSDsylcnGdwYhhwNSBQh82KkqnkZVSv/qbyGuUTTeE/5F6REZFMByLRg6i6qoRiGE9EnIIOFyLMzkYN/ceyK8X4gajKzmuIjfPitro6nLNzpXKtUWPXWPi9Na3nh6uXoS3xbtLOzZ+G3ilT+rrRlm76cK93U65eM7cn6BqU5dr6+mty5z1ZgdUp7Mb+pnM3tHZAJIY1SiUxdOBhEmBuSrICtbxLFcrr4v+uoUm55WroifXjdqX/52lvtxcXw1Q/X908++ObnPNWMXvtxSqP0N2RkUwvklzAlQEglSlxXb2/8bZevtJnfg8CedGp9gQCmc7c7tUvzMlXr3wrKS3BUE8iwd59fJqhgdkmYGTo4/ffRwe4qgs4Pz97IMmMFztE0qG8w0cEwGHDnnce58tY+2KJP18T4X0MvvN7EtFB7W7P299xS3vXvm7whRk8aYiDC5P5jlsX1Tci3ffwrPQ0Gpwro/9OkJ1c0OHCoJMbM+PZhYS3P/epZucQP4mq5xfP2xxjzZc5MKkEAoFsFC4OF+fJVuOuZJ8quA5+g1R9K8YzmFR3nUHc+LvRBbdL8t5+X4yOpMlUJp0syYwXO6BeCGq1sf0KBzXxeXy+fo5O/wXAxZl5ao9dEfpAFfqQ2HUTEO6n5/IevvRmLkuackxYc/ulMKJAF7b8Bv2pqLiWuicrsPpPSd/JPP6o66D2xT6RlfbqHOERH5/Ntvd/4BcWaMM4sfR7jXl/ZnPq6q4vcFn8ywu2vQ0djeJ6m+jYhfwT59qXhunfBY6KKzK6tVcSo21OHTtWMM95pfV9xF8/tU2n61s9WAKryQR3OtOlqTAfxKaH3akQ4TwW1VZb7965qhZ19RDCGmWt6DJPcJtEo4iOFkHrvRapm2th7yjwTeLxO37LawVEf4oSEFmeoRvc7pWL+367ZOHa2AMR+hcBF6ekCfo2pR2PsdepFRdwVL/xd1wGZpuAAfLAAHeXu6S4GPbwtOYIznVI7X+XFqq+WNNkxfogrCp5L0c+3wf55YGXnVujwcWbJPzrMSX14DHUnY9JJQACgWDkH1yo8YqMiGR4qXGMxD9t1Aj4MlggoiQl+LnrfvTy5XlrDqZFqXRW4JTvcT1InUik6KnXumynD8yQwJLiPIGSAhDHmBiSCMa98v4fnXnZ2WL89siQwS0imc4kCVPYsBfziQq/2Y7PFpKYdLLuvgpkRCaVAAbJrcFqWtBAOZGg76Pg4vgMEBvrUX2hMSSUIrdEq4GLM/OIycnOxdlZBfOcfVY9/YkvEah6engNEK7mksjuYOYrZ44dK4C7FjGOf26jH9GRCW4OvYU5Qg10t9vug0PeVy+vOHGC0Zr+t5Y4t1tcSlqsx62Kplaf12gdIDgrLdqFNB+RNaqtYnTTxMQQourC0FsjULdvJ176h6hPY6+LDSF6+Lkb6t/ITUku1OgiTeR5Z2Vron+3jQLwKimnarnO1SPWSl7Si0Y/5IAtwe1flbz4x/SPmB4ElUr2cx+aIOCWs/eCe4/pIX5r6a+/JD2rV2TQh9GoDkhMdCnXt3ZgFB95y5lVAoY26lR3OuNJQ/b30tYLolLIWivgSGULFvXUnZVTkz9xX377xsm/6HSJuqbrfH7BPEa4VEVkUgkAB9UV6Gd1iAOu0Ab/YHT2JtLPnUzQDVQgZgKxaGBU/feKa/VyPMWxvakJ6kWQwCNp0XixlhTOSN4VMlgGiP4UpUz5EOfmtiVx95uoqwSpQaR7fQAAAEsyU9iFTSSviIhIkjxP3PcYEEMDl6su/pNbWHtxnrVWxKmrMJJbdHJUZ9kb6g5HIGoEBXrjh2UfB0EtLjzKh/Zw9mjPftUZ8Hqs4zzYkdbT2N6De/lPaIB91PGYbpjkJuciUVlRHvcaLxRy5Q501LVPWHrHhsH0QApzhE2q+i7Ctrc2/FqYI4SWv7jI/fdr71Xwrog7Vr0d8Wuhrkv0tZuPX2Vz9c/55yH9rTEgcd77uY1Ekp0bfLV1zTFdbIh1qLGaLdFl2tHJZ4jHPTFHBqCmWlGn/SZdaDmo7l16j8c5r+vVtwXj8TY+smPJMpswK6S01x9NEPDkN8v6FMgSLzqZAMh0Ly81IBgaLrQNQ1s7LsSkj3E22QyzRsAGNeqER1IRX74q/WQ8ksu3iwr++WIt0dleVQFb/bbinCJoh5OUj87iix+sX3ytoKKnvkJMfIt0VT9jBm83jE9giUTtGxHpMqB2D8QgkNXiC7CHpzXn2+wL/9+FpuUHklfeuV55sWll+qevqAo453livA0EESN36TUN4+w6EO6nho6f7d/cjnoAymUeu6Ic1UDfG+mjJ9lFaibdl0qnUulUMgH+/qvCTr/jWXuQXL5jevpqvkCNvm1JcUo+EoBa9kxotjrbIF/mOPrHoZve8NodGuACVecIiSyHH2ulahidLfj8IxcF6gXCePB9RgktNnlXJEl+AeeHM06wZb+abqt7YpELHvz7QtX18g7vw2m70YotI9O9XFzcKP/miikUnZdmH0V7GY0N191a0V+P3XJN3rf4H/9X/CTgTTv+QKibUd+ra6qUgBXo+fO1/I4VTD8/OtPhkfhG58ZtutDyavtdnhW6Xp13hbEnjmqv1iUUQghbgvG6kfbK+QobvVsWnQwIBJMaNJk+mdIFZoGA6fU3o5ZvO51Mpr/u0vpVDhyQEPXL364u/WNMyJKG+m4y7teFS99Fg1ul1XcFlx9vToj7KI7h0nFdVNdUqdL0NDQNa/vRUdBu9DMyVrvh4kwZJZR49s/ZjW0v7+N8QBFm5NgcOLlSfpZbWTMvMClmnryBGJW2S/+hS4rjdVFYGWDzylZR1wvecTulyVwSg67rVXS6HizJTOEqrXWO+YOsjvpQAFTUAY7k4auzDQrP8M6jk1QAAJOBSAQqkwTDOPNDr4HpjRQuMSAiJMQLggkRux2bCkW06KiVtVxueT8riYVU46h+a/Xq6+4IP4JudDqQOEk/UFGXfr/ixAkPSfr/FYhhq4AQKgHAmZl7hTdtwj9ZW83m06I29+I3xm1ZS2e6NGX/WUg8ePwtIgE0t1bK61SdD9pa73Y1XdfuOZnmYdxqDExyHuU7MqDaqqb7P16rq7hDZLx8Py/jzK21aE4HSFapoDCZHkjhl2ea8Avt/ruo13UjfRmZvt0L4ubwpTApYNfuSIcaoco7bK21wS2LaKEr/CQwwwUMlqhlVRnHjFo+56JcbusvL9P1I2a/YHwhR2ZNQCA7m4Vuy0F7B4Jru3JRtZgRn8WQZX8p/O5Cq41vIBGCaGt72iFaVOiuwW0/edBnpP/dzPC3s+sVyDxv2tv+zvX1V+8s/8NOukZQjWPG7X5zuxcJlglkCC12l1ERWF6JBk0E3s4u6Xxt52sqEb8B+NCsZUIhDDkYPnzUTzIC0mgAnW5cGVhSnMeV0w8kOOpEnUAmqyUSNZncmDfQ9zKpIz8u8ijSNXR6AxgrR3JuZQea+6CImOApQBVjqOncv/7V9cqbPgQClcnwUt9XKfPOFYpRV0MylUoAOLjwy9OFdcDrrU8/8KzOYMNeTFx5jqitrcmGkbgrkiSv7+24zNG50r++oPxIZt2q7XT31Q69HTbufQ/tNq7s6rj5cMH21/0MrcagSc4o35/xG3+/+GJ2xSIAWq5X8FV+6WhOB8g56sAuNDTJEVIv1AgE1x7cw+FcSA44cmORQUHwggUdnluIAtQta3uIBzSgR0w9M1zAGrkp2TqfPbRRrxeKV2x5WZJT9JNX8Gp3KjoZ2vRNtvg+Y5O3NFNQB9/o9fi8IEZ7Kjtb7OzsxFht01Ajffq056crFdC+9EgPe2NfaMOgDm2MDc0aaqxXiSrq5jG8fUPWdwuKBJdb/3Nnbexugye4w2AlTZKnc34vPTdvzaeG4L+sXX5UOn2QRQ8Hi3OEsEapBKHDroDqYMPMjMYTuBNoe8nUodMbhsfwfmHDatZa6ddnmnof/iQo/LsI54NADzS5N4gHj7/bqbMJEQji7M/O9yxe3FNRKcbrhpMEKvN1uwcXb/zKiAwhNxby26yWz1/mv2f1HT7nTIcLg06s5qBJUTtWhdOXuQW/0luYnNvUIeATYxPWPTrLVTpuXLLMeeC+hrYCbvcvZ+cggUEk1QPck3s9+DU+9y7BAQkJYV50P4CmXWl/uKDnyo/aDT4+CkUdzpnhOB+u+orD6cDb3G06X/htvaJ+njcjkpkYZlMoUDNDfJ+ZdIGZLWCGAS6az+S7S5V4r7eWlafxHUMXCgr+abCbHwXv8I55C9ky1r7fL31Qfu2avGOetTMjhkWhR/iupTNJBm8Jd3fDfFFmihAm0Q3mLDKVShiUbkCkWh28qP4X78Q4XPGflRs41IZv7gS9s13/GQxT0nQa1JKniFbnMBXGYBrbeVEjRWNmvCw0LcGDSPRAzdD6YRuVMEQH01UmZyBglDKGMKQhD1KiJpMbi+PZSGxWoG56Q49Rd3HN9T3Hzu8v9a3VBXo8etpz7aLeJqS+EJ8idIxm1IsqegDoWbQ6zlYez5Z7ecnz8h5sORKFsFOE8I+NjbcR5z0JG+2pzFVPnjix8P9/e18f18SZrv0kK+ue6iYI9mMPM3wV3BI+inUthI8cWd+mBIF2t2wORBf3FBakniWlHtEeyu6P1ypb6CbG9RRxl7PbHBdokvZVutGgVepmCTNdrRUlsBUPqZmnom4tTYrWWs37x8wkkxAgfISgzPWXhsnMM5O5n+e+r/u678dZ+W8bOfT26JPLzTvff+i1quQrX57DrpHJt4fc4kkIOw+QbQjKhBxef4scE9YV3jrwW+OSR766NhQavvyrJWtAL5EkSQ0DeIv2gcSRAdvI3cyn4u9EoBbb4hHLF4/LQnsNnKilX3Yd+3zZkz///bYoTH/onCg5HeE5Xe65wzw2MGeAm/LQRfyTyFSqj2R1fdaFDtPNJbaRM0Y9fmIRWTNCNl1J+f7ja6OHsY6u4PV7SlJoP8CllgAAON2/ZZzH7d17Dw3RDDvV1pxuN6C3Xlq0Mv/OVaroFTwuyV9O8ul8O6Csy/Ximil+/8JH11N/7F0wxYMvbHhhWLQ+Ud/Hl6SG8XhuTVFr6TM4U9UubpNr6L7E5aZP07oAADyOdsOGdiqZCwq3uE7kvlw8euLXv/t0DU0RPXCi5R8v6n6+iOKEePYBg7HXzl3GsYwsywKXDmGhUZFD+v3/785P/2PV4dq+bFWGjfvMDllo065dw9FFXOzXnUFPkzTjKNfG5f9bXU10Z20r/+WftFVsI35AlQIwyqsgjtsRqNGie/aILta/OZgcdI2itaTRlqP6jxa/9Ptf8jowbmJG2RbyEXFgu/pDYP/U/q1v/jHSfZK7eduG+BvYCVtGjm3QeuPKF0sjnxgxvs+NGDlry9xamuqR75gbzGMDc87ot1c/9U2Hq3kocfjEY6/WSYKwGyErz1y1GH8Pc9UpNuXBW2TbcEQoiQ6CHlQ14sX9GwpZv3nbVlloO8nU8aC2thWt3swldcC5d0O+/FhrNg98eGzgy2RXWN+CETY+dTYefGHDC1ioUJZ87je/ajF89FnoGrKIa4xgCgAAkCJRUP22vWeppBmurDWhwWcOOe+LxwOuVDXElfucBaNb0pOE00x6UulqsSioiVLfZ4udwaBS3to7dKaDLLq52n/0r7S/cLvHcOXhWN75XuvXoU6/FBFKHMZ9htuhzxT+MPeXJaFNv3nLMvr1nTuXPzEvylGV8JR1e6xrnhOnkrf5+bdufWx4Kyh3U0b68vjrn+hvx9OuOLJjU6iXwZA0KaWc/mL4/F8GHshN7Gvde+bkyROLflKz/vbxAzAmIyNZKL7bQ66ctQ3GyExZ2c9Wj3TjtIeySigJ6WxsRXNynnwi2m7sTqwuE6LScukEgat/MS8NzCliECWd7jioHzwXRTUPpXs4G7HRLy/f/M6GbXLHwCnz3wb4P/1PIWzeR2eZJkwEkXabv+ysLXFraSqw22m3ARFKQjq3v4m+/FPQwxGkfqP9729v/uX/ieDeGLB+86gwlgcAhEiqWECfHOLKfQRnZAg7ZTwFlz6jbN5go4q4OB55XojrWl5ohiJpQXlRdNDwol4rVyJEuKN6Ujt/EkZ7LnfuBaMzkBRwuKNt25pHyUtjGFpH11yQnqG6TjRs7DiO8f8t4rSTEP9e3zVubJj1RO/ompxCYYGL2dPt/fD78eCU/uLyIMM7V/M3Z1/6+Cvpc0tOnjxjbGszJf/02b8P8SX8fju6NXm4N/YZshzbuPcN/XdF+ad7LMvhn7X87Ow4XpigyH0wLpqU4vp/tH6taFS/733OyEOPZQc9cMt+DEhVGUT3Z3tVdVjUJlVc+/P1tl/84cefNH8SLxWL3TwURBhifO1I4r9vIJve8VKnvfLPBuadgTHzXf0ttfuo/UFMadXro/q6+9Lqqwq4o5fPD3wqeOx/e+wxoUb92SX5JdKxRAUTXrQa6VtLUwGgWTSa7eB+3LxXH79jyyoAONDQZl4qeeiR+Eet6r5wicCOH+0hz09vm0JFF5e/+cfo5x+ZqaZUqWEejgjU1RrQuj0Sc22tOUkiTl08+I/InOXdtbR23rYyUcJY7igSn9LjAfe80BRBSjSdl5bSKR43zzBv0V86TpMajgjRzQ/1f70ZTPfDscWL3WnSDvWZlVtqEgcPDXx64/JXd74z+sFJ6+In/+WptYk8/J1DZ0fO3ohOpvdMMEaIHrxj/SL+O2s5Z9QnbZZLxNm+M0ZzKOVouOWbSHlKPF7/X29g3Te6uyEp/F36T8uvnzh2+7sPLlmVLeb3dfY8sm1b1IFdu9q+Gxvx5fBHx83Bsi1iBDCnVFyng/xvLvztrovnDCjml4FRqScD2cUJu57G5JQRQfhV7LcHsCvXbbzH16z8AT/Y1nfccDf79WepzWrG0WUygys3rQZleNoNG+qNHLI7ig0GiSJONHaGSIRxgocH/rjvT/j/nh5IlG1JRYCrxWQ/tbkJlcj699drk+nAL87twroWrTlcLOS27+scgLbgRFufeTF36bLQv2pdzdYz6qrErpCOg2lc/dtcerzpPEtcWbvv0BDV39Ot1p0iEkJ/lH/xvQ9uJm8gNRyXbJlx3H/czHH1w6GV7Dp5bfOAodsa94Oor2xd15N3VD3z8MNL7cbTibLCFfaLxwwfPP6Lph25oqLc0HYDv65MNqrXUw0OfvgUaicuLR1YjDy55JG0ZRbzkM08HDImmUty/UPgn+9+PnSZs2zk5AHsJn/gnYPGOzkvP3P9mBEtTLdrdqm7jObQTeodyRj2qGpX7qih25bIOBXE8X5OSjzRuO3QkKd4LWCYPwZGcQ80oxrUpsX6jrSF/mhzXCQSe6mFdBqF624d/x32qOxFcRwP4du/vnPrCogvKJGOq3CBOnnD3o4DRlF9DRVcubQaVJLN4uqOUlQgFtBFr+HC1WLJcz/Kl0gkAo/zIsIk0ahez80M5t8EvUFkdDEm8HPS7nzhltL4cK6tT28Dy04ab0lKS6gO6cwqdDIIkRaIuVQNElOPNxXgOnlj5+hoX18CVYyTkZBNXQXiuB3hHKUV92dDVn3r0147vHSh6+StwsIlnZ2f0k35UaE4hbauBlCtyuhr6ug6NfjFkm8vspy7dCdaKM4Sk6mzNAap89fOdzCwqig1VfLw4Lvv3VhC1nR9OXDq6pUhuPJnv657KTpoNDGBz/FkG0iu/92PhpeMjIwsGwEjUSt5d9LqyaRcXZnE0qn5aNV6jtE4dFZ/MXprfQHimVgnN+yytnXyt9RtLSoSBbXTIpjAYj4YGEUfYaI9ZKHrI2jW8rOd5tU/j//MeOjsolMH99Lkm4AHYkXrKDZPADiQjna8K1yol2NHbhC2a1eHqH4z6GFqNegkG62rajdRNsoTCIUT8E0Qx6/Y+E8/8eGuPx4zU0sf0xsZsx1ZvFAQxkME4RKheGXIQPM+Wjji7GkOcWhPSY0YaN4HkyTieK5Pal3vY9MpDWhZGcpQcnkUfTTaCuvo5u/ZJaURA+0ngnNWLcV0/amvORO4rm14SJWj4VxwYT7n1IeXR+ILhY84a34F4VedVXDczhZsbdX26M7aRpgU0vu3x5ztSn9c8aPcILP+0MHhaFGBOBVBEJ4bAUvJM7+3cl3SqMF8Z/HQVU5WfdWjpHjqs94THd1Bz/1nCf+Prxvh5/+UtakQfcDJD7vyizw7xGwoyrXyheEQ8gLByHtFwA0Mz8/fRkTlkvQRN2LkrG3Fwxf1to2vP/kX6iXYIQulyLdvhtsvMPLCY6IdT/D4o4a2nhCJWJwUhOmNXNmWgrEqUr0tE/QSSZJ4/sQ/Cd13kYs1mPjPo6baHdcYS5/TvJmCqWp3woOHK+WYsI4Uarg5tKRgXEb9KXUGNUikhLfbi5ILAOCUrZB9SAvEZGnG9fZX9bdz6Gx+rgdjyRNIkkbf1R/v+35dW66+rT1k/Z6qeC4X5cGW2saD3KdfesZ2/D3z4HDwM8s/bGzufSg0OCNbjNiw374Db16harp4PIFEFB0dTzYpAYAmYKM2qTLee2nX4Kp1K3kQx+1xfO47Hy7eqq66SzYkv47pb66g+hk+kfngrbtL+3sOEVG5EsbzcU5nRHsfPwMYW9u7g9MldBAQcATcwDjRQeYOsi2rNJzPl5ZLhYyXYDlqO/yC2rbptezP9KfOmG+utC0On0LwyhNIkmBjbedAd29ivWo8FSlfUioOmzhJQpuNTdtAfK/6mSxXeZLb0scUTG1J5/PCqCkAV8pfqG+i12FxqtvgmYLx4ARh6szeDEQo8arkcpetYEhBAb146v5mf4Ax0TitC0LAI5eaOHHR4nPvdh4/bl6Zv+Ya4Vj7L3epHJ2s71c1f/z28wfqJfCdXYZrSZFXsE8eXDx8/Fr2mkX7917O3rNplfO3QJxxbz+m1fIpuuLzxUvtPR98HTTa1seXhoPOtzronvI8Hrj+/gGq+uEJrP30UvSHK3OjiA71AVqTyZjOam2FqpI4DhzgFtbNgBaadQTYwCiay1kS3+/2EgjBGwa0bP1q0+9q3v32qp88HfaBvm+qwStddeLhcblkE5O1W4A4bkdSUkOw7dvqzSFRmZGftdW5ypOOcgTk0ucUDTp3pqKZd/Il2JN7o36n+uzY4NvN1Blz/AzgpuQaQ+Tw3LOCnhON876P1tZ2DozqrXypEAGxa/KTRw3dtoy1S97b0T4qo8t+y8TD+vb2tjZzyIqU79tvhf3wAXj8w09vXL31YOKTuctJuoh5txDvtwHTXpKu2Pz4Kfxi7oGaktG2Nmtm4gNYz0erXD3lGf3CYNHza2D7LqM9ym67xLGMBItEQoRHsTWHnD1OeN5qtwOMABsYVTceDO7csfxB1RQkWx/R1seX8Pt1hj4QLxZy2/d14O+dvR0X/a2Lnzz2HwfclwsfwfDUIY73cxCEB+z2kGQJn+9DqEPJ7RP5ZuNZwBEVPpcAzR2HDgwHBXFJjQ85NTtFg8xEs7PBQfM+zB4cJdq2ZxOd14Y6ZYs9XIjwfDf1KcCp5PJC5FBzv7tc3e3qUKfrF6SKQwbq1b0r15eGY8oWc7gwNTVpoP1/bGVVcm5bQ+dl+/LsnKDDb/etadojGm77kL/nledDsO36B+V1/7c8ZuB9W3YJtcOQPZwOaKFSWWEEstKSZKoFEPc7l8+8F7Q6GX36iZsdbxutyYn2Pn6O6PF/jhbEfs+98i1MIBGNtrfxy1RbyovIEzL7IxT5thXD3CNwBsYoiT/deZDz2Mt7cm9s36ame+hRW75nBFs+u7mC038h6KnvXro2eaQ0EZxEEzcE7jPxS31UfZJxSyu/Wr0jPcl+VmP6fo5o0aJeW0KpW5dXRCgJ6WzUJ26uRp12y2hw0Ef2AgH2kPgUxK6TV6hHRDIpWd/l2cxjFuGdyHGTq28uc5toII4TfFtrY7PBnqPeI+mv2XTge1WbYzTbf/8/WOzLVTGahr5sVSH/62/+fuAgP2cVqUJePHr97TOngy9YLj32r1IBDwmHzRq7RIi400X9WLvxzEl9kEiWkYtGwauXl/8w++FhtfnGomN/NDMoluzbh2s7uRKx2L3yjSeQhJj7OQKER8bDEYVVqMHn/ggBQiAMDEL8KLNu3P4VxNTqA0GyPbnXjAQn5trd79jb373EGeXaLdaEpx69DoILxWsfmjxSmgQ8O4TxBQkQAwXZieGTRcFkNrnFWbWx90+GoLVF4kfIBSfYrY7LLbxh7nfoanCwp0xiBzwEQAgQDmFP37o1onPDC1h0EVn855f3wzuRA4+6y9URxtWpOUhvzalOPKfvC5GI8550HH+nrdues7c4qH1Ps/HuT94o4elaDPziqtKQzkZ94saIgZ6HHnt6ZQYwaj4egYuTi4QI4Akk4RzgEkTjOh1HIIgTJomCzHr1gU8+P3t4MDT+tv50hIg33PPB6FM0xbL6MtZ7zZaQkAFayWyku6gaESA8RjxsFs6465O/EQADg0dr9xkjEqGerM8RQvdCj7UXD55Ea2SOY+9dG+V8NdJxLkLEvToj94n8dXlUvh9i7STRNImz3v/Chm1kuwHLQLMSbOx4LbmzVstNLynNdS047uyFR3hDW11R9HB9K8yVisMAsGNajV1ckMIDONa+KCTYiM1qgbr7fXslcugsM6OvmwuuOUicnThqA3wBEkbVSg90/331C9mXT/YNGPS2iBHjxSSJWCwJMXeHLe9XGYdD7TevXDs/EhU11IEtJ0uGGedF7J21WLhEEEbSiU9uTA41qHsjsx68aA2KjPyZawpYG+OMtUa6OgaiRWPyJVTcRfX8mQnjOjdwzCUIrRZzOByYIi+vcocc1hUCAAAU8UlEQVQaO91SUlpamZeXl1ep1e54+VcVeXl52tPayoodWozQKhRabWVlpRbDiBleVZGXp8BcY1BofTshhlXm5eXl5RUpCEJbWek6Bf13baVCSzgwRV5eXh7zEg4HptViBKatpK9E0DdBYDO+HR8GrqjMq6zUYtrKvEqtVkHfL4ERBKFVKDBMUZmXV6l1+w5BuH2/srLS7SlhWoxwEFqFQv2rl3doCfIY5xGEoigvbwd1/4RWoXDeo+vGtXl5Cuw0efuYtlKBOQhMvUOBYVqFVosxHwuh9bi4+70pMPINyvPxZwws5nYF4/HNjRu2Ny1a37FHcvW3CvVpTsbrbxTeOP5+cMyK29+QhR6fPLTSPuhsEVFfFh83PUEDcAkXqPZpJLnrC9FEdQu1dZvPjoyAry2nQje9MWa+p6dSIiorn2YvwqG3BgdOjhpXtliFKKcfjpEyzB7Gj6/6tbXb9BHbqN7U7nELPFpbSzN+EEIY7EF2IwLOUXmFekT0i9d+8WBnbSMWHByckS1GeADq5LW7zlx9OGvFuXZsuUfcBY82bts1EC3iYg19uS+C1qa/nh84diqkYqW9fWd7d9SaVV4oFkasxXzanj1/QtaTnYznOebKwCj6jjAbCNuykf81Gt4fXLHxl+u/emcffDpn8dkT/LWraf4tt2pLxNgSyelcst8GDNq+hDRbX/B6kc146NxwUEj4BOEw1Mlrtzc1YUGyLVuW7n++3vaLPzT/680T+oErZ29El7sE78zKJbrRCrCHxCMQeDQ4cHWtIb+Itev19kQJMLSYw2efUCYLzNK8xleubFtf8EgvKNzihTPc2T4cLQmHRw22hJJUD7+VbGwW0VnbCCV1W9K59viClDBaK7MpdHhxtnRruo3JGQIAAI8/GhSa0Ldrp23znoLV3NGvJS9lXDUcan/7xtMdr6d4oVgoePY+8NLzR3wPWBeYIwNz0XelJZKQAYhfW1KqKnP2iEdKtka7828eJZLTAa6rbbWRqr9WNCeDz5ds3SqdiGyCOrkGVJfl3tB3HNK3YYJYPhweeXidOG9VEKa3JcokLr02s3KJnkrDEIQ3psGBs2sNNb/ECZNGDXo9NyLYBuJn28DoAjNqUyX39ZYZj6GMfJcHZwgbWziSkgJP6wKejc2klLjRbm46oDZjZm4wt0/fro8oq/P4yezm7bv0UTWbUSslXsG1v+20LHlo2cDRM8meFMu4NyZv7R0aOknt+jdOz595Cn8bGK7TcQSpHDp0FobbrvKt+o6uT6jiDrurK6gH/zb94BXqlC12YUkidKr+fLFVHn+0va2t255Tv0d0o+0c/xXVT4PatzUPDHuqQBBBCN2xjDmVjqHsUsOAHUKAIDyGZxiXmpQkQVHh9MuTxwWHWWBGrbdQJ6/dbhgVScjdjcfkuzw5Q7FkIhEmeftM2Wd/J2a0DI2MRK3fU1UqYfBGZNfHJsOBkM0ddQWI69dEwi8ZNGcee/5AmXAMxeINNGfo2vVvqs8lsPCngUEct6fwe2oxbiIaH4cMvfWb/3rDYFvz0svpw1hH1xlOVBSX+4R7V4xZuKgzxeSsEPORaOIJkkYNB3rt1942fHtrU8mIrrYvQ50D3FUguFLe2G6nGpsJwhhEtDdJhB3TauxCIXB5hp3Q1mfmiD31+TO7ZTLUHFNgRq/JcNe+dnOEhzASQAjCOGM4Q59/AqiT13aOJkojFt14XMQ5pB+l2105/ee6OkmQ4UZCqdMcyWU8jv81ZuwNFkl9q8RBBCFY8z4MckEio9P1vQM/GhgZ4Iq2Je7dtjdqdVDzX2yPPvHMo11vt2PBZdUrblxLXG5v2bff6EU9NJOLukKF8SvEvHwNAl6/rrYvoz7YaIpdu6Szk1taUipE3FUgdAsNm7bBlk13tphIEmG3c/mIm2fIzy4ZE97MFKRGPiPTs8DMtSbXJcLmvnipmKHDgkdrazsTt5TE0XmLQk812QSAEIRxBgxGJxfVVBZPLkdu/rNb10fnMo6IS8sny5HQoOXRri077jX40cDoAHdvVHENv/cDq9k68gU3r75s8cfq4ZVrbceU5lVN6k2hmP7smUWzZmHT64EMj7bUvvPAlvpihMcd/fwJypuFkEfXGslrmw3QngjOHDpEVy4LKBXv+JIIZ+QpEcYJ/OYZApeIpNpjm1O63S/VYd+VTWayGkkoGMMZTgLSOOvqEsdwUR6V/27toqZK8DBq28Vi907X9xL8mQPAFHmVCr1a0UI4HA4Hoa3Mq1QoSoqK8yqZmRRM6//M0Pgg820Ypq7MyytVOwfuSgTRWRmC/LAyLy+P+guVzfGWIiPPotUSZN6G0Gq1Cq3Xg2YKTEHnjDCt98QQ4/kSdE6qspIcNKbwSOBNBmYmU4G5Lkrmu5xJKmaSjSCYl2Xk5Sa+jkKLEZiicorjm3fwK8mBCIsk4Wf/e+9bkMyEZKhTrNjNsEd+RpZmpBVm2Ho4AvEMCzRmBjvW/qe3Lt2O+uKLS4A43X6O/9zaWMCsenAWlaWEjxpghmp91HAiGu+SRFAd/JjxOs0ZuoQjEYVbZt0zBFCZv6HetbXFeEEswugpTIqz4qiVLURSUFBUNLXiBL65sdZFOdolJa4mc94apEKdUkPY9J32JCES5uMy7lHbHjpPapOnB7/T9G6ZEPhnDF3DKM0ItM4F6uQNVyMfS46wfBBZ3by9vCj18z+32MOFcanu+0E6i8rKSgVxAiEH9rvyYPWtsJwp5WZ6hojXpO0sAW/B6P0afQxiIQwS8fVUxxEfGtl7A89pnO6Uo8tNpRqkkpnhMDsX2vq4fNDX3ImNTkLwUGXOLXRte8C6hc4i/J8H49k7t7/xt6yfpYIHBF7J4gDCzk+SivnY+7fKcgDBESA8O18o9lKR5VZU5pkH82hn7ZLzCcMxXU8fGJu0nTEgrmsh92sEiVEhIVEW62ThJoSAx0MEjI4jSNx0FeiMZhjMdl2kNNHZJo0u87G19SWUJfBtduukBA9jGQxst9DZhN+dUEJbSckNSWedmAMx3tRAaKkgisB8i5ScOjyCGF8yN0bONyvAFJVaAlM4JXwEQTh8eKLMQHHcMU9zPHmVWmIc/SD9oKbwo5NfGf/B3mvws4E5GQLt/I5Wff09SaZDgRHjMQrOA32WFE8NBKYlFci+sgWetISvk4hvg1FUKrRapxW5/jI59TIG0/jKvQB/r2DOqZM0sUpFQCnDGYHAMK1CgTFWvLkfAnllQluZ58ODHMMZEtpKxaw8fiZn6MC0WgXTJDwrCSYDSRVqp/KVewgch8PhZycU6uQN1khgQatV92AmngFcmb+zC2QVFwMrkAZGVQB18gZrZiawolVVKZMciyvzd4KajqoU6msy1aRf8XkM6qEhUFxTbG21opn004A4DhCgaWjtiszMsqi7hrLIi088SJ3cBKqrUE3+zi4AgC9fuccwJ2Yc2FTXzEBgGEF6hlrCgSkqA+LoOl1Th8OXkMvhcJAriSv0mqWfwN3n1xKuJBdGaN3iMZ/WecrjpTzMwLkG/sPcFlzeWyBfaq37ezPXEYKT1Zima+pW/jgLcPP5GT4dyXYw4jFf5gGKraEnrfnHf80cc+Ai3qPAlXKrVFUQBgDElQ2tlsxqVQGAIGyOPUOI6xp2qodAVFZxZuBcU7cR6eQVxsgsps8PcZ3GZE1DLa3WTGABk8UCLmdyaAhEFRdHzov78g+4gR7AvAWCAmMPBAAAwmTJrJaBnrm1LojjEEBdgwlVdTQVRwGACqsC+RZCHMchALiuwSrrkKFpDCvCNSY0DQVWIJOlTR5pQxxYTQ0VrWi1qqk4CkQC9L61LgAAu4J5Ba7TIQXCHmWD0QIAyJSpCuY29GYQCcZWX1kNv45HqQEoMFrT3JgSXCnfaQHFskzjTmOmrwsRrpTvtGQWRxqNaGCcgjkFa2De4XIQ5x5UHX4B0Mkr1EPFTU0oAVJSAvsW4jodUoBqlKBKCmBYCtVRayeQdVQBpdyUJpMC4Msgp+hM3vtgXUTvSJFmqiuUOAzEtcOEmcCowUFYQXVxFDD2BM66oPP+U8he9pZWeYMVAJJeT1M1oa1yJahSVaWkhPk0yKk5k/cDWANzB4QQAjLSqGlKs2qUSt3cW1lYgaoabZUrlQ3GzKYAvoW4piJfiTv/CwEamUlaBQTWoa6d+RpUVS2ditASQS07WwFqtVqRQK/JcwTWRWSAjDQsVrS6ah78+rgORwoCOg5cpwPA2EqmqCGu01jRKiHAQQrQKEFVFVDmt6IdqgJfTwdxHKSkAIgH3uOdO7AGxgSO4wiw9litRitafR9TW1MC1Ck1qJSccnCdvBVUq4Q9lKBkUlYDOjkMXCc3obMkJrmHwBrYGEAc7zGZ7t/MzHRB8j6oRt6KVqsKwiCEYZPyfwy51gIFG4ONBXJ/Z2amCyQt01ght0pVMtADAZjUunCdDgK0uAZtlTMCuYUG1sDGIMw3QmyBgUp5V4MGuVXo0+yTglobrCgKhKpq1BQgQjbwYF1EFr5hKkJ+AMnYS5dfoS5u6ljI3gBrYCx8AJV3BzjuAwHIJGMBrtOYrGiaNLB8aODAGhiLcUBLcnd2DRU31YAGq3DylByu0yEFBQRLxjrBxmAsxkEYICW5HTVZ6oqd6iG1ZnKqArGqK/LzTQAJSxGiKBrp/1HOd7AGxsIrIK5sBZnFkcYGHVLV0dTU0VRsMU1mYbgG1NRkga6dGpwlY0mwBsbCAxDHIdRpTGkyYDRaMjPpOh1UJh2P3IA4SRIiqKXVhGYB0NWq7CGQBRp2uYGNwVgwAZXKCgvapCoIw5VKaxoKgHBSeoKSd9DFl74koBcO2BWMBRMEsIAhdYUOghRpGrBObl2k8HdIXUEnk1nrcgNrYCycgLjOBCJriqOAukKJ0yUqkwDXmNI6Omqyulp1/h/hvYdFgR4Ai3kDsljLagWymhrgcwCFoJYGpS4TZGUK/Tu8exPsCrbgAXVKUsjke7EWpNpzyOU6GFagUkmFge0XMo/BkhwLG1Anr1CDYrqsE/pYrIXn5++MKm5yaev9P9J7FOwKtqABCbS6o0NmbZDrIAC+CJ0hrlMqlaCpqXhIXZFvApEyIWtdE4A1sAUMiBMACQMgRSqLNDb4UlOC6xpaAQosOxt6hB0dNVEgbT7Ufs9nsCTHggWu1FilaQDHe6yt1jSVyoeiSAgAGFKrI2tqMk0NSlylqvL7KO91sCvYAobF2GACiNVqzRxXo+EGXGNCZcVZUV0mUFBVnQYWaInXlMAa2MID1Tkrpao6E1hae3z/IkUzRmahCABsWapPYFnEBQb3zlmQojYm+gaulLdaImVkpy1faUYWFFgDW2hgdM4CmSgAaNVEbcGp/buEPcoGEKhOx/c0WJJjwQDiOIGkpKSkpACAoABEWoFwIjEU2cawQGaSNyitkSBTylrXNMDGYAsDUKfUWK0miouHhA/FWmHA1CDXwZQqlQxYLCib7poWWANbGAhDUVRYkBYJAIA6XY+pB0weR6VUqcgUdEpVdTXq/zHel2BjsPsa0H1zIFwpb7WATN+0TVSjG0KnQ3yS1bPwBnYFu58x/u4N4wDiOIS4Up6fn69D0jKNPdDHohUW44A1sPsazMa6EO8xgbSJrMW19+RUGt2wmAisi3j/g7l7w4QYs/ck6JFrFuCGDbMJ1sBYkPC29yT0qdEoiwnAGtiCB9QpNWhVmkkJ0lCTFaShKFgou+PNAdhE84IHYbV0GeUWAIYsaHGk1Tph9pnFFMEa2AIGuZ+DTJqZpQGoxQgyUdSXNlIspgDWwBYwwtBIYDSaNMDSNQRqmqoRtuXarIONwRY4cKW8FZXJ2LjLT2ANjAXOajX8B9bAWLDwI1glBwsWfgRrYCxY+BGsgbFg4UewBsaChR/BGhgLFn4Ea2AsWPgRrIGxYOFHsAbGgoUfwRqYnzCoSueQKD9Cf5CuGpz2yXz87qRHusbFHNysjgEMqtLdT+x+0cmv6fX4I+WMz9JVgzO4lzkEa2D+wKAqPVYjveBwOByOwyBn2oZFI0be3S2PmZ2xAZC2mxyZw3G4bP+rMx3b1C/q0wPxenzZYeozB/04AnIvUwFrYH7AoF4Ddr9JvQKSrRdeWUf9wdyY7j7XOmdl8pNBVXp6eXk6OUUfUaXTc7Vz9fC2Lnqbv10fT/guS54tM5kveDvPoCq9vLzc28rgWp48Bu88SXqjeeLnkyZdFwOOlDPGdqR8ovUnTbpu8tnFdS/zCqyB+QEXzKaEFc5XIiZGEkP+x3Re8CY51x48AgAYVKW/KnAuc9QLRh5zYTd48VVA/kOjd72G9Lp4Yff5nPIjYFC1kfqAPid1YOOLCeRkfzjhxcbx39wjB/enCWKB9/PsB896OXP5RvCmo1niZfCDqo3kVd8UnDeNuZTpxVjKHHP2J6yIAUCydTegxjaoenV/2bOSiY8HAID9OeNPG/S9zDOwBjaHoGbiWEHa+Y8HAbhgNtGvUc5+cP7jQcYx3qbtwY/P0x/GyLsdzRIQI+9+E2x0PwEgr0C+i+Wg2dHs/ua6vbvnyYXW63mo15UeLfnFHPAKuTKPGfygXgN2b5UAAGLkr5SNvfcxvlzMOmna/oNHqAV/q2Sy4wHDRXQ6zGPvZZ6BNTA/gPFOTgJXUOGYTpB1pJwTa36FfAuZn8fIux0Ox4XdpJl5Ol/Uu3u4zGnE450HeH7x8O7zrkBnmoN3+nIx8lfK9h88MqjXgIl8wAl9v7H3Ms/AGpgfELNOCl7cSL2IR8rHC4RiBWnU3DyGdvN+2hUJJtpfdEYwpGt15OB+xoEXyNPFyLsdjsNlYBxjlzRfkGpi6ct6O4+XIctfSSDvbMzgY9ZJaZdv4rMcOej0ByXPlu1/daMm4ZWJ7JNx/Lhwv5f5BNbA/IEYeffhBNqBOr/7gvcJ3nVU7IsJh8d4cmNBvkbkWcHhbnmM5Nky0hU8CMqAa5qPlXcfBjmTe04x8lfK9uekqwbHOY/3MRxOeHGjanDs4GPkb+4+n8PhcDivnk8b8z2GLwdc9yrZuhuYEryZj9fjnTHY2GXZeS8TPcAAgC24ZBFADKrSN4I3ZzEFMe/ANr1hESAcKefk7Adlhx33r3UBdgVjwcKvYGMwFiz8CNbAWLDwI1gDY8HCj2ANjAULP4I1MBYs/AjWwFiw8CP+P14/UkNhQFylAAAAAElFTkSuQmCC" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

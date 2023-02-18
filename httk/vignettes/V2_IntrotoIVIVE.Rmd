@@ -1,6 +1,6 @@
 ---
 title: "Introduction to *In Vitro-In Vivo* Extrapolation (IVIVE) with R Package httk"
-author: "John Wambaugh"
+author: "John Wambaugh and Elaina Kenyon"
 date: "November, 2022"
 output: rmarkdown::html_vignette
 vignette: >
@@ -185,7 +185,7 @@ install.packages("httk")
 install.packages("readxl")
 ```
 
-### Installing R package "readxl"
+### Installing R package "ggplot2"
 ```{r install_ggplot2, eval = FALSE}
 install.packages("ggplot2")
 ```
@@ -424,7 +424,12 @@ knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")],
 
 
 # Step Three: High Throughput Toxicokinetics with QSPR Predictions
-Load the table of quantitative structure-property relationship (QSPR) model 
+For chemicals where no *in vitro* toxicokinetic data are available, we can 
+sometimes load predictions from *in silico* models. We do not provide *in silico*
+models for $f_{up}$ and $Cl_{int}$ themselves (in many cases those models are much larger
+in terms of file size than the whole **httk** package). However we do have tables
+of pre-made predictions form a variety of models. For example, you can
+load the table of quantitative structure-property relationship (QSPR) model 
 predictions from the 
 [Sipes et al. (2017)](https://doi.org/10.1021/acs.est.7b00650) 
 supplemental material:
@@ -470,9 +475,18 @@ knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")],
 
 
 # Step Four: Reverse Dosimetry *In Vitro-In Vivo* Extrapolation
-Calculate the equivalent steady-state dose to produce a plasma concentration 
-equal to tenth percentile ToxCast $AC_{50}$, we find the administered equivalent
-dose by dividing the *in vitro* concentration by the $C_{ss}$ from 1 mg/kg/day,
+Using toxicokinetics to predict tissue concentrations resulting from a known
+dose is known as "forward dosimetry". Using toxicokinetics to estimate the dose
+that might have led to a known tissue cocentration is known as "reverse dosimetry"
+[(Clewell, et al., 2008)](https://doi.org/10.1016/j.taap.2008.04.021).
+**httk** allows the use of reverse dosimetry to calculate the equivalent 
+steady-state dose to produce a plasma concentration 
+equal to a bioactive concentration identified *in vitro* 
+[(Breen et al., 2021)](https://doi.org/10.1080/17425255.2021.1935867). 
+For example, we can start from the tenth percentile ToxCast $AC_{50}$ and find 
+the administered equivalent
+dose that would cause that concentration in the plasma. We do this by dividing 
+the *in vitro* concentration by the $C_{ss}$ from 1 mg/kg/day,
 ending up with a dose rate with units of mg/kd/day that will product the
 *in vitro* concentration:
 $$AED = \frac{AC_{50}}{C_{ss}}$$
@@ -490,7 +504,11 @@ knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","EquivDose")],
 
                   
 # Step Five: Compare with Estimated Exposure Rates
-To prioritize these
+The U.S. National Academy of Sciences, Engineering, and Medicine advises 
+calculating chemical risk posed to the public health on the basis of hazard,
+the dose-response relationship, and exposure. We can use *in vitro* bioactivity as
+a surrogate for hazard and **httk** as a surrogate for the dose-reponse relationship.
+However, to prioritize
 chemicals on the basis of putative risk we need some estimate of human exposure.
 Because most chemicals lack measured
 data characterizing population intake rates (mg/kg body weight/
@@ -510,7 +528,7 @@ interval is calculated, this reflects uncertainty but not variability --
 the [(Ring, 2018)](https://doi.org/10.1021/acs.est.8b04056) model predicts 
 population median exposure rates for the U.S. population.
 
-If you can access the journal article online, we can load the SEEM predictions
+There are three ways to access the SEEM predictions. If you can access the journal article online, we can load the SEEM predictions
 from [Supplemental Table 1](https://pubs.acs.org/doi/suppl/10.1021/acs.est.8b04056/suppl_file/es8b04056_si_002.zip)
 of the Supporting Information for 
 [Ring et al. (2018)](https://doi.org/10.1021/acs.est.8b04056). Don't forget that
@@ -579,10 +597,15 @@ knitr::kable(toxcast.table[1:10,c("Compound","EquivDose","seem3.u95","Pathway","
 
 ## Make a BER plot
 Convert the chemical names into factors for plotting:
-```{r ber_plot, eval = TRUE}
+```{r chem_name_factors, eval = TRUE}
 toxcast.table$Compound <- factor(toxcast.table$Compound,
                                     levels=toxcast.table$Compound)
-
+```
+Then we can create a plot where the BER for each chemical is shown by the margin 
+between putative hazard (in red) and estimated exposure (in blue). The wider
+the margin, the lesser the risk. Chemicals are arranged from left-to-right by
+increasing margin (that is, decreasing risk).
+```{r ber_plot, eval = TRUE}
 BER.plot <- ggplot(data=toxcast.table) +
   geom_segment(aes(x=Compound,
                    xend=Compound,
