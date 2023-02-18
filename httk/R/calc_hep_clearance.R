@@ -30,6 +30,12 @@
 #'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
 #'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.
@@ -66,6 +72,8 @@ calc_hep_clearance <- function(chem.name=NULL,
                                suppress.messages=FALSE,
                                well.stirred.correction=TRUE,
                                restrictive.clearance=TRUE,
+                               species="Human",
+                               adjusted.funbound.plasma=TRUE,
                                ...)
 {
   model <- hepatic.model

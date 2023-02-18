@@ -137,8 +137,7 @@ predict_partitioning_schmitt <- function(
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Tissue <- Species <- variable <- Reference <- value <- 
-    pearce2017regression <-physiology.data <- NULL
+  Tissue <- Species <- variable <- Reference <- value <- NULL
   #End R CMD CHECK appeasement.
   
   if (is.null(model)) stop("Model must be specified.")
