@@ -56,7 +56,7 @@ dosimetry (also known as "RTK")
 ## Getting Started
 
 For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html>
+<http://rafalab.dfci.harvard.edu/dsbook/getting-started.html>
 
 For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
@@ -64,7 +64,7 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 ### Dependencies
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
-* Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 ```
 install.packages("X")
@@ -182,12 +182,13 @@ Mark Sfeir,
 Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
-### Bug-Fixes and Parameter Values
+### Bug-Fixes Vignette edits, and Parameter Values
 Miyuki Breen [breen.miyuki@epa.gov], 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
+Elaina Kenyon [kenyon.elaina@epa.gov]
 James Sluka [jsluka@indiana.edu],  
 Nisha Sipes [sipes.nisha@epa.gov], and 
 Barbara Wetmore [wetmore.barbara@epa.gov]

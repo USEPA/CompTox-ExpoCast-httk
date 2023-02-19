@@ -153,6 +153,11 @@ solve_1comp(chem.name='Bisphenol-A',days=1)
 params <- parameterize_1comp(chem.cas="80-05-7")
 solve_1comp(parameters=params)
 
+head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
+head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
+solve_1comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
+solve_1comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
+
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput

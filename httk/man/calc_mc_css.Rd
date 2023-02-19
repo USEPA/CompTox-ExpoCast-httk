@@ -258,10 +258,10 @@ calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)
  calc_mc_css(parameters=params,model="pbtk")
 }
 
-\donttest{
  set.seed(1234)
- # Standard HTTK Monte Carlo:
- NSAMP = 500
+ # Standard HTTK Monte Carlo (set number of samples NSAMP low for rapid 
+ # testing, increase NSAMP for more stable results):
+ NSAMP = 25
  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
  set.seed(1234)
  calc_mc_css(chem.cas="90-43-7",
@@ -295,7 +295,6 @@ calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)
  httkpop=FALSE,
  invitrouv=FALSE,
  vary.params=list(Pow=0.3))
-}
 
 }
 \references{

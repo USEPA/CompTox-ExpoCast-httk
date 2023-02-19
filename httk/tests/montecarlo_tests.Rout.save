@@ -137,8 +137,6 @@ Warning message:
 In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
 > 
-> 
-> 
 > #
 > #
 > # Now test that MC works across different models:
@@ -175,85 +173,6 @@ Warning messages:
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
 2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-> 
-> #
-> #
-> # Now do different MC sampling:
-> set.seed(1234)
-> # Standard HTTK Monte Carlo:
-> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-50.56 
-Warning messages:
-1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-2: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-> set.seed(1234)
-> # HTTK Monte Carlo with no measurment uncertainty (pre v1.10.0):
-> calc_mc_css(chem.cas="90-43-7",
-+   model="pbtk",
-+   samples=NSAMP,
-+   invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE,
-+     poormetab = TRUE, 
-+     fup.censored.dist = FALSE, 
-+     fup.lod = 0.01, 
-+     fup.meas.cv = 0.0, 
-+     clint.meas.cv = 0.0, 
-+     fup.pop.cv = 0.3, 
-+     clint.pop.cv = 0.3))
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-44.36 
-Warning messages:
-1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-2: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-> set.seed(1234)
-> # HTTK Monte Carlo with no HTTK-Pop physiological variability):
-> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-93.11 
-Warning messages:
-1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-2: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-> set.seed(1234)
-> # HTTK Monte Carlo with no in vitro uncertainty and variability):
-> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-28.94 
-Warning messages:
-1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-2: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-> set.seed(1234)
-> # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-> calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
-Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-9.474 
-Warning messages:
-1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-2: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
 > 
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
