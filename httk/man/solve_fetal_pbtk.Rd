@@ -161,6 +161,18 @@ This gestational model is only parameterized for humans.
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
+# With adjustement to fraction unbound plasma for fetus:
+fetal_parms_fup_adjusted <- 
+  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
+
+# Without adjustement to fraction unbound plasma for fetus:
+fetal_parms_fup_unadjusted <-  
+  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
+                                fetal_fup_adjustment = FALSE)
+head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
+
+
 }
 \seealso{
 \code{\link{solve_model}}

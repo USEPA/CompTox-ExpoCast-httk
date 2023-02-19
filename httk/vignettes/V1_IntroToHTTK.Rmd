@@ -38,7 +38,7 @@ included for predicting tissue:plasma partition coefficients and
 volume of distribution
 ([Pearce et al., 2017](https://doi.org/10.1007/s10928-017-9548-7)).
 These functions and data provide a set of tools for
-IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data)) 
+IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data)) 
 to real-world exposures via reverse dosimetry (also known as "RTK")
 ([Wetmore et al., 2015](https://doi.org/10.1093/toxsci/kfv171)).
 
@@ -65,7 +65,7 @@ vitro to in vivo extrapolation"](https://doi.org/10.1080/17425255.2021.1935867)
 ## Getting Started
 
 For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html>
+<http://rafalab.dfci.harvard.edu/dsbook/getting-started.html>
 
 For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
@@ -73,7 +73,7 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 ### Dependencies
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
-* Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 	From the R command prompt: install.packages("X") 
   Or, if using RStudio, look for 'Install Packages' under the 'Tools' tab.

@@ -97,6 +97,10 @@
 #' params <-parameterize_3comp(chem.cas="80-05-7")
 #' solve_3comp(parameters=params)
 #' 
+#' head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1))
+#' head(solve_3comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
+#' solve_3comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
+#' solve_3comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 #'
 #' @seealso \code{\link{solve_model}}
 #'

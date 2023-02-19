@@ -180,6 +180,33 @@ included. This function automatically add these points, and they are returned
 to the user unless the times argument is used, in which case only the time
 points specified by that argument are provided.
 }
+\examples{
+# The varrious "solve_x" functions are wrappers for solve_model:
+head(solve_pbtk(chem.name="Terbufos"))
+head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+                 initial.dose = 1, # Assume dose is in mg/kg BW/day  
+                 doses.per.day=NULL,
+                 dosing.matrix = NULL,
+                 daily.dose = NULL)))
+
+# A dose matrix specifies times and magnitudes of doses:
+dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+colnames(dm) <- c("time","dose")
+solve_pbtk(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
+solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
+  initial.dose =NULL,
+  doses.per.day=NULL,
+  daily.dose=NULL,
+  dosing.matrix=dm))[190:201,]
+
+solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
+  initial.dose =NULL,
+  doses.per.day=4,
+  daily.dose=1,
+  dosing.matrix=NULL))[190:205,]
+solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
+
+}
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.

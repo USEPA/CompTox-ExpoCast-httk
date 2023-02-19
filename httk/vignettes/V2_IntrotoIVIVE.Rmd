@@ -171,7 +171,7 @@ don't want to keep the only copies of your files there.
 ## Installing Necessary Software
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
-* Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 	From the R command prompt: install.packages("X") 
   Or, if using RStudio, look for 'Install Packages' under the 'Tools' tab.
@@ -240,7 +240,7 @@ have a direct toxicological interpretation.
 ## Downloading ToxCast Data
 
 The main page for the data is here:
-https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
+https://www.epa.gov/chemical-research/exploring-toxcast-data
 
 Most useful to us is a single file containing all the hits across all chemcials
 and assays:
@@ -545,7 +545,7 @@ SEEM <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
 ```
 
 If you want, you can also download the predictions for specific chemcials from
-the [Comptox Chemicals Dashboard](https://ccte-ccd.epa.gov/dashboard/). Be
+the [Comptox Chemicals Dashboard](https://comptox.epa.gov/dashboard/). Be
 sure to use Batch Search and select the option for "NHANES/Predicted Exposure".
 You can download the file in a "comma separated values" or ".CSV" format, in 
 which case you use "read.csv". Or you can download an Excel ".xls" file which

@@ -249,10 +249,10 @@
 #'  calc_mc_css(parameters=params,model="pbtk")
 #' }
 #'
-#' \donttest{
 #'  set.seed(1234)
-#'  # Standard HTTK Monte Carlo:
-#'  NSAMP = 500
+#'  # Standard HTTK Monte Carlo (set number of samples NSAMP low for rapid 
+#'  # testing, increase NSAMP for more stable results):
+#'  NSAMP = 25
 #'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
 #'  set.seed(1234)
 #   HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
@@ -287,7 +287,6 @@
 #'  httkpop=FALSE,
 #'  invitrouv=FALSE,
 #'  vary.params=list(Pow=0.3))
-#' }
 #'
 #' @import stats
 #' @importFrom purrr compact 
