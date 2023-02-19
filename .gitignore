@@ -5,6 +5,7 @@ httk/src-i386/
 httk/src-x64/
 httk/build/
 httk.Rcheck/
+httk/vignettes/Linakis2020/
 work/
 httk/data-raw/ckd_epi_resid_var_files/
 ###################
