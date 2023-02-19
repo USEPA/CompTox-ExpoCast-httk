@@ -94,6 +94,7 @@
 #' head(solve_1comp(chem.name="Terbufos",daily.dose=NULL,dose=1,iv.dose=TRUE))
 #' # A dose matrix specifies times and magnitudes of doses:
 #' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+#' colnames(dm) <- c("time","dose")
 #' solve_1comp(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
 #' solve_1comp(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
 #'
