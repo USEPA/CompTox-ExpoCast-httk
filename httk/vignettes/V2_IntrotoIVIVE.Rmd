@@ -201,6 +201,17 @@ library(readxl)
 library(ggplot2)
 ```
 
+## Control run speed
+Portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = TRUE}
+NSAMP <- 25
+```
 
 # Step One: Loading *In Vitro* Screening Data
 
@@ -241,7 +252,7 @@ have a direct toxicological interpretation.
 The main page for the data is here:
 https://www.epa.gov/chemical-research/exploring-toxcast-data
 
-Most useful to us is a single file containing all the hits across all chemcials
+Most useful to us is a single file containing all the hits across all chemicals
 and assays:
 https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
 
@@ -411,6 +422,7 @@ for (this.id in unique(toxcast.table$DTXSID))
     toxcast.table[toxcast.table$DTXSID==this.id,"Css"] <- 
       calc_mc_css(dtxsid=this.id,
                   output.units="uM",
+                  samples=NSAMP,
                   suppress.messages=TRUE)
     toxcast.table[toxcast.table$DTXSID==this.id,"Css.Type"] <- "in vitro"
   }
@@ -456,6 +468,7 @@ for (this.id in unique(toxcast.table$DTXSID))
     toxcast.table[toxcast.table$DTXSID==this.id,"Css"] <- 
       calc_mc_css(dtxsid=this.id,
                   output.units="uM",
+                  samples=NSAMP,
                   suppress.messages=TRUE)
     toxcast.table[toxcast.table$DTXSID==this.id,"Css.Type"] <- "in silico"
   }
@@ -543,7 +556,7 @@ your working directory with your other files.
 SEEM <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
 ```
 
-If you want, you can also download the predictions for specific chemcials from
+If you want, you can also download the predictions for specific chemicals from
 the [Comptox Chemicals Dashboard](https://comptox.epa.gov/dashboard/). Be
 sure to use Batch Search and select the option for "NHANES/Predicted Exposure".
 You can download the file in a "comma separated values" or ".CSV" format, in 
