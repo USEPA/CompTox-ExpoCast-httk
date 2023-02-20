@@ -78,16 +78,11 @@ rm(list=ls())
 If you are using the RMarkdown version of this vignette (extension, .RMD) you
 will be able to see that several chunks of code in this vignette
 have the statement "eval = execute.vignette". The next chunk of code, by default,
-sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
-not run when the vignette was built. We do this because some steps require 
-extensive computing time and the checks on CRAN limit how long we can spend
-building the package. If you want this vignette to work, you must run all code,
-either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
-either change execute.vignette to TRUE or press "play" (the green arrow) on
-each chunk in RStudio.
+sets execute.vignette = TRUE.  If execute.vignette = FALSE that would mean that the code is included (and necessary) but was
+not run when the vignette was built.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- FALSE
+execute.vignette <- TRUE
 ```
 
 ### Load the relevant libraries
@@ -114,9 +109,20 @@ packageVersion("httk")
 ### Control run speed
 To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
 (currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
-```{r chemical_thinng, eval = execute.vignette}
+```{r chemical_thining, eval = execute.vignette}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
 SKIP.CHEMS <- 25
+```
+
+Similarly, portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = execute.vignette}
+NSAMP <- 25
 ```
 
 # Examples
@@ -154,7 +160,7 @@ models without partition coefficients by using the default option of
 would then automatically be set to 0.005.
 
 First we make up a list of chemicals with both literature $C_{ss}$ values and HTTK data for making new $C_{ss}$ predictions:
-```{r select_Chemicals, eval=TRUE}
+```{r select_Chemicals, eval = execute.vignette}
 chem.list <- intersect(get_cheminfo(model = "pbtk", 
                                     suppress.messages = TRUE)[seq(
                                       1, NUM.CHEMS, SKIP.CHEMS)],
@@ -179,12 +185,13 @@ for (this.cas in chem.list)
                       as.data.frame(get_wetmore_css(chem.cas = this.cas,
                                                     which.quantile = 0.50,
                                                     output.units = "uM",
-                                                      suppress.messages=TRUE)))
+                                                    suppress.messages=TRUE)))
     this.row <- cbind(this.row,
                       as.data.frame(calc_mc_css(chem.cas = this.cas,
                                                 which.quantile = 0.50,
                                                 output.units = "uM",
-                                                      suppress.messages=TRUE)))
+                                                samples = NSAMP,
+                                                suppress.messages=TRUE)))
     css.table <- rbind(css.table, this.row)
 }
 colnames(css.table) <- c("Compound","DTXSID","CAS", "PBTK", "Wetmore", "MC")
@@ -307,7 +314,7 @@ calc_mc_css(chem.cas = "80-05-7",
               million.cells.per.gliver = 0.15,
               Clint = 0.15),
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             httkpop=FALSE,
             invitrouv=FALSE,
             suppress.messages = TRUE)
@@ -333,7 +340,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 ```
 
@@ -350,14 +357,14 @@ to get the same Monte Carlo output again and again (and in many cases
 on different computers). The seed can take any value, and if you use the
 same seed followed by the same functions called in the same order with the
 same arguments, you will get the same answer again and again:
-```{r set_seed_example, eval=TRUE}
+```{r set_seed_example, eval = execute.vignette}
 # Random number generator seed 1:
 set.seed(654321)
 calc_mc_css(chem.cas = "80-05-7", 
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 
 # Continuing to draw random numbers without resetting the seed:
@@ -365,7 +372,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 
 # Random number generator seed 2:
@@ -374,7 +381,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 
 # Continuing to draw random numbers without resetting the seed:
@@ -382,7 +389,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 
 # Random number generator seed 2 gives the same answer as it did above:
@@ -391,7 +398,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 
 # Random number generator seed 1 gives the same answer as it did above:
@@ -400,7 +407,7 @@ calc_mc_css(chem.cas = "80-05-7",
             daily.dose = 1, 
             which.quantile = 0.5,
             output.units = "uM", 
-            samples = 1000,
+            samples = NSAMP,
             suppress.messages = TRUE)
 ```
 
@@ -418,7 +425,7 @@ We can also calculate the AED using literature values or sampling with **httk**:
 ```{r literature_oral_equivalent_example, eval = execute.vignette}
 get_wetmore_oral_equiv(50, chem.cas = "80-05-7")
 set.seed(654321)
-calc_mc_oral_equiv(50, chem.cas = "80-05-7")
+calc_mc_oral_equiv(50, chem.cas = "80-05-7", samples = NSAMP)
 ```
 
 ### Monte Carlo Simulation of $C_{ss}$
@@ -463,7 +470,7 @@ out <- calc_mc_tk(parameters=params,
                   suppress.messages = TRUE,
                   httkpop = FALSE,
                   invitrouv = FALSE,
-                  samples = 50,
+                  samples = NSAMP,
                   solvemodel.arg.list = list(times = seq(0,0.5,0.025))
                   )
 ```
@@ -501,6 +508,7 @@ out <- calc_mc_css(parameters=params,
                   model = "pbtk",
                   suppress.messages = TRUE,
                   httkpop = FALSE,
+                  samples = NSAMP,
                   invitrouv = FALSE)
 
 zoxamide2 <- ggplot(as.data.frame(out), aes(out)) +
@@ -604,7 +612,8 @@ Now we can make predictions for wolverines!
 ```{r add_a_species3, eval = execute.vignette}
 calc_mc_css(chem.cas="80-05-7",species="wolverine",
             parameterize.arg.list=list(default.to.human=TRUE),
-            suppress.messages=TRUE)
+            suppress.messages=TRUE,
+            samples = NSAMP)
 ```
 
 ## Export functions
@@ -646,7 +655,7 @@ containing the average or maximum steady state concentrations by substituting
 avg or max
 for days.
 
-```{r figure3, eval=TRUE}
+```{r figure3, eval = execute.vignette}
 css.data <- data.frame()
 chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
   1, NUM.CHEMS, SKIP.CHEMS)]
@@ -678,7 +687,7 @@ origin with a
 slope of 1 (Pearce et al. (2017) Figure 4).
 
 
-```{r figure4, eval=TRUE}
+```{r figure4, eval = execute.vignette}
 avg.vs.max <- ggplot(css.data, aes(avg, max)) +
     geom_point() + geom_abline() +
     scale_x_log10() + scale_y_log10() +

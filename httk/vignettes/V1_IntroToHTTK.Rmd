@@ -116,6 +116,18 @@ library(httk)
 # Check what version you are using 
 packageVersion("httk")
 ```
+### Control run speed
+Portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = TRUE}
+NSAMP <- 25
+```
+
 ### Suppressing Messages
 Note that since *in vitro-in vivo* extrapolation (IVIVE) is built upon
 many, many assumptions, *httk** attempts to give many warning messages 
@@ -171,10 +183,12 @@ quantile, for a specified CAS number and species
 calc_mc_oral_equiv(0.1,
                    chem.cas = "34256-82-1",
                    species = "human",
+                   samples = NSAMP,
                    suppress.messages = TRUE)
 calc_mc_oral_equiv(0.1,
                    chem.cas = "99-71-8", 
                    species = "human",
+                   samples = NSAMP,
                    suppress.messages = TRUE)
 ```
 
@@ -195,6 +209,7 @@ Note that we use the R built-in function head() to show only the first five rows
 ```{r pbtk_ex, eval = TRUE}
 head(solve_pbtk(chem.name = "bisphenol a", 
                 plots = TRUE,
+                days = 1,
                 suppress.messages = TRUE))
 ```
 
