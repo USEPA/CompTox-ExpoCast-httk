@@ -11,6 +11,9 @@ vignette: >
 *Please send questions to breen.miyuki@epa.gov*
 
 ### Set vignette options
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
 ```{r setup_vignette, eval = TRUE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 ```
@@ -100,6 +103,8 @@ and here:
 ```
 
 ### Delete all objects from memory:
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
 ```{r clear_memory, eval = TRUE}
 rm(list=ls())
 ```

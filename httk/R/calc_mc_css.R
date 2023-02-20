@@ -213,49 +213,58 @@
 #' steady-stae concentration (Css) from the Monte Carlo simulation
 #'
 #' @examples
+#' \donttest{
+#' # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
+#' # for more stable results. Default value is 1000:
+#' NSAMP = 10
+#'
 #' # Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
 #' # concentration of chemical with CAS 2451-62-9 to mg/kg/day:
 #' set.seed(1234)
-#' 3/calc_mc_css(chem.cas="2451-62-9",samples=10,output.units="uM")
+#' 3/calc_mc_css(chem.cas="2451-62-9", samples=NSAMP, output.units="uM")
 #' # The significant digits should give the same answer as:
 #' set.seed(1234)
-#' calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)  
+#' calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)  
 #'
-#' \donttest{
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',
-#'              samples=100,return.samples=TRUE)
+#'  calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+#'              samples=NSAMP, return.samples=TRUE)
 #' 
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+#'  calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+#'              samples=NSAMP,
+#'              httkpop.generate.arg.list=list(method='vi'))
 #'                           
 #'  # The following example should result in an error since we do not 
 #'  # estimate tissue partitioning with '3compartmentss'.                         
 #'  set.seed(1234)
-#'  try(calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart'))
+#'  try(calc_mc_css(chem.name='2,4-d', which.quantile=.9,
+#'              samples=NSAMP,
+#'              httkpop=FALSE, tissue='heart'))
 #'  
+#' # But heart will work with PBTK, even though it's lumped since we estimate
+#' # a partition coefficient before lumping:
 #'  set.seed(1234)
-#'  calc_mc_css(chem.name='2,4-d',model='pbtk',which.quantile=.9,httkpop=FALSE,tissue='heart')
+#'  calc_mc_css(chem.name='2,4-d', model='pbtk',
+#'              samples=NSAMP,
+#'              which.quantile=.9, httkpop=FALSE, tissue='heart')
 #' 
 #'  set.seed(1234)
 #'  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
-#'              output.units = "uM", samples = 2000,
+#'              output.units = "uM", samples = NSAMP,
 #'              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
 #'              agelim_years=NULL, agelim_months=NULL,
 #'              weight_category = c("Underweight","Normal","Overweight","Obese")))
 #' 
 #'  params <- parameterize_pbtk(chem.cas="80-05-7")
 #'  set.seed(1234)
-#'  calc_mc_css(parameters=params,model="pbtk")
-#' }
+#'  calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
 #'
 #'  set.seed(1234)
-#'  # Standard HTTK Monte Carlo (set number of samples NSAMP low for rapid 
-#'  # testing, increase NSAMP for more stable results):
-#'  NSAMP = 25
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+#'  # Standard HTTK Monte Carlo 
+#'  calc_mc_css(chem.cas="90-43-7", model="pbtk", samples=NSAMP)
 #'  set.seed(1234)
-#   HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
+#'  # HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
 #'  calc_mc_css(chem.cas="90-43-7",
 #'  model="pbtk",
 #'  samples=NSAMP,
@@ -268,25 +277,32 @@
 #'    clint.meas.cv = 0.0, 
 #'    fup.pop.cv = 0.3, 
 #'    clint.pop.cv = 0.3))
-#'  set.seed(1234)
+#'
 #'  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
+#'  set.seed(1234)
 #'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
-#'  set.seed(1234)
+#'
 #'  # HTTK Monte Carlo with no in vitro uncertainty and variability):
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 #'  set.seed(1234)
+#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
+#'
 #'  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
-#'  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
+#'  set.seed(1234)
+#'  calc_mc_css(chem.cas="90-43-7" ,model="pbtk",
+#'              samples=NSAMP, httkpop=FALSE, invitrouv=FALSE)
+#'
 #'  # Should be the same as the mean result:
 #'  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-#'  set.seed(1234)
+#'
 #'  # HTTK Monte Carlo using basic Monte Carlo sampler:
+#'  set.seed(1234)
 #'  calc_mc_css(chem.cas="90-43-7",
-#'  model="pbtk",
-#'  samples=NSAMP,
-#'  httkpop=FALSE,
-#'  invitrouv=FALSE,
-#'  vary.params=list(Pow=0.3))
+#'              model="pbtk",
+#'              samples=NSAMP,
+#'              httkpop=FALSE,
+#'              invitrouv=FALSE,
+#'              vary.params=list(Pow=0.3))
+#' }
 #'
 #' @import stats
 #' @importFrom purrr compact 

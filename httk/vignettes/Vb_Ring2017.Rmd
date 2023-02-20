@@ -22,6 +22,8 @@ https://doi.org/10.1016/j.envint.2017.06.004
 ## Abstract
 The thousands of chemicals present in the environment ([USGAO, 2013](https://www.gao.gov/products/gao-13-249)) must be triaged to identify priority chemicals for human health risk research. Most chemicals have little of the toxicokinetic (TK) data that are necessary for relating exposures to tissue concentrations that are believed to be toxic. Ongoing efforts have collected limited, in vitro TK data for a few hundred chemicals. These data have been combined with biomonitoring data to estimate an approximate margin between potential hazard and exposure. The most “at risk” 95th percentile of adults have been identified from simulated populations that are generated either using standard “average” adult human parameters or very specific cohorts such as Northern Europeans. To better reflect the modern U.S. population, we developed a population simulation using physiologies based on distributions of demographic and anthropometric quantities from the most recent U.S. Centers for Disease Control and Prevention National Health and Nutrition Examination Survey (NHANES) data. This allowed incorporation of inter-individual variability, including variability across relevant demographic subgroups. Variability was analyzed with a Monte Carlo approach that accounted for the correlation structure in physiological parameters. To identify portions of the U.S. population that are more at risk for specific chemicals, physiologic variability was incorporated within an open-source high-throughput (HT) TK modeling framework. We prioritized 50 chemicals based on estimates of both potential hazard and exposure. Potential hazard was estimated from in vitro HT screening assays (i.e., the Tox21 and ToxCast programs). Bioactive in vitro concentrations were extrapolated to doses that produce equivalent concentrations in body tissues using a reverse dosimetry approach in which generic TK models are parameterized with: 1) chemical-specific parameters derived from in vitro measurements and predicted from chemical structure; and 2) with physiological parameters for a virtual population. For risk-based prioritization of chemicals, predicted bioactive equivalent doses were compared to demographic-specific inferences of exposure rates that were based on NHANES urinary analyte biomonitoring data. The inclusion of NHANES-derived inter-individual variability decreased predicted bioactive equivalent doses by 12% on average for the total population when compared to previous methods. However, for some combinations of chemical and demographic groups the margin was reduced by as much as three quarters. This TK modeling framework allows targeted risk prioritization of chemicals for demographic groups of interest, including potentially sensitive life stages and subpopulations.
 
+This vignette provides the code used to generate the virtual populations for the ten subpopulations of interest, plus a non-obese adult subpopulation.
+
 ## HTTK Version
 
 This vignette was created with **httk** v1.5. Although we attempt to maintain 
@@ -30,11 +32,39 @@ backward compatibility, if you encounter issues with the latest release of
 and cannot easily address the changes, historical versions of httk are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
+## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
 ```{r, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 ```
-This vignette provides the code used to generate the virtual populations for the ten subpopulations of interest, plus a non-obese adult subpopulation.
 
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
+
+### Load the relevant libraries
 To use the code in this vignette, you'll first need to load a few packages.
 If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
@@ -44,18 +74,7 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
-
-#### eval = FALSE
-If you are using the RMarkdown version of this vignette (extension, .RMD) you
-will be able to see that several chunks of code in this vignette
-have the statement "eval = FALSE"
-at the beginning. This means that the code is included (and necessary) but was
-not run when the vignette was built. We do this because some steps require 
-extensive computing time and the checks on CRAN limit how long we can spend
-building the package. If you want this vignette to work, you must run all code,
-either by cutting and pasting it into R or pressing "play" (the green arrow) on
-each chunk in RStudio.
-```{r load_packages, eval = FALSE}
+```{r load_packages, eval = execute.vignette}
 library("httk")
 library("data.table")
 ```
@@ -64,7 +83,7 @@ Because we'll be writing some files (and then reading them in other vignettes),
 be aware of where your current working directory is -- the files will be written there.
 # Set up subpopulation specs
 Here, we set the number of individuals in each virtual population (1000). We also specify a list of names for the virtual populations. Then we specify corresponding lists of gender, age limits, and BMI categories. HTTK-Pop default values will be used for other population specifications (e.g. race/ethnicity, kidney function categories).
-```{r subpop_specs, eval = FALSE}
+```{r subpop_specs, eval = execute.vignette}
 nsamp<-1000
 #List subpop names
 ExpoCast.group<-list("Total",
@@ -110,7 +129,7 @@ bmi_category <- c(rep(list(c('Underweight',
 
 ## Generate populations
 First, define the loop body as a function; then use `parallel::clusterMap` to parallelize it. Warning: This might take a couple of minutes to run.
-```{r generate_parallel, eval = FALSE}
+```{r generate_parallel, eval = execute.vignette}
 tmpfun <- function(gendernum, agelim, bmi_category, ExpoCast_grp,
                    nsamp, method){
   result <- tryCatch({

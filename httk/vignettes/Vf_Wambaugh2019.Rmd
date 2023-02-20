@@ -9,9 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r knitrPRrep, include=FALSE, eval = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
-```
 *Please send questions to wambaugh.john@epa.gov*
  
 This vignette provides the code used to generate the figures in Wambaugh et al. (2019) 
@@ -61,9 +58,39 @@ backward compatibility, if you encounter issues with the latest release of
 and cannot easily address the changes, historical versions of httk are 
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
-
 ## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
+
 ### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
 If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
@@ -72,27 +99,16 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' 
-
-#### eval = FALSE
-If you are using the RMarkdown version of this vignette (extension, .RMD) you
-will be able to see that several chunks of code in this vignette
-have the statement "eval = FALSE"
-at the beginning. This means that the code is included (and necessary) but was
-not run when the vignette was built. We do this because some steps require 
-extensive computing time and the checks on CRAN limit how long we can spend
-building the package. If you want this vignette to work, you must run all code,
-either by cutting and pasting it into R or pressing "play" (the green arrow) on
-each chunk in RStudio.
-```{r setup, eval = FALSE}
+```{r setup, eval = execute.vignette}
 library(data.table)
 library(httk)
 library(ggplot2)
-#library(gdata)
 library(stringr)
 library(scales)
 library(grid)
 library(reshape)
 ```
+
 ## Define some needed code:
 ### RMSE and $R^2$
 This returns an expression with 
@@ -100,7 +116,7 @@ This returns an expression with
 (RMSE) and 
 [coefficient of determination](https://en.wikipedia.org/wiki/Coefficient_of_determination) 
 $R^2$ for plotting:
-```{r lmr2, eval = FALSE}
+```{r lmr2, eval = execute.vignette}
 lm_R2 <- function(m,prefix=NULL){
     out <- substitute("RMSE = "~mse*","~~italic(R)^2~"="~r2, 
          list(mse = signif(mean(m$residuals^2)^(1/2),3),
@@ -118,7 +134,7 @@ From http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
  If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
  then plot 1 will go in the upper left, 2 will go in the upper right, and
  3 will go all the way across the bottom.
-```{r multi.plot, eval = FALSE}
+```{r multi.plot, eval = execute.vignette}
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, heights=NULL, widths=unit(rep_len(1, cols), "null")) {
 
   # Make a list from the ... arguments and plotlist
@@ -161,7 +177,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, heights=NUL
 
 ### Function to format scientific notation 
 From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
-```{R scientific.notation, eval = FALSE}
+```{R scientific.notation, eval = execute.vignette}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -172,7 +188,7 @@ scientific_10 <- function(x) {
 
 ### Function to format scientific notation
 This one leaves every other tickmark blank:
-```{R scientific.notation2, eval = FALSE}
+```{R scientific.notation2, eval = execute.vignette}
 scientific_10_skip <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -185,7 +201,7 @@ scientific_10_skip <- function(x) {
 
 ### Calculates the $C_{ss}$ using uncertainty only:
 $C_{ss}$ is the steady-state plasma concentration.
-```{R cssfun.u, eval = FALSE}
+```{R cssfun.u, eval = execute.vignette}
 cssfun_u <- function(chemcas, 
                       MW, 
                       hepatic.bioavailability, 
@@ -332,7 +348,7 @@ cssfun_u <- function(chemcas,
 ```
 
 ### This calculates the half-life using uncertainty only:
-```{R hlfun.u, eval = FALSE}
+```{R hlfun.u, eval = execute.vignette}
 hlfun_u <- function(chemcas, 
                       MW, 
                       probs=0.95,
@@ -474,7 +490,7 @@ greater certainty. For the $f_{up}$ values, a credible interval approaching 1
 indicates that all possible values are consistent with the data, that is, the 
 data do not help identify fup since fup must be between 0 and 1. In **panel d** the 
 distribution of credible intervals for $Cl_{int}$ is shown.
-```{R Wambaugh2019.Fig1, eval = FALSE}
+```{R Wambaugh2019.Fig1, eval = execute.vignette}
 Fig1.table <- httk::wambaugh2019.raw
 Fig1.table$Error1 <- Fig1.table$Base.Fup.High - Fig1.table$Base.Fup.Low
 Fig1.table$Error2 <- Fig1.table$Affinity.Fup.High - Fig1.table$Affinity.Fup.Low
@@ -574,7 +590,7 @@ concentrations, a model for binding to protein with an dissociation constant
 (for example, hemoglobin) and the stoichiometry are unknown, this number 
 provides a rough estimate for each chemical of how much that chemical would be 
 expected to be impacted by the presence of plasma binding. 
-```{R Wambaugh2019.Fig2, eval = FALSE}
+```{R Wambaugh2019.Fig2, eval = execute.vignette}
 Fig2.table <- httk::wambaugh2019.raw
 print(paste(sum(!is.na(Fig2.table$Fup.point)),"total successful Fup estimates using point estimation."))
 print(paste(sum(!is.na(Fig2.table$Base.Fup.Med)),"total successful Fup estimates using BAyesian analysis of top protein concentration."))
@@ -719,7 +735,7 @@ two Bayesian analyses are compared. In both plots, the diagonal dashed line
 indicates the identity line ("perfect predictions"). In both panels the 
 Bayesian estimates are "uncertain" (semi-solid) if the CV was larger than 0.5 
 and certain (solid) otherwise.
-```{R Wambaugh2019.Fig3, eval = FALSE}
+```{R Wambaugh2019.Fig3, eval = execute.vignette}
 Fig1.table$Class <- "Other"
 Fig1.table[Fig1.table$DTXSID %in% pharma$DTXSID,"Class"]<-"Pharmaceutical"
 Fig1.table$Class <- as.factor(Fig1.table$Class)
@@ -743,7 +759,7 @@ though 1 and 10 uM were fit jointly. The size of the credible interval varies
 significantly from chemical to chemical, especially for the lower clearance 
 rates. Plots of individual fits are provided as supplemental material 
 <!-- (https://doi.org/10.5061/dryad.nf40jb4) -->.
-```{R Wambaugh2019.Fig4, eval = FALSE}
+```{R Wambaugh2019.Fig4, eval = execute.vignette}
 clearance.table <- subset(httk::wambaugh2019.raw,!is.na(CLint.1uM.Median))
     
 print(paste(sum(clearance.table$CLint.1uM.Median==0),"zero valued median Bayesian posteriors"))
@@ -809,7 +825,7 @@ triangles are those that could be estimated with the previous, point estimate
 methods, while chemicals plotted with circles could not. The dashed line 
 indicates the identity (perfect predictor) line. Chemicals that had no point 
 estimate are plotted on the identity line.
-```{R Wambaugh2019.Fig5, eval = FALSE}
+```{R Wambaugh2019.Fig5, eval = execute.vignette}
 # This section takes a long time because calc_vdist is not yet data.table compatible:
 ceetox <- as.data.table(subset(httk::wambaugh2019,!is.na(Human.Funbound.plasma)&!is.na(Human.Clint)&!is.na(logP)))
 httk_cas <- ceetox$CAS[ceetox$CAS %in% get_cheminfo(model="3compartmentss")]
@@ -896,7 +912,7 @@ and variability can be combined (squares) to estimate a 95th percentile
 reflecting both factors. For most chemicals, variability contributes more than 
 uncertainty to the difference between the $C_{ss}$ predicted for the median 
 $Cl_{int}$ and $f_{up}$ values. 
-```{R Wambaugh2019.Fig6, eval = FALSE}
+```{R Wambaugh2019.Fig6, eval = execute.vignette}
 set.seed(42)
 ceetox[CAS%in%httk_cas,
        css95_uv:=calc_mc_css(chem.cas=CAS,
@@ -1027,7 +1043,7 @@ bioactivity potentially overlap that would have been missed as priority
 chemicals if uncertainty analysis was not performed. Two overlapping bars are 
 shown for each chemical''s bioactive doses -- the upper one is for variability 
 alone (as in **Panel A**), the lower is for uncertainty and variability together.
-```{R Wambaugh2019.Fig7,  eval = FALSE}
+```{R Wambaugh2019.Fig7,  eval = execute.vignette}
 # Head to ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/ to get the ToxCast/Tox21 data:
 # These are the concentrations that caused activity in exess of the background (ACC) "hits".
 # 
@@ -1195,7 +1211,7 @@ write.csv(subset(human.hits,Exposure.high>HTS.Q10.equivdose.uv)[,c("Compound","D
 ```
 
 # Final statistics:
-```{R calc.stats,  eval = FALSE}
+```{R calc.stats,  eval = execute.vignette}
 Wetmore.chems <- subset(chem.physical_and_invitro.data,regexpr("Wetmore",Human.Clint.Reference)!=-1)[,c("Compound","CAS","DTXSID","Formula")]
 Wetmore.chems <- subset(Wetmore.chems,CAS%in%get_cheminfo())
 
