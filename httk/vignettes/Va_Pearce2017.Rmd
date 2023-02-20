@@ -59,24 +59,40 @@ and cannot easily address the changes, historical versions of **httk** are
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
 ## Prepare R to run the vignette
-```{r}
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
-
 ### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
 ```{r clear_memory, eval = TRUE}
 rm(list=ls()) 
 ```
 
-### Load the relevant libraries
-```{r load_packages, eval = TRUE}
-library(ggplot2)
-library(httk)
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
 ```
 
-If you get the message *"Error in library(X) : there is no package called 'X'"*
+### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
+If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
 From the R command prompt:
@@ -84,30 +100,34 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+```{r load_packages, eval = execute.vignette}
+library(ggplot2)
+library(httk)
+```
 
-Check what version is installed
+Check what version of **httk** is installed:
 
-```{r version_check, eval = TRUE}
+```{r version_check, eval = execute.vignette}
 packageVersion("httk")
 ```
 
 ### Control run speed
 To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
 (currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
-```{r chemical_thinng, eval = TRUE}
+```{r chemical_thinng, eval = execute.vignette}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
 SKIP.CHEMS <- 25
 ```
 
 # Examples
 To get a list of parameters for the pbtk model of Triclosan in a rat:
-```{r rat_pbtk_parameters, eval = TRUE}
+```{r rat_pbtk_parameters, eval = execute.vignette}
 parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
 ```
 We do not have a full set of *in vitro* parameters for rat for Triclosan,
 so we fill in the *in vitro* measured values with human-derived measurements and 
 use rat physiological parameters by setting "default.to.human = TRUE":
-```{r rat_pbtk_parameters2, eval = TRUE}
+```{r rat_pbtk_parameters2, eval = execute.vignette}
 parameters <- parameterize_pbtk(chem.name = "triclosan", 
                                 species = "rat", 
                                 default.to.human = TRUE)
@@ -116,7 +136,7 @@ parameters <- parameterize_pbtk(chem.name = "triclosan",
 To change the $f_{up}$ in the previous parameters list to 0.001 from the
 human value of 0.003044 and use it in a simulation of the PBTK model for
 a single dose of 1 mg/kg BW of Triclosan in a rat:
-```{r use)pbtk_parameters, eval = TRUE}
+```{r use)pbtk_parameters, eval = execute.vignette}
 parameters["Funbound.plasma"] <- 0.001
 out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
 ```
@@ -142,7 +162,7 @@ chem.list <- intersect(get_cheminfo(model = "pbtk",
 ```
 
 Then we initialize a NULL table and build it up one row at a time:
-```{r make_Css_table, eval = TRUE}
+```{r make_Css_table, eval = execute.vignette}
 css.table <- NULL
 for (this.cas in chem.list)
 {
@@ -171,7 +191,7 @@ colnames(css.table) <- c("Compound","DTXSID","CAS", "PBTK", "Wetmore", "MC")
 ```
 
 Now display the table and plot two columns against each other:
-```{r display_Css_table, eval = TRUE}
+```{r display_Css_table, eval = execute.vignette}
 knitr::kable(css.table, caption = "Literature and HTTK Plasma Css", 
              floating.environment="sidewaystable",
              row.names=FALSE,
@@ -192,7 +212,7 @@ To see how $C_{ss}$ resulting from discrete dosing deviates from the
 average steady state concentration, we can make a plot with **ggplot2**
 that includes a horizontal line through the $y$-axis at the predicted
 $C_{ss}$ for oral infusion dosing (Figure 2 in Pearce et al., 2017).
-```{r plot_examples, eval = TRUE}
+```{r plot_examples, eval = execute.vignette}
 out <- solve_pbtk(chem.name = "Bisphenol A", 
                   days = 50, 
                   doses.per.day = 3,
@@ -222,7 +242,7 @@ are rather intended to make the user aware of the assumptions involved.
 However, they quickly grow annoying and can be turned off with the
 "suppress.messages=TRUE" argument. Proceed with caution...
 
-```{r suppress_messages, eval = TRUE}
+```{r suppress_messages, eval = execute.vignette}
 out <- solve_pbtk(chem.name = "Bisphenol A", 
                   days = 50, 
                   doses.per.day = 3,
@@ -249,7 +269,7 @@ all.peak.stats <- calc_stats(days = 10, doses.per.day = 3, stats = "peak")
 The same function can be used for a single chemical. For example, 
 the AUC, peak, and mean for a single 1 mg dose of Triclosan over 10
 day:
-```{r stats_example2, eval = TRUE}
+```{r stats_example2, eval = execute.vignette}
 triclosan.stats <- calc_stats(days = 10, chem.name = "triclosan")
 ```
 
@@ -269,7 +289,7 @@ for the *in vitro* parameters ([Wambaugh et al., 2019](https://doi.org/10.1093/t
 
 Note that the function "get_wetmore_css" was renamed "get_lit_css" in a later release
 of **httk**.
-```{r css_examples, eval = TRUE}
+```{r css_examples, eval = execute.vignette}
 get_wetmore_css(chem.cas = "80-05-7", daily.dose = 1,
                 which.quantile = 0.5, output.units = "uM")
 
@@ -307,7 +327,7 @@ conducted by the U.S. Centers for Disease Control and Prevention
 described by [Wambaugh et al. (2019)](https://doi.org/10.1093/toxsci/kfz205).
 
 Both httk-pop and *in vitro* uncertainty/variability simulation, are on by default:
-```{r css_examples2, eval = TRUE}
+```{r css_examples2, eval = execute.vignette}
 set.seed(654321)
 calc_mc_css(chem.cas = "80-05-7", 
             daily.dose = 1, 
@@ -395,7 +415,7 @@ concentration $C_{ss}$ produced by a dose rate of 1 mg/kg bw/day:
 $$ AED = \frac{C_{\text{in vitro}}}{C_{ss}}$$
 
 We can also calculate the AED using literature values or sampling with **httk**:
-```{r literature_oral_equivalent_example, eval = TRUE}
+```{r literature_oral_equivalent_example, eval = execute.vignette}
 get_wetmore_oral_equiv(50, chem.cas = "80-05-7")
 set.seed(654321)
 calc_mc_oral_equiv(50, chem.cas = "80-05-7")
@@ -418,7 +438,7 @@ of Monte Carlo.
 
 First we create a list of parameters and then assign a coefficient of variation
 to each parameter we wish to vary:
-```{r monte_carlo_css_example_1, eval = TRUE}
+```{r monte_carlo_css_example_1, eval = execute.vignette}
 vary.params <- NULL
 params <- parameterize_pbtk(chem.name = "Zoxamide")
 for (this.param in names(subset(params, names(params) != "Funbound.plasma")))
@@ -429,11 +449,11 @@ for (this.param in names(subset(params, names(params) != "Funbound.plasma")))
 
 We can draw $f_{up}$ from a censored distribution with a limit of dextion (LOD)
 of 0.01:
-```{r monte_carlo_css_example_2, eval = TRUE}
+```{r monte_carlo_css_example_2, eval = execute.vignette}
 censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
 ```
 ### Solve the full TK time-course
-```{r monte_carlo_css_example_3, eval = TRUE}
+```{r monte_carlo_css_example_3, eval = execute.vignette}
 set.seed(1)
 out <- calc_mc_tk(parameters=params, 
                   vary.params = vary.params,
@@ -449,7 +469,7 @@ out <- calc_mc_tk(parameters=params,
 ```
 
 Make a table of concentration vs. time with confidence intervals:
-```{r monte_carlo_css_example_4, eval = TRUE}
+```{r monte_carlo_css_example_4, eval = execute.vignette}
 zoxtable <- cbind(out[["means"]][,"time"],
                   out[["means"]][,"Cplasma"],
                   out[["means"]][,"Cplasma"] - 1.96*out[["sds"]][,"Cplasma"],
@@ -460,7 +480,7 @@ knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time",
 ```
 
 Plot Monte Carlo analysis of concentration vs. time:
-```{r monte_carlo_css_example_5, eval = TRUE}
+```{r monte_carlo_css_example_5, eval = execute.vignette}
 zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
     geom_line(color = "dark blue",size=2) +
       geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
@@ -473,7 +493,7 @@ print(zoxamide1)
 ```
 
 ### Examine $C_{ss}$
-```{r monte_carlo_css_example_6, eval = TRUE}
+```{r monte_carlo_css_example_6, eval = execute.vignette}
 out <- calc_mc_css(parameters=params, 
                   vary.params = vary.params,
                   censored.params = censored.params,
@@ -501,7 +521,7 @@ these tissues are available for use as compartments in new models or to be lumpe
 into the rest of body in existing models (using function "lump_tissues"). We can add 
 a new tissue (for example, mammary) to the tissue data by replicating the data
 from another tissue and adjusting as appropriate.
-```{r add_a_tissue, eval = TRUE}
+```{r add_a_tissue, eval = execute.vignette}
 new.tissue <- subset(tissue.data,Tissue == "adipose" & Species =="Human")
 new.tissue[, "Tissue"] <- "mammary"
 new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 
@@ -531,7 +551,7 @@ tissue.data[tissue.data$Tissue == "rest", 'value'] <-
 To generate the parameters for a model with kidneys, thyroid, brain, 
 breast, liver compartment combining the liver and gut, and a rest of body
 compartment:
-```{r add_a_tissue3, eval = TRUE}
+```{r add_a_tissue3, eval = execute.vignette}
 compartments <- list(liver = c("liver", "gut"), kidney = "kidney",
                      breast = "mammary", brain = "brain",
                      thyroid = "thyroid")
@@ -555,7 +575,7 @@ the species-specific aspects of physiology necessary to parameterize a PBTK
 model. We can add a new species (for example, wolverines) to the physiology.data by 
 replicating the data from another species and adjusting as appropriate.
 
-```{r add_a_species1, eval = TRUE}
+```{r add_a_species1, eval = execute.vignette}
 new.species <- physiology.data[,"Rabbit"]
 names(new.species) <- physiology.data[,"Parameter"]
 rabbit.BW <- new.species["Average BW"] 
@@ -573,7 +593,7 @@ knitr::kable(physiology.data[,c("Parameter","Units","Wolverine")],
 ```
 
 The tissue volumes and flows are stored separately in tissue.data
-```{r add_a_species2, eval = TRUE}
+```{r add_a_species2, eval = execute.vignette}
 new.tissue.data <- subset(tissue.data,Species=="Rabbit")
 new.tissue.data$Species <- "Wolverine"
 
@@ -581,7 +601,7 @@ tissue.data <- rbind(tissue.data,new.tissue.data)
 ```
 
 Now we can make predictions for wolverines!
-```{r add_a_species3, eval = TRUE}
+```{r add_a_species3, eval = execute.vignette}
 calc_mc_css(chem.cas="80-05-7",species="wolverine",
             parameterize.arg.list=list(default.to.human=TRUE),
             suppress.messages=TRUE)

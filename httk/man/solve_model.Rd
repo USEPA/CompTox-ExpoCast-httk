@@ -182,29 +182,44 @@ points specified by that argument are provided.
 }
 \examples{
 # The varrious "solve_x" functions are wrappers for solve_model:
-head(solve_pbtk(chem.name="Terbufos"))
+head(solve_pbtk(chem.name="Terbufos", days=1))
+
 head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
                  initial.dose = 1, # Assume dose is in mg/kg BW/day  
                  doses.per.day=NULL,
                  dosing.matrix = NULL,
+                 days=1,
                  daily.dose = NULL)))
 
 # A dose matrix specifies times and magnitudes of doses:
 dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 colnames(dm) <- c("time","dose")
-solve_pbtk(chem.name="Methenamine",dosing.matrix=dm,dose=NULL,daily.dose=NULL)[190:201,]
+
+solve_pbtk(chem.name="Methenamine",
+           dosing.matrix=dm,
+           dose=NULL,
+           days=2.5,
+           daily.dose=NULL)
+
 solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
-  initial.dose =NULL,
-  doses.per.day=NULL,
-  daily.dose=NULL,
-  dosing.matrix=dm))[190:201,]
+            initial.dose =NULL,
+            doses.per.day=NULL,
+            daily.dose=NULL,
+            days=2.5,
+            dosing.matrix=dm))
 
 solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
-  initial.dose =NULL,
-  doses.per.day=4,
-  daily.dose=1,
-  dosing.matrix=NULL))[190:205,]
-solve_pbtk(chem.name="Besonprodil",daily.dose=1,dose=NULL,doses.per.day=4)[190:205,]
+            initial.dose =NULL,
+            doses.per.day=4,
+            daily.dose=1,
+            days=2.5,
+            dosing.matrix=NULL))
+  
+solve_pbtk(chem.name="Besonprodil",
+           daily.dose=1,
+           dose=NULL,
+           doses.per.day=4,
+           days=2.5)
 
 }
 \references{
