@@ -61,7 +61,7 @@ available from: https://cran.r-project.org/src/contrib/Archive/httk/
 R package **knitr** generates html and PDF documents from this RMarkdown file,
 Each bit of code that follows is known as a "chunk". We start by telling 
 **knitr** how we want our chunks to look.
-```{r knitrPrep, include=FALSE, eval = execute.vignette}
+```{r knitrPrep, include=FALSE, eval = TRUE}
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>', fig.width=5, fig.height=3)
 ```
 
