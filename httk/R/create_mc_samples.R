@@ -120,6 +120,7 @@
 #'
 #' @import stats
 #' @import methods
+#' @importFrom purrr compact 
 #' @export create_mc_samples
 create_mc_samples <- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -137,42 +138,12 @@ create_mc_samples <- function(chem.cas=NULL,
                         return.samples=FALSE,
                         tissue=NULL,
                         httkpop.dt=NULL,
-                        invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=TRUE,
-                          poormetab=TRUE,
-                          fup.censored.dist=FALSE,
-                          fup.lod=0.01,
-                          fup.meas.cv=0.4,
-                          clint.meas.cv=0.3,
-                          fup.pop.cv=0.3,
-                          clint.pop.cv=0.3),
-                        httkpop.generate.arg.list=list(
-                          method='direct resampling',
-                          gendernum=NULL,
-                          agelim_years=NULL,
-                          agelim_months=NULL,
-                          weight_category =  c(
-                            "Underweight", 
-                            "Normal", 
-                            "Overweight", 
-                            "Obese"),
-                          gfr_category = c(
-                            "Normal", 
-                            "Kidney Disease", 
-                            "Kidney Failure"),
-                          reths = c(
-                            "Mexican American", 
-                            "Other Hispanic", 
-                            "Non-Hispanic White",
-                            "Non-Hispanic Black", 
-                            "Other")),
-                        convert.httkpop.arg.list=list(),
-                        propagate.invitrouv.arg.list=list(),
-                        parameterize.arg.list=list(
-                          restrictive.clearance = TRUE,
-                          default.to.human=FALSE,
-                          clint.pvalue.threshold=0.05,
-                          regression=TRUE))
+                        invitro.mc.arg.list=NULL,
+                        httkpop.generate.arg.list=
+                          list(method = "direct resampling"),
+                        convert.httkpop.arg.list=NULL,
+                        propagate.invitrouv.arg.list=NULL,
+                        parameterize.arg.list=NULL)
 {
 
 #
@@ -205,39 +176,49 @@ create_mc_samples <- function(chem.cas=NULL,
   Qcardiacc <- Qliverf <- hepatic.bioavailability <- ..parameter.names <- NULL
   Species <- NULL
   
-# Check to see if we need to call the parameterize_MODEL function:
+  #Depending on model, choose the function in HTTK that will return the default
+  #HTTK parameters for this chemical
+  paramfun <- model.list[[model]]$parameterize.func
+  parameterize.args <- purrr::compact(c(list(chem.cas=chem.cas,
+                                             chem.name=chem.name,
+                                             dtxsid=dtxsid,
+                                             species=species,
+                                        parameters=parameters,
+                                        adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
+                                        adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
+                                        suppress.messages=suppress.messages),
+                                        parameterize.arg.list))
+  # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
   {
-#Depending on model, choose the function in HTTK that will return the default
-#HTTK parameters for this chemical
-    paramfun <- model.list[[model]]$parameterize.func
-    parameterize.args <- c(list(chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid,
-                             species=species),
-                             parameterize.arg.list)
-    # Make sure all the arguments are used by the function:
+    # Make sure all the arguments are used by the parameterization function:
     parameterize.args <- parameterize.args[names(parameterize.args) %in% 
-      methods::formalArgs(paramfun)]
+                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=parameterize.args)
-    
-    # Pass all 'parameterize.args' arguments and the 'suppress.messages'
-    # arguments to the 'parameterize_schmitt' function.
-    args.schmitt <- parameterize.args[which(
-      names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
-    )]
-    pschmitt <- do.call(parameterize_schmitt,
-                        args = c(args.schmitt,suppress.messages=TRUE))
-    
-# The Schmitt parameters are useful if we need to redo partitioning later:
-    pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
-    parameters.mean <- c(parameters.mean, pschmitt)
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
-    parameters.mean <- parameters 
+    parameters.mean <- parameters
   }
+  # Pass all 'parameterize.args' arguments and the 'suppress.messages'
+  # arguments to the 'parameterize_schmitt' function.
+  args.schmitt <- parameterize.args[which(
+    names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
+    )]
+  args.schmitt$suppress.messages <- TRUE
+  # The Schmitt parameters are useful if we need to redo partitioning later, though
+  # some models don't include partitioning so the function might fail:
+  pschmitt <- try(do.call(parameterize_schmitt,
+                      args = args.schmitt),
+                      silent=TRUE)
+  if (is(pschmitt,"try-error")) pschmitt <- NULL
+  
+  # But we don't want to overwrite any Schmitt params provided by the
+  # argument parameters:
+  pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
+  # Add in the Schmitt parameters:
+  parameters.mean <- c(parameters.mean, pschmitt)
   parameter.names <- names(parameters.mean)
     
 # Make sure that parameters that monte_carlo samples won't be overwritten later:
@@ -267,7 +248,8 @@ create_mc_samples <- function(chem.cas=NULL,
   parameters.dt <- monte_carlo(parameters.mean,
                      censored.params=censored.params,
                      cv.params=vary.params,
-                     samples=samples)
+                     samples=samples,
+                     suppress.messages=suppress.messages)
                       
 #
 #
@@ -278,21 +260,23 @@ create_mc_samples <- function(chem.cas=NULL,
 
   if (httkpop==TRUE & tolower(species)=="human")
   {
-    physiology.dt <- httkpop_mc(
+    # we use purrr::compact to drop NULL values from arguments list:
+    physiology.dt <- do.call(httkpop_mc, args=purrr::compact(c(list(
                        model=model,
                        samples=samples,
-                       httkpop.dt=httkpop.dt,
-                                             httkpop.generate.arg.list)
+                       httkpop.dt=httkpop.dt),
+                       httkpop.generate.arg.list)))
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
   # Convert the httk-pop parameters to appropriate model variables
     converthttkpopfun <- model.list[[model]]$convert.httkpop.func
     if (!is.null(converthttkpopfun))
-      parameters.dt <- do.call(converthttkpopfun, args=c(list(
+  # we use purrr::compact to drop NULL values from arguments list:
+      parameters.dt <- do.call(converthttkpopfun, args=purrr::compact(c(list(
                        parameters.dt=parameters.dt,
                        httkpop.dt=httkpop.dt),
-                       convert.httkpop.arg.list))
+                       convert.httkpop.arg.list)))
    } else {
     if(httkpop==TRUE) 
       warning('httkpop model only available for human and thus not used.\n\
@@ -305,15 +289,17 @@ Set species=\"Human\" to run httkpop model.')
          parameters.dt[,eval(this.name):=subset(these.vols,Name==this.name)$value]
      these.flows <- subset(this.tissuedata,variable=="Flow (mL/min/kg^(3/4))")
      these.flows$Name <- paste("Q",these.vols$Tissue,"f",sep="")
+     # We don't use httk::physiology.data because we want the user to be able to
+     # edit the data, so we grab physiology data from the interactive environment
      these.flows$value <- these.flows$value/
-       as.numeric(subset(httk::physiology.data,Parameter=="Cardiac Output")[
-       tolower(colnames(httk::physiology.data))==tolower(species)])
+       as.numeric(subset(physiology.data,Parameter=="Cardiac Output")[
+       tolower(colnames(physiology.data))==tolower(species)])
      for (this.name in these.flows$Name)
        if (!(this.name %in% names(parameters.dt)))
          parameters.dt[,eval(this.name):=subset(these.flows,Name==this.name)$value]
      parameters.dt[, hematocrit:=
-       as.numeric(subset(httk::physiology.data,Parameter=="Hematocrit")[
-       tolower(colnames(httk::physiology.data))==tolower(species)])]
+       as.numeric(subset(physiology.data,Parameter=="Hematocrit")[
+       tolower(colnames(physiology.data))==tolower(species)])]
   }
 #
 #
@@ -338,7 +324,7 @@ Set species=\"Human\" to run httkpop model.')
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
 #  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
 #  {
-#    suppressWarnings(parameters.dt[c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+#    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
 #  }
 
 #
@@ -378,15 +364,10 @@ Set species=\"Human\" to run httkpop model.')
   #tissue-to-plasma partitioning coefficient, and one element of each vector
   #for each individual. The list element names specify which partition
   #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-      PCs <- predict_partitioning_schmitt(
+      PCs <- do.call(predict_partitioning_schmitt, args = list(
                parameters=parameters.dt,
-               chem.name=chem.name,
-               chem.cas=this.chem,
-               dtxsid=dtxsid,
-               species=species,
-               adjusted.Funbound.plasma=invitro.mc.arg.list$adjusted.Funbound.plasma,
-               regression=parameterize.arg.list$regression,
-               suppress.messages=TRUE)
+               args.schmitt,
+               suppress.messages=TRUE))
 # Store the red blood cell to unbound plasma partition coefficient if we need
 # it later:
       if (calcrb2p | firstpass) parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
@@ -430,12 +411,24 @@ Set species=\"Human\" to run httkpop model.')
                                             parameters.mean$Funbound.plasma,
                                             parameters.mean$hematocrit)]
     } 
-# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
+# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
-                                      hematocrit=parameters.dt$hematocrit,
-                                      Krbc2pu=parameters.dt$Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)]
+                                      hematocrit=hematocrit,
+                                      Krbc2pu=Krbc2pu,
+                                      Funbound.plasma=Funbound.plasma)] 
+                                      
+    if (any(is.na(parameters.dt$Rblood2plasma)))
+    {
+      parameters.dt[is.na(Rblood2plasma),
+                          Rblood2plasma := available_rblood2plasma(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            species=species,
+                            adjusted.Funbound.plasma=TRUE,
+                            suppress.messages=suppress.messages)]
+    }
   }
   
   if (firstpass)
@@ -453,14 +446,16 @@ Set species=\"Human\" to run httkpop model.')
           hepatic.model='unscaled',
           suppress.messages=TRUE)#L/h/kg body weight
 
-  parameters.dt[,hepatic.bioavailability := calc_hep_bioavailability(
-    parameters=list(
-      Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
-      Funbound.plasma=parameters.dt$Funbound.plasma,
-      Clmetabolismc=cl, # L/h/kg
-      Rblood2plasma=parameters.dt$Rblood2plasma,
-      BW=parameters.dt$BW),
-    restrictive.clearance=parameterize.arg.list$restrictive.clearance)] 
+# we use purrr::compact to drop NULL values from arguments list:
+  parameters.dt[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
+    args=purrr::compact(list(
+      parameters=list(
+        Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
+        Funbound.plasma=parameters.dt$Funbound.plasma,
+        Clmetabolismc=cl, # L/h/kg
+        Rblood2plasma=parameters.dt$Rblood2plasma,
+        BW=parameters.dt$BW),
+      restrictive.clearance=parameterize.arg.list[["restrictive.clearance"]])))]
   }
   
 #
@@ -471,6 +466,10 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt <- do.call(propagateuvfun, args=c(list(
                        parameters.dt=parameters.dt),
                        propagate.invitrouv.arg.list))
+  
+# set precision:
+  cols <- colnames(parameters.dt)
+  parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
   
 #Return only the HTTK parameters for the specified model. That is, only the
 #columns whose names are in the names of the default parameter set.

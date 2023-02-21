@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_physchem_param.R
 \name{get_physchem_param}
 \alias{get_physchem_param}
-\title{Get physico-chemical parameters from chem.physical_and_invitro.data}
+\title{Get physico-chemical parameters from chem.physical_and_invitro.data table}
 \usage{
 get_physchem_param(param, chem.name = NULL, chem.cas = NULL, dtxsid = NULL)
 }
@@ -23,12 +23,20 @@ The parameters, either a single value, a named list for a single chemical, or a 
 This function retrieves physico-chemical properties ("param") for the chemical specified 
 by chem.name or chem.cas from the vLiver tables.
 }
+\details{
+Note that this function works with a local version of the 
+get.physical_and_invitro.data table to allow users to add/modify chemical
+data (for example, via \code{\link{add_chemtable}} or 
+\code{\link{load_sipes2017}}).
+}
 \examples{
 
 get_physchem_param(param = 'logP', chem.cas = '80-05-7')
 get_physchem_param(param = c('logP','MW'), chem.cas = c('80-05-7','81-81-2'))
 
-
+}
+\seealso{
+\code{\link{get_invitroPK_param}}
 }
 \author{
 John Wambaugh and Robert Pearce

@@ -1,10 +1,22 @@
-#' Retrieve chemical information from HTTK package
+#' Retrieve chemical information available from HTTK package
 #' 
-#' This function provides the information specified in "info=" (can be single entry
-#' or vector) for all chemicals for which a toxicokinetic model can be
-#' parameterized for a given species. Since different models have different 
+#' This function lists information on all the chemicals within HTTK for which 
+#' there are sufficient data for the specified model and species. 
+#' By default the function returns only CAS (that is, info="CAS"). 
+#' The type of information available includes chemical identifiers 
+#' ("Compound", "CASRN", "DTXSID"), in vitro
+#' measurements ("Clint", "Clint.pvalue", "Funbound plasma", "Rblood2plasma"), 
+#' and physico-chemical information ("Formula", "logMA", "logP", "MW",
+#' "pKa_Accept", "pKa_Donor"). The argument "info" can be a single type of 
+#' information, "all" information, or a vector of specific types of information.
+#' The argument "model" defaults to 
+#' "3compartmentss" and the argument "species" defaults to "human".  
+#' Since different models have different 
 #' requirements and not all chemicals have complete data, this function will 
-#' return different number of chemicals depending on the model specififed.
+#' return different numbers of chemicals depending on the model specified. If
+#' a chemical is not listed by get_cheminfo then either the in vitro or
+#' physico-chemical data needed are currently missing (but could potentially
+#' be added using \code{\link{add_chemtable}}.
 #' 
 #' When default.to.human is set to TRUE, and the species-specific data,
 #' Funbound.plasma and Clint, are missing from 
@@ -65,7 +77,11 @@
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
 #' 
-#' @param suppress.messages Whether or not the output messages are suppressed.
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param suppress.messages Whether or not the output messages are suppressed 
+#' (default FALSE).
 #' 
 #' @return \item{vector/data.table}{Table (if info has multiple entries) or 
 #' vector containing a column for each valid entry 
@@ -169,9 +185,10 @@ get_cheminfo <- function(info="CAS",
                          median.only=FALSE,
                          fup.ci.cutoff=TRUE,
                          clint.pvalue.threshold=0.05,
+                         class.exclude=TRUE,
                          suppress.messages=FALSE)
 {
-# Parameters in this list can be retrieve with the info argument:
+                                        # Parameters in this list can be retrieve with the info argument:
   valid.info <- c("Compound",
                   "CAS",
                   "Clint",
@@ -434,17 +451,6 @@ get_cheminfo <- function(info="CAS",
   {
     # Identify the appropriate column for Funbound (if needed):
     species.fup <- paste0(species,'.Funbound.plasma')
-    # Turn triples with confidence intervals into single values: 
-    temp.fup <- strsplit(as.character(
-      chem.physical_and_invitro.data[,species.fup]),",")
-    if (any(unlist(lapply(temp.fup,length))>1)) 
-    {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(
-        temp.fup, 
-        function(x) x[[1]]))))
-    } else {
-      temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
-    }    # Check to see if we will use human data where species data is missing:
     if (default.to.human)
     {
       # Check to see if this is a column that already has data:
@@ -453,7 +459,17 @@ get_cheminfo <- function(info="CAS",
         # Identify values to replace with human:
         if (exclude.fup.zero) 
         {
-          # Replace all the zeros if that will impact the model:
+          # Turn triples with confidence intervals into single values: 
+          temp.fup <- strsplit(as.character(
+            chem.physical_and_invitro.data[,species.fup]),",")
+          if (any(unlist(lapply(temp.fup,length))>1)) 
+          {
+            temp.fup <-  suppressWarnings(as.numeric(unlist(lapply(
+              temp.fup, 
+              function(x) x[[1]]))))
+          } else {
+            temp.fup <-  suppressWarnings(as.numeric(unlist(temp.fup)))
+          }    # Check to see if we will use human data where species data is missing:          # Replace all the zeros if that will impact the model:
           replace.index <- (temp.fup==0)
           # Comparisons with NA's will produce NA's
           replace.index[is.na(replace.index)] <- TRUE
@@ -543,8 +559,12 @@ get_cheminfo <- function(info="CAS",
       function(x) all(!is.na(x)))
   # print a warning of exclusion criteria for compounds
   #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
-  if(!suppress.messages & any(good.chemicals.index==FALSE)){
-    warning("Excluding compounds that have one or more missing in necessary parameters.")
+  if (!suppress.messages & any(good.chemicals.index==FALSE))
+  {
+    warning(paste(
+      "Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.\n
+For model ", model, " each chemical must have non-NA values for:",
+      paste(necessary.params,collapse=", "), sep=""))
   }
   # If we need fup:
     if (tolower(paste(species,"Funbound.plasma",sep=".")) %in% 
@@ -640,7 +660,8 @@ get_cheminfo <- function(info="CAS",
       }
     }
     # If we need to remove compounds belonging to a given chemical class:
-    if(!is.null(chem.class.filt)){
+    if (class.exclude & !is.null(chem.class.filt))
+    {
       # obtain the chemical classifications
       chem.class <- strsplit(
         chem.physical_and_invitro.data[,"Chemical.Class"],

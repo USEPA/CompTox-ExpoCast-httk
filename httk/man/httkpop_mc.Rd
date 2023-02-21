@@ -39,9 +39,11 @@ Breen et al. (submitted).
 \examples{
 
 set.seed(42)
-indiv_examp <- httkpop_generate(method="d", nsamp=100)
+indiv_examp <- httkpop_generate(method="d", nsamp=10)
+
 httk_param <- httkpop_mc(httkpop.dt=indiv_examp, 
-model="1compartment")
+                        samples=10,
+                        model="1compartment")
 
 }
 \references{

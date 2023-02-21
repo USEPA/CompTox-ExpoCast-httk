@@ -133,8 +133,8 @@ different tissues as functions of time based on the dose and dosing
 frequency.  It uses a three compartment model with partition coefficients.
 }
 \details{
-Note that the model parameters have units of hours while the model output is
-in days.
+Note that the timescales for the model parameters have units of hours while 
+the model output is in days.
 
 Default of NULL for doses.per.day solves for a single dose.
 
@@ -153,15 +153,43 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-solve_3comp(chem.name='Bisphenol-A',doses.per.day=2,daily.dose=.5,days=1,tsteps=2)
+solve_3comp(chem.name='Bisphenol-A', 
+            doses.per.day=2, 
+            daily.dose=.5,
+            days=1,
+            tsteps=2)
 
+# By storing the model parameters in a vector first, you can potentially
+# edit them before using the model:
 params <-parameterize_3comp(chem.cas="80-05-7")
-solve_3comp(parameters=params)
+solve_3comp(parameters=params, days=1)
+
+head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, days=1))
+head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, 
+                 days=1, iv.dose=TRUE))
+
+# A dose matrix specifies times and magnitudes of doses:
+dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+colnames(dm) <- c("time","dose")
+solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
+            dose=NULL, daily.dose=NULL,
+            days=2.5)
+
+solve_3comp(chem.name="Besonprodil",
+            daily.dose=1, dose=NULL,
+            days=2.5, doses.per.day=4)
 
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+}
+\seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_3comp}}
+
+\code{\link{calc_analytic_css_3comp}}
 }
 \author{
 John Wambaugh and Robert Pearce

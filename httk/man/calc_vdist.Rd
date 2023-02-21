@@ -52,7 +52,8 @@ dataset).}
 \item{Volume of distribution}{Units of L/ kg BW.}
 }
 \description{
-This function predicts partition coefficients for all tissues, then lumps them
+This function predicts partition coefficients for all tissues using
+\code{\link{predict_partitioning_schmitt}}, then lumps them
 into a single compartment.
 }
 \details{
@@ -78,6 +79,13 @@ plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
 partition coefficients for PBPK modeling of drugs and environmental
 chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
+}
+\seealso{
+\code{\link{predict_partitioning_schmitt}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
 }
 \author{
 John Wambaugh and Robert Pearce

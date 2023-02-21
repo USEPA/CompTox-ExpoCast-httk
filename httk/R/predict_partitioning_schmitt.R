@@ -1,30 +1,45 @@
-# This predicts the coefficient of tissue to FREE plasma fraction via Schmitt's method (2008):  
-# fupl: unbound fraction in plasma
-# Pow: octanol:water partition coefficient (not log transformed)
-# pKa_Donor: compound H dissociation equilibrium constant(s)
-# pKa_Accept: compound H association equilibrium constant(s)   
-# MA: phospholipid:water distribution coefficient
-# KAPPAcell2pu: Ratio of D inside the cell to D in the plasma, as derived from the different pHs and pKas
-# Fprotein.plasma: protein fraction in plasma - from Gardner 1980
-
-
 #' Predict partition coefficients using the method from Schmitt (2008).
-#' 
-#' This function implements the method from Schmitt (2008) in predicting the 
+#'                                                                                                                        #' This function implements the method from Schmitt (2008) for predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
-#' in the tissue.data table.
+#' in the \code{\link{tissue.data}} table. The method has been modifed
+#' by Pearce et al. (2017) based on an evalaution using in vivo measured 
+#' partition coefficients.
 #' 
-#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' To understand this method, it is 
+#' important to recognize that in  a given media the fraction unbound in that 
+#' media is inverse of the media:water partition coefficient. 
+#' In Schmitt's model, each tissue is composed of cells and
+#' interstitium, with each cell consisting of neutral lipid,
+#' neutral phospholipid, water, protein, and acidic phospholipid.
+#' Each tissue cell is defined as the sum of separate
+#' compartments for each constituent, all of which partition
+#' with a shared water compartment. The partitioning between
+#' the cell components and cell water is compound specific
+#' and determined by log Pow (in neutral lipid partitioning),
+#' membrane affinity (phospholipid and protein partitioning),
+#' and pKa (neutral lipid and acidic phospholipid partitioning).
+#' For a given compound the partitioning into each
+#' component is identical across tissues. Thus the differences
+#' among tissues are driven by their composition, that is, the
+#' varying volumes of components such as neutral lipid.
+#' However, pH differences across tissues also determine
+#' small differences in partitioning between cell and plasma
+#' water. The fup is used as the plasma water to total plasma
+#' partition coefficient and to approximate the partitioning
+#' between interstitial protein and water.
 #' 
-#' A regression is used for membrane affinity when not provided.  The
+#' A regression is used to predict membrane affinity when measured values are 
+#' not available (\code{\link{calc_ma}}).  The
 #' regressions for correcting each tissue are performed on tissue plasma
 #' partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
 #' corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
 #' Thus the regressions should be used with the corrected Funbound.plasma.
 #' 
+#' A separate regression is used when adjusted.Funbound.plasma is FALSE.
+#' 
 #' The red blood cell regression can be used but is not by default because of
-#' the span of the data used, reducing confidence in the regression for higher
-#' and lower predicted values.
+#' the span of the data used for evaluation, reducing confidence in the 
+#' regression for higher and lower predicted values.
 #' 
 #' Human tissue volumes are used for species other than Rat.
 #' 
@@ -56,6 +71,10 @@
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'
+#' @seealso \code{\link{parameterize_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#' 
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
 #'
@@ -82,11 +101,10 @@
 #' @examples
 #' 
 #' predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
-#' 
+#'
 #' @import magrittr
 #'
 #' @export predict_partitioning_schmitt
-#'
 predict_partitioning_schmitt <- function(
   chem.name=NULL,
   chem.cas=NULL,
@@ -119,8 +137,7 @@ predict_partitioning_schmitt <- function(
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  Tissue <- Species <- variable <- Reference <- value <- 
-    pearce2017regression <-physiology.data <- NULL
+  Tissue <- Species <- variable <- Reference <- value <- NULL
   #End R CMD CHECK appeasement.
   
   if (is.null(model)) stop("Model must be specified.")
@@ -150,15 +167,24 @@ predict_partitioning_schmitt <- function(
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
-      parameters$Fprotein.plasma <-  httk::physiology.data[
-      which(httk::physiology.data[,'Parameter'] == 
+      parameters$Fprotein.plasma <-  physiology.data[
+      which(physiology.data[,'Parameter'] == 
         'Plasma Protein Volume Fraction'),
-      which(tolower(colnames(httk::physiology.data)) == tolower(species))]
+      which(tolower(colnames(physiology.data)) == tolower(species))]
   }
   
   if (!adjusted.Funbound.plasma & user.params == FALSE) 
     parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+
+  if (any(parameters$Funbound.plasma == 0))
+    if (tolower(species) == "human" | default.to.human) {
+      stop("Fraction unbound below limit of detection, cannot predict partitioning.")
+    } else {
+      stop("\
+Fraction unbound for species below limit of detection, cannot predict partitioning. Perhaps try default.to.human=TRUE.")
+    }
     
+        
 # If we don't have a measured value, use Yun & Edgington (2013):
   if (any(is.na(parameters$MA)))
   {
@@ -300,13 +326,16 @@ predict_partitioning_schmitt <- function(
       as.numeric(subset(this.subset,variable=='Fa_PLc')[,'value'])
 		if (is.na(Fa_PL)) Fa_PL <- 0
 		
-		# tissue pH
+		# tissue-specific pH
 		pH <- as.numeric(subset(this.subset,variable=='pH')[,'value'])
 
 		# neutral phospholipid:water partition coefficient:
 	  Kn_PL <- parameters$MA
-    
-    # Need to calculate the amount of un-ionized parent:
+
+# Schmitt Schmitt (2008) section 2.5: Partition coefficients for tissue components:
+# First, calc_ionization handles the Hendersen-Hasselbalch relation for arbitrary pKa''s.
+# We need to calculate the distribution of charged and uncharged molecules at
+# the pH of the tissue:
     ionization <- calc_ionization(pH=pH,parameters=parameters)
     fraction_neutral  <- ionization[["fraction_neutral"]]
     fraction_charged <- ionization[["fraction_charged"]]
@@ -314,29 +343,48 @@ predict_partitioning_schmitt <- function(
     fraction_positive <- ionization[["fraction_positive"]]
     fraction_zwitter <- ionization[["fraction_zwitter"]]
 
-		# neutral lipid:water partition coefficient
-		Kn_L <- parameters$Pow * (fraction_neutral + 
-      fraction_zwitter + parameters$alpha * fraction_charged)
+# Schmitt (2008) section 2.5.1: neutral lipid:water partition coefficient
+# This is a generalized version of Schmitt (2008) equations 13 and 14:
+		Kn_L <- calc_dow(Pow = parameters$Pow,
+                     fraction_charged = fraction_charged,
+                     alpha = parameters$alpha)
 
-		# protein:water partition coefficient:
+# Schmitt (2008) section 2.5.3: protein:water partition coefficient 
+# Schmitt (2008) equation 19:
 		KP <- 0.163 + 0.0221*Kn_PL
 		
-		# acidic phospholipid:water partition coefficient:
+# Schmitt (2008) section 2.5.2: acidic phospholipid:water partition coefficient:
+# This is a generalized version of Schmitt (2008) equations 17 and 18:
 		Ka_PL <- Kn_PL * (fraction_neutral + fraction_zwitter + 
       20*fraction_positive + 0.05*fraction_negative)
 
+# Schmitt (2008) section 2.2: Unbound fraction in interstitial space
+# It is important to recognize that in a given media the fraction unbound in
+# that media is one over the media:water partition coefficient.
+# Schmitt (2008) Equation 4: 
   	Kint <- (FWint + FPint/parameters$Fprotein.plasma*
       (1/parameters$Funbound.plasma - FWpl))
 		
+# Schmitt (2008) section 2.3: Unbound fraction in cellular space
+# It is important to recognize that in a given media the fraction unbound in
+# that media is one over the media:water partition coefficient.
+# Schmitt (2008) Equation 7: 
 		Kcell <- (FW + Kn_L * Fn_L + Kn_PL * Fn_PL + Ka_PL * Fa_PL + KP * FP) 
-		
+
+# The following is our attempt to calculate the parameter kappa in general. 
+# We run calc_ionization a second time for the plasma pH.
     plasma <- calc_ionization(pH=parameters$plasma.pH,parameters=parameters)
     fraction_neutral_plasma <- plasma[['fraction_neutral']]
     fraction_zwitter_plasma <- plasma[['fraction_zwitter']]    
     fraction_charged_plasma <- plasma[['fraction_charged']] 
-    KAPPAcell2pu <- (fraction_neutral_plasma + fraction_zwitter_plasma + 
-      parameters$alpha * fraction_charged_plasma)/(fraction_neutral + 
-      fraction_zwitter + parameters$alpha * fraction_charged)
+# We then calculate the pH gradient infuence (Schmitt (2008) section 2.4) 
+# as a sort  of generalized version of Schmitt (2008) equations 10 and 11:	
+    KAPPAcell2pu <- (fraction_neutral_plasma + 
+                     fraction_zwitter_plasma + 
+                     parameters$alpha * fraction_charged_plasma) /
+                     (fraction_neutral + 
+                     fraction_zwitter + 
+                     parameters$alpha * fraction_charged)
     
     
     if (this.tissue == 'red blood cells') 

@@ -10,7 +10,6 @@ calc_mc_tk(
   dtxsid = NULL,
   parameters = NULL,
   samples = 1000,
-  which.quantile = 0.95,
   species = "Human",
   suppress.messages = FALSE,
   model = "pbtk",
@@ -23,17 +22,10 @@ calc_mc_tk(
   tissue = NULL,
   output.units = "mg/L",
   solvemodel.arg.list = list(times = c(0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5)),
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
-    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
-  convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = TRUE, regression = TRUE),
+  invitro.mc.arg.list = NULL,
+  httkpop.generate.arg.list = list(method = "direct resampling"),
+  convert.httkpop.arg.list = NULL,
+  parameterize.arg.list = NULL,
   return.all.sims = FALSE
 )
 }
@@ -51,9 +43,6 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 httkpop model.}
 
 \item{samples}{Number of samples generated in calculating quantiles.}
-
-\item{which.quantile}{Which quantile from Monte Carlo simulation is
-requested. Can be a vector.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").  Species must be set to "Human" to run httkpop model.}
@@ -189,6 +178,9 @@ for (age.lower in age.ranges)
 }
 
 }
+}
+\seealso{
+\code{\link{create_mc_samples}}
 }
 \author{
 John Wambaugh

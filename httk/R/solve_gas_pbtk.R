@@ -186,38 +186,43 @@
 #'
 #' @keywords Solve
 #'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_gas_pbtk}}
+#'
 #' @examples
+#' \donttest{
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
-#' \donttest{
-#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
-#' daily.dose = 3, input.units = "umol", plots=TRUE,initial.values=c(Aven=20))
+#' out <- solve_gas_pbtk(chem.name='pyrene',
+#'                       exp.conc = 0, doses.per.day = 2,
+#'                       daily.dose = 3, input.units = "umol",
+#'                       days=2.5, 
+#'                       plots=TRUE, initial.values=c(Aven=20))
 #' 
-#' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
-#' exp.duration = 6, exercise = TRUE)
+#' out <- solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 3, 
+#'                       period = 24, days=2.5,
+#'                       exp.duration = 6, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
-#' solve_gas_pbtk(parameters=params)
+#' solve_gas_pbtk(parameters=params, days=2.5)
 #' 
 #' # Oral dose with exhalation as a route of elimination:
 #' out <- solve_gas_pbtk(chem.name = 'bisphenol a', exp.conc = 0, dose=100,
-#' input.units="mg/kg")
+#'                       days=2.5, input.units="mg/kg")
 #'
 #' # Note that different model compartments for this model have different units 
 #' # and that the final units can be controlled with the output.units argument:
-#' head(solve_gas_pbtk(chem.name="lindane"))
+#' head(solve_gas_pbtk(chem.name="lindane", days=2.5))
 #' # Convert all compartment units to mg/L:
-#' head(solve_gas_pbtk(chem.name="lindane",output.units="mg/L"))
+#' head(solve_gas_pbtk(chem.name="lindane", days=2.5, output.units="mg/L"))
 #' # Convert just the plasma to mg/L:
-#' head(solve_gas_pbtk(chem.name="lindane",output.units=list(Cplasma="mg/L")))
+#' head(solve_gas_pbtk(chem.name="lindane", days=2.5, 
+#'                     output.units=list(Cplasma="mg/L")))
 #' }
 #' 
 #' @export solve_gas_pbtk
-#' 
-#' @useDynLib httk
-#' 
-#' @import deSolve
 #' 
 #' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,
