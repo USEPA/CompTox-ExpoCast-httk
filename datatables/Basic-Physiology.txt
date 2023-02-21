@@ -1,0 +1,17 @@
+"Parameter"	"Units"	"Mouse"	"Rat"	"Dog"	"Human"	"Rabbit"	"Monkey"
+"Total Body Water"	"ml/kg"	725	668	603.6	600	716	693
+"Plasma Volume"	"ml/kg"	50	31.2	51.5	42.86	44	44.8
+"Cardiac Output"	"ml/min/kg^(3/4)"	150.4	209.3	213.4	231.4	212	324.8
+"Average BW"	"kg"	0.02	0.25	10	70	2.5	5
+"Total Plasma Protein"	"g/ml"	0.062	0.067	0.09	0.074	0.057	0.088
+"Plasma albumin"	"g/ml"	0.0327	0.0316	0.0263	0.0418	0.0387	0.0493
+"Plasma a-1-AGP"	"g/ml"	0.0125	0.0181	0.0037	0.0018	0.0013	0.0024
+"Hematocrit"	"fraction"	0.45	0.46	0.42	0.44	0.36	0.41
+"Urine"	"ml/min/kg^(3/4)"	0.01306	0.09821	0.03705	0.04017	0.0417	0.1508
+"Bile"	"ml/min/kg^(3/4)"	0.02612	0.04419	0.01482	0.01004	0.0833	0.004006
+"GFR"	"ml/min/kg^(3/4)"	5.265	3.705	10.9	5.165	3.12	2.08
+"Average Body Temperature"	"C"	37	38.7	38.9	37	39.35	38
+"Plasma Effective Neutral Lipid Volume Fraction"	"unitless"	0.00355	0.00174	0.001037	0.0073	0.001962	0.0073
+"Plasma Protein Volume Fraction"	"unitless"	0.06036	0.05871	0.09	0.06951	0.057	0.06951
+"Pulmonary Ventilation Rate"	"l/h/kg^(3/4)"	24.75	24.75	24.75	27.75	24.75	27.75
+"Alveolar Dead Space Fraction"	"unitless"	0.33	0.33	0.33	0.33	0.33	0.33

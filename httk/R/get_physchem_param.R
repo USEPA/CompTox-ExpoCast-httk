@@ -1,14 +1,21 @@
-#' Get physico-chemical parameters from chem.physical_and_invitro.data
+#' Get physico-chemical parameters from chem.physical_and_invitro.data table
 #'
 #' This function retrieves physico-chemical properties ("param") for the chemical specified 
 #' by chem.name or chem.cas from the vLiver tables.
 #' 
+#' Note that this function works with a local version of the 
+#' get.physical_and_invitro.data table to allow users to add/modify chemical
+#' data (for example, via \code{\link{add_chemtable}} or 
+#' \code{\link{load_sipes2017}}).
+#'
 #' @param param The desired parameters, a vector or single value.
 #' @param chem.name The chemical names that you want parameters for, a vector or single value
 #' @param chem.cas The chemical CAS numbers that you want parameters for, a vector or single value
 #' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
+#' @seealso \code{\link{get_invitroPK_param}} 
+#'
 #' @return The parameters, either a single value, a named list for a single chemical, or a list of lists
 #' 
 #' @author John Wambaugh and Robert Pearce
@@ -18,7 +25,6 @@
 #' get_physchem_param(param = 'logP', chem.cas = '80-05-7')
 #' get_physchem_param(param = c('logP','MW'), chem.cas = c('80-05-7','81-81-2'))
 #' 
-#'
 #' @export get_physchem_param 
 get_physchem_param <- function(
                         param, 

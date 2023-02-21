@@ -45,8 +45,6 @@
 #' @param parameters Parameters from parameterize_steadystate. Not used with
 #' httkpop model.
 #' @param samples Number of samples generated in calculating quantiles.
-#' @param which.quantile Which quantile from Monte Carlo simulation is
-#' requested. Can be a vector.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").  Species must be set to "Human" to run httkpop model. 
 #' @param suppress.messages Whether or not to suppress output message.
@@ -95,6 +93,8 @@
 #' @param return.all.sims Logical indicating whether to return the results
 #' of all simulations, in addition to the default toxicokinetic statistics
 #' 
+#' @seealso \code{\link{create_mc_samples}}
+#'
 #' @author  John Wambaugh
 #'
 #' @keywords Monte-Carlo dynamic simulation
@@ -135,13 +135,13 @@
 #' 
 #' }
 #' @importFrom purrr reduce
+#' @importFrom purrr compact 
 #' @export calc_mc_tk
 calc_mc_tk<- function(chem.cas=NULL,
                         chem.name=NULL,
                         dtxsid = NULL,
                         parameters=NULL,
                         samples=1000,
-                        which.quantile=0.95,
                         species="Human",
                         suppress.messages=FALSE,
                         model="pbtk",
@@ -155,41 +155,11 @@ calc_mc_tk<- function(chem.cas=NULL,
                         output.units="mg/L",
                         solvemodel.arg.list=list(
                           times=c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)),
-                        invitro.mc.arg.list=list(
-                          adjusted.Funbound.plasma=TRUE,
-                          poormetab=TRUE,
-                          fup.censored.dist=FALSE,
-                          fup.lod=0.01,
-                          fup.meas.cv=0.4,
-                          clint.meas.cv=0.3,
-                          fup.pop.cv=0.3,
-                          clint.pop.cv=0.3),
-                        httkpop.generate.arg.list=list(
-                          method='direct resampling',
-                          gendernum=NULL,
-                          agelim_years=NULL,
-                          agelim_months=NULL,
-                          weight_category =  c(
-                            "Underweight", 
-                            "Normal", 
-                            "Overweight", 
-                            "Obese"),
-                          gfr_category = c(
-                            "Normal", 
-                            "Kidney Disease", 
-                            "Kidney Failure"),
-                          reths = c(
-                            "Mexican American", 
-                            "Other Hispanic", 
-                            "Non-Hispanic White",
-                            "Non-Hispanic Black", 
-                            "Other")),
-                        convert.httkpop.arg.list=list(),
-                        parameterize.arg.list=list(
-                          default.to.human=FALSE,
-                          clint.pvalue.threshold=0.05,
-                          restrictive.clearance = TRUE,
-                          regression=TRUE),
+                        invitro.mc.arg.list=NULL,
+                        httkpop.generate.arg.list = list(
+                          method='direct resampling'),
+                        convert.httkpop.arg.list=NULL,
+                        parameterize.arg.list=NULL,
                         return.all.sims=FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -211,41 +181,44 @@ calc_mc_tk<- function(chem.cas=NULL,
   if (is.null(model.list[[model]]$solve.func)) 
     stop(paste("Kinetic model solver not available for model ",model,".",sep="")) 
 
-#
-#
-# CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
-# VALUES FOR WHICH Css SHOULD BE CALCULATEDL
-#
-#
-  parameter.dt <- create_mc_samples(
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid = dtxsid,
-                        parameters=parameters,
-                        samples=samples,
-                        species=species,
-                        suppress.messages=suppress.messages,
-                        model=model,
-                        httkpop=httkpop,
-                        invitrouv=invitrouv,
-                        calcrb2p=calcrb2p,
-                        censored.params=censored.params,
-                        vary.params=vary.params,
-                        return.samples=FALSE,
-                        invitro.mc.arg.list=invitro.mc.arg.list,
-                        httkpop.generate.arg.list=httkpop.generate.arg.list,
-                        convert.httkpop.arg.list=convert.httkpop.arg.list,
-                        parameterize.arg.list=parameterize.arg.list)
+  #
+  #
+  # CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
+  # VALUES FOR WHICH Css SHOULD BE CALCULATED
+  #
+  #
+  parameter.dt <- do.call(create_mc_samples,
+                          # we use purrr::compact to drop NULL values from arguments list:
+                          args=purrr::compact(c(list(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid = dtxsid,
+                            parameters=parameters,
+                            samples=samples,
+                            species=species,
+                            suppress.messages=suppress.messages,
+                            model=model,
+                            httkpop=httkpop,
+                            invitrouv=invitrouv,
+                            calcrb2p=calcrb2p,
+                            censored.params=censored.params,
+                            vary.params=vary.params,
+                            return.samples=FALSE,
+                            invitro.mc.arg.list=invitro.mc.arg.list,
+                            httkpop.generate.arg.list=httkpop.generate.arg.list,
+                            convert.httkpop.arg.list=convert.httkpop.arg.list,
+                            parameterize.arg.list=parameterize.arg.list))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
   model.out <- list()
   for (i in 1:nrow(parameter.dt)) 
-   model.out[[i]] <- do.call(model.list[[model]]$solve.func,args=c(list(
-     parameters=as.list(parameter.dt[i,])),
-     suppress.messages=TRUE,
-     solvemodel.arg.list))
+   model.out[[i]] <- do.call(model.list[[model]]$solve.func,
+                             args=purrr::compact(c(list(
+     parameters=as.list(parameter.dt[i,]),
+     suppress.messages=TRUE),
+     solvemodel.arg.list)))
 
   means <- set_httk_precision(Reduce("+",model.out)/length(model.out))
   sds <- set_httk_precision((purrr::reduce(model.out,

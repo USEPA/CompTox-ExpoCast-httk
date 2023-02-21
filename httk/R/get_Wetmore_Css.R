@@ -211,7 +211,9 @@ get_wetmore_css <- function(
                         output.units="mg/L",
                         suppress.messages=FALSE)
 {
-  warning("Function \"get_wetmore_css\" has been renamed to \"get_lit_cheminfo\".")
+  if (!suppress.messages)
+    warning("Function \"get_wetmore_css\" has been renamed to \"get_lit_cheminfo\".")
+  
   return(do.call(get_lit_css, list(                        
                         chem.cas=chem.cas,
                         chem.name=chem.name,
