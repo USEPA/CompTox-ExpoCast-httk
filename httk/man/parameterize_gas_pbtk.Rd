@@ -83,7 +83,7 @@ the state of exercise}
 \item{VD}{Anatomical dead space (L), to be modulated especially as part of
 simulating the state of exercise}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -192,6 +192,27 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+}
+\seealso{
+\code{\link{solve_gas_pbtk}}
+
+\code{\link{apply_clint_adjustment}}
+
+\code{\link{predict_partitioning_schmitt}}
+
+\code{\link{available_rblood2plasma}}
+
+\code{\link{calc_kair}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
+
+\code{\link{get_clint}}
+
+\code{\link{get_fup}}
+
+\code{\link{get_physchem_param}}
 }
 \author{
 Matt Linakis, Robert Pearce, John Wambaugh

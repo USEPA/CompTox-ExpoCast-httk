@@ -1,0 +1,71 @@
+#------------------------------------------------------------------------------
+# the HTTK Three Compartment Model (3compartment)
+# written by Robert Pearce, modified by John Wambaugh
+#-
+
+States = {
+Aintestine,
+Aportven,
+Aliver,
+Asyscomp,
+Ametabolized,
+Atubules
+};
+
+Inputs = {
+};
+
+Outputs = {
+Cportven,
+Cliver,
+Csyscomp,
+};
+
+BW = 0;
+CLmetabolismc = 0;
+kgutabs = 0;
+Qcardiacc = 0;
+Qgfrc = 0;
+Qgutf = 0;
+Qliverf = 0;
+Vportvenc = 0;
+Vliverc = 0;
+Vsyscompc = 0;
+Fraction_unbound_plasma = 0;
+CLmetabolism = 0.0;
+Qcardiac = 0;
+Qgfr = 0.0;
+Qgut = 0.0;
+Qliver = 0.0;
+Kliver2plasma = 0;
+Krest2plasma = 0;
+Ratioblood2plasma = 0;
+
+Initialize{
+kgutabs = kgutabs * 24;
+CLmetabolism = CLmetabolismc * 24 * BW;
+Qcardiac = Qcardiacc * 24 * BW;
+Qgfr = Qgfrc * BW * 24;
+Qgut = Qcardiac * Qgutf;
+Qliver = Qcardiac * Qliverf;
+Vportven = Vportvenc * BW;
+Vsyscomp = Vsyscompc * BW;
+Vliver = Vliverc * BW;
+}
+
+Dynamics{
+Cportven = Aportven / Vportven;
+Cliver = Aliver / Vliver;
+Csyscomp = Asyscomp / Vsyscomp;
+
+
+dt (Aintestine) = -kgutabs * Aintestine;
+dt (Aportven) = kgutabs * Aintestine + Qgut * (Asyscomp / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma  - Aportven / Vportven);
+dt(Aliver) = Qgut * Aportven / Vportven + Qliver * Asyscomp / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - (Qliver + Qgut) * Aliver / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * Aliver / Vliver;
+dt(Asyscomp) = (Qgut + Qliver) * Aliver / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - Qgut * Asyscomp / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qliver * Asyscomp / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgfr / Krest2plasma * Asyscomp / Vsyscomp;
+dt (Ametabolized) = CLmetabolism / Kliver2plasma * Aliver / Vliver;
+dt (Atubules) = Qgfr / Krest2plasma * Asyscomp / Vsyscomp;
+
+}
+
+End.

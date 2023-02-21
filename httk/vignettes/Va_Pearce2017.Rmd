@@ -1,0 +1,699 @@
+---
+title: "Pearce et al. (2017): Updated v79i04.R Examples"
+author: "Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wambaugh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{a) Pearce (2017): HTTK Basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+from "httk: R Package for High-Throughput Toxicokinetics"
+
+Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wambaugh
+
+Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
+
+https://doi.org/10.18637%2Fjss.v079.i04
+
+*Please send questions to wambaugh.john@epa.gov*
+
+## Abstract
+
+Thousands of chemicals have been profiled by high-throughput screening programs 
+such as ToxCast and Tox21; these chemicals are tested in part because most of 
+them have limited or no data on hazard, exposure, or toxicokinetics. 
+Toxicokinetic models aid in predicting tissue concentrations resulting from 
+chemical exposure, and a "reverse dosimetry" approach can be used to predict 
+exposure doses sufficient to cause tissue concentrations that have been 
+identified as bioactive by high-throughput screening. We have created four 
+toxicokinetic models within the R software package **httk**. These models are 
+designed to be parameterized using high-throughput *in vitro* data (plasma 
+protein binding and hepatic clearance), as well as structure-derived 
+physicochemical properties and species-specific physiological data. The package 
+contains tools for Monte Carlo sampling and reverse dosimetry along with 
+functions for the analysis of concentration vs. time simulations. The package 
+can currently use human *in vitro* data to make predictions for 553 chemicals in 
+humans, rats, mice, dogs, and rabbits, including 94 pharmaceuticals and 415 
+ToxCast chemicals. For 67 of these chemicals, the package includes rat-specific 
+*in vitro* data. This package is structured to be augmented with additional 
+chemical data as they become available. Package **httk** enables the inclusion of 
+toxicokinetics in the statistical analysis of chemicals undergoing
+high-throughput screening.
+
+This vignette was created from the 
+[R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
+for the 
+[2017 paper that introduced **httk**](https://doi.org/10.18637%2Fjss.v079.i04).
+
+## HTTK Version
+
+The 
+[R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
+was created with **httk** v1.7. It was 
+updated to a vignette using **httk** v2.2.2 in 2022. Although we attempt to 
+maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
+and cannot easily address the changes, historical versions of **httk** are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
+## Prepare R to run the vignette
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = TRUE.  If execute.vignette = FALSE that would mean that the code is included (and necessary) but was
+not run when the vignette was built.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- TRUE
+```
+
+### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+```{r load_packages, eval = execute.vignette}
+library(ggplot2)
+library(httk)
+```
+
+Check what version of **httk** is installed:
+
+```{r version_check, eval = execute.vignette}
+packageVersion("httk")
+```
+
+### Control run speed
+To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
+(currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
+```{r chemical_thining, eval = execute.vignette}
+NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
+SKIP.CHEMS <- 25
+```
+
+Similarly, portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = execute.vignette}
+NSAMP <- 25
+```
+
+# Examples
+To get a list of parameters for the pbtk model of Triclosan in a rat:
+```{r rat_pbtk_parameters, eval = execute.vignette}
+parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
+```
+We do not have a full set of *in vitro* parameters for rat for Triclosan,
+so we fill in the *in vitro* measured values with human-derived measurements and 
+use rat physiological parameters by setting "default.to.human = TRUE":
+```{r rat_pbtk_parameters2, eval = execute.vignette}
+parameters <- parameterize_pbtk(chem.name = "triclosan", 
+                                species = "rat", 
+                                default.to.human = TRUE)
+```
+
+To change the $f_{up}$ in the previous parameters list to 0.001 from the
+human value of 0.003044 and use it in a simulation of the PBTK model for
+a single dose of 1 mg/kg BW of Triclosan in a rat:
+```{r use)pbtk_parameters, eval = execute.vignette}
+parameters["Funbound.plasma"] <- 0.001
+out <- solve_pbtk(parameters = parameters, suppress.messages = TRUE)
+```
+
+
+## Making a table
+
+In the example below, setting model to "pbtk"
+in "get_cheminfo" removes the chemicals from the list with $f_{up}$ below
+the limit of detection which have been set to zero because the
+model uses partition coefficients that are calculated with
+$f_{up}$. However, we could include all chemicals that work with the
+models without partition coefficients by using the default option of
+"3compartmentss" or setting exclude.fup.zero to false, and $f_{up}$
+would then automatically be set to 0.005.
+
+First we make up a list of chemicals with both literature $C_{ss}$ values and HTTK data for making new $C_{ss}$ predictions:
+```{r select_Chemicals, eval = execute.vignette}
+chem.list <- intersect(get_cheminfo(model = "pbtk", 
+                                    suppress.messages = TRUE)[seq(
+                                      1, NUM.CHEMS, SKIP.CHEMS)],
+                       get_wetmore_cheminfo())
+```
+
+Then we initialize a NULL table and build it up one row at a time:
+```{r make_Css_table, eval = execute.vignette}
+css.table <- NULL
+for (this.cas in chem.list)
+{
+    ids <- get_chem_id(chem.cas=this.cas)
+    this.row <- data.frame(Compound=ids$chem.name,
+                              DTXSID=ids$dtxsid,
+                              CAS=this.cas)
+    this.row <- cbind(this.row,
+                      as.data.frame(calc_analytic_css(chem.cas = this.cas,
+                                                      model = "pbtk",
+                                                      output.units = "uM",
+                                                      suppress.messages=TRUE)))
+    this.row <- cbind(this.row,
+                      as.data.frame(get_wetmore_css(chem.cas = this.cas,
+                                                    which.quantile = 0.50,
+                                                    output.units = "uM",
+                                                    suppress.messages=TRUE)))
+    this.row <- cbind(this.row,
+                      as.data.frame(calc_mc_css(chem.cas = this.cas,
+                                                which.quantile = 0.50,
+                                                output.units = "uM",
+                                                samples = NSAMP,
+                                                suppress.messages=TRUE)))
+    css.table <- rbind(css.table, this.row)
+}
+colnames(css.table) <- c("Compound","DTXSID","CAS", "PBTK", "Wetmore", "MC")
+```
+
+Now display the table and plot two columns against each other:
+```{r display_Css_table, eval = execute.vignette}
+knitr::kable(css.table, caption = "Literature and HTTK Plasma Css", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
+litvshttkcss <- ggplot(css.table, aes(Wetmore, MC)) +
+    geom_point() + geom_abline() +
+    scale_x_log10() + scale_y_log10() +
+    xlab(bquote("Literature"~C[ss]~"("*mu*"M)")) +
+    ylab(bquote("HTTK"~C[ss]~"("*mu*"M)")) +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(litvshttkcss)
+```
+
+## Plotting example
+
+To see how $C_{ss}$ resulting from discrete dosing deviates from the
+average steady state concentration, we can make a plot with **ggplot2**
+that includes a horizontal line through the $y$-axis at the predicted
+$C_{ss}$ for oral infusion dosing (Figure 2 in Pearce et al., 2017).
+```{r plot_examples, eval = execute.vignette}
+out <- solve_pbtk(chem.name = "Bisphenol A", 
+                  days = 50, 
+                  doses.per.day = 3,
+                  daily.dose=1,
+                  output.units = "uM")
+plot.data <- as.data.frame(out)
+
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  output.units = "uM")
+
+c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) +
+    geom_line() + geom_hline(yintercept = css) +
+    ylab(bquote("Plasma Concentration ("*mu*"M)")) +
+    xlab("Day") +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16),
+          plot.title = element_text(size = 17, hjust=0.5)) +
+    ggtitle("Bisphenol A")
+print(c.vs.t)
+```
+
+### Suppressing Messages
+Note that since *in vitro-in vivo* extrapolation (IVIVE) is built upon
+many, many assumptions, *httk** attempts to give many warning messages 
+by default. These messages do not usually mean something is wrong, but 
+are rather intended to make the user aware of the assumptions involved.
+However, they quickly grow annoying and can be turned off with the
+"suppress.messages=TRUE" argument. Proceed with caution...
+
+```{r suppress_messages, eval = execute.vignette}
+out <- solve_pbtk(chem.name = "Bisphenol A", 
+                  days = 50, 
+                  doses.per.day = 3,
+                  daily.dose=1,
+                  output.units = "uM",
+                  suppress.messages = TRUE)
+
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  output.units = "uM",
+                  suppress.messages = TRUE)
+```
+
+
+## TK Study Summary Statistics
+"calc_tk_stats" allows summary TK statistics to be calculated for a specific
+study design (including dose regiment, duration, and species).
+The following code calculates the peak plasma concentration for all chemicals in 
+**httk** simulated for 10 days at 1 mg/kg BW/day with 3 doses per day.
+Note that the function "calc_stats" was renamed "calc_tk_stats" in a later release
+of **httk**.
+```{r stats_example1, eval = FALSE}
+all.peak.stats <- calc_stats(days = 10, doses.per.day = 3, stats = "peak")
+```
+The same function can be used for a single chemical. For example, 
+the AUC, peak, and mean for a single 1 mg dose of Triclosan over 10
+day:
+```{r stats_example2, eval = execute.vignette}
+triclosan.stats <- calc_stats(days = 10, chem.name = "triclosan")
+```
+
+## Steady-state Plasma Concentration
+Below are examples of two functions,comparing the medians of
+the Wetmore data in humans for 1 mg/kg BW/day of Bisphenol A with
+the "calc_mc_css" simulation with probability distributions
+containing a third of the standard deviation, half the limit of
+detection for $f_{up}$, and the same number of samples of the
+parameters used in [Wetmore et al. (2012)](https://doi.org/10.1093/toxsci/kfr254). 
+
+We use make use of the default
+Monte Carlo sampler by setting argument "httkpop=FALSE" to turn off
+httk-pop ([Ring et al., 2017](https://doi.org/10.1016/j.envint.2017.06.004)) and 
+"invitrouv=FALSE" to turn off uncertainty/variability
+for the *in vitro* parameters ([Wambaugh et al., 2019](https://doi.org/10.1093/toxsci/kfz205)). 
+
+Note that the function "get_wetmore_css" was renamed "get_lit_css" in a later release
+of **httk**.
+```{r css_examples, eval = execute.vignette}
+get_wetmore_css(chem.cas = "80-05-7", daily.dose = 1,
+                which.quantile = 0.5, output.units = "uM")
+
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            censored.params = list(
+              Funbound.plasma = list(cv = 0.1, lod = 0.005)),
+            vary.params = list(
+              BW = 0.15, 
+              Vliverc = 0.15, 
+              Qgfrc = 0.15,
+              Qtotal.liverc = 0.15, 
+              million.cells.per.gliver = 0.15,
+              Clint = 0.15),
+            output.units = "uM", 
+            samples = NSAMP,
+            httkpop=FALSE,
+            invitrouv=FALSE,
+            suppress.messages = TRUE)
+```
+
+### Using more sophisticated Monte Carlo
+
+**httk** uses Monte Carlo to simulate population variability and propagate 
+parameter uncertainty. The algorithm for population variability, "httk-pop" 
+[(Ring et al., 2017)](https://doi.org/10.1016/j.envint.2017.06.004) 
+simulates population variability in TK by
+predicting distributions of physiological parameters based on
+distributions of demographic and biometric quantities from the
+National Health and Nutrition Examination Survey (NHANES),
+conducted by the U.S. Centers for Disease Control and Prevention
+(CDC). MEthods for propagating uncertainty in *in vitro* measurements were
+described by [Wambaugh et al. (2019)](https://doi.org/10.1093/toxsci/kfz205).
+
+Both httk-pop and *in vitro* uncertainty/variability simulation, are on by default:
+```{r css_examples2, eval = execute.vignette}
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+```
+
+### Controlling the random number generator
+
+Any of the Monte Carlo functions in **httk**, often indicated by the 
+inclusion of "mc" in the function name, make use of random draws from
+distributions to simulate uncertainty and variability. The random number
+generator in any computer is actually a pseudo-random number generator
+that creates a sequence of nearly uncorrelated numbers, but that sequence
+can be recreated at any time if we set a random number generator "seed".
+In R we control the seed with the function "set.seed", which allows us
+to get the same Monte Carlo output again and again (and in many cases
+on different computers). The seed can take any value, and if you use the
+same seed followed by the same functions called in the same order with the
+same arguments, you will get the same answer again and again:
+```{r set_seed_example, eval = execute.vignette}
+# Random number generator seed 1:
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+
+# Continuing to draw random numbers without resetting the seed:
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+
+# Random number generator seed 2:
+set.seed(123456)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+
+# Continuing to draw random numbers without resetting the seed:
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+
+# Random number generator seed 2 gives the same answer as it did above:
+set.seed(123456)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+
+# Random number generator seed 1 gives the same answer as it did above:
+set.seed(654321)
+calc_mc_css(chem.cas = "80-05-7", 
+            daily.dose = 1, 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            suppress.messages = TRUE)
+```
+
+
+## IVIVE with HTTK
+
+Simple "reverse dosimetry" *in vitro-in vivo* extrapolation (IVIVE) determines
+an administered equivalent dose (AED) by taking an *in vitro* concentration $C_{\text{in vitro}}$
+(50 uM in the example below) and dividing it by the steady-state plasma 
+concentration $C_{ss}$ produced by a dose rate of 1 mg/kg bw/day:
+
+$$ AED = \frac{C_{\text{in vitro}}}{C_{ss}}$$
+
+We can also calculate the AED using literature values or sampling with **httk**:
+```{r literature_oral_equivalent_example, eval = execute.vignette}
+get_wetmore_oral_equiv(50, chem.cas = "80-05-7")
+set.seed(654321)
+calc_mc_oral_equiv(50, chem.cas = "80-05-7", samples = NSAMP)
+```
+
+### Monte Carlo Simulation of $C_{ss}$
+We can perform a Monte Carlo simulation on Zoxamide with the
+model pbtk with the same limit of detection and coefficients of
+variation (cv).
+Note, the function "monte_carlo" was replaced with a similar function 
+"calc_mc_tk" for simulation concentration timecourses, while arguments were
+added to "calc_mc_css" that allowed the functionality seen in the 2017 paper.
+Separately, a new function
+"monte_carlo" was created to complement "httkpop_mc" and "invitro_mc" as
+part of "create_mc_samples". "monte_carlo" varies parameters according to
+a normal distribution with given mean and coefficient of variation or according
+to a censored distribution with an additional limit of detection parameter.
+Note that we again turn off httkpop and invitrouv to replicate the 2017 version
+of Monte Carlo.
+
+First we create a list of parameters and then assign a coefficient of variation
+to each parameter we wish to vary:
+```{r monte_carlo_css_example_1, eval = execute.vignette}
+vary.params <- NULL
+params <- parameterize_pbtk(chem.name = "Zoxamide")
+for (this.param in names(subset(params, names(params) != "Funbound.plasma")))
+  # Only want to vary numerical parameters:
+  if (is.numeric(params[[this.param]])) 
+      vary.params[this.param] <- 0.2
+```
+
+We can draw $f_{up}$ from a censored distribution with a limit of dextion (LOD)
+of 0.01:
+```{r monte_carlo_css_example_2, eval = execute.vignette}
+censored.params <- list(Funbound.plasma = list(cv = 0.2, lod = 0.01))
+```
+### Solve the full TK time-course
+```{r monte_carlo_css_example_3, eval = execute.vignette}
+set.seed(1)
+out <- calc_mc_tk(parameters=params, 
+                  vary.params = vary.params,
+                  censored.params = censored.params,
+                  return.samples = TRUE, 
+                  model = "pbtk",
+                  suppress.messages = TRUE,
+                  httkpop = FALSE,
+                  invitrouv = FALSE,
+                  samples = NSAMP,
+                  solvemodel.arg.list = list(times = seq(0,0.5,0.025))
+                  )
+```
+
+Make a table of concentration vs. time with confidence intervals:
+```{r monte_carlo_css_example_4, eval = execute.vignette}
+zoxtable <- cbind(out[["means"]][,"time"],
+                  out[["means"]][,"Cplasma"],
+                  out[["means"]][,"Cplasma"] - 1.96*out[["sds"]][,"Cplasma"],
+                  out[["means"]][,"Cplasma"] + 1.96*out[["sds"]][,"Cplasma"])
+colnames(zoxtable) <- c("time","Cplasma","lcl","ucl")
+knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time",
+             floating.environment="sidewaystable")
+```
+
+Plot Monte Carlo analysis of concentration vs. time:
+```{r monte_carlo_css_example_5, eval = execute.vignette}
+zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
+    geom_line(color = "dark blue",size=2) +
+      geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
+                  fill = "light blue", color="black", linetype="dotted")+
+    ylab("Plasma concentration") +
+    xlab("Time (days)") +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(zoxamide1)
+```
+
+### Examine $C_{ss}$
+```{r monte_carlo_css_example_6, eval = execute.vignette}
+out <- calc_mc_css(parameters=params, 
+                  vary.params = vary.params,
+                  censored.params = censored.params,
+                  return.samples = TRUE, 
+                  model = "pbtk",
+                  suppress.messages = TRUE,
+                  httkpop = FALSE,
+                  samples = NSAMP,
+                  invitrouv = FALSE)
+
+zoxamide2 <- ggplot(as.data.frame(out), aes(out)) +
+    geom_histogram(fill = "blue", binwidth = 1/6) +
+    scale_x_log10() + ylab("Number of Samples") +
+    xlab(bquote(C[ss]~"("*mu*"M)")) +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(zoxamide2)
+```
+
+## Adding a tissue
+The **httk** package contains a data.frame called tissue.data that describes the
+composition of various tissues in terms of the 
+[Schmitt (2008)](https://doi.org/10.1016/j.tiv.2007.09.010) 
+mechanistic model for deriving tissue:plasma partition coefficients. Once described,
+these tissues are available for use as compartments in new models or to be lumped
+into the rest of body in existing models (using function "lump_tissues"). We can add 
+a new tissue (for example, mammary) to the tissue data by replicating the data
+from another tissue and adjusting as appropriate.
+```{r add_a_tissue, eval = execute.vignette}
+new.tissue <- subset(tissue.data,Tissue == "adipose" & Species =="Human")
+new.tissue[, "Tissue"] <- "mammary"
+new.tissue[new.tissue$variable=="Vol (L/kg)","value"] <- 
+  320/1000/60 # Itsukage et al. (2017) PMID: 29308107
+new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value'] <-
+# We'll arbitrarily set flow to a tenth of total adipose:
+  new.tissue[new.tissue$variable %in% c('Flow (mL/min/kg^(3/4))'),'value']/10
+tissue.data <- rbind(tissue.data, new.tissue)
+knitr::kable(subset(tissue.data,Tissue=="mammary"), 
+             caption = "Approximate Mamary Tissue Parameters", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
+```
+If we thought this tissue had been included in the rest of body total
+previously we could consider removing it from those volumes and flows, but
+we won't do that here (Note eval=FALSE):
+```{r add_a_tissue2, eval = FALSE}
+# If we thought this tissue was included in the rest of the bod
+tissue.data[tissue.data$Tissue == "rest", 'value'] <-
+  tissue.data[tissue.data$Tissue == "rest", 'value'] -
+  new.tissue[new.tissue$variable %in% c(
+    'Vol (L/kg)',
+    'Flow (mL/min/kg^(3/4))'),
+    'value']
+```
+To generate the parameters for a model with kidneys, thyroid, brain, 
+breast, liver compartment combining the liver and gut, and a rest of body
+compartment:
+```{r add_a_tissue3, eval = execute.vignette}
+compartments <- list(liver = c("liver", "gut"), kidney = "kidney",
+                     breast = "mammary", brain = "brain",
+                     thyroid = "thyroid")
+tissues.to.include <- unique(tissue.data$Tissue)
+tissues.to.include <- tissues.to.include[!(tissues.to.include=="placenta")]
+Kp <- predict_partitioning_schmitt(
+  chem.name = "Nicotine", 
+  tissues = tissues.to.include,
+  suppress.messages = TRUE)
+lumped.params <- lump_tissues(Kp, tissuelist=compartments)
+knitr::kable(as.data.frame(lumped.params), 
+             caption = "PCs, Volumes, and Flows for Lumped Tissues", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
+```
+
+## Adding a species
+The **httk** package contains a data.frame called physiology.data that describes 
+the species-specific aspects of physiology necessary to parameterize a PBTK 
+model. We can add a new species (for example, wolverines) to the physiology.data by 
+replicating the data from another species and adjusting as appropriate.
+
+```{r add_a_species1, eval = execute.vignette}
+new.species <- physiology.data[,"Rabbit"]
+names(new.species) <- physiology.data[,"Parameter"]
+rabbit.BW <- new.species["Average BW"] 
+new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
+new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+
+physiology.data <- cbind(physiology.data, new.species)
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+
+knitr::kable(physiology.data[,c("Parameter","Units","Wolverine")], 
+             caption = "Approximate Wolverine Physiological Parameters", 
+             floating.environment="sidewaystable",
+             row.names=FALSE,
+             digits=3)
+```
+
+The tissue volumes and flows are stored separately in tissue.data
+```{r add_a_species2, eval = execute.vignette}
+new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+new.tissue.data$Species <- "Wolverine"
+
+tissue.data <- rbind(tissue.data,new.tissue.data)
+```
+
+Now we can make predictions for wolverines!
+```{r add_a_species3, eval = execute.vignette}
+calc_mc_css(chem.cas="80-05-7",species="wolverine",
+            parameterize.arg.list=list(default.to.human=TRUE),
+            suppress.messages=TRUE,
+            samples = NSAMP)
+```
+
+## Export functions
+
+Jarnac [(Sauro and Fell 2000)](http://academic.sun.ac.za/natural/biochem/btk/book/Sauro.pdf) 
+and SBML [(Hucka et al. 2003)](https://doi.org/10.1093/bioinformatics/btg015) are commonly used languages for
+systems biology models of cellular and physiological processes. In the event that a modeler
+wishes to couple such a model to a toxicokinetic model, we provide functions to export
+model equations and chemical-specific parameters to these languages. The two functions,
+"export_pbtk_sbml" and "export_pbtk_jarnac", have the same arguments and only differ in
+the file extension names (.xml and .jan) entered into the filename argument. Both use liters
+as the units for volume, but the amounts are unitless and to be determined by the user. If
+we suppose that we enter an initial amount of 1 mg in the gut lumen, then all the other
+compartments will contain amounts in mg. 
+
+Below is a call of an export function for a dose
+of 1 given to a rat:
+
+```{r export, eval = FALSE}
+export_pbtk_sbml(chem.name = "Bisphenol A", species = "Rat",
+                 initial.amounts = list(Agutlumen = 1),
+                 filename = "PBTKmodel.xml")
+```
+
+## Days to steady state histogram
+
+Creating histograms can allow us to visualize how a given value varies across 
+all the chemicals
+contained within the package. To create a histogram using **ggplot2** of the 
+number of days to
+steady state, we must first set up a for loop with "get_cheminfo" and "calc_css" 
+to generate a
+vector containing the data. Vectors containing the average and maximum concentrations at
+steady state are also generated in this example, avg and max. The data contained 
+in the days
+vector are then plotted as a histogram (Pearce et al., (2017) Figure 3). We can 
+just as easily create a histogram
+containing the average or maximum steady state concentrations by substituting 
+avg or max
+for days.
+
+```{r figure3, eval = execute.vignette}
+css.data <- data.frame()
+chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
+  1, NUM.CHEMS, SKIP.CHEMS)]
+for (this.cas in chem.list) {
+    css.info <- calc_css(chem.cas = this.cas,
+                         doses.per.day = 1,
+                         suppress.messages = TRUE)
+    css.data[this.cas,"days"] <- css.info[["the.day"]]
+    css.data[this.cas,"avg"] <- css.info[["avg"]]
+    css.data[this.cas,"max"] <- css.info[["max"]]
+}
+
+hist <- ggplot(css.data, aes(days+0.1)) +
+    geom_histogram(fill = "blue", bins=5) +
+    scale_x_log10() + ylab("Number of Chemicals") + xlab("Days") +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(hist)
+```
+
+
+## Average vs. maximum concentration
+
+We can compare the average and maximum concentrations at steady state using the average
+and maximum concentration at steady state vectors, avg and max, from the 
+previous example.
+The vectors are bound into a data frame and plotted with a line through the 
+origin with a
+slope of 1 (Pearce et al. (2017) Figure 4).
+
+
+```{r figure4, eval = execute.vignette}
+avg.vs.max <- ggplot(css.data, aes(avg, max)) +
+    geom_point() + geom_abline() +
+    scale_x_log10() + scale_y_log10() +
+    xlab(bquote("Avg. Conc. at Steady State ("*mu*"M)")) +
+    ylab(bquote("Max. Conc. at Steady State ("*mu*"M)")) +
+    theme(axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16))
+print(avg.vs.max)
+```

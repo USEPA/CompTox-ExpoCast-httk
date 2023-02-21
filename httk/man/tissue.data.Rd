@@ -25,6 +25,34 @@ rabbit. Tissue volumes were calculated by converting the fractional mass of
 each tissue with its density (both from ICRP), lumping the remaining tissues
 into the rest-of-body, excluding the mass of the gastrointestinal contents
 }
+\details{
+New tissues can be added to this table to generate
+their partition coefficients.
+
+The tissue data needed for calculating partition coefficients include: 
+cellular and water fractions of 
+total volume, lipid and protein  fractions of cellular volume, lipid 
+fractions of the total lipid volume, the pH of each tissue,
+and the fractional volume of protein in plasma.
+}
+\examples{
+# We can add thyroid to the tissue data by making a row containing
+# its data, subtracting the volumes and flows from the rest-of-body, 
+# and binding the row to tissue.data. Here we assume it contains the same 
+# partition coefficient data as the spleen and a tenth of the volume and  
+# blood flow:
+new.tissue <- subset(tissue.data,Tissue == "spleen")
+new.tissue[, "Tissue"] <- "thyroid"
+new.tissue[new.tissue$variable \%in\% c("Vol (L/kg)",
+"Flow (mL/min/kg^(3/4))"),"value"] <- new.tissue[new.tissue$variable
+\%in\% c("Vol (L/kg)","Flow (mL/min/kg^(3/4))"),"value"] / 10
+tissue.data[tissue.data$Tissue == "rest", "value"] <-
+tissue.data[tissue.data$Tissue == "rest", "value"] -
+new.tissue[new.tissue$variable \%in\% c("Vol (L/kg)",
+"Flow (mL/min/kg^(3/4))"),"value"]
+tissue.data <- rbind(tissue.data, new.tissue)
+
+}
 \references{
 Birnbaum, L and Brown, R and Bischoff, K and Foran, J and
 Blancato, J and Clewell, H and Dedrick, R (1994). Physiological parameter
@@ -41,6 +69,9 @@ published in association with BIBRA 22(2), 457-67,
 10.1016/j.tiv.2007.09.010.
 
 ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
+}
+\seealso{
+\code{\link{predict_partitioning_schmitt}}
 }
 \author{
 John Wambaugh, Robert Pearce, and Nisha Sipes

@@ -2,7 +2,12 @@
 % Please edit documentation in R/predict_partitioning_schmitt.R
 \name{predict_partitioning_schmitt}
 \alias{predict_partitioning_schmitt}
-\title{Predict partition coefficients using the method from Schmitt (2008).}
+\title{Predict partition coefficients using the method from Schmitt (2008).
+                                                                                                                       #' This function implements the method from Schmitt (2008) for predicting the 
+tissue to unbound plasma partition coefficients for the tissues contained 
+in the \code{\link{tissue.data}} table. The method has been modifed
+by Pearce et al. (2017) based on an evalaution using in vivo measured 
+partition coefficients.}
 \usage{
 predict_partitioning_schmitt(
   chem.name = NULL,
@@ -69,22 +74,42 @@ Returns tissue to unbound plasma partition coefficients for each
 tissue.
 }
 \description{
-This function implements the method from Schmitt (2008) in predicting the 
-tissue to unbound plasma partition coefficients for the tissues contained 
-in the tissue.data table.
+To understand this method, it is 
+important to recognize that in  a given media the fraction unbound in that 
+media is inverse of the media:water partition coefficient. 
+In Schmitt's model, each tissue is composed of cells and
+interstitium, with each cell consisting of neutral lipid,
+neutral phospholipid, water, protein, and acidic phospholipid.
+Each tissue cell is defined as the sum of separate
+compartments for each constituent, all of which partition
+with a shared water compartment. The partitioning between
+the cell components and cell water is compound specific
+and determined by log Pow (in neutral lipid partitioning),
+membrane affinity (phospholipid and protein partitioning),
+and pKa (neutral lipid and acidic phospholipid partitioning).
+For a given compound the partitioning into each
+component is identical across tissues. Thus the differences
+among tissues are driven by their composition, that is, the
+varying volumes of components such as neutral lipid.
+However, pH differences across tissues also determine
+small differences in partitioning between cell and plasma
+water. The fup is used as the plasma water to total plasma
+partition coefficient and to approximate the partitioning
+between interstitial protein and water.
 }
 \details{
-A separate regression is used when adjusted.Funbound.plasma is FALSE.
-
-A regression is used for membrane affinity when not provided.  The
+A regression is used to predict membrane affinity when measured values are 
+not available (\code{\link{calc_ma}}).  The
 regressions for correcting each tissue are performed on tissue plasma
 partition coefficients (Ktissue2pu * Funbound.plasma) calculated with the
 corrected Funbound.plasma value and divided by this value to get Ktissue2pu.
 Thus the regressions should be used with the corrected Funbound.plasma.
 
+A separate regression is used when adjusted.Funbound.plasma is FALSE.
+
 The red blood cell regression can be used but is not by default because of
-the span of the data used, reducing confidence in the regression for higher
-and lower predicted values.
+the span of the data used for evaluation, reducing confidence in the 
+regression for higher and lower predicted values.
 
 Human tissue volumes are used for species other than Rat.
 }
@@ -108,6 +133,11 @@ and pharmacodynamics 44.6 (2017): 549-565.
 Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
 tissue-to-plasma partition coefficients using readily available input 
 parameters." Xenobiotica 43.10 (2013): 839-852.
+}
+\seealso{
+\code{\link{parameterize_schmitt}}
+
+\code{\link{tissue.data}}
 }
 \author{
 Robert Pearce

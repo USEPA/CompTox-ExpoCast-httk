@@ -38,7 +38,15 @@
 #' available, the function uses the appropriate physiological data (volumes and
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' (NOTE: The 'default.to.human' specification should be included as part of the
+#' arguments listed in 'parameterize.arg.list'.)
 #'  
+#' For both plotting purposes and helping the numerical equation solver, it is
+#' helpful to specify that time points shortly before and after dosing are 
+#' included. This function automatically add these points, and they are returned
+#' to the user unless the times argument is used, in which case only the time
+#' points specified by that argument are provided.
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -84,8 +92,6 @@
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -93,8 +99,6 @@
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param ... Additional arguments passed to the integrator.
@@ -117,12 +121,54 @@
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #' 
 #' @keywords Solve
+#'
+#' @examples
+#' # The varrious "solve_x" functions are wrappers for solve_model:
+#' head(solve_pbtk(chem.name="Terbufos", days=1))
+#'
+#' head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+#'                  initial.dose = 1, # Assume dose is in mg/kg BW/day  
+#'                  doses.per.day=NULL,
+#'                  dosing.matrix = NULL,
+#'                  days=1,
+#'                  daily.dose = NULL)))
+#'
+#' # A dose matrix specifies times and magnitudes of doses:
+#' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+#' colnames(dm) <- c("time","dose")
+#'
+#' solve_pbtk(chem.name="Methenamine",
+#'            dosing.matrix=dm,
+#'            dose=NULL,
+#'            days=2.5,
+#'            daily.dose=NULL)
+#' 
+#' solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
+#'             initial.dose =NULL,
+#'             doses.per.day=NULL,
+#'             daily.dose=NULL,
+#'             days=2.5,
+#'             dosing.matrix=dm))
+#' 
+#' solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
+#'             initial.dose =NULL,
+#'             doses.per.day=4,
+#'             daily.dose=1,
+#'             days=2.5,
+#'             dosing.matrix=NULL))
+#'   
+#' solve_pbtk(chem.name="Besonprodil",
+#'            daily.dose=1,
+#'            dose=NULL,
+#'            doses.per.day=4,
+#'            days=2.5)
 #' 
 #' @export solve_model
 #'
 #' @useDynLib httk
 #'
 #' @importFrom deSolve ode
+#' @importFrom purrr compact 
 solve_model <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
@@ -144,13 +190,10 @@ solve_model <- function(chem.name = NULL,
                     method="lsoda",rtol=1e-8,atol=1e-12,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
+                    restrictive.clearance=TRUE,
                     adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
-                    parameterize.arg.list=list(
-                      default.to.human=FALSE,
-                      clint.pvalue.threshold=0.05,
-                      restrictive.clearance = TRUE,
-                      regression=TRUE),
+                    parameterize.arg.list=list(),
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -317,14 +360,14 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,c(list(
+    parameters <- do.call(parameterize_function,args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
       species=species,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list)) 
+      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list))) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {
@@ -374,7 +417,7 @@ specification in compartment_units for model ", model)
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
-  if (!parameterize.arg.list$restrictive.clearance) parameters$Clmetabolismc <- 
+  if (!restrictive.clearance) parameters$Clmetabolismc <- 
     parameters$Clmetabolismc / parameters$Funbound.plasma
   
   # If there is not an explicit liver we need to include a factor for first-
@@ -427,7 +470,8 @@ specification in compartment_units for model ", model)
     non.state.vars <- which(!(names(initial.values)%in%state.vars))
     # Check if there are any non.state.vars
     if(length(non.state.vars)!=0){
-      warning("Additional unnecessary elements were included in the ",
+      if (!suppress.messages)
+        warning("Additional unnecessary elements were included in the ",
               "initial.values -- namely ",
               paste(names(initial.values)[non.state.vars],collapse = ", "),
               ".\n    ",
@@ -447,7 +491,8 @@ specification in compartment_units for model ", model)
       initial.value.units <- compartment_units[names(initial.values)]
       
       #provide warning of assumption
-      warning("No units were specified for the provided initial values. ",
+      if (!suppress.messages)
+        warning("No units were specified for the provided initial values. ",
               "Assume initial values are in default model units:\n    ",
               paste(paste(
                 names(initial.value.units),
@@ -490,7 +535,8 @@ specification in compartment_units for model ", model)
         
         #Check if there are any non.state.vars
         if(length(non.state.vars)!=0){
-          warning("Additional unnecessary elements were included in the",
+          if (!suppress.messages)
+             warning("Additional unnecessary elements were included in the",
                   "initial.values -- namely ",
                   paste(names(initial.value.units)[non.state.vars],collapse = ", "),
                   ".\n    ",
@@ -551,10 +597,13 @@ specification in compartment_units for model ", model)
   
 ### SIMULATION TIME
 
-# Small time delta for plotting changes:
-  SMALL.TIME <- 1e-5  
+  # Save the requested times so that we only return those:
+  requested.times <- times
+
+  # Small time delta for plotting changes:
+  SMALL.TIME <- 1e-3  
   
-# We need to let the solver know which time points we want:
+  # We need to let the solver know which time points we want:
   if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
   times <- sort(times)
   start.time <- times[1]
@@ -673,6 +722,7 @@ specification in compartment_units for model ", model)
     #Update our times vector to include times of provided dosing events, as well as
     #the times of dosing events incremented by SMALL.TIME for visualization.
     times <- sort(unique(c(times,
+      sapply(eventdata$time-SMALL.TIME, function(x) max(x,0)),
       eventdata$time,
       eventdata$time+SMALL.TIME)))
   }  
@@ -725,6 +775,9 @@ specification in compartment_units for model ", model)
     forcings = forcings,
     fcontrol = fcontrol,
     ...)
+
+# only give the requested times:
+ if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
 
 # Cannot guarantee arbitrary precision for deSolve:
   out <- set_httk_precision(out)
@@ -791,7 +844,6 @@ specification in compartment_units for model ", model)
 # Document the values produced by the simulation:  
   if(!suppress.messages)
   {
- 
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid))
     {
 # If only a parameter vector is given it's good to warn people that they

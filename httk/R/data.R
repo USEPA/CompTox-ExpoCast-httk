@@ -1025,6 +1025,15 @@
 #'
 #' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
+#' Brown, Hayley S., Michael Griffin, and J. Brian Houston. "Evaluation of 
+#' cryopreserved human hepatocytes as an alternative in vitro system to 
+#' microsomes for the prediction of metabolic clearance." Drug metabolism and 
+#' disposition 35.2 (2007): 293-301.
+#'
+#' Gulden, Michael, et al. "Impact of protein binding on the availability and 
+#' cytotoxic potency of organochlorine pesticides and chlorophenols in vitro." 
+#' Toxicology 175.1-3 (2002): 201-213.
+#'
 #' Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 #' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 #' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
@@ -1041,6 +1050,10 @@
 #' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
 #' assessment of the top 25 English prescription pharmaceuticals. Water
 #' research 36(20), 5013-22.
+#' 
+#' Jones, Barry C., et al. "An investigation into the prediction of in vivo 
+#' clearance for a range of flavin-containing monooxygenase substrates." 
+#' Drug metabolism and disposition 45.10 (2017): 1060-1067.
 #'
 #' Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
 #' Development of a novel in vitro model to predict hepatic clearance using
@@ -1086,6 +1099,11 @@
 #' clearance of organic chemicals in humans." Environmental toxicology and
 #' pharmacology 42 (2016): 190-197.
 #'
+#' Riley, Robert J., Dermot F. McGinnity, and Rupert P. Austin. "A unified 
+#' model for predicting human hepatic, metabolic clearance from in vitro 
+#' intrinsic clearance data in hepatocytes and microsomes." Drug Metabolism and 
+#' Disposition 33.9 (2005): 1304-1311.
+#'
 #' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
 #' partition coefficients. Toxicology in vitro : an international journal
 #' published in association with BIBRA 22(2), 457-67,
@@ -1096,6 +1114,10 @@
 #' Application of Serum Incubation Method. Drug Metabolism and Disposition
 #' 30(8), 892-896, 10.1124/dmd.30.8.892.
 #'
+#' Sohlenius-Sternbeck, Anna-Karin, et al. "Practical use of the regression 
+#' offset approach for the prediction of in vivo intrinsic clearance from 
+#' hepatocytes." Xenobiotica 42.9 (2012): 841-853.
+#' 
 #' Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
 #' for human bioaccumulative potential with a physiologically based
 #' toxicokinetic model. Archives of Toxicology 86(3), 393-403,
@@ -1131,6 +1153,10 @@
 #' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 #' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 #' Sciences, kfv171.
+#'
+#' F. L. Wood, J. B. Houston and D. Hallifax
+#' 'Drug Metabolism and Disposition November 1, 2017, 45 (11) 1178-1188; 
+#' DOI: https://doi.org/10.1124/dmd.117.077040
 #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
 #' @keywords data
@@ -1343,7 +1369,17 @@
 #' each tissue with its density (both from ICRP), lumping the remaining tissues
 #' into the rest-of-body, excluding the mass of the gastrointestinal contents
 #'
+#' New tissues can be added to this table to generate
+#' their partition coefficients.
 #'
+#' The tissue data needed for calculating partition coefficients include: 
+#' cellular and water fractions of 
+#' total volume, lipid and protein  fractions of cellular volume, lipid 
+#' fractions of the total lipid volume, the pH of each tissue,
+#' and the fractional volume of protein in plasma. 
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#' 
 #' @docType data
 #' @format A data.frame containing 13 rows and 20 columns.
 #' @author John Wambaugh, Robert Pearce, and Nisha Sipes
@@ -1366,6 +1402,24 @@
 #'
 #' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
+#'
+#' @examples
+#' # We can add thyroid to the tissue data by making a row containing
+#' # its data, subtracting the volumes and flows from the rest-of-body, 
+#' # and binding the row to tissue.data. Here we assume it contains the same 
+#' # partition coefficient data as the spleen and a tenth of the volume and  
+#' # blood flow:
+#' new.tissue <- subset(tissue.data,Tissue == "spleen")
+#' new.tissue[, "Tissue"] <- "thyroid"
+#' new.tissue[new.tissue$variable %in% c("Vol (L/kg)",
+#' "Flow (mL/min/kg^(3/4))"),"value"] <- new.tissue[new.tissue$variable
+#' %in% c("Vol (L/kg)","Flow (mL/min/kg^(3/4))"),"value"] / 10
+#' tissue.data[tissue.data$Tissue == "rest", "value"] <-
+#' tissue.data[tissue.data$Tissue == "rest", "value"] -
+#' new.tissue[new.tissue$variable %in% c("Vol (L/kg)",
+#' "Flow (mL/min/kg^(3/4))"),"value"]
+#' tissue.data <- rbind(tissue.data, new.tissue)
+#'
 #' @keywords data
 "tissue.data"
 
@@ -1634,3 +1688,37 @@
 #' @source Kapraun et al. 2021 (submitted)
 #' @keywords data
 "wang2018"
+
+#' ToxCast Example Data
+#' The main page for the ToxCast data is here:
+#' https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
+#' Most useful to us is a single file containing all the hits across all chemcials
+#' and assays:
+#' https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
+#' 
+#' As of November, 2022 the most recent version was 3.5 and was available as an
+#' .Rdata file (invitrodb_3_5_mc5.Rdata)
+#' 
+#'  Unfortunately for this vignette there are too many ToxCast data to fit into a
+#' 5mb R package. So we will subset to just the shemicals for the 
+#' "Intro to IVIVE" vignette and distribute
+#' only those data. In addition, out of 78 columns in the data, we will keep only 
+#' eight.
+#' @name example.toxcast
+#' @docType data
+#' @format data.frame
+#' @keywords data
+"example.toxcast"
+
+#' SEEM Example Data
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+#' Download the file Ring2018Preds.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Intro to IVIVE" example chemicals
+#' @name example.seem
+#' @docType data
+#' @format data.frame
+#' @keywords data
+"example.seem"

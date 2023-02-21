@@ -1,0 +1,47 @@
+Test Article,Species,Concentration,Clearance (痞/min/million cells),Half Life (mins),Avg % Remaining at Last Point,Comments,microM,
+1444768,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444768,Rat,10 然,< 2.9,>480,144.0,,10,2.9
+1444842,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444842,Rat,10 然,ND,ND,ND,ND- not detected due to poor sensitivity,10,NA
+1444850,Rat,1 然,8.3,167.2,94.6,,1,8.290783958
+1444850,Rat,10 然,10.6,130.7,53.2,,10,10.60266034
+1444852,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444852,Rat,10 然,< 2.9,>480,94.5,,10,2.9
+1444856,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444856,Rat,10 然,102.9,13.5,5.1,,10,102.8949923
+1444857,Rat,1 然,55.8,24.9,19.4,,1,55.75464619
+1444857,Rat,10 然,24.8,55.9,22.9,,10,24.81558687
+1444865,Rat,1 然,73.4,18.9,53.0,,1,73.37348309
+1444865,Rat,10 然,15.0,92.5,42.2,,10,14.98644848
+1444867,Rat,1 然,79.7,17.4,59.6,,1,79.72205488
+1444867,Rat,10 然,38.0,36.5,95.0,,10,37.97098923
+1444878,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444878,Rat,10 然,ND,ND,ND,Data too variable due to poor sensitivity,10,NA
+1444883,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444883,Rat,10 然,38.0,36.5,17.1,,10,37.96155495
+1444895,Rat,1 然,4.5,308.5,72.4,,1,4.493683462
+1444895,Rat,10 然,16.4,84.5,39.3,,10,16.40186452
+1444897,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444897,Rat,10 然,ND,ND,ND,ND- not detected due to poor sensitivity,10,NA
+1444907,Rat,1 然,169.2,8.2,12.2,,1,169.1517402
+1444907,Rat,10 然,38.9,35.6,9.4,,10,38.92063833
+1444908,Rat,1 然,5.8,240.9,72.5,,1,5.755819003
+1444908,Rat,10 然,1.9,>480,96.9,,10,1.922153228
+1444924,Rat,1 然,49.4,28.1,52.8,,1,49.35028882
+1444924,Rat,10 然,1.5,>480,101.3,,10,1.493383274
+1444928,Rat,1 然,31.4,44.1,16.8,,1,31.40189703
+1444928,Rat,10 然,46.7,29.7,6.6,,10,46.69149725
+1444939,Rat,1 然,< 2.9,>480,96.4,,1,2.9
+1444939,Rat,10 然,9.9,140.7,66.1,,10,9.853133168
+1444846,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444846,Rat,10 然,ND,ND,ND,ND- not detected due to poor sensitivity,10,NA
+1444905,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444905,Rat,10 然,ND,ND,ND,ND- not detected due to poor sensitivity,10,NA
+1444853,Rat,1 然,ND,ND,ND,ND- not detected due to poor sensitivity,1,NA
+1444853,Rat,10 然,ND,ND,ND,ND- not detected due to poor sensitivity,10,NA
+Verapamil-1,Rat,1 然,45.5,30.4,23.3,control,1,45.53096468
+Verapamil-10,Rat,10 然,14.5,95.9,53.2,control,10,14.45189958
+Warfarin-1,Rat,1 然,< 2.9,> 480,83.2,control,1,2.9
+Warfarin-10,Rat,10 然,< 2.9,> 480,91.6,control,10,2.9
+,,,,,,,,
+,,,,,,,,
