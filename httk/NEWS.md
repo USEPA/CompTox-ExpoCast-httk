@@ -1,33 +1,37 @@
 ---
 title: "News for R package httk"
-date: "December 2, 2022"
+date: "February 20, 2023"
 output: html_document
----
+---                                                 
 
-# version 2.2.2 (December, 2022)
-
+# version 2.2.2 (February, 2023)
+## Bug Fixes
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
 * Removed inappropriate second adjustment for binding in intrinsic hepatic clearance assay from 'cal_hep_clearance' -- Kilford (2008) adjustment now only occurs in parameterization functions. Added new function 'apply_clint_adjustment' to standardize implementation of adjustment (thanks Todor Antonijevic)
 * Fixed major bug in 'calc_ionization' that caused error when argument pH was a vector -- impacts monte carlo for ionized compounds
-* Added functions 'calc_fup_correction' and 'apply_fup_adjustment' to consolidate and make uniform application of the Pearce (2017) lipid binding adjustment to in vitro measured fup
-* Added cutoff of logKow/logDow no greater than 6 for 'calc_fup_correction' and 'calc_hep_fu' based on the idea that the in vitro assays are not long enough to reach concentration ratios greater than 1,000,000 to 1
-* Updaed 'calc_analytic_css_pbtk' to reflect Breen et al. (2022) modifcation to glomerular filtration in the kidney
-* 'get_cheminfo' now lists required parameters when chemicals are excluded (thanks Ben Savage)
-* Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
 * Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia Tan)
+* Fixed bugs that prevented using Monte Carlo with phys-chem parameters
+* Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
+* Fixed bug where 'solve_model' returned other than requested times when argument times was specified (thanks to Kimberly Truong)
+
+## New Features
 * Added updated vignette from Pearce et al. (2017): v79i04.R
 * Added new vignette on "Introduction to IVIVE"
-* Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now internally using 'do.call' wherever possible to pass arguments
-* Fixed bugs that prevented using Monte Carlo with phys-chem parameters
-* Revised restrictive.clearance argument for function 'solve_model'
-* Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
+* Added functions 'calc_fup_correction' and 'apply_fup_adjustment' to consolidate and make uniform application of the Pearce (2017) lipid binding adjustment to in vitro measured fup
 * We now export function 'calc_dow' for the distribution coefficient
 * New function 'calc_ma' separates membrane affinity calculation from 'parameterize_schmitt'
 * New function 'calc_kair' separates calculation of blood:air, water:air, and mucus:air partition coefficients from 'parameterize_gas_pbtk'
+
+## Enhancements
+* Added cutoff of logKow/logDow no greater than 6 for 'calc_fup_correction' and 'calc_hep_fu' based on the idea that the in vitro assays are not long enough to reach concentration ratios greater than 1,000,000 to 1
+* Updated 'calc_analytic_css_pbtk' to reflect Breen et al. (2022) modifcation to glomerular filtration in the kidney
+* 'get_cheminfo' now lists required parameters when chemicals are excluded (thanks Ben Savage)
+* Returned 'daily.dose' argument to 'calc_mc_css' (still defaults to 1 mg/kg/day)
+* Simplified arguments needed for 'calc_mc_css' and 'calc_mc_tk' since now internally using 'do.call' wherever possible to pass arguments
+* Revised restrictive.clearance argument for function 'solve_model'
 * Added inline code comments to 'predict_partitioning_schmitt' identifying corresponding equations in Schmitt (2008)
 * Added option class.exclude to 'get_cheminfo' -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 * Updated various function documentation
-* Fixed bug where 'solve_model' returned other than requested times when argument times was specified (thanks to Kimberly Truong)
 
 # version 2.2.1 (September, 2022)
 
