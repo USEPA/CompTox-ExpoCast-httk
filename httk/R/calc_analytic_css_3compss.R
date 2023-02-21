@@ -34,7 +34,15 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_steadystate}}
+#'
 #'@author Robert Pearce and John Wambaugh
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
 #'@keywords 3compss
 calc_analytic_css_3compss <- function(chem.name=NULL,
                                    chem.cas = NULL,
@@ -123,13 +131,16 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
           suppress.messages=TRUE)#L/h/kg body weight
   if (!restrictive.clearance) cl <- cl*Fup
 
-# Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:
-  Css <- parameters$Fgutabs * 
+# Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
+  Css_blood <- parameters$Fgutabs * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
     parameters$Qgfrc/BW^0.25 * Fup + 
     Qtotalliver*Fup*cl /
     (Qtotalliver + Fup*cl/Rb2p))
+  # Convert from blood to plasma:
+  Css <- Css_blood/Rb2p
+    
     
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))

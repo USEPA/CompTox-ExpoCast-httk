@@ -43,8 +43,8 @@
 #' @param species Included for compatibility with other functions, but the model
 #' will not run for non-human species (default "Human").
 #' @param tsteps The number time steps per hour. Default of 4. 
-#' @param daily.dose Total daily dose, mg.
-#' @param dose Amount of a single dose, mg/kg BW.  
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param dose Amount of a single, initial oral dose in mg/kg BW.  
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -86,14 +86,32 @@
 #' for each time point.
 #' 
 #' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
+#'
 #' @keywords Solve
+#'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_fetal_pbtk}}
+#'
 #' @examples
 #' 
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 #' doses.per.day = 3)
+#'
+#' # With adjustement to fraction unbound plasma for fetus:
+#' fetal_parms_fup_adjusted <- 
+#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
+#' 
+#' # Without adjustement to fraction unbound plasma for fetus:
+#' fetal_parms_fup_unadjusted <-  
+#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
+#'                                 fetal_fup_adjustment = FALSE)
+#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
+#' 
 #' 
 #' @export solve_fetal_pbtk
-#' @useDynLib httk
+#'
 #' @import deSolve
 solve_fetal_pbtk <- function(chem.name = NULL,
                              chem.cas = NULL,

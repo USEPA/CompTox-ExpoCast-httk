@@ -4,7 +4,11 @@
 \alias{get_wetmore_cheminfo}
 \title{Get literature Chemical Information. (deprecated).}
 \usage{
-get_wetmore_cheminfo(info = "CAS", species = "Human")
+get_wetmore_cheminfo(
+  info = "CAS",
+  species = "Human",
+  suppress.messages = FALSE
+)
 }
 \arguments{
 \item{info}{A single character vector (or collection of character vectors)
@@ -18,6 +22,8 @@ from
 and "Species".}
 
 \item{species}{Species desired (either "Rat" or default "Human").}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 \item{info}{Table/vector containing values specified in "info" for

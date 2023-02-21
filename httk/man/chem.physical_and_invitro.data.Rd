@@ -111,6 +111,15 @@ CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
 
 EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 
+Brown, Hayley S., Michael Griffin, and J. Brian Houston. "Evaluation of 
+cryopreserved human hepatocytes as an alternative in vitro system to 
+microsomes for the prediction of metabolic clearance." Drug metabolism and 
+disposition 35.2 (2007): 293-301.
+
+Gulden, Michael, et al. "Impact of protein binding on the availability and 
+cytotoxic potency of organochlorine pesticides and chlorophenols in vitro." 
+Toxicology 175.1-3 (2002): 201-213.
+
 Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
@@ -127,6 +136,10 @@ microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
 Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
 assessment of the top 25 English prescription pharmaceuticals. Water
 research 36(20), 5013-22.
+
+Jones, Barry C., et al. "An investigation into the prediction of in vivo 
+clearance for a range of flavin-containing monooxygenase substrates." 
+Drug metabolism and disposition 45.10 (2017): 1060-1067.
 
 Lau, Y. Y., Sapidou, E., Cui, X., White, R. E. and Cheng, K. C. (2002).
 Development of a novel in vitro model to predict hepatic clearance using
@@ -172,6 +185,11 @@ Pirovano, Alessandra, et al. "QSARs for estimating intrinsic hepatic
 clearance of organic chemicals in humans." Environmental toxicology and
 pharmacology 42 (2016): 190-197.
 
+Riley, Robert J., Dermot F. McGinnity, and Rupert P. Austin. "A unified 
+model for predicting human hepatic, metabolic clearance from in vitro 
+intrinsic clearance data in hepatocytes and microsomes." Drug Metabolism and 
+Disposition 33.9 (2005): 1304-1311.
+
 Schmitt, W. (2008). General approach for the calculation of tissue to plasma
 partition coefficients. Toxicology in vitro : an international journal
 published in association with BIBRA 22(2), 457-67,
@@ -181,6 +199,10 @@ Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
 Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
 Application of Serum Incubation Method. Drug Metabolism and Disposition
 30(8), 892-896, 10.1124/dmd.30.8.892.
+
+Sohlenius-Sternbeck, Anna-Karin, et al. "Practical use of the regression 
+offset approach for the prediction of in vivo intrinsic clearance from 
+hepatocytes." Xenobiotica 42.9 (2012): 841-853.
 
 Tonnelier, A., Coecke, S. and Zaldivar, J.-M. (2012). Screening of chemicals
 for human bioaccumulative potential with a physiologically based
@@ -217,6 +239,10 @@ LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
 "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
 Sciences, kfv171.
+
+F. L. Wood, J. B. Houston and D. Hallifax
+'Drug Metabolism and Disposition November 1, 2017, 45 (11) 1178-1188; 
+DOI: https://doi.org/10.1124/dmd.117.077040
 }
 \author{
 John Wambaugh

@@ -42,7 +42,7 @@
 #' @param days Length of the simulation.
 #' @param tsteps The number of time steps per hour.
 #' @param daily.dose Total daily dose, defaults to mg/kg BW.
-#' @param dose Amount of a single dose, defaults to mg/kg BW. 
+#' @param dose Amount of a single, initial oral dose in mg/kg BW. 
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -93,15 +93,22 @@
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_gas_pbtk}}
+#'
+#' @seealso \code{\link{calc_analytic_css_pbtk}} 
+#'
 #' @keywords Solve pbtk
 #'
 #' @examples
+#' \donttest{
 #' 
 #' # Multiple doses per day:
 #' head(solve_pbtk(
 #'   chem.name='Bisphenol-A',
 #'   daily.dose=.5,
-#'   days=5,
+#'   days=2.5,
 #'   doses.per.day=2,
 #'   tsteps=2))
 #' 
@@ -109,19 +116,19 @@
 #' out <- solve_pbtk(
 #'   chem.name='bisphenola',
 #'   dose=0,
+#'   days=2.5,
 #'   output.units="mg/L", 
 #'   initial.values=c(Agut=200))
 #'
 #' # Working with parameters (rather than having solve_pbtk retrieve them):
 #' params <- parameterize_pbtk(chem.cas="80-05-7")
-#' head(solve_pbtk(parameters=params))
+#' head(solve_pbtk(parameters=params, days=2.5))
 #'                   
 #' # We can change the parameters given to us by parameterize_pbtk:
 #' params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
 #' params["Funbound.plasma"] <- 0.1
-#' out <- solve_pbtk(parameters=params)
+#' out <- solve_pbtk(parameters=params, days=2.5)
 #' 
-#' \donttest{
 #' # A fifty day simulation:
 #' out <- solve_pbtk(
 #'   chem.name = "Bisphenol A", 

@@ -244,7 +244,9 @@ get_wetmore_oral_equiv <- function(
                                clearance.assay.conc=NULL,
                                ...)
 {
-  warning("Function \"get_wetmore_oral_equiv\" has been renamed to \"get_lit_oral_equiv\".")
+  if (!suppress.messages)
+    warning("Function \"get_wetmore_oral_equiv\" has been renamed to \"get_lit_oral_equiv\".")
+
   return(do.call(get_lit_oral_equiv, c(list(                        
                                conc=conc,
                                chem.name=chem.name,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_invitroPK_param.R
 \name{get_invitroPK_param}
 \alias{get_invitroPK_param}
-\title{Retrieve data from chem.physical_and_invitro.data table}
+\title{Retrieve species-specific in vitro data from chem.physical_and_invitro.data table}
 \usage{
 get_invitroPK_param(
   param,
@@ -31,8 +31,18 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 The value of the parameter, if found
 }
 \description{
+This function retrieves in vitro PK data (for example intrinsic metabolic clearance 
 or fraction unbound in plasma) from the main HTTK data. This function looks
 for species-specific values.
+}
+\details{
+Note that this function works with a local version of the 
+get.physical_and_invitro.data table to allow users to add/modify chemical
+data (for example, via \code{\link{add_chemtable}} or 
+\code{\link{load_sipes2017}}).
+}
+\seealso{
+\code{\link{get_physchem_param}}
 }
 \author{
 John Wambaugh and Robert Pearce

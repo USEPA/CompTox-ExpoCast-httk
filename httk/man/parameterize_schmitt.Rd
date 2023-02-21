@@ -96,6 +96,15 @@ Pearce, Robert G., et al. "Evaluation and calibration of high-throughput
 predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 and pharmacodynamics 44.6 (2017): 549-565.
 }
+\seealso{
+\code{\link{predict_partitioning_schmitt}}
+
+\code{\link{tissue.data}}
+
+\code{\link{calc_ma}}
+
+\code{\link{apply_fup_adjustment}}
+}
 \author{
 Robert Pearce and John Wambaugh
 }

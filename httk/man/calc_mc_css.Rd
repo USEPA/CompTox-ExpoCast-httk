@@ -12,6 +12,7 @@ calc_mc_css(
   samples = 1000,
   which.quantile = 0.95,
   species = "Human",
+  daily.dose = 1,
   suppress.messages = FALSE,
   model = "3compartmentss",
   httkpop = TRUE,
@@ -23,20 +24,11 @@ calc_mc_css(
   tissue = NULL,
   concentration = "plasma",
   output.units = "mg/L",
-  invitro.mc.arg.list = list(adjusted.Funbound.plasma = TRUE, poormetab = TRUE,
-    fup.censored.dist = FALSE, fup.lod = 0.01, fup.meas.cv = 0.4, clint.meas.cv = 0.3,
-    fup.pop.cv = 0.3, clint.pop.cv = 0.3),
-  httkpop.generate.arg.list = list(method = "direct resampling", gendernum = NULL,
-    agelim_years = NULL, agelim_months = NULL, weight_category = c("Underweight",
-    "Normal", "Overweight", "Obese"), gfr_category = c("Normal", "Kidney Disease",
-    "Kidney Failure"), reths = c("Mexican American", "Other Hispanic",
-    "Non-Hispanic White", "Non-Hispanic Black", "Other")),
-  convert.httkpop.arg.list = list(),
-  parameterize.arg.list = list(default.to.human = FALSE, clint.pvalue.threshold = 0.05,
-    restrictive.clearance = TRUE, regression = TRUE),
-  calc.analytic.css.arg.list = list(),
-  parameterize.args = list(default.to.human = FALSE, adjusted.Funbound.plasma = TRUE,
-    regression = TRUE, minimum.Funbound.plasma = 1e-04)
+  invitro.mc.arg.list = NULL,
+  httkpop.generate.arg.list = list(method = "direct resampling"),
+  convert.httkpop.arg.list = NULL,
+  parameterize.arg.list = NULL,
+  calc.analytic.css.arg.list = NULL
 )
 }
 \arguments{
@@ -62,6 +54,8 @@ requested. Can be a vector.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").  Species must be set to "Human" to run httkpop model.}
+
+\item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{suppress.messages}{Whether or not to suppress output message.}
 
@@ -126,15 +120,12 @@ specific tissue.}
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
-\item{parameterize.arg.list}{Additional parameters passed to the 
-parameterize_* function for the model.}
+\item{parameterize.arg.list}{A list of arguments to be passed to the model
+parameterization function (that is, parameterize_MODEL) corresponding to
+argument "model". (Defaults to NULL.)}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
 \code{\link{calc_analytic_css}}.}
-
-\item{parameterize.args}{A list of arguments to be passed to the model
-parameterization function (that is, parameterize_MODEL) corresponding to
-argument "model". (Defaults to NULL.)}
 }
 \value{
 Quantiles (specified by which.quantile) of the distribution of plasma
@@ -231,48 +222,59 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+# Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
+# for more stable results. Default value is 1000:
+NSAMP = 10
+
 # Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
 # concentration of chemical with CAS 2451-62-9 to mg/kg/day:
 set.seed(1234)
-3/calc_mc_css(chem.cas="2451-62-9",samples=10,output.units="uM")
+3/calc_mc_css(chem.cas="2451-62-9", samples=NSAMP, output.units="uM")
 # The significant digits should give the same answer as:
 set.seed(1234)
-calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)  
+calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)  
 
 \donttest{
  set.seed(1234)
- calc_mc_css(chem.name='Bisphenol A',output.units='uM',
-             samples=100,return.samples=TRUE)
+ calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+             samples=NSAMP, return.samples=TRUE)
 
  set.seed(1234)
- calc_mc_css(chem.name='Bisphenol A',output.units='uM',httkpop.generate.arg.list=list(method='vi'))
+ calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+             samples=NSAMP,
+             httkpop.generate.arg.list=list(method='vi'))
                           
  # The following example should result in an error since we do not 
  # estimate tissue partitioning with '3compartmentss'.                         
  set.seed(1234)
- try(calc_mc_css(chem.name='2,4-d',which.quantile=.9,httkpop=FALSE,tissue='heart'))
+ try(calc_mc_css(chem.name='2,4-d', which.quantile=.9,
+             samples=NSAMP,
+             httkpop=FALSE, tissue='heart'))
  
+# But heart will work with PBTK, even though it's lumped since we estimate
+# a partition coefficient before lumping:
  set.seed(1234)
- calc_mc_css(chem.name='2,4-d',model='pbtk',which.quantile=.9,httkpop=FALSE,tissue='heart')
+ calc_mc_css(chem.name='2,4-d', model='pbtk',
+             samples=NSAMP,
+             which.quantile=.9, httkpop=FALSE, tissue='heart')
 
  set.seed(1234)
  calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
-             output.units = "uM", samples = 2000,
+             output.units = "uM", samples = NSAMP,
              httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
-             agelim_years=NULL, agelim_months=NULL, weight_category = 
-             c("Underweight", "Normal", "Overweight", "Obese")))
+             agelim_years=NULL, agelim_months=NULL,
+             weight_category = c("Underweight","Normal","Overweight","Obese")))
 
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)
- calc_mc_css(parameters=params,model="pbtk")
+ calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
 }
 
-\donttest{
  set.seed(1234)
- # Standard HTTK Monte Carlo:
- NSAMP = 500
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP)
+ # Standard HTTK Monte Carlo 
+ calc_mc_css(chem.cas="90-43-7", model="pbtk", samples=NSAMP)
  set.seed(1234)
+ # HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
  calc_mc_css(chem.cas="90-43-7",
  model="pbtk",
  samples=NSAMP,
@@ -285,26 +287,31 @@ calc_mc_oral_equiv(chem.cas="2451-62-9",conc=3,samples=10)
    clint.meas.cv = 0.0, 
    fup.pop.cv = 0.3, 
    clint.pop.cv = 0.3))
- set.seed(1234)
+
  # HTTK Monte Carlo with no HTTK-Pop physiological variability):
+ set.seed(1234)
  calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
- set.seed(1234)
+
  # HTTK Monte Carlo with no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
  set.seed(1234)
+ calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
+
  # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE,invitrouv=FALSE)
+ set.seed(1234)
+ calc_mc_css(chem.cas="90-43-7" ,model="pbtk",
+             samples=NSAMP, httkpop=FALSE, invitrouv=FALSE)
+
  # Should be the same as the mean result:
  calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
- set.seed(1234)
+
  # HTTK Monte Carlo using basic Monte Carlo sampler:
+ set.seed(1234)
  calc_mc_css(chem.cas="90-43-7",
- model="pbtk",
- samples=NSAMP,
- httkpop=FALSE,
- invitrouv=FALSE,
- vary.params=list(Pow=0.3))
-}
+             model="pbtk",
+             samples=NSAMP,
+             httkpop=FALSE,
+             invitrouv=FALSE,
+             vary.params=list(Pow=0.3))
 
 }
 \references{
@@ -317,9 +324,14 @@ Environment international 106 (2017): 105-118.
 
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
 In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
-
+                                                      
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+}
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{create_mc_samples}}
 }
 \author{
 Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen

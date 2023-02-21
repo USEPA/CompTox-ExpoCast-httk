@@ -179,13 +179,19 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+# Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
+# for more stable results. Default value is 1000:
+NSAMP = 10
+
 # Basic in vitro - in vivo extrapolation with httk, convert 0.5 uM in vitro
 # concentration of chemical Surinabant to mg/kg/day:
 set.seed(1234)
-0.5/calc_mc_css(chem.name="Surinabant",samples=10,output.units="uM")
+0.5/calc_mc_css(chem.name="Surinabant", samples=NSAMP, output.units="uM")
+
 # The significant digits should give the same answer as:
 set.seed(1234)
-calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=10)  
+calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=NSAMP)  
+
 # Note that we use set.seed to get the same sequence of random numbers for
 # the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
@@ -193,12 +199,15 @@ calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=10)
 # The following example should result in an error since we do not 
 # estimate tissue partitioning with '3compartmentss'. 
 set.seed(1234)                        
-try(calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95),
+try(calc_mc_oral_equiv(0.1, chem.cas="34256-82-1",
+                       which.quantile=c(0.05,0.5,0.95),
+                       samples=NSAMP,
                        tissue='brain'))
        
 set.seed(1234)
-calc_mc_oral_equiv(0.1,chem.cas="34256-82-1",model='pbtk',
-                   which.quantile=c(0.05,0.5,0.95),tissue='brain')
+calc_mc_oral_equiv(0.1,chem.cas="34256-82-1", model='pbtk',
+                   samples=NSAMP,
+                   which.quantile=c(0.05,0.5,0.95), tissue='brain')
  
 }
 
@@ -217,6 +226,11 @@ In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217
 
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
 pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+}
+\seealso{
+\code{\link{calc_mc_css}}
+
+\code{\link{create_mc_samples}}
 }
 \author{
 John Wambaugh

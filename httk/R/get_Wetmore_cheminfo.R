@@ -112,6 +112,8 @@ get_lit_cheminfo <- function(info="CAS",species="Human")
 #' 
 #' @param species Species desired (either "Rat" or default "Human").
 #' 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
 #' 
@@ -146,8 +148,13 @@ get_lit_cheminfo <- function(info="CAS",species="Human")
 #' get_lit_cheminfo(info=c('CAS','MW'))
 #' 
 #' @export get_wetmore_cheminfo
-get_wetmore_cheminfo <- function(info="CAS",species="Human")
+get_wetmore_cheminfo <- function(
+    info="CAS",
+    species="Human",
+    suppress.messages=FALSE)
 {
-  warning("Function \"get_wetmore_cheminfo\" has been renamed to \"get_lit_cheminfo\".")
-  return(do.call(get_lit_cheminfo, list(info = info, species=species)))
+  if (!suppress.messages) warning(
+    "Function \"get_wetmore_cheminfo\" has been renamed to \"get_lit_cheminfo\".")
+
+    return(do.call(get_lit_cheminfo, list(info = info, species=species)))
 }

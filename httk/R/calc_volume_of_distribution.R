@@ -1,6 +1,7 @@
 #' Calculate the volume of distribution for a one compartment model.
 #'
-#' This function predicts partition coefficients for all tissues, then lumps them
+#' This function predicts partition coefficients for all tissues using
+#' \code{\link{predict_partitioning_schmitt}}, then lumps them
 #' into a single compartment.
 #' 
 #' The effective volume of distribution is calculated by summing each tissues
@@ -18,30 +19,49 @@
 #' specified when Funbound.plasma is not given in parameter list. 
 #' @param chem.cas Either the CAS number or the chemical name must be specified
 #' when Funbound.plasma is not given in parameter list. 
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Parameters from parameterize_3comp, parameterize_pbtk or
 #' predict_partitioning_schmitt.
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with parition coefficients calculated with this value.
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
+#' 
 #' @author John Wambaugh and Robert Pearce
+#' 
 #' @references Schmitt W. "General approach for the calculation of tissue to
 #' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
 #' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
 #' partition coefficients for PBPK modeling of drugs and environmental
 #' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
+#' 
 #' @keywords Parameter 1compartment
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
+#' 
 #' @examples
 #' 
 #' calc_vdist(chem.cas="80-05-7")
