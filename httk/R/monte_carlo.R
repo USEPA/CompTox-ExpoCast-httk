@@ -28,6 +28,7 @@
 #' distribution between 0 and the limit of detection.
 #' @param samples This argument is the number of samples to be generated for
 #' calculating quantiles.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @author John Wambaugh
 #'
@@ -73,7 +74,8 @@ monte_carlo <- function(
                  parameters,
                  cv.params=NULL,
                  censored.params=NULL,
-                 samples=1000)
+                 samples=1000,
+                 suppress.messages=TRUE)
 {
 
 # Create a data table with the same parameters in every row:  
@@ -99,7 +101,7 @@ monte_carlo <- function(
     else 
     {
       MC.matrix[,this.param] <- 0  
-      warning(paste(
+      if (!suppress.messages) warning(paste(
         this.param,
         "has mean of zero, yielding SD of zero for fixed cv.\n\
 Parameter value fixed at zero."))

@@ -59,7 +59,7 @@ overrides chem.name and chem.cas.}
 
 \item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 
-\item{dose}{Amount of a single dose, defaults to mg/kg BW.}
+\item{dose}{Amount of a single, initial oral dose in mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -162,7 +162,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 head(solve_pbtk(
   chem.name='Bisphenol-A',
   daily.dose=.5,
-  days=5,
+  days=2.5,
   doses.per.day=2,
   tsteps=2))
 
@@ -170,17 +170,18 @@ head(solve_pbtk(
 out <- solve_pbtk(
   chem.name='bisphenola',
   dose=0,
+  days=2.5,
   output.units="mg/L", 
   initial.values=c(Agut=200))
 
 # Working with parameters (rather than having solve_pbtk retrieve them):
 params <- parameterize_pbtk(chem.cas="80-05-7")
-head(solve_pbtk(parameters=params))
+head(solve_pbtk(parameters=params, days=2.5))
                   
 # We can change the parameters given to us by parameterize_pbtk:
 params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
 params["Funbound.plasma"] <- 0.1
-out <- solve_pbtk(parameters=params)
+out <- solve_pbtk(parameters=params, days=2.5)
 
 \donttest{
 # A fifty day simulation:
@@ -210,6 +211,13 @@ print(c.vs.t)
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+}
+\seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_gas_pbtk}}
+
+\code{\link{calc_analytic_css_pbtk}}
 }
 \author{
 John Wambaugh and Robert Pearce

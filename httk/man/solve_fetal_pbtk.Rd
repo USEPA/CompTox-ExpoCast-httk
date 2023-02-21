@@ -61,13 +61,13 @@ will not run for non-human species (default "Human").}
 
 \item{tsteps}{The number time steps per hour. Default of 4.}
 
-\item{dose}{Amount of a single dose, mg/kg BW.}
+\item{dose}{Amount of a single, initial oral dose in mg/kg BW.}
 
 \item{dosing.matrix}{A matrix of either one column (or row) with a set of
 dosing times or with two columns (or rows) correspondingly named "dose" and
 "time" containing the time and amount, in mg/kg BW, of each dose.}
 
-\item{daily.dose}{Total daily dose, mg.}
+\item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{doses.per.day}{Number of doses per day.}
 
@@ -161,6 +161,23 @@ This gestational model is only parameterized for humans.
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
+# With adjustement to fraction unbound plasma for fetus:
+fetal_parms_fup_adjusted <- 
+  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
+
+# Without adjustement to fraction unbound plasma for fetus:
+fetal_parms_fup_unadjusted <-  
+  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
+                                fetal_fup_adjustment = FALSE)
+head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
+
+
+}
+\seealso{
+\code{\link{solve_model}}
+
+\code{\link{parameterize_fetal_pbtk}}
 }
 \author{
 John Wambaugh, Mark Sfeir, and Dustin Kapraun

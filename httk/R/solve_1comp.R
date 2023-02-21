@@ -4,8 +4,8 @@
 #' for a one compartment model as a function of time based on the dose and
 #' dosing frequency. 
 #' 
-#' Note that the model parameters have units of hours while the model output is
-#' in days.
+#' Note that the timescales for the model parameters have units of hours while 
+#' the model output is in days.
 #' 
 #' Default value of NULL for doses.per.day solves for a single dose.
 #' 
@@ -86,12 +86,33 @@
 #'
 #' @examples
 #' 
-#' solve_1comp(chem.name='Bisphenol-A',days=1)
+#' solve_1comp(chem.name='Bisphenol-A', days=1)
+#'
+#' # By storing the model parameters in a vector first, you can potentially
+#' # edit them before using the model:
 #' params <- parameterize_1comp(chem.cas="80-05-7")
-#' solve_1comp(parameters=params)
+#' solve_1comp(parameters=params, days=1)
+#'
+#' head(solve_1comp(chem.name="Terbufos", daily.dose=NULL, dose=1, days=1))
+#' head(solve_1comp(chem.name="Terbufos", daily.dose=NULL,
+#'                  dose=1,days=1, iv.dose=TRUE))
+#' 
+#' # A dose matrix specifies times and magnitudes of doses:
+#' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+#' colnames(dm) <- c("time","dose")
+#' solve_1comp(chem.name="Methenamine", dosing.matrix=dm,
+#'             days=2.5, dose=NULL,daily.dose=NULL)
+#' 
+#' solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
+#'             days=2.5, doses.per.day=4)
+#'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_1comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_1comp}}
 #'
 #' @export solve_1comp
-#' @useDynLib httk
 solve_1comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
