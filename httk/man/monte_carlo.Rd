@@ -8,7 +8,8 @@ monte_carlo(
   parameters,
   cv.params = NULL,
   censored.params = NULL,
-  samples = 1000
+  samples = 1000,
+  suppress.messages = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ distribution between 0 and the limit of detection.}
 
 \item{samples}{This argument is the number of samples to be generated for
 calculating quantiles.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \value{
 A data.table with a row for each individual in the sample and a column for

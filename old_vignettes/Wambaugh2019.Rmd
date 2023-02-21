@@ -1009,7 +1009,7 @@ for (this.chem in human.hits$CAS)
 human.hits<- subset(human.hits,!is.na(Exposure.median))
 
 
-# This code puts the chemicals into order by margine between exposure and activity:
+# This code puts the chemicals into order by margin between exposure and activity:
 chem.names <- unique(human.hits$Compound)
 potency <- rep(Inf,times=length(chem.names))
 names(potency) <- chem.names

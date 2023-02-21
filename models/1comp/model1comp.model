@@ -1,0 +1,42 @@
+#------------------------------------------------------------------------------
+# the HTTK One Compartment Model (1compartment)
+# written by Robert Pearce, modified by John Wambaugh
+#------------------------------------------------------------------------------
+
+States = {
+Agutlumen,
+Acompartment,
+Ametabolized,
+AUC,
+};
+
+Inputs = {
+};
+
+Outputs = {
+Ccompartment
+};
+
+vdist = 0;
+ke=0;
+kgutabs=1;
+BW=70;
+
+
+
+Initialize{
+vdist = vdist * BW;
+kgutabs = kgutabs * 24;
+ke = ke * 24;
+}
+
+Dynamics{
+Ccompartment = Acompartment / vdist;
+
+dt(Agutlumen)  = -kgutabs * Agutlumen; 
+dt(Acompartment) = kgutabs * Agutlumen - ke * Acompartment;
+dt(Ametabolized) = ke * Acompartment;
+dt(AUC) = Ccompartment;
+}
+
+End.

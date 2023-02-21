@@ -1,8 +1,32 @@
 #'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
-#'This function calculates the analytic steady state plasma or venous blood 
-#'concentrations as a result of infusion dosing.
+#' This function calculates the analytic steady state concentration (mg/L) as a result
+#' of oral infusion dosing. Concentrations are returned for plasma by default, but various
+#' tissues or blood concentrations can also be given as specified.
+#' 
+#' The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
+#' various tissues of the body. A system of oridinary
+#' differential equations describes how the amounts in each tissue change as 
+#' a function of time. The analytic steady-state equation was found by 
+#' algebraically solving for the tissue concentrations that result in each
+#' equation being zero -- thus determining the concentration at which there is no change
+#' over time as the result of a fixed infusion dose rate. 
 #'
+#' The analytical solution is:
+#' \deqn{C^{ss}_{ven} = \frac{dose rate * \frac{Q_{liver} + Q_{gut}}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})}}{Q_{cardiac} - \frac{(Q_{liver} + Q_{gut})^2}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})} - \frac{(Q_{kidney})^2}{\frac{f_{up}}{R_{b:p}}*Q_{GFR}+Q_{kideny}}-Q_{rest}}}{%
+#' C_ven_ss =(dose rate * (Q_liver + Q_gut) / (f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)))/(Q_cardiac - (Q_liver + Qgut)^2/(f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)) - (Q_kidney)^2/(f_up/Rb2p*Q_gfr + Q_kidney) - Q_rest)}
+#' \deqn{C^{ss}_{plasma} = \frac{C^{ss}_{ven}}{R_{b:p}}}{%
+#'       C_ss = C_ven_ss/Rb2p}
+#' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
+#'        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
+#'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
+#' rate in the kidney, other Q's indicate blood flows to various tissues, 
+#' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
+#' f_up is the chemical-specific fraction unbound n plasma, R_b2p is the 
+#' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
+#' is the chemical- and tissue-specufic equilibrium partition coefficient
+#' and dose rate has  units of mg/kg/day. 
+#' 
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
@@ -33,9 +57,16 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_pbtk}}
+#'
 #'@author Robert Pearce and John Wambaugh
 #'
-#'@keywords pbtk
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
+#'@keywords pbtk                           
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
@@ -101,27 +132,32 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     }
   }
   
-  Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25  
-  Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25    
-  Clmetabolism <-  parameters[["Clmetabolismc"]]  
+  Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
+  Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25 # L/h/kg   
+  Clmetabolism <-  parameters[["Clmetabolismc"]] # L/h/kg
   Kliver2pu <- parameters[['Kliver2pu']]
   
-  Qgut <- parameters[["Qgutf"]] * Qcardiac
-  Qliver <- parameters[["Qliverf"]] * Qcardiac
-  Qkidney <- parameters[['Qkidneyf']] * Qcardiac
-  Qrest <- Qcardiac-Qgut-Qliver-Qkidney
+  Qgut <- parameters[["Qgutf"]] * Qcardiac # L/h/kg
+  Qliver <- parameters[["Qliverf"]] * Qcardiac # L/h/kg
+  Qkidney <- parameters[['Qkidneyf']] * Qcardiac # L/h/kg
+  Qrest <- Qcardiac-Qgut-Qliver-Qkidney # L/h/kg
   Rblood2plasma <- parameters[['Rblood2plasma']]
   fup <- parameters[["Funbound.plasma"]]
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   
-# Calculate steady-state plasma Css:
-  Css <- (hourly.dose * (Qliver + Qgut) / 
+# Css for venous blood:
+  Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
-         (Qcardiac - (Qliver + Qgut)**2 /
+         (Qcardiac - 
+         (Qliver + Qgut)**2 /
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
-         Qkidney**2 / (Qgfr * fup / Rblood2plasma + Qkidney) - Qrest)
+         Qkidney +
+         Qgfr * fup / Rblood2plasma  - 
+         Qrest)
+# Calculate steady-state plasma Css:
+  Css <- Cven.ss / Rblood2plasma
 
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))

@@ -33,7 +33,15 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_3comp}}
+#'
 #'@author Robert Pearce and John Wambaugh
+#'
+#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
+#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#'
 #'@keywords 3compartment
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
@@ -111,13 +119,16 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   Rblood2plasma <- parameters$Rblood2plasma
   Clmetabolism <- parameters$Clmetabolismc
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
-  Css <- hourly.dose * parameters[['BW']]^0.25  / 
+  
+  # Steady-state blood concentration:
+  Css_blood <- hourly.dose * parameters[['BW']]^0.25  / 
     (Clmetabolism * parameters[['BW']]^0.25 + 
     parameters$Qgfrc * (parameters$Qliverf + 
     parameters$Qgutf) * parameters$Qcardiacc / 
     ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + 
     fup * parameters$Qgfrc / parameters$Rblood2plasma)) / fup
-
+  Css <- Css_blood/ Rblood2plasma
+  
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {

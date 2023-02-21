@@ -96,6 +96,18 @@
 #'
 #' @keywords Parameter 3compartment
 #'
+#' @seealso \code{\link{solve_3comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_3comp}}
+#'
+#' @seealso \code{\link{parameterize_pbtk}}
+#'
+#' @seealso \code{\link{apply_clint_adjustment}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
+#'
 #' @examples
 #' 
 #'  parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
