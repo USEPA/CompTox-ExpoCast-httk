@@ -129,9 +129,9 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Corrected swapped "area_bottom" values in table well_param for the Armitage model. (thank you Todor Antonijevic) 
 *  Contribution from Todor Antonijevic:
   * this.conc_ser_alb, this.conc_ser_lip and this.Vdom added to the list of arguments.
-  * the volume of headspace calculated as in Armitage et al. 2014.
-  * the volume of medium calculated as in Armitage et al. 2014.
-  * f_ratio calculated as in Armitage et al. 2014
+  * the volume of headspace calculated as in [Armitage et al. (2014)](<https://doi.org/10.1021/es501955g>).
+  * the volume of medium calculated as in [Armitage et al. (2014)](<https://doi.org/10.1021/es501955g>).
+  * f_ratio calculated as in [Armitage et al. (2014)](<https://doi.org/10.1021/es501955g>)
   * kow added in the denominator of cwat, i.e. kowP_domf_oc*Vdom
 * Corrected major bug introduced in 2.0.0 (vectorization of `calc_ionization`) that caused pKa's to be ignored in many cases (thank you Wu Yaoxing)
 * Corrected monkey cardiac output (thank you Peter Egeghy)
