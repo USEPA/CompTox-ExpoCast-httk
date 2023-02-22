@@ -40,10 +40,11 @@ httk/man/frechen2021.Rd
 *-Ex.R
 
 # Output files from R CMD build
-/*.tar.gz
+*.tar.gz
+*.zip
 
 # Output files from R CMD check
-/*.Rcheck/
+*.Rcheck
 
 # RStudio files
 .Rproj.user/
