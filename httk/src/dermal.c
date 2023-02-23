@@ -25,11 +25,11 @@
      Atubules = 0.0,
      Ametabolized = 0.0,
      AUC = 0.0,
-     Askin_top_exposed = 0.0,
-     Askin_top_unexposed = 0.0,
-     Askin_bottom_epidermis_exposed = 0.0,
-     Askin_bottom_unexposed = 0.0,
-     Avehicle = 0.0,
+     Astratum_corneum_exposed = 0.0,
+     Astratum_corneum_unexposed = 0.0,
+     Aviable_epidermis_exposed = 0.0,
+     Aviable_epidermis_unexposed = 0.0,
+     Amedia = 0.0,
      Ain = 0.0,
 
    14 Outputs:
@@ -42,21 +42,21 @@
     "Ckidney",
     "Cplasma",
     "Aplasma",
-    "Cskin_top_exposed",
-    "Cskin_top_unexposed",
-    "Cskin_bottom_exposed",
-    "Cskin_bottom_unexposed",
-    "Cvehicle",
+    "Cstratum_corneum_exposed",
+    "Cstratum_corneum_unexposed",
+    "Cviable_epidermis_exposed",
+    "Cviable_epidermis_unexposed",
+    "Cmedia",
 
    1 Input:
-     Vvehicle (forcing function)
+     Vmedia (forcing function)
 
    64 Parameters:
      skin_depth = 0,
-     Fskin_depth_top = 0,
-     Fskin_depth_bottom = 0,
-     Pvehicle2top = 0,
-     Ptop2bottom = 0,
+     Fskin_depth_sc = 0,
+     Fskin_depth_ve = 0,
+     Pmedia2sc = 0,
+     Psc2ve = 0,
      Fskin_exposed = 0,
      totalSA = 0,
      SA_exposed = 0,
@@ -64,9 +64,9 @@
      Clmetabolismc = 0.0,
      hematocrit = 0.0,
      kgutabs = 0.0,
-     Ktop2vehicle = 0,
-     Ktop2bottom = 0,
-     Kbottom2pu = 0,
+     Ksc2media = 0,
+     Ksc2ve = 0,
+     Kve2pu = 0,
      Kkidney2pu = 0,
      Kliver2pu = 0,
      Krest2pu = 0,
@@ -86,8 +86,8 @@
      Vrestc = 0,
      Vvenc = 0,
      Vskinc = 0,
-     Vskin_topc = 0,
-     Vskin_bottomc = 0,
+     Vstratum_corneumc = 0,
+     Vviable_epidermisc = 0,
      Fraction_unbound_plasma = 0.0,
      Rblood2plasma = 0.0,
      Clmetabolism = 0.0,
@@ -110,12 +110,12 @@
      Vskin = 0,
      Vskin_exposed = 0.0,
      Vskin_unexposed = 0.0,
-     Vskin_top = 0,
-     Vskin_top_exposed = 0,
-     Vskin_top_unexposed = 0,
-     Vskin_bottom = 0,
-     Vskin_bottom_exposed = 0,
-     Vskin_bottom_unexposed = 0,
+     Vstratum_corneum = 0,
+     Vstratum_corneum_exposed = 0,
+     Vstratum_corneum_unexposed = 0,
+     Vviable_epidermis = 0,
+     Vviable_epidermis_exposed = 0,
+     Vviable_epidermis_unexposed = 0,
 */
 
 #include <R.h>
@@ -135,11 +135,11 @@
 #define ID_Atubules 0x00008
 #define ID_Ametabolized 0x00009
 #define ID_AUC 0x0000a
-#define ID_Askin_top_exposed 0x0000b
-#define ID_Askin_top_unexposed 0x0000c
-#define ID_Askin_bottom_exposed 0x0000d
-#define ID_Askin_bottom_unexposed 0x0000e
-#define ID_Avehicle 0x0000f
+#define ID_Astratum_corneum_exposed 0x0000b
+#define ID_Astratum_corneum_unexposed 0x0000c
+#define ID_Aviable_epidermis_exposed 0x0000d
+#define ID_Aviable_epidermis_unexposed 0x0000e
+#define ID_Amedia 0x0000f
 #define ID_Ain 0x00010
 
 /* Model variables: Outputs */
@@ -152,20 +152,20 @@
 #define ID_Ckidney 0x00006
 #define ID_Cplasma 0x00007
 #define ID_Aplasma 0x00008
-#define ID_Cskin_top_exposed 0x00009
-#define ID_Cskin_top_unexposed 0x0000a
-#define ID_Cskin_bottom_exposed 0x0000b
-#define ID_Cskin_bottom_unexposed 0x0000c
-#define ID_Cvehicle 0x0000d
+#define ID_Cstratum_corneum_exposed 0x00009
+#define ID_Cstratum_corneum_unexposed 0x0000a
+#define ID_Cviable_epidermis_exposed 0x0000b
+#define ID_Cviable_epidermis_unexposed 0x0000c
+#define ID_Cmedia 0x0000d
 
 /* Parameters */
 static double parms[64];
 
 #define skin_depth parms[0]
-#define Fskin_depth_top parms[1]
-#define Fskin_depth_bottom parms[2]
-#define Pvehicle2top parms[3]
-#define Ptop2bottom parms[4]
+#define Fskin_depth_sc parms[1]
+#define Fskin_depth_ve parms[2]
+#define Pmedia2sc parms[3]
+#define Psc2ve parms[4]
 #define Fskin_exposed parms[5]
 #define totalSA parms[6]
 #define SA_exposed parms[7]
@@ -173,9 +173,9 @@ static double parms[64];
 #define Clmetabolismc parms[9]
 #define hematocrit parms[10]
 #define kgutabs parms[11]
-#define Ktop2vehicle parms[12]
-#define Ktop2bottom parms[13]
-#define Kbottom2pu parms[14]
+#define Ksc2media parms[12]
+#define Ksc2ve parms[13]
+#define Kve2pu parms[14]
 #define Kkidney2pu parms[15]
 #define Kliver2pu parms[16]
 #define Krest2pu parms[17]
@@ -195,8 +195,8 @@ static double parms[64];
 #define Vrestc parms[31]
 #define Vvenc parms[32]
 #define Vskinc parms[33]
-#define Vskin_topc parms[34]
-#define Vskin_bottomc parms[35]
+#define Vstratum_corneumc parms[34]
+#define Vviable_epidermisc parms[35]
 #define Fraction_unbound_plasma parms[36]
 #define Rblood2plasma parms[37]
 #define Clmetabolism parms[38]
@@ -219,17 +219,17 @@ static double parms[64];
 #define Vskin parms[55]
 #define Vskin_exposed parms[56]
 #define Vskin_unexposed parms[57]
-#define Vskin_top parms[58]
-#define Vskin_top_exposed parms[59]
-#define Vskin_top_unexposed parms[60]
-#define Vskin_bottom parms[61]
-#define Vskin_bottom_exposed parms[62]
-#define Vskin_bottom_unexposed parms[63]
+#define Vstratum_corneum parms[58]
+#define Vstratum_corneum_exposed parms[59]
+#define Vstratum_corneum_unexposed parms[60]
+#define Vviable_epidermis parms[61]
+#define Vviable_epidermis_exposed parms[62]
+#define Vviable_epidermis_unexposed parms[63]
 
 /* Forcing (Input) functions */
 static double forc[1];
 
-#define Vvehicle forc[0]
+#define Vmedia forc[0]
 
 /*----- Initializers */
 void initmod_dermal (void (* odeparms)(int *, double *))
@@ -245,6 +245,18 @@ void initforc_dermal (void (* odeforcs)(int *, double *))
 }
 
 
+/* Calling R code will ensure that input y has same
+   dimension as yini */
+void initState (double *y)
+{
+  int i;
+
+  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+  {
+    yini[i] = y[i];
+  }
+}
+
 void getParms_dermal (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
@@ -255,8 +267,8 @@ void getParms_dermal (double *inParms, double *out, int *nout) {
   }
 
 
-  Vskin_bottomc = Vskinc - Vskin_topc ;
-  Fskin_depth_bottom = 1 - Fskin_depth_top ;
+  Vviable_epidermisc = Vskinc - Vstratum_corneumc ;
+  Fskin_depth_ve = 1 - Fskin_depth_sc ;
 
   kgutabs = kgutabs * 24 ;
   Clmetabolism = Clmetabolismc * 24 * BW ;
@@ -272,12 +284,12 @@ void getParms_dermal (double *inParms, double *out, int *nout) {
   Vskin = BW * Vskinc ;
   Vskin_exposed = SA_exposed * skin_depth * 0.001 ;
   Vskin_unexposed = Vskin - Vskin_exposed ;
-  Vskin_top = Vskin * Fskin_depth_top ;
-  Vskin_top_exposed = Vskin_top * Fskin_exposed ;
-  Vskin_top_unexposed = Vskin_top * ( 1 - Fskin_exposed ) ;
-  Vskin_bottom = Vskin * Fskin_depth_bottom ;
-  Vskin_bottom_exposed = Vskin_bottom * Fskin_exposed ;
-  Vskin_bottom_unexposed = Vskin_bottom * ( 1 - Fskin_exposed ) ;
+  Vstratum_corneum = Vskin * Fskin_depth_sc ;
+  Vstratum_corneum_exposed = Vstratum_corneum * Fskin_exposed ;
+  Vstratum_corneum_unexposed = Vstratum_corneum * ( 1 - Fskin_exposed ) ;
+  Vviable_epidermis = Vskin * Fskin_depth_ve ;
+  Vviable_epidermis_exposed = Vviable_epidermis * Fskin_exposed ;
+  Vviable_epidermis_unexposed = Vviable_epidermis * ( 1 - Fskin_exposed ) ;
 
   Qskin = Qcardiac * Qskinf ;
   Qskin_unexposed = Qskin * Vskin_unexposed / Vskin ;
@@ -300,8 +312,7 @@ void getParms_dermal (double *inParms, double *out, int *nout) {
 
 void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
-  /* local */ double Rin_dermal;
-  /* local */ double Rin_oral;
+  /* local */ double Rin;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -321,39 +332,37 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
 
-  yout[ID_Cskin_top_unexposed] = y[ID_Askin_top_unexposed] / Vskin_top_unexposed ;
+  yout[ID_Cstratum_corneum_unexposed] = y[ID_Astratum_corneum_unexposed] / Vstratum_corneum_unexposed ;
 
-  yout[ID_Cskin_top_exposed] = y[ID_Askin_top_exposed] / Vskin_top_exposed ;
+  yout[ID_Cstratum_corneum_exposed] = y[ID_Astratum_corneum_exposed] / Vstratum_corneum_exposed ;
 
-  yout[ID_Cskin_bottom_unexposed] = y[ID_Askin_bottom_unexposed] / Vskin_bottom_unexposed ;
+  yout[ID_Cviable_epidermis_unexposed] = y[ID_Aviable_epidermis_unexposed] / Vviable_epidermis_unexposed ;
 
-  yout[ID_Cskin_bottom_exposed] = y[ID_Askin_bottom_exposed] / Vskin_bottom_exposed ;
+  yout[ID_Cviable_epidermis_exposed] = y[ID_Aviable_epidermis_exposed] / Vviable_epidermis_exposed ;
 
-  yout[ID_Cvehicle] = (Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ;
+  yout[ID_Cmedia] = y[ID_Amedia] / Vmedia ;
 
-  Rin_dermal = ( Vvehicle ? Pvehicle2top * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_top_exposed] / Ktop2vehicle ) : 0.0 ) ;
+  Rin = ( y[ID_Amedia] ? Pmedia2sc * SA_exposed * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cstratum_corneum_exposed] / Ksc2media ) : 0.0 ) ;
 
-  Rin_oral = kgutabs * y[ID_Agutlumen] ;
+  ydot[ID_Amedia] = - Rin ;
 
-  ydot[ID_Avehicle] = - Rin_dermal ;
+  ydot[ID_Ain] = Rin ;
 
-  ydot[ID_Ain] = Rin_dermal + Rin_oral ;
+  ydot[ID_Astratum_corneum_exposed] = Rin + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cviable_epidermis_exposed] - yout[ID_Cstratum_corneum_exposed] / Ksc2ve ) ;
 
-  ydot[ID_Askin_top_exposed] = Rin_dermal + Ptop2bottom * SA_exposed * 24 * 0.001 * ( yout[ID_Cskin_bottom_exposed] - yout[ID_Cskin_top_exposed] / Ktop2bottom ) ;
+  ydot[ID_Astratum_corneum_unexposed] = Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cviable_epidermis_unexposed] - yout[ID_Cstratum_corneum_unexposed] / Ksc2ve ) ;
 
-  ydot[ID_Askin_top_unexposed] = Ptop2bottom * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cskin_bottom_unexposed] - yout[ID_Cskin_top_unexposed] / Ktop2bottom ) ;
+  ydot[ID_Aviable_epidermis_exposed] = Qskin_exposed * ( yout[ID_Cart] - yout[ID_Cviable_epidermis_exposed] * Rblood2plasma / Kve2pu / Fraction_unbound_plasma ) + Psc2ve * SA_exposed * 24 * 0.001 * ( yout[ID_Cstratum_corneum_exposed] / Ksc2ve - yout[ID_Cviable_epidermis_exposed] ) ;
 
-  ydot[ID_Askin_bottom_exposed] = Qskin_exposed * ( yout[ID_Cart] - yout[ID_Cskin_bottom_exposed] * Rblood2plasma / Kbottom2pu / Fraction_unbound_plasma ) + Ptop2bottom * SA_exposed * 24 * 0.001 * ( yout[ID_Cskin_top_exposed] / Ktop2bottom - yout[ID_Cskin_bottom_exposed] ) ;
+  ydot[ID_Aviable_epidermis_unexposed] = Qskin_unexposed * ( yout[ID_Cart] - yout[ID_Cviable_epidermis_unexposed] * Rblood2plasma / Kve2pu / Fraction_unbound_plasma ) + Psc2ve * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cstratum_corneum_unexposed] / Ksc2ve - yout[ID_Cviable_epidermis_unexposed] ) ;
 
-  ydot[ID_Askin_bottom_unexposed] = Qskin_unexposed * ( yout[ID_Cart] - yout[ID_Cskin_bottom_unexposed] * Rblood2plasma / Kbottom2pu / Fraction_unbound_plasma ) + Ptop2bottom * ( totalSA - SA_exposed ) * 24 * 0.001 * ( yout[ID_Cskin_top_unexposed] / Ktop2bottom - yout[ID_Cskin_bottom_unexposed] ) ;
+  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Agutlumen] = - Rin_oral ;
-
-  ydot[ID_Agut] = Rin_oral + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
   ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 
-  ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qskin_unexposed * yout[ID_Cskin_bottom_unexposed] / Kbottom2pu + Qskin_exposed * yout[ID_Cskin_bottom_exposed] / Kbottom2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
+  ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qskin_unexposed * yout[ID_Cviable_epidermis_unexposed] / Kve2pu + Qskin_exposed * yout[ID_Cviable_epidermis_exposed] / Kve2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
   ydot[ID_Alung] = Qcardiac * ( yout[ID_Cven] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
@@ -361,9 +370,9 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Akidney] = Qkidney * yout[ID_Cart] - Qkidney * yout[ID_Ckidney] / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * yout[ID_Ckidney] / Kkidney2pu ;
+  ydot[ID_Akidney] = Qkidney * yout[ID_Cart] - Qkidney * yout[ID_Ckidney] / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart ;
 
-  ydot[ID_Atubules] = Qgfr * yout[ID_Ckidney] / Kkidney2pu ;
+  ydot[ID_Atubules] = Qgfr * Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart ;
 
   ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 
