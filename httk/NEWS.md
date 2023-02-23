@@ -4,6 +4,11 @@ date: "February 20, 2023"
 output: html_document
 ---                                                 
 
+# version 2.2.2 (February 23, 2023)
+## Bug Fixes
+* Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
+* Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
+
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
