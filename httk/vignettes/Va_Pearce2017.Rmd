@@ -14,7 +14,7 @@ Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wamb
 
 Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
 
-https://doi.org/10.18637%2Fjss.v079.i04
+https://doi.org/10.18637/jss.v079.i04
 
 *Please send questions to wambaugh.john@epa.gov*
 
@@ -44,7 +44,7 @@ high-throughput screening.
 This vignette was created from the 
 [R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
 for the 
-[2017 paper that introduced **httk**](https://doi.org/10.18637%2Fjss.v079.i04).
+[2017 paper that introduced **httk**](https://doi.org/10.18637/jss.v079.i04).
 
 ## HTTK Version
 
