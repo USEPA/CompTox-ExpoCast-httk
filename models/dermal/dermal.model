@@ -233,8 +233,8 @@ Dynamics{
 	dt (Alung) = Qcardiac * (Cven - Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
 	dt (Aart) = Qcardiac * (Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - Cart );
 	dt (Arest) = Qrest * (Cart - Crest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
-	dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Ckidney / Kkidney2pu;
-	dt (Atubules) = Qgfr * Ckidney / Kkidney2pu;
+	dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Fraction_unbound_plasma / Rblood2plasma * Aart / Vart;
+	dt (Atubules) = Qgfr * Fraction_unbound_plasma / Rblood2plasma * Aart / Vart;
 	
 	# Rate of change of amount of chemical metabolized (umol/day).
 	dt (Ametabolized) = Clmetabolism * Cliver / Kliver2pu ;

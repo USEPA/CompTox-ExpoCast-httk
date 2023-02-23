@@ -215,9 +215,9 @@ Dynamics{
 	dt (Alung) = Qcardiac * (Cven - Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
 	dt (Aart) = Qcardiac * (Alung / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - Aart / Vart );
 	dt (Arest) = Qrest * (Cart - Arest/Vrest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
-	dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Ckidney / Kkidney2pu;
-	dt (Atubules) = Qgfr * Ckidney / Kkidney2pu;
-	dt (Ametabolized) = Clmetabolism * Cliver / Kliver2pu ;
+	dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart;
+	dt (Atubules) = Qgfr * Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart;
+	dt (Ametabolized) = Qgfr * Fraction_unbound_plasma / Rblood2plasma * Aart / Vart;
 	dt (AUC) = Cven / Rblood2plasma;
 }
 # End of DYNAMICS.
