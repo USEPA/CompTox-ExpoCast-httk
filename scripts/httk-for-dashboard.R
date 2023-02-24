@@ -5,6 +5,15 @@ library(data.table)
 # Clear the memory:
 rm(list=ls())
 
+prev.table <- read.csv("Dashboard-HTTK-CssunitsmgpL.txt",sep="\t")
+write.table(
+  prev.table,
+  file=paste(
+    "Dashboard-HTTK-CssunitsmgpL-previous.txt",sep=""),
+  row.names=F,
+  quote=F,
+  sep="\t")
+  
 #setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
 # Number of samples for Monte Carlo, default is 1000, but this is more stable:
 NUM.SAMPLES <- 1e4
@@ -217,7 +226,7 @@ make.ccd.table <- function(
 }
 
 # Create a multicore cluster:
-cl <- parallel::makeCluster(detectCores())
+cl <- parallel::makeCluster(detectCores()-1)
 
 # Load httk on all cores:
 clusterEvalQ(cl, library(httk))
@@ -263,6 +272,9 @@ httk.version <- sessionInfo()$otherPkgs$httk$Version
 output.date <- Sys.Date()
 
 save(Css.units,httk.version,output.date,file="Dashboard-HTTK-stamp.RData")
+
+# Convert to data.frame:
+dashboard.table <- as.data.frame(dashboard.table)
 
 # Replace references with DOI:
 dashboard.table[is.na(dashboard.table[,"Reference"]), 
@@ -350,9 +362,53 @@ write.table(
 # MW, not currently used, Molecular Weght, g/mol
 #
 
+tmp <- merge(subset(dashboard.table, Parameter=="Css" & 
+                    Model=="3compartmentss" & 
+                    Species=="Human" & 
+                    Percentile=="95%"),
+             subset(prev.table, Parameter=="Css" & 
+                    Model=="3compartmentss" & 
+                    Species=="Human" & 
+                    Percentile=="95%"),
+             all.x=TRUE, 
+             by=c("DTXSID","Parameter","Model","Species","Percentile"))
+tmp$Change <- tmp$Predicted.x/tmp$Predicted.y
 
+library(ggplot2)
+library(scales)
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
 
+Fig <- ggplot(tmp, aes(x=Change)) + 
+         geom_histogram() + 
+         scale_x_log10(label=scientific_10) +
+         scale_y_log10(label=scientific_10) +
+         ggtitle(paste0("httk v",httk.version," Change from Previous Version"))+
+         ylab("Number of Chemicals") +
+         xlab("Fold Change in calc_mc_css Prediction") +
+         geom_vline(xintercept=1,linetype="dashed", color="blue", linewidth=2) +
+         geom_vline(xintercept=0.1,linetype="dotted", color="blue", linewidth=1) +
+         geom_vline(xintercept=10,linetype="dotted", color="blue", linewidth=1)
+         
+         
+png("calc-mc-css-fold-chang.png")         
+print(Fig)
+dev.off()
 
+tmp <- tmp[,colnames(tmp)[c(1:5,7:8,12:13,16)]]
+colnames(tmp) <- gsub("x","prev",colnames(tmp))
+colnames(tmp) <- gsub("y","new",colnames(tmp))
+write.table(
+  tmp,
+  file=paste(
+    "Dashboard-HTTK-CssunitsmgpL-change.txt",sep=""),
+  row.names=F,
+  quote=F,
+  sep="\t")
 
 
 
