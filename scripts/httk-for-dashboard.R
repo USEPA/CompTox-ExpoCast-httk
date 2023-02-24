@@ -395,7 +395,7 @@ Fig <- ggplot(tmp, aes(x=Change)) +
          geom_vline(xintercept=10,linetype="dotted", color="blue", linewidth=1)
          
          
-png("calc-mc-css-fold-chang.png")         
+png("calc-mc-css-fold-change.png")         
 print(Fig)
 dev.off()
 
