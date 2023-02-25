@@ -63,7 +63,7 @@ is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
-vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
+media) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
 Other optional inputs are "octanol" and "olive oil".}
 
 \item{times}{Optional time sequence for specified number of days.  Dosing
@@ -72,7 +72,7 @@ sequence begins at the beginning of times.}
 \item{parameters}{Chemical parameters from parameterize_dermal_pbtk function,
 overrides chem.name and chem.cas.}
 
-\item{days}{Length of the simulation.}
+\item{days}{Length of the simulation.If "times" input is used, this is ignored.}
 
 \item{tsteps}{The number time steps per hour.}
 
@@ -106,10 +106,23 @@ TRUE along with partition coefficients calculated with this value.}
 parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
 "method.permeability", and "Kvehicle2water" are not passed through this.}
 
-\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L. If InfiniteDose
-is TRUE, this parameter is ignored and set = 1.}
+\item{route}{Route of exposure, can be "oral" OR "iv" OR "dermal" (default).}
 
-\item{initial.dose}{Concentration}
+\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L. If 
+InfiniteDose=TRUE, this parameter is ignored and set = 1.}
+
+\item{initial.dose}{Initial exposure dose. If InfiniteDose=TRUE, this is a concentration, 
+otherwise, this is an amount.}
+
+\item{input.units}{Exposure units applied to initial.dose and/or dosing.dermal.
+If InfiniteDose=TRUE, must be a concentration, i.e., "mg/kg/L" (default), otherwise,
+must be an amount, i.e., "mg/kg" (default).}
+
+\item{dose.duration}{Amount of time dermal dose is on skin before being washed off.
+Note that when dose.duration is used, washoff=TRUE.}
+
+\item{dose.duration.units}{Units for dose.duration, can be "minutes" OR "hours" 
+OR "days" (default).}
 
 \item{dosing.dermal}{Matrix consisting of three columns named
 "Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
@@ -117,13 +130,11 @@ with the applied amount in the vehicle, and the volume of the applied
 vehicle, L. Note that the units of Cvehicle are controlled by input.units. ***If
 InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.}
 
-\item{washoff}{This parameter only matters if dosing.dermal is being used. If 
-TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
-FALSE (default), any chemical left on the skin is added to the new dose.}
+\item{washoff}{If TRUE, any chemical left on the skin is assumed to be replaced 
+by new dose  (i.e., washoff occurs before new dose is administered). If FALSE 
+(default), any chemical left on the skin is added to the new dose.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{BW}{Body weight, kg.}
 
 \item{InitialDose}{If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
 of chemical in the vehicle is considered) and Cvehicle is a constant. If
@@ -137,7 +148,19 @@ for each time point.
 \description{
 This function solves for the amounts or concentrations of a chemical in
 different tissues as functions of time based on the dose and dosing
-frequency.
+frequency. The user can input dermal doses via one of three options:
+\itemize{
+  \item{dose.duration}{User can input the length of exposure time for one dermal
+  dose before washoff occurs. Note that initial.dose can be used to change the
+  initial dose used along with this option.}
+  \item{dosing.dermal}{With this option, users can input multiple doses over
+  time as a matrix with columns for time, the volume of vehicle administered,
+  and the concentration of the vehicle administered. Note that the the parameter
+  washoff can be used to specify whether chemical is washed off in between doses.}
+  \item{dosing.matrix}{This option is also used to describe multiple exosure doses
+  over time, and is described in the help file of solve_model. 
+  Note that unlike dosing.dermal, Vvehicle cannot be changed this this option.}
+}
 }
 \details{
 Model units are the same as vehicle concentration, units/L or units when

@@ -27,7 +27,7 @@
      AUC = 0.0,
      Askin_top_exposed = 0.0,
      Askin_top_unexposed = 0.0,
-     Askin_bottom_epidermis_exposed = 0.0,
+     Askin_bottom_exposed = 0.0,
      Askin_bottom_unexposed = 0.0,
      Avehicle = 0.0,
      Ain = 0.0,

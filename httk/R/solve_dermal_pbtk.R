@@ -2,7 +2,19 @@
 #' 
 #' This function solves for the amounts or concentrations of a chemical in
 #' different tissues as functions of time based on the dose and dosing
-#' frequency. 
+#' frequency. The user can input dermal doses via one of three options:
+#' \itemize{
+#'   \item{dose.duration}{User can input the length of exposure time for one dermal
+#'   dose before washoff occurs. Note that initial.dose can be used to change the
+#'   initial dose used along with this option.}
+#'   \item{dosing.dermal}{With this option, users can input multiple doses over
+#'   time as a matrix with columns for time, the volume of vehicle administered,
+#'   and the concentration of the vehicle administered. Note that the the parameter
+#'   washoff can be used to specify whether chemical is washed off in between doses.}
+#'   \item{dosing.matrix}{This option is also used to describe multiple exosure doses
+#'   over time, and is described in the help file of solve_model. 
+#'   Note that unlike dosing.dermal, Vvehicle cannot be changed this this option.}
+#' }
 #' 
 #' Model units are the same as vehicle concentration, units/L or units when
 #' use.amounts=T.
@@ -47,13 +59,13 @@
 #' is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 #' law of diffusion to calculate P. For "dermal" model, this parameter is ignored.
 #' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
-#' vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
+#' media) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
 #' Other optional inputs are "octanol" and "olive oil".
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
 #' @param parameters Chemical parameters from parameterize_dermal_pbtk function,
 #' overrides chem.name and chem.cas.
-#' @param days Length of the simulation.
+#' @param days Length of the simulation.If "times" input is used, this is ignored.
 #' @param tsteps The number time steps per hour.
 #' @param plots Plots all outputs if true.
 #' @param monitor.vars Which variables are returned as a function of time. 
@@ -74,18 +86,26 @@
 #' @param parameterize.arg.list Additional parameterized passed to the model 
 #' parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
 #' "method.permeability", and "Kvehicle2water" are not passed through this.
-#' @param BW Body weight, kg.
-#' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L. If InfiniteDose
-#' is TRUE, this parameter is ignored and set = 1.
-#' @param initial.dose Concentration
+#' @param route Route of exposure, can be "oral" OR "iv" OR "dermal" (default).
+#' @param Vvehicle Volume of vehicle applied to skin in L, defaults to 0.01 L. If 
+#' InfiniteDose=TRUE, this parameter is ignored and set = 1.
+#' @param initial.dose Initial exposure dose. If InfiniteDose=TRUE, this is a concentration, 
+#' otherwise, this is an amount.
+#' @param input.units Exposure units applied to initial.dose and/or dosing.dermal.
+#' If InfiniteDose=TRUE, must be a concentration, i.e., "mg/kg/L" (default), otherwise,
+#' must be an amount, i.e., "mg/kg" (default).
+#' @param dose.duration Amount of time dermal dose is on skin before being washed off.
+#' Note that when dose.duration is used, washoff=TRUE.
+#' @param dose.duration.units Units for dose.duration, can be "minutes" OR "hours" 
+#' OR "days" (default).
 #' @param dosing.dermal Matrix consisting of three columns named
 #' "Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
 #' with the applied amount in the vehicle, and the volume of the applied
 #' vehicle, L. Note that the units of Cvehicle are controlled by input.units. ***If
 #' InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.
-#' @param washoff This parameter only matters if dosing.dermal is being used. If 
-#' TRUE, any chemical left on the skin is assumed to be replaced be new dose. If
-#' FALSE (default), any chemical left on the skin is added to the new dose.
+#' @param washoff If TRUE, any chemical left on the skin is assumed to be replaced 
+#' by new dose  (i.e., washoff occurs before new dose is administered). If FALSE 
+#' (default), any chemical left on the skin is added to the new dose.
 #' @param InitialDose If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
 #' of chemical in the vehicle is considered) and Cvehicle is a constant. If
 #' FALSE (default), dosing is finite and Cvehicle changes over time.
@@ -287,11 +307,11 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   }
   
   # INITIAL.DOSE and DOSE.UNITS
-  if (is.null(dosing.dermal)){
-    if (InfiniteDose){input.units.default="mg/kg/L"} else {input.units.default="mg/kg"}
-    
-    if (is.null(input.units)){
-      input.units <- input.units.default
+  if (InfiniteDose){input.units.default="mg/kg/L"} else {input.units.default="mg/kg"}
+  
+  if (is.null(input.units)){
+    input.units <- input.units.default
+    if (is.null(dosing.dermal)){
       if (is.null(initial.dose)){
         initial.dose <- 1;  
         warning(paste0("The initial.dose is automatically set to 1", input.units.default,"."))
@@ -318,15 +338,21 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if (route=="dermal"){
       route="dermal.washoff"
     } else warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
-  }
+  } else if (!is.null(dose.duration)){ 
+    route="dermal.washoff"
+    warning("Washoff occurs automatically if dose.duration is used.")
+    }
   
   #Check for ppm
-  if(input.units=="ppm"){
-    input.units="ppmw"
-    if (!(is.null(Kvehicle2water) || Kvehicle2water==1 || Kvehicle2water=="water")){
-      warning("It is assumed that the dosing units are in ppm for water so that 1ppm = 1 mg/L.\n For concentrations in ppm in air assuming 25 degrees C, set input.units=\"ppmv\" or see help file for convert_units.")
+  if (!is.null(input.units)){
+    if(input.units=="ppm"){
+      input.units="ppmw"
+      if (!(is.null(Kvehicle2water) || Kvehicle2water==1 || Kvehicle2water=="water")){
+        warning("It is assumed that the dosing units are in ppm for water so that 1ppm = 1 mg/L.\n For concentrations in ppm in air assuming 25 degrees C, set input.units=\"ppmv\" or see help file for convert_units.")
+      }
     }
   }
+
   
   #INFINITEDOSE
   if(InfiniteDose){
