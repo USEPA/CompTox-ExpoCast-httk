@@ -19,7 +19,10 @@ parameterize_pbtk(
   regression = TRUE,
   suppress.messages = FALSE,
   restrictive.clearance = TRUE,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  million.cells.per.gliver = 110,
+  liver.density = 1.05,
+  kgutabs = 2.18
 )
 }
 \arguments{
@@ -63,9 +66,14 @@ partition coefficients.}
 \item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
-\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
-equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-dataset).}
+\item{minimum.Funbound.plasma}{\eqn{f_{up}} is not allowed to drop below
+this value (default is 0.0001).}
+
+\item{million.cells.per.gliver}{Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))}
+
+\item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
+
+\item{kgutabs}{Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))}
 }
 \value{
 \item{BW}{Body Weight, kg.} 
@@ -108,11 +116,15 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
-Generate a chemical- and species-specific set of model parameters, 
-including tissue:plasma partition coefficients (via Schmitt (2008)'s method
-as modified by Pearce et al. (2017)) and organ volumes and flows 
-(from table \code{\link{physiology.data}}) for an arbitrary tissue lumping 
-scheme (tissues  must be described in table \code{\link{tissue.data}}).
+Generate a chemical- and species-specific set of PBPK model parameters.
+Parameters include 
+tissue:plasma partition coefficients, organ volumes, and flows 
+for the tissue lumping scheme specified by argument tissuelist.
+Tissure:(fraction unbound in) plasma partitition coefficients are predicted
+via Schmitt (2008)'s method as modified by Pearce et al. (2017) using
+\code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
+retrieved from table \code{\link{physiology.data}}.
+Tissues must be described in table \code{\link{tissue.data}}.
 }
 \details{
 By default, this function initializes the parameters needed in the functions 
@@ -120,7 +132,6 @@ By default, this function initializes the parameters needed in the functions
 default generic PBTK model (for oral and intravenous dosing only).
 }
 \examples{
-
 
  parameters <- parameterize_pbtk(chem.cas='80-05-7')
 
@@ -131,9 +142,6 @@ default generic PBTK model (for oral and intravenous dosing only).
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
- 
- 
-
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput 
@@ -150,6 +158,30 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+
+Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
+to relate drug metabolic clearance in hepatic microsomes, isolated 
+hepatocytes, and the intact liver: studies with induced livers involving 
+diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+
+International Commission on Radiological Protection. Report of the task 
+group on reference man. Vol. 23. Pergamon, Oxford. 1975.
+
+Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
+toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
+}
+\seealso{
+\code{\link{solve_pbtk}}
+
+\code{\link{calc_analytic_css_pbtk}}
+
+\code{\link{predict_partitioning_schmitt}}
+
+\code{\link{apply_clint_adjustment}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
 }
 \author{
 John Wambaugh and Robert Pearce

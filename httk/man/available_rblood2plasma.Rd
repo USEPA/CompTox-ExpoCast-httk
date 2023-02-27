@@ -38,21 +38,22 @@ calculated if not.
 }
 \description{
 This function finds the best available constant ratio of the blood
-concentration to the plasma concentration, using get_rblood2plasma and
-calc_rblood2plasma.
+concentration to the plasma concentration, using 
+\code{\link{get_rblood2plasma}} and \code{\link{calc_rblood2plasma}}.
 }
 \details{
 Either retrieves a measured blood:plasma concentration ratio from the
-chem.physical_and_invitro.data table or calculates it using the red blood cell
+\code{\link{chem.physical_and_invitro.data}} table or calculates it using the red blood cell
 partition coefficient predicted with Schmitt's method
 
-If available, in vivo data (from chem.physical_and_invitro.data) for the
+If available, in vivo data (from \code{\link{chem.physical_and_invitro.data}}) 
+for the
 given species is returned, substituting the human in vivo value when missing
 for other species.  In the absence of in vivo data, the value is calculated
-with calc_rblood2plasma for the given species. If Funbound.plasma is
+with \code{\link{calc_rblood2plasma}} for the given species. If Funbound.plasma is
 unvailable for the given species, the human Funbound.plasma is substituted.
 If none of these are available, the mean human Rblood2plasma from
-chem.physical_and_invitro.data is returned.  %% ~~ If necessary, more
+\code{\link{chem.physical_and_invitro.data}} is returned.  %% ~~ If necessary, more
 details than the description above ~~
 }
 \examples{
@@ -60,6 +61,11 @@ details than the description above ~~
 available_rblood2plasma(chem.name="Bisphenol A",adjusted.Funbound.plasma=FALSE)
 available_rblood2plasma(chem.name="Bisphenol A",species="Rat")
 
+}
+\seealso{
+\code{\link{calc_rblood2plasma}}
+
+\code{\link{get_rblood2plasma}}
 }
 \author{
 Robert Pearce
