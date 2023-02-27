@@ -9,12 +9,11 @@ calc_hep_clearance(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  species = "Human",
-  default.to.human = FALSE,
   hepatic.model = "well-stirred",
   suppress.messages = FALSE,
   well.stirred.correction = TRUE,
   restrictive.clearance = TRUE,
+  species = "Human",
   adjusted.Funbound.plasma = TRUE,
   ...
 )
@@ -32,12 +31,6 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate
 function, overrides chem.name and chem.cas.}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
-
 \item{hepatic.model}{Model used in calculating hepatic clearance, unscaled,
 parallel tube, dispersion, or default well-stirred.}
 
@@ -51,8 +44,11 @@ plasma, but converted to use with plasma concentration.}
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE.}
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
 
 \item{...}{Additional parameters passed to parameterize_steadystate if
 parameters is NULL.}
@@ -70,7 +66,6 @@ al. (2008).
 
 calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
 calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
-
 
 }
 \references{

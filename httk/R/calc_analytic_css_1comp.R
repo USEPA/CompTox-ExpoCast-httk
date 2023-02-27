@@ -33,6 +33,10 @@
 #'  
 #'@return Steady state plasma concentration in mg/L units
 #'
+#' @seealso \code{\link{calc_analytic_css}}
+#'
+#' @seealso \code{\link{parameterize_1comp}}
+#'
 #'@author Robert Pearce and John Wambaugh
 #'@keywords 1compartment
 calc_analytic_css_1comp <- function(chem.name=NULL,
@@ -95,8 +99,12 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
   }
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
+  
+  # one compartment Css is dose.rate / clearance:
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
-
+  # Convert to plasma concentration:
+  Css <- Css/parameters[['Rblood2plasma']]
+  
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {

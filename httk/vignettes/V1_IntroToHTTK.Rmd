@@ -1,0 +1,281 @@
+---
+title: "Introduction to HTTK"
+author: "Miyuki Breen, Anna Kreutz, and John Wambaugh"
+date: "June 15, 2021"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{1) Introduction to HTTK}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+*Please send questions to breen.miyuki@epa.gov*
+
+### Set vignette options
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r setup_vignette, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+```
+
+## Description
+
+R package **httk** provides pre-made, chemical independent ("generic") models 
+and chemical-specific data 
+for chemical toxicokinetics ("TK") 
+and *in vitro-in vivo* extrapolation ("IVIVE") in bioinformatics, 
+as described by [Pearce et al. (2017)](https://doi.org/10.18637/jss.v079.i04).
+Chemical-specific *in vitro* data have been obtained from relatively
+high-throughput experiments. Both physiologically-based ("PBTK")
+and empirical (for example, one compartment) "TK" models can be
+parameterized with the data provided for thousands of chemicals,
+multiple exposure routes, and various species. The models consist
+of systems of ordinary differential equations which are solved
+using compiled (C-based) code for speed. A Monte Carlo sampler is
+included, which allows for simulating human biological variability
+([Ring et al., 2017](https://doi.org/10.1016/j.envint.2017.06.004))
+and propagating parameter uncertainty
+([Wambaugh et al., 2019](https://doi.org/10.1093/toxsci/kfz205)). 
+Calibrated methods are
+included for predicting tissue:plasma partition coefficients and
+volume of distribution
+([Pearce et al., 2017](https://doi.org/10.1007/s10928-017-9548-7)).
+These functions and data provide a set of tools for
+IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data)) 
+to real-world exposures via reverse dosimetry (also known as "RTK")
+([Wetmore et al., 2015](https://doi.org/10.1093/toxsci/kfv171)).
+
+## Introduction
+
+Chemicals can be identified using name, CAS, or DTXSID (that
+is, a substance identifier for the [Distributed Structure-
+Searchable Toxicity (DSSTox) database](https://doi.org/10.1016/j.comtox.2019.100096). 
+Available chemical-
+specific information includes logP, MW, pKa, intrinsic clearance,
+partitioning. Calculations can be performed to derive chemical
+properties, TK parameters, or IVIVE values. Functions are also
+available to perform forward dosimetry using the various
+models. As functions are typed at the RStudio command line,
+available arguments are displayed, with additional help available
+through the "?" operator. Vignettes for the various available
+packages in httk are provided to give an overview of their
+respective capabilities. The aim of **httk** is to provide a readily
+accessible platform for working with HTTK models.
+
+This material is from [Breen et al. (2021) "High-throughput PBTK models for in 
+vitro to in vivo extrapolation"](https://doi.org/10.1080/17425255.2021.1935867)
+
+## Getting Started
+
+For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
+<http://rafalab.dfci.harvard.edu/dsbook/getting-started.html>
+
+For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
+<https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
+
+### Dependencies
+
+* Users will need the freely available R statistical computing language: <https://www.r-project.org/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
+* If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
+	From the R command prompt: install.packages("X") 
+  Or, if using RStudio, look for 'Install Packages' under the 'Tools' tab.
+* Note that R does not recognize fancy versions of quotation marks that curve
+toward each other. 
+If you are cutting and pasting from software like Word or Outlook you may need 
+to replace the quotation marks that curve toward each other with ones typed by 
+the keyboard.
+
+### Installing R package "httk"
+```{r install_httk, eval = FALSE}
+install.packages("httk")
+```
+
+### “Write Privileges” On Your Personal Computer.
+```{r write_privileges, eval = FALSE}
+ Depending on the account you are using and where you want to install the package on that computer, you may need “permission” from your local file system to install the package. See this help here:
+
+<https://stackoverflow.com/questions/42807247/installing-package-cannot-open-file-permission-denied>
+
+and here:
+
+<https://support.microsoft.com/en-us/topic/general-problem-installing-any-r-package-0bf1f9ba-ead2-6335-46ec-190f6af75e44>
+```
+
+### Delete all objects from memory:
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls())
+```
+
+### Load the HTTK data, models, and functions
+```{r load_httk, eval = TRUE}
+library(httk)
+
+# Check what version you are using 
+packageVersion("httk")
+```
+### Control run speed
+Portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = TRUE}
+NSAMP <- 25
+```
+
+### Suppressing Messages
+Note that since *in vitro-in vivo* extrapolation (IVIVE) is built upon
+many, many assumptions, *httk** attempts to give many warning messages 
+by default. These messages do not usually mean something is wrong, but 
+are rather intended to make the user aware of the assumptions involved.
+However, they quickly grow annoying and can be turned off with the
+"suppress.messages=TRUE" argument. Proceed with caution...
+
+```{r suppress_messages, eval = TRUE}
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  suppress.messages = FALSE)
+
+css <- calc_analytic_css(chem.name = "Bisphenol A",
+                  suppress.messages = TRUE)
+```
+
+## Examples
+
+* List all CAS numbers for all chemicals with sufficient data to run httk 
+Note that we use the R built-in function head() to show only the first five rows
+```{r cheminfo_ex1, eval = TRUE}
+head(get_cheminfo(suppress.messages = TRUE))
+```
+
+Remove the head() function to get the full table
+```{r cheminfo_ex1a, eval = FALSE}
+get_cheminfo(suppress.messages = TRUE)
+```
+* List all information (If median.only=FALSE you will get medians, lower 95th,
+ and upper 95th for Fup, plus p-value for Clint, separated by commans, when
+ those statistics are available. Older data only have means for Clint and Fup.): 
+
+Note that we use the R built-in function head() to show only the first five rows
+```{r cheminfo_ex2, eval = TRUE}
+head(get_cheminfo(info = "all", median.only=TRUE,suppress.messages = TRUE))
+```
+
+* Is a chemical with a specified CAS number available? 
+```{r cheminfo_ex3, eval = TRUE}
+"80-05-7" %in% get_cheminfo(suppress.messages = TRUE)
+```
+
+* All data on chemicals A, B, C (You need to specify the names instead of "A","B","C"...)
+```{r cheminfo_ex4, eval = TRUE}
+subset(get_cheminfo(info = "all",suppress.messages = TRUE), 
+       Compound %in% c("A","B","C"))
+```
+
+* Administrated equivalent dose (mg/kg BW/day) to produce 0.1 uM plasma concentration, 0.95
+quantile, for a specified CAS number and species
+
+```{r oral_equiv_ex, eval = TRUE}
+calc_mc_oral_equiv(0.1,
+                   chem.cas = "34256-82-1",
+                   species = "human",
+                   samples = NSAMP,
+                   suppress.messages = TRUE)
+calc_mc_oral_equiv(0.1,
+                   chem.cas = "99-71-8", 
+                   species = "human",
+                   samples = NSAMP,
+                   suppress.messages = TRUE)
+```
+
+* Calculate the mean, AUC, and peak concentrations for a simulated study (28-day daily dose, by
+default) for a specified CAS number and species
+```{r tkstats_ex, eval = TRUE}
+calc_tkstats(chem.cas = "34256-82-1",
+             species = "rat",
+             suppress.messages = TRUE)
+calc_tkstats(chem.cas = "962-58-3", 
+             species = "rat",
+             suppress.messages = TRUE)
+```
+
+* Using the PBTK solver for a specified chem name 
+
+Note that we use the R built-in function head() to show only the first five rows
+```{r pbtk_ex, eval = TRUE}
+head(solve_pbtk(chem.name = "bisphenol a", 
+                plots = TRUE,
+                days = 1,
+                suppress.messages = TRUE))
+```
+
+* Create data set, my_data, for all data on chemicals A, B, C, in R 
+```{r subset_ex, eval = TRUE}
+my_data <- subset(get_cheminfo(info = "all",suppress.messages = TRUE), 
+                  Compound %in% c("A","B","C"))
+```
+
+* Export data set, my_data, from R to csv file called my_data.csv in the current working directory 
+```{r writetodisk_ex, eval = TRUE}
+write.csv(my_data, file = "my_data.csv")
+```
+
+#### Mean and Median Fraction Unbound in Plasma
+Create a data.frame with all the Fup values, we ask for model="schmitt" since
+that model only needs fup, we ask for "median.only" because we don't care
+about uncertainty intervals here:
+```{r fup_stats1, eval = TRUE}
+library(httk)
+fup.tab <- get_cheminfo(info="all",
+                        median.only=TRUE,
+                        model="schmitt",
+                        suppress.messages = TRUE)
+```
+Calculate the median, making sure to convert to numeric values:
+```{r fup_stats2, eval = TRUE}
+median(as.numeric(fup.tab$Human.Funbound.plasma),na.rm=TRUE)
+```
+Calculate the mean:
+```{r fup_stats3, eval = TRUE}
+mean(as.numeric(fup.tab$Human.Funbound.plasma),na.rm=TRUE)
+```
+Count how many non-NA values we have (should be the same as the number of 
+rows in the table but just in case we ask for non NA values:
+```{r fup_stats4, eval = TRUE}
+sum(!is.na(fup.tab$Human.Funbound.plasma))
+```
+
+#### User Notes
+
+* When using the CAS number as a unique chemical identifier with 'httk'
+functions it is best to type these numbers directly (i.e. by hand) into the
+console, script, Rmarkdown, etc. to avoid unnecessary error messages. Webpages,
+word documents, and other sources of these CAS numbers may use a
+different character encoding that does not match those used in the 'httk' data
+sources.
+
+## Help
+
+* Getting help with R Package httk 
+```{r help1, eval = FALSE}
+help(httk)
+```
+
+* You can go straight to the index: 
+```{r help2, eval = FALSE}
+help(package = httk)
+```
+
+* List all vignettes for httk 
+```{r help3, eval = FALSE}
+vignette(package = "httk")
+```
+
+* Displays the vignette for a specified vignette 
+```{r help4, eval = FALSE}
+vignette("1_IntroToHTTK")
+```
