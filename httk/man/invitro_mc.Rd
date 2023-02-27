@@ -99,19 +99,25 @@ The Monte Carlo methods used here were recently updated and described by
 Breen et al. (submitted).
 }
 \examples{
+\donttest{
 #Simply generate a virtual population of 100 individuals,
 #using the direct-resampling method
 set.seed(42)
+
 # Pull mean vchemical=specific values:
 chem.props <- parameterize_pbtk(chem.name="bisphenolaf")
+
 # Convert to data.table with one row per sample:
 parameters.dt <- monte_carlo(chem.props,samples=100)
+
 # Use httk-pop to generate a population:
 pop <- httkpop_generate(method='direct resampling', nsamp=100)
+
 # Overwrite parameters specified by httk-pop:
 parameters.dt[,names(pop):=pop]
 # Vary in vitro parameters:
 parameters.dt <- invitro_mc(parameters.dt,samples=100)
+}
 
 }
 \references{
