@@ -66,7 +66,7 @@
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#'@keywords pbtk
+#'@keywords pbtk                           
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
@@ -132,27 +132,31 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     }
   }
   
-  Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25  
-  Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25    
-  Clmetabolism <-  parameters[["Clmetabolismc"]]  
+  Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
+  Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25 # L/h/kg   
+  Clmetabolism <-  parameters[["Clmetabolismc"]] # L/h/kg
   Kliver2pu <- parameters[['Kliver2pu']]
   
-  Qgut <- parameters[["Qgutf"]] * Qcardiac
-  Qliver <- parameters[["Qliverf"]] * Qcardiac
-  Qkidney <- parameters[['Qkidneyf']] * Qcardiac
-  Qrest <- Qcardiac-Qgut-Qliver-Qkidney
+  Qgut <- parameters[["Qgutf"]] * Qcardiac # L/h/kg
+  Qliver <- parameters[["Qliverf"]] * Qcardiac # L/h/kg
+  Qkidney <- parameters[['Qkidneyf']] * Qcardiac # L/h/kg
+  Qrest <- Qcardiac-Qgut-Qliver-Qkidney # L/h/kg
   Rblood2plasma <- parameters[['Rblood2plasma']]
   fup <- parameters[["Funbound.plasma"]]
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
   hourly.dose <- hourly.dose * parameters$Fgutabs
   
-# Calculate steady-state plasma Css:
+# Css for venous blood:
   Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
-         (Qcardiac - (Qliver + Qgut)**2 /
+         (Qcardiac - 
+         (Qliver + Qgut)**2 /
          (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
-         Qkidney**2 / (Qgfr * fup / Rblood2plasma + Qkidney) - Qrest)
+         Qkidney +
+         Qgfr * fup / Rblood2plasma  - 
+         Qrest)
+# Calculate steady-state plasma Css:
   Css <- Cven.ss / Rblood2plasma
 
 # Check to see if a specific tissue was asked for:

@@ -45,16 +45,16 @@ Overwrites chem.name and chem.cas.}
 \description{
 This function calculates the ionization of a compound at a given pH. The 
 pKa's are either entered as parameters or taken from a specific compound in
-the package.
-}
-\details{
-The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or 
+the package. The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or 
 vectors. We support characters because there are many instances with multiple 
 predicted values and all those values can be included by concatenating with 
 commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
 may be vectors of characters representing different chemicals or instances of
-chemical parameters to allow for uncertainty analysis.
-
+chemical parameters to allow for uncertainty analysis. A null value for
+pKa_Donor or pKa_Accept is interpretted as no argument provided, while NA 
+is taken as no equlibria
+}
+\details{
 The fractions are calculated by determining the coefficients for each
 species and dividing the particular species by the sum of all three.  The
 positive, negative and zwitterionic/neutral coefficients are given by:
@@ -79,7 +79,7 @@ out <- calc_ionization(chem.name='bisphenola',pH=11)
 print(out)
 out[["fraction_negative"]]==max(unlist(out))
 
-# Fictious compound, should be almost all all negative (anion):
+# Fictitious compound, should be almost all all negative (anion):
 out <- calc_ionization(pKa_Donor=8,pKa_Accept="1,4",pH=9)
 print(out)
 out[["fraction_negative"]]>0.9

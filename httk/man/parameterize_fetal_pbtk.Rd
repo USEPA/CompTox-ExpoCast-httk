@@ -111,9 +111,9 @@ AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 
 \code{\link{parameterize_pbtk}}
 
-\code{\link{predict_partioning_schmitt}}
+\code{\link{predict_partitioning_schmitt}}
 
-\code{\link{adjust_clint}}
+\code{\link{apply_clint_adjustment}}
 
 \code{\link{tissue.data}}
 

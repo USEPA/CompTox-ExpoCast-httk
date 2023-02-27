@@ -138,6 +138,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     parameters$Qgfrc/BW^0.25 * Fup + 
     Qtotalliver*Fup*cl /
     (Qtotalliver + Fup*cl/Rb2p))
+  # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
     
     

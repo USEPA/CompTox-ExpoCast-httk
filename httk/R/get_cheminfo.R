@@ -77,7 +77,11 @@
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
 #' 
-#' @param suppress.messages Whether or not the output messages are suppressed.
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param suppress.messages Whether or not the output messages are suppressed 
+#' (default FALSE).
 #' 
 #' @return \item{vector/data.table}{Table (if info has multiple entries) or 
 #' vector containing a column for each valid entry 
@@ -181,6 +185,7 @@ get_cheminfo <- function(info="CAS",
                          median.only=FALSE,
                          fup.ci.cutoff=TRUE,
                          clint.pvalue.threshold=0.05,
+                         class.exclude=TRUE,
                          suppress.messages=FALSE)
 {
                                         # Parameters in this list can be retrieve with the info argument:
@@ -557,7 +562,7 @@ get_cheminfo <- function(info="CAS",
   if (!suppress.messages & any(good.chemicals.index==FALSE))
   {
     warning(paste(
-      "Excluding compounds that have one or more needed parameter missing in chem.physical_and_invitro.table.\n
+      "Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.\n
 For model ", model, " each chemical must have non-NA values for:",
       paste(necessary.params,collapse=", "), sep=""))
   }
@@ -655,7 +660,8 @@ For model ", model, " each chemical must have non-NA values for:",
       }
     }
     # If we need to remove compounds belonging to a given chemical class:
-    if(!is.null(chem.class.filt)){
+    if (class.exclude & !is.null(chem.class.filt))
+    {
       # obtain the chemical classifications
       chem.class <- strsplit(
         chem.physical_and_invitro.data[,"Chemical.Class"],

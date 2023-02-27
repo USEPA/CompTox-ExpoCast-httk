@@ -51,9 +51,12 @@ Distribution coefficient (numeric)
 This function estimates the ratio of the equilibrium concentrations of
 a compound in octanol and water, taking into account the charge of the
 compound. Given the pH, we assume the neutral (uncharged) fraction of
-compound partitions according to the hydrophobicity (Pow). We assume that
+compound partitions according to the hydrophobicity 
+(\ifelse{html}{\out{P<sub>ow</sub>}}{\eqn{P_{ow}}}). We assume that
 only a fraction alpha (defaults to 0.001 -- Schmitt (2008)) of the charged
-compound partitions into lipid (octanol). Fractions charged are calculated
+compound partitions into lipid (octanol):
+\ifelse{html}{\out{D<sub>ow</sub> = P<sub>ow</sub>*(F<sub>neutral</sub> + alpha*F<sub>charged</sub>)}}{\deqn{D_{ow} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}}
+Fractions charged are calculated
 according to hydrogen ionization equilibria (pKa_Donor, pKa_Accept) using
 \code{\link{calc_ionization}}.
 }
@@ -70,11 +73,7 @@ equilibria for pharmacokinetic modeling." Science of The Total Environment
 615 (2018): 150-160.
 }
 \seealso{
-<<<<<<< HEAD
-\link{\code{calc_ionization}}
-=======
 \code{\link{calc_ionization}}
->>>>>>> patch/2.2.2
 }
 \author{
 Robert Pearce and John Wambaugh

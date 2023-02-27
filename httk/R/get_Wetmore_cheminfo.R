@@ -112,6 +112,8 @@ get_lit_cheminfo <- function(info="CAS",species="Human")
 #' 
 #' @param species Species desired (either "Rat" or default "Human").
 #' 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @return \item{info}{Table/vector containing values specified in "info" for
 #' valid chemicals.}
 #' 

@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.12.2
-Date: 2022-11-16
+Version: 99.12.3
+Date: 2023-02-27
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -60,6 +60,8 @@ Authors@R: c(
            person("Todor", "Antonijevic", email="tantonijevic@toxstrategies.com",
              role = c("ctb"), comment = c(ORCID = "0000-0002-0248-8412")),
            person("Jimena", "Davis", role = c("ctb")), 
+           person("Elaina", "Kenyon", email="kenyon.elaina@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
@@ -77,13 +79,13 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        testthat
+        testthat, readxl
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
@@ -101,7 +103,8 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
-  Jimena Davis [ctb], 
+  Jimena Davis [ctb],
+  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>), 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
