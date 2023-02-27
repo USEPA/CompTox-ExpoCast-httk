@@ -76,6 +76,20 @@
 #'
 #' @keywords Parameter
 #'
+#' @seealso \code{\link{solve_fetal_pbtk}}
+#'
+#' @seealso \code{\link{parameterize_pbtk}}
+#'
+#' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{apply_clint_adjustment}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
+#'
+#' @seealso \code{\link{kapraun2019}}
+#'
 #' @examples
 #' 
 #' 
