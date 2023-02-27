@@ -55,6 +55,8 @@
 #' @param tissue.vols A list of volumes for tissues in \code{tissuelist}.
 #'
 #' @param tissue.flows A list of flows for tissues in \code{tissuelist}.
+#' 
+#' @param tissuenames A list of tissue names in \code{tissuenames}.
 #'
 #' @param model Specify which model (and therefore which tissues) are being 
 #' considered.
@@ -80,7 +82,7 @@
 #' high-throughput predictions of chemical distribution to tissues." Journal of
 #' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 #'
-#' @keywords Parameter, pbtk
+#' @keywords Parameter pbtk
 #' 
 #' @examples
 #' 
@@ -99,7 +101,7 @@ lump_tissues <- function(Ktissue2pu.in,
                          species="Human",
                          tissue.vols=NULL,
                          tissue.flows=NULL,
-                         tissue.names=NULL,
+                         tissuenames=NULL,
                          model="pbtk",
                          suppress.messages=FALSE)
 {

@@ -64,7 +64,7 @@ Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state concentration (mg/L) as a result
-of infusion dosing. Concentrations are returned for plasma by default, but various
+of oral infusion dosing. Concentrations are returned for plasma by default, but various
 tissues or blood concentrations can also be given as specified.
 }
 \details{
@@ -94,6 +94,11 @@ and dose rate has  units of mg/kg/day.
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput
 toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+}
+\seealso{
+\code{\link{calc_analytic_css}}
+
+\code{\link{parameterize_pbtk}}
 }
 \author{
 Robert Pearce and John Wambaugh
