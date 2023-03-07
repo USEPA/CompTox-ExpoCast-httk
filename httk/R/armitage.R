@@ -226,7 +226,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' kmw \tab \tab \cr           
 #' kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 #' kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-#' swat \tab The water solubility (i.e., 10^gswat) \tab mol/L \cr         
+#' swat \tab The water solubility (i.e., 10^gswat*1e6) \tab uM=umol/L \cr         
 #' kpl \tab \tab \cr           
 #' kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 #' kbsa \tab \tab \cr          
@@ -234,7 +234,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' soct_L \tab \tab \cr        
 #' scell_L \tab \tab \cr       
 #' cinit \tab Initial concentration \tab uM=umol/L \cr         
-#' mtot \tab Total moles \tab mol \cr          
+#' mtot \tab Total micromoles \tab umol \cr          
 #' cwat \tab Total concentration in water \tab uM=umol/L \cr          
 #' cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
 #' csat \tab Is the solution saturated (1/0) \tab logical \cr         
@@ -527,7 +527,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[,gkaw:=gkaw-duaw*Tcor] %>%
     .[,kaw := 10^gkaw] %>%
     .[,gswat:=gswat-(-1*duow)*Tcor] %>%
-    .[,swat:=10^gswat]
+    .[,swat:=10^gswat*1e6]
   
   tcdata[is.na(gkpl),gkpl:=0.97*gkow-6.94] %>% 
     .[,kpl:=10^gkpl] %>%
@@ -564,7 +564,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
   
-  tcdata[,nomconc := nomconc/1e6] %>% # umol/L to mol/L for all concentrations
+  tcdata[,nomconc := nomconc] %>% # umol/L to mol/L for all concentrations
     .[,cinit:= nomconc] %>%
     .[,mtot:= nomconc*Vbm] %>%
     .[,cwat:=mtot/(kaw*Vair + Vm + kbsa*Valb +
