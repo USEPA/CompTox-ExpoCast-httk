@@ -9,7 +9,7 @@ solve_dermal_pbtk(
   chem.cas = NULL,
   dtxsid = NULL,
   model.type = "dermal_1subcomp",
-  method.permeability = "Chen-Lian",
+  method.permeability = "UK-Surrey",
   Kvehicle2water = NULL,
   times = NULL,
   parameters = NULL,
@@ -58,8 +58,8 @@ to the top layer being the stratum corneum and the bottom layer being the combin
 viable epidermis and dermis.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
-the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
-is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". Default
+is "UK-Surrey" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 

@@ -9,7 +9,7 @@ parameterize_dermal_pbtk(
   chem.name = NULL,
   dtxsid = NULL,
   model.type = "dermal_1subcomp",
-  method.permeability = "Chen-Lian",
+  method.permeability = "UK-Surrey",
   species = "Human",
   default.to.human = F,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
@@ -48,8 +48,8 @@ to the top layer being the stratum corneum and the bottom layer being the combin
 viable epidermis and dermis.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
-the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". 
-Default is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". 
+Default is "UK-Surrey" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 law of diffusion to calculate P. For "dermal" model, this parameter is ignored.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or

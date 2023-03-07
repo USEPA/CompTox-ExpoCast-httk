@@ -16,8 +16,8 @@
 #' to the top layer being the stratum corneum and the bottom layer being the combined
 #' viable epidermis and dermis.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
-#' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". 
-#' Default is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". 
+#' Default is "UK-Surrey" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 #' law of diffusion to calculate P. For "dermal" model, this parameter is ignored.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
@@ -148,7 +148,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               model.type="dermal_1subcomp", #can also be "dermal"
-                              method.permeability = "Chen-Lian",
+                              method.permeability = "UK-Surrey",
                               species="Human",
                               default.to.human=F,
                               tissuelist=list(liver=c("liver"),kidney=c("kidney"),lung=c("lung"),gut=c("gut"),skin="skin"),
@@ -414,13 +414,13 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
       
     # Permeability coefficient from m to ve
     if (model.type=="dermal_1subcomp") {
-    if (method.permeability=="Chen-Lian"){
+    if (method.permeability=="UK-Surrey"){
       skin_depth = skin_depth - 0.002
       P <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
     } else if (method.permeability=="Potts-Guy"){
       P <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
     } else stop(
-      "method.permeatility must be set to either 'Potts-Guy' or 'Chen-Lian'")
+      "method.permeatility must be set to either 'Potts-Guy' or 'UK-Surrey'")
     } else if (model.type=="dermal") {
       warning("Input method.permeability ignored, since there is only one method do calculate Psc2ve and Pm2sc in this function.")
     }

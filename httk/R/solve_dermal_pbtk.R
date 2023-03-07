@@ -55,8 +55,8 @@
 #' to the top layer being the stratum corneum and the bottom layer being the combined
 #' viable epidermis and dermis.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
-#' the permeability coefficient, P, either "Potts-Guy" or "Chen-Lian". Default
-#' is "Chen-Lian" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
+#' the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". Default
+#' is "UK-Surrey" (Sawyer et al., 2016 and Chen et al., 2015), which uses Fick's
 #' law of diffusion to calculate P. For "dermal" model, this parameter is ignored.
 #' @param Kvehicle2water Partition coefficient for the vehicle (sometimes called the 
 #' media) carrying the chemical to water. Default is "water", which assumes the vehicle is water.
@@ -136,7 +136,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     chem.cas = NULL, #solve_model
                     dtxsid = NULL,#solve_model
                     model.type = "dermal_1subcomp", #can also be "dermal"
-                    method.permeability = "Chen-Lian",
+                    method.permeability = "UK-Surrey",
                     Kvehicle2water = NULL,
                     times=NULL, #solve_model
                     parameters=NULL, #solve_model
