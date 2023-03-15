@@ -28,6 +28,7 @@
 #' distribution between 0 and the limit of detection.
 #' @param samples This argument is the number of samples to be generated for
 #' calculating quantiles.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @author John Wambaugh
 #'
