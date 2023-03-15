@@ -97,7 +97,7 @@ convert_units <- function(input.units = NULL,
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
   
-  if(any(c(input.units,output.units)=='unitless')){
+  if ("unitless" %in% c(input.units,output.units)){
     if(input.units!=output.units){
       stop(
         "User specified 'unitless' for a model compartment that has units, ",

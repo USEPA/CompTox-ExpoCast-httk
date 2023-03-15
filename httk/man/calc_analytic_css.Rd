@@ -154,6 +154,13 @@ params <- parameterize_pbtk(chem.cas="80-05-7")
 
 calc_analytic_css(parameters=params,model="pbtk")
 
+# Try various chemicals with differing parameter sources/issues:
+calc_analytic_css(chem.name="Betaxolol")
+calc_analytic_css(chem.name="Tacrine",model="pbtk")
+calc_analytic_css(chem.name="Dicofol",model="1compartment")
+calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
+calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
+
 }
 \references{
 Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
