@@ -47,13 +47,15 @@ model.list[['3compartment']]$tissuelist = list(
 # how other parameters were calculated:
 model.list[["3compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
   "Funbound.plasma",
   "Funbound.plasma.dist",
   "Funbound.plasma.adjustment",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "hematocrit",
   "Kgut2pu",

@@ -21,6 +21,8 @@ calc_mc_oral_equiv(
   concentration = "plasma",
   IVIVE = NULL,
   model = "3compartmentss",
+  Caco2.options = list(),
+  calc.analytic.css.arg.list = list(),
   ...
 )
 }
@@ -76,7 +78,7 @@ specific tissue.}
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
-overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 See Details below for more information.}
 
 \item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
@@ -179,6 +181,7 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+\donttest{
 # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
 # for more stable results. Default value is 1000:
 NSAMP = 10
@@ -195,7 +198,6 @@ calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=NSAMP)
 # Note that we use set.seed to get the same sequence of random numbers for
 # the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
-\donttest{
 # The following example should result in an error since we do not 
 # estimate tissue partitioning with '3compartmentss'. 
 set.seed(1234)                        

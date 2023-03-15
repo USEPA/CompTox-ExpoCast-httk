@@ -22,6 +22,7 @@ create_mc_samples(
   tissue = NULL,
   httkpop.dt = NULL,
   invitro.mc.arg.list = NULL,
+  Caco2.options = list(),
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,

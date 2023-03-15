@@ -17,7 +17,9 @@ parameterize_steadystate(
   restrictive.clearance = TRUE,
   fup.lod.default = 0.005,
   suppress.messages = FALSE,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(),
+  ...
 )
 }
 \arguments{
@@ -60,11 +62,19 @@ value is 0.0005.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-dose that enters the gutlumen.} 
+\item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, 
+that is, the fraction of the dose that enters the gutlumen.}  
 \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
 \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
@@ -117,5 +127,5 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 \code{\link{physiology.data}}
 }
 \author{
-John Wambaugh
+John Wambaugh and Greg Honda
 }
