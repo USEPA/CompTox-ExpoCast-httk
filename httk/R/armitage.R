@@ -262,7 +262,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' xplastic \tab Fraction bound to plastic \tab fraction \cr     
 #' xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 #' eta_free \tab Effective availability ratio \tab fraction \cr      
-#' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab uM=umol/L \cr
+#' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction (%) \cr
 #' }
 #'
 #' @author Greg Honda
@@ -602,7 +602,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[,xplastic:=mplastic/mtot] %>%
     .[,xprecip:=mprecip/mtot] %>% 
     .[, eta_free := cwat_s/nomconc] %>%  # effective availability ratio
-    .[, cfree.invitro := cwat_s * 1e6] # free invitro concentration in micromolar
+    .[, cfree.invitro := cwat_s] # free invitro concentration in micromolar
   
   return(tcdata)
   #output concentrations in mol/L
