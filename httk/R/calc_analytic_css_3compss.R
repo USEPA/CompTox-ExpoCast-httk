@@ -55,6 +55,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
 
@@ -85,6 +86,15 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Fetch some parameters using parameterize_steadstate, if needed:
   if (is.null(parameters))
   {
+  # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
@@ -96,6 +106,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                     dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
+                                    Caco2.options = Caco2.options,
                                     ...)
 
   } else {
@@ -132,7 +143,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   if (!restrictive.clearance) cl <- cl*Fup
 
 # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
-  Css_blood <- parameters$Fgutabs * 
+   Css_blood <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
     parameters$Qgfrc/BW^0.25 * Fup + 
@@ -140,7 +151,6 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     (Qtotalliver + Fup*cl/Rb2p))
   # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
-    
     
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))

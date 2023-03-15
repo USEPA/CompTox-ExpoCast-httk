@@ -71,6 +71,14 @@ model.list <- list()
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #'
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#'
 #'@param IVIVE Honda et al. (2019) identified four plausible sets of 
 #'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
 #'Argument may be set to "Honda1" through "Honda4". If used, this function 
@@ -97,16 +105,26 @@ model.list <- list()
 #'oral infusion dosing.  All tissues other than gut, liver, and lung are the 
 #'product of the steady state plasma concentration and the tissue to plasma 
 #'partition coefficient. 
-#'\tabular{lrrrr}{
-#' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr
-#'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr
-#'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr
-#'Honda3 \tab Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-#'Honda4 \tab Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr
-#'Honda5 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-#'Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
+#'
+#' Only four sets of IVIVE assumptions that performed well in Honda et al. 
+#' (2019) are currently included in \code{\link{honda.ivive}}:
+#' "Honda1" through "Honda4". The use of max (peak) 
+#' concentration can not be currently be calculated with \code{\link{calc_analytic_css}}. 
+#' The httk default settings correspond to "Honda3":
+#' 
+#'\tabular{lrrrrr}{
+#' \tab \emph{In Vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \emph{In Vivo} \tab TK Statistic Used* \tab Bioactive Chemical Conc. \emph{In Vitro} \cr
+#'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
+#'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+#'Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+#'Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 #'}
-#'*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
+#'
+#' "Honda1" uses plasma concentration, restrictive clearance, and treats the 
+#' unbound invivo concentration as bioactive. For IVIVE, any input nominal 
+#' concentration in vitro should be converted to cfree.invitro using 
+#' \code{\link{armitage_eval}}, otherwise performance will be the same as 
+#' "Honda2". 
 #'  
 #'@examples 
 #'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
@@ -163,6 +181,7 @@ calc_analytic_css <- function(chem.name=NULL,
                               restrictive.clearance = TRUE,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
+                              Caco2.options = list(),
                               parameterize.args = list(),
                               ...)
 {  
@@ -226,6 +245,7 @@ calc_analytic_css <- function(chem.name=NULL,
         chem.name=chem.name,
         dtxsid=dtxsid,
         species=species,
+        Caco2.options=Caco2.options,
         suppress.messages=suppress.messages),
       parameterize.args))
  
@@ -261,7 +281,7 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fbio.oral <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
     
   if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
@@ -308,7 +328,8 @@ calc_analytic_css <- function(chem.name=NULL,
         suppress.messages=suppress.messages,
         tissue=tissue,
         restrictive.clearance=restrictive.clearance,
-        bioactive.free.invivo = bioactive.free.invivo),
+        bioactive.free.invivo = bioactive.free.invivo,
+        Caco2.options = Caco2.options),
         list(...)))
     }
   } else {
