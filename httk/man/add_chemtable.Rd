@@ -25,7 +25,7 @@ the table. Each item in the list should point to a column in the table
 new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-'Fgutabs', 'Rblood2plasma'.}
+'Fabs', 'Fgut', 'Rblood2plasma'.}
 
 \item{current.table}{This is the table to which data are being added.}
 
@@ -66,6 +66,7 @@ modeled.
 \examples{
 
 library(httk)
+\donttest{
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 my.new.data <- cbind(my.new.data,as.data.frame(c(
                      "111-11-2","222-22-0","333-33-5"),
@@ -128,6 +129,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                  reference="MyPaper 2015") 
 # Note that average and max change (relative to above):
 calc_css(chem.name="B")     
+}
 
 }
 \author{

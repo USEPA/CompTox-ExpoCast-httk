@@ -13,6 +13,10 @@ httk/data-raw/ckd_epi_resid_var_files/
 # Or these R files
 ###################
 MD5
+
+###################
+# Or these R files
+###################
 .Rbuildignore
 *.Rhistory
 *.Rproj
