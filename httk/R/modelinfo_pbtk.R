@@ -253,6 +253,24 @@ model.list[["pbtk"]]$routes <- list(
     "dose.type" = "add")
   )
 
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
+model.list[["pbtk"]]$state.vars <- c(
+    "Agutlumen",
+    "Agut",
+    "Aliver",
+    "Aven",
+    "Alung",
+    "Aart",
+    "Arest",
+    "Akidney", 
+    "Atubules",
+    "Ametabolized",
+    "AUC"
+    ) 
+    
 # Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
