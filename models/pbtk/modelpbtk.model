@@ -102,8 +102,8 @@ dt (Aven) = ((Qliver + Qgut) * Aliver / Vliver / Kliver2pu + Qkidney * Akidney /
 dt (Alung) = Qcardiac * (Aven / Vven - Alung / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
 dt (Aart) = Qcardiac * (Alung / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - Aart / Vart );
 dt (Arest) = Qrest * (Aart/Vart - Arest/Vrest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
-dt (Akidney) = Qkidney * Aart / Vart - Qkidney * Akidney / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Akidney / Vkidney / Kkidney2pu;
-dt (Atubules) = Qgfr * Akidney / Vkidney / Kkidney2pu;
+dt (Akidney) = Qkidney * Aart / Vart - Qkidney * Akidney / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Fraction_unbound_plasma / Rblood2plasma * Aart / Vart;
+dt (Atubules) = Qgfr * Fraction_unbound_plasma / Rblood2plasma * Aart / Vart;
 dt (Ametabolized) = Clmetabolism * Aliver / Vliver / Kliver2pu ;
 dt (AUC) = Aven / Vven / Rblood2plasma;
 
