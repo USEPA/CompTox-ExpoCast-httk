@@ -3,9 +3,12 @@
 #' This function estimates the ratio of the equilibrium concentrations of
 #' a compound in octanol and water, taking into account the charge of the
 #' compound. Given the pH, we assume the neutral (uncharged) fraction of
-#' compound partitions according to the hydrophobicity (Pow). We assume that
+#' compound partitions according to the hydrophobicity 
+#' (\ifelse{html}{\out{P<sub>ow</sub>}}{\eqn{P_{ow}}}). We assume that
 #' only a fraction alpha (defaults to 0.001 -- Schmitt (2008)) of the charged
-#' compound partitions into lipid (octanol). Fractions charged are calculated
+#' compound partitions into lipid (octanol):
+#' \ifelse{html}{\out{D<sub>ow</sub> = P<sub>ow</sub>*(F<sub>neutral</sub> + alpha*F<sub>charged</sub>)}}{\deqn{D_{ow} = P_{ow}*(F_{neutral} + \alpha*F_{charged})}}
+#' Fractions charged are calculated
 #' according to hydrogen ionization equilibria (pKa_Donor, pKa_Accept) using
 #' \code{\link{calc_ionization}}.
 #' 
@@ -125,24 +128,28 @@ calc_dow <- function(Pow=NULL,
     fraction_charged  <- ionization[["fraction_charged"]]
   }
   
-# Calculate Dow:
+# Schmitt (2008) section 2.5.1: neutral lipid:water partition coefficient
+# This is a generalized version of Schmitt (2008) equations 13 and 14 to
+# calculate Dow. 
+# Note that this form captures fraction neutral and zwitterions, that is
+# 1 - fraction_charged = fraction_neutral + fraction_zwitter):
   Dow <- Pow*(1 + (alpha - 1)*fraction_charged)
   
-  return(Dow)
+  return(set_httk_precision(Dow))
 }
 
 #' Calculate the ionization.
 #' 
 #' This function calculates the ionization of a compound at a given pH. The 
 #' pKa's are either entered as parameters or taken from a specific compound in
-#' the package.
-#' 
-#' The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or 
+#' the package. The arguments pKa_Donor and pKa_Accept may be single numbers, characters, or 
 #' vectors. We support characters because there are many instances with multiple 
 #' predicted values and all those values can be included by concatenating with 
 #' commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
 #' may be vectors of characters representing different chemicals or instances of
-#' chemical parameters to allow for uncertainty analysis.
+#' chemical parameters to allow for uncertainty analysis. A null value for
+#' pKa_Donor or pKa_Accept is interpretted as no argument provided, while NA 
+#' is taken as no equlibria
 #' 
 #' The fractions are calculated by determining the coefficients for each
 #' species and dividing the particular species by the sum of all three.  The
@@ -208,7 +215,7 @@ calc_dow <- function(Pow=NULL,
 #' print(out)
 #' out[["fraction_negative"]]==max(unlist(out))
 #'
-#' # Fictious compound, should be almost all all negative (anion):
+#' # Fictitious compound, should be almost all all negative (anion):
 #' out <- calc_ionization(pKa_Donor=8,pKa_Accept="1,4",pH=9)
 #' print(out)
 #' out[["fraction_negative"]]>0.9
@@ -242,6 +249,7 @@ calc_ionization <- function(
 
   if ((!is.null(chem.cas) | !is.null(chem.name) | !is.null(dtxsid)) & 
       !all(c("pKa_Donor","pKa_Accept") %in% names(parameters)) &
+# A null value means no argument provided, while NA means no equlibria:
       (is.null(pKa_Donor) & is.null(pKa_Accept))) 
   {
     out <- get_chem_id(
@@ -255,22 +263,24 @@ calc_ionization <- function(
       suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas))
   }
   
+  if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
+  {
+    pKa_Donor <- parameters$pKa_Donor
+    pKa_Accept <- parameters$pKa_Accept
+  } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
+  {
+# If one of pKa_Donor/Accept is specified but not the other, we assume the other
+# is not present:
+    if (is.null(pKa_Donor)) pKa_Donor <- NA
+    if (is.null(pKa_Accept)) pKa_Accept <- NA
+  } else {
+    stop(
+"Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
+  }
+  
   # Check if any of these arguments are vectors:
   if (length(pKa_Donor) < 2 & length(pKa_Accept) < 2 & length(pH) < 2)
   {
-    if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
-    {
-      pKa_Donor <- parameters$pKa_Donor
-      pKa_Accept <- parameters$pKa_Accept
-    } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
-    {
-  # A null value means no argument provided, while NA means no equlibria:
-      if (is.null(pKa_Donor)) pKa_Donor <- NA
-      if (is.null(pKa_Accept)) pKa_Accept <- NA
-    } else {
-      stop(
-  "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
-    }
     # Number of ionizations to calculate:
     if (is.null(parameters))
     {
@@ -287,10 +297,12 @@ calc_ionization <- function(
       length(unique(parameters$pKa_Accept)),
       length(unique(parameters$pKa_pH))))
     }
-  } else calculations <- max(c(
+  } else {
+    calculations <- max(c(
     length(unique(pKa_Donor)),
     length(unique(pKa_Accept)),
     length(unique(pH))))
+  }
   
   fraction_neutral <- NULL
   fraction_charged <- NULL
@@ -302,9 +314,9 @@ calc_ionization <- function(
   {
     if (calculations > 1)
     {
-      this.pKa_Donor <- pKa_Donor[[index]]
-      this.pKa_Accept <- pKa_Accept[[index]]
-      this.pH <- pH[[index]]
+      this.pKa_Donor <- pKa_Donor[[min(index,length(pKa_Donor))]]
+      this.pKa_Accept <- pKa_Accept[[min(index,length(pKa_Donor))]]
+      this.pH <- pH[[min(index,length(pKa_Donor))]]
     } else {
       this.pKa_Donor <- pKa_Donor[[1]]
       this.pKa_Accept <- pKa_Accept[[1]]
@@ -386,7 +398,7 @@ calc_ionization <- function(
       if (nz == 0) {
         for (i in 1:length(eq.points))
         {
-          negative <- negative + 10^(i * pH - sum(eq.points[1:i]))
+          negative <- negative + 10^(i * this.pH - sum(eq.points[1:i]))
         }
       } else if (nz == length(eq.points))
         {
@@ -394,16 +406,16 @@ calc_ionization <- function(
         {
           positive <- positive + 
             10^(sum(eq.points[(length(eq.points) + 1 - i):
-              length(eq.points)])- i * pH)
+              length(eq.points)])- i * this.pH)
         }
       } else {
         for (i in 1:nz) 
         {
-          positive <- positive + 10^(sum(eq.points[(nz + 1 - i):nz])- i * pH)
+          positive <- positive + 10^(sum(eq.points[(nz + 1 - i):nz])- i * this.pH)
         }
         for (i in 1:(length(eq.points)-nz)) 
         {
-          negative <- negative + 10^(i * pH - sum(eq.points[(nz+1):(nz+i)])) 
+          negative <- negative + 10^(i * this.pH - sum(eq.points[(nz+1):(nz+i)])) 
         }
       }
       denom <- denom + positive + negative      
@@ -429,11 +441,11 @@ calc_ionization <- function(
     }
   }  
   
-  return(list(fraction_neutral = fraction_neutral,
+  return(lapply(list(fraction_neutral = fraction_neutral,
     fraction_charged = fraction_charged,
     fraction_negative = fraction_negative,
     fraction_positive = fraction_positive,
-    fraction_zwitter = fraction_zwitter))
+    fraction_zwitter = fraction_zwitter),set_httk_precision))
 }
 
 is_acid <- function(pH=7,pKa_Donor=NA,pKa_Accept=NA,fraction_negative=NULL)

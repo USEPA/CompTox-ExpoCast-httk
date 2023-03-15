@@ -122,6 +122,19 @@ Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 }
+\seealso{
+\code{\link{solve_3comp}}
+
+\code{\link{calc_analytic_css_3comp}}
+
+\code{\link{parameterize_pbtk}}
+
+\code{\link{apply_clint_adjustment}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
+}
 \author{
 Robert Pearce and John Wambaugh
 }
