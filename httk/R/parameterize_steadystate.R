@@ -27,10 +27,10 @@
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
 #' having p-values greater than the threshold are set to zero.
 #' 
-#' @param default.to.human Substitutes missing rat values with human values if
-#' true.
+#' @param default.to.human Substitutes missing species-specific values with human values if
+#' TRUE (default is FALSE).
 #' 
-#' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
+#' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' 
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
@@ -81,7 +81,13 @@
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #'
-#' @keywords Parameter 3compss
+#' @seealso \code{\link{calc_analytic_css_3compss}}
+#'
+#' @seealso \code{\link{apply_clint_adjustment}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' 
@@ -96,7 +102,7 @@ parameterize_steadystate <- function(
                               species="Human",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
-                              human.clint.fup=FALSE,
+                              force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
                               restrictive.clearance=TRUE,
@@ -160,161 +166,96 @@ parameterize_steadystate <- function(
 
   # Rate of disappearance of compound from a hepatocyte incubation
   # (hepatic intrinsic clearance -- uL/min/million hepatocytes):
-  Clint.db <- try(get_invitroPK_param(
-                    "Clint",
-                    species,
-                    chem.cas=chem.cas,
-                    chem.name=chem.name,
-                    dtxsid=dtxsid),
-                silent=TRUE)
-                
-  # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param(
-                        "Clint.pValue",
-                        species,
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                     silent=TRUE)
-                    
-  if (is(Clint.db,"try-error") & default.to.human || human.clint.fup) 
-  {
-    Clint.db <- try(get_invitroPK_param(
-                      "Clint",
-                      "Human",
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                  silent=TRUE)
-    Clint.pValue <- try(get_invitroPK_param(
-                          "Clint.pValue",
-                          "Human",
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-                      silent=TRUE)
-    warning(paste(species,"coerced to Human for metabolic clerance data."))
-  }
-  if (is(Clint.db,"try-error")) 
-    stop("Missing metabolic clearance data for given species.\n\
-Set default.to.human to true to substitute human value.")
-# Check if clintis a point value or a distribution, if a distribution, 
-#use the median:
-  if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
-  {
-    Clint.dist <- Clint.db
-    Clint.point <- as.numeric(strsplit(Clint.db,",")[[1]][1])
-    Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
-    if (!suppress.messages) warning("Clint is provided as a distribution.")
-  } else {
-    Clint.point <- Clint.db
-    Clint.dist <- NA
-  }
-  if (!is.na(Clint.pValue) & 
-      Clint.pValue > clint.pvalue.threshold) Clint.point  <- 0
-  
-  # unitless fraction of chemical unbound with plasma
-  # fup.db contains whatever was in the chem.phys table
-  fup.db <- try(get_invitroPK_param(
-                  "Funbound.plasma",
-                  species,
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-              silent=TRUE)
-  if (is(fup.db,"try-error") & default.to.human || human.clint.fup) 
-  {
-    fup.db<- try(get_invitroPK_param(
-                   "Funbound.plasma",
-                   "Human",
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-               silent=TRUE)
-    if (!suppress.messages) 
-      warning(paste(species,"coerced to Human for protein binding data."))
-  }
-  if (is(fup.db,"try-error")) 
-    stop("Missing protein binding data for given species.\n\
-Set default.to.human to true to substitute human value.")
-# Check if fup is a point value or a distribution, if a distribution, 
-# use the median:
-  if (nchar(fup.db) - nchar(gsub(",","",fup.db))==2) 
-  {
-    fup.point <- as.numeric(strsplit(fup.db,",")[[1]][1])
-    fup.dist <- fup.db
-    if (!suppress.messages) 
-      warning("Fraction unbound is provided as a distribution.")
-  } else {
-    fup.point <- fup.db
-    fup.dist <- NA
-  }
-  if (fup.point == 0)
-  {
-    fup.point <- fup.lod.default
-    if (!suppress.messages) warning("Fraction unbound = 0, changed to 0.005.")
-  }
+# Get the intrinsic hepatic clearance:  
+  Clint.list <- get_clint(
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas,
+      species=species,
+      default.to.human=default.to.human,
+      force.human.clint=force.human.clint.fup,
+      clint.pvalue.threshold=clint.pvalue.threshold,
+      suppress.messages=suppress.messages) 
+  Clint.point <- Clint.list$Clint.point
+  Clint.dist <- Clint.list$Clint.dist
 
-# acid dissociation constants
+# Get phys-chemical properties:
+  MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
+  # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
-                                  "pKa_Donor",
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid))
-# basic association cosntants
+    "pKa_Donor",
+    chem.cas=chem.cas)) 
+  # basic association cosntants
   pKa_Accept <- suppressWarnings(get_physchem_param(
-                                   "pKa_Accept",
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid))
-# Octanol:water partition coeffiecient
-  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) 
-  ion <- calc_ionization(pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
-  dow <- Pow * (ion$fraction_neutral + 
-                0.001 * ion$fraction_charged + 
-                ion$fraction_zwitter)
-
-  if (adjusted.Funbound.plasma)
-  {
-    if (human.clint.fup) 
-    {
-      Flipid <- subset(physiology.data,
-                  Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-                    which(colnames(physiology.data) == 'Human')]
-    } else {
-      Flipid <- subset(physiology.data,
-                  Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-                    which(tolower(colnames(physiology.data)) == tolower(species))]
-    }
-    fup.adjustment <- max(1 / ((dow) * Flipid + 1 / fup.point)/fup.point,
-                        minimum.Funbound.plasma) # Enforcing a sanity check on 
-                                                 # plasma binding
-    fup.adjusted <- fup.point*fup.adjustment # unitless fraction
-    if (!suppress.messages) 
-      warning('Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017).')
-  } else {
-    fup.adjusted <- fup.point
-    fup.adjustment <- NA
-  }
-# Restrict values of fup:
-  if (fup.adjusted < minimum.Funbound.plasma) 
-    fup.adjusted <- minimum.Funbound.plasma
+    "pKa_Accept",
+    chem.cas=chem.cas)) 
+  # Octanol:water partition coefficient
+  Pow <- 10^get_physchem_param(
+    "logP",
+    chem.cas=chem.cas) 
     
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
 # clearance assay (Kilford et al., 2008)
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept,
-    suppress.messages=suppress.messages)) # fraction 
-  if (adjusted.Clint) 
+    pKa_Accept=pKa_Accept)) # fraction 
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
+                               Clint.point,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
+  
+  # Get the central tendency (point estimate) and potentially the distribution
+  # quantiles for the fraction unbound in plasma (fup):
+  fup.list <- get_fup(
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas,
+      species=species,
+      default.to.human=default.to.human,
+      force.human.fup=force.human.clint.fup,
+      suppress.messages=suppress.messages) 
+  fup.point <- fup.list$Funbound.plasma.point
+  fup.dist <- fup.list$Funbound.plasma.dist 
+
+  if (fup.point == 0)
   {
-    Clint.point <- Clint.point/Fu_hep
-    if (!suppress.messages) 
-    {
-      warning('Clint adjusted for in vitro partioning (Kilford, 2008).')
-    }
+    fup.point <- fup.lod.default
+    if (!suppress.messages) warning(paste0(
+        "Fraction unbound = 0, changed to ",
+        fup.lod.default,
+        "."))
   }
+
+# Distribution coefficient:
+  dow<- calc_dow(Pow = Pow, pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
+
+  # Get the Pearce et al. (2017) lipid binding correction:       
+  fup.adjustment <- calc_fup_correction(fup.point,
+                                        dtxsid=dtxsid,
+                                        chem.name=chem.name,
+                                        chem.cas=chem.cas,
+                                        species=species,
+                                        default.to.human=default.to.human,
+                                        force.human.fup=force.human.clint.fup,
+                                        suppress.messages=suppress.messages)
+
+  # Apply the correction if requested:
+  if (adjusted.Funbound.plasma)
+  { 
+    fup.corrected <- apply_fup_adjustment(
+                       fup.point,
+                       fup.correction=fup.adjustment,
+                       suppress.messages=suppress.messages,
+                       minimum.Funbound.plasma=minimum.Funbound.plasma
+                       )
+  } else {
+    fup.corrected <- fup.point
+  } 
+      
   Fgutabs <- try(get_invitroPK_param("Fgutabs",
                    species,
                         chem.cas=chem.cas,
@@ -327,7 +268,7 @@ Set default.to.human to true to substitute human value.")
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
   Params[["Funbound.plasma.adjustment"]] <- fup.adjustment
-  Params[["Funbound.plasma"]] <- fup.adjusted
+  Params[["Funbound.plasma"]] <- fup.corrected
   Params[["Funbound.plasma.dist"]] <- fup.dist
   Params[["Qtotal.liverc"]] <- Qtotal.liverc    #        L/h/kgBW
   Params[["Qgfrc"]] <- QGFRc/1000*60 #        L/h/kgBW     
@@ -344,7 +285,7 @@ Set default.to.human to true to substitute human value.")
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
             species=species,
-            adjusted.Funbound.plasma=fup.adjusted,
+            adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
 
@@ -357,7 +298,7 @@ Set default.to.human to true to substitute human value.")
 
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4
-                    Funbound.plasma=fup.adjusted,
+                    Funbound.plasma=fup.corrected,
                     Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]],
                     BW=BW),

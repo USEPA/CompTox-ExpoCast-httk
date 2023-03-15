@@ -59,6 +59,7 @@ model.list[["1compartment"]]$param.names <- c(
   "MA",
   "MW",
   "Rblood2plasma",
+  'plasma.vol',
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
