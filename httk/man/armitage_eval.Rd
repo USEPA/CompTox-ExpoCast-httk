@@ -24,7 +24,7 @@ armitage_eval(
   this.P_nlom = 0.035,
   this.P_dom = 0.05,
   this.P_cells = 1,
-  this.csalt = 150000,
+  this.csalt = 0.15,
   this.celldensity = 1,
   this.cellmass = 3,
   this.f_oc = 1,
@@ -156,7 +156,7 @@ ss.GSE \tab \tab \cr
 kmw \tab \tab \cr           
 kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-swat \tab The water solubility (i.e., 10^gswat) \tab mol/L \cr         
+swat \tab The water solubility (i.e., 10^gswat*1e6) \tab uM=umol/L \cr         
 kpl \tab \tab \cr           
 kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 kbsa \tab \tab \cr          
@@ -164,7 +164,7 @@ swat_L \tab \tab \cr
 soct_L \tab \tab \cr        
 scell_L \tab \tab \cr       
 cinit \tab Initial concentration \tab uM=umol/L \cr         
-mtot \tab Total moles \tab mol \cr          
+mtot \tab Total micromoles \tab umol \cr          
 cwat \tab Total concentration in water \tab uM=umol/L \cr          
 cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
 csat \tab Is the solution saturated (1/0) \tab logical \cr         
@@ -192,7 +192,7 @@ xcells \tab Fraction within cells \tab fraction \cr
 xplastic \tab Fraction bound to plastic \tab fraction \cr     
 xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 eta_free \tab Effective availability ratio \tab fraction \cr      
-\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab uM=umol/L \cr
+\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction (%) \cr
 }
 }
 \description{
