@@ -30,7 +30,9 @@ armitage_eval(
   this.f_oc = 1,
   this.conc_ser_alb = 24,
   this.conc_ser_lip = 1.9,
-  this.Vdom = 0
+  this.Vdom = 0,
+  this.pH = 7,
+  neutral.only = FALSE
 )
 }
 \arguments{
@@ -89,6 +91,10 @@ model}
 \item{this.conc_ser_lip}{1.9 g/L, mass concentration of lipids in serum.}
 
 \item{this.Vdom}{0 ml, the volume of dissolved organic matter (DOM)}
+
+\item{this.pH}{7.0, pH of cell culture}
+
+\item{neutral.only}{FALSE, Should we restrict the partitioning concentration to neutral only?}
 }
 \value{
 \tabular{lll}{
@@ -187,9 +193,9 @@ eta_free \tab effective availability ratio \tab fraction \cr
 }
 }
 \description{
-Evaluate the Armitage model for chemical distributon in vitro. Takes input
+Evaluate the Armitage model for chemical distributon \em{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table. Updates over
-the model published in Armitage et al. 2014 include binding to plastic walls
+the model published in Armitage et al. (2014) include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{

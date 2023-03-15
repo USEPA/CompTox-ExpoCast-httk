@@ -51,11 +51,17 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#'
-#' @return 
-#' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, 
+#' that is, the fraction of the dose that enters the gutlumen.}  
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
 #' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
@@ -70,7 +76,7 @@
 #' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
 #' clearance, calculated from the corrected well-stirred model.}
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Greg Honda
 #'
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 
@@ -108,7 +114,9 @@ parameterize_steadystate <- function(
                               restrictive.clearance=TRUE,
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              Caco2.options=list(),
+                              ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -254,15 +262,18 @@ parameterize_steadystate <- function(
                        )
   } else {
     fup.corrected <- fup.point
-  } 
-      
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
-                   species,
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-               silent=TRUE)
-  if (is(Fgutabs,"try-error")) Fgutabs <- 1
+    fup.adjustment <- NA
+  }
+  
+# Look for a measured fraction absorbed from the gut (oral doses):
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",
+                 species,
+                 chem.cas=chem.cas,
+                 chem.name=chem.name,
+                 dtxsid=dtxsid,
+                 silent=TRUE))
+# If no measured value is available default to one:                 
+  if (is(Fabsgut,"try-error")) Fabsgut <- 1
 
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
@@ -280,14 +291,26 @@ parameterize_steadystate <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fgutabs']] <- Fgutabs
   
-  Rb2p <- available_rblood2plasma(chem.name=chem.name,
+  Rb2p <- available_rblood2plasma(
+            chem.name=chem.name,
             chem.cas=chem.cas,
+            dtxsid=dtxsid,
             species=species,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
+  
+  Params <- do.call(get_fabsgut, c(
+    list(
+      Params=Params,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species
+      ),
+    Caco2.options)
+    )
 
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:

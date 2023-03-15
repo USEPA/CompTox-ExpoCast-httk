@@ -50,6 +50,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
 
@@ -79,6 +80,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                     dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {
@@ -97,10 +99,11 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-  
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+
   
   # one compartment Css is dose.rate / clearance:
+  hourly.dose <- hourly.dose * parameters$Fbio.oral
+
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
   # Convert to plasma concentration:
   Css <- Css/parameters[['Rblood2plasma']]

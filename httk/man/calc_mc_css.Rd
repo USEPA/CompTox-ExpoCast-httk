@@ -24,6 +24,7 @@ calc_mc_css(
   tissue = NULL,
   concentration = "plasma",
   output.units = "mg/L",
+  Caco2.options = list(),
   invitro.mc.arg.list = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
@@ -125,6 +126,7 @@ parameterization function (that is, parameterize_MODEL) corresponding to
 argument "model". (Defaults to NULL.)}
 
 \item{calc.analytic.css.arg.list}{Additional parameters passed to 
+
 \code{\link{calc_analytic_css}}.}
 }
 \value{
@@ -222,6 +224,7 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+\donttest{
 # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
 # for more stable results. Default value is 1000:
 NSAMP = 10
@@ -234,7 +237,6 @@ set.seed(1234)
 set.seed(1234)
 calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)  
 
-\donttest{
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A', output.units='uM',
              samples=NSAMP, return.samples=TRUE)
@@ -268,7 +270,6 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)
  calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
-}
 
  set.seed(1234)
  # Standard HTTK Monte Carlo 
@@ -312,6 +313,7 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
              httkpop=FALSE,
              invitrouv=FALSE,
              vary.params=list(Pow=0.3))
+}
 
 }
 \references{
@@ -334,7 +336,7 @@ pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 
 \code{\link{create_mc_samples}}
 }
 \author{
-Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}

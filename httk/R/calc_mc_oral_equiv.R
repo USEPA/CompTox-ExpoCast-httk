@@ -137,7 +137,7 @@
 #' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+#' overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 #' See Details below for more information.
 #'
 #' @param ... Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
@@ -224,6 +224,8 @@ calc_mc_oral_equiv <- function(conc,
                                concentration = "plasma",
                                IVIVE=NULL,
                                model='3compartmentss',
+                               Caco2.options = list(),
+                               calc.analytic.css.arg.list = list(),
                                ...)
 {
   # check if the input units are in concentration units - output error if TRUE
@@ -247,7 +249,6 @@ calc_mc_oral_equiv <- function(conc,
     # for 'dose' unit conversions later in the function
   }
     
-  
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
@@ -308,6 +309,7 @@ calc_mc_oral_equiv <- function(conc,
   well.stirred.correction <- adjusted.Funbound.plasma <- NULL
   #End R CMD CHECK appeasement.
   
+
   # output units are in '<input.units>/mg/kg/day' for 'Css'
   # (i.e. 'mg/L / kg/day' or 'uM / kg/day')
   Css <- try(do.call(calc_mc_css,
@@ -328,8 +330,10 @@ calc_mc_oral_equiv <- function(conc,
                             IVIVE = IVIVE,
                             well.stirred.correction=well.stirred.correction,
                             adjusted.Funbound.plasma=adjusted.Funbound.plasma),
-                          return.samples=return.samples,
+                         Caco2.options = Caco2.options,
+                         return.samples=return.samples,
                           ...))))
+
                          
   if (is(Css,"try-error"))
   {
@@ -350,6 +354,7 @@ calc_mc_oral_equiv <- function(conc,
     if (is.null(chem.cas)){
       chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
     } 
+
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
     # output units are in 'umol/kg/day' for 'dose'
     dose <- dose * convert_units(

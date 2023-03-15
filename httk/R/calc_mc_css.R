@@ -184,9 +184,10 @@
 #' argument "model". (Defaults to NULL.)  
 #'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
-#' \code{\link{calc_analytic_css}}.
 #'
-#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+#' \code{\link{calc_analytic_css}}.
+#' 
+#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 #'
 #' @references 
 #' Wambaugh, John F., et al. "Toxicokinetic triage for 
@@ -326,6 +327,7 @@ calc_mc_css <- function(chem.cas = NULL,
                         tissue = NULL,
                         concentration = "plasma",
                         output.units = "mg/L",
+                        Caco2.options=list(),
                         invitro.mc.arg.list = NULL,
                         httkpop.generate.arg.list = 
                           list(method = "direct resampling"),
@@ -397,6 +399,7 @@ calc_mc_css <- function(chem.cas = NULL,
                               calcrb2p=calcrb2p,
                               censored.params=censored.params,
                               vary.params=vary.params,
+                              Caco2.options = Caco2.options,
                               return.samples=FALSE,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,

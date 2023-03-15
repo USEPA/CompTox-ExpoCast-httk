@@ -139,6 +139,7 @@ create_mc_samples <- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=NULL,
+                        Caco2.options=list(),
                         httkpop.generate.arg.list=
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
@@ -266,6 +267,7 @@ create_mc_samples <- function(chem.cas=NULL,
                        samples=samples,
                        httkpop.dt=httkpop.dt),
                        httkpop.generate.arg.list)))
+
 # Overwrite parameters specified by httk-pop:
     parameters.dt[,names(physiology.dt):=physiology.dt]
     
@@ -316,6 +318,7 @@ Set species=\"Human\" to run httkpop model.')
                        args=c(list(
                          parameters.dt=parameters.dt,
                          samples=samples),
+                         Caco2.options,
                          invitro.mc.arg.list))
   }
 
