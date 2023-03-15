@@ -1,0 +1,82 @@
+
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #R CMD BATCH --no-timing --no-restore --no-save caco2_test.R caco2_test.Rout
+> library(httk)
+> options(warn=-1)
+> 
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk")
+Plasma concentration returned in uM units.
+[1] 1.111
+> calc_analytic_css(chem.name="bisphenol a",model="pbtk",Caco2.options=list(keepit100=T))
+Plasma concentration returned in uM units.
+[1] 1.173
+> 
+> head(solve_pbtk(chem.cas="80-05-7"))
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
+[1,] 0.00000    290.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
+[2,] 0.00001    290.40  0.1374 4.189e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    168.50 68.1700 2.264e+01 2.745e-01 2.227 0.2394 0.06292   3.008
+[4,] 0.02083     97.70 69.1000 4.672e+01 6.567e-01 5.642 0.6293 0.39230  11.880
+[5,] 0.03125     56.65 56.1200 5.612e+01 8.758e-01 7.657 0.8636 0.92280  18.990
+[6,] 0.04167     32.85 43.1700 5.509e+01 9.446e-01 8.321 0.9428 1.50500  22.250
+       Cplasma Atubules Ametabolized      AUC
+[1,] 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 6.000e-09 0.000000    2.000e-09 0.000000
+[3,] 3.474e-01 0.001864    1.048e+00 0.001343
+[4,] 8.313e-01 0.018770    5.200e+00 0.007608
+[5,] 1.109e+00 0.055110    1.129e+01 0.017910
+[6,] 1.196e+00 0.103300    1.780e+01 0.030040
+> head(solve_pbtk(chem.cas="80-05-7",Caco2.options=list(keepit100=T)))
+Human amounts returned in umol and concentration returned in uM units.
+AUC is area under plasma concentration in uM * days units with 
+Rblood2plasma = 0.79.
+        time Agutlumen    Cgut    Cliver      Cven Clung   Cart   Crest Ckidney
+[1,] 0.00000    306.60  0.0000 0.000e+00 0.000e+00 0.000 0.0000 0.00000   0.000
+[2,] 0.00001    306.50  0.1449 4.420e-05 5.000e-09 0.000 0.0000 0.00000   0.000
+[3,] 0.01042    177.80 71.9300 2.389e+01 2.896e-01 2.350 0.2526 0.06639   3.174
+[4,] 0.02083    103.10 72.9100 4.930e+01 6.929e-01 5.953 0.6640 0.41390  12.540
+[5,] 0.03125     59.78 59.2200 5.922e+01 9.241e-01 8.080 0.9112 0.97380  20.040
+[6,] 0.04167     34.66 45.5500 5.813e+01 9.967e-01 8.780 0.9948 1.58800  23.480
+       Cplasma Atubules Ametabolized      AUC
+[1,] 0.000e+00 0.000000    0.000e+00 0.000000
+[2,] 6.000e-09 0.000000    2.000e-09 0.000000
+[3,] 3.666e-01 0.001966    1.106e+00 0.001417
+[4,] 8.771e-01 0.019810    5.487e+00 0.008027
+[5,] 1.170e+00 0.058150    1.191e+01 0.018900
+[6,] 1.262e+00 0.109100    1.878e+01 0.031700
+> 
+> 
+> NSAMP <- 1000
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+  95% 
+1.044 
+> set.seed(1234)
+> calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP,Caco2.options=list(keepit100=T))
+Human plasma concentration returned in mg/L units for 0.95 quantile.
+ 95% 
+1.12 
+> 
+> 
+> 
+> 
+> 

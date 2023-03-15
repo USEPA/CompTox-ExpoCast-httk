@@ -17,22 +17,24 @@ model.list[["3compartmentss"]]$parameterize.func <- "parameterize_steadystate"
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[["3compartmentss"]]$param.names <- c("BW",
-                       "Clint",
-                       "Clint.dist",
-                       "Dow74",
-                       "Fgutabs",
-                       "Fhep.assay.correction",
-                       "Funbound.plasma",
-                       "Funbound.plasma.dist",
-                       "Funbound.plasma.adjustment",
-                       "hepatic.bioavailability",
-                       "liver.density",
-                       "million.cells.per.gliver",
-                       "MW",
-                       "Qtotal.liverc",
-                       "Qgfrc",
-                       "Rblood2plasma",
-                       "Vliverc")
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
+  "Clint",
+  "Clint.dist",
+  "Dow74",
+  "Fabsgut",
+  "Fhep.assay.correction",
+  "Funbound.plasma",
+  "Funbound.plasma.dist",
+  "Funbound.plasma.adjustment",
+  "hepatic.bioavailability",
+  "liver.density",
+  "million.cells.per.gliver",
+  "MW",
+  "Qtotal.liverc",
+  "Qgfrc",
+  "Rblood2plasma",
+  "Vliverc")
 
 
 # Allowable units (and whether they are for amounts or concentration):
@@ -55,7 +57,7 @@ model.list[["3compartmentss"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["3compartmentss"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hepatic.bioavailability",
   "liver.density",
   "million.cells.per.gliver",

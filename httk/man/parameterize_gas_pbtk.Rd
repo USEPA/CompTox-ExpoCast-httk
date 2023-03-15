@@ -72,11 +72,6 @@ in desired output concentration units.}
 \item{exercise}{Logical indicator of whether to simulate an exercise-induced
 heightened respiration rate}
 
-\item{fR}{Respiratory frequency (breaths/minute), used especially to adjust
-breathing rate in the case of exercise. This parameter, along with VT and VD
-(below) gives another option for calculating Qalv (Alveolar ventilation) 
-in case pulmonary ventilation rate is not known}
-
 \item{VT}{Tidal volume (L), to be modulated especially as part of simulating
 the state of exercise}
 
@@ -97,7 +92,7 @@ dataset).}
 \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 (median, lower 95th, upper 95th, p value)} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gut lumen.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 
