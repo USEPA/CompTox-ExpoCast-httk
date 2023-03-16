@@ -91,7 +91,7 @@ calc_fbio.oral <- function(Params = NULL,
       chem.name <- out$chem.name                                
       dtxsid <- out$dtxsid
     
-    Params <- do.call(parameterize_steadystate, c(list(
+    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
       chem.cas = chem.cas,
       chem.name = chem.name,
       dtxsid = dtxsid,
@@ -104,7 +104,7 @@ calc_fbio.oral <- function(Params = NULL,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
         keepit100 = keepit100)),
-      ...))
+      ...)))
   }
 
   if(keepit100 == TRUE){
@@ -177,7 +177,7 @@ calc_fabs.oral <- function(Params = NULL,
         chem.name <- out$chem.name                                
         dtxsid <- out$dtxsid
       
-    Params <- do.call(parameterize_steadystate, c(list(
+    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
       chem.cas = chem.cas,
       chem.name = chem.name,
       dtxsid = dtxsid,
@@ -190,7 +190,7 @@ calc_fabs.oral <- function(Params = NULL,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
         keepit100 = keepit100)),
-      ...))
+      ...)))
   }
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
@@ -243,7 +243,7 @@ calc_fgut.oral <- function(Params = NULL,
         chem.name <- out$chem.name                                
         dtxsid <- out$dtxsid
 
-    Params <- do.call(parameterize_steadystate, c(list(
+    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
       chem.cas = chem.cas,
       chem.name = chem.name,
       dtxsid = dtxsid,
@@ -256,7 +256,7 @@ calc_fgut.oral <- function(Params = NULL,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
         keepit100 = keepit100)),
-      ...))
+      ...)))
     }
     
     clu_hep <- Params$Clint*Params$BW # L/h for 70 kg human

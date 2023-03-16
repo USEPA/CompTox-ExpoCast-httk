@@ -56,6 +56,11 @@
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
 #' 
+#' @param fR Respiratory frequency (breaths/minute), used especially to adjust
+#' breathing rate in the case of exercise. This parameter, along with VT and VD
+#' (below) gives another option for calculating Qalv (Alveolar ventilation) 
+#' in case pulmonary ventilation rate is not known 
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
 #' 
@@ -294,14 +299,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-# Look for a measured fraction absorbed from the gut (oral doses):
-  Fabsgut <- try(get_invitroPK_param("Fabsgut",
-                 species,
-                 chem.cas=chem.cas,
-                 chem.name=chem.name,
-                 dtxsid=dtxsid,
-                 silent=TRUE))
-# If no measured value is available default to one: 
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",species,chem.cas=chem.cas),silent=TRUE)
   if (is(Fabsgut,"try-error")) Fabsgut <- 1
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
@@ -358,15 +356,17 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     MA=schmitt.params[["MA"]],
     kUrtc = 11.0, #Added MWL 9-20-19
     Vmucc = 0.0001)) #Added MWL 9-20-19
+# Fraction unbound lipid correction: 
+  if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+    
+# Liver metabolism properties:
+  # Unbound fraction of chemical in the hepatocyte intrinsic clearance assay:
+  outlist["Fhep.assay.correction"] <- Fu_hep # fraction 
   
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
-  outlist <- c(outlist,list(
-    Fhep.assay.correction=calc_hep_fu(
-      parameters = list(Pow = schmitt.params$Pow,
-      pKa_Donor=schmitt.params$pKa_Donor,
-      pKa_Accept=schmitt.params$pKa_Accept,
-      suppress.messages=suppress.messages))))  # fraction 
-
+  # Check if saturable metabolism included:
   if (vmax==0)
   {
     if (!suppress.messages) 
@@ -390,8 +390,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
         suppress.messages=TRUE)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
-      liver.density=1.05, # g/mL
-      Fabsgut=Fabsgut)) #L/h/kg BW
+      liver.density=1.05)) # g/mL
   } else {
     outlist <- c(outlist,list(
       vmax=vmax,km=km,
@@ -399,44 +398,54 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Clint.dist = Clint.dist, 
       Clmetabolismc=0,                       
       million.cells.per.gliver=110, # 10^6 cells/g-liver
-      liver.density=1.05, # g/mL
-      Fabsgut=Fabsgut))#ML added Km = km 9-19-19
+      liver.density=1.05)) # g/mL
   }
  
- 
- if (adjusted.Funbound.plasma) 
-  {
-    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
-  } else outlist["Funbound.plasma.adjustment"] <- NA
-   
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        suppress.messages=TRUE))
+# Blood to plasma ratio:
+  outlist <- c(outlist,
+    Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+      species=species,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      suppress.messages=TRUE))
     
 # Get the blood:air and mucus:air partition coefficients:
-    Kx2air <- calc_kair(chem.name=chem.name,
-                        chem.cas=chem.cas,
-                        dtxsid=dtxsid,
-                        species=species,
-                        default.to.human=default.to.human,
-                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                        suppress.messages=suppress.messages)
-    
-    Kwater2air <- Kx2air$Kwater2air
-    Kblood2air <- Kx2air$Kblood2air
-    Kmuc2air <- Kx2air$Kmuc2air
+  Kx2air <- calc_kair(chem.name=chem.name,
+                      chem.cas=chem.cas,
+                      dtxsid=dtxsid,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
         
-    if(exercise){
-      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
-      #Added 4-30-19 to allow user-input respiratory and/or work values,
-      #assumes input units of L and min^-1
-    } else {
-      Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
-      Qalvc <- Vdot * (0.67) #L/h/kg^0.75
-    }
-    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
+# Set airflow based on whether exercising:
+  if(exercise){
+    Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
+    #Added 4-30-19 to allow user-input respiratory and/or work values,
+    #assumes input units of L and min^-1
+  } else {
+    Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+    Qalvc <- Vdot * (0.67) #L/h/kg^0.75
+  }
+  outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
+# Oral bioavailability parameters:
+  outlist <- c(
+    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      Params=outlist,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    ))
+            
+# Alphabetize and set precision:
   return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
 }

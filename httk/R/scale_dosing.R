@@ -74,7 +74,7 @@ scale_dosing <- function(
     if (!("Fabsgut"%in%names(parameters))) 
       stop(
 "Argument \"parameters\" to scale_dosing must specify Fgutabs for oral route.")
-    scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
+    scale.factor <- scale.factor*as.numeric(parameters[['Fabsgut']])
   }
   
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 
