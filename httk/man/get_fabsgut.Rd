@@ -10,7 +10,7 @@ get_fabsgut(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   Caco2.Pab.default = "1.6",
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,

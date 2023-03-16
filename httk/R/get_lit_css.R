@@ -214,7 +214,7 @@ get_wetmore_css <- function(
   if (!suppress.messages)
     warning("Function \"get_wetmore_css\" has been renamed to \"get_lit_cheminfo\".")
   
-  return(do.call(get_lit_css, list(                        
+  return(do.call(get_lit_css, args=purrr::compact(list(                        
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         daily.dose=daily.dose,
@@ -222,5 +222,5 @@ get_wetmore_css <- function(
                         species=species,
                         clearance.assay.conc=clearance.assay.conc,
                         output.units=output.units,
-                        suppress.messages=suppress.messages)))
+                        suppress.messages=suppress.messages))))
 }

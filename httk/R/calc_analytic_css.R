@@ -240,14 +240,14 @@ calc_analytic_css <- function(chem.name=NULL,
   # pass chemical information plus formal argument parameterize.args to the
   # parameterization function specified by the appropriate modelinfo file:
     parameters <- do.call(what=parameterize_function, 
-      args=c(list(
+      args=purrr::compact(c(list(
         chem.cas=chem.cas,
         chem.name=chem.name,
         dtxsid=dtxsid,
         species=species,
         Caco2.options=Caco2.options,
         suppress.messages=suppress.messages),
-      parameterize.args))
+      parameterize.args)))
  
   } else {
     model_param_names <- model.list[[model]]$param.names 
@@ -301,36 +301,38 @@ calc_analytic_css <- function(chem.name=NULL,
   if (model %in% names(model.list))            
   {
     if (route == "inhalation"){
-      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-        chem.cas = chem.cas,
-        chem.name = chem.name,
-        dtxsid=dtxsid,
-        parameters=parameters,
-        exp.conc = exp.conc,
-        period = period,
-        exp.duration = exp.duration,
-        concentration=concentration,
-        suppress.messages=suppress.messages,
-        tissue=tissue,
-        restrictive.clearance=restrictive.clearance,
-        bioactive.free.invivo = bioactive.free.invivo),
-        list(...)))
+      Css <- do.call(model.list[[model]]$analytic.css.func,
+        args=purrr::compact(c(list(
+          chem.cas = chem.cas,
+          chem.name = chem.name,
+          dtxsid=dtxsid,
+          parameters=parameters,
+          exp.conc = exp.conc,
+          period = period,
+          exp.duration = exp.duration,
+          concentration=concentration,
+          suppress.messages=suppress.messages,
+          tissue=tissue,
+          restrictive.clearance=restrictive.clearance,
+          bioactive.free.invivo = bioactive.free.invivo),
+          list(...))))
       
     } else if (route %in% c("oral","iv"))
     {
-      Css <- do.call(model.list[[model]]$analytic.css.func,c(list(
-        chem.cas = chem.cas,
-        chem.name = chem.name,
-        dtxsid=dtxsid,
-        parameters=parameters,
-        hourly.dose=hourly.dose,
-        concentration=concentration,
-        suppress.messages=suppress.messages,
-        tissue=tissue,
-        restrictive.clearance=restrictive.clearance,
-        bioactive.free.invivo = bioactive.free.invivo,
-        Caco2.options = Caco2.options),
-        list(...)))
+      Css <- do.call(model.list[[model]]$analytic.css.func,
+        args=purrr::compact(c(list(
+          chem.cas = chem.cas,
+          chem.name = chem.name,
+          dtxsid=dtxsid,
+          parameters=parameters,
+          hourly.dose=hourly.dose,
+          concentration=concentration,
+          suppress.messages=suppress.messages,
+          tissue=tissue,
+          restrictive.clearance=restrictive.clearance,
+          bioactive.free.invivo = bioactive.free.invivo,
+          Caco2.options = Caco2.options),
+          list(...))))
     }
   } else {
     stop(paste("Model",model,"not available. Please select from:",
