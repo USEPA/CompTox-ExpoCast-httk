@@ -247,7 +247,7 @@ get_wetmore_oral_equiv <- function(
   if (!suppress.messages)
     warning("Function \"get_wetmore_oral_equiv\" has been renamed to \"get_lit_oral_equiv\".")
 
-  return(do.call(get_lit_oral_equiv, c(list(                        
+  return(do.call(get_lit_oral_equiv, args=purrr::compact(c(list(                        
                                conc=conc,
                                chem.name=chem.name,
                                chem.cas=chem.cas,
@@ -257,5 +257,5 @@ get_wetmore_oral_equiv <- function(
                                input.units=input.units,
                                output.units=output.units,
                                clearance.assay.conc=clearance.assay.conc),
-                               ...)))
+                               ...))))
 }

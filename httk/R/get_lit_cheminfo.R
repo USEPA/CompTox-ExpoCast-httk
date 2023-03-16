@@ -156,5 +156,6 @@ get_wetmore_cheminfo <- function(
   if (!suppress.messages) warning(
     "Function \"get_wetmore_cheminfo\" has been renamed to \"get_lit_cheminfo\".")
 
-    return(do.call(get_lit_cheminfo, list(info = info, species=species)))
+    return(do.call(get_lit_cheminfo, 
+                   args=purrr::compact(list(info = info, species=species))))
 }

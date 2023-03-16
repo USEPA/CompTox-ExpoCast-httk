@@ -55,9 +55,8 @@
 #' @param restrictive.clearance In calculating hepatic.bioavailability, protein
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
+#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
+#' this value (default is 0.0001).      
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
@@ -341,12 +340,21 @@ parameterize_pbtk <- function(
                             pKa_Accept=pKa_Accept,
                             MA=schmitt.params[["MA"]]))
   
+  # Fraction unbound lipid correction:
+  if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- 
+      schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+   
+# Blood to plasma ratio:
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
+# Liver metabolism properties:
   outlist <- c(
     outlist,
     list(Clint=Clint.point,
@@ -369,31 +377,24 @@ parameterize_pbtk <- function(
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
-
-  if (adjusted.Funbound.plasma) 
-  {
-    outlist["Funbound.plasma.adjustment"] <- 
-      schmitt.params$Funbound.plasma.adjustment
-  } else outlist["Funbound.plasma.adjustment"] <- NA
    
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma))
-        
-  outlist <- do.call(get_fabsgut, c(
+# Oral bioavailability parameters:
+  outlist <- c(
+    outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
       Params=outlist,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
-      species=species
+      species=species,
+      suppress.messages=suppress.messages
       ),
-    Caco2.options)
-    )
+    Caco2.options))
+    ))
 
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
   
+# Set precision:
   return(lapply(outlist, set_httk_precision))
 }
