@@ -196,7 +196,7 @@ create_mc_samples <- function(chem.cas=NULL,
     parameterize.args <- parameterize.args[names(parameterize.args) %in% 
                                              methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=parameterize.args)
+                         args=purrr::compact(parameterize.args))
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
@@ -211,7 +211,7 @@ create_mc_samples <- function(chem.cas=NULL,
   # The Schmitt parameters are useful if we need to redo partitioning later, though
   # some models don't include partitioning so the function might fail:
   pschmitt <- try(do.call(parameterize_schmitt,
-                      args = args.schmitt),
+                      args=purrr::compact(args.schmitt)),
                       silent=TRUE)
   if (is(pschmitt,"try-error")) pschmitt <- NULL
   
@@ -315,11 +315,11 @@ Set species=\"Human\" to run httkpop model.')
   if (invitrouv) 
   {
     parameters.dt <- do.call(invitro_mc,
-                       args=c(list(
+                       args=purrr::compact(c(list(
                          parameters.dt=parameters.dt,
                          samples=samples),
                          Caco2.options,
-                         invitro.mc.arg.list))
+                         invitro.mc.arg.list)))
   }
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
@@ -367,10 +367,10 @@ Set species=\"Human\" to run httkpop model.')
   #tissue-to-plasma partitioning coefficient, and one element of each vector
   #for each individual. The list element names specify which partition
   #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-      PCs <- do.call(predict_partitioning_schmitt, args = list(
+      PCs <- do.call(predict_partitioning_schmitt, args=purrr::compact(list(
                parameters=parameters.dt,
                args.schmitt,
-               suppress.messages=TRUE))
+               suppress.messages=TRUE)))
 # Store the red blood cell to unbound plasma partition coefficient if we need
 # it later:
       if (calcrb2p | firstpass) parameters.dt[, Krbc2pu:=PCs[['Krbc2pu']]]
@@ -466,9 +466,9 @@ Set species=\"Human\" to run httkpop model.')
 #
   propagateuvfun <- model.list[[model]]$propagateuv.func
   if (!is.null(propagateuvfun))
-    parameters.dt <- do.call(propagateuvfun, args=c(list(
+    parameters.dt <- do.call(propagateuvfun, args=purrr::compact(c(list(
                        parameters.dt=parameters.dt),
-                       propagate.invitrouv.arg.list))
+                       propagate.invitrouv.arg.list)))
   
 # set precision:
   cols <- colnames(parameters.dt)

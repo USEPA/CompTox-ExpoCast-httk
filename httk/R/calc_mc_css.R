@@ -399,7 +399,6 @@ calc_mc_css <- function(chem.cas = NULL,
                               calcrb2p=calcrb2p,
                               censored.params=censored.params,
                               vary.params=vary.params,
-                              Caco2.options = Caco2.options,
                               return.samples=FALSE,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
@@ -415,7 +414,8 @@ calc_mc_css <- function(chem.cas = NULL,
 
   parameter.dt[,Css:= do.call(calc_analytic_css,
 # we use purrr::compact to drop NULL values from arguments list:
-                              args=purrr::compact(c(list(parameters=.SD,
+                              args=purrr::compact(c(list(
+                              parameters=.SD,
                               model=model,
                               suppress.messages=TRUE,
                               chem.cas=chem.cas,
