@@ -34,12 +34,13 @@ get_fabsgut <- function(
   chem.name=NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   Caco2.Pab.default = "1.6",
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
   overwrite.invivo = FALSE,
-  keepit100 = FALSE)
+  keepit100 = FALSE,
+  suppress.messages=FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -48,23 +49,23 @@ get_fabsgut <- function(
     stop('chem.name, chem.cas, or dtxsid must be specified.')
 
 # Look up the chemical name/CAS, depending on what was provide:
-    out <- get_chem_id(
+    chem.ids <- get_chem_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name                                
-    dtxsid <- out$dtxsid
+    chem.cas <- chem.ids$chem.cas
+    chem.name <- chem.ids$chem.name                                
+    dtxsid <- chem.ids$dtxsid
   
-  if (is.null(Params)) Params <- list()
+  out <- list()
   
   if(keepit100 == TRUE)
   {
-    Params[["Fabs"]] <- 1
-    Params[["Fgut"]] <- 1
-    Params[["Fabsgut"]] <- 1
-    Params[["Caco2.Pab"]] <- 10
-    Params[["Caco2.Pab.dist"]] <- NA
+    out[["Fabs"]] <- 1
+    out[["Fgut"]] <- 1
+    out[["Fabsgut"]] <- 1
+    out[["Caco2.Pab"]] <- 10
+    out[["Caco2.Pab.dist"]] <- NA
   } else {
     # Caco-2 Pab:
     Caco2.Pab.db <- try(get_invitroPK_param(
@@ -73,10 +74,10 @@ get_fabsgut <- function(
         chem.cas=chem.cas,
         chem.name=chem.name,
         dtxsid=dtxsid), 
-      silent = T)
+      silent = TRUE)
     if (is(Caco2.Pab.db,"try-error")){  
       Caco2.Pab.db <- as.character(Caco2.Pab.default)
-      warning(paste0(
+      if (!suppress.messages) warning(paste0(
         "Default value of ", 
         Caco2.Pab.default, 
         " used for Caco2 permeability."))
@@ -92,20 +93,21 @@ get_fabsgut <- function(
       Caco2.Pab.dist <- NA
     }
     
-    Params[["Caco2.Pab"]] <- Caco2.Pab.point
-    Params[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
+    out[["Caco2.Pab"]] <- Caco2.Pab.point
+    out[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
     
     # Select Fabs, optionally overwrite based on Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
+                silent=TRUE)
     if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
       if (overwrite.invivo == TRUE | 
-        (Caco2.Fabs == TRUE & class(Fabs) == "try-error"))
+        (Caco2.Fabs == TRUE & is(Fabs,"try-error")))
       {
-        Params[["Fabs"]] <- 1
+        out[["Fabs"]] <- 1
         # Caco2 is a human cell line
         # only calculable for human, assume the same across species
         Fabs <- calc_fabs.oral(
-          Params = Params, 
+          Params = c(out, Params), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
@@ -115,15 +117,16 @@ get_fabsgut <- function(
       }
     }
     
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
+                silent=TRUE)
     if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
     {
       if (overwrite.invivo == TRUE | 
-        (Caco2.Fgut == TRUE & class(Fgut) == "try-error"))
+        (Caco2.Fgut == TRUE & is(Fgut,"try-error")))
       {
-        Params[["Fgut"]] <- 1
+        out[["Fgut"]] <- 1
         Fgut <- calc_fgut.oral(
-          Params = Params, 
+          Params = c(out, Params), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
@@ -132,10 +135,10 @@ get_fabsgut <- function(
         Fgut <- 1
       }
     }
-    Params[['Fabsgut']] <- Fabs*Fgut
-    Params[['Fabs']] <- Fabs
-    Params[['Fgut']] <- Fgut
+    out[['Fabsgut']] <- Fabs*Fgut
+    out[['Fabs']] <- Fabs
+    out[['Fgut']] <- Fgut
   }
   
-  return(Params)
+  return(out)
 }

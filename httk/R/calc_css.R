@@ -213,7 +213,8 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance
   )
-  css <- do.call("calc_analytic_css",args = analyticcss_params)
+  css <- do.call("calc_analytic_css", 
+                 args=purrr::compact(analyticcss_params))
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:

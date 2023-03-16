@@ -270,8 +270,8 @@ parameterize_steadystate <- function(
                  species,
                  chem.cas=chem.cas,
                  chem.name=chem.name,
-                 dtxsid=dtxsid,
-                 silent=TRUE))
+                 dtxsid=dtxsid),
+                 silent=TRUE)
 # If no measured value is available default to one:                 
   if (is(Fabsgut,"try-error")) Fabsgut <- 1
 
@@ -292,6 +292,7 @@ parameterize_steadystate <- function(
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
   
+# Blood to plasma ratio:
   Rb2p <- available_rblood2plasma(
             chem.name=chem.name,
             chem.cas=chem.cas,
@@ -301,16 +302,19 @@ parameterize_steadystate <- function(
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
   
-  Params <- do.call(get_fabsgut, c(
+# Oral bioavailability parameters:
+  Params <- c(
+    Params, do.call(get_fabsgut, args=purrr::compact(c(
     list(
       Params=Params,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
-      species=species
+      species=species,
+      suppress.messages=suppress.messages
       ),
-    Caco2.options)
-    )
+    Caco2.options))
+    ))
 
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
@@ -318,7 +322,9 @@ parameterize_steadystate <- function(
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=TRUE)#L/h/kg body weight
-
+          
+# "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
+# don't explicitly model blood from the gut:
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4
                     Funbound.plasma=fup.corrected,
