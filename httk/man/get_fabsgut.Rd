@@ -15,7 +15,8 @@ get_fabsgut(
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
   overwrite.invivo = FALSE,
-  keepit100 = FALSE
+  keepit100 = FALSE,
+  suppress.messages = FALSE
 )
 }
 \arguments{
