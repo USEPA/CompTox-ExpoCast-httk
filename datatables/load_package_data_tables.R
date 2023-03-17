@@ -839,7 +839,7 @@ CorypKaTable[regexpr(",",CorypKaTable$pKa)==-1&!is.na(CorypKaTable$pKa),"pKa"] <
 CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"] <- as.character(signif(as.numeric( CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"]),3))
 CorypKaTable <- CorypKaTable[CorypKaTable$CAS %in% chem.prop$CAS,]
 CorypKaTable$pKa.Reference[!is.na(CorypKaTable$pKa.Reference) & CorypKaTable$pKa.Reference=="SPARC"] <- "Strope 2018"
-CorypKaTable$pKb.Reference[!is.na(CorypKaTable$pKb.Reference) & CorypKaTable$pKb.Reference=="SPARC"] <- "Strope 201."
+CorypKaTable$pKb.Reference[!is.na(CorypKaTable$pKb.Reference) & CorypKaTable$pKb.Reference=="SPARC"] <- "Strope 2018"
 
 
 chem.prop <- add_chemtable(CorypKaTable,
@@ -1401,6 +1401,23 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 #
 #
+
+
+Honda2023.Caco2 <- as.data.frame(readxl::read_xlsx("CACO-2/caco2_QC_18May2018.xlsx"))
+chem.physical_and_invitro.data <- add_chemtable(Honda2023.Caco2,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='compound',
+                                    CAS = 'casrn',
+                                    DTXSID='DTXSID',
+                                    Caco2.Pab="Pab"),
+                                  overwrite=FALSE,
+                                  reference = 'Honda2023',
+                                  species="Human") 
+                                  
+
+honda2023 <- read.csv("CACO-2/caco2_compound_fabs_lit.csv")
+honda2023 <- subset(honda2023, !is.na(f_abs_percent))
 
 #
 #
@@ -2047,6 +2064,7 @@ save(chem.physical_and_invitro.data,
      physiology.data,
      pearce2017regression,
      kapraun2019,
+     honda2023,
      tissue.data,
      Tables.Rdata.stamp,
      EPA.ref,
