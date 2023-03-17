@@ -193,7 +193,7 @@ eta_free \tab effective availability ratio \tab fraction \cr
 }
 }
 \description{
-Evaluate the Armitage model for chemical distributon \em{in vitro}. Takes input
+Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table. Updates over
 the model published in Armitage et al. (2014) include binding to plastic walls
 and lipid and protein compartments in cells.
