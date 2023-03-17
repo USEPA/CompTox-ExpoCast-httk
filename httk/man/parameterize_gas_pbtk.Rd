@@ -72,6 +72,11 @@ in desired output concentration units.}
 \item{exercise}{Logical indicator of whether to simulate an exercise-induced
 heightened respiration rate}
 
+\item{fR}{Respiratory frequency (breaths/minute), used especially to adjust
+breathing rate in the case of exercise. This parameter, along with VT and VD
+(below) gives another option for calculating Qalv (Alveolar ventilation) 
+in case pulmonary ventilation rate is not known}
+
 \item{VT}{Tidal volume (L), to be modulated especially as part of simulating
 the state of exercise}
 
