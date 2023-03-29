@@ -230,7 +230,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
                                          species=species,
                                          default.to.human=default.to.human,
-                                         force.human.fup=force.human.clint.fup)
+                                         force.human.fup=force.human.clint.fup,
+                                         suppress.messages=suppress.messages)
   PCs <- predict_partitioning_schmitt(parameters=schmitt.params,
                                       species=species,
                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -349,7 +350,8 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
 
   outlist <- c(outlist,Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
                                                              species=species,
-                                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+                                                             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                                                             suppress.messages=suppress.messages),
                Fgutabs=Fgutabs)
   
   # Get the blood:air partition coefficient:
@@ -389,7 +391,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
       Km2w <- Kvehicle2water
     } else if (Kvehicle2water=="water"){
       Km2w <- 1 #vehicle=water
-      warning("Since parameter Kvehicle2water is null, vehicle containing chemical is assumed to be water.")
+      if(!suppress.messages) warning("Since parameter Kvehicle2water is null, vehicle containing chemical is assumed to be water.")
     } else if (Kvehicle2water=="octanol"){
       Km2w <- Pow
     } else  if (Kvehicle2water=="olive oil"){
@@ -422,7 +424,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     } else stop(
       "method.permeatility must be set to either 'Potts-Guy' or 'UK-Surrey'")
     } else if (model.type=="dermal") {
-      warning("Input method.permeability ignored, since there is only one method do calculate Psc2ve and Pm2sc in this function.")
+      if(!suppress.messages) warning("Input method.permeability ignored, since there is only one method do calculate Psc2ve and Pm2sc in this function.")
     }
 
     # Added by AEM, 1/27/2022

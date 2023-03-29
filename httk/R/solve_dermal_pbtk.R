@@ -181,7 +181,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   
   # Check for exposure route 
   #check that it is iv OR dermal OR oral (if dermal.washoff, put ERROR stop())
-  if (is.null(route)) { route <- 'dermal'; warning(
+  if (is.null(route)) { route <- 'dermal'; if(!suppress.messages) warning(
     "If route is not chosen, it is set to dermal by default.")}
   if (!(route %in% c("iv","oral","dermal"))){ stop(
     'route must either be "iv", "oral", or "dermal". To allow wash off to occur,
@@ -200,7 +200,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   if (!is.null(parameters)){
     if(InfiniteDose!=parameters$InfiniteDose){
       InfiniteDose = parameters$InfiniteDose
-      warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
+      if(!suppress.messages) warning("InfiniteDose in parameters overrides InfiniteDose input into solve_dermal_pbtk.")
     }
   }
 
@@ -211,7 +211,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                                        dosing.dermal,
                                        dose.duration,
                                        dose.duration.units),is.null))) | washoff | InfiniteDose){
-      warning("When route is not set to 'dermal', inputs Vvehicle, dosing.dermal,
+      if(!suppress.messages) warning("When route is not set to 'dermal', inputs Vvehicle, dosing.dermal,
               dose.duration, dose.duration.units, washoff, and InfiniteDose are ignored.
               Vvehicle is set to 0.")
     }
@@ -225,7 +225,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if (InfiniteDose){
       #Vvehicle and forcings set
       if (!is.null(Vvehicle) | washoff){
-        warning("When InfiniteDose = T, washoff is ignored, and Vvehicle is set to 0 L and ignored.")
+        if(!suppress.messages) warning("When InfiniteDose = T, washoff is ignored, and Vvehicle is set to 0 L and ignored.")
       }
       forcings = cbind(times=start.time, forcing_values = 0)
       
@@ -233,7 +233,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       if (!is.null(dosing.dermal)){
         if (!is.null(dosing.matrix) | !is.null(dose.duration)) stop("Either dosing.matrix, dose.duration, or dosing.dermal can be used. Only one cannot be null.")
         if (any(is.na(dosing.dermal))) stop("Dosing matrix dosing.dermal cannot contain NA values.")
-        if (dim(dosing.dermal)[2]==3){ warning("Vvehicle column of dosing.dermal ignored for when InfiniteDose=TRUE.")
+        if (dim(dosing.dermal)[2]==3){ if(!suppress.messages) warning("Vvehicle column of dosing.dermal ignored for when InfiniteDose=TRUE.")
         } else if (dim(dosing.dermal)[2]!=2){ stop("dosing.dermal should be matrix with two named columns: time (days), 
                                            Cvehicle (same units as input.units).")
         }
@@ -256,7 +256,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       # Set Vvehicle and Forcings
       if (is.null(Vvehicle)) {
         Vvehicle <- 0.1; #only affects model if route=dermal
-        if (is.null(dosing.dermal)) warning(paste("Vvehicle not specified, so set to", Vvehicle, "L."))
+        if (is.null(dosing.dermal)) if(!suppress.messages) warning(paste("Vvehicle not specified, so set to", Vvehicle, "L."))
       }
       if (length(Vvehicle)!=1) stop("Vvehicle input must be one value. 
                                     To change the volume of the vehicle over time, use the dosing.dermal input.") 
@@ -292,7 +292,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     
     # DOSE.DURATION
     if(!is.null(dose.duration)){
-      if(is.null(dose.duration.units)){ dose.duration.units="days"; warning("The dose.duration.units are automatically set to \"days\".\nTo change units, set dose.duration.units= \"hours\", \"mins\", or \"days\".")}
+      if(is.null(dose.duration.units)){ dose.duration.units="days"; if(!suppress.messages) warning("The dose.duration.units are automatically set to \"days\".\nTo change units, set dose.duration.units= \"hours\", \"mins\", or \"days\".")}
       if (length(dose.duration)!=1 | length(dose.duration.units)!=1){ stop("The dose.duration and dose.duration.units should only be one input. \nFor multiple dosing changes over time, use dosing.dermal.")}
       if (is.null(dose.duration.units) | (tolower(dose.duration.units) %in% c("days","day","d"))){
         dose.duration.days <- dose.duration;
@@ -314,9 +314,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if (is.null(dosing.dermal)){
       if (is.null(initial.dose)){
         initial.dose <- 1;  
-        warning(paste0("The initial.dose is automatically set to 1", input.units.default,"."))
+        if(!suppress.messages) warning(paste0("The initial.dose is automatically set to 1", input.units.default,"."))
       } else {
-        warning(paste0("The input.units are not specified, so initial dose is set automatically to ",initial.dose," ",input.units.default,"."))
+        if(!suppress.messages) warning(paste0("The input.units are not specified, so initial dose is set automatically to ",initial.dose," ",input.units.default,"."))
       }
     } else {
       if(is.null(initial.dose)){ stop("The initial.dose must be specified along with input.units.")}
@@ -337,10 +337,10 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   if (washoff){
     if (route=="dermal"){
       route="dermal.washoff"
-    } else warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
+    } else if(!suppress.messages) warning(paste0('Since route is ',route,'washoff does not apply and is ignored.'))
   } else if (!is.null(dose.duration)){ 
     route="dermal.washoff"
-    warning("Washoff occurs automatically if dose.duration is used.")
+    if(!suppress.messages) warning("Washoff occurs automatically if dose.duration is used.")
     }
   
   #Check for ppm
@@ -348,7 +348,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     if(input.units=="ppm"){
       input.units="ppmw"
       if (!(is.null(Kvehicle2water) || Kvehicle2water==1 || Kvehicle2water=="water")){
-        warning("It is assumed that the dosing units are in ppm for water so that 1ppm = 1 mg/L.\n For concentrations in ppm in air assuming 25 degrees C, set input.units=\"ppmv\" or see help file for convert_units.")
+        if(!suppress.messages) warning("It is assumed that the dosing units are in ppm for water so that 1ppm = 1 mg/L.\n For concentrations in ppm in air assuming 25 degrees C, set input.units=\"ppmv\" or see help file for convert_units.")
       }
     }
   }
