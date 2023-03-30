@@ -50,7 +50,7 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs.
 #' @param model.type Choice of dermal model, either the default "dermal_1subcomp" for
-#' the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
+#' the model with 1 compartment for the skin; or "dermal" for the 
 #' model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 #' to the top layer being the stratum corneum and the bottom layer being the combined
 #' viable epidermis and dermis.
@@ -325,9 +325,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
 
   if (model.type=="dermal"){
     model.forsolver="dermal"
-    
     #DERMAL DOES NOT WORK RIGHT NOW
-    stop('model.type="dermal" does not work right now. Please set model.type="dermal_1subcomp" or leave model.type blank.')
+    #stop('model.type="dermal" does not work right now. Please set model.type="dermal_1subcomp" or leave model.type blank.')
     
   } else if (model.type=="dermal_1subcomp"){
     model.forsolver="dermal_1subcomp"

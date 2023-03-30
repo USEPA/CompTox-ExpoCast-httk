@@ -43,8 +43,8 @@ the chemical must be identified by either CAS, name, or DTXSIDs.}
 
 \item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
 the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
-model with 2 sub compartments (a top and bottom layer) for skin which defaults 
-to the top layer being the stratum corneum and the bottom layer being the combined
+model with 2 sub compartments (a sc and ed layer) for skin which defaults 
+to the sc layer being the stratum corneum and the ed layer being the combined
 viable epidermis and dermis.}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
@@ -124,7 +124,7 @@ excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
 \item{Qlungf}{Fraction of cardiac output flowing to the lung.}
-\item{Qskinf}{Fraction of cardiac output flowing to the skin, or to the bottom
+\item{Qskinf}{Fraction of cardiac output flowing to the skin, or to the ed
 layer of the skin when model.type="dermal".}
 \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
 blood to the concentration in the plasma from available_rblood2plasma.}
@@ -136,22 +136,22 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 \item{Vskinc}{Volume of the skin per kg body weight, L/kg BW.}
-\item{Vskin_topc}{Volume of the top or upper layer of the skin per 
+\item{Vskin_scc}{Volume of the sc or upper layer of the skin per 
 kg body weight, L/kg BW. This parameter does not appear when 
 model.type="dermal_1subcomp".}
-\item{Vskin_bottomc}{Volume of the bottom layer of the skin per 
+\item{Vskin_edc}{Volume of the ed layer of the skin per 
 kg body weight, L/kg BW. This parameter does not appear when 
 model.type="dermal_1subcomp".}
 \item{P}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
 this parameter changes depending on method.permeability. When model.type="dermal",
-this parameter is replaced by Pvehicle2top and Ptop2bottom.} \item{Pvehicle2top}{Permeability
+this parameter is replaced by Pvehicle2sc and Psc2ed.} \item{Pvehicle2sc}{Permeability
 of the stratum corneum (SC), cm/h. This parameter does not appear when 
-model.type="dermal_1subcomp".} \item{Ptop2bottom}{Permeability of the bottom layer of the skin ("bottom"), cm/h.
+model.type="dermal_1subcomp".} \item{Psc2ed}{Permeability of the ed layer of the skin ("ed"), cm/h.
 This parameter does not appear when model.type="dermal_1subcomp".} \item{Kskin2vehicle}{Partition coefficient
 between exposed skin and vehicle. This parameter only appears when model.type="dermal_1subcomp"
-and is replaced by Ktop2vehicle when model.type="dermal".} \item{Ktop2vehicle}{Partition 
+and is replaced by Ksc2vehicle when model.type="dermal".} \item{Ksc2vehicle}{Partition 
 coefficient between SC and vehicle. This parameter does not appear when 
-model.type="dermal_1subcomp".} \item{Kbottom2vehicle}{Partition coefficient between VE and
+model.type="dermal_1subcomp".} \item{Ked2vehicle}{Partition coefficient between VE and
 SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
 cm^2.} \item{Vvehicle}{Volume of vehicle, L.} \item{skin_depth}{Skin skin_depth, cm.}
 \item{Fdermabs}{Fraction of vehicle concentration available for absorption.}

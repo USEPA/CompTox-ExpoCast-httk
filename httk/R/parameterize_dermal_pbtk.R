@@ -12,8 +12,8 @@
 #' the chemical must be identified by either CAS, name, or DTXSIDs.
 #' @param model.type Choice of dermal model, either the default "dermal_1subcomp" for
 #' the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
-#' model with 2 sub compartments (a top and bottom layer) for skin which defaults 
-#' to the top layer being the stratum corneum and the bottom layer being the combined
+#' model with 2 sub compartments (a sc and ed layer) for skin which defaults 
+#' to the sc layer being the stratum corneum and the ed layer being the combined
 #' viable epidermis and dermis.
 #' @param method.permeability For "dermal_1subcomp" model, method of calculating 
 #' the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". 
@@ -77,7 +77,7 @@
 #' \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 #' \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
 #' \item{Qlungf}{Fraction of cardiac output flowing to the lung.}
-#' \item{Qskinf}{Fraction of cardiac output flowing to the skin, or to the bottom
+#' \item{Qskinf}{Fraction of cardiac output flowing to the skin, or to the ed
 #' layer of the skin when model.type="dermal".}
 #' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
 #' blood to the concentration in the plasma from available_rblood2plasma.}
@@ -89,22 +89,22 @@
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 #' \item{Vskinc}{Volume of the skin per kg body weight, L/kg BW.}
-#' \item{Vskin_topc}{Volume of the top or upper layer of the skin per 
+#' \item{Vskin_scc}{Volume of the sc or upper layer of the skin per 
 #' kg body weight, L/kg BW. This parameter does not appear when 
 #' model.type="dermal_1subcomp".}
-#' \item{Vskin_bottomc}{Volume of the bottom layer of the skin per 
+#' \item{Vskin_edc}{Volume of the ed layer of the skin per 
 #' kg body weight, L/kg BW. This parameter does not appear when 
 #' model.type="dermal_1subcomp".}
 #' \item{P}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
 #' this parameter changes depending on method.permeability. When model.type="dermal",
-#' this parameter is replaced by Pvehicle2top and Ptop2bottom.} \item{Pvehicle2top}{Permeability
+#' this parameter is replaced by Pvehicle2sc and Psc2ed.} \item{Pvehicle2sc}{Permeability
 #' of the stratum corneum (SC), cm/h. This parameter does not appear when 
-#' model.type="dermal_1subcomp".} \item{Ptop2bottom}{Permeability of the bottom layer of the skin ("bottom"), cm/h.
+#' model.type="dermal_1subcomp".} \item{Psc2ed}{Permeability of the ed layer of the skin ("ed"), cm/h.
 #' This parameter does not appear when model.type="dermal_1subcomp".} \item{Kskin2vehicle}{Partition coefficient
 #' between exposed skin and vehicle. This parameter only appears when model.type="dermal_1subcomp"
-#' and is replaced by Ktop2vehicle when model.type="dermal".} \item{Ktop2vehicle}{Partition 
+#' and is replaced by Ksc2vehicle when model.type="dermal".} \item{Ksc2vehicle}{Partition 
 #' coefficient between SC and vehicle. This parameter does not appear when 
-#' model.type="dermal_1subcomp".} \item{Kbottom2vehicle}{Partition coefficient between VE and
+#' model.type="dermal_1subcomp".} \item{Ked2vehicle}{Partition coefficient between VE and
 #' SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
 #' cm^2.} \item{Vvehicle}{Volume of vehicle, L.} \item{skin_depth}{Skin skin_depth, cm.}
 #' \item{Fdermabs}{Fraction of vehicle concentration available for absorption.}
@@ -310,7 +310,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     lumped_params[substr(names(lumped_params),1,1) == 'K'])
   
   if (model.type=="dermal"){ #rename Kskin2pu for dermal model (2 subcompartments)
-    names(outlist)[names(outlist)=="Kskin2pu"] <- "Kbottom2pu"
+    names(outlist)[names(outlist)=="Kskin2pu"] <- "Ked2pu"
   }
   
 # Create the list of parameters:
@@ -373,14 +373,14 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                Qalvc = unname(Qalvc))
   
   #Skin parameters
-  Fskin_depth_top = 11/560;
-  Fskin_depth_bottom = 1 - Fskin_depth_top;
+  Fskin_depth_sc = 17/527;
+  Fskin_depth_ed = 1 - Fskin_depth_sc;
   if (is.null(totalSA)){
     totalSA <- sqrt(height * unname(BW) / 3600) * 100^2; #TotalSA=4 * (outlist$BW + 7) / (outlist$BW + 90) * 100^2
   }
   # Calculation of dermal partition coefficient (Sawyer, 2016 and Chen, 2015):
     
-    # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ve = viable epidermis and dermis layers)
+    # Partition coefficients (sc = stratum corneum, w = water, m = media/vehicle, ed = viable epidermis and dermis layers)
     
     rho_lip = 0.9; rho_w = 1; rho_pro = 1.37 #bulk density of lipid, water, and protein, respectively (g/cm^3) (Nitsche et al. 2006)
     phi_lip = 0.125*0.45; phi_w = 0.55; phi_pro = 0.875*0.45; #volume fractions of lipid, water, and protein phases in SC, respectively
@@ -401,30 +401,52 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
     Km2sc = Km2w/Ksc2w; #Equation 1, Chen, 2015
       ionization <- calc_ionization(chem.cas=chem.cas,pH=skin.pH)
       fnon <- 1 - ionization$fraction_charged      
-    Kve2w <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) #Equation 11, Chen , 2015
-    Kve2m <-  Kve2w / Km2w
-    Kve2sc <- Kve2w / Ksc2w
+    Ked2w <- 0.7 * (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) #Equation 11, Chen , 2015
+    Ked2m <-  Ked2w / Km2w
+    Ked2sc <- Ked2w / Ksc2w
+    
+    # Calculate diffusion in Stratum Corneum
+    r_s = (0.9087*MW*(3/4/pi))^(1/3) # emperical equation for calculating solute radius # Equation after Equation 4, Chen, 2009
+      #Calculate diffusion in water - CHECK UNITS OMG
+      Kval = 1.3806488e-23 #Boltzmann constant m2*kg/s2/K
+      temp = 309 #temperature in Kelvin
+      eta = 7.1e-4 #viscosity of water at above temperature
+      Dw = (Kval*temp)/(6*pi*eta*r_s)
+    if (Pow > 2){ #lipophilic chemical
+      if (MW<=1) Dsc = 2e-9 * exp(-0.46*r_s^2)
+      if (MW>1) Dsc = 3e-13
+      skin_depth_diffusion = skin_depth*1.5 # skin_depth is larger, since chemical must go around corneocytes
+    } else if (Pow<=2){
+      thetab = 0.25 # fraction of water content in SC corneocytes
+      #phib = 0.65 # fraction of water content in SC corneocytes at saturation
+      beta = 9.32e-8; alpha = 9.47; gamma = -1.17; lambda=1.09 # model parameters, Chen, 2015
+      r_f = 35e-8 # radius of keratin microfibril (35 Angstrom converted to 35e-8 cm), Chen, 2015
+      k=beta*r_f^2*(1-thetab)^lambda; # hydraulic permeability, Chen 2015
+      S = (1-thetab)*((r_s + r_f)/r_f)^2
+      Dsc = exp(-alpha*S^lambda) / (1 + r_s/sqrt(k) + r_s^2/(3*k)) * Dw # Equation 6, Chen 2015
+      skin_depth_diffusion = skin_depth
+    }
     
       # Diffusion in viable epidermis and dermis: Equation 15, Chen, 2015
-      Dve <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) * 100^2 * 60^2  #cm^2/h
+      Ded <- 10^(-8.5 - 0.655 * log10(MW)) / (0.68 + 0.32 / fup + 0.025 * fnon * Ksc2w) * 100^2 * 60^2  #cm^2/h
             
-      # Permeability coefficient from sc to ve
-      Psc2ve <- Kve2sc * Dve / (skin_depth*Fskin_depth_bottom) #cm/h
+      # Permeability coefficient from sc to ed
+      Psc2ed <- Ked2sc * Ded / (skin_depth*Fskin_depth_ed) #cm/h
       
       # Permeability coefficient from m to sc: Ellison dataset in Marina Evans, et al. (not yet published)
-      Pm2sc <- 1.4 * Psc2ve #R = 0.83, p=7.2e-14
+      Pm2sc <- (1/Km2sc) * Dsc / (skin_depth_diffusion*(1-Fskin_depth_ed))
       
-    # Permeability coefficient from m to ve
+    # Permeability coefficient from m to ed
     if (model.type=="dermal_1subcomp") {
     if (method.permeability=="UK-Surrey"){
       skin_depth = skin_depth - 0.002
-      P <- Kve2m * Dve / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
+      P <- Ked2m * Ded / skin_depth #10^(-6.3 - 0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) # cm/h Potts-Guy Equation  
     } else if (method.permeability=="Potts-Guy"){
       P <- 10^(-2.7 -0.0061 * MW + 0.71 * log10(schmitt.params$Pow)) #cm/h
     } else stop(
       "method.permeatility must be set to either 'Potts-Guy' or 'UK-Surrey'")
     } else if (model.type=="dermal") {
-      if(!suppress.messages) warning("Input method.permeability ignored, since there is only one method do calculate Psc2ve and Pm2sc in this function.")
+      if(!suppress.messages) warning("Input method.permeability ignored, since there is only one method do calculate Psc2ed and Pm2sc in this function.")
     }
 
     # Added by AEM, 1/27/2022
@@ -434,16 +456,17 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                    skin_depth = skin_depth,
                    #Fdermabs = 1,
                    Fskin_exposed=0.1,
-                   Fskin_depth_top = Fskin_depth_top, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
-                   Fskin_depth_bottom = 1-Fskin_depth_top, #AEM's best guess
-                   Pvehicle2top = Pm2sc, 
-                   Ptop2bottom = Psc2ve,
-                   Ktop2vehicle = 1/Km2sc, #function above
-                   Ktop2bottom = 1/Kve2sc,
-                   #Kve2pu = outlist$Kskin2pu, #partition coefficient
+                   Fskin_depth_sc = Fskin_depth_sc, #"The stratum corneum compartment was assumed to be 11/560th of total skin volume." Poet et al. (2002)
+                   Fskin_depth_ed = 1-Fskin_depth_sc, #AEM's best guess
+                   Pvehicle2sc = Pm2sc, 
+                   Psc2ed = Psc2ed,
+                   Ksc2vehicle = 1/Km2sc, #function above
+                   Ksc2ed = 1/Ked2sc,
+                   #Ked2pu = outlist$Kskin2pu, #partition coefficient
                    Qskinf = flows[["Qskinf"]], #not sure if this is totally accurate
-                   Vskin_topc = outlist$Vskinc*Fskin_depth_top,
-                   Vskin_bottomc=outlist$Vskinc*(1-Fskin_depth_top))
+                   Vskin_scc = outlist$Vskinc*Fskin_depth_sc,
+                   Vskin_edc=outlist$Vskinc*(1-Fskin_depth_sc),
+                   InfiniteDose=InfiniteDose)
     } else if (model.type=="dermal_1subcomp"){
       outlist <- c(outlist,
                    totalSA = totalSA,
@@ -451,7 +474,7 @@ parameterize_dermal_pbtk <- function(chem.cas=NULL,
                    #Fdermabs=1,
                    Fskin_exposed=0.1,
                    P = P,
-                   Kskin2vehicle = Kve2m,
+                   Kskin2vehicle = Ked2m,
                    InfiniteDose = InfiniteDose) 
     }
     

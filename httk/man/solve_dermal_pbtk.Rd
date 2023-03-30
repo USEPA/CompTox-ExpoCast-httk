@@ -52,7 +52,7 @@ be specified.}
 the chemical must be identified by either CAS, name, or DTXSIDs.}
 
 \item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
-the model with 1 compartment for the skin; or (not usable yet) "dermal" for the 
+the model with 1 compartment for the skin; or "dermal" for the 
 model with 2 sub compartments (a top and bottom layer) for skin which defaults 
 to the top layer being the stratum corneum and the bottom layer being the combined
 viable epidermis and dermis.}
