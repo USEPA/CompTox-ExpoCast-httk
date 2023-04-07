@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22 ucrt) -- "Vigorous Calisthenics"
+R version 4.1.3 (2022-03-10) -- "One Push-Up"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -30,21 +30,19 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
-[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
-      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
-[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
-[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
-[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
-[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
+     time  Cgut Cliver   Cven Clung   Cart Crest Ckidney Cplasma Calvppmv
+[1,] 0.00 0.000  0.000 0.0000 0.000 0.0000 0.000    0.00  0.0000  0.0e+00
+[2,] 0.05 0.858  0.189 0.0161 0.368 0.0436 0.113    1.39  0.0214  4.5e-08
+[3,] 0.10 1.190  0.263 0.0253 0.580 0.0564 0.244    1.82  0.0336  5.8e-08
+     Cmixexhppmv Cmuc Atubules Ametabolized      AUC
+[1,]      0.0123    0 0.000000         0.00 0.000000
+[2,]      0.0150 1540 0.000702         1.99 0.000671
+[3,]      0.0169 2590 0.001710         5.97 0.002050
 Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 > signif(head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05)))[,-11],3)
@@ -57,21 +55,19 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
-[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
-      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
-[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
-[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
-[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
-[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
+     time  Cgut Cliver   Cven Clung   Cart Crest Ckidney Cplasma Calvppmv
+[1,] 0.00 0.000  0.000 0.0000 0.000 0.0000 0.000    0.00  0.0000  0.0e+00
+[2,] 0.05 0.858  0.189 0.0161 0.368 0.0436 0.113    1.39  0.0214  4.5e-08
+[3,] 0.10 1.190  0.263 0.0253 0.580 0.0564 0.244    1.82  0.0336  5.8e-08
+     Cmixexhppmv Cmuc Atubules Ametabolized      AUC
+[1,]      0.0123    0 0.000000         0.00 0.000000
+[2,]      0.0150 1540 0.000702         1.99 0.000671
+[3,]      0.0169 2590 0.001710         5.97 0.002050
 Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 > signif(head(solve_gas_pbtk(
@@ -86,21 +82,19 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
-[1,] 0e+00 0.00e+00 0.00e+00 0.00e+00 0.00e+00 0.000000 0.00e+00 0.00e+00
-[2,] 1e-05 4.99e-06 8.37e-07 2.00e-09 1.33e-06 0.000663 2.44e-07 2.03e-05
-[3,] 5e-02 8.28e-01 3.55e-02 1.43e-02 3.57e-01 0.041800 1.09e-01 1.33e+00
-[4,] 1e-01 1.13e+00 4.79e-02 2.25e-02 5.54e-01 0.053600 2.34e-01 1.73e+00
-      Cplasma Calvppmv Cmixexhppmv     Cmuc Atubules Ametabolized      AUC
-[1,] 0.00e+00  0.0e+00      0.0123    0.000 0.000000      0.0e+00 0.000000
-[2,] 2.00e-09  1.0e-09      0.0123    0.373 0.000000      6.0e-09 0.000000
-[3,] 1.90e-02  4.3e-08      0.0150 1540.000 0.000595      2.5e+00 0.000607
-[4,] 2.98e-02  5.5e-08      0.0169 2590.000 0.001530      7.0e+00 0.001830
+     time  Cgut Cliver   Cven Clung   Cart Crest Ckidney Cplasma Calvppmv
+[1,] 0.00 0.000  0.000 0.0000 0.000 0.0000 0.000    0.00  0.0000  0.0e+00
+[2,] 0.05 0.858  0.189 0.0161 0.368 0.0436 0.113    1.39  0.0214  4.5e-08
+[3,] 0.10 1.190  0.263 0.0253 0.580 0.0564 0.244    1.82  0.0336  5.8e-08
+     Cmixexhppmv Cmuc Atubules Ametabolized      AUC
+[1,]      0.0123    0 0.000000         0.00 0.000000
+[2,]      0.0150 1540 0.000702         1.99 0.000671
+[3,]      0.0169 2590 0.001710         5.97 0.002050
 Warning messages:
-1: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
-  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 4: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
@@ -121,7 +115,7 @@ $Clint.dist
 [1] NA
 
 $Clmetabolismc
-[1] 12.55
+[1] 9.568
 
 $Fgutabs
 [1] 1
@@ -130,10 +124,10 @@ $Fhep.assay.correction
 [1] 0.7622
 
 $Funbound.plasma
-[1] 0.08293
+[1] 0.08292
 
 $Funbound.plasma.adjustment
-[1] 0.4605
+[1] 0.4604
 
 $Funbound.plasma.dist
 [1] NA
@@ -142,7 +136,7 @@ $hematocrit
 [1] 0.44
 
 $Kblood2air
-[1] 79.08
+[1] 79.09
 
 $Kgut2pu
 [1] 44.76
@@ -151,7 +145,7 @@ $kgutabs
 [1] 2.18
 
 $Kkidney2pu
-[1] 70.46
+[1] 70.47
 
 $Kliver2pu
 [1] 88.32
@@ -169,7 +163,7 @@ $Krbc2pu
 [1] 4.105
 
 $Krest2pu
-[1] 29.7
+[1] 29.71
 
 $kUrtc
 [1] 11
@@ -178,7 +172,7 @@ $liver.density
 [1] 1.05
 
 $MA
-[1] NA
+[1] 155.2
 
 $million.cells.per.gliver
 [1] 110
@@ -213,7 +207,7 @@ $Qkidneyf
 [1] 0.2214
 
 $Qliverf
-[1] 0.05359
+[1] 0.0535
 
 $Qlungf
 [1] 0.025
@@ -252,13 +246,11 @@ $Vvenc
 [1] 0.03827
 
 Warning messages:
-1: In predict_partitioning_schmitt(parameters = schmitt.params, species = species,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013)
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In parameterize_gas_pbtk(chem.name = "styrene") :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.name = "styrene") :
-  Clint adjusted for in vitro partioning (Kilford, 2008).
-4: In parameterize_gas_pbtk(chem.name = "styrene") :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 > 
 > quit("no")

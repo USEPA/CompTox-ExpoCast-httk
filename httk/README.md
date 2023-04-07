@@ -1,4 +1,5 @@
-<img src="man/figures/httk-logo.png" align="center" width="240" />
+
+<img src="man/figures/httk-logo.png" align="right" width="50%"/>
 
 # R Package "httk"
 
@@ -12,8 +13,8 @@ absorption, distribution, metabolism, and excretion by the body).
 The models are design to be parameterized with chemical-specific in vitro 
 (animal free) measurements. The predictions can be used for traditional
 dosimetry as well as in vivo-in vitro extrapolation (IVIVE) of in vitro 
-bioactivity testing data (for example, ToxCast). See Breen et al. 
-(2021, <https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
+bioactivity testing data (for example, ToxCast). See [Breen et al. 
+(2021)](<https://doi.org/10.1080/17425255.2021.1935867>) for a recent review.
 
 This repository is for reporting bugs and contributing enhancements. Installable
 files, documentation, and other information can be obtained from
@@ -25,8 +26,7 @@ Pre-made models that can be rapidly tailored to various chemicals
 and species using chemical-specific in vitro data and physiological 
 information. These tools allow incorporation of chemical 
 toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") 
-into bioinformatics, as described by Pearce et al. (2017) 
-(<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
+into bioinformatics, as described by [Pearce et al. (2017)](<https://doi.org/10.18637/jss.v079.i04>). Chemical-specific 
 in vitro data characterizing toxicokinetics have been obtained 
 from relatively high-throughput experiments. The 
 chemical-independent ("generic") physiologically-based ("PBTK") and empirical 
@@ -41,22 +41,22 @@ where in vivo data do exist. The models are systems of ordinary
 differential equations that are developed in MCSim and solved
 using compiled (C-based) code for speed. A Monte Carlo sampler is
 included for simulating human biological variability
-(Ring et al., 2017 <https://doi.org/10.1016/j.envint.2017.06.004>)
+([Ring et al., 2017](<https://doi.org/10.1016/j.envint.2017.06.004>))
 and propagating parameter uncertainty 
-(Wambaugh et al., 2019 <https://doi.org/10.1093/toxsci/kfz205>). 
+([Wambaugh et al., 2019](<https://doi.org/10.1093/toxsci/kfz205>)). 
 Empirically calibrated methods are included for predicting 
-tissue:plasma partition coefficients and volume of distribution (Pearce et al., 
-2017 <https://doi.org/10.1007/s10928-017-9548-7>).
+tissue:plasma partition coefficients and volume of distribution ([Pearce et al., 
+2017](<https://doi.org/10.1007/s10928-017-9548-7>)).
 These functions and data provide a set of tools for using IVIVE to
 convert concentrations from high-throughput screening experiments
 (for example, Tox21, ToxCast) to real-world exposures via reverse 
 dosimetry (also known as "RTK")
-(Wetmore et al., 2015 <https://doi.org/10.1093/toxsci/kfv171>).
+([Wetmore et al., 2015](<https://doi.org/10.1093/toxsci/kfv171>)).
 
 ## Getting Started
 
 For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html>
+<http://rafalab.dfci.harvard.edu/dsbook/getting-started.html>
 
 For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
@@ -64,7 +64,7 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 ### Dependencies
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
-* Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 ```
 install.packages("X")
@@ -77,7 +77,7 @@ the keyboard.
 
 ### Installing R package "httk"
 
-Adapted from Breen et al. (2021) <https://doi.org/10.1080/17425255.2021.1935867>
+Adapted from [Breen et al. (2021)](<https://doi.org/10.1080/17425255.2021.1935867>)
 
 * Getting Started with R Package httk from the R command line
 ```
@@ -182,12 +182,13 @@ Mark Sfeir,
 Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
-### Bug-Fixes and Parameter Values
+### Bug-Fixes Vignette edits, and Parameter Values
 Miyuki Breen [breen.miyuki@epa.gov], 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
+Elaina Kenyon [kenyon.elaina@epa.gov]
 James Sluka [jsluka@indiana.edu],  
 Nisha Sipes [sipes.nisha@epa.gov], and 
 Barbara Wetmore [wetmore.barbara@epa.gov]

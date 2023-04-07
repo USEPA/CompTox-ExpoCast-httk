@@ -562,7 +562,7 @@ get_cheminfo <- function(info="CAS",
   if (!suppress.messages & any(good.chemicals.index==FALSE))
   {
     warning(paste(
-      "Excluding compounds that have one or more needed parameter missing in chem.physical_and_invitro.table.\n
+      "Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.\n
 For model ", model, " each chemical must have non-NA values for:",
       paste(necessary.params,collapse=", "), sep=""))
   }

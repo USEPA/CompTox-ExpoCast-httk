@@ -11,6 +11,9 @@ vignette: >
 *Please send questions to breen.miyuki@epa.gov*
 
 ### Set vignette options
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
 ```{r setup_vignette, eval = TRUE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
 ```
@@ -38,7 +41,7 @@ included for predicting tissue:plasma partition coefficients and
 volume of distribution
 ([Pearce et al., 2017](https://doi.org/10.1007/s10928-017-9548-7)).
 These functions and data provide a set of tools for
-IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data)) 
+IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data)) 
 to real-world exposures via reverse dosimetry (also known as "RTK")
 ([Wetmore et al., 2015](https://doi.org/10.1093/toxsci/kfv171)).
 
@@ -65,7 +68,7 @@ vitro to in vivo extrapolation"](https://doi.org/10.1080/17425255.2021.1935867)
 ## Getting Started
 
 For an introduction to R, see Irizarry (2022) "Introduction to Data Science": 
-<https://rafalab.github.io/dsbook/getting-started.html>
+<http://rafalab.dfci.harvard.edu/dsbook/getting-started.html>
 
 For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) in the "TAME Toolkit":
 <https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html>
@@ -73,7 +76,7 @@ For an introduction to toxicokinetics, with examples in "httk", see Ring (2021) 
 ### Dependencies
 
 * Users will need the freely available R statistical computing language: <https://www.r-project.org/>
-* Users will likely want a development environment like RStudio: <https://www.rstudio.com/products/rstudio/download/>
+* Users will likely want a development environment like RStudio: <https://posit.co/download/rstudio-desktop/>
 * If you get the message "Error in library(X) : there is no package called 'X'" then you will need to install that package: 
 	From the R command prompt: install.packages("X") 
   Or, if using RStudio, look for 'Install Packages' under the 'Tools' tab.
@@ -88,7 +91,20 @@ the keyboard.
 install.packages("httk")
 ```
 
+### “Write Privileges” On Your Personal Computer.
+```{r write_privileges, eval = FALSE}
+ Depending on the account you are using and where you want to install the package on that computer, you may need “permission” from your local file system to install the package. See this help here:
+
+<https://stackoverflow.com/questions/42807247/installing-package-cannot-open-file-permission-denied>
+
+and here:
+
+<https://support.microsoft.com/en-us/topic/general-problem-installing-any-r-package-0bf1f9ba-ead2-6335-46ec-190f6af75e44>
+```
+
 ### Delete all objects from memory:
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
 ```{r clear_memory, eval = TRUE}
 rm(list=ls())
 ```
@@ -100,6 +116,18 @@ library(httk)
 # Check what version you are using 
 packageVersion("httk")
 ```
+### Control run speed
+Portions of this vignette use Monte Carlo sampling to simulate variability and
+propagate uncertainty. The more samples that are used, the more stable the 
+results are (that is, the less likely they are to change if a different random
+sequence is used). However, the more samples that are used, the longer it takes
+to run. So, to speed up how fast these examples run, we specify here that we
+only want to use 25 samples, even though the actual **httk** default is 1000.
+Increase this number to get more stable (and accurate) results:
+```{r MC_samples, eval = TRUE}
+NSAMP <- 25
+```
+
 ### Suppressing Messages
 Note that since *in vitro-in vivo* extrapolation (IVIVE) is built upon
 many, many assumptions, *httk** attempts to give many warning messages 
@@ -155,10 +183,12 @@ quantile, for a specified CAS number and species
 calc_mc_oral_equiv(0.1,
                    chem.cas = "34256-82-1",
                    species = "human",
+                   samples = NSAMP,
                    suppress.messages = TRUE)
 calc_mc_oral_equiv(0.1,
                    chem.cas = "99-71-8", 
                    species = "human",
+                   samples = NSAMP,
                    suppress.messages = TRUE)
 ```
 
@@ -179,6 +209,7 @@ Note that we use the R built-in function head() to show only the first five rows
 ```{r pbtk_ex, eval = TRUE}
 head(solve_pbtk(chem.name = "bisphenol a", 
                 plots = TRUE,
+                days = 1,
                 suppress.messages = TRUE))
 ```
 

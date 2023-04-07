@@ -269,7 +269,9 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[["gas_pbtk"]]$compartment.units <- c( #missing States: Ainh and Aexh - AM, 1/21/2022
+model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Ainh"="umol",
+                                          "Aexh"="umol",
                                           "Aart"="umol",
                                           "Agut"="umol",
                                           "Agutlumen"="umol",
@@ -322,7 +324,7 @@ model.list[["gas_pbtk"]]$routes <- list(
     "dose.type" = "add"),
   "inhalation" = list(
     "entry.compartment" = "Cinhppmv",
-    "dose.type" = "add")   
+    "dose.type" = "replace")   
   )
 
 # This ORDERED LIST of variables are always calculated in amounts (must match

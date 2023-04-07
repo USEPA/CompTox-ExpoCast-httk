@@ -38,6 +38,8 @@
 #' available, the function uses the appropriate physiological data (volumes and
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+#' (NOTE: The 'default.to.human' specification should be included as part of the
+#' arguments listed in 'parameterize.arg.list'.)
 #'  
 #' For both plotting purposes and helping the numerical equation solver, it is
 #' helpful to specify that time points shortly before and after dosing are 
@@ -90,8 +92,6 @@
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -99,8 +99,6 @@
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
 #' @param ... Additional arguments passed to the integrator.
@@ -123,6 +121,47 @@
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #' 
 #' @keywords Solve
+#'
+#' @examples
+#' # The varrious "solve_x" functions are wrappers for solve_model:
+#' head(solve_pbtk(chem.name="Terbufos", days=1))
+#'
+#' head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+#'                  initial.dose = 1, # Assume dose is in mg/kg BW/day  
+#'                  doses.per.day=NULL,
+#'                  dosing.matrix = NULL,
+#'                  days=1,
+#'                  daily.dose = NULL)))
+#'
+#' # A dose matrix specifies times and magnitudes of doses:
+#' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+#' colnames(dm) <- c("time","dose")
+#'
+#' solve_pbtk(chem.name="Methenamine",
+#'            dosing.matrix=dm,
+#'            dose=NULL,
+#'            days=2.5,
+#'            daily.dose=NULL)
+#' 
+#' solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
+#'             initial.dose =NULL,
+#'             doses.per.day=NULL,
+#'             daily.dose=NULL,
+#'             days=2.5,
+#'             dosing.matrix=dm))
+#' 
+#' solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
+#'             initial.dose =NULL,
+#'             doses.per.day=4,
+#'             daily.dose=1,
+#'             days=2.5,
+#'             dosing.matrix=NULL))
+#'   
+#' solve_pbtk(chem.name="Besonprodil",
+#'            daily.dose=1,
+#'            dose=NULL,
+#'            doses.per.day=4,
+#'            days=2.5)
 #' 
 #' @export solve_model
 #'

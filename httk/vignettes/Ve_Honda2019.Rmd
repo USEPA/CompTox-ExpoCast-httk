@@ -10,9 +10,6 @@ vignette: >
 ---
 *Please send questions to wambaugh.john@epa.gov*
 
-```{r setup, include=FALSE, eval = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
-```
 from "Using the concordance of *in vitro* and *in vivo* data to evaluate extrapolation assumptionst"
 
 Gregory S. Honda, Robert G. Pearce, Ly L. Pham, R. W. Setzer, Barbara A. Wetmore,
@@ -63,6 +60,36 @@ and cannot easily address the changes, historical versions of httk are
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
 ## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r setup, include=FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=5)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
+
 ### Load the relevant libraries
 If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
@@ -72,7 +99,7 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
-```{r InitialPrep}
+```{r InitialPrep, eval = execute.vignette}
 library(data.table)
 library(magrittr)
 library(ggplot2)
@@ -84,18 +111,9 @@ library(httk)
 This produces an updated version of the top panel of Figure 3 from the paper 
 [Armitage, 2014](https://doi.org/10.1021/es501955g)
 
-#### eval = FALSE
-If you are using the RMarkdown version of this vignette (extension, .RMD) you
-will be able to see that several chunks of code in this vignette
-have the statement "eval = FALSE"
-at the beginning. This means that the code is included (and necessary) but was
-not run when the vignette was built. We do this because some steps require 
-extensive computing time and the checks on CRAN limit how long we can spend
-building the package. If you want this vignette to work, you must run all code,
-either by cutting and pasting it into R or pressing "play" (the green arrow) on
-each chunk in RStudio.
 
-```{r MakeTable, eval = FALSE}
+=======
+```{r MakeTable, eval = execute.vignette}
 armitage.dt <- copy(armitage_input)
 armitage.dt[,well_number:=384] %>% 
   .[,option.bottom:=TRUE] %>% 
@@ -119,7 +137,7 @@ armitage_output3 <- armitage_eval(tcdata = armitage.dt2[,ac50:=0.001])
 
 ## Plot results
 
-```{r MakePlot, echo=TRUE, eval = FALSE}
+```{r MakePlot, echo=TRUE, eval = execute.vignette}
 armitage_output <- rbind(armitage_output1[,xfill:="50 \U00B5M"],
                          armitage_output2[,xfill:="1 \U00B5M"],
                          armitage_output3[,xfill:="1 nM"])

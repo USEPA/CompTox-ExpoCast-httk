@@ -43,9 +43,6 @@
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
 #' 
-#' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
-#' of unbound plasma in calculation of partition coefficients for rats if true.
-#' 
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
 #' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
 #'

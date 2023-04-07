@@ -102,7 +102,7 @@
 #'
 #' @seealso \code{\link{parameterize_pbtk}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{tissue.data}}
 #'

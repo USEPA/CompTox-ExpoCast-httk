@@ -136,9 +136,9 @@ Cplasma = Aven / Vven / Rblood2plasma; # ... plasma (uM)
 Aplasma = Aven / Rblood2plasma * (1 - hematocrit); # (umols)
 Calv = Cart/Kblood2air;   # Concentration in the alveoli (uM)
 Calvppmv = Calv * 24.45;  # ... (ppmv)
-Cendexh = ((Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv))/Qalv; # Concentration exhaled (uM)
+Cendexh = (Qalv * Calv + kUrt * (Cmuc/Kmuc2air - Calv))/Qalv; # Concentration exhaled (uM)
 Cendexhppmv = Cendexh * 24.45;        # ... (ppmv)
-Cmixexh = 0.7 * Cendexh + 0.3 * Cinh; # Concentration exhaled mix (uM)
+Cmixexh = 0.7 * Cendexh + 0.3 * Cinh; # Concentration exhaled mix (uM*d)
 Cmixexhppmv = Cmixexh * 24.45;        # ... (ppmv)
 Cmuc = Amuc/Vmuc;            # Concentration in mucus
 
@@ -151,13 +151,13 @@ dt (Aven) = ((Qliver + Qgut) * Cliver / Kliver2pu + Qkidney * Ckidney / Kkidney2
 dt (Alung) = Qlung * (Cart - Clung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
 dt (Aart) = (Qcardiac * (Cven - Cart)) + (Qalv * (Cinh - Calv)) - (kUrt * (Cinh - (Cmuc/Kmuc2air)));
 dt (Arest) = Qrest * (Cart - Crest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
-dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Ckidney / Kkidney2pu;
-dt (Atubules) = Qgfr * Ckidney / Kkidney2pu;
+dt (Akidney) = Qkidney * Cart - Qkidney * Ckidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Cart / Rblood2plasma * Fraction_unbound_plasma;
+dt (Atubules) = Qgfr * Cart / Rblood2plasma * Fraction_unbound_plasma;
 dt (Ametabolized) = Clmetabolism * Cliver / Kliver2pu/ Fraction_unbound_plasma * Rblood2plasma + Vmax * Cliver / Kliver2pu / (Km + Cliver / Kliver2pu) ;
 dt (AUC) = Cven / Rblood2plasma;
-dt (Ainh) = (Qalv * (Cinh - Calv)) + kUrt * ((Cmuc/Kmuc2air) - Cinh);
-dt (Aexh) = (Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv);
-dt (Amuc) = (kUrt * (Cinh - (Cmuc/Kmuc2air))) - (kUrt * ((Cmuc/Kmuc2air) - Calv));
+dt (Ainh) = (Qalv * (Cinh - Calv)) + kUrt * ((Cmuc/Kmuc2air) - Cinh); # umol/d
+dt (Aexh) = (Qalv * Calv) + kUrt * ((Cmuc/Kmuc2air) - Calv); # umol/d
+dt (Amuc) = (kUrt * (Cinh - (Cmuc/Kmuc2air))) - (kUrt * ((Cmuc/Kmuc2air) - Calv)); # umol/d
 
 }
 End.

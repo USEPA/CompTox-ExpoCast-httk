@@ -60,6 +60,8 @@ Authors@R: c(
            person("Todor", "Antonijevic", email="tantonijevic@toxstrategies.com",
              role = c("ctb"), comment = c(ORCID = "0000-0002-0248-8412")),
            person("Jimena", "Davis", role = c("ctb")), 
+           person("Elaina", "Kenyon", email="kenyon.elaina@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
@@ -67,7 +69,9 @@ Authors@R: c(
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")), 
            person("Woodrow", "Setzer", email = "setzer.woodrow@epa.gov",
-             role = c("ctb"), comment = c(ORCID = "0000-0002-6709-9186"))
+             role = c("ctb"), comment = c(ORCID = "0000-0002-6709-9186")),
+           person("Annabel", "Meade", email = "aemeade7@gmail.com",
+             role = c("ctb"))
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
@@ -77,7 +81,7 @@ Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        testthat
+        testthat, readxl
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
@@ -100,11 +104,13 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
-  Jimena Davis [ctb], 
+  Jimena Davis [ctb],
+  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>), 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>), 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>), 
-  Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
+  Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>),
+  Annabel Meade [ctb],
 Maintainer: John Wambaugh <wambaugh.john@epa.gov>
 Copyright: This package is primarily developed by employees of the U.S.
         Federal government as part of their official duties and is

@@ -184,6 +184,8 @@ create_mc_samples <- function(chem.cas=NULL,
                                              dtxsid=dtxsid,
                                              species=species,
                                         parameters=parameters,
+                                        adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
+                                        adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
                                         parameterize.arg.list))
   # Check to see if we need to call the parameterize_MODEL function:
@@ -205,9 +207,13 @@ create_mc_samples <- function(chem.cas=NULL,
     names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
     )]
   args.schmitt$suppress.messages <- TRUE
-  # The Schmitt parameters are useful if we need to redo partitioning later:
-  pschmitt <- do.call(parameterize_schmitt,
-                      args = args.schmitt)
+  # The Schmitt parameters are useful if we need to redo partitioning later, though
+  # some models don't include partitioning so the function might fail:
+  pschmitt <- try(do.call(parameterize_schmitt,
+                      args = args.schmitt),
+                      silent=TRUE)
+  if (is(pschmitt,"try-error")) pschmitt <- NULL
+  
   # But we don't want to overwrite any Schmitt params provided by the
   # argument parameters:
   pschmitt <- pschmitt[!(names(pschmitt)%in%names(parameters.mean))]
@@ -318,7 +324,7 @@ Set species=\"Human\" to run httkpop model.')
 # Force pKa to NA_real_ so data.table doesn't replace everything with text
 #  if (any(c("pKa_Donor","pKa_Accept") %in% names(parameters.dt)))
 #  {
-#    suppressWarnings(parameters.dt[c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
+#    suppressWarnings(parameters.dt[, c("pKa_Donor","pKa_Accept") := NULL]) %>% .[, c("pKa_Donor","pKa_Accept") := NA_real_]
 #  }
 
 #
@@ -405,12 +411,24 @@ Set species=\"Human\" to run httkpop model.')
                                             parameters.mean$Funbound.plasma,
                                             parameters.mean$hematocrit)]
     } 
-# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funboun.plasma. 
+# Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)]
+                                      Funbound.plasma=Funbound.plasma)] 
+                                      
+    if (any(is.na(parameters.dt$Rblood2plasma)))
+    {
+      parameters.dt[is.na(Rblood2plasma),
+                          Rblood2plasma := available_rblood2plasma(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            species=species,
+                            adjusted.Funbound.plasma=TRUE,
+                            suppress.messages=suppress.messages)]
+    }
   }
   
   if (firstpass)

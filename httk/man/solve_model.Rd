@@ -125,12 +125,6 @@ dataset)}
 parameterization function.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -177,12 +171,56 @@ When species is specified but chemical-specific in vitro data are not
 available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+(NOTE: The 'default.to.human' specification should be included as part of the
+arguments listed in 'parameterize.arg.list'.)
  
 For both plotting purposes and helping the numerical equation solver, it is
 helpful to specify that time points shortly before and after dosing are 
 included. This function automatically add these points, and they are returned
 to the user unless the times argument is used, in which case only the time
 points specified by that argument are provided.
+}
+\examples{
+# The varrious "solve_x" functions are wrappers for solve_model:
+head(solve_pbtk(chem.name="Terbufos", days=1))
+
+head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+                 initial.dose = 1, # Assume dose is in mg/kg BW/day  
+                 doses.per.day=NULL,
+                 dosing.matrix = NULL,
+                 days=1,
+                 daily.dose = NULL)))
+
+# A dose matrix specifies times and magnitudes of doses:
+dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+colnames(dm) <- c("time","dose")
+
+solve_pbtk(chem.name="Methenamine",
+           dosing.matrix=dm,
+           dose=NULL,
+           days=2.5,
+           daily.dose=NULL)
+
+solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
+            initial.dose =NULL,
+            doses.per.day=NULL,
+            daily.dose=NULL,
+            days=2.5,
+            dosing.matrix=dm))
+
+solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
+            initial.dose =NULL,
+            doses.per.day=4,
+            daily.dose=1,
+            days=2.5,
+            dosing.matrix=NULL))
+  
+solve_pbtk(chem.name="Besonprodil",
+           daily.dose=1,
+           dose=NULL,
+           doses.per.day=4,
+           days=2.5)
+
 }
 \references{
 Pearce, Robert G., et al. "Httk: R package for high-throughput

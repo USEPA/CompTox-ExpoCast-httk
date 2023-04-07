@@ -152,13 +152,23 @@
 #'
 #' @seealso \code{\link{solve_gas_pbtk}}
 #'
-#' @seealso \code{\link{adjust_clint}}
+#' @seealso \code{\link{apply_clint_adjustment}}
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
+#'
+#' @seealso \code{\link{available_rblood2plasma}}
+#'
+#' @seealso \code{\link{calc_kair}}
 #'
 #' @seealso \code{\link{tissue.data}}
 #'
 #' @seealso \code{\link{physiology.data}}
+#'
+#' @seealso \code{\link{get_clint}}
+#'
+#' @seealso \code{\link{get_fup}}
+#'
+#' @seealso \code{\link{get_physchem_param}}
 #'
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
@@ -219,32 +229,48 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   dtxsid <- out$dtxsid
    
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
-  # Clint has units of uL/min/10^6 cells
-  Clint.db <- try(get_invitroPK_param("Clint",species,chem.cas=chem.cas),silent=TRUE)
-  # Check that the trend in the CLint assay was significant:
-  Clint.pValue <- try(get_invitroPK_param("Clint.pValue",species,chem.cas=chem.cas),silent=TRUE)
-  if ((is(Clint.db,"try-error") & default.to.human) || force.human.clint.fup) 
-  {
-    Clint.db <- try(get_invitroPK_param("Clint","Human",chem.cas=chem.cas),silent=TRUE)
-    Clint.pValue <- try(get_invitroPK_param("Clint.pValue","Human",chem.cas=chem.cas),silent=TRUE)
-    if (!suppress.messages)
-      warning(paste(species,"coerced to Human for metabolic clearance data."))
-  }
-  if (is(Clint.db,"try-error")) 
-    stop("Missing metabolic clearance data for given species. Set default.to.human to true to substitute human value.")
-  # Check if clint is a point value or a distribution, if a distribution, use the median:
-  if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
-  {
-    Clint.dist <- Clint.db
-    Clint<- as.numeric(strsplit(Clint.db,",")[[1]][1])
-    Clint.pValue <- as.numeric(strsplit(Clint.db,",")[[1]][4])
-    if (!suppress.messages) warning("Clint is provided as a distribution.")
-  } else {
-    Clint <- Clint.db
-    Clint.dist <- NA
-  }
-  if (!is.na(Clint.pValue) & Clint.pValue > clint.pvalue.threshold) Clint  <- 0
 
+  # Clint has units of uL/min/10^6 cells:
+  Clint.list <- get_clint(
+      dtxsid=dtxsid,
+      chem.name=chem.name,
+      chem.cas=chem.cas,
+      species=species,
+      default.to.human=default.to.human,
+      force.human.clint=force.human.clint.fup,
+      clint.pvalue.threshold=clint.pvalue.threshold,
+      suppress.messages=suppress.messages) 
+  Clint.point <- Clint.list$Clint.point
+  Clint.dist <- Clint.list$Clint.dist
+
+# Get phys-chemical properties:
+  MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
+  # acid dissociation constants
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+    "pKa_Donor",
+    chem.cas=chem.cas)) 
+  # basic association cosntants
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+    "pKa_Accept",
+    chem.cas=chem.cas)) 
+  # Octanol:water partition coefficient
+  Pow <- 10^get_physchem_param(
+    "logP",
+    chem.cas=chem.cas) 
+    
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  Fu_hep <- calc_hep_fu(parameters=list(
+    Pow=Pow,
+    pKa_Donor=pKa_Donor,
+    pKa_Accept=pKa_Accept)) # fraction 
+
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
+  if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
+                               Clint.point,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
   
 # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
@@ -289,25 +315,6 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
-  MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
-  pKa_Donor <- suppressWarnings(get_physchem_param("pKa_Donor",chem.cas=chem.cas)) # acid dissociation constants
-  pKa_Accept <- suppressWarnings(get_physchem_param("pKa_Accept",chem.cas=chem.cas)) # basic association cosntants
-  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas) # Octanol:water partition coeffiecient
-
-# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
-  Fu_hep <- calc_hep_fu(parameters=list(
-    Pow=Pow,
-    pKa_Donor=pKa_Donor,
-    pKa_Accept=pKa_Accept,
-    suppress.messages=suppress.messages)) # fraction 
-
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
-  if (adjusted.Clint) Clint <- apply_clint_adjustment(
-                               Clint,
-                               Fu_hep=Fu_hep,
-                               suppress.messages=suppress.messages)
   outlist <- list()
    # Begin flows:
   #mL/min/kgBW converted to L/h/kgBW:
@@ -365,13 +372,13 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     outlist <- c(outlist, list(
       vmax=0,
       km=1, #km value of 1 is a dummy value here
-      Clint=Clint, 
+      Clint=Clint.point, 
       Clint.dist = Clint.dist,
       Clmetabolismc = as.numeric(calc_hep_clearance(
         chem.name = chem.name,
         hepatic.model="unscaled",
         parameters=list(
-          Clint=Clint, #uL/min/10^6 cells
+          Clint=Clint.point, #uL/min/10^6 cells
           Funbound.plasma=fup, # unitless fraction
           hep.assay.correction=outlist$Fhep.assay.correction, 
           million.cells.per.gliver= 110, # 10^6 cells/g-liver
@@ -386,7 +393,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   } else {
     outlist <- c(outlist,list(
       vmax=vmax,km=km,
-      Clint=Clint, 
+      Clint=Clint.point, 
       Clint.dist = Clint.dist, 
       Clmetabolismc=0,                       
       million.cells.per.gliver=110, # 10^6 cells/g-liver

@@ -15,12 +15,6 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). 
-#'
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true.
-#'
 #' @param parameters Chemical parameters from parameterize_steadystate
 #' function, overrides chem.name and chem.cas.
 #'
@@ -36,6 +30,12 @@
 #'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
 #'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.
@@ -72,6 +72,8 @@ calc_hep_clearance <- function(chem.name=NULL,
                                suppress.messages=FALSE,
                                well.stirred.correction=TRUE,
                                restrictive.clearance=TRUE,
+                               species="Human",
+                               adjusted.Funbound.plasma=TRUE,
                                ...)
 {
   model <- hepatic.model
@@ -81,8 +83,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                  "million.cells.per.gliver",
                  "Vliverc",
                  "BW",
-                 "liver.density",
-                 'Fhep.assay.correction')
+                 "liver.density")
                  
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -299,6 +300,9 @@ calc_hep_clearance <- function(chem.name=NULL,
 #'
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
+#' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
+#' adjustment if calculating Rblood2plasma.
 #'
 #' @param ... Additional parameters passed to parameterize_steadystate if
 #' parameters is NULL.

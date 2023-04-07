@@ -30,8 +30,13 @@
 #' is increased as such:
 #' \ifelse{html}{\out{K<sup>corrected</sup><sub>plasma:water</sub> = 1/f<sup>corrected</sup><sub>up</sub> = 1/f<sup>in vitro</sup><sub>up</sub> + D<sub>ow</sub>*F<sub>lipid</sub>}}{\deqn{f^{corrected}_{up} = \frac{1}{f^{corrected}_{up}} = \frac{1}{K_{nL}^{pl}*F_{lipid} + \frac{1}{f^{in vitro}_{up}}}}}
 #' 
+#' Note that octanal:water partitioning above 1:1,000,000 
+#' (\ifelse{html}{\out{LogD<sub>ow</sub> > 6}}{\eqn{LogD_{ow} > 6}})
+#' are truncated at 1:1,000,000 because greater partitioning would
+#' likely take longer than protein binding assay itself.
+#'
 #' @param fup Fraction unbound in plasma, if provided this argument overides
-#' values from argument parameters and \code{\link{chem.phys_and_invitro.data}} 
+#' values from argument parameters and \code{\link{chem.physical_and_invitro.data}} 
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -52,6 +57,8 @@
 #' 
 #' @param plasma.pH pH of plasma (default 7.4)
 #'
+#' @param dow74 The octanol-water distribution ratio (DOW).
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
@@ -62,6 +69,8 @@
 #' calculation for rats if true.
 #' When species is specified as rabbit, dog, or mouse, the human unbound
 #' fraction is substituted.
+#' 
+#' @param suppress.messages Whether or not the output message is suppressed.
 #' 
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'
@@ -93,7 +102,7 @@
 #'
 #' @keywords in-vitro
 #'
-#' @seealso \code{\link{adjust_fup}}
+#' @seealso \code{\link{apply_fup_adjustment}}
 #'
 #' @seealso \code{\link{calc_dow}}
 #'
@@ -114,6 +123,14 @@ calc_fup_correction <- function(
                  suppress.messages=FALSE
                  ) 
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  Parameter <- NULL
+  #End R CMD CHECK appeasement.
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -174,8 +191,12 @@ calc_fup_correction <- function(
       pKa_Accept <- parameters$pKa_Accept
     } else if ("Dow74" %in% names(parameters)) {
       if (is.null(dow74)) dow74 <- parameters$Dow74
+      if ("Pow" %in% names(parameters)) Pow <- parameters$Pow
+      else Pow <- NA
     } else stop("Missing parameters needed in calc_fup_correction.")  
   }
+  
+  Pow <- min(Pow,1e6) # Octanal:water partitioning above 1:1000000 would likely take longer than hepatocyte assay
   
   # Grab the fraction of in vivo plasma that is lipid:
   if (!is.null(parameters))
@@ -204,6 +225,8 @@ calc_fup_correction <- function(
                   pKa_Accept=pKa_Accept
                   ) 
   } else dow <- dow74
+  
+  dow <- min(dow,1e6) # Octanal:water partitioning above 1:1000000 would likely take longer than hepatocyte assay
   
   fup.corrected <- 1 / ((dow) * Flipid + 1 / fup)
   fup.correction <- fup.corrected/fup

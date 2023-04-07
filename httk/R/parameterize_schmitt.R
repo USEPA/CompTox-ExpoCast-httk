@@ -62,7 +62,7 @@
 #'
 #' @seealso \code{\link{calc_ma}}
 #'
-#' @seealso \code{\link{adjust_fup}}
+#' @seealso \code{\link{apply_fup_adjustment}}
 #'
 #' @references 
 #' Pearce, Robert G., et al. "Httk: R package for high-throughput 
@@ -286,6 +286,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
         species=species,
         default.to.human=default.to.human,
         force.human.fup=force.human.fup,
+        minimum.Funbound.plasma=minimum.Funbound.plasma,
         suppress.messages=suppress.messages) 
     fup.point <- fup.list$Funbound.plasma.point
     fup.dist <- fup.list$Funbound.plasma.dist 
@@ -319,6 +320,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.adjustment <- NA
     fup.corrected <- NA
   } 
+  
+  if (is.na(fup.corrected)) stop(
+"fup is NA, Schmitt's method for tissue partition cannot be used.")
+
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
                   Funbound.plasma.dist=fup.dist,

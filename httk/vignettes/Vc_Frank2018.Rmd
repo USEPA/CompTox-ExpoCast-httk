@@ -71,8 +71,38 @@ and cannot easily address the changes, historical versions of httk are
 available from: https://cran.r-project.org/src/contrib/Archive/httk/
 
 ## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r knitrPrep, include=FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
 
 ### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
 If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
 
@@ -82,26 +112,15 @@ install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 
-#### eval = FALSE
-If you are using the RMarkdown version of this vignette (extension, .RMD) you
-will be able to see that several chunks of code in this vignette
-have the statement "eval = FALSE"
-at the beginning. This means that the code is included (and necessary) but was
-not run when the vignette was built. We do this because some steps require 
-extensive computing time and the checks on CRAN limit how long we can spend
-building the package. If you want this vignette to work, you must run all code,
-either by cutting and pasting it into R or pressing "play" (the green arrow) on
-each chunk in RStudio.
-```{r setup, eval = FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+```{r setup, eval = execute.vignette}
 library(httk)
-#library(gdata)
 library(ggplot2)
 library(scales)
 ```
+
 ### Function to format scientific notation 
 From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
-```{R scientific.notation}
+```{R scientific.notation, eval = execute.vignette}
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -109,13 +128,15 @@ scientific_10 <- function(x) {
   out <- parse(text=gsub("10\\^00","1",out))                    
 }  
 ```
+
 ### Load the data
-```{r Frank2018data, eval = FALSE}
+```{r Frank2018data, eval = execute.vignette}
 chem.table <- Frank2018invivo
 ```
+
 ## Use HTTK to perform IVIVE
 ### This loops through each study design in the table and runs solve_pbtk:
-```{R ivive.loop, eval = FALSE}
+```{R ivive.loop, eval = execute.vignette}
 for (this.row in 1:dim(chem.table)[1])
 {
   this.cas <- chem.table[this.row,"Substance_CASRN"]
@@ -179,7 +200,7 @@ and below perfect prediction. Because all in vitro treatments
 were exposed for the same amount of time, the relationship
 between nominal in vitro concentration and time-integrated
 concentration is a constant.
-```{R Frank2018.Fig6, eval = FALSE}
+```{R Frank2018.Fig6, eval = execute.vignette}
 Fig.AUC <- ggplot(data=chem.table) +
   geom_segment(color="grey",aes(x=AUC,y=Lower.95..CI,xend=AUC,yend=Higher.95..CI))+    
 #  geom_point(aes(x=AUC,y=Critical.concentration,color="Chemical"))+ 

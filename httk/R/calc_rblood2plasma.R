@@ -15,23 +15,33 @@
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
+#' 
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Parameters from \code{\link{parameterize_schmitt}}
+#' 
 #' @param hematocrit Overwrites default hematocrit value in calculating
 #' Rblood2plasma.
+#' 
 #' @param Krbc2pu The red blood cell to unbound plasma chemical partition
 #' coefficient, typically from \code{\link{predict_partitioning_schmitt}}
+#' 
 #' @param Funbound.plasma The fraction of chemical unbound (free) in the
 #' presence of plasma protein
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment.
+#' 
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
 #'
