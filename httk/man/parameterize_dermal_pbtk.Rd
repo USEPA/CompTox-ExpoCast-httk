@@ -22,7 +22,6 @@ parameterize_dermal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   skin_depth = 0.12,
   skin.pH = 7,
-  vmax.km = F,
   height = 175,
   totalSA = NULL,
   Kvehicle2water = "water",
@@ -84,10 +83,6 @@ dataset).}
 
 \item{skin.pH}{pH of dermis/skin, used in calculating P and Kskin2vehicle.}
 
-\item{vmax.km}{Whether or not to use Michaelis-Menten kinetics, returning
-Vmax and Km in parameters instead of Clmetabolismc and
-million.cells.per.gliver. THIS INPUT IS CURRENTLY NOT USED.}
-
 \item{height}{Height in cm, used in calculating totalSA.}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
@@ -99,28 +94,65 @@ of chemical in the vehicle is considered) and Cvehicle is a constant. If
 FALSE (default), dosing is finite and Cvehicle changes over time.}
 }
 \value{
-\item{BW}{Body Weight, kg.} \item{Clmetabolismc}{Hepatic Clearance, L/h/kg
-BW.} \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
-the dose that enters the gutlumen.} \item{Funbound.plasma}{Fraction of
-plasma that is not bound.} \item{Fhep.assay.correction}{The fraction of
-chemical unbound in hepatocyte assay using the method of Kilford et al.
-(2008)} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-\item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
-concentration in plasma.} \item{kgutabs}{Rate that chemical enters the gut
-from gutlumen, 1/h.} \item{Kkidney2pu}{Ratio of concentration of chemical in
-kidney tissue to unbound concentration in plasma.} \item{Kliver2pu}{Ratio of
-concentration of chemical in liver tissue to unbound concentration in
-plasma.} \item{Klung2pu}{Ratio of concentration of chemical in lung tissue
-to unbound concentration in plasma.} \item{Krbc2pu}{Ratio of concentration
-of chemical in red blood cells to unbound concentration in plasma.}
-\item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
+\item{BW}{Body Weight, kg.} 
+\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+the dose that enters the gutlumen.} 
+\item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
+assay using the method of Kilford et al.(2008)} 
+\item{Fskin_depth_sc}{Fraction of skin depth in strateum corneum so that the depth
+of the SC is Fskin_depth_sc*skin_depth. This parameter does not appear when 
+model.type="dermal_1subcomp".} 
+\item{Fskin_depth_ed}{Fraction of skin depth in combined viable epidermis and
+dermis so that the depth of the ED is Fskin_depth_ed*skin_depth. This parameter does not appear when 
+model.type="dermal_1subcomp".} 
+\item{Fskin_exposed}{Fraction of skin exposed.} 
+\item{Funbound.plasma}{Fraction of plasma that is not bound.} 
+\item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{InfiniteDose}{If InfiniteDose=1, infinite dosing is assumed and Cvehicle_infinite
+is used in place of Cvehicle; if InfiniteDose=0, finite dosing is assumed and
+Avehicle is used for dosing. When InfiniteDose=1, the state variable Avehicle 
+does not have meaning.}
 \item{Kblood2air}{Ratio of concentration of chemical in blood to air, calculated
-using calc_kair.} \item{Qalvc}{Unscaled alveolar ventilation rate, L/h/kg BW^3/4.}
-\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} \item{Qgfrc}{Glomerular
-Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered from kidney and
-excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
+using calc_kair.}
+\item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound
+concentration in plasma.} 
+\item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.} 
+\item{Kkidney2pu}{Ratio of concentration of chemical in
+kidney tissue to unbound concentration in plasma.} 
+\item{Kliver2pu}{Ratio of concentration of chemical in liver tissue to unbound 
+concentration in plasma.} 
+\item{Klung2pu}{Ratio of concentration of chemical in lung tissue
+to unbound concentration in plasma.} 
+\item{Krbc2pu}{Ratio of concentration of chemical in red blood cells to unbound 
+concentration in plasma.}
+\item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
+unbound concentration in plasma.} 
+\item{Kskin2pu}{Ratio of concentration of chemical in skin tissue to
+unbound concentration in plasma.}
+\item{Kskin2vehicle}{Partition coefficient between exposed skin and vehicle. 
+This parameter only appears when model.type="dermal_1subcomp"
+and is replaced by Ksc2vehicle when model.type="dermal".} 
+\item{Ksc2vehicle}{Partition coefficient between SC and vehicle. This parameter 
+does not appear when model.type="dermal_1subcomp".} 
+\item{Ksc2ed}{Partition coefficient between ED and
+SC. This parameter does not appear when model.type="dermal_1subcomp".} 
+\item{MA}{?}
+\item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
+\item{MW}{Molecular Weight, g/mol.} 
+\item{P}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
+this parameter changes depending on method.permeability. When model.type="dermal",
+this parameter is replaced by Pvehicle2sc and Psc2ed.} 
+\item{Pvehicle2sc}{Permeability
+of the stratum corneum (SC), cm/h. This parameter does not appear when 
+model.type="dermal_1subcomp".} 
+\item{Psc2ed}{Permeability of the combined viable epidermis and dermis layer of the skin ("ed"), cm/h.
+This parameter does not appear when model.type="dermal_1subcomp".} 
+\item{Qalvc}{Unscaled alveolar ventilation rate, L/h/kg BW^3/4.}
+\item{Qcardiacc}{Cardiac Output, L/h/kg BW^3/4.} 
+\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid filtered 
+from kidney and excreted.} 
+\item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 \item{Qkidneyf}{Fraction of cardiac output flowing to the kidneys.}
 \item{Qliverf}{Fraction of cardiac output flowing to the liver.}
 \item{Qlungf}{Fraction of cardiac output flowing to the lung.}
@@ -128,6 +160,8 @@ excreted.} \item{Qgutf}{Fraction of cardiac output flowing to the gut.}
 layer of the skin when model.type="dermal".}
 \item{Rblood2plasma}{The ratio of the concentration of the chemical in the
 blood to the concentration in the plasma from available_rblood2plasma.}
+\item{skin_depth}{Skin depth, cm.}
+\item{totalSA}{Total body surface area, cm^2.} 
 \item{Vartc}{Volume of the arteries per kg body weight, L/kg BW.}
 \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
 \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.}
@@ -139,38 +173,21 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vskin_scc}{Volume of the sc or upper layer of the skin per 
 kg body weight, L/kg BW. This parameter does not appear when 
 model.type="dermal_1subcomp".}
-\item{Vskin_edc}{Volume of the ed layer of the skin per 
-kg body weight, L/kg BW. This parameter does not appear when 
-model.type="dermal_1subcomp".}
-\item{P}{Permeability of the skin, cm/h. When model.type="dermal_1subcomp", 
-this parameter changes depending on method.permeability. When model.type="dermal",
-this parameter is replaced by Pvehicle2sc and Psc2ed.} \item{Pvehicle2sc}{Permeability
-of the stratum corneum (SC), cm/h. This parameter does not appear when 
-model.type="dermal_1subcomp".} \item{Psc2ed}{Permeability of the ed layer of the skin ("ed"), cm/h.
-This parameter does not appear when model.type="dermal_1subcomp".} \item{Kskin2vehicle}{Partition coefficient
-between exposed skin and vehicle. This parameter only appears when model.type="dermal_1subcomp"
-and is replaced by Ksc2vehicle when model.type="dermal".} \item{Ksc2vehicle}{Partition 
-coefficient between SC and vehicle. This parameter does not appear when 
-model.type="dermal_1subcomp".} \item{Ked2vehicle}{Partition coefficient between VE and
-SC. This parameter does not appear when model.type="dermal_1subcomp".} \item{totalSA}{Total body surface area,
-cm^2.} \item{Vvehicle}{Volume of vehicle, L.} \item{skin_depth}{Skin skin_depth, cm.}
-\item{Fdermabs}{Fraction of vehicle concentration available for absorption.}
-\item{Fskin_exposed}{Fraction of skin exposed.} \item{InfiniteDose}{If InfiniteDose=1, 
-infinite dosing is assumed; if InfiniteDose=0, finite dosing is assumed. When InfiniteDose=1,
-the state variable Avehicle does not have meaning.} \item{Vmax}{units/hr, with
-units corresponding to dosing concentration. CURRENTLY NOT IN USE.} \item{Km}{units same as dosing
-concentration. CURRENTLY NOT IN USE.}
+\item{Vskin_edc}{Volume of the combined viable epidermis and dermis layer of the skin per 
+kg body weight, L/kg BW. This parameter does not appear when model.type="dermal_1subcomp".}
 }
 \description{
-This function initializes the parameters needed in the functions solve_dermal_pbtk
-by calling solve_pbtk and adding additional parameters.
+This function initializes the parameters needed in the functions solve_dermal_pbtk.
 }
 \examples{
 
 params <- parameterize_dermal_pbtk(chem.cas="80-05-7")
 
-params <- parameterize_dermal_pbtk(chem.name="bisphenola", model.type="dermal_1subcomp", 
+params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal_1subcomp", 
 method.permeability="Potts-Guy")
+
+params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal", 
+Kvehicle2water = "octanol")
 
 
  

@@ -53,9 +53,8 @@ the chemical must be identified by either CAS, name, or DTXSIDs.}
 
 \item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
 the model with 1 compartment for the skin; or "dermal" for the 
-model with 2 sub compartments (a top and bottom layer) for skin which defaults 
-to the top layer being the stratum corneum and the bottom layer being the combined
-viable epidermis and dermis.}
+model with 2 sub compartments for skin: the stratum corneum (SC) and the combined
+viable epidermis and dermis (ED).}
 
 \item{method.permeability}{For "dermal_1subcomp" model, method of calculating 
 the permeability coefficient, P, either "Potts-Guy" or "UK-Surrey". Default
@@ -108,15 +107,15 @@ parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
 
 \item{route}{Route of exposure, can be "oral" OR "iv" OR "dermal" (default).}
 
-\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.01 L. If 
+\item{Vvehicle}{Volume of vehicle applied to skin in L, defaults to 0.1 L. If 
 InfiniteDose=TRUE, this parameter is ignored and set = 1.}
 
 \item{initial.dose}{Initial exposure dose. If InfiniteDose=TRUE, this is a concentration, 
 otherwise, this is an amount.}
 
 \item{input.units}{Exposure units applied to initial.dose and/or dosing.dermal.
-If InfiniteDose=TRUE, must be a concentration, i.e., "mg/kg/L" (default), otherwise,
-must be an amount, i.e., "mg/kg" (default).}
+If InfiniteDose=TRUE, must be a concentration, e.g., "mg/kg/L" (default), otherwise,
+must be an amount, e.g., "mg/kg" (default).}
 
 \item{dose.duration}{Amount of time dermal dose is on skin before being washed off.
 Note that when dose.duration is used, washoff=TRUE.}
@@ -127,11 +126,11 @@ OR "days" (default).}
 \item{dosing.dermal}{Matrix consisting of three columns named
 "Cvehicle", "Vvehicle", and "time" containing the dosing times, days,
 with the applied amount in the vehicle, and the volume of the applied
-vehicle, L. Note that the units of Cvehicle are controlled by input.units. ***If
-InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.}
+vehicle, L. Note that the units of Cvehicle are controlled by input.units. **If
+InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.**}
 
 \item{washoff}{If TRUE, any chemical left on the skin is assumed to be replaced 
-by new dose  (i.e., washoff occurs before new dose is administered). If FALSE 
+by new dose  (i.e., wash-off occurs before new dose is administered). If FALSE 
 (default), any chemical left on the skin is added to the new dose.}
 
 \item{...}{Additional arguments passed to the integrator.}
@@ -146,20 +145,20 @@ compartment, the area under the curve, and plasma concentration and a row
 for each time point.
 }
 \description{
-This function solves for the amounts or concentrations of a chemical in
-different tissues as functions of time based on the dose and dosing
-frequency. The user can input dermal doses via one of three options:
+This function solves for the amounts or concentrations in uM of a chemical in
+different tissues as functions of time after dermal exposure. The user can input 
+dermal doses via one of three options:
 \itemize{
-  \item{dose.duration}{User can input the length of exposure time for one dermal
-  dose before washoff occurs. Note that initial.dose can be used to change the
+  \item{dose.duration: }{User can input the length of exposure time for one dermal
+  dose before wash-off occurs. Note that initial.dose can be used to change the
   initial dose used along with this option.}
-  \item{dosing.dermal}{With this option, users can input multiple doses over
+  \item{dosing.dermal: }{With this option, users can input multiple doses over
   time as a matrix with columns for time, the volume of vehicle administered,
   and the concentration of the vehicle administered. Note that the the parameter
   washoff can be used to specify whether chemical is washed off in between doses.}
-  \item{dosing.matrix}{This option is also used to describe multiple exosure doses
+  \item{dosing.matrix: }{This option is also used to describe multiple exposure doses
   over time, and is described in the help file of solve_model. 
-  Note that unlike dosing.dermal, Vvehicle cannot be changed this this option.}
+  Note that unlike dosing.dermal, Vvehicle cannot be changed with this option.}
 }
 }
 \details{
@@ -173,13 +172,11 @@ exposed skin.
 Note that the model parameters have units of hours while the model output is
 in days.
 
-Default NULL value for doses.per.day solves for a single dose.
-
 The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, unexposed stratum corneum and viable epidermis, exposed 
-stratum corneum and viable epidermis, vehicle, and the rest of the body. When model.type 
-= "dermal_1subcomp", the stratum corneum and viable epidermis are replaced with 
-one compartment: skin.
+veins, arteries, lungs, unexposed skin, exposed skin, vehicle, and the rest of the body. When model.type 
+= "dermal", a 2-compartment model is used where skin
+is divided into the stratum corneum, SC, and the combined viable epidermis and
+dermis, ED.
 
 The extra compartments include the amounts or concentrations metabolized by
 the liver and excreted by the kidneys through the tubules.
@@ -192,9 +189,27 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 
-Vvehicle <- c(.1,.2,.3)
-time <- c(0,.5,3)
-Cvehicle <- c(2,0,3)
+# Dermal exposure to default dose
+out <- solve_dermal_pbtk(chem.name="bisphenola",plots=TRUE)
+
+# Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
+# Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
+dose.conc <- 2 #mg/L
+Vvehicle <- 0.01 #L
+initial.dose <- dose.conc*Vvehicle
+out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=initial.dose, input.units="mg",
+Vvehicle=0.01, Kskin2vehicle="octanol", dose.duration=8, dose.duration.units="hr", days=3, plots=TRUE)
+
+# Now, try this again with an infinite dose.
+out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=dose.conc, input.units="mg/L",
+Vvehicle=0.01, Kskin2vehicle="octanol", dose.duration=8, dose.duration.units="hr", 
+days=3, InfiniteDose=TRUE, plots=TRUE)
+
+# Now, try a scenario where 2 mg of chemical in 1 mL of water is applied and washed off 8 hours later every day for 5 days
+num.days <- 5;
+time <- c(0:(num.days-1),(0:(num.days-1)) + 8/24); time <- sort(time) #in days
+Vvehicle <- rep(1e-3,length(time)) #convert mL to L
+Cvehicle <- rep(c(2,0),num.days)/Vvehicle # convert 2 mg to mg/L
 dosing.dermal <- cbind(time,Cvehicle,Vvehicle)
 out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.dermal=dosing.dermal,plots=T)
 
