@@ -1403,22 +1403,30 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 
 
-Honda2023.Caco2 <- as.data.frame(readxl::read_xlsx("CACO-2/caco2_QC_18May2018.xlsx"))
-chem.physical_and_invitro.data <- add_chemtable(Honda2023.Caco2,
+load("CACO-2/our_caco2_25MAR2019.RData")
+chem.physical_and_invitro.data <- add_chemtable(caco2.dt2,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
-                                    Compound='compound',
+                                    Compound='ref.chnm',
                                     CAS = 'casrn',
-                                    DTXSID='DTXSID',
+                                    DTXSID='dtxsid',
                                     Caco2.Pab="Pab"),
-                                  overwrite=FALSE,
-                                  reference = 'Honda2023',
+                                  overwrite=TRUE,
+                                  reference = 'HondaUnpublished',
                                   species="Human") 
                                   
 
-honda2023 <- read.csv("CACO-2/caco2_compound_fabs_lit.csv")
-honda2023 <- subset(honda2023, !is.na(f_abs_percent))
-
+load("CACO-2/lit_caco2_26MAR2019.RData")
+chem.physical_and_invitro.data <- add_chemtable(lit.caco2.dt,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    CAS = 'casrn',
+                                    DTXSID='dtxsid',
+                                    Caco2.Pab="lit_pab",
+                                    Reference="repref"),
+                                  overwrite=FALSE,
+                                  species="Human") 
+                                  
 #
 #
 #
