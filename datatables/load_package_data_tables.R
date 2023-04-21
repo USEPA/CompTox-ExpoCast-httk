@@ -1402,31 +1402,89 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 #
 
-
+# Add new Pab measurements from Honda2023:
 load("CACO-2/our_caco2_25MAR2019.RData")
+# Assign all chems the low Pab standard deviation:
+caco2.dt2$SD <- 0.3
+# Need a column of all numeric Pab's (no NA's) for calculations:
+caco2.dt2$NumericPab <- caco2.dt2$Pab
+caco2.dt2[is.na(caco2.dt2$Pab),"NumericPab"] <- 0
+# Assign the chemicals with high Pab's the lower standard deviation
+# (Honda 2023 Figure 2):
+caco2.dt2[caco2.dt2$NumericPab >= 10, "SD"] <- 0.13
+# Calculate the confidence intervals (remembering the standard deviations are
+# on the log10 scale:
+caco2.dt2$Pab.Low95 <- signif(10^(log10(caco2.dt2$NumericPab) -
+                                    1.96*caco2.dt2$SD),
+                              3)
+caco2.dt2$Pab.High95 <- signif(10^(log10(caco2.dt2$NumericPab) +
+                                     1.96*caco2.dt2$SD),
+                               3)
+# Concatenate the measured values and intervals using commas for use by
+# invitro_mc
+caco2.dt2[,"PabInterval"] <- paste(
+  signif(caco2.dt2$Pab,3),
+  caco2.dt2$Pab.Low95,
+  caco2.dt2$Pab.High95,
+  sep=",")
+# Return the NA Pab's to NA:
+caco2.dt2[is.na(caco2.dt2$Pab),"PabInterval"] <- NA
+
 chem.physical_and_invitro.data <- add_chemtable(caco2.dt2,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
                                     Compound='ref.chnm',
                                     CAS = 'casrn',
                                     DTXSID='dtxsid',
-                                    Caco2.Pab="Pab"),
+                                    Caco2.Pab="PabInterval"),
                                   overwrite=TRUE,
                                   reference = 'HondaUnpublished',
                                   species="Human") 
-                                  
+# Clean up and reduce likelihood of cut-and-paste errors in next block:
+rm(caco2.dt2) 
 
+
+# Add literature Pab measurements compiled by Honda2023:
 load("CACO-2/lit_caco2_26MAR2019.RData")
+# Assign all chems the low Pab standard deviation (with 0.1 extra for literature):
+lit.caco2.dt$SD <- 0.3 + 0.1
+# Need a column of all numeric Pab's (no NA's) for calculations:
+lit.caco2.dt$NumericPab <- lit.caco2.dt$lit_pab
+lit.caco2.dt[is.na(lit.caco2.dt$lit_pab),"NumericPab"] <- 0
+# Assign the chemicals with high Pab's the lower standard deviation
+# (Honda 2023 Figure 2):
+lit.caco2.dt[lit.caco2.dt$NumericPab >= 10, "SD"] <- 0.13 + 0.1
+# Calculate the confidence intervals (remembering the standard deviations are
+# on the log10 scale:
+lit.caco2.dt$Pab.Low95 <- signif(10^(log10(lit.caco2.dt$NumericPab) -
+                                    1.96*lit.caco2.dt$SD),
+                              3)
+lit.caco2.dt$Pab.High95 <- signif(10^(log10(lit.caco2.dt$NumericPab) +
+                                     1.96*lit.caco2.dt$SD),
+                               3)
+# Concatenate the measured values and intervals using commas for use by
+# invitro_mc
+lit.caco2.dt[,"PabInterval"] <- paste(
+  signif(lit.caco2.dt$lit_pab,3),
+  lit.caco2.dt$Pab.Low95,
+  lit.caco2.dt$Pab.High95,
+  sep=",")
+# Return the NA Pab's to NA:
+lit.caco2.dt[is.na(lit.caco2.dt$lit_pab),"PabInterval"] <- NA
+
 chem.physical_and_invitro.data <- add_chemtable(lit.caco2.dt,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
                                     CAS = 'casrn',
                                     DTXSID='dtxsid',
-                                    Caco2.Pab="lit_pab",
+                                    Caco2.Pab="PabInterval",
                                     Reference="repref"),
                                   overwrite=FALSE,
                                   species="Human") 
-                                  
+
+# Load QSPR predictions:
+load("CACO-2/httk_qspr_preds.RData")    
+honda2023 <- httk.caco2.qspr
 #
 #
 #
@@ -2067,6 +2125,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
+     sipes2017,
      dawson2021,
      pradeep2020,
      physiology.data,
@@ -2091,7 +2150,6 @@ sipes2017 <- sipes2017[,c(
                'Human.Clint')]
  
 save(Wetmore.data,
-     sipes2017,
      chem.lists,
      sysdata.rda.stamp,                 
      file="sysdata.rda",
