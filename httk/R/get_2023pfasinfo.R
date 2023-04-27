@@ -1,4 +1,4 @@
-#' Retrieve chemical information on 2022 EPA PFAS Chemicals
+#' Retrieve chemical information on 2023 EPA PFAS Chemicals
 #' 
 #' This function is a wrapper for \code{\link{get_cheminfo}} that only lists
 #' chemicals from the Smeltz, Kreutz, and Crizer data sets collected on PFAS
@@ -87,7 +87,7 @@
 #'
 #' library(httk)
 #' PFASCssTable <- NULL
-#' for (this.id in get_2022pfasinfo(info="dtxsid"))
+#' for (this.id in get_2023pfasinfo(info="dtxsid"))
 #' {
 #'   PFASCssTable <- rbind(PFASCssTable, data.frame(
 #'     DTXSID = this.id,
@@ -95,8 +95,8 @@
 #'     ))
 #' }
 #' 
-#' @export get_2022pfasinfo
-get_2022pfasinfo <- function(info="CAS",
+#' @export get_2023pfasinfo
+get_2023pfasinfo <- function(info="CAS",
                          species="Human",
                          fup.lod.default=0.005,
                          model='3compartmentss',
