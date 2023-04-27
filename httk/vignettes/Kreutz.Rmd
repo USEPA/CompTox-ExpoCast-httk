@@ -393,3 +393,19 @@ print(fig.legend)
 ```{r fig_combined, eval = TRUE}
 multiplot(fig.logp,fig.logd,fig.mw,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
 ```
+
+```{r evaluate_predictors, eval=TRUE}
+fups <- get_cheminfo(info=c("DTXSID","Funbound.plasma"))
+preds <- merge(pfas.fup.predictions,fups,by.x="Admet",by.y="DTXSID")
+colnames(preds)[3] <- "ADMet"
+colnames(preds)[7] <- "OPERA26"
+colnames(preds)[11] <- "OPERA29"
+colnames(preds)[15] <- "Dawson26"
+colnames(preds)[18] <- "Dawson29"
+for (this.col in c(3,7,11,15,18)) preds[,this.col] <- as.numeric(preds[,this.col])
+preds$Obs.Med <- sapply(preds$Human.Funbound.plasma,function(x) as.numeric(strsplit(x,",")[[1]][1]))
+summary(lm(Obs.Med ~ ADMet,data=preds))
+summary(lm(Obs.Med ~ OPERA29,data=preds))
+summary(lm(Obs.Med ~ OPERA29,data=preds))
+summary(lm(Obs.Med ~ Dawson26,data=preds))
+summary(lm(Obs.Med ~ Dawson29,data=preds))```
