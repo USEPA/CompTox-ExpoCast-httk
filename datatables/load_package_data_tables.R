@@ -907,7 +907,7 @@ length(unique(chem.prop$CAS))==dim(chem.prop)[1]
 
 chem.physical_and_invitro.data <- chem.prop
 
-if (unique(chem.physical_and_invitro.data$CAS) < 
+if (length(unique(chem.physical_and_invitro.data$CAS)) <
   dim(chem.physical_and_invitro.data)[1]) 
   stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
 if (any(sapply(chem.physical_and_invitro.data$CAS,
@@ -1574,10 +1574,10 @@ Kreutz2023ClintBayes$Human.Clint <- paste(
   sep=",")
 Kreutz2023ClintBayes[Kreutz2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
   "Human.Clint"] <-NA
-                     
+                
 chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintBayes,
   current.table=chem.physical_and_invitro.data,
-  data.list=list(Compound="Compound",
+  data.list=list(Compound="Compound.Name",
     DTXSID="DTXSID",
     CAS="CASRN",
     Clint="Human.Clint"
@@ -1630,7 +1630,7 @@ chem.physical_and_invitro.data <- add_chemtable(Crizer2022ClintManual,
   overwrite=TRUE)
 
 pfas.fup.predictions <- as.data.frame(
-  read_excel("PFAS-Fup-Compiled.Predicions.xlsx",sheet=1))
+  read_excel("PFAS-Fup-Compiled-Predictions.xlsx",sheet=1))
 
 #
 #
@@ -1862,7 +1862,7 @@ chem.physical_and_invitro.data[
   "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID=="DTXSID30395037",
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID%in%"DTXSID30395037",
                    "Chemical.Class"] <-"PFAS"
 
 #Remove chemicals with no DTXSID:
