@@ -157,6 +157,7 @@ appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
+\donttest{
 
 # Multiple doses per day:
 head(solve_pbtk(
@@ -183,7 +184,6 @@ params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
 params["Funbound.plasma"] <- 0.1
 out <- solve_pbtk(parameters=params, days=2.5)
 
-\donttest{
 # A fifty day simulation:
 out <- solve_pbtk(
   chem.name = "Bisphenol A", 
