@@ -179,6 +179,7 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+\donttest{
 # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
 # for more stable results. Default value is 1000:
 NSAMP = 10
@@ -195,7 +196,6 @@ calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=NSAMP)
 # Note that we use set.seed to get the same sequence of random numbers for
 # the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
-\donttest{
 # The following example should result in an error since we do not 
 # estimate tissue partitioning with '3compartmentss'. 
 set.seed(1234)                        
