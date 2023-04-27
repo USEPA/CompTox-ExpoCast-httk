@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Mar2022"
+SCRIPT.VERSION <- "feature/PFAS April2023"
 
 ## R Packages ##
 library(reshape)
@@ -1405,26 +1405,26 @@ chem.physical_and_invitro.data <- check_duplicates(
 #PFAS:
 PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
 
-Smeltz2022PPBBayes <- read.csv("Smeltz2022/SmeltzPFAS-PPB-UC-Level4.tsv",
+Smeltz2023PPBBayes <- read.csv("Smeltz2023/SmeltzPFAS-PPB-UC-Level4.tsv",
                                sep="\t")
-length(unique(Smeltz2022PPBBayes$DTXSID))
+length(unique(Smeltz2023PPBBayes$DTXSID))
 # Add CASRN:
-Smeltz2022PPBBayes <- merge(Smeltz2022PPBBayes,
+Smeltz2023PPBBayes <- merge(Smeltz2023PPBBayes,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
 # Add reference chemical n-butylparaben:
-Smeltz2022PPBBayes[Smeltz2022PPBBayes$DTXSID=="DTXSID3020209",
+Smeltz2023PPBBayes[Smeltz2023PPBBayes$DTXSID=="DTXSID3020209",
                    "CASRN"] <-"94-26-8"
 
-Smeltz2022PPBBayes$Human.Funbound.plasma <- paste(
-  signif(Smeltz2022PPBBayes$Fup.Med ,3),
-  signif(Smeltz2022PPBBayes$Fup.Low ,3),
-  signif(Smeltz2022PPBBayes$Fup.High ,3),
+Smeltz2023PPBBayes$Human.Funbound.plasma <- paste(
+  signif(Smeltz2023PPBBayes$Fup.Med ,3),
+  signif(Smeltz2023PPBBayes$Fup.Low ,3),
+  signif(Smeltz2023PPBBayes$Fup.High ,3),
   sep=",")
-Smeltz2022PPBBayes[Smeltz2022PPBBayes$Human.Funbound.plasma=="NA,NA,NA", 
+Smeltz2023PPBBayes[Smeltz2023PPBBayes$Human.Funbound.plasma=="NA,NA,NA", 
   "Human.Funbound.plasma"] <-NA
                      
-chem.physical_and_invitro.data <- add_chemtable(Smeltz2022PPBBayes,
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBBayes,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Compound",
     DTXSID="DTXSID",
@@ -1434,28 +1434,28 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2022PPBBayes,
   reference="Smeltz 2022 Bayes",
   species="Human",
   overwrite=TRUE)
-  
-Smeltz2022ClintBayes <- read.csv("Smeltz2022/SmeltzPFAS-Clint-Level4.tsv",sep="\t")
-Smeltz2022ClintBayes <- merge(Smeltz2022ClintBayes ,
+
+Smeltz2023ClintBayes <- read.csv("Smeltz2023/SmeltzPFAS-Clint-Level4.tsv",sep="\t")
+Smeltz2023ClintBayes <- merge(Smeltz2023ClintBayes ,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
 # Add reference chemical phenacetin:
-Smeltz2022PPBBayes[Smeltz2022PPBBayes$DTXSID=="DTXSID1021116",
+Smeltz2023PPBBayes[Smeltz2023PPBBayes$DTXSID=="DTXSID1021116",
                    "CASRN"] <-"62-44-2 "
 # Add reference chemical propranolol:
-Smeltz2022PPBBayes[Smeltz2022PPBBayes$DTXSID=="DTXSID6023525",
+Smeltz2023PPBBayes[Smeltz2023PPBBayes$DTXSID=="DTXSID6023525",
                    "CASRN"] <-"525-66-6"
                             
-Smeltz2022ClintBayes$Human.Clint <- paste(
-  signif(Smeltz2022ClintBayes$Clint.1.Med, 3),
-  signif(Smeltz2022ClintBayes$Clint.1.Low, 3),
-  signif(Smeltz2022ClintBayes$Clint.1.High, 3),
-  signif(Smeltz2022ClintBayes$Clint.pValue, 3),
+Smeltz2023ClintBayes$Human.Clint <- paste(
+  signif(Smeltz2023ClintBayes$Clint.1.Med, 3),
+  signif(Smeltz2023ClintBayes$Clint.1.Low, 3),
+  signif(Smeltz2023ClintBayes$Clint.1.High, 3),
+  signif(Smeltz2023ClintBayes$Clint.pValue, 3),
   sep=",")
-Smeltz2022ClintBayes[Smeltz2022ClintBayes$Human.Clint=="NA,NA,NA,NA", 
+Smeltz2023ClintBayes[Smeltz2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
   "Human.Clint"] <-NA
                                                  
-chem.physical_and_invitro.data <- add_chemtable(Smeltz2022ClintBayes,
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023ClintBayes,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Compound.Name",
     DTXSID="DTXSID",
@@ -1467,14 +1467,14 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2022ClintBayes,
   species="Human",
   overwrite=TRUE)
 
-Smeltz2022PPBManual <- as.data.frame(
-  read_excel("Smeltz2022/20220201_PFAS-LC_FractionUnbound_MGS.xlsx",sheet=2))
-colnames(Smeltz2022PPBManual)[2] <- "Compound"
-Smeltz2022PPBManual <- merge(Smeltz2022PPBManual,
+Smeltz2023PPBManual <- as.data.frame(
+  read_excel("Smeltz2023/20220201_PFAS-LC_FractionUnbound_MGS.xlsx",sheet=2))
+colnames(Smeltz2023PPBManual)[2] <- "Compound"
+Smeltz2023PPBManual <- merge(Smeltz2023PPBManual,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
                             
-chem.physical_and_invitro.data <- add_chemtable(Smeltz2022PPBManual,
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBManual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Compound",
     DTXSID="DTXSID",
@@ -1485,16 +1485,16 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2022PPBManual,
   species="Human",
   overwrite=FALSE)
   
-Smeltz2022ClintManual <- as.data.frame(
-  read_excel("Smeltz2022/Hep12 Data for Uncertainty Feb2022.xlsx",sheet=1))
-colnames(Smeltz2022ClintManual)[5] <- "Clint"
+Smeltz2023ClintManual <- as.data.frame(
+  read_excel("Smeltz2023/Hep12 Data for Uncertainty Feb2022.xlsx",sheet=1))
+colnames(Smeltz2023ClintManual)[5] <- "Clint"
 # We don't want bad Clint's:
-Smeltz2022ClintManual[Smeltz2022ClintManual$Clint < 0, "pValue"] <- 1
-Smeltz2022ClintManual <- merge(Smeltz2022ClintManual,
+Smeltz2023ClintManual[Smeltz2023ClintManual$Clint < 0, "pValue"] <- 1
+Smeltz2023ClintManual <- merge(Smeltz2023ClintManual,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
                             
-chem.physical_and_invitro.data <- add_chemtable(Smeltz2022ClintManual,
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023ClintManual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Analyte Name",
     DTXSID="DTXSID",
@@ -1510,63 +1510,93 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2022ClintManual,
 #
 #
 
-Kreutz2022PPBBayes <- as.data.frame(
-  read.csv("Kreutz2022/KreutzPFAS-PPB-UC-Level4.tsv",sep="\t"))
-length(unique(Kreutz2022PPBBayes$DTXSID))
-Kreutz2022PPBBayes <- merge(Kreutz2022PPBBayes,
+Kreutz2023PPBBayes <- as.data.frame(
+read.csv("Kreutz2023/KreutzPFAS-fup-UC-Level4.tsv",sep="\t"))
+length(unique(Kreutz2023PPBBayes$DTXSID))
+Kreutz2023PPBBayes <- merge(Kreutz2023PPBBayes,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
 # Add reference chemical n-butylparaben:
-Kreutz2022PPBBayes[Kreutz2022PPBBayes$DTXSID=="DTXSID5023792",
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID5023792",
                    "CASRN"] <-"99-99-0"
-Kreutz2022PPBBayes[Kreutz2022PPBBayes$DTXSID=="DTXSID30395037",
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID30395037",
                    "CASRN"] <-"58244-27-2"                   
                                                
-Kreutz2022PPBBayes$Human.Funbound.plasma <- paste(
-  signif(Kreutz2022PPBBayes$Fup.Med ,3),
-  signif(Kreutz2022PPBBayes$Fup.Low ,3),
-  signif(Kreutz2022PPBBayes$Fup.High ,3),
+Kreutz2023PPBBayes$Human.Funbound.plasma <- paste(
+  signif(Kreutz2023PPBBayes$Fup.Med ,3),
+  signif(Kreutz2023PPBBayes$Fup.Low ,3),
+  signif(Kreutz2023PPBBayes$Fup.High ,3),
   sep=",")
-Kreutz2022PPBBayes[Kreutz2022PPBBayes$Human.Funbound.plasma=="NA,NA,NA", 
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$Human.Funbound.plasma=="NA,NA,NA", 
   "Human.Funbound.plasma"] <-NA
                      
-chem.physical_and_invitro.data <- add_chemtable(Kreutz2022PPBBayes,
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023PPBBayes,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Compound",
     DTXSID="DTXSID",
     CAS="CASRN",
     Funbound.plasma="Human.Funbound.plasma"
     ),
-  reference="Kreutz 2022 Bayes",
+  reference="Kreutz 2023 Bayes",
   species="Human",
   overwrite=TRUE)
   
-Kreutz2022PPBManual <- as.data.frame(
-  read_excel("Kreutz2022/Kreutz-2022-PFAS-PPB.xlsx",sheet=1))
-colnames(Kreutz2022PPBManual)[5] <- "fup"
+Kreutz2023PPBManual <- as.data.frame(
+  read_excel("Kreutz2023/Kreutz-2022-PFAS-PPB.xlsx",sheet=1))
+colnames(Kreutz2023PPBManual)[5] <- "fup"
 
-chem.physical_and_invitro.data <- add_chemtable(Kreutz2022PPBManual,
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023PPBManual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Name",
     DTXSID="DTXSID",
     CAS="CASRN",
     Funbound.plasma="fup"
     ),
-  reference="Kreutz 2022 Manual",
+  reference="Kreutz 2023 Manual",
   species="Human",
   overwrite=FALSE)
 
-Kreutz2022ClintManual <- as.data.frame(
-  read_excel("Kreutz2022/Kreutz-2022-Clint-Manual.xlsx",sheet=1,skip=1))
-colnames(Kreutz2022ClintManual)[27] <- "Clint"
-Kreutz2022ClintManual[,"P Value"] <- 
-  as.numeric(Kreutz2022ClintManual[,"P value"])
-Kreutz2022ClintManual[is.na(Kreutz2022ClintManual[,"P value"]),
+Kreutz2023ClintBayes <- as.data.frame(
+read.csv("Kreutz2023/KreutzPFAS-Clint-Level4.tsv",sep="\t"))
+length(unique(Kreutz2023ClintBayes$DTXSID))
+Kreutz2023ClintBayes <- merge(Kreutz2023ClintBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+# Add reference chemical Ametryn:
+Kreutz2023ClintBayes[Kreutz2023ClintBayes$DTXSID=="DTXSID1023869",
+                   "CASRN"] <-"834-12-8"
+                                               
+Kreutz2023ClintBayes$Human.Clint <- paste(
+  signif(Kreutz2023ClintBayes$Clint.1.Med ,3),
+  signif(Kreutz2023ClintBayes$Clint.1.Low ,3),
+  signif(Kreutz2023ClintBayes$Clint.1.High ,3),
+  signif(Kreutz2023ClintBayes$Clint.pValue, 3),
+  sep=",")
+Kreutz2023ClintBayes[Kreutz2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
+  "Human.Clint"] <-NA
+                     
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintBayes,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Clint="Human.Clint"
+    ),
+  reference="Kreutz 2023 Bayes",
+  species="Human",
+  overwrite=TRUE)
+  
+Kreutz2023ClintManual <- as.data.frame(
+  read_excel("Kreutz2023/Kreutz-2022-Clint-Manual.xlsx",sheet=1,skip=1))
+colnames(Kreutz2023ClintManual)[27] <- "Clint"
+Kreutz2023ClintManual[,"P Value"] <- 
+  as.numeric(Kreutz2023ClintManual[,"P value"])
+Kreutz2023ClintManual[is.na(Kreutz2023ClintManual[,"P value"]),
   "P value"] <- 0
 # We don't want bad Clint's:
-Kreutz2022ClintManual[Kreutz2022ClintManual$Clint < 0, "P value"] <- 1
+Kreutz2023ClintManual[Kreutz2023ClintManual$Clint < 0, "P value"] <- 1
    
-chem.physical_and_invitro.data <- add_chemtable(Kreutz2022ClintManual,
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintManual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Name",
     DTXSID="Analyte",
@@ -1599,7 +1629,8 @@ chem.physical_and_invitro.data <- add_chemtable(Crizer2022ClintManual,
   species="Human",
   overwrite=TRUE)
 
-
+pfas.fup.predictions <- as.data.frame(
+  read_excel("PFAS-Fup-Compiled.Predicions.xlsx",sheet=1))
 
 #
 #
@@ -2244,6 +2275,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.summary.data,
      dawson2021,
      pradeep2020,
+     pfas.fup.predictions,
      physiology.data,
      pearce2017regression,
      kapraun2019,
