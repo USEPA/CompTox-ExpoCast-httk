@@ -127,7 +127,7 @@ calc_dow <- function(Pow,pH=NA,pKa_Donor=NA,pKa_Accept=NA,fraction_charged=NULL,
 Create a subset of httk data where we know $f_{up}$. We drop the $f_{up}$ measurements of "0" since those
 are < limit of detection in earlier studies (
 [Wetmore, 2012](https://doi.org/10.1093/toxsci/kfr254), 
-[Wetmore, 2015](https://doi.org/10.1093/toxsci/kfv171)). We don't have quantitative values for analysis of thsoe chemicals.
+[Wetmore, 2015](https://doi.org/10.1093/toxsci/kfv171)). We don't have quantitative values for analysis of those chemicals.
 ```{r subset_chems, eval = TRUE}
 fup.subset <- subset(chem.physical_and_invitro.data,
                      !is.na(Human.Funbound.plasma))
@@ -265,12 +265,12 @@ fig.logp  <- ggplot(data=kreutz) +
     x=logP,
     y=Human.Funbound.plasma),
     size=3,
-    color="Blue") +
+    color="Black") +
   geom_line(aes(x=logP,y=logPfit1),color="black") + 
-  geom_line(aes(x=logP,y=logPfit2),color="blue") +
+  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
    #ylab("Fraction unbound in plasma") + 
   ylab("") +
-  xlab("Hydrophobicity (LogP)") +
+  xlab(bquote("Log "~P[ow])) +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -288,11 +288,11 @@ fig.logd  <- ggplot(data=kreutz) +
     x=logD74,
     y=Human.Funbound.plasma),
     size=3,
-    color="Blue") +
+    color="Black") +
   geom_line(aes(x=logD74,y=logDfit1),color="black") + 
-  geom_line(aes(x=logD74,y=logDfit2),color="blue") +
+  geom_line(aes(x=logD74,y=logDfit2),color="blue",linetype = "dashed") +
   ylab("Fraction unbound in plasma") + 
-  xlab("Distribution Coefficient in Plasma (LogD74)") +
+  xlab("Log D, pH 7.4") +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -308,11 +308,11 @@ fig.mw <- ggplot(data=kreutz) +
     x=MW,
     y=Human.Funbound.plasma),
     size=3,
-    color="Blue") +
+    color="Black") +
   geom_line(aes(x=MW,y=MWfit),color="black") + 
    #ylab("Fraction unbound in plasma") + 
   ylab("") +
-  xlab("Molecular Weight (Daltons)") +
+  xlab("Molecular Weight (g/mol)") +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -332,12 +332,12 @@ fig.wsol  <- ggplot(data=kreutz) +
     x=logWSol,
     y=Human.Funbound.plasma),
     size=3,
-    color="Blue") +
+    color="Black") +
   geom_line(aes(x=logWSol,y=logWSolfit1),color="black") + 
-  geom_line(aes(x=logWSol,y=logWSolfit2),color="blue") + 
+  geom_line(aes(x=logWSol,y=logWSolfit2),color="blue",linetype = "dashed") + 
   #ylab("Fraction unbound in plasma") + 
   ylab("") +
-  xlab("Water Solubility (LogWSol)") +
+  xlab("Log Water Solubility (mg/L)") +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -354,7 +354,7 @@ fig.henry  <- ggplot(data=kreutz) +
     x=logHenry,
     y=Human.Funbound.plasma),
     size=3,
-    color="Blue") +
+    color="Black") +
   geom_line(aes(x=logHenry,y=Henryfit),color="black") + 
   #ylab("Fraction unbound in plasma") + 
   ylab("") +
@@ -377,6 +377,8 @@ fig.legend <- ggplot(data=kreutz) +
   xlab("") +
     theme_bw()  +
     geom_line(aes(x=logWSol,y=logWSolfit1),color="white",size=3) +
+  guides(shape = FALSE,colour = guide_legend(override.aes = list(shape = c(NA, NA),
+                                                   linetype = c("solid","dashed"))))+
   theme(
     panel.grid = element_blank(),
         axis.title = element_blank(),
@@ -391,7 +393,7 @@ fig.legend <- ggplot(data=kreutz) +
 print(fig.legend)
 ```
 ```{r fig_combined, eval = TRUE}
-multiplot(fig.logp,fig.logd,fig.mw,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
+multiplot(fig.mw,fig.logp,fig.logd,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
 ```
 
 ```{r evaluate_predictors, eval=TRUE}
