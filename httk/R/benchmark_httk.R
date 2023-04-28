@@ -13,11 +13,15 @@
 #' with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
 #' reduce the chance of these errors occuring in the future.
 #' 
-#' Past performance was evaluated by manually installing previous versions of 
+#' Past performance was retroactively evaluated by manually installing previous 
+#' versions of 
 #' the package from https://cran.r-project.org/src/contrib/Archive/httk/ and
 #' then adding the code for \code{benchmark_httk} at the command line
 #' interface. The results are stored in the data.frame 
 #' \code{\link{httk.performance}.
+#'
+#' The in vivo statistics are currently based on comparisons to the in vivo
+#' data compiled by Wambaugh et al. (2018).
 #'
 #' @param basic.check Whether to run the basic checks, including units uM and 
 #' mg/L units for calc_analytic_css, calc_mc_css, and solve_pbtk as well as 
