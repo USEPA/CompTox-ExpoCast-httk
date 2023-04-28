@@ -358,7 +358,7 @@ fig.henry  <- ggplot(data=kreutz) +
   geom_line(aes(x=logHenry,y=Henryfit),color="black") + 
   #ylab("Fraction unbound in plasma") + 
   ylab("") +
-  xlab("Henry's Law Constant (logHenry)") +
+  xlab(bquote("Henry's Law Constant (Log atmospheres"%*%m^3/~"mole)")) +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
