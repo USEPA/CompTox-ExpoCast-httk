@@ -9,6 +9,12 @@ output: html_document
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
 * Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
 
+# version 2.2.3 (May, 2023)
+## New Features
+* Added new function `benchmark_httk` to compare current function of the package against historical performance
+* Skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
+
+
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
