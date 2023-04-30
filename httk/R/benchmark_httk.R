@@ -405,7 +405,7 @@ benchmark_httk <- function(
       ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark)) + 
       geom_point() +
-      geom_path(group=1) +
+      geom_path(group=Benchmark) +
       ylab("Ratio mg/L / uM * 1000 / MW") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["units.plot"]] <- units.plot
@@ -414,7 +414,7 @@ benchmark_httk <- function(
       ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark)) + 
       geom_point() +
-      geom_path(group=1) +
+      geom_path(group=Benchmark) +
       ylab("Root Mean Squared Log10 Error (RMSLE)") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["rmsle.plot"]] <- rmsle.plot
@@ -423,7 +423,7 @@ benchmark_httk <- function(
       ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark)) + 
       geom_point() +
-      geom_path(group=1) +
+      geom_path(group=Benchmark1) +
       ylab("Chemical Count") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["count.plot"]] <- count.plot
