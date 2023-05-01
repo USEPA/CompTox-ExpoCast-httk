@@ -112,7 +112,7 @@ library(httk)
 library(gdata)
 library(ggplot2)
 library(viridis)
-#library(CensRegMod)
+library(censReg)
 library(gmodels)
 library(gplots)
 library(scales)
@@ -237,7 +237,7 @@ print(fup.change.plot)
 ```
 Now we calculate and plot the regressions for all tissues, together with their 95% confidence intervals.
 
-```{r PCregressions, eval=execute.vignette}
+```{r performPCregressions, eval=execute.vignette}
 regressions <- NULL
 
 for(tissue in as.character(unique(pc.table[,'Tissue']))){
@@ -253,8 +253,12 @@ for(tissue in as.character(unique(pc.table[,'Tissue']))){
 }
 colnames(regressions) <- c('Tissue','Intercept','Slope','P-value','SE','R-squared',
                            'Int Var','Slp Var','Cov','df','estimable')
+```
+
+```{r PCRegressionFigure, eval=execute.vignette}
 x.cf <- seq(-2,3.5,.01)
-for(tissue in  as.character(unique(pc.table[,'Tissue']))){
+for(tissue in  as.character(unique(pc.table[,'Tissue'])))
+{
   conf <- qt(0.975,df=subset(regressions,Tissue==tissue)[['df']]+1) *
       subset(regressions,Tissue==tissue)[['SE']] *
       sqrt(subset(regressions,Tissue==tissue)[['Int Var']] +
@@ -267,13 +271,15 @@ for(tissue in  as.character(unique(pc.table[,'Tissue']))){
 
   cf <- cbind(as.data.frame(x.cf),as.data.frame(y.cf),as.data.frame(y.ncf))
   if(tissue == 'Blood Cells'){
-    eval(parse(text= paste('Blood <- ggplot() + labs(y=expression(paste("Inferred ",K[p])),
-                               x=expression(paste("Predicted ",K[p]))) + geom_abline(linetype = "dashed") +
+    eval(parse(text= paste('Blood <- ggplot() + 
+                               geom_abline(linetype = "dashed") +
                                geom_point(data=subset(pc.table,Tissue == \'',tissue,'\'),aes(10^(Predicted),
                                10^(Experimental)))  +  theme(axis.text=element_text(size=14),
                                axis.title=element_text(size=14),plot.title=element_text(size=14)) +
                                scale_x_log10(label=scientific_10,limits=c(0.01,1000)) + 
                                scale_y_log10(label=scientific_10,limits=c(0.01,1000)) +
+                               ylab(ifelse(tissue=="Brain",expression(paste("Inferred ",K[p])),"")) +
+                               xlab(ifelse(tissue=="Skin", expression(paste("Predicted ",K[p])),"")) +
                                geom_line(data=cf,aes(10^(x.cf),10^(y.cf))) +
                                geom_line(data=cf,aes(10^(x.cf),10^(y.ncf))) +
                                geom_abline(intercept=subset(regressions,Tissue==tissue)[[\'Intercept\']],
@@ -287,6 +293,8 @@ for(tissue in  as.character(unique(pc.table[,'Tissue']))){
                                axis.title=element_text(size=14),plot.title=element_text(size=14)) +
                                scale_x_log10(label=scientific_10,limits=c(0.01,1000)) + 
                                scale_y_log10(label=scientific_10,limits=c(0.01,1000)) +
+                               ylab(ifelse(tissue=="Brain",expression(paste("Inferred ",K[p])),"")) +
+                               xlab(ifelse(tissue=="Skin", expression(paste("Predicted ",K[p])),"")) + 
                                geom_line(data=cf,aes(10^(x.cf),10^(y.cf))) +
                                geom_line(data=cf,aes(10^(x.cf),10^(y.ncf))) +
                                geom_abline(intercept=subset(regressions,Tissue==tissue)[[\'Intercept\']],
@@ -294,6 +302,8 @@ for(tissue in  as.character(unique(pc.table[,'Tissue']))){
                                ggtitle(\'',tissue,'\')',sep='')))
   }
 }
+
+grid.arrange(Adipose, Blood, Bone, Brain, Gut, Heart, Kidney, Liver, Lung, Muscle, Skin, Spleen, nrow=4)
 ```
 In vivo volume of distribution data are compared with the predictions, and 
 errors are calculated.  Regressions and improvements are calculated and plotted.
@@ -320,7 +330,7 @@ for(this.cas in obach[,'CAS']){
     suppress.messages=TRUE)
   reg.pcs <- predict_partitioning_schmitt(
     parameters=parameters,
-    regression=FALSE,
+    regression=TRUE,
     suppress.messages=TRUE)
   vdist <- calc_vdist(
     parameters=c(pcs,Funbound.plasma=parameters$Funbound.plasma),
@@ -432,13 +442,19 @@ fup <- NULL
 logP <- NULL
 pka_donor <- NULL
 pka_accept <- NULL
-for(this.cas in rb2p.data[rb2p.data[,'CAS'] %in% get_cheminfo(model='schmitt'),'CAS']){
+for(this.cas in rb2p.data[rb2p.data[,'CAS'] %in% 
+  get_cheminfo(model='schmitt', suppress.messages = TRUE),'CAS'])
+{
   rb2p <- get_rblood2plasma(chem.cas=this.cas)
   krbc <- (rb2p + .44 - 1) / 0.44
   measured.rb2p <- c(measured.rb2p,rb2p)
   measured.krbc <- c(measured.krbc,krbc)
-  parameters <- parameterize_schmitt(chem.cas=this.cas)
-  pcs <- predict_partitioning_schmitt(parameters=parameters)
+  parameters <- parameterize_schmitt(
+    chem.cas=this.cas,
+    suppress.messages = TRUE)
+  pcs <- predict_partitioning_schmitt(
+    parameters=parameters,
+    suppress.messages=TRUE)
   predicted.krbc <- c(predicted.krbc,pcs[['Krbc2pu']] * parameters$Funbound.plasma)
   cas <- c(cas,this.cas)
   charge <- c(charge,calc_ionization(chem.cas=this.cas,pH=7.4)$fraction_charged)
@@ -456,7 +472,9 @@ rb2p.table <- cbind(rb2p.table,error,charge,fup,logP)
 error <- log10(measured.krbc) -  log10(predicted.krbc)
 krbc.table <- cbind(as.data.frame(cas),as.data.frame(predicted.krbc),as.data.frame(measured.krbc),
                     as.data.frame(error),charge,fup,logP,pka_donor,pka_accept)
+```
 
+```{r RBCStats, eval=execute.vignette}
 pdta <- data.frame(x = predicted.krbc,
                    y = measured.krbc)
 pdta$y[pdta$y <= 0.1] <- 0.1
@@ -468,8 +486,11 @@ cc <- as.numeric(y <= 0.1)
 y[y < 0.1] <- 0.1
 y <- -log10(y)
 
-out <- em.cens(cc, x, y, dist="Normal")
+out <- censReg(y~x, data = pdta, left=0.1)
+out$betas <- out$estimate
+```
 
+```{r RBCFigure, eval=execute.vignette}
 censored.regression <- ggplot() +
     geom_point(data=pdta,aes(x=x,y=y, color=Censoring)) +
     scale_x_log10(limits=c(.0009,40)) + scale_y_log10(limits=c(.1,4),breaks=c(.1,.5,2.5)) +
@@ -478,6 +499,7 @@ censored.regression <- ggplot() +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
     plot.title=element_text(size=18,hjust=0.5),legend.position = c(0.11, .8)) +
     geom_abline(slope=out$betas[2],intercept=-out$betas[1]) + ggtitle('(B)')
+print(censored.regression)
 
 rb2p.plot <- ggplot(rb2p.table,aes(predicted.rb2p,measured.rb2p)) +
     geom_point()  + scale_x_log10(lim=c(.52,18)) + 
@@ -486,20 +508,27 @@ rb2p.plot <- ggplot(rb2p.table,aes(predicted.rb2p,measured.rb2p)) +
     x=expression(paste("Predicted Whole Blood ",K[p]))) +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
     plot.title=element_text(size=18,hjust=0.5)) + ggtitle('(A)')
+print(rb2p.plot)
 ```
 
 Lastly, we make the heatmap.
-```{r summaryheatmap, eval=execute.vignetteE}
+```{r summarytable, eval=execute.vignetteE}
 heatmap.table <- NULL
 for(this.cas in get_cheminfo(model='schmitt')){
-    parms <- parameterize_schmitt(chem.cas=this.cas)
-    pcs <- predict_partitioning_schmitt(parameters=parms)
+    parms <- parameterize_schmitt(
+      chem.cas=this.cas,
+      suppress.messages = TRUE)
+    pcs <- predict_partitioning_schmitt(
+      parameters=parms, 
+      suppress.messages = TRUE)
     heatmap.table <- cbind(heatmap.table,log10(unlist(pcs)[1:11]*parms$Funbound.plasma))
 }
 rownames(heatmap.table) <-  c('Adipose','Bone','Brain','Gut','Heart',
                               'Kidney','Liver','Lung','Muscle','Skin','Spleen')
 colnames(heatmap.table) <- rep("",dim(heatmap.table)[2])
+```
 
+```{r summaryheatmap, eval=execute.vignetteE}
 pal <- function (n, h = c(260, -328), c = 80, l = c(30, 100), power = 1.5,
     fixup = TRUE, gamma = NULL, alpha = 1, ...)
 {
