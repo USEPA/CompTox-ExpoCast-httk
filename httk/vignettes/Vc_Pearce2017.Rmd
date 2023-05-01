@@ -117,6 +117,7 @@ library(gmodels)
 library(gplots)
 library(scales)
 library(colorspace)
+library(gridExtra)
 ```
 ### Function to format scientific notation 
 From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
@@ -173,23 +174,55 @@ for(this.cas in cas.list){
   for(this.tissue in subset(pc.data,CAS==this.cas)[,'Tissue']){
     if(this.tissue == 'Blood Cells') this.pc <- 'rbc'
     else this.pc <- this.tissue
-    pc.table <- rbind(pc.table,cbind(as.data.frame(this.cas),as.data.frame(this.tissue),
-    as.data.frame(log10(init.pcs[[which(substr(names(init.pcs),2,nchar(names(init.pcs))-3)
-                                  == tolower(this.pc))]] * init.parameters$Funbound.plasma)),
-    as.data.frame(log10(pcs[[which(substr(names(pcs),2,nchar(names(pcs))-3)
-                             == tolower(this.pc))]] * parameters$unadjusted.Funbound.plasma)),
-    as.data.frame(log10(init.pcs[[which(substr(names(init.pcs),2,nchar(names(init.pcs))-3)
-                                  == tolower(this.pc))]] * init.parameters$unadjusted.Funbound.plasma)),
-    as.data.frame(log10(pcs[[which(substr(names(pcs),2,nchar(names(pcs))-3)
-                             == tolower(this.pc))]] * parameters$Funbound.plasma)),
-    as.data.frame(log10(subset(pc.data,CAS==this.cas & Tissue==this.tissue)[,'Exp_PC'])),
-    as.data.frame(subset(pc.data,CAS==this.cas & Tissue==this.tissue)[,'LogP']),as.data.frame(charge),
-    as.data.frame(as.character(subset(pc.data,CAS == this.cas)[1,'A.B.N'])),
-    as.data.frame(subset(pc.data,CAS == this.cas)[1,'fu'])))
+        pc.table <- rbind(pc.table,
+                      cbind(
+                        as.data.frame(this.cas),
+                        as.data.frame(this.tissue),
+                        as.data.frame(log10(
+                          init.pcs[[which(substr(names(init.pcs),
+                            2,
+                            nchar(names(init.pcs))-3) == 
+                            tolower(this.pc))]] * 
+                          init.parameters$Funbound.plasma)),
+                        as.data.frame(log10(
+                          pcs[[which(substr(names(pcs),
+                            2,
+                            nchar(names(pcs))-3) == 
+                            tolower(this.pc))]] *
+                          parameters$unadjusted.Funbound.plasma)),
+                        as.data.frame(log10(
+                          init.pcs[[which(substr(names(init.pcs),
+                            2,
+                            nchar(names(init.pcs))-3) == 
+                            tolower(this.pc))]] *
+                          init.parameters$unadjusted.Funbound.plasma)),
+                        as.data.frame(log10(
+                          pcs[[which(substr(names(pcs),
+                            2,
+                            nchar(names(pcs))-3) == tolower(this.pc))]] * 
+                            parameters$Funbound.plasma)),
+                        as.data.frame(log10(
+                          subset(pc.data,
+                            CAS==this.cas & Tissue==this.tissue)[,'Exp_PC'])),
+                        as.data.frame(subset(pc.data,
+                          CAS==this.cas & Tissue==this.tissue)[,'LogP']),
+                        as.data.frame(charge),
+                        as.data.frame(as.character(subset(pc.data,
+                          CAS == this.cas)[1,'A.B.N'])),
+                        as.data.frame(subset(pc.data, 
+                          CAS == this.cas)[1,'fu'])))
   }
 }
-colnames(pc.table) <- c('CAS','Tissue','fup.correction','ma.correction','init.Predicted',
-                        'Predicted','Experimental','logP','charge','type','fup')
+colnames(pc.table) <- c('CAS','Tissue',
+                        'fup.correction',
+                        'ma.correction',
+                        'init.Predicted',
+                        'Predicted',
+                        'Experimental',
+                        'logP',
+                        'charge',
+                        'type',
+                        'fup')
 init.error <- pc.table[,'Experimental'] - pc.table[,'init.Predicted']
 fup.error <- pc.table[,'Experimental'] - pc.table[,'fup.correction']
 ma.error <- pc.table[,'Experimental'] - pc.table[,'ma.correction']
@@ -202,38 +235,75 @@ pc.table <- cbind(pc.table,fup.improvement,ma.improvement, final.improvement,
 ```
 
 ```{r KpFigures, eval=execute.vignette}
-init.plot <- ggplot() + geom_point(data=pc.table,aes(10^(init.Predicted),10^(Experimental))) +
-    geom_abline() + labs(y=expression(paste("Measured ",K[p])), x=expression(paste("Predicted ",K[p]))) +
-    theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
-    plot.title=element_text(size=18,hjust = 0.5)) + scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
-    scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + ggtitle('(A)')
+init.plot <- ggplot() + 
+  geom_point(data=pc.table,aes(10^(init.Predicted),10^(Experimental))) +
+  geom_abline() + 
+  labs(y=expression(paste("Measured ",K[p])), 
+       x=expression(paste("Predicted ",K[p]))) +
+  theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
+    plot.title=element_text(size=18,hjust = 0.5)) + 
+  scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
+  scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
+  ggtitle('(A)')
 print(init.plot)
+init.stats <- summary(lm(Experimental ~ init.Predicted, 
+                         data=pc.table))
 
-final.plot <- ggplot() + geom_point(data=pc.table,aes(10^(Predicted),10^(Experimental))) +
-    geom_abline() + labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p]))) +
-    theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
-    plot.title=element_text(size=18,hjust=0.5)) + scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
-    scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + ggtitle('(B)')
+final.plot <- ggplot() + 
+  geom_point(data=pc.table,aes(10^(Predicted),10^(Experimental))) +
+  geom_abline() + 
+  labs(y=expression(paste("Measured ",K[p])),
+       x=expression(paste("Predicted ",K[p]))) +
+  theme(axis.text=element_text(size=16),axis.title=element_text(size=16),
+    plot.title=element_text(size=18,hjust=0.5)) +
+  scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
+  scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
+  ggtitle('(B)')
 print(final.plot)
+final.stats <- summary(lm(Experimental ~ Predicted, 
+                          data=pc.table))
 
 fup.change.plot <-  ggplot() +
-    geom_point(data=pc.table[order(pc.table[,'fup.improvement'],decreasing=F),],
-    aes(10^(fup.correction),10^(Experimental),color=fup.improvement)) + geom_abline() +
-    labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p])),color='Improvement') +
-    theme(axis.text=element_text(size=16),axis.title=element_text(size=16)) +
-    scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
-    scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
-    scale_color_viridis(direction=-1,option='inferno')
+  geom_point(data=pc.table[order(pc.table[,'fup.improvement'],decreasing=F),],
+    aes(10^(fup.correction),10^(Experimental),color=fup.improvement)) + 
+  geom_abline() +
+  labs(y=expression(paste("Measured ",K[p])),
+       x=expression(paste("Predicted ",K[p])),color='Improvement') +
+  theme(axis.text=element_text(size=16),axis.title=element_text(size=16)) +
+  scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
+  scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
+  scale_color_viridis(direction=-1,option='inferno')
+print(fup.change.plot)
+fup.stats <- summary(lm(Experimental ~ fup.correction, 
+                     data=pc.table))
+
 ma.subset <- subset(pc.table,!CAS %in% ma.data.list)
 ma.change.plot <- ggplot() +
-    geom_point(data=ma.subset[order(ma.subset[,'ma.improvement'],decreasing=F),]
-    ,aes(10^(ma.correction),10^(Experimental),color=ma.improvement)) + geom_abline() +
-    labs(y=expression(paste("Measured ",K[p])),x=expression(paste("Predicted ",K[p])),color='Improvement') +
+    geom_point(data=ma.subset[order(ma.subset[,'ma.improvement']
+      ,decreasing=F),], 
+      aes(10^(ma.correction),10^(Experimental),color=ma.improvement)) + 
+    geom_abline() +
+    labs(y=expression(paste("Measured ",K[p])),
+      x=expression(paste("Predicted ",K[p])),color='Improvement') +
     theme(axis.text=element_text(size=16),axis.title=element_text(size=16)) +
     scale_x_log10(label=scientific_10,limits=c(0.01,10^4.5)) + 
     scale_y_log10(label=scientific_10,limits=c(0.01,10^4.5)) +
     scale_color_viridis(direction=-1,option='inferno')
-print(fup.change.plot)
+print(ma.change.plot)
+ma.stats <- summary(lm(Experimental ~ ma.correction, 
+                    data=ma.subset))
+
+fup.table <- data.frame(Test=c("Initial Tissue PC Accuracy","Fup Lipid Correction","Membrane Affinity","Final"),
+                           RSquared = signif(c(init.stats$adj.r.squared,
+                                         fup.stats$adj.r.squared,
+                                         ma.stats$adj.r.squared,
+                                         final.stats$adj.r.squared),3),
+                           RMSLE = signif(c(mean(init.stats$residuals^2,na.rm=TRUE)^(1/2),
+                                     mean(fup.stats$residuals^2,na.rm=TRUE)^(1/2),
+                                     mean(ma.stats$residuals^2,na.rm=TRUE)^(1/2),
+                                     mean(final.stats$residuals^2,na.rm=TRUE)^(1/2)),3)
+                          )
+knitr::kable(fup.table)
 ```
 Now we calculate and plot the regressions for all tissues, together with their 95% confidence intervals.
 
@@ -253,6 +323,17 @@ for(tissue in as.character(unique(pc.table[,'Tissue']))){
 }
 colnames(regressions) <- c('Tissue','Intercept','Slope','P-value','SE','R-squared',
                            'Int Var','Slp Var','Cov','df','estimable')
+
+for (this.col in 2:10) regressions[,this.col] <- signif(regressions[,this.col], 3)
+regressions <- regressions[order(regressions[,1]),]
+
+knitr::kable(regressions, caption = "Table 1: The regressions for each tissue, after fup and membrane affinity adjustments, of the log10-transformed measured Kp regressed on
+predicted Kp")
+
+write.table(regressions,
+            file=paste0("Pearce2017PCCalibration=",Sys.Date(),".txt"),
+            sep="/t",
+            row.names=FALSE)
 ```
 
 ```{r PCRegressionFigure, eval=execute.vignette}

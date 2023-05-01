@@ -1,4 +1,7 @@
+# When using this code in past versions of httk, we load the needed data tables
+# to assure we are evaluating against similar values:
 #load("NewInVivoTablesForHTTK.RData")
+#pc.data <- read.csv("Pearce2017-PC-data.txt")
 
 #' Assess the curent performance of httk relative to historical benchmarks
 #' 
@@ -95,6 +98,7 @@ benchmark_httk <- function(
                            basic.check=TRUE,
                            calc_mc_css.check=TRUE,
                            in_vivo_stats.check=TRUE,
+                           tissuepc.check=TRUE,
                            suppress.messages=TRUE,
                            make.plots=TRUE)
 {
@@ -376,7 +380,157 @@ benchmark_httk <- function(
 #                           row.names=FALSE,
 #                           sep="\t")
   }
-  
+
+  #
+  if (tissuepc.check)
+  {
+    pc.table <- NULL
+    pc.data <- subset(pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
+        "Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & 
+        tolower(Species) == 'rat' & !CAS %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6',
+        '57562-99-9','59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2','60-54-8'))
+    if ("suppress.messages" %in% formalArgs(get_cheminfo))
+    {
+      cas.list <- get_cheminfo(
+                    model='schmitt',
+                    species='rat',
+                    suppress.messages=TRUE)
+    } else {
+      cas.list <- get_cheminfo(
+                    model='schmitt',
+                    species='rat')
+    }
+    cas.list <-  cas.list[cas.list %in% pc.data[,'CAS']]
+    ma.data.list <- subset(chem.physical_and_invitro.data,!is.na(logMA))[,'CAS']
+    for(this.cas in cas.list)
+    {
+      if ("suppress.messages" %in% formalArgs(parameterize_schmitt))
+      {
+        parameters <- parameterize_schmitt(
+          chem.cas=this.cas,
+          species='rat',
+          suppress.messages=TRUE)
+      } else {
+        parameters <- parameterize_schmitt(
+          chem.cas=this.cas,
+          species='rat')
+      }
+      # Switched the name of this parameter aroung v1.9
+      if ("Funbound.plasma.uncorrected" %in% names(parameters))
+        parameters$unadjusted.Funbound.plasma <- 
+          parameters$Funbound.plasma.uncorrected
+      # Added this parameter in v1.6:
+      if (!("unadjusted.Funbound.plasma" %in% names(parameters)))
+        parameters$unadjusted.Funbound.plasma <- parameters$Funbound.plasma
+        
+      init.parameters <- parameters
+      if (exists("calc_ionization"))
+      {
+        charge <- calc_ionization(
+          chem.cas=this.cas,
+          pH=7.4)$fraction_charged
+      } else charge <- 0
+      if(!this.cas %in% ma.data.list){
+        init.parameters$MA <- 10^(0.999831 - 0.016578*38.7 + 0.881721 * log10(parameters$Pow))
+      }
+      # Versions prior to 1.6 did not have regression arg:
+      if (!("regression" %in% formalArgs(predict_partitioning_schmitt)))
+      {
+        pcs <- predict_partitioning_schmitt(
+          parameters=parameters,
+          species='rat')
+        init.pcs <- predict_partitioning_schmitt(
+          parameters=init.parameters,
+          species='rat')
+      # Suppress messages added later:
+      } else if (!("suppress.messages" %in% 
+                   formalArgs(predict_partitioning_schmitt)))
+      {
+        pcs <- predict_partitioning_schmitt(
+          parameters=parameters,
+          species='rat',
+          regression=FALSE)
+        init.pcs <- predict_partitioning_schmitt(
+          parameters=init.parameters,
+          species='rat',
+          regression=FALSE)
+      } else {
+        pcs <- predict_partitioning_schmitt(
+          parameters=parameters,
+          species='rat',
+          regression=FALSE,
+          suppress.messages=TRUE)
+        init.pcs <- predict_partitioning_schmitt(
+          parameters=init.parameters,
+          species='rat',
+          regression=FALSE,
+          suppress.messages=TRUE)
+      }
+      for(this.tissue in subset(pc.data,CAS==this.cas)[,'Tissue']){
+        if(this.tissue == 'Blood Cells') this.pc <- 'rbc'
+        else this.pc <- this.tissue
+        pc.table <- rbind(pc.table,
+                      cbind(
+                        as.data.frame(this.cas),
+                        as.data.frame(this.tissue),
+                        as.data.frame(log10(
+                          init.pcs[[which(substr(names(init.pcs),
+                            2,
+                            nchar(names(init.pcs))-3) == 
+                            tolower(this.pc))]] * 
+                          init.parameters$Funbound.plasma)),
+                        as.data.frame(log10(
+                          pcs[[which(substr(names(pcs),
+                            2,
+                            nchar(names(pcs))-3) == 
+                            tolower(this.pc))]] *
+                          parameters$unadjusted.Funbound.plasma)),
+                        as.data.frame(log10(
+                          init.pcs[[which(substr(names(init.pcs),
+                            2,
+                            nchar(names(init.pcs))-3) == 
+                            tolower(this.pc))]] *
+                          init.parameters$unadjusted.Funbound.plasma)),
+                        as.data.frame(log10(
+                          pcs[[which(substr(names(pcs),
+                            2,
+                            nchar(names(pcs))-3) == tolower(this.pc))]] * 
+                            parameters$Funbound.plasma)),
+                        as.data.frame(log10(
+                          subset(pc.data,
+                            CAS==this.cas & Tissue==this.tissue)[,'Exp_PC'])),
+                        as.data.frame(subset(pc.data,
+                          CAS==this.cas & Tissue==this.tissue)[,'LogP']),
+                        as.data.frame(charge),
+                        as.data.frame(as.character(subset(pc.data,
+                          CAS == this.cas)[1,'A.B.N'])),
+                        as.data.frame(subset(pc.data, 
+                          CAS == this.cas)[1,'fu'])))
+      }
+    }
+    colnames(pc.table) <- c('CAS','Tissue','fup.correction','ma.correction','init.Predicted',
+                            'Predicted','Experimental','logP','charge','type','fup')
+    init.error <- pc.table[,'Experimental'] - pc.table[,'init.Predicted']
+    fup.error <- pc.table[,'Experimental'] - pc.table[,'fup.correction']
+    ma.error <- pc.table[,'Experimental'] - pc.table[,'ma.correction']
+    final.error <- pc.table[,'Experimental'] - pc.table[,'Predicted']
+    fup.improvement <- abs(init.error) - abs(fup.error)
+    ma.improvement <- abs(init.error) - abs(ma.error)
+    final.improvement <- abs(init.error) - abs(final.error)
+    pc.table <- cbind(pc.table,fup.improvement,ma.improvement, final.improvement,
+                      final.error,init.error,ma.error,fup.error)
+    
+    if (any(!is.na(final.error))) RMSLE.TissuePC <- (mean(
+        final.error^2, na.rm=TRUE))^(1/2)
+    else RMSLE.TissuePC <- (mean(
+        init.error^2, na.rm=TRUE))^(1/2)
+    
+    benchmarks[["tissuepc"]] <- list(RMSLE.TissuePC = signif(RMSLE.TissuePC,4),
+                                     N.TissuePC = 
+                                       length(final.error[!is.na(final.error)]))
+    
+  }
+    
   if (make.plots)
   {
     plot.table <- NULL
@@ -403,27 +557,28 @@ benchmark_httk <- function(
 
     units.plot <- 
       ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
-             aes(x=Version, y=Value, color=Benchmark)) + 
+             aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
-      geom_path(group=Benchmark) +
+      geom_line() +
       ylab("Ratio mg/L / uM * 1000 / MW") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["units.plot"]] <- units.plot
     
+
     rmsle.plot <- 
       ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
-             aes(x=Version, y=Value, color=Benchmark)) + 
+             aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
-      geom_path(group=Benchmark) +
+      geom_line() +
       ylab("Root Mean Squared Log10 Error (RMSLE)") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["rmsle.plot"]] <- rmsle.plot
     
     count.plot <- 
       ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
-             aes(x=Version, y=Value, color=Benchmark)) + 
+             aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
-      geom_path(group=Benchmark1) +
+      geom_line() +
       ylab("Chemical Count") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["count.plot"]] <- count.plot
@@ -432,8 +587,10 @@ benchmark_httk <- function(
   return(benchmarks)
 }
 
+# We uncomment this code when using this function in past versions of httk:
 #library(httk)
-#out <- benchmark_httk(basic.check=TRUE, calc_mc_css.check=TRUE, make.plots=FALSE)
-
-
-#out <- benchmark_httk(basic.check=FALSE, calc_mc_css.check=FALSE, make.plots=FALSE)
+#out <- benchmark_httk(basic.check=FALSE, 
+#                      calc_mc_css.check=FALSE,
+#                      in_vivo_stats.check=FALSE,
+#                      tissuepc.check=TRUE, 
+#                      make.plots=FALSE)
