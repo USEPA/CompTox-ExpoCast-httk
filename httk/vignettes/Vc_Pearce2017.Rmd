@@ -593,7 +593,7 @@ print(rb2p.plot)
 ```
 
 Lastly, we make the heatmap.
-```{r summarytable, eval=execute.vignetteE}
+```{r summarytable, eval=execute.vignette}
 heatmap.table <- NULL
 for(this.cas in get_cheminfo(model='schmitt')){
     parms <- parameterize_schmitt(
@@ -609,7 +609,7 @@ rownames(heatmap.table) <-  c('Adipose','Bone','Brain','Gut','Heart',
 colnames(heatmap.table) <- rep("",dim(heatmap.table)[2])
 ```
 
-```{r summaryheatmap, eval=execute.vignetteE}
+```{r summaryheatmap, eval=execute.vignette}
 pal <- function (n, h = c(260, -328), c = 80, l = c(30, 100), power = 1.5,
     fixup = TRUE, gamma = NULL, alpha = 1, ...)
 {
