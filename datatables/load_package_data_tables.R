@@ -1403,54 +1403,82 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 
 # Add new Pab measurements from Honda2023:
-load("CACO-2/our_caco2_25MAR2019.RData")
+caco2.dt <- read.csv("CACO-2/AllCaco2PabData_10e-6cmps.txt",sep="\t")
+caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
+caco2.cas <- read.csv("CACO-2/CASRN-fromCCD.csv")
+
+caco2.unique <- NULL
+for (this.dtxsid in sort(unique(caco2.dt$dtxsid)))
+{
+  this.subset <- subset(caco2.dt, dtxsid==this.dtxsid)
+# Prefer our data over literature:
+  if ("EPA" %in% this.subset$Data.Origin)
+  {
+    this.subset <- subset(this.subset, Data.Origin=="EPA") 
+  }
+  this.row <- this.subset[1,]
+  this.row[,"Pab"] <- median(this.subset$Pab)
+  this.row[,"Data.Origin"] <- 
+    paste(unique(this.subset$Data.Origin),collapse=",")
+    
+  this.row[,"CAS"] <- unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid,"CASRN"])
+  this.row[,"Compound"] <- unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid,
+                                  "PREFERRED_NAME"])
+  caco2.unique <- rbind(caco2.unique, this.row)
+}
+caco2.unique$Pab <- signif(as.numeric(caco2.unique$Pab), 4)
+caco2.unique <- subset(caco2.unique, !is.na(CAS))
+
+# Handle new chemical data first:
+epa.caco2 <- subset(caco2.unique, Data.Origin=="EPA")
+
 # Assign all chems the low Pab standard deviation:
-caco2.dt2$SD <- 0.3
+epa.caco2$SD <- 0.3
 # Need a column of all numeric Pab's (no NA's) for calculations:
-caco2.dt2$NumericPab <- caco2.dt2$Pab
-caco2.dt2[is.na(caco2.dt2$Pab),"NumericPab"] <- 0
+epa.caco2$NumericPab <- epa.caco2$Pab
+epa.caco2[is.na(epa.caco2$Pab),"NumericPab"] <- 0
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
-caco2.dt2[caco2.dt2$NumericPab >= 10, "SD"] <- 0.13
+epa.caco2[epa.caco2$NumericPab >= 10, "SD"] <- 0.13
 # Calculate the confidence intervals (remembering the standard deviations are
 # on the log10 scale:
-caco2.dt2$Pab.Low95 <- signif(10^(log10(caco2.dt2$NumericPab) -
-                                    1.96*caco2.dt2$SD),
+epa.caco2$Pab.Low95 <- signif(10^(log10(epa.caco2$NumericPab) -
+                                    1.96*epa.caco2$SD),
                               3)
-caco2.dt2$Pab.High95 <- signif(10^(log10(caco2.dt2$NumericPab) +
-                                     1.96*caco2.dt2$SD),
+epa.caco2$Pab.High95 <- signif(10^(log10(epa.caco2$NumericPab) +
+                                     1.96*epa.caco2$SD),
                                3)
 # Concatenate the measured values and intervals using commas for use by
 # invitro_mc
-caco2.dt2[,"PabInterval"] <- paste(
-  signif(caco2.dt2$Pab,3),
-  caco2.dt2$Pab.Low95,
-  caco2.dt2$Pab.High95,
+epa.caco2[,"PabInterval"] <- paste(
+  signif(epa.caco2$Pab,3),
+  epa.caco2$Pab.Low95,
+  epa.caco2$Pab.High95,
   sep=",")
 # Return the NA Pab's to NA:
-caco2.dt2[is.na(caco2.dt2$Pab),"PabInterval"] <- NA
+epa.caco2[is.na(epa.caco2$Pab),"PabInterval"] <- NA
 
-chem.physical_and_invitro.data <- add_chemtable(caco2.dt2,
+chem.physical_and_invitro.data <- add_chemtable(epa.caco2,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
-                                    Compound='ref.chnm',
-                                    CAS = 'casrn',
+                                    Compound='Compound',
+                                    CAS = 'CAS',
                                     DTXSID='dtxsid',
                                     Caco2.Pab="PabInterval"),
                                   overwrite=TRUE,
                                   reference = 'HondaUnpublished',
                                   species="Human") 
-# Clean up and reduce likelihood of cut-and-paste errors in next block:
-rm(caco2.dt2) 
 
-
+#
 # Add literature Pab measurements compiled by Honda2023:
-load("CACO-2/lit_caco2_26MAR2019.RData")
+#
+lit.caco2.dt <- subset(caco2.unique, Data.Origin!="EPA")
+
 # Assign all chems the low Pab standard deviation (with 0.1 extra for literature):
 lit.caco2.dt$SD <- 0.3 + 0.1
 # Need a column of all numeric Pab's (no NA's) for calculations:
-lit.caco2.dt$NumericPab <- lit.caco2.dt$lit_pab
-lit.caco2.dt[is.na(lit.caco2.dt$lit_pab),"NumericPab"] <- 0
+lit.caco2.dt$NumericPab <- lit.caco2.dt$Pab
+lit.caco2.dt[is.na(lit.caco2.dt$Pab),"NumericPab"] <- 0
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
 lit.caco2.dt[lit.caco2.dt$NumericPab >= 10, "SD"] <- 0.13 + 0.1
@@ -1465,7 +1493,7 @@ lit.caco2.dt$Pab.High95 <- signif(10^(log10(lit.caco2.dt$NumericPab) +
 # Concatenate the measured values and intervals using commas for use by
 # invitro_mc
 lit.caco2.dt[,"PabInterval"] <- paste(
-  signif(lit.caco2.dt$lit_pab,3),
+  signif(lit.caco2.dt$Pab,3),
   lit.caco2.dt$Pab.Low95,
   lit.caco2.dt$Pab.High95,
   sep=",")
@@ -1475,12 +1503,54 @@ lit.caco2.dt[is.na(lit.caco2.dt$lit_pab),"PabInterval"] <- NA
 chem.physical_and_invitro.data <- add_chemtable(lit.caco2.dt,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list = list(
-                                    CAS = 'casrn',
+                                    Compound='Compound',
+                                    CAS = 'CAS',
                                     DTXSID='dtxsid',
                                     Caco2.Pab="PabInterval",
-                                    Reference="repref"),
+                                    Reference="Data.Origin"),
                                   overwrite=FALSE,
                                   species="Human") 
+
+
+
+#
+# Add phys-chem for full library of chemicals both with data and qspr predictions:
+#
+caco2.desc <- read.csv("CACO-2/QSPRPrediction-smi_OPERA2.9Pred.csv")
+dim(caco2.desc)
+
+#for comparing data vs. qspr let's add in all the training/test chemicals:
+data.desc <- read.csv("CACO-2/trainset-smi_OPERA2.9Pred.csv")
+caco2.desc <- rbind(caco2.desc, data.desc)
+dim(caco2.desc)
+
+caco2.desc$MoleculeID <- gsub("\\|c:10\t","",caco2.desc$MoleculeID)
+
+caco2.desc <- subset(caco2.desc,!duplicated(MoleculeID))
+dim(caco2.desc)
+
+for (this.dtxsid in sort(unique(caco2.desc$MoleculeID)))
+  if (this.dtxsid %in% caco2.cas$DTXSID)
+{
+  caco2.desc[caco2.desc$MoleculeID%in%this.dtxsid, "CASRN"] <-
+    unique(caco2.cas[caco2.cas$DTXSID%in%this.dtxsid, "CASRN"])
+  caco2.desc[caco2.desc$MoleculeID%in%this.dtxsid, "Compound"] <- 
+    unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid, "PREFERRED_NAME"])
+}
+                                       
+chem.physical_and_invitro.data <- add_chemtable(subset(caco2.desc,!is.na(CASRN)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(Compound='Compound',
+    CAS='CASRN',
+    DTXSID="MoleculeID",
+    MW='MolWeight',
+    logP="LogP_pred",
+    logHenry = "LogHL_pred",
+    logWSol = "LogWS_pred",
+    MP = "MP_pred"
+  ),                                                                        
+  reference="OPERA29",
+  overwrite=T)
 
 # Load QSPR predictions:
 load("CACO-2/httk_qspr_preds.RData")    
@@ -1581,6 +1651,9 @@ dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
 # Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
 
+# No duplicated values:
+dsstox <- subset(dsstox, !duplicated(DTXSID))
+
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(Compound='PREFERRED_NAME',
@@ -1596,6 +1669,10 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   ),                                                                        
   reference="EPA",
   overwrite=T)
+  
+# No duplicated values:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+  !duplicated(DTXSID))                                             
 
 EPA.ref <- paste('CompTox Dashboard',
   file.info(paste("HTTK-DSSTox-output-",i,".tsv",sep=""))$ctime)
@@ -1621,7 +1698,13 @@ browser()
 dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv")
 
 # Get rid of the ones that weren't found:
-dsstox <- subset(dsstox,DTXSID!="-")
+dsstox <- subset(dsstox, DTXSID!="-")
+dsstox <- subset(dsstox, DTXSID!="N/A")
+dsstox <- subset(dsstox, !is.na(AVERAGE_MASS))
+dsstox <- subset(dsstox, AVERAGE_MASS != "N/A")
+dsstox <- subset(dsstox, !is.na(OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED))
+dsstox <- subset(dsstox, OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED != "N/A")
+
 # Calculate log10 Henry's law constnat:
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
   "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
@@ -1643,6 +1726,15 @@ for (this.row in 1:dim(dsstox)[1])
       chem.physical_and_invitro.data$Compound ==
       dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
       dsstox[this.row,"CASRN"]
+}
+
+# Pick approved name when there are duplicates:
+for (this.name in unique(dsstox$INPUT[duplicated(dsstox$INPUT)]))
+{
+  not.this.name <- subset(dsstox, INPUT!=this.name)
+  this.subset <- subset(dsstox, INPUT==this.name)
+  this.row <- this.subset[regexpr("Approved",this.subset$FOUND_BY)!=-1,]
+  dsstox <- rbind(not.this.name,this.row)
 }
 
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
