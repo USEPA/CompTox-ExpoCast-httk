@@ -15,6 +15,7 @@ output: html_document
 
 ## Enhancements
 * Package now requires **ggplot2** -- will gradually shift all plotting from base R 
+* Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) on Evaluation of Tissue Partitioning
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
