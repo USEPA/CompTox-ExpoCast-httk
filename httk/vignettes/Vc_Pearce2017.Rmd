@@ -93,7 +93,7 @@ either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ### Load the relevant libraries
