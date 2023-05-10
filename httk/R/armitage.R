@@ -167,7 +167,11 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' @param this.pH pH of cell culture
 #' 
-#' @param neutral.only Should we restrict the partitioning concentration to neutral only?
+#' @param this.Vdom 0 ml, the volume of dissolved organic matter (DOM)
+#' 
+#' @param this.pH 7.0, pH of cell culture
+#' 
+#' @param neutral.only FALSE, Should we restrict the partitioning concentration to neutral only?
 #'
 #' @return
 #' \tabular{lll}{
@@ -448,6 +452,23 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                                 chem.cas = casrn)]
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
+  
+  # Check if considering charge:
+  if (neutral.only)
+  {
+    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
+    {
+    # If not, pull them:
+      tcdata[, c("pKa_Donor","pKa_Accept") := 
+               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn)]
+    }
+    # Calculate the fraction neutral:
+    tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
+        pH = this.pH,    
+        pKa_Donor = x["pKa_Donor"], 
+        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] 
+  } else tcdata[, Fneutral := 1]
   
   # Check if considering charge:
   if (neutral.only)
