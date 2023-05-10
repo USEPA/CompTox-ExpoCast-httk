@@ -43,7 +43,7 @@ made with the immediately preceding version while the file
 [Dashboard-HTTK-CssunitsmgpL-change.txt](https://github.com/USEPA/CompTox-ExpoCast-httk/blob/main/scripts/Dashboard-HTTK-CssunitsmgpL-change.txt) reports the change in Css on a per
 chemical basis. These changes are graphed in
 [calc-mc-css-fold-change.png](https://github.com/USEPA/CompTox-ExpoCast-httk/blob/main/scripts/calc-mc-css-fold-change.png):
-<img src="calc-mc-css-fold-change.png)" align="right" width="50%"/>
+<img src="calc-mc-css-fold-change.png" align="right" width="50%"/>
 
 ## Chemical Counts for Discussion of HTTK
 
