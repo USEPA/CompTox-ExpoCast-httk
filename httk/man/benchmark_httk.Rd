@@ -14,19 +14,23 @@ benchmark_httk(
 )
 }
 \arguments{
-\item{basic.check}{Whether to run the basic checks, including units uM and 
-mg/L units for 'calc_analytic_css', 'calc_mc_css', and 'solve_pbtk' as well as 
-the number of chemicals with sufficient data to run the steady_stat emodel 
+\item{basic.check}{Whether to run the basic checks, including uM and 
+mg/L units for \code{\link{calc_analytic_css}}, \code{\link{calc_mc_css}}, 
+and \code{\link{solve_pbtk}} as well as 
+the number of chemicals with sufficient data to run the steady_state model 
 (defaults to TRUE)}
 
-\item{calc_mc_css.check}{Whetjer to check the Monte Carlo sample. A 
-comparison of the output of 'calc_mc_css' to the SimCyp outputs reported in 
+\item{calc_mc_css.check}{Whether to check the Monte Carlo sample. A 
+comparison of the output of \code{\link{calc_mc_css}} to the SimCyp outputs 
+reported in 
 the Wetmore et al. (2012,2015) papers is performed. A comparison between the
-ouput of 'calc_analytic_css' (no Monte Carlo) to the median of the output of
-'calc_mc_css' is also performed. (defaults to TRUE)}
+ouput of \code{\link{calc_analytic_css}} (no Monte Carlo) to the median of the output of
+\code{\link{calc_mc_css}} is also performed. (defaults to TRUE)}
 
-\item{in_vivo_stats.check}{Whether to compare the outputs of `calc_mc_css`
-and `calc_tkstats` to in vivo measurements of Css, AUC, and Cmax collected
+\item{in_vivo_stats.check}{Whether to compare the outputs of 
+\code{\link{calc_mc_css}}
+and \code{\link{calc_tkstats}} to in vivo measurements of Css, AUC, and 
+Cmax collected
 by Wambaugh et al. (2018). (defaults to TRUE)}
 
 \item{tissuepc.check}{Whether to compare the tissue-specific partition
@@ -42,9 +46,9 @@ historical performance (defaults to TRUE)}
 }
 \value{
 named list, whose elements depend on the selected checks
-\tabular{rl}{
+\tabular{ll}{
   basic \tab A list with four metrics:
-  \itemize{
+  \describe{
     \item{N.steadystate}{Number of chemicals with sufficient data for steady-state IVIVE}
     \item{calc_analytic.units}{Ratio of mg/L to uM * 1000 / molecular weight -- should be 1}
     \item{calc_mc.units}{Ratio should be 1}
@@ -52,7 +56,7 @@ named list, whose elements depend on the selected checks
   } \cr
 
   calc_mc_css \tab A list with four metrics:
-  \itemize{
+  \describe{
     \item{RMSLE.Wetmore}{Root mean squared log10 error (RMSLE) in predicted Css between literature valuse (SimCyp, Wetmore et al. 2012,2015) and calc_mc_css}
     \item{N.Wetmore}{Number of chemicals in Wetmore comparison}
     \item{RMSLE.noMC}{RMSLE between calc_analytic_css and calc_mc_css}
@@ -60,7 +64,7 @@ named list, whose elements depend on the selected checks
   } \cr
 
   in_vivo_stats \tab A list with two metrics:
-  \itemize{
+  \describe{
     \item{RMSLE.InVivoCss}{RMSLE between the predictions of calc_analytic_css and in vivo estimates of Css}
     \item{N.InVivoCss}{Number of chemcials in comparison}
   } \cr                    
@@ -84,9 +88,9 @@ precision of the functions -- usually four significant figures). \cr
 }
 \description{
 The function performs a series of "sanity checks" and predictive performance
-benchmarks so that the impace of changes to the data, models, and 
+benchmarks so that the impact of changes to the data, models, and 
 implementation of the R package can be tested. Plots can be generated showing 
-how the performance of he current version compares with past releases of
+how the performance of the current version compares with past releases of
 httk.
 }
 \details{
@@ -99,38 +103,40 @@ Past performance was retroactively evaluated by manually installing previous
 versions of 
 the package from https://cran.r-project.org/src/contrib/Archive/httk/ and
 then adding the code for \code{benchmark_httk} at the command line
-interface. The results are stored in the data.frame 
-\code{\link{httk.performance}}.
+interface. 
 
-The basic tests are important -- if the output units are wrong, there's not
-much that can be write. Typically errors have been limited to individual
-code unit problems are hopefully less likely.
+The basic tests are important -- if the output units for key functions are wrong, not
+much can be right. Past unit errors were linked to an incorrect unit 
+conversions made within an individual function. Since the usage of 
+\code{\link{convert_units}} became standard throughout httk,
+unit problems are hopefully less likely.
 
-There are two Monte Carlo tests. One compares 'calc_mc_css' 95th percentile
-95th percnetile steady-state plasma concentrations for a 1 mg/kg/day exposure
+There are two Monte Carlo tests. One compares \code{\link{calc_mc_css}} 95th percentile
+steady-state plasma concentrations for a 1 mg/kg/day exposure
 against the Css values calculated by SimCyp and reported in Wetmore et al.
-cragually shifted to better describe non-pharmaceutical commercial chemicals.
+(2012,2015). These have gradually diverged as the assumptions for httk have
+shifted to better describe non-pharmaceutical, commercial chemicals.
 
-The in vivo tests are in some ways the most important, as the establish the
-overall predictivity for 'httk' for Cmax, AUC, and Css. The in vivo 
+The in vivo tests are in some ways the most important, as they establish the
+overall predictivity for httk for Cmax, AUC, and Css. The in vivo 
 statistics are currently based on comparisons to the in vivo
 data compiled by Wambaugh et al. (2018). We see that when the tissue
 partition coefficient calibrations were introduced in v1.6 that the
 overall predicivity for in vivo endpoints was reduced (increased RMSLE).
-If this phenomena continues, as new in vivo evaluation data become available,
+If this phenomena continues as new in vivo evaluation data become available,
 we may need to revisit whether evaluation against experimentally-derived 
 partition coefficients can actually be used for calibration, or just merely
 for establishing confidence intervals.
 
-The partition coefficient tests provide an important check of the 'httk'
+The partition coefficient tests provide an important check of the httk
 implementation of the Schmitt (2008) model for tissue:plasma equilibrium 
 distribution. These predictions heavily rely on accurate description of 
 tissue composition and the ability to predict the ionization state of the
 compounds being modeled.
 }
 \references{
-Wambaugh et al. "Developing Generic Toxicokinetic Models with R Package 
-"httk" for Enhanced Reporting Accuracy and Statistical Evaluation",
+Davidson-Fritz et al. "Transparent and Evaluated Toxicokinetic Models for 
+Bioinformatics and Public Health Risk Assessment",
 in preparation
 }
 \author{
