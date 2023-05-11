@@ -6,12 +6,12 @@
 #' Assess the curent performance of httk relative to historical benchmarks
 #' 
 #' The function performs a series of "sanity checks" and predictive performance
-#' benchmarks so that the impace of changes to the data, models, and 
+#' benchmarks so that the impact of changes to the data, models, and 
 #' implementation of the R package can be tested. Plots can be generated showing 
-#' how the performance of he current version compares with past releases of
+#' how the performance of the current version compares with past releases of
 #' httk.
 #' 
-#' Historically some refinements made to one aspect of httk have unitentiionally
+#' Historically some refinements made to one aspect of httk have unintentionally
 #' impacted other aspects. Most notably errors have ocasionally been introduced 
 #' with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
 #' reduce the chance of these errors occuring in the future.
@@ -24,15 +24,16 @@
 #' \code{\link{httk.performance}}.
 #'
 #' The basic tests are important -- if the output units are wrong, there's not
-#' much that can be write. Typically errors have been limited to individual
-#" functions. Since the useage of 'convert_units' became standard throughout the
-#' code unit problems are hopefully less likely.
+#' much that can be right Typically errors have been limited to individual
+#' functions. Since the implementation of 'convert_units' and it's standard usage
+#' throughout function within 'httk', unit conversion errors are hopefully less
+#' likely in future versions.
 #'
 #' There are two Monte Carlo tests. One compares 'calc_mc_css' 95th percentile
-#' 95th percnetile steady-state plasma concentrations for a 1 mg/kg/day exposure
+#' steady-state plasma concentrations for a 1 mg/kg/day exposure
 #' against the Css values calculated by SimCyp and reported in Wetmore et al.
 #" (2012,2015). These have gradually diverged as the assumptions for 'httk' have
-#' cragually shifted to better describe non-pharmaceutical commercial chemicals.
+#' gradually shifted to better describe non-pharmaceutical commercial chemicals.
 #'
 #' The in vivo tests are in some ways the most important, as the establish the
 #' overall predictivity for 'httk' for Cmax, AUC, and Css. The in vivo 
@@ -53,10 +54,10 @@
 #'
 #' @param basic.check Whether to run the basic checks, including units uM and 
 #' mg/L units for 'calc_analytic_css', 'calc_mc_css', and 'solve_pbtk' as well as 
-#' the number of chemicals with sufficient data to run the steady_stat emodel 
+#' the number of chemicals with sufficient data to run the steady_state model 
 #' (defaults to TRUE)
 #'
-#' @param calc_mc_css.check Whetjer to check the Monte Carlo sample. A 
+#' @param calc_mc_css.check Whether to check the Monte Carlo sample. A 
 #' comparison of the output of 'calc_mc_css' to the SimCyp outputs reported in 
 #' the Wetmore et al. (2012,2015) papers is performed. A comparison between the
 #' ouput of 'calc_analytic_css' (no Monte Carlo) to the median of the output of
@@ -106,15 +107,13 @@
 #' calculated. If the units are correct the ratio should be 1 (within the 
 #' precision of the functions -- usually four significant figures). \cr
 #'
-#'   units.plot \tab A ggplot2 figure showing units tests of various functions. 
-#' Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-#' calculated. If the units are correct the ratio should be 1 (within the 
-#' precision of the functions -- usually four significant figures). \cr
+#'   rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+#' Output generated is the root mean square log10 error for parameters estimated
+#' by the package. \cr
 #'
-#'   units.plot \tab A ggplot2 figure showing units tests of various functions. 
-#' Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-#' calculated. If the units are correct the ratio should be 1 (within the 
-#' precision of the functions -- usually four significant figures). \cr
+#'   count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
+#' Output generated is a count of the chemicals available for the each of the
+#' parameters estimated by and used for benchmarking the package. \cr
 #'
 #' }
 #' 
@@ -290,9 +289,11 @@ benchmark_httk <- function(
   
   if (in_vivo_stats.check)
   {
+    # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
     FitData <- subset(chem.invivo.PK.aggregate.data,
                       Compound!="Bensulide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
+    # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
     FitData <- subset(FitData,Compound!="Propyzamide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
     if ("parameterize.args" %in% formalArgs(calc_analytic_css))
@@ -337,9 +338,11 @@ benchmark_httk <- function(
                               as.numeric(FitData$Css))^2,
                          na.rm=TRUE)^(1/2),4) 
     
+    # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
     FitData2 <- subset(chem.invivo.PK.summary.data,
                       Compound!="Bensulide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
+    # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>
     FitData2 <- subset(FitData2,Compound!="Propyzamide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
     # v1.1 did not have an argument "dose" for calc_stats:
@@ -419,6 +422,7 @@ benchmark_httk <- function(
   if (tissuepc.check)
   {
     pc.table <- NULL
+    # Subset 'pc.data' - exclude chemicals for <justification for exclusion>
     pc.data <- subset(pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
         "Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & 
         tolower(Species) == 'rat' & !CAS %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6',
