@@ -11,7 +11,7 @@
 #' how the performance of the current version compares with past releases of
 #' httk.
 #' 
-#' Historically some refinements made to one aspect of httk have unitentiionally
+#' Historically some refinements made to one aspect of httk have unintentionally
 #' impacted other aspects. Most notably errors have ocasionally been introduced 
 #' with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
 #' reduce the chance of these errors occuring in the future.
@@ -110,15 +110,13 @@
 #' calculated. If the units are correct the ratio should be 1 (within the 
 #' precision of the functions -- usually four significant figures). \cr
 #'
-#'   units.plot \tab A ggplot2 figure showing units tests of various functions. 
-#' Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-#' calculated. If the units are correct the ratio should be 1 (within the 
-#' precision of the functions -- usually four significant figures). \cr
+#'   rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+#' Output generated is the root mean square log10 error for parameters estimated
+#' by the package. \cr
 #'
-#'   units.plot \tab A ggplot2 figure showing units tests of various functions. 
-#' Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-#' calculated. If the units are correct the ratio should be 1 (within the 
-#' precision of the functions -- usually four significant figures). \cr
+#'   count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
+#' Output generated is a count of the chemicals available for the each of the
+#' parameters estimated by and used for benchmarking the package. \cr
 #'
 #' }
 #' 
@@ -294,9 +292,11 @@ benchmark_httk <- function(
   
   if (in_vivo_stats.check)
   {
+    # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
     FitData <- subset(chem.invivo.PK.aggregate.data,
                       Compound!="Bensulide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
+    # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
     FitData <- subset(FitData,Compound!="Propyzamide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
     if ("parameterize.args" %in% formalArgs(calc_analytic_css))
@@ -341,9 +341,11 @@ benchmark_httk <- function(
                               as.numeric(FitData$Css))^2,
                          na.rm=TRUE)^(1/2),4) 
     
+    # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
     FitData2 <- subset(chem.invivo.PK.summary.data,
                       Compound!="Bensulide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
+    # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>
     FitData2 <- subset(FitData2,Compound!="Propyzamide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
     # v1.1 did not have an argument "dose" for calc_stats:
@@ -423,6 +425,7 @@ benchmark_httk <- function(
   if (tissuepc.check)
   {
     pc.table <- NULL
+    # Subset 'pc.data' - exclude chemicals for <justification for exclusion>
     pc.data <- subset(pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
         "Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & 
         tolower(Species) == 'rat' & !CAS %in% c('10457-90-6','5786-21-0','17617-23-1','69-23-8','2898-12-6',
