@@ -252,8 +252,67 @@ summary(fit.henry.best)
 $f_{up}$ decreases with the Henry's law constant for all chemicals, 
 but there is no statistically significant difference for PFAS.
 
+By default ggplot2 uses dashes rather than true minus signs in axis labels, this
+code (from https://github.com/r-lib/scales/issues/249) corrects that:
+```{r true_minus_signs, eval=TRUE}
+library(scales)
+library(rlang)
+
+# Copy some internals for reproducibility
+precision <- scales:::precision
+round_any <- scales:::round_any
+
+# Signs is a length 3 vector with symbols for negative, positive and zero
+# signed numbers, in that order.
+number <- function(x, accuracy = NULL, scale = 1, prefix = "",
+                   suffix = "", big.mark = " ", decimal.mark = ".",
+                   trim = TRUE, signs = c("\u2212","",""), ...) {
+  if (length(x) == 0) return(character())
+  accuracy <- accuracy %||% precision(x * scale)
+  x <- round_any(x, accuracy / scale)
+  nsmall <- -floor(log10(accuracy))
+  nsmall <- min(max(nsmall, 0), 20)
+  
+  # Determine sign when x is still numeric to index with later
+  x_sign <- sign(scale * x)
+  x_sign[is.na(x_sign)] <- 0 # Protect against NA-indexing
+  if (length(signs) < 3) {
+    signs <- c(signs, rep("", 3 - length(signs)))
+  }
+  
+  ret <- format(
+    scale * x,
+    big.mark = big.mark,
+    decimal.mark = decimal.mark,
+    trim = trim,
+    nsmall = nsmall,
+    scientific = FALSE,
+    ...
+  )
+  # Substitute existing hyphens
+  ret <- gsub("-", signs[1], ret)
+  # Prefix zero and plus signs
+  ret[x_sign == 1] <- paste0(signs[2], ret[x_sign == 1])
+  ret[x_sign == 0] <- paste0(signs[3], ret[x_sign == 0])
+  
+  ret <- paste0(prefix, ret, suffix)
+  ret[is.infinite(x)] <- as.character(x[is.infinite(x)])
+  
+  # restore NAs from input vector
+  ret[is.na(x)] <- NA
+  names(ret) <- names(x)
+  
+  ret
+}
+```
+
+Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
+```{r fig_properties, eval = TRUE}
+FONT.SIZE <- 8
+POINT.SIZE <- 1
+```
+
 ```{r fig_logP, eval = TRUE}
-FONT.SIZE <- 9
 kreutz$PFAS<-0
 kreutz$PFAS <- factor(kreutz$PFAS,levels=c(0,1))
 kreutz$logPfit1 <- predict(fit.logp.best,kreutz)
@@ -264,12 +323,12 @@ fig.logp  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logP,
     y=Human.Funbound.plasma),
-    size=3,
+    size=POINT.SIZE,
     color="Black") +
   geom_line(aes(x=logP,y=logPfit1),color="black") + 
   geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-   #ylab("Fraction unbound in plasma") + 
-  ylab("") +
+  ylab("Fraction unbound in plasma") + 
+  #ylab("") +
   xlab(bquote("Log "~P[ow])) +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
@@ -287,11 +346,12 @@ fig.logd  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logD74,
     y=Human.Funbound.plasma),
-    size=3,
+    size=POINT.SIZE,
     color="Black") +
   geom_line(aes(x=logD74,y=logDfit1),color="black") + 
   geom_line(aes(x=logD74,y=logDfit2),color="blue",linetype = "dashed") +
-  ylab("Fraction unbound in plasma") + 
+#  ylab("Fraction unbound in plasma") +
+  ylab("") +
   xlab("Log D, pH 7.4") +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
@@ -307,7 +367,7 @@ fig.mw <- ggplot(data=kreutz) +
   geom_point(aes(
     x=MW,
     y=Human.Funbound.plasma),
-    size=3,
+    size=POINT.SIZE,
     color="Black") +
   geom_line(aes(x=MW,y=MWfit),color="black") + 
    #ylab("Fraction unbound in plasma") + 
@@ -331,13 +391,14 @@ fig.wsol  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logWSol,
     y=Human.Funbound.plasma),
-    size=3,
+    size=POINT.SIZE,
     color="Black") +
   geom_line(aes(x=logWSol,y=logWSolfit1),color="black") + 
   geom_line(aes(x=logWSol,y=logWSolfit2),color="blue",linetype = "dashed") + 
   #ylab("Fraction unbound in plasma") + 
   ylab("") +
   xlab("Log Water Solubility (mg/L)") +
+  scale_x_continuous(labels = ~number(.x)) +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -353,14 +414,15 @@ fig.henry  <- ggplot(data=kreutz) +
   geom_point(aes(
     x=logHenry,
     y=Human.Funbound.plasma),
-    size=3,
+    size=POINT.SIZE,
     color="Black") +
   geom_line(aes(x=logHenry,y=Henryfit),color="black") + 
   #ylab("Fraction unbound in plasma") + 
   ylab("") +
   xlab(bquote("Henry's Law Constant (Log atmospheres"%*%m^3/~"mole)")) +
+  scale_x_continuous(labels = ~number(.x)) +
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
+  theme( text  = element_text(size=FONT.SIZE-3))
 
 print(fig.henry)
 ```
@@ -386,14 +448,25 @@ fig.legend <- ggplot(data=kreutz) +
         axis.ticks = element_blank(),
     panel.border = element_blank(),
         panel.background = element_blank())+
-   theme(legend.key.height= unit(1.5, 'cm'),
-        legend.key.width= unit(6, 'cm'))+
+   theme(legend.key.height= unit(0.4*1.5, 'cm'),
+        legend.key.width= unit(0.4*6, 'cm'))+
   theme( text  = element_text(size=FONT.SIZE)) 
 
 print(fig.legend)
 ```
 ```{r fig_combined, eval = TRUE}
 multiplot(fig.mw,fig.logp,fig.logd,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
+```
+```{r fig_combined_highresfile, eval = TRUE}
+png(height=1000,width=1200,res=300,file="Fig3TrendAnalysis.png",pointsize=10)
+multiplot(fig.mw,
+          fig.logp,fig.logd,
+          fig.wsol,
+          fig.henry,
+          fig.legend,
+          cols=2,
+          widths=c(1.75,1.75))
+dev.off()
 ```
 
 ```{r evaluate_predictors, eval=TRUE}
@@ -410,4 +483,5 @@ summary(lm(Obs.Med ~ ADMet,data=preds))
 summary(lm(Obs.Med ~ OPERA29,data=preds))
 summary(lm(Obs.Med ~ OPERA29,data=preds))
 summary(lm(Obs.Med ~ Dawson26,data=preds))
-summary(lm(Obs.Med ~ Dawson29,data=preds))```
+summary(lm(Obs.Med ~ Dawson29,data=preds))
+```
