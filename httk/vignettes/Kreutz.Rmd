@@ -422,7 +422,7 @@ fig.henry  <- ggplot(data=kreutz) +
   xlab(bquote("Henry's Law Constant (Log atmospheres"%*%m^3/~"mole)")) +
   scale_x_continuous(labels = ~number(.x)) +
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE-3))
+  theme( text  = element_text(size=FONT.SIZE-2))
 
 print(fig.henry)
 ```
@@ -448,8 +448,8 @@ fig.legend <- ggplot(data=kreutz) +
         axis.ticks = element_blank(),
     panel.border = element_blank(),
         panel.background = element_blank())+
-   theme(legend.key.height= unit(0.4*1.5, 'cm'),
-        legend.key.width= unit(0.4*6, 'cm'))+
+   theme(legend.key.height= unit(0.8*1.5, 'cm'),
+        legend.key.width= unit(0.8*6, 'cm'))+
   theme( text  = element_text(size=FONT.SIZE)) 
 
 print(fig.legend)
@@ -458,7 +458,7 @@ print(fig.legend)
 multiplot(fig.mw,fig.logp,fig.logd,fig.wsol,fig.henry,fig.legend,cols=2,widths=c(1.75,1.75))
 ```
 ```{r fig_combined_highresfile, eval = TRUE}
-png(height=1000,width=1200,res=300,file="Fig3TrendAnalysis.png",pointsize=10)
+tiff(height=5*300,width=6*300,res=300,file="Fig3TrendAnalysis.tiff",pointsize=10)
 multiplot(fig.mw,
           fig.logp,fig.logd,
           fig.wsol,
