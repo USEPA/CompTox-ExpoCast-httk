@@ -77,6 +77,8 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 ```{r load_packages, eval = execute.vignette}
 library("httk")
 library("data.table")
+# Make sure we're using a clean version of the httk chemical library:
+reset_httk()
 ```
 
 Because we'll be writing some files (and then reading them in other vignettes),

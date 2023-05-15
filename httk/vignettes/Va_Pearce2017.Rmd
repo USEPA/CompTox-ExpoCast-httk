@@ -98,6 +98,8 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 ```{r load_packages, eval = execute.vignette}
 library(ggplot2)
 library(httk)
+# Make sure we're using a clean version of the httk chemical library:
+reset_httk()
 ```
 
 Check what version of **httk** is installed:

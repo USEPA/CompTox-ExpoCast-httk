@@ -87,7 +87,8 @@ convert_units <- function(input.units = NULL,
                           chem.name = NULL,
                           dtxsid = NULL,
                           parameters = NULL,
-                          temp = 25, 
+                          temp = 25,
+                          liquid.density = 1.0, # g/mL
                           state="liquid")
 {
 # The volume of an ideal gas at this temperature (L/mol)
@@ -194,28 +195,43 @@ compound data.table/data.frame or list.')
   # So MW/24.45 has units of g/L
   # density of water is 1 g/mL = 1000 g/L = 10^6 mg/L
   # density of air is 1.225 kg/m^3 = 0.001225 kg/L = 1.225 g/L
+# weight per volume:
   conc_units_conversion_frame["mg/l","um"] <- 10^3/MW 
   conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*volidealgas  
   conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*volidealgas
   conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*volidealgas
-  conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
   conc_units_conversion_frame["ug/ml","um"] <- 10^3/MW
+  conc_units_conversion_frame["mcg/ml","ppmv"] <- 10^3/MW*volidealgas
+  conc_units_conversion_frame["mcg/ml","mg/l"] <- 1
+  conc_units_conversion_frame["mcg/ml","um"] <- 10^3/MW
   conc_units_conversion_frame["ug/l","mg/l"] <- 1/10^3
   conc_units_conversion_frame["ug/l","um"] <- 1/MW 
-  conc_units_conversion_frame["umol/l","um"] <- 1
-  conc_units_conversion_frame["umol/l","ppmv"] <- 24.45
-  conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
-  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*volidealgas
-  conc_units_conversion_frame["nm","um"] <- 1/10^3
-  conc_units_conversion_frame["nmol/l","nm"] <- 1
   conc_units_conversion_frame["ug/dl","mg/l"] <- 1/10^2
   conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*10^3/MW
   conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*volidealgas
-  conc_units_conversion_frame["ug/g","um"] <- 10^3/MW 
-  conc_units_conversion_frame["ug/g","ppmw"] <- 1
-  conc_units_conversion_frame["ppmw","um"] <- 10^3/MW 
-  # Weight conversiond depends on state of matter:
+  conc_units_conversion_frame["ng/l","mg/l"] <- 1/10^6
+  conc_units_conversion_frame["ng/ml","mg/l"] <- 1/10^3
+# moles per volume:
+  conc_units_conversion_frame["um","ppmv"] <- 24.45 # uL gas / L air -> mol gas / L air
+  conc_units_conversion_frame["umol/l","um"] <- 1
+  conc_units_conversion_frame["umol/l","mg/l"] <- MW/10^3
+  conc_units_conversion_frame["umol/l","ppmv"] <- 24.45
+  conc_units_conversion_frame["nmol/l","um"] <- 1/10^3
+  conc_units_conversion_frame["nmol/l","mg/l"] <- MW/10^6
+  conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*volidealgas
+  conc_units_conversion_frame["nm","um"] <- 1/10^3
+  conc_units_conversion_frame["nmol/l","nm"] <- 1
+  # Weight conversion depends on state of matter:
+  if (state == "liquid")
+  {
+    # Assume liquid is water with density of 1 g / mL:
+    conc_units_conversion_frame["ug/g","um"] <- 10^3/MW*liquid.density
+    conc_units_conversion_frame["mg/kg","mg/l"] <- liquid.density 
+    conc_units_conversion_frame["ug/g","mg/l"] <- liquid.density 
+    conc_units_conversion_frame["ug/g","ppmw"] <- liquid.density
+    conc_units_conversion_frame["ppmw","um"] <- 10^3/MW*liquid.density     
+  }
   if (state == "gas")
   {
   # ug/g -> uL/L for air not water    CHECK    
