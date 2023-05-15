@@ -198,6 +198,7 @@ compound data.table/data.frame or list.')
 # weight per volume:
   conc_units_conversion_frame["mg/l","um"] <- 10^3/MW 
   conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*volidealgas  
+  conc_units_conversion_frame["mg/l","ppbv"] <- 10^6/MW*volidealgas  
   conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*volidealgas
   conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*volidealgas
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1

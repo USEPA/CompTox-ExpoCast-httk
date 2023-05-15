@@ -1,8 +1,19 @@
 ---
 title: "News for R package httk"
-date: "February 20, 2023"
+date: "May 15, 2023"
 output: html_document
 ---                                                 
+
+# version feature/dermal
+This version accompanies the submission of the Meade et al. manuscript 
+"Title here"
+
+## New Features
+* Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
+* Added new vignette on "Vignette Name"
+
+## Enhancements
+* Added additional unit conversions to 'convert_units'
 
 # version 2.2.2 (February 23, 2023)
 ## Bug Fixes
