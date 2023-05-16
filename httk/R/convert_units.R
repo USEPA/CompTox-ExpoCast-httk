@@ -225,31 +225,33 @@ compound data.table/data.frame or list.')
   {
     # Liquid solvent has density liquid.density g / mL:
 # density and volume per volume:
-    conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/liquid.density  
-    conc_units_conversion_frame["mg/l","ppbv"] <- 10^6/liquid.density  
-    conc_units_conversion_frame["ug/l","ppmv"] <- 1/liquid.density
-    conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/liquid.density
-# molar and weight per weight:
+    conc_units_conversion_frame["mg/l","ppmv"] <- 1/liquid.density  
+    conc_units_conversion_frame["mg/l","ppbv"] <- 10^3/liquid.density  
+    conc_units_conversion_frame["ug/l","ppmv"] <- 1/10^3/liquid.density
+    conc_units_conversion_frame["ug/ml","ppmv"] <- 1/liquid.density
+# density and volume per volume:
+    conc_units_conversion_frame["mg/l","ppmv"] <- 1/liquid.density  
+    conc_units_conversion_frame["um","ppmv"] <- MW/10^3/liquid.density  
+    # molar and weight per weight:
     conc_units_conversion_frame["ug/g","um"] <- 10^3/MW*liquid.density
     conc_units_conversion_frame["ppmw","um"] <- 10^3/MW*liquid.density     
 # density and weight per weight:
     conc_units_conversion_frame["mg/kg","mg/l"] <- liquid.density 
     conc_units_conversion_frame["ug/g","mg/l"] <- liquid.density 
     conc_units_conversion_frame["ug/g","ppmw"] <- liquid.density
-  }
-  if (state == "gas")
-  {
-  # uL gas / L air -> mol gas / L air
+  } else if (state == "gas") {
+  # Gas has density volidealgas L / mol:
 # density and volume per volume:
     conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*volidealgas  
     conc_units_conversion_frame["mg/l","ppbv"] <- 10^6/MW*volidealgas  
     conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*volidealgas
     conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*volidealgas
-    onc_units_conversion_frame["mcg/ml","ppmv"] <- 10^3/MW*volidealgas
-    conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3/MW*volidealgas
+    conc_units_conversion_frame["mcg/ml","ppmv"] <- 10^3/MW*volidealgas
+    conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3*MW*volidealgas
+    conc_units_conversion_frame["mg/m3","ppmv"] <- 1/MW*volidealgas  
 # molar and volume per volume:
-    conc_units_conversion_frame["um","ppmv"] <- volidealgas 
-    conc_units_conversion_frame["umol/l","ppmv"] <- volidealgas
+    conc_units_conversion_frame["um","ppmv"] <- 1*volidealgas 
+    conc_units_conversion_frame["umol/l","ppmv"] <- 1*volidealgas
     conc_units_conversion_frame["nmol/l","ppmv"] <- 1/10^3*volidealgas
 # molar and weight per weight:
     # ug/g -> uL/L for air not water    CHECK    
@@ -304,7 +306,7 @@ compound data.table/data.frame or list.')
   
   #Now check to see if our compiled information can appropriately support
   #the requested units conversion, and if so, provide the conversion factor.
-  if(any(!c(input.units,output.units)%in%httk_dose_units_list))
+  if (any(!c(input.units,output.units)%in%httk_dose_units_list))
   {
     stop(paste("Requested units",
       paste(unique(c(input.units,output.units))[!(
@@ -316,6 +318,7 @@ concentrations are supported in \'mg/L\', \'uM\', and, in the case of gas models
 where the gas is assumed ideal, \'ppmv\'.")) 
   }
 
+  conversion_factor <- NA
   if(all(c(input.units,output.units)%in%names(amounts_units_conversion_frame))){
     conversion_factor <-
       amounts_units_conversion_frame[input.units, output.units]
@@ -343,15 +346,16 @@ where the gas is assumed ideal, \'ppmv\'."))
     #    'conc2amount_units_conversion_frame') **
     conversion_factor <- 
       conc2amount_units_conversion_frame[input.units,output.units]
-  }else{
-    stop(paste('Conversion from', input.units, 'to', output.units, 'is not
+  }
+  
+  if (is.na(conversion_factor)) stop(
+    paste('Conversion from', input.units, 'to', output.units, 'is not
   supported. Supported extrinsic amount units include mg and
   umol, and supported intrinsic concentration units include
   mg/L, uM, and in the case of gas models where the gas is
   assumed ideal, ppmv. If converting between amount and
   concentration, user must specify volume (vol).'))
-  }
-  
+
   return(set_httk_precision(conversion_factor))
 }
 

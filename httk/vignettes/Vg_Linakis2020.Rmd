@@ -78,7 +78,7 @@ either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- FALSE
+execute.vignette <- TRUE
 ```
 
 ### Load the relevant libraries
@@ -123,6 +123,12 @@ conc_data$ORIGINAL_CONC <- conc_data$CONCENTRATION
 
 
 ```
+```{r correct_doses}
+conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==2,"DOSE"] <-
+  100 # paper gives different doses
+conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==9,"DOSE"] <-
+  300 # paper gives different doses
+```
 
 Sets the units based on the sampling matrix (gas/liquid):
   BL : blood
@@ -149,7 +155,10 @@ for (this.unit in gas.units)
     for (this.chem in these.chems)  
     {
       this.factor <- convert_units(
-        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+        input.units=this.unit, 
+        output.units=target.unit, 
+        dtxsid=this.chem,
+        state="gas")
       print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
       
       # Scale the observation    
@@ -171,7 +180,7 @@ for (this.unit in gas.units)
 ```
 
 Normalize the units for tissue samples to uM:
-```{r normalize_other_units, eval = execute.vignette}
+```{r normalize_liquid_units, eval = execute.vignette}
 tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
 tissue.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% tissue.media)$CONC_U)
@@ -185,7 +194,10 @@ for (this.unit in tissue.units)
     for (this.chem in these.chems)  
     {
       this.factor <- convert_units(
-        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+        input.units=this.unit, 
+        output.units=target.unit, 
+        dtxsid=this.chem,
+        state="liquid")
       print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
       
       # Scale the observation    
@@ -662,27 +674,37 @@ The observations in simobsfull are in both uM and ppmv -- standardize to uM
 these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
 for (this.chem in these.chems)
 {
-  # Use HTTK unit conversion:
-  this.factor <- convert_units(
-    input.units="ppmv", output.units="um", chem.name=this.chem)
+  these.matrices <- unique(subset(simobsfull,unit=="ppmv" & chem==this.chem)$matrix)
+  for (this.matrix in these.matrices)
+    {
+      # Use HTTK unit conversion:
+      this.factor <- convert_units(
+        input.units="ppmv", 
+        output.units="um", 
+        chem.name=this.chem,
+        state=ifelse(this.matrix %in% gas.media,"gas","liquid"))
       
-  # Scale the observation    
-  simobsfull[simobsfull$chem==this.chem & 
-              simobsfull$unit=="ppmv","obsconc"] <-
-    this.factor * simobsfull[
-      simobsfull$chem==this.chem & 
-        simobsfull$unit=="ppmv","obsconc"]
-  # Scale the prediction    
-  simobsfull[simobsfull$chem==this.chem & 
-              simobsfull$unit=="ppmv","simconc"] <-
-    this.factor * simobsfull[
-      simobsfull$chem==this.chem & 
-        simobsfull$unit=="ppmv","simconc"]
-  # Change the reported unit
-  simobsfull[simobsfull$chem==this.chem & 
-              simobsfull$unit=="ppmv","unit"] <-
-    "uM"
-}
+      # Scale the observation    
+      simobsfull[simobsfull$chem==this.chem & 
+                   simobsfull$unit=="ppmv" &
+                   simobsfull$matrix==this.matrix, "obsconc"] <-
+        this.factor * simobsfull[
+          simobsfull$chem==this.chem & 
+            simobsfull$unit=="ppmv" &
+            simobsfull$matrix==this.matrix, "obsconc"]
+      # Scale the prediction    
+      simobsfull[simobsfull$chem==this.chem & 
+                   simobsfull$unit=="ppmv" &
+                   simobsfull$matrix==this.matrix, "simconc"] <-
+        this.factor * simobsfull[
+          simobsfull$chem==this.chem & 
+            simobsfull$unit=="ppmv" &
+            simobsfull$matrix==this.matrix,"simconc"]
+      # Change the reported unit
+      simobsfull[simobsfull$chem==this.chem & 
+                   simobsfull$unit=="ppmv","unit"] <-
+      "uM"
+    }
 ```
 
 
