@@ -93,11 +93,11 @@ model}
 
 \item{this.conc_ser_lip}{Mass concentration of lipids in serum (g/L)}
 
-\item{this.Vdom}{The volume of dissolved organic matter or DOM (mL)}
+\item{this.Vdom}{0 ml, the volume of dissolved organic matter (DOM)}
 
-\item{this.pH}{pH of cell culture}
+\item{this.pH}{7.0, pH of cell culture}
 
-\item{neutral.only}{Should we restrict the partitioning concentration to neutral only?}
+\item{neutral.only}{FALSE, Should we restrict the partitioning concentration to neutral only?}
 }
 \value{
 \tabular{lll}{

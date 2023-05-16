@@ -184,6 +184,9 @@ calc_tkstats <-function(
                       ),
                       ...)
     
+# Skip any transients in first 5 minutes (for intravenous):
+    PKtimecourse <- PKtimecourse[PKtimecourse[,"time"]>5/60/24,]
+    
     # For the 3-compartment model:  
     colnames(PKtimecourse)[colnames(PKtimecourse)=="Csyscomp"]<-"Cplasma"
       
