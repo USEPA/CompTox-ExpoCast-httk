@@ -104,30 +104,36 @@ library(forcats)
 library(smatr)
 ```
 ### Get metabolism and concentration data 
+All concentrations are in uM
 ```{r data, eval = execute.vignette}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
-#conc_data <- subset(concentration_data_Linakis2020, !(SAMPLING_MATRIX %in%
-#                      c("EEB","MEB","EB")))
-#conc_data <- concentration_data_Linakis2020
-#  subset(concentration_data_Linakis2020, !(SOURCE_CVT %in% c(
-#  "11453305")))
+
+# Change "ppm" to "ppmv"
 conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
 conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
-# Not sure what to do with percent:
-conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
-# Rename this column:
-colnames(conc_data)[colnames(conc_data)=="ORIG_CONC_U"] <- "CONC_U"
-conc_data$ORIGINAL_CONC_U <- conc_data$CONC_U
-conc_data$ORIGINAL_CONC <- conc_data$CONCENTRATION
-
-
+# Too many "time = 0" points already have chemical in the body:
+conc_data <- subset(conc_data, TIME>0)
 ```
+
+
+# Handle percent dose data:
+```{r percent_dose, eval=FALSE}
+conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","CONCENTRATION"] <- 
+  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","CONCENTRATIION"] * 
+  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","DOSE"] / 100
+conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","ORIG_CONC_U"] <- 
+  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","DOSE_U"]
+
+conc_data$ORIG_CONC <- conc_data$CONCENTRATION
+conc_data$CONC_U <- conc_data$ORIG_CONC_U
+```
+# paper gives different doses
 ```{r correct_doses}
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==2,"DOSE"] <-
-  100 # paper gives different doses
+  100 
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==9,"DOSE"] <-
-  300 # paper gives different doses
+  300 
 ```
 
 Sets the units based on the sampling matrix (gas/liquid):
@@ -140,82 +146,46 @@ Sets the units based on the sampling matrix (gas/liquid):
   PL: plasma
   +W with work/exercise
     
-Normalize units for gaseous samples to ppmv:
-```{r convert_to_ppmweight, eval = execute.vignette}
+Although solve_gas_pbtk can now output gaseous media concentrations in both
+ppmv and uM, at the time of the Linkais et al. (2020) analysis the model only
+supported uM.
+
+If the cvt data weren't already in uM we could use the following to convert:
+```{r convert_to_um, eval = FALSE}
 gas.media <- c("EB","MEB","EEB","EB (+W)")
-gas.units <- unique(subset(conc_data,
-  SAMPLING_MATRIX %in% gas.media)$CONC_U)
-target.unit <- "ppmv"
-for (this.unit in gas.units)
-  if (this.unit != target.unit)
-  {
-    these.chems <- unique(subset(conc_data,
-      SAMPLING_MATRIX %in% gas.media &
-      CONC_U==this.unit)$DTXSID)    
-    for (this.chem in these.chems)  
-    {
-      this.factor <- convert_units(
-        input.units=this.unit, 
-        output.units=target.unit, 
-        dtxsid=this.chem,
-        state="gas")
-      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
-      
-      # Scale the observation    
-      conc_data[conc_data$DTXSID==this.chem &
-                  conc_data$SAMPLING_MATRIX %in% gas.media &
-                  conc_data$CONC_U==this.unit,"CONCENTRATION"] <-
-        this.factor * conc_data[
-          conc_data$DTXSID==this.chem &
-            conc_data$SAMPLING_MATRIX %in% gas.media &
-            conc_data$CONC_U==this.unit,"CONCENTRATION"]
-      # Change the reported unit
-      conc_data[conc_data$DTXSID==this.chem &
-                  conc_data$SAMPLING_MATRIX %in% gas.media &
-                  conc_data$CONC_U==this.unit,"CONC_U"] <-
-        target.unit
-
-    }
-  }
-```
-
-Normalize the units for tissue samples to uM:
-```{r normalize_liquid_units, eval = execute.vignette}
-tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
-tissue.units <- unique(subset(conc_data,
-  SAMPLING_MATRIX %in% tissue.media)$CONC_U)
 target.unit <- "uM"
-for (this.unit in tissue.units)
-  if (this.unit != target.unit)
-  {
-    these.chems <- unique(subset(conc_data,
-      SAMPLING_MATRIX %in% tissue.media &
-      CONC_U==this.unit)$DTXSID)    
-    for (this.chem in these.chems)  
+for (this.chem in unique(conc_data$DTXSID))
+    for (this.medium in unique(subset(conc_data,
+                                      DTXSID==this.chem)$SAMPLING_MATRIX))
     {
+   #   this.unit <- ifelse(this.medium %in% gas.media,"ppmv","mg/l")
+      this.unit <- "uM"
       this.factor <- convert_units(
         input.units=this.unit, 
         output.units=target.unit, 
         dtxsid=this.chem,
-        state="liquid")
-      print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
+        state=ifelse(this.medium %in% gas.media,"gas","liquid"))
+      print(paste("Use",
+                  this.factor,
+                  "to convert",
+                  this.unit,
+                  "to",
+                  target.unit,
+                  "for",
+                  this.chem))
       
       # Scale the observation    
       conc_data[conc_data$DTXSID==this.chem &
-                  conc_data$SAMPLING_MATRIX %in% tissue.media &
-                  conc_data$CONC_U==this.unit,"CONCENTRATION"] <-
+                conc_data$SAMPLING_MATRIX %in% this.medium, "CONCENTRATION"] <-
         this.factor * conc_data[
           conc_data$DTXSID==this.chem &
-            conc_data$SAMPLING_MATRIX %in% tissue.media &
-            conc_data$CONC_U==this.unit,"CONCENTRATION"]
+          conc_data$SAMPLING_MATRIX %in% this.medium, "CONCENTRATION"]
       # Change the reported unit
       conc_data[conc_data$DTXSID==this.chem &
-                  conc_data$SAMPLING_MATRIX %in% tissue.media &
-                  conc_data$CONC_U==this.unit,"CONC_U"] <-
+                conc_data$SAMPLING_MATRIX %in% this.medium,"CONC_U"] <-
         target.unit
-
     }
-  }
+    
 ```
 
 ## ANALYSIS
@@ -280,9 +250,6 @@ for(i in 1:nrow(unique_scenarios)){
           "Clung", 
           "Cart", 
           "Cplasma", 
-          "Calvppmv", 
-          "Cendexhppmv", 
-          "Cmixexhppmv", 
           "Calv", 
           "Cendexh", 
           "Cmixexh", 
@@ -316,25 +283,12 @@ for(i in 1:nrow(unique_scenarios)){
       solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "EB" |
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
-      unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
-    {
-      if (unique_scenarios[i,"CONC_U"] == "ppmv")
-      {
-        solve$simconc <- solve$Cendexhppmv
-        solve$unit <- "ppmv"
-      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
-        solve$simconc <- solve$Cendexh
-        solve$unit <- "uM"
-      }
+      unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)") {
+      solve$simconc <- solve$Cendexh
+      solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-      if (unique_scenarios[i,"CONC_U"] == "ppmv")
-      {
-        solve$simconc <- solve$Cmixexhppmv
-        solve$unit <- "ppmv"
-      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
-        solve$simconc <- solve$Cmixexh
-        solve$unit <- "uM"
-      }
+      solve$simconc <- solve$Cmixexh
+      solve$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -342,6 +296,8 @@ for(i in 1:nrow(unique_scenarios)){
       solve$simconc <- NA
       solve$unit <- NA
     }
+    # Set a lower measurable value:
+    solve$simconc[solve$simconc<10^-6] <- 0
     simlist[[i]] <- solve
 }
 ```
@@ -450,7 +406,7 @@ for(i in 1:length(simlist))
       "matrix",
       "mw",
       "CONC_U",
-      "ORIGINAL_CONC_U"
+      "ORIG_CONC_U"
       )], simobscomb, by="time", all.x=TRUE))
 
 # Merge with met_data
@@ -669,45 +625,6 @@ simobsfullhum <- subset(simobsfull, simobsfull$species == "Human")
 unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
-The observations in simobsfull are in both uM and ppmv -- standardize to uM
-```{r Standardize Units, eval = execute.vignette}
-these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
-for (this.chem in these.chems)
-{
-  these.matrices <- unique(subset(simobsfull,unit=="ppmv" & chem==this.chem)$matrix)
-  for (this.matrix in these.matrices)
-    {
-      # Use HTTK unit conversion:
-      this.factor <- convert_units(
-        input.units="ppmv", 
-        output.units="um", 
-        chem.name=this.chem,
-        state=ifelse(this.matrix %in% gas.media,"gas","liquid"))
-      
-      # Scale the observation    
-      simobsfull[simobsfull$chem==this.chem & 
-                   simobsfull$unit=="ppmv" &
-                   simobsfull$matrix==this.matrix, "obsconc"] <-
-        this.factor * simobsfull[
-          simobsfull$chem==this.chem & 
-            simobsfull$unit=="ppmv" &
-            simobsfull$matrix==this.matrix, "obsconc"]
-      # Scale the prediction    
-      simobsfull[simobsfull$chem==this.chem & 
-                   simobsfull$unit=="ppmv" &
-                   simobsfull$matrix==this.matrix, "simconc"] <-
-        this.factor * simobsfull[
-          simobsfull$chem==this.chem & 
-            simobsfull$unit=="ppmv" &
-            simobsfull$matrix==this.matrix,"simconc"]
-      # Change the reported unit
-      simobsfull[simobsfull$chem==this.chem & 
-                   simobsfull$unit=="ppmv","unit"] <-
-      "uM"
-    }
-```
-
-
 ### Regressions
 Other analytics including linear regression on overall concentration vs. time observed vs. predicted
 ```{r regression, eval = execute.vignette}
@@ -896,6 +813,7 @@ chemunderpred <- subset(simobsfull,
   simobsfull$simconc > 0)
 table(chemunderpred$chemclass) / table(simobsfull$chemclass)*100
 ```
+
 ## TABLE AND PLOT GENERATION
 
 ### Figure 2: overall observed vs. predicted plot
