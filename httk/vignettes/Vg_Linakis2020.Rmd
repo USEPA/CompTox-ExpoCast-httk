@@ -104,7 +104,7 @@ library(forcats)
 library(smatr)
 ```
 ### Get metabolism and concentration data 
-All concentrations are in uM
+
 ```{r data, eval = execute.vignette}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
@@ -112,22 +112,14 @@ conc_data <- concentration_data_Linakis2020
 # Change "ppm" to "ppmv"
 conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
 conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
+
 # Too many "time = 0" points already have chemical in the body:
 conc_data <- subset(conc_data, TIME>0)
+
+# All concentrations are in uM
+conc_data[,"CONC_U"] <- "uM"
 ```
 
-
-# Handle percent dose data:
-```{r percent_dose, eval=FALSE}
-conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","CONCENTRATION"] <- 
-  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","CONCENTRATIION"] * 
-  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","DOSE"] / 100
-conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","ORIG_CONC_U"] <- 
-  conc_data[toupper(conc_data$ORIG_CONC_U) %in% "PERCENT","DOSE_U"]
-
-conc_data$ORIG_CONC <- conc_data$CONCENTRATION
-conc_data$CONC_U <- conc_data$ORIG_CONC_U
-```
 # paper gives different doses
 ```{r correct_doses}
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==2,"DOSE"] <-
