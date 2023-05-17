@@ -1,5 +1,4 @@
 "Chemical","DTXSID","CASRN","CAMEO Chemical Class","Molecular Weight (g/mol)","Log P","Solubility (mol/L)","Blood Air Partition Coefficient","Available Species Data","Vmax (pmol/min/10^6 cells)","KM (uM)","Metabolism Data Source","Concentration-Time Data Source"
-"1,1-Dichloroethylene","DTXSID8021438","75-35-4",6,96.94,2.15876,0.0407054,0,2,117.267116245389,1.0315659170621,9,"6845373"
 "1,1,1-Trichloroethane","DTXSID0021381","71-55-6",6,133.4,2.43114,0.0139482,0,1,0.880164906937427,43.1034482758621,9,"422270"
 "1,1,1,2-Tetrafluoroethane","DTXSID1021324","811-97-2",5,102.032,0.827267,0.00122953,0,1,0.0840072582271108,4.90042339658146,7,"17365028"
 "1,1,2-Trichloro-1,2,2-trifluoroethane","DTXSID6021377","76-13-1",5,187.37,2.96667,0.001011,0,1,0.228730014714964,5.3370336766825,7,"17365028"
