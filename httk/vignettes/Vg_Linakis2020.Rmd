@@ -120,6 +120,11 @@ conc_data <- subset(conc_data, TIME>0)
 conc_data[,"CONC_U"] <- "uM"
 ```
 
+# Error in CvT (identified by Xiaoqing Chang)?
+```{r baddata, eval=execute.vignette}
+conc_data <- subset(conc_data, SOURCE_CVT != "6845373")
+```
+
 # paper gives different doses
 ```{r correct_doses}
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==2,"DOSE"] <-
