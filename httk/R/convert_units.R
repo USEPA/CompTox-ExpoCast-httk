@@ -205,6 +205,9 @@ compound data.table/data.frame or list.')
   conc_units_conversion_frame["mcg/ml","um"] <- 10^3/MW
   conc_units_conversion_frame["ug/l","um"] <- 1/MW 
   conc_units_conversion_frame["ug/dl","um"] <- 1/10^2*10^3/MW
+  conc_units_conversion_frame["mg/l","m"] <- 1/MW/10^3 
+  conc_units_conversion_frame["mg/l","mm"] <- 1/MW 
+  conc_units_conversion_frame["mg/l","nm"] <- 10^6/MW 
 # density to density:
   conc_units_conversion_frame["ug/ml","mg/l"] <- 1
   conc_units_conversion_frame["mcg/ml","mg/l"] <- 1
@@ -227,12 +230,19 @@ compound data.table/data.frame or list.')
 # density and volume per volume:
     conc_units_conversion_frame["mg/l","ppmv"] <- 1/liquid.density  
     conc_units_conversion_frame["mg/l","ppbv"] <- 10^3/liquid.density  
+    conc_units_conversion_frame["mg/m3","ppmv"] <- 1/liquid.density/10^3  
     conc_units_conversion_frame["ug/l","ppmv"] <- 1/10^3/liquid.density
     conc_units_conversion_frame["ug/ml","ppmv"] <- 1/liquid.density
-# density and volume per volume:
-    conc_units_conversion_frame["mg/l","ppmv"] <- 1/liquid.density  
-    conc_units_conversion_frame["um","ppmv"] <- MW/10^3/liquid.density  
-    # molar and weight per weight:
+# molar and volume per volume:
+    conc_units_conversion_frame["um","ppmv"] <- MW*10^-3/liquid.density  
+    conc_units_conversion_frame["um","ppbv"] <- MW*10^0/liquid.density  
+    conc_units_conversion_frame["nm","ppmv"] <- MW*10^-6/liquid.density  
+    conc_units_conversion_frame["nm","ppbv"] <- MW*10^-3/liquid.density  
+    conc_units_conversion_frame["m","ppmv"] <- MW*10^3/liquid.density  
+    conc_units_conversion_frame["m","ppbv"] <- MW*10^6/liquid.density  
+    conc_units_conversion_frame["mm","ppmv"] <- MW*10^0/liquid.density  
+    conc_units_conversion_frame["mm","ppbv"] <- MW*10^3/liquid.density  
+# molar and weight per weight:
     conc_units_conversion_frame["ug/g","um"] <- 10^3/MW*liquid.density
     conc_units_conversion_frame["ppmw","um"] <- 10^3/MW*liquid.density     
 # density and weight per weight:
@@ -350,7 +360,7 @@ where the gas is assumed ideal, \'ppmv\'."))
   
   if (is.na(conversion_factor)) stop(
     paste('Conversion from', input.units, 'to', output.units, 'is not
-  supported. Supported extrinsic amount units include mg and
+  supported for', state, '. Supported extrinsic amount units include mg and
   umol, and supported intrinsic concentration units include
   mg/L, uM, and in the case of gas models where the gas is
   assumed ideal, ppmv. If converting between amount and
