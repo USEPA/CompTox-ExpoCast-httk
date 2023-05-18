@@ -1,6 +1,6 @@
 ---
 title: "News for R package httk"
-date: "May 15, 2023"
+date: "May 2023"
 output: html_document
 ---                                                 
 
@@ -15,10 +15,22 @@ This version accompanies the submission of the Meade et al. manuscript
 ## Enhancements
 * Added additional unit conversions to 'convert_units'
 
-# version 2.2.2 (February 23, 2023)
+                                         
+# version 2.2.3 (May, 2023)
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
 * Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
+* Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
+* Corrected ppbv unit conversions in 'convert_units'
+
+## New Features
+* Added new function `benchmark_httk` to compare current function of the package against historical performance
+* Skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
+
+## Enhancements
+* Package now requires **ggplot2** -- will gradually shift all plotting from base R 
+* Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
+* Revised function 'convert_units', expanding the variety of unit conversions available
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
@@ -49,13 +61,13 @@ This version accompanies the submission of the Meade et al. manuscript
 * Added option class.exclude to `get_cheminfo` -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 * Updated various function documentation
 
-# version 2.2.1 (September, 2022)
+# version 2.2.1 (September 24, 2022)
 
 This minor update removes UTF-8 characters from the package and changes the
 calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerability
 to machine precision errors.
 
-# version 2.2.0 (September, 2022)
+# version 2.2.0 (September 8, 2022)
 This version accompanies the submission of the Breen et al. manuscript 
 "Simulating Toxicokinetic Variability to Identify Susceptible and Highly 
 Exposed Populations"
@@ -121,7 +133,7 @@ units unaffected, but this will have impacted equivalent doses calculated with
 being based to `parameterize_schmitt`
 
 
-# version 2.1.0 (March, 2022)
+# version 2.1.0 (March 26, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
 
 ## New Features
@@ -153,7 +165,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Corrected monkey cardiac output (thank you Peter Egeghy)
 * Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
 
-# version 2.0.4 (May 7, 2021)
+# version 2.0.4 (May 10, 2021)
 
 ## Enhancements
 * Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
@@ -172,7 +184,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Fixed problems with Clint values reported from [Wood et al. 2017](<https://doi.org/10.1124/dmd.117.077040>), fraction unbound in hepatocyte assay adjustment was being applied twice (thank you Xiaoqing Chang)
 * Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
 
-# version 2.0.3 (August 16, 2020)
+# version 2.0.3 (September 25, 2020)
 
 ## Enhancements
 * Updated literature chemical-specific human and rat in vitro data:
@@ -196,7 +208,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Output for `calc_tkstats` corrected to display "Rblood2plasma"
 * Minor fix with argument "suppress.messages" in `parameterize_pbtk`
 
-# version 2.0.2 (July 18, 2020)
+# version 2.0.2 (July 19, 2020)
 
 ## Enhancements
 * Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
@@ -205,7 +217,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 ## Bug Fixes 
 * Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. (thank you, Nisha Sipes)
 
-# version 2.0.1 (February 28, 2020)
+# version 2.0.1 (March 2, 2020)
 
 ## New Features
 * New function `set_httk_precision` is now used throughout code to enforce a standard set of significant figures (4) and precision (nothing less than 1e-9).
@@ -218,7 +230,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 ## Bug Fixes 
 * Fixed output of `calc_mc_oral_equivalent` (was sometimes returning all samples unasked, thank you Dan Dawson)
 
-# version 2.0.0 (February 10, 2020)
+# version 2.0.0 (February 17, 2020)
 This version is consistent with consistent with Linakis et al. (submitted) "Development and Evaluation of a High Throughput Inhalation Model for Organic Chemicals"
 
 ## New Features
@@ -252,7 +264,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
 * To decrease package size the load image option of load_sipes2017 was eliminated
  * Added vignette for Figure 6 from [Frank, et al. "Defining toxicological tipping points in neuronal network development."](<https://doi.org/10.1016/j.taap.2018.01.017>)
    
-# version 1.10.1 (Septmeber 9, 2019)
+# version 1.10.1 (Septmeber 10, 2019)
 
 ## Enhancements
 * Changed all file name starting letters to lowercase.
@@ -260,7 +272,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
 ## Bug Fixes 
 * Many bug fixes (thank you David Trudel).
   
-# version 1.10.0 (July 9, 2019)
+# version 1.10.0 (July 12, 2019)
 This version is consistent with the submitted manuscript Wambaugh et al. 
 "Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization". 
 Major enhancements were made to allow propagation of measurement-specific uncertainty
