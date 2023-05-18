@@ -78,7 +78,7 @@ either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ### Load the relevant libraries
@@ -126,7 +126,7 @@ conc_data <- subset(conc_data, SOURCE_CVT != "6845373")
 ```
 
 # paper gives different doses
-```{r correct_doses}
+```{r correct_doses, eval=execute.vignette}
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==2,"DOSE"] <-
   100 
 conc_data[conc_data$SOURCE_CVT=="1439659" & round(conc_data$DOSE)==9,"DOSE"] <-
