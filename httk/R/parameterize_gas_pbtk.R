@@ -209,6 +209,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               VD = 0.15,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
+                              Caco2.options=NULL,
                               ...)
 {
   physiology.data <- physiology.data
