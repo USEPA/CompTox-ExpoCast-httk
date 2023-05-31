@@ -185,6 +185,10 @@
 #'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
 #'
+#' @param Caco2.options Arguments describing how to handle Caco2 absorption data
+#' that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+#' functions
+#'
 #' \code{\link{calc_analytic_css}}.
 #' 
 #' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
@@ -327,13 +331,13 @@ calc_mc_css <- function(chem.cas = NULL,
                         tissue = NULL,
                         concentration = "plasma",
                         output.units = "mg/L",
-                        Caco2.options=list(),
                         invitro.mc.arg.list = NULL,
                         httkpop.generate.arg.list = 
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list = NULL,
                         parameterize.arg.list = NULL,
-                        calc.analytic.css.arg.list = NULL
+                        calc.analytic.css.arg.list = NULL,
+                        Caco2.options=NULL
                         ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -400,11 +404,11 @@ calc_mc_css <- function(chem.cas = NULL,
                               censored.params=censored.params,
                               vary.params=vary.params,
                               return.samples=FALSE,
-                              Caco2.options=Caco2.options,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterize.arg.list=parameterize.arg.list))))
+                              parameterize.arg.list=parameterize.arg.list,
+                              Caco2.options=Caco2.options))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:

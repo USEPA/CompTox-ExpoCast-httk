@@ -1,9 +1,11 @@
-#' Parameterize_SteadyState
+#' Caco2 Oral Fraction Calculators
 #' 
-#' These functions calculate the fraction absorbed (calc_fabs.oral), the fraction
+#' These functions calculate the fraction absorbed (calc_fabs.oral -- 
+#' Darwich et al. (2010)), the fraction
 #' surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
 #' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
 #' parameterization and other functions. Options are set in the list Caco2.options.
+#' Caco2 is related to effective permeability based on Yang et al. (2007)
 #' 
 #' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
@@ -53,11 +55,15 @@
 #'                          Caco2.options = list(Caco2.Pab.default = 2,
 #'                                               Caco2.Fabs = FALSE,
 #'                                               Caco2.Fgut = FALSE))
+#'
+#' @references 
+#' Darwich, A. S., Neuhoff, S., Jamei, M., & Rostami-Hodjegan, A. (2010). Interplay of metabolism and transport in determining oral drug absorption and gut wall metabolism: a simulation assessment using the "Advanced Dissolution, Absorption, Metabolism (ADAM)" model. Curr Drug Metab, 11(9), 716-729. 
+#' Yang, J., Jamei, M., Yeo, K. R., Tucker, G. T., & Rostami-Hodjegan, A. (2007). Prediction of intestinal first-pass drug metabolism. Curr Drug Metab, 8(7), 676-684. 
 #' 
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
 #' @export calc_fgut.oral
-#' 
+#'
 calc_fbio.oral <- function(Params = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -141,7 +147,7 @@ calc_fbio.oral <- function(Params = NULL,
 
 }
 
-# Calculate the fraction absorbed in the gut
+# Calculate the fraction absorbed in the gut (Darwich et al., 2010)
 calc_fabs.oral <- function(Params = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -206,6 +212,7 @@ calc_fabs.oral <- function(Params = NULL,
 }
 
 # Calculate the fraction of chemical surviving first pass metabolism in the gut
+# Is this the Yang et al. (2007) QGut Model?
 calc_fgut.oral <- function(Params = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -264,7 +271,7 @@ calc_fgut.oral <- function(Params = NULL,
     
     if(tolower(species) == "rat"){
       peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
-      peffr <- peffh/3.6 # Fagerhol 1996
+      peffr <- peffh/3.6 # Fagerholm 1996
       permr <- 71/(100^2)*peffr*3.6
       fgut.oral <- 0.65/(0.65+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+.65/permr))
       
