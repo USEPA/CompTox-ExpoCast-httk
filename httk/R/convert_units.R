@@ -267,7 +267,8 @@ compound data.table/data.frame or list.')
     # ug/g -> uL/L for air not water    CHECK    
 # density and weight per weight:
     conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
-# weight per weight and volume per volume:
+    conc_units_conversion_frame["mg/kg","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
+    # weight per weight and volume per volume:
     conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
   } 
   
