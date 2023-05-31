@@ -115,7 +115,7 @@ parameterize_steadystate <- function(
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
-                              Caco2.options=list(),
+                              Caco2.options=NULL,
                               ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for

@@ -191,7 +191,7 @@ parameterize_pbtk <- function(
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
-                       Caco2.options = list()
+                       Caco2.options = NULL
                        )
 {
   #Give a binding to the physiology.data
