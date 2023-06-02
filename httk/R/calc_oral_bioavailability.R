@@ -269,26 +269,44 @@ calc_fgut.oral <- function(Params = NULL,
     clu_hep <- Params$Clint*Params$BW # L/h for 70 kg human
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
     
+    # Yang et al. (2007) equation 9:
+    peff <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+    
     if(tolower(species) == "rat"){
-      peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
-      peffr <- peffh/3.6 # Fagerholm 1996
-      permr <- 71/(100^2)*peffr*3.6
-      fgut.oral <- 0.65/(0.65+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+.65/permr))
-      
+#      peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+      peff <- (peff - 0.03)/3.6 # Fagerholm 1996 -- Yang et al. (2007) equation 14
+#      permr <- 71/(100^2)*peffr*3.6
+      Asmallintestine <- 71/(100^2) # m2 Ref?
+      Qvilli <- 0.65 # L/h Ref?
+
+#      fgut.oral <- Qvilli /
+#        (Qvilli +
+#           Params$Funbound.plasma*clu_gut / 
+#           Params$Rblood2plasma*(1+Qvilli/permr))
+# IF not a rat, we assume human:
     }else{
+      if (tolower(species) != "human") 
+        warning("Human intestinal permeability and micirofilli blood flow used to calculate fraction absorbed by gut")
       
       # Calculate Qvilli based on Qsmallintestine, or use default for ~70 kg human
       if(!is.null(Params$Qsmallintestine)){
         Qvilli <- (18/37.5)*Params$Qsmallintestine
       }else{
+        warning("Because model used does not provide Qsmallintestine, an average value of 18 L/h was used to calculate fraction absorbed by gut")
         Qvilli <- 18 # L/h blood flow to microvilli of intestinal lumen
       }
-      
-      peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
-      permh <- 0.66*peffh*3.6 # L/h, 0.66 m2 area intestine
-      fgut.oral <- Qvilli/(Qvilli+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+Qvilli/permh))
-      
+      # Yang et al. (2007) equation 9:
+ #     peffh <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+      Asmallintestine <- 0.66 # m2 area intestine -- Yang et al. (2007)
+         # L/h, 0.66 m2 area intestine
+#      fgut.oral <- Qvilli/(Qvilli+Params$Funbound.plasma*clu_gut/Params$Rblood2plasma*(1+Qvilli/permh))
     }
+    # permeability clearance (CLperm) Yang et al. (2007) equation 8:
+    CLperm <- peff * Asmallintestine * 1000/10^4/100*3600 # 10^-4 cm / s * m2 * 1000 L / m^3 / 10^4 * 1 m / 100 cm * 3600 s / h = L / h
+    # Qgut "in terms of fundamental parameters" -- Yang et al. (2007) equation 6:
+    Qgut <- Qvilli * CLperm / (Qvilli + CLperm)
+    # Qgut Model -- Yang et al. (2007) equation 5:
+    fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut/Params$Rblood2plasma) 
   }else{
     # if Caco2.options$Fgut.oral == FALSE, return 1
     fgut.oral <- Params$Fgut
