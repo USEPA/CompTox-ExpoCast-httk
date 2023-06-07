@@ -13,9 +13,11 @@ output: html_document
 
 ## New Features
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
-* Skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
+* We now skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
 
 ## Enhancements
+* Added QSPR predictions for Fup and Clint for several thousand chemicals using the [Dawson et al. (2020)](https://doi.org/10.1021/acs.est.0c06117) models -- accessible from 'load_dawson2021'(thank you Alex Fisher and Mike Tornero!)
+* Predicted phys-chem properties for most chemicals using [OPERA v2.9](https://github.com/NIEHS/OPERA)
 * Package now requires **ggplot2** -- will gradually shift all plotting from base R 
 * Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
 * Revised function 'convert_units', expanding the variety of unit conversions available
