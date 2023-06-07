@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Dec2021"
+SCRIPT.VERSION <- "feature/DawsonUpdate"
 
 ## R Packages ##
 library(reshape)
@@ -1623,25 +1623,65 @@ chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
                                         !duplicated(CAS) &
                                         !duplicated(DTXSID))
 
-# Not sure how to get water:air patition coefficient from OPERA 
-# (need to check into Henry's law coefficient)
-# Use EPI Suite for now
-load("chemprops-072115.RData")
-#Dashboard doesn't like this CAS:
-chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
-chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
-chemprop.table$logHenry <- log10(as.numeric(chemprop.table$Henry))
-chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS="CASRN",
-                 logHenry="logHenry",
-                 logP="LogP",
-                 MP="MP",
-                 MW="MolecularWeight",
-                 logPwa="logPwa37p5"),
-  reference="EPISuite")
+#
+#
+# CREATE .SMI FILE FOR OPERA (SO WE CAN GET PKA's)
+#
+#
 
-#Add Strope 2018 new pKa
+write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
+  file="HTTK-AllChems.smi",
+  row.names=F,
+  sep="\t",
+  col.names=F,
+  quote=F)
+cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
+cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
+cat("Enter \"c\" to continue when ready.\n")
+browser()
+
+#
+#
+# WAIT UNTIL TABLE IS GENERATED (COULD BE 5+ HOURS)
+#
+#
+
+#
+#
+#
+# READ IN OPERA PREDICTIONS INFORMATION
+#
+#
+#
+OPERA.VERSION <- "2.9"
+cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
+opera.preds <- read.csv(paste(
+  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
+
+#calculate water:air partition coefficinent (Kwa = Koa / Kow):
+opera.preds$LogPwa_calc <- opera.preds$LogKOA_pred - opera.preds$LogP_pred 
+
+chem.physical_and_invitro.data <- add_chemtable(
+  opera.preds,
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(CAS='MoleculeID',
+    logP="LogP_pred",
+    logHenry = "LogHL_pred",
+    logWSol = "LogWS_pred",
+    logPwa = "LogPwa_calc",
+    MP = "MP_pred",
+    pKa_Donor="pKa_a_pred",
+    pKa_Accept="pKa_b_pred"
+    ),
+  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  overwrite=T)
+
+
+#
+#
+#Add Strope 2018 new pKa where we don't have them from OPERA
+#
+#
 load('Strope2018.RData')
 cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
 cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
