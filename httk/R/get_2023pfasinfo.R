@@ -102,7 +102,7 @@ get_2023pfasinfo <- function(info="CAS",
                          model='3compartmentss',
                          default.to.human=FALSE,
                          median.only=FALSE,
-                         fup.ci.cutoff=TRUE,
+                         fup.ci.cutoff=FALSE,
                          clint.pvalue.threshold=0.05,
                          suppress.messages=FALSE,
                          target.env=.GlobalEnv)
@@ -129,6 +129,7 @@ get_2023pfasinfo <- function(info="CAS",
                          median.only=median.only,
                          fup.ci.cutoff=fup.ci.cutoff,
                          clint.pvalue.threshold=clint.pvalue.threshold,
+                         class.exclude=FALSE,
                          suppress.messages=suppress.messages)
 
 # Return the full data before exiting the function
