@@ -21,6 +21,7 @@ output: html_document
 * Package now requires **ggplot2** -- will gradually shift all plotting from base R 
 * Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
 * Revised function 'convert_units', expanding the variety of unit conversions available
+* Model "1compartment" allows volatile chemicals again since clearance is amorphous for that model (likely understimated without exhalation)
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
