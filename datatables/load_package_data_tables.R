@@ -1431,7 +1431,7 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBBayes,
     CAS="CASRN",
     Funbound.plasma="Human.Funbound.plasma"
     ),
-  reference="Smeltz 2022 Bayes",
+  reference="Smeltz 2023 Bayes",
   species="Human",
   overwrite=TRUE)
 
@@ -1440,10 +1440,10 @@ Smeltz2023ClintBayes <- merge(Smeltz2023ClintBayes ,
                             PFAS[,c("DTXSID","CASRN")],
                             all.x=TRUE)
 # Add reference chemical phenacetin:
-Smeltz2023PPBBayes[Smeltz2023PPBBayes$DTXSID=="DTXSID1021116",
+Smeltz2023ClintBayes[Smeltz2023ClintBayes$DTXSID=="DTXSID1021116",
                    "CASRN"] <-"62-44-2 "
 # Add reference chemical propranolol:
-Smeltz2023PPBBayes[Smeltz2023PPBBayes$DTXSID=="DTXSID6023525",
+Smeltz2023ClintBayes[Smeltz2023ClintBayes$DTXSID=="DTXSID6023525",
                    "CASRN"] <-"525-66-6"
                             
 Smeltz2023ClintBayes$Human.Clint <- paste(
@@ -1463,7 +1463,7 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2023ClintBayes,
     Clint="Human.Clint",
     Clint.pValue="Clint.pValue"
     ),
-  reference="Smeltz 2022 Bayes",
+  reference="Smeltz 2023 Bayes",
   species="Human",
   overwrite=TRUE)
 
@@ -1481,7 +1481,7 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBManual,
      CAS="CASRN",
     Funbound.plasma="Mean fu"
     ),
-  reference="Smeltz 2022 Manual",
+  reference="Smeltz 2023 Manual",
   species="Human",
   overwrite=FALSE)
   
@@ -1502,9 +1502,9 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2023ClintManual,
     CLint="Clint",
     Clint.pValue="pValue"
     ),
-  reference="Smeltz 2022 Manual",
+  reference="Smeltz 2023 Manual",
   species="Human",
-  overwrite=TRUE)
+  overwrite=FALSE)
 #
 #
 #
@@ -1604,20 +1604,49 @@ chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintManual,
     CLint="Clint",
     Clint.pValue="P value"
     ),
-  reference="Kreutz 2022 Manual",
+  reference="Kreutz 2023 Manual",
   species="Human",
-  overwrite=TRUE)
-  
-Crizer2022ClintManual <- as.data.frame(
-  read_excel("Crizer2022/Crizer-2022-PFAS-Clint.xlsx",sheet=1))
-colnames(Crizer2022ClintManual)[8] <- "Clint"
-Crizer2022ClintManual <- subset(Crizer2022ClintManual,
-  !is.na(Crizer2022ClintManual$Clint))
-# We don't want bad Clint's:
-Crizer2022ClintManual[Crizer2022ClintManual$Clint < 0, "pValue"] <- 1
-length(unique(Crizer2022ClintManual$DTXSID))
+  overwrite=FALSE)
 
-chem.physical_and_invitro.data <- add_chemtable(Crizer2022ClintManual,
+#
+#  
+Crizer2023ClintBayes <- read.csv("Crizer2023/CrizerPFAS-Clint-Level4.tsv",sep="\t")
+Crizer2023ClintBayes <- merge(Crizer2023ClintBayes ,
+                              PFAS[,c("DTXSID","CASRN")],
+                              all.x=TRUE)
+
+Crizer2023ClintBayes$Human.Clint <- paste(
+  signif(Crizer2023ClintBayes$Clint.1.Med, 3),
+  signif(Crizer2023ClintBayes$Clint.1.Low, 3),
+  signif(Crizer2023ClintBayes$Clint.1.High, 3),
+  signif(Crizer2023ClintBayes$Clint.pValue, 3),
+  sep=",")
+Crizer2023ClintBayes[Crizer2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
+                     "Human.Clint"] <-NA
+
+chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintBayes,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(Compound="Compound.Name",
+                                                               DTXSID="DTXSID",
+                                                               CAS="CASRN",
+                                                               Clint="Human.Clint",
+                                                               Clint.pValue="Clint.pValue"
+                                                ),
+                                                reference="Crizer 2024 Bayes",
+                                                species="Human",
+                                                overwrite=TRUE)
+
+
+Crizer2023ClintManual <- as.data.frame(
+  read_excel("Crizer2023/Crizer-2022-PFAS-Clint.xlsx",sheet=1))
+colnames(Crizer2023ClintManual)[8] <- "Clint"
+Crizer2023ClintManual <- subset(Crizer2023ClintManual,
+  !is.na(Crizer2023ClintManual$Clint))
+# We don't want bad Clint's:
+Crizer2023ClintManual[Crizer2023ClintManual$Clint < 0, "pValue"] <- 1
+length(unique(Crizer2023ClintManual$DTXSID))
+
+chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintManual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="PREFERRED_NAME",
     DTXSID="DTXSID",
@@ -1625,9 +1654,9 @@ chem.physical_and_invitro.data <- add_chemtable(Crizer2022ClintManual,
     CLint="Clint",
     Clint.pValue="pValue"
     ),
-  reference="Crizer 2022 Manual",
+  reference="Crizer 2023 Manual",
   species="Human",
-  overwrite=TRUE)
+  overwrite=FALSE)
 
 pfas.fup.predictions <- as.data.frame(
   read_excel("PFAS-Fup-Compiled-Predictions.xlsx",sheet=1))
@@ -2267,6 +2296,11 @@ write.table(chem.invivo.PK.summary.data,file="HTTK-Chem-InVivo-Summary-Data.txt"
 write.table(physiology.data,file="HTTK-Physiology-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t")
 
+sipes2017 <- sipes2017[,c(
+  'CAS',
+  'Human.Funbound.plasma',
+  'Human.Clint')]
+
 Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 #Write the tables.Rdata file:                                  
 save(chem.physical_and_invitro.data,
@@ -2279,6 +2313,7 @@ save(chem.physical_and_invitro.data,
      physiology.data,
      pearce2017regression,
      kapraun2019,
+     sipes2017,
      tissue.data,
      Tables.Rdata.stamp,
      EPA.ref,
@@ -2291,13 +2326,7 @@ cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 
-sipes2017 <- sipes2017[,c(
-               'CAS',
-               'Human.Funbound.plasma',
-               'Human.Clint')]
- 
 save(Wetmore.data,
-     sipes2017,
      chem.lists,
      sysdata.rda.stamp,                 
      file="sysdata.rda",
