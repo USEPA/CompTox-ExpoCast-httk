@@ -1,122 +1,122 @@
-"Compound"	"CAS"	"DTXSID"	"logP"	"MW"	"pKa_Accept"	"pKa_Donor"	"Human.Clint"	"Human.Clint.pValue"	"Human.Funbound.plasma"	"Human.Rblood2plasma"	"Css.noexhale.uM.1mgkgday"	"Css.exhale.uM.1mgkgday"
-"Ametryn"	"834-12-8"	"DTXSID1023869"	2.98	227.3	"5.27"	"None"	"14.7,11.5,17.6,0"	NA	"0.003952"	0.6436	298.3	298.3
-"Perfluorooctane sulfonic acid"	"1763-23-1"	"DTXSID3031864"	5.6	500.1	"None"	"-1.64"	"0,0,0,0.587"	0.587	"0.00874,0.0075,0.0101"	0.6436	NA	21.96
-"Perfluorooctanoic acid"	"335-67-1"	"DTXSID8031865"	3.11	414.1	"None"	"0.34"	"0,0,0,0.996"	0.996	"1.68e-07,2.76e-15,0.00199"	0.6436	NA	2252
-"Perfluoroundecanoic acid"	"2058-94-8"	"DTXSID8047553"	4	564.1	"None"	"0.54"	"14.8,9.57,21.7,0"	0	"0.0156,0.0149,0.0163"	NA	NA	9.65
-"\"3,3,4,4,5,5,6,6,7,7,8,8,8-tridecafluorooctyl methacrylate\""	"2144-53-8"	"DTXSID3047558"	5.2	432.2	"None"	"None"	"196.9"	1e-04	"0.102,0.0402,0.186"	NA	NA	1.405
-"Heptadecafluorooctanesulfonic acid potassium salt"	"2795-39-3"	"DTXSID8037706"	-1.07	538.2	"None"	"-1.64"	"0,0,0,0.979"	0.979	"0.00601,0.00515,0.00705"	NA	NA	43.87
-"Potassium nonafluoro-1-butanesulfonate"	"29420-49-3"	"DTXSID3037707"	0.26	338.2	"None"	"-1.61"	"0,0,0,0.993"	0.993	"0.00543,0.00508,0.00582"	NA	NA	297.7
-"Perfluorohexanoic acid"	"307-24-4"	"DTXSID3031862"	2.85	314.1	"None"	"0.2"	"0,0,0,0.967"	0.967	"0.0081,0.00743,0.00881"	NA	NA	255.6
-"Perfluorodecanoic acid"	"335-76-2"	"DTXSID3031860"	4.15	514.1	"None"	"0.4"	"0,0,0,0.993"	0.993	"0.00291,0.00282,0.00301"	NA	NA	90.16
-"Perfluoroheptanoic acid"	"375-85-9"	"DTXSID1037303"	2.06	364.1	"None"	"0.06"	"0,0,0,0.469"	0.469	"0.000441,0.000408,0.000476"	NA	NA	1823
-"Perfluorononanoic acid"	"375-95-1"	"DTXSID8031863"	3.54	464.1	"None"	"0.23"	"11.7,1.06,14.7,0.0249"	0.0249	"0.002,0.00177,0.00226"	NA	NA	103.3
-"Pentadecafluorooctanoic acid ammonium salt"	"3825-26-1"	"DTXSID8037708"	3.68	431.1	"None"	"0.34"	"11,8,13.6,4e-05"	4e-05	"0.00197,0.00163,0.00233"	NA	NA	121.5
-"Potassium perfluorohexanesulfonate"	"3871-99-6"	"DTXSID3037709"	2.7	438.2	"None"	"-1.64"	"8.27,5.47,10.6,1e-04"	1e-04	"0.00131,0.00116,0.00146"	NA	NA	203
-"Perfluorooctanesulfonamide"	"754-91-6"	"DTXSID3038939"	3.45	499.1	"None"	"6.78"	"11.93"	0.0286	"0.00451,0.0043,0.00479"	NA	NA	39.09
-"Butylparaben"	"94-26-8"	"DTXSID3020209"	3.56	194.2	"None"	"8.29"	"39.3"	1e-04	"0.0209,0.0203,0.0215"	NA	18.8	18.8
-"4-nitrotoluene"	"99-99-0"	"DTXSID5023792"	2.37	137.1	"None"	"None"	"19.32"	2e-04	"0.0679,0.0598,0.0757"	NA	22.27	21.81
-"Perfluorobutanesulfonic acid"	"375-73-5"	"DTXSID5030030"	3.38	300.1	NA	"-1.61"	"0,0,0,0.558"	0.558	"0.0151,0.0147,0.0155"	NA	NA	124.9
-"Perfluorohexanesulfonic acid"	"355-46-4"	"DTXSID7040150"	2.21	400.1	NA	"-1.64"	"0,0,0,0.467"	0.467	"0.0013,0.00113,0.00149"	NA	NA	234.4
-"Propranolol"	"525-66-6"	"DTXSID6023525"	3.33	259.3	"9.56"	NA	"10,7.6,12.1,0"	0	"0.282,0.236,0.338"	0.86	1.792	1.792
-"Sulfluramid"	"4151-50-2"	"DTXSID1032646"	6.79	527.2	"None"	"8.36"	"40,30.9,50,0"	0	"0.0241,0.023,0.0253"	NA	NA	3.219
-"1,1,2,2-tetrahydroperfluoro-1-decanol"	"678-39-7"	"DTXSID7029904"	5.7	464.1	"None"	"9.73"	"NA"	NA	"0.0168,0.00939,0.0291"	NA	NA	NA
-"3,3,4,4,5,5,6,6,7,7,8,8,8-tridecafluorooctan-1-ol"	"647-42-7"	"DTXSID5044572"	4.57	364.1	"None"	"9.74"	"NA"	NA	"0.232,0.126,0.433"	NA	NA	NA
-"1,1,1,2,2,3,3,4,4-nonafluoro-6-iodohexane"	"2043-55-2"	"DTXSID1047578"	3.3	374	"None"	"None"	"NA"	NA	"0.0824,0.0601,0.112"	NA	NA	NA
-"8:2 fluorotelomer sulfonic acid"	"39108-34-4"	"DTXSID00192353"	4.74	528.2	NA	"1.33"	"10.9,6.9,14.1,0.0012"	0.0012	"0.0385,0.0356,0.0418"	NA	NA	4.079
-"3:3 fluorotelomer carboxylic acid"	"356-02-5"	"DTXSID00379268"	3.4	242.1	NA	"3.06"	"0,0,0,0.991"	0.991	"0.049,0.046,0.0524"	NA	278.8	199.2
-"Perfluorononanoyl chloride"	"52447-23-1"	"DTXSID00379925"	4.667	482.5	NA	NA	"773,647,917,0"	0	"0.00133,0.00104,0.00164"	NA	NA	2.54
-"Perfluorooctanoyl fluoride"	"335-66-0"	"DTXSID0059829"	4.076	416.1	NA	NA	"NA"	NA	"0.00319,0.00269,0.00374"	NA	NA	NA
-"Hexafluoroglutaryl chloride (hexafluorocl)"	"678-77-3"	"DTXSID0060985"	2.82	276.9	NA	NA	"0"	NA	"0.675,0.6,0.769"	NA	NA	0.02172
-"Potassium perfluorooctanoate (kpfoa)"	"2395-00-8"	"DTXSID00880026"	0.2775	452.2	NA	NA	"0,0,0,0.936"	0.936	"0.0103,0.00958,0.0111"	NA	875.1	875
-"N-methylperfluorooctanesulfonamide"	"31506-32-8"	"DTXSID1067629"	4.7	513.2	NA	"8.27"	"54.3,43,67,0"	0	"0.0107,0.01,0.0113"	NA	NA	7.141
-"2-(perfluorohexyl)ethylphosphonic acid"	"252237-40-4"	"DTXSID20179883"	3.92	428.1	NA	"-0.23"	"0,0,0,0.994"	0.994	"0.00406,0.00352,0.00471"	NA	1508	1508
-"Perfluoro-3,6-dioxaoctane-1,8-dioic acid"	"55621-21-1"	"DTXSID20375106"	1.55	322.1	NA	"-1.95"	"NA"	NA	"0.0136,0.0117,0.0162"	NA	NA	NA
-"2h,2h,3h,3h-perfluorooctanoic acid"	"914637-49-3"	"DTXSID20874028"	3.15	342.1	NA	"3.54"	"19,14.2,21.4,0"	0	"0.00616,0.00587,0.00646"	NA	NA	74.66
-"Perfluoro-3,6-dioxaheptanoic acid"	"151772-58-6"	"DTXSID30382063"	2.75	296	NA	"-1.91"	"0,0,0,0.702"	0.702	"0.00321,0.00308,0.00334"	NA	NA	113.3
-"Perfluorotetradecanoic acid"	"376-06-7"	"DTXSID3059921"	5.1	714.1	NA	"0.54"	"0,0,0,0.951"	0.951	"0.0269,0.0258,0.028"	NA	NA	6.502
-"((perfluorooctyl)ethyl)phosphonic acid"	"80220-63-9"	"DTXSID30627108"	4.23	528.1	NA	"-0.1"	"NA"	NA	"6.07e-08,2.79e-15,0.00048"	NA	NA	NA
-"4:2 fluorotelomer sulfonic acid"	"757124-72-4"	"DTXSID30891564"	3.46	328.2	NA	"0.93"	"0,0,0,0.491"	0.491	"0.00657,0.00597,0.00722"	NA	NA	167.3
-"Pentadecafluorooctanoyl chloride (pfoa-cl)"	"335-64-8"	"DTXSID40187142"	4.067	432.5	NA	NA	"0,0,0,0.799"	0.799	"0.000824,0.000567,0.00109"	NA	NA	256.8
-"3-(perfluoroisopropyl)-2-propenoic acid (isppra)"	"243139-64-2"	"DTXSID40380257"	4.36	240.1	NA	"1.83"	"0,0,0,0.654"	0.654	"0.0777,0.0703,0.0867"	NA	124.9	124.9
-"Octafluoroadipic acid"	"336-08-3"	"DTXSID4059833"	2.53	290.1	NA	"-0.76"	"NA"	NA	"0.135,0.12,0.152"	NA	NA	NA
-"Perfluorobutanoic acid"	"375-22-4"	"DTXSID4059916"	1.43	214	NA	"-0.21"	"0,0,0,0.834"	0.834	"0.106,0.102,0.111"	NA	NA	33.61
-"Sodium perfluorooctanoate (napfoa)"	"335-95-5"	"DTXSID40880025"	2.693	436.1	NA	NA	"0,0,0,0.816"	0.816	"0.000933,0.000766,0.00112"	NA	9800	9800
-"9h-perfluorononanoic acid"	"76-21-1"	"DTXSID50226894"	4.016	446.1	NA	NA	"269,115,437,0.0066"	0.0066	"0.000879,0.000776,0.00101"	NA	21.65	21.65
-"Perfluoro-3,6,9-trioxatridecanoic acid"	"330562-41-9"	"DTXSID50375114"	5	562.1	NA	"-2.18"	"NA"	NA	"0.00211,0.00189,0.00235"	NA	NA	NA
-"Perfluoro(2-ethoxyethanesulfonic acid) (pfeoes)"	"113507-82-7"	"DTXSID50379814"	2.985	316.1	NA	NA	"0,0,0,0.497"	0.497	"0.00174,0.0016,0.00188"	NA	2655	2655
-"Perfluoro-3,6-dioxadecanoic acid"	"137780-69-9"	"DTXSID50381073"	4.042	446.1	NA	NA	"0,0,0,0.999"	0.999	"0.000954,0.000865,0.00106"	NA	9140	9140
-"Perfluorohexanesulfonamide"	"41997-13-1"	"DTXSID50469320"	2.8	399.1	NA	"7.05"	"23,11.5,38,2e-05"	2e-05	"0.000435,0.000406,0.000466"	NA	NA	404.7
-"11-h-perfluoroundecanoic acid"	"1765-48-6"	"DTXSID5061954"	4.888	546.1	NA	NA	"0,0,0,0.138"	0.138	"0.00167,0.00151,0.00184"	NA	133.7	133.7
-"4h-perfluorobutanoic acid"	"679-12-9"	"DTXSID50892417"	1.71	196	NA	"0.67"	"0,0,0,0.942"	0.942	"0.197,0.163,0.231"	NA	58.68	51.26
-"N-ethyl-n-(2-hydroxyethyl)perfluorooctanesulfonamide"	"1691-99-2"	"DTXSID6027426"	4.15	571.2	NA	"5.42"	"NA"	NA	"0.0818,0.0783,0.0855"	NA	NA	NA
-"2,2,2-trifluoroethyl perfluorobutanesulfonate (tfe-pfbs)"	"79963-95-4"	"DTXSID60380390"	3.01	382.1	NA	NA	"0,0,0,0.982"	0.982	"0.00478,0.00397,0.00575"	NA	NA	96.36
-"Perfluoro(4-methoxybutanoic) acid"	"863090-89-5"	"DTXSID60500450"	1.95	280	NA	"-0.29"	"0,0,0,0.914"	0.914	"0.0144,0.0124,0.0172"	NA	918.6	692.3
-"Perfluoropentanoic acid"	"2706-90-3"	"DTXSID6062599"	1.35	264	NA	"-0.8"	"0,0,0,0.991"	0.991	"0.0474,0.045,0.0499"	NA	NA	46.26
-"Perfluoro-4-isopropoxybutanoic acid"	"801212-59-9"	"DTXSID60663110"	3.65	380.1	NA	"0.34"	"0,0,0,0.992"	0.992	"0.00217,0.00199,0.00237"	NA	NA	273.9
-"6:2 fluorotelomer sulfonic acid"	"27619-97-2"	"DTXSID6067331"	3.73	428.2	NA	"1.23"	"0,0,0,0.948"	0.948	"0.0141,0.0119,0.017"	NA	NA	22.28
-"Sodium perfluorodecanesulfonate (pfds)"	"2806-15-7"	"DTXSID60892443"	3.75	622.1	NA	"-1.54"	"5.97,3.11,8.27,0.00846"	0.00846	"0.0534,0.0496,0.0576"	NA	NA	2.903
-"7h-perfluoroheptanoic acid"	"1546-95-8"	"DTXSID70165670"	2.994	346.1	NA	NA	"NA"	NA	"0.00269,0.00233,0.00313"	NA	NA	NA
-"Perfluoro-3-methoxypropanoic acid"	"377-73-1"	"DTXSID70191136"	1.84	230	NA	"0.89"	"0,0,0,0.951"	0.951	"0.0605,0.0533,0.07"	NA	NA	92.65
-"N-methyl-n-(2-hydroxyethyl)perfluorooctanesulfonamide"	"24448-09-7"	"DTXSID7027831"	4.57	557.2	NA	"6.16"	"NA"	NA	"0.1,0.0911,0.112"	NA	NA	NA
-"4,4,5,5,6,6,7,7,8,8,9,9,9-tridecafluorononanoic acid"	"27854-30-4"	"DTXSID70379917"	4.18	392.1	NA	NA	"0,0,0,0.0773"	0.0773	"0.00201,0.00174,0.00254"	NA	202.6	202.6
-"8h-perfluorooctanoic acid"	"13973-14-3"	"DTXSID70565479"	3.526	396.1	NA	NA	"0,0,0,0.5"	0.5	"0.00231,0.00215,0.00258"	NA	3059	3059
-"Perfluorooctanesulfonate"	"45298-90-6"	"DTXSID80108992"	5.6	499.1	NA	"-1.64"	"0,0,0,0.793"	0.793	"0.00569,0.00527,0.00616"	NA	NA	47.85
-"4,4-bis(trifluoromethyl)-4-fluoropropanoic acid (tfmfpa)"	"243139-62-0"	"DTXSID80380256"	3.894	242.1	NA	NA	"0,0,0,0.999"	0.999	"0.107,0.0985,0.116"	NA	512.3	512.3
-"Perfluoro-3,6,9-trioxadecanoic acid"	"151772-59-7"	"DTXSID80380837"	4.056	412.1	NA	NA	"NA"	NA	"0.000383,0.000318,0.000454"	NA	NA	NA
-"Perfluoroheptanoyl chloride"	"52447-22-0"	"DTXSID80382154"	4.132	382.5	NA	NA	"0,0,0,0.754"	0.754	"0.00141,0.00116,0.00165"	NA	NA	8.262
-"Perfluorooctanesulfonamido ammonium iodide (pfosaa)"	"1652-63-7"	"DTXSID8051419"	2.72	726.2	NA	"7.22"	"0,0,0,0.901"	0.901	"0.0139,0.0132,0.0147"	NA	NA	11.98
-"Perfluoroheptanesulfonic acid"	"375-92-8"	"DTXSID8059920"	3.38	450.1	NA	"-1.81"	"0,0,0,0.985"	0.985	"0.000667,0.000594,0.000745"	NA	NA	491.6
-"Hexafluoroglutaric acid (hexafluoroglutarate)"	"376-73-8"	"DTXSID8059926"	1.896	240.1	NA	NA	"NA"	NA	"0.493,0.471,0.516"	NA	NA	NA
-"Tetrafluorosuccinic acid (tetrafluorosuccinate)"	"377-38-8"	"DTXSID8059928"	1.11	190	NA	NA	"NA"	NA	"0.663,0.601,0.728"	NA	NA	NA
-"Perfluoropropanoic acid"	"422-64-0"	"DTXSID8059970"	1.4	164	NA	"0.81"	"0,0,0,0.667"	0.667	"0.24,0.213,0.272"	NA	46.92	43.1
-"3-perfluoroheptylpropanoic acid"	"812-70-4"	"DTXSID90382620"	5.55	442.1	NA	"3.36"	"15.7,9.73,22.9,0.00012"	0.00012	"0.0055,0.00522,0.00581"	NA	NA	31.23
-"Heptafluorobutyryl chloride (pfba-cl)"	"375-16-6"	"DTXSID9059915"	2.278	232.5	NA	NA	"NA"	NA	"0.0863,0.0836,0.0886"	NA	NA	NA
-"Perfluorotridecanoic acid"	"72629-94-8"	"DTXSID90868151"	7.47	664.1	NA	"0.54"	"0,0,0,0.87"	0.87	"0.0482,0.0455,0.0513"	NA	NA	2.138
-"Perfluoro-1-octanesulfonyl chloride  (pfos-cl)"	"423-60-9"	"DTXSID90315130"	5.74	518.6	NA	NA	"0,0,0,0.99"	0.99	"0.0109"	NA	NA	24.28
-"6:1 fluorotelomer alcohol"	"375-82-6"	"DTXSID00190950"	2.98	350.1	NA	"8.1"	"NA"	NA	"0.0187,0.0108,0.0305"	NA	NA	NA
-"1h,1h,9h-perfluorononyl acrylate"	"4180-26-1"	"DTXSID00194615"	5.23	486.2	NA	NA	"NA"	NA	"2.02e-08,2.42e-15,0.0961"	NA	NA	NA
-"1h,1h,11h,11h-perfluorotetraethylene glycol"	"330562-44-2"	"DTXSID00380798"	3.613	410.1	NA	NA	"5.23,0,7.23,0.0332"	NA	"0.0115,0.00983,0.0139"	NA	96.05	96.05
-"Pentafluoropropionamide"	"354-76-7"	"DTXSID0059871"	0.8185	163	NA	NA	"0,0,0,0.823"	0.0875	"0.754,0.514,0.973"	NA	14.08	13.41
-"1h,1h,5h-perfluoropentanol"	"355-80-6"	"DTXSID0059879"	2.19	232.1	NA	"7.81"	"3.83,0,6.07,0.0364"	NA	"0.791,0.482,0.989"	NA	3.098	2.738
-"2,2,3,3-tetrafluoropropyl acrylate"	"7383-71-3"	"DTXSID10224331"	1.584	186.1	NA	NA	"NA"	NA	"1.93e-08,2.17e-15,0.146"	NA	NA	NA
-"1h,1h-perfluoroheptylamine"	"423-49-4"	"DTXSID10379835"	3.442	349.1	NA	NA	"NA"	NA	"0.129,0.0521,0.343"	NA	NA	NA
-"3-(perfluorooctyl)propanol"	"1651-41-8"	"DTXSID10379991"	5.128	478.1	NA	NA	"NA"	NA	"0.0348,0.0248,0.0478"	NA	NA	NA
-"3-(perfluoro-2-butyl)propane-1,2-diol"	"125070-38-4"	"DTXSID10382147"	2.75	294.1	NA	"8.67"	"4.6,0,6.57,0.258"	NA	"0.364,0.255,0.527"	NA	6.673	6.673
-"4:2 fluorotelomer alcohol"	"2043-47-2"	"DTXSID1062122"	3.27	264.1	NA	"9.75"	"306,0,332,0.0441"	NA	"0.235,0.13,0.428"	NA	NA	0.3853
-"2-(perfluorobutyl)ethyl acrylate"	"52591-27-2"	"DTXSID1068772"	3.058	318.1	NA	NA	"NA"	NA	"2.26e-06,3.04e-15,0.123"	NA	NA	NA
-"1,6-dibromododecafluorohexane"	"918-22-9"	"DTXSID20335129"	5.009	459.9	NA	NA	"0,0,146,0.691"	NA	"1.78e-09,2.13e-15,0.00112"	NA	NA	147.4
-"Heptafluorobutyramide"	"662-50-0"	"DTXSID2060965"	2	213.1	NA	"6.61"	"0,0,0,0.982"	NA	"0.566,0.477,0.695"	NA	14.79	11.4
-"Perfluoro-1,4-diiodobutane"	"375-50-8"	"DTXSID30190948"	3.372	453.8	NA	NA	"103,0,169,0.271"	NA	"0.00723,0.00368,0.0123"	NA	NA	1.223
-"1h,1h,7h-perfluoroheptyl 4-methylbenzenesulfonate"	"424-16-8"	"DTXSID30340244"	6.004	486.3	NA	NA	"0,0,10,0.873"	NA	"0.116,0.1,0.145"	NA	25270	260.7
-"Tris(trifluoroethoxy)methane"	"58244-27-2"	"DTXSID30395037"	1.99	310.1	NA	NA	"NA"	NA	"0.132,0.0496,0.217"	NA	NA	NA
-"1h,1h,8h,8h-perfluorooctane-1,8-diol"	"90177-96-1"	"DTXSID30396867"	3.174	362.1	NA	NA	"5.03,2.11,7.3,0.0156"	NA	"0.0465,0.0398,0.0564"	NA	31.71	31.71
-"Hexafluoroamylene"	"376-90-9"	"DTXSID3059927"	1.01	212.1	NA	"6.84"	"0,0,4.07,0.864"	0.0017	"0.627,0.529,0.765"	NA	NA	2.604
-"1h,1h-perfluorobutyl methacrylate"	"13695-31-3"	"DTXSID3065586"	3.27	268.1	NA	NA	"NA"	NA	"0.716,0.294,0.982"	NA	NA	NA
-"N-methyl-n-trimethylsilylheptafluorobutyramide"	"53296-64-3"	"DTXSID40379666"	4.37	299.3	NA	NA	"6.1,0,17.2,0.159"	NA	"0.532,0.361,0.763"	NA	NA	0.3966
-"Heptafluorobutanol"	"375-01-9"	"DTXSID4059914"	1.94	200.1	NA	"8.38"	"NA"	NA	"0.49,0.337,0.724"	NA	NA	NA
-"1h,1h-perfluorooctylamine"	"307-29-9"	"DTXSID50184723"	4.003	399.1	NA	NA	"NA"	NA	"0.605,0.348,0.941"	NA	NA	NA
-"1h,1h,10h,10h-perfluorodecane-1,10-diol"	"754-96-1"	"DTXSID50369896"	4.17	462.1	NA	NA	"115,79,165,0"	1e-04	"0.00408,4.48e-12,0.0055"	NA	70.09	70.09
-"1h,1h-perfluorononylamine"	"355-47-5"	"DTXSID50379930"	4.789	449.1	NA	NA	"NA"	NA	"0.0402,0.0102,0.112"	NA	NA	NA
-"Bis(1h,1h-perfluoropropyl)amine"	"883498-76-8"	"DTXSID50381992"	2.87	281.1	NA	"6.97"	"NA"	NA	"0.0412,0.0279,0.0716"	NA	NA	NA
-"Methyl perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)"	"25600-66-2"	"DTXSID50382621"	5.52	428.1	NA	"9.82"	"NA"	NA	"0.0161,0.00895,0.0276"	NA	NA	NA
-"1-iodopentadecafluoroheptane"	"335-58-0"	"DTXSID5059828"	4.89	496	NA	NA	"NA"	NA	"0.907,0.542,0.997"	NA	NA	NA
-"1h,1h,5h,5h-perfluoro-1,5-pentanediol diacrylate"	"678-95-5"	"DTXSID5060986"	3.463	320.2	NA	NA	"NA"	NA	"7.62e-09,2.29e-15,0.049"	NA	NA	NA
-"1h,1h-perfluorooctyl methacrylate"	"3934-23-4"	"DTXSID5063235"	4.216	468.2	NA	NA	"NA"	NA	"0.0638,0.0245,0.112"	NA	NA	NA
-"Perfluorooctanamide"	"423-54-1"	"DTXSID60195123"	3.14	413.1	NA	"6.54"	"NA"	NA	"0.0252,0.0207,0.0304"	NA	NA	NA
-"4:4 fluorotelomer alcohol"	"3792-02-7"	"DTXSID60377821"	4.25	292.1	NA	"9.96"	"NA"	NA	"0.0608,0.0336,0.106"	NA	NA	NA
-"3-(perfluoropropyl)propanol"	"679-02-7"	"DTXSID60379269"	2.36	228.1	NA	"10.07"	"0,0,77.3,0.722"	NA	"0.202,0.14,0.295"	NA	NA	20.72
-"(perfluoro-5-methylhexyl)ethyl 2-methylprop-2-enoate"	"50836-66-3"	"DTXSID60379901"	5.36	482.2	NA	NA	"NA"	NA	"4.3e-06,2.91e-15,0.106"	NA	NA	NA
-"Nonafluoropentanamide"	"13485-61-5"	"DTXSID60400587"	1.84	263.1	NA	"6.46"	"88.7,62.7,122,0.00568"	NA	"0.192,0.166,0.228"	NA	0.5762	0.5759
-"Perfluoropentanamide"	"355-81-7"	"DTXSID70366226"	2.17	245.1	NA	"6.98"	"0,0,3.04,0.925"	NA	"0.478,0.41,0.573"	NA	16.1	12.2
-"1h,1h,8h,8h-perfluoro-3,6-dioxaoctane-1,8-diol"	"129301-42-4"	"DTXSID70381090"	1.98	294.1	NA	"5.98"	"0,0,2.94,0.901"	NA	"0.191,0.124,0.335"	NA	38.08	38.08
-"Perfluorooctanamidine"	"307-31-3"	"DTXSID70381151"	3.34	412.1	NA	"4.59"	"NA"	NA	"4.95e-09,2.21e-15,0.00975"	NA	NA	NA
-"(perfluorobutyryl)-2-thenoylmethane"	"559-94-4"	"DTXSID7060332"	5.02	322.2	NA	NA	"NA"	NA	"0.00944,0.00481,0.0324"	NA	NA	NA
-"((2,2,3,3-tetrafluoropropoxy)methyl)oxirane"	"19932-26-4"	"DTXSID70880230"	0.95	188.1	NA	NA	"327,299,333,0"	NA	"0.63,0.288,0.961"	NA	NA	0.05011
-"Octafluoroadipamide"	"355-66-8"	"DTXSID80310730"	2.17	288.1	NA	"6.36"	"0,0,0,0.995"	0.0127	"0.864,0.717,0.986"	NA	7.141	7.141
-"11:1 fluorotelomer alcohol"	"423-65-4"	"DTXSID80375107"	5.62	600.1	NA	"8.37"	"NA"	NA	"0.0578,0.0307,0.104"	NA	NA	NA
-"2-aminohexafluoropropan-2-ol"	"31253-34-6"	"DTXSID80382093"	1.07	183.1	NA	"6.17"	"NA"	NA	"0.867,0.624,0.993"	NA	NA	NA
-"8:2 fluorotelomer methacrylate"	"1996-88-9"	"DTXSID8062101"	5.064	532.2	NA	NA	"NA"	NA	"0.0461,0.0146,0.0846"	NA	NA	NA
-"1,6-diiodoperfluorohexane"	"375-80-4"	"DTXSID90190949"	3.754	553.9	NA	NA	"27.3,21.2,34.3,0"	NA	"0.295,0.163,0.479"	NA	NA	0.007683
-"Dodecafluoroheptanol"	"335-99-9"	"DTXSID9059832"	3.46	332.1	NA	"8.08"	"93.3,81.7,104,0"	NA	"0.0526,0.0361,0.0757"	NA	NA	2.316
-"1h,1h,5h-perfluoropentyl methacrylate"	"355-93-1"	"DTXSID90880131"	2.781	300.1	NA	NA	"141,0,281,0.0556"	NA	"0.267,0.137,0.51"	NA	NA	0.43
-"1-iodo-1h,1h,2h,2h-perfluorononane"	"2043-52-9"	"DTXSID90880156"	6.043	524	NA	NA	"7.4,4.73,15.3,0"	NA	"0.108,0.036,0.223"	NA	NA	1.2
+"Compound"	"CAS"	"DTXSID"	"logP"	"MW"	"pKa_Accept"	"pKa_Donor"	"Human.Clint"	"Human.Clint.pValue"	"Human.Funbound.plasma"	"Human.Rblood2plasma"	"Css95.noexhale.uM.1mgkgday"	"Css95.exhale.uM.1mgkgday"	"Css.ML.uM.1mgkgday"
+"Ametryn"	"834-12-8"	"DTXSID1023869"	2.98	227.3	"5.27"	"None"	"14.7,11.5,17.6,0"	NA	"0.003952"	0.6436	298.3	298.3	NA
+"Perfluorooctane sulfonic acid"	"1763-23-1"	"DTXSID3031864"	5.6	500.1	"None"	"-1.64"	"0,0,0,0.587"	0.587	"0.00874,0.0075,0.0101"	0.6436	NA	21.96	17400
+"Perfluorooctanoic acid"	"335-67-1"	"DTXSID8031865"	3.11	414.1	"None"	"0.34"	"0,0,0,0.996"	0.996	"1.68e-07,2.76e-15,0.00199"	0.6436	NA	2252	21010.5
+"Perfluoroundecanoic acid"	"2058-94-8"	"DTXSID8047553"	4	564.1	"None"	"0.54"	"14.8,9.57,21.7,0"	0	"0.0156,0.0149,0.0163"	NA	NA	9.65	15425.1
+"\"3,3,4,4,5,5,6,6,7,7,8,8,8-tridecafluorooctyl methacrylate\""	"2144-53-8"	"DTXSID3047558"	5.2	432.2	"None"	"None"	"196.9"	1e-04	"0.102,0.0402,0.186"	NA	NA	1.405	20131.8
+"Heptadecafluorooctanesulfonic acid potassium salt"	"2795-39-3"	"DTXSID8037706"	-1.07	538.2	"None"	"-1.64"	"0,0,0,0.979"	0.979	"0.00601,0.00515,0.00705"	NA	NA	43.87	16164.6
+"Potassium nonafluoro-1-butanesulfonate"	"29420-49-3"	"DTXSID3037707"	0.26	338.2	"None"	"-1.61"	"0,0,0,0.993"	0.993	"0.00543,0.00508,0.00582"	NA	NA	297.7	688.981
+"Perfluorohexanoic acid"	"307-24-4"	"DTXSID3031862"	2.85	314.1	"None"	"0.2"	"0,0,0,0.967"	0.967	"0.0081,0.00743,0.00881"	NA	NA	255.6	741.872
+"Perfluorodecanoic acid"	"335-76-2"	"DTXSID3031860"	4.15	514.1	"None"	"0.4"	"0,0,0,0.993"	0.993	"0.00291,0.00282,0.00301"	NA	NA	90.16	16921.5
+"Perfluoroheptanoic acid"	"375-85-9"	"DTXSID1037303"	2.06	364.1	"None"	"0.06"	"0,0,0,0.469"	0.469	"0.000441,0.000408,0.000476"	NA	NA	1823	23890.2
+"Perfluorononanoic acid"	"375-95-1"	"DTXSID8031863"	3.54	464.1	"None"	"0.23"	"11.7,1.06,14.7,0.0249"	0.0249	"0.002,0.00177,0.00226"	NA	NA	103.3	18748.5
+"Pentadecafluorooctanoic acid ammonium salt"	"3825-26-1"	"DTXSID8037708"	3.68	431.1	"None"	"0.34"	"11,8,13.6,4e-05"	4e-05	"0.00197,0.00163,0.00233"	NA	NA	121.5	20184
+"Potassium perfluorohexanesulfonate"	"3871-99-6"	"DTXSID3037709"	2.7	438.2	"None"	"-1.64"	"8.27,5.47,10.6,1e-04"	1e-04	"0.00131,0.00116,0.00146"	NA	NA	203	19853.4
+"Perfluorooctanesulfonamide"	"754-91-6"	"DTXSID3038939"	3.45	499.1	"None"	"6.78"	"11.93"	0.0286	"0.00451,0.0043,0.00479"	NA	NA	39.09	17434.8
+"Butylparaben"	"94-26-8"	"DTXSID3020209"	3.56	194.2	"None"	"8.29"	"39.3"	1e-04	"0.0209,0.0203,0.0215"	NA	18.8	18.8	NA
+"4-nitrotoluene"	"99-99-0"	"DTXSID5023792"	2.37	137.1	"None"	"None"	"19.32"	2e-04	"0.0679,0.0598,0.0757"	NA	22.27	21.81	NA
+"Perfluorobutanesulfonic acid"	"375-73-5"	"DTXSID5030030"	3.38	300.1	NA	"-1.61"	"0,0,0,0.558"	0.558	"0.0151,0.0147,0.0155"	NA	NA	124.9	776.356
+"Perfluorohexanesulfonic acid"	"355-46-4"	"DTXSID7040150"	2.21	400.1	NA	"-1.64"	"0,0,0,0.467"	0.467	"0.0013,0.00113,0.00149"	NA	NA	234.4	21741.3
+"Propranolol"	"525-66-6"	"DTXSID6023525"	3.33	259.3	"9.56"	NA	"10,7.6,12.1,0"	0	"0.282,0.236,0.338"	0.86	1.792	1.792	NA
+"Sulfluramid"	"4151-50-2"	"DTXSID1032646"	6.79	527.2	"None"	"8.36"	"40,30.9,50,0"	0	"0.0241,0.023,0.0253"	NA	NA	3.219	16503.9
+"1,1,2,2-tetrahydroperfluoro-1-decanol"	"678-39-7"	"DTXSID7029904"	5.7	464.1	"None"	"9.73"	"NA"	NA	"0.0168,0.00939,0.0291"	NA	NA	NA	18748.5
+"3,3,4,4,5,5,6,6,7,7,8,8,8-tridecafluorooctan-1-ol"	"647-42-7"	"DTXSID5044572"	4.57	364.1	"None"	"9.74"	"NA"	NA	"0.232,0.126,0.433"	NA	NA	NA	23890.2
+"1,1,1,2,2,3,3,4,4-nonafluoro-6-iodohexane"	"2043-55-2"	"DTXSID1047578"	3.3	374	"None"	"None"	"NA"	NA	"0.0824,0.0601,0.112"	NA	NA	NA	41.7144
+"8:2 fluorotelomer sulfonic acid"	"39108-34-4"	"DTXSID00192353"	4.74	528.2	NA	"1.33"	"10.9,6.9,14.1,0.0012"	0.0012	"0.0385,0.0356,0.0418"	NA	NA	4.079	16469.1
+"3:3 fluorotelomer carboxylic acid"	"356-02-5"	"DTXSID00379268"	3.4	242.1	NA	"3.06"	"0,0,0,0.991"	0.991	"0.049,0.046,0.0524"	NA	278.8	199.2	962.523
+"Perfluorononanoyl chloride"	"52447-23-1"	"DTXSID00379925"	4.667	482.5	NA	NA	"773,647,917,0"	0	"0.00133,0.00104,0.00164"	NA	NA	2.54	18035.1
+"Perfluorooctanoyl fluoride"	"335-66-0"	"DTXSID0059829"	4.076	416.1	NA	NA	"NA"	NA	"0.00319,0.00269,0.00374"	NA	NA	NA	20906.1
+"Hexafluoroglutaryl chloride (hexafluorocl)"	"678-77-3"	"DTXSID0060985"	2.82	276.9	NA	NA	"0"	NA	"0.675,0.6,0.769"	NA	NA	0.02172	841.363
+"Potassium perfluorooctanoate (kpfoa)"	"2395-00-8"	"DTXSID00880026"	0.2775	452.2	NA	NA	"0,0,0,0.936"	0.936	"0.0103,0.00958,0.0111"	NA	875.1	875	19235.7
+"N-methylperfluorooctanesulfonamide"	"31506-32-8"	"DTXSID1067629"	4.7	513.2	NA	"8.27"	"54.3,43,67,0"	0	"0.0107,0.01,0.0113"	NA	NA	7.141	16956.3
+"2-(perfluorohexyl)ethylphosphonic acid"	"252237-40-4"	"DTXSID20179883"	3.92	428.1	NA	"-0.23"	"0,0,0,0.994"	0.994	"0.00406,0.00352,0.00471"	NA	1508	1508	NA
+"Perfluoro-3,6-dioxaoctane-1,8-dioic acid"	"55621-21-1"	"DTXSID20375106"	1.55	322.1	NA	"-1.95"	"NA"	NA	"0.0136,0.0117,0.0162"	NA	NA	NA	NA
+"2h,2h,3h,3h-perfluorooctanoic acid"	"914637-49-3"	"DTXSID20874028"	3.15	342.1	NA	"3.54"	"19,14.2,21.4,0"	0	"0.00616,0.00587,0.00646"	NA	NA	74.66	25430.1
+"Perfluoro-3,6-dioxaheptanoic acid"	"151772-58-6"	"DTXSID30382063"	2.75	296	NA	"-1.91"	"0,0,0,0.702"	0.702	"0.00321,0.00308,0.00334"	NA	NA	113.3	52.6968
+"Perfluorotetradecanoic acid"	"376-06-7"	"DTXSID3059921"	5.1	714.1	NA	"0.54"	"0,0,0,0.951"	0.951	"0.0269,0.0258,0.028"	NA	NA	6.502	12180
+"((perfluorooctyl)ethyl)phosphonic acid"	"80220-63-9"	"DTXSID30627108"	4.23	528.1	NA	"-0.1"	"NA"	NA	"6.07e-08,2.79e-15,0.00048"	NA	NA	NA	NA
+"4:2 fluorotelomer sulfonic acid"	"757124-72-4"	"DTXSID30891564"	3.46	328.2	NA	"0.93"	"0,0,0,0.491"	0.491	"0.00657,0.00597,0.00722"	NA	NA	167.3	26508.9
+"Pentadecafluorooctanoyl chloride (pfoa-cl)"	"335-64-8"	"DTXSID40187142"	4.067	432.5	NA	NA	"0,0,0,0.799"	0.799	"0.000824,0.000567,0.00109"	NA	NA	256.8	20114.4
+"3-(perfluoroisopropyl)-2-propenoic acid (isppra)"	"243139-64-2"	"DTXSID40380257"	4.36	240.1	NA	"1.83"	"0,0,0,0.654"	0.654	"0.0777,0.0703,0.0867"	NA	124.9	124.9	970.445
+"Octafluoroadipic acid"	"336-08-3"	"DTXSID4059833"	2.53	290.1	NA	"-0.76"	"NA"	NA	"0.135,0.12,0.152"	NA	NA	NA	NA
+"Perfluorobutanoic acid"	"375-22-4"	"DTXSID4059916"	1.43	214	NA	"-0.21"	"0,0,0,0.834"	0.834	"0.106,0.102,0.111"	NA	NA	33.61	72.8988
+"Sodium perfluorooctanoate (napfoa)"	"335-95-5"	"DTXSID40880025"	2.693	436.1	NA	NA	"0,0,0,0.816"	0.816	"0.000933,0.000766,0.00112"	NA	9800	9800	19949.1
+"9h-perfluorononanoic acid"	"76-21-1"	"DTXSID50226894"	4.016	446.1	NA	NA	"269,115,437,0.0066"	0.0066	"0.000879,0.000776,0.00101"	NA	21.65	21.65	19505.4
+"Perfluoro-3,6,9-trioxatridecanoic acid"	"330562-41-9"	"DTXSID50375114"	5	562.1	NA	"-2.18"	"NA"	NA	"0.00211,0.00189,0.00235"	NA	NA	NA	15477.3
+"Perfluoro(2-ethoxyethanesulfonic acid) (pfeoes)"	"113507-82-7"	"DTXSID50379814"	2.985	316.1	NA	NA	"0,0,0,0.497"	0.497	"0.00174,0.0016,0.00188"	NA	2655	2655	27526.8
+"Perfluoro-3,6-dioxadecanoic acid"	"137780-69-9"	"DTXSID50381073"	4.042	446.1	NA	NA	"0,0,0,0.999"	0.999	"0.000954,0.000865,0.00106"	NA	9140	9140	19505.4
+"Perfluorohexanesulfonamide"	"41997-13-1"	"DTXSID50469320"	2.8	399.1	NA	"7.05"	"23,11.5,38,2e-05"	2e-05	"0.000435,0.000406,0.000466"	NA	NA	404.7	21802.2
+"11-h-perfluoroundecanoic acid"	"1765-48-6"	"DTXSID5061954"	4.888	546.1	NA	NA	"0,0,0,0.138"	0.138	"0.00167,0.00151,0.00184"	NA	133.7	133.7	15929.7
+"4h-perfluorobutanoic acid"	"679-12-9"	"DTXSID50892417"	1.71	196	NA	"0.67"	"0,0,0,0.942"	0.942	"0.197,0.163,0.231"	NA	58.68	51.26	79.5912
+"N-ethyl-n-(2-hydroxyethyl)perfluorooctanesulfonamide"	"1691-99-2"	"DTXSID6027426"	4.15	571.2	NA	"5.42"	"NA"	NA	"0.0818,0.0783,0.0855"	NA	NA	NA	NA
+"2,2,2-trifluoroethyl perfluorobutanesulfonate (tfe-pfbs)"	"79963-95-4"	"DTXSID60380390"	3.01	382.1	NA	NA	"0,0,0,0.982"	0.982	"0.00478,0.00397,0.00575"	NA	NA	96.36	40.8252
+"Perfluoro(4-methoxybutanoic) acid"	"863090-89-5"	"DTXSID60500450"	1.95	280	NA	"-0.29"	"0,0,0,0.914"	0.914	"0.0144,0.0124,0.0172"	NA	918.6	692.3	55.7076
+"Perfluoropentanoic acid"	"2706-90-3"	"DTXSID6062599"	1.35	264	NA	"-0.8"	"0,0,0,0.991"	0.991	"0.0474,0.045,0.0499"	NA	NA	46.26	59.0928
+"Perfluoro-4-isopropoxybutanoic acid"	"801212-59-9"	"DTXSID60663110"	3.65	380.1	NA	"0.34"	"0,0,0,0.992"	0.992	"0.00217,0.00199,0.00237"	NA	NA	273.9	22889.7
+"6:2 fluorotelomer sulfonic acid"	"27619-97-2"	"DTXSID6067331"	3.73	428.2	NA	"1.23"	"0,0,0,0.948"	0.948	"0.0141,0.0119,0.017"	NA	NA	22.28	20314.5
+"Sodium perfluorodecanesulfonate (pfds)"	"2806-15-7"	"DTXSID60892443"	3.75	622.1	NA	"-1.54"	"5.97,3.11,8.27,0.00846"	0.00846	"0.0534,0.0496,0.0576"	NA	NA	2.903	13980.9
+"7h-perfluoroheptanoic acid"	"1546-95-8"	"DTXSID70165670"	2.994	346.1	NA	NA	"NA"	NA	"0.00269,0.00233,0.00313"	NA	NA	NA	25134.3
+"Perfluoro-3-methoxypropanoic acid"	"377-73-1"	"DTXSID70191136"	1.84	230	NA	"0.89"	"0,0,0,0.951"	0.951	"0.0605,0.0533,0.07"	NA	NA	92.65	67.8288
+"N-methyl-n-(2-hydroxyethyl)perfluorooctanesulfonamide"	"24448-09-7"	"DTXSID7027831"	4.57	557.2	NA	"6.16"	"NA"	NA	"0.1,0.0911,0.112"	NA	NA	NA	NA
+"4,4,5,5,6,6,7,7,8,8,9,9,9-tridecafluorononanoic acid"	"27854-30-4"	"DTXSID70379917"	4.18	392.1	NA	NA	"0,0,0,0.0773"	0.0773	"0.00201,0.00174,0.00254"	NA	202.6	202.6	22185
+"8h-perfluorooctanoic acid"	"13973-14-3"	"DTXSID70565479"	3.526	396.1	NA	NA	"0,0,0,0.5"	0.5	"0.00231,0.00215,0.00258"	NA	3059	3059	21967.5
+"Perfluorooctanesulfonate"	"45298-90-6"	"DTXSID80108992"	5.6	499.1	NA	"-1.64"	"0,0,0,0.793"	0.793	"0.00569,0.00527,0.00616"	NA	NA	47.85	17434.8
+"4,4-bis(trifluoromethyl)-4-fluoropropanoic acid (tfmfpa)"	"243139-62-0"	"DTXSID80380256"	3.894	242.1	NA	NA	"0,0,0,0.999"	0.999	"0.107,0.0985,0.116"	NA	512.3	512.3	962.523
+"Perfluoro-3,6,9-trioxadecanoic acid"	"151772-59-7"	"DTXSID80380837"	4.056	412.1	NA	NA	"NA"	NA	"0.000383,0.000318,0.000454"	NA	NA	NA	21114.9
+"Perfluoroheptanoyl chloride"	"52447-22-0"	"DTXSID80382154"	4.132	382.5	NA	NA	"0,0,0,0.754"	0.754	"0.00141,0.00116,0.00165"	NA	NA	8.262	40.7784
+"Perfluorooctanesulfonamido ammonium iodide (pfosaa)"	"1652-63-7"	"DTXSID8051419"	2.72	726.2	NA	"7.22"	"0,0,0,0.901"	0.901	"0.0139,0.0132,0.0147"	NA	NA	11.98	NA
+"Perfluoroheptanesulfonic acid"	"375-92-8"	"DTXSID8059920"	3.38	450.1	NA	"-1.81"	"0,0,0,0.985"	0.985	"0.000667,0.000594,0.000745"	NA	NA	491.6	19331.4
+"Hexafluoroglutaric acid (hexafluoroglutarate)"	"376-73-8"	"DTXSID8059926"	1.896	240.1	NA	NA	"NA"	NA	"0.493,0.471,0.516"	NA	NA	NA	NA
+"Tetrafluorosuccinic acid (tetrafluorosuccinate)"	"377-38-8"	"DTXSID8059928"	1.11	190	NA	NA	"NA"	NA	"0.663,0.601,0.728"	NA	NA	NA	NA
+"Perfluoropropanoic acid"	"422-64-0"	"DTXSID8059970"	1.4	164	NA	"0.81"	"0,0,0,0.667"	0.667	"0.24,0.213,0.272"	NA	46.92	43.1	95.1288
+"3-perfluoroheptylpropanoic acid"	"812-70-4"	"DTXSID90382620"	5.55	442.1	NA	"3.36"	"15.7,9.73,22.9,0.00012"	0.00012	"0.0055,0.00522,0.00581"	NA	NA	31.23	19679.4
+"Heptafluorobutyryl chloride (pfba-cl)"	"375-16-6"	"DTXSID9059915"	2.278	232.5	NA	NA	"NA"	NA	"0.0863,0.0836,0.0886"	NA	NA	NA	67.0956
+"Perfluorotridecanoic acid"	"72629-94-8"	"DTXSID90868151"	7.47	664.1	NA	"0.54"	"0,0,0,0.87"	0.87	"0.0482,0.0455,0.0513"	NA	NA	2.138	13102.2
+"Perfluoro-1-octanesulfonyl chloride  (pfos-cl)"	"423-60-9"	"DTXSID90315130"	5.74	518.6	NA	NA	"0,0,0,0.99"	0.99	"0.0109"	NA	NA	24.28	16773.6
+"6:1 fluorotelomer alcohol"	"375-82-6"	"DTXSID00190950"	2.98	350.1	NA	"8.1"	"NA"	NA	"0.0187,0.0108,0.0305"	NA	NA	NA	665.448
+"1h,1h,9h-perfluorononyl acrylate"	"4180-26-1"	"DTXSID00194615"	5.23	486.2	NA	NA	"NA"	NA	"2.02e-08,2.42e-15,0.0961"	NA	NA	NA	17895.9
+"1h,1h,11h,11h-perfluorotetraethylene glycol"	"330562-44-2"	"DTXSID00380798"	3.613	410.1	NA	NA	"5.23,0,7.23,0.0332"	NA	"0.0115,0.00983,0.0139"	NA	96.05	96.05	NA
+"Pentafluoropropionamide"	"354-76-7"	"DTXSID0059871"	0.8185	163	NA	NA	"0,0,0,0.823"	0.0875	"0.754,0.514,0.973"	NA	14.08	13.41	95.706
+"1h,1h,5h-perfluoropentanol"	"355-80-6"	"DTXSID0059879"	2.19	232.1	NA	"7.81"	"3.83,0,6.07,0.0364"	NA	"0.791,0.482,0.989"	NA	3.098	2.738	67.2048
+"2,2,3,3-tetrafluoropropyl acrylate"	"7383-71-3"	"DTXSID10224331"	1.584	186.1	NA	NA	"NA"	NA	"1.93e-08,2.17e-15,0.146"	NA	NA	NA	NA
+"1h,1h-perfluoroheptylamine"	"423-49-4"	"DTXSID10379835"	3.442	349.1	NA	NA	"NA"	NA	"0.129,0.0521,0.343"	NA	NA	NA	667.545
+"3-(perfluorooctyl)propanol"	"1651-41-8"	"DTXSID10379991"	5.128	478.1	NA	NA	"NA"	NA	"0.0348,0.0248,0.0478"	NA	NA	NA	18200.4
+"3-(perfluoro-2-butyl)propane-1,2-diol"	"125070-38-4"	"DTXSID10382147"	2.75	294.1	NA	"8.67"	"4.6,0,6.57,0.258"	NA	"0.364,0.255,0.527"	NA	6.673	6.673	NA
+"4:2 fluorotelomer alcohol"	"2043-47-2"	"DTXSID1062122"	3.27	264.1	NA	"9.75"	"306,0,332,0.0441"	NA	"0.235,0.13,0.428"	NA	NA	0.3853	882.138
+"2-(perfluorobutyl)ethyl acrylate"	"52591-27-2"	"DTXSID1068772"	3.058	318.1	NA	NA	"NA"	NA	"2.26e-06,3.04e-15,0.123"	NA	NA	NA	49.0464
+"1,6-dibromododecafluorohexane"	"918-22-9"	"DTXSID20335129"	5.009	459.9	NA	NA	"0,0,146,0.691"	NA	"1.78e-09,2.13e-15,0.00112"	NA	NA	147.4	18913.8
+"Heptafluorobutyramide"	"662-50-0"	"DTXSID2060965"	2	213.1	NA	"6.61"	"0,0,0,0.982"	NA	"0.566,0.477,0.695"	NA	14.79	11.4	73.2108
+"Perfluoro-1,4-diiodobutane"	"375-50-8"	"DTXSID30190948"	3.372	453.8	NA	NA	"103,0,169,0.271"	NA	"0.00723,0.00368,0.0123"	NA	NA	1.223	19174.8
+"1h,1h,7h-perfluoroheptyl 4-methylbenzenesulfonate"	"424-16-8"	"DTXSID30340244"	6.004	486.3	NA	NA	"0,0,10,0.873"	NA	"0.116,0.1,0.145"	NA	25270	260.7	NA
+"Tris(trifluoroethoxy)methane"	"58244-27-2"	"DTXSID30395037"	1.99	310.1	NA	NA	"NA"	NA	"0.132,0.0496,0.217"	NA	NA	NA	NA
+"1h,1h,8h,8h-perfluorooctane-1,8-diol"	"90177-96-1"	"DTXSID30396867"	3.174	362.1	NA	NA	"5.03,2.11,7.3,0.0156"	NA	"0.0465,0.0398,0.0564"	NA	31.71	31.71	NA
+"Hexafluoroamylene"	"376-90-9"	"DTXSID3059927"	1.01	212.1	NA	"6.84"	"0,0,4.07,0.864"	0.0017	"0.627,0.529,0.765"	NA	NA	2.604	NA
+"1h,1h-perfluorobutyl methacrylate"	"13695-31-3"	"DTXSID3065586"	3.27	268.1	NA	NA	"NA"	NA	"0.716,0.294,0.982"	NA	NA	NA	58.188
+"N-methyl-n-trimethylsilylheptafluorobutyramide"	"53296-64-3"	"DTXSID40379666"	4.37	299.3	NA	NA	"6.1,0,17.2,0.159"	NA	"0.532,0.361,0.763"	NA	NA	0.3966	52.1196
+"Heptafluorobutanol"	"375-01-9"	"DTXSID4059914"	1.94	200.1	NA	"8.38"	"NA"	NA	"0.49,0.337,0.724"	NA	NA	NA	77.9688
+"1h,1h-perfluorooctylamine"	"307-29-9"	"DTXSID50184723"	4.003	399.1	NA	NA	"NA"	NA	"0.605,0.348,0.941"	NA	NA	NA	21802.2
+"1h,1h,10h,10h-perfluorodecane-1,10-diol"	"754-96-1"	"DTXSID50369896"	4.17	462.1	NA	NA	"115,79,165,0"	1e-04	"0.00408,4.48e-12,0.0055"	NA	70.09	70.09	NA
+"1h,1h-perfluorononylamine"	"355-47-5"	"DTXSID50379930"	4.789	449.1	NA	NA	"NA"	NA	"0.0402,0.0102,0.112"	NA	NA	NA	19374.9
+"Bis(1h,1h-perfluoropropyl)amine"	"883498-76-8"	"DTXSID50381992"	2.87	281.1	NA	"6.97"	"NA"	NA	"0.0412,0.0279,0.0716"	NA	NA	NA	55.4892
+"Methyl perfluoro(3-(1-ethenyloxypropan-2-yloxy)propanoate)"	"25600-66-2"	"DTXSID50382621"	5.52	428.1	NA	"9.82"	"NA"	NA	"0.0161,0.00895,0.0276"	NA	NA	NA	20323.2
+"1-iodopentadecafluoroheptane"	"335-58-0"	"DTXSID5059828"	4.89	496	NA	NA	"NA"	NA	"0.907,0.542,0.997"	NA	NA	NA	17539.2
+"1h,1h,5h,5h-perfluoro-1,5-pentanediol diacrylate"	"678-95-5"	"DTXSID5060986"	3.463	320.2	NA	NA	"NA"	NA	"7.62e-09,2.29e-15,0.049"	NA	NA	NA	27170.1
+"1h,1h-perfluorooctyl methacrylate"	"3934-23-4"	"DTXSID5063235"	4.216	468.2	NA	NA	"NA"	NA	"0.0638,0.0245,0.112"	NA	NA	NA	18583.2
+"Perfluorooctanamide"	"423-54-1"	"DTXSID60195123"	3.14	413.1	NA	"6.54"	"NA"	NA	"0.0252,0.0207,0.0304"	NA	NA	NA	21062.7
+"4:4 fluorotelomer alcohol"	"3792-02-7"	"DTXSID60377821"	4.25	292.1	NA	"9.96"	"NA"	NA	"0.0608,0.0336,0.106"	NA	NA	NA	797.559
+"3-(perfluoropropyl)propanol"	"679-02-7"	"DTXSID60379269"	2.36	228.1	NA	"10.07"	"0,0,77.3,0.722"	NA	"0.202,0.14,0.295"	NA	NA	20.72	68.3904
+"(perfluoro-5-methylhexyl)ethyl 2-methylprop-2-enoate"	"50836-66-3"	"DTXSID60379901"	5.36	482.2	NA	NA	"NA"	NA	"4.3e-06,2.91e-15,0.106"	NA	NA	NA	18043.8
+"Nonafluoropentanamide"	"13485-61-5"	"DTXSID60400587"	1.84	263.1	NA	"6.46"	"88.7,62.7,122,0.00568"	NA	"0.192,0.166,0.228"	NA	0.5762	0.5759	885.633
+"Perfluoropentanamide"	"355-81-7"	"DTXSID70366226"	2.17	245.1	NA	"6.98"	"0,0,3.04,0.925"	NA	"0.478,0.41,0.573"	NA	16.1	12.2	35496
+"1h,1h,8h,8h-perfluoro-3,6-dioxaoctane-1,8-diol"	"129301-42-4"	"DTXSID70381090"	1.98	294.1	NA	"5.98"	"0,0,2.94,0.901"	NA	"0.191,0.124,0.335"	NA	38.08	38.08	NA
+"Perfluorooctanamidine"	"307-31-3"	"DTXSID70381151"	3.34	412.1	NA	"4.59"	"NA"	NA	"4.95e-09,2.21e-15,0.00975"	NA	NA	NA	21114.9
+"(perfluorobutyryl)-2-thenoylmethane"	"559-94-4"	"DTXSID7060332"	5.02	322.2	NA	NA	"NA"	NA	"0.00944,0.00481,0.0324"	NA	NA	NA	NA
+"((2,2,3,3-tetrafluoropropoxy)methyl)oxirane"	"19932-26-4"	"DTXSID70880230"	0.95	188.1	NA	NA	"327,299,333,0"	NA	"0.63,0.288,0.961"	NA	NA	0.05011	NA
+"Octafluoroadipamide"	"355-66-8"	"DTXSID80310730"	2.17	288.1	NA	"6.36"	"0,0,0,0.995"	0.0127	"0.864,0.717,0.986"	NA	7.141	7.141	NA
+"11:1 fluorotelomer alcohol"	"423-65-4"	"DTXSID80375107"	5.62	600.1	NA	"8.37"	"NA"	NA	"0.0578,0.0307,0.104"	NA	NA	NA	14494.2
+"2-aminohexafluoropropan-2-ol"	"31253-34-6"	"DTXSID80382093"	1.07	183.1	NA	"6.17"	"NA"	NA	"0.867,0.624,0.993"	NA	NA	NA	NA
+"8:2 fluorotelomer methacrylate"	"1996-88-9"	"DTXSID8062101"	5.064	532.2	NA	NA	"NA"	NA	"0.0461,0.0146,0.0846"	NA	NA	NA	16347.3
+"1,6-diiodoperfluorohexane"	"375-80-4"	"DTXSID90190949"	3.754	553.9	NA	NA	"27.3,21.2,34.3,0"	NA	"0.295,0.163,0.479"	NA	NA	0.007683	15703.5
+"Dodecafluoroheptanol"	"335-99-9"	"DTXSID9059832"	3.46	332.1	NA	"8.08"	"93.3,81.7,104,0"	NA	"0.0526,0.0361,0.0757"	NA	NA	2.316	701.563
+"1h,1h,5h-perfluoropentyl methacrylate"	"355-93-1"	"DTXSID90880131"	2.781	300.1	NA	NA	"141,0,281,0.0556"	NA	"0.267,0.137,0.51"	NA	NA	0.43	51.9792
+"1-iodo-1h,1h,2h,2h-perfluorononane"	"2043-52-9"	"DTXSID90880156"	6.043	524	NA	NA	"7.4,4.73,15.3,0"	NA	"0.108,0.036,0.223"	NA	NA	1.2	16599.6
