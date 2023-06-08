@@ -1505,6 +1505,13 @@ chem.physical_and_invitro.data <- add_chemtable(Smeltz2023ClintManual,
   reference="Smeltz 2023 Manual",
   species="Human",
   overwrite=FALSE)
+  
+# Drop chemials with poor analytial chemistry (BAW 06/08/23):
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !(DTXSID %in% c(
+                                                         "DTXSID90558000",
+                                                         "DTXSID9059832"
+                                                         )))
 #
 #
 #

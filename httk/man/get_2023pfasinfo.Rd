@@ -11,7 +11,7 @@ get_2023pfasinfo(
   model = "3compartmentss",
   default.to.human = FALSE,
   median.only = FALSE,
-  fup.ci.cutoff = TRUE,
+  fup.ci.cutoff = FALSE,
   clint.pvalue.threshold = 0.05,
   suppress.messages = FALSE,
   target.env = .GlobalEnv
