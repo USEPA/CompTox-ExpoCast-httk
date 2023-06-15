@@ -103,7 +103,10 @@
 #' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr    
 #' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
 #' [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins \tab unitless fraction \cr 
+#' plasma proteins (fup). Entries provided as a series of numbers separated by commas
+#' are the Bayesian estimates of the fup distribution - displayed as the median,
+#' lower and upper 95th percentile (that is quantile 2.5 and 97.5, respectively).
+#' \tab unitless fraction \cr 
 #' [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
 #' }
 #' }
