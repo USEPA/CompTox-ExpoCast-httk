@@ -1012,7 +1012,10 @@
 #' gut \tab unitless fraction \cr           
 #'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
 #'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins \tab unitless fraction \cr         
+#' plasma proteins (fup). Entries provided as a series of numbers separated by commas
+#' are the Bayesian estimates of the fup distribution - displayed as the median,
+#' lower and upper 95th percentile (that is quantile 2.5 and 97.5, respectively).
+#' \tab unitless fraction \cr         
 #'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
 #'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
 #'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
