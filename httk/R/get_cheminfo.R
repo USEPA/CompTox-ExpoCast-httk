@@ -100,13 +100,15 @@
 #' pKa_Donor \tab The hydrogen donor equilibria concentrations 
 #'  \tab logarithm \cr   
 #' [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr    
-#' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
+#' intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+#' the Clint distribution - displayed as the median, 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr    
+#' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+#' Values close to 1 indicate clearance is not statistically significant. \tab none \cr  
 #' [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins (fup). Entries provided as a series of numbers separated by commas
-#' are the Bayesian estimates of the fup distribution - displayed as the median,
-#' lower and upper 95th percentile (that is quantile 2.5 and 97.5, respectively).
-#' \tab unitless fraction \cr 
+#' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+#' the fup distribution - displayed as the median and 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr 
 #' [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
 #' }
 #' }
