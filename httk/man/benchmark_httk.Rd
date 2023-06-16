@@ -74,15 +74,13 @@ Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
 calculated. If the units are correct the ratio should be 1 (within the 
 precision of the functions -- usually four significant figures). \cr
 
-  units.plot \tab A ggplot2 figure showing units tests of various functions. 
-Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-calculated. If the units are correct the ratio should be 1 (within the 
-precision of the functions -- usually four significant figures). \cr
+  rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+Output generated is the root mean square log10 error for parameters estimated
+by the package. \cr
 
-  units.plot \tab A ggplot2 figure showing units tests of various functions. 
-Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
-calculated. If the units are correct the ratio should be 1 (within the 
-precision of the functions -- usually four significant figures). \cr
+  count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
+Output generated is a count of the chemicals available for the each of the
+parameters estimated by and used for benchmarking the package. \cr
 
 }
 }
@@ -94,7 +92,7 @@ how the performance of the current version compares with past releases of
 httk.
 }
 \details{
-Historically some refinements made to one aspect of httk have unitentiionally
+Historically some refinements made to one aspect of httk have unintentionally
 impacted other aspects. Most notably errors have ocasionally been introduced 
 with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
 reduce the chance of these errors occuring in the future.
