@@ -726,7 +726,7 @@ specification in compartment_units for model ", model)
       eventdata$time,
       eventdata$time+SMALL.TIME)))
   }  
-  
+ 
 ### MODEL PARAMETERS FOR DESOLVE
 
   # Map the R parameters onto the names for the C code:
@@ -756,7 +756,7 @@ specification in compartment_units for model ", model)
   names(parameters) <- compiled_param_names
 
 ### RUNNING DESOLVE
-
+  
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(
     y = state, 
@@ -780,7 +780,7 @@ specification in compartment_units for model ", model)
  if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
 
 # Cannot guarantee arbitrary precision for deSolve:
-  out <- set_httk_precision(out)
+  out[,2:ncol(out)] <- set_httk_precision(out[,2:ncol(out)])
 
 ### MODEL OUTPUT
 
@@ -899,5 +899,5 @@ Set recalc.clearance to TRUE if desired.")
     cat("\n")
   }
     
-  return(set_httk_precision(out)) 
+  return(out) 
 }
