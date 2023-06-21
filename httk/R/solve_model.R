@@ -780,7 +780,7 @@ specification in compartment_units for model ", model)
  if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
 
 # Cannot guarantee arbitrary precision for deSolve:
-  out[,2:ncol(out)] <- set_httk_precision(out[,2:ncol(out)])
+  out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
 
 ### MODEL OUTPUT
 
