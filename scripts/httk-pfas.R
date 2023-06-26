@@ -3,6 +3,7 @@ rm(list=ls())
 
 # Load httk:
 library(httk)
+library(readxl)
 
 # Load Dawson et al. (2023) Machine Learning predictions:
 dawson.2021 <- read.csv("C:/Users/jwambaug/git/CompTox-PFASHalfLife/SupplementalMaterial/S3_Dawsonetal_PFAS_HL_101122.csv")
@@ -11,6 +12,17 @@ dawson.2021 <- subset(dawson.2021,
                       Sex=="Female" &
                       DosingAdj=="Oral" &
                       ClassModDomain == 1)
+                      
+# Load Patlewicz PFAS master list:
+PFAS.Css.Table <- read_excel("GP_List_TKinfo_20230608.xlsx")
+PFAS.Css.Table <- PFAS.Css.Table[,1:3]
+colnames(PFAS.Css.Table) <- c("DTXSID","CAS","Name")
+
+merge(PFAS.Css.Table,get_2023pfasinfo(info="all",model="schmitt")[,3:11],
+  by="DTXSID",
+  all.x=TRUE)
+  
+
 
 # Load all data from the papers (Schmitt model only requires Fup, so we get some chemicals without Clint where we can't make predictions')
 PFAS.Css.Table <- get_2023pfasinfo(info="all",model="schmitt")
@@ -31,7 +43,8 @@ for (this.chem in get_2023pfasinfo(model="3compartmentss2"))
     output.units="uM")
 }
 for (this.chem in PFAS.Css.Table$DTXSID)
-  if (this.chem %in% dawson.2021$DTXSID)
+  if (this.chem %in% dawson.2021$DTXSID & 
+      this.chem %in% chem.physical_and_invitro.data$DTXSID)
   {
     this.row <- which(PFAS.Css.Table$DTXSID == this.chem)
     PFAS.Css.Table[this.row,"Css.ML.uM.1mgkgday"] <-
