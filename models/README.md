@@ -66,3 +66,12 @@ Parameter names passed to initparams must match those in .model file.
 To add a model to the httk R package, move the model_[MODEL].c file (with function 
 names changed) to the httk/src directory and add the modelinfo_[MODEL] to the httk/R
 directory and then reinstall the package.
+
+## Questions
+If you have questions, comments, or concerns please contact:
+
+### Principal Investigator 
+John Wambaugh [wambaugh.john@epa.gov]
+
+### Lead Software Engineer 
+Sarah Davidson [Davidson.Sarah.E@epa.gov]

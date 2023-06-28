@@ -2199,6 +2199,11 @@ write.table(pearce2017regression,file = "Pearce_2017_Regression.txt",quote = F,s
 #
 #
 
+#
+# HTTK Performance Benchmarks
+#
+httk.performance <- as.data.frame(read_excel("httk-benchmarks.xlsx",sheet=1))
+httk.performance[1,1] <- "1.1"
 
 #
 # WRITE OUT DATA
@@ -2213,6 +2218,11 @@ write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t"
 
 Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 #Write the tables.Rdata file:                                  
+sipes2017 <- sipes2017[,c(
+               'CAS',
+               'Human.Funbound.plasma',
+               'Human.Clint')]
+               
 save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
      chem.invivo.PK.aggregate.data,
@@ -2220,6 +2230,7 @@ save(chem.physical_and_invitro.data,
      sipes2017,
      dawson2021,
      pradeep2020,
+     sipes2017,
      physiology.data,
      pearce2017regression,
      kapraun2019,
@@ -2235,15 +2246,11 @@ cat("Move the Tables.RData to the httk/data directory.\n")
 cat("Move the sysdata.rdaa to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
-
-sipes2017 <- sipes2017[,c(
-               'CAS',
-               'Human.Funbound.plasma',
-               'Human.Clint')]
  
 save(Wetmore.data,
      chem.lists,
-     sysdata.rda.stamp,                 
+     sysdata.rda.stamp,
+     httk.performance,                 
      file="sysdata.rda",
      compress="xz",
      version=2)
