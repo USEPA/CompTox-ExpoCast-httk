@@ -1554,7 +1554,8 @@ chem.physical_and_invitro.data <- add_chemtable(subset(caco2.desc,!is.na(CASRN))
 
 # Load QSPR predictions:
 load("CACO-2/httk_qspr_preds.RData")    
-honda2023 <- httk.caco2.qspr
+honda2023.qspr <- httk.caco2.qspr
+honda2023.data <- caco2.dt
 
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
@@ -2322,7 +2323,8 @@ save(chem.physical_and_invitro.data,
      physiology.data,
      pearce2017regression,
      kapraun2019,
-     honda2023,
+     honda2023.qspr,
+     honda2023.data,
      tissue.data,
      Tables.Rdata.stamp,
      EPA.ref,

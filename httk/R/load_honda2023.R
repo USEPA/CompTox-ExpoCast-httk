@@ -69,9 +69,9 @@ load_honda2023 <- function(
             " excluded in the prediction load.\n",sep=""))
   if (exclude_oad)
   {
-    tmp_honda2023 <- subset(httk::honda2023, Pab.Pred.AD == 1)
+    tmp_honda2023 <- subset(httk::honda2023.qspr, Pab.Pred.AD == 1)
   } else {
-    tmp_honda2023 <- httk::honda2023
+    tmp_honda2023 <- httk::honda2023.qspr
   }
   cat(paste("Loading Caco2 PAb predictions from Honda et al. (2023) for",
             dim(tmp_honda2023)[1],"chemicals.\n"))
