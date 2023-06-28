@@ -1511,7 +1511,8 @@ chem.physical_and_invitro.data <- add_chemtable(lit.caco2.dt,
                                   overwrite=FALSE,
                                   species="Human") 
 
-
+# Rename data for distribution with R package
+honda2023.data <- caco2.unique[,1:5]
 
 #
 # Add phys-chem for full library of chemicals both with data and qspr predictions:
@@ -1555,7 +1556,6 @@ chem.physical_and_invitro.data <- add_chemtable(subset(caco2.desc,!is.na(CASRN))
 # Load QSPR predictions:
 load("CACO-2/httk_qspr_preds.RData")    
 honda2023.qspr <- httk.caco2.qspr
-honda2023.data <- caco2.dt
 
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
