@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "Dec2021"
+SCRIPT.VERSION <- "feature/DawsonUpdate"
 
 ## R Packages ##
 library(reshape)
@@ -1339,12 +1339,12 @@ chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 #
 #
-# Data from Dawson et al. (2021)
+# Data (training and test sets, not predictions) from Dawson et al. (2021)
 # https://doi.org/10.1021/acs.est.0c06117
 #
 #
 dawson2021.training <- as.data.frame(readxl::read_xlsx(
-  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  path = "Dawson2021/S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 3))
 dawson2021.training <- subset(dawson2021.training, DTXSID != "-")
 
@@ -1364,7 +1364,7 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.training,
                                   species="Human")
 
 dawson2021.test <- as.data.frame(readxl::read_xlsx(
-  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
+  path = "Dawson2021/S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 4))
 dawson2021.test <- subset(dawson2021.test, DTXSID != "-")
 chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
@@ -1377,7 +1377,7 @@ chem.physical_and_invitro.data <- add_chemtable(dawson2021.test,
                                   overwrite=FALSE,
                                   reference = 'Dawson 2021',
                                   species="Human")
-
+                                  
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 #
@@ -1402,6 +1402,35 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 #
 
+## Load in Dawson 2021 Predictions ##
+dawson.clint.1 <- 
+  read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
+dawson.clint.2 <- 
+  read.csv("Dawson2021/Novel_clint_predictions_with_AD_Trainset29_descs_from_Opera2.9.csv")
+dawson.fup.1 <- 
+  read.csv("Dawson2021/Novel_fup_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
+dawson.fup.2 <- 
+  read.csv("Dawson2021/Novel_fup_predictions_with_AD_Trainset29_descs_from_Opera2.9.csv")
+
+chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.1,CASRN!=""),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='MoleculeID',
+                                 CAS = 'CASRN',
+                                 DTXSID='MoleculeID',
+                                 LogP="LogP_pred"
+                                 ), species="Human",
+                                 overwrite=FALSE,
+                                 reference="Dawson 2023")
+                                 
+chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!=""),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='MoleculeID',
+                                 CAS = 'CASRN',
+                                 DTXSID='MoleculeID',
+                                 LogP="LogP_pred"
+                                 ), species="Human",
+                                 overwrite=FALSE,
+                                 reference="Dawson 2023")                                   
 #
 #
 #
@@ -1487,6 +1516,8 @@ for (i in 1:(length(blocks)-1))
 
 # Get rid of the ones that weren't found:
 dsstox <- subset(dsstox,DTXSID!="-")
+dsstox <- subset(dsstox,DTXSID!="N/A")
+
 # Don't use DTXSID as CASRN:
 dsstox[regexpr("DTXSID",dsstox[,"CASRN"])!=-1,"CASRN"] <- NA
 # Calculate log10 Henry's law constnat:
@@ -1498,7 +1529,9 @@ dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
 # Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
 
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
+chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
+                                                       !is.na(CASRN) &
+                                                       !(CASRN %in% "N/A")),
   current.table = chem.physical_and_invitro.data,
   data.list=list(Compound='PREFERRED_NAME',
     CAS='CASRN',
@@ -1513,6 +1546,11 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   ),                                                                        
   reference="EPA",
   overwrite=T)
+  
+# Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                        !duplicated(CAS) &
+                                        !duplicated(DTXSID))
 
 EPA.ref <- paste('CompTox Dashboard',
   file.info(paste("HTTK-DSSTox-output-",i,".tsv",sep=""))$ctime)
@@ -1562,7 +1600,9 @@ for (this.row in 1:dim(dsstox)[1])
       dsstox[this.row,"CASRN"]
 }
 
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
+chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
+                                                       !is.na(CASRN) &
+                                                       !(CASRN %in% "N/A")),
   current.table = chem.physical_and_invitro.data,
   data.list=list(Compound='PREFERRED_NAME',
     CAS='CASRN',
@@ -1578,42 +1618,70 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,!is.na(CASRN)),
   reference="EPA",
   overwrite=T)
 
-# Some chemicals are missing from DSStox OPERA predictions, so run OPERA and 
-# add them to MissingPhysChem.csv
-new.opera <- read.csv('MissingPhysChem.csv') 
-colnames(new.opera)[1] <- "INPUT"
-new.opera[,"logHenry"] <- log10(as.numeric(new.opera$HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED))
-new.opera[,"logWSol"] <- log10(as.numeric(new.opera$WATER_SOLUBILITY_MOL.L_OPERA_PRED))
-chem.physical_and_invitro.data <- add_chemtable(new.opera,
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='CASRN',
-                 Compound='INPUT',
-                 logP='OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED',
-                 logHenry = "logHenry",
-                 logWSol = "logWSol",
-                 MP = "MELTING_POINT_DEGC_OPERA_PRED",
-                 MW='AVERAGE_MASS'),
-  reference='OPERA')
+  # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                        !duplicated(CAS) &
+                                        !duplicated(DTXSID))
 
-# Not sure how to get water:air patition coefficient from OPERA 
-# (need to check into Henry's law coefficient)
-# Use EPI Suite for now
-load("chemprops-072115.RData")
-#Dashboard doesn't like this CAS:
-chemprop.table[chemprop.table$CASRN=="51630-58-1","CASRN"] <- "67614-33-9"
-chemprop.table <- subset(chemprop.table,CASRN%in%chem.physical_and_invitro.data[,"CAS"])
-chemprop.table$logHenry <- log10(as.numeric(chemprop.table$Henry))
-chem.physical_and_invitro.data <- add_chemtable(chemprop.table,
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS="CASRN",
-                 logHenry="logHenry",
-                 logP="LogP",
-                 MP="MP",
-                 MW="MolecularWeight",
-                 logPwa="logPwa37p5"),
-  reference="EPISuite")
+#
+#
+# CREATE .SMI FILE FOR OPERA (SO WE CAN GET PKA's)
+#
+#
 
-#Add Strope 2018 new pKa
+write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
+  file="HTTK-AllChems.smi",
+  row.names=F,
+  sep="\t",
+  col.names=F,
+  quote=F)
+cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
+cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
+cat("Enter \"c\" to continue when ready.\n")
+browser()
+
+#
+#
+# WAIT UNTIL TABLE IS GENERATED (COULD BE 5+ HOURS)
+#
+#
+
+#
+#
+#
+# READ IN OPERA PREDICTIONS INFORMATION
+#
+#
+#
+OPERA.VERSION <- "2.9"
+cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
+opera.preds <- read.csv(paste(
+  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
+
+#calculate water:air partition coefficinent (Kwa = Koa / Kow):
+opera.preds$LogPwa_calc <- opera.preds$LogKOA_pred - opera.preds$LogP_pred 
+
+chem.physical_and_invitro.data <- add_chemtable(
+  opera.preds,
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(CAS='MoleculeID',
+    logP="LogP_pred",
+    logHenry = "LogHL_pred",
+    logWSol = "LogWS_pred",
+    logPwa = "LogPwa_calc",
+    MP = "MP_pred",
+    pKa_Donor="pKa_a_pred",
+    pKa_Accept="pKa_b_pred"
+    ),
+  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  overwrite=T)
+
+
+#
+#
+#Add Strope 2018 new pKa where we don't have them from OPERA
+#
+#
 load('Strope2018.RData')
 cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
 cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
@@ -1819,24 +1887,47 @@ chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES
 
 
 #
-# Create dawson2021 Data
+# Create dawson2021 QSPR predictions table
 #
 
-## Load in Data ##
-dawson2021_full <- as.data.frame(readxl::read_xlsx(
-  path = "S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
-  sheet = 14))
-dawson2021      <- dawson2021_full[,c("CASRN",
-                                      "QSAR_Clint","Clint QSAR AD Outlier",
-                                      "QSAR_Fup","Fup QSAR AD Outlier")]
+dawson.clint <- rbind(dawson.clint.1, dawson.clint.2)[, c(
+                      "MoleculeID", "CASRN", 
+                      "ClintPredictBin_MD", 
+                      "ClintPredictBin_SD",
+                      "Outlier")]
+dawson.fup <- rbind(dawson.fup.1, dawson.fup.2)[, c(
+                      "MoleculeID", "CASRN", "Fup.RF.pred", "Outlier")]
+dawson2021_full <- merge(dawson.clint,dawson.fup,by="MoleculeID")
+
+dawson2021_full <-subset(dawson2021_full,CASRN.x!="")
+
+dawson2021      <- dawson2021_full[,c("CASRN.x",
+                                      "ClintPredictBin_MD", 
+                                      "ClintPredictBin_SD",
+                                      "Outlier.x",
+                                      "Fup.RF.pred",
+                                      "Outlier.y"
+                                      )]
+
+colnames(dawson2021) <- c("CASRN",
+                          "QSAR_Clint","QSAR_Clint_SD","Clint QSAR AD Outlier",
+                          "QSAR_Fup","Fup QSAR AD Outlier")
+
+dawson2021 <- subset(dawson2021,!duplicated(CASRN))
+
+for (this.col in c("QSAR_Clint", "QSAR_Clint_SD", "QSAR_Fup"))
+{
+  dawson2021[,this.col] <- signif(dawson2021[,this.col],3) 
+}
+
 #
 # END dawson2021 Creation
 #
 
 #
-# Create pradeep2020 Data
+# Create pradeep2020 QSPR predictions table
 #
-## Load in Data ##
+## Load in Predictions ##
 # load chem data
 pradeep.chem <- as.data.frame(readxl::read_xlsx(
   path = "pradeep-Tox21_httk_predictions.xlsx",
