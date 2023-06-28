@@ -8,6 +8,8 @@ output: html_document
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
 * Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
+* Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
+* Corrected ppbv unit conversions in 'convert_units'
 
 ## New Features
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
@@ -15,7 +17,8 @@ output: html_document
 
 ## Enhancements
 * Package now requires **ggplot2** -- will gradually shift all plotting from base R 
-* Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) on Evaluation of Tissue Partitioning
+* Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
+* Revised function 'convert_units', expanding the variety of unit conversions available
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
