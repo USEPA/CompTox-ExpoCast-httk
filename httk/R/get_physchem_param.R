@@ -39,7 +39,6 @@ get_physchem_param <- function(
   chem.name0 <- chem.name
   dtxsid0 <- dtxsid
   
-  
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -72,13 +71,16 @@ get_physchem_param <- function(
   if(!all(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP"))){
     stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
   }
-
-  if (length(dtxsid)!=0) this.index <- 
+  
+  # Match to identifier containing all chemicals -- CHANGED BY AMEADE 2/9/2023
+  num.chems <- max(length(chem.cas0),length(chem.name0),length(dtxsid0),na.rm=TRUE)
+  if (length(dtxsid) == num.chems) this.index <- 
     match(dtxsid, chem.physical_and_invitro.data[,"DTXSID"])
-  else if (length(chem.cas)!=0) this.index <- 
+  else if (length(chem.cas) == num.chems) this.index <- 
     match(chem.cas, chem.physical_and_invitro.data[,"CAS"])
-  else this.index <- 
+  else if (length(chem.name) == num.chems) this.index <- 
     match(chem.name, chem.physical_and_invitro.data[,"Compound"])
+  else stop("The chemical identifiers, dtxsid, chem.cas, or chem.name, were not all present in chem.physical_and_invitro.data.")
   if(!any(is.na(suppressWarnings(chem.physical_and_invitro.data[this.index,
                                   param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
