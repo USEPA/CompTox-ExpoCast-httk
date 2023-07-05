@@ -489,7 +489,15 @@ Set species=\"Human\" to run httkpop model.')
         BW=parameters.dt$BW),
       restrictive.clearance=parameterize.arg.list[["restrictive.clearance"]])))]
   }
-  
+#
+# Propagate any parameter changes into oral bioavailability:
+#
+  parameters.dt[,Fabsgut:=
+                  calc_fbio.oral(Params=parameters.dt)$fbio.oral]
+  parameters.dt[,Fabs:=
+                  calc_fbio.oral(Params=parameters.dt)$fabs.oral]
+  parameters.dt[,Fgut:=
+                  calc_fbio.oral(Params=parameters.dt)$fgut.oral]
 #
 # Do any model-specific uncertainty propagation
 #
