@@ -69,8 +69,8 @@ calc_fbio.oral <- function(Params = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
   Caco2.Pab.default = "1.6",
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
@@ -153,8 +153,8 @@ calc_fabs.oral <- function(Params = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
   Caco2.Pab.default = "1.6",
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
@@ -219,8 +219,8 @@ calc_fgut.oral <- function(Params = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = F,
-  suppress.messages = F,
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
   Caco2.Pab.default = "1.6",
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
@@ -318,27 +318,6 @@ calc_fgut.oral <- function(Params = NULL,
     # if Caco2.options$Fgut.oral == FALSE, return 1
     fgut.oral <- Params$Fgut
   }
-  return(as.numeric(fgut.oral))
+  return(set_httk_precision(as.numeric(fgut.oral)))
  
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
